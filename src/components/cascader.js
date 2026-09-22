@@ -894,7 +894,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           root:root,input:input,panel:panel,columnsHost:columnsHost,triggerTarget:triggerTarget,
           setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,getState:getState,
           loadChildren:function(key,meta){var path=pathByKeys([key]);var item=path[0]||null;if(!item){var found=findPathByValue(key);item=found.length?found[found.length-1]:null;}return item?loadChildrenFor(item,meta):Promise.resolve([]);},
-          getControl:function(){return fieldControl;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
+          getControl:function(){return fieldControl;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
           applyOptions:applyOptions,dispose:disposeRuntime
         });
       
@@ -919,7 +919,7 @@ export class Cascader extends PopupFieldComponent{
  getControl(){const r=runtimeState.get(this).runtime;return r?r.getControl():null;}
  getColumns(){const r=runtimeState.get(this).runtime;return r?r.getColumns():[];}
  getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
- getInputElement(){const r=runtimeState.get(this).runtime;return r?r.input:null;}
+ getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
  getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}
  getPopupOriginElement(){const r=runtimeState.get(this).runtime;return r?r.columnsHost:null;}
 }
