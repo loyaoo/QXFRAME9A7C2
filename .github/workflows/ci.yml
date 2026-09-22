@@ -35,6 +35,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Dependency security audit
+        run: npm audit --audit-level=high
+
+      - name: Completion audit
+        run: npm run audit:completion
+
       - name: Full release verification
         run: npm run release
 
