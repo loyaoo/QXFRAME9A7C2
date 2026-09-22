@@ -109,7 +109,7 @@ function create(options) {
     readOnly: false
   }, options || {});
   if (typeof opts.loop !== 'boolean') throw new TypeError('[QXFRAME9A7C2] WheelPanel loop must be boolean.');
-  var doc = opts.document || global.document;
+  var doc = opts.document || globalThis.document;
   var host = opts.container || null;
   if (!host || host.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] WheelPanel container must be an Element.');
   var columns = normalizeColumns(opts.columns);
