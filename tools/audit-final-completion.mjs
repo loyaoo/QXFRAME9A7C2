@@ -30,6 +30,18 @@ for(const [file,text] of source){
   if(file==='src/utils/url.js') continue;
   for(const hit of occurrences(text,/['"`]\s*javascript\s*:/ig)) dangerousProtocol.push({file,match:hit.match});
 }
+const dynamicAttributeSinks=[];
+const cssTextSinks=[];
+for(const [file,text] of source){
+  const attr=/\.setAttribute\s*\(\s*([^,\n]+),/g;
+  let m;
+  while((m=attr.exec(text))){
+    const first=m[1].trim();
+    if(!/^['"`][^'"`]+['"`]$/.test(first)) dynamicAttributeSinks.push({file,expression:first.slice(0,120)});
+  }
+  const cssCount=occurrences(text,/\.style\.cssText\s*=|setAttribute\s*\(\s*['"]style['"]/g).length;
+  if(cssCount) cssTextSinks.push({file,count:cssCount});
+}
 const urlSinks=[];
 for(const [file,text] of source){
   const sink=/(?:\.\s*(?:href|src|formAction)\s*=|setAttribute\s*\(\s*['"](?:href|src|action|formaction)['"])/g;
@@ -103,7 +115,7 @@ const duplicates=[...duplicateBlocks.entries()].filter(([,locs])=>locs.length>1)
 const report={
   ok:false,
   files:srcFiles.length,
-  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks},
+  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks},
   duplicateCapabilityCandidates:rawPrimitives,
   staleMigrationComments:staleComments,
   staleActiveMetadata:staleMetadata,
@@ -117,6 +129,6 @@ const report={
   },
   exactDuplicateBlocks:duplicates
 };
-report.ok=security.every(x=>x.approved)&&dangerousProtocol.length===0&&urlSinks.every(x=>x.urlPolicy)&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.length===0&&cssTextSinks.length===0&&urlSinks.every(x=>x.urlPolicy)&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
