@@ -2,6 +2,7 @@
 // It extends FieldComponent and composes Trigger; it does not inherit PopupComponent.
 import { FieldComponent } from './field.js';
 import { fieldHooks } from '../core/fieldHooks.js';
+import { componentHooks } from '../core/componentHooks.js';
 import { Trigger } from './trigger.js';
 import { DOM } from '../core/dom.js';
 
@@ -107,6 +108,15 @@ export class PopupFieldComponent extends FieldComponent {
     getPopupElement() { return requireState(this).popup; }
     getTabExitTarget() { return requireState(this).tabExitTarget; }
     getPopupState() { const trigger = requireState(this).trigger; return trigger ? trigger.getState() : Object.freeze({ open: false, destroyed: this.destroyed }); }
+
+    [componentHooks.beforeDestroy]() {
+        const record = requireState(this);
+        if (record.trigger && typeof record.trigger.destroy === 'function') record.trigger.destroy('component-destroy');
+        record.trigger = null;
+        record.reference = null;
+        record.popup = null;
+        record.tabExitTarget = null;
+    }
 
     [fieldHooks.fieldOptionsUpdated](next, previous, patch) {
         const record = requireState(this);
