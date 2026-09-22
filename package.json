@@ -62,7 +62,8 @@
     "verify:subpath-browser": "node tools/verify-preserve-subpath-browser.mjs",
     "verify:package-runtime": "node tools/verify-package-runtime.mjs",
     "verify:tool-cwd": "node tools/verify-tool-cwd-independence.mjs",
-    "verify:browser:optional": "node tools/verify-browser-smoke.mjs && node tools/verify-source-esm-browser.mjs && node tools/verify-source-umd-browser.mjs && node tools/verify-high-risk-browser.mjs && npm run verify:subpath-browser"
+    "verify:browser:optional": "node tools/verify-browser-smoke.mjs && node tools/verify-source-esm-browser.mjs && node tools/verify-source-umd-browser.mjs && node tools/verify-high-risk-browser.mjs && npm run verify:subpath-browser",
+    "audit:completion": "node tools/audit-final-completion.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",
