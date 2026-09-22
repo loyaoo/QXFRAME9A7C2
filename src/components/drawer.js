@@ -75,15 +75,7 @@ function normalize(input, previous) {
   next.maskClassName = next.maskClassName == null ? '' : String(next.maskClassName);
   return next;
 }
-function render(host, value, context, doc) {
-  var output = typeof value === 'function' ? value(context) : value;
-  Renderer.replace(host, output == null ? '' : output, doc);
-}
 function px(value) { return typeof value === 'number' ? value + 'px' : (value || ''); }
-function applyStyle(element, style) {
-  if (!style || typeof style !== 'object') return;
-  Object.keys(style).forEach(function (key) { element.style[key] = style[key] == null ? '' : String(style[key]); });
-}
     
 function createDrawerController(instance, options) {
   var opts = normalize(Object.assign({
@@ -220,14 +212,14 @@ function createDrawerController(instance, options) {
     var showFooter = opts.footer !== false && opts.footer !== null && (buttons.length > 0 || customFooter);
     panel.classList.toggle('is-headerless', opts.header === false);
     panel.classList.toggle('is-footerless', !showFooter);
-    applyStyle(panel, opts.style);
-    applyStyle(mask, opts.maskStyle);
+    frameShell.applyStyle(panel, opts.style);
+    frameShell.applyStyle(mask, opts.maskStyle);
     // Global stacking is projected by LayerManager through OverlayRuntime. Public zIndex
     // remains a relative offset and is never written as an absolute component z-index.
     if (!overlay || !overlay.getState().active) root.style.zIndex = '';
   }
-  function renderTitle() { render(title, opts.title, { instance: api, close: close }, doc); }
-  function renderContent() { render(contentHost, opts.content, { instance: api, close: close, scroll: scroll }, doc); scroll.refresh(); }
+  function renderTitle() { frameShell.renderValue(title, opts.title, { instance: api, close: close }); }
+  function renderContent() { frameShell.renderValue(contentHost, opts.content, { instance: api, close: close, scroll: scroll }); scroll.refresh(); }
   function renderFooter() { buttons = frameShell.renderFooter(resolveButtons); }
   function destroyHiddenContent() {
     if (!opts.destroyOnHidden || hiddenContentDestroyed) return false;
