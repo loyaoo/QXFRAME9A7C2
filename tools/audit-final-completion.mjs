@@ -42,7 +42,7 @@ const dynamicAttributeApprovals={
   'src/core/overlayFrameShell.js':'button attrs explicitly reject event, URL, srcdoc and poster attributes'
 };
 for(const [file,text] of source){
-  const attr=/([A-Za-z_$][\\w$]*)\.setAttribute\s*\(\s*([^,\n]+),/g;
+  const attr=/([A-Za-z_$][A-Za-z0-9_$]*)\.setAttribute\s*\(\s*([^,\n]+),/g;
   let m;
   while((m=attr.exec(text))){
     const receiver=m[1], first=m[2].trim();
