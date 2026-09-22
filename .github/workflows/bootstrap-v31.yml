@@ -1,0 +1,112 @@
+name: Bootstrap v31 Source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bootstrap-v31.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bootstrap-v31
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check source state
+        id: source
+        shell: bash
+        run: |
+          if [[ -f package.json && -d src && -d tools ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Recover v31 ZIP from repository history
+        if: steps.source.outputs.ready != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP_NAME='QXFRAME9A7C2-v2.19.81-HOTFIX6-ESM-MIGRATION-ACCELERATED-v31.zip'
+          SOURCE_COMMIT='f7d29c921dcbc4a641fac549426a3e05accacc1e'
+          git show "${SOURCE_COMMIT}:${ZIP_NAME}" > /tmp/qxframe-v31.zip
+          rm -rf /tmp/qxframe-v31
+          mkdir -p /tmp/qxframe-v31
+          unzip -q /tmp/qxframe-v31.zip -d /tmp/qxframe-v31
+          INNER="$(find /tmp/qxframe-v31 -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+          test -n "$INNER"
+          rsync -a --delete --exclude='.git/' --exclude='.github/' "$INNER/" ./
+          test -f package.json
+          test -d src
+          test -d tools
+
+      - name: Restore repository control files
+        if: steps.source.outputs.ready != 'true'
+        shell: bash
+        run: |
+          printf '%s\n' \
+            'node_modules/' \
+            '.release-stage/' \
+            '.release-dist-backup/' \
+            '*.tgz' \
+            '*.zip' \
+            '.DS_Store' \
+            'npm-debug.log*' > .gitignore
+
+      - name: Setup Node.js
+        if: steps.source.outputs.ready != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate lockfile
+        if: steps.source.outputs.ready != 'true'
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Install dependencies
+        if: steps.source.outputs.ready != 'true'
+        run: npm ci
+
+      - name: Run full production release
+        if: steps.source.outputs.ready != 'true'
+        run: npm run release
+
+      - name: Build distributable package
+        if: steps.source.outputs.ready != 'true'
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          npm pack --pack-destination artifacts
+
+      - name: Upload release artifacts
+        if: steps.source.outputs.ready != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: qxframe9a7c2-v31-bootstrap-release
+          path: |
+            dist/
+            artifacts/*.tgz
+          retention-days: 3
+
+      - name: Commit bootstrapped source
+        if: steps.source.outputs.ready != 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: bootstrap v31 source and release artifacts"
+          git push origin HEAD:main
