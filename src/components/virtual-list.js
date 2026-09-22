@@ -222,7 +222,7 @@ export class VirtualList extends Component {
         });
         if (this.destroyed || renderAborted) return false;
         r.layer.appendChild(fragment); r.renderCount += 1;
-        if (!(Number(this.options.itemSize) > 0) && this.options.measureItems !== false) r.rendered.forEach(element => r.virtualizer.measureElement(Number(DOM.getPrivate(element, 'virtualIndex')), element));
+        if (r.virtualizer && !(Number(this.options.itemSize) > 0) && this.options.measureItems !== false) r.rendered.forEach(element => r.virtualizer.measureElement(Number(DOM.getPrivate(element, 'virtualIndex')), element));
         const detail = { state: this.#stateSnapshot(next.reason), reason: next.reason, controller: this };
         if (Utils.isFunction(this.options.onRender)) this.options.onRender(detail);
         if (!this.destroyed) this.emit('render', detail);
