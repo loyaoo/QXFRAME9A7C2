@@ -464,7 +464,6 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     destroyed = true;
     if (nowButtonOff) { nowButtonOff(); nowButtonOff = null; }
-    if (nowButton && nowHandler) nowButton.removeEventListener('click', nowHandler);
     if (panelScrollSettleOff) panelScrollSettleOff();
     panelScrollSettleOff = null;
     dependentPanelSyncScheduler.dispose();
