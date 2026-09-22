@@ -1,1 +1,0 @@
-{"ok":true,"modules":164,"components":40,"manifest":72,"legacyGlobals":0,"vendorGlobals":0}

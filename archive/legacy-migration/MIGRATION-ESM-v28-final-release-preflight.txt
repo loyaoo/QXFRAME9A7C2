@@ -1,5 +1,0 @@
-
-> qxframe9a7c2@2.19.81 verify:release-preflight
-> node tools/verify-release-preflight.mjs
-
-{"ok":true,"rollupOutputs":3,"packageExports":true,"strictBuild":true,"auxiliaryIifeGlobal":false,"frozenFallback":false}

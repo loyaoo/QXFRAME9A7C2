@@ -1,1 +1,0 @@
-{"ok":true,"esmNamedComponents":40,"umdGlobal":true,"cutoverBridge":true}

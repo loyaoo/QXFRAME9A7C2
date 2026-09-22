@@ -1,5 +1,0 @@
-
-> qxframe9a7c2@2.19.81 verify:platform
-> node tools/verify-platform.mjs
-
-{"ok":true,"browserBaseline":{"chrome":105,"edge":105,"firefox":112,"safari":"16.4"},"modules":72}

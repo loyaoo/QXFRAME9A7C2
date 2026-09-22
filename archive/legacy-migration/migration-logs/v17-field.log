@@ -1,1 +1,0 @@
-{"ok":true,"fieldComponent":true,"inputNumberClass":true,"inputOtpClass":true,"rateClass":true,"tagInputClass":true,"controlAuthority":true,"controlApi":["create","createDefaultDOM","createFormFieldBridge","createProjection","enhance","placeFieldRoot","projectFormFieldLayout","resolveElement","resolveFieldOptions"]}

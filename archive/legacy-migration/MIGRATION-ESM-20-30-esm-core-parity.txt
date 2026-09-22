@@ -1,5 +1,0 @@
-
-> qxframe9a7c2@2.19.81 verify:esm-core
-> node tools/verify-esm-core-parity.mjs
-
-{"ok":true,"candidates":["Utils","IdManager","URLPolicy","ValueEquality","DateUnit","Events","Scheduler","InteractionDetails","Selection","ValueDraft","StateController","TreeModel","PaginationModel","TableModel","InteractionPolicy","TransformModel","AsyncTask","AsyncTaskGroup","AsyncAction","ActiveItem"],"runtimeAuthority":"legacy-registry","esmAuthorityReady":true,"rollupCutoverPending":true}

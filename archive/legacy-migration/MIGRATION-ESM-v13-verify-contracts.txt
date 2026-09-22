@@ -1,5 +1,0 @@
-
-> qxframe9a7c2@2.19.81 verify:contracts
-> node tools/verify-component-contracts.mjs
-
-{"ok":true,"schemas":40,"sourceContractDrift":0,"demoContractDrift":0}

@@ -1,5 +1,0 @@
-
-> qxframe9a7c2@2.19.81 verify:picker-family
-> node tools/verify-picker-family.mjs
-
-{"ok":true,"family":"PickerComponent","extends":"PopupFieldComponent","members":["WheelPicker","TimePicker","ColorPicker","DatePicker"],"support":["PickerField","WheelPanel","TimePanel"],"publicLifecycleOwner":"PickerComponent"}

@@ -1,7 +1,0 @@
-
-> qxframe9a7c2@2.19.81 build
-> node tools/build-release.mjs
-
-[build-release] Rollup is required for the production build. Run `npm install` so `rollup` (preferred) or the official `@rollup/wasm-node` fallback is available.
-[build-release] rollup: Cannot find package 'rollup' imported from /mnt/data/qx_v28_work/QXFRAME9A7C2-v2.19.81-HOTFIX6-ESM-MIGRATION-ACCELERATED-v28/tools/build-release.mjs
-[build-release] @rollup/wasm-node: Cannot find package '@rollup/wasm-node' imported from /mnt/data/qx_v28_work/QXFRAME9A7C2-v2.19.81-HOTFIX6-ESM-MIGRATION-ACCELERATED-v28/tools/build-release.mjs
