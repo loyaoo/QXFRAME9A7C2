@@ -49,7 +49,7 @@ function create(config) {
     element.setAttribute('data-button-key',buttonConfig.key);
     if(link){var safeHref=URLPolicy.sanitize(buttonConfig.href,'navigation');if(safeHref)element.href=safeHref;else element.removeAttribute('href');if(buttonConfig.target)element.target=buttonConfig.target;if(buttonConfig.rel)element.rel=buttonConfig.rel;else if(buttonConfig.target==='_blank')element.rel='noopener noreferrer';}
     else element.type=buttonConfig.buttonType||'button';
-    if(buttonConfig.attrs&&typeof buttonConfig.attrs==='object')Object.keys(buttonConfig.attrs).forEach(function(name){var lower=String(name).toLowerCase();if(/^on/.test(lower)||lower==='href'||lower==='src'||lower==='xlink:href')return;if(buttonConfig.attrs[name]!=null)element.setAttribute(name,String(buttonConfig.attrs[name]));});
+    if(buttonConfig.attrs&&typeof buttonConfig.attrs==='object')Object.keys(buttonConfig.attrs).forEach(function(name){var lower=String(name).toLowerCase();if(/^on/.test(lower)||['href','src','xlink:href','action','formaction','srcdoc','poster'].indexOf(lower)>=0)return;if(buttonConfig.attrs[name]!=null)element.setAttribute(name,String(buttonConfig.attrs[name]));});
     applyStyle(element,buttonConfig.style);
     var data={instance:api(),event:null,button:element,config:buttonConfig,buttonConfig:buttonConfig,close:function(reason){if(typeof cfg.close==='function')return cfg.close(reason||buttonConfig.role||'button',data.event);},setLoading:function(active){element.classList.toggle('is-loading',active===true);if(!link)element.disabled=active===true||buttonDisabled(buttonConfig,data);}};
     var disabled=buttonDisabled(buttonConfig,data);
