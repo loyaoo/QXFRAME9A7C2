@@ -671,10 +671,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (destroyed) return false;
        destroyed = true;
        gradientListenerCleanups.splice(0).forEach(function (cleanup) { cleanup(); });
-       if (modeHost && gradientClickHandler) modeHost.removeEventListener('click', gradientClickHandler);
-       if (gradientHost && gradientClickHandler) gradientHost.removeEventListener('click', gradientClickHandler);
        if (gradientDragSession) gradientDragSession.destroy(); gradientDragSession = null;
-       if (gradientHost && gradientInputHandler) gradientHost.removeEventListener('change', gradientInputHandler);
        gradientDragSnapshot = null; gradientDragIndex = -1;
        if (field) field.destroy(reason || 'color-picker-destroy');
        if (panel) panel.destroy(reason || 'color-picker-destroy');
