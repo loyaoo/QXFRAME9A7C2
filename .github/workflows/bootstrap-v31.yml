@@ -64,7 +64,8 @@ jobs:
             '*.tgz' \
             '*.zip' \
             '.DS_Store' \
-            'npm-debug.log*' > .gitignore
+            'npm-debug.log*' \
+            'dist/' > .gitignore
 
       - name: Patch Rollup facade sourcemap verifier
         if: steps.source.outputs.ready != 'true'
@@ -95,6 +96,17 @@ jobs:
         if: steps.source.outputs.ready != 'true'
         run: npm ci
 
+      - name: Commit recovered v31 source before release
+        if: steps.source.outputs.ready != 'true'
+        shell: bash
+        run: |
+          rm -rf dist artifacts .release-stage .release-dist-backup
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: bootstrap v31 source tree"
+          git push origin HEAD:main
+
       - name: Run full production release
         if: steps.source.outputs.ready != 'true'
         run: npm run release
@@ -116,12 +128,3 @@ jobs:
             artifacts/*.tgz
           retention-days: 3
 
-      - name: Commit bootstrapped source
-        if: steps.source.outputs.ready != 'true'
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "chore: bootstrap v31 source and release artifacts"
-          git push origin HEAD:main
