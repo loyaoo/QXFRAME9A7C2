@@ -46,7 +46,7 @@ function create(options) {
     placeholder: '', placement: 'bottom-start', open: false, trigger: 'click',
     closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true, focusScope: 'exit', matchReferenceWidth: false, renderControl: true, headless: false
   }, options || {});
-  var doc = opts.document || global.document;
+  var doc = opts.document || globalThis.document;
   var host = opts.container || null;
   var headlessMode = opts.headless === true;
   var projectionMode = !headlessMode && opts.renderControl === false;
