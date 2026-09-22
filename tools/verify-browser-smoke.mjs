@@ -53,7 +53,7 @@ function launchBrowser() {
         ], { stdio: ['ignore', 'ignore', 'pipe'] });
         let stderr = '';
         let settled = false;
-        const timer = setTimeout(() => finish(new Error('Chromium DevTools endpoint timed out')), 10000);
+        const timer = setTimeout(() => finish(new Error('Chromium DevTools endpoint timed out')), 30000);
         function finish(error, endpoint) {
             if (settled) return;
             settled = true;
