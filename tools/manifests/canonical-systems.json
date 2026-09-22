@@ -81,7 +81,7 @@
       "status": "converged",
       "canonicalOwner": [
         "DOMHeadless.LayerManager",
-        "src/manifests/layers.json"
+        "tools/manifests/layers.json"
       ],
       "legacyOwners": [
         "magic z-index bands",

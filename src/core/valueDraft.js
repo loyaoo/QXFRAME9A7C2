@@ -1,5 +1,3 @@
-// Migration stage 20→30: real ESM candidate extracted from the frozen HOTFIX6 kernel.
-// Runtime consumers remain on the legacy registry until Rollup cutover; parity is enforced by tools/verify-esm-core-parity.mjs.
 
 import { Utils } from '../utils/utils.js';
 import { ValueEquality } from '../utils/valueEquality.js';

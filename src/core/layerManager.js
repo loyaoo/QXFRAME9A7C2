@@ -1,5 +1,3 @@
-// Migration stage 20→30: real ESM candidate extracted from the frozen HOTFIX6 kernel.
-// Runtime consumers remain on the legacy registry until Rollup cutover; parity is enforced by tools/verify-esm-core-parity.mjs.
 
 /* generated:layer-tokens:start */
   var LAYER_TOKENS = Object.freeze({ overlayBase:19920510, step:10, bandStride:10000, bands:Object.freeze({ popup:0, modal:1, notice:2, tooltip:3, blocking:4 }) });

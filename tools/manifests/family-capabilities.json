@@ -370,7 +370,7 @@
         "Core.Lifecycle"
       ],
       "consumers": [
-        "src/modules/*.js"
+        "interactive component/core runtimes via Component.listen / Core.DOM.listen"
       ]
     }
   ]
