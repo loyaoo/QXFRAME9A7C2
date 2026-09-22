@@ -62,7 +62,7 @@ const child = cp.spawn(browser, ['--headless=new','--no-sandbox','--disable-gpu'
 let stderr = '', endpoint = null;
 child.stderr.setEncoding('utf8');
 child.stderr.on('data', chunk => { stderr += chunk; const match = stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/); if (match) endpoint = match[1]; });
-const deadline = Date.now() + 10000;
+const deadline = Date.now() + 30000;
 while (!endpoint && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 50));
 if (!endpoint) throw new Error('CDP endpoint timeout');
 const socket = new WebSocketClient(endpoint);
