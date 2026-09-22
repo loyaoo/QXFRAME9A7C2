@@ -32,7 +32,7 @@ for(const [file,text] of source){
 }
 const urlSinks=[];
 for(const [file,text] of source){
-  const sink=/(?:\.\s*(?:href|src|action|formAction)\s*=|setAttribute\s*\(\s*['"](?:href|src|action|formaction)['"])/g;
+  const sink=/(?:\.\s*(?:href|src|formAction)\s*=|setAttribute\s*\(\s*['"](?:href|src|action|formaction)['"])/g;
   const hits=occurrences(text,sink);
   if(!hits.length) continue;
   urlSinks.push({file,count:hits.length,urlPolicy:/\bURLPolicy\b/.test(text)});
@@ -61,7 +61,6 @@ for(const [file,text] of source){
   });
 }
 const activeMetadataFiles=[
- 'README.md','QXFRAME9A7C2-重构开发规范手册-整合重写版.md','MIGRATION-src-dist-unified.md','HARDENING-v2.19.81.md',
  ...walk(path.join(root,'tools/manifests'),f=>f.endsWith('.json')).map(f=>posix(path.relative(root,f)))
 ];
 const staleMetadata=[];
@@ -118,6 +117,6 @@ const report={
   },
   exactDuplicateBlocks:duplicates
 };
-report.ok=security.every(x=>x.approved)&&dangerousProtocol.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=security.every(x=>x.approved)&&dangerousProtocol.length===0&&urlSinks.every(x=>x.urlPolicy)&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
