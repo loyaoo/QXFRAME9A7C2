@@ -1,3 +1,5 @@
+import { URLPolicy } from '../utils/url.js';
+
 
 var activeProjections = 0, activeEntries = 0, writes = 0, dedupedWrites = 0, restores = 0, skippedRestores = 0;
   function sameStyle(left, right) { return !!left && !!right && left.value === right.value && left.priority === right.priority; }
@@ -47,9 +49,23 @@ var activeProjections = 0, activeEntries = 0, writes = 0, dedupedWrites = 0, res
       if (desired.value === '') node.style.removeProperty(prop); else node.style.setProperty(prop, desired.value, desired.priority);
       remember(node, 'style', prop, original, { value: node.style.getPropertyValue(prop), priority: node.style.getPropertyPriority(prop) }); writes += 1; return true;
     }
+    function safeAttributeValue(node, name, value) {
+      var lower = String(name || '').trim().toLowerCase();
+      if (!lower) return { name: '', value: value };
+      if (/^on/.test(lower) || lower === 'srcdoc') throw new TypeError('[QXFRAME9A7C2] DOMProjection refuses executable attribute: ' + lower);
+      if (['href','xlink:href','action','formaction','src','poster'].indexOf(lower) >= 0 && value !== undefined && value !== null && value !== false) {
+        var tag = String(node && node.tagName || '').toLowerCase();
+        var kind = (lower === 'src' && (tag === 'img' || tag === 'image')) ? 'image'
+          : ((lower === 'src' || lower === 'poster') && (tag === 'audio' || tag === 'video' || tag === 'source')) ? 'media'
+          : 'navigation';
+        return { name: lower, value: URLPolicy.assertSafe(value, kind) };
+      }
+      return { name: lower, value: value };
+    }
     function setAttribute(node, name, value) {
       if (destroyed || !node || !node.getAttribute || !node.setAttribute) return false;
-      var attr = String(name || ''); if (!attr) return false;
+      var checked = safeAttributeValue(node, name, value), attr = checked.name; if (!attr) return false;
+      value = checked.value;
       var desired = value === undefined || value === null || value === false ? { had: false, value: null } : { had: true, value: String(value) };
       var existing = indexed(node, 'attribute', attr);
       if (existing && owns(existing)) {
