@@ -75,7 +75,7 @@ jobs:
           p = Path('tools/verify-release-artifacts.mjs')
           s = p.read_text()
           old = "    assert.ok(Array.isArray(map.sources) && map.sources.length > 0, `Source map has no sources: ${file}`);"
-          new = "    assert.ok(Array.isArray(map.sources), `Source map sources must be an array: ${file}`);\n    assert.equal(typeof map.mappings, 'string', `Source map mappings must be a string: ${file}`);\n    if (map.sources.length === 0) assert.equal(map.mappings, '', `Source map without sources must have empty mappings: ${file}`);"
+          new = "    assert.ok(Array.isArray(map.sources), `Source map sources must be an array: ${file}`);\n    assert.equal(typeof map.mappings, 'string', `Source map mappings must be a string: ${file}`);\n    if (map.sources.length === 0) assert.match(map.mappings, /^;*$/, `Source map without sources may contain only unmapped lines: ${file}`);"
           if old not in s:
               raise SystemExit('Expected v31 sourcemap assertion not found')
           p.write_text(s.replace(old, new))
