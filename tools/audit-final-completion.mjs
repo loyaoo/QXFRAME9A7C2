@@ -49,10 +49,13 @@ for(const [file,text] of source){
     if(['projection'].includes(receiver)) continue;
     if(!/^['"`][^'"`]+['"`]$/.test(first)) dynamicAttributeSinks.push({file,receiver,expression:first.slice(0,120),approved:!!dynamicAttributeApprovals[file],reason:dynamicAttributeApprovals[file]||''});
   }
-  const cssCount=occurrences(text,/\.style\.cssText\s*=|setAttribute\s*\(\s*['"]style['"]/g).length;
+  const cssAssignments=[...text.matchAll(/\.style\.cssText\s*=\s*([^;]+);/g)].map(match=>match[1].trim());
+  const styleAttributes=occurrences(text,/setAttribute\s*\(\s*['"]style['"]/g).length;
+  const cssCount=cssAssignments.length+styleAttributes;
   if(cssCount){
-    const approved=(file==='src/components/tags.js' && !/style\.cssText\s*=\s*[^'"]/.test(text)) || file==='src/core/focusScope.js';
-    cssTextSinks.push({file,count:cssCount,approved,reason:file==='src/components/tags.js'?'only clears inline style before canonical style projection':'framework-owned static focus-guard CSS'});
+    const tagsClearOnly=file==='src/components/tags.js' && styleAttributes===0 && cssAssignments.every(value=>value==="''"||value==='""');
+    const approved=tagsClearOnly || file==='src/core/focusScope.js';
+    cssTextSinks.push({file,count:cssCount,approved,reason:tagsClearOnly?'only clears inline style before canonical style projection':file==='src/core/focusScope.js'?'framework-owned static focus-guard CSS':''});
   }
 }
 
@@ -71,7 +74,7 @@ const projectionNode=fakeAttributeNode('A');
 let projectionSecurity={eventAttributeRejected:false,javascriptUrlRejected:false,obfuscatedJavascriptRejected:false,httpsAccepted:false};
 try{securityProjection.setAttribute(projectionNode,'onclick','alert(1)');}catch{projectionSecurity.eventAttributeRejected=true;}
 try{securityProjection.setAttribute(projectionNode,'href','javascript:alert(1)');}catch{projectionSecurity.javascriptUrlRejected=true;}
-try{securityProjection.setAttribute(projectionNode,'href','java\\nscript:alert(1)');}catch{projectionSecurity.obfuscatedJavascriptRejected=true;}
+try{securityProjection.setAttribute(projectionNode,'href','java\u000Ascript:alert(1)');}catch{projectionSecurity.obfuscatedJavascriptRejected=true;}
 projectionSecurity.httpsAccepted=securityProjection.setAttribute(projectionNode,'href','https://example.com/')===true && projectionNode.getAttribute('href')==='https://example.com/';
 securityProjection.destroy();
 const urlSinks=[];
