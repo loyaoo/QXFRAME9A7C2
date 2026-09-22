@@ -51,4 +51,4 @@ jobs:
           path: |
             dist/
             artifacts/*.tgz
-          retention-days: 3
+          retention-days: 30
