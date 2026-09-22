@@ -1,0 +1,61 @@
+{
+  "ok": true,
+  "kernelSections": 77,
+  "classifiedSections": 77,
+  "candidateSections": 68,
+  "candidateFiles": 79,
+  "statusCounts": {
+    "remove-loader-shell": 5,
+    "candidate": 68,
+    "deferred-runtime-provider": 1,
+    "phase-30-35": 2,
+    "merge-initializer": 1
+  },
+  "deferred": [
+    {
+      "section": "qxframe9a7c2-core",
+      "status": "remove-loader-shell",
+      "phase": "cutover"
+    },
+    {
+      "section": "qxframe9a7c2-performance",
+      "status": "deferred-runtime-provider",
+      "phase": "after-component-runtime"
+    },
+    {
+      "section": "qxframe9a7c2-headless",
+      "status": "remove-loader-shell",
+      "phase": "cutover"
+    },
+    {
+      "section": "floating-ui.core.umd.min",
+      "status": "phase-30-35",
+      "phase": "30-35"
+    },
+    {
+      "section": "floating-ui.dom.umd.min",
+      "status": "phase-30-35",
+      "phase": "30-35"
+    },
+    {
+      "section": "qxframe9a7c2-dom-headless",
+      "status": "remove-loader-shell",
+      "phase": "cutover"
+    },
+    {
+      "section": "qxframe9a7c2-components",
+      "status": "remove-loader-shell",
+      "phase": "component-cutover"
+    },
+    {
+      "section": "qxframe9a7c2-building-blocks",
+      "status": "remove-loader-shell",
+      "phase": "component-cutover"
+    },
+    {
+      "section": "qxframe9a7c2-focus-modality",
+      "status": "merge-initializer",
+      "phase": "cutover"
+    }
+  ]
+}

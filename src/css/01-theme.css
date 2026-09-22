@@ -1,0 +1,416 @@
+/* theme */
+
+  /* v2.18.56 local seed resolver. Public seed slots are resolved at each theme boundary
+   * so nested themes can override a single base color without regenerating a palette. */
+  :root,[data-qxframe9a7c2-theme] {
+    --_qxframe9a7c2-seed-grey: var(--qxframe9a7c2-theme-grey, var(--qxframe9a7c2-theme-seed-grey));
+    --_qxframe9a7c2-seed-gray: var(--qxframe9a7c2-theme-gray, var(--qxframe9a7c2-theme-seed-gray));
+    --_qxframe9a7c2-seed-cyan: var(--qxframe9a7c2-theme-cyan, var(--qxframe9a7c2-theme-seed-cyan));
+    --_qxframe9a7c2-seed-teal: var(--qxframe9a7c2-theme-teal, var(--qxframe9a7c2-theme-seed-teal));
+    --_qxframe9a7c2-seed-green: var(--qxframe9a7c2-theme-green, var(--qxframe9a7c2-theme-seed-green));
+    --_qxframe9a7c2-seed-lime: var(--qxframe9a7c2-theme-lime, var(--qxframe9a7c2-theme-seed-lime));
+    --_qxframe9a7c2-seed-yellow: var(--qxframe9a7c2-theme-yellow, var(--qxframe9a7c2-theme-seed-yellow));
+    --_qxframe9a7c2-seed-orange: var(--qxframe9a7c2-theme-orange, var(--qxframe9a7c2-theme-seed-orange));
+    --_qxframe9a7c2-seed-red: var(--qxframe9a7c2-theme-red, var(--qxframe9a7c2-theme-seed-red));
+    --_qxframe9a7c2-seed-pink: var(--qxframe9a7c2-theme-pink, var(--qxframe9a7c2-theme-seed-pink));
+    --_qxframe9a7c2-seed-purple: var(--qxframe9a7c2-theme-purple, var(--qxframe9a7c2-theme-seed-purple));
+    --_qxframe9a7c2-seed-blue: var(--qxframe9a7c2-theme-blue, var(--qxframe9a7c2-theme-seed-blue));
+    --_qxframe9a7c2-seed-azure: var(--qxframe9a7c2-theme-azure, var(--qxframe9a7c2-theme-seed-azure));
+    --_qxframe9a7c2-seed-white: var(--qxframe9a7c2-theme-white, var(--qxframe9a7c2-theme-seed-white));
+    --_qxframe9a7c2-seed-black: var(--qxframe9a7c2-theme-black, var(--qxframe9a7c2-theme-seed-black));
+    --_qxframe9a7c2-seed-primary: var(--qxframe9a7c2-theme-primary, var(--_qxframe9a7c2-seed-blue));
+    --_qxframe9a7c2-seed-success: var(--qxframe9a7c2-theme-success, var(--_qxframe9a7c2-seed-teal));
+    --_qxframe9a7c2-seed-warning: var(--qxframe9a7c2-theme-warning, var(--_qxframe9a7c2-seed-orange));
+    --_qxframe9a7c2-seed-error: var(--qxframe9a7c2-theme-error, var(--_qxframe9a7c2-seed-red));
+    --_qxframe9a7c2-seed-info: var(--qxframe9a7c2-theme-info, var(--_qxframe9a7c2-seed-cyan));
+
+    /* Resolved Primary Palette. Public --theme-primary-N slots are optional, independent
+     * overrides. Missing tones are synthesized from the canonical one-seed contract.
+     * Numbering is stable: 1 darkest -> 13 lightest. The 5/6/7 and 8/9/10 anchors preserve
+     * the v2.19.29 Light/Dark active/hover/base transformations exactly. */
+    --_qxframe9a7c2-primary-1: var(--qxframe9a7c2-theme-primary-1, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 36%, black));
+    --_qxframe9a7c2-primary-2: var(--qxframe9a7c2-theme-primary-2, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 48%, black));
+    --_qxframe9a7c2-primary-3: var(--qxframe9a7c2-theme-primary-3, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 60%, black));
+    --_qxframe9a7c2-primary-4: var(--qxframe9a7c2-theme-primary-4, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 70%, black));
+    --_qxframe9a7c2-primary-5: var(--qxframe9a7c2-theme-primary-5, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 80%, black));
+    --_qxframe9a7c2-primary-6: var(--qxframe9a7c2-theme-primary-6, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 88%, black));
+    --_qxframe9a7c2-primary-7: var(--qxframe9a7c2-theme-primary-7, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 100%, black));
+    --_qxframe9a7c2-primary-8: var(--qxframe9a7c2-theme-primary-8, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 92%, white));
+    --_qxframe9a7c2-primary-9: var(--qxframe9a7c2-theme-primary-9, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 84%, white));
+    --_qxframe9a7c2-primary-10: var(--qxframe9a7c2-theme-primary-10, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 72%, white));
+    --_qxframe9a7c2-primary-11: var(--qxframe9a7c2-theme-primary-11, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 56%, white));
+    --_qxframe9a7c2-primary-12: var(--qxframe9a7c2-theme-primary-12, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 36%, white));
+    --_qxframe9a7c2-primary-13: var(--qxframe9a7c2-theme-primary-13, color-mix(in oklab, var(--_qxframe9a7c2-seed-primary) 16%, white));
+    --_qxframe9a7c2-primary-foreground-auto: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-primary-foreground: var(--qxframe9a7c2-theme-primary-foreground, var(--_qxframe9a7c2-primary-foreground-auto));
+
+    /* Neutral MIX strength. The v2.19.81-r2 tone curve is the canonical palette:
+     * each Grey tone carries 10–22% of its matching resolved Primary tone. This public
+     * percentage scales that original curve instead of replacing it with one flat tint.
+     * 100% = exact r2 MIX palette; 0% = pure Grey; 50% = half-strength r2 MIX. */
+    --_qxframe9a7c2-neutral-mix-ratio: var(--qxframe9a7c2-theme-neutral-mix-ratio, 100%);
+
+    /* Canonical r2 Auxiliary curve. Keep these base tones byte-for-byte equivalent to r2. */
+    --_qxframe9a7c2-auxiliary-base-1: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-1)) 90%, var(--_qxframe9a7c2-primary-1));
+    --_qxframe9a7c2-auxiliary-base-2: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-2)) 88%, var(--_qxframe9a7c2-primary-2));
+    --_qxframe9a7c2-auxiliary-base-3: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-3)) 86%, var(--_qxframe9a7c2-primary-3));
+    --_qxframe9a7c2-auxiliary-base-4: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-4)) 84%, var(--_qxframe9a7c2-primary-4));
+    --_qxframe9a7c2-auxiliary-base-5: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-5)) 82%, var(--_qxframe9a7c2-primary-5));
+    --_qxframe9a7c2-auxiliary-base-6: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-6)) 80%, var(--_qxframe9a7c2-primary-6));
+    --_qxframe9a7c2-auxiliary-base-7: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-7)) 78%, var(--_qxframe9a7c2-primary-7));
+    --_qxframe9a7c2-auxiliary-base-8: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-8)) 78%, var(--_qxframe9a7c2-primary-8));
+    --_qxframe9a7c2-auxiliary-base-9: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-9)) 80%, var(--_qxframe9a7c2-primary-9));
+    --_qxframe9a7c2-auxiliary-base-10: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-10)) 82%, var(--_qxframe9a7c2-primary-10));
+    --_qxframe9a7c2-auxiliary-base-11: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-11)) 84%, var(--_qxframe9a7c2-primary-11));
+    --_qxframe9a7c2-auxiliary-base-12: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-12)) 87%, var(--_qxframe9a7c2-primary-12));
+    --_qxframe9a7c2-auxiliary-base-13: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-13)) 90%, var(--_qxframe9a7c2-primary-13));
+
+    /* Scale the whole r2 curve toward pure Grey. At 100% the resulting tones are exactly
+     * the old palette; unlike the temporary flat-ratio implementation, tone relationships stay intact. */
+    --_qxframe9a7c2-auxiliary-1: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-1)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-1) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-2: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-2)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-2) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-3: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-3)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-3) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-4: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-4)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-4) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-5: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-5)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-5) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-6: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-6)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-6) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-7: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-7)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-7) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-8: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-8)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-8) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-9: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-9)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-9) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-10: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-10)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-10) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-11: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-11)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-11) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-12: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-12)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-12) var(--_qxframe9a7c2-neutral-mix-ratio));
+    --_qxframe9a7c2-auxiliary-13: color-mix(in oklab, rgb(var(--qxframe9a7c2-palette-grey-13)) calc(100% - var(--_qxframe9a7c2-neutral-mix-ratio)), var(--_qxframe9a7c2-auxiliary-base-13) var(--_qxframe9a7c2-neutral-mix-ratio));
+
+    --_qxframe9a7c2-neutral-1: var(--qxframe9a7c2-theme-neutral-1, var(--_qxframe9a7c2-auxiliary-1));
+    --_qxframe9a7c2-neutral-2: var(--qxframe9a7c2-theme-neutral-2, var(--_qxframe9a7c2-auxiliary-2));
+    --_qxframe9a7c2-neutral-3: var(--qxframe9a7c2-theme-neutral-3, var(--_qxframe9a7c2-auxiliary-3));
+    --_qxframe9a7c2-neutral-4: var(--qxframe9a7c2-theme-neutral-4, var(--_qxframe9a7c2-auxiliary-4));
+    --_qxframe9a7c2-neutral-5: var(--qxframe9a7c2-theme-neutral-5, var(--_qxframe9a7c2-auxiliary-5));
+    --_qxframe9a7c2-neutral-6: var(--qxframe9a7c2-theme-neutral-6, var(--_qxframe9a7c2-auxiliary-6));
+    --_qxframe9a7c2-neutral-7: var(--qxframe9a7c2-theme-neutral-7, var(--_qxframe9a7c2-auxiliary-7));
+    --_qxframe9a7c2-neutral-8: var(--qxframe9a7c2-theme-neutral-8, var(--_qxframe9a7c2-auxiliary-8));
+    --_qxframe9a7c2-neutral-9: var(--qxframe9a7c2-theme-neutral-9, var(--_qxframe9a7c2-auxiliary-9));
+    --_qxframe9a7c2-neutral-10: var(--qxframe9a7c2-theme-neutral-10, var(--_qxframe9a7c2-auxiliary-10));
+    --_qxframe9a7c2-neutral-11: var(--qxframe9a7c2-theme-neutral-11, var(--_qxframe9a7c2-auxiliary-11));
+    --_qxframe9a7c2-neutral-12: var(--qxframe9a7c2-theme-neutral-12, var(--_qxframe9a7c2-auxiliary-12));
+    --_qxframe9a7c2-neutral-13: var(--qxframe9a7c2-theme-neutral-13, var(--_qxframe9a7c2-auxiliary-13));
+
+    /* generated:layer-tokens:start */
+    --qxframe9a7c2-z-overlay-base: 19920510;
+    --qxframe9a7c2-z-popup-base: calc(var(--qxframe9a7c2-z-overlay-base) + 0);
+    --qxframe9a7c2-z-modal-base: calc(var(--qxframe9a7c2-z-overlay-base) + 10000);
+    --qxframe9a7c2-z-notice-base: calc(var(--qxframe9a7c2-z-overlay-base) + 20000);
+    --qxframe9a7c2-z-tooltip-base: calc(var(--qxframe9a7c2-z-overlay-base) + 30000);
+    --qxframe9a7c2-z-blocking-base: calc(var(--qxframe9a7c2-z-overlay-base) + 40000);
+    --qxframe9a7c2-z-local-base: 0;
+    --qxframe9a7c2-z-local-raised: 1;
+    --qxframe9a7c2-z-local-above: 2;
+    --qxframe9a7c2-z-local-overlay: 3;
+    --qxframe9a7c2-z-local-focus: 4;
+    --qxframe9a7c2-z-local-active: 5;
+    --qxframe9a7c2-z-local-loading-mask: 8;
+    --qxframe9a7c2-z-local-loading-indicator: 9;
+    /* generated:layer-tokens:end */
+  }
+
+  /* Cross-browser foreground fallback for arbitrary primary seeds. Relative OKLCH is
+   * substantially more available than contrast-color(); where supported it deterministically
+   * selects black for light seeds and white for dark seeds. Public foreground override remains
+   * authoritative, and older engines retain the historical white fallback. */
+  @supports (color: oklch(from white l c h)) {
+    :root,[data-qxframe9a7c2-theme] {
+      --_qxframe9a7c2-primary-foreground-auto: oklch(from var(--_qxframe9a7c2-seed-primary) clamp(0, calc((0.62 - l) * 1000), 1) 0 h);
+    }
+  }
+  @supports (color: contrast-color(red)) {
+    :root,[data-qxframe9a7c2-theme] {
+      --_qxframe9a7c2-primary-foreground-auto: contrast-color(var(--_qxframe9a7c2-seed-primary));
+    }
+  }
+
+  /* Built-in standard theme preset.
+   * Resolution order is: user theme slot -> clean standard preset -> mixed Neutral/Auxiliary.
+   * Keeping the mixed value last makes the tint algorithm a resilient fallback without making
+   * ordinary Light/Dark surfaces look tinted during normal use. */
+  :root,[data-qxframe9a7c2-theme] {
+    --_qxframe9a7c2-standard-light-bg: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-standard-light-surface: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-standard-light-surface-raised: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-standard-dark-bg: rgb(var(--qxframe9a7c2-palette-black));
+    --_qxframe9a7c2-standard-dark-surface: rgb(var(--qxframe9a7c2-palette-black));
+    --_qxframe9a7c2-standard-dark-surface-raised: rgb(var(--qxframe9a7c2-palette-black));
+  }
+
+  /* Mode recipe: solid tones use perceptual OKLab mixing; translucent channels mix with
+   * transparent in sRGB. Neutral base inputs are stored as paired Light/Dark slots so a
+   * global mode switch never leaks one mode's public semantic values into a nested boundary. */
+  :root,[data-qxframe9a7c2-theme="light"],[data-qxframe9a7c2-theme="light"] {
+    color-scheme: light;
+    --_qxframe9a7c2-accent-tone-target: black;
+    --_qxframe9a7c2-accent-base-weight: 100%;
+    --_qxframe9a7c2-accent-hover-weight: 88%;
+    --_qxframe9a7c2-accent-active-weight: 80%;
+    --_qxframe9a7c2-accent-soft-weight: 12%;
+    --_qxframe9a7c2-accent-soft-hover-weight: 18%;
+    --_qxframe9a7c2-accent-border-weight: 32%;
+    --_qxframe9a7c2-accent-ring-weight: 24%;
+    --_qxframe9a7c2-mode-bg: var(--qxframe9a7c2-theme-light-bg, var(--_qxframe9a7c2-standard-light-bg, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-surface: var(--qxframe9a7c2-theme-light-surface, var(--_qxframe9a7c2-standard-light-surface, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-surface-raised: var(--qxframe9a7c2-theme-light-surface-raised, var(--_qxframe9a7c2-standard-light-surface-raised, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-surface-muted: var(--qxframe9a7c2-theme-light-surface-muted, var(--_qxframe9a7c2-neutral-12));
+    --_qxframe9a7c2-mode-text: var(--qxframe9a7c2-theme-light-text, var(--_qxframe9a7c2-neutral-2));
+    --_qxframe9a7c2-mode-text-secondary: var(--qxframe9a7c2-theme-light-text-secondary, var(--_qxframe9a7c2-neutral-5));
+    --_qxframe9a7c2-mode-text-muted: var(--qxframe9a7c2-theme-light-text-muted, var(--_qxframe9a7c2-neutral-6));
+    --_qxframe9a7c2-mode-text-placeholder: var(--qxframe9a7c2-theme-light-text-placeholder, var(--_qxframe9a7c2-neutral-7));
+    --_qxframe9a7c2-mode-border: var(--qxframe9a7c2-theme-light-border, var(--_qxframe9a7c2-neutral-9));
+    --_qxframe9a7c2-mode-border-subtle: var(--qxframe9a7c2-theme-light-border-subtle, var(--_qxframe9a7c2-neutral-10));
+    --_qxframe9a7c2-mode-border-strong: var(--qxframe9a7c2-theme-light-border-strong, var(--_qxframe9a7c2-neutral-8));
+    --_qxframe9a7c2-mode-default-solid: var(--qxframe9a7c2-theme-light-default-solid, var(--_qxframe9a7c2-neutral-2));
+    --_qxframe9a7c2-mode-default-solid-hover: var(--qxframe9a7c2-theme-light-default-solid-hover, var(--_qxframe9a7c2-neutral-1));
+    --_qxframe9a7c2-mode-default-solid-focus: var(--qxframe9a7c2-theme-light-default-solid-focus, var(--_qxframe9a7c2-neutral-2));
+    --_qxframe9a7c2-mode-default-solid-active: var(--qxframe9a7c2-theme-light-default-solid-active, var(--_qxframe9a7c2-neutral-1));
+    --_qxframe9a7c2-mode-default-solid-text: var(--qxframe9a7c2-theme-light-default-solid-text, var(--_qxframe9a7c2-neutral-13));
+    --_qxframe9a7c2-mode-default-solid-disabled-text: var(--qxframe9a7c2-theme-light-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8));
+    --_qxframe9a7c2-mode-accent: var(--_qxframe9a7c2-primary-7);
+    --_qxframe9a7c2-mode-accent-hover: var(--_qxframe9a7c2-primary-6);
+    --_qxframe9a7c2-mode-accent-active: var(--_qxframe9a7c2-primary-5);
+    --_qxframe9a7c2-mode-success: var(--_qxframe9a7c2-seed-success);
+    --_qxframe9a7c2-mode-warning: var(--_qxframe9a7c2-seed-warning);
+    --_qxframe9a7c2-mode-error: var(--_qxframe9a7c2-seed-error);
+    --_qxframe9a7c2-mode-info: var(--_qxframe9a7c2-seed-info);
+    --_qxframe9a7c2-mode-success-hover: color-mix(in oklab, var(--_qxframe9a7c2-mode-success) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-success-active: color-mix(in oklab, var(--_qxframe9a7c2-mode-success) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-warning-hover: color-mix(in oklab, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-warning-active: color-mix(in oklab, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-error-hover: color-mix(in oklab, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-error-active: color-mix(in oklab, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-info-hover: color-mix(in oklab, var(--_qxframe9a7c2-mode-info) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-info-active: color-mix(in oklab, var(--_qxframe9a7c2-mode-info) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-accent-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-accent-soft-hover: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-soft-hover-weight), transparent);
+    --_qxframe9a7c2-mode-accent-border: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-border-weight), transparent);
+    --_qxframe9a7c2-mode-accent-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-mode-success-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-success) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-warning-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-error-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-info-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-info) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-on-accent: var(--_qxframe9a7c2-primary-foreground);
+    --_qxframe9a7c2-on-grey: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-gray: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-cyan: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-teal: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-green: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-lime: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-yellow: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-orange: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-red: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-pink: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-purple: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-blue: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-azure: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-white: rgb(var(--qxframe9a7c2-palette-black));
+    --_qxframe9a7c2-on-black: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-success: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-warning: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-error: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-info: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-mode-subtle: var(--_qxframe9a7c2-neutral-12);
+    --_qxframe9a7c2-mode-subtle-hover: var(--_qxframe9a7c2-neutral-11);
+    --_qxframe9a7c2-mode-subtle-active: var(--_qxframe9a7c2-neutral-10);
+    --_qxframe9a7c2-mode-text-disabled: var(--_qxframe9a7c2-neutral-7);
+    --_qxframe9a7c2-mode-bg-disabled: var(--_qxframe9a7c2-neutral-12);
+    --_qxframe9a7c2-mode-border-disabled: var(--_qxframe9a7c2-neutral-10);
+    --_qxframe9a7c2-mode-mask: rgba(var(--qxframe9a7c2-palette-black), .45);
+    --_qxframe9a7c2-mode-mask-strong: rgba(var(--qxframe9a7c2-palette-black), .78);
+    --_qxframe9a7c2-mode-overlay-control: rgba(var(--qxframe9a7c2-palette-black), .52);
+    --_qxframe9a7c2-mode-overlay-control-hover: rgba(var(--qxframe9a7c2-palette-black), .70);
+    --_qxframe9a7c2-mode-overlay-divider: rgba(var(--qxframe9a7c2-palette-white), .18);
+    --_qxframe9a7c2-mode-tooltip-bg: rgba(var(--qxframe9a7c2-palette-black), .88);
+    --_qxframe9a7c2-mode-loading-mask: color-mix(in srgb, var(--_qxframe9a7c2-mode-bg) 74%, transparent);
+    --_qxframe9a7c2-mode-code-bg: var(--_qxframe9a7c2-neutral-1);
+    --_qxframe9a7c2-mode-focus-ring-color: var(--_qxframe9a7c2-mode-accent-ring-color);
+    --_qxframe9a7c2-mode-focus-visible: rgb(var(--qxframe9a7c2-palette-black));
+    --_qxframe9a7c2-mode-error-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-mode-warning-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-mode-popup-shadow: 0 .75rem 2rem color-mix(in srgb, var(--_qxframe9a7c2-neutral-1) 18%, transparent);
+    --_qxframe9a7c2-ripple-default-inside: rgba(var(--qxframe9a7c2-palette-black), .22);
+    --_qxframe9a7c2-ripple-default-outside: rgba(var(--qxframe9a7c2-palette-black), .38);
+    --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
+    --qxframe9a7c2-ripple-inside-color: var(--_qxframe9a7c2-ripple-default-inside);
+    --qxframe9a7c2-ripple-outside-color: var(--_qxframe9a7c2-ripple-default-outside);
+    --qxframe9a7c2-ripple-outside-opacity: 1;
+  }
+
+  [data-qxframe9a7c2-theme="dark"],[data-qxframe9a7c2-theme="dark"] {
+    color-scheme: dark;
+    --_qxframe9a7c2-accent-tone-target: white;
+    --_qxframe9a7c2-accent-base-weight: 84%;
+    --_qxframe9a7c2-accent-hover-weight: 72%;
+    --_qxframe9a7c2-accent-active-weight: 92%;
+    --_qxframe9a7c2-accent-soft-weight: 22%;
+    --_qxframe9a7c2-accent-soft-hover-weight: 30%;
+    --_qxframe9a7c2-accent-border-weight: 46%;
+    --_qxframe9a7c2-accent-ring-weight: 30%;
+    --_qxframe9a7c2-mode-bg: var(--qxframe9a7c2-theme-dark-bg, var(--_qxframe9a7c2-standard-dark-bg, var(--_qxframe9a7c2-neutral-1)));
+    --_qxframe9a7c2-mode-surface: var(--qxframe9a7c2-theme-dark-surface, var(--_qxframe9a7c2-standard-dark-surface, var(--_qxframe9a7c2-mode-bg)));
+    --_qxframe9a7c2-mode-surface-raised: var(--qxframe9a7c2-theme-dark-surface-raised, var(--_qxframe9a7c2-standard-dark-surface-raised, var(--_qxframe9a7c2-neutral-2)));
+    --_qxframe9a7c2-mode-surface-muted: var(--qxframe9a7c2-theme-dark-surface-muted, var(--_qxframe9a7c2-neutral-2));
+    --_qxframe9a7c2-mode-text: var(--qxframe9a7c2-theme-dark-text, var(--_qxframe9a7c2-neutral-13));
+    --_qxframe9a7c2-mode-text-secondary: var(--qxframe9a7c2-theme-dark-text-secondary, var(--_qxframe9a7c2-neutral-9));
+    --_qxframe9a7c2-mode-text-muted: var(--qxframe9a7c2-theme-dark-text-muted, var(--_qxframe9a7c2-neutral-7));
+    --_qxframe9a7c2-mode-text-placeholder: var(--qxframe9a7c2-theme-dark-text-placeholder, var(--_qxframe9a7c2-neutral-6));
+    --_qxframe9a7c2-mode-border: var(--qxframe9a7c2-theme-dark-border, var(--_qxframe9a7c2-neutral-4));
+    --_qxframe9a7c2-mode-border-subtle: var(--qxframe9a7c2-theme-dark-border-subtle, var(--_qxframe9a7c2-neutral-3));
+    --_qxframe9a7c2-mode-border-strong: var(--qxframe9a7c2-theme-dark-border-strong, var(--_qxframe9a7c2-neutral-5));
+    --_qxframe9a7c2-mode-default-solid: var(--qxframe9a7c2-theme-dark-default-solid, var(--_qxframe9a7c2-neutral-5));
+    --_qxframe9a7c2-mode-default-solid-hover: var(--qxframe9a7c2-theme-dark-default-solid-hover, var(--_qxframe9a7c2-neutral-6));
+    --_qxframe9a7c2-mode-default-solid-focus: var(--qxframe9a7c2-theme-dark-default-solid-focus, var(--_qxframe9a7c2-neutral-5));
+    --_qxframe9a7c2-mode-default-solid-active: var(--qxframe9a7c2-theme-dark-default-solid-active, var(--_qxframe9a7c2-neutral-4));
+    --_qxframe9a7c2-mode-default-solid-text: var(--qxframe9a7c2-theme-dark-default-solid-text, var(--_qxframe9a7c2-neutral-13));
+    --_qxframe9a7c2-mode-default-solid-disabled-text: var(--qxframe9a7c2-theme-dark-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8));
+    --_qxframe9a7c2-mode-accent: var(--_qxframe9a7c2-primary-9);
+    --_qxframe9a7c2-mode-accent-hover: var(--_qxframe9a7c2-primary-10);
+    --_qxframe9a7c2-mode-accent-active: var(--_qxframe9a7c2-primary-8);
+    --_qxframe9a7c2-mode-success: color-mix(in oklab, var(--_qxframe9a7c2-seed-success) var(--_qxframe9a7c2-accent-base-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-warning: color-mix(in oklab, var(--_qxframe9a7c2-seed-warning) var(--_qxframe9a7c2-accent-base-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-error: color-mix(in oklab, var(--_qxframe9a7c2-seed-error) var(--_qxframe9a7c2-accent-base-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-info: color-mix(in oklab, var(--_qxframe9a7c2-seed-info) var(--_qxframe9a7c2-accent-base-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-success-hover: color-mix(in oklab, var(--_qxframe9a7c2-seed-success) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-success-active: color-mix(in oklab, var(--_qxframe9a7c2-seed-success) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-warning-hover: color-mix(in oklab, var(--_qxframe9a7c2-seed-warning) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-warning-active: color-mix(in oklab, var(--_qxframe9a7c2-seed-warning) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-error-hover: color-mix(in oklab, var(--_qxframe9a7c2-seed-error) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-error-active: color-mix(in oklab, var(--_qxframe9a7c2-seed-error) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-info-hover: color-mix(in oklab, var(--_qxframe9a7c2-seed-info) var(--_qxframe9a7c2-accent-hover-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-info-active: color-mix(in oklab, var(--_qxframe9a7c2-seed-info) var(--_qxframe9a7c2-accent-active-weight), var(--_qxframe9a7c2-accent-tone-target));
+    --_qxframe9a7c2-mode-accent-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-accent-soft-hover: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-soft-hover-weight), transparent);
+    --_qxframe9a7c2-mode-accent-border: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-border-weight), transparent);
+    --_qxframe9a7c2-mode-accent-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-accent) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-mode-success-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-success) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-warning-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-error-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-info-soft: color-mix(in srgb, var(--_qxframe9a7c2-mode-info) var(--_qxframe9a7c2-accent-soft-weight), transparent);
+    --_qxframe9a7c2-mode-on-accent: var(--_qxframe9a7c2-primary-foreground);
+    --_qxframe9a7c2-on-grey: rgb(var(--qxframe9a7c2-palette-black));
+    --_qxframe9a7c2-on-gray: rgb(var(--qxframe9a7c2-palette-black));
+    --_qxframe9a7c2-on-cyan: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-teal: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-green: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-lime: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-yellow: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-orange: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-red: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-pink: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-purple: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-blue: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-azure: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-white: rgb(var(--qxframe9a7c2-palette-black));
+    --_qxframe9a7c2-on-black: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-success: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-warning: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-error: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-on-info: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-mode-subtle: var(--_qxframe9a7c2-neutral-2);
+    --_qxframe9a7c2-mode-subtle-hover: var(--_qxframe9a7c2-neutral-2);
+    --_qxframe9a7c2-mode-subtle-active: var(--_qxframe9a7c2-neutral-3);
+    --_qxframe9a7c2-mode-text-disabled: var(--_qxframe9a7c2-neutral-5);
+    --_qxframe9a7c2-mode-bg-disabled: var(--_qxframe9a7c2-neutral-2);
+    --_qxframe9a7c2-mode-border-disabled: var(--_qxframe9a7c2-neutral-4);
+    --_qxframe9a7c2-mode-mask: rgba(var(--qxframe9a7c2-palette-black), .45);
+    --_qxframe9a7c2-mode-mask-strong: rgba(var(--qxframe9a7c2-palette-black), .78);
+    --_qxframe9a7c2-mode-overlay-control: rgba(var(--qxframe9a7c2-palette-black), .52);
+    --_qxframe9a7c2-mode-overlay-control-hover: rgba(var(--qxframe9a7c2-palette-black), .70);
+    --_qxframe9a7c2-mode-overlay-divider: rgba(var(--qxframe9a7c2-palette-white), .18);
+    --_qxframe9a7c2-mode-tooltip-bg: rgba(var(--qxframe9a7c2-palette-black), .88);
+    --_qxframe9a7c2-mode-loading-mask: color-mix(in srgb, var(--_qxframe9a7c2-mode-bg) 74%, transparent);
+    --_qxframe9a7c2-mode-code-bg: var(--_qxframe9a7c2-neutral-1);
+    --_qxframe9a7c2-mode-focus-ring-color: var(--_qxframe9a7c2-mode-accent-ring-color);
+    --_qxframe9a7c2-mode-focus-visible: rgb(var(--qxframe9a7c2-palette-white));
+    --_qxframe9a7c2-mode-error-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-mode-warning-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-mode-popup-shadow: 0 .875rem 2.625rem color-mix(in srgb, var(--_qxframe9a7c2-neutral-1) 46%, transparent);
+    --_qxframe9a7c2-ripple-default-inside: rgba(var(--qxframe9a7c2-palette-white), .22);
+    --_qxframe9a7c2-ripple-default-outside: rgba(var(--qxframe9a7c2-palette-white), .38);
+    --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
+    --qxframe9a7c2-ripple-inside-color: var(--_qxframe9a7c2-ripple-default-inside);
+    --qxframe9a7c2-ripple-outside-color: var(--_qxframe9a7c2-ripple-default-outside);
+    --qxframe9a7c2-ripple-outside-opacity: 1;
+  }
+
+
+  /* Theme Boundary resolver. Public slots are intentionally never assigned here. */
+  :root,[data-qxframe9a7c2-theme] {
+    --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-semantic-bg, var(--qxframe9a7c2-theme-base, var(--_qxframe9a7c2-mode-bg)));
+    --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-semantic-surface, var(--_qxframe9a7c2-mode-surface));
+    --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-semantic-surface-raised, var(--_qxframe9a7c2-mode-surface-raised));
+    --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-semantic-surface-muted, var(--_qxframe9a7c2-mode-surface-muted));
+    --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-semantic-text, var(--_qxframe9a7c2-mode-text));
+    --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-semantic-text-secondary, var(--_qxframe9a7c2-mode-text-secondary));
+    --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-semantic-text-muted, var(--_qxframe9a7c2-mode-text-muted));
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-semantic-text-placeholder, var(--_qxframe9a7c2-mode-text-placeholder));
+    --_qxframe9a7c2-semantic-text-inverse: var(--qxframe9a7c2-semantic-text-inverse, rgb(var(--qxframe9a7c2-palette-white)));
+    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-semantic-border, var(--_qxframe9a7c2-mode-border));
+    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-semantic-border-subtle, var(--_qxframe9a7c2-mode-border-subtle));
+    --_qxframe9a7c2-semantic-border-strong: var(--qxframe9a7c2-semantic-border-strong, var(--_qxframe9a7c2-mode-border-strong));
+    --_qxframe9a7c2-semantic-accent: var(--qxframe9a7c2-semantic-accent, var(--_qxframe9a7c2-mode-accent));
+    --_qxframe9a7c2-semantic-accent-hover: var(--qxframe9a7c2-semantic-accent-hover, var(--_qxframe9a7c2-mode-accent-hover));
+    --_qxframe9a7c2-semantic-accent-active: var(--qxframe9a7c2-semantic-accent-active, var(--_qxframe9a7c2-mode-accent-active));
+    --_qxframe9a7c2-semantic-focus: var(--qxframe9a7c2-semantic-focus, var(--_qxframe9a7c2-semantic-accent));
+    --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-semantic-focus-visible, var(--_qxframe9a7c2-mode-focus-visible));
+    --_qxframe9a7c2-semantic-success: var(--qxframe9a7c2-semantic-success, var(--_qxframe9a7c2-mode-success));
+    --_qxframe9a7c2-semantic-warning: var(--qxframe9a7c2-semantic-warning, var(--_qxframe9a7c2-mode-warning));
+    --_qxframe9a7c2-semantic-error: var(--qxframe9a7c2-semantic-error, var(--_qxframe9a7c2-mode-error));
+    --_qxframe9a7c2-semantic-info: var(--qxframe9a7c2-semantic-info, var(--_qxframe9a7c2-mode-info));
+    --_qxframe9a7c2-semantic-success-hover: var(--qxframe9a7c2-semantic-success-hover, var(--_qxframe9a7c2-mode-success-hover));
+    --_qxframe9a7c2-semantic-success-active: var(--qxframe9a7c2-semantic-success-active, var(--_qxframe9a7c2-mode-success-active));
+    --_qxframe9a7c2-semantic-warning-hover: var(--qxframe9a7c2-semantic-warning-hover, var(--_qxframe9a7c2-mode-warning-hover));
+    --_qxframe9a7c2-semantic-warning-active: var(--qxframe9a7c2-semantic-warning-active, var(--_qxframe9a7c2-mode-warning-active));
+    --_qxframe9a7c2-semantic-error-hover: var(--qxframe9a7c2-semantic-error-hover, var(--_qxframe9a7c2-mode-error-hover));
+    --_qxframe9a7c2-semantic-error-active: var(--qxframe9a7c2-semantic-error-active, var(--_qxframe9a7c2-mode-error-active));
+    --_qxframe9a7c2-semantic-info-hover: var(--qxframe9a7c2-semantic-info-hover, var(--_qxframe9a7c2-mode-info-hover));
+    --_qxframe9a7c2-semantic-info-active: var(--qxframe9a7c2-semantic-info-active, var(--_qxframe9a7c2-mode-info-active));
+    --_qxframe9a7c2-semantic-accent-border: var(--qxframe9a7c2-semantic-accent-border, color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) var(--_qxframe9a7c2-accent-border-weight), transparent));
+    --_qxframe9a7c2-semantic-accent-ring-color: var(--qxframe9a7c2-semantic-accent-ring-color, color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) var(--_qxframe9a7c2-accent-ring-weight), transparent));
+    --_qxframe9a7c2-semantic-on-accent: var(--qxframe9a7c2-semantic-on-accent, var(--_qxframe9a7c2-mode-on-accent, var(--_qxframe9a7c2-semantic-bg)));
+    --_qxframe9a7c2-semantic-on-status: var(--qxframe9a7c2-semantic-on-status, rgb(var(--qxframe9a7c2-palette-white)));
+
+    --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-semantic-subtle, color-mix(in srgb, var(--_qxframe9a7c2-semantic-text) 4%, var(--_qxframe9a7c2-semantic-bg)));
+    --_qxframe9a7c2-semantic-subtle-hover: var(--qxframe9a7c2-semantic-subtle-hover, color-mix(in srgb, var(--_qxframe9a7c2-semantic-text) 7%, var(--_qxframe9a7c2-semantic-bg)));
+    --_qxframe9a7c2-semantic-subtle-active: var(--qxframe9a7c2-semantic-subtle-active, color-mix(in srgb, var(--_qxframe9a7c2-semantic-text) 11%, var(--_qxframe9a7c2-semantic-bg)));
+    --_qxframe9a7c2-semantic-accent-soft: var(--qxframe9a7c2-semantic-accent-soft, color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) var(--_qxframe9a7c2-accent-soft-weight), transparent));
+    --_qxframe9a7c2-semantic-accent-soft-hover: var(--qxframe9a7c2-semantic-accent-soft-hover, color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) var(--_qxframe9a7c2-accent-soft-hover-weight), transparent));
+    --_qxframe9a7c2-semantic-success-soft: var(--qxframe9a7c2-semantic-success-soft, color-mix(in srgb, var(--_qxframe9a7c2-semantic-success) var(--_qxframe9a7c2-accent-soft-weight), transparent));
+    --_qxframe9a7c2-semantic-warning-soft: var(--qxframe9a7c2-semantic-warning-soft, color-mix(in srgb, var(--_qxframe9a7c2-semantic-warning) var(--_qxframe9a7c2-accent-soft-weight), transparent));
+    --_qxframe9a7c2-semantic-error-soft: var(--qxframe9a7c2-semantic-error-soft, color-mix(in srgb, var(--_qxframe9a7c2-semantic-error) var(--_qxframe9a7c2-accent-soft-weight), transparent));
+    --_qxframe9a7c2-semantic-info-soft: var(--qxframe9a7c2-semantic-info-soft, color-mix(in srgb, var(--_qxframe9a7c2-semantic-info) var(--_qxframe9a7c2-accent-soft-weight), transparent));
+    --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-semantic-surface-hover, var(--_qxframe9a7c2-semantic-subtle-hover));
+    --_qxframe9a7c2-semantic-border-hover: var(--qxframe9a7c2-semantic-border-hover, var(--_qxframe9a7c2-semantic-border-strong));
+    --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-semantic-text-disabled, color-mix(in srgb, var(--_qxframe9a7c2-semantic-text) 32%, var(--_qxframe9a7c2-semantic-bg)));
+    --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-semantic-bg-disabled, color-mix(in srgb, var(--_qxframe9a7c2-semantic-text) 5%, var(--_qxframe9a7c2-semantic-bg)));
+    --_qxframe9a7c2-semantic-border-disabled: var(--qxframe9a7c2-semantic-border-disabled, color-mix(in srgb, var(--_qxframe9a7c2-semantic-text) 11%, var(--_qxframe9a7c2-semantic-bg)));
+    --_qxframe9a7c2-semantic-bg-readonly: var(--qxframe9a7c2-semantic-bg-readonly, var(--_qxframe9a7c2-semantic-subtle));
+
+    --_qxframe9a7c2-semantic-overlay-base: var(--qxframe9a7c2-semantic-overlay-base, rgb(var(--qxframe9a7c2-palette-black)));
+    --_qxframe9a7c2-semantic-overlay-text: var(--qxframe9a7c2-semantic-overlay-text, rgb(var(--qxframe9a7c2-palette-white)));
+    --_qxframe9a7c2-semantic-mask: var(--qxframe9a7c2-semantic-mask, color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 45%, transparent));
+    --_qxframe9a7c2-semantic-mask-strong: var(--qxframe9a7c2-semantic-mask-strong, color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 78%, transparent));
+    --_qxframe9a7c2-semantic-overlay-control: var(--qxframe9a7c2-semantic-overlay-control, color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 52%, transparent));
+    --_qxframe9a7c2-semantic-overlay-control-hover: var(--qxframe9a7c2-semantic-overlay-control-hover, color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 70%, transparent));
+    --_qxframe9a7c2-semantic-overlay-divider: var(--qxframe9a7c2-semantic-overlay-divider, color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-text) 18%, transparent));
+    --_qxframe9a7c2-semantic-tooltip-bg: var(--qxframe9a7c2-semantic-tooltip-bg, color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 88%, transparent));
+    --_qxframe9a7c2-semantic-loading-mask: var(--qxframe9a7c2-semantic-loading-mask, var(--_qxframe9a7c2-mode-loading-mask));
+    --_qxframe9a7c2-semantic-code-bg: var(--qxframe9a7c2-semantic-code-bg, var(--_qxframe9a7c2-mode-code-bg));
+
+    --_qxframe9a7c2-focus-ring-size: var(--qxframe9a7c2-theme-focus-ring-size, 2px);
+    --_qxframe9a7c2-focus-visible-width: var(--qxframe9a7c2-focus-visible-width, 2px);
+    --_qxframe9a7c2-focus-visible-offset: var(--qxframe9a7c2-focus-visible-offset, -1px);
+    --_qxframe9a7c2-focus-visible-outline: var(--_qxframe9a7c2-focus-visible-width) solid var(--_qxframe9a7c2-semantic-focus-visible);
+    --_qxframe9a7c2-focus-ring: 0 0 0 var(--_qxframe9a7c2-focus-ring-size) color-mix(in srgb, var(--_qxframe9a7c2-semantic-focus) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-validation-error-ring: 0 0 0 var(--_qxframe9a7c2-focus-ring-size) color-mix(in srgb, var(--_qxframe9a7c2-semantic-error) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-validation-warning-ring: 0 0 0 var(--_qxframe9a7c2-focus-ring-size) color-mix(in srgb, var(--_qxframe9a7c2-semantic-warning) var(--_qxframe9a7c2-accent-ring-weight), transparent);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-family-popup-shadow, var(--_qxframe9a7c2-mode-popup-shadow));
+    --_qxframe9a7c2-overlay-shadow: var(--qxframe9a7c2-family-surface-overlay-shadow, 0 1.25rem 3.75rem color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 22%, transparent));
+    --_qxframe9a7c2-font-family: var(--qxframe9a7c2-theme-font-family, inherit);
+  }
+

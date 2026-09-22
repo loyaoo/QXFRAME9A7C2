@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN" class="qxframe9a7c2-theme-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QXFRAME9A7C2 · Stage 03 · Pure Headless</title>
+
+
+<link rel="stylesheet" href="../dist/qxframe9a7c2.css" data-qxframe9a7c2-runtime="dist">
+<link rel="stylesheet" href="./assets/qxframe9a7c2-docs.css">
+</head>
+<body><main class="qxframe9a7c2-docs-shell">
+<header class="qxframe9a7c2-docs-header"><div><div class="qxframe9a7c2-docs-kicker">Stage 03 · v1.8 Clean Rebaseline</div><h1 class="qxframe9a7c2-docs-title">Generic Pure Headless 测试台</h1><p class="qxframe9a7c2-docs-subtitle">观察 Collection / Selection / ValueDraft / ActiveItem / TreeModel / PaginationModel / AsyncTask 的独立状态边界。</p></div></header>
+<section class="qxframe9a7c2-docs-demo-grid">
+<article class="qxframe9a7c2-docs-card"><h2>ActiveItem</h2><p>初始化不自动选第一项；点击按钮后才建立 Interaction Cursor。</p><button id="stage03-active-prev">previous()</button> <button id="stage03-active-next">next()</button><pre id="stage03-active-state"></pre></article>
+<article class="qxframe9a7c2-docs-card"><h2>ValueDraft</h2><input id="stage03-value-input"><button id="stage03-value-commit">commit()</button><button id="stage03-value-cancel">cancel()</button><pre id="stage03-value-state"></pre></article>
+<article class="qxframe9a7c2-docs-card"><h2>PaginationModel</h2><button id="stage03-page-prev">previous()</button><button id="stage03-page-next">next()</button><pre id="stage03-page-state"></pre></article>
+<article class="qxframe9a7c2-docs-card"><h2>AsyncTask</h2><button id="stage03-async-run">run()</button><button id="stage03-async-reset">reset()</button><pre id="stage03-async-state"></pre></article>
+<article class="qxframe9a7c2-docs-card"><h2>Collection</h2><button id="stage03-collection-move">移动 Alpha</button><pre id="stage03-collection-state"></pre></article>
+<article class="qxframe9a7c2-docs-card"><h2>Selection</h2><button id="stage03-selection-alpha">Alpha</button><button id="stage03-selection-bravo">Bravo</button><button id="stage03-selection-charlie">Charlie</button><pre id="stage03-selection-state"></pre></article>
+<article class="qxframe9a7c2-docs-card"><h2>TreeModel</h2><pre id="stage03-tree-state"></pre></article>
+<article class="qxframe9a7c2-docs-card"><h2>事件日志</h2><pre id="stage03-logs"></pre></article>
+</section>
+<p><a href="../tests/stage-03.html">打开 Stage 03 浏览器回归</a></p>
+</main>
+<script src="../dist/qxframe9a7c2.js" data-qxframe9a7c2-runtime="dist"></script>
+<script src="./assets/qxframe9a7c2-docs.js"></script>
+
+
+<script src="./assets/qxframe9a7c2-stage-03.js"></script>
+</body></html>

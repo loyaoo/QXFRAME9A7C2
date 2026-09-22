@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "name": "alert",
+      "module": "alert",
+      "modules": [
+        "icon"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "avatar",
+      "module": "avatar",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "badge",
+      "module": "badge",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "button",
+      "module": "button",
+      "modules": [
+        "core",
+        "ripple"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "card",
+      "module": "card",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "checkbox",
+      "module": "checkbox",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "descriptions",
+      "module": "descriptions",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "empty",
+      "module": "empty",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "form",
+      "module": "form",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "grid",
+      "module": "grid",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "icon",
+      "module": "icon",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "layout",
+      "module": "layout",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    },
+    {
+      "name": "radio",
+      "module": "radio",
+      "modules": [
+        "core"
+      ],
+      "capabilities": {}
+    }
+  ]
+}

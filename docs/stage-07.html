@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN" class="qxframe9a7c2-theme-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QXFRAME9A7C2 · Stage 07 Visible Building Blocks</title>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="../dist/qxframe9a7c2.css" data-qxframe9a7c2-runtime="dist">
+<link rel="stylesheet" href="assets/qxframe9a7c2-docs.css">
+<style>
+.s7-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:1rem}.s7-host{min-width:0}.s7-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:.75rem 0}.s7-code{white-space:pre-wrap;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}.s7-log{max-height:18rem;overflow:auto}.s7-note{padding:.75rem;border-left:3px solid var(--qxframe9a7c2-color-primary);background:var(--qxframe9a7c2-color-primary-soft)}.s7-dark-card{padding:1rem;background:var(--qxframe9a7c2-color-surface);border:1px solid var(--qxframe9a7c2-color-border);border-radius:var(--qxframe9a7c2-component-radius)}
+</style>
+</head>
+<body>
+<main class="qxframe9a7c2-docs-shell">
+<header class="qxframe9a7c2-docs-header">
+<div><div class="qxframe9a7c2-docs-kicker">Stage 07 · Visible Building Blocks</div><h1 class="qxframe9a7c2-docs-title">VirtualList + List + Pagination + Menu + Picker-family</h1><p class="qxframe9a7c2-docs-subtitle">Stage 07 在已通过的 VirtualList / List / Pagination / Menu 基础上补齐 Picker-family 可复用层：OptionList、Calendar、TimePanel、ColorPanel；Select / DatePicker / TimePicker / ColorPicker 仍留在 Stage 08。</p></div>
+<button id="theme-toggle" class="qxframe9a7c2-button is-primary is-outlined is-sm" type="button">切换 Light / Dark</button>
+</header>
+
+<section class="qxframe9a7c2-docs-section qxframe9a7c2-docs-card">
+<h2>Interaction Contract</h2>
+<div class="s7-note"><code>Arrow / Home / End / Page → activeKey → .is-active → ensureVisible(nearest)</code><br><code>Enter / Space / Click → activation → List selection/value</code></div>
+<p>真实 DOM focus 停留在稳定的搜索输入框或列表 viewport；动态 item 不使用 roving focus，也不通过 DOM class 反推业务状态。</p>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>VirtualList · Standalone</h2>
+<div class="s7-grid"><div class="qxframe9a7c2-docs-card"><div id="virtual-host" class="s7-host"></div></div><div class="qxframe9a7c2-docs-card"><h3>当前状态</h3><pre id="virtual-state" class="qxframe9a7c2-docs-output s7-code"></pre><div class="s7-actions"><button id="virtual-0" class="qxframe9a7c2-button is-primary is-outlined is-sm">scrollToIndex(0)</button><button id="virtual-50000" class="qxframe9a7c2-button is-primary is-outlined is-sm">scrollToIndex(50000)</button><button id="virtual-last" class="qxframe9a7c2-button is-primary is-outlined is-sm">ensureVisible(99999)</button></div></div></div>
+<p>数据量：<strong>100000</strong>。DOM 只保留当前可见范围与 overscan；VirtualList 不理解 selection、activeKey 或 List 业务。</p>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>List · Standalone</h2>
+<div class="s7-grid"><div class="qxframe9a7c2-docs-card"><div id="list-host" class="s7-host"></div></div><div class="qxframe9a7c2-docs-card"><h3>State</h3><pre id="list-state" class="qxframe9a7c2-docs-output s7-code"></pre><div class="s7-actions"><button id="list-first" class="qxframe9a7c2-button is-primary is-outlined is-sm">focusFirst()</button><button id="list-selected" class="qxframe9a7c2-button is-primary is-outlined is-sm">focusSelected()</button><button id="list-search" class="qxframe9a7c2-button is-primary is-outlined is-sm">focusSearch()</button><button id="list-clear-active" class="qxframe9a7c2-button is-warning is-outlined is-sm">resetActive()</button><button id="list-clear-value" class="qxframe9a7c2-button is-error is-outlined is-sm">clear()</button></div></div></div>
+<p>可以先点搜索框，然后直接使用 <code>ArrowUp / ArrowDown</code>。hover 项变化不会改变 <code>value</code>；按 <code>Enter</code> 才提交当前项。</p>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>List + VirtualList · Composed</h2>
+<div class="s7-grid"><div class="qxframe9a7c2-docs-card"><div id="large-list-host" class="s7-host"></div></div><div class="qxframe9a7c2-docs-card"><h3>State</h3><pre id="large-list-state" class="qxframe9a7c2-docs-output s7-code"></pre><div class="s7-actions"><button id="large-focus" class="qxframe9a7c2-button is-primary is-outlined is-sm">focusWrap()</button><button id="large-prepare" class="qxframe9a7c2-button is-primary is-outlined is-sm">prepareOpen()</button><button id="large-set-active" class="qxframe9a7c2-button is-primary is-outlined is-sm">setActiveKey("row-5000")</button></div><p>10000 行；默认选择 <code>value-9000</code>。方向键移动 <code>activeKey</code> 时已提交 value 保持不变。</p></div></div>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Pagination · Standalone</h2>
+<div class="s7-grid"><div class="qxframe9a7c2-docs-card"><div id="pagination-host" class="s7-host"></div></div><div class="qxframe9a7c2-docs-card"><h3>State</h3><pre id="pagination-state" class="qxframe9a7c2-docs-output s7-code"></pre><div class="s7-actions"><button id="pagination-prev" class="qxframe9a7c2-button is-primary is-outlined is-sm">prev()</button><button id="pagination-next" class="qxframe9a7c2-button is-primary is-outlined is-sm">next()</button><button id="pagination-12" class="qxframe9a7c2-button is-primary is-outlined is-sm">setCurrent(12)</button><button id="pagination-size" class="qxframe9a7c2-button is-warning is-outlined is-sm">setPageSize(20)</button></div></div></div>
+<p>Pagination 直接消费 Generic <code>PaginationModel</code>。页码 token、pager budget、单页 gap 展开、ellipsis 隐藏区间与跳转目标都由 Model 推导；Visible Pagination 只负责 DOM、文案、共享 Components.Select page-size control 与 jumper draft 交互。动态页码 DOM 重建仍由稳定 root 的 EventDelegation 接管。</p>
+</section>
+
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Menu · Standalone + Nested Submenu</h2>
+<div class="s7-grid"><div class="qxframe9a7c2-docs-card"><div id="menu-host" class="s7-host"></div></div><div class="qxframe9a7c2-docs-card"><h3>State</h3><pre id="menu-state" class="qxframe9a7c2-docs-output s7-code"></pre><div class="s7-actions"><button id="menu-first" class="qxframe9a7c2-button is-primary is-outlined is-sm">setActiveKey("file")</button><button id="menu-close" class="qxframe9a7c2-button is-warning is-outlined is-sm">setOpenKeys([])</button><button id="menu-select" class="qxframe9a7c2-button is-primary is-outlined is-sm">setSelectedKey("copy")</button></div><p>Menu 已重新定义为导航组件：selectedKey 表示当前导航，activeKey 只表示键盘光标，openKeys 表示展开导航分支。</p></div></div>
+</section>
+
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Picker-family Building Blocks</h2>
+<div class="s7-grid">
+  <article class="qxframe9a7c2-docs-card"><h3>OptionList</h3><div id="option-list-host" class="s7-host"></div><pre id="option-list-state" class="qxframe9a7c2-docs-output s7-code"></pre><p>直接组合 List；方向键只移动 activeKey，Enter/Click 才改变 value。</p></article>
+  <article class="qxframe9a7c2-docs-card"><h3>Calendar</h3><div id="calendar-host" class="s7-host"></div><pre id="calendar-state" class="qxframe9a7c2-docs-output s7-code"></pre><p>翻月只改变 viewValue；Arrow 只改变 activeKey；Enter/Click 才选择 value。</p></article>
+  <article class="qxframe9a7c2-docs-card"><h3>TimePanel</h3><div id="time-panel-host" class="s7-host"></div><pre id="time-panel-state" class="qxframe9a7c2-docs-output s7-code"></pre><p>Hour / Minute / Second 由 OptionList 组合，面板自身不包含 popup 或 confirm 事务。</p></article>
+  <article class="qxframe9a7c2-docs-card"><h3>ColorPanel</h3><div id="color-panel-host" class="s7-host"></div><pre id="color-panel-state" class="qxframe9a7c2-docs-output s7-code"></pre><p>HSV / RGB / Alpha 转换与 presets 属于 panel；弹层、输入框和确认流程留给 Stage 08 ColorPicker。</p></article>
+</div>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>DOM Source / Renderer Contract</h2>
+<div class="s7-grid">
+  <article class="qxframe9a7c2-docs-card"><h3>One DOM Source</h3><pre class="s7-code">elements (Existing DOM)
+→ createDOM(context)
+→ default .dom.js factory
+→ one Refs Contract</pre><p><code>elements + createDOM</code> 冲突直接报错。Existing DOM root 属于用户，destroy 不删除。</p></article>
+  <article class="qxframe9a7c2-docs-card"><h3>Safe Renderer</h3><pre class="s7-code">Node / Fragment / Node[]
+primitive / null
+
+string → TextNode
+never HTML</pre><p>局部 renderCell / renderPreset 与顶层 DOM Source 独立；原生 &lt;template&gt; 仅作为 clone helper。</p></article>
+</div>
+
+<h2>Dependencies / Composition API</h2>
+<div class="s7-grid"><article class="qxframe9a7c2-docs-card"><h3>VirtualList</h3><pre class="s7-code">DOM Headless:
+Virtualizer
+
+Composition API:
+getVirtualizer()
+getViewportElement()
+getRenderedElement(key)</pre></article><article class="qxframe9a7c2-docs-card"><h3>List</h3><pre class="s7-code">Pure Headless:
+Collection
+Selection
+ActiveItem
+
+DOM Headless:
+KeyboardNavigation
+EventDelegation
+
+Building Block:
+VirtualList</pre></article><article class="qxframe9a7c2-docs-card"><h3>Pagination</h3><pre class="s7-code">Pure Headless:
+PaginationModel
+
+DOM Headless:
+EventDelegation
+
+Composition API:
+getModel()
+getItems()
+getEventDelegation()</pre></article><article class="qxframe9a7c2-docs-card"><h3>Menu</h3><pre class="s7-code">Building Block:
+List
+
+DOM Headless:
+OverlayRuntime / Trigger
+LayerManager
+
+Composition API:
+getList()
+getState()
+closeChild() / closeChildren()</pre></article></div>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Methods / Events / Hooks</h2>
+<div class="s7-grid"><article class="qxframe9a7c2-docs-card"><h3>主要 Methods</h3><pre class="s7-code">VirtualList:
+mount / setItems / refresh
+scrollToIndex / scrollToOffset
+ensureVisible / getVisibleRange
+destroy
+
+List:
+mount / render / setItems / setSearch
+setValue / clear / selectValue
+deselectValue / toggleValue
+setActiveKey / resetActive / prepareOpen
+focusFirst / focusLast / focusSelected
+focusSearch / focusWrap / handleKeydown
+updateOptions / destroy
+
+Pagination:
+mount / render / setCurrent / setPageSize
+prev / next / refresh / updateOptions
+destroy
+
+Menu:
+mount / render / setItems / setValue / clear
+setSearch / prepareOpen / resetActive
+selectValue / deselectValue / toggleValue
+focusFirst / focusLast / focusSelected
+focusActive / focusSearch / closeChild
+closeChildren / handleKeydown / updateOptions
+setDisabled / setReadOnly / destroy</pre></article><article class="qxframe9a7c2-docs-card"><h3>Events / Hooks</h3><pre class="s7-code">VirtualList:
+range-change
+render
+onRangeChange
+onRender
+
+List:
+active-change
+click
+select
+change
+search
+range-change
+render
+onActiveChange
+onClick / onSelect / onChange
+onSearch / onRender
+
+Pagination:
+change / render / refresh
+onChange / onSizeChange / onRender
+
+Menu:
+activate / select / change / search / active-change
+onSelect / onChange / onSearch / onActiveChange</pre></article></div>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Light / Dark</h2>
+<div class="s7-grid"><div class="s7-dark-card qxframe9a7c2-theme-light"><strong>Light</strong><div id="light-list" style="margin-top:.75rem"></div></div><div class="s7-dark-card qxframe9a7c2-theme-dark"><strong>Dark</strong><div id="dark-list" style="margin-top:.75rem"></div></div></div>
+</section>
+
+<section class="qxframe9a7c2-docs-section qxframe9a7c2-docs-card"><h2>Event Log</h2><pre id="event-log" class="qxframe9a7c2-docs-output s7-code s7-log"></pre></section>
+
+<footer class="qxframe9a7c2-docs-footer"><a href="stage-06.html">Stage 06 Clean Baseline</a><a href="../tests/stage-07.html">Stage 07 Tests</a><a href="../audit/STAGE_07_CANONICAL_ENTRY_CONSOLIDATION.md">Stage 07 Validation</a></footer>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+<script src="../dist/qxframe9a7c2.js" data-qxframe9a7c2-runtime="dist"></script>
+<script src="../vendor/floating-ui/floating-ui.core.umd.min.js"></script>
+<script src="../vendor/floating-ui/floating-ui.dom.umd.min.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="assets/qxframe9a7c2-stage-07.js"></script>
+</body></html>

@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "executableCutoverParity": true,
+  "candidateAuthority": 79,
+  "loadedLegacyModules": 72,
+  "reachableLegacyModuleImplementations": 68,
+  "classComponentAuthorities": [
+    "Carousel",
+    "Collapse",
+    "Progress",
+    "Result"
+  ],
+  "publicComponents": 40,
+  "buildingBlocks": 14,
+  "reachableSourceFiles": 168,
+  "staticImportEdges": 389,
+  "monolithicKernelImported": false,
+  "legacyEntryImported": false,
+  "publicSourceEntryCutover": true,
+  "floatingUI": "legacy-umd-until-30→35",
+  "compatFiles": 8
+}

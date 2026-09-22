@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "mode": "archival-pre-rollup-production-baseline",
+  "files": {
+    "dist/qxframe9a7c2.js": "13dc56032a6562003827220dd83c0ce9fd6307f9efb046052138b1829251372d",
+    "dist/qxframe9a7c2.css": "5042e59366a6424516f4d2d17af8b61da4e24f5521224c7cbc4adedfb74eca92",
+    "dist/qxframe9a7c2.d.ts": "fea48995b11ceea218af66e7c290dfe6bcd938f1f53b729ebb222f75f23dc573"
+  }
+}

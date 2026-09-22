@@ -1,0 +1,85 @@
+{
+  "framework": "QXFRAME9A7C2",
+  "frameworkVersion": "2.19.81",
+  "version": 1,
+  "component": "Table",
+  "features": [
+    "virtual",
+    "fixed",
+    "sticky",
+    "edit",
+    "expanded",
+    "resize",
+    "reorder",
+    "responsive",
+    "group-header",
+    "remote",
+    "selection",
+    "summary"
+  ],
+  "defaultStatus": "supported",
+  "combinations": [
+    {
+      "features": [
+        "remote",
+        "reorder:row"
+      ],
+      "status": "unsupported",
+      "reason": "Remote rows are server-ordered; client row reorder cannot be committed as the authoritative data order."
+    },
+    {
+      "features": [
+        "group-header"
+      ],
+      "status": "unsupported",
+      "reason": "Nested/group header geometry is not implemented by the current single-row header renderer."
+    },
+    {
+      "features": [
+        "virtual",
+        "edit"
+      ],
+      "status": "supported-with-constraints",
+      "reason": "Stable row keys are required and an edit session is finalized before its row leaves the rendered virtual range."
+    },
+    {
+      "features": [
+        "virtual",
+        "expanded"
+      ],
+      "status": "supported-with-constraints",
+      "reason": "Variable row measurement is enabled only while expanded content is present."
+    },
+    {
+      "features": [
+        "fixed",
+        "responsive"
+      ],
+      "status": "supported-with-constraints",
+      "reason": "Fixed offsets are recomputed from visible columns and hidden responsive columns contribute zero width."
+    },
+    {
+      "features": [
+        "reorder:row",
+        "sort/filter/search"
+      ],
+      "status": "supported-with-constraints",
+      "reason": "Row reorder is temporarily unavailable while a projected sort/filter/search order is active."
+    },
+    {
+      "features": [
+        "reorder:column",
+        "fixed"
+      ],
+      "status": "supported-with-constraints",
+      "reason": "Reorder cannot violate fixed-start / normal / fixed-end ordering."
+    },
+    {
+      "features": [
+        "responsive:details"
+      ],
+      "status": "unsupported",
+      "reason": "Automatic responsive details would need a second row-details renderer and interaction owner; use explicit renderExpanded/details composition until that contract is implemented end-to-end."
+    }
+  ]
+}

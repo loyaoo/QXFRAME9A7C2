@@ -1,0 +1,120 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { FieldComponent } from '../src/components/field.js';
+import { InputNumber } from '../src/components/input-number.js';
+import { InputOTP } from '../src/components/input-otp.js';
+import { Rate } from '../src/components/rate.js';
+import { TagInput } from '../src/components/tag-input.js';
+import { Slider } from '../src/components/slider.js';
+import { Control } from '../src/components/control.js';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const fieldSource = fs.readFileSync(path.join(root, 'src/components/field.js'), 'utf8');
+const numberSource = fs.readFileSync(path.join(root, 'src/components/input-number.js'), 'utf8');
+const otpSource = fs.readFileSync(path.join(root, 'src/components/input-otp.js'), 'utf8');
+const rateSource = fs.readFileSync(path.join(root, 'src/components/rate.js'), 'utf8');
+const tagInputSource = fs.readFileSync(path.join(root, 'src/components/tag-input.js'), 'utf8');
+const sliderSource = fs.readFileSync(path.join(root, 'src/components/slider.js'), 'utf8');
+const controlSource = fs.readFileSync(path.join(root, 'src/components/control.js'), 'utf8');
+for (const [label, source] of [['FieldComponent', fieldSource], ['InputNumber', numberSource], ['InputOTP', otpSource], ['Rate', rateSource], ['TagInput', tagInputSource], ['Slider', sliderSource], ['Control', controlSource]]) {
+    for (const pattern of [/Registry\.(?:get|assert|define)/, /defineModule\s*\(/, /(?:globalThis|window)\.QXFRAME9A7C2/]) assert.ok(!pattern.test(source), `${label} contains legacy runtime dependency: ${pattern}`);
+}
+assert.match(numberSource, /class\s+InputNumber\s+extends\s+FieldComponent/, 'InputNumber must extend FieldComponent.');
+assert.ok(!/\bdestroy\s*\(/.test(numberSource), 'InputNumber must inherit Component.destroy.');
+assert.ok(!/\bupdateOptions\s*\(/.test(numberSource.replace(/\.updateOptions\s*\(/g, '')), 'InputNumber must inherit Component.updateOptions.');
+assert.match(tagInputSource, /class\s+TagInput\s+extends\s+FieldComponent/, 'TagInput must extend FieldComponent.');
+assert.ok(!/\bdestroy\s*\(/.test(tagInputSource), 'TagInput must inherit Component.destroy.');
+assert.ok(!/\bupdateOptions\s*\(/.test(tagInputSource.replace(/\.updateOptions\s*\(/g, '')), 'TagInput must inherit Component.updateOptions.');
+assert.match(rateSource, /class\s+Rate\s+extends\s+FieldComponent/, 'Rate must extend FieldComponent.');
+assert.ok(!/\bdestroy\s*\(/.test(rateSource), 'Rate must inherit Component.destroy.');
+assert.ok(!/\bupdateOptions\s*\(/.test(rateSource.replace(/\.updateOptions\s*\(/g, '')), 'Rate must inherit Component.updateOptions.');
+assert.match(otpSource, /class\s+InputOTP\s+extends\s+FieldComponent/, 'InputOTP must extend FieldComponent.');
+assert.ok(!/\bdestroy\s*\(/.test(otpSource), 'InputOTP must inherit Component.destroy.');
+assert.ok(!/\bupdateOptions\s*\(/.test(otpSource.replace(/\.updateOptions\s*\(/g, '')), 'InputOTP must inherit Component.updateOptions.');
+assert.match(sliderSource, /class\s+Slider\s+extends\s+FieldComponent/, 'Slider must extend FieldComponent.');
+assert.ok(!/^\s*destroy\s*\(/m.test(sliderSource), 'Slider must inherit Component.destroy.');
+assert.ok(!/^\s*updateOptions\s*\(/m.test(sliderSource), 'Slider must inherit Component.updateOptions.');
+
+class ProbeField extends FieldComponent {}
+const focusTarget = { focusCount:0, blurCount:0, focus(){this.focusCount+=1;}, blur(){this.blurCount+=1;} };
+const probe = new ProbeField({ value:'a', disabled:false, readOnly:false });
+probe.bindFocusTarget(focusTarget);
+assert.equal(probe.value, 'a');
+assert.equal(probe.canMutate(), true);
+assert.equal(probe.setFieldValue('b'), true);
+assert.equal(probe.value, 'b');
+assert.equal(probe.focus(), true); assert.equal(focusTarget.focusCount, 1);
+assert.equal(probe.blur(), true); assert.equal(focusTarget.blurCount, 1);
+probe.updateOptions({ readOnly:true });
+assert.equal(probe.canMutate(), false, 'readOnly must gate field mutation.');
+assert.equal(probe.setFieldValue('c'), false, 'readOnly mutation must be blocked.');
+probe.updateOptions({ readOnly:false, busy:true });
+assert.equal(probe.canMutate(), false, 'busy must gate field mutation.');
+assert.equal(probe.destroy(), true); assert.equal(probe.destroy(), false);
+
+const fakeContainer = { nodeType:1, ownerDocument:null };
+const inputNumber = new InputNumber({ container:fakeContainer, defaultValue:1, step:2, disabled:false });
+assert.ok(inputNumber instanceof FieldComponent);
+assert.equal(inputNumber.options.defaultValue, 1);
+assert.equal(inputNumber.options.step, 2);
+inputNumber.updateOptions({ disabled:true });
+assert.equal(inputNumber.disabled, true);
+assert.throws(() => inputNumber.updateOptions({ container:{ nodeType:1 } }), /immutable/);
+assert.throws(() => new InputNumber({ container:fakeContainer, mode:'invalid' }), /mode must be/);
+assert.throws(() => new InputNumber({ container:fakeContainer, unknown:true }), /unknown option/);
+inputNumber.destroy();
+const tagInput = new TagInput({ container:fakeContainer, defaultValue:[{key:'a',value:'a',label:'A'}] });
+assert.ok(tagInput instanceof FieldComponent);
+assert.equal(tagInput.value[0].key, 'a');
+tagInput.updateOptions({ disabled:true });
+assert.equal(tagInput.disabled, true);
+assert.throws(() => tagInput.updateOptions({ container:{nodeType:1} }), /immutable/);
+assert.throws(() => new TagInput({ container:fakeContainer, value:[{key:'a'}] }), /value\[\]\.value is required/);
+tagInput.destroy();
+
+const rate = new Rate({ container:fakeContainer, defaultValue:2, half:true, disabled:false });
+assert.ok(rate instanceof FieldComponent);
+assert.equal(rate.options.count, 5);
+assert.equal(rate.options.half, true);
+rate.updateOptions({ disabled:true });
+assert.equal(rate.disabled, true);
+assert.throws(() => rate.updateOptions({ direction:'rtl' }), /does not support direction/);
+assert.throws(() => rate.updateOptions({ count:0 }), /between 1 and 100/);
+rate.destroy();
+
+const otp = new InputOTP({ container:fakeContainer, length:4, value:'12', disabled:false });
+assert.ok(otp instanceof FieldComponent);
+assert.equal(otp.options.length, 4);
+assert.equal(otp.options.mask, false);
+assert.equal(otp.options.value, '12');
+otp.updateOptions({ disabled:true });
+assert.equal(otp.disabled, true);
+assert.throws(() => otp.updateOptions({ length:6 }), /structural and immutable/);
+assert.throws(() => new InputOTP({ container:fakeContainer, mask:{} }), /mask must be/);
+assert.throws(() => new InputOTP({ container:fakeContainer, unknown:true }), /unknown option/);
+otp.destroy();
+
+const slider = new Slider({ container:fakeContainer, defaultValue:20, min:0, max:100, step:10, disabled:false });
+assert.ok(slider instanceof FieldComponent);
+assert.equal(slider.options.step, 10);
+slider.updateOptions({ disabled:true });
+assert.equal(slider.disabled, true);
+assert.throws(() => slider.updateOptions({ container:{ nodeType:1 } }), /immutable/);
+assert.throws(() => new Slider({ container:fakeContainer, min:100, max:0 }), /max must be greater/);
+slider.destroy();
+
+const expectedControlApi = ['create','createDefaultDOM','createFormFieldBridge','createProjection','enhance','placeFieldRoot','projectFormFieldLayout','resolveElement','resolveFieldOptions'];
+assert.deepEqual(Object.keys(Control).sort(), expectedControlApi.slice().sort(), 'Control public API keys drifted.');
+const modernResolved=Control.resolveFieldOptions({size:'lg',disabled:true},{});
+assert.equal(Object.getPrototypeOf(modernResolved.options), null, 'Control.resolveFieldOptions options must remain a null-prototype record.');
+assert.equal(modernResolved.options.size, 'lg');
+assert.equal(modernResolved.options.disabled, true);
+assert.equal(modernResolved.target, null);
+assert.equal(modernResolved.formField, null);
+assert.equal(modernResolved.document, undefined);
+assert.equal(modernResolved.hasNativeValue, false);
+assert.equal(modernResolved.nativeValue, undefined);
+
+console.log(JSON.stringify({ok:true,fieldComponent:true,inputNumberClass:true,inputOtpClass:true,rateClass:true,tagInputClass:true,sliderClass:true,controlAuthority:true,controlApi:Object.keys(Control).sort()}));

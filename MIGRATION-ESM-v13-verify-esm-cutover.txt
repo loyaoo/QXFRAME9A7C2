@@ -1,0 +1,27 @@
+
+> qxframe9a7c2@2.19.81 verify:esm-cutover
+> node tools/verify-esm-cutover-rehearsal.mjs
+
+{
+  "ok": true,
+  "candidateAuthority": 79,
+  "membershipTotals": {
+    "CoreRegistry": 12,
+    "HeadlessRegistry": 33,
+    "DOMHeadlessRegistry": 34
+  },
+  "skippedLegacyCandidateSections": 68,
+  "legacyModuleFactoriesBootstrapped": 72,
+  "publicComponents": 40,
+  "buildingBlocks": 14,
+  "runtimeParity": {
+    "coreRegistry": true,
+    "headlessRegistry": true,
+    "domHeadlessRegistry": true,
+    "componentRegistry": true,
+    "buildingBlockRegistry": true,
+    "moduleManifest": true
+  },
+  "productionAuthorityChanged": false,
+  "note": "Rehearsal only: production build still uses the frozen legacy kernel until Rollup is executable."
+}

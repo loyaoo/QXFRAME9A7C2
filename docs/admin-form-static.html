@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html class="qxframe9a7c2-theme-light" lang="zh-CN">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="assets/qxframe9a7c2-docs-theme-state.js"></script>
+<title>新增内容 · QXFRAME Admin Demo</title>
+<link href="../dist/qxframe9a7c2.css" rel="stylesheet"/>
+<link href="assets/qxframe9a7c2-admin-demo.css" rel="stylesheet"/>
+</head>
+<body class="admin-demo">
+<div class="qxframe9a7c2-layout is-horizontal admin-shell">
+<aside class="qxframe9a7c2-layout-sider admin-sider">
+<div class="admin-brand"><span class="admin-brand-mark">QX</span><span>QX Admin<small>Component composition demo</small></span><button aria-label="切换窄栏图标模式" class="qxframe9a7c2-button is-default is-text is-sm admin-sider-toggle" id="admin-sider-toggle" type="button"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-sidebar is-line is-round is-stroke-2"></span></button></div>
+<div class="admin-nav"><div data-admin-current="add" id="admin-main-menu"></div></div>
+<div class="admin-sider-foot"><div class="admin-user-mini"><span class="qxframe9a7c2-avatar is-md">LY</span><div><strong>管理员</strong><span>Super Admin</span></div></div></div>
+</aside>
+<section class="qxframe9a7c2-layout is-fixed-header admin-main">
+<header class="qxframe9a7c2-layout-header admin-header">
+<div class="admin-header-left"><div class="admin-breadcrumb"><span>后台</span><span class="sep">/</span><strong>内容管理 / 新增</strong></div></div>
+<div class="admin-header-right">
+<div class="admin-header-search" id="admin-global-search"></div>
+<button aria-label="切换主题" class="qxframe9a7c2-button is-default is-text is-sm admin-icon-button" data-admin-theme-toggle="" type="button"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-moon is-line is-round is-stroke-2"></span></button>
+<span class="qxframe9a7c2-badge-anchor"><button class="qxframe9a7c2-button is-default is-text is-sm admin-icon-button" type="button"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-bell is-line is-round is-stroke-2"></span></button><span class="qxframe9a7c2-badge-count">3</span></span>
+<button class="qxframe9a7c2-button is-default is-text is-sm admin-user-trigger" id="admin-user-trigger" type="button"><span class="qxframe9a7c2-avatar is-sm">LY</span><span class="qxframe9a7c2-icon qxframe9a7c2-icon-caret-down is-line is-round is-stroke-3 is-xs"></span></button></div>
+</header>
+<main class="qxframe9a7c2-layout-content admin-content"><div class="admin-page">
+<div class="admin-page-head"><div class="admin-page-title"><h1>新增内容</h1><p>创建新的内容条目并设置发布、权限与媒体信息。</p></div><div class="admin-page-actions"><span class="qxframe9a7c2-badge is-warning">未保存</span></div></div>
+<article class="qxframe9a7c2-card admin-card admin-tabs-card"><div class="qxframe9a7c2-card-body"><div class="admin-tabs-host" id="admin-form-tabs"></div></div></article>
+<div class="admin-form-layout">
+<div class="admin-form-main">
+<article class="qxframe9a7c2-card admin-card admin-form-card"><header class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-title">基础信息</div><div class="qxframe9a7c2-card-extra">必填项以 * 标记</div></header><div class="qxframe9a7c2-card-body"><form class="qxframe9a7c2-form is-md"><label class="qxframe9a7c2-form-field"><span>标题 *</span><input id="admin-title-input" name="title" placeholder="请输入内容标题" type="text" value="秋季新品专题"/><small class="admin-form-help">用于列表、搜索和页面标题。</small></label><div class="admin-form-grid-2"><label class="qxframe9a7c2-form-field"><span>内容类型 *</span><div class="admin-control" id="admin-content-type-select"></div></label><label class="qxframe9a7c2-form-field"><span>所属分类</span><div class="admin-control" id="admin-category-cascader"></div></label></div><label class="qxframe9a7c2-form-field"><span>URL Slug</span><input id="admin-slug-input" name="slug" type="text" value="autumn-new-products"/></label><label class="qxframe9a7c2-form-field"><span>摘要</span><textarea id="admin-summary-textarea" maxlength="160" name="summary" placeholder="简要描述页面内容" rows="3">集中展示秋季新品、推荐搭配与活动权益。</textarea></label><label class="qxframe9a7c2-form-field"><span>内容标签</span><div class="admin-control" id="admin-tags-input"></div><small class="admin-form-help">使用框架 TagInput，支持多标签录入。</small></label></form></div></article>
+<article class="qxframe9a7c2-card admin-card admin-form-card"><header class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-title">正文内容</div><div class="qxframe9a7c2-card-extra">富文本区域</div></header><div class="qxframe9a7c2-card-body"><div class="qxframe9a7c2-form-selectgroup is-buttons is-connected is-toolbar" style="margin-bottom:10px"><label class="qxframe9a7c2-form-selectgroup-item"><input checked="" class="qxframe9a7c2-form-selectgroup-input" name="align" type="radio"/><span class="qxframe9a7c2-form-selectgroup-label">B</span></label><label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" name="align" type="radio"/><span class="qxframe9a7c2-form-selectgroup-label">I</span></label><label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" name="align" type="radio"/><span class="qxframe9a7c2-form-selectgroup-label">H2</span></label></div><div class="admin-editor" contenteditable="true"><strong>秋日新章，回归自然质感。</strong><br/><br/>这里作为正文编辑器占位区域，用于检查 Card、Toolbar、Control 与表单正文区域组合后的密度和层级。真实 CMS 可以在这里接入业务编辑器。</div></div></article>
+<article class="qxframe9a7c2-card admin-card admin-form-card"><header class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-title">封面与媒体</div><div class="qxframe9a7c2-card-extra">Upload</div></header><div class="qxframe9a7c2-card-body"><div class="admin-control admin-upload-compact" id="admin-cover-upload"></div></div></article>
+</div>
+<aside class="admin-form-side">
+<article class="qxframe9a7c2-card admin-card admin-form-card"><header class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-title">发布设置</div></header><div class="qxframe9a7c2-card-body"><div class="admin-side-list"><div class="admin-side-row"><span>立即发布<small>保存后直接公开内容</small></span><label class="qxframe9a7c2-switch is-sm"><input checked="" class="qxframe9a7c2-switch-input" type="checkbox"/><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label></div><div class="admin-side-divider"></div><label class="qxframe9a7c2-form-field"><span>发布时间</span><div class="admin-control" id="admin-publish-date"></div></label><label class="qxframe9a7c2-form-field"><span>作者</span><div class="admin-control" id="admin-author-autocomplete"></div><small class="admin-form-help">使用框架 Autocomplete 搜索并选择作者。</small></label><label class="qxframe9a7c2-form-field"><span>排序权重</span><div class="admin-control" id="admin-weight-input"></div><small class="admin-form-help">数值越大越靠前。</small></label><div class="admin-side-row"><span>置顶内容<small>在列表顶部优先展示</small></span><label class="qxframe9a7c2-switch is-sm"><input class="qxframe9a7c2-switch-input" type="checkbox"/><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label></div></div></div></article>
+<article class="qxframe9a7c2-card admin-card admin-form-card"><header class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-title">访问权限</div></header><div class="qxframe9a7c2-card-body"><div class="admin-side-list"><label class="qxframe9a7c2-form-check"><input checked="" class="qxframe9a7c2-form-check-input" name="access" type="radio"/><span class="qxframe9a7c2-form-check-label">公开</span><small class="qxframe9a7c2-form-check-description">所有访客可访问</small></label><label class="qxframe9a7c2-form-check"><input class="qxframe9a7c2-form-check-input" name="access" type="radio"/><span class="qxframe9a7c2-form-check-label">登录用户</span></label><label class="qxframe9a7c2-form-check"><input class="qxframe9a7c2-form-check-input" name="access" type="radio"/><span class="qxframe9a7c2-form-check-label">指定角色</span></label></div></div></article>
+<article class="qxframe9a7c2-card admin-card admin-form-card"><header class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-title">内容信息</div></header><div class="qxframe9a7c2-card-body"><section class="qxframe9a7c2-descriptions is-horizontal is-borderless is-sm is-colon"><div class="qxframe9a7c2-descriptions-table-wrap"><table class="qxframe9a7c2-descriptions-table"><tbody><tr><th>状态</th><td><span class="qxframe9a7c2-badge is-warning">草稿</span></td></tr><tr><th>版本</th><td>v1</td></tr><tr><th>语言</th><td>zh-CN</td></tr><tr><th>创建人</th><td>廖垚</td></tr></tbody></table></div></section></div></article>
+</aside>
+</div>
+<div class="admin-actionbar"><button class="qxframe9a7c2-button is-default is-outlined is-md" id="admin-save-more" type="button">更多 <span class="qxframe9a7c2-icon qxframe9a7c2-icon-caret-up is-line is-round is-stroke-3 is-xs"></span></button><a class="qxframe9a7c2-button is-default is-outlined is-md" href="admin-list-static.html">取消</a><button class="qxframe9a7c2-button is-default is-filled is-md">保存草稿</button><button class="qxframe9a7c2-button is-primary is-solid is-md">保存并发布</button></div>
+</div></main>
+</section>
+</div>
+<script data-qxframe9a7c2-runtime="dist" src="../dist/qxframe9a7c2.js"></script><script src="assets/qxframe9a7c2-admin-demo.js"></script>
+</body></html>

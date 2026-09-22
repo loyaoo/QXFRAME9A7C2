@@ -1,0 +1,5 @@
+
+> qxframe9a7c2@2.19.81 verify:esm-entry
+> node tools/verify-esm-entry.mjs
+
+{"ok":true,"esmNamedComponents":40,"classAuthorities":["Carousel","Collapse","Progress","Result"],"umdGlobal":true,"cutoverBridge":true}

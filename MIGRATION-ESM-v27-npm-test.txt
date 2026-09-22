@@ -1,0 +1,122 @@
+
+> qxframe9a7c2@2.19.81 test
+> npm run verify
+
+
+> qxframe9a7c2@2.19.81 verify
+> npm run verify:architecture && npm run verify:esm-graph && npm run verify:entry && npm run verify:component-base && npm run verify:field-base && npm run verify:popup-family && npm run verify:overlay-family && npm run verify:popup-field-family && npm run verify:picker-family && npm run verify:shared-utilities && npm run verify:collection-family && npm run verify:high-risk-authorities && npm run verify:registry-readiness && npm run verify:contracts && npm run verify:platform && npm run verify:release-preflight && npm run verify:final
+
+
+> qxframe9a7c2@2.19.81 verify:architecture
+> node tools/verify-modern-architecture.mjs
+
+{"ok":true,"sourceFiles":164,"legacyViolations":0,"components":40,"moduleManifest":72,"staticRuntime":true,"globalSideEffectFree":true}
+
+> qxframe9a7c2@2.19.81 verify:esm-graph
+> node tools/verify-esm-import-graph.mjs
+
+{
+  "ok": true,
+  "files": 164,
+  "edges": 1214,
+  "externalImports": 0,
+  "cycles": 0,
+  "legacyImports": 0
+}
+
+> qxframe9a7c2@2.19.81 verify:entry
+> node tools/verify-source-entry.mjs
+
+{"ok":true,"componentParity":"40/40","moduleManifestParity":"72/72","sourceGlobalSideEffectFree":true,"umdSourceGlobal":true,"legacyGlobalKeys":0}
+
+> qxframe9a7c2@2.19.81 verify:component-base
+> node tools/verify-component-base.mjs
+
+{
+  "ok": true,
+  "componentBase": true,
+  "optionInheritance": true,
+  "optionTransaction": true,
+  "contractValidation": true,
+  "eventLifecycle": true,
+  "resourceOwnership": true,
+  "listenerCleanup": true,
+  "instanceRegistry": true,
+  "destroyIdempotent": true,
+  "familySpecificResponsibilities": 0
+}
+
+> qxframe9a7c2@2.19.81 verify:field-base
+> node tools/verify-field-component.mjs
+
+{"ok":true,"fieldComponent":true,"inputNumberClass":true,"inputOtpClass":true,"rateClass":true,"tagInputClass":true,"sliderClass":true,"controlAuthority":true,"controlApi":["create","createDefaultDOM","createFormFieldBridge","createProjection","enhance","placeFieldRoot","projectFormFieldLayout","resolveElement","resolveFieldOptions"]}
+
+> qxframe9a7c2@2.19.81 verify:popup-family
+> node tools/verify-popup-family.mjs
+
+{"ok":true,"triggerAuthority":true,"popupFamilyBase":true,"popoverAuthority":true,"popconfirmAuthority":true,"tooltipAuthority":true,"dropdownAuthority":true,"lifecycleOwner":"PopupComponent"}
+
+> qxframe9a7c2@2.19.81 verify:overlay-family
+> node tools/verify-overlay-family.mjs
+
+{"ok":true,"family":"OverlayComponent","members":["Modal","Drawer"],"publicLifecycleOwner":"OverlayComponent"}
+
+> qxframe9a7c2@2.19.81 verify:popup-field-family
+> node tools/verify-popup-field-family.mjs
+
+{"ok":true,"family":"PopupFieldComponent","extends":"FieldComponent","composition":["Trigger"],"membersComplete":["Autocomplete","Select","Cascader","TreeSelect"],"membersPending":[]}
+
+> qxframe9a7c2@2.19.81 verify:picker-family
+> node tools/verify-picker-family.mjs
+
+{"ok":true,"family":"PickerComponent","extends":"PopupFieldComponent","members":["WheelPicker","TimePicker","ColorPicker","DatePicker"],"support":["PickerField","WheelPanel","TimePanel"],"publicLifecycleOwner":"PickerComponent"}
+
+> qxframe9a7c2@2.19.81 verify:shared-utilities
+> node tools/verify-shared-utility-authorities.mjs
+
+{"ok":true,"timeUnit":true,"wheelMetrics":true,"treeQuery":true,"queryConsumers":7}
+
+> qxframe9a7c2@2.19.81 verify:collection-family
+> node tools/verify-collection-family.mjs
+
+{"ok":true,"stage":"84→88","authorities":["Menu","Tree","Transfer","List","ItemCollection","OptionList","VirtualList","Tabs","Calendar","PeriodPanel"],"count":10}
+
+> qxframe9a7c2@2.19.81 verify:high-risk-authorities
+> node tools/verify-high-risk-authorities.mjs
+
+{"ok":true,"authorityCount":9,"reachableLegacyModuleImplementations":0,"names":["Image","JSON","Message","NoticeService","Notification","Pagination","Table","Tags","Upload"]}
+
+> qxframe9a7c2@2.19.81 verify:registry-readiness
+> node tools/verify-registry-removal-readiness.mjs
+
+{
+  "ok": true,
+  "moduleCoverage": "72/72",
+  "reachableLegacyModuleImplementations": 0,
+  "compatRuntimeFiles": 0,
+  "registryRemovalAuthorityReady": true,
+  "sourceRegistryRemovalComplete": true,
+  "rollupInstalled": false,
+  "productionArtifactsReady": false,
+  "productionCutoverReady": false
+}
+
+> qxframe9a7c2@2.19.81 verify:contracts
+> node tools/verify-component-contracts.mjs
+
+{"ok":true,"schemas":40,"canonicalContracts":40,"contractDrift":0,"demoContractDrift":0}
+
+> qxframe9a7c2@2.19.81 verify:platform
+> node tools/verify-platform.mjs
+
+{"ok":true,"browserBaseline":{"chrome":105,"edge":105,"firefox":112,"safari":"16.4"},"componentFiles":60,"observerOwner":"ObserverHub","templateOwner":"DOMTemplate"}
+
+> qxframe9a7c2@2.19.81 verify:release-preflight
+> node tools/verify-release-preflight.mjs
+
+{"ok":true,"rollupOutputs":3,"packageExports":true,"strictBuild":true,"auxiliaryIifeGlobal":false,"frozenFallback":false}
+
+> qxframe9a7c2@2.19.81 verify:final
+> node tools/verify-final-cleanroom.mjs
+
+{"ok":true,"scannedFiles":164,"legacyRuntimeMarkers":0,"removedLegacyPaths":6}

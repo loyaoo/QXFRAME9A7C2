@@ -1,0 +1,158 @@
+/* composition */
+/* QXFRAME9A7C2 Composition Protocol. Geometry only: seam/radius/stacking/group gap. */
+.qxframe9a7c2-form-input-group{
+  --qxframe9a7c2-form-input-group-radius:var(--_qxframe9a7c2-control-radius);
+  box-sizing:border-box;display:flex;align-items:stretch;width:100%;min-width:0;isolation:isolate
+}
+.qxframe9a7c2-form-input-group.is-rounded{--qxframe9a7c2-form-input-group-radius:var(--qxframe9a7c2-radius-pill)}
+.qxframe9a7c2-form-input-group.is-separated{gap:var(--qxframe9a7c2-space-2,8px)}
+.qxframe9a7c2-form-input-group.is-vertical{flex-direction:column}
+/* Connected composition is the size owner by default. Child size classes are ignored in this layer; `.is-mixed-size` is the explicit escape hatch. */
+.qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-group-control,.qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{--_qxframe9a7c2-control-height:inherit;--_qxframe9a7c2-control-font-size:inherit;--_qxframe9a7c2-control-padding-inline:inherit;--_qxframe9a7c2-control-padding-block:inherit;--_qxframe9a7c2-control-gap:inherit;--_qxframe9a7c2-control-radius:inherit;--_qxframe9a7c2-control-border-width:inherit;--_qxframe9a7c2-control-icon-size:inherit;--_qxframe9a7c2-control-line-height:inherit}
+.qxframe9a7c2-form-input-group-item{position:relative;display:flex;align-items:stretch;flex:1 1 0;min-width:0}
+/* Auto-width slots keep intrinsic width when space exists, but must still shrink under zoom/long-copy pressure. */
+.qxframe9a7c2-form-input-group-item.is-auto{flex:0 1 auto;min-width:0;max-width:100%}
+.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{width:100%;min-width:0}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-input,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-select,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item{position:relative;flex:1 1 0;min-width:min(calc(var(--_qxframe9a7c2-control-height) * 2),30%)}
+/* Non-field segments may shrink instead of forcing horizontal page overflow. Preserve one usable field segment and one control-height action floor. */
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-addon{position:relative;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-button{position:relative;flex:0 1 auto;min-width:min(calc(var(--_qxframe9a7c2-control-height) * 2),35%);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-button.is-square,.qxframe9a7c2-form-input-group>.qxframe9a7c2-button.is-circle{min-width:var(--_qxframe9a7c2-control-height);flex-shrink:0}
+.qxframe9a7c2-form-input-group-addon{
+  box-sizing:border-box;display:inline-flex;min-width:0;min-height:var(--_qxframe9a7c2-control-height);align-items:center;justify-content:center;
+  gap:var(--qxframe9a7c2-space-2,8px);padding:0 var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
+  border-radius:var(--qxframe9a7c2-form-input-group-radius);background:var(--_qxframe9a7c2-semantic-surface-muted);color:var(--_qxframe9a7c2-semantic-text-secondary);
+  font:inherit;font-size:var(--_qxframe9a7c2-control-font-size);line-height:1;white-space:nowrap
+}
+button.qxframe9a7c2-form-input-group-addon,a.qxframe9a7c2-form-input-group-addon,.qxframe9a7c2-form-input-group-addon.is-action{cursor:pointer;text-decoration:none}
+button.qxframe9a7c2-form-input-group-addon:hover,a.qxframe9a7c2-form-input-group-addon:hover,.qxframe9a7c2-form-input-group-addon.is-action:hover{background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text)}
+button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-input-group-addon:focus-visible,.qxframe9a7c2-form-input-group-addon.is-action:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);border-color:var(--_qxframe9a7c2-semantic-focus);box-shadow:none;z-index:var(--qxframe9a7c2-z-local-focus)}
+.qxframe9a7c2-form-input-group-addon>.qxframe9a7c2-form-check-input{--_qxframe9a7c2-form-check-size:calc(var(--_qxframe9a7c2-control-height) * .5);margin:0}
+.qxframe9a7c2-form-input-group-kbd{display:inline-flex;align-items:center;gap:.2em;padding:.125rem .35rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-bottom-width:2px;border-radius:var(--qxframe9a7c2-radius-sm);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font:600 .78em/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.qxframe9a7c2-form-input-group-link{color:var(--_qxframe9a7c2-semantic-accent);text-decoration:none}
+.qxframe9a7c2-form-input-group-link:hover{text-decoration:underline;text-underline-offset:.16em}
+
+/* A connected group only owns adjacent borders/radii/z-order. It never mutates child value/state owners. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control+.qxframe9a7c2-group-control{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control,.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{border-radius:0}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control:first-child,.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:first-child>.qxframe9a7c2-group-control{border-start-start-radius:var(--qxframe9a7c2-form-input-group-radius);border-end-start-radius:var(--qxframe9a7c2-form-input-group-radius)}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control:last-child,.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:last-child>.qxframe9a7c2-group-control{border-start-end-radius:var(--qxframe9a7c2-form-input-group-radius);border-end-end-radius:var(--qxframe9a7c2-form-input-group-radius)}
+
+
+
+
+
+
+
+/* Formal group-item projection. No child state colors are owned here. */
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control{--_qxframe9a7c2-group-stack:1;z-index:var(--_qxframe9a7c2-group-stack)}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-button-item{z-index:auto}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control:hover{--_qxframe9a7c2-group-stack:2}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-error,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-invalid,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-warning{--_qxframe9a7c2-group-stack:3}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control:focus-within,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-focused,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-expanded-visible{--_qxframe9a7c2-group-stack:4}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-expanded{--_qxframe9a7c2-group-stack:5}
+@media(max-width:640px){
+ .qxframe9a7c2-form-input-group.is-responsive>.qxframe9a7c2-group-control{margin-inline-start:0}
+}
+/* Native SelectGroup button mode reuses the same composition owner instead of maintaining a parallel seam system. */
+.qxframe9a7c2-form-selectgroup.is-buttons{gap:0;isolation:isolate}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-label{border-radius:0}
+.qxframe9a7c2-form-selectgroup.is-buttons>.qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item .qxframe9a7c2-form-selectgroup-label{margin-inline-start:0}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:first-child .qxframe9a7c2-form-selectgroup-label{border-start-start-radius:var(--_qxframe9a7c2-control-radius);border-end-start-radius:var(--_qxframe9a7c2-control-radius)}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:last-child .qxframe9a7c2-form-selectgroup-label{border-start-end-radius:var(--_qxframe9a7c2-control-radius);border-end-end-radius:var(--_qxframe9a7c2-control-radius)}
+.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons>.qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item{margin-inline-start:0;margin-block-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons .qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item .qxframe9a7c2-form-selectgroup-label{margin-inline-start:0;margin-block-start:0}
+.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons .qxframe9a7c2-form-selectgroup-item:first-child .qxframe9a7c2-form-selectgroup-label{border-start-start-radius:var(--_qxframe9a7c2-control-radius);border-start-end-radius:var(--_qxframe9a7c2-control-radius);border-end-start-radius:0;border-end-end-radius:0}
+.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons .qxframe9a7c2-form-selectgroup-item:last-child .qxframe9a7c2-form-selectgroup-label{border-start-start-radius:0;border-start-end-radius:0;border-end-start-radius:var(--_qxframe9a7c2-control-radius);border-end-end-radius:var(--_qxframe9a7c2-control-radius)}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item{z-index:var(--qxframe9a7c2-z-local-raised)}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:hover{z-index:var(--qxframe9a7c2-z-local-above)}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label{z-index:var(--qxframe9a7c2-z-local-overlay)}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
+
+/* Nested stable GroupItem projects child interaction state to the composition stacking owner. */
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{--_qxframe9a7c2-group-stack:2}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-error,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-warning{--_qxframe9a7c2-group-stack:3}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:focus-within{--_qxframe9a7c2-group-stack:4}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-expanded{--_qxframe9a7c2-group-stack:5}
+
+/* ButtonGroup is geometry-only: every Button keeps a full border and owns its paint z-index. */
+.qxframe9a7c2-button-group{
+  --qxframe9a7c2-button-group-radius:var(--_qxframe9a7c2-action-radius);
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:stretch;
+  min-width:0;
+  isolation:isolate
+}
+.qxframe9a7c2-button-group.is-rounded{--qxframe9a7c2-button-group-radius:var(--qxframe9a7c2-radius-pill)}
+.qxframe9a7c2-button-group.is-separated{gap:var(--qxframe9a7c2-space-2,8px)}
+.qxframe9a7c2-button-group.is-vertical{flex-direction:column}
+.qxframe9a7c2-button-group:not(.is-mixed-size)>.qxframe9a7c2-button{
+  --_qxframe9a7c2-control-height:inherit;
+  --_qxframe9a7c2-control-font-size:inherit;
+  --_qxframe9a7c2-control-padding-inline:inherit;
+  --_qxframe9a7c2-control-padding-block:inherit;
+  --_qxframe9a7c2-control-gap:inherit;
+  --_qxframe9a7c2-control-radius:inherit;
+  --_qxframe9a7c2-control-border-width:inherit;
+  --_qxframe9a7c2-control-icon-size:inherit;
+  --_qxframe9a7c2-control-line-height:inherit
+}
+
+/* Horizontal connected group: full 1px borders + logical -1px overlap. */
+.qxframe9a7c2-button-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-button{
+  border-radius:0
+}
+.qxframe9a7c2-button-group:not(.is-separated):not(.is-vertical)>.is-text.qxframe9a7c2-button,.qxframe9a7c2-button-group:not(.is-separated):not(.is-vertical)>.is-link.qxframe9a7c2-button{
+  border-width:var(--_qxframe9a7c2-control-border-width)
+}
+.qxframe9a7c2-button-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-button+.qxframe9a7c2-button{
+  margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))
+}
+.qxframe9a7c2-button-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-button:first-child{
+  border-start-start-radius:var(--qxframe9a7c2-button-group-radius);
+  border-end-start-radius:var(--qxframe9a7c2-button-group-radius)
+}
+.qxframe9a7c2-button-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-button:last-child{
+  border-start-end-radius:var(--qxframe9a7c2-button-group-radius);
+  border-end-end-radius:var(--qxframe9a7c2-button-group-radius)
+}
+
+/* Vertical connected group: same model on the block axis. */
+.qxframe9a7c2-button-group:not(.is-separated).is-vertical>.qxframe9a7c2-button{
+  border-radius:0
+}
+.qxframe9a7c2-button-group:not(.is-separated).is-vertical>.is-text.qxframe9a7c2-button,.qxframe9a7c2-button-group:not(.is-separated).is-vertical>.is-link.qxframe9a7c2-button{
+  border-width:var(--_qxframe9a7c2-control-border-width)
+}
+.qxframe9a7c2-button-group:not(.is-separated).is-vertical>.qxframe9a7c2-button+.qxframe9a7c2-button{
+  margin-block-start:calc(0px - var(--_qxframe9a7c2-control-border-width))
+}
+.qxframe9a7c2-button-group:not(.is-separated).is-vertical>.qxframe9a7c2-button:first-child{
+  border-start-start-radius:var(--qxframe9a7c2-button-group-radius);
+  border-start-end-radius:var(--qxframe9a7c2-button-group-radius)
+}
+.qxframe9a7c2-button-group:not(.is-separated).is-vertical>.qxframe9a7c2-button:last-child{
+  border-end-start-radius:var(--qxframe9a7c2-button-group-radius);
+  border-end-end-radius:var(--qxframe9a7c2-button-group-radius)
+}
+.qxframe9a7c2-button-group.is-separated>.qxframe9a7c2-button{
+  border-radius:var(--qxframe9a7c2-button-group-radius)
+}
+
+/*
+ * is-split keeps its public composition meaning but no longer owns a special seam.
+ * The same overlapping full-border model is used; Button paint priority decides the visible edge.
+ */
+
+/* Pagination segmented is opt-in through className; Pagination retains page/current/disabled ownership. */
+.qxframe9a7c2-pagination.is-segmented{gap:0;isolation:isolate}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item{position:relative;z-index:var(--qxframe9a7c2-z-local-raised)}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item+.qxframe9a7c2-pagination-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item .qxframe9a7c2-pagination-control{border-radius:0}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item:first-child .qxframe9a7c2-pagination-control{border-start-start-radius:var(--_qxframe9a7c2-control-radius);border-end-start-radius:var(--_qxframe9a7c2-control-radius)}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item:last-child .qxframe9a7c2-pagination-control{border-start-end-radius:var(--_qxframe9a7c2-control-radius);border-end-end-radius:var(--_qxframe9a7c2-control-radius)}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item:not(.is-disabled):hover{z-index:var(--qxframe9a7c2-z-local-above)}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item.is-current{z-index:var(--qxframe9a7c2-z-local-overlay)}
+.qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
+
+

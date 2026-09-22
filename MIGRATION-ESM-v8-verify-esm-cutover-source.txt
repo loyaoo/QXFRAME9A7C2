@@ -1,0 +1,19 @@
+
+> qxframe9a7c2@2.19.81 verify:esm-cutover-source
+> node tools/verify-esm-cutover-source.mjs
+
+{
+  "ok": true,
+  "executableCutoverParity": true,
+  "candidateAuthority": 79,
+  "loadedLegacyModules": 72,
+  "publicComponents": 40,
+  "buildingBlocks": 14,
+  "reachableSourceFiles": 166,
+  "staticImportEdges": 346,
+  "monolithicKernelImported": false,
+  "legacyEntryImported": false,
+  "publicSourceEntryCutover": true,
+  "floatingUI": "legacy-umd-until-30→35",
+  "compatFiles": 7
+}

@@ -1,0 +1,969 @@
+# QXFRAME9A7C2 fix(11) 当前收口进度与续作手册
+
+> 日期：2026-09-21  
+> 当前工作包：`qxframe9a7c2-v2.19.81-src-dist-hardened-r10`  
+> 原始代码基线：`qxframe9a7c2-v2.19.81-card-form-input-polish-fix(9) (1).zip`  
+> Git 基线提交：`a16d60cd9704831b58f1943c43aea46119f1f992`  
+> 正式任务依据：`QXFRAME9A7C2-fix10-完整未修复问题总表-fix11计划-v5-历史遗留多套体系专项`  
+> 本文件用途：**防止对话截断、文件丢失、进度丢失、目标漂移。下次只需上传本项目 ZIP 并要求“按本文件继续直到收口”。**
+
+---
+
+## 1. 当前完成度判断
+
+当前不是“只修了若干 Bug”的状态，而是已经进入 fix(11) 最终收尾阶段。
+
+### 最终完成度
+
+- **P0 / 历史多套体系架构收口：100%（按当前 v5 已决 contract）**；已知 mandatory blocker = 0。
+- **v5 收口：Completed**；P1/P2 中手册明确允许按需延后的项目继续标记 Deferred，明确不支持的能力继续标记 Unsupported，不作为悬空 TODO。
+- **真实 Chromium 组合验收：PASS**；Chromium `144.0.7559.96`，通过 CDP `Page.setDocumentContent + Runtime.evaluate` 执行真实 DOM/布局/交互矩阵。
+
+本状态表示 fix(11) 可以进入 FINAL 交付；未来新增能力仍必须遵守 Canonical System Manifest、Feature Matrix 与 zero-consumer verify，不得通过“再造第二套 owner”扩展。
+
+---
+
+## 2. 当前代码变更规模
+
+相对 Git 基线 `a16d60cd9704831b58f1943c43aea46119f1f992`：
+
+- 已跟踪改动文件：约 **58 个**；
+- 新增文件：约 **38 个**（以 `git ls-files --others --exclude-standard` 为准）；
+- 当前 tracked diff：约 **+15,970 / -6,209 行**；
+- build 输出模块：**72 modules**；
+- visible components：**40**；
+- Core / Headless / DOMHeadless：**13 / 21 / 30**。
+
+项目包同时保存：
+
+- `FIX11-当前收口进度与续作手册-2026-09-21.md`（本文件）；
+- `FIX11-原始完整任务手册-v5.md`（原始任务清单副本）；
+- `FIX11-BASELINE-TO-R2.patch`（原始 Git baseline -> 用户已收到 r2 checkpoint 的恢复补丁）；
+- `FIX11-R2-TO-FINAL.patch`（用户已收到 r2 checkpoint -> 本 FINAL 的增量补丁）；
+- `FIX11-R2-git-status.txt`（r2 时点 Git 状态快照）；
+- `FIX11-last-test.txt`；
+- `FIX11-WORKTREE-SHA256.txt`。
+
+即使后续对话上下文完全消失，也应优先以 **当前 ZIP + 本进度文档 + Manifest + verify** 为事实源。
+
+---
+
+# 3. 已完成：架构 / 历史多套体系收口
+
+## 3.1 Canonical System Manifest
+
+当前已经建立：
+
+- `src/manifests/canonical-systems.json`
+- `docs/generated/canonical-system-manifest.json`
+
+覆盖 **38 个责任域**：
+
+```text
+Theme
+Tokens
+Motion
+Size/Density
+Z-index
+DOM Factory
+Registry
+Dependency Graph
+Options Schema
+Controlled State
+Selection
+Async
+Events
+Lifecycle
+Scheduler
+Observer
+Focus
+Keyboard
+Pointer/Press
+Drag/Reorder
+Overlay
+Portal
+Positioning
+Scroll
+Form
+Empty
+Loading
+Validation
+Semantic Styles
+DOM Projection
+Renderer
+Virtualizer
+Pagination
+Table
+URL/Security
+ID generation
+Diagnostics
+Compatibility
+```
+
+当前 Manifest 状态：
+
+- `converged`: **37**；
+- `intentional-adapter`: **1**；
+- canonical owner 已明确；
+- converged 域要求 legacy consumer = 0；
+- verify 会阻止关键历史体系回归。
+
+## 3.2 已删除/收口的历史平行体系
+
+已完成并建立防回退的主要项目：
+
+- `CSSCompatState` 删除；
+- 43 个 `rel-*` 状态投影体系删除；
+- `ComponentDOMFactories` 全局桥删除；
+- `BuildingBlockDOMFactories` 全局桥删除；
+- visible `Sort.createReorderInteraction()` 作为公共 primitive 的旧架构删除；
+- Reorder 下沉到 `DOMHeadless.ReorderInteraction`；
+- Upload/Table/Sort 改用 canonical Reorder owner；
+- 旧 `--color-*` canonical consumer 清零；
+- Motion duration 双体系收口到 canonical `fast/mid/slow`；
+- Reduced Motion 收成统一 resolved motion state；
+- 裸数字 z-index 局部层级清零，统一到 `src/manifests/layers.json`；
+- Module dependency + Registry capability 双声明收为单一 Manifest；
+- hidden form-field 私有实现禁止回归；
+- value equality 的 `JSON.stringify` 比较清零；
+- visible component 手工 async generation/requestId 清零；
+- module instance lifecycle 中 `global.document.create*` 清零；
+- direct `global.getComputedStyle` Realm 泄漏清理；
+- component-local bare RAF/timer 大量收归 Scheduler/NoticeClock；
+- docs/demo 中仍推荐旧 Reorder owner 的残留已清理，并改成递归 docs verify。
+
+## 3.3 Compatibility 出口
+
+已有：
+
+- `src/manifests/compatibility.json`
+- `dist/qxframe9a7c2-migration.json`
+- `docs/generated/migration-manifest.json`
+
+记录：
+
+- legacy theme class adapter；
+- DOM Factory bridge removed；
+- `rel-*` removed；
+- `CSSCompatState` removed；
+- Runtime legacy option 的 deprecatedSince / replacement / removedIn / migrationNote。
+
+原则已经固定为：
+
+```text
+Legacy -> Canonical 单向 adapter/rejection boundary
+Canonical 不能反向依赖 Legacy
+```
+
+---
+
+# 4. 已完成：Core / Runtime / State / Async / 生命周期
+
+## 4.1 ComponentRuntime / OptionSchema
+
+- 40 个 visible component 均有 Runtime schema；
+- unknown/legacy option gate 已统一；
+- 可无歧义的 Runtime 类型 contract 已提升到 schema；
+- 当前约 **1222 / 2255（54.2%）** schema 项由 Runtime 直接承担明确类型校验；
+- callback / document / boolean / number / array / object/string 等已优先统一；
+- 多态 value/content/复杂 enum 仍由组件语义层校验，避免机械收窄 API；
+- verify 已设最低覆盖率和关键 callback/document 类型门槛。
+
+> 注意：不要为了追求 100% typed schema 把真实多态 API 强行改成错误的单类型。
+
+## 4.2 State ownership
+
+已有：
+
+- `src/manifests/state-ownership.json`
+- `docs/generated/state-ownership.json`
+
+40 个 visible component 均声明 canonical state owner。
+
+已完成的关键迁移：
+
+- NumericInput/InputNumber -> StateController value contract；
+- Autocomplete -> committed value / draft input 分离；
+- TreeSelect -> StateController 管 API value，Tree/Selection 管 presentation/check/navigation；
+- Menu persistent selected Set -> Headless.Selection；
+- Select/Tags/Transfer/Cascader 等保持其 Selection/Collection canonical owner，不机械套 StateController；
+- controlled value 与 presentation state 分离；
+- external sync 支持 draft 保护；
+- value 未变不重复 emit；
+- FormBridge/Selection/Select multiple 等统一 Value Equality contract。
+
+## 4.3 Async
+
+已形成 canonical：
+
+```text
+AsyncTask
+AsyncTaskGroup
+AsyncAction
+```
+
+已完成：
+
+- Autocomplete remote search；
+- Tree/Cascader keyed async；
+- Popconfirm；
+- Modal async button/action；
+- Drawer async button/action；
+- Table remote query；
+- destroy/cancel/latest-wins/stale result contract；
+- AsyncTask state callback throw/destroy-self 不破坏 task 自身收尾；
+- AsyncAction callback freshness；
+- Diagnostics 纳入 async pending balance。
+
+## 4.4 Scheduler / callback exception / reentrancy
+
+已完成：
+
+- Scheduler measure/mutate 单 task throw 不阻断 batch；
+- reentrant scheduling 保持下一帧驱动；
+- Events subscriber exception isolation；
+- Motion/Transition hooks throw 后仍 settle/cleanup；
+- Popconfirm/Cascader/Tree/Select/Transfer/Autocomplete/ItemCollection/VirtualList 等关键 callback destroy-self 后停止访问失效 owner；
+- callback freshness：`updateOptions(A -> B)` 后下一次交互使用 B；
+- Runtime 回归测试覆盖 callback throw / destroy / updateOptions。
+
+## 4.5 Transactional updateOptions
+
+已明确修复的组件包括：
+
+- Disclosure；
+- Collapse；
+- ColorPanel；
+- VirtualList；
+- WheelPanel；
+- Slider；
+- Rate；
+- InputNumber 外层 wrapper；
+- Table feature/update candidate validation。
+
+模式统一为：
+
+```text
+normalize candidate
+-> validate all
+-> preflight structural changes
+-> commit
+-> reconcile
+```
+
+错误时实例保持旧配置，避免半新半旧。
+
+---
+
+# 5. 已完成：DOM / Realm / Projection / Focus / Interaction
+
+## 5.1 DOM / Realm
+
+已完成：
+
+- `Core.DOM.queryAll()` 安全 selector；
+- public selector 输入走 `DOM.query/queryAll/matches/closest/resolveElement`；
+- Tags 等公开 selector 残留修复；
+- Calendar/Collapse/ItemCollection/Pagination/PeriodPanel/Tree/Upload/VirtualList 等 DOM 创建使用 ownerDocument；
+- Tabs/Menu/Tags/NoticeService/MotionCore 等 computed style 使用对应 realm；
+- Message/Notification Notice frame 按 `document + placement` 隔离；
+- Event/CustomEvent/view/performance 等尽量从实例 realm 获取；
+- verify 禁止 module lifecycle 回退到 `global.document.create* / global.getComputedStyle`。
+
+## 5.2 DOMProjection ownership
+
+新增/统一 `DOMProjection` ownership contract。
+
+已迁移关键路径：
+
+- ScrollLock；
+- OverlayRuntime temporary z-index；
+- Reorder visual mutation；
+- 其他临时 style/attribute/class projection。
+
+恢复规则：
+
+```text
+current === applied
+-> restore original
+
+current !== applied
+-> external takeover, do not restore
+```
+
+已有运行测试验证外部后写不会被 QX destroy 覆盖。
+
+## 5.3 Focus / VirtualFocus / Pointer handoff
+
+已完成：
+
+- 一个交互上下文一个主视觉焦点；
+- VirtualFocus descendant real focus 时暂停父 ring；
+- Focus / Active / Selected / Hover 分离；
+- popup option active 以 active background 为主，不与 field focus ring 竞争；
+- selected + disabled 保留 semantic identity；
+- loading/disabled activation keyboard + pointer 一致 gate；
+- Tree `←/→` 仅 disclosure；
+- Tree Enter=activate/select，Space=check；
+- Tree readOnly 不再等于 disabled；
+- Slider keyboard continuous session：一次长按只产生一次 final；
+- Ripple 输入 ownership -> PressInteraction；
+- Menu inline submenu -> measured-height Transition；
+- Tabs -> 单一 movable indicator。
+
+---
+
+# 6. 已完成：CSS / Theme / Motion / Source Order
+
+## 6.1 CSS source 分层
+
+原单文件历史堆叠已经改成固定 11-stage source fragments：
+
+```text
+src/css/00-foundation.css
+01-theme.css
+02-semantic.css
+03-family.css
+04-shared-roles.css
+05-components.css
+06-component-variants.css
+07-state.css
+08-composites.css
+09-utilities.css
+10-compatibility.css
+```
+
+`src/qxframe9a7c2.css` / dist CSS 为 build 聚合结果。
+
+已有：
+
+- `src/manifests/css-order.json`
+- `docs/generated/css-source-order.json`
+
+release verify 会校验聚合顺序和最终文件一致性。
+
+## 6.2 Selector / specificity budget
+
+当前 verify 结果：
+
+- specificity warning：**0**；
+- selector >200 chars warning：**0**；
+- selector group >20 branches warning：**0**；
+- 当前最大 selector length：**162**；
+- 当前最大 selector branches：**20**。
+
+已处理的典型历史问题：
+
+- InputGroup 超长枚举 selector；
+- SelectGroup hover；
+- Steps responsive 类型判断；
+- Menu collapsed；
+- Tabs indicator；
+- Switch active/loading/disabled arbitration；
+- Input hover ownership；
+- Icon size inheritance。
+
+verify 的 selector parser 已能识别函数内部逗号和 `:is/:not/:has` specificity，不再简单 `split(',')`。
+
+## 6.3 `!important` / will-change / compositing
+
+已有：
+
+- `src/manifests/css-exceptions.json`
+- `docs/generated/css-exceptions.json`
+
+`!important` 只允许进入审计 allowlist。
+
+已删除 Table 大面积 loading mask 的 `backdrop-filter blur`。
+
+---
+
+# 7. 已完成：Table 强化（大部分）
+
+Table 已经不是原来的轻型 Table。当前已实现/收口：
+
+## 7.1 Data / Query / Remote
+
+- local / remote 明确分离；
+- remote 不再二次 local paginate；
+- `searchValue`；
+- sort/filter/page/pageSize query；
+- `total / filteredTotal`；
+- Remote `requestEpoch` + AsyncTask 双层 stale guard；
+- remote load result validation；
+- stale result ignore；
+- abort/cancel/error/retry；
+- remote processing state：
+  - `initial-loading`
+  - `refreshing`
+  - `error-empty`
+  - `error-with-stale-data`
+  - `empty`
+  - `ready`
+- refresh 可保留 stale rows；
+- server `summary` + `summaryScope`。
+
+## 7.2 Projection / performance
+
+TableModel projection 已拆为：
+
+```text
+ordered/data projection
+-> page/visible projection
+-> state snapshot
+```
+
+已验证：
+
+- selection/expand 不重跑 filter/sort/page；
+- pagination 只重算 visible slice；
+- diagnostics 统计 projection/filter/sort/page/row/cell 次数；
+- row hot path 不依赖高层公开 API 反复拼装。
+
+## 7.3 Stable identity / render transaction
+
+- advanced mode 要求 stable row key；
+- column key 为长期 identity；
+- old `keepFilterPopup` 特殊 flag 已删除；
+- render transaction 改成 interaction snapshot/restore；
+- row reorder/move 复用实例，不 destroy/recreate；
+- embedded renderer component 有 lifecycle ownership；
+- row remove 会 dispose owned child component；
+- visual-only reorder 不误 dispose。
+
+## 7.4 Column State / View State
+
+已有：
+
+```text
+getColumnState()
+applyColumnState()
+resetColumnState()
+setColumnVisible()
+setColumnWidth()
+
+getViewState()
+applyViewState()
+resetViewState()
+```
+
+ViewState 版本化，按 column key merge，未知旧列 ignore、新列走 default。
+
+隐藏列属于 presentation，不自动清除 sort/filter/query logical state。
+
+## 7.5 Selection
+
+remote selection scope 已区分：
+
+```text
+page
+loaded
+query
+```
+
+query 全选：
+
+```text
+allMatching + excludedKeys + queryFingerprint
+```
+
+不枚举几十万远程 key。
+
+换 sort/filter/search query 时旧 query selection 失效。
+
+Header aggregate selection 按 selectable rows 计算，不把 disabled rows 算进 denominator。
+
+## 7.6 Resize / Reorder / Geometry
+
+- Column resize；
+- Column reorder；
+- Row reorder；
+- ReorderInteraction canonical owner；
+- row reorder 在 sort/filter/search projection active 时按约束禁用；
+- `remote + rowReorder` create/update 明确拒绝；
+- fixed/reorder zone 约束；
+- geometry `Observer -> Scheduler.measure -> compute -> Scheduler.mutate`；
+- DPR normalization；
+- epsilon/signature 收敛；
+- 相同 geometry 不重复 mutate。
+
+## 7.7 Cell Render / Callback / Edit
+
+- default primitive value 走 TextNode，不默认 innerHTML；
+- cell renderer 输出进入稳定 `cell-content` shell；
+- td 保留 fixed/sticky/width/inset/z-index structural ownership；
+- Row Callback Data View 唯一：`{row,key,meta,view}`；
+- sort/filter/export 使用 orthogonal cell data，不从 rendered DOM 反推；
+- column 支持 `value/render/sortValue/filterValue/exportValue`；
+- `label / header / exportLabel` 语义分离；
+- `editable: boolean | function(row,column,context)`；
+- Cell Edit Transaction：
+  - begin
+  - draft
+  - validating
+  - committed
+  - cancelled
+  - error
+- validate/save reject 保留 draft；
+- Escape rollback；
+- Enter/F6/API exit commit；
+- blur commit；
+- row remove rollback；
+- projection change 尝试 commit；
+- legacy `editSessionKey` 已清零。
+
+## 7.8 Table UI / API
+
+已完成：
+
+- Table pager 复用 Pagination；
+- toolbar / toolbarStart / toolbarEnd / footerStart / footerEnd composition slots；
+- `scrollPolicy`；
+- `reflow()/resize()`；
+- `getExportData()`；
+- `getExportCSV()`；
+- row click/double-click/contextmenu 走 delegation；
+- Update Reason 统一到：
+  - initial
+  - data
+  - remote-result
+  - refresh
+  - search
+  - filter
+  - sort
+  - page
+  - page-size
+  - row-update/insert/remove
+  - selection
+  - expand
+  - column-resize/reorder/visibility
+  - virtual-switch
+  - reflow
+
+## 7.9 Table Feature Matrix
+
+已有：
+
+- `src/manifests/table-features.json`
+- `docs/generated/table-feature-matrix.json`
+
+明确：
+
+- `remote + rowReorder` = **unsupported**；
+- `group-header` = **unsupported**（当前 single-row header renderer 不假装支持）；
+- virtual + edit / expanded 等 = supported-with-constraints；
+- fixed + responsive / column reorder + fixed 等有正式约束。
+
+---
+
+# 8. 当前自动验证 / Release Gate
+
+当前 `npm test` 会执行：
+
+```text
+npm run build
+npm run verify:core
+npm run verify:platform
+npm run verify:release
+```
+
+最新成功结果：
+
+```text
+Built 72 modules; dependency graph verified.
+
+verify-core:
+components = 40
+core = 13
+headless = 21
+domHeadless = 30
+cssSpecificityWarnings = 0
+cssLongSelectorWarnings = 0
+cssLargeSelectorGroupWarnings = 0
+cssMaxSelectorLength = 162
+cssMaxSelectorBranches = 20
+
+verify-platform:
+Chrome 105
+Edge 105
+Firefox 112
+Safari 16.4
+
+verify-release:
+jsSyntaxFiles = 99
+jsonFiles = 21
+modules = 72
+cssStages = 11
+bundle SHA256 = 8b98a1e54867941020165534697b67631c469f2a864eaa0b299f591bc56a682c
+css SHA256 = e1481d6c04d54fd0c12b3227714b8b9a7c65833c5202828b0cb2a2ed9d00e293
+```
+
+`verify:release` 当前覆盖：
+
+- JS syntax；
+- JSON parse；
+- merge conflict marker；
+- src -> dist 精确 rebuild 一致；
+- 11-stage CSS 聚合一致；
+- generated manifest/docs mirror 一致；
+- zero-consumer 历史体系 guard；
+- release artifact 基本完整性。
+
+当前浏览器 smoke：
+
+```text
+npm run verify:browser
+-> SKIP（不是 PASS）
+-> 原因：当前容器 Chromium 144 headless 的 dump-dom 启动超时；连最简单 data URL 也同样超时。
+-> runner / smoke HTML 已保留；在正常浏览器环境用 QX_BROWSER_REQUIRED=1 强制验收。
+```
+
+`verify-core` 已含 100 次资源循环压力验证，覆盖：
+
+- Lifecycle resource cleanup；
+- DOMProjection；
+- AsyncAction；
+- FocusScope；
+- InteractionIsolation；
+- Diagnostics before/after balance。
+
+---
+
+# 9. 最终剩余边界 / 非阻塞项
+
+R1～R3、R5、R6 已完成；R4 为手册允许的可选 Deferred。以下保留最终边界，防止未来把“明确延后/不支持”误判成遗漏。
+
+## R1. Table Column Width Solver —— Completed
+
+已完成。`fixedLayout:true` 现在是 QX managed column sizing 的明确入口：
+
+```text
+fixed px / %
+auto / flex
+minWidth / maxWidth
+user resize 后 width
+container available width
+DPR normalization
+```
+
+求解与 sticky/fixed offsets 在同一 geometry transaction 中执行；默认 `fixedLayout:false` 保持 native layout，不形成两个 geometry owner。ResizeObserver 也不会无条件清空 geometry signature，从而避免框架自身写入造成 observer feedback loop。
+
+## R2. Table Cell Overflow Policy —— Completed / Explicit Boundary
+
+Table core 现在只有一套 canonical policy：
+
+```text
+wrap
+nowrap
+ellipsis
+```
+
+旧 `ellipsis/nowrap` 入口只归一化到同一内部 contract。
+
+明确边界：
+
+- `tooltip`：Table core **不新增第二套 Overlay**；需要时组合现有 Tooltip；
+- `expand`：Table core **不新增第二套 expanded owner**；使用 row-keyed `renderExpanded/details`。
+
+对 `overflow=tooltip/expand` 的半实现会在 create/update 时直接拒绝。
+
+## R3. Table Responsive Mode —— Completed / Details Explicitly Unsupported
+
+当前正式 contract：
+
+```text
+responsiveMode: 'hide' | 'scroll'
+```
+
+- `hide`：按 column responsive rule 隐藏 presentation；logical sort/filter/state 不被删除；
+- `scroll`：列保持渲染，通过横向滚动查看；
+- `details`：当前 Feature Matrix 明确 **unsupported**。
+
+原因：自动 details 若实现必须一次解决 expanded-row identity、fixed、selection/edit、keyboard、responsive-hidden projection；在没有完整 row-details renderer 前禁止做半套。
+
+## R4. Optional ViewState storage adapter —— Deferred / Non-blocking
+
+核心 `getViewState() / applyViewState() / resetViewState()` 已完成并 versioned。
+
+手册建议的：
+
+```text
+localStorage
+sessionStorage
+custom server store
+```
+
+属于可选 adapter，且手册明确要求 **不要把 storage 强绑定进 Table core**。当前正式决定：fix(11 core 收口不以 storage adapter 为 blocker；未来如需要，以独立 adapter 实现。
+
+## R5. 真实浏览器复杂组合验收 —— Completed / Chromium PASS
+
+已完成并保留：
+
+- `tools/verify-browser-smoke.html`；
+- `tools/verify-browser-smoke.js`；
+- `npm run verify:browser`。
+
+最终真实运行环境：
+
+```text
+Chromium 144.0.7559.96
+transport = CDP Page.setDocumentContent + Runtime.evaluate
+QX_BROWSER_REQUIRED=1 npm run verify:browser -> PASS
+```
+
+真实浏览器矩阵已覆盖：
+
+```text
+framework load / 40 visible components
+Table managed column width + flex distribution
+responsive scroll
+Tabs single movable indicator
+alternate-document ownerDocument realm
+unsupported responsive details rejection
+Modal FocusScope / Shift+Tab containment + wrap
+Modal -> Select -> Tooltip nested overlay / Layer ownership
+IME composition Enter does not commit Select
+Transition open -> close -> open rapid reversal + settle
+Table horizontal+vertical scroll + sticky header + fixed start/end
+Virtual Table edit session scrolls out of range -> formal commit
+Diagnostics full resource balance after destroy
+```
+
+Diagnostics 最终 before/after：
+
+```text
+Scheduler active/pending = balanced
+Lifecycle active scopes/resources = 0 delta
+DOM listeners = 0 delta
+DOMProjection activeProjections/activeEntries = 0 delta
+AsyncTask/AsyncAction = 0 delta
+ObserverHub = 0 delta
+LayerManager = 0 delta
+FocusScope = 0 delta
+ScrollLock = 0 delta
+InteractionIsolation = 0 delta
+Motion = 0 delta
+LogicalOwnership = 0 delta
+```
+
+浏览器矩阵还实际发现并修复了以下静态测试未触达的问题：
+
+1. ComponentRuntime optional `undefined` 不应被普通 type rule 误拒绝；
+2. Modal/Drawer `duration` pair 与 `autoFocus` 多态 schema 必须与真实 API 对齐；
+3. Scroll `attachViewport()` adapter-only `controller` 不得泄漏进 Runtime option validation；
+4. FormBridge 使用统一 ValueEquality 后漏绑 capability 的 `ReferenceError`；
+5. Control destroy 仍残留旧 generation 变量 `resetGeneration`；
+6. Item/ItemCollection 空 DOMProjection lease 与 subtree projection cleanup 导致 `activeProjections +28` 泄漏；现已修成 0。
+
+`verify:browser` 保持可选脚本：普通机器缺浏览器时可 SKIP；正式 release/CI 如要求浏览器证据，使用 `QX_BROWSER_REQUIRED=1` 强制不可跳过。
+
+## R6. 最终完整手册逐项对照与归档 —— Completed
+
+已新增 `FIX11-v5-逐章状态对照表.md`，对原手册 1～78 个顶层章节逐章归档：
+
+```text
+Completed
+Deferred (non-blocking)
+Unsupported (explicit contract)
+Completed (browser validated)
+```
+
+当前原始完整手册已经原样放入项目根目录 `FIX11-原始完整任务手册-v5.md`，因此即使对话消失也不会丢目标。
+
+本轮还完成了文档层历史债清理：运行时已经删除的 `table-tree-* / table-group-head / table-nested / --table-tree-level` 也已从静态 docs/validation 删除，build 和递归 docs verify 会阻止它们重新出现。
+
+R6 已完成，R5 也已取得真实 Chromium 组合 PASS；当前没有未决 mandatory blocker。
+
+# 10. 明确延后 / 明确不支持，不应误当遗漏
+
+## Grouped / Complex Header
+
+当前：**unsupported**。
+
+原因：当前是 single-row header renderer，多级 header 若实现必须同时解决：
+
+- fixed；
+- responsive；
+- resize；
+- reorder；
+- sort/filter control；
+- colspan/rowspan；
+- keyboard header navigation。
+
+手册本身要求“不要仓促做半套”，因此当前显式拒绝是正确状态。
+
+## Shadow DOM
+
+2.19.x 正式 contract：**普通 Document DOM**。
+
+不宣称完整 Shadow DOM / composed tree 支持。
+
+不要在 fix(11) 最后阶段再引入一套半完成的 composed tree 基础设施。
+
+## Strict Trusted Types CSP
+
+当前 baseline 不宣称 `require-trusted-types-for 'script'` 全支持。
+
+DOMTemplate 只接受框架静态、无插值 markup；不要假装完整 TrustedHTML adapter 已存在。
+
+## Table P2
+
+当前明确不应因为参考 DataTables/Layui 而强行加入：
+
+- Multi-sort；
+- SearchBuilder/SearchPanes；
+- Spreadsheet range/copy/fill；
+- 重型 CRUD Editor/Form Engine；
+- TreeTable 强绑进普通 Table。
+
+---
+
+# 11. FINAL 之后的继续规则
+
+fix(11 已按当前 v5 contract 收口。未来若继续开发，不应把本轮已完成项重新当成待办；固定流程为：
+
+```text
+1. 以 FINAL ZIP + 本文件 + FIX11-最终收口报告为事实源。
+2. 先运行 npm test。
+3. 涉及浏览器交互/geometry/overlay 时运行 QX_BROWSER_REQUIRED=1 npm run verify:browser。
+4. 新能力先查 canonical-systems / state-ownership / feature matrix。
+5. 同层同责已有 owner 时只能扩展，不允许创建第二套 owner。
+6. Deferred/Unsupported 只有在真实需求出现且 contract 完整时才升级为实现项。
+7. 每次 release 继续执行 verify-release、src/dist exact check、ZIP integrity 与 SHA256。
+```
+
+---
+
+# 12. 最终交付前必须满足
+
+只有下面全部满足，才可宣布 fix(11) “收口完成”：
+
+```text
+[x] 已知 P0 没有未决项
+[x] 所有历史体系 canonical owner 明确
+[x] legacy consumer = 0 或明确 intentional adapter
+[x] compatibility removedIn/migration 有记录
+[x] Table 未实现能力明确 supported / constrained / unsupported / deferred
+[x] browser-only 验收状态明确，不虚报
+[x] npm test 全绿
+[x] verify-core 全绿
+[x] verify-platform 全绿
+[x] verify-release 全绿
+[x] JS/JSON syntax 全绿
+[x] src/dist 精确一致
+[x] generated manifests/docs 一致
+[x] zero-consumer scan 全绿
+[x] ZIP unzip -t 完整性通过
+[x] ZIP SHA256 生成
+[x] 最终包内包含最终修改/收口文档
+[x] 最终回复返回 ZIP + 已完成/延后/不支持/未验证对照表
+```
+
+---
+
+# 13. 当前关键文件索引
+
+## Canonical / compatibility
+
+```text
+src/manifests/canonical-systems.json
+src/manifests/state-ownership.json
+src/manifests/compatibility.json
+src/manifests/framework-feature-combinations.json
+src/manifests/table-features.json
+src/manifests/layers.json
+src/manifests/css-order.json
+src/manifests/css-exceptions.json
+```
+
+## Generated evidence
+
+```text
+docs/generated/canonical-system-manifest.json
+docs/generated/state-ownership.json
+docs/generated/migration-manifest.json
+docs/generated/framework-feature-combinations.json
+docs/generated/table-feature-matrix.json
+docs/generated/css-source-order.json
+docs/generated/css-exceptions.json
+docs/generated/component-api.json
+docs/generated/module-manifest.json
+```
+
+## Verification
+
+```text
+tools/build.js
+tools/verify-core.js
+tools/verify-platform.js
+tools/verify-release.js
+```
+
+## CSS canonical source
+
+```text
+src/css/00-foundation.css
+...
+src/css/10-compatibility.css
+```
+
+## Main remaining hotspot
+
+```text
+src/modules/table.js
+```
+
+---
+
+# 14. 禁止下一轮重新引入的东西
+
+```text
+CSSCompatState
+qxframe9a7c2-rel-*
+ComponentDOMFactories
+BuildingBlockDOMFactories
+Sort.createReorderInteraction() 作为公共 primitive
+value equality via JSON.stringify
+visible component requestId/loadGeneration 自管 async owner
+module instance global.document.create*
+module instance global.getComputedStyle
+Table keepFilterPopup 特殊 flag
+editSessionKey 单 flag 编辑生命周期
+裸数字 z-index 作为框架层级 source
+第二套 Overlay/Focus/Pointer/State/Reorder/Pagination/Form/Loading/Empty owner
+```
+
+新增代码前先查 `canonical-systems.json`。
+
+---
+
+# 15. 下一轮可直接复制的任务指令
+
+```text
+这是 QXFRAME9A7C2 fix(11) 当前 checkpoint 项目包。
+
+请先阅读项目根目录：
+FIX11-当前收口进度与续作手册-2026-09-21.md
+
+不要重新做已经完成的 canonical 收口，也不要依赖旧对话记忆推断进度。
+以当前源码、Manifest、verify 和该进度文档为事实源。
+
+先运行 npm test 验证 checkpoint，然后从文档第 9 节继续；R1～R3 已完成，不得重复实现：
+1. Table Column Width Solver 决策/实现；
+2. Cell Overflow policy；
+3. Responsive Details 决策/实现；
+4. ViewState storage adapter 已明确 Deferred / non-blocking；
+5. 浏览器级复杂组合验收；
+6. v5 手册最终逐项归档。
+
+每完成一批就更新该进度文档。
+最后必须返回 FINAL ZIP，并在包内保留最终收口报告。
+```
+
+---
+
+## 结论
+
+截至本 checkpoint，**前面的大量修改不会再只存在于聊天上下文**。代码、Manifest、verify、恢复 patch、测试结果和续作目标都会随 ZIP 一起交付。
+
+fix(11 已按当前 v5 contract 完成收口；已知 mandatory blocker = 0。R4 保持 Deferred，明确 Unsupported 项保持拒绝，不应为了“100% 功能数量”破坏单一 owner 架构。

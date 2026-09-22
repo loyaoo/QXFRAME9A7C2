@@ -1,0 +1,5 @@
+
+> qxframe9a7c2@2.19.81 verify:core
+> node tools/verify-core.mjs
+
+{"ok":true,"components":40,"core":13,"headless":33,"domHeadless":35,"familyCapabilities":25,"cssSpecificityWarnings":0,"cssLongSelectorWarnings":0,"cssLargeSelectorGroupWarnings":0,"cssMaxSelectorLength":162,"cssMaxSelectorGroupLength":1370,"cssMaxSelectorBranches":20}

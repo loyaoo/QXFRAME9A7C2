@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "authorities": [
+    {
+      "name": "Autocomplete",
+      "module": "autocomplete",
+      "source": "src/components/autocomplete.js",
+      "phase": "64→70"
+    },
+    {
+      "name": "Carousel",
+      "module": "carousel",
+      "source": "src/components/carousel.js",
+      "phase": "45→50-prep"
+    },
+    {
+      "name": "Cascader",
+      "module": "cascader",
+      "source": "src/components/cascader.js",
+      "phase": "64→70"
+    },
+    {
+      "name": "Collapse",
+      "module": "collapse",
+      "source": "src/components/collapse.js",
+      "phase": "45→50-prep"
+    },
+    {
+      "name": "ColorPicker",
+      "module": "color-picker",
+      "source": "src/components/color-picker.js",
+      "phase": "70→76"
+    },
+    {
+      "name": "DatePicker",
+      "module": "date-picker",
+      "source": "src/components/date-picker.js",
+      "phase": "70→76"
+    },
+    {
+      "name": "Drawer",
+      "module": "drawer",
+      "source": "src/components/drawer.js",
+      "phase": "58→64"
+    },
+    {
+      "name": "Dropdown",
+      "module": "dropdown",
+      "source": "src/components/dropdown.js",
+      "phase": "50→58"
+    },
+    {
+      "name": "InputNumber",
+      "module": "input-number",
+      "source": "src/components/input-number.js",
+      "phase": "40→45"
+    },
+    {
+      "name": "InputOTP",
+      "module": "input-otp",
+      "source": "src/components/input-otp.js",
+      "phase": "40→45"
+    },
+    {
+      "name": "Loading",
+      "module": "loading",
+      "source": "src/components/loading.js",
+      "phase": "45→50-prep"
+    },
+    {
+      "name": "Modal",
+      "module": "modal",
+      "source": "src/components/modal.js",
+      "phase": "58→64"
+    },
+    {
+      "name": "Popconfirm",
+      "module": "popconfirm",
+      "source": "src/components/popconfirm.js",
+      "phase": "50→58"
+    },
+    {
+      "name": "Popover",
+      "module": "popover",
+      "source": "src/components/popover.js",
+      "phase": "50→58"
+    },
+    {
+      "name": "Progress",
+      "module": "progress",
+      "source": "src/components/progress.js",
+      "phase": "45→50-prep"
+    },
+    {
+      "name": "Rate",
+      "module": "rate",
+      "source": "src/components/rate.js",
+      "phase": "40→45"
+    },
+    {
+      "name": "Result",
+      "module": "result",
+      "source": "src/components/result.js",
+      "phase": "45→50-prep"
+    },
+    {
+      "name": "Select",
+      "module": "select",
+      "source": "src/components/select.js",
+      "phase": "64→70"
+    },
+    {
+      "name": "Slider",
+      "module": "slider",
+      "source": "src/components/slider.js",
+      "phase": "40→45"
+    },
+    {
+      "name": "Sort",
+      "module": "sort",
+      "source": "src/components/sort.js",
+      "phase": "45→50-prep"
+    },
+    {
+      "name": "Steps",
+      "module": "steps",
+      "source": "src/components/steps.js",
+      "phase": "45→50-prep"
+    },
+    {
+      "name": "TagInput",
+      "module": "tag-input",
+      "source": "src/components/tag-input.js",
+      "phase": "40→45"
+    },
+    {
+      "name": "TimePicker",
+      "module": "time-picker",
+      "source": "src/components/time-picker.js",
+      "phase": "70→76"
+    },
+    {
+      "name": "Tooltip",
+      "module": "tooltip",
+      "source": "src/components/tooltip.js",
+      "phase": "50→58"
+    },
+    {
+      "name": "TreeSelect",
+      "module": "tree-select",
+      "source": "src/components/tree-select.js",
+      "phase": "64→70"
+    },
+    {
+      "name": "WheelPicker",
+      "module": "wheel-picker",
+      "source": "src/components/wheel-picker.js",
+      "phase": "70→76"
+    }
+  ]
+}

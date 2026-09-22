@@ -1,0 +1,123 @@
+// Stage 64→70 foundation: canonical PopupField family base.
+// It extends FieldComponent and composes Trigger; it does not inherit PopupComponent.
+import { FieldComponent } from './field.js';
+import { fieldHooks } from '../core/fieldHooks.js';
+import { Trigger } from './trigger.js';
+import { DOM } from '../core/dom.js';
+
+const state = new WeakMap();
+
+export const popupFieldHooks = Object.freeze({
+    beforeOpen: Symbol('QXFRAME9A7C2.PopupField.beforeOpen'),
+    afterOpen: Symbol('QXFRAME9A7C2.PopupField.afterOpen'),
+    beforeClose: Symbol('QXFRAME9A7C2.PopupField.beforeClose'),
+    afterClose: Symbol('QXFRAME9A7C2.PopupField.afterClose'),
+    optionsUpdated: Symbol('QXFRAME9A7C2.PopupField.optionsUpdated')
+});
+
+function requireState(instance) {
+    const record = state.get(instance);
+    if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid PopupFieldComponent instance.');
+    return record;
+}
+
+export class PopupFieldComponent extends FieldComponent {
+    constructor(options = {}) {
+        super(options);
+        state.set(this, { trigger: null, reference: null, popup: null, tabExitTarget: null });
+    }
+
+    setupPopupFieldRuntime(options = {}) {
+        const record = requireState(this);
+        if (record.trigger) throw new Error('[QXFRAME9A7C2] PopupField runtime is already initialized.');
+        const config = Object.assign({}, options);
+        record.reference = config.reference || null;
+        record.popup = config.floating || null;
+        record.tabExitTarget = config.tabExitTarget || null;
+        const beforeOpen = config.beforeOpen;
+        const beforeClose = config.beforeClose;
+        const onOpen = config.onOpen;
+        const onClose = config.onClose;
+        config.beforeOpen = detail => {
+            if (!this.canActivate({ preserveFocusWhileLoading: true })) return false;
+            const hook = this[popupFieldHooks.beforeOpen];
+            if (typeof hook === 'function' && hook.call(this, detail) === false) return false;
+            return typeof beforeOpen === 'function' ? beforeOpen(detail) : undefined;
+        };
+        config.beforeClose = detail => {
+            const hook = this[popupFieldHooks.beforeClose];
+            if (typeof hook === 'function' && hook.call(this, detail) === false) return false;
+            return typeof beforeClose === 'function' ? beforeClose(detail) : undefined;
+        };
+        config.onOpen = detail => {
+            if (typeof onOpen === 'function') onOpen(detail);
+            const hook = this[popupFieldHooks.afterOpen];
+            if (typeof hook === 'function') hook.call(this, detail);
+        };
+        config.onClose = detail => {
+            if (typeof onClose === 'function') onClose(detail);
+            const hook = this[popupFieldHooks.afterClose];
+            if (typeof hook === 'function') hook.call(this, detail);
+        };
+        return this.adoptPopupFieldRuntime(Trigger.create(config), { reference: record.reference, popup: record.popup, tabExitTarget: record.tabExitTarget, owned: true });
+    }
+
+    adoptPopupFieldRuntime(trigger, options = {}) {
+        const record = requireState(this);
+        if (record.trigger) throw new Error('[QXFRAME9A7C2] PopupField runtime is already initialized.');
+        if (!trigger || typeof trigger.open !== 'function' || typeof trigger.close !== 'function' || typeof trigger.getState !== 'function') throw new TypeError('[QXFRAME9A7C2] PopupFieldComponent requires a Trigger-compatible runtime.');
+        if (Object.prototype.hasOwnProperty.call(options, 'reference')) record.reference = options.reference;
+        if (Object.prototype.hasOwnProperty.call(options, 'popup')) record.popup = options.popup;
+        if (Object.prototype.hasOwnProperty.call(options, 'tabExitTarget')) record.tabExitTarget = options.tabExitTarget;
+        record.trigger = options.owned === true ? this.own(trigger) : trigger;
+        return trigger;
+    }
+
+    open(reason, originalEvent) {
+        if (this.destroyed || !this.canActivate({ preserveFocusWhileLoading: true })) return false;
+        const trigger = requireState(this).trigger;
+        return trigger ? trigger.open(reason || 'api', originalEvent || null) : false;
+    }
+    close(reason, originalEvent) {
+        if (this.destroyed) return false;
+        const trigger = requireState(this).trigger;
+        return trigger ? trigger.close(reason || 'api', originalEvent || null) : false;
+    }
+    toggle(reason, originalEvent) {
+        if (this.destroyed || !this.canActivate({ preserveFocusWhileLoading: true })) return false;
+        const trigger = requireState(this).trigger;
+        return trigger ? trigger.toggle(reason || 'api', originalEvent || null) : false;
+    }
+    setOpen(value, reason, originalEvent) { return value === true ? this.open(reason || 'set-open', originalEvent) : this.close(reason || 'set-open', originalEvent); }
+    reposition(reason = 'api') { const trigger = requireState(this).trigger; return !this.destroyed && trigger ? trigger.reposition(reason) : false; }
+
+    focusReference(options) {
+        const reference = requireState(this).reference || this.root;
+        return DOM.focusElement(reference, options || { preventScroll: true });
+    }
+    focusPopup(options) {
+        const popup = requireState(this).popup;
+        if (!popup) return false;
+        const target = popup.querySelector && popup.querySelector('[tabindex="0"],button:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex="-1"])');
+        return DOM.focusElement(target || popup, options || { preventScroll: true });
+    }
+
+    getTrigger() { return requireState(this).trigger; }
+    getReferenceElement() { return requireState(this).reference; }
+    getPopupElement() { return requireState(this).popup; }
+    getTabExitTarget() { return requireState(this).tabExitTarget; }
+    getPopupState() { const trigger = requireState(this).trigger; return trigger ? trigger.getState() : Object.freeze({ open: false, destroyed: this.destroyed }); }
+
+    [fieldHooks.fieldOptionsUpdated](next, previous, patch) {
+        const record = requireState(this);
+        if (record.trigger) {
+            const triggerPatch = {};
+            for (const key of ['disabled','openDelay','closeDelay','placement','strategy','matchReferenceWidth','flipOnOverflow','closeOnEscape','closeOnOutsidePress','closeOnTabExit','zIndex']) {
+                if (Object.prototype.hasOwnProperty.call(patch, key)) triggerPatch[key] = next[key];
+            }
+            if (Object.keys(triggerPatch).length) record.trigger.updateOptions(triggerPatch);
+        }
+        const hook = this[popupFieldHooks.optionsUpdated];
+        if (typeof hook === 'function') hook.call(this, next, previous, patch);
+    }
+}

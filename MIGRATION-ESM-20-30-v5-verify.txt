@@ -1,0 +1,126 @@
+
+> qxframe9a7c2@2.19.81 verify
+> npm run verify:core && npm run verify:contracts && npm run verify:platform && npm run verify:esm-core && npm run verify:esm-coverage && npm run verify:esm-graph && npm run verify:esm-consumers && npm run verify:esm-entry && npm run verify:release
+
+
+> qxframe9a7c2@2.19.81 verify:core
+> node tools/verify-core.mjs
+
+{"ok":true,"components":40,"core":13,"headless":33,"domHeadless":35,"familyCapabilities":25,"cssSpecificityWarnings":0,"cssLongSelectorWarnings":0,"cssLargeSelectorGroupWarnings":0,"cssMaxSelectorLength":162,"cssMaxSelectorGroupLength":1370,"cssMaxSelectorBranches":20}
+
+> qxframe9a7c2@2.19.81 verify:contracts
+> node tools/verify-component-contracts.mjs
+
+{"ok":true,"schemas":40,"sourceContractDrift":0,"demoContractDrift":0}
+
+> qxframe9a7c2@2.19.81 verify:platform
+> node tools/verify-platform.mjs
+
+{"ok":true,"browserBaseline":{"chrome":105,"edge":105,"firefox":112,"safari":"16.4"},"modules":72}
+
+> qxframe9a7c2@2.19.81 verify:esm-core
+> node tools/verify-esm-core-parity.mjs
+
+{"ok":true,"candidates":["Utils","IdManager","URLPolicy","ValueEquality","DateUnit","SemanticStyles","Events","Scheduler","InteractionDetails","Lifecycle","DOMProjection","Config","DOM","Selection","ValueDraft","StateController","TreeModel","PaginationModel","TableModel","Collection","InteractionPolicy","TransformModel","AsyncTask","AsyncTaskGroup","AsyncAction","ActiveItem","UploadLifecycle","TextInputBehavior","TokenInput","SegmentedInput","NumericInput","Disclosure","InteractionModality","ObserverHub","PressInteraction","PointerSession","EventDelegation","FormBridge","FocusManager","ScrollLock","PopupSurface","TriggerInteraction","LogicalOwnership","ScrollVisibility","Renderer","DOMBinding","FieldHost","ResponsiveOverflow","DOMTemplate","LayerManager","DismissableLayer","InteractionIsolation","FocusScope","FocusTrap","Virtualizer","KeyboardNavigation","RovingProjection","TagNavigation","KeyboardRegion","ItemAccessors","ItemSchema","SearchState","SelectionTags","HierarchicalSelection","PickerSession","OpenStateBridge","TemporalGrid","OptionTransaction","ClearAction","OverlayFramePolicy","NoticePreset","ReorderInteraction","MotionCore","MotionPresets","Transition","TransitionGroup","PositionAdapter","OverlayRuntime","OverlayFrameShell"],"runtimeAuthority":"legacy-registry","esmAuthorityReady":true,"rollupCutoverPending":true}
+
+> qxframe9a7c2@2.19.81 verify:esm-coverage
+> node tools/verify-esm-migration-coverage.mjs
+
+{
+  "ok": true,
+  "kernelSections": 77,
+  "classifiedSections": 77,
+  "candidateSections": 68,
+  "candidateFiles": 79,
+  "statusCounts": {
+    "remove-loader-shell": 5,
+    "candidate": 68,
+    "deferred-runtime-provider": 1,
+    "phase-30-35": 2,
+    "merge-initializer": 1
+  },
+  "deferred": [
+    {
+      "section": "qxframe9a7c2-core",
+      "status": "remove-loader-shell",
+      "phase": "cutover"
+    },
+    {
+      "section": "qxframe9a7c2-performance",
+      "status": "deferred-runtime-provider",
+      "phase": "after-component-runtime"
+    },
+    {
+      "section": "qxframe9a7c2-headless",
+      "status": "remove-loader-shell",
+      "phase": "cutover"
+    },
+    {
+      "section": "floating-ui.core.umd.min",
+      "status": "phase-30-35",
+      "phase": "30-35"
+    },
+    {
+      "section": "floating-ui.dom.umd.min",
+      "status": "phase-30-35",
+      "phase": "30-35"
+    },
+    {
+      "section": "qxframe9a7c2-dom-headless",
+      "status": "remove-loader-shell",
+      "phase": "cutover"
+    },
+    {
+      "section": "qxframe9a7c2-components",
+      "status": "remove-loader-shell",
+      "phase": "component-cutover"
+    },
+    {
+      "section": "qxframe9a7c2-building-blocks",
+      "status": "remove-loader-shell",
+      "phase": "component-cutover"
+    },
+    {
+      "section": "qxframe9a7c2-focus-modality",
+      "status": "merge-initializer",
+      "phase": "cutover"
+    }
+  ]
+}
+
+> qxframe9a7c2@2.19.81 verify:esm-graph
+> node tools/verify-esm-import-graph.mjs
+
+{
+  "ok": true,
+  "files": 82,
+  "edges": 254,
+  "cycles": 0,
+  "legacyImports": 0
+}
+
+> qxframe9a7c2@2.19.81 verify:esm-consumers
+> node tools/verify-esm-consumers.mjs
+
+{
+  "ok": true,
+  "totalLegacyLookups": 622,
+  "totals": {
+    "CoreRegistry": 219,
+    "HeadlessRegistry": 167,
+    "DOMHeadlessRegistry": 163,
+    "ComponentRegistry": 25,
+    "BuildingBlockRegistry": 48
+  },
+  "moduleFilesWithRegistryConsumers": 57,
+  "policy": "counts may decrease, never increase"
+}
+
+> qxframe9a7c2@2.19.81 verify:esm-entry
+> node tools/verify-esm-entry.mjs
+
+{"ok":true,"esmNamedComponents":40,"umdGlobal":true,"legacyBridge":true}
+
+> qxframe9a7c2@2.19.81 verify:release
+> node tools/verify-release.mjs
+

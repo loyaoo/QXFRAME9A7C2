@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "authorities": [
+    {
+      "name": "Calendar",
+      "module": "calendar",
+      "source": "src/components/calendar.js",
+      "phase": "84→88-prep",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "ColorPanel",
+      "module": "color-panel",
+      "source": "src/components/color-panel.js",
+      "phase": "70→76-prep",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "Control",
+      "module": "control",
+      "source": "src/components/control.js",
+      "phase": "40→45-foundation",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "Item",
+      "module": "item",
+      "source": "src/components/item.js",
+      "phase": "84→88-prep",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "ItemCollection",
+      "module": "item-collection",
+      "source": "src/components/item-collection.js",
+      "phase": "84→88-prep",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "List",
+      "module": "list",
+      "source": "src/components/list.js",
+      "phase": "84→88",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "NoticeClock",
+      "module": "notice-clock",
+      "source": "src/core/noticeClock.js",
+      "phase": "45→50-support",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "NoticeService",
+      "module": "notice-service",
+      "source": "src/core/noticeService.js",
+      "phase": "88→92-tail",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "OptionList",
+      "module": "option-list",
+      "source": "src/components/option-list.js",
+      "phase": "64→70-prep",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "PeriodPanel",
+      "module": "period-panel",
+      "source": "src/components/period-panel.js",
+      "phase": "84→88-prep",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "TextField",
+      "module": "text-field",
+      "source": "src/components/text-field.js",
+      "phase": "40→45-support",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "TimePanel",
+      "module": "time-panel",
+      "source": "src/components/time-panel.js",
+      "phase": "70→76",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "Tree",
+      "module": "tree",
+      "source": "src/components/tree.js",
+      "phase": "84→88-prep",
+      "namespace": "buildingBlocks"
+    },
+    {
+      "name": "VirtualList",
+      "module": "virtual-list",
+      "source": "src/components/virtual-list.js",
+      "phase": "84→88-prep",
+      "namespace": "buildingBlocks"
+    }
+  ]
+}

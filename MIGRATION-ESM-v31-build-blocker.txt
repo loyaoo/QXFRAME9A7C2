@@ -1,0 +1,7 @@
+
+> qxframe9a7c2@2.19.81 build
+> node tools/build-release.mjs
+
+[build-release] No usable Rollup provider is available. Install rollup@4.63.4 or @rollup/wasm-node@4.63.4, or set QXFRAME_ROLLUP_PROVIDER to a compatible local module.
+rollup: Cannot find package 'rollup' imported from /mnt/data/qx_v30_work/QXFRAME9A7C2-v2.19.81-HOTFIX6-ESM-MIGRATION-ACCELERATED-v31/tools/rollup-provider.mjs
+@rollup/wasm-node: Cannot find package '@rollup/wasm-node' imported from /mnt/data/qx_v30_work/QXFRAME9A7C2-v2.19.81-HOTFIX6-ESM-MIGRATION-ACCELERATED-v31/tools/rollup-provider.mjs

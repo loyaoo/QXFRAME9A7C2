@@ -1,0 +1,93 @@
+{
+  "framework": "QXFRAME9A7C2",
+  "frameworkVersion": "2.19.81",
+  "version": 1,
+  "principle": "A primitive passing in isolation does not imply that its composition is supported. Every listed cross-primitive composition has one declared owner and an explicit verification strategy.",
+  "statuses": [
+    "supported",
+    "supported-with-constraints",
+    "unsupported"
+  ],
+  "combinations": [
+    {
+      "features": [
+        "Overlay",
+        "Nested Overlay"
+      ],
+      "status": "supported",
+      "owner": "DOMHeadless.OverlayRuntime + LayerManager + LogicalOwnership",
+      "contract": "Nested overlays inherit logical ownership, stack above their owner family, and do not dismiss the owner as an outside interaction.",
+      "verify": "layer-family ordering and nested overlay interaction regression"
+    },
+    {
+      "features": [
+        "Async",
+        "Destroy"
+      ],
+      "status": "supported",
+      "owner": "Headless.AsyncTask / AsyncAction",
+      "contract": "Destroy cancels ownership immediately; late resolve/reject cannot write state or emit success/error into the destroyed owner.",
+      "verify": "resource-balance and destroyed-state regression"
+    },
+    {
+      "features": [
+        "Transition",
+        "Portal"
+      ],
+      "status": "supported",
+      "owner": "DOMHeadless.Transition + OverlayRuntime",
+      "contract": "Logical open state is independent from visual settle; portal ownership remains stable through enter/leave/reversal.",
+      "verify": "motion hook safety plus overlay lifecycle regression"
+    },
+    {
+      "features": [
+        "Virtualizer",
+        "Edit"
+      ],
+      "status": "supported-with-constraints",
+      "owner": "Table edit transaction + Virtualizer stable row key",
+      "contract": "An active editor is keyed by stable row/column identity. A renderer change may rebind presentation but cannot silently commit or discard draft state.",
+      "verify": "Table stable-key/edit transaction checks"
+    },
+    {
+      "features": [
+        "Drag",
+        "Virtualizer"
+      ],
+      "status": "supported-with-constraints",
+      "owner": "DOMHeadless.ReorderInteraction",
+      "contract": "Drag records sourceKey rather than sourceIndex and cancels when dataVersion invalidates the logical source.",
+      "verify": "ReorderInteraction stable-key/data-version checks"
+    },
+    {
+      "features": [
+        "FormBridge",
+        "Portal"
+      ],
+      "status": "supported-with-constraints",
+      "owner": "BuildingBlocks.Control FormFieldBridge",
+      "contract": "Form ownership is taken from the authored field/form attribute, not from the portal DOM ancestry of popup controls.",
+      "verify": "FormBridge ownership contract"
+    },
+    {
+      "features": [
+        "Focus",
+        "VirtualFocus"
+      ],
+      "status": "supported",
+      "owner": "DOMHeadless.VirtualFocus + FocusScope",
+      "contract": "Only one primary visual focus owner is projected; descendant real focus suspends the parent virtual ring without losing logical active identity.",
+      "verify": "VirtualFocus descendant-focus regression"
+    },
+    {
+      "features": [
+        "ScrollLock",
+        "Nested Overlay"
+      ],
+      "status": "supported",
+      "owner": "DOMHeadless.ScrollLock + OverlayRuntime",
+      "contract": "Nested blockers share/ref-count lock ownership and restore only mutations still owned by QX.",
+      "verify": "resource-balance and DOMProjection ownership checks"
+    }
+  ]
+}

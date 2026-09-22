@@ -1,0 +1,33 @@
+
+> qxframe9a7c2@2.19.81 test
+> npm run build && npm run verify
+
+
+> qxframe9a7c2@2.19.81 build
+> node tools/build.js
+
+Built 72 modules; dependency graph verified.
+
+> qxframe9a7c2@2.19.81 verify
+> npm run verify:core && npm run verify:contracts && npm run verify:platform && npm run verify:release
+
+
+> qxframe9a7c2@2.19.81 verify:core
+> node tools/verify-core.js
+
+{"ok":true,"components":40,"core":13,"headless":21,"domHeadless":30,"cssSpecificityWarnings":0,"cssLongSelectorWarnings":0,"cssLargeSelectorGroupWarnings":0,"cssMaxSelectorLength":162,"cssMaxSelectorGroupLength":1370,"cssMaxSelectorBranches":20}
+
+> qxframe9a7c2@2.19.81 verify:contracts
+> node tools/verify-component-contracts.js
+
+{"ok":true,"schemas":40,"sourceContractDrift":0,"demoContractDrift":0}
+
+> qxframe9a7c2@2.19.81 verify:platform
+> node tools/verify-platform.js
+
+{"ok":true,"browserBaseline":{"chrome":105,"edge":105,"firefox":112,"safari":"16.4"},"modules":72}
+
+> qxframe9a7c2@2.19.81 verify:release
+> node tools/verify-release.js
+
+{"ok":true,"jsSyntaxFiles":100,"jsonFiles":21,"modules":72,"cssStages":11,"bundleSha256":"cf2f433b04ccbe824f9f4b7c3d76af0bed719080d70df2ba5e8d9fe91a334647","cssSha256":"744bb38e13e5c64a81c880768bb91847b55614c25ff1b49cb236b13abf109b4e"}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html class="qxframe9a7c2-theme-light" lang="zh-CN">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="assets/qxframe9a7c2-docs-theme-state.js"></script>
+<title>内容管理 · QXFRAME Admin Demo</title>
+<link href="../dist/qxframe9a7c2.css" rel="stylesheet"/>
+<link href="assets/qxframe9a7c2-admin-demo.css" rel="stylesheet"/>
+</head>
+<body class="admin-demo">
+<div class="qxframe9a7c2-layout is-horizontal admin-shell">
+<aside class="qxframe9a7c2-layout-sider admin-sider">
+<div class="admin-brand"><span class="admin-brand-mark">QX</span><span>QX Admin<small>Component composition demo</small></span><button aria-label="切换窄栏图标模式" class="qxframe9a7c2-button is-default is-text is-sm admin-sider-toggle" id="admin-sider-toggle" type="button"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-sidebar is-line is-round is-stroke-2"></span></button></div>
+<div class="admin-nav"><div data-admin-current="list" id="admin-main-menu"></div></div>
+<div class="admin-sider-foot"><div class="admin-user-mini"><span class="qxframe9a7c2-avatar is-md">LY</span><div><strong>管理员</strong><span>Super Admin</span></div></div></div>
+</aside>
+<section class="qxframe9a7c2-layout is-fixed-header admin-main">
+<header class="qxframe9a7c2-layout-header admin-header">
+<div class="admin-header-left"><div class="admin-breadcrumb"><span>后台</span><span class="sep">/</span><strong>内容管理</strong></div></div>
+<div class="admin-header-right">
+<div class="admin-header-search" id="admin-global-search"></div>
+<button aria-label="切换主题" class="qxframe9a7c2-button is-default is-text is-sm admin-icon-button" data-admin-theme-toggle="" type="button"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-moon is-line is-round is-stroke-2"></span></button>
+<span class="qxframe9a7c2-badge-anchor"><button class="qxframe9a7c2-button is-default is-text is-sm admin-icon-button" type="button"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-bell is-line is-round is-stroke-2"></span></button><span class="qxframe9a7c2-badge-count">3</span></span>
+<button class="qxframe9a7c2-button is-default is-text is-sm admin-user-trigger" id="admin-user-trigger" type="button"><span class="qxframe9a7c2-avatar is-sm">LY</span><span class="qxframe9a7c2-icon qxframe9a7c2-icon-caret-down is-line is-round is-stroke-3 is-xs"></span></button></div>
+</header>
+<main class="qxframe9a7c2-layout-content admin-content"><div class="admin-page">
+<div class="admin-page-head"><div class="admin-page-title"><h1>内容管理</h1><p>统一管理文章、商品、专题与独立页面。</p></div><div class="admin-page-actions"><a class="qxframe9a7c2-button is-primary is-solid is-md" href="admin-form-static.html"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-plus is-line is-round is-stroke-2"></span><span class="qxframe9a7c2-button-label">新增内容</span></a></div></div>
+<article class="qxframe9a7c2-card admin-card admin-tabs-card"><div class="qxframe9a7c2-card-body"><div class="admin-tabs-host" id="admin-list-tabs"></div></div></article>
+<article class="qxframe9a7c2-card admin-card admin-filter-card"><div class="qxframe9a7c2-card-body"><form class="qxframe9a7c2-form is-md admin-filter-form"><label class="qxframe9a7c2-form-field"><span>关键词</span><div class="admin-control" id="admin-list-autocomplete"></div></label><label class="qxframe9a7c2-form-field"><span>类型</span><div class="admin-control" id="admin-list-type-select"></div></label><label class="qxframe9a7c2-form-field"><span>状态</span><div class="admin-control" id="admin-list-status-select"></div></label><label class="qxframe9a7c2-form-field"><span>更新时间</span><div class="admin-control" id="admin-list-date-picker"></div></label><div class="admin-filter-actions"><button class="qxframe9a7c2-button is-primary is-solid is-md" type="button">查询</button><button class="qxframe9a7c2-button is-default is-outlined is-md" type="button">重置</button></div></form></div></article>
+<article class="qxframe9a7c2-card admin-card admin-list-card"><div class="qxframe9a7c2-card-body"><div class="admin-toolbar"><div class="admin-toolbar-left"><button class="qxframe9a7c2-button is-default is-outlined is-sm" id="admin-batch-trigger" type="button">批量操作 <span class="qxframe9a7c2-icon qxframe9a7c2-icon-caret-down is-line is-round is-stroke-3 is-xs"></span></button><span class="admin-toolbar-note">已选择 0 项</span></div><div class="admin-toolbar-right"><button class="qxframe9a7c2-button is-default is-text is-sm"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-setting is-line is-round is-stroke-2"></span><span class="qxframe9a7c2-button-label">列设置</span></button></div></div><div class="admin-table-wrap"><div class="admin-table-host" id="admin-list-table"></div></div><div class="admin-pagination"><span id="admin-list-page-info">共 0 条</span><div class="admin-pagination-host" id="admin-list-pagination"></div></div></div></article>
+</div></main>
+</section>
+</div>
+<script data-qxframe9a7c2-runtime="dist" src="../dist/qxframe9a7c2.js"></script><script src="assets/qxframe9a7c2-admin-demo.js"></script>
+</body></html>

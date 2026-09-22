@@ -1,0 +1,34 @@
+
+> qxframe9a7c2@2.19.81 verify
+> npm run verify:core && npm run verify:contracts && npm run verify:platform && npm run verify:esm-core && npm run verify:esm-entry && npm run verify:release
+
+
+> qxframe9a7c2@2.19.81 verify:core
+> node tools/verify-core.mjs
+
+{"ok":true,"components":40,"core":13,"headless":33,"domHeadless":35,"familyCapabilities":25,"cssSpecificityWarnings":0,"cssLongSelectorWarnings":0,"cssLargeSelectorGroupWarnings":0,"cssMaxSelectorLength":162,"cssMaxSelectorGroupLength":1370,"cssMaxSelectorBranches":20}
+
+> qxframe9a7c2@2.19.81 verify:contracts
+> node tools/verify-component-contracts.mjs
+
+{"ok":true,"schemas":40,"sourceContractDrift":0,"demoContractDrift":0}
+
+> qxframe9a7c2@2.19.81 verify:platform
+> node tools/verify-platform.mjs
+
+{"ok":true,"browserBaseline":{"chrome":105,"edge":105,"firefox":112,"safari":"16.4"},"modules":72}
+
+> qxframe9a7c2@2.19.81 verify:esm-core
+> node tools/verify-esm-core-parity.mjs
+
+{"ok":true,"candidates":["Utils","IdManager","URLPolicy","ValueEquality","DateUnit","SemanticStyles","Events","Scheduler","InteractionDetails","Lifecycle","DOMProjection","Config","DOM","Selection","ValueDraft","StateController","TreeModel","PaginationModel","TableModel","Collection","InteractionPolicy","TransformModel","AsyncTask","AsyncTaskGroup","AsyncAction","ActiveItem","UploadLifecycle","TextInputBehavior","TokenInput","SegmentedInput","NumericInput","Disclosure","InteractionModality","ObserverHub","PressInteraction","PointerSession","EventDelegation","FormBridge","FocusManager","ScrollLock","PopupSurface","TriggerInteraction","LogicalOwnership","ScrollVisibility","Renderer","DOMBinding","FieldHost","ResponsiveOverflow","DOMTemplate","LayerManager","DismissableLayer","InteractionIsolation","FocusScope","FocusTrap","Virtualizer","KeyboardNavigation","RovingProjection","TagNavigation","KeyboardRegion","ItemAccessors","ItemSchema","SearchState","SelectionTags","HierarchicalSelection","PickerSession","OpenStateBridge","TemporalGrid","OptionTransaction","ClearAction","OverlayFramePolicy","NoticePreset","ReorderInteraction","MotionCore","MotionPresets","Transition","TransitionGroup","PositionAdapter","OverlayRuntime","OverlayFrameShell"],"runtimeAuthority":"legacy-registry","esmAuthorityReady":true,"rollupCutoverPending":true}
+
+> qxframe9a7c2@2.19.81 verify:esm-entry
+> node tools/verify-esm-entry.mjs
+
+{"ok":true,"esmNamedComponents":40,"umdGlobal":true,"legacyBridge":true}
+
+> qxframe9a7c2@2.19.81 verify:release
+> node tools/verify-release.mjs
+
+{"ok":true,"jsSyntaxFiles":189,"jsonFiles":22,"modules":72,"cssStages":11,"bundleSha256":"13dc56032a6562003827220dd83c0ce9fd6307f9efb046052138b1829251372d","cssSha256":"5042e59366a6424516f4d2d17af8b61da4e24f5521224c7cbc4adedfb74eca92"}

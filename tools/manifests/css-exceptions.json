@@ -1,0 +1,420 @@
+{
+  "version": 1,
+  "policy": "No unregistered !important or will-change declarations. Exceptions are selector-exact and require a rationale.",
+  "entries": [
+    {
+      "selector": ".qxframe9a7c2-tag[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-ripple-wave.is-inside::after",
+      "importantDeclarations": 0,
+      "willChangeDeclarations": 1,
+      "reason": "Transient ripple animation phase owns its animation/transform while the wave exists."
+    },
+    {
+      "selector": ".qxframe9a7c2-ripple-wave.is-inside.is-leave::after",
+      "importantDeclarations": 2,
+      "willChangeDeclarations": 0,
+      "reason": "Transient ripple animation phase owns its animation/transform while the wave exists."
+    },
+    {
+      "selector": ".qxframe9a7c2-icon",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Icon glyph box baseline is a framework primitive and must not inherit conflicting line-box height."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-xs-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-xs-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-sm-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-sm-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-md-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-md-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-lg-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-lg-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-xl-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-xl-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-xxl-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-xxl-only",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-xs-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-xs-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-sm-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-sm-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-md-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-md-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-lg-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-lg-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-xl-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-xl-up",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-xs-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-xs-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-sm-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-sm-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-md-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-md-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-lg-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-lg-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-hidden-xl-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-visible-xl-down",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive visibility utilities are explicit cascade escape hatches."
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions[data-responsive=\"true\"]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive Descriptions projection must override authored column count at its breakpoint."
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions-grid,.qxframe9a7c2-descriptions[data-responsive=\"true\"]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Responsive Descriptions projection must override authored column count at its breakpoint."
+    },
+    {
+      "selector": "[class^=\"qxframe9a7c2-\"],[class*=\" qxframe9a7c2-\"]",
+      "importantDeclarations": 3,
+      "willChangeDeclarations": 0,
+      "reason": "Framework-wide motion-disable/reset boundary intentionally overrides component-local declarations."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled[class^=\"qxframe9a7c2-\"],.qxframe9a7c2-motion-disabled[class*=\" qxframe9a7c2-\"],.qxframe9a7c2-motion-disabled [class^=\"qxframe9a7c2-\"],.qxframe9a7c2-motion-disabled [class*=\" qxframe9a7c2-\"]",
+      "importantDeclarations": 3,
+      "willChangeDeclarations": 0,
+      "reason": "Framework-wide motion-disable/reset boundary intentionally overrides component-local declarations."
+    },
+    {
+      "selector": ".qxframe9a7c2-scroll.is-scrollbar-manual-hide .qxframe9a7c2-scroll-track",
+      "importantDeclarations": 3,
+      "willChangeDeclarations": 0,
+      "reason": "Explicit manual scrollbar-hide mode is an opt-in terminal visibility override."
+    },
+    {
+      "selector": ".qxframe9a7c2-modal-root[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-modal-container.is-fullscreen",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Audited framework state/compatibility override; changes require explicit review."
+    },
+    {
+      "selector": ".qxframe9a7c2-drawer-root[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-loading-root[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-form-selectgroup-input",
+      "importantDeclarations": 10,
+      "willChangeDeclarations": 0,
+      "reason": "Native input is visually suppressed while preserving the authored control as the canonical form/input owner."
+    },
+    {
+      "selector": ".qxframe9a7c2-date-picker-calendar-group:not(.is-date-picker-active),.qxframe9a7c2-date-picker-calendar-panel:not(.is-date-picker-active),.qxframe9a7c2-date-picker-drill-panel:not(.is-date-picker-active)",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .is-fixed-start,.qxframe9a7c2-table .is-fixed-end",
+      "importantDeclarations": 2,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table th.is-fixed-start,.qxframe9a7c2-table th.is-fixed-end",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-cell-check",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-cell-actions",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-cell-align-center",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-cell-align-end",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-expanded-row>td",
+      "importantDeclarations": 2,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-cell-editable",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-empty>td",
+      "importantDeclarations": 2,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-col-hide-md",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-col-hide-sm",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-virtual-spacer>td",
+      "importantDeclarations": 3,
+      "willChangeDeclarations": 0,
+      "reason": "Table structural geometry/alignment ownership must override user renderer presentation without changing layout contracts."
+    },
+    {
+      "selector": ".qxframe9a7c2-sort-overlay",
+      "importantDeclarations": 0,
+      "willChangeDeclarations": 1,
+      "reason": "Transient drag overlay exists only during the reorder session."
+    },
+    {
+      "selector": ".qxframe9a7c2-upload-input",
+      "importantDeclarations": 7,
+      "willChangeDeclarations": 0,
+      "reason": "Native input is visually suppressed while preserving the authored control as the canonical form/input owner."
+    },
+    {
+      "selector": ".qxframe9a7c2-slider-tooltip[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-carousel.is-fade .qxframe9a7c2-carousel-track",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Carousel mode switch disables the transform track transition owned by slide mode."
+    },
+    {
+      "selector": ".qxframe9a7c2-carousel.is-card .qxframe9a7c2-carousel-track",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Carousel mode switch disables the transform track transition owned by slide mode."
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-trigger[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-root[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-motion.is-trajectory-active",
+      "importantDeclarations": 0,
+      "willChangeDeclarations": 1,
+      "reason": "Transient trajectory state enables compositor promotion only while preview trajectory animation is active."
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-media[hidden]",
+      "importantDeclarations": 1,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-root[hidden]",
+      "importantDeclarations": 2,
+      "willChangeDeclarations": 0,
+      "reason": "Authoritative visibility state must win over component display/layout rules."
+    }
+  ]
+}

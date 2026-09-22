@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "componentBase": true,
+  "optionInheritance": true,
+  "optionTransaction": true,
+  "contractValidation": true,
+  "eventLifecycle": true,
+  "resourceOwnership": true,
+  "listenerCleanup": true,
+  "instanceRegistry": true,
+  "destroyIdempotent": true,
+  "familySpecificResponsibilities": 0
+}

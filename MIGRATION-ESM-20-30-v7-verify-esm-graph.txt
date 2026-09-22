@@ -1,0 +1,11 @@
+
+> qxframe9a7c2@2.19.81 verify:esm-graph
+> node tools/verify-esm-import-graph.mjs
+
+{
+  "ok": true,
+  "files": 83,
+  "edges": 256,
+  "cycles": 0,
+  "legacyImports": 0
+}

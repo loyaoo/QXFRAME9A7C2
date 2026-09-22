@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN" class="qxframe9a7c2-theme-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QXFRAME9A7C2 · Stage 06</title>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="../dist/qxframe9a7c2.css" data-qxframe9a7c2-runtime="dist">
+<link rel="stylesheet" href="assets/qxframe9a7c2-docs.css">
+<style>
+.s6-row{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem;margin:.75rem 0}
+.s6-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+.s6-card{padding:1rem;border:1px solid var(--qxframe9a7c2-color-border);border-radius:.5rem;background:var(--qxframe9a7c2-color-surface);color:var(--qxframe9a7c2-color-text)}
+.s6-log{min-height:8rem;white-space:pre-wrap;padding:.75rem;border:1px solid var(--qxframe9a7c2-color-border);border-radius:.375rem;background:var(--qxframe9a7c2-color-subtle);font:12px/1.5 monospace}
+</style>
+</head>
+<body>
+<main class="qxframe9a7c2-docs-shell">
+<header class="qxframe9a7c2-docs-header">
+<div><p class="qxframe9a7c2-docs-eyebrow">Stage 06 · Basic Visible Components</p><h1>Basic Visible Components + Full Color Tokens</h1>
+<p>真实 QXFRAME9A7C2 Button / Switch / Badge。Original UIKit 保持只读。</p></div>
+<label id="theme-switch" class="qxframe9a7c2-switch is-md">
+<input class="qxframe9a7c2-switch-input" type="checkbox">
+<span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span>
+<span class="qxframe9a7c2-switch-label">Dark</span>
+</label>
+</header>
+
+
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Token Naming · Stage 06</h2>
+<p><code>color-blue-5</code> 是 exact palette；<code>color-primary</code> 是 Semantic Color。</p>
+<p><code>space-*</code> 继续表示 spacing。Typography 分为 <code>font-size-数字</code> 和 <code>font-size-xs/sm/md/lg/xl</code>。</p>
+<p>Exact font-size：<code>8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40px</code>。</p>
+<p>Common semantic names：<code>xs=12 / sm=13 / md=14 / lg=16 / xl=18px</code>；Control Size Context 仍为 <code>12/13/14/15/16px</code>。</p>
+<p><a href="../audit/STAGE_06C_TOKEN_NAMING.md">查看完整 Token Naming Audit</a></p>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Original Global Color Tokens · Restored</h2>
+<p>Physical palette <code>172/172 exact</code>，Theme Role palette <code>65/65 exact</code>，Original global <code>--uikit-color-*</code> semantic names <code>58/58 restored</code>。</p>
+<div class="s6-row">
+<span class="qxframe9a7c2-badge is-primary is-md">Blue / Primary</span>
+<span class="qxframe9a7c2-badge is-success is-md">Teal / Success</span>
+<span class="qxframe9a7c2-badge is-warning is-md">Orange / Warning</span>
+<span class="qxframe9a7c2-badge is-error is-md">Red / Error</span>
+<span class="qxframe9a7c2-badge is-info is-md">Cyan / Info</span>
+</div>
+<p>完整映射见 <a href="../audit/STAGE_06B_COLOR_TOKEN_RESTORATION.md">Stage 06B Color Token Restoration</a>。</p>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Button · Sizes / Radius / Padding</h2>
+<div class="s6-row">
+<button class="qxframe9a7c2-button is-primary is-solid is-xs">XS</button>
+<button class="qxframe9a7c2-button is-primary is-solid is-sm">SM</button>
+<button class="qxframe9a7c2-button is-primary is-solid is-md">MD</button>
+<button class="qxframe9a7c2-button is-primary is-solid is-lg">LG</button>
+<button class="qxframe9a7c2-button is-primary is-solid is-xl">XL</button>
+</div>
+<p><code>height 24/28/32/36/40 · radius 3/3/4/4/5 · padding-x 6/8/10/12/14</code></p>
+
+<h3>Colors / Appearances</h3>
+<div class="s6-row">
+<button class="qxframe9a7c2-button is-primary is-solid is-sm">Primary</button>
+<button class="qxframe9a7c2-button is-success is-solid is-sm">Success</button>
+<button class="qxframe9a7c2-button is-warning is-outlined is-sm">Warning</button>
+<button class="qxframe9a7c2-button is-error is-plain is-sm">Error</button>
+<button class="qxframe9a7c2-button is-info is-filled is-sm">Info</button>
+<button class="qxframe9a7c2-button is-primary is-text is-sm">Text</button>
+<button class="qxframe9a7c2-button is-primary is-link is-sm">Link</button>
+</div>
+
+<h3>Shapes / States</h3>
+<div class="s6-row">
+<button class="qxframe9a7c2-button is-primary is-solid is-md is-round">Round</button>
+<button class="qxframe9a7c2-button is-primary is-solid is-md is-square"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-plus is-line is-round is-stroke-3 is-sm"></span></button>
+<button class="qxframe9a7c2-button is-primary is-solid is-md is-circle"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-plus is-line is-round is-stroke-3 is-sm"></span></button>
+<button class="qxframe9a7c2-button is-primary is-solid is-md is-loading">Loading</button>
+<button class="qxframe9a7c2-button is-primary is-solid is-md" disabled>Disabled</button>
+</div>
+
+<h3>Methods</h3>
+<div id="button-host" class="s6-row"></div>
+<div class="s6-row">
+<button id="btn-success" class="qxframe9a7c2-button is-default is-outlined is-sm">setOptions(success)</button>
+<button id="btn-loading" class="qxframe9a7c2-button is-default is-outlined is-sm">toggle loading</button>
+<button id="btn-focus" class="qxframe9a7c2-button is-default is-outlined is-sm">focus()</button>
+<button id="btn-destroy" class="qxframe9a7c2-button is-error is-outlined is-sm">destroy()</button>
+<button id="btn-recreate" class="qxframe9a7c2-button is-primary is-outlined is-sm">recreate</button>
+</div>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Switch · Native State / Event</h2>
+<div class="s6-row">
+<label class="qxframe9a7c2-switch is-xs"><input class="qxframe9a7c2-switch-input" type="checkbox"><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span><span class="qxframe9a7c2-switch-label">XS</span></label>
+<label class="qxframe9a7c2-switch is-sm"><input class="qxframe9a7c2-switch-input" type="checkbox" checked><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span><span class="qxframe9a7c2-switch-label">SM</span></label>
+<label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox"><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span><span class="qxframe9a7c2-switch-label">MD</span></label>
+<label class="qxframe9a7c2-switch is-lg"><input class="qxframe9a7c2-switch-input" type="checkbox" checked><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span><span class="qxframe9a7c2-switch-label">LG</span></label>
+<label class="qxframe9a7c2-switch is-xl"><input class="qxframe9a7c2-switch-input" type="checkbox" disabled><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span><span class="qxframe9a7c2-switch-label">XL disabled</span></label>
+</div>
+<div id="switch-host" class="s6-row"></div>
+</section>
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Badge · Tone / Status / Size</h2>
+<div class="s6-row">
+<span class="qxframe9a7c2-badge is-default is-md">Default</span>
+<span class="qxframe9a7c2-badge is-primary is-md">Primary</span>
+<span class="qxframe9a7c2-badge is-success is-md">Success</span>
+<span class="qxframe9a7c2-badge is-warning is-md">Warning</span>
+<span class="qxframe9a7c2-badge is-error is-md">Error</span>
+<span class="qxframe9a7c2-badge is-info is-md">Info</span>
+<span class="qxframe9a7c2-badge-status is-processing"><span class="qxframe9a7c2-badge-status-dot"></span>Processing</span>
+<span class="qxframe9a7c2-badge is-error is-dot"></span>
+</div>
+<div class="s6-row">
+<span class="qxframe9a7c2-badge is-primary is-solid is-xs">XS</span>
+<span class="qxframe9a7c2-badge is-primary is-solid is-sm">SM</span>
+<span class="qxframe9a7c2-badge is-primary is-solid is-md">MD</span>
+<span class="qxframe9a7c2-badge is-primary is-solid is-lg">LG</span>
+<span class="qxframe9a7c2-badge is-primary is-solid is-xl">XL</span>
+</div>
+<div class="s6-row" style="gap:1.75rem;padding:.75rem"><span class="qxframe9a7c2-badge-anchor"><button class="qxframe9a7c2-button is-default is-outlined">Inbox</button><span class="qxframe9a7c2-badge-count">5</span></span><span class="qxframe9a7c2-badge-anchor"><button class="qxframe9a7c2-button is-default is-outlined">Overflow</button><span class="qxframe9a7c2-badge-count">99+</span></span></div><div class="qxframe9a7c2-badge-ribbon-wrap" style="margin-top:1rem;min-height:5rem;padding:2.5rem 1rem 1rem;border:1px solid var(--qxframe9a7c2-color-border);border-radius:var(--qxframe9a7c2-radius-lg)"><span class="qxframe9a7c2-badge-ribbon">Ribbon</span>Static HTML + CSS Badge</div>
+</section>
+
+
+<section class="qxframe9a7c2-docs-section">
+<h2>Avatar · Text / Image / Status / Group</h2>
+<div class="s6-row"><span class="qxframe9a7c2-avatar is-xs">XS</span><span class="qxframe9a7c2-avatar is-sm">SM</span><span class="qxframe9a7c2-avatar is-md">UI<span class="qxframe9a7c2-avatar-status"></span></span><span class="qxframe9a7c2-avatar is-lg">LG</span><span class="qxframe9a7c2-avatar is-xl is-square">XL</span><span class="qxframe9a7c2-avatar-group"><span class="qxframe9a7c2-avatar is-sm">A</span><span class="qxframe9a7c2-avatar is-sm">B</span><span class="qxframe9a7c2-avatar is-sm">+3</span></span></div>
+</section>
+
+<section class="qxframe9a7c2-docs-section"><h2>Light / Dark</h2>
+<div class="s6-grid">
+<div class="s6-card qxframe9a7c2-theme-light"><h3>Light</h3><div class="s6-row"><button class="qxframe9a7c2-button is-primary is-solid is-md">Button</button><span class="qxframe9a7c2-badge is-success is-md">Badge</span></div></div>
+<div class="s6-card qxframe9a7c2-theme-dark"><h3>Dark</h3><div class="s6-row"><button class="qxframe9a7c2-button is-primary is-solid is-md">Button</button><span class="qxframe9a7c2-badge is-success is-md">Badge</span></div></div>
+</div></section>
+
+<section class="qxframe9a7c2-docs-section"><h2>State / Event Log</h2>
+<p>Registry: <code id="registry">pending</code></p>
+<p>Button: <code id="button-state">pending</code></p>
+<p>Switch: <code id="switch-state">pending</code></p>
+<p>Badge: <code id="badge-state">static HTML + CSS · no Component controller</code></p>
+<p>Avatar: <code>static HTML + CSS · no Component controller</code></p>
+<pre id="event-log" class="s6-log"></pre>
+</section>
+
+<footer class="qxframe9a7c2-docs-footer">
+<a href="stage-05.html">Stage 05 Final Demo</a>
+<a href="../tests/stage-06.html">Stage 06 Tests</a>
+<a href="../audit/STAGE_06C_VALIDATION.md">Stage 06 Historical Validation</a>
+</footer>
+
+<section class="qxframe9a7c2-docs-section">
+  <h2>Static Foundation · Button / Tags / Public Grid</h2>
+  <div class="s6-card">
+    <div class="s6-row">
+      <button class="qxframe9a7c2-button is-primary is-solid">Primary</button>
+      <button class="qxframe9a7c2-button is-default is-plain">Plain</button>
+      <div class="qxframe9a7c2-tags"><span class="qxframe9a7c2-tag is-blue">Blue</span><span class="qxframe9a7c2-tag is-green">Green</span><span class="qxframe9a7c2-tag is-checked">Checked</span></div>
+    </div>
+    <div class="qxframe9a7c2-row qxframe9a7c2-g-4">
+      <div class="qxframe9a7c2-col-8"><div class="s6-card">col-8</div></div>
+      <div class="qxframe9a7c2-col-8"><div class="s6-card">col-8</div></div>
+      <div class="qxframe9a7c2-col-8"><div class="s6-card">col-8</div></div>
+    </div>
+    <div class="qxframe9a7c2-row qxframe9a7c2-g-4" style="margin-top:.75rem">
+      <div class="qxframe9a7c2-col-24 qxframe9a7c2-col-md-12"><div class="s6-card">24 / md-12</div></div>
+      <div class="qxframe9a7c2-col-24 qxframe9a7c2-col-md-12"><div class="s6-card">24 / md-12</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+
+
+
+<script src="../dist/qxframe9a7c2.js" data-qxframe9a7c2-runtime="dist"></script>
+<script src="assets/qxframe9a7c2-stage-06.js"></script>
+</body></html>

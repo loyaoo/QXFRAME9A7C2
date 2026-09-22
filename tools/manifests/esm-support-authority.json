@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "authorities": [
+    {
+      "name": "ComponentContracts",
+      "module": "component-contracts",
+      "source": "src/core/componentContracts.js",
+      "phase": "35→40-foundation",
+      "namespace": "runtime"
+    },
+    {
+      "name": "EmptyProjection",
+      "module": "empty-projection",
+      "source": "src/core/emptyProjection.js",
+      "phase": "84→88-prep",
+      "namespace": "domHeadless"
+    },
+    {
+      "name": "Image",
+      "module": "image",
+      "source": "src/components/image.js",
+      "phase": "88→92",
+      "namespace": "components"
+    },
+    {
+      "name": "JSON",
+      "module": "json",
+      "source": "src/components/json.js",
+      "phase": "88→92",
+      "namespace": "components"
+    },
+    {
+      "name": "Menu",
+      "module": "menu",
+      "source": "src/components/menu.js",
+      "phase": "80→84-prep",
+      "namespace": "components"
+    },
+    {
+      "name": "Message",
+      "module": "message",
+      "source": "src/components/message.js",
+      "phase": "88→92-tail",
+      "namespace": "components"
+    },
+    {
+      "name": "Notification",
+      "module": "notification",
+      "source": "src/components/notification.js",
+      "phase": "88→92-tail",
+      "namespace": "components"
+    },
+    {
+      "name": "Pagination",
+      "module": "pagination",
+      "source": "src/components/pagination.js",
+      "phase": "88→92-tail",
+      "namespace": "components"
+    },
+    {
+      "name": "PickerField",
+      "module": "picker-field-base",
+      "source": "src/components/picker-field.js",
+      "phase": "70→76",
+      "namespace": "support"
+    },
+    {
+      "name": "Ripple",
+      "module": "ripple",
+      "source": "src/components/ripple.js",
+      "phase": "45→50-behavior",
+      "namespace": "components"
+    },
+    {
+      "name": "Scroll",
+      "module": "scroll",
+      "source": "src/components/scroll.js",
+      "phase": "88→92-prep",
+      "namespace": "components"
+    },
+    {
+      "name": "SwitchLoadingGuard",
+      "module": "switch",
+      "source": "src/core/switchLoadingGuard.js",
+      "phase": "40→45-support",
+      "namespace": "bootstrap-behavior"
+    },
+    {
+      "name": "Table",
+      "module": "table",
+      "source": "src/components/table.js",
+      "phase": "88→92",
+      "namespace": "components"
+    },
+    {
+      "name": "Tabs",
+      "module": "tabs",
+      "source": "src/components/tabs.js",
+      "phase": "84→88",
+      "namespace": "components"
+    },
+    {
+      "name": "Tags",
+      "module": "tags",
+      "source": "src/components/tags.js",
+      "phase": "88→92-tail",
+      "namespace": "components"
+    },
+    {
+      "name": "Transfer",
+      "module": "transfer",
+      "source": "src/components/transfer.js",
+      "phase": "80→84-prep",
+      "namespace": "components"
+    },
+    {
+      "name": "Trigger",
+      "module": "trigger",
+      "source": "src/components/trigger.js",
+      "phase": "50→58-foundation",
+      "namespace": "components"
+    },
+    {
+      "name": "Upload",
+      "module": "upload",
+      "source": "src/components/upload.js",
+      "phase": "88→92",
+      "namespace": "components"
+    },
+    {
+      "name": "WheelPanel",
+      "module": "wheel-panel",
+      "source": "src/components/wheel-panel.js",
+      "phase": "70→76",
+      "namespace": "support"
+    }
+  ]
+}

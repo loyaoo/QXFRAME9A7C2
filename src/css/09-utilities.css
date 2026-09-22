@@ -1,0 +1,79 @@
+/* unlayered overrides (kept last to preserve original cascade strength) */
+.qxframe9a7c2-picker-field-footer-actions{width:100%}.qxframe9a7c2-time-picker-now.is-footer-action{width:auto;margin-right:auto;border-top:0;min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:left}.qxframe9a7c2-table-filter-popup{min-width:11rem;max-width:min(22rem,calc(100vw - 2rem));background:var(--_qxframe9a7c2-popup-bg);border:1px solid var(--_qxframe9a7c2-popup-border);border-radius:var(--_qxframe9a7c2-popup-radius);box-shadow:var(--_qxframe9a7c2-popup-shadow);color:var(--_qxframe9a7c2-popup-text)}.qxframe9a7c2-table-filter-options{display:grid;gap:.125rem;max-height:16rem;overflow:auto}.qxframe9a7c2-table-filter-option{display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);border-radius:var(--_qxframe9a7c2-action-radius);cursor:pointer}.qxframe9a7c2-table-filter-option:hover{background:var(--_qxframe9a7c2-semantic-subtle-hover)}.qxframe9a7c2-table-filter-actions{display:flex;justify-content:space-between;gap:var(--_qxframe9a7c2-control-gap);margin-top:var(--_qxframe9a7c2-control-gap);padding-top:var(--_qxframe9a7c2-control-gap);border-top:1px solid var(--_qxframe9a7c2-semantic-border)}.qxframe9a7c2-table-filter-search{margin-bottom:.375rem}.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control{box-sizing:border-box;width:100%;min-height:var(--_qxframe9a7c2-control-height);padding:.25rem .5rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-action-radius);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text);outline:0}.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus{border-color:var(--_qxframe9a7c2-semantic-accent);box-shadow:none}.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}.qxframe9a7c2-table-filter-options.is-tree .qxframe9a7c2-table-filter-option{padding-inline-start:calc(.375rem + var(--qxframe9a7c2-table-filter-depth,0) * 1rem)}.qxframe9a7c2-table-filter-option.has-children > span:last-child{font-weight:600}.qxframe9a7c2-table-filter-option-spacer{width:1rem;height:1rem;flex:0 0 1rem}
+
+/* Unified keyboard focus-visible contract.
+ * Mouse/programmatic focus stays on border/background; keyboard navigation gets the only
+ * heavy focus edge: 2px, -1px, black in Light and white in Dark via the semantic token. */
+.qxframe9a7c2-form-input:focus-visible:not(:disabled),
+.qxframe9a7c2-form-select:focus-visible:not(:disabled),
+.qxframe9a7c2-form-textarea:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input:not([type]):focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="text"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="search"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="email"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="password"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="url"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="tel"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="number"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="date"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="datetime-local"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="time"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="month"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form input[type="week"]:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form select:focus-visible:not(:disabled),
+.qxframe9a7c2-native-form textarea:focus-visible:not(:disabled){
+  outline:var(--_qxframe9a7c2-focus-visible-outline);
+  outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
+}
+
+
+/* Focus ownership and modality closeout.
+ * Mouse/pointer focus remains border/background only. The 2px outline belongs to real keyboard
+ * navigation, and composite controls paint that outline on the same shell that owns the border. */
+.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled):not(.is-focus-outline-disabled){
+  --_qxframe9a7c2-state-outline:var(--_qxframe9a7c2-focus-visible-outline);
+  outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
+}
+.qxframe9a7c2-input.is-variant-underlined.is-keyboard-focus:not(.is-disabled):not(.is-focus-outline-disabled),
+.qxframe9a7c2-input.is-flush.is-keyboard-focus:not(.is-disabled):not(.is-focus-outline-disabled){
+  --_qxframe9a7c2-state-outline:var(--_qxframe9a7c2-focus-visible-outline)
+}
+/* Hosted Tags/MultipleSelect editors are implementation details; the outer Control shell owns focus. */
+.qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input:focus-visible{outline:none}
+/* SelectGroup already exposes one focus ring on the label; never draw a second ring on its indicator. */
+.qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator{outline:none}
+/* Connected input-group children must paint over adjacent seams while hovered/focused. */
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{z-index:var(--qxframe9a7c2-z-local-above)}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
+/* Card is a generic container: clipping belongs to the media/clip owner, not to the card root. */
+.qxframe9a7c2-card{overflow:visible}
+.qxframe9a7c2-card>.qxframe9a7c2-card-cover:first-child{border-start-start-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px);border-start-end-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px)}
+.qxframe9a7c2-card>.qxframe9a7c2-card-cover:last-child{border-end-start-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px);border-end-end-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px)}
+/* Pointer focus must not accidentally inherit UA :focus-visible heuristics on text-editing controls. */
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-input:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-select:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-textarea:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="range"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input:not([type]):focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="text"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="search"]:focus-visible{
+  outline:none
+}
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="email"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="password"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="url"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="tel"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="number"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="date"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="datetime-local"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="time"]:focus-visible{
+  outline:none
+}
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="month"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="week"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form select:focus-visible,
+html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form textarea:focus-visible{
+  outline:none
+}

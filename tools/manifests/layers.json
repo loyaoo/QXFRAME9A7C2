@@ -1,0 +1,22 @@
+{
+  "overlayBase": 19920510,
+  "step": 10,
+  "bandStride": 10000,
+  "bands": {
+    "popup": 0,
+    "modal": 1,
+    "notice": 2,
+    "tooltip": 3,
+    "blocking": 4
+  },
+  "local": {
+    "base": 0,
+    "raised": 1,
+    "above": 2,
+    "overlay": 3,
+    "focus": 4,
+    "active": 5,
+    "loadingMask": 8,
+    "loadingIndicator": 9
+  }
+}

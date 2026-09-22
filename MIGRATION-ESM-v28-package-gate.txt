@@ -1,0 +1,42 @@
+
+> qxframe9a7c2@2.19.81 verify:package
+> node tools/verify-package-contents.mjs
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: npm package is missing required release files: dist/qxframe9a7c2.js.map, dist/qxframe9a7c2.esm.js, dist/qxframe9a7c2.esm.js.map, dist/esm/index.js, dist/esm/components/index.js, dist/esm/core/index.js, dist/esm/utils/index.js
++ actual - expected
+
++ [
++   'dist/qxframe9a7c2.js.map',
++   'dist/qxframe9a7c2.esm.js',
++   'dist/qxframe9a7c2.esm.js.map',
++   'dist/esm/index.js',
++   'dist/esm/components/index.js',
++   'dist/esm/core/index.js',
++   'dist/esm/utils/index.js'
++ ]
+- []
+
+    at file:///mnt/data/qx_v28_work/QXFRAME9A7C2-v2.19.81-HOTFIX6-ESM-MIGRATION-ACCELERATED-v28/tools/verify-package-contents.mjs:23:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:274:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    'dist/qxframe9a7c2.js.map',
+    'dist/qxframe9a7c2.esm.js',
+    'dist/qxframe9a7c2.esm.js.map',
+    'dist/esm/index.js',
+    'dist/esm/components/index.js',
+    'dist/esm/core/index.js',
+    'dist/esm/utils/index.js'
+  ],
+  expected: [],
+  operator: 'deepStrictEqual'
+}
+
+Node.js v22.16.0

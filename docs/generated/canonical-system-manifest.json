@@ -1,0 +1,666 @@
+{
+  "frameworkVersion": "2.19.81",
+  "version": 1,
+  "framework": "QXFRAME9A7C2",
+  "purpose": "Single-source ownership manifest for historical multi-system convergence. Every framework responsibility has one canonical owner; compatibility is an adapter boundary, never a second implementation.",
+  "systems": {
+    "Theme": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.Config",
+        "Config.createScope",
+        "CSS data-qxframe9a7c2-theme boundary"
+      ],
+      "legacyOwners": [
+        "component-local theme resolvers",
+        "legacy theme classes"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Tokens": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.Config tokens",
+        "canonical --qxframe9a7c2-* / --_qxframe9a7c2-* token graph"
+      ],
+      "legacyOwners": [
+        "legacy --color-* tokens",
+        "component-local token aliases"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Motion": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.Config motion policy",
+        "DOMHeadless.MotionCore",
+        "DOMHeadless.MotionPresets",
+        "DOMHeadless.Transition"
+      ],
+      "legacyOwners": [
+        "legacy duration token family",
+        "component-local transition timers"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Size/Density": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.Config size",
+        "canonical control/spacing tokens"
+      ],
+      "legacyOwners": [
+        "component-local size resolvers"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Z-index": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.LayerManager",
+        "src/manifests/layers.json"
+      ],
+      "legacyOwners": [
+        "magic z-index bands",
+        "portal DOM-order stacking"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "DOM Factory": {
+      "status": "converged",
+      "canonicalOwner": [
+        "ownerDocument/module-local DOM factories",
+        "Core.DOM"
+      ],
+      "legacyOwners": [
+        "ComponentDOMFactories",
+        "BuildingBlockDOMFactories",
+        "global.document DOM construction in instance lifecycle"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Registry": {
+      "status": "converged",
+      "canonicalOwner": [
+        "__createRegistry",
+        "CoreRegistry/HeadlessRegistry/DOMHeadlessRegistry/BuildingBlockRegistry/ComponentRegistry"
+      ],
+      "legacyOwners": [
+        "parallel registry implementations"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Dependency Graph": {
+      "status": "converged",
+      "canonicalOwner": [
+        "ModuleManifest",
+        "defineModule manifest capabilities"
+      ],
+      "legacyOwners": [
+        "dual module deps / registry deps declarations",
+        "legacy defineModule(name,deps,...)"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Options Schema": {
+      "status": "converged",
+      "canonicalOwner": [
+        "ComponentRuntime.definition schema"
+      ],
+      "legacyOwners": [
+        "LEGACY_OPTIONS helpers",
+        "component-local unknown/type option gates"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Controlled State": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Headless.StateController",
+        "State Ownership Manifest"
+      ],
+      "legacyOwners": [
+        "component-local canonical value owners",
+        "apiValue shadow state"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Selection": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Headless.Selection",
+        "specialized model selection where declared by State Ownership Manifest"
+      ],
+      "legacyOwners": [
+        "component-local persistent selected Set"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Async": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Headless.AsyncTask",
+        "Headless.AsyncTaskGroup",
+        "Headless.AsyncAction"
+      ],
+      "legacyOwners": [
+        "requestId/loadGeneration/datasetGeneration in visible components"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Events": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.Events",
+        "Core.InteractionDetails",
+        "DOMHeadless.EventDelegation"
+      ],
+      "legacyOwners": [
+        "parallel emitter/listener semantics"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Lifecycle": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.Lifecycle"
+      ],
+      "legacyOwners": [
+        "component-local cleanup registries"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Scheduler": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.Scheduler"
+      ],
+      "legacyOwners": [
+        "component scheduling via raw timers/requestAnimationFrame"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Observer": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.ObserverHub"
+      ],
+      "legacyOwners": [
+        "direct ResizeObserver/MutationObserver/IntersectionObserver in visible components"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Focus": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.FocusManager",
+        "DOMHeadless.FocusScope",
+        "KeyboardNavigation VirtualFocus"
+      ],
+      "legacyOwners": [
+        "parallel focus trap/ring ownership"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Keyboard": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.KeyboardNavigation",
+        "DOMHeadless.KeyboardRegion"
+      ],
+      "legacyOwners": [
+        "component-local generic key navigation engines"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Pointer/Press": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.PressInteraction",
+        "DOMHeadless.PointerSession"
+      ],
+      "legacyOwners": [
+        "Ripple/manual mousedown/touch/keyboard press interpretation"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Drag/Reorder": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.ReorderInteraction"
+      ],
+      "legacyOwners": [
+        "Sort.createReorderInteraction",
+        "component-local generic reorder engines"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Overlay": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.OverlayRuntime",
+        "DOMHeadless.DismissableLayer",
+        "DOMHeadless.LayerManager",
+        "DOMHeadless.FocusScope"
+      ],
+      "legacyOwners": [
+        "parallel modal/popup dismissal/focus stacks"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Portal": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.PopupSurface",
+        "DOMHeadless.LogicalOwnership",
+        "DOMHeadless.LayerManager"
+      ],
+      "legacyOwners": [
+        "DOM-order-only portal ownership"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Positioning": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.PositionAdapter"
+      ],
+      "legacyOwners": [
+        "component-local popup geometry engines"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Scroll": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.ScrollLock",
+        "Scroll component",
+        "DOMHeadless.Virtualizer reveal/viewport contracts"
+      ],
+      "legacyOwners": [
+        "component-local body lock/scroll compensation"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Form": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.FormBridge",
+        "Form component"
+      ],
+      "legacyOwners": [
+        "manual hidden form synchronization"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Empty": {
+      "status": "converged",
+      "canonicalOwner": [
+        "EmptyProjection",
+        "Empty component"
+      ],
+      "legacyOwners": [
+        "component-local empty placeholder branches"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Loading": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Loading component",
+        "Headless.InteractionPolicy capability gate"
+      ],
+      "legacyOwners": [
+        "pointer-only loading gates",
+        "parallel loading blockers"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Validation": {
+      "status": "converged",
+      "canonicalOwner": [
+        "ComponentRuntime OptionSchema",
+        "FormBridge/native validity boundary",
+        "component semantic validators"
+      ],
+      "legacyOwners": [
+        "duplicate generic option validation helpers"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Semantic Styles": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.SemanticStyles"
+      ],
+      "legacyOwners": [
+        "component-local semantic style precedence systems"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "DOM Projection": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.DOMProjection"
+      ],
+      "legacyOwners": [
+        "unowned temporary style/class/attribute restore logic"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Renderer": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.Renderer"
+      ],
+      "legacyOwners": [
+        "component-local generic renderer ownership engines"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Virtualizer": {
+      "status": "converged",
+      "canonicalOwner": [
+        "DOMHeadless.Virtualizer"
+      ],
+      "legacyOwners": [
+        "component-local generic virtualization engines"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Pagination": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Headless.PaginationModel",
+        "Pagination component"
+      ],
+      "legacyOwners": [
+        "Table mini pager"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Table": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Headless.TableModel",
+        "Table component composed from canonical primitives"
+      ],
+      "legacyOwners": [
+        "local-only parallel data/query/pager/reorder state"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "URL/Security": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.URLPolicy",
+        "DOMHeadless.DOMTemplate static HTML boundary"
+      ],
+      "legacyOwners": [
+        "ad-hoc URL scheme checks",
+        "unreviewed dynamic innerHTML"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "ID generation": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.IdManager"
+      ],
+      "legacyOwners": [
+        "Math.random/generated selector ids"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Diagnostics": {
+      "status": "converged",
+      "canonicalOwner": [
+        "Core.PerformanceDiagnostics"
+      ],
+      "legacyOwners": [
+        "ad-hoc leak counters without shared balance contract"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": false,
+      "migrationAction": "delete/redirect legacy consumers to canonical owner",
+      "deleteCondition": "legacy consumer count must remain zero",
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+    },
+    "Compatibility": {
+      "status": "intentional-adapter",
+      "canonicalOwner": [
+        "ComponentRuntime legacy metadata",
+        "docs/generated/migration-manifest.json",
+        "final CSS compatibility boundary"
+      ],
+      "legacyOwners": [
+        "unbounded legacy runtime branches"
+      ],
+      "legacyConsumerCount": 0,
+      "runtimeOverlap": false,
+      "cssOverlap": false,
+      "publicCompatibility": true,
+      "migrationAction": "keep bounded adapters with removal metadata",
+      "deleteCondition": "remove adapter when declared removedIn boundary is reached",
+      "verifyRule": "compatibility entries require migration metadata and may not become canonical sources"
+    }
+  }
+}

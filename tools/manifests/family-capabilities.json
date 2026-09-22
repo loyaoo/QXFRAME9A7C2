@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "policy": "A component family may adapt a canonical capability, but must not own a second state machine or rule implementation for the same capability.",
+  "capabilities": [
+    {
+      "id": "overlay-frame",
+      "status": "converged",
+      "owner": [
+        "Headless.OverlayFramePolicy",
+        "DOMHeadless.OverlayFrameShell",
+        "DOMHeadless.OverlayRuntime"
+      ],
+      "consumers": [
+        "modal.js",
+        "drawer.js"
+      ]
+    },
+    {
+      "id": "picker-session",
+      "status": "converged",
+      "owner": [
+        "Headless.PickerSession"
+      ],
+      "consumers": [
+        "date-picker.js",
+        "time-picker.js",
+        "color-picker.js",
+        "wheel-picker.js"
+      ]
+    },
+    {
+      "id": "picker-footer",
+      "status": "converged",
+      "owner": [
+        "PickerField.createConfirmFooter"
+      ],
+      "consumers": [
+        "date-picker.js",
+        "time-picker.js",
+        "color-picker.js",
+        "wheel-picker.js"
+      ]
+    },
+    {
+      "id": "field-host",
+      "status": "converged",
+      "owner": [
+        "DOMHeadless.FieldHost"
+      ],
+      "consumers": [
+        "select.js",
+        "tree-select.js",
+        "cascader.js",
+        "autocomplete.js",
+        "picker-field-base.js"
+      ]
+    },
+    {
+      "id": "selected-tags",
+      "status": "converged",
+      "owner": [
+        "Headless.SelectionTags",
+        "DOMHeadless.TagNavigation"
+      ],
+      "consumers": [
+        "select.js",
+        "tree-select.js",
+        "cascader.js",
+        "date-picker.js",
+        "tag-input.js"
+      ]
+    },
+    {
+      "id": "temporal-grid",
+      "status": "converged",
+      "owner": [
+        "Headless.TemporalGrid"
+      ],
+      "consumers": [
+        "calendar.js",
+        "period-panel.js"
+      ]
+    },
+    {
+      "id": "temporal-date-utils",
+      "status": "converged",
+      "owner": [
+        "Headless.DateUnit"
+      ],
+      "consumers": [
+        "calendar.js",
+        "date-picker.js"
+      ]
+    },
+    {
+      "id": "hierarchy-model",
+      "status": "converged",
+      "owner": [
+        "Headless.TreeModel",
+        "Headless.ItemAccessors"
+      ],
+      "consumers": [
+        "tree.js",
+        "tree-select.js",
+        "cascader.js",
+        "dropdown.js",
+        "menu.js"
+      ]
+    },
+    {
+      "id": "hierarchical-selection",
+      "status": "converged",
+      "owner": [
+        "Headless.HierarchicalSelection"
+      ],
+      "consumers": [
+        "tree.js",
+        "tree-select.js",
+        "cascader.js",
+        "dropdown.js"
+      ]
+    },
+    {
+      "id": "search-pipeline",
+      "status": "converged",
+      "owner": [
+        "Headless.SearchState",
+        "ItemCollection"
+      ],
+      "consumers": [
+        "item-collection.js",
+        "tree.js",
+        "cascader.js",
+        "select.js",
+        "tree-select.js",
+        "dropdown.js",
+        "transfer.js",
+        "autocomplete.js"
+      ]
+    },
+    {
+      "id": "item-accessors",
+      "status": "converged",
+      "owner": [
+        "Headless.ItemAccessors",
+        "Headless.ItemSchema"
+      ],
+      "consumers": [
+        "tree.js",
+        "tree-select.js",
+        "cascader.js",
+        "dropdown.js",
+        "menu.js",
+        "autocomplete.js"
+      ]
+    },
+    {
+      "id": "responsive-overflow",
+      "status": "converged",
+      "owner": [
+        "DOMHeadless.ResponsiveOverflow"
+      ],
+      "consumers": [
+        "tags.js",
+        "tabs.js",
+        "menu.js"
+      ]
+    },
+    {
+      "id": "clear-action",
+      "status": "converged",
+      "owner": [
+        "Headless.ClearAction",
+        "Control"
+      ],
+      "consumers": [
+        "control.js",
+        "select.js",
+        "tree-select.js",
+        "cascader.js",
+        "autocomplete.js",
+        "picker-field-base.js"
+      ]
+    },
+    {
+      "id": "interaction-policy",
+      "status": "converged",
+      "owner": [
+        "Headless.InteractionPolicy"
+      ],
+      "consumers": [
+        "control.js",
+        "select.js",
+        "tree-select.js",
+        "cascader.js",
+        "dropdown.js",
+        "transfer.js",
+        "table.js",
+        "tags.js",
+        "date-picker.js",
+        "time-picker.js",
+        "color-picker.js",
+        "wheel-picker.js"
+      ]
+    },
+    {
+      "id": "trigger-consumer",
+      "status": "converged",
+      "owner": [
+        "Trigger"
+      ],
+      "consumers": [
+        "select.js",
+        "tree-select.js",
+        "cascader.js",
+        "autocomplete.js",
+        "picker-field-base.js",
+        "dropdown.js",
+        "tooltip.js",
+        "popover.js"
+      ]
+    },
+    {
+      "id": "notice-preset",
+      "status": "converged",
+      "owner": [
+        "Headless.NoticePreset",
+        "NoticeService"
+      ],
+      "consumers": [
+        "message.js",
+        "notification.js"
+      ]
+    },
+    {
+      "id": "roving-projection",
+      "status": "converged",
+      "owner": [
+        "DOMHeadless.RovingProjection"
+      ],
+      "consumers": [
+        "tabs.js",
+        "steps.js",
+        "collapse.js"
+      ]
+    },
+    {
+      "id": "native-text-field-shell",
+      "status": "converged",
+      "owner": [
+        "Control"
+      ],
+      "consumers": [
+        "text-field.js"
+      ]
+    },
+    {
+      "id": "option-transaction",
+      "status": "converged",
+      "owner": [
+        "Headless.OptionTransaction"
+      ],
+      "consumers": [
+        "select.js",
+        "tree-select.js",
+        "cascader.js",
+        "autocomplete.js",
+        "picker-field-base.js",
+        "date-picker.js",
+        "time-picker.js",
+        "color-picker.js",
+        "rate.js",
+        "slider.js",
+        "input-otp.js",
+        "input-number.js",
+        "tag-input.js",
+        "transfer.js",
+        "upload.js",
+        "sort.js"
+      ]
+    },
+    {
+      "id": "value-equality",
+      "status": "converged",
+      "owner": [
+        "Headless.ValueEquality"
+      ],
+      "consumers": [
+        "control.js",
+        "select.js",
+        "wheel-panel.js",
+        "wheel-picker.js",
+        "time-picker.js",
+        "color-picker.js"
+      ]
+    },
+    {
+      "id": "option-validation",
+      "status": "converged",
+      "owner": [
+        "ComponentRuntime.OptionSchema",
+        "Core.Utils"
+      ],
+      "consumers": [
+        "modal.js",
+        "drawer.js",
+        "steps.js",
+        "notice-service.js",
+        "loading.js",
+        "progress.js"
+      ]
+    },
+    {
+      "id": "size-density",
+      "status": "converged",
+      "owner": [
+        "Core.Utils.normalizeSize",
+        "Core.Utils.normalizeEnum"
+      ],
+      "consumers": [
+        "control.js",
+        "select.js",
+        "tags.js",
+        "tabs.js",
+        "table.js",
+        "rate.js",
+        "slider.js",
+        "picker-field-base.js"
+      ]
+    },
+    {
+      "id": "element-resolution",
+      "status": "converged",
+      "owner": [
+        "Core.DOM.requireElement"
+      ],
+      "consumers": [
+        "trigger.js",
+        "dropdown.js",
+        "tooltip.js",
+        "popover.js"
+      ]
+    },
+    {
+      "id": "open-state-bridge",
+      "status": "converged",
+      "owner": [
+        "Headless.OpenStateBridge"
+      ],
+      "consumers": [
+        "trigger.js",
+        "dropdown.js",
+        "tooltip.js",
+        "select.js",
+        "tree-select.js",
+        "cascader.js",
+        "autocomplete.js",
+        "picker-field-base.js",
+        "date-picker.js",
+        "time-picker.js",
+        "color-picker.js",
+        "wheel-picker.js"
+      ]
+    },
+    {
+      "id": "listener-lifecycle",
+      "status": "converged",
+      "owner": [
+        "Core.DOM.listen",
+        "Core.Lifecycle"
+      ],
+      "consumers": [
+        "src/modules/*.js"
+      ]
+    }
+  ]
+}

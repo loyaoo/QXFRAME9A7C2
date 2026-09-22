@@ -1,0 +1,40 @@
+.qxframe9a7c2-docs-field-lab{width:100%;display:grid;gap:18px}
+.qxframe9a7c2-docs-field-lab-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qxframe9a7c2-docs-field-lab-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);gap:18px;align-items:start;width:100%}
+.qxframe9a7c2-docs-field-lab-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;width:100%}
+.qxframe9a7c2-docs-field-lab-form>.qxframe9a7c2-form-field{min-width:0;padding:14px;border:1px solid var(--qxframe9a7c2-docs-border);border-radius:10px;background:var(--qxframe9a7c2-docs-surface)}
+.qxframe9a7c2-docs-field-lab-form>.qxframe9a7c2-form-field.is-wide{grid-column:1/-1}
+.qxframe9a7c2-docs-field-lab-label{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;font-weight:700}
+.qxframe9a7c2-docs-field-lab-label small{font-weight:500;color:var(--qxframe9a7c2-docs-muted)}
+.qxframe9a7c2-docs-field-lab-choice{display:grid;gap:8px}
+.qxframe9a7c2-docs-field-lab-inspector{position:sticky;top:88px;display:grid;gap:12px;min-width:0}
+.qxframe9a7c2-docs-field-lab-panel{min-width:0;border:1px solid var(--qxframe9a7c2-docs-border);border-radius:10px;background:var(--qxframe9a7c2-docs-surface);padding:14px}
+.qxframe9a7c2-docs-field-lab-panel h4{margin:0 0 10px;font-size:14px}
+.qxframe9a7c2-docs-field-lab-json{margin:0;max-height:310px;overflow:auto;border-radius:8px;background:var(--qxframe9a7c2-docs-code,#111827);color:var(--qxframe9a7c2-docs-code-text,#e5e7eb);padding:12px;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.qxframe9a7c2-docs-field-lab-table-wrap{overflow:auto;max-height:460px;border:1px solid var(--qxframe9a7c2-docs-border);border-radius:8px}
+.qxframe9a7c2-docs-field-lab-table{width:100%;border-collapse:collapse;font-size:12px;min-width:720px}
+.qxframe9a7c2-docs-field-lab-table th,.qxframe9a7c2-docs-field-lab-table td{padding:8px 9px;border-bottom:1px solid var(--qxframe9a7c2-docs-border);text-align:left;vertical-align:top;white-space:normal;word-break:break-word}
+.qxframe9a7c2-docs-field-lab-table th{position:sticky;top:0;background:var(--qxframe9a7c2-docs-surface);z-index:1;color:var(--qxframe9a7c2-docs-muted);font-weight:700}
+.qxframe9a7c2-docs-field-lab-table tr:last-child td{border-bottom:0}
+.qxframe9a7c2-docs-field-lab-ok{color:var(--qxframe9a7c2-color-success,#16a34a);font-weight:700}.qxframe9a7c2-docs-field-lab-bad{color:var(--qxframe9a7c2-color-error,#dc2626);font-weight:700}
+.qxframe9a7c2-docs-control-lab-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+.qxframe9a7c2-docs-control-lab-card{min-width:0;border:1px solid var(--qxframe9a7c2-docs-border);border-radius:10px;padding:13px;background:var(--qxframe9a7c2-docs-surface)}
+.qxframe9a7c2-docs-control-lab-card h4{margin:0 0 4px;font-size:14px}.qxframe9a7c2-docs-control-lab-card p{margin:0 0 10px;color:var(--qxframe9a7c2-docs-muted);font-size:12px}
+.qxframe9a7c2-docs-control-lab-mount{display:grid;gap:8px;min-width:0}.qxframe9a7c2-docs-control-lab-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.qxframe9a7c2-docs-control-lab-readout{margin-top:10px;padding:9px;border-radius:7px;background:var(--qxframe9a7c2-color-primary-soft,var(--qxframe9a7c2-docs-surface));font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.qxframe9a7c2-docs-control-lab-wide{grid-column:1/-1}
+.qxframe9a7c2-docs-control-lab-api{display:flex;flex-wrap:wrap;gap:6px}.qxframe9a7c2-docs-control-lab-api span{padding:3px 7px;border:1px solid var(--qxframe9a7c2-docs-border);border-radius:999px;font-size:11px}
+@media(max-width:1050px){.qxframe9a7c2-docs-field-lab-layout{grid-template-columns:1fr}.qxframe9a7c2-docs-field-lab-inspector{position:static}.qxframe9a7c2-docs-field-lab-form,.qxframe9a7c2-docs-control-lab-grid{grid-template-columns:1fr}.qxframe9a7c2-docs-field-lab-form>.qxframe9a7c2-form-field.is-wide,.qxframe9a7c2-docs-control-lab-wide{grid-column:auto}}
+
+/* v2.17.24 Form field / InputGroup documentation labs. Runtime visuals stay in Form/Control CSS. */
+.qxframe9a7c2-docs-field-style-grid,.qxframe9a7c2-docs-input-group-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+.qxframe9a7c2-docs-field-style-card,.qxframe9a7c2-docs-input-group-card{box-sizing:border-box;min-width:0;border:1px solid var(--qxframe9a7c2-docs-border);border-radius:10px;padding:13px;background:var(--qxframe9a7c2-docs-surface)}
+.qxframe9a7c2-docs-field-style-card h4,.qxframe9a7c2-docs-input-group-card h4{margin:0 0 4px;font-size:14px}
+.qxframe9a7c2-docs-field-style-card p,.qxframe9a7c2-docs-input-group-card p{margin:0 0 10px;color:var(--qxframe9a7c2-docs-muted);font-size:12px;line-height:1.5}
+.qxframe9a7c2-docs-field-style-stack,.qxframe9a7c2-docs-input-group-stage{display:grid;gap:8px;min-width:0}
+.qxframe9a7c2-docs-input-group-card.is-wide{grid-column:1/-1}
+.qxframe9a7c2-docs-input-group-lab{display:grid;gap:12px;width:100%;margin:0}
+.qxframe9a7c2-docs-input-group-stage>.qxframe9a7c2-form-input-group{max-width:100%}
+.qxframe9a7c2-docs-input-group-stage .qxframe9a7c2-select{min-width:0}
+@media(max-width:900px){.qxframe9a7c2-docs-field-style-grid,.qxframe9a7c2-docs-input-group-grid{grid-template-columns:1fr}.qxframe9a7c2-docs-input-group-card.is-wide{grid-column:auto}}
+.qxframe9a7c2-docs-field-lab-native{box-sizing:border-box;width:100%}

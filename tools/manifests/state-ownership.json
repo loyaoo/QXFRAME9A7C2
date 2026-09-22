@@ -1,0 +1,305 @@
+{
+  "version": 1,
+  "ownerKinds": [
+    "state-controller",
+    "selection",
+    "model",
+    "overlay",
+    "delegated",
+    "local-ephemeral",
+    "presentation"
+  ],
+  "components": {
+    "Autocomplete": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [
+        "ItemCollection",
+        "AsyncTask"
+      ],
+      "canonical": "committed value; draft input is StateController draft/presentation"
+    },
+    "Carousel": {
+      "kind": "local-ephemeral",
+      "primary": "CarouselSession",
+      "secondary": [],
+      "canonical": "current slide index/session; no value/defaultValue contract"
+    },
+    "Cascader": {
+      "kind": "selection",
+      "primary": "Selection",
+      "secondary": [
+        "Collection",
+        "AsyncTask"
+      ],
+      "canonical": "selected values; path/search are presentation/session state"
+    },
+    "Collapse": {
+      "kind": "model",
+      "primary": "Disclosure",
+      "secondary": [],
+      "canonical": "expanded keys"
+    },
+    "ColorPicker": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [
+        "ColorPanel",
+        "PickerField"
+      ],
+      "canonical": "committed/draft color value"
+    },
+    "DatePicker": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [
+        "PickerField"
+      ],
+      "canonical": "picker draft/commit value; calendar/time selection remains specialized presentation"
+    },
+    "Drawer": {
+      "kind": "overlay",
+      "primary": "OverlayRuntime",
+      "secondary": [
+        "Trigger"
+      ],
+      "canonical": "logical open lifecycle"
+    },
+    "Dropdown": {
+      "kind": "selection",
+      "primary": "Selection",
+      "secondary": [
+        "Tree",
+        "Trigger"
+      ],
+      "canonical": "menu/dropdown selection"
+    },
+    "Image": {
+      "kind": "local-ephemeral",
+      "primary": "ImageSession",
+      "secondary": [],
+      "canonical": "load/preview session; no value/defaultValue contract"
+    },
+    "InputNumber": {
+      "kind": "delegated",
+      "primary": "NumericInput",
+      "secondary": [
+        "StateController"
+      ],
+      "canonical": "NumericInput owns canonical numeric value and delegates value semantics to StateController"
+    },
+    "InputOTP": {
+      "kind": "delegated",
+      "primary": "Control",
+      "secondary": [
+        "SegmentedInput"
+      ],
+      "canonical": "segmented input model owns canonical segment values"
+    },
+    "JSON": {
+      "kind": "model",
+      "primary": "Tree",
+      "secondary": [
+        "Collection"
+      ],
+      "canonical": "JSON tree model/active navigation; no generic value owner"
+    },
+    "Loading": {
+      "kind": "presentation",
+      "primary": "LoadingSession",
+      "secondary": [],
+      "canonical": "visual busy projection; no business value"
+    },
+    "Menu": {
+      "kind": "selection",
+      "primary": "Selection",
+      "secondary": [
+        "Tree"
+      ],
+      "canonical": "selected menu keys; disclosure remains Tree/Disclosure-owned"
+    },
+    "Message": {
+      "kind": "delegated",
+      "primary": "NoticeService",
+      "secondary": [],
+      "canonical": "notice lifecycle owned by NoticeService"
+    },
+    "Modal": {
+      "kind": "overlay",
+      "primary": "OverlayRuntime",
+      "secondary": [
+        "Trigger"
+      ],
+      "canonical": "logical open/close lifecycle"
+    },
+    "Notification": {
+      "kind": "delegated",
+      "primary": "NoticeService",
+      "secondary": [],
+      "canonical": "notice lifecycle owned by NoticeService"
+    },
+    "Pagination": {
+      "kind": "model",
+      "primary": "PaginationModel",
+      "secondary": [],
+      "canonical": "page/pageSize/count projection"
+    },
+    "Popconfirm": {
+      "kind": "overlay",
+      "primary": "Popover",
+      "secondary": [
+        "AsyncTask"
+      ],
+      "canonical": "logical open plus confirm async action"
+    },
+    "Popover": {
+      "kind": "overlay",
+      "primary": "Trigger",
+      "secondary": [],
+      "canonical": "logical open/close lifecycle"
+    },
+    "Progress": {
+      "kind": "presentation",
+      "primary": "ProgressProjection",
+      "secondary": [],
+      "canonical": "pure value-to-visual projection; caller owns value"
+    },
+    "Rate": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [],
+      "canonical": "rating value/defaultValue and controlled requests"
+    },
+    "Result": {
+      "kind": "presentation",
+      "primary": "ResultProjection",
+      "secondary": [],
+      "canonical": "pure result presentation; no mutable business value"
+    },
+    "Ripple": {
+      "kind": "presentation",
+      "primary": "PressInteraction",
+      "secondary": [],
+      "canonical": "press visual only; activation ownership is external"
+    },
+    "Scroll": {
+      "kind": "model",
+      "primary": "ObserverHub",
+      "secondary": [
+        "PointerSession"
+      ],
+      "canonical": "scroll viewport/session state"
+    },
+    "Select": {
+      "kind": "selection",
+      "primary": "Selection",
+      "secondary": [
+        "OptionList"
+      ],
+      "canonical": "selected option values"
+    },
+    "Slider": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [],
+      "canonical": "slider value/range value and continuous interaction draft"
+    },
+    "Sort": {
+      "kind": "model",
+      "primary": "Collection",
+      "secondary": [
+        "ReorderInteraction"
+      ],
+      "canonical": "sortable collection/order state"
+    },
+    "Steps": {
+      "kind": "model",
+      "primary": "Collection",
+      "secondary": [],
+      "canonical": "step collection and current cursor"
+    },
+    "Table": {
+      "kind": "model",
+      "primary": "TableModel",
+      "secondary": [
+        "Selection",
+        "AsyncTask",
+        "ReorderInteraction"
+      ],
+      "canonical": "query/columns/rows/view state in TableModel; aggregate selection remains Table selection contract"
+    },
+    "Tabs": {
+      "kind": "model",
+      "primary": "Collection",
+      "secondary": [],
+      "canonical": "tab collection plus stable active key"
+    },
+    "TagInput": {
+      "kind": "delegated",
+      "primary": "Tags",
+      "secondary": [],
+      "canonical": "tag values owned by Tags composition"
+    },
+    "Tags": {
+      "kind": "selection",
+      "primary": "Selection",
+      "secondary": [],
+      "canonical": "tag selection/value collection"
+    },
+    "TimePicker": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [
+        "PickerField",
+        "TimePanel"
+      ],
+      "canonical": "committed/draft time value"
+    },
+    "Tooltip": {
+      "kind": "overlay",
+      "primary": "Trigger",
+      "secondary": [],
+      "canonical": "logical open/close lifecycle"
+    },
+    "Transfer": {
+      "kind": "selection",
+      "primary": "Selection",
+      "secondary": [
+        "Collection"
+      ],
+      "canonical": "target/source transfer selection and target order"
+    },
+    "TreeSelect": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [
+        "Tree",
+        "Selection"
+      ],
+      "canonical": "API value/controlled contract; Tree owns presentation/check navigation state"
+    },
+    "Trigger": {
+      "kind": "overlay",
+      "primary": "OverlayRuntime",
+      "secondary": [],
+      "canonical": "logical open/close and overlay interaction lifecycle"
+    },
+    "Upload": {
+      "kind": "delegated",
+      "primary": "UploadLifecycle",
+      "secondary": [
+        "ReorderInteraction"
+      ],
+      "canonical": "file list/upload lifecycle"
+    },
+    "WheelPicker": {
+      "kind": "state-controller",
+      "primary": "StateController",
+      "secondary": [
+        "PickerField",
+        "WheelPanel"
+      ],
+      "canonical": "committed/draft wheel-picker value"
+    }
+  }
+}

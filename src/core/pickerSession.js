@@ -1,0 +1,59 @@
+// Migration stage 20→30: real ESM candidate extracted from the frozen HOTFIX6 kernel.
+// Runtime consumers remain on the legacy registry until Rollup cutover; parity is enforced by tools/verify-esm-core-parity.mjs.
+
+import { Utils } from '../utils/utils.js';
+import { StateController } from './stateController.js';
+import { ValueEquality } from '../utils/valueEquality.js';
+
+function createPickerSession(options) {
+  var opts = options || {};
+  var ownsController = !opts.controller;
+  var controller = opts.controller || StateController.create({
+    value: opts.value,
+    controlled: opts.controlled === true,
+    normalize: opts.normalize,
+    copy: opts.copy || ValueEquality.copy,
+    equals: opts.equals || ValueEquality.equals,
+    onChange: opts.onChange,
+    onValueChange: opts.onValueChange,
+    onDraftChange: opts.onDraftChange
+  });
+  function resolveFlag(value, detail) { return Utils.isFunction(value) ? value(controller, detail || {}) === true : value === true; }
+  function open(meta) {
+    var detail = Object.assign({ silent:true, source:'popup', reason:'open' }, meta || {});
+    controller.begin(detail);
+    if (Utils.isFunction(opts.onOpenDraft)) opts.onOpenDraft(controller, detail);
+    return true;
+  }
+  function commit(meta) {
+    var detail = Object.assign({ source:'api', reason:'confirm' }, meta || {});
+    if (Utils.isFunction(opts.canCommit) && opts.canCommit(controller, detail) === false) return false;
+    var ok=controller.commit(detail);
+    if(ok && Utils.isFunction(opts.onCommit)) opts.onCommit(controller, detail);
+    return ok;
+  }
+  function cancel(meta) {
+    var detail = Object.assign({ source:'api', reason:'cancel' }, meta || {});
+    var ok=controller.cancel(detail);
+    if(Utils.isFunction(opts.onCancel)) opts.onCancel(controller, detail);
+    return ok;
+  }
+  function shouldRollback(detail) {
+    if (opts.rollbackDirtyOnClose !== undefined) return resolveFlag(opts.rollbackDirtyOnClose, detail);
+    return resolveFlag(opts.needConfirm, detail);
+  }
+  function close(detail) {
+    var info = Object.assign({}, detail || {}), rolledBack = false;
+    if (controller.dirty && shouldRollback(info)) { rolledBack = cancel({ silent:true, source:'popup', reason: info.reason || 'close', originalEvent:info.originalEvent || null }) !== false; }
+    info.rolledBack = rolledBack;
+    info.dirty = controller.dirty === true;
+    if (Utils.isFunction(opts.onCloseDraft)) opts.onCloseDraft(controller, info);
+    return true;
+  }
+  function updateOptions(next) { opts = Object.assign({}, opts, next || {}); return api; }
+  var api = Object.freeze({ controller:controller, open:open, commit:commit, cancel:cancel, close:close, updateOptions:updateOptions, destroy:function(){return ownsController ? controller.destroy() : false;} });
+  return api;
+}
+
+export const PickerSession = Object.freeze({ create: createPickerSession });
+export { createPickerSession };

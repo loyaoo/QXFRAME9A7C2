@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "modernSourceFiles": 154,
+  "modernLegacyMarkers": 0,
+  "moduleCoverage": "72/72",
+  "reachableLegacyModuleImplementations": 0,
+  "reachableCompatFiles": 11,
+  "compatFiles": 11,
+  "compatLegacyMarkers": 47,
+  "rollupExecutable": false,
+  "registryRemovalAuthorityReady": true,
+  "productionCutoverReady": false
+}

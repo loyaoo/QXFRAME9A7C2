@@ -1,0 +1,5688 @@
+{
+  "framework": "QXFRAME9A7C2",
+  "version": "2.19.81",
+  "components": [
+    {
+      "name": "Autocomplete",
+      "schema": {
+        "applySuggestion": "any",
+        "autoUpdate": "boolean",
+        "backfill": "boolean",
+        "busy": "boolean",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "container": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "emptyText": "any",
+        "error": "boolean",
+        "errorText": "any",
+        "filterItem": "any",
+        "flipOnOverflow": "boolean",
+        "focusOutline": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "getKey": {
+          "type": "function",
+          "nullable": true
+        },
+        "getLabel": {
+          "type": "function",
+          "nullable": true
+        },
+        "getSuggestionQuery": {
+          "type": "function",
+          "nullable": true
+        },
+        "getValue": {
+          "type": "function",
+          "nullable": true
+        },
+        "headless": "any",
+        "height": "any",
+        "highlightFirst": "boolean",
+        "inputTarget": "any",
+        "isItemDisabled": {
+          "type": "function",
+          "nullable": true
+        },
+        "itemRender": "any",
+        "itemSize": "number",
+        "items": "array",
+        "loadSuggestions": "any",
+        "loadingText": "any",
+        "matchOnly": "boolean",
+        "matchReferenceWidth": "boolean",
+        "maxHeight": "any",
+        "middleware": "array",
+        "minChars": "number",
+        "name": "string",
+        "onActiveChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBackfill": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBlur": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFocus": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearch": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSuggestionsError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSuggestionsLoad": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "overscan": "number",
+        "placeholder": "string",
+        "placement": "string",
+        "portalContainer": "any",
+        "prefix": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderControl": "boolean",
+        "required": "boolean",
+        "setSelectionRange": "any",
+        "size": "string",
+        "sortItems": "any",
+        "source": "any",
+        "status": "string",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string",
+        "virtual": "any",
+        "virtualThreshold": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "options",
+        "triggerOnFocus",
+        "openOnFocus",
+        "defaultActiveFirstOption",
+        "filterOption",
+        "dataSource",
+        "fetchSuggestions",
+        "valueRender",
+        "draftValueRender"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Lifecycle",
+          "Scheduler",
+          "Utils"
+        ],
+        "headless": [
+          "AsyncTask",
+          "StateController",
+          "ItemSchema",
+          "OpenStateBridge",
+          "ItemAccessors",
+          "OptionTransaction",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "DOMBinding",
+          "KeyboardNavigation",
+          "FieldHost"
+        ],
+        "buildingBlocks": [
+          "Control",
+          "OptionList",
+          "Item"
+        ],
+        "components": [
+          "Trigger",
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Carousel",
+      "schema": {
+        "adaptiveHeight": "boolean",
+        "afterChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "arrows": "boolean",
+        "autoplay": "boolean",
+        "beforeChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "cardHeight": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "direction": "string",
+        "disabled": "boolean",
+        "document": "document",
+        "dotPlacement": "any",
+        "dots": "boolean",
+        "draggable": "boolean",
+        "duration": "number",
+        "easing": "string",
+        "effect": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "initialIndex": "any",
+        "inputTarget": "any",
+        "interval": "number",
+        "items": "array",
+        "keyboard": "boolean",
+        "loop": "boolean",
+        "name": "string",
+        "nextArrow": "any",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "pauseOnFocus": "boolean",
+        "pauseOnHover": "boolean",
+        "portalContainer": "any",
+        "prevArrow": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderDot": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "swipe": "boolean",
+        "swipeThreshold": "number",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any",
+        "waitForAnimate": "boolean"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "type",
+        "current",
+        "defaultCurrent",
+        "slides",
+        "speed",
+        "autoplaySpeed",
+        "indicatorPosition",
+        "arrow",
+        "infinite",
+        "initialSlide"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Scheduler",
+          "Config",
+          "Utils"
+        ],
+        "headless": [],
+        "domHeadless": [
+          "Renderer",
+          "PointerSession"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "Cascader",
+      "schema": {
+        "autoUpdate": "boolean",
+        "busy": "boolean",
+        "changeOnSelect": "boolean",
+        "checkedStrategy": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "closeOnSelect": "boolean",
+        "container": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "expandTrigger": "any",
+        "filterPath": "any",
+        "focusOutline": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "headless": "any",
+        "height": "any",
+        "inputTarget": "any",
+        "itemRender": "any",
+        "itemStyles": "any",
+        "items": "array",
+        "key": "any",
+        "loadChildren": "any",
+        "loadedKeys": "array",
+        "matchReferenceWidth": "boolean",
+        "maxHeight": "any",
+        "maxVisibleTags": "any",
+        "middleware": "array",
+        "multiple": "boolean",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onLoad": {
+          "type": "function",
+          "nullable": true
+        },
+        "onLoadError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearch": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "placeholder": "string",
+        "placement": "string",
+        "popupRender": "any",
+        "portalContainer": "any",
+        "prefix": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderControl": "boolean",
+        "renderPath": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTag": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTagOverflow": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "searchable": "boolean",
+        "selectionAppearance": "any",
+        "separator": "string",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "tagClasses": "any",
+        "tagStyles": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string",
+        "virtual": "any",
+        "virtualThreshold": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "Selection",
+          "AsyncTaskGroup",
+          "ItemSchema",
+          "OpenStateBridge",
+          "SelectionTags",
+          "HierarchicalSelection",
+          "SearchState",
+          "InteractionPolicy",
+          "ItemAccessors",
+          "OptionTransaction"
+        ],
+        "domHeadless": [
+          "DOMBinding",
+          "Renderer",
+          "KeyboardNavigation",
+          "TagNavigation",
+          "FieldHost"
+        ],
+        "buildingBlocks": [
+          "Control",
+          "ItemCollection",
+          "Item"
+        ],
+        "components": [
+          "Trigger",
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Collapse",
+      "schema": {
+        "accordion": "boolean",
+        "animation": "any",
+        "beforeChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "bordered": "boolean",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "collapsible": "any",
+        "container": "any",
+        "defaultValue": "any",
+        "destroyInactive": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "ghost": "boolean",
+        "indicatorPosition": "any",
+        "inputTarget": "any",
+        "items": "array",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderIndicator": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "size": "string",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "transition": "any",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "activeKey",
+        "activeKeys",
+        "defaultActiveKey",
+        "defaultActiveKeys",
+        "destroyInactivePanel",
+        "expandIconPosition",
+        "ghosted"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "Disclosure",
+          "ActiveItem"
+        ],
+        "domHeadless": [
+          "KeyboardNavigation",
+          "Renderer",
+          "Transition",
+          "RovingProjection"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "ColorPicker",
+      "schema": {
+        "angle": "any",
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "busy": "boolean",
+        "cancelText": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnOutsidePress": "boolean",
+        "confirmDisabled": "any",
+        "confirmText": "any",
+        "container": "any",
+        "createDOM": "any",
+        "defaultPickerValue": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "draftValueTarget": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "eyeDropper": "any",
+        "focusOutline": "any",
+        "footer": "any",
+        "footerEnd": "any",
+        "footerStart": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "format": "any",
+        "gradient": "any",
+        "gradientAngle": "any",
+        "headless": "any",
+        "indicatorPlacement": "any",
+        "inputTarget": "any",
+        "keyboard": "boolean",
+        "mode": "any",
+        "name": "string",
+        "needConfirm": "boolean",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChangeComplete": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDraftChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFormatChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInvalid": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "placeholder": "string",
+        "placement": "string",
+        "portalContainer": "any",
+        "prefix": "any",
+        "presets": "array",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderControl": "boolean",
+        "required": "boolean",
+        "showAlpha": "any",
+        "showCancel": "boolean",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "stops": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "swatchOnly": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "allowClear",
+        "defaultOpen",
+        "colorFormat",
+        "predefine",
+        "picker",
+        "valueRender",
+        "draftValueRender"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Events",
+          "Utils"
+        ],
+        "headless": [
+          "StateController",
+          "OpenStateBridge",
+          "PickerSession",
+          "OptionTransaction",
+          "InteractionPolicy",
+          "ValueEquality"
+        ],
+        "domHeadless": [
+          "PointerSession"
+        ],
+        "buildingBlocks": [
+          "ColorPanel"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "DatePicker",
+      "schema": {
+        "allowEmpty": "array",
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "busy": "boolean",
+        "cancelText": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnOutsidePress": "boolean",
+        "closeOnSelect": "boolean",
+        "commitInputOnBlur": "boolean",
+        "confirmDisabled": "any",
+        "confirmText": "any",
+        "container": "any",
+        "createDOM": "any",
+        "defaultPickerValue": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "disabledDate": "any",
+        "disabledTime": "any",
+        "document": "document",
+        "draftValueTarget": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusOutline": "any",
+        "footer": "any",
+        "footerEnd": "any",
+        "footerStart": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "format": "any",
+        "headless": "any",
+        "hour": "any",
+        "inputTarget": "any",
+        "maxDate": "any",
+        "minDate": "any",
+        "minute": "any",
+        "multipleSeparator": "any",
+        "name": "string",
+        "needConfirm": "boolean",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDraftChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPanelChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreset": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreviewChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "order": "boolean",
+        "panelCount": "number",
+        "panelRender": "any",
+        "parseInput": "any",
+        "pickerValue": "any",
+        "placeholder": "string",
+        "placement": "string",
+        "portalContainer": "any",
+        "prefix": "any",
+        "preserveInvalidOnBlur": "boolean",
+        "presets": "array",
+        "previewValue": "any",
+        "rangeSeparator": "string",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderCell": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderControl": "boolean",
+        "required": "boolean",
+        "second": "any",
+        "selection": "string",
+        "showCancel": "boolean",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "time": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "unit": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string",
+        "weekStartsOn": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "allowClear",
+        "defaultOpen",
+        "mode",
+        "picker",
+        "range",
+        "multiple",
+        "showTime",
+        "timeOptions",
+        "type",
+        "separator",
+        "valueRender",
+        "draftValueRender"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Events",
+          "Utils"
+        ],
+        "headless": [
+          "StateController",
+          "DateUnit",
+          "OpenStateBridge",
+          "PickerSession",
+          "SelectionTags",
+          "OptionTransaction",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "TagNavigation"
+        ],
+        "buildingBlocks": [
+          "Calendar",
+          "PeriodPanel",
+          "TimePanel"
+        ],
+        "components": [
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Drawer",
+      "schema": {
+        "afterOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "animation": "any",
+        "attrs": {
+          "type": "object",
+          "nullable": true
+        },
+        "autoFocus": "custom",
+        "autoLoading": "any",
+        "autoOpen": "any",
+        "buttonType": "any",
+        "buttons": "array",
+        "cancelText": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closable": {
+          "types": [
+            "boolean",
+            "object"
+          ],
+          "nullable": true
+        },
+        "closeIcon": "any",
+        "closeOnClick": "boolean",
+        "closeOnEscape": "boolean",
+        "closeOnMask": "boolean",
+        "closeOptions": {
+          "type": "object",
+          "nullable": true
+        },
+        "confirmText": "any",
+        "container": "any",
+        "content": "any",
+        "destroyOnHidden": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "duration": "custom",
+        "easing": "string",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "enterDuration": "number",
+        "enterEasing": "any",
+        "focusTrap": "boolean",
+        "footer": "any",
+        "forceRender": "boolean",
+        "formField": "any",
+        "formTarget": "any",
+        "header": "any",
+        "height": "any",
+        "href": "any",
+        "id": "any",
+        "inputTarget": "any",
+        "key": "any",
+        "leaveDuration": "number",
+        "leaveEasing": "any",
+        "lockScroll": "boolean",
+        "maskClassName": "any",
+        "maskColor": "any",
+        "maskStyle": "any",
+        "name": "string",
+        "onBeforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBeforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onCancel": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onConfirm": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDestroy": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "rel": "any",
+        "required": "boolean",
+        "respectReducedMotion": "any",
+        "restoreFocus": "boolean",
+        "role": "any",
+        "scrollbarVisibility": "any",
+        "showMask": "boolean",
+        "source": "any",
+        "style": {
+          "type": "object",
+          "nullable": true
+        },
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "target": "any",
+        "title": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any",
+        "width": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "visible",
+        "defaultVisible",
+        "getContainer",
+        "popupContainer"
+      ],
+      "optionImpact": {},
+      "initializer": false,
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Events",
+          "Lifecycle",
+          "Config",
+          "Utils"
+        ],
+        "headless": [
+          "OverlayFramePolicy"
+        ],
+        "domHeadless": [
+          "Renderer",
+          "OverlayRuntime",
+          "OverlayFrameShell",
+          "PopupSurface",
+          "Transition",
+          "MotionPresets"
+        ],
+        "buildingBlocks": [],
+        "components": [
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Dropdown",
+      "schema": {
+        "arrowPadding": "number",
+        "autoUpdate": "boolean",
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnOutsidePress": "boolean",
+        "closeOnSelect": "boolean",
+        "container": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "flipOnOverflow": "boolean",
+        "focusOnOpen": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "inputTarget": "any",
+        "items": "array",
+        "middleware": "array",
+        "multiple": "boolean",
+        "name": "string",
+        "offset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "onAction": {
+          "type": "function",
+          "nullable": true
+        },
+        "onActiveChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearch": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "searchValue": "any",
+        "searchable": "boolean",
+        "selectable": "any",
+        "selectionAppearance": "any",
+        "showArrow": "boolean",
+        "size": "string",
+        "source": "any",
+        "strategy": "string",
+        "style": {
+          "type": "object",
+          "nullable": true
+        },
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "submenuLeaveDelay": "number",
+        "submenuOffset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "submenuOpenDelay": "number",
+        "submenuTrigger": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "targetEl",
+        "triggerTarget",
+        "triggerEl",
+        "visible",
+        "defaultVisible",
+        "popupVisible",
+        "defaultPopupVisible",
+        "autoOpen",
+        "position",
+        "mouseEnterDelay",
+        "mouseLeaveDelay",
+        "destroyOnHidden",
+        "selectedValue",
+        "selectedValues",
+        "defaultValues",
+        "selectionMode",
+        "mode",
+        "type",
+        "options"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "reference"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "Selection",
+          "ItemSchema",
+          "HierarchicalSelection",
+          "InteractionPolicy",
+          "ItemAccessors",
+          "OpenStateBridge"
+        ],
+        "domHeadless": [
+          "KeyboardNavigation"
+        ],
+        "buildingBlocks": [
+          "ItemCollection"
+        ],
+        "components": [
+          "Trigger",
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Image",
+      "schema": {
+        "alt": "any",
+        "circle": "boolean",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "controls": "boolean",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "doubleClickZoom": "boolean",
+        "draggable": "boolean",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "errorContent": "any",
+        "fallback": "any",
+        "fit": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "height": "any",
+        "initialIndex": "any",
+        "inputTarget": "any",
+        "items": "array",
+        "keyboard": "boolean",
+        "lazy": "boolean",
+        "maskClosable": "boolean",
+        "maskColor": "any",
+        "maskOpacity": "any",
+        "maxScale": "number",
+        "minScale": "number",
+        "name": "string",
+        "onDownload": {
+          "type": "function",
+          "nullable": true
+        },
+        "onError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFallback": {
+          "type": "function",
+          "nullable": true
+        },
+        "onLoad": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreviewChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreviewVisibleChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onTransform": {
+          "type": "function",
+          "nullable": true
+        },
+        "placeholder": "string",
+        "portalContainer": "any",
+        "preview": "any",
+        "previewGroup": "any",
+        "previewList": "any",
+        "previewMask": "any",
+        "previewMaskText": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "rotateStep": "number",
+        "rounded": "boolean",
+        "scaleStep": "number",
+        "source": "any",
+        "src": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "trajectory": "any",
+        "triggerTarget": "any",
+        "valueTarget": "any",
+        "wheelZoom": "boolean",
+        "width": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Config",
+          "Utils"
+        ],
+        "headless": [
+          "TransformModel"
+        ],
+        "domHeadless": [
+          "Renderer",
+          "OverlayRuntime",
+          "PopupSurface",
+          "Transition",
+          "PointerSession"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "InputNumber",
+      "schema": {
+        "changeOnBlur": "boolean",
+        "changeOnWheel": "boolean",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "controls": "boolean",
+        "decimalSeparator": "any",
+        "defaultValue": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusOutline": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "formatter": "any",
+        "inputMode": "any",
+        "inputTarget": "any",
+        "keyboard": "boolean",
+        "max": "any",
+        "min": "any",
+        "mode": "any",
+        "name": "string",
+        "onBlur": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFocus": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPressEnter": {
+          "type": "function",
+          "nullable": true
+        },
+        "onStep": {
+          "type": "function",
+          "nullable": true
+        },
+        "parser": "any",
+        "placeholder": "string",
+        "portalContainer": "any",
+        "precision": "number",
+        "prefix": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "step": {
+          "types": [
+            "number",
+            "string"
+          ],
+          "nullable": true
+        },
+        "stringMode": "boolean",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "target": "any",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "controlPlacement"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Scheduler",
+          "Utils"
+        ],
+        "headless": [
+          "NumericInput",
+          "OptionTransaction",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [],
+        "buildingBlocks": [
+          "Control"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "InputOTP",
+      "schema": {
+        "accept": "any",
+        "autoFocus": "boolean",
+        "autocomplete": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "defaultValue": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusOutline": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "formatter": "any",
+        "inputMode": "any",
+        "inputTarget": "any",
+        "length": "number",
+        "mask": "any",
+        "name": "string",
+        "onBlur": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onComplete": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFocus": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "placeholder": {
+          "types": [
+            "string",
+            "array"
+          ],
+          "nullable": true
+        },
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "separator": {
+          "types": [
+            "string",
+            "function"
+          ],
+          "nullable": true
+        },
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "target": "any",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "allowedChars",
+        "type",
+        "allowClear",
+        "segments"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Scheduler",
+          "DOM",
+          "Utils"
+        ],
+        "headless": [
+          "OptionTransaction"
+        ],
+        "domHeadless": [],
+        "buildingBlocks": [
+          "Control"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "JSON",
+      "schema": {
+        "addEventListener": "any",
+        "autocomplete": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "collapsed": "boolean",
+        "container": "any",
+        "copy": "any",
+        "data": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "editable": "boolean",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "height": "any",
+        "indent": "number",
+        "inputTarget": "any",
+        "maxDepth": "any",
+        "maxHeight": "any",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "showLine": "boolean",
+        "size": "string",
+        "sortKeys": "any",
+        "source": "any",
+        "spellcheck": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "tabIndex": "any",
+        "toolbar": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "value": "any",
+        "valueTarget": "any",
+        "virtual": "any",
+        "virtualThreshold": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [],
+        "domHeadless": [
+          "KeyboardRegion"
+        ],
+        "buildingBlocks": [
+          "Tree"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Loading",
+      "schema": {
+        "target": "element",
+        "fullscreen": "boolean",
+        "open": "boolean",
+        "delay": "number",
+        "text": "any",
+        "indicator": "any",
+        "size": {
+          "enum": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "xl"
+          ]
+        },
+        "progress": "any",
+        "showMask": "boolean",
+        "lockScroll": "boolean",
+        "blocking": "boolean",
+        "className": "string",
+        "style": "object",
+        "boxStyle": "object",
+        "maskColor": "string",
+        "maskBlur": "any",
+        "onOpen": "function",
+        "onClose": "function"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "container",
+        "appendTo",
+        "triggerElement",
+        "triggerEl",
+        "visible",
+        "autoOpen",
+        "forceRender",
+        "keepMounted",
+        "destroyOnHidden",
+        "autoClose",
+        "openReason",
+        "event",
+        "_event",
+        "tip"
+      ],
+      "optionImpact": {},
+      "initializer": false,
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Scheduler",
+          "DOMProjection",
+          "Utils"
+        ],
+        "headless": [],
+        "domHeadless": [
+          "OverlayRuntime",
+          "PopupSurface",
+          "Renderer"
+        ],
+        "buildingBlocks": [],
+        "components": [
+          "Progress"
+        ]
+      }
+    },
+    {
+      "name": "Menu",
+      "schema": {
+        "autoUpdate": "boolean",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "collapsed": "boolean",
+        "collapsedWidth": "any",
+        "container": "any",
+        "defaultOpenKeys": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "disabledOverflow": "any",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "expandIcon": "any",
+        "flipOnOverflow": "boolean",
+        "forceSubMenuRender": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "inlineIndent": "any",
+        "inputTarget": "any",
+        "itemDisplay": "any",
+        "items": "array",
+        "loop": "boolean",
+        "middleware": "array",
+        "mode": "any",
+        "multiple": "boolean",
+        "name": "string",
+        "onClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDeselect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onNavigate": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelectedKeyChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelectedKeysChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onTitleClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "openKeys": "any",
+        "overflowedIndicator": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "querySelector": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "selectable": "any",
+        "selectedKey": "any",
+        "selectedKeys": "any",
+        "selectionAppearance": "any",
+        "size": "string",
+        "source": "any",
+        "strategy": "string",
+        "style": {
+          "type": "object",
+          "nullable": true
+        },
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "submenuLeaveDelay": "number",
+        "submenuMode": "any",
+        "submenuOffset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "submenuOpenDelay": "number",
+        "submenuTrigger": "any",
+        "theme": "any",
+        "tooltip": "any",
+        "triggerTarget": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Lifecycle",
+          "Scheduler",
+          "Utils",
+          "ScrollVisibility",
+          "IdManager"
+        ],
+        "headless": [
+          "Selection",
+          "ItemSchema",
+          "ItemAccessors"
+        ],
+        "domHeadless": [
+          "DOMBinding",
+          "KeyboardRegion",
+          "ObserverHub",
+          "Transition",
+          "ResponsiveOverflow"
+        ],
+        "buildingBlocks": [
+          "Item"
+        ],
+        "components": [
+          "Trigger"
+        ]
+      }
+    },
+    {
+      "name": "Message",
+      "schema": {
+        "actions": "array",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closable": "boolean",
+        "closeOnClick": "boolean",
+        "container": "any",
+        "content": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "duration": "number",
+        "easing": "string",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "enterDuration": "number",
+        "formField": "any",
+        "formTarget": "any",
+        "icon": "any",
+        "inputTarget": "any",
+        "key": "any",
+        "leaveDuration": "number",
+        "maxCount": "number",
+        "moveDuration": "number",
+        "name": "string",
+        "onBeforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onUpdate": {
+          "type": "function",
+          "nullable": true
+        },
+        "pauseOnHover": "boolean",
+        "pauseOnHoverScope": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "showProgress": "boolean",
+        "source": "any",
+        "stack": "any",
+        "stackClassName": "any",
+        "stackStyle": {
+          "type": "object",
+          "nullable": true
+        },
+        "style": {
+          "type": "object",
+          "nullable": true
+        },
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [],
+      "optionImpact": {},
+      "initializer": false,
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [],
+        "headless": [
+          "NoticePreset"
+        ],
+        "domHeadless": [],
+        "buildingBlocks": [
+          "NoticeService"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Modal",
+      "schema": {
+        "afterClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "afterOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "animation": "any",
+        "attrs": {
+          "type": "object",
+          "nullable": true
+        },
+        "autoFocus": "custom",
+        "autoLoading": "any",
+        "autoOpen": "any",
+        "buttonType": "any",
+        "buttons": "array",
+        "cancelText": "any",
+        "center": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closable": {
+          "types": [
+            "boolean",
+            "object"
+          ],
+          "nullable": true
+        },
+        "closeIcon": "any",
+        "closeOnClick": "boolean",
+        "closeOnEscape": "boolean",
+        "closeOnMask": "boolean",
+        "closeOptions": {
+          "type": "object",
+          "nullable": true
+        },
+        "confirmText": "any",
+        "container": "any",
+        "content": "any",
+        "destroyOnHidden": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "duration": "custom",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "enterDuration": "number",
+        "focusTrap": "boolean",
+        "footer": "any",
+        "forceRender": "boolean",
+        "formField": "any",
+        "formTarget": "any",
+        "fullscreen": "any",
+        "header": "any",
+        "href": "any",
+        "id": "any",
+        "inputTarget": "any",
+        "key": "any",
+        "label": "any",
+        "leaveDuration": "number",
+        "lockScroll": "boolean",
+        "maskAnimation": "any",
+        "maskBlur": "any",
+        "maskClassName": "any",
+        "maskColor": "any",
+        "maskDuration": "custom",
+        "maskEnterDuration": "number",
+        "maskLeaveDuration": "number",
+        "maskStyle": "any",
+        "maxWidth": "any",
+        "name": "string",
+        "onBeforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBeforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onCancel": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onConfirm": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDestroy": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "origin": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "rel": "any",
+        "required": "boolean",
+        "restoreFocus": "boolean",
+        "role": "any",
+        "scrollbarVisibility": "any",
+        "showMask": "boolean",
+        "source": "any",
+        "style": {
+          "type": "object",
+          "nullable": true
+        },
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "target": "any",
+        "text": "any",
+        "title": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any",
+        "width": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [],
+      "optionImpact": {},
+      "initializer": false,
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Events",
+          "Lifecycle",
+          "Config",
+          "IdManager",
+          "Utils"
+        ],
+        "headless": [
+          "OverlayFramePolicy"
+        ],
+        "domHeadless": [
+          "Renderer",
+          "OverlayRuntime",
+          "OverlayFrameShell",
+          "PopupSurface",
+          "Transition",
+          "MotionPresets"
+        ],
+        "buildingBlocks": [],
+        "components": [
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Notification",
+      "schema": {
+        "actions": "array",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closable": "boolean",
+        "closeOnClick": "boolean",
+        "container": "any",
+        "content": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "duration": "number",
+        "easing": "string",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "enterDuration": "number",
+        "formField": "any",
+        "formTarget": "any",
+        "icon": "any",
+        "inputTarget": "any",
+        "key": "any",
+        "leaveDuration": "number",
+        "maxCount": "number",
+        "maxWidth": "any",
+        "minWidth": "any",
+        "moveDuration": "number",
+        "name": "string",
+        "onAction": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBeforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onUpdate": {
+          "type": "function",
+          "nullable": true
+        },
+        "pauseOnHover": "boolean",
+        "pauseOnHoverScope": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "showProgress": "boolean",
+        "source": "any",
+        "stack": "any",
+        "stackClassName": "any",
+        "stackStyle": {
+          "type": "object",
+          "nullable": true
+        },
+        "style": {
+          "type": "object",
+          "nullable": true
+        },
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "title": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any",
+        "width": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [],
+      "optionImpact": {},
+      "initializer": false,
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [],
+        "headless": [
+          "NoticePreset"
+        ],
+        "domHeadless": [],
+        "buildingBlocks": [
+          "NoticeService"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Pagination",
+      "schema": {
+        "background": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "components": "any",
+        "container": "any",
+        "count": "number",
+        "current": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "ellipsis": "any",
+        "ellipsisJump": "any",
+        "first": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "hideOnSinglePage": "any",
+        "inputMode": "any",
+        "inputTarget": "any",
+        "itemRender": "any",
+        "jump": "any",
+        "last": "any",
+        "layout": "any",
+        "name": "string",
+        "next": "any",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onNextClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPrevClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRender": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSizeChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "pageSize": "any",
+        "pageSizeOptions": "array",
+        "pagerCount": "any",
+        "portalContainer": "any",
+        "prev": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "responsive": "any",
+        "showJumper": "any",
+        "showSizeChanger": "any",
+        "showTotal": "any",
+        "simple": "any",
+        "size": "string",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "triggerTarget": "any",
+        "type": "string",
+        "value": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "element",
+        "total",
+        "limit",
+        "limits",
+        "defaultCurrent",
+        "step",
+        "pageCount",
+        "currentPage",
+        "pageSizes",
+        "small",
+        "showFirst",
+        "showLast",
+        "prevText",
+        "nextText",
+        "onPageChange",
+        "onCurrentChange",
+        "hash",
+        "theme",
+        "min"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "Lifecycle",
+          "Utils",
+          "Scheduler"
+        ],
+        "headless": [
+          "PaginationModel"
+        ],
+        "domHeadless": [
+          "KeyboardNavigation",
+          "EventDelegation",
+          "Renderer",
+          "DOMBinding"
+        ],
+        "buildingBlocks": [
+          "Item"
+        ],
+        "components": [
+          "Select"
+        ]
+      }
+    },
+    {
+      "name": "Popconfirm",
+      "schema": {
+        "arrowPadding": "number",
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "cancelDisabled": "any",
+        "cancelText": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnFocusOutside": "any",
+        "closeOnOutsidePress": "boolean",
+        "closeOnTabExit": "boolean",
+        "confirmDisabled": "any",
+        "confirmText": "any",
+        "container": "any",
+        "content": "any",
+        "danger": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "icon": "any",
+        "inputTarget": "any",
+        "middleware": "array",
+        "name": "string",
+        "offset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "onCancel": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onConfirm": {
+          "type": "function",
+          "nullable": true
+        },
+        "onConfirmError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "originalEvent": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "restoreFocus": "boolean",
+        "restoreFocusOnClose": "any",
+        "showArrow": "boolean",
+        "showWarning": "any",
+        "size": "string",
+        "source": "any",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "title": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "targetEl",
+        "triggerTarget",
+        "triggerEl",
+        "visible",
+        "defaultVisible",
+        "popupVisible",
+        "defaultPopupVisible",
+        "position",
+        "message",
+        "iconName",
+        "iconText",
+        "okText",
+        "okType",
+        "cancelButtonProps",
+        "okButtonProps"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "reference"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Utils"
+        ],
+        "headless": [
+          "AsyncAction"
+        ],
+        "domHeadless": [],
+        "buildingBlocks": [],
+        "components": [
+          "Popover"
+        ]
+      }
+    },
+    {
+      "name": "Popover",
+      "schema": {
+        "action": "any",
+        "arrowPadding": "number",
+        "autoUpdate": "boolean",
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnFocusOutside": "any",
+        "closeOnOutsidePress": "boolean",
+        "closeOnTabExit": "boolean",
+        "container": "any",
+        "containsTarget": "any",
+        "content": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusScope": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "inputTarget": "any",
+        "middleware": "array",
+        "name": "string",
+        "offset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "restoreFocus": "boolean",
+        "restoreFocusOnClose": "any",
+        "showArrow": "boolean",
+        "size": "string",
+        "source": "any",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "title": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "targetEl",
+        "triggerTarget",
+        "triggerEl",
+        "anchor",
+        "anchorEl",
+        "visible",
+        "defaultVisible",
+        "popupVisible",
+        "defaultPopupVisible",
+        "autoOpen",
+        "position",
+        "contentNode",
+        "html",
+        "unmountOnExit",
+        "autoFitPosition",
+        "autoFixPosition",
+        "popupWidth",
+        "popupMinWidth",
+        "popupMaxWidth",
+        "popupStyle",
+        "panelStyle"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "reference"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "Lifecycle",
+          "DOM",
+          "Utils"
+        ],
+        "headless": [],
+        "domHeadless": [],
+        "buildingBlocks": [],
+        "components": [
+          "Trigger"
+        ]
+      }
+    },
+    {
+      "name": "Progress",
+      "schema": {
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "color": "any",
+        "container": "any",
+        "direction": "string",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "format": "any",
+        "gapDegree": "any",
+        "gapPlacement": "any",
+        "inputTarget": "any",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onUpdate": {
+          "type": "function",
+          "nullable": true
+        },
+        "percent": "any",
+        "portalContainer": "any",
+        "railColor": "any",
+        "readOnly": "boolean",
+        "reason": "any",
+        "reference": "any",
+        "required": "boolean",
+        "showInfo": "any",
+        "silent": "any",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "steps": "any",
+        "strokeColor": "any",
+        "strokeLinecap": "any",
+        "strokeWidth": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "success": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "successPercent",
+        "successColor",
+        "trailColor"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "IdManager",
+          "Utils"
+        ],
+        "headless": [],
+        "domHeadless": [
+          "Renderer"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "Rate",
+      "schema": {
+        "character": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "container": "any",
+        "count": "number",
+        "defaultValue": "any",
+        "direction": "string",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "half": "boolean",
+        "inputTarget": "any",
+        "keyboard": "boolean",
+        "mode": "any",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onHoverChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "originalEvent": "any",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reason": "any",
+        "reference": "any",
+        "required": "boolean",
+        "serializeValue": "any",
+        "silent": "any",
+        "size": "string",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "toggle": "any",
+        "tooltips": "any",
+        "triggerTarget": "any",
+        "user": "any",
+        "value": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "allowHalf",
+        "allowClear"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "source"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "InteractionPolicy",
+          "StateController",
+          "OptionTransaction"
+        ],
+        "domHeadless": [
+          "Renderer"
+        ],
+        "buildingBlocks": [
+          "Control"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Result",
+      "schema": {
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "extra": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "icon": "any",
+        "inputTarget": "any",
+        "name": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "size": {
+          "types": [
+            "string",
+            "number"
+          ],
+          "nullable": true
+        },
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "subtitle": "any",
+        "title": "any",
+        "triggerTarget": "any",
+        "valueTarget": "any",
+        "viewBox": "any",
+        "visible": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "show",
+        "status"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Scheduler",
+          "SemanticStyles",
+          "Utils"
+        ],
+        "headless": [],
+        "domHeadless": [
+          "Renderer"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "Ripple",
+      "schema": {
+        "inside": "any",
+        "outside": "any",
+        "color": "any"
+      },
+      "defaults": {
+        "inside": true,
+        "outside": false,
+        "color": null
+      },
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "element",
+        "container",
+        "mount"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Lifecycle",
+          "DOM",
+          "Config"
+        ],
+        "headless": [],
+        "domHeadless": [
+          "ObserverHub",
+          "PressInteraction"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "Scroll",
+      "schema": {
+        "align": "any",
+        "axis": "any",
+        "behavior": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "content": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "edgeShadow": "boolean",
+        "edgeShadowSize": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusable": "boolean",
+        "formField": "any",
+        "formTarget": "any",
+        "inputTarget": "any",
+        "keyboard": "boolean",
+        "name": "string",
+        "offset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "onScroll": {
+          "type": "function",
+          "nullable": true
+        },
+        "onScrollEnd": {
+          "type": "function",
+          "nullable": true
+        },
+        "onScrollStart": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSnapSettle": {
+          "type": "function",
+          "nullable": true
+        },
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reason": "any",
+        "reference": "any",
+        "required": "boolean",
+        "root": "any",
+        "scrollIdleDelay": "number",
+        "scrollbarHideDelay": "any",
+        "scrollbarInteractive": "any",
+        "scrollbarVisibility": "any",
+        "snapAlign": "any",
+        "snapAxis": "any",
+        "snapBehavior": "any",
+        "snapDuration": "number",
+        "snapLoop": "boolean",
+        "snapOnIdle": "boolean",
+        "snapTargets": "any",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "triggerTarget": "any",
+        "valueTarget": "any",
+        "viewport": "any",
+        "wheelAxis": "any",
+        "wheelBehavior": "any",
+        "wheelPropagation": "boolean",
+        "x": "any",
+        "y": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "scrollX",
+        "scrollY",
+        "scrollbar",
+        "wrapper",
+        "wrap",
+        "view",
+        "scrollElement",
+        "virtual",
+        "virtualData",
+        "itemHeight",
+        "estimatedItemSize",
+        "wheelStepInterval",
+        "direction"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Utils",
+          "Events",
+          "Lifecycle",
+          "Scheduler",
+          "DOM",
+          "Config",
+          "ScrollVisibility"
+        ],
+        "headless": [
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "DOMBinding",
+          "DOMTemplate",
+          "ObserverHub",
+          "PointerSession"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "Select",
+      "schema": {
+        "addOnBlur": "any",
+        "addOnEnter": "any",
+        "addOnTab": "any",
+        "autoUpdate": "boolean",
+        "busy": "boolean",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearContent": "any",
+        "clearSearchOnSelect": "any",
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "container": "any",
+        "creatable": "any",
+        "defaultActiveFirstOption": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "emptyText": "any",
+        "error": "boolean",
+        "errorText": "any",
+        "filterItem": "any",
+        "flipOnOverflow": "boolean",
+        "focusOutline": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "getKey": {
+          "type": "function",
+          "nullable": true
+        },
+        "getLabel": {
+          "type": "function",
+          "nullable": true
+        },
+        "getValue": {
+          "type": "function",
+          "nullable": true
+        },
+        "headless": "any",
+        "height": "any",
+        "hideSelectedOptions": "any",
+        "inputTarget": "any",
+        "isItemDisabled": {
+          "type": "function",
+          "nullable": true
+        },
+        "itemRender": "any",
+        "itemSize": "number",
+        "itemStyles": "any",
+        "items": "array",
+        "loading": "boolean",
+        "loadingIcon": "any",
+        "loadingText": "any",
+        "matchReferenceWidth": "boolean",
+        "maxCount": "number",
+        "maxHeight": "any",
+        "maxTagLength": "number",
+        "maxVisibleTags": "any",
+        "measureAvailableWidth": "any",
+        "measureTagOverflowWidth": "any",
+        "measureTagWidth": "any",
+        "middleware": "array",
+        "multiple": "boolean",
+        "name": "string",
+        "normalizeTag": "any",
+        "onActive": {
+          "type": "function",
+          "nullable": true
+        },
+        "onActiveChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBlur": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDeselect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFocus": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInputKeyDown": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPopupScroll": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearch": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onTagInvalid": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "overscan": "number",
+        "placeholder": "string",
+        "placement": "string",
+        "popupRender": "any",
+        "portalContainer": "any",
+        "prefix": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderControl": "boolean",
+        "renderTag": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTagOverflow": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderValue": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "searchFields": "any",
+        "searchable": "boolean",
+        "selectionAppearance": "any",
+        "size": "string",
+        "sortItems": "any",
+        "source": "any",
+        "status": "string",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "tagClasses": "any",
+        "tagInputMinWidth": "any",
+        "tagRemoveContent": "any",
+        "tagStyles": "any",
+        "tagTextMaxLength": "any",
+        "toggleContent": "any",
+        "tokenSeparators": {
+          "types": [
+            "array",
+            "function"
+          ],
+          "nullable": true
+        },
+        "trigger": "string",
+        "triggerTarget": "any",
+        "validateTag": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string",
+        "virtual": "any",
+        "virtualThreshold": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "options",
+        "showSearch",
+        "allowClear",
+        "openOnFocus",
+        "mode",
+        "maxTagCount",
+        "tagRender",
+        "labelRender",
+        "valueRender",
+        "draftValueRender"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "ValueEquality",
+          "OpenStateBridge",
+          "InteractionPolicy",
+          "SelectionTags",
+          "OptionTransaction",
+          "SearchState"
+        ],
+        "domHeadless": [
+          "DOMBinding",
+          "KeyboardNavigation",
+          "TagNavigation",
+          "Renderer",
+          "FieldHost"
+        ],
+        "buildingBlocks": [
+          "Control",
+          "OptionList",
+          "Item"
+        ],
+        "components": [
+          "Trigger",
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Slider",
+      "schema": {
+        "allowCross": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "defaultValue": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "dots": "boolean",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "final": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "handleDisabled": "any",
+        "included": "any",
+        "inputTarget": "any",
+        "keyboard": "boolean",
+        "marks": "any",
+        "max": "any",
+        "min": "any",
+        "name": "string",
+        "onAfterChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBeforeChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onKeyDown": {
+          "type": "function",
+          "nullable": true
+        },
+        "originalEvent": "any",
+        "portalContainer": "any",
+        "range": "any",
+        "readOnly": "boolean",
+        "reason": "any",
+        "reference": "any",
+        "required": "boolean",
+        "reverse": "any",
+        "serializeValue": "any",
+        "silent": "any",
+        "size": "string",
+        "source": "any",
+        "step": "number",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "tooltip": "any",
+        "triggerTarget": "any",
+        "user": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "vertical": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "tipFormatter"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "source"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "StateController",
+          "OptionTransaction"
+        ],
+        "domHeadless": [
+          "PointerSession"
+        ],
+        "buildingBlocks": [
+          "Control"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Sort",
+      "schema": {
+        "animation": "any",
+        "beforeMove": {
+          "type": "function",
+          "nullable": true
+        },
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "container": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "draggable": "boolean",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "handleOnly": "any",
+        "inputTarget": "any",
+        "items": "array",
+        "keyboard": "boolean",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDragCancel": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDragEnd": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDragMove": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDragStart": {
+          "type": "function",
+          "nullable": true
+        },
+        "orientation": "string",
+        "originalEvent": "any",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reason": "any",
+        "reference": "any",
+        "required": "boolean",
+        "serializeValue": "any",
+        "showActions": "any",
+        "showHandle": "any",
+        "silent": "any",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "triggerTarget": "any",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "mode",
+        "direction",
+        "itemSelector",
+        "handleSelector",
+        "dragHandle",
+        "handle",
+        "showButtons",
+        "handleText",
+        "preserveDom",
+        "clearOnDestroy",
+        "domMode",
+        "authored",
+        "modifierRequired",
+        "onBeforeMove",
+        "onSort"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "source"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "Collection",
+          "OptionTransaction",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "EventDelegation",
+          "Renderer",
+          "TransitionGroup",
+          "LayerManager",
+          "ReorderInteraction"
+        ],
+        "buildingBlocks": [
+          "Control"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Steps",
+      "schema": {
+        "allowCurrentClick": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clickable": "any",
+        "container": "any",
+        "current": "any",
+        "direction": "string",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "event": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "initial": "any",
+        "inputTarget": "any",
+        "itemRender": "any",
+        "items": "array",
+        "key": "any",
+        "labelPlacement": "any",
+        "name": "string",
+        "notifySame": "any",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "originalEvent": "any",
+        "percent": "any",
+        "portalContainer": "any",
+        "progressDot": "any",
+        "readOnly": "boolean",
+        "reason": "any",
+        "reference": "any",
+        "required": "boolean",
+        "responsive": "any",
+        "silent": "any",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "Collection",
+          "ActiveItem"
+        ],
+        "domHeadless": [
+          "Renderer",
+          "KeyboardNavigation",
+          "RovingProjection"
+        ],
+        "buildingBlocks": [
+          "Item"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Table",
+      "schema": {
+        "addEventListener": "any",
+        "bordered": "boolean",
+        "borderless": "any",
+        "caption": "any",
+        "checked": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "columns": "array",
+        "columnReorder": "any",
+        "container": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "editEnterBehavior": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "emptyText": "any",
+        "errorText": "any",
+        "expandedKeys": "array",
+        "filteredTotal": "any",
+        "filters": "array",
+        "fixedLayout": "boolean",
+        "footer": "any",
+        "footerEnd": "any",
+        "footerStart": "any",
+        "forceRenderExpanded": "boolean",
+        "formField": "any",
+        "formTarget": "any",
+        "getKey": {
+          "type": "function",
+          "nullable": true
+        },
+        "height": "any",
+        "hover": "any",
+        "inputTarget": "any",
+        "isItemDisabled": {
+          "type": "function",
+          "nullable": true
+        },
+        "items": "array",
+        "keepStaleData": "boolean",
+        "key": "any",
+        "keyboardNavigation": "any",
+        "load": "any",
+        "loading": "boolean",
+        "loadingText": "any",
+        "maxHeight": "any",
+        "minWidth": "any",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onColumnReorder": {
+          "type": "function",
+          "nullable": true
+        },
+        "onColumnResize": {
+          "type": "function",
+          "nullable": true
+        },
+        "onColumnResizeEnd": {
+          "type": "function",
+          "nullable": true
+        },
+        "onLoad": {
+          "type": "function",
+          "nullable": true
+        },
+        "onLoadError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRow": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRowClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRowDoubleClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRowContextMenu": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRowReorder": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearchChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelectionChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "overscan": "number",
+        "page": "any",
+        "pageSize": "any",
+        "pager": "any",
+        "portalContainer": "any",
+        "preserveSelectedKeys": "boolean",
+        "readOnly": "boolean",
+        "reference": "any",
+        "remoteSelectionScope": "any",
+        "renderExpanded": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "rowClassName": "any",
+        "rowExpandable": "any",
+        "rowHeight": "any",
+        "rowReorder": "any",
+        "responsiveMode": "string",
+        "searchMatcher": "any",
+        "searchValue": "any",
+        "selectedKeys": "any",
+        "selectionMode": "any",
+        "setSelectionRange": "any",
+        "scrollPolicy": "any",
+        "shadow": "any",
+        "size": "string",
+        "sortKey": "any",
+        "sortOrder": "any",
+        "source": "any",
+        "stickyHeader": "boolean",
+        "stickySummary": "boolean",
+        "striped": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "summary": "any",
+        "tabIndex": "any",
+        "title": "any",
+        "toolbar": "any",
+        "toolbarEnd": "any",
+        "toolbarStart": "any",
+        "total": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "value": "any",
+        "valueTarget": "any",
+        "virtual": "any",
+        "virtualThreshold": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "dataSource",
+        "rowKey",
+        "rowSelection",
+        "expandable",
+        "pagination"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Scheduler",
+          "ScrollVisibility",
+          "IdManager",
+          "Utils"
+        ],
+        "headless": [
+          "TableModel",
+          "AsyncTask",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "EventDelegation",
+          "Renderer",
+          "Virtualizer",
+          "EmptyProjection",
+          "KeyboardNavigation",
+          "InteractionModality",
+          "ObserverHub",
+          "PointerSession",
+          "ReorderInteraction"
+        ],
+        "buildingBlocks": [],
+        "components": [
+          "Trigger",
+          "Pagination"
+        ]
+      }
+    },
+    {
+      "name": "Tabs",
+      "schema": {
+        "activationMode": "any",
+        "activeKey": "any",
+        "addable": "boolean",
+        "animated": "any",
+        "centered": "boolean",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closable": "boolean",
+        "container": "any",
+        "createItem": "any",
+        "defaultActiveKey": "any",
+        "destroyInactive": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "edgeShadow": "boolean",
+        "editable": "boolean",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "id": "any",
+        "indicator": "any",
+        "inputTarget": "any",
+        "items": "array",
+        "key": "any",
+        "label": "any",
+        "name": "string",
+        "onAdd": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBeforeChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBeforeEdit": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onEdit": {
+          "type": "function",
+          "nullable": true
+        },
+        "orientation": "string",
+        "overflow": "any",
+        "overflowMaxHeight": "number",
+        "overflowPopupRender": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "size": "string",
+        "source": "any",
+        "stretch": "boolean",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "transition": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "valueTarget": "any",
+        "wheelPropagation": "boolean"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "el",
+        "mount",
+        "position",
+        "tabPosition",
+        "active",
+        "defaultActive"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "Lifecycle",
+          "Scheduler",
+          "DOM",
+          "IdManager",
+          "Utils"
+        ],
+        "headless": [
+          "Collection",
+          "ActiveItem",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "Renderer",
+          "KeyboardNavigation",
+          "Transition",
+          "ObserverHub",
+          "ResponsiveOverflow",
+          "RovingProjection"
+        ],
+        "buildingBlocks": [],
+        "components": [
+          "Scroll",
+          "Popover"
+        ]
+      }
+    },
+    {
+      "name": "TagInput",
+      "schema": {
+        "addOnBlur": "any",
+        "addOnEnter": "any",
+        "addOnTab": "any",
+        "beforeAdd": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeEdit": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeRemove": {
+          "type": "function",
+          "nullable": true
+        },
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearVisibility": "any",
+        "clearable": "boolean",
+        "container": "any",
+        "creatable": "any",
+        "defaultValue": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusOutline": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "inputTarget": "any",
+        "inputValue": "any",
+        "js": "any",
+        "maxTagLength": "number",
+        "maxTags": "any",
+        "name": "string",
+        "normalizeTag": "any",
+        "onAdd": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBlur": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onEdit": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFocus": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInvalid": {
+          "type": "function",
+          "nullable": true
+        },
+        "onKeydown": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRemove": {
+          "type": "function",
+          "nullable": true
+        },
+        "placeholder": "string",
+        "portalContainer": "any",
+        "prefix": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "tags": "any",
+        "tokenSeparators": {
+          "types": [
+            "array",
+            "function"
+          ],
+          "nullable": true
+        },
+        "tokenizeOnPaste": "any",
+        "triggerTarget": "any",
+        "unique": "any",
+        "validateTag": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "tags",
+        "defaultTags",
+        "allowClear",
+        "showSearch",
+        "searchable",
+        "hasPopup",
+        "showArrow",
+        "inputTag"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Utils"
+        ],
+        "headless": [
+          "OptionTransaction",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "KeyboardNavigation",
+          "TagNavigation"
+        ],
+        "buildingBlocks": [
+          "Control"
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "Tags",
+      "schema": {
+        "addLabel": "any",
+        "addOnBlur": "any",
+        "addOnEnter": "any",
+        "addOnTab": "any",
+        "beforeAdd": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeEdit": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeRemove": {
+          "type": "function",
+          "nullable": true
+        },
+        "checkable": "boolean",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closable": "boolean",
+        "container": "any",
+        "controlled": "any",
+        "creatable": "any",
+        "defaultValue": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "editable": "boolean",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "formField": "any",
+        "formTarget": "any",
+        "hosted": "any",
+        "inputMinWidth": "number",
+        "inputTarget": "any",
+        "inputValue": "any",
+        "items": "array",
+        "maxCount": "number",
+        "maxTagLength": "number",
+        "maxVisible": "number",
+        "measureAvailableWidth": "any",
+        "measureItemWidth": "any",
+        "measureOverflowWidth": "any",
+        "multiple": "boolean",
+        "name": "string",
+        "normalizeTag": "any",
+        "onAdd": {
+          "type": "function",
+          "nullable": true
+        },
+        "onAddRequest": {
+          "type": "function",
+          "nullable": true
+        },
+        "onBlur": {
+          "type": "function",
+          "nullable": true
+        },
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onEdit": {
+          "type": "function",
+          "nullable": true
+        },
+        "onFocus": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInvalid": {
+          "type": "function",
+          "nullable": true
+        },
+        "onItemsChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onKeydown": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOverflow": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRemove": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRemoveRequest": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearch": {
+          "type": "function",
+          "nullable": true
+        },
+        "overflow": "any",
+        "overflowMaxHeight": "number",
+        "overflowPlacement": "any",
+        "overflowTrigger": "any",
+        "placeholder": "string",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderOverflow": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTag": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "scrollbarVisibility": "any",
+        "showOverflowPopover": "any",
+        "size": "string",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "tabIndex": "any",
+        "tagClassName": "any",
+        "tagOverflowClassName": "any",
+        "tagRemoveClassName": "any",
+        "tagRemoveContent": "any",
+        "tagTextClassName": "any",
+        "tokenSeparators": {
+          "types": [
+            "array",
+            "function"
+          ],
+          "nullable": true
+        },
+        "tokenizeOnPaste": "any",
+        "triggerTarget": "any",
+        "type": "string",
+        "unique": "any",
+        "validateTag": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "nameInput",
+        "wrap",
+        "target",
+        "el",
+        "mount",
+        "options",
+        "checkedValue",
+        "checkedValues",
+        "defaultCheckedValues",
+        "maxTagCount",
+        "maxTagPlaceholder",
+        "overflowPopover",
+        "collapsedTooltip",
+        "minCollapsedNum"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "container"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "Lifecycle",
+          "Scheduler",
+          "DOM",
+          "Utils",
+          "ScrollVisibility"
+        ],
+        "headless": [
+          "TokenInput",
+          "Selection",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [
+          "FormBridge",
+          "Renderer",
+          "KeyboardRegion",
+          "ObserverHub",
+          "ResponsiveOverflow"
+        ],
+        "buildingBlocks": [],
+        "components": [
+          "Scroll",
+          "Popover"
+        ]
+      }
+    },
+    {
+      "name": "TimePicker",
+      "schema": {
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "busy": "boolean",
+        "cancelText": "any",
+        "cellRender": "any",
+        "changeOnScroll": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnOutsidePress": "boolean",
+        "closeOnSelect": "boolean",
+        "commitInputOnBlur": "boolean",
+        "confirmDisabled": "any",
+        "confirmText": "any",
+        "container": "any",
+        "createDOM": "any",
+        "defaultPickerValue": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "disabledHours": "any",
+        "disabledMinutes": "any",
+        "disabledSeconds": "any",
+        "disabledTime": "any",
+        "document": "document",
+        "draftValueTarget": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusOutline": "any",
+        "footer": "any",
+        "footerEnd": "any",
+        "footerStart": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "headless": "any",
+        "hideDisabledOptions": "boolean",
+        "hourStep": "number",
+        "inputTarget": "any",
+        "match": "any",
+        "minuteStep": "number",
+        "name": "string",
+        "needConfirm": "boolean",
+        "nowText": "any",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDraftChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInput": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreviewChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "order": "boolean",
+        "placeholder": "string",
+        "placement": "string",
+        "portalContainer": "any",
+        "prefix": "any",
+        "preserveInvalidOnBlur": "boolean",
+        "previewValue": "any",
+        "rangeSeparator": "string",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderControl": "boolean",
+        "required": "boolean",
+        "secondStep": "number",
+        "selection": "string",
+        "showCancel": "boolean",
+        "showNow": "boolean",
+        "showSecond": "boolean",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "use12Hours": "boolean",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "allowClear",
+        "defaultOpen",
+        "picker",
+        "range",
+        "valueRender",
+        "draftValueRender"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Events",
+          "Utils",
+          "Scheduler"
+        ],
+        "headless": [
+          "StateController",
+          "OpenStateBridge",
+          "PickerSession",
+          "OptionTransaction",
+          "InteractionPolicy",
+          "ValueEquality"
+        ],
+        "domHeadless": [],
+        "buildingBlocks": [
+          "TimePanel"
+        ],
+        "components": [
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Tooltip",
+      "schema": {
+        "arrowPadding": "number",
+        "autoUpdate": "boolean",
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "container": "any",
+        "content": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "followCursor": "boolean",
+        "formField": "any",
+        "formTarget": "any",
+        "fresh": "any",
+        "group": "any",
+        "inlinePositioning": "any",
+        "inlinePositioningOptions": {
+          "type": "object",
+          "nullable": true
+        },
+        "inputTarget": "any",
+        "interactiveBorder": "number",
+        "interactiveDebounce": "number",
+        "middleware": "array",
+        "name": "string",
+        "offset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "parentLayerId": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "required": "boolean",
+        "showArrow": "boolean",
+        "size": "string",
+        "source": "any",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "trigger": "string",
+        "triggerTarget": "any",
+        "unique": "any",
+        "valueTarget": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "targetEl",
+        "triggerTarget",
+        "triggerEl",
+        "anchor",
+        "anchorEl",
+        "visible",
+        "defaultVisible",
+        "popupVisible",
+        "defaultPopupVisible",
+        "autoOpen",
+        "position",
+        "title",
+        "mouseEnterDelay",
+        "mouseLeaveDelay",
+        "autoFitPosition"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "reference"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Utils",
+          "Config"
+        ],
+        "headless": [
+          "OpenStateBridge"
+        ],
+        "domHeadless": [
+          "TriggerInteraction",
+          "LayerManager"
+        ],
+        "buildingBlocks": [],
+        "components": [
+          "Trigger"
+        ]
+      }
+    },
+    {
+      "name": "Transfer",
+      "schema": {
+        "checked": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "columns": "array",
+        "container": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "filterItem": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "getKey": {
+          "type": "function",
+          "nullable": true
+        },
+        "getLabel": {
+          "type": "function",
+          "nullable": true
+        },
+        "getValue": {
+          "type": "function",
+          "nullable": true
+        },
+        "height": "any",
+        "indeterminate": "any",
+        "inputTarget": "any",
+        "isItemDisabled": {
+          "type": "function",
+          "nullable": true
+        },
+        "itemRender": "any",
+        "items": "array",
+        "maxHeight": "any",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPageChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRowClick": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearch": {
+          "type": "function",
+          "nullable": true
+        },
+        "oneWay": "boolean",
+        "pagination": "any",
+        "portalContainer": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderFooter": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTitle": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "rowClassName": "any",
+        "searchable": "boolean",
+        "serializeValue": "any",
+        "size": "string",
+        "sortable": "boolean",
+        "source": "any",
+        "status": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "table": "any",
+        "titles": "array",
+        "triggerTarget": "any",
+        "type": "string",
+        "value": "any",
+        "valueTarget": "any",
+        "virtual": "any",
+        "virtualThreshold": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "targetKeys",
+        "dataSource",
+        "selectedKeys",
+        "sourceSelectedKeys",
+        "targetSelectedKeys"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "source"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "Lifecycle",
+          "Utils",
+          "DOM"
+        ],
+        "headless": [
+          "Collection",
+          "InteractionPolicy",
+          "OptionTransaction"
+        ],
+        "domHeadless": [
+          "DOMBinding",
+          "Renderer"
+        ],
+        "buildingBlocks": [
+          "ItemCollection",
+          "Item",
+          "Control"
+        ],
+        "components": [
+          "Pagination",
+          "Table"
+        ]
+      }
+    },
+    {
+      "name": "TreeSelect",
+      "schema": {
+        "add": "any",
+        "autoUpdate": "boolean",
+        "beforeCheck": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeExpand": {
+          "type": "function",
+          "nullable": true
+        },
+        "busy": "boolean",
+        "checkStrictly": "boolean",
+        "checkable": "boolean",
+        "checkedStrategy": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "closeOnSelect": "boolean",
+        "container": "any",
+        "defaultExpandedKeys": "array",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "expandedKeys": "array",
+        "filterItem": "any",
+        "flipOnOverflow": "boolean",
+        "focusOutline": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "getItems": {
+          "type": "function",
+          "nullable": true
+        },
+        "getKey": {
+          "type": "function",
+          "nullable": true
+        },
+        "getLabel": {
+          "type": "function",
+          "nullable": true
+        },
+        "getValue": {
+          "type": "function",
+          "nullable": true
+        },
+        "has": "any",
+        "headless": "any",
+        "height": "any",
+        "indent": "number",
+        "inputTarget": "any",
+        "isItemDisabled": {
+          "type": "function",
+          "nullable": true
+        },
+        "itemRender": "any",
+        "itemStyles": "any",
+        "items": "array",
+        "loadChildren": "any",
+        "loadedKeys": "array",
+        "matchReferenceWidth": "boolean",
+        "maxCount": "number",
+        "maxHeight": "any",
+        "maxVisibleTags": "any",
+        "middleware": "array",
+        "multiple": "boolean",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onCheck": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onExpand": {
+          "type": "function",
+          "nullable": true
+        },
+        "onLoad": {
+          "type": "function",
+          "nullable": true
+        },
+        "onLoadError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRemove": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSearch": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "placeholder": "string",
+        "placement": "string",
+        "popupRender": "any",
+        "portalContainer": "any",
+        "prefix": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderControl": "boolean",
+        "renderIcon": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTag": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTagOverflow": {
+          "type": "function",
+          "nullable": true
+        },
+        "required": "boolean",
+        "searchable": "boolean",
+        "showLine": "boolean",
+        "size": "string",
+        "source": "any",
+        "status": "string",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "tagClasses": "any",
+        "tagStyles": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string",
+        "virtual": "any",
+        "virtualThreshold": "any"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "options",
+        "mode",
+        "showSearch",
+        "allowClear",
+        "openOnFocus",
+        "valueRender",
+        "draftValueRender"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "Events",
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "StateController",
+          "ItemSchema",
+          "OpenStateBridge",
+          "InteractionPolicy",
+          "SelectionTags",
+          "ItemAccessors",
+          "OptionTransaction",
+          "SearchState"
+        ],
+        "domHeadless": [
+          "DOMBinding",
+          "KeyboardNavigation",
+          "TagNavigation",
+          "FieldHost"
+        ],
+        "buildingBlocks": [
+          "Control",
+          "Tree"
+        ],
+        "components": [
+          "Trigger",
+          "Scroll"
+        ]
+      }
+    },
+    {
+      "name": "Trigger",
+      "schema": {
+        "afterClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "afterOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "allowReferenceUpdate": "any",
+        "applyPosition": "any",
+        "arrow": "any",
+        "arrowElement": "any",
+        "arrowPadding": "number",
+        "autoUpdate": "boolean",
+        "autoUpdateOptions": {
+          "type": "object",
+          "nullable": true
+        },
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeInfo": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnFocusOutside": "any",
+        "closeOnOutsidePress": "boolean",
+        "closeOnTabExit": "boolean",
+        "compensateScrollbar": "any",
+        "componentType": "any",
+        "container": "any",
+        "containsTarget": "any",
+        "destroyOnClose": "boolean",
+        "destroyOnDeactivate": "any",
+        "disabled": "boolean",
+        "document": "document",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "exclude": "any",
+        "flipOnOverflow": "boolean",
+        "floating": "any",
+        "focusOnActivate": "any",
+        "focusOnOpen": "any",
+        "focusScope": "any",
+        "forceRender": "boolean",
+        "formField": "any",
+        "formTarget": "any",
+        "group": "any",
+        "initialFocus": "any",
+        "inlinePositioning": "any",
+        "inlinePositioningOptions": {
+          "type": "object",
+          "nullable": true
+        },
+        "inputTarget": "any",
+        "interactiveBorder": "number",
+        "interactiveDebounce": "number",
+        "keyboardActivation": "boolean",
+        "layerKind": "any",
+        "lockScroll": "boolean",
+        "manageZIndex": "any",
+        "matchReferenceWidth": "boolean",
+        "middleware": "array",
+        "name": "string",
+        "offset": {
+          "types": [
+            "number",
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
+        "onClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInteractionEnter": {
+          "type": "function",
+          "nullable": true
+        },
+        "onInteractionLeave": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPositionError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPositionUpdate": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "parent": "any",
+        "parentLayerId": "any",
+        "placement": "string",
+        "portalContainer": "any",
+        "position": "any",
+        "positionReference": "any",
+        "readOnly": "boolean",
+        "record": "any",
+        "reference": "any",
+        "required": "boolean",
+        "restoreFocus": "boolean",
+        "restoreFocusOnClose": "any",
+        "restoreFocusOnDismiss": "any",
+        "restoreFocusTarget": "any",
+        "scrollLockTarget": "any",
+        "setVisible": "any",
+        "source": "any",
+        "strategy": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "tabExitTarget": "any",
+        "transition": "any",
+        "transitionElement": "any",
+        "trapFocus": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "useTransformPosition": "any",
+        "valueTarget": "any",
+        "wasOpen": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "target",
+        "targetEl",
+        "triggerEl",
+        "anchor",
+        "anchorEl",
+        "popup",
+        "popupEl",
+        "panel",
+        "popupVisible",
+        "defaultPopupVisible",
+        "clickOutsideToClose",
+        "enterDelay",
+        "leaveDelay",
+        "mouseEnterDelay",
+        "mouseLeaveDelay",
+        "motion",
+        "bindTarget"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "reference"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Events",
+          "Utils",
+          "Config"
+        ],
+        "headless": [
+          "OpenStateBridge"
+        ],
+        "domHeadless": [
+          "OverlayRuntime",
+          "PopupSurface",
+          "TriggerInteraction",
+          "Transition",
+          "MotionPresets",
+          "LogicalOwnership"
+        ],
+        "buildingBlocks": [],
+        "components": []
+      }
+    },
+    {
+      "name": "Upload",
+      "schema": {
+        "abortable": "any",
+        "accept": "any",
+        "actionVisibility": "any",
+        "autoUpload": "boolean",
+        "beforeRemove": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeUpload": {
+          "type": "function",
+          "nullable": true
+        },
+        "capture": "any",
+        "className": "string",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "click": "any",
+        "container": "any",
+        "defaultValue": "any",
+        "directory": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "downloadable": "boolean",
+        "drag": "boolean",
+        "dragSort": "boolean",
+        "dragText": "any",
+        "dropHint": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "files": "array",
+        "formField": "any",
+        "formTarget": "any",
+        "format": "any",
+        "hideTrigger": "boolean",
+        "hideTriggerAtMax": "boolean",
+        "inputName": "any",
+        "inputTarget": "any",
+        "itemRender": "any",
+        "listType": "any",
+        "maxCount": "number",
+        "maxSize": "any",
+        "multiple": "boolean",
+        "name": "string",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDownload": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDrop": {
+          "type": "function",
+          "nullable": true
+        },
+        "onError": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPaste": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreview": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreviewChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onPreviewVisibleChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onProgress": {
+          "type": "function",
+          "nullable": true
+        },
+        "onReject": {
+          "type": "function",
+          "nullable": true
+        },
+        "onRemove": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSort": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSuccess": {
+          "type": "function",
+          "nullable": true
+        },
+        "openFileDialogOnClick": "boolean",
+        "pastable": "boolean",
+        "portalContainer": "any",
+        "previewFile": "any",
+        "previewTarget": "any",
+        "previewable": "boolean",
+        "progressView": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "removable": "boolean",
+        "removeAttribute": "any",
+        "renderExtra": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderFileIcon": {
+          "type": "function",
+          "nullable": true
+        },
+        "renderTrigger": {
+          "type": "function",
+          "nullable": true
+        },
+        "request": "any",
+        "required": "boolean",
+        "retryable": "boolean",
+        "serializeValue": "any",
+        "setAttribute": "any",
+        "showLabel": "any",
+        "showList": "boolean",
+        "source": "any",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "tabIndex": "any",
+        "thickness": "any",
+        "thumbUrl": "any",
+        "transformFile": "any",
+        "triggerTarget": "any",
+        "triggerText": "any",
+        "type": "string",
+        "uid": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "zIndex": "number"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "fileList",
+        "defaultFileList",
+        "customRequest",
+        "action",
+        "showUploadList",
+        "renderItem",
+        "trigger",
+        "iconRender",
+        "isImageUrl",
+        "progress",
+        "maxCountHideTrigger",
+        "dragHint"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "create",
+        "bind": "source"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Lifecycle",
+          "Utils"
+        ],
+        "headless": [
+          "UploadLifecycle",
+          "OptionTransaction"
+        ],
+        "domHeadless": [
+          "Renderer",
+          "OverlayRuntime",
+          "ReorderInteraction"
+        ],
+        "buildingBlocks": [
+          "Control",
+          "Item"
+        ],
+        "components": [
+          "Image"
+        ]
+      }
+    },
+    {
+      "name": "WheelPicker",
+      "schema": {
+        "afterClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "afterOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeClose": {
+          "type": "function",
+          "nullable": true
+        },
+        "beforeOpen": {
+          "type": "function",
+          "nullable": true
+        },
+        "busy": "boolean",
+        "cancelText": "any",
+        "classNames": {
+          "type": "object",
+          "nullable": true
+        },
+        "classes": {
+          "type": "object",
+          "nullable": true
+        },
+        "clearable": "boolean",
+        "closeDelay": "number",
+        "closeOnEscape": "boolean",
+        "closeOnOutsidePress": "boolean",
+        "closeOnSelect": "boolean",
+        "columns": "array",
+        "commitMeta": "any",
+        "confirmDisabled": "any",
+        "confirmText": "any",
+        "container": "any",
+        "createDOM": "any",
+        "defaultValue": "any",
+        "destroyOnClose": "boolean",
+        "disabled": "boolean",
+        "document": "document",
+        "draftValueTarget": "any",
+        "elements": {
+          "type": "object",
+          "nullable": true
+        },
+        "focusOutline": "any",
+        "footer": "any",
+        "footerEnd": "any",
+        "footerStart": "any",
+        "formField": "any",
+        "formTarget": "any",
+        "formatValue": "any",
+        "headless": "any",
+        "inputTarget": "any",
+        "itemHeight": "any",
+        "loop": "boolean",
+        "matchReferenceWidth": "boolean",
+        "name": "string",
+        "needConfirm": "boolean",
+        "onChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onClear": {
+          "type": "function",
+          "nullable": true
+        },
+        "onDraftChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onOpenChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "onSelect": {
+          "type": "function",
+          "nullable": true
+        },
+        "onValueChange": {
+          "type": "function",
+          "nullable": true
+        },
+        "open": "boolean",
+        "openDelay": "number",
+        "panelSynced": "any",
+        "placeholder": "string",
+        "placement": "string",
+        "portalContainer": "any",
+        "prefix": "any",
+        "readOnly": "boolean",
+        "reference": "any",
+        "renderControl": "boolean",
+        "required": "boolean",
+        "scrollIdleDelay": "number",
+        "scrollbarVisibility": "any",
+        "separator": "string",
+        "showCancel": "boolean",
+        "size": "string",
+        "snapBehavior": "any",
+        "snapDuration": "number",
+        "source": "any",
+        "status": "string",
+        "styles": {
+          "type": "object",
+          "nullable": true
+        },
+        "suffix": "any",
+        "trigger": "string",
+        "triggerTarget": "any",
+        "value": "any",
+        "valueTarget": "any",
+        "variant": "string",
+        "visibleItemCount": "number",
+        "wheelPropagation": "boolean"
+      },
+      "defaults": {},
+      "immutable": [],
+      "legacy": [
+        "el",
+        "mount",
+        "allowClear",
+        "changeOnScroll",
+        "picker",
+        "genericPicker",
+        "pickerInstance",
+        "options",
+        "snapWheelMode",
+        "wheelStepInterval",
+        "valueRender",
+        "draftValueRender"
+      ],
+      "optionImpact": {},
+      "initializer": {
+        "mode": "enhance"
+      },
+      "allowUnknown": false,
+      "dependencies": {
+        "core": [
+          "DOM",
+          "Events",
+          "Utils"
+        ],
+        "headless": [
+          "StateController",
+          "OpenStateBridge",
+          "PickerSession",
+          "ValueEquality",
+          "InteractionPolicy"
+        ],
+        "domHeadless": [],
+        "buildingBlocks": [],
+        "components": [
+          "Scroll"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+QXFRAME9A7C2 fix(11) FINAL package
+Date: 2026-09-21
+Baseline: v2.19.81
+Status: mandatory blockers = 0
+
+Final gates:
+- npm test: PASS
+- build: PASS (72 modules)
+- verify-core: PASS (40 components / 13 Core / 21 Headless / 30 DOMHeadless)
+- CSS specificity warnings: 0
+- CSS long-selector warnings: 0
+- CSS large-selector-group warnings: 0
+- verify-platform: PASS
+- verify-release: PASS
+- QX_BROWSER_REQUIRED=1 npm run verify:browser: PASS
+- browser transport: Chromium CDP setDocumentContent
+- Diagnostics resource balance: PASS
+- DOMProjection activeProjections delta: 0
+
+Primary records:
+- FIX11-最终收口报告-2026-09-21.md
+- FIX11-当前收口进度与续作手册-2026-09-21.md
+- FIX11-v5-逐章状态对照表.md
+- FIX11-原始完整任务手册-v5.md
+- FIX11-final-node-test.txt
+- FIX11-final-browser-test.txt
+- FIX11-R2-TO-FINAL.patch
+- FIX11-WORKTREE-SHA256.txt
+
+Explicit non-blocking boundaries remain documented as Deferred/Unsupported rather than partial implementations.

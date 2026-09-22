@@ -1,0 +1,41 @@
+{
+  "allPassed": true,
+  "css": {
+    "topLevelParseErrors": [],
+    "bytes": 927956
+  },
+  "javascript": {
+    "filesChecked": 72,
+    "syntaxFailures": []
+  },
+  "checks": {
+    "card_grid_parent_border_removed": true,
+    "card_actions_uses_card_border": true,
+    "card_selected_uses_outline": true,
+    "card_selected_does_not_author_border": true,
+    "card_tabs_divider_pseudo_and_clipped": true,
+    "badge_dot_public_size": true,
+    "switch_dynamic_on_off_content": true,
+    "input_group_positional_radius": true,
+    "selectgroup_single_seam_owner": true,
+    "form_check_inline_flex": true,
+    "form_check_input_margin_zero": true,
+    "native_radio_dot_half": true,
+    "native_select_unified_rule": true,
+    "half_icon_does_not_scale_glyph": true,
+    "input_number_actions_flush_edge": true,
+    "input_number_state_channels": true,
+    "input_number_suffix_reserves_actions": true,
+    "control_default_loading_uses_spinner": true,
+    "tags_close_uses_icon": true,
+    "no_special_character_action_icons_in_modules": true,
+    "static_switch_shows_on_off_attributes": true,
+    "static_tag_close_uses_icon": true
+  },
+  "specialCharacterActionIconViolations": [],
+  "notes": [
+    "CardGrid is a Card-owned composition surface, so the parent top/start perimeter borders were removed; item right/bottom dividers remain the single internal grid seam owner.",
+    "Native/form select-specific paint is declared by one shared selector block so the two native paths cannot drift apart.",
+    "Browser rendering was not used for this audit in the current execution environment; validation is source/CSS parse/build/syntax based."
+  ]
+}

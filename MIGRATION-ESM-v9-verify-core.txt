@@ -1,0 +1,1 @@
+{"ok":true,"components":40,"core":13,"headless":33,"domHeadless":35,"familyCapabilities":25,"cssSpecificityWarnings":0,"cssLongSelectorWarnings":0,"cssLargeSelectorGroupWarnings":0,"cssMaxSelectorLength":162,"cssMaxSelectorGroupLength":1370,"cssMaxSelectorBranches":20}

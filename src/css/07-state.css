@@ -1,0 +1,14 @@
+/* state */
+/* Explicit state layer replaces the old zero-specificity selector-wrapper ordering dependency.
+ * Row semantic/selection/capability state must outrank structural, striped and hover recipes. */
+.qxframe9a7c2-table tr.is-success{--_qxframe9a7c2-table-row-bg:var(--_qxframe9a7c2-semantic-success-soft)}
+.qxframe9a7c2-table tr.is-warning{--_qxframe9a7c2-table-row-bg:var(--_qxframe9a7c2-semantic-warning-soft)}
+.qxframe9a7c2-table tr.is-error{--_qxframe9a7c2-table-row-bg:var(--_qxframe9a7c2-semantic-error-soft)}
+.qxframe9a7c2-table tr.is-selected{--_qxframe9a7c2-table-row-bg:var(--_qxframe9a7c2-semantic-accent-soft)}
+.qxframe9a7c2-table tr.is-clickable{--_qxframe9a7c2-table-row-cursor:pointer}
+.qxframe9a7c2-table tr.is-disabled{--_qxframe9a7c2-table-row-bg:var(--_qxframe9a7c2-semantic-subtle);--_qxframe9a7c2-table-row-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-table-row-cursor:not-allowed}
+/* Context-specific state projection intentionally outranks generic Item open state. */
+.qxframe9a7c2-json-tree .qxframe9a7c2-item-surface.is-open{--_qxframe9a7c2-item-bg:transparent}
+.qxframe9a7c2-json-tree .qxframe9a7c2-item-surface.is-open:hover,
+.qxframe9a7c2-json-tree .qxframe9a7c2-item-surface.is-open.is-hover{--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
+
