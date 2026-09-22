@@ -38,7 +38,7 @@ function create(options) {
     readOnly: false
   }, incoming);
   if (!itemHeightExplicit) opts.itemHeight = WheelMetrics.itemHeight(opts.size);
-  var doc = opts.document || (opts.container && opts.container.ownerDocument) || global.document;
+  var doc = opts.document || (opts.container && opts.container.ownerDocument) || globalThis.document;
   var emitter = Events.createEmitter();
   var value = TimeUnit.normalizeClamped(opts.value !== undefined ? opts.value : opts.defaultValue);
   var destroyed = false;
