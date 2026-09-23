@@ -107,6 +107,12 @@ var pickerSession = instance.setupPickerSession({
   onCancel: function (_controller, detail) {
     panel.setValue(draft.value || [], { silent: true, source: detail && detail.source || 'api', reason: detail && detail.source === 'popup' ? 'close-restore' : 'cancel-sync' });
     syncField(false);
+  },
+  onCloseDraft: function (controller, detail) {
+    if (!detail.rolledBack && opts.needConfirm !== true && controller.dirty) {
+      controller.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+    }
+    if (!detail.rolledBack) syncField(false);
   }
 });
 function commit(meta) { return instance.commit(meta || {}); }
