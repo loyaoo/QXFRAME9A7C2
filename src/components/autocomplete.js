@@ -293,7 +293,10 @@ var selectionRangeScheduler = null;
           optionList.setItems([]);
           optionList.setSearch('');
           optionList.resetActive({ source: 'autocomplete', reason: 'suggestions-loading' });
-          return createSuggestionTask().run({ info: info, meta: meta, originalEvent: originalEvent || null }, { source: meta.reason }).then(function (result) {
+          var task = createSuggestionTask();
+          var promise = task.run({ info: info, meta: meta, originalEvent: originalEvent || null }, { source: meta.reason });
+          var requestId = task.requestId;
+          return promise.then(function (result) {
             if (!result || !result.isCurrent || !result.isCurrent() || destroyed) return [];
             if (result.error) { setLoading(false); notifyLoadError(result.error, info, meta); return []; }
             try {
@@ -308,7 +311,7 @@ var selectionRangeScheduler = null;
               return [];
             }
           }, function (error) {
-            if (destroyed) return [];
+            if (destroyed || !suggestionTask || suggestionTask.requestId !== requestId || suggestionTask.state !== 'error') return [];
             if (error && error.name === 'AbortError') return [];
             setLoading(false); notifyLoadError(error, info, meta); return [];
           });
@@ -326,7 +329,10 @@ var selectionRangeScheduler = null;
         }
     
         function setItems(items) {
-          if (destroyed) return instance; validateItems(items, opts); opts.items = Array.isArray(items) ? items.slice() : []; currentItems = opts.items.slice();
+          if (destroyed) return instance; validateItems(items, opts);
+          if (suggestionTask && suggestionTask.pending) suggestionTask.cancel('autocomplete-items-replaced');
+          setLoading(false);
+          opts.items = Array.isArray(items) ? items.slice() : []; currentItems = opts.items.slice();
           var info = deriveQuery('set-items'); setLoadedItems(currentItems, info, { reason: 'set-items' }); return instance;
         }
     
@@ -504,8 +510,11 @@ var selectionRangeScheduler = null;
             var nextPortal = typeof next.portalContainer === 'string' ? DOM.resolveElement(next.portalContainer, doc) : next.portalContainer;
             if (nextPortal !== portalContainer) throw new Error('[QXFRAME9A7C2] Autocomplete portalContainer is immutable; destroy and recreate to change it.');
           }
+          var suggestionOwnerChanged = (hasOwn(next, 'loadSuggestions') && next.loadSuggestions !== opts.loadSuggestions) || hasOwn(next, 'items');
           var candidate = Utils.mergeOwn( opts, next);
           if (hasOwn(next,'items') || hasOwn(next,'getKey') || hasOwn(next,'getLabel') || hasOwn(next,'getValue')) validateItems(candidate.items, candidate);
+          if (suggestionOwnerChanged && suggestionTask && suggestionTask.pending) suggestionTask.cancel('autocomplete-options-replaced');
+          if (suggestionOwnerChanged) setLoading(false);
           Utils.copyOwn(opts, next);
           var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }
