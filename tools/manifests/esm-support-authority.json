@@ -93,13 +93,6 @@
       "namespace": "components"
     },
     {
-      "name": "Tags",
-      "module": "tags",
-      "source": "src/components/tags.js",
-      "phase": "88→92-tail",
-      "namespace": "components"
-    },
-    {
       "name": "Transfer",
       "module": "transfer",
       "source": "src/components/transfer.js",
