@@ -1260,11 +1260,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
         activeRangePart = selection === 'range' && normalized[1] ? 1 : 0;
         syncSelectionPanel(true); syncTimePanel(); syncField(true);
         if (opts.needConfirm !== true && rangeCommitReady(normalized)) {
-          draft.commit({ source: source, reason: 'preset-commit', originalEvent: event });
-          // A complete preset is an atomic immediate selection. Range calendar clicks keep
-          // their historical non-closing default, but presets close unless the caller
-          // explicitly opted out with closeOnSelect:false.
-          if (!closeOnSelectExplicit || opts.closeOnSelect !== false) field.close('preset', event);
+          var presetCommitted = draft.commit({ source: source, reason: 'preset-commit', originalEvent: event });
+          // A complete preset is an atomic immediate selection. Do not close if commit was
+          // vetoed, but otherwise presets close unless the caller explicitly opted out.
+          if (presetCommitted !== false && (!closeOnSelectExplicit || opts.closeOnSelect !== false)) field.close('preset', event);
         }
         var payload = { value: cloneValue(normalized, selection), preset: preset, index: index, source: source, reason: 'preset-select', originalEvent: event, datePicker: api };
         if (Utils.isFunction(opts.onPreset)) opts.onPreset(cloneValue(normalized, selection), payload);
