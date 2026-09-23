@@ -18,6 +18,29 @@ function walk(dir, test=()=>true){
 }
 const srcFiles=walk(path.join(root,'src'),f=>/\.(?:js|mjs)$/.test(f));
 const source=new Map(srcFiles.map(f=>[posix(path.relative(root,f)),fs.readFileSync(f,'utf8')]));
+const secretScanFiles=[
+  ...srcFiles,
+  ...walk(path.join(root,'tools'),f=>/\.(?:js|mjs|json|ya?ml|md)$/.test(f)),
+  ...walk(path.join(root,'.github/workflows'),f=>/\.ya?ml$/.test(f)),
+  ...walk(path.join(root,'docs'),f=>/\.(?:js|json|html|md)$/.test(f)),
+  ...['package.json','package-lock.json','README.md','HARDENING-v2.19.81.md','MIGRATION-src-dist-unified.md'].map(name=>path.join(root,name)).filter(fs.existsSync)
+];
+const secretFilePaths=secretScanFiles.map(f=>posix(path.relative(root,f))).filter(rel=>/(^|\/)(?:\.env(?:\.|$)|[^/]+\.(?:pem|key|p12|pfx)|id_rsa|credentials|secrets?\.json)$/i.test(rel));
+const secretPatterns=[
+  ['private-key',/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/g],
+  ['github-token',/\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,})\b/g],
+  ['openai-key',/\bsk-[A-Za-z0-9_-]{20,}\b/g],
+  ['aws-access-key',/\bAKIA[0-9A-Z]{16}\b/g]
+];
+const secretFindings=[];
+for(const file of secretScanFiles){
+  const rel=posix(path.relative(root,file));
+  const text=fs.readFileSync(file,'utf8');
+  for(const [kind,re] of secretPatterns){
+    re.lastIndex=0; let m;
+    while((m=re.exec(text))) secretFindings.push({file:rel,kind,index:m.index});
+  }
+}
 const occurrences=(text,re)=>{const out=[];let m;re.lastIndex=0;while((m=re.exec(text)))out.push({index:m.index,match:m[0]});return out;};
 const security=[];
 const htmlSinks=/\b(?:eval\s*\(|new\s+Function\b|document\.write\s*\(|\.outerHTML\s*=|\.insertAdjacentHTML\s*\(|createContextualFragment\s*\(|\bsrcdoc\s*=|\.innerHTML\s*=)/g;
@@ -158,7 +181,7 @@ const duplicates=[...duplicateBlocks.entries()].filter(([,locs])=>locs.length>1)
 const report={
   ok:false,
   files:srcFiles.length,
-  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity},
+  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,secretFilePaths,secretFindings},
   duplicateCapabilityCandidates:rawPrimitives,
   staleMigrationComments:staleComments,
   staleActiveMetadata:staleMetadata,
@@ -172,6 +195,6 @@ const report={
   },
   exactDuplicateBlocks:duplicates
 };
-report.ok=security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&urlSinks.every(x=>x.urlPolicy)&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&urlSinks.every(x=>x.urlPolicy)&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
