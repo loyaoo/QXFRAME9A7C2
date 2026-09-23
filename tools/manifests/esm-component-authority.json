@@ -140,6 +140,12 @@
       "phase": "40→45"
     },
     {
+      "name": "Tags",
+      "module": "tags",
+      "source": "src/components/tags.js",
+      "phase": "99→100"
+    },
+    {
       "name": "TimePicker",
       "module": "time-picker",
       "source": "src/components/time-picker.js",
