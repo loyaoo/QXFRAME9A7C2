@@ -1,6 +1,7 @@
 
 import { Events } from './events.js';
 import { DOMProjection } from './domProjection.js';
+import { ObserverHub } from './observerHub.js';
 import { Utils } from '../utils/utils.js';
 
 const global = globalThis;
@@ -25,19 +26,14 @@ var THEMES = ['light','dark'];
   function isPlainObject(value) { if (!value || Object.prototype.toString.call(value) !== '[object Object]') return false; var proto = Object.getPrototypeOf(value); return proto === Object.prototype || proto === null; }
   var tokenOriginals = Object.create(null);
   var scopedConfigs = typeof WeakMap === 'function' ? new WeakMap() : null;
-  var reducedMotionMedia = null, reducedMotion = false;
-  try {
-    reducedMotionMedia = global.matchMedia ? global.matchMedia('(prefers-reduced-motion: reduce)') : null;
-    reducedMotion = !!(reducedMotionMedia && reducedMotionMedia.matches);
-  } catch (_) { reducedMotionMedia = null; reducedMotion = false; }
+  var reducedMotion = false;
   function emitMotionChange(source, event, root) {
     motionEmitter.emit('change', Object.freeze({ source: source || 'config', originalEvent: event || null, root: root || null, reducedMotion: reducedMotion === true }));
   }
-  if (reducedMotionMedia) {
-    var onReducedMotionChange = function (event) { reducedMotion = !!(event && event.matches); emitMotionChange('media', event, null); };
-    if (typeof reducedMotionMedia.addEventListener === 'function') reducedMotionMedia.addEventListener('change', onReducedMotionChange);
-    else if (typeof reducedMotionMedia.addListener === 'function') reducedMotionMedia.addListener(onReducedMotionChange);
-  }
+  ObserverHub.media('(prefers-reduced-motion: reduce)', function (media, event) {
+    reducedMotion = !!(media && media.matches);
+    if (event) emitMotionChange('media', event, null);
+  }, { schedule:'sync', immediate:true, window:global });
   function own(object, key) { return Object.prototype.hasOwnProperty.call(object || {}, key); }
   function cloneTokens(tokens) { var out = {}; Object.keys(tokens || {}).forEach(function (key) { out[key] = tokens[key]; }); return out; }
   function snapshot() { return Object.freeze({ theme: state.theme, size: state.size, variant: state.variant, focusOutline: state.focusOutline, motion: state.motion, triggerOpenDelay: state.triggerOpenDelay, triggerCloseDelay: state.triggerCloseDelay, tokens: Object.freeze(cloneTokens(state.tokens)) }); }
