@@ -246,7 +246,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        className: 'qxframe9a7c2-color-picker', panelClass: 'qxframe9a7c2-color-picker-panel',
        size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: fieldPrefixContent(), suffix: fieldSuffixContent(), required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: false,
        clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
-       closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnEscape: opts.closeOnEscape !== false, focusScope: 'contain', destroyOnClose: opts.destroyOnClose !== false,
+       closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false,
        beforeOpen: function (detail) { if (Utils.isFunction(opts.beforeOpen) && opts.beforeOpen(detail) === false) return false; return !destroyed && opts.disabled !== true; },
        beforeClose: function (detail) { var forcedDisabled = !!(detail && detail.forceClose === 'disabled'); var vetoed = Utils.isFunction(opts.beforeClose) && opts.beforeClose(detail) === false; if (destroyed) return false; if (vetoed && !forcedDisabled) return false; },
        onOpen: function (detail) { if (pickerSession) pickerSession.open(detail); if (panel && detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || '')))) activateColorVirtualFocus('color-picker-open'); },
@@ -321,11 +321,14 @@ function setupColorPickerRuntime(instance, fieldInit) {
          var payload = { value: cloneModel(next), color: value, activeStopIndex: mode === 'gradient' ? activeStopIndex : null, rgba: detail.rgba, hsv: detail.hsv, source: detail.source, reason: detail.reason, complete: detail.complete === true, colorPicker: api };
          if (Utils.isFunction(opts.onInput)) opts.onInput(cloneModel(next), payload);
          emitter.emit('input', payload);
-         if (opts.needConfirm !== true && detail.complete === true) draft.commit({ source: detail.source, reason: 'panel-commit' });
        },
        onChangeComplete: function (value, detail) {
          if (!draft) return;
-         emitInteractionComplete(draft.draftValue, detail || { source: 'panel', reason: 'panel-complete' });
+         var completeDetail = detail || { source: 'panel', reason: 'panel-complete' };
+         if (opts.needConfirm !== true && completeDetail.cancelled !== true && completeDetail.rolledBack !== true && draft.dirty) {
+           instance.commit({ source: completeDetail.source || 'panel', reason: completeDetail.reason || 'panel-commit', originalEvent: completeDetail.originalEvent || null });
+         }
+         emitInteractionComplete(draft.draftValue, completeDetail);
        }
      });
 
@@ -341,17 +344,19 @@ function setupColorPickerRuntime(instance, fieldInit) {
        copyValue: cloneModel,
        equals: modelEquals,
        onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, colorPicker: api })); if (detail.silent !== true) { var payload = { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, reason: detail.reason, source: detail.source || 'api', colorPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneModel(value), payload); emitter.emit('change', payload); } },
-       onDraftChange: function (value, detail) { if (!(detail && detail.valueChanged === true && opts.needConfirm !== true)) syncField(field && field.getState().open && opts.needConfirm === true); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(draft.value), draftValue: cloneModel(value), mode: mode, colorPicker: api })); }
+       onDraftChange: function (value, detail) { if (!(detail && detail.valueChanged === true && opts.needConfirm !== true)) syncField(field && field.getState().open); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(draft.value), draftValue: cloneModel(value), mode: mode, colorPicker: api })); }
      });
 
      var pickerSession = instance.setupPickerSession({
        controller: draft,
-       rollbackDirtyOnClose: true,
+       rollbackDirtyOnClose: function () { return opts.needConfirm === true; },
        canCommit: function () { return !destroyed; },
        onOpenDraft: function (controller) { syncPanelFromModel(controller.draftValue || seedValue(), 'open-sync'); syncField(true); },
        onCommit: function () { syncField(false); },
        onCancel: function (_controller, detail) { syncPanelFromModel(draft.value || seedValue(), detail && detail.source === 'popup' ? 'close-restore' : 'cancel-sync'); syncField(false); },
-       onCloseDraft: function (_controller, detail) { if (!detail.rolledBack) syncField(false); }
+       onCloseDraft: function (_controller, detail) {
+         if (!detail.rolledBack) syncField(false);
+       }
      });
      function commit(meta) { return instance.commit(meta || {}); }
      function cancel(meta) { return instance.cancel(meta || {}); }
@@ -397,7 +402,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          next.stops[activeStopIndex].color = color;
        } else next = color;
        draft.setDraft(next, Utils.assignOwn({ source: 'api', reason: 'alpha' }, meta || {}));
-       if (opts.needConfirm !== true) draft.commit(Utils.assignOwn({ source: 'api', reason: 'alpha-commit' }, meta || {}));
+       if (opts.needConfirm !== true) instance.commit(Utils.assignOwn({ source: 'api', reason: 'alpha-commit' }, meta || {}));
        syncField(opts.needConfirm === true && field.getState().open); return true;
      }
      function canonicalizeModelForFormat(value) {
@@ -446,7 +451,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          var previewPayload = { value: cloneModel(next), color: activeColor(next), activeStopIndex: activeStopIndex, source: detail.source, reason: detail.reason, complete: false, colorPicker: api };
          if (Utils.isFunction(opts.onInput)) opts.onInput(cloneModel(next), previewPayload);
          emitter.emit('input', previewPayload);
-       } else if (opts.needConfirm !== true) draft.commit(Utils.mergeOwn( detail, { reason: detail.reason || 'gradient-commit' }));
+       } else if (opts.needConfirm !== true) instance.commit(Utils.mergeOwn( detail, { reason: detail.reason || 'gradient-commit' }));
        syncField(opts.needConfirm === true && field.getState().open);
        if (detail.complete === true) emitInteractionComplete(next, detail);
        return true;
@@ -639,7 +644,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        Utils.copyOwn(opts, next);
        gradientEnabled = nextGradientEnabled;
        opts.gradient = gradientEnabled;
-       field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: fieldPrefixContent(), suffix: fieldSuffixContent(), required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, focusScope: 'contain', destroyOnClose: opts.destroyOnClose !== false });
+       field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: fieldPrefixContent(), suffix: fieldSuffixContent(), required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
        if (opts.renderControl !== false && opts.headless !== true) { var fieldRoot = field.getRootElement(); fieldRoot.classList.toggle('is-swatch-only', opts.swatchOnly === true); fieldRoot.classList.toggle('is-swatch-start', String(opts.indicatorPlacement || 'start') === 'start'); fieldRoot.classList.toggle('is-swatch-end', String(opts.indicatorPlacement || 'start') === 'end'); }
        panel.updateOptions({ format: opts.format, showAlpha: opts.showAlpha !== false, presets: Array.isArray(opts.presets) ? opts.presets.slice() : [], disabled: opts.disabled === true, readOnly: opts.readOnly === true, keyboard: opts.keyboard !== false, eyeDropper: opts.eyeDropper !== false });
        if (nextMode !== mode) setMode(nextMode, { silent: true, source: 'options' });

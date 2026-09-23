@@ -288,8 +288,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
       else if (draft.draftValue && draft.draftValue[0] && draft.draftValue[1] && selectedPart !== null) activeRangePart = selectedPart;
     }
     if (opts.needConfirm !== true && complete(draft.draftValue)) {
-      draft.commit({ source: detail.source, reason: 'select-commit' });
-      if (opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
+      var selectedCommit = instance.commit({ source: detail.source, reason: 'select-commit', originalEvent: detail.originalEvent || null });
+      if (selectedCommit !== false && opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
     }
     var panelSource = detail && detail.panelOrigin === true;
     var rangePartChanged = selection === 'range' && activeRangePart !== previousRangePart;
@@ -340,7 +340,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (!parsed.valid || !complete(parsed.value)) { if (opts.preserveInvalidOnBlur !== true) syncField(field.getState().open); return; }
     draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse' });
     syncPanel('time-picker-blur-sync');
-    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true) draft.commit({ source: 'input', reason: 'blur-commit' });
+    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true) instance.commit({ source: 'input', reason: 'blur-commit', originalEvent: event || null });
     syncField(opts.needConfirm === true && field.getState().open);
   }
 
@@ -350,7 +350,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     className: 'qxframe9a7c2-time-picker', panelClass: 'qxframe9a7c2-time-picker-panel',
     size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: true,
     clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
-    closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnEscape: opts.closeOnEscape !== false, focusScope: 'contain', destroyOnClose: opts.destroyOnClose !== false,
+    closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false,
     beforeOpen: function (detail) { if (Utils.isFunction(opts.beforeOpen) && opts.beforeOpen(detail) === false) return false; return !destroyed && opts.disabled !== true; },
     beforeClose: function (detail) { var forcedDisabled = !!(detail && detail.forceClose === 'disabled'); var vetoed = Utils.isFunction(opts.beforeClose) && opts.beforeClose(detail) === false; if (destroyed) return false; if (vetoed && !forcedDisabled) return false; },
     onOpen: function (detail) {
@@ -440,7 +440,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (selection === 'range' && String(opts.rangeSeparator || '') === '') { opts = previous; throw new TypeError('[QXFRAME9A7C2] TimePicker rangeSeparator must not be empty in range selection.'); }
     if (opts.previewValue !== false && opts.previewValue !== 'hover') { opts = previous; throw new TypeError("[QXFRAME9A7C2] TimePicker previewValue must be false or 'hover'."); }
     dependentPanelSyncScheduler.cancel();
-    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, focusScope: 'contain', destroyOnClose: opts.destroyOnClose !== false });
+    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     else syncPanel('time-picker-options');
     if (opts.previewValue === false) hoverPreviewValue = null;

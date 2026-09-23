@@ -495,6 +495,13 @@ function create(options) {
     if (!isDirectionalKey(event && event.key)) return;
     finishKeyboardInteraction(event, 'saturation-keyboard-complete');
   }));
+  // Hosted virtual focus keeps real DOM focus on the PickerField editor. In that mode
+  // directional keyup never reaches the saturation element, so complete the same
+  // keyboard interaction from the document capture phase as well.
+  if (doc) scope.add(DOM.listen(doc, 'keyup', function (event) {
+    if (!keyboardSnapshot || !isDirectionalKey(event && event.key)) return;
+    finishKeyboardInteraction(event, 'saturation-keyboard-complete');
+  }, true));
   if (globalThis && globalThis.addEventListener) scope.add(DOM.listen(globalThis, 'blur', function (event) {
     finishKeyboardInteraction(event, 'saturation-keyboard-blur');
     if (dragging) { dragging = false; if (dragSnapshot) { var initialDrag = cloneState(dragSnapshot); dragSnapshot = null; emitChange(initialDrag, { source: 'blur', reason: 'saturation-pointer-blur', originalEvent: event }, true); } }
@@ -543,6 +550,7 @@ function create(options) {
       emitter.emit('invalid', { value: invalid, originalEvent: event || null, colorPanel: api });
       return false;
     }
+    resetInteractionSnapshots();
     var previous = cloneState(state);
     state = parsed;
     sync();
@@ -609,6 +617,12 @@ function create(options) {
     return virtualFocusDomain;
   }
     
+  function resetInteractionSnapshots() {
+    dragging = false;
+    dragSnapshot = null;
+    keyboardSnapshot = null;
+  }
+
   function setValue(next, meta) {
     if (destroyed) return false;
     var parsed = parseColor(next);
@@ -625,6 +639,7 @@ function create(options) {
   }
   function setAlpha(next, meta) {
     if (destroyed) return false;
+    resetInteractionSnapshots();
     var previous = cloneState(state);
     state.a = clamp(next, 0, 1);
     sync();
@@ -652,7 +667,7 @@ function create(options) {
     var candidateState = hasOwn(next, 'value') ? parseColor(next.value) : null;
     if (hasOwn(next, 'value') && !candidateState) throw new TypeError('[QXFRAME9A7C2] ColorPanel value is not a supported color.');
     opts = candidateOptions;
-    if (candidateState) state = candidateState;
+    if (candidateState) { resetInteractionSnapshots(); state = candidateState; }
     if (hasOwn(next, 'presets')) renderPresets();
     sync();
     if (binding && binding.syncClasses) binding.syncClasses(opts.classes);

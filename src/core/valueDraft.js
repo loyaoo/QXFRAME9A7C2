@@ -101,14 +101,16 @@ return true;
 
 function begin(meta) {
 if (destroyed) return false;
+var cfg = meta || {};
 var previousDraft = draftValue;
-draftValue = copy(committedValue);
+var nextDraft = Object.prototype.hasOwnProperty.call(cfg, 'draftSeed') ? normalize(cfg.draftSeed, cfg) : committedValue;
+draftValue = copy(nextDraft);
 var draftChanged = !equals(previousDraft, draftValue);
 if (draftChanged) mutationVersion += 1;
 var detail = payload({
   previousDraftValue: previousDraft,
   reason: 'begin'
-}, meta);
+}, cfg);
 detail.draftChanged = draftChanged;
 if (draftChanged && Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(draftValue, detail);
 if (detail.silent !== true) {

@@ -201,9 +201,15 @@ export class Collapse extends Component {
                 onBeforeEnter: () => { if (itemRecord.panel) { itemRecord.panel.hidden = false; itemRecord.panel.style.setProperty('--qxframe9a7c2-collapse-motion-height', itemRecord.panel.scrollHeight + 'px'); } },
                 onBeforeLeave: () => { if (itemRecord.panel) itemRecord.panel.style.setProperty('--qxframe9a7c2-collapse-motion-height', itemRecord.panel.scrollHeight + 'px'); },
                 onAfterLeave: () => {
-                    if (!itemRecord.panel) return;
+                    if (!itemRecord.panel || itemRecord.open === true) return;
                     itemRecord.panel.hidden = true;
+                    itemRecord.panel.style.removeProperty('--qxframe9a7c2-collapse-motion-height');
                     if (this.options.destroyInactive === true) { itemRecord.content.textContent = ''; itemRecord.contentRendered = false; }
+                },
+                onAfterEnter: () => {
+                    if (!itemRecord.panel || itemRecord.open !== true) return;
+                    itemRecord.panel.hidden = false;
+                    itemRecord.panel.style.removeProperty('--qxframe9a7c2-collapse-motion-height');
                 }
             });
             itemRecord.cleanups.push(DOM.listen(main, 'focus', () => { record.active.set(itemRecord.item.key, { silent: true, reason: 'focus', source: 'dom' }); syncRoving(); }));
@@ -228,6 +234,7 @@ export class Collapse extends Component {
         };
         const syncRecord = (itemRecord, item, open, reason) => {
             const current = this.options;
+            const previousItem = itemRecord.item;
             itemRecord.item = item;
             const mode = effectiveCollapsible(item);
             itemRecord.section.className = 'qxframe9a7c2-collapse-item' + (open ? ' is-open' : '') + (mode === 'disabled' ? ' is-disabled' : '') + (item.className ? ' ' + item.className : '');
@@ -246,8 +253,10 @@ export class Collapse extends Component {
             itemRecord.header.appendChild(itemRecord.main);
             if (hasExtra) itemRecord.header.appendChild(itemRecord.extra);
             if (String(current.indicatorPosition) === 'end') itemRecord.header.appendChild(itemRecord.indicator);
+            const contentChanged = !previousItem || previousItem.content !== item.content;
+            const structuralRefresh = reason === 'options' || reason === 'set-items';
             if ((open || current.destroyInactive !== true) && !itemRecord.contentRendered) { renderPart(itemRecord.content, item.content, item); itemRecord.contentRendered = true; }
-            else if (itemRecord.contentRendered && current.destroyInactive !== true) renderPart(itemRecord.content, item.content, item);
+            else if (itemRecord.contentRendered && current.destroyInactive !== true && (contentChanged || structuralRefresh)) renderPart(itemRecord.content, item.content, item);
             if (itemRecord.open === null) {
                 itemRecord.open = open;
                 itemRecord.panel.hidden = !open;
@@ -255,7 +264,9 @@ export class Collapse extends Component {
             } else if (itemRecord.open !== open) {
                 itemRecord.open = open;
                 if (open) itemRecord.panel.hidden = false;
-                else if (current.destroyInactive === true) { itemRecord.content.textContent = ''; itemRecord.contentRendered = false; }
+                // Keep content mounted until leave actually settles. Removing it before
+                // setVisible(false) collapses the measured height to zero and makes rapid
+                // close -> reopen reversals jump instead of retargeting from the live frame.
                 itemRecord.transition.setVisible(open, { reason: reason || 'collapse-toggle' });
             } else if (open) itemRecord.panel.hidden = false;
             record.headers[item.key] = mode === 'icon' ? itemRecord.indicator : (mode === 'header' ? itemRecord.main : null);

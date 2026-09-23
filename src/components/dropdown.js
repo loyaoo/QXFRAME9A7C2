@@ -420,6 +420,7 @@ function initializeDropdown(instance, options) {
     flipOnOverflow: opts.flipOnOverflow !== false,
     autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnFocusOutside: true, closeOnTabExit: true, tabExitTarget: reference, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false,
     restoreFocusTarget: reference,
+    restoreFocusOnDismiss: true,
     restoreFocusOnClose: shouldRestoreReference,
     openDelay: opts.openDelay, closeDelay: opts.closeDelay, disabled: opts.disabled === true,
     beforeOpen: function (detail) { if (destroyed || opts.disabled === true) return false; if (Utils.isFunction(opts.beforeOpen)) return opts.beforeOpen(detail); },

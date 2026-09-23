@@ -684,7 +684,9 @@ function setupTreeRuntime(instance) {
             var toggle = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-tree-toggle') : null;
             var checkbox = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-tree-check') : null;
             if (toggle && root.contains(toggle)) {
-              if (InteractionPolicy.mutationLocked(opts)) return;
+              // Disclosure changes visibility/navigation state, not the Tree value.
+              // Keep readOnly browsable just like ArrowLeft/ArrowRight; disabled still locks it.
+              if (opts.disabled === true) return;
               event.preventDefault(); event.stopPropagation(); if (event.stopImmediatePropagation) event.stopImmediatePropagation();
               var toggleKey = toggleKeyByNode && toggleKeyByNode.get(toggle);
               if (toggleKey) list.setActiveKey(toggleKey, { source: DOM.activationSource(event), reason: 'toggle-active', originalEvent: event });

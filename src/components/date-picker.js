@@ -658,8 +658,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (!calendar) return false;
     var nextMode = mode === 'year' || mode === 'month' ? mode : 'date';
     var previousMode = calendarPanelMode;
-    var rawView = cloneDate(anchorValue) || cloneDate(calendar.getState().viewValue) || new Date();
-    var view = dualCalendarEnabled() ? dualPrimaryView(rawView) : clampPanelValue(rawView);
+    var activeCalendar = calendarSecondary && activeCalendarPanel === 'secondary' ? calendarSecondary : calendar;
+    var rawView = cloneDate(anchorValue) || cloneDate(activeCalendar && activeCalendar.getState().viewValue) || new Date();
+    // Year/month drill panels describe the physical panel that initiated the drill.
+    // Only the date-mode pair needs the left-panel primary anchor normalization.
+    var view = nextMode === 'date' && dualCalendarEnabled() ? dualPrimaryView(rawView) : clampPanelValue(rawView);
     calendarPanelMode = nextMode;
     if (calendarGroup) calendarGroup.classList.toggle('is-date-picker-active', nextMode === 'date');
     if (calendar.getRootElement()) calendar.getRootElement().classList.toggle('is-date-picker-active', nextMode === 'date');
@@ -690,19 +693,28 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (!target && field.getRootElement) target = field.getRootElement();
     return DOM.focusElement(target, { preventScroll: true });
   }
+  function rememberCalendarDrillOwner(detail) {
+    if (!calendarSecondary || !detail || !detail.calendar) return activeCalendarPanel;
+    if (detail.calendar === calendarSecondary) activeCalendarPanel = 'secondary';
+    else if (detail.calendar === calendar) activeCalendarPanel = 'primary';
+    return activeCalendarPanel;
+  }
   function requestCalendarYear(viewValue, detail) {
+    rememberCalendarDrillOwner(detail);
     var changed = setCalendarPanelMode('year', viewValue);
     if (changed && detail && detail.source === 'keyboard') focusFieldHost();
     return changed;
   }
   function requestCalendarMonth(viewValue, detail) {
+    rememberCalendarDrillOwner(detail);
     var changed = setCalendarPanelMode('month', viewValue);
     if (changed && detail && detail.source === 'keyboard') focusFieldHost();
     return changed;
   }
   function handleYearDrillSelect(selected, detail) {
     if (!calendar || !selected) return;
-    var current = cloneDate(calendar.getState().viewValue) || new Date();
+    var owner = calendarSecondary && activeCalendarPanel === 'secondary' ? calendarSecondary : calendar;
+    var current = cloneDate(owner.getState().viewValue) || new Date();
     current.setFullYear(selected.getFullYear());
     current.setDate(1);
     setCalendarPanelMode('month', current);
@@ -711,19 +723,19 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function handleMonthDrillSelect(selected, detail) {
     if (!calendar || !selected) return;
     var source = detail && detail.source || 'api';
-    calendar.setViewValue(dualCalendarEnabled() ? dualPrimaryView(selected) : selected, {
+    var secondaryOwner = !!(calendarSecondary && activeCalendarPanel === 'secondary');
+    var primaryAnchor = secondaryOwner ? addMonths(selected, -1) : selected;
+    var primaryView = dualCalendarEnabled() ? dualPrimaryView(primaryAnchor) : clampPanelValue(primaryAnchor);
+    calendar.setViewValue(primaryView, {
       silent: false,
       source: source,
       reason: 'header-month-select',
       originalEvent: detail && detail.originalEvent || null
     });
-    if (calendarSecondary) syncCalendarPair(selected, { source: source, reason: 'header-month-secondary' });
-    setCalendarPanelMode('date', selected);
-    activeCalendarPanel = 'primary';
-    // Returning from the year/month drill must also move the active date. Otherwise
-    // Calendar.handleKeydown starts from the stale pre-drill activeKey and the first
-    // arrow key jumps the view back to the previous year/month.
-    calendar.setActiveDate(selected, { silent: true, source: source, reason: 'month-drill-active' });
+    if (calendarSecondary) syncCalendarPair(primaryView, { source: source, reason: 'header-month-secondary' });
+    setCalendarPanelMode('date', primaryView);
+    var owner = secondaryOwner ? calendarSecondary : calendar;
+    if (owner) owner.setActiveDate(selected, { silent: true, source: source, reason: 'month-drill-active' });
     if (source === 'keyboard') focusFieldHost();
     activateCurrentPanelVirtualFocus('month-drill-select');
   }
@@ -779,6 +791,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
   function handlePanelSelect(value, detail) {
     hoverPreviewValue = null;
+    if (calendarSecondary && detail && detail.calendar) {
+      if (detail.calendar === calendarSecondary) activeCalendarPanel = 'secondary';
+      else if (detail.calendar === calendar) activeCalendarPanel = 'primary';
+      if (calendar && calendar.refreshStates) calendar.refreshStates();
+      if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
+    }
     var next = applyPanelSelection(value);
     if (next === null) return;
     draft.setDraft(next, { source: detail.source, reason: unit + '-select' });
@@ -788,9 +806,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
     var complete = rangeCommitReady(draft.draftValue);
     if (opts.needConfirm !== true && complete) {
-      draft.commit({ source: detail.source, reason: 'select-commit' });
-      if (selection === 'single' && opts.closeOnSelect !== false) field.close('select', detail.originalEvent || null);
-      else if (selection === 'range' && opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
+      var selectedCommit = instance.commit({ source: detail.source, reason: 'select-commit', originalEvent: detail.originalEvent || null });
+      if (selectedCommit !== false && selection === 'single' && opts.closeOnSelect !== false) field.close('select', detail.originalEvent || null);
+      else if (selectedCommit !== false && selection === 'range' && opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
     }
   }
   function handleTimeChange(value, detail) {
@@ -814,7 +832,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       activeRangePart = selectedPart;
     }
     draft.setDraft(current, { source: detail.source || 'time', reason: 'time-select' });
-    if (opts.needConfirm !== true) draft.commit({ source: detail.source || 'time', reason: 'time-commit' });
+    if (opts.needConfirm !== true) instance.commit({ source: detail.source || 'time', reason: 'time-commit', originalEvent: detail.originalEvent || null });
   }
   function addMultipleInput(text, meta) {
     if (selection !== 'multiple') return false;
@@ -892,7 +910,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var key = state && state.activeKey;
     if (!key && state && state.activeValue) key = DateUnit.key(state.activeValue, state.unit || unit, 0);
     if (!key) return false;
-    return domain.activate(String(key), { source:'keyboard', reason:reason || 'date-picker-panel', ensureVisible:true });
+    var activated = domain.activate(String(key), { source:'keyboard', reason:reason || 'date-picker-panel', ensureVisible:true });
+    if (calendar && calendar.refreshStates) calendar.refreshStates();
+    if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
+    return activated;
   }
   function activateCurrentPanelVirtualFocus(reason) {
     if (!field || !field.getKeyboardNavigation) return false;
@@ -1011,7 +1032,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       return;
     }
     draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse' });
-    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true && rangeCommitReady(parsed.value)) draft.commit({ source: 'input', reason: 'blur-commit' });
+    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true && rangeCommitReady(parsed.value)) instance.commit({ source: 'input', reason: 'blur-commit', originalEvent: event || null });
     syncSelectionPanel(true);
     syncTimePanel();
     syncField(opts.needConfirm === true && field.getState().open);
@@ -1047,7 +1068,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
     trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
     closeOnOutsidePress: opts.closeOnOutsidePress !== false,
     closeOnEscape: opts.closeOnEscape !== false,
-    focusScope: 'contain',
     destroyOnClose: opts.destroyOnClose !== false,
     matchReferenceWidth: false,
     beforeOpen: function (detail) { if (Utils.isFunction(opts.beforeOpen) && opts.beforeOpen(detail) === false) return false; return !destroyed && opts.disabled !== true; },
@@ -1251,11 +1271,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
         activeRangePart = selection === 'range' && normalized[1] ? 1 : 0;
         syncSelectionPanel(true); syncTimePanel(); syncField(true);
         if (opts.needConfirm !== true && rangeCommitReady(normalized)) {
-          draft.commit({ source: source, reason: 'preset-commit', originalEvent: event });
-          // A complete preset is an atomic immediate selection. Range calendar clicks keep
-          // their historical non-closing default, but presets close unless the caller
-          // explicitly opted out with closeOnSelect:false.
-          if (!closeOnSelectExplicit || opts.closeOnSelect !== false) field.close('preset', event);
+          var presetCommitted = instance.commit({ source: source, reason: 'preset-commit', originalEvent: event });
+          // A complete preset is an atomic immediate selection. Do not close if commit was
+          // vetoed, but otherwise presets close unless the caller explicitly opted out.
+          if (presetCommitted !== false && (!closeOnSelectExplicit || opts.closeOnSelect !== false)) field.close('preset', event);
         }
         var payload = { value: cloneValue(normalized, selection), preset: preset, index: index, source: source, reason: 'preset-select', originalEvent: event, datePicker: api };
         if (Utils.isFunction(opts.onPreset)) opts.onPreset(cloneValue(normalized, selection), payload);
@@ -1350,7 +1369,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     }
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
     if (own(next, 'closeOnSelect')) closeOnSelectExplicit = true;
-    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, focusScope: 'contain', destroyOnClose: opts.destroyOnClose !== false });
+    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
     if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
     if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });

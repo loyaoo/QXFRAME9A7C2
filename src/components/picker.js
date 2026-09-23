@@ -20,7 +20,7 @@ function requireState(instance) {
 export class PickerComponent extends PopupFieldComponent {
     constructor(options = {}) {
         super(options);
-        state.set(this, { field: null, controller: null, session: null, beforeCommit: null });
+        state.set(this, { field: null, controller: null, session: null });
     }
 
     setupPickerSession(options = {}) {
@@ -28,11 +28,13 @@ export class PickerComponent extends PopupFieldComponent {
         if (record.session) throw new Error('[QXFRAME9A7C2] Picker session is already initialized.');
         if (!options.controller) throw new TypeError('[QXFRAME9A7C2] PickerComponent requires a draft controller.');
         record.controller = options.controller;
-        record.beforeCommit = typeof options.beforeCommit === 'function' ? options.beforeCommit : null;
         record.session = PickerSession.create({
             controller: options.controller,
             needConfirm: () => this.options.needConfirm === true,
             rollbackDirtyOnClose: options.rollbackDirtyOnClose,
+            commitDirtyOnClose: options.commitDirtyOnClose,
+            cancelDirtyOnCommitReject: options.cancelDirtyOnCommitReject,
+            beforeCommit: typeof options.beforeCommit === 'function' ? (_controller, detail) => options.beforeCommit(detail) : null,
             canCommit: (controller, detail) => !this.destroyed && (typeof options.canCommit !== 'function' || options.canCommit(controller, detail) !== false),
             onOpenDraft: options.onOpenDraft,
             onCommit: options.onCommit,
@@ -86,7 +88,6 @@ export class PickerComponent extends PopupFieldComponent {
         const record = requireState(this);
         if (!record.session) return false;
         const detail = Utils.assignOwn({ source: 'api', reason: 'confirm' }, meta);
-        if (record.beforeCommit && record.beforeCommit(detail) === false) return false;
         return record.session.commit(detail);
     }
 
@@ -123,8 +124,8 @@ export class PickerComponent extends PopupFieldComponent {
                 this.close('cancel', event);
             },
             confirm: event => {
-                this.commit({ source: DOM.activationSource(event), reason: 'confirm-button', originalEvent: event });
-                this.close('confirm', event);
+                const committed = this.commit({ source: DOM.activationSource(event), reason: 'confirm-button', originalEvent: event });
+                if (committed !== false) this.close('confirm', event);
             },
             cancelLabel: options.cancelLabel || opts.cancelText,
             confirmLabel: options.confirmLabel || opts.confirmText,

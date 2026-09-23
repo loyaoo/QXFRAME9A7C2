@@ -14,6 +14,7 @@ import { DateUnit } from '../utils/dateUnit.js';
 
 let DOMFactory;
 var WEEKDAYS = ['日','一','二','三','四','五','六'];
+var calendarDomainSequence = 0;
 var blueprint = DOMTemplate.staticHTML`
   <div class="qxframe9a7c2-calendar qxframe9a7c2-date-panel" data-qxframe9a7c2-ref="root">
     <div class="qxframe9a7c2-calendar-header qxframe9a7c2-date-panel-header" data-qxframe9a7c2-ref="header">
@@ -49,6 +50,7 @@ function create(options) {
   var opts = mergeOptions({}, options);
   var doc = opts.document || (opts.container && opts.container.ownerDocument) || globalThis.document;
   var emitter = Events.createEmitter();
+  var virtualFocusDomainName = 'calendar-' + (++calendarDomainSequence);
   var scope = Lifecycle.createScope();
   var destroyed = false;
   var root = null;
@@ -96,7 +98,17 @@ function create(options) {
     isDisabled: function (entry) { return entry.disabled === true; },
     activeKey: keyOf(initialActive),
     onChange: function (key, detail) {
-      if (virtualFocusDomain && virtualFocusController && key) virtualFocusDomain.activate(String(key), { source:detail && detail.source || 'api', modality:detail && detail.source === 'keyboard' ? 'keyboard' : (detail && detail.source === 'pointer' ? 'pointer' : virtualFocusController.getState().modality), reason:detail && detail.reason || 'calendar-active', originalEvent:detail && detail.originalEvent || null, ensureVisible:false });
+      if (virtualFocusDomain && virtualFocusController && key) {
+        var activeSource = detail && detail.source || 'api';
+        var controllerState = virtualFocusController.getState();
+        var ownsDomain = controllerState && controllerState.domain === virtualFocusDomain.name;
+        // Hosted calendars share one real-focus owner (for example DatePicker dual panels).
+        // Silent/programmatic view reconciliation must not steal the shared virtual-focus
+        // domain from the panel the user is actually navigating.
+        if (!hostedVirtualFocus || activeSource === 'keyboard' || activeSource === 'pointer') {
+          virtualFocusDomain.activate(String(key), { source:activeSource, modality:activeSource === 'keyboard' ? 'keyboard' : (activeSource === 'pointer' ? 'pointer' : controllerState.modality), reason:detail && detail.reason || 'calendar-active', originalEvent:detail && detail.originalEvent || null, ensureVisible:false });
+        } else if (ownsDomain) virtualFocusDomain.refresh({ reconcile:true, source:activeSource, reason:detail && detail.reason || 'calendar-active-sync' });
+      }
       syncCellStates();
       var date = parseDate(key);
       var payload = { key: key, date: cloneDate(date), source: detail && detail.source || 'api', reason: detail && detail.reason || 'active', calendar: api };
@@ -290,7 +302,8 @@ function create(options) {
       nodes[i].classList.toggle('is-in-range', state.inRange === true);
       nodes[i].classList.toggle('is-range-start', state.rangeStart === true);
       nodes[i].classList.toggle('is-range-end', state.rangeEnd === true);
-      nodes[i].classList.toggle('is-active', DOM.getPrivate(nodes[i], 'calendarDate') === activeItem.activeKey);
+      var visualActiveOwner = !hostedVirtualFocus || (virtualFocusController && virtualFocusDomain && virtualFocusController.getState().domain === virtualFocusDomain.name);
+      nodes[i].classList.toggle('is-active', visualActiveOwner && DOM.getPrivate(nodes[i], 'calendarDate') === activeItem.activeKey);
       nodes[i].classList.toggle('is-hover', state.hover === true);
       nodes[i];
     }
@@ -408,7 +421,7 @@ function create(options) {
       activeKey: activeItem.activeKey,
       activation: { reason:'calendar-bind', ensureVisible:false },
       domain: {
-        name:'calendar',
+        name:virtualFocusDomainName,
         getElement:function(key){ return getCellElement(key); },
         reconcile:function(key){ var cell=cells.find(function(entry){return entry.key===String(key)&&entry.disabled!==true;}); if(cell)return cell.key; return activeItem.activeKey || null; },
         ensureVisible:function(){ return true; }

@@ -276,10 +276,12 @@ function create(options) {
       getElement:function(key){ var location=virtualLocation(key); return location ? location.record.itemElements[location.itemIndex] || null : null; },
       reconcile:function(key){
         var location=virtualLocation(key); if (location) return key;
-        var record=columnRecords[activeColumnIndex] || columnRecords[0]; if (!record) return null;
-        var selectedIndex=itemIndexForValue(record.items, value[activeColumnIndex]);
+        var normalizedColumn=Math.max(0,Math.min(activeColumnIndex,Math.max(0,columnRecords.length-1)));
+        var record=columnRecords[normalizedColumn]; if (!record) return null;
+        activeColumnIndex=normalizedColumn;
+        var selectedIndex=itemIndexForValue(record.items, value[normalizedColumn]);
         if (selectedIndex < 0) selectedIndex=nearestEnabledIndex(record.items, 0);
-        return selectedIndex >= 0 ? virtualKey(activeColumnIndex, selectedIndex) : null;
+        return selectedIndex >= 0 ? virtualKey(normalizedColumn, selectedIndex) : null;
       },
       ensureVisible:function(key){
         var location=virtualLocation(key); if (!location) return false;
@@ -300,16 +302,29 @@ function create(options) {
     return activateVirtualAt(next, selectedIndex, meta || { source:'keyboard', reason:'set-active-column' });
   }
   function handleKeydown(event) {
-    if (destroyed || !event || InteractionPolicy.mutationLocked(opts)) return false;
+    if (destroyed || !event || opts.disabled === true) return false;
+    var readOnly = opts.readOnly === true;
     var index=Math.max(0, Math.min(activeColumnIndex, Math.max(0,columnRecords.length-1)));
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       var nextColumn=event.key === 'ArrowLeft' ? index-1 : index+1;
-      if (!columnRecords[nextColumn]) return false;
-      return setActiveColumn(nextColumn, { source:'keyboard', reason:event.key, originalEvent:event });
+      if (!columnRecords[nextColumn]) {
+        setActiveColumn(index, { source:'keyboard', reason:event.key + '-boundary', originalEvent:event });
+        return true;
+      }
+      setActiveColumn(nextColumn, { source:'keyboard', reason:event.key, originalEvent:event });
+      return true;
     }
     var record=columnRecords[index]; if (!record) return false;
     var enabled=[]; record.items.forEach(function(item,itemIndex){ if(!item.disabled) enabled.push(itemIndex); }); if(!enabled.length) return false;
-    var current=itemIndexForValue(record.items,value[index]); var position=enabled.indexOf(current); if(position<0) position=0;
+    var current=itemIndexForValue(record.items,value[index]);
+    if (virtualFocusController && virtualFocusDomain) {
+      var vfState=virtualFocusController.getState ? virtualFocusController.getState() : null;
+      if (vfState && vfState.domain === virtualFocusDomain.name && vfState.key) {
+        var location=virtualLocation(vfState.key);
+        if (location && location.columnIndex === index) current=location.itemIndex;
+      }
+    }
+    var position=enabled.indexOf(current); if(position<0) position=0;
     var next=position;
     if(event.key==='ArrowDown') next=record.loop?(position+1)%enabled.length:Math.min(enabled.length-1,position+1);
     else if(event.key==='ArrowUp') next=record.loop?(position-1+enabled.length)%enabled.length:Math.max(0,position-1);
@@ -319,9 +334,11 @@ function create(options) {
     else if(event.key==='End') next=enabled.length-1;
     else return false;
     var target=enabled[next]; if(target===undefined) return false;
-    var changed=selectIndex(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
-    if(changed) activateVirtualAt(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
-    return changed;
+    if (!readOnly) selectIndex(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
+    activateVirtualAt(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
+    // Recognized navigation remains owned by the open Picker even when the target is
+    // already selected at a boundary or the Picker is read-only.
+    return true;
   }
 
   function renderColumn(index) {
@@ -499,6 +516,7 @@ function create(options) {
     var start = Math.max(0, Number(index) || 0);
     destroyColumns(start);
     for (var i = start; i < columns.length; i += 1) renderColumn(i);
+    activeColumnIndex = Math.max(0, Math.min(activeColumnIndex, Math.max(0, columnRecords.length - 1)));
     if (virtualFocusDomain) virtualFocusDomain.refresh({ reconcile:true });
   }
 

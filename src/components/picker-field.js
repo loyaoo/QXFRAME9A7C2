@@ -87,7 +87,7 @@ function create(options) {
 
   control = headlessMode ? null : projectionMode ? Control.createProjection({
     document: doc, reference: root, valueTarget: valueHost, inputTarget: input, formTarget: opts.formTarget, formField: opts.formField, name: opts.name, committedValue: opts.committedValue, serializeValue: opts.serializeValue,
-    mode: opts.controlMode || 'input', tags: tags, displayValue: displayValue, inputValue: displayValue, editable: opts.editable === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder,
+    mode: opts.controlMode || 'input', tags: tags, displayValue: displayValue, inputValue: displayValue, editable: opts.editable === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder,
     onInput: function (value, event) { displayValue = value; if (typeof opts.onInput === 'function') opts.onInput(value, event, api); },
     onBlur: function (event) { if (typeof opts.onBlur === 'function') opts.onBlur(event, api); },
   }) : Control.create({
@@ -95,7 +95,7 @@ function create(options) {
     document: doc, formField: opts.formField, committedValue: opts.committedValue, serializeValue: opts.serializeValue, mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true,
     tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName,
     size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable,
-    clearable: opts.clearable, clearVisibility: 'interaction', hasValue: clearVisible, draftVisual: opts.draftVisual === true, inputValue: displayValue,
+    clearable: opts.clearable, clearVisibility: 'interaction', hasValue: clearVisible, draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, inputValue: displayValue,
     placeholder: displayPlaceholder, expanded: false, toggleVisible: true, toggle: opts.toggle,
     onInput: function (value, event) { displayValue = value; if (typeof opts.onInput === 'function') opts.onInput(value, event, api); },
     onBlur: function (event) { if (typeof opts.onBlur === 'function') opts.onBlur(event, api); },
@@ -151,6 +151,14 @@ function create(options) {
     if (!projectionMode && (String(opts.controlMode || 'input') === 'input' || String(opts.controlMode || 'input') === 'tags')) control.setInputValue(text);
     else if (projectionMode && editorElement() && opts.editable === true) control.setInputValue(text);
   }
+  function projectNavigationVisual(value) {
+    if (!navigationActive || projectionMode || !control) return false;
+    var editor = editorElement();
+    if (!editor || editor.value === undefined) return false;
+    var text = value == null ? '' : String(value);
+    if (String(editor.value || '') !== text) editor.value = text;
+    return true;
+  }
   function beginNavigationInteraction() {
     if (navigationActive) return false;
     interactionGeneration += 1;
@@ -168,7 +176,9 @@ function create(options) {
     navigationActive = false;
     var closeReason = String(detail && detail.reason || '');
     if (closeReason !== 'editor-pointer') editorPointerPending = false;
-    if (closeReason !== 'editor-context') suppressOpenEvent = null;
+    // Same-gesture suppression is only needed for pointerdown -> click. Never retain
+    // a ContextMenuEvent beyond the logical close lifecycle.
+    suppressOpenEvent = null;
     if (preserveEditorForReason(closeReason) && snapshot) {
       projectDisplayValue(snapshot.value);
       restoreSelection(snapshot);
@@ -280,7 +290,7 @@ function create(options) {
     scope.add(DOM.listen(selectorEditor, 'compositionstart', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
     scope.add(DOM.listen(selectorEditor, 'paste', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
     scope.add(DOM.listen(selectorEditor, 'cut', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
-    scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) { suppressOpenEvent = event; close('editor-context', event); } }));
+    scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-context', event); }));
     scope.add(DOM.listen(selectorEditor, 'keydown', function (event) { if (editorIntentKeydown(event)) close('editor-intent', event); }));
   }
 
@@ -325,7 +335,8 @@ function create(options) {
   function syncControl() {
     if (!control) return;
     var editorValue = navigationActive && editorSnapshot ? editorSnapshot.value : displayValue;
-    control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: editorValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
+    control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: editorValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
+    if (navigationActive) projectNavigationVisual(opts.draftVisual === true ? draftDisplayValue : displayValue);
   }
   function writeExternalValue(target, value) { if (!target) return; var text = value == null ? '' : String(value); if (/^(input|textarea|select)$/i.test(String(target.tagName || ''))) target.value = text; else target.textContent = text; }
   function setDisplayValue(value) {
@@ -336,7 +347,13 @@ function create(options) {
     if (!navigationActive) projectDisplayValue(displayValue);
     return api;
   }
-  function setDraftDisplayValue(value) { draftDisplayValue = value == null ? '' : String(value); if (projectionMode) writeExternalValue(draftValueTarget, draftDisplayValue); return api; }
+  function setDraftDisplayValue(value) {
+    draftDisplayValue = value == null ? '' : String(value);
+    if (projectionMode) writeExternalValue(draftValueTarget, draftDisplayValue);
+    else if (control && control.setDraftDisplayValue) control.setDraftDisplayValue(draftDisplayValue);
+    if (!projectionMode && navigationActive && opts.draftVisual === true) projectNavigationVisual(draftDisplayValue);
+    return api;
+  }
   function setPlaceholder(value) { displayPlaceholder = value == null ? '' : String(value); if (control) control.updateOptions({ placeholder: displayPlaceholder }); return api; }
   function setCommittedValue(value, meta) {
     var detail = meta || { silent: true, source: 'picker', reason: 'projection' };
@@ -353,7 +370,12 @@ function create(options) {
   }
   function setTags(value) { tags = Array.isArray(value) ? value.slice() : []; if (control) control.setTags(tags); return api; }
   function setClearVisible(value) { clearVisible = value === true; if (control) control.setHasValue(clearVisible); return api; }
-  function setDraftVisual(value) { opts.draftVisual = value === true; if (control && control.setDraftVisual) control.setDraftVisual(opts.draftVisual); return api; }
+  function setDraftVisual(value) {
+    opts.draftVisual = value === true;
+    if (control && control.setDraftVisual) control.setDraftVisual(opts.draftVisual);
+    if (navigationActive) projectNavigationVisual(opts.draftVisual ? draftDisplayValue : displayValue);
+    return api;
+  }
   function open(reason, event) { return destroyed || !canActivatePicker() ? false : triggerSession.open(reason || 'api', event || null); }
   function close(reason, event) { return destroyed ? false : triggerSession.close(reason || 'api', event || null); }
   function setOpen(value, reason, event) { return value === true ? open(reason || 'set-open', event) : close(reason || 'set-open', event); }
