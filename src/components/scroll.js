@@ -2,7 +2,8 @@
 // Migrated from the frozen HOTFIX6 implementation without changing public behavior.
 
 import { Utils } from '../utils/utils.js';
-import { Events } from '../core/events.js';
+import { Component } from '../core/component.js';
+import { componentHooks } from '../core/componentHooks.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
 import { DOM } from '../core/dom.js';
@@ -13,7 +14,7 @@ import { DOMTemplate } from '../core/domTemplate.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { PointerSession } from '../core/pointerSession.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
-import { ComponentContracts, validateContractOptions } from '../core/componentContracts.js';
+import { ComponentContracts } from '../core/componentContracts.js';
 
 var DOMFactory;
 var blueprint = DOMTemplate.staticHTML`
@@ -49,6 +50,31 @@ var WHEEL_BEHAVIORS = Object.freeze(['pixel', 'snap-step']);
 var SNAP_BEHAVIORS = Object.freeze(['auto', 'smooth']);
 var EPSILON = 0.5;
 var own = Utils.own;
+const SCROLL_DEFAULTS = Object.freeze({
+  axis: 'y',
+  wheelAxis: 'auto',
+  wheelPropagation: true,
+  scrollbarVisibility: 'auto',
+  scrollbarInteractive: true,
+  scrollbarHideDelay: 1000,
+  edgeShadow: false,
+  edgeShadowSize: 16,
+  keyboard: true,
+  focusable: true,
+  disabled: false,
+  readOnly: false,
+  wheelBehavior: 'pixel',
+  snapTargets: null,
+  snapAxis: 'auto',
+  snapAlign: 'nearest',
+  snapBehavior: 'auto',
+  snapDuration: 220,
+  snapOnIdle: false,
+  snapLoop: false,
+  scrollIdleDelay: 100
+});
+const scrollState = new WeakMap();
+const attachedScrollInstances = new WeakSet();
     
 function normalizeEnum(value, allowed, fallback, label) {
   var normalized = value === undefined || value === null || value === '' ? fallback : String(value);
@@ -71,8 +97,8 @@ function normalizeScrollOptions(value, label) {
   return value;
 }
     
-function normalizeSnapTargets(value) {
-  var source = Utils.isFunction(value) ? value(api) : value;
+function normalizeSnapTargets(value, controller) {
+  var source = Utils.isFunction(value) ? value(controller) : value;
   if (source === undefined || source === null) return [];
   var array;
   if (Array.isArray(source)) array = source.slice();
@@ -132,10 +158,12 @@ function attachViewport(options) {
   if (input.focusable === undefined) input.focusable = false;
   if (input.keyboard === undefined) input.keyboard = false;
   if (input.scrollbarVisibility === undefined) input.scrollbarVisibility = 'auto';
-  var instance = create(input);
+  var instance = new Scroll(input);
+  attachedScrollInstances.add(instance);
+  instance.render();
   var destroyed = false;
-  var proxy = Object.create(instance);
-  Object.defineProperty(proxy, 'destroy', { enumerable:true, value:function () {
+  var bound = new Map();
+  function destroyAttached() {
     if (destroyed) return false;
     destroyed = true;
     var result = instance.destroy();
@@ -144,56 +172,27 @@ function attachViewport(options) {
     ['is-axis-x','is-axis-y','is-axis-both','is-scrollbar-auto','is-scrollbar-always','is-scrollbar-hidden','is-scrollbar-interactive','is-scrollbar-manual-show','is-scrollbar-manual-hide','has-edge-shadow','is-disabled','is-readonly','is-scrollbar-active','can-scroll-up','can-scroll-down','can-scroll-left','can-scroll-right'].forEach(function (name) { root.classList.remove(name); });
     if (originalTabindex === null) root.removeAttribute('tabindex'); else root.setAttribute('tabindex', originalTabindex);
     return result;
-  }});
-  return Object.freeze(proxy);
+  }
+  return new Proxy(instance, {
+    get: function (target, key) {
+      if (key === 'destroy') return destroyAttached;
+      var value = Reflect.get(target, key, target);
+      if (typeof value !== 'function') return value;
+      if (!bound.has(key)) bound.set(key, value.bind(target));
+      return bound.get(key);
+    },
+    set: function (target, key, value) { return Reflect.set(target, key, value, target); }
+  });
 }
     
-function create(options) {
-  validateContractOptions(ComponentContracts.get('Scroll'), options || {}, 'Scroll');
-  var opts = Utils.assignOwn({
-    axis: 'y',
-    wheelAxis: 'auto',
-    wheelPropagation: true,
-    scrollbarVisibility: 'auto',
-    scrollbarInteractive: true,
-    scrollbarHideDelay: 1000,
-    edgeShadow: false,
-    edgeShadowSize: 16,
-    keyboard: true,
-    focusable: true,
-    disabled: false,
-    readOnly: false,
-    wheelBehavior: 'pixel',
-    snapTargets: null,
-    snapAxis: 'auto',
-    snapAlign: 'nearest',
-    snapBehavior: 'auto',
-    snapDuration: 220,
-    snapOnIdle: false,
-    snapLoop: false,
-    scrollIdleDelay: 100
-  }, options || {});
-    
+function setupScroll(instance) {
+  var opts = Utils.assignOwn(instance.options);
   var doc = opts.document || globalThis.document;
   var view = doc && doc.defaultView || globalThis;
   if (!doc || !Utils.isFunction(doc.createElement)) throw new Error('[QXFRAME9A7C2] Scroll requires a browser document.');
   var mountContainer = opts.container || null;
   if (opts.elements == null) ensureElement(mountContainer, 'container');
-    
-  opts.axis = normalizeEnum(opts.axis, AXES, 'y', 'axis');
-  opts.wheelAxis = normalizeEnum(opts.wheelAxis, WHEEL_AXES, 'auto', 'wheelAxis');
-  opts.scrollbarVisibility = normalizeEnum(opts.scrollbarVisibility, VISIBILITIES, 'auto', 'scrollbarVisibility');
-  opts.snapAxis = normalizeEnum(opts.snapAxis, WHEEL_AXES, 'auto', 'snapAxis');
-  opts.snapAlign = normalizeEnum(opts.snapAlign, SNAP_ALIGNS, 'nearest', 'snapAlign');
-  opts.wheelBehavior = normalizeEnum(opts.wheelBehavior, WHEEL_BEHAVIORS, 'pixel', 'wheelBehavior');
-  opts.snapBehavior = normalizeEnum(opts.snapBehavior, SNAP_BEHAVIORS, 'auto', 'snapBehavior');
   assertAxisCompatibility(opts.axis, opts.wheelAxis, opts.snapAxis);
-    
-  if (typeof opts.snapLoop !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Scroll snapLoop must be boolean.');
-  if (typeof opts.focusable !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Scroll focusable must be boolean.');
-  opts.scrollbarHideDelay = Number(opts.scrollbarHideDelay);
-  if (!Number.isFinite(opts.scrollbarHideDelay) || opts.scrollbarHideDelay < 0) throw new TypeError('[QXFRAME9A7C2] Scroll scrollbarHideDelay must be a non-negative finite millisecond value.');
-  var emitter = Events.createEmitter();
   var scope = null;
   var domBinding = null;
   var root = null;
@@ -219,13 +218,13 @@ function create(options) {
   var snapStepGesture = null;
   var snapStepMotion = null;
   var motion = null;
-  var api = null;
+  var api = instance;
     
   domBinding = DOMBinding.resolve({
     options: opts,
     document: doc,
     target: mountContainer,
-    component: null,
+    component: api,
     requiredRefs: ['root', 'viewport', 'content', 'trackX', 'trackY', 'thumbX', 'thumbY', 'shadowTop', 'shadowBottom', 'shadowLeft', 'shadowRight'],
     defaultFactory: DOMFactory.createDefaultDOM
   });
@@ -412,7 +411,7 @@ function create(options) {
   }
     
   function getSnapTargets() {
-    return normalizeSnapTargets(opts.snapTargets).filter(function (element) {
+    return normalizeSnapTargets(opts.snapTargets, api).filter(function (element) {
       return content === element || !!(content.contains && content.contains(element));
     });
   }
@@ -465,12 +464,12 @@ function create(options) {
     lastScrollState = state;
     if (snap !== lastSnap) {
       lastSnap = snap;
-      emitter.emit('snap-change', { index: snap, state: state, reason: reason || 'refresh', controller: api });
+      api.emit('snap-change', { index: snap, state: state, reason: reason || 'refresh', controller: api });
     }
     if (emitScroll === true) {
       var detail = { state: state, reason: reason || 'scroll', controller: api };
       if (Utils.isFunction(opts.onScroll)) opts.onScroll(detail);
-      if (!destroyed) emitter.emit('scroll', detail);
+      if (!destroyed) api.emit('scroll', detail);
     }
     return state;
   }
@@ -495,7 +494,7 @@ function create(options) {
     scrolling = true;
     var detail = { state: getState(), reason: reason || 'scroll', controller: api };
     if (Utils.isFunction(opts.onScrollStart)) opts.onScrollStart(detail);
-    if (!destroyed) emitter.emit('scroll-start', detail);
+    if (!destroyed) api.emit('scroll-start', detail);
   }
     
   function emitScrollEnd(reason) {
@@ -503,7 +502,7 @@ function create(options) {
     scrolling = false;
     var detail = { state: getState(), reason: reason || 'scroll-end', controller: api };
     if (Utils.isFunction(opts.onScrollEnd)) opts.onScrollEnd(detail);
-    if (!destroyed) emitter.emit('scroll-end', detail);
+    if (!destroyed) api.emit('scroll-end', detail);
   }
     
   function emitSnapSettle(index, reason) {
@@ -512,7 +511,7 @@ function create(options) {
     var element = index >= 0 && index < targets.length ? targets[index] : null;
     var detail = { index: index, element: element, state: getState(), reason: reason || 'snap-settle', controller: api };
     if (Utils.isFunction(opts.onSnapSettle)) opts.onSnapSettle(detail);
-    if (!destroyed) emitter.emit('snap-settle', detail);
+    if (!destroyed) api.emit('snap-settle', detail);
   }
     
   var motionFrame = Scheduler.createFrameScheduler(function (timestamp) {
@@ -996,37 +995,14 @@ function create(options) {
     return api;
   }
     
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions) {
     if (destroyed) return api;
-    validateContractOptions(ComponentContracts.get('Scroll'), nextOptions || {}, 'Scroll');
-    var next = nextOptions || {};
-    STRUCTURAL_OPTIONS.forEach(function (key) {
-      if (!own(next, key)) return;
-      var current = key === 'container' ? mountContainer : (key === 'document' ? doc : opts[key]);
-      if (next[key] !== current) {
-        throw new Error('[QXFRAME9A7C2] Scroll ' + key + ' is immutable; destroy and recreate to change it.');
-      }
-    });
-    var candidate = Utils.mergeOwn( opts, next);
-    candidate.axis = normalizeEnum(candidate.axis, AXES, 'y', 'axis');
-    candidate.wheelAxis = normalizeEnum(candidate.wheelAxis, WHEEL_AXES, 'auto', 'wheelAxis');
-    candidate.scrollbarVisibility = normalizeEnum(candidate.scrollbarVisibility, VISIBILITIES, 'auto', 'scrollbarVisibility');
-    candidate.snapAxis = normalizeEnum(candidate.snapAxis, WHEEL_AXES, 'auto', 'snapAxis');
-    candidate.snapAlign = normalizeEnum(candidate.snapAlign, SNAP_ALIGNS, 'nearest', 'snapAlign');
-    candidate.wheelBehavior = normalizeEnum(candidate.wheelBehavior, WHEEL_BEHAVIORS, 'pixel', 'wheelBehavior');
-    candidate.snapBehavior = normalizeEnum(candidate.snapBehavior, SNAP_BEHAVIORS, 'auto', 'snapBehavior');
-    if (typeof candidate.snapLoop !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Scroll snapLoop must be boolean.');
-    if (typeof candidate.focusable !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Scroll focusable must be boolean.');
-    candidate.scrollbarHideDelay = Number(candidate.scrollbarHideDelay);
-    if (!Number.isFinite(candidate.scrollbarHideDelay) || candidate.scrollbarHideDelay < 0) throw new TypeError('[QXFRAME9A7C2] Scroll scrollbarHideDelay must be a non-negative finite millisecond value.');
+    var candidate = Utils.assignOwn(nextOptions);
     assertAxisCompatibility(candidate.axis, candidate.wheelAxis, candidate.snapAxis);
     var preservedX = getMetrics().x;
     var hideDelayChanged = candidate.scrollbarHideDelay !== opts.scrollbarHideDelay;
     var hadPendingScrollbarHide = scrollbarHideDelay.pending;
     opts = candidate;
-    // Option changes can alter observable state (for example axis) before the
-    // scheduled geometry projection runs. Invalidate the cached snapshot so
-    // an immediate getState() observes the canonical options, not stale state.
     lastScrollState = null;
     applyRootOptions();
     if (opts.scrollbarVisibility !== 'auto' || manualScrollbarVisibility !== null) clearHideTimer();
@@ -1036,7 +1012,7 @@ function create(options) {
     if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     return api;
   }
-    
+
   function finishActiveMotionForReducedMotion() {
     if (destroyed || motionEnabled()) return;
     if (motion) {
@@ -1062,7 +1038,7 @@ function create(options) {
   function refresh(reason) {
     if (destroyed) return null;
     var state = updateProjection(reason || 'refresh', false);
-    emitter.emit('refresh', { state: state, reason: reason || 'refresh', controller: api });
+    api.emit('refresh', { state: state, reason: reason || 'refresh', controller: api });
     return state;
   }
     
@@ -1070,7 +1046,7 @@ function create(options) {
     return lastScrollState || updateProjection('state', false);
   }
     
-  function destroy() {
+  function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true;
     clearHideTimer();
@@ -1078,7 +1054,6 @@ function create(options) {
     cancelSnapStepSequence();
     cancelMotion();
     if (scope) scope.dispose();
-    emitter.dispose();
     if (domBinding && domBinding.source !== 'external' && mountContainer && content) {
       Array.prototype.slice.call(content.childNodes).forEach(function (node) {
         mountContainer.insertBefore(node, root);
@@ -1091,35 +1066,22 @@ function create(options) {
     return true;
   }
     
-  api = Object.freeze({
-    scrollTo: scrollTo,
-    scrollBy: scrollBy,
-    scrollToElement: scrollToElement,
-    goToSnap: goToSnap,
-    nextSnap: nextSnap,
-    prevSnap: prevSnap,
-    getCurrentSnap: getCurrentSnap,
-    settleSnap: settleSnap,
-    showScrollbar: showScrollbar,
-    hideScrollbar: hideScrollbar,
-    resetScrollbarVisibility: resetScrollbarVisibility,
-    refresh: refresh,
-    updateOptions: updateOptions,
-    setDisabled: function (value) { return updateOptions({ disabled: value === true }); },
-    setReadOnly: function (value) { return updateOptions({ readOnly: value === true }); },
-    setFocusable: function (value) { return updateOptions({ focusable: value !== false }); },
-    focus: function () { if (!destroyed && opts.disabled !== true && opts.focusable !== false && root && Utils.isFunction(root.focus)) { DOM.focusElement(root); } return api; },
+  var record = {
+    scrollTo: scrollTo, scrollBy: scrollBy, scrollToElement: scrollToElement,
+    goToSnap: goToSnap, nextSnap: nextSnap, prevSnap: prevSnap, getCurrentSnap: getCurrentSnap, settleSnap: settleSnap,
+    showScrollbar: showScrollbar, hideScrollbar: hideScrollbar, resetScrollbarVisibility: resetScrollbarVisibility,
+    refresh: refresh, applyOptions: applyOptions,
+    focus: function () { if (!destroyed && opts.disabled !== true && opts.focusable !== false && root) DOM.focusElement(root); return api; },
     getState: getState,
     getRootElement: function () { return root; },
     getViewportElement: function () { return viewport; },
     getContentElement: function () { return content; },
     getRefs: function () { return domBinding ? domBinding.refs : null; },
-    getDOMSource: function () { return domBinding ? domBinding.source : null; },
-    on: emitter.on,
-    once: emitter.once,
-    destroy: destroy
-  });
-    
+    getDOMSource: function () { return domBinding ? domBinding.source : null; }
+  };
+  scrollState.set(instance, record);
+  instance.own(destroyRuntime);
+
   scope.add(DOM.listen(viewport, 'scroll', function () {
     requestProjection('scroll');
     if (!snapSettling && !motion && now() >= idleSuppressUntil) {
@@ -1150,8 +1112,84 @@ function create(options) {
     
   applyRootOptions();
   refresh('mount');
-  return api;
+  return root;
 }
     
 
-export const Scroll = Object.freeze({ create, attachViewport, createDefaultDOM: DOMFactory.createDefaultDOM });
+function boolOption(value, label) {
+  if (typeof value !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Scroll ' + label + ' must be boolean.');
+  return value;
+}
+function nonNegativeDelay(value, label, fallback) {
+  var number = Number(value == null ? fallback : value);
+  if (!Number.isFinite(number) || number < 0) throw new TypeError('[QXFRAME9A7C2] Scroll ' + label + ' must be a non-negative finite millisecond value.');
+  return number;
+}
+function recordForScroll(instance) {
+  var record = scrollState.get(instance);
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Scroll instance.');
+  return record;
+}
+
+export class Scroll extends Component {
+  static options = SCROLL_DEFAULTS;
+  static optionNormalizers = Object.freeze({
+    axis: value => normalizeEnum(value, AXES, 'y', 'axis'),
+    wheelAxis: value => normalizeEnum(value, WHEEL_AXES, 'auto', 'wheelAxis'),
+    scrollbarVisibility: value => normalizeEnum(value, VISIBILITIES, 'auto', 'scrollbarVisibility'),
+    snapAxis: value => normalizeEnum(value, WHEEL_AXES, 'auto', 'snapAxis'),
+    snapAlign: value => normalizeEnum(value, SNAP_ALIGNS, 'nearest', 'snapAlign'),
+    wheelBehavior: value => normalizeEnum(value, WHEEL_BEHAVIORS, 'pixel', 'wheelBehavior'),
+    snapBehavior: value => normalizeEnum(value, SNAP_BEHAVIORS, 'auto', 'snapBehavior'),
+    snapLoop: value => boolOption(value, 'snapLoop'),
+    focusable: value => boolOption(value, 'focusable'),
+    scrollbarHideDelay: value => nonNegativeDelay(value, 'scrollbarHideDelay', 1000),
+    scrollIdleDelay: value => nonNegativeDelay(value, 'scrollIdleDelay', 100)
+  });
+  static immutableOptions = STRUCTURAL_OPTIONS;
+  static contract = ComponentContracts.get('Scroll');
+  static createDefaultDOM = DOMFactory.createDefaultDOM;
+  static attachViewport(options) { return attachViewport(options); }
+
+  [componentHooks.render]() {
+    var existing = scrollState.get(this);
+    if (existing) return attachedScrollInstances.has(this) ? undefined : existing.getRootElement();
+    assertAxisCompatibility(this.options.axis, this.options.wheelAxis, this.options.snapAxis);
+    var root = setupScroll(this);
+    return attachedScrollInstances.has(this) ? undefined : root;
+  }
+  [componentHooks.beforeOptionsUpdate](patch) {
+    var candidate = Utils.mergeOwn(this.options, patch || {});
+    candidate.axis = normalizeEnum(candidate.axis, AXES, 'y', 'axis');
+    candidate.wheelAxis = normalizeEnum(candidate.wheelAxis, WHEEL_AXES, 'auto', 'wheelAxis');
+    candidate.snapAxis = normalizeEnum(candidate.snapAxis, WHEEL_AXES, 'auto', 'snapAxis');
+    assertAxisCompatibility(candidate.axis, candidate.wheelAxis, candidate.snapAxis);
+  }
+  [componentHooks.optionsUpdated](next) { var record = scrollState.get(this); if (record) record.applyOptions(next); }
+
+  scrollTo(options) { return recordForScroll(this).scrollTo(options); }
+  scrollBy(options) { return recordForScroll(this).scrollBy(options); }
+  scrollToElement(element, options) { return recordForScroll(this).scrollToElement(element, options); }
+  goToSnap(index, options) { return recordForScroll(this).goToSnap(index, options); }
+  nextSnap(options) { return recordForScroll(this).nextSnap(options); }
+  prevSnap(options) { return recordForScroll(this).prevSnap(options); }
+  getCurrentSnap() { return recordForScroll(this).getCurrentSnap(); }
+  settleSnap(options) { return recordForScroll(this).settleSnap(options); }
+  showScrollbar() { return recordForScroll(this).showScrollbar(); }
+  hideScrollbar() { return recordForScroll(this).hideScrollbar(); }
+  resetScrollbarVisibility() { return recordForScroll(this).resetScrollbarVisibility(); }
+  refresh(reason) { return recordForScroll(this).refresh(reason); }
+  setDisabled(value) { return this.updateOptions({ disabled:value === true }); }
+  setReadOnly(value) { return this.updateOptions({ readOnly:value === true }); }
+  setFocusable(value) { return this.updateOptions({ focusable:value !== false }); }
+  focus() { return recordForScroll(this).focus(); }
+  getState() { return recordForScroll(this).getState(); }
+  getRootElement() { return recordForScroll(this).getRootElement(); }
+  getViewportElement() { return recordForScroll(this).getViewportElement(); }
+  getContentElement() { return recordForScroll(this).getContentElement(); }
+  getRefs() { return recordForScroll(this).getRefs(); }
+  getDOMSource() { return recordForScroll(this).getDOMSource(); }
+}
+
+export { attachViewport, createDefaultDOM };
+export default Scroll;
