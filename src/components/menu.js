@@ -516,16 +516,20 @@ function setupMenu(instance) {
           onBeforeEnter: function () {
             if (!inlineLevel) return;
             inlineLevel.hidden = false;
-            inlineLevel.classList.add('is-open');
+            inlineLevel.classList.remove('is-open');
             inlineLevel.style.setProperty('--qxframe9a7c2-menu-inline-motion-height', inlineLevel.scrollHeight + 'px');
           },
           onBeforeLeave: function () {
             if (!inlineLevel) return;
             inlineLevel.hidden = false;
-            inlineLevel.classList.add('is-open');
+            inlineLevel.classList.remove('is-open');
             inlineLevel.style.setProperty('--qxframe9a7c2-menu-inline-motion-height', inlineLevel.scrollHeight + 'px');
           },
-          onAfterEnter: function () { if (inlineLevel) inlineLevel.style.removeProperty('--qxframe9a7c2-menu-inline-motion-height'); },
+          onAfterEnter: function () {
+            if (!inlineLevel) return;
+            inlineLevel.classList.add('is-open');
+            inlineLevel.style.removeProperty('--qxframe9a7c2-menu-inline-motion-height');
+          },
           onAfterLeave: function () {
             if (!inlineLevel) return;
             inlineLevel.classList.remove('is-open');
