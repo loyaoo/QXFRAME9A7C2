@@ -23,7 +23,11 @@ var DEFAULT_HEADLESS_FORBIDDEN = Object.freeze(['container','elements','createDO
     return true;
   }
   function resolvePickerControl(config) {
-    var host = resolve(config);
+    var local = Object.assign({
+      requiredRefs:['root','values','input','clear','toggle'],
+      projectionRefs:[{ref:'values',option:'valueTarget'},{ref:'input',option:'inputTarget'}]
+    }, config || {});
+    var host = resolve(local);
     var refs = host.refs || {};
     var rendered = !host.headless && !host.projection;
     return Object.freeze({
