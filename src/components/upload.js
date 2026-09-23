@@ -61,7 +61,7 @@ function statusText(record) {
 function create(source, overrides) {
   var fieldInit = Control.resolveFieldOptions(source, overrides);
   var incoming = fieldInit.options;
-  var opts = Object.assign({
+  var opts = Utils.mergeOwn({
     multiple: false, disabled: false, drag: false, pastable: false, autoUpload: true,
     showList: true, listType: 'text', removable: true, previewable: true, downloadable: false,
     retryable: true, abortable: true, dragSort: false, openFileDialogOnClick: true,
@@ -559,7 +559,7 @@ function create(source, overrides) {
     OptionTransaction.rejectImmutable(next, ['target','container','formField'], 'Upload field binding');
     if (own(next,'drag') && (next.drag === true) !== (opts.drag === true)) throw new Error('[QXFRAME9A7C2] Upload drag structure is immutable; destroy and recreate to change it.');
     if (reorderInteraction && reorderInteraction.getState().dragging && (own(next,'dragSort') || own(next,'disabled'))) reorderInteraction.cancelDrag('options');
-    var candidate = Object.assign({}, opts, next); candidate.listType = listType(candidate.listType); validateViewOptions(candidate); opts = candidate;
+    var candidate = Utils.mergeOwn(opts, next); candidate.listType = listType(candidate.listType); validateViewOptions(candidate); opts = candidate;
     lifecycle.updateOptions(Object.assign(lifecycleOptions(false), own(next,'value') ? { value: next.value } : {}));
     syncStructure(); renderList(); if (formBridge) { formBridge.updateOptions({ name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, serializeValue: serializeFormValue }); formBridge.setValue(lifecycle.getValue(), { silent: true }); } return api;
   }
