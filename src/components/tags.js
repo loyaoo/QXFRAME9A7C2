@@ -1252,6 +1252,8 @@ function setupTags(instance) {
     });
     Object.keys(metadataByKey).forEach(function (key) { if (!live[key]) delete metadataByKey[key]; });
     pruneSelection(Utils.assignOwn({ silent:true, reason:'items-prune', source:reason || 'silent-token' }, meta || {}));
+    opts.inputValue = tokenInput.getState().inputValue;
+    if (input && input.value !== opts.inputValue) input.value = opts.inputValue;
     render(reason || 'silent-token');
     syncFormBridge(meta);
     return true;
