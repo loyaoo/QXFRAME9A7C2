@@ -8,7 +8,7 @@ import { Utils } from '../utils/utils.js';
 const global = globalThis;
 
 function bindVirtualFocus(options) {
-    var settings = options || {};
+    var settings = Utils.mergeOwn(options || {});
     var controller = settings.controller;
     if (!controller || !Utils.isFunction(controller.registerDomain)) return null;
     var previous = settings.previousDomain;
@@ -21,7 +21,7 @@ function bindVirtualFocus(options) {
     var activeKey = Utils.isFunction(settings.getActiveKey) ? settings.getActiveKey() : settings.activeKey;
     var state = Utils.isFunction(controller.getState) ? controller.getState() : null;
     if (activeKey !== null && activeKey !== undefined && activeKey !== '' && state && state.modality === 'keyboard') {
-      domain.activate(activeKey, Object.assign({ source:'keyboard', reason:'keyboard-region-bind', ensureVisible:true }, settings.activation || {}));
+      domain.activate(activeKey, Utils.mergeOwn({ source:'keyboard', reason:'keyboard-region-bind', ensureVisible:true }, settings.activation || {}));
     }
     return Object.freeze({ controller:controller, domain:domain, hosted:hosted });
   }
@@ -45,7 +45,7 @@ function create(options) {
     var hosted = settings.hosted === true;
     var disabled = settings.disabled === true;
     var destroyed = false;
-    var navigationOptions = Object.assign({}, settings.navigation || {}, {
+    var navigationOptions = Utils.mergeOwn(settings.navigation || {}, {
       root: root,
       focusRoot: settings.focusRoot || (settings.navigation && settings.navigation.focusRoot) || root
     });
@@ -84,7 +84,7 @@ function create(options) {
 
     function focus(options) {
       if (destroyed || disabled || hosted) return false;
-      return DOM.focusElement(root, Object.assign({ preventScroll: true }, options || {}));
+      return DOM.focusElement(root, Utils.mergeOwn({ preventScroll: true }, options || {}));
     }
 
     function destroy() {
