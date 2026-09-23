@@ -349,12 +349,17 @@ function setupColorPickerRuntime(instance, fieldInit) {
 
      var pickerSession = instance.setupPickerSession({
        controller: draft,
-       rollbackDirtyOnClose: true,
+       rollbackDirtyOnClose: function () { return opts.needConfirm === true; },
        canCommit: function () { return !destroyed; },
        onOpenDraft: function (controller) { syncPanelFromModel(controller.draftValue || seedValue(), 'open-sync'); syncField(true); },
        onCommit: function () { syncField(false); },
        onCancel: function (_controller, detail) { syncPanelFromModel(draft.value || seedValue(), detail && detail.source === 'popup' ? 'close-restore' : 'cancel-sync'); syncField(false); },
-       onCloseDraft: function (_controller, detail) { if (!detail.rolledBack) syncField(false); }
+       onCloseDraft: function (controller, detail) {
+         if (!detail.rolledBack && opts.needConfirm !== true && controller.dirty) {
+           controller.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+         }
+         if (!detail.rolledBack) syncField(false);
+       }
      });
      function commit(meta) { return instance.commit(meta || {}); }
      function cancel(meta) { return instance.cancel(meta || {}); }
