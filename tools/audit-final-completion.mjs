@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { generateComponentApi, generateModuleManifest } from './generate-release-metadata.mjs';
 import { DOMProjection } from '../src/core/domProjection.js';
 import { DOM } from '../src/core/dom.js';
+import { ComponentContracts } from '../src/core/componentContracts.js';
+import { Utils } from '../src/utils/utils.js';
 import { Utils } from '../src/utils/utils.js';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -117,6 +119,29 @@ const prototypeSecurity={
   safeKeyPreserved:patchedProbe.safe===1,
   globalPrototypeClean:Object.prototype.polluted===undefined
 };
+const contractPrototypeSecurity = {
+  components: ComponentContracts.names.length,
+  rejected: 0,
+  failures: []
+};
+for (const name of ComponentContracts.names) {
+  const contract = ComponentContracts.get(name);
+  for (const key of ['__proto__','prototype','constructor']) {
+    const input = JSON.parse('{"' + key + '":{"qxframePolluted":true}}');
+    let rejected = false;
+    try { ComponentContracts.validate(contract, input, name); } catch (_) { rejected = true; }
+    if (rejected) contractPrototypeSecurity.rejected += 1;
+    else contractPrototypeSecurity.failures.push({ name, key });
+  }
+}
+const pollutionProbe = JSON.parse('{"__proto__":{"qxframePolluted":true},"constructor":{"prototype":{"qxframePolluted":true}},"safe":1}');
+const mergedPollutionProbe = Utils.mergeOwn(pollutionProbe);
+contractPrototypeSecurity.utilitySafe =
+  mergedPollutionProbe.safe === 1 &&
+  !Object.prototype.hasOwnProperty.call(mergedPollutionProbe,'__proto__') &&
+  !Object.prototype.hasOwnProperty.call(mergedPollutionProbe,'constructor') &&
+  Object.prototype.qxframePolluted === undefined;
+
 const urlSinks=[];
 for(const [file,text] of source){
   const sink=/(?:\.\s*(?:href|src|formAction)\s*=|setAttribute\s*\(\s*['"](?:href|src|action|formaction)['"])/g;
@@ -212,7 +237,7 @@ const duplicates=[...duplicateBlocks.entries()].filter(([,locs])=>locs.length>1)
 const report={
   ok:false,
   files:srcFiles.length,
-  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,secretFilePaths,secretFindings},
+  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,contractPrototypeSecurity,secretFilePaths,secretFindings},
   duplicateCapabilityCandidates:rawPrimitives,
   prototypeMergeCandidates:prototypeMergeCandidates,
   asyncPrimitiveCandidates,
