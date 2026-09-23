@@ -173,10 +173,20 @@ const rawPrimitives=[];
 const asyncPrimitiveCandidates=[];
 const asyncPrimitiveRules=[
   ['setTimeout',/\b(?:globalThis\.|global\.)?setTimeout\s*\(/g,['src/core/scheduler.js','src/core/motion.js','src/vendor/floating-ui.js']],
+  ['setTimeout-reference',/\b(?:globalThis|global)\.setTimeout\b/g,['src/core/scheduler.js','src/core/motion.js','src/vendor/floating-ui.js']],
+  ['clearTimeout',/\b(?:globalThis\.|global\.)?clearTimeout\s*\(/g,['src/core/scheduler.js','src/core/motion.js','src/vendor/floating-ui.js']],
+  ['clearTimeout-reference',/\b(?:globalThis|global)\.clearTimeout\b/g,['src/core/scheduler.js','src/core/motion.js','src/vendor/floating-ui.js']],
   ['setInterval',/\b(?:globalThis\.|global\.)?setInterval\s*\(/g,[]],
+  ['setInterval-reference',/\b(?:globalThis|global)\.setInterval\b/g,[]],
+  ['clearInterval',/\b(?:globalThis\.|global\.)?clearInterval\s*\(/g,[]],
+  ['clearInterval-reference',/\b(?:globalThis|global)\.clearInterval\b/g,[]],
   ['requestAnimationFrame',/\b(?:globalThis\.|global\.)?requestAnimationFrame\s*\(/g,['src/core/scheduler.js','src/vendor/floating-ui.js']],
+  ['requestAnimationFrame-reference',/\b(?:globalThis|global)\.requestAnimationFrame\b/g,['src/core/scheduler.js','src/vendor/floating-ui.js']],
+  ['cancelAnimationFrame-reference',/\b(?:globalThis|global)\.cancelAnimationFrame\b/g,['src/core/scheduler.js','src/vendor/floating-ui.js']],
   ['AbortController',/\bnew\s+(?:globalThis\.|global\.)?AbortController\s*\(/g,['src/core/motion.js']],
-  ['fetch',/\b(?:globalThis\.|global\.)?fetch\s*\(/g,[]]
+  ['AbortController-reference',/\b(?:globalThis|global)\.AbortController\b/g,['src/core/asyncTask.js','src/core/motion.js']],
+  ['fetch',/\b(?:globalThis\.|global\.)?fetch\s*\(/g,[]],
+  ['fetch-reference',/\b(?:globalThis|global)\.fetch\b/g,[]]
 ];
 for(const [file,text] of source){
   for(const [kind,re,allowed] of asyncPrimitiveRules){

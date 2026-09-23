@@ -21,6 +21,7 @@ const importMap=JSON.stringify({imports}).replace(/</g,'\\u003c');
 const test=`
 import {Autocomplete,QXFRAME9A7C2,Image,JSON as JSONView,Message,Notification,Pagination,Table,Tags,Upload} from 'qx:/src/index.js';
 import {NoticeService} from 'qx:/src/core/noticeService.js';
+import {NoticeClock} from 'qx:/src/core/noticeClock.js';
 import {ItemCollection} from 'qx:/src/components/item-collection.js';
 const out=document.getElementById('result');
 function a(v,m){if(!v)throw new Error(m)}
@@ -34,6 +35,7 @@ try{
  a(QXFRAME9A7C2.Components.Message.info===Message.info,'Message registry identity');
  a(QXFRAME9A7C2.Components.Notification.info===Notification.info,'Notification registry identity');
  a(QXFRAME9A7C2.BuildingBlocks.NoticeService.utils===NoticeService.utils,'NoticeService registry identity');
+ const clockFrame=document.createElement('iframe');document.body.appendChild(clockFrame);let clockFinished=0;const realmClock=NoticeClock.create({view:clockFrame.contentWindow,duration:10,autoStart:true,frameUpdates:true,onFinish:()=>{clockFinished+=1;}});await new Promise(resolve=>setTimeout(resolve,60));a(realmClock.getState().finished===true&&clockFinished===1,'NoticeClock must finish once through Scheduler on an explicit window realm');realmClock.destroy();clockFrame.remove();
 
  const ih=document.createElement('div');document.body.appendChild(ih);const image=Image.create({document,container:ih,src:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',preview:false});a(image.getRootElement().classList.contains('qxframe9a7c2-image'),'Image create');image.destroy();
  const jh=document.createElement('div');document.body.appendChild(jh);const json=JSONView.create({document,container:jh,data:{a:1,b:[2]}});a(json.getState().data.a===1,'JSON state');json.destroy();

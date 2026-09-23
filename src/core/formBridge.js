@@ -1,5 +1,6 @@
 
 import { DOM } from './dom.js';
+import { Scheduler } from './scheduler.js';
 import { IdManager } from '../utils/id.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 import { Utils } from '../utils/utils.js';
@@ -108,7 +109,16 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
     var ownsFormField = false, fieldSnapshot = formField ? snapshot(formField) : null, originalForm = formField ? (formField.form || (formField.closest ? formField.closest('form') : null)) : null;
     var state = { generatedFormId:false, originalFormId: originalForm ? originalForm.getAttribute('id') : null, formIdResource:null };
     var extraFields = [], destroyed = false, dispatching = false, adapter = null, currentValue = cloneValue(opts.value);
-    var resetCleanup = null, inputCleanup = null, changeCleanup = null;
+    var resetCleanup = null, inputCleanup = null, changeCleanup = null, resetScheduler = null;
+
+    function ensureResetScheduler() {
+      if (!resetScheduler) resetScheduler = Scheduler.createDelayScheduler(function (_timestamp, event) {
+        if (destroyed) return;
+        if (Utils.isFunction(opts.onReset)) opts.onReset({ source:'form', reason:'reset', originalEvent:event || null, bridge:api });
+        sync();
+      });
+      return resetScheduler;
+    }
 
     function ensureField() {
       if (formField || !opts.name) return formField;
@@ -123,8 +133,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
       if (!adapter) adapter = createAdapter(formField);
       var form = adapter.getForm();
       if (form && !resetCleanup) resetCleanup = DOM.listen(form, 'reset', function (event) {
-        var schedule = global.setTimeout || function (fn) { fn(); };
-        schedule(function () { if (destroyed) return; if (Utils.isFunction(opts.onReset)) opts.onReset({ source:'form', reason:'reset', originalEvent:event || null, bridge:api }); sync(); }, 0);
+        ensureResetScheduler().request(0, event || null);
       });
       function nativeChanged(event) { if (destroyed || dispatching) return; currentValue = adapter.read(); if (Utils.isFunction(opts.onNativeChange)) opts.onNativeChange(cloneValue(currentValue), { source:'form-field', reason:event.type, originalEvent:event, bridge:api }); }
       if (!inputCleanup) inputCleanup = DOM.listen(formField, 'input', nativeChanged);
@@ -156,7 +165,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
     function dispatch(type) { if (!formField || !formField.dispatchEvent) return false; var EventCtor = doc && doc.defaultView && doc.defaultView.Event || global.Event; if (!EventCtor) return false; dispatching=true; try { formField.dispatchEvent(new EventCtor(type,{bubbles:true})); } finally { dispatching=false; } return true; }
     function setValue(value, meta) { if (destroyed) return api; var previous=cloneValue(currentValue); currentValue=cloneValue(value); sync(); var changed=!(Utils.isFunction(opts.equals) ? opts.equals(previous,currentValue) === true : ValueEquality.deep(previous,currentValue)); if (!(meta&&meta.silent) && (changed || (meta&&meta.forceEvent===true))) { dispatch('input'); dispatch('change'); } return api; }
     function updateOptions(nextOptions) { if (destroyed) return api; var next=nextOptions||{}; ['root','target','formField','document'].forEach(function(name){if(hasOwn(next,name))throw new Error('[QXFRAME9A7C2] FormBridge structural option "'+name+'" is immutable.');}); Utils.copyOwn(opts,next); sync(); return api; }
-    function destroy() { if (destroyed) return false; destroyed=true; clearExtras(); if(resetCleanup)resetCleanup(); if(inputCleanup)inputCleanup(); if(changeCleanup)changeCleanup(); resetCleanup=inputCleanup=changeCleanup=null; if(ownsFormField&&formField&&formField.parentNode)formField.parentNode.removeChild(formField); else if(formField&&fieldSnapshot)restore(formField,fieldSnapshot); if(originalForm&&state.generatedFormId) releaseFormId(originalForm,state); formField=null; adapter=null; root=null; target=null; return true; }
+    function destroy() { if (destroyed) return false; destroyed=true; clearExtras(); if(resetCleanup)resetCleanup(); if(inputCleanup)inputCleanup(); if(changeCleanup)changeCleanup(); if(resetScheduler)resetScheduler.dispose(); resetCleanup=inputCleanup=changeCleanup=null; resetScheduler=null; if(ownsFormField&&formField&&formField.parentNode)formField.parentNode.removeChild(formField); else if(formField&&fieldSnapshot)restore(formField,fieldSnapshot); if(originalForm&&state.generatedFormId) releaseFormId(originalForm,state); formField=null; adapter=null; root=null; target=null; return true; }
     var api=Object.freeze({setValue:setValue,updateOptions:updateOptions,sync:sync,dispatch:dispatch,getValue:function(){return cloneValue(currentValue);},getSerializedValue:function(){return cloneValue(serialized(currentValue));},getFormField:function(){return formField;},getAdapter:function(){return adapter;},getState:function(){return Object.freeze({value:cloneValue(currentValue),serializedValue:cloneValue(serialized(currentValue)),name:formField?formField.name:(opts.name||''),disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,generated:ownsFormField,destroyed:destroyed});},destroy:destroy});
     if (formField) prepareAuthoredField(); ensureField(); sync(); return api;
   }
