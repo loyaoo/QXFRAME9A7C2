@@ -3,6 +3,7 @@ import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { Scheduler } from '../core/scheduler.js';
+import { StateController } from '../core/stateController.js';
 import { DOM } from '../core/dom.js';
 import { Utils } from '../utils/utils.js';
 
@@ -54,6 +55,7 @@ export class InputOTP extends FieldComponent {
             length: opts.length,
             match: matcher(opts.accept),
             control: null,
+            valueState: null,
             autoFocusScheduler: null,
             lastCompleteValue: '',
             rendered: false
@@ -111,6 +113,8 @@ export class InputOTP extends FieldComponent {
         const record = state.get(this);
         if (record.rendered) return record.control && record.control.getRootElement();
         const initialValue = this.#sanitize(own(this.options, 'value') ? this.options.value : (own(this.options, 'defaultValue') ? this.options.defaultValue : ''));
+        const valueState = this.own(StateController.create({ value: initialValue, controlled: own(this.options, 'value'), normalizeValue: value => this.#sanitize(value) }));
+        record.valueState = valueState;
         const adapter = { toValue: values => values.join(''), toSegments: value => this.#toSegments(value) };
         const formatSegment = (raw, index) => {
             const formatted = this.#applyFormatter(raw, { reason: 'segment', index });
@@ -127,13 +131,18 @@ export class InputOTP extends FieldComponent {
                 if (typeof this.options.onInput === 'function') this.options.onInput(values.join(''), { ...detail, instance: this });
             },
             onChange: (value, detail) => {
-                this.setFieldValue(value, { silent: true, force: true });
-                const payload = { ...detail, instance: this };
-                if (typeof this.options.onChange === 'function') this.options.onChange(value, payload);
+                const proposed = this.#sanitize(value);
+                const meta = { silent: true, source: detail && detail.source || 'control', reason: detail && detail.reason || 'change', originalEvent: detail && detail.originalEvent || null };
+                valueState.requestChange(proposed, meta);
+                if (valueState.controlled) control.updateOptions({ value: valueState.value });
+                else this.setFieldValue(valueState.value, { silent: true, force: true, reason: meta.reason });
+                this.#syncFocusPolicy();
+                const payload = { ...detail, controlled: valueState.controlled, proposedValue: proposed, instance: this };
+                if (typeof this.options.onChange === 'function') this.options.onChange(proposed, payload);
                 if (detail && detail.complete === true) {
-                    if (value !== record.lastCompleteValue) {
-                        record.lastCompleteValue = value;
-                        if (typeof this.options.onComplete === 'function') this.options.onComplete(value, payload);
+                    if (proposed !== record.lastCompleteValue) {
+                        record.lastCompleteValue = proposed;
+                        if (typeof this.options.onComplete === 'function') this.options.onComplete(proposed, payload);
                     }
                 } else record.lastCompleteValue = '';
             },
@@ -162,7 +171,13 @@ export class InputOTP extends FieldComponent {
         const record = state.get(this);
         if (!record.control) return;
         const update = { disabled: next.disabled === true, readOnly: next.readOnly === true, required: next.required === true, size: next.size, status: next.status, variant: next.variant, focusOutline: next.focusOutline, name: next.name };
-        if (own(patch, 'value')) update.value = this.#sanitize(next.value);
+        if (own(patch, 'value')) {
+            const external = this.#sanitize(next.value);
+            record.valueState.setControlled(true);
+            record.valueState.syncExternal(external, { silent: true, source: 'options', reason: 'external-sync' });
+            this.setFieldValue(record.valueState.value, { silent: true, force: true, reason: 'external-sync' });
+            update.value = record.valueState.value;
+        }
         record.control.updateOptions(update);
         this.#syncFocusPolicy();
     }
@@ -170,8 +185,9 @@ export class InputOTP extends FieldComponent {
     setValue(value) {
         if (this.destroyed) return false;
         const record = state.get(this), next = this.#sanitize(value);
-        this.setFieldValue(next, { silent: true, force: true });
-        record.control.updateOptions({ value: next });
+        record.valueState.setValue(next, { silent: true, source: 'api', reason: 'set-value' });
+        this.setFieldValue(record.valueState.value, { silent: true, force: true, reason: 'set-value' });
+        record.control.updateOptions({ value: record.valueState.value });
         this.#syncFocusPolicy();
         return this;
     }
@@ -187,8 +203,8 @@ export class InputOTP extends FieldComponent {
     blur() { const record = state.get(this); return this.destroyed || !record.control ? false : record.control.blur(); }
     getState() {
         const record = state.get(this), current = record.control ? record.control.getState() : null;
-        const value = current ? current.value : this.value;
-        return Object.freeze({ value, complete: String(value == null ? '' : value).length === record.length, length: record.length, disabled: current ? current.disabled : this.disabled, readOnly: current ? current.readOnly : this.readOnly, destroyed: this.destroyed });
+        const value = record.valueState ? record.valueState.value : this.value;
+        return Object.freeze({ value, complete: String(value == null ? '' : value).length === record.length, length: record.length, controlled: !!(record.valueState && record.valueState.controlled), disabled: current ? current.disabled : this.disabled, readOnly: current ? current.readOnly : this.readOnly, destroyed: this.destroyed });
     }
     getControl() { return state.get(this).control; }
     getRootElement() { const control = state.get(this).control; return control ? control.getRootElement() : this.root; }
