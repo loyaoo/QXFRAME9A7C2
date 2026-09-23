@@ -123,8 +123,8 @@ export class PickerComponent extends PopupFieldComponent {
                 this.close('cancel', event);
             },
             confirm: event => {
-                this.commit({ source: DOM.activationSource(event), reason: 'confirm-button', originalEvent: event });
-                this.close('confirm', event);
+                const committed = this.commit({ source: DOM.activationSource(event), reason: 'confirm-button', originalEvent: event });
+                if (committed !== false) this.close('confirm', event);
             },
             cancelLabel: options.cancelLabel || opts.cancelText,
             confirmLabel: options.confirmLabel || opts.confirmText,
