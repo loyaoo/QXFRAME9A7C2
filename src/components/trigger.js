@@ -247,7 +247,7 @@ function create(options) {
       focusScope: opts.focusScope, trapFocus: opts.trapFocus === true, lockScroll: opts.lockScroll === true, scrollLockTarget: opts.scrollLockTarget,
       compensateScrollbar: opts.compensateScrollbar !== false, restoreFocus: opts.restoreFocus !== false,
       restoreFocusTarget: opts.restoreFocusTarget, restoreFocusOnDeactivate: false, tabExitTarget: resolveTabExitTarget,
-      focusOnActivate: opts.focusOnOpen === true, initialFocus: opts.initialFocus,
+      focusOnActivate: opts.focusOnOpen === true, initialFocus: opts.initialFocus, fallbackFocus: opts.fallbackFocus,
       position: opts.position !== false, manageZIndex: opts.manageZIndex !== false,
       positionReference: opts.positionReference || null, useTransformPosition: opts.useTransformPosition === true, inlinePositioning: opts.inlinePositioning === true, inlinePositioningOptions: opts.inlinePositioningOptions,
       destroyOnDeactivate: opts.destroyOnClose !== false, parentLayerId: opts.parentLayerId, layerKind: opts.layerKind || 'popup', componentType: opts.componentType || null, group: opts.group, zIndex: opts.zIndex, exclude: opts.exclude,
@@ -375,6 +375,7 @@ function create(options) {
     runtime.mount();
     surface.show(info);
     if (!runtime.getState().active) runtime.activate(info);
+    else if (runtime.activateInteraction) runtime.activateInteraction(info);
     emitOpen(true, info);
     // A logical callback may synchronously close or destroy this Trigger.
     if (destroyed || !opened) return true;
@@ -412,6 +413,7 @@ function create(options) {
     // A logical callback may synchronously reopen or destroy this Trigger. Only the
     // internal destroy authority is guarded; a public reason string cannot spoof teardown.
     if (destroyed || opened) return true;
+    if (runtime.deactivateInteraction) runtime.deactivateInteraction(info);
     transition.setVisible(false, { reason: info.reason, originalEvent: info.originalEvent, immediate: !opts.transition || forceClose === 'destroy' });
     return true;
   }
@@ -500,7 +502,7 @@ function create(options) {
   function removeChild(child) { if (isTriggerInstance(child) && child.getParent() === api) child.setParent(null); return api; }
     
   function syncRuntimeSettings(next) {
-    var keys = ['reference','allowReferenceUpdate','placement','strategy','offset','middleware','arrow','arrowElement','arrowPadding','flipOnOverflow','matchReferenceWidth','autoUpdate','autoUpdateOptions','closeOnOutsidePress','closeOnFocusOutside','closeOnTabExit','closeOnEscape','focusScope','trapFocus','lockScroll','scrollLockTarget','compensateScrollbar','restoreFocus','restoreFocusTarget','initialFocus','position','manageZIndex','parentLayerId','layerKind','componentType','group','zIndex','positionReference','useTransformPosition','inlinePositioning','inlinePositioningOptions','exclude','applyPosition','onPositionUpdate','onPositionError'];
+    var keys = ['reference','allowReferenceUpdate','placement','strategy','offset','middleware','arrow','arrowElement','arrowPadding','flipOnOverflow','matchReferenceWidth','autoUpdate','autoUpdateOptions','closeOnOutsidePress','closeOnFocusOutside','closeOnTabExit','closeOnEscape','focusScope','trapFocus','lockScroll','scrollLockTarget','compensateScrollbar','restoreFocus','restoreFocusTarget','initialFocus','fallbackFocus','position','manageZIndex','parentLayerId','layerKind','componentType','group','zIndex','positionReference','useTransformPosition','inlinePositioning','inlinePositioningOptions','exclude','applyPosition','onPositionUpdate','onPositionError'];
     var patch = {};
     keys.forEach(function (key) {
       if (!own(next, key)) return;
