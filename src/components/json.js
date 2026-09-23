@@ -27,7 +27,7 @@ function normalizeIndent(value) {
   return number;
 }
 function normalizeOptions(options, previous) {
-  var source = Object.assign({}, previous || {}, options || {});
+  var source = Utils.mergeOwn(previous, options);
   rejectRemoved(options || {});
   source.collapsed = source.collapsed === true;
   source.sortKeys = source.sortKeys === true;
@@ -66,7 +66,7 @@ function pathSegments(path) {
 function jsonEditablePrimitive(value) { return value === null || typeof value === 'string' || typeof value === 'boolean' || (typeof value === 'number' && Number.isFinite(value)); }
     
 function create(options) {
-  var opts = normalizeOptions(Object.assign({ data: null, collapsed: false, maxDepth: Infinity, sortKeys: false, toolbar: true, copy: true, indent: 2, showLine: true, editable: false, readOnly: false }, options || {}));
+  var opts = normalizeOptions(Utils.mergeOwn({ data: null, collapsed: false, maxDepth: Infinity, sortKeys: false, toolbar: true, copy: true, indent: 2, showLine: true, editable: false, readOnly: false }, options));
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] JSON container must be an Element.');
   var doc = opts.document || opts.container.ownerDocument || global.document;
   opts.document = doc;
