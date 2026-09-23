@@ -16,6 +16,7 @@ import { Renderer } from '../core/renderer.js';
 import { TokenInput } from '../core/tokenInput.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { Selection } from '../core/selection.js';
+import { StateController } from '../core/stateController.js';
 import { FieldComponent } from './field.js';
 import { Scroll } from './scroll.js';
 import { Popover } from './popover.js';
@@ -256,14 +257,26 @@ function setupTags(instance) {
   }
   function emitSelection(values,detail){
     syncFormBridge(detail);
-    var payload = Utils.assignOwn({ value: values.slice(), reason: 'selection', source: 'api', instance: api }, detail || {});
+    var payload = Utils.assignOwn({ value: values.slice(), reason: 'selection', source: 'api', valueControlled:!!(selectionValueState && selectionValueState.controlled), instance: api }, detail || {});
     if (payload.silent !== true && Utils.isFunction(opts.onChange)) opts.onChange(values.slice(), payload);
     if (payload.silent !== true && !destroyed) api.emit('change', payload);
+  }
+  function normalizeSelectionValue(value) {
+    var values = normalizeStringArray(value, 'value');
+    return opts.multiple === false ? values.slice(0, 1) : values;
+  }
+  var selectionValueState = StateController.createOptionValueBinding(opts, source, normalizeSelectionValue);
+  scope.add(function () { if (selectionValueState) selectionValueState.destroy(); selectionValueState = null; });
+  function selectionValue() { return selectionValueState ? selectionValueState.value : normalizeSelectionValue([]); }
+  function syncSelectionProjection(reason) {
+    if (!selection || !selectionValueState) return false;
+    selection.set(selectionValue(), { silent:true, source:selectionValueState.controlled ? 'controlled' : 'state', reason:reason || 'value-sync' });
+    return true;
   }
     
   var selection = Selection.create({
     multiple: opts.multiple !== false,
-    values: opts.value,
+    values: selectionValue(),
     onChange: function (values, detail) {
       if (!syncingItems) render('selection');
       emitSelection(values, detail);
@@ -276,7 +289,9 @@ function setupTags(instance) {
     coreTags().forEach(function (tag) { allowed[tag.value] = true; });
     var next = selection.values.filter(function (value) { return !!allowed[value]; });
     if (next.length === selection.values.length) return;
-    selection.set(next, Utils.assignOwn({ reason: 'items-prune', source: 'items' }, meta || {}));
+    var detail = Utils.assignOwn({ reason: 'items-prune', source: 'items' }, meta || {});
+    selection.set(next, detail);
+    if (selectionValueState && !selectionValueState.controlled) selectionValueState.write(selection.values, { silent:true, source:detail.source, reason:detail.reason }, false);
   }
     
   var tokenInput = TokenInput.create({
@@ -1193,13 +1208,15 @@ function setupTags(instance) {
     
   function setValue(value, meta) {
     if (destroyed) return false;
-    var values = normalizeStringArray(value, 'value');
+    var values = normalizeSelectionValue(value);
     var allowed = Object.create(null);
     coreTags().forEach(function (tag) { allowed[tag.value] = true; });
     values.forEach(function (entry) {
       if (!allowed[entry]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
     });
-    var changed = selection.set(values, Utils.assignOwn({ reason: 'set-value', source: 'api' }, meta || {}));
+    var detail = Utils.assignOwn({ reason: 'set-value', source: 'api' }, meta || {});
+    selectionValueState.write(values, { silent:true, source:detail.source, reason:detail.reason, originalEvent:detail.originalEvent || null }, false);
+    var changed = selection.set(selectionValue(), detail);
     if (changed !== false) syncFormBridge(meta);
     return changed;
   }
@@ -1207,9 +1224,27 @@ function setupTags(instance) {
     if (destroyed || opts.checkable !== true) return false;
     var item = itemByValue(value);
     if (!item || item.disabled === true || mutationLocked(meta)) return false;
-    var changed = selection.toggle(item.value, desired, Utils.assignOwn({ reason: 'toggle', source: 'api' }, meta || {}));
-    if (changed !== false) syncFormBridge(meta);
-    return changed;
+    var detail = Utils.assignOwn({ reason: 'toggle', source: 'api' }, meta || {});
+    var current = selection.values.slice();
+    var key = String(item.value), selected = current.indexOf(key) >= 0;
+    var nextSelected = desired === undefined ? !selected : desired !== false;
+    var proposed = current.filter(function (entry) { return entry !== key; });
+    if (nextSelected) {
+      if (opts.multiple === false) proposed = [key];
+      else proposed.push(key);
+    }
+    proposed = normalizeSelectionValue(proposed);
+    var changed = selectionValueState.write(proposed, { silent:true, source:detail.source, reason:detail.reason, originalEvent:detail.originalEvent || null }, true);
+    if (!changed) return false;
+    if (selectionValueState.controlled) {
+      syncSelectionProjection('controlled-toggle');
+      render('selection');
+      emitSelection(proposed, Utils.assignOwn(detail, { valueControlled:true, proposedValue:proposed.slice() }));
+      return true;
+    }
+    selection.set(selectionValue(), detail);
+    syncFormBridge(meta);
+    return true;
   }
   function remove(value, meta) {
     if (destroyed || mutationLocked(meta)) return false;
@@ -1311,6 +1346,12 @@ function setupTags(instance) {
     opts.overflowTrigger = 'hover';
     if (!own(next, 'inputValue')) opts.inputValue = runtimeInputValue;
     selection.updateOptions({ multiple: opts.multiple !== false });
+    if (own(next, 'multiple')) {
+      var modeValue = normalizeSelectionValue(selectionValue());
+      if (selectionValueState.controlled) selectionValueState.syncExternal(modeValue, { silent:true, source:'options', reason:'options-mode' });
+      else selectionValueState.write(modeValue, { silent:true, source:'options', reason:'options-mode' }, false);
+      syncSelectionProjection('options-mode');
+    }
     tokenInput.updateOptions({
       unique: opts.unique !== false,
       tokenSeparators: opts.tokenSeparators,
@@ -1333,7 +1374,11 @@ function setupTags(instance) {
       pruneSelection({ silent:true, reason:'items-prune', source:'options' });
       syncingItems = false;
     }
-    if (own(next, 'value')) selection.set(values, { silent:true, reason:'options-value', source:'options' });
+    if (own(next, 'value')) {
+      selectionValueState.setControlled(true);
+      selectionValueState.syncExternal(values, { silent:true, source:'options', reason:'options-value' });
+      syncSelectionProjection('options-value');
+    }
     if (own(next,'inputValue')) tokenInput.setInputValue(next.inputValue,{silent:true,reason:'options-input',source:'options'});
     if (formBridge) formBridge.updateOptions({name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true});
     syncFormBridge({silent:true,source:'options',reason:'options'});
@@ -1345,8 +1390,8 @@ function setupTags(instance) {
     var items = publicItems();
     return Object.freeze({
       items: items,
-      value: selection.values.slice(),
-      inputValue:tokenInput.getState().inputValue,formValue:canonicalFormValue(),hosted:opts.hosted===true,controlled:opts.controlled===true,adding:adding===true,
+      value: selectionValue(),
+      inputValue:tokenInput.getState().inputValue,formValue:canonicalFormValue(),hosted:opts.hosted===true,controlled:opts.controlled===true,valueControlled:!!selectionValueState.controlled,adding:adding===true,
       checkable: opts.checkable === true,
       multiple: opts.multiple !== false,
       variant: opts.variant,
