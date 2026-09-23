@@ -48,7 +48,7 @@ function createPickerSession(options) {
     if (Utils.isFunction(opts.onCloseDraft)) opts.onCloseDraft(controller, info);
     return true;
   }
-  function updateOptions(next) { opts = Object.assign({}, opts, next || {}); return api; }
+  function updateOptions(next) { opts = Utils.mergeOwn(opts, next || {}); return api; }
   var api = Object.freeze({ controller:controller, open:open, commit:commit, cancel:cancel, close:close, updateOptions:updateOptions, destroy:function(){return ownsController ? controller.destroy() : false;} });
   return api;
 }
