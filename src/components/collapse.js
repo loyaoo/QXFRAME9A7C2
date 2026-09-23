@@ -90,6 +90,8 @@ export class Collapse extends Component {
             root,
             items: opts.items,
             disclosure: null,
+            valueState: null,
+            syncValueProjection: null,
             active: null,
             records: Object.create(null),
             headers: Object.create(null),
@@ -114,6 +116,7 @@ export class Collapse extends Component {
             return this.options.accordion === true ? output.slice(0, 1) : output;
         };
         const valueState = StateController.createOptionValueBinding(opts, opts, normalizeValue);
+        record.valueState = valueState;
         this.own(valueState);
         record.disclosure = Disclosure.create({
             value: valueState.value,
@@ -313,14 +316,20 @@ export class Collapse extends Component {
         const pruneDisclosure = reason => {
             const allowed = Object.create(null);
             record.items.forEach(item => { allowed[item.key] = true; });
+            const canonical = valueState.value;
+            const pruned = canonical.filter(key => allowed[key] === true);
+            if (!valueState.controlled && pruned.length !== canonical.length) valueState.write(pruned, { silent:true, source:'items', reason:reason || 'items-prune' }, false);
+            const projected = valueState.controlled ? pruned : valueState.value;
             const current = record.disclosure.getState().value;
-            const pruned = current.filter(key => allowed[key] === true);
-            if (pruned.length !== current.length) record.disclosure.setValue(pruned, { silent: true, reason: reason || 'items-prune', source: 'items' });
+            const same = current.length === projected.length && current.every((key,index) => key === projected[index]);
+            if (!same) record.disclosure.setValue(projected, { silent:true, reason:reason || 'items-prune', source:'items' });
+            return projected;
         };
         const syncDisclosure = reason => {
             record.disclosure.setValue(valueState.value, { silent: true, source: valueState.controlled ? 'controlled' : 'state', reason: reason || 'value-sync' });
-            pruneDisclosure(reason || 'value-sync');
+            return pruneDisclosure(reason || 'value-sync');
         };
+        record.syncValueProjection = syncDisclosure;
         const emit = (previous, nextValue, meta) => {
             const onChange = this.options.onChange;
             if (typeof onChange === 'function') onChange(nextValue.slice(), Utils.assignOwn({ previousValue: previous.slice(), controlled: valueState.controlled, instance: this }, meta || {}));
@@ -400,11 +409,7 @@ export class Collapse extends Component {
         if (this.destroyed) return false;
         const record = recordFor(this);
         record.items = normalizeItems(next);
-        const allowed = Object.create(null);
-        record.items.forEach(item => { allowed[item.key] = true; });
-        const current = record.disclosure.getState().value;
-        const pruned = current.filter(key => allowed[key] === true);
-        if (pruned.length !== current.length) record.disclosure.setValue(pruned, { silent: true, reason: 'set-items', source: 'items' });
+        record.syncValueProjection('set-items');
         record.render('set-items');
         return this;
     }
@@ -422,8 +427,8 @@ export class Collapse extends Component {
         const record = recordFor(this);
         const opts = this.options;
         return Object.freeze({
-            value: valueState.value,
-            controlled: valueState.controlled,
+            value: record.valueState.value,
+            controlled: record.valueState.controlled,
             accordion: opts.accordion === true,
             bordered: opts.bordered !== false,
             ghost: opts.ghost === true,
