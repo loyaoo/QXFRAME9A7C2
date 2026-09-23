@@ -1217,11 +1217,17 @@ function setupTags(instance) {
     if (index < 0) return false;
     var item = itemByValue(value);
     if (meta && meta.user === true && !itemUserRemovable(item)) return false;
-    return tokenInput.removeAt(index, Utils.assignOwn({ reason: 'remove', source: 'api' }, meta || {}));
+    var detail = Utils.assignOwn({ reason: 'remove', source: 'api' }, meta || {});
+    var changed = tokenInput.removeAt(index, detail);
+    if (changed) syncSilentTokenMutation(detail, 'remove');
+    return changed;
   }
   function add(text, meta) {
     if (destroyed || mutationLocked(meta)) return false;
-    return tokenInput.add(text, Utils.assignOwn({ reason: 'add', source: 'api' }, meta || {}));
+    var detail = Utils.assignOwn({ reason: 'add', source: 'api' }, meta || {});
+    var changed = tokenInput.add(text, detail);
+    if (changed) syncSilentTokenMutation(detail, 'add');
+    return changed;
   }
   function addMany(values, meta) {
     if (!Array.isArray(values)) throw new TypeError('[QXFRAME9A7C2] Tags addMany values must be an array.');
@@ -1237,20 +1243,36 @@ function setupTags(instance) {
     api.setFieldValue(value, { silent:true, force:true });
     if (formBridge) formBridge.setValue(value, Utils.assignOwn({silent:true,source:'tags',reason:'sync'},meta||{}));
   }
+  function syncSilentTokenMutation(meta, reason) {
+    if (!(meta && meta.silent === true)) return false;
+    var live = Object.create(null);
+    tokenInput.getState().tags.forEach(function (tag) {
+      live[tag.key] = true;
+      if (!metadataByKey[tag.key]) metadataByKey[tag.key] = itemExtras(tag);
+    });
+    Object.keys(metadataByKey).forEach(function (key) { if (!live[key]) delete metadataByKey[key]; });
+    pruneSelection(Utils.assignOwn({ silent:true, reason:'items-prune', source:reason || 'silent-token' }, meta || {}));
+    render(reason || 'silent-token');
+    syncFormBridge(meta);
+    return true;
+  }
   function setItems(items, meta) {
     if (destroyed) return false;
     var next = normalizeItems(items);
     rebuildMetadata(next);
     syncingItems = true;
-    tokenInput.setTags(next.map(itemCore), Utils.assignOwn({ reason: 'set-items', source: 'api' }, meta || {}));
-    if (meta && meta.silent === true) pruneSelection(Utils.assignOwn({ reason: 'items-prune', source: 'set-items' }, meta || {}));
+    var detail = Utils.assignOwn({ reason: 'set-items', source: 'api' }, meta || {});
+    tokenInput.setTags(next.map(itemCore), detail);
     syncingItems = false;
-    if (meta && meta.silent === true) render('set-items');
+    syncSilentTokenMutation(detail, 'set-items');
     return api;
   }
   function clear(meta) {
     if (destroyed || mutationLocked(meta)) return false;
-    return tokenInput.clear(Utils.assignOwn({ reason: 'clear', source: 'api' }, meta || {}));
+    var detail = Utils.assignOwn({ reason: 'clear', source: 'api' }, meta || {});
+    var changed = tokenInput.clear(detail);
+    if (changed) syncSilentTokenMutation(detail, 'clear');
+    return changed;
   }
   function setInputValue(value, meta) {
     if (destroyed) return false;
@@ -1455,8 +1477,8 @@ function setupTags(instance) {
     add:add, addMany:addMany, remove:remove, toggle:toggle, setItems:setItems, setValue:setValue, clear:clear,
     has:function(value){return itemIndexByValue(value)>=0;}, getValue:canonicalFormValue, getItems:publicItems,
     beginAdd:beginAdd, cancelAdd:cancelAdd,
-    editAt:function(index,text,meta){return tokenInput.editAt(index,text,meta);},
-    removeAt:function(index,meta){return tokenInput.removeAt(index,meta);},
+    editAt:function(index,text,meta){var detail=Utils.assignOwn({reason:'edit',source:'api'},meta||{}),changed=tokenInput.editAt(index,text,detail);if(changed)syncSilentTokenMutation(detail,'edit');return changed;},
+    removeAt:function(index,meta){var detail=Utils.assignOwn({reason:'remove',source:'api'},meta||{}),changed=tokenInput.removeAt(index,detail);if(changed)syncSilentTokenMutation(detail,'remove');return changed;},
     setInputValue:setInputValue, commitInput:commitInput,
     refreshOverflow:function(){return refreshOverflow('api');}, applyOptions:applyOptions,
     focus:focusRuntime, blur:blurRuntime, getState:getState,
