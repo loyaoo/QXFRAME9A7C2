@@ -123,7 +123,7 @@ export class InputOTP extends FieldComponent {
         };
         const control = Control.create({
             container: this.options.container, formField: this.options.formField, mode: 'segments', segments: this.#segments(), segmentSeparator: this.options.separator,
-            valueAdapter: adapter, value: initialValue, segmentFocusIndex: this.#canonicalFocusIndex(initialValue), formatSegment,
+            valueAdapter: adapter, value: initialValue, ...(valueState.controlled ? { committedValue: valueState.value } : {}), segmentFocusIndex: this.#canonicalFocusIndex(initialValue), formatSegment,
             disabled: this.disabled, readOnly: this.readOnly, required: this.options.required === true,
             size: this.options.size, status: this.options.status, variant: this.options.variant, focusOutline: this.options.focusOutline, name: this.options.name,
             onSegmentInput: (values, detail) => {
@@ -134,7 +134,7 @@ export class InputOTP extends FieldComponent {
                 const proposed = this.#sanitize(value);
                 const meta = { silent: true, source: detail && detail.source || 'control', reason: detail && detail.reason || 'change', originalEvent: detail && detail.originalEvent || null };
                 valueState.requestChange(proposed, meta);
-                if (valueState.controlled) control.updateOptions({ value: valueState.value });
+                if (valueState.controlled) control.updateOptions({ value: valueState.value, committedValue: valueState.value });
                 else this.setFieldValue(valueState.value, { silent: true, force: true, reason: meta.reason });
                 this.#syncFocusPolicy();
                 const payload = { ...detail, controlled: valueState.controlled, proposedValue: proposed, instance: this };
@@ -177,6 +177,7 @@ export class InputOTP extends FieldComponent {
             record.valueState.syncExternal(external, { silent: true, source: 'options', reason: 'external-sync' });
             this.setFieldValue(record.valueState.value, { silent: true, force: true, reason: 'external-sync' });
             update.value = record.valueState.value;
+            update.committedValue = record.valueState.value;
         }
         record.control.updateOptions(update);
         this.#syncFocusPolicy();
@@ -187,7 +188,7 @@ export class InputOTP extends FieldComponent {
         const record = state.get(this), next = this.#sanitize(value);
         record.valueState.setValue(next, { silent: true, source: 'api', reason: 'set-value' });
         this.setFieldValue(record.valueState.value, { silent: true, force: true, reason: 'set-value' });
-        record.control.updateOptions({ value: record.valueState.value });
+        record.control.updateOptions(record.valueState.controlled ? { value: record.valueState.value, committedValue: record.valueState.value } : { value: record.valueState.value });
         this.#syncFocusPolicy();
         return this;
     }
