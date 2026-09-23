@@ -2280,18 +2280,19 @@ function setupTable(instance) {
     if (remoteError) return count ? 'error-with-stale-data' : 'error-empty';
     return count ? 'ready' : 'empty';
   }
-  function escapeCSVCell(value, delimiter) {
+  function escapeCSVCell(value, delimiter, escapeFormula) {
     if (value === undefined || value === null) return '';
     var text = String(value);
+    if (escapeFormula !== false && /^[=+\-@\t\r]/.test(text)) text = "'" + text;
     if (text.indexOf('"') >= 0) text = text.replace(/"/g, '""');
     return (text.indexOf('"') >= 0 || text.indexOf('\n') >= 0 || text.indexOf('\r') >= 0 || text.indexOf(delimiter) >= 0) ? '"' + text + '"' : text;
   }
   function getExportCSV(config) {
-    var local = config || {}, delimiter = local.delimiter == null ? ',' : String(local.delimiter);
+    var local = config || {}, delimiter = local.delimiter == null ? ',' : String(local.delimiter), escapeFormula = local.escapeFormula !== false;
     if (!delimiter) throw new TypeError('[QXFRAME9A7C2] Table CSV delimiter must not be empty.');
     var data = getExportData(local);
-    var lines = [data.headers.map(function (value) { return escapeCSVCell(value, delimiter); }).join(delimiter)];
-    data.rows.forEach(function (row) { lines.push(row.map(function (value) { return escapeCSVCell(value, delimiter); }).join(delimiter)); });
+    var lines = [data.headers.map(function (value) { return escapeCSVCell(value, delimiter, escapeFormula); }).join(delimiter)];
+    data.rows.forEach(function (row) { lines.push(row.map(function (value) { return escapeCSVCell(value, delimiter, escapeFormula); }).join(delimiter)); });
     return (local.bom === true ? '\ufeff' : '') + lines.join(local.newline == null ? '\r\n' : String(local.newline));
   }
   function getExportData(config) {
