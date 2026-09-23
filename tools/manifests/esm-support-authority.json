@@ -16,20 +16,6 @@
       "namespace": "domHeadless"
     },
     {
-      "name": "Image",
-      "module": "image",
-      "source": "src/components/image.js",
-      "phase": "88→92",
-      "namespace": "components"
-    },
-    {
-      "name": "JSON",
-      "module": "json",
-      "source": "src/components/json.js",
-      "phase": "88→92",
-      "namespace": "components"
-    },
-    {
       "name": "Menu",
       "module": "menu",
       "source": "src/components/menu.js",
@@ -83,13 +69,6 @@
       "module": "table",
       "source": "src/components/table.js",
       "phase": "88→92",
-      "namespace": "components"
-    },
-    {
-      "name": "Tabs",
-      "module": "tabs",
-      "source": "src/components/tabs.js",
-      "phase": "84→88",
       "namespace": "components"
     },
     {

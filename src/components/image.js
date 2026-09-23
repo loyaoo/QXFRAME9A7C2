@@ -1,3 +1,6 @@
+import { Component } from '../core/component.js';
+import { componentHooks } from '../core/componentHooks.js';
+import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { URLPolicy } from '../utils/url.js';
 import { Lifecycle } from '../core/lifecycle.js';
@@ -11,6 +14,17 @@ import { PointerSession } from '../core/pointerSession.js';
 import { Utils } from '../utils/utils.js';
 
 const global = globalThis;
+
+const IMAGE_DEFAULTS = Object.freeze({
+  src: '', alt: '', fit: 'cover', lazy: false, fallback: '', placeholder: null, errorContent: null,
+  rounded: false, circle: false, width: null, height: null, preview: false, previewMask: true,
+  previewMaskText: 'Preview', disabled: false, maskClosable: true, maskOpacity: 0.82, maskColor: '',
+  keyboard: true, wheelZoom: true, doubleClickZoom: true, draggable: true, destroyOnClose: true, minScale: 0.2, maxScale: 5,
+  scaleStep: 0.25, rotateStep: 90, showToolbar: true, showNavigation: true, showClose: true,
+  showTitle: true, showCounter: true, showZoom: true, showRotate: true, showFlip: true, showReset: true,
+  download: false
+});
+const imageState = new WeakMap();
 
 var FITS = Object.freeze(['fill', 'contain', 'cover', 'none', 'scale-down']);
 var REMOVED_OPTIONS = Object.freeze(['target', 'el', 'mount', 'previewList', 'previewGroup', 'previewSrc']);
@@ -121,17 +135,8 @@ function render(container, output, doc) {
   var value = output;
   Renderer.replace(container, value == null ? '' : value, doc);
 }
-function create(options) {
-  var source = options || {};
-  var opts = normalizeOptions(Utils.assignOwn({
-    src: '', alt: '', fit: 'cover', lazy: false, fallback: '', placeholder: null, errorContent: null,
-    rounded: false, circle: false, width: null, height: null, preview: false, previewMask: true,
-    previewMaskText: 'Preview', disabled: false, maskClosable: true, maskOpacity: 0.82, maskColor: '',
-    keyboard: true, wheelZoom: true, doubleClickZoom: true, draggable: true, destroyOnClose: true, minScale: 0.2, maxScale: 5,
-    scaleStep: 0.25, rotateStep: 90, showToolbar: true, showNavigation: true, showClose: true,
-    showTitle: true, showCounter: true, showZoom: true, showRotate: true, showFlip: true, showReset: true,
-    download: false
-  }, source));
+function setupImage(instance) {
+  var opts = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, instance.options));
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Image container must be an Element.');
     
   var doc = opts.document || opts.container.ownerDocument || global.document;
@@ -163,7 +168,7 @@ function create(options) {
   var previewAudio = null;
   var previewMedia = null;
   var panMetrics = null;
-  var api = null;
+  var api = instance;
   var previewActionByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
   var previewChromeNodes = [];
     
@@ -809,106 +814,79 @@ function create(options) {
     openPreview(undefined, event);
   }));
     
-  api = Object.freeze({
-    openPreview: openPreview,
-    closePreview: closePreview,
-    next: nextPreview,
-    prev: prevPreview,
-    setPreviewIndex: setPreviewIndex,
+  function setSrc(src) {
+    if (destroyed) return api;
+    api.updateOptions({ src: src == null ? '' : String(src) });
+    return api;
+  }
+  function setPreviewItems(items) {
+    if (!Array.isArray(items)) throw new TypeError('[QXFRAME9A7C2] Image preview items must be an array.');
+    previewIndex = 0;
+    api.updateOptions({ preview: Utils.mergeOwn(previewConfig(), { items: items.slice() }) });
+    return api;
+  }
+  function applyOptions(nextOptions, patch) {
+    if (destroyed) return false;
+    var changed = patch || {};
+    var candidate = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, nextOptions));
+    var sourceChanged = own(changed, 'src');
+    opts = candidate;
+    renderPlaceholder();
+    renderError();
+    renderMask();
+    syncRoot();
+    if (sourceChanged) setSource(opts.src);
+    if (!previewable() && previewOpen) closePreview('preview-disabled');
+    if (overlay) overlay.updateOptions({ closeOnEscape: cfg('keyboard', opts.keyboard) !== false, destroyOnDeactivate: cfg('destroyOnClose', opts.destroyOnClose) !== false });
+    transformModel.updateOptions({ minScale: Number(cfg('minScale', opts.minScale)), maxScale: Number(cfg('maxScale', opts.maxScale)) }, { reason: 'options' });
+    if (previewRoot) { renderChrome(); refreshTransform('options'); }
+    return api;
+  }
+  function getState() {
+    return Object.freeze({
+      src: image.getAttribute('src') || '', loading: loading, error: error, fallbackTried: fallbackTried,
+      previewOpen: previewOpen, previewPresent: !!(presence && presence.getState().present), previewIndex: previewIndex, previewCount: previewItems().length,
+      previewMounted: !!(overlay && overlay.getState().mounted), overlayActive: !!(overlay && overlay.getState().active), previewType: currentPreviewType(),
+      disabled: opts.disabled === true, fit: opts.fit, destroyed: destroyed, transform: transformValue()
+    });
+  }
+  function destroyRuntime() {
+    if (destroyed) return false;
+    var wasOpen = previewOpen;
+    var destroyDetail = previewDetail('destroy', null);
+    destroyed = true; previewOpen = false; drag = null;
+    if (maskPresence) maskPresence.destroy();
+    if (presence) presence.destroy();
+    if (surface) surface.hide(destroyDetail);
+    if (overlay) overlay.destroy();
+    if (surface) surface.destroy();
+    if (transformModel) transformModel.destroy();
+    if (wasOpen) call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: 'api', reason: 'destroy', event: null, index: previewIndex, item: currentPreviewItem(), instance: api }));
+    overlay = null; surface = null; presence = null; previewRoot = null; previewMask = null; previewStage = null; previewMotion = null;
+    previewImage = null; previewVideo = null; previewAudio = null; previewMedia = null; panMetrics = null;
+    scope.dispose(); DOM.removeNode(root); return true;
+  }
+  var record = {
+    openPreview: openPreview, closePreview: closePreview, next: nextPreview, prev: prevPreview, setPreviewIndex: setPreviewIndex,
     zoomIn: function () { return zoomBy(Number(cfg('scaleStep', opts.scaleStep)), 'api'); },
     zoomOut: function () { return zoomBy(-Number(cfg('scaleStep', opts.scaleStep)), 'api'); },
     rotateLeft: function () { return rotateBy(-Number(cfg('rotateStep', opts.rotateStep)), 'api'); },
     rotateRight: function () { return rotateBy(Number(cfg('rotateStep', opts.rotateStep)), 'api'); },
-    flipX: function () { return flip('x'); },
-    flipY: function () { return flip('y'); },
-    reset: function () { return resetTransform('api'); },
-    setSrc: function (src) { opts.src = src == null ? '' : String(src); return setSource(opts.src); },
-    setPreviewItems: function (items) {
-      if (!Array.isArray(items)) throw new TypeError('[QXFRAME9A7C2] Image preview items must be an array.');
-      var normalized = items.map(normalizePreviewItem);
-      var config = previewConfig();
-      opts.preview = Utils.mergeOwn(config, { items: normalized });
-      previewIndex = 0;
-      if (previewImage) syncPreviewMedia('set-items');
-      return api;
-    },
-    updateOptions: function (nextOptions) {
-      if (destroyed) return false;
-      var next = nextOptions || {};
-      rejectRemoved(next);
-      if (own(next, 'container') && next.container !== opts.container) throw new Error('[QXFRAME9A7C2] Image container is immutable.');
-      if (own(next, 'document') && next.document !== doc) throw new Error('[QXFRAME9A7C2] Image document is immutable.');
-      var candidate = normalizeOptions(Utils.mergeOwn(opts, next));
-      var sourceChanged = own(next, 'src');
-      opts = candidate;
-      renderPlaceholder();
-      renderError();
-      renderMask();
-      syncRoot();
-      if (sourceChanged) setSource(opts.src);
-      if (!previewable() && previewOpen) closePreview('preview-disabled');
-      if (overlay) overlay.updateOptions({ closeOnEscape: cfg('keyboard', opts.keyboard) !== false, destroyOnDeactivate: cfg('destroyOnClose', opts.destroyOnClose) !== false });
-      transformModel.updateOptions({ minScale: Number(cfg('minScale', opts.minScale)), maxScale: Number(cfg('maxScale', opts.maxScale)) }, { reason: 'options' });
-      if (previewRoot) {
-            renderChrome();
-        refreshTransform('options');
-      }
-      return api;
-    },
-    getState: function () {
-      return Object.freeze({
-        src: image.getAttribute('src') || '', loading: loading, error: error, fallbackTried: fallbackTried,
-        previewOpen: previewOpen, previewPresent: !!(presence && presence.getState().present), previewIndex: previewIndex, previewCount: previewItems().length,
-        previewMounted: !!(overlay && overlay.getState().mounted), overlayActive: !!(overlay && overlay.getState().active), previewType: currentPreviewType(),
-        disabled: opts.disabled === true, fit: opts.fit, destroyed: destroyed,
-        transform: transformValue()
-      });
-    },
-    getRootElement: function () { return root; },
-    getImageElement: function () { return image; },
-    getPreviewElement: function () { return previewRoot; },
-    getPreviewMaskElement: function () { return previewMask; },
-    getPreviewStageElement: function () { return previewStage; },
-    getPreviewMediaElement: function () { return previewMedia; },
-    getPreviewOverlayRuntime: function () { return overlay; },
-    destroy: function () {
-      if (destroyed) return false;
-      var wasOpen = previewOpen;
-      var destroyDetail = previewDetail('destroy', null);
-      destroyed = true;
-      previewOpen = false;
-      drag = null;
-      if (maskPresence) maskPresence.destroy();
-      if (presence) presence.destroy();
-      if (surface) surface.hide(destroyDetail);
-      if (overlay) overlay.destroy();
-      if (surface) surface.destroy();
-      if (transformModel) transformModel.destroy();
-      if (wasOpen) call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: 'api', reason: 'destroy', event: null, index: previewIndex, item: currentPreviewItem(), instance: api }));
-      overlay = null;
-      surface = null;
-      presence = null;
-      previewRoot = null;
-      previewMask = null;
-      previewStage = null;
-      previewMotion = null;
-      previewImage = null;
-      previewVideo = null;
-      previewAudio = null;
-      previewMedia = null;
-      panMetrics = null;
-      scope.dispose();
-      DOM.removeNode(root);
-      return true;
-    }
-  });
-    
+    flipX: function () { return flip('x'); }, flipY: function () { return flip('y'); }, reset: function () { return resetTransform('api'); },
+    setSrc: setSrc, setPreviewItems: setPreviewItems, applyOptions: applyOptions, getState: getState,
+    getRootElement: function () { return root; }, getImageElement: function () { return image; }, getPreviewElement: function () { return previewRoot; },
+    getPreviewMaskElement: function () { return previewMask; }, getPreviewStageElement: function () { return previewStage; },
+    getPreviewMediaElement: function () { return previewMedia; }, getPreviewOverlayRuntime: function () { return overlay; }
+  };
+  imageState.set(instance, record);
+  instance.own(destroyRuntime);
+
   renderPlaceholder();
   renderError();
   renderMask();
   syncRoot();
   setSource(opts.src);
-  return api;
+  return root;
 }
     
 function createPreview(options) {
@@ -924,13 +902,13 @@ function createPreview(options) {
   delete previewOptions.document;
   delete previewOptions.container;
   delete previewOptions.portalContainer;
-  var owner = create({
+  var owner = Image.create({
     container: host,
     document: doc,
     src: '',
     alt: '',
-    placeholder: false,
-    errorContent: false,
+    placeholder: '',
+    errorContent: '',
     previewMask: false,
     preview: previewOptions,
     destroyOnClose: source.destroyOnClose !== false
@@ -941,19 +919,19 @@ function createPreview(options) {
     openPreview: function (index, event) { owner.openPreview(index, event); return api; },
     close: function (reason, event) { owner.closePreview(reason, event); return api; },
     closePreview: function (reason, event) { owner.closePreview(reason, event); return api; },
-    next: owner.next,
-    prev: owner.prev,
-    setIndex: owner.setPreviewIndex,
-    setPreviewIndex: owner.setPreviewIndex,
-    setItems: owner.setPreviewItems,
-    setPreviewItems: owner.setPreviewItems,
-    zoomIn: owner.zoomIn,
-    zoomOut: owner.zoomOut,
-    rotateLeft: owner.rotateLeft,
-    rotateRight: owner.rotateRight,
-    flipX: owner.flipX,
-    flipY: owner.flipY,
-    reset: owner.reset,
+    next: function () { owner.next(); return api; },
+    prev: function () { owner.prev(); return api; },
+    setIndex: function (index, reason) { owner.setPreviewIndex(index, reason); return api; },
+    setPreviewIndex: function (index, reason) { owner.setPreviewIndex(index, reason); return api; },
+    setItems: function (items) { owner.setPreviewItems(items); return api; },
+    setPreviewItems: function (items) { owner.setPreviewItems(items); return api; },
+    zoomIn: function () { owner.zoomIn(); return api; },
+    zoomOut: function () { owner.zoomOut(); return api; },
+    rotateLeft: function () { owner.rotateLeft(); return api; },
+    rotateRight: function () { owner.rotateRight(); return api; },
+    flipX: function () { owner.flipX(); return api; },
+    flipY: function () { owner.flipY(); return api; },
+    reset: function () { owner.reset(); return api; },
     updateOptions: function (next) {
       var config = Utils.mergeOwn(previewOptions, next);
       if (own(config, 'items')) owner.setPreviewItems(config.items);
@@ -961,12 +939,12 @@ function createPreview(options) {
       previewOptions = config;
       return api;
     },
-    getState: owner.getState,
-    getPreviewElement: owner.getPreviewElement,
-    getPreviewMaskElement: owner.getPreviewMaskElement,
-    getPreviewStageElement: owner.getPreviewStageElement,
-    getPreviewMediaElement: owner.getPreviewMediaElement,
-    getPreviewOverlayRuntime: owner.getPreviewOverlayRuntime,
+    getState: function () { return owner.getState(); },
+    getPreviewElement: function () { return owner.getPreviewElement(); },
+    getPreviewMaskElement: function () { return owner.getPreviewMaskElement(); },
+    getPreviewStageElement: function () { return owner.getPreviewStageElement(); },
+    getPreviewMediaElement: function () { return owner.getPreviewMediaElement(); },
+    getPreviewOverlayRuntime: function () { return owner.getPreviewOverlayRuntime(); },
     destroy: function () {
       if (destroyed) return false;
       destroyed = true;
@@ -978,10 +956,68 @@ function createPreview(options) {
   return api;
 }
 
-export const Image = Object.freeze({
-    definition: Object.freeze({ initializer: Object.freeze({ mode: 'create', bind: 'container' }) }),
-    create,
-    createPreview
-});
-export { create, createPreview };
+function normalizeFit(value) {
+  var fit = String(value == null ? 'cover' : value).toLowerCase();
+  if (FITS.indexOf(fit) < 0) throw new TypeError('[QXFRAME9A7C2] Image fit must be one of: ' + FITS.join(', ') + '.');
+  return fit;
+}
+function recordForImage(instance) {
+  var record = imageState.get(instance);
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Image instance.');
+  return record;
+}
+
+export class Image extends Component {
+  static options = Object.freeze({});
+  static optionNormalizers = Object.freeze({
+    fit: normalizeFit,
+    preview: normalizePreview,
+    minScale: value => finite(value, 0.2, 'minScale', 0.01),
+    maxScale: value => finite(value, 5, 'maxScale', 0.01),
+    scaleStep: value => finite(value, 0.25, 'scaleStep', 0.01),
+    rotateStep: value => finite(value, 90, 'rotateStep', 0),
+    maskOpacity: value => { var result = finite(value, 0.82, 'maskOpacity', 0); if (result > 1) throw new TypeError('[QXFRAME9A7C2] Image maskOpacity must be <= 1.'); return result; }
+  });
+  static immutableOptions = Object.freeze(['container', 'document']);
+  static contract = ComponentContracts.get('Image');
+  static createPreview(options) { return createPreview(options); }
+
+  [componentHooks.render]() {
+    var existing = imageState.get(this);
+    if (existing) return existing.getRootElement();
+    var options = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, this.options));
+    if (options.maxScale < options.minScale) throw new TypeError('[QXFRAME9A7C2] Image maxScale must be >= minScale.');
+    return setupImage(this);
+  }
+  [componentHooks.beforeOptionsUpdate](patch) {
+    rejectRemoved(patch || {});
+    var candidate = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, this.options, patch || {}));
+    if (candidate.maxScale < candidate.minScale) throw new TypeError('[QXFRAME9A7C2] Image maxScale must be >= minScale.');
+  }
+  [componentHooks.optionsUpdated](next, _previous, patch) { var record = imageState.get(this); if (record) record.applyOptions(next, patch); }
+
+  openPreview(index, event) { return recordForImage(this).openPreview(index, event); }
+  closePreview(reason, event) { return recordForImage(this).closePreview(reason, event); }
+  next() { return recordForImage(this).next(); }
+  prev() { return recordForImage(this).prev(); }
+  setPreviewIndex(index, reason) { return recordForImage(this).setPreviewIndex(index, reason); }
+  zoomIn() { return recordForImage(this).zoomIn(); }
+  zoomOut() { return recordForImage(this).zoomOut(); }
+  rotateLeft() { return recordForImage(this).rotateLeft(); }
+  rotateRight() { return recordForImage(this).rotateRight(); }
+  flipX() { return recordForImage(this).flipX(); }
+  flipY() { return recordForImage(this).flipY(); }
+  reset() { return recordForImage(this).reset(); }
+  setSrc(src) { return recordForImage(this).setSrc(src); }
+  setPreviewItems(items) { return recordForImage(this).setPreviewItems(items); }
+  getState() { return recordForImage(this).getState(); }
+  getRootElement() { return recordForImage(this).getRootElement(); }
+  getImageElement() { return recordForImage(this).getImageElement(); }
+  getPreviewElement() { return recordForImage(this).getPreviewElement(); }
+  getPreviewMaskElement() { return recordForImage(this).getPreviewMaskElement(); }
+  getPreviewStageElement() { return recordForImage(this).getPreviewStageElement(); }
+  getPreviewMediaElement() { return recordForImage(this).getPreviewMediaElement(); }
+  getPreviewOverlayRuntime() { return recordForImage(this).getPreviewOverlayRuntime(); }
+}
+export { createPreview };
 export default Image;

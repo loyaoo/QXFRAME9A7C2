@@ -28,7 +28,7 @@ const out=document.getElementById('result');
 function a(v,m){if(!v)throw new Error(m)}
 try{
  a(QXFRAME9A7C2.Components.Image.createPreview===Image.createPreview,'Image registry identity');
- a(QXFRAME9A7C2.Components.JSON.definition===JSONView.definition,'JSON registry identity');
+ const jsonRegistryHost=document.createElement('div');document.body.appendChild(jsonRegistryHost);const jsonRegistry=QXFRAME9A7C2.Components.JSON.create({document,container:jsonRegistryHost,data:{registry:true}});a(jsonRegistry instanceof JSONView,'JSON registry class authority');jsonRegistry.destroy();jsonRegistryHost.remove();
  a(QXFRAME9A7C2.Components.Pagination.createDefaultDOM===Pagination.createDefaultDOM,'Pagination registry identity');
  a(QXFRAME9A7C2.Components.Table.sizes.join(',')===Table.sizes.join(','),'Table registry identity');
  a(QXFRAME9A7C2.Components.Tags.definition===Tags.definition,'Tags registry identity');

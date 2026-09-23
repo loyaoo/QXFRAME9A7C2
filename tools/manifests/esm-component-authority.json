@@ -50,6 +50,12 @@
       "phase": "50→58"
     },
     {
+      "name": "Image",
+      "module": "image",
+      "source": "src/components/image.js",
+      "phase": "96→98"
+    },
+    {
       "name": "InputNumber",
       "module": "input-number",
       "source": "src/components/input-number.js",
@@ -60,6 +66,12 @@
       "module": "input-otp",
       "source": "src/components/input-otp.js",
       "phase": "40→45"
+    },
+    {
+      "name": "JSON",
+      "module": "json",
+      "source": "src/components/json.js",
+      "phase": "96→98"
     },
     {
       "name": "Loading",
@@ -132,6 +144,12 @@
       "module": "steps",
       "source": "src/components/steps.js",
       "phase": "45→50-prep"
+    },
+    {
+      "name": "Tabs",
+      "module": "tabs",
+      "source": "src/components/tabs.js",
+      "phase": "96→98"
     },
     {
       "name": "TagInput",

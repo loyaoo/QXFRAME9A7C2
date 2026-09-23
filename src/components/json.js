@@ -1,3 +1,6 @@
+import { Component } from '../core/component.js';
+import { componentHooks } from '../core/componentHooks.js';
+import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { KeyboardRegion } from '../core/keyboardRegion.js';
@@ -5,6 +8,20 @@ import { Utils } from '../utils/utils.js';
 import { Tree } from './tree.js';
 
 const global = globalThis;
+
+const JSON_DEFAULTS = Object.freeze({
+  data: null,
+  collapsed: false,
+  maxDepth: Infinity,
+  sortKeys: false,
+  toolbar: true,
+  copy: true,
+  indent: 2,
+  showLine: true,
+  editable: false,
+  readOnly: false
+});
+const jsonState = new WeakMap();
 
 var REMOVED_OPTIONS = Object.freeze(['target', 'el', 'mount']);
 var SUPPORTED_OPTIONS = Object.freeze(['container','document','data','collapsed','sortKeys','toolbar','copy','maxDepth','indent','showLine','virtual','virtualThreshold','height','maxHeight','editable','readOnly','onChange']);
@@ -65,12 +82,12 @@ function pathSegments(path) {
 }
 function jsonEditablePrimitive(value) { return value === null || typeof value === 'string' || typeof value === 'boolean' || (typeof value === 'number' && Number.isFinite(value)); }
     
-function create(options) {
-  var opts = normalizeOptions(Utils.mergeOwn({ data: null, collapsed: false, maxDepth: Infinity, sortKeys: false, toolbar: true, copy: true, indent: 2, showLine: true, editable: false, readOnly: false }, options));
+function setupJSON(instance) {
+  var opts = Utils.mergeOwn(instance.options);
+  rejectRemoved(opts);
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] JSON container must be an Element.');
   var doc = opts.document || opts.container.ownerDocument || global.document;
-  opts.document = doc;
-    
+
   var root = doc.createElement('div');
   var toolbar = doc.createElement('div');
   var treeHost = doc.createElement('div');
@@ -86,7 +103,7 @@ function create(options) {
   var treeRenderDispose = null;
   var treeVirtualRenderDispose = null;
   var destroyed = false;
-  var api = null;
+  var api = instance;
     
   root.className = 'qxframe9a7c2-json-root';
   root.tabIndex = 0;
@@ -289,8 +306,8 @@ function create(options) {
     try { nextData = replaceValueAtPath(opts.data, key, nextValue); }
     catch (_) { editor.classList.add('is-invalid'); return false; }
     editSession = null; pendingEditKey = null; pendingEditReason = null;
-    opts.data = nextData;
-    if (tree) tree.setItems(treeItems(), { source: 'json', reason: reason || 'json-edit-commit' });
+    api.updateOptions({ data: nextData });
+    if (destroyed) return false;
     if (restoreFocus !== false) { DOM.focusElement(root, { preventScroll: true }); activateTreeKey(key, 'keyboard', reason || 'json-edit-commit', event, true); }
     emitChange(nextData, { path: key, previousValue: previousValue, value: nextValue, source: 'edit', reason: reason || 'json-edit-commit', originalEvent: event || null });
     return true;
@@ -404,16 +421,16 @@ function create(options) {
     try { var output = global.JSON.stringify(opts.data, null, opts.indent); return output === undefined ? String(opts.data) : output; }
     catch (_) { return String(opts.data); }
   }
-  function setData(data) { if (destroyed) return false; if (editSession) cancelEdit('json-set-data', null, true); opts.data = data; render('set-data'); return api; }
+  function setData(data) { if (destroyed) return false; api.updateOptions({ data: data }); return api; }
   function copy() { if (destroyed) return Promise.resolve(false); var target = clipboard(); if (!target) return Promise.resolve(api); return target.writeText(serialize()).then(function () { return api; }); }
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return false;
-    var next = nextOptions || {}; rejectRemoved(next);
-    if (own(next, 'container') && next.container !== opts.container) throw new Error('[QXFRAME9A7C2] JSON container is immutable.');
-    if (own(next, 'document') && next.document !== opts.document) throw new Error('[QXFRAME9A7C2] JSON document is immutable.');
-    var hadCollapsed = own(next, 'collapsed'), normalized = normalizeOptions(next, opts);
+    var changed = patch || {};
+    rejectRemoved(changed);
+    var hadCollapsed = own(changed, 'collapsed');
     if (editSession) cancelEdit('json-options-update', null, true);
-    opts = normalized; render('update-options');
+    opts = Utils.mergeOwn(nextOptions);
+    render('update-options');
     if (hadCollapsed && tree) {
       if (opts.collapsed) tree.collapseAll({ source: 'json', reason: 'collapsed-option' });
       else tree.expandAll({ source: 'json', reason: 'collapsed-option' });
@@ -425,12 +442,12 @@ function create(options) {
     var totalBranches = tree ? branchKeys(treeItems(), []).length : 0;
     return Object.freeze({ data: opts.data, collapsed: opts.collapsed, maxDepth: opts.maxDepth, sortKeys: opts.sortKeys, toolbar: opts.toolbar, copy: opts.copy, indent: opts.indent, editable: opts.editable === true, readOnly: opts.readOnly === true, activePath: state.activeKey || null, editingPath: editSession ? editSession.key : null, detailCount: totalBranches, expandedCount: state.expandedKeys.length, visibleCount: state.visibleKeys.length, destroyed: destroyed });
   }
-  function destroy() {
+  function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true; pendingEditKey = null; pendingEditReason = null; editSession = null; if(treeRenderDispose)treeRenderDispose();treeRenderDispose=null;if(treeVirtualRenderDispose)treeVirtualRenderDispose();treeVirtualRenderDispose=null;scope.dispose();toolbarDomain=null;regionController=null;keyboard=null;if (tree) tree.destroy('json-destroy'); tree = null; DOM.removeNode(root); root = toolbar = treeHost = null; return true;
   }
     
-  api = Object.freeze({
+  var record = {
     setData: setData,
     getData: function () { return opts.data; },
     toJSON: serialize,
@@ -441,22 +458,79 @@ function create(options) {
     commitEdit: function () { return commitEdit('json-commit-edit', null, true); },
     cancelEdit: function () { return cancelEdit('json-cancel-edit', null, true); },
     getEditElement: function (path) { var key = path === undefined || path === null ? activeTreeKey() : String(path); return key ? editElement(key) : null; },
-    updateOptions: updateOptions,
+    applyOptions: applyOptions,
     getState: getState,
     getTree: function () { return tree; },
     getKeyboardNavigation: function () { return keyboard; },
     getKeyboardRegion: function () { return regionController; },
     getRootElement: function () { return root; },
     getTreeElement: function () { return tree ? tree.getRootElement() : null; },
-    getToolbarElement: function () { return toolbar; },
-    destroy: destroy
-  });
-  render('initial'); return api;
+    getToolbarElement: function () { return toolbar; }
+  };
+  jsonState.set(instance, record);
+  instance.own(destroyRuntime);
+  render('initial');
+  return root;
 }
 
-export const JSONComponent = Object.freeze({
-    definition: Object.freeze({ initializer: Object.freeze({ mode: 'create', bind: 'container' }) }),
-    create
-});
-export { JSONComponent as JSON, create };
+function recordFor(instance) {
+  var record = jsonState.get(instance);
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid JSON instance.');
+  return record;
+}
+function normalizeOnChange(value) {
+  if (value !== undefined && value !== null && typeof value !== 'function') throw new TypeError('[QXFRAME9A7C2] JSON onChange must be a function or null.');
+  return value;
+}
+
+export class JSONComponent extends Component {
+  static options = JSON_DEFAULTS;
+  static optionNormalizers = Object.freeze({
+    collapsed: value => value === true,
+    sortKeys: value => value === true,
+    toolbar: value => value !== false,
+    copy: value => value !== false,
+    maxDepth: normalizeDepth,
+    indent: normalizeIndent,
+    editable: value => value === true,
+    readOnly: value => value === true,
+    onChange: normalizeOnChange
+  });
+  static immutableOptions = Object.freeze(['container', 'document']);
+  static contract = ComponentContracts.get('JSON');
+
+  [componentHooks.render]() {
+    var existing = jsonState.get(this);
+    if (existing) {
+      existing.applyOptions(this.options, {});
+      return existing.getRootElement();
+    }
+    return setupJSON(this);
+  }
+
+  [componentHooks.optionsUpdated](next, _previous, patch) {
+    var record = jsonState.get(this);
+    if (record) record.applyOptions(next, patch);
+  }
+
+  setData(data) { return recordFor(this).setData(data); }
+  getData() { return recordFor(this).getData(); }
+  toJSON() { return recordFor(this).toJSON(); }
+  expandAll() { return recordFor(this).expandAll(); }
+  collapseAll() { return recordFor(this).collapseAll(); }
+  copy() { return recordFor(this).copy(); }
+  enterEdit(path) { return recordFor(this).enterEdit(path); }
+  commitEdit() { return recordFor(this).commitEdit(); }
+  cancelEdit() { return recordFor(this).cancelEdit(); }
+  getEditElement(path) { return recordFor(this).getEditElement(path); }
+  getState() { return recordFor(this).getState(); }
+  getTree() { return recordFor(this).getTree(); }
+  getKeyboardNavigation() { return recordFor(this).getKeyboardNavigation(); }
+  getKeyboardRegion() { return recordFor(this).getKeyboardRegion(); }
+  getRootElement() { return recordFor(this).getRootElement(); }
+  getTreeElement() { return recordFor(this).getTreeElement(); }
+  getToolbarElement() { return recordFor(this).getToolbarElement(); }
+}
+
+export { JSONComponent as JSON };
 export default JSONComponent;
