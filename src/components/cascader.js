@@ -743,13 +743,15 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           onTagRemove: function (tag, detail) {
             if (opts.multiple !== true || isLocked()) return;
             var removeTargets = tagSelectionTargets(tag.value);
-            selection.set(selection.values.filter(function (value) { return removeTargets.indexOf(String(value)) < 0; }), { source: detail.source || 'control', reason: detail.reason || 'tag-remove' });
-            var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null;
-            opts.value = values.slice(); syncControl({ source: detail && detail.source || 'control', reason: detail && detail.reason || 'tag-remove' }); refreshSelectionSurfaces();
-            var payload = { value: selection.values.slice(), values: selection.values.slice(), removedValue: tag.value, reason: detail.reason || 'tag-remove', originalEvent: detail.originalEvent || null, cascader: instance };
-            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(selection.values.slice(), payload);
+            var proposed = normalizeApiValue(selection.values.filter(function (value) { return removeTargets.indexOf(String(value)) < 0; }));
+            var changed = writeApiValue(proposed, { silent:true, source:detail.source || 'control', reason:detail.reason || 'tag-remove', originalEvent:detail.originalEvent || null }, true);
+            syncSelectionFromApiValue('tag-remove');
+            syncControl({ source: detail && detail.source || 'control', reason: detail && detail.reason || 'tag-remove' }); refreshSelectionSurfaces();
+            if (!changed) return;
+            var payload = { value: proposed.slice(), values: proposed.slice(), removedValue: tag.value, reason: detail.reason || 'tag-remove', originalEvent: detail.originalEvent || null, controlled:!!valueState.controlled, cascader: instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(proposed.slice(), payload);
             if (destroyed) return;
-            if (Utils.isFunction(opts.onChange)) opts.onChange(selection.values.slice(), payload);
+            if (Utils.isFunction(opts.onChange)) opts.onChange(proposed.slice(), payload);
             if (destroyed) return;
             emitter.emit('change', payload);
           },
@@ -837,37 +839,46 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         function normalizeSelection() {
           var valid = opts.multiple === true ? normalizeAssociatedValues(selection.values) : selection.values.filter(function (value) { return findPathByValue(value).length > 0; }).slice(0, 1);
           selection.set(valid, { silent: true, source: 'normalize', reason: 'items' });
+          if (valueState && !valueState.controlled) valueState.setValue(opts.multiple === true ? selection.values.slice() : selection.value, { silent:true, source:'normalize', reason:'items' });
           var values = selection.values;
           if (selectionAnchorValue === null || !values.some(function (value) { return String(value) === String(selectionAnchorValue); })) selectionAnchorValue = values.length ? values[values.length - 1] : null;
           if (!activePathKeys.length) { var seedPath = selectedAnchorPath(); if (seedPath.length) activePathKeys = seedPath.map(function (item) { return String(item.key); }); }
         }
         function setValue(next, meta) {
           if (destroyed) return instance;
-          selection.set(opts.multiple === true ? normalizeAssociatedValues(next) : normalizeValues(next, false), { source: meta && meta.source || 'instance', reason: meta && meta.reason || 'cascader-set-value' }); normalizeSelection();
-          opts.value = opts.multiple === true ? selection.values.slice() : selection.value;
+          var cfg = meta || {};
+          var previous = apiValue();
+          var changed = writeApiValue(next, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'cascader-set-value', originalEvent:cfg.originalEvent || null }, false);
+          syncSelectionFromApiValue('set-value'); normalizeSelection();
+          var canonical = apiValue();
           var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null;
           var seedPath = selectedAnchorPath(); activePathKeys = seedPath.map(function (item) { return String(item.key); });
           activeColumnIndex = activePathKeys.length ? activePathKeys.length - 1 : 0;
           keyboardCursorKey = seedPath.length ? String(seedPath[seedPath.length - 1].key) : '';
-          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!(meta && meta.silent), source: meta && meta.source || 'instance', reason: meta && meta.reason || 'set-value' });
-          var payload = { value: opts.value, values: selection.values.slice(), reason: meta && meta.reason || 'set-value', source: meta && meta.source || 'instance', silent: !!(meta && meta.silent), originalEvent: meta && meta.originalEvent || null, cascader: instance };
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(opts.value, payload);
-          if (destroyed) return instance;
-          if (!(meta && meta.silent)) {
-            if (Utils.isFunction(opts.onChange)) opts.onChange(opts.value, payload);
+          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!cfg.silent, source: cfg.source || 'instance', reason: cfg.reason || 'set-value' });
+          if (changed) {
+            var payload = { value: copyApiValue(canonical), previousValue:copyApiValue(previous), values: apiValues(canonical), reason: cfg.reason || 'set-value', source: cfg.source || 'instance', silent: !!cfg.silent, originalEvent: cfg.originalEvent || null, controlled:!!valueState.controlled, cascader: instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(canonical), payload);
             if (destroyed) return instance;
-            emitter.emit('change', payload);
+            if (!cfg.silent) {
+              if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(canonical), payload);
+              if (destroyed) return instance;
+              emitter.emit('change', payload);
+            }
           }
           return instance;
         }
         function clear(meta) {
-          if (destroyed || isLocked()) return false; var had = selection.values.length > 0;
-          selection.clear({ source: meta && meta.source || 'instance', reason: meta && meta.reason || 'clear' }); opts.value = opts.multiple === true ? [] : undefined; activePathKeys = []; activeColumnIndex = 0; selectionAnchorValue = null; keyboardCursorKey = '';
-          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!(meta && meta.silent), source: meta && meta.source || 'instance', reason: meta && meta.reason || 'clear' });
-          var payload = { value: opts.value, values: [], reason: meta && meta.reason || 'clear', originalEvent: meta && meta.originalEvent || null, cascader: instance };
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(opts.value, payload);
+          if (destroyed || isLocked()) return false;
+          var cfg = meta || {}, had = selection.values.length > 0, proposed = opts.multiple === true ? [] : undefined;
+          var changed = writeApiValue(proposed, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'clear', originalEvent:cfg.originalEvent || null }, true);
+          syncSelectionFromApiValue('clear'); activePathKeys = []; activeColumnIndex = 0; keyboardCursorKey = '';
+          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!cfg.silent, source: cfg.source || 'instance', reason: cfg.reason || 'clear' });
+          if (!changed) return false;
+          var payload = { value: copyApiValue(proposed), values: [], reason: cfg.reason || 'clear', originalEvent: cfg.originalEvent || null, controlled:!!valueState.controlled, cascader: instance };
+          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(proposed), payload);
           if (destroyed) return had;
-          if (Utils.isFunction(opts.onChange)) opts.onChange(opts.value, payload);
+          if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(proposed), payload);
           if (destroyed) return had;
           emitter.emit('change', payload);
           if (destroyed) return had;
