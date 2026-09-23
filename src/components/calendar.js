@@ -96,7 +96,17 @@ function create(options) {
     isDisabled: function (entry) { return entry.disabled === true; },
     activeKey: keyOf(initialActive),
     onChange: function (key, detail) {
-      if (virtualFocusDomain && virtualFocusController && key) virtualFocusDomain.activate(String(key), { source:detail && detail.source || 'api', modality:detail && detail.source === 'keyboard' ? 'keyboard' : (detail && detail.source === 'pointer' ? 'pointer' : virtualFocusController.getState().modality), reason:detail && detail.reason || 'calendar-active', originalEvent:detail && detail.originalEvent || null, ensureVisible:false });
+      if (virtualFocusDomain && virtualFocusController && key) {
+        var activeSource = detail && detail.source || 'api';
+        var controllerState = virtualFocusController.getState();
+        var ownsDomain = controllerState && controllerState.domain === virtualFocusDomain.name;
+        // Hosted calendars share one real-focus owner (for example DatePicker dual panels).
+        // Silent/programmatic view reconciliation must not steal the shared virtual-focus
+        // domain from the panel the user is actually navigating.
+        if (!hostedVirtualFocus || activeSource === 'keyboard' || activeSource === 'pointer') {
+          virtualFocusDomain.activate(String(key), { source:activeSource, modality:activeSource === 'keyboard' ? 'keyboard' : (activeSource === 'pointer' ? 'pointer' : controllerState.modality), reason:detail && detail.reason || 'calendar-active', originalEvent:detail && detail.originalEvent || null, ensureVisible:false });
+        } else if (ownsDomain) virtualFocusDomain.refresh({ reconcile:true, source:activeSource, reason:detail && detail.reason || 'calendar-active-sync' });
+      }
       syncCellStates();
       var date = parseDate(key);
       var payload = { key: key, date: cloneDate(date), source: detail && detail.source || 'api', reason: detail && detail.reason || 'active', calendar: api };
@@ -290,7 +300,8 @@ function create(options) {
       nodes[i].classList.toggle('is-in-range', state.inRange === true);
       nodes[i].classList.toggle('is-range-start', state.rangeStart === true);
       nodes[i].classList.toggle('is-range-end', state.rangeEnd === true);
-      nodes[i].classList.toggle('is-active', DOM.getPrivate(nodes[i], 'calendarDate') === activeItem.activeKey);
+      var visualActiveOwner = !hostedVirtualFocus || (virtualFocusController && virtualFocusDomain && virtualFocusController.getState().domain === virtualFocusDomain.name);
+      nodes[i].classList.toggle('is-active', visualActiveOwner && DOM.getPrivate(nodes[i], 'calendarDate') === activeItem.activeKey);
       nodes[i].classList.toggle('is-hover', state.hover === true);
       nodes[i];
     }
