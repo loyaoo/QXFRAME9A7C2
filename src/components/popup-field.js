@@ -77,6 +77,10 @@ export function createPopupFieldTriggerSettings(options = {}, context = {}, over
         closeOnTabExit: true,
         closeOnEscape: true,
         restoreFocusTarget: ctx.triggerTarget || ctx.reference || null,
+        // Centralize non-modal popup focus return: Escape and non-focusable outside
+        // dismissal return to the authored control, while Tab/focus-outside and clicks on
+        // another focusable control keep the browser's new focus.
+        restoreFocusOnDismiss: true,
         restoreFocusOnClose: function (detail) {
             var reason = String(detail && detail.reason || '');
             if (reason === 'escape') return true;
