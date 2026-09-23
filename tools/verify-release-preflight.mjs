@@ -46,7 +46,19 @@ for (const script of ['verify-browser-smoke.mjs','verify-source-esm-browser.mjs'
     assert.ok(browserSuite.includes(script), `Strict browser suite must execute ${script}.`);
 }
 assert.match(browserSuite, /Release browser verification requires Chromium\/Chrome/, 'Strict browser suite must fail closed when Chromium is unavailable.');
-assert.ok(/npm run build && npm run verify && npm run verify:browser && npm run verify:release/.test(pkg.scripts.release || ''));
+assert.equal(
+    pkg.scripts['verify:legacy-browser'],
+    'node tools/verify-browser-smoke.mjs --required --skip-docs --smoke=migration/baseline-hotfix6-2026-09-22/verify-browser-smoke.html',
+    'Frozen HOTFIX6 browser compatibility gate must remain explicit and strict.'
+);
+const frozenBrowserSmoke = path.join(root, 'migration', 'baseline-hotfix6-2026-09-22', 'verify-browser-smoke.html');
+assert.ok(fs.existsSync(frozenBrowserSmoke), 'Frozen HOTFIX6 browser smoke source must remain available.');
+assert.match(fs.readFileSync(frozenBrowserSmoke, 'utf8'), /QX_BROWSER_SMOKE:/, 'Frozen HOTFIX6 browser smoke must contain the original result marker.');
+assert.equal(
+    pkg.scripts.release,
+    'npm run build && npm run verify && npm run verify:browser && npm run verify:legacy-browser && npm run verify:release && npm run verify:package',
+    'Release must run current browser verification and the frozen HOTFIX6 compatibility smoke before artifact/package gates.'
+);
 assert.equal(pkg.exports['.'].import, './dist/esm/index.js');
 assert.equal(pkg.exports['.'].default, './dist/esm/index.js');
 assert.equal(pkg.exports['./bundle'].import, './dist/qxframe9a7c2.esm.js');
