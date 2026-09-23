@@ -60,6 +60,7 @@ const focusTarget = { focusCount:0, blurCount:0, focus(){this.focusCount+=1;}, b
 const probe = new ProbeField({ value:'a', disabled:false, readOnly:false });
 probe.bindFocusTarget(focusTarget);
 assert.equal(probe.value, 'a');
+assert.equal(probe.valueControlled, true, 'FieldComponent valueControlled must reflect an authored value option.');
 assert.equal(probe.canMutate(), true);
 assert.equal(probe.setFieldValue('b'), true);
 assert.equal(probe.value, 'b');
@@ -73,6 +74,10 @@ assert.equal(probe.canMutate(), false, 'busy must gate field mutation.');
 assert.equal(probe.destroy(), true); assert.equal(probe.destroy(), false);
 
 const fakeContainer = { nodeType:1, ownerDocument:null };
+const uncontrolledProbe = new ProbeField({ defaultValue:'seed' });
+assert.equal(uncontrolledProbe.valueControlled, false, 'FieldComponent defaultValue must remain uncontrolled.');
+uncontrolledProbe.destroy();
+
 const inputNumber = new InputNumber({ container:fakeContainer, defaultValue:1, step:2, disabled:false });
 assert.ok(inputNumber instanceof FieldComponent);
 assert.equal(inputNumber.options.defaultValue, 1);
@@ -107,6 +112,7 @@ assert.ok(otp instanceof FieldComponent);
 assert.equal(otp.options.length, 4);
 assert.equal(otp.options.mask, false);
 assert.equal(otp.options.value, '12');
+assert.equal(otp.valueControlled, true, 'InputOTP value must opt into the FieldComponent controlled contract.');
 otp.updateOptions({ disabled:true });
 assert.equal(otp.disabled, true);
 assert.throws(() => otp.updateOptions({ length:6 }), /structural and immutable/);
