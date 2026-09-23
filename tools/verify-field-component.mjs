@@ -7,6 +7,9 @@ import { InputNumber } from '../src/components/input-number.js';
 import { InputOTP } from '../src/components/input-otp.js';
 import { Rate } from '../src/components/rate.js';
 import { TagInput } from '../src/components/tag-input.js';
+import { Tags } from '../src/components/tags.js';
+import { Transfer } from '../src/components/transfer.js';
+import { Upload } from '../src/components/upload.js';
 import { Slider } from '../src/components/slider.js';
 import { Control } from '../src/components/control.js';
 
@@ -16,9 +19,12 @@ const numberSource = fs.readFileSync(path.join(root, 'src/components/input-numbe
 const otpSource = fs.readFileSync(path.join(root, 'src/components/input-otp.js'), 'utf8');
 const rateSource = fs.readFileSync(path.join(root, 'src/components/rate.js'), 'utf8');
 const tagInputSource = fs.readFileSync(path.join(root, 'src/components/tag-input.js'), 'utf8');
+const tagsSource = fs.readFileSync(path.join(root, 'src/components/tags.js'), 'utf8');
+const transferSource = fs.readFileSync(path.join(root, 'src/components/transfer.js'), 'utf8');
+const uploadSource = fs.readFileSync(path.join(root, 'src/components/upload.js'), 'utf8');
 const sliderSource = fs.readFileSync(path.join(root, 'src/components/slider.js'), 'utf8');
 const controlSource = fs.readFileSync(path.join(root, 'src/components/control.js'), 'utf8');
-for (const [label, source] of [['FieldComponent', fieldSource], ['InputNumber', numberSource], ['InputOTP', otpSource], ['Rate', rateSource], ['TagInput', tagInputSource], ['Slider', sliderSource], ['Control', controlSource]]) {
+for (const [label, source] of [['FieldComponent', fieldSource], ['InputNumber', numberSource], ['InputOTP', otpSource], ['Rate', rateSource], ['TagInput', tagInputSource], ['Tags', tagsSource], ['Slider', sliderSource], ['Transfer', transferSource], ['Upload', uploadSource], ['Control', controlSource]]) {
     for (const pattern of [/Registry\.(?:get|assert|define)/, /defineModule\s*\(/, /(?:globalThis|window)\.QXFRAME9A7C2/]) assert.ok(!pattern.test(source), `${label} contains legacy runtime dependency: ${pattern}`);
 }
 assert.match(fieldSource, /from ['"]\.\.\/core\/dom\.js['"]/, 'FieldComponent must import DOM focus authority.');
@@ -40,6 +46,14 @@ assert.ok(!/\bupdateOptions\s*\(/.test(otpSource.replace(/\.updateOptions\s*\(/g
 assert.match(sliderSource, /class\s+Slider\s+extends\s+FieldComponent/, 'Slider must extend FieldComponent.');
 assert.ok(!/^\s*destroy\s*\(/m.test(sliderSource), 'Slider must inherit Component.destroy.');
 assert.ok(!/^\s*updateOptions\s*\(/m.test(sliderSource), 'Slider must inherit Component.updateOptions.');
+assert.match(tagsSource, /class\s+Tags\s+extends\s+FieldComponent/, 'Tags must extend FieldComponent.');
+assert.ok(!/^\s*destroy\s*\(/m.test(tagsSource), 'Tags must inherit Component.destroy.');
+assert.match(transferSource, /class\s+Transfer\s+extends\s+FieldComponent/, 'Transfer must extend FieldComponent.');
+assert.ok(!/^\s*destroy\s*\(/m.test(transferSource), 'Transfer must inherit Component.destroy.');
+assert.ok(!/^\s*updateOptions\s*\(/m.test(transferSource), 'Transfer must inherit Component.updateOptions.');
+assert.match(uploadSource, /class\s+Upload\s+extends\s+FieldComponent/, 'Upload must extend FieldComponent.');
+assert.ok(!/^\s*destroy\s*\(/m.test(uploadSource), 'Upload must inherit Component.destroy.');
+assert.ok(!/^\s*updateOptions\s*\(/m.test(uploadSource), 'Upload must inherit Component.updateOptions.');
 
 class ProbeField extends FieldComponent {}
 const focusTarget = { focusCount:0, blurCount:0, focus(){this.focusCount+=1;}, blur(){this.blurCount+=1;} };
@@ -109,6 +123,30 @@ assert.throws(() => slider.updateOptions({ container:{ nodeType:1 } }), /immutab
 assert.throws(() => new Slider({ container:fakeContainer, min:100, max:0 }), /max must be greater/);
 slider.destroy();
 
+const tags = new Tags({ container:fakeContainer, items:[{key:'a',value:'a',label:'A'}], value:[], disabled:false });
+assert.ok(tags instanceof FieldComponent);
+assert.deepEqual(tags.value, ['a']);
+tags.updateOptions({ disabled:true });
+assert.equal(tags.disabled, true);
+assert.throws(() => tags.updateOptions({ container:{ nodeType:1 } }), /immutable/);
+tags.destroy();
+
+const transfer = new Transfer({ container:fakeContainer, items:[], value:[], disabled:false });
+assert.ok(transfer instanceof FieldComponent);
+assert.deepEqual(transfer.value, []);
+transfer.updateOptions({ disabled:true });
+assert.equal(transfer.disabled, true);
+assert.throws(() => transfer.updateOptions({ container:{ nodeType:1 } }), /immutable/);
+transfer.destroy();
+
+const upload = new Upload({ container:fakeContainer, value:[], disabled:false });
+assert.ok(upload instanceof FieldComponent);
+assert.deepEqual(upload.value, []);
+upload.updateOptions({ disabled:true });
+assert.equal(upload.disabled, true);
+assert.throws(() => upload.updateOptions({ container:{ nodeType:1 } }), /immutable/);
+upload.destroy();
+
 const expectedControlApi = ['create','createDefaultDOM','createFormFieldBridge','createProjection','enhance','placeFieldRoot','projectFormFieldLayout','resolveElement','resolveFieldOptions'];
 assert.deepEqual(Object.keys(Control).sort(), expectedControlApi.slice().sort(), 'Control public API keys drifted.');
 const modernResolved=Control.resolveFieldOptions({size:'lg',disabled:true},{});
@@ -121,4 +159,4 @@ assert.equal(modernResolved.document, undefined);
 assert.equal(modernResolved.hasNativeValue, false);
 assert.equal(modernResolved.nativeValue, undefined);
 
-console.log(JSON.stringify({ok:true,fieldComponent:true,inputNumberClass:true,inputOtpClass:true,rateClass:true,tagInputClass:true,sliderClass:true,controlAuthority:true,controlApi:Object.keys(Control).sort()}));
+console.log(JSON.stringify({ok:true,fieldComponent:true,inputNumberClass:true,inputOtpClass:true,rateClass:true,tagInputClass:true,tagsClass:true,sliderClass:true,transferClass:true,uploadClass:true,controlAuthority:true,controlApi:Object.keys(Control).sort()}));
