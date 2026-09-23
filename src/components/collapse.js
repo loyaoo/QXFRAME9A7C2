@@ -3,6 +3,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Disclosure } from '../core/disclosure.js';
+import { StateController } from '../core/stateController.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { RovingProjection } from '../core/rovingProjection.js';
@@ -89,6 +90,8 @@ export class Collapse extends Component {
             root,
             items: opts.items,
             disclosure: null,
+            valueState: null,
+            syncValueProjection: null,
             active: null,
             records: Object.create(null),
             headers: Object.create(null),
@@ -101,8 +104,23 @@ export class Collapse extends Component {
         };
         state.set(this, record);
 
+        const normalizeValue = value => {
+            if (value === undefined || value === null) value = [];
+            if (!Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] Collapse value must be an array of keys.');
+            const seen = Object.create(null), output = [];
+            value.forEach(key => {
+                const normalized = String(key);
+                if (!normalized || seen[normalized]) return;
+                seen[normalized] = true;
+                output.push(normalized);
+            });
+            return this.options.accordion === true ? output.slice(0, 1) : output;
+        };
+        const valueState = StateController.createOptionValueBinding(opts, opts, normalizeValue);
+        record.valueState = valueState;
+        this.own(valueState);
         record.disclosure = Disclosure.create({
-            value: hasOwn(opts, 'value') ? opts.value : (hasOwn(opts, 'defaultValue') ? opts.defaultValue : []),
+            value: valueState.value,
             accordion: opts.accordion === true
         });
         record.active = ActiveItem.create({
@@ -299,44 +317,61 @@ export class Collapse extends Component {
         const pruneDisclosure = reason => {
             const allowed = Object.create(null);
             record.items.forEach(item => { allowed[item.key] = true; });
+            const canonical = valueState.value;
+            const pruned = canonical.filter(key => allowed[key] === true);
+            if (!valueState.controlled && pruned.length !== canonical.length) valueState.write(pruned, { silent:true, source:'items', reason:reason || 'items-prune' }, false);
+            const projected = valueState.controlled ? pruned : valueState.value;
             const current = record.disclosure.getState().value;
-            const pruned = current.filter(key => allowed[key] === true);
-            if (pruned.length !== current.length) record.disclosure.setValue(pruned, { silent: true, reason: reason || 'items-prune', source: 'items' });
+            const same = current.length === projected.length && current.every((key,index) => key === projected[index]);
+            if (!same) record.disclosure.setValue(projected, { silent:true, reason:reason || 'items-prune', source:'items' });
+            return projected;
         };
-        const emit = (previous, meta) => {
+        const syncDisclosure = reason => {
+            record.disclosure.setValue(valueState.value, { silent: true, source: valueState.controlled ? 'controlled' : 'state', reason: reason || 'value-sync' });
+            return pruneDisclosure(reason || 'value-sync');
+        };
+        record.syncValueProjection = syncDisclosure;
+        const emit = (previous, nextValue, meta) => {
             const onChange = this.options.onChange;
-            if (typeof onChange === 'function') onChange(record.disclosure.getState().value.slice(), Utils.assignOwn({ previousValue: previous, instance: this }, meta || {}));
+            if (typeof onChange === 'function') onChange(nextValue.slice(), Utils.assignOwn({ previousValue: previous.slice(), controlled: valueState.controlled, instance: this }, meta || {}));
         };
         record.setValue = (next, meta) => {
             if (this.destroyed) return false;
-            const previous = record.disclosure.getState().value.slice();
-            if (!record.disclosure.setValue(next, Utils.assignOwn({ silent: true }, meta))) return false;
-            pruneDisclosure('set-value');
-            record.render(meta && meta.reason || 'set-value');
-            if (!(meta && meta.silent)) emit(previous, meta);
+            const cfg = meta || {}, previous = valueState.value;
+            if (!valueState.write(next, { silent: true, source: cfg.source || 'api', reason: cfg.reason || 'set-value', originalEvent: cfg.originalEvent || null }, false)) return false;
+            syncDisclosure('set-value');
+            record.render(cfg.reason || 'set-value');
+            if (!cfg.silent) emit(previous, valueState.value, cfg);
             return this;
         };
         record.toggle = (key, meta) => {
             if (this.destroyed) return false;
             const item = itemByKey(key);
             if (!item || effectiveCollapsible(item) === 'disabled') return false;
-            const previous = record.disclosure.getState().value.slice();
+            const previous = valueState.value;
             const open = previous.indexOf(item.key) < 0;
+            const proposed = open ? (opts.accordion === true ? [item.key] : previous.concat([item.key])) : previous.filter(entry => entry !== item.key);
             const payload = Utils.assignOwn({ key: item.key, item, open, instance: this }, meta || {});
             if (typeof this.options.beforeChange === 'function' && this.options.beforeChange(payload) === false) return false;
-            record.disclosure.set(item.key, open, { silent: true, reason: payload.reason, source: payload.source });
+            const changed = valueState.write(proposed, { silent: true, source: payload.source || 'api', reason: payload.reason || 'toggle', originalEvent: payload.originalEvent || null }, true);
+            if (!changed) return false;
+            syncDisclosure('toggle');
             record.render(payload.reason || 'toggle');
-            emit(previous, payload);
+            emit(previous, proposed, payload);
             const header = record.headers[item.key];
             if (header && payload.originalEvent) DOM.focusElement(header);
             return this;
         };
         record.applyOptions = (next, patch) => {
             const candidateItems = hasOwn(patch, 'items') ? next.items : record.items;
-            const candidateValue = hasOwn(patch, 'value') ? next.value : record.disclosure.getState().value;
-            if (!Array.isArray(candidateValue)) throw new TypeError('[QXFRAME9A7C2] Collapse value must be an array of keys.');
+            if (hasOwn(patch, 'value')) {
+                valueState.setControlled(true);
+                valueState.syncExternal(next.value, { silent: true, source: 'options', reason: 'options-value' });
+            } else if (hasOwn(patch, 'accordion')) {
+                valueState.write(valueState.value, { silent: true, source: 'options', reason: 'options-accordion' }, false);
+            }
             record.items = candidateItems;
-            record.disclosure.updateOptions({ accordion: next.accordion === true, value: candidateValue });
+            record.disclosure.updateOptions({ accordion: next.accordion === true, value: valueState.value });
             pruneDisclosure('options-items');
             record.render('options');
         };
@@ -375,11 +410,7 @@ export class Collapse extends Component {
         if (this.destroyed) return false;
         const record = recordFor(this);
         record.items = normalizeItems(next);
-        const allowed = Object.create(null);
-        record.items.forEach(item => { allowed[item.key] = true; });
-        const current = record.disclosure.getState().value;
-        const pruned = current.filter(key => allowed[key] === true);
-        if (pruned.length !== current.length) record.disclosure.setValue(pruned, { silent: true, reason: 'set-items', source: 'items' });
+        record.syncValueProjection('set-items');
         record.render('set-items');
         return this;
     }
@@ -397,7 +428,8 @@ export class Collapse extends Component {
         const record = recordFor(this);
         const opts = this.options;
         return Object.freeze({
-            value: record.disclosure.getState().value.slice(),
+            value: record.valueState.value,
+            controlled: record.valueState.controlled,
             accordion: opts.accordion === true,
             bordered: opts.bordered !== false,
             ghost: opts.ghost === true,
