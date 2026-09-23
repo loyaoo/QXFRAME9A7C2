@@ -151,7 +151,7 @@ for(const [file,text] of source){
 const prototypeMergeCandidates=[];
 for(const [file,text] of source){
   text.split(/\r?\n/).forEach((line,index)=>{
-    if(/Object\.assign\s*\(\s*\{\}\s*,/.test(line) || /Object\.keys\s*\([^\n]+\)\.forEach\s*\([^\n]+\[[^\]]+\]\s*=/.test(line)) {
+    if(/Object\.assign\s*\(/.test(line) || /Object\.keys\s*\([^\n]+\)\.forEach\s*\([^\n]+\[[^\]]+\]\s*=(?!=)/.test(line)) {
       prototypeMergeCandidates.push({file,line:index+1,text:line.trim().slice(0,260)});
     }
   });
@@ -263,7 +263,7 @@ const unexpectedDuplicateRegions=duplicateRegions.filter(region=>!allowedFamilyD
 const report={
   ok:false,
   files:srcFiles.length,
-  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,contractPrototypeSecurity,secretFilePaths,secretFindings},
+  security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,prototypeSecurity,contractPrototypeSecurity,secretFilePaths,secretFindings},
   duplicateCapabilityCandidates:rawPrimitives,
   prototypeMergeCandidates:prototypeMergeCandidates,
   asyncPrimitiveCandidates,
