@@ -627,8 +627,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           },
           handlers: {
             Escape: function (detail) { return triggerSession.getState().open ? close('escape', detail.originalEvent) : handleHostedTagKeydown(detail.originalEvent); },
-            ArrowDown: function (detail) { if (!triggerSession.getState().open) { open('keyboard-down', detail.originalEvent); return true; } return tree.handleKeydown(detail.originalEvent); },
-            ArrowUp: function (detail) { if (!triggerSession.getState().open) { open('keyboard-up', detail.originalEvent); return true; } return tree.handleKeydown(detail.originalEvent); },
+            ArrowDown: function (detail) { if (!triggerSession.getState().open) return open('keyboard-down', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
+            ArrowUp: function (detail) { if (!triggerSession.getState().open) return open('keyboard-up', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
             ArrowLeft: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
             ArrowRight: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
             Backspace: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
