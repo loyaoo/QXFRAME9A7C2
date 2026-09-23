@@ -857,7 +857,7 @@ var controlHost = FieldHost.resolvePickerControl({
           shouldHandle: function (detail) { return !(detail.originalEvent && detail.originalEvent.defaultPrevented); },
           editableKeys: ['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter','Escape','Home','End','PageUp','PageDown'],
           allowEditableKey: function (key, detail) {
-            if ((key === 'Home' || key === 'End') && triggerSession.getState().open && opts.searchable !== true) return true;
+            if ((key === 'Home' || key === 'End') && triggerSession.getState().open) return true;
             if (['ArrowLeft','ArrowRight','Backspace','Delete','Home','End'].indexOf(key) >= 0 && KeyboardNavigation.shouldPreserveNativeTextEditing(detail.originalEvent, detail.target)) return false;
             return true;
           },
