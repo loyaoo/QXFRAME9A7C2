@@ -186,7 +186,12 @@ export class Component {
         OptionTransaction.rejectImmutable(patch, record.immutableOptions, name);
         record.options = record.transaction.update(patch);
         const hook = this[componentHooks.optionsUpdated];
-        if (typeof hook === 'function') hook.call(this, record.options, previous, patch);
+        try {
+            if (typeof hook === 'function') hook.call(this, record.options, previous, patch);
+        } catch (error) {
+            record.options = record.transaction.restore(previous);
+            throw error;
+        }
         record.emitter.emit('options', { instance: this, options: record.options, previous, patch });
         return this;
     }
