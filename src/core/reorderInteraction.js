@@ -64,7 +64,7 @@ function entryForKey(key) {
 }
 function notify(name, detail) {
   if (typeof source[name] !== 'function') return;
-  source[name](Object.assign({ instance: typeof source.getInstance === 'function' ? source.getInstance() : null }, detail || {}));
+  source[name](Utils.assignOwn({ instance: typeof source.getInstance === 'function' ? source.getInstance() : null }, detail || {}));
 }
 function axisConfig() {
   return orientation() === 'horizontal'

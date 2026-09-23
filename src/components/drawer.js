@@ -77,7 +77,7 @@ function normalize(input, previous) {
 function px(value) { return typeof value === 'number' ? value + 'px' : (value || ''); }
     
 function createDrawerController(instance, options) {
-  var opts = normalize(Object.assign({
+  var opts = normalize(Utils.assignOwn({
     title: '', content: '', placement: 'right', closable: true, showMask: true,
     closeOnMask: true, closeOnEscape: true, destroyOnHidden: false, lockScroll: true,
     focusTrap: true, restoreFocus: true, forceRender: false, autoOpen: true,

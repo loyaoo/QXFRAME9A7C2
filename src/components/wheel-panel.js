@@ -93,7 +93,7 @@ function normalizeColumns(value) {
 function create(options) {
   var itemHeightExplicit = own(options || {}, 'itemHeight');
   if (own(options || {}, 'wheelStepInterval')) throw new TypeError('[QXFRAME9A7C2] WheelPanel wheelStepInterval was removed; continuous step targeting is owned by Scroll.');
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     columns: null,
     value: [],
     visibleItemCount: 7,
@@ -588,7 +588,7 @@ function create(options) {
     selectedItems = normalized.selectedItems;
     rebuildFrom(0);
     refreshVisible(meta && meta.reason || 'wheel-panel-set-value');
-    if (!(meta && meta.silent) && !equalArray(previous, value)) emitChange(previous, -1, Object.assign({ source: 'api', reason: 'set-value' }, meta || {}));
+    if (!(meta && meta.silent) && !equalArray(previous, value)) emitChange(previous, -1, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
     return true;
   }
 

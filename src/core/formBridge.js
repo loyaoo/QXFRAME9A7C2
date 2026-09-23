@@ -101,7 +101,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
     return true;
   }
   function create(options) {
-    var opts = Object.assign({ disabled:false, readOnly:false, required:false, value:'' }, options || {});
+    var opts = Utils.assignOwn({ disabled:false, readOnly:false, required:false, value:'' }, options || {});
     var doc = opts.document || (opts.formField && opts.formField.ownerDocument) || (opts.root && opts.root.ownerDocument) || global.document;
     var root = opts.root || null, target = opts.target || null, formField = opts.formField || null;
     if (formField && !isFormField(formField)) throw new TypeError('[QXFRAME9A7C2] formField must be an input, textarea, or select Element.');

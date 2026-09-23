@@ -294,12 +294,12 @@ export class Collapse extends Component {
         };
         const emit = (previous, meta) => {
             const onChange = this.options.onChange;
-            if (typeof onChange === 'function') onChange(record.disclosure.getState().value.slice(), Object.assign({ previousValue: previous, instance: this }, meta || {}));
+            if (typeof onChange === 'function') onChange(record.disclosure.getState().value.slice(), Utils.assignOwn({ previousValue: previous, instance: this }, meta || {}));
         };
         record.setValue = (next, meta) => {
             if (this.destroyed) return false;
             const previous = record.disclosure.getState().value.slice();
-            if (!record.disclosure.setValue(next, Object.assign({ silent: true }, meta))) return false;
+            if (!record.disclosure.setValue(next, Utils.assignOwn({ silent: true }, meta))) return false;
             pruneDisclosure('set-value');
             record.render(meta && meta.reason || 'set-value');
             if (!(meta && meta.silent)) emit(previous, meta);
@@ -311,7 +311,7 @@ export class Collapse extends Component {
             if (!item || effectiveCollapsible(item) === 'disabled') return false;
             const previous = record.disclosure.getState().value.slice();
             const open = previous.indexOf(item.key) < 0;
-            const payload = Object.assign({ key: item.key, item, open, instance: this }, meta || {});
+            const payload = Utils.assignOwn({ key: item.key, item, open, instance: this }, meta || {});
             if (typeof this.options.beforeChange === 'function' && this.options.beforeChange(payload) === false) return false;
             record.disclosure.set(item.key, open, { silent: true, reason: payload.reason, source: payload.source });
             record.render(payload.reason || 'toggle');
@@ -353,12 +353,12 @@ export class Collapse extends Component {
     open(key, meta) {
         const record = recordFor(this);
         if (record.disclosure.has(key)) return this;
-        return record.toggle(key, Object.assign({ reason: 'open' }, meta || {}));
+        return record.toggle(key, Utils.assignOwn({ reason: 'open' }, meta || {}));
     }
     close(key, meta) {
         const record = recordFor(this);
         if (!record.disclosure.has(key)) return this;
-        return record.toggle(key, Object.assign({ reason: 'close' }, meta || {}));
+        return record.toggle(key, Utils.assignOwn({ reason: 'close' }, meta || {}));
     }
     setItems(next) {
         if (this.destroyed) return false;

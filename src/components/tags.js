@@ -252,13 +252,13 @@ function create(options) {
   function emitItemsChange(detail){
     syncFormBridge(detail);
     var items=publicItems();
-    var payload = Object.assign({ items: items.slice(), reason: 'items', source: 'api', instance: api }, detail || {});
+    var payload = Utils.assignOwn({ items: items.slice(), reason: 'items', source: 'api', instance: api }, detail || {});
     if (payload.silent !== true && Utils.isFunction(opts.onItemsChange)) opts.onItemsChange(items.slice(), payload);
     if (payload.silent !== true) emitter.emit('itemsChange', payload);
   }
   function emitSelection(values,detail){
     syncFormBridge(detail);
-    var payload = Object.assign({ value: values.slice(), reason: 'selection', source: 'api', instance: api }, detail || {});
+    var payload = Utils.assignOwn({ value: values.slice(), reason: 'selection', source: 'api', instance: api }, detail || {});
     if (payload.silent !== true && Utils.isFunction(opts.onChange)) opts.onChange(values.slice(), payload);
     if (payload.silent !== true) emitter.emit('change', payload);
   }
@@ -280,7 +280,7 @@ function create(options) {
     coreTags().forEach(function (tag) { allowed[tag.value] = true; });
     var next = selection.values.filter(function (value) { return !!allowed[value]; });
     if (next.length === selection.values.length) return;
-    if (selection.set(next, Object.assign({ reason: 'items-prune', source: 'items' }, meta || {})) !== false) opts.value = selection.values.slice();
+    if (selection.set(next, Utils.assignOwn({ reason: 'items-prune', source: 'items' }, meta || {})) !== false) opts.value = selection.values.slice();
   }
     
   var tokenInput = TokenInput.create({
@@ -303,7 +303,7 @@ function create(options) {
     beforeTagEdit:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.beforeEdit))return opts.beforeEdit(copyPublicItem(current),Utils.mergeOwn(detail,{instance:api}))!==false;},
     beforeTagRemove:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]||{}),item=copyPublicItem(current);if(detail&&detail.user===true&&!itemUserRemovable(current))return false;if(Utils.isFunction(opts.beforeRemove)&&opts.beforeRemove(item,Utils.mergeOwn(detail,{instance:api}))===false)return false;if(opts.controlled===true){var proposed=publicItems().filter(function(entry){return entry.key!==item.key;});if(Utils.isFunction(opts.onRemoveRequest))opts.onRemoveRequest(item,Utils.mergeOwn(detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
     onTagAdd: function (tag, detail) {
-      var item = Object.assign({ color: '', icon: undefined, href: '', className: '' }, tag);
+      var item = Utils.assignOwn({ color: '', icon: undefined, href: '', className: '' }, tag);
       metadataByKey[tag.key] = itemExtras(item);
       if (Utils.isFunction(opts.onAdd)) opts.onAdd(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
     },
@@ -327,7 +327,7 @@ function create(options) {
       var payload = Utils.mergeOwn( detail, { instance: api });
       if (Utils.isFunction(opts.onInput)) opts.onInput(value, payload);
       if (Utils.isFunction(opts.onSearch)) opts.onSearch(value, payload);
-      emitter.emit('input', Object.assign({ value: value }, payload));
+      emitter.emit('input', Utils.assignOwn({ value: value }, payload));
     },
     onTagInvalid: function (detail) {
       if (Utils.isFunction(opts.onInvalid)) opts.onInvalid(Utils.mergeOwn( detail, { instance: api }));
@@ -1201,7 +1201,7 @@ function create(options) {
     values.forEach(function (entry) {
       if (!allowed[entry]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
     });
-    var changed = selection.set(values, Object.assign({ reason: 'set-value', source: 'api' }, meta || {}));
+    var changed = selection.set(values, Utils.assignOwn({ reason: 'set-value', source: 'api' }, meta || {}));
     if (changed !== false) opts.value = selection.values.slice();
     return changed;
   }
@@ -1209,7 +1209,7 @@ function create(options) {
     if (destroyed || opts.checkable !== true) return false;
     var item = itemByValue(value);
     if (!item || item.disabled === true || mutationLocked(meta)) return false;
-    var changed = selection.toggle(item.value, desired, Object.assign({ reason: 'toggle', source: 'api' }, meta || {}));
+    var changed = selection.toggle(item.value, desired, Utils.assignOwn({ reason: 'toggle', source: 'api' }, meta || {}));
     if (changed !== false) opts.value = selection.values.slice();
     return changed;
   }
@@ -1219,11 +1219,11 @@ function create(options) {
     if (index < 0) return false;
     var item = itemByValue(value);
     if (meta && meta.user === true && !itemUserRemovable(item)) return false;
-    return tokenInput.removeAt(index, Object.assign({ reason: 'remove', source: 'api' }, meta || {}));
+    return tokenInput.removeAt(index, Utils.assignOwn({ reason: 'remove', source: 'api' }, meta || {}));
   }
   function add(text, meta) {
     if (destroyed || mutationLocked(meta)) return false;
-    return tokenInput.add(text, Object.assign({ reason: 'add', source: 'api' }, meta || {}));
+    return tokenInput.add(text, Utils.assignOwn({ reason: 'add', source: 'api' }, meta || {}));
   }
   function addMany(values, meta) {
     if (!Array.isArray(values)) throw new TypeError('[QXFRAME9A7C2] Tags addMany values must be an array.');
@@ -1234,25 +1234,25 @@ function create(options) {
   function beginAdd() { if (destroyed || opts.editable !== true || InteractionPolicy.mutationLocked(opts)) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
   function cancelAdd() { if (destroyed || opts.hosted === true) return false; adding=false; tokenInput.setInputValue('',{silent:true,reason:'cancel-add',source:'tags'}); opts.inputValue=''; render('cancel-add'); return true; }
   function canonicalFormValue() { return opts.checkable === true ? selection.values.slice() : coreTags().map(function(tag){return tag.value;}); }
-  function syncFormBridge(meta) { if (!formBridge) return; formBridge.setValue(canonicalFormValue(), Object.assign({silent:true,source:'tags',reason:'sync'},meta||{})); }
+  function syncFormBridge(meta) { if (!formBridge) return; formBridge.setValue(canonicalFormValue(), Utils.assignOwn({silent:true,source:'tags',reason:'sync'},meta||{})); }
   function setItems(items, meta) {
     if (destroyed) return false;
     var next = normalizeItems(items);
     rebuildMetadata(next);
     syncingItems = true;
-    tokenInput.setTags(next.map(itemCore), Object.assign({ reason: 'set-items', source: 'api' }, meta || {}));
-    if (meta && meta.silent === true) pruneSelection(Object.assign({ reason: 'items-prune', source: 'set-items' }, meta || {}));
+    tokenInput.setTags(next.map(itemCore), Utils.assignOwn({ reason: 'set-items', source: 'api' }, meta || {}));
+    if (meta && meta.silent === true) pruneSelection(Utils.assignOwn({ reason: 'items-prune', source: 'set-items' }, meta || {}));
     syncingItems = false;
     if (meta && meta.silent === true) render('set-items');
     return api;
   }
   function clear(meta) {
     if (destroyed || mutationLocked(meta)) return false;
-    return tokenInput.clear(Object.assign({ reason: 'clear', source: 'api' }, meta || {}));
+    return tokenInput.clear(Utils.assignOwn({ reason: 'clear', source: 'api' }, meta || {}));
   }
   function setInputValue(value, meta) {
     if (destroyed) return false;
-    var changed = tokenInput.setInputValue(value, Object.assign({ reason: 'set-input', source: 'api' }, meta || {}));
+    var changed = tokenInput.setInputValue(value, Utils.assignOwn({ reason: 'set-input', source: 'api' }, meta || {}));
     opts.inputValue = tokenInput.getState().inputValue;
     if (input && input.value !== opts.inputValue) input.value = opts.inputValue;
     return changed;

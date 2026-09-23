@@ -560,7 +560,7 @@ function create(source, overrides) {
     if (own(next,'drag') && (next.drag === true) !== (opts.drag === true)) throw new Error('[QXFRAME9A7C2] Upload drag structure is immutable; destroy and recreate to change it.');
     if (reorderInteraction && reorderInteraction.getState().dragging && (own(next,'dragSort') || own(next,'disabled'))) reorderInteraction.cancelDrag('options');
     var candidate = Utils.mergeOwn(opts, next); candidate.listType = listType(candidate.listType); validateViewOptions(candidate); opts = candidate;
-    lifecycle.updateOptions(Object.assign(lifecycleOptions(false), own(next,'value') ? { value: next.value } : {}));
+    lifecycle.updateOptions(Utils.assignOwn(lifecycleOptions(false), own(next,'value') ? { value: next.value } : {}));
     syncStructure(); renderList(); if (formBridge) { formBridge.updateOptions({ name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, serializeValue: serializeFormValue }); formBridge.setValue(lifecycle.getValue(), { silent: true }); } return api;
   }
     

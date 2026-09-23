@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 
 import { DateUnit } from '../utils/dateUnit.js';
 
@@ -34,7 +35,7 @@ function moveDate(value, action, options) {
   else if(action==='end') { var end=DateUnit.startOfWeek(next,weekStarts); if(end){end.setDate(end.getDate()+6);next=end;} }
   return next;
 }
-function moveDateByKey(value, key, options) { var action=keyAction(key, Object.assign({columns:7},options||{})); return action && action.type !== 'activate' ? moveDate(value, action.action, options) : DateUnit.clone(value); }
+function moveDateByKey(value, key, options) { var action=keyAction(key, Utils.assignOwn({columns:7},options||{})); return action && action.type !== 'activate' ? moveDate(value, action.action, options) : DateUnit.clone(value); }
 
 export const TemporalGrid = Object.freeze({ keyAction, moveIndex, moveDate, moveDateByKey });
 export { keyAction, moveIndex, moveDate, moveDateByKey };

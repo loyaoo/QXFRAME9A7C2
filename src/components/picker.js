@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 import { PopupFieldComponent, popupFieldHooks } from './popup-field.js';
 import { PickerSession } from '../core/pickerSession.js';
 import { DOM } from '../core/dom.js';
@@ -74,26 +75,26 @@ export class PickerComponent extends PopupFieldComponent {
     commit(meta = {}) {
         const record = requireState(this);
         if (!record.session) return false;
-        const detail = Object.assign({ source: 'api', reason: 'confirm' }, meta);
+        const detail = Utils.assignOwn({ source: 'api', reason: 'confirm' }, meta);
         if (record.beforeCommit && record.beforeCommit(detail) === false) return false;
         return record.session.commit(detail);
     }
 
     cancel(meta = {}) {
         const session = requireState(this).session;
-        return session ? session.cancel(Object.assign({ source: 'api', reason: 'cancel' }, meta)) : false;
+        return session ? session.cancel(Utils.assignOwn({ source: 'api', reason: 'cancel' }, meta)) : false;
     }
 
     clear(meta = {}) {
         if (this.destroyed || !this.canMutate()) return false;
         const hook = this[pickerHooks.clear];
-        return typeof hook === 'function' ? hook.call(this, Object.assign({ source: 'api', reason: 'clear' }, meta)) : false;
+        return typeof hook === 'function' ? hook.call(this, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta)) : false;
     }
 
     now(meta = {}) {
         if (this.destroyed || !this.canMutate()) return false;
         const hook = this[pickerHooks.now];
-        return typeof hook === 'function' ? hook.call(this, Object.assign({ source: 'api', reason: 'now' }, meta)) : false;
+        return typeof hook === 'function' ? hook.call(this, Utils.assignOwn({ source: 'api', reason: 'now' }, meta)) : false;
     }
 
     createConfirmFooter(options = {}) {

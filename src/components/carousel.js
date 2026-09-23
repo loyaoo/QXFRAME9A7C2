@@ -323,7 +323,7 @@ export class Carousel extends Component {
         }
         function goTo(index, config) {
             if (instance.destroyed || !count()) return api;
-            const meta = Object.assign({ reason: 'go-to', source: 'api', user: false, animate: true }, config || {});
+            const meta = Utils.assignOwn({ reason: 'go-to', source: 'api', user: false, animate: true }, config || {});
             if (meta.user === true && opts.disabled === true) return api;
             const resolved = normalizeIndex(index);
             if (resolved === current) { restartAutoplay(); return api; }
@@ -339,8 +339,8 @@ export class Carousel extends Component {
             restartAutoplay();
             return api;
         }
-        function nextSlide(config) { return goTo(current + 1, Object.assign({ reason: 'next' }, config || {})); }
-        function prevSlide(config) { return goTo(current - 1, Object.assign({ reason: 'prev' }, config || {})); }
+        function nextSlide(config) { return goTo(current + 1, Utils.assignOwn({ reason: 'next' }, config || {})); }
+        function prevSlide(config) { return goTo(current - 1, Utils.assignOwn({ reason: 'prev' }, config || {})); }
 
         function renderItems() {
             itemScope.dispose();

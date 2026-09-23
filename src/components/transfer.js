@@ -112,7 +112,7 @@ function create(source, overrides) {
     var rawNative = String(fieldInit.nativeValue == null ? '' : fieldInit.nativeValue);
     incoming.value = rawNative === '' ? [] : rawNative.split(',').filter(function (value) { return value !== ''; });
   }
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     items: [], value: [], titles: ['Source', 'Target'], searchable: true, sortable: true,
     oneWay: false, disabled: false, readOnly: false, required: false, size: 'md', virtual: false, pagination: false, table: false, status: 'default'
   }, incoming);
@@ -577,7 +577,7 @@ function create(source, overrides) {
   }
 
   function listOptions(side, listItems) {
-    return Object.assign({
+    return Utils.assignOwn({
       ownerPrefix: 'transfer',
       itemSemanticClasses: function () { return ['qxframe9a7c2-transfer-item','qxframe9a7c2-transfer-' + side + '-item']; },
       itemClassParts: side === 'source' ? ['item','sourceItem'] : ['item','targetItem'],
@@ -615,11 +615,11 @@ function create(source, overrides) {
     var desiredTargetSelection = selectionPolicy && own(selectionPolicy, 'target') ? selectionPolicy.target : previousTargetSelection;
     var nextSourceItems = sourceItems();
     var nextTargetItems = targetItems();
-    sourceList.updateOptions(Object.assign(listRuntimeOptions('source'), {
+    sourceList.updateOptions(Utils.assignOwn(listRuntimeOptions('source'), {
       items: nextSourceItems,
       value: selectionForItems(nextSourceItems, desiredSourceSelection)
     }));
-    targetList.updateOptions(Object.assign(listRuntimeOptions('target'), {
+    targetList.updateOptions(Utils.assignOwn(listRuntimeOptions('target'), {
       items: nextTargetItems,
       value: selectionForItems(nextTargetItems, desiredTargetSelection)
     }));
@@ -649,7 +649,7 @@ function create(source, overrides) {
     var previous = targetValues.slice();
     targetValues = next;
     refreshLists(meta && meta.reason || 'set-value');
-    if (!(meta && meta.silent === true)) emitChange(previous, Object.assign({ direction: 'set' }, meta || {}));
+    if (!(meta && meta.silent === true)) emitChange(previous, Utils.assignOwn({ direction: 'set' }, meta || {}));
     return api;
   }
 

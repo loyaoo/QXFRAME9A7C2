@@ -36,7 +36,7 @@ function validateItems(items) {
 function requireState(instance) { const record = state.get(instance); if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Dropdown instance.'); return record; }
 
 function initializeDropdown(instance, options) {
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     trigger: 'click', placement: 'bottom-start', closeOnSelect: undefined,
     searchable: false, selectable: true, multiple: false, disabled: false, readOnly: false,
     size: 'md', selectionAppearance: 'check-start', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined, closeDelay: undefined,

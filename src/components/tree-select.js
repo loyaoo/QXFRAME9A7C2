@@ -146,7 +146,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         function apiValue() { return valueState ? copyApiValue(valueState.value) : normalizeApiValue(undefined); }
         function writeApiValue(next, meta, request) {
           if (!valueState) return false;
-          var cfg = Object.assign({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta || {});
+          var cfg = Utils.assignOwn({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta || {});
           var normalized = normalizeApiValue(next);
           if (StateController.deepEquals(valueState.value, normalized)) return false;
           if (request === true && valueState.controlled) return valueState.requestChange(normalized, cfg);

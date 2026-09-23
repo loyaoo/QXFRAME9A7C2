@@ -97,7 +97,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
   var derivedNeedConfirm = selection !== 'single' || withTime;
   var closeOnSelectExplicit = own(sourceOptions, 'closeOnSelect');
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     selection: selection,
     unit: unit,
     time: timeOptions || false,
@@ -564,7 +564,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function dualSecondaryView(primary) { return addMonths(dualPrimaryView(primary), 1); }
   function syncCalendarPair(primary, meta) {
     if (!calendarSecondary) return;
-    var settings = Object.assign({ silent: true, source: 'sync', reason: 'dual-panel-sync' }, meta || {});
+    var settings = Utils.assignOwn({ silent: true, source: 'sync', reason: 'dual-panel-sync' }, meta || {});
     calendarSecondary.setViewValue(dualSecondaryView(primary), settings);
   }
   function restoreControlledPanelValue() {
@@ -766,7 +766,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function clear(meta) {
     if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value, selection);
-    draft.setValue(emptyValue(selection), Object.assign({ source: 'api', reason: 'clear' }, meta || {}));
+    draft.setValue(emptyValue(selection), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
     syncSelectionPanel(false);
     syncTimePanel();
@@ -825,7 +825,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     parsed.value.forEach(function (entry) {
       if (!base.some(function (current) { return DateUnit.same(current, entry, unit, opts.weekStartsOn); })) base.push(entry);
     });
-    draft.setValue(base, Object.assign({ source: 'input', reason: 'multiple-input' }, meta || {}));
+    draft.setValue(base, Utils.assignOwn({ source: 'input', reason: 'multiple-input' }, meta || {}));
     rawInput = '';
     if (field) field.setDisplayValue('');
     syncSelectionPanel(true);
@@ -1278,7 +1278,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = normalizeValue(value); } catch (_) { return false; }
-    var result = draft.setValue(normalized, Object.assign({ source: 'api', reason: 'set-value' }, meta || {}));
+    var result = draft.setValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
     activeRangePart = selection === 'range' && normalized[1] ? 1 : 0;
     syncSelectionPanel(true);
     syncTimePanel();
@@ -1289,7 +1289,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = normalizeValue(value); } catch (_) { return false; }
-    var result = draft.setDraft(normalized, Object.assign({ source: 'api', reason: 'set-picker-value' }, meta || {}));
+    var result = draft.setDraft(normalized, Utils.assignOwn({ source: 'api', reason: 'set-picker-value' }, meta || {}));
     activeRangePart = selection === 'range' && normalized[1] ? 1 : 0;
     syncSelectionPanel(true);
     syncTimePanel();
@@ -1300,7 +1300,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = clampPanelValue(normalizeBound(value, 'panel value')); } catch (_) { return false; }
-    var settings = Object.assign({ source: 'api', reason: 'date-picker-panel-view' }, meta || {});
+    var settings = Utils.assignOwn({ source: 'api', reason: 'date-picker-panel-view' }, meta || {});
     if (calendar) return calendar.setViewValue(normalized, settings);
     if (periodPanel) return periodPanel.setViewValue(normalized, settings);
     return false;

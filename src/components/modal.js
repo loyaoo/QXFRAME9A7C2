@@ -70,7 +70,7 @@ function normalize(input, previous) {
 function px(value) { return typeof value === 'number' ? value + 'px' : (value || ''); }
     
 function createModalController(instance, options) {
-  var opts = normalize(Object.assign({
+  var opts = normalize(Utils.assignOwn({
     title: '提示', content: '', closable: true, showMask: true, closeOnMask: true,
     closeOnEscape: true, destroyOnHidden: false, lockScroll: true, focusTrap: true,
     restoreFocus: true, forceRender: false, autoOpen: true, placement: 'center',

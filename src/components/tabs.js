@@ -109,7 +109,7 @@ function renderOutput(host, value, item, api, slot, doc) {
 function create(options) {
   var source = options || {};
   ComponentContracts.validate(ComponentContracts.get('Tabs'),source,'Tabs');
-  var opts = normalizeOptions(Object.assign({
+  var opts = normalizeOptions(Utils.assignOwn({
     items: [], orientation: 'horizontal', placement: 'top', type: 'line', activationMode: 'auto',
     destroyInactive: false, overflow: true, edgeShadow: true, wheelPropagation: true,
     editable: false, addable: undefined, closable: false, disabled: false, readOnly: false,

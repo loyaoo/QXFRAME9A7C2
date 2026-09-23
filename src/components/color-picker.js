@@ -95,7 +95,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      var mode = own(source, 'mode') ? normalizeMode(source.mode) : 'solid';
      if (own(source, 'gradient') && typeof source.gradient !== 'boolean') throw new TypeError('[QXFRAME9A7C2] ColorPicker gradient must be boolean.');
      var gradientEnabled = source.gradient === true || (own(source, 'mode') && mode === 'gradient');
-     var opts = Object.assign({
+     var opts = Utils.assignOwn({
        mode: mode, gradient: false, format: 'hex', showAlpha: true, clearable: true, needConfirm: false, showCancel: false,
        disabled: false, readOnly: false, size: 'md', placement: 'bottom-start', trigger: 'click', open: false,
        placeholder: '选择颜色', presets: null, indicatorPlacement: 'start', gradientAngle: 90, swatchOnly: false
@@ -358,7 +358,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      function clear(meta) {
        if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
        var changed = !!draft.value;
-       draft.setValue(null, Object.assign({ source: 'api', reason: 'clear' }, meta || {}));
+       draft.setValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
        syncField(false);
        var payload = { value: null, reason: meta && meta.reason || 'clear', colorPicker: api };
        if (Utils.isFunction(opts.onClear)) opts.onClear(payload);
@@ -373,7 +373,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        opts.mode = mode;
        var canonical = normalizeModel(value);
        if (canonical === undefined) return false;
-       var result = draft.setValue(canonical, Object.assign({ source: 'api', reason: 'set-value' }, meta || {}));
+       var result = draft.setValue(canonical, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
        syncPanelFromModel(canonical || seedValue(), 'set-value-sync');
        syncField(false); return result;
      }
@@ -382,7 +382,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (isGradient(value) && !gradientEnabled) throw new TypeError('[QXFRAME9A7C2] ColorPicker gradient support is disabled; enable it before setting a gradient value.');
        var canonical = normalizeModel(value);
        if (canonical === undefined) return false;
-       var result = draft.setDraft(canonical, Object.assign({ source: 'api', reason: 'set-picker-value' }, meta || {}));
+       var result = draft.setDraft(canonical, Utils.assignOwn({ source: 'api', reason: 'set-picker-value' }, meta || {}));
        syncPanelFromModel(canonical || seedValue(), 'picker-sync');
        syncField(true); return result;
      }
@@ -396,8 +396,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
          activeStopIndex = Math.max(0, Math.min(next.stops.length - 1, activeStopIndex));
          next.stops[activeStopIndex].color = color;
        } else next = color;
-       draft.setDraft(next, Object.assign({ source: 'api', reason: 'alpha' }, meta || {}));
-       if (opts.needConfirm !== true) draft.commit(Object.assign({ source: 'api', reason: 'alpha-commit' }, meta || {}));
+       draft.setDraft(next, Utils.assignOwn({ source: 'api', reason: 'alpha' }, meta || {}));
+       if (opts.needConfirm !== true) draft.commit(Utils.assignOwn({ source: 'api', reason: 'alpha-commit' }, meta || {}));
        syncField(opts.needConfirm === true && field.getState().open); return true;
      }
      function canonicalizeModelForFormat(value) {
@@ -428,7 +428,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (nextMode === 'gradient') converted = isGradient(current) ? current : seedGradient(current || seedSolid());
        else converted = isGradient(current) ? (activeColor(current) || seedSolid()) : current;
        mode = nextMode; opts.mode = nextMode; activeStopIndex = 0;
-       draft.setValue(converted, Object.assign({ silent: true, source: 'api', reason: 'mode-change' }, meta || {}));
+       draft.setValue(converted, Utils.assignOwn({ silent: true, source: 'api', reason: 'mode-change' }, meta || {}));
        draft.setDraft(converted, { silent: true, source: 'api', reason: 'mode-draft' });
        syncPanelFromModel(converted, 'mode-sync'); syncField(false); return api;
      }
@@ -439,7 +439,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      function applyGradient(next, meta) {
        if (!gradientEnabled) return false;
        if (mode !== 'gradient') setMode('gradient', { silent: true });
-       var detail = Object.assign({ source: 'api', reason: 'gradient-change' }, meta || {});
+       var detail = Utils.assignOwn({ source: 'api', reason: 'gradient-change' }, meta || {});
        draft.setDraft(next, detail);
        syncPanelFromModel(next, 'gradient-sync');
        if (detail.preview === true) {
@@ -462,7 +462,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (destroyed || !gradientEnabled) return false;
        var next = currentGradient(); next.angle = Number(angle);
        if (!Number.isFinite(next.angle)) return false;
-       return applyGradient(next, Object.assign({ reason: 'gradient-angle' }, meta || {}));
+       return applyGradient(next, Utils.assignOwn({ reason: 'gradient-angle' }, meta || {}));
      }
      function setGradientStop(index, color, offset, meta) {
        if (destroyed || !gradientEnabled) return false;
@@ -476,7 +476,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        next.stops.sort(function (a, b) { return a.offset - b.offset; });
        activeStopIndex = next.stops.findIndex(function (stop) { return stop.color === canonical && (offset === undefined || Math.abs(stop.offset - clamp(offset, 0, 1)) < 1e-9); });
        if (activeStopIndex < 0) activeStopIndex = 0;
-       return applyGradient(next, Object.assign({ reason: 'gradient-stop' }, meta || {}));
+       return applyGradient(next, Utils.assignOwn({ reason: 'gradient-stop' }, meta || {}));
      }
      function addGradientStop(offset, color, meta) {
        if (destroyed || !gradientEnabled) return false;
@@ -486,7 +486,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        next.stops.push({ offset: clamp(offset === undefined ? 0.5 : offset, 0, 1), color: canonical });
        next.stops.sort(function (a, b) { return a.offset - b.offset; });
        activeStopIndex = next.stops.findIndex(function (stop) { return stop.color === canonical && Math.abs(stop.offset - clamp(offset === undefined ? 0.5 : offset, 0, 1)) < 1e-9; });
-       return applyGradient(next, Object.assign({ reason: 'gradient-add-stop' }, meta || {}));
+       return applyGradient(next, Utils.assignOwn({ reason: 'gradient-add-stop' }, meta || {}));
      }
      function removeGradientStop(index, meta) {
        if (destroyed || !gradientEnabled) return false;
@@ -495,7 +495,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var position = Number(index);
        if (!Number.isInteger(position) || position < 0 || position >= next.stops.length) return false;
        next.stops.splice(position, 1); activeStopIndex = Math.max(0, Math.min(next.stops.length - 1, activeStopIndex));
-       return applyGradient(next, Object.assign({ reason: 'gradient-remove-stop' }, meta || {}));
+       return applyGradient(next, Utils.assignOwn({ reason: 'gradient-remove-stop' }, meta || {}));
      }
 
      function stopOffsetFromPointer(event) {

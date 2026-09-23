@@ -53,7 +53,7 @@ function resolvedDelay(value, configKey, element) {
     
 function create(options) {
   validateContractOptions(ComponentContracts.get('Trigger'), options || {}, 'Trigger');
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     trigger: 'click', placement: 'bottom-start', strategy: 'absolute', offset: 8, arrow: false, arrowElement: null, arrowPadding: 8, open: false, disabled: false,
     openDelay: undefined, closeDelay: undefined, autoUpdate: true, closeOnOutsidePress: true, closeOnFocusOutside: false, closeOnTabExit: false, closeOnEscape: true, focusScope: 'auto',
     restoreFocusOnDismiss: false, flipOnOverflow: true, destroyOnClose: true, forceRender: false, keyboardActivation: true, transition: MotionPresets.popupPlacement
@@ -180,7 +180,7 @@ function create(options) {
     return { source: DOM.activationSource(originalEvent), reason: reason || 'api', originalEvent: originalEvent || null, trigger: api, state: { open: opened }, forceClose: forceClose || null };
   }
   function emitOpen(value, info) {
-    return OpenStateBridge.dispatch(value, Object.assign({ source:DOM.activationSource(info && info.originalEvent) }, info || {}), {
+    return OpenStateBridge.dispatch(value, Utils.assignOwn({ source:DOM.activationSource(info && info.originalEvent) }, info || {}), {
       emitter: emitter,
       emitPhase: true,
       decorate: function () { return { trigger:api }; },

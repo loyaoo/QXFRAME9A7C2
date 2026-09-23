@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 var NULLABLE_FUNCTION = Object.freeze({ type: 'function', nullable: true });
 var NULLABLE_OBJECT = Object.freeze({ type: 'object', nullable: true });
 var BOOLEAN_OPTIONS = Object.freeze(new Set([
@@ -38,7 +39,7 @@ function inferRule(key) {
   return 'any';
 }
 function schema(keys) { var output = Object.create(null); keys.forEach(function (key) { output[key] = inferRule(key); }); return Object.freeze(output); }
-function schemaWith(keys, overrides) { var output = Object.assign(Object.create(null), schema(keys), overrides || {}); return Object.freeze(output); }
+function schemaWith(keys, overrides) { var output = Utils.assignOwn(Object.create(null), schema(keys), overrides || {}); return Object.freeze(output); }
 function durationPairValue(value) { return (typeof value === 'number' && Number.isFinite(value)) || (Array.isArray(value) && value.length <= 2 && value.every(function (item) { return typeof item === 'number' && Number.isFinite(item); })); }
 function autoFocusValue(value) { return value === false || typeof value === 'string' || typeof value === 'function' || !!(value && value.nodeType === 1); }
 var contracts = {

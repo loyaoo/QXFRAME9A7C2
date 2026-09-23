@@ -239,7 +239,7 @@ export class Sort extends Component {
     #emitChange(previousItems, detail = {}) {
         const r = recordFor(this), next = this.#items();
         if (r.formBridge) r.formBridge.setValue(next.map(item => item.key), { forceEvent: true, source: detail.source || 'api', reason: detail.reason || 'change' });
-        if (typeof this.options.onChange === 'function') this.options.onChange(next.slice(), Object.assign({ items: next.slice(), order: next.map(item => item.key), previousItems: previousItems.slice(), instance: this }, detail));
+        if (typeof this.options.onChange === 'function') this.options.onChange(next.slice(), Utils.assignOwn({ items: next.slice(), order: next.map(item => item.key), previousItems: previousItems.slice(), instance: this }, detail));
     }
     #moveByKey(key, delta, meta) { const index = recordFor(this).collection.indexOf(String(key)); return index < 0 ? false : this.move(index, index + delta, meta); }
 
@@ -252,8 +252,8 @@ export class Sort extends Component {
         if (meta.silent !== true) this.#emitChange(previous, { reason: result.reason || meta.reason || 'move', source: meta.source || 'api', originalEvent: meta.originalEvent || null, moved: Object.freeze({ key: result.key, fromIndex: result.fromIndex, toIndex: result.toIndex }) });
         return true;
     }
-    moveUp(key, meta) { return this.#moveByKey(key, -1, Object.assign({ reason: 'move-up' }, meta || {})); }
-    moveDown(key, meta) { return this.#moveByKey(key, 1, Object.assign({ reason: 'move-down' }, meta || {})); }
+    moveUp(key, meta) { return this.#moveByKey(key, -1, Utils.assignOwn({ reason: 'move-up' }, meta || {})); }
+    moveDown(key, meta) { return this.#moveByKey(key, 1, Utils.assignOwn({ reason: 'move-down' }, meta || {})); }
     setItems(next, meta = {}) {
         if (this.destroyed) return false;
         const r = recordFor(this); if (r.reorderInteraction && r.reorderInteraction.getState().dragging) r.reorderInteraction.cancelDrag('set-items');

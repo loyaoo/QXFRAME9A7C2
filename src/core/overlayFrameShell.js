@@ -41,7 +41,7 @@ function create(config) {
     if(typeof opts.autoFocus==='function')return opts.autoFocus(instance);
     return surface.querySelector('button:not([disabled]),a[href]:not([tabindex="-1"]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')||surface;
   }
-  function overlayOptions(extra){var opts=options(), add=extra||{};return Object.assign({floating:root,document:doc,portalContainer:cfg.portalContainer,position:false,closeOnOutsidePress:false,closeOnEscape:opts.closeOnEscape,trapFocus:opts.focusTrap,lockScroll:opts.lockScroll,initialFocus:initialFocus,focusOnActivate:opts.autoFocus!==false,restoreFocus:opts.restoreFocus,destroyOnDeactivate:opts.destroyOnHidden===true,zIndex:opts.zIndex,layerKind:'modal',componentType:cfg.componentType||'Overlay'},add);}
+  function overlayOptions(extra){var opts=options(), add=extra||{};return Utils.assignOwn({floating:root,document:doc,portalContainer:cfg.portalContainer,position:false,closeOnOutsidePress:false,closeOnEscape:opts.closeOnEscape,trapFocus:opts.focusTrap,lockScroll:opts.lockScroll,initialFocus:initialFocus,focusOnActivate:opts.autoFocus!==false,restoreFocus:opts.restoreFocus,destroyOnDeactivate:opts.destroyOnHidden===true,zIndex:opts.zIndex,layerKind:'modal',componentType:cfg.componentType||'Overlay'},add);}
   function clearActions(){actionCleanups.splice(0).forEach(function(dispose){try{dispose();}catch(error){}});}
   function buttonDisabled(buttonConfig,data){return typeof buttonConfig.disabled==='function'?buttonConfig.disabled(data)!==false:buttonConfig.disabled===true;}
   function createActionButton(buttonConfig){

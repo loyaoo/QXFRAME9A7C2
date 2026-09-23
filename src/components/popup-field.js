@@ -55,7 +55,7 @@ export function popupSelectionOpenPlan(detail, options = {}) {
 export function createPopupFieldTriggerSettings(options = {}, context = {}, overrides = {}) {
     const opts = options || {};
     const ctx = context || {};
-    return Object.assign({
+    return Utils.assignOwn({
         trigger: opts.trigger,
         keyboardActivation: false,
         openDelay: opts.openDelay,

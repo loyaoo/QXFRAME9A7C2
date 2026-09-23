@@ -272,7 +272,7 @@ function create(options) {
     return true;
   }
   function emitChange(nextData, detail) {
-    if (typeof opts.onChange === 'function') opts.onChange(nextData, Object.freeze(Object.assign({ data: nextData, json: api }, detail || {})));
+    if (typeof opts.onChange === 'function') opts.onChange(nextData, Object.freeze(Utils.assignOwn({ data: nextData, json: api }, detail || {})));
   }
   function commitEdit(reason, event, restoreFocus) {
     if (!editSession) return false;

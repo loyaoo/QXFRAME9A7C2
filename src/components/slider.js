@@ -59,7 +59,7 @@ function prepare(source, overrides) {
         const rawNative = String(fieldInit.nativeValue == null ? '' : fieldInit.nativeValue);
         incoming.value = incoming.range ? rawNative.split(',').filter(part => part !== '').map(Number) : Number(rawNative);
     }
-    const preview = normalizeSliderOptions(Object.assign({ min:0,max:100,step:1,range:false,included:true,vertical:false,reverse:false,keyboard:true,disabled:false,readOnly:false,allowCross:true,dots:false,marks:null,tooltip:{},size:'md',required:false }, incoming));
+    const preview = normalizeSliderOptions(Utils.assignOwn({ min:0,max:100,step:1,range:false,included:true,vertical:false,reverse:false,keyboard:true,disabled:false,readOnly:false,allowCross:true,dots:false,marks:null,tooltip:{},size:'md',required:false }, incoming));
     if (!preview.container && !preview.formField) throw new TypeError('[QXFRAME9A7C2] Slider requires target/container or formField.');
     const doc = fieldInit.document || preview.document || (preview.container && preview.container.ownerDocument) || (preview.formField && preview.formField.ownerDocument) || globalThis.document;
     return { fieldInit, incoming, doc };

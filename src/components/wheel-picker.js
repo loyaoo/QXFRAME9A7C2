@@ -115,7 +115,7 @@ function cancel(meta) { return instance.cancel(meta || {}); }
 function clear(meta) {
   if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
   var changed = !!(draft.value && draft.value.length);
-  draft.setValue([], Object.assign({ source: 'api', reason: 'clear' }, meta || {}));
+  draft.setValue([], Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
   panel.setValue([], { silent: true, source: 'api', reason: 'clear-sync' });
   syncField(false);
   var payload = { value: [], reason: meta && meta.reason || 'clear', wheelPicker: api };
@@ -225,7 +225,7 @@ function setValue(next, meta) {
   var normalized = assertValue(next || [], 'value');
   panel.setValue(normalized, { silent: true, source: 'api', reason: 'set-value-normalize' });
   normalized = panel.getState().value;
-  var result = draft.setValue(normalized, Object.assign({ source: 'api', reason: 'set-value' }, meta || {}));
+  var result = draft.setValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
   panel.setValue(draft.value || [], { silent: true, source: 'api', reason: 'set-value-sync' });
   syncField(false);
   return result;

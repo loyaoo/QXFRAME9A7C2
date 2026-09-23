@@ -123,7 +123,7 @@ function render(container, output, doc) {
 }
 function create(options) {
   var source = options || {};
-  var opts = normalizeOptions(Object.assign({
+  var opts = normalizeOptions(Utils.assignOwn({
     src: '', alt: '', fit: 'cover', lazy: false, fallback: '', placeholder: null, errorContent: null,
     rounded: false, circle: false, width: null, height: null, preview: false, previewMask: true,
     previewMaskText: 'Preview', disabled: false, maskClosable: true, maskOpacity: 0.82, maskColor: '',
@@ -332,7 +332,7 @@ function create(options) {
     previewImage.classList.toggle('is-zoomed', state.scale > 1.001);
     previewImage.classList.toggle('is-flipped-x', state.flipX < 0);
     previewImage.classList.toggle('is-flipped-y', state.flipY < 0);
-    call(cfg('onTransform', opts.onTransform), Object.freeze(Object.assign({ reason: detail && detail.reason || 'api' }, transformValue())), Object.freeze({ index: previewIndex, item: currentPreviewItem(), instance: api }));
+    call(cfg('onTransform', opts.onTransform), Object.freeze(Utils.assignOwn({ reason: detail && detail.reason || 'api' }, transformValue())), Object.freeze({ index: previewIndex, item: currentPreviewItem(), instance: api }));
     return api;
   }
   transformModel = TransformModel.create({

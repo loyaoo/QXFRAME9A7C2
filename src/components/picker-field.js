@@ -41,7 +41,7 @@ function sizeName(value) { return Utils.normalizeSize(value, 'md'); }
 function validateHeadlessOptions(options, label) { return FieldHost.validateHeadless(options || {}, label || 'PickerField'); }
 
 function create(options) {
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     size: 'md', disabled: false, readOnly: false, editable: false, clearable: false, draftVisual: false, controlMode: 'input', tags: [], tokenSeparators: [],
     placeholder: '', placement: 'bottom-start', open: false, trigger: 'click',
     closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true, focusScope: 'exit', matchReferenceWidth: false, renderControl: true, headless: false

@@ -412,7 +412,7 @@ function create(options) {
     if (typeof opts.onSelectionChange !== 'function') return;
     var entries = projectedEntries();
     var values = entries.filter(function (entry) { return isKeySelected(entry.key); }).map(function (entry) { return entry.key; });
-    opts.onSelectionChange(values, Object.assign({ instance: api, selection: selectionStateSnapshot() }, meta || {}));
+    opts.onSelectionChange(values, Utils.assignOwn({ instance: api, selection: selectionStateSnapshot() }, meta || {}));
   }
   function setQuerySelectionAll(selected, meta) {
     if (!isRemote() || opts.remoteSelectionScope !== 'query') return false;
@@ -421,16 +421,16 @@ function create(options) {
       remoteSelection.queryFingerprint = remoteQueryFingerprint();
       remoteSelection.excludedKeys.clear();
     } else resetRemoteSelection();
-    renderSelectionProjection(Object.assign({ reason: 'selection', selectionReason: 'query-all' }, meta || {}));
-    emitSelectionChange(Object.assign({ reason: 'selection', selectionReason: 'query-all' }, meta || {}));
+    renderSelectionProjection(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-all' }, meta || {}));
+    emitSelectionChange(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-all' }, meta || {}));
     return true;
   }
   function toggleQuerySelection(key, selected, meta) {
     if (!querySelectionActive()) return false;
     var normalized = String(key);
     if (selected === false) remoteSelection.excludedKeys.add(normalized); else remoteSelection.excludedKeys.delete(normalized);
-    renderSelectionProjection(Object.assign({ reason: 'selection', selectionReason: 'query-exclusion', key: normalized }, meta || {}));
-    emitSelectionChange(Object.assign({ reason: 'selection', selectionReason: 'query-exclusion', key: normalized }, meta || {}));
+    renderSelectionProjection(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-exclusion', key: normalized }, meta || {}));
+    emitSelectionChange(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-exclusion', key: normalized }, meta || {}));
     return true;
   }
   function normalizeRemoteResult(result) {
@@ -1145,7 +1145,7 @@ function create(options) {
     });
     if (!changed) return true;
     opts.columns = normalizeColumns(nextColumns);
-    return model.setColumns(opts.columns, Object.assign({ source: 'column-resize', reason: 'columns' }, meta || {}));
+    return model.setColumns(opts.columns, Utils.assignOwn({ source: 'column-resize', reason: 'columns' }, meta || {}));
   }
   function installColumnResize(th, column) {
     if (column.resizable !== true || mutationLocked()) return;
@@ -1211,7 +1211,7 @@ function create(options) {
     var columns = all.map(function (column) { return column.visible === false ? column : visible[visibleIndex++]; });
     if (!validFixedColumnOrder(columns.filter(function (column) { return column.visible !== false; }))) return false;
     opts.columns = normalizeColumns(columns);
-    var changed = model.setColumns(opts.columns, Object.assign({ source: 'column-reorder', reason: 'column-reorder' }, meta || {}));
+    var changed = model.setColumns(opts.columns, Utils.assignOwn({ source: 'column-reorder', reason: 'column-reorder' }, meta || {}));
     if (changed && typeof opts.onColumnReorder === 'function') opts.onColumnReorder(moving.key, sourceIndex, at, Object.freeze({ columns: opts.columns.slice(), instance: api }));
     return changed;
   }
@@ -1228,7 +1228,7 @@ function create(options) {
     if (!found) return false;
     if (!changed) return true;
     opts.columns = normalizeColumns(columns);
-    return model.setColumns(opts.columns, Object.assign({ source: 'api', reason: 'column-visibility' }, meta || {}));
+    return model.setColumns(opts.columns, Utils.assignOwn({ source: 'api', reason: 'column-visibility' }, meta || {}));
   }
   function setColumnOrder(keys, meta) {
     if (!Array.isArray(keys)) throw new TypeError('[QXFRAME9A7C2] Table setColumnOrder() keys must be an array.');
@@ -1244,7 +1244,7 @@ function create(options) {
     if (!validFixedColumnOrder(ordered.filter(function (column) { return column.visible !== false; }))) return false;
     if (ordered.every(function (column, index) { return column.key === columns[index].key; })) return true;
     opts.columns = normalizeColumns(ordered);
-    return model.setColumns(opts.columns, Object.assign({ source: 'api', reason: 'column-reorder' }, meta || {}));
+    return model.setColumns(opts.columns, Utils.assignOwn({ source: 'api', reason: 'column-reorder' }, meta || {}));
   }
   function columnStateSnapshot() {
     return allColumns().map(function (column, index) { return Object.freeze({ key: column.key, visible: column.visible !== false, width: column.width == null ? null : column.width, flex: column.flex == null ? null : column.flex, order: index, fixed: column.fixed || null }); });
@@ -1282,11 +1282,11 @@ function create(options) {
     });
     if (!validFixedColumnOrder(columns.filter(function (column) { return column.visible !== false; }))) throw new TypeError('[QXFRAME9A7C2] Table column state violates fixed start/middle/end ordering.');
     opts.columns = normalizeColumns(columns);
-    return model.setColumns(opts.columns, Object.assign({ source: 'api', reason: 'column-state' }, meta || {}));
+    return model.setColumns(opts.columns, Utils.assignOwn({ source: 'api', reason: 'column-state' }, meta || {}));
   }
   function resetColumnState(meta) {
     opts.columns = normalizeColumns(initialColumns);
-    return model.setColumns(opts.columns, Object.assign({ source: 'api', reason: 'column-state-reset' }, meta || {}));
+    return model.setColumns(opts.columns, Utils.assignOwn({ source: 'api', reason: 'column-state-reset' }, meta || {}));
   }
   function canRowReorder() {
     if (!opts.rowReorder || isRemote() || mutationLocked()) return false;
@@ -1314,7 +1314,7 @@ function create(options) {
     insertAt = Math.max(0, Math.min(items.length, insertAt));
     items.splice(insertAt, 0, moving);
     opts.items = items;
-    var changed = model.setItems(items, Object.assign({ source: 'row-reorder', reason: 'items' }, meta || {}));
+    var changed = model.setItems(items, Utils.assignOwn({ source: 'row-reorder', reason: 'items' }, meta || {}));
     if (changed && typeof opts.onRowReorder === 'function') opts.onRowReorder(sourceKey, sourceIndex, insertAt, Object.freeze({ items: items.slice(), instance: api }));
     return changed;
   }
@@ -2366,18 +2366,18 @@ function create(options) {
     insertRows: function (index, rows, meta) { return model.insertRows(index, rows, meta); },
     removeRows: function (keys, meta) { return model.removeRows(keys, meta); },
     setColumns: function (columns, meta) { opts.columns = normalizeColumns(columns); return model.setColumns(opts.columns, meta); },
-    setColumnWidth: function (key, width, meta) { return commitColumnWidth(key, width, Object.assign({ source: 'api', reason: 'column-resize' }, meta || {})); },
+    setColumnWidth: function (key, width, meta) { return commitColumnWidth(key, width, Utils.assignOwn({ source: 'api', reason: 'column-resize' }, meta || {})); },
     setColumnVisible: setColumnVisible,
     setColumnOrder: setColumnOrder,
     applyColumnState: applyColumnState,
     resetColumnState: resetColumnState,
-    reorderColumn: function (key, toIndex, meta) { return reorderColumnsByKey(key, toIndex, Object.assign({ source: 'api' }, meta || {})); },
-    reorderRow: function (key, toIndex, meta) { return reorderRowsByKey(key, toIndex, Object.assign({ source: 'api' }, meta || {})); },
+    reorderColumn: function (key, toIndex, meta) { return reorderColumnsByKey(key, toIndex, Utils.assignOwn({ source: 'api' }, meta || {})); },
+    reorderRow: function (key, toIndex, meta) { return reorderRowsByKey(key, toIndex, Utils.assignOwn({ source: 'api' }, meta || {})); },
     getColumnState: columnStateSnapshot,
     setSort: model.setSort,
     setFilter: model.setFilter,
     setFilters: model.setFilters,
-    setSearchValue: function (value, meta) { opts.searchValue = value == null ? '' : String(value); if (typeof opts.onSearchChange === 'function') opts.onSearchChange(opts.searchValue, Object.assign({ instance: api }, meta || {})); return model.setSearchValue(opts.searchValue, meta); },
+    setSearchValue: function (value, meta) { opts.searchValue = value == null ? '' : String(value); if (typeof opts.onSearchChange === 'function') opts.onSearchChange(opts.searchValue, Utils.assignOwn({ instance: api }, meta || {})); return model.setSearchValue(opts.searchValue, meta); },
     setSelectedKeys: function (keys, meta) { resetRemoteSelection(); return model.setSelectedKeys(keys, meta); },
     toggleSelected: function (key, desired, meta) { if (toggleQuerySelection(key, desired, meta)) return true; return model.toggleSelected(key, desired, meta); },
     selectVisible: function (desired, meta) { if (isRemote() && opts.remoteSelectionScope === 'query') return setQuerySelectionAll(desired, meta); return model.selectVisible(desired, meta); },
@@ -2416,7 +2416,7 @@ function create(options) {
     getCellElement: function (rowKey, columnKey) { return findNavigationCell(navigationCellKey(String(rowKey), { kind: 'data', key: String(columnKey) })); },
     getViewState: viewStateSnapshot,
     applyViewState: applyViewState,
-    resetViewState: function (meta) { return applyViewState(initialViewState, Object.assign({ source: 'api', reason: 'view-state-reset' }, meta || {})); },
+    resetViewState: function (meta) { return applyViewState(initialViewState, Utils.assignOwn({ source: 'api', reason: 'view-state-reset' }, meta || {})); },
     getExportData: getExportData,
     getExportCSV: getExportCSV,
     reflow: reflow,

@@ -36,7 +36,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   var source = fieldInit.options;
   var selection = normalizeSelectionName(source.selection);
   var derivedNeedConfirm = selection === 'range';
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     selection: selection,
     showSecond: true, needConfirm: derivedNeedConfirm, showCancel: derivedNeedConfirm, closeOnSelect: false,
     commitInputOnBlur: true, preserveInvalidOnBlur: false, clearable: true,
@@ -256,7 +256,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function clear(meta) {
     if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value);
-    draft.setValue(emptyValue(), Object.assign({ source: 'api', reason: 'clear' }, meta || {}));
+    draft.setValue(emptyValue(), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
     syncPanel('time-picker-clear-sync');
     syncField(false);
@@ -304,7 +304,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
     var now = TimeUnit.normalizeStrict(value === undefined || value === null ? TimeUnit.now() : value);
     if (!now) return false;
-    var detail = Object.assign({ source: 'now', reason: 'now' }, meta || {});
+    var detail = Utils.assignOwn({ source: 'now', reason: 'now' }, meta || {});
     return applyPanelValue(now, detail);
   }
   function setActiveRangePart(index) {
@@ -364,7 +364,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   panel = TimePanel.create(Utils.mergeOwn( resolvedPanelOptions(panelSeed()), {
     container: field.getPanelHost(),
     value: panelSeed(),
-    onSelect: function (value, detail) { applyPanelValue(value, Object.assign({ panelOrigin: true }, detail || {})); }
+    onSelect: function (value, detail) { applyPanelValue(value, Utils.assignOwn({ panelOrigin: true }, detail || {})); }
   }));
   if (field.getKeyboardNavigation && field.getKeyboardNavigation()) panel.bindVirtualFocus(field.getKeyboardNavigation().virtualFocus, true);
   panelScrollSettleOff = panel.on('scrollSettle', function () {
@@ -408,7 +408,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = normalizeValue(value); } catch (_) { return false; }
-    var result = draft.setValue(normalized, Object.assign({ source: 'api', reason: 'set-value' }, meta || {}));
+    var result = draft.setValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
     if (selection === 'range') activeRangePart = normalized && !normalized[0] ? 0 : (normalized && !normalized[1] ? 1 : 0);
     syncPanel('time-picker-set-value');
     syncField(false); return result;
@@ -417,7 +417,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = normalizeValue(value); } catch (_) { return false; }
-    var result = draft.setDraft(normalized, Object.assign({ source: 'api', reason: 'set-picker-value' }, meta || {}));
+    var result = draft.setDraft(normalized, Utils.assignOwn({ source: 'api', reason: 'set-picker-value' }, meta || {}));
     if (selection === 'range') activeRangePart = normalized && !normalized[0] ? 0 : (normalized && !normalized[1] ? 1 : activeRangePart);
     syncPanel('time-picker-set-picker-value');
     syncField(true); return result;

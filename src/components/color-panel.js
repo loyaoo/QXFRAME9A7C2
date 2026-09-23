@@ -144,7 +144,7 @@ function parseColor(value) {
     }
     if (value.r !== undefined && value.g !== undefined && value.b !== undefined) {
       if (![Number(value.r), Number(value.g), Number(value.b)].every(Number.isFinite)) return null;
-      return Object.assign(rgbToHsv(Number(value.r), Number(value.g), Number(value.b)), { a: value.a === undefined ? 1 : clamp(value.a, 0, 1) });
+      return Utils.assignOwn(rgbToHsv(Number(value.r), Number(value.g), Number(value.b)), { a: value.a === undefined ? 1 : clamp(value.a, 0, 1) });
     }
     if (value.h !== undefined && value.s !== undefined && value.l !== undefined) {
       var hslS = Number(value.s), hslL = Number(value.l);
@@ -152,7 +152,7 @@ function parseColor(value) {
       if (hslS > 1) hslS /= 100;
       if (hslL > 1) hslL /= 100;
       var hslRgb = hslToRgb(Number(value.h), hslS, hslL);
-      return Object.assign(rgbToHsv(hslRgb.r, hslRgb.g, hslRgb.b), { a: value.a === undefined ? 1 : clamp(value.a, 0, 1) });
+      return Utils.assignOwn(rgbToHsv(hslRgb.r, hslRgb.g, hslRgb.b), { a: value.a === undefined ? 1 : clamp(value.a, 0, 1) });
     }
     return null;
   }
@@ -166,7 +166,7 @@ function parseColor(value) {
     if (hex.length === 6 || hex.length === 8) {
       var r = parseInt(hex.slice(0, 2), 16), g = parseInt(hex.slice(2, 4), 16), b = parseInt(hex.slice(4, 6), 16);
       var a = hex.length === 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1;
-      return Object.assign(rgbToHsv(r, g, b), { a: a });
+      return Utils.assignOwn(rgbToHsv(r, g, b), { a: a });
     }
     return null;
   }
@@ -175,7 +175,7 @@ function parseColor(value) {
   if (match) {
     var rr = Number(match[1]), gg = Number(match[2]), bb = Number(match[3]);
     if (![rr,gg,bb].every(Number.isFinite) || rr < 0 || rr > 255 || gg < 0 || gg > 255 || bb < 0 || bb > 255) return null;
-    return Object.assign(rgbToHsv(rr, gg, bb), { a: match[4] === undefined ? 1 : clamp(Number(match[4]) > 1 ? Number(match[4]) / 100 : Number(match[4]), 0, 1) });
+    return Utils.assignOwn(rgbToHsv(rr, gg, bb), { a: match[4] === undefined ? 1 : clamp(Number(match[4]) > 1 ? Number(match[4]) / 100 : Number(match[4]), 0, 1) });
   }
     
   match = text.match(/^hsla?\(\s*([\d.]+)(?:deg)?\s*[, ]\s*([\d.]+)%\s*[, ]\s*([\d.]+)%(?:\s*[,/]\s*([\d.]+)%?)?\s*\)$/i);
@@ -183,7 +183,7 @@ function parseColor(value) {
     var hh = Number(match[1]), ss = Number(match[2]), ll = Number(match[3]);
     if (![hh,ss,ll].every(Number.isFinite) || ss < 0 || ss > 100 || ll < 0 || ll > 100) return null;
     var rgb = hslToRgb(hh, ss / 100, ll / 100);
-    return Object.assign(rgbToHsv(rgb.r, rgb.g, rgb.b), { a: match[4] === undefined ? 1 : clamp(Number(match[4]) > 1 ? Number(match[4]) / 100 : Number(match[4]), 0, 1) });
+    return Utils.assignOwn(rgbToHsv(rgb.r, rgb.g, rgb.b), { a: match[4] === undefined ? 1 : clamp(Number(match[4]) > 1 ? Number(match[4]) / 100 : Number(match[4]), 0, 1) });
   }
   return null;
 }

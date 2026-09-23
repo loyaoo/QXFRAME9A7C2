@@ -34,7 +34,7 @@ function create(options) {
   }
   function notify(state, detail) {
     if (destroyed) return;
-    var payload = Object.freeze(Object.assign({ state: state, action: api }, detail || {}));
+    var payload = Object.freeze(Utils.assignOwn({ state: state, action: api }, detail || {}));
     if (Utils.isFunction(opts.onStateChange)) {
       try { opts.onStateChange(snapshot(), payload); }
       catch (error) { report(error, { phase: 'state-change', state: state, action: api }); }

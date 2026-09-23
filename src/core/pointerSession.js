@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
@@ -16,7 +17,7 @@ function create(options) {
     var activeScope = null;
     var active = false, dragging = false, destroyed = false, pointerId = null, startX = 0, startY = 0, lastX = 0, lastY = 0;
     function state() { return typeof opts.getState === 'function' ? (opts.getState() || {}) : (opts.state || {}); }
-    function policy() { return InteractionPolicy.resolve(state(), Object.assign({ draggable: true }, opts.capabilities || {})); }
+    function policy() { return InteractionPolicy.resolve(state(), Utils.assignOwn({ draggable: true }, opts.capabilities || {})); }
     function payload(reason, event) {
       var dx = Number(event && event.clientX || lastX) - startX, dy = Number(event && event.clientY || lastY) - startY;
       if (opts.axis === 'x') dy = 0; else if (opts.axis === 'y') dx = 0;

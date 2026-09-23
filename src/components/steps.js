@@ -170,7 +170,7 @@ export class Steps extends Component {
     #itemStatus(item, index) { const r = recordFor(this), opts = this.options; if (item && item.status) return item.status; if (index < r.current) return 'finish'; if (index === r.current) return opts.status; return 'wait'; }
     #contextFor(item, index, status, element, details) {
         const r = recordFor(this), opts = this.options;
-        return Item.createContext(item, Object.assign({
+        return Item.createContext(item, Utils.assignOwn({
             index, key: item && item.key, value: item && item.key, element: element || null, component: this, controller: this,
             status, title: item && item.title, description: item && item.description, item, instance: this,
             disabled: opts.disabled === true || !!(item && item.disabled), selected: index === r.current, active: !!(item && item.key === r.activeItem.activeKey)
@@ -254,8 +254,8 @@ export class Steps extends Component {
         }
         return this;
     }
-    next(config) { return this.setCurrent(recordFor(this).current + 1, Object.assign({ reason: 'next' }, config || {})); }
-    prev(config) { return this.setCurrent(recordFor(this).current - 1, Object.assign({ reason: 'prev' }, config || {})); }
+    next(config) { return this.setCurrent(recordFor(this).current + 1, Utils.assignOwn({ reason: 'next' }, config || {})); }
+    prev(config) { return this.setCurrent(recordFor(this).current - 1, Utils.assignOwn({ reason: 'prev' }, config || {})); }
     setItems(items) { if (this.destroyed) return false; this.updateOptions({ items }); return this; }
     getState() { const r = recordFor(this), opts = this.options; return Object.freeze({ current: r.current, activeKey: r.activeItem.activeKey || null, count: opts.items.length, status: opts.items.length ? this.#itemStatus(opts.items[r.current] || {}, r.current) : opts.status, direction: opts.direction, type: opts.type, labelPlacement: opts.labelPlacement, progressDot: opts.progressDot !== false, responsive: opts.responsive, disabled: opts.disabled, size: opts.size, destroyed: this.destroyed }); }
     getRootElement() { return recordFor(this).root; }

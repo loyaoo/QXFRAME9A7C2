@@ -150,7 +150,7 @@ function attachViewport(options) {
     
 function create(options) {
   validateContractOptions(ComponentContracts.get('Scroll'), options || {}, 'Scroll');
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     axis: 'y',
     wheelAxis: 'auto',
     wheelPropagation: true,

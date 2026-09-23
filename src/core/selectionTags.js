@@ -15,7 +15,7 @@ function createSelectionTags(options) {
       disabled: Utils.isFunction(opts.disabledOf) ? opts.disabledOf(value, index) === true : false,
       removable: !Utils.isFunction(opts.removableOf) || opts.removableOf(value, index) !== false
     };
-    if (Utils.isFunction(opts.decorate)) tag = Object.assign(tag, opts.decorate(tag, value, index) || {});
+    if (Utils.isFunction(opts.decorate)) tag = Utils.assignOwn(tag, opts.decorate(tag, value, index) || {});
     return Object.freeze(tag);
   }
   function tags() { return values().map(toTag); }

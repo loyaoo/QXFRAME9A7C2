@@ -18,20 +18,20 @@ function createPickerSession(options) {
   });
   function resolveFlag(value, detail) { return Utils.isFunction(value) ? value(controller, detail || {}) === true : value === true; }
   function open(meta) {
-    var detail = Object.assign({ silent:true, source:'popup', reason:'open' }, meta || {});
+    var detail = Utils.assignOwn({ silent:true, source:'popup', reason:'open' }, meta || {});
     controller.begin(detail);
     if (Utils.isFunction(opts.onOpenDraft)) opts.onOpenDraft(controller, detail);
     return true;
   }
   function commit(meta) {
-    var detail = Object.assign({ source:'api', reason:'confirm' }, meta || {});
+    var detail = Utils.assignOwn({ source:'api', reason:'confirm' }, meta || {});
     if (Utils.isFunction(opts.canCommit) && opts.canCommit(controller, detail) === false) return false;
     var ok=controller.commit(detail);
     if(ok && Utils.isFunction(opts.onCommit)) opts.onCommit(controller, detail);
     return ok;
   }
   function cancel(meta) {
-    var detail = Object.assign({ source:'api', reason:'cancel' }, meta || {});
+    var detail = Utils.assignOwn({ source:'api', reason:'cancel' }, meta || {});
     var ok=controller.cancel(detail);
     if(Utils.isFunction(opts.onCancel)) opts.onCancel(controller, detail);
     return ok;

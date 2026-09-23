@@ -123,7 +123,7 @@ function create(options) {
   var supplied = options || {};
   rejectNonCanonical(supplied);
   var submenuModeAuto = !own(supplied, 'submenuMode');
-  var opts = Object.assign({
+  var opts = Utils.assignOwn({
     items: [], mode: 'vertical', selectedKey: undefined, selectedKeys: undefined, openKeys: undefined,
     multiple: false, selectable: true, submenuMode: undefined, itemDisplay: 'icon-label', collapsed: false,
     disabled: false, size: 'md', submenuTrigger: 'hover', submenuOpenDelay: 0, submenuLeaveDelay: 100, submenuOffset: 8,

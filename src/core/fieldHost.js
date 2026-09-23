@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 
 import { DOM } from './dom.js';
 import { DOMBinding } from './domBinding.js';
@@ -23,7 +24,7 @@ var DEFAULT_HEADLESS_FORBIDDEN = Object.freeze(['container','elements','createDO
     return true;
   }
   function resolvePickerControl(config) {
-    var local = Object.assign({
+    var local = Utils.assignOwn({
       requiredRefs:['root','values','input','clear','toggle'],
       projectionRefs:[{ref:'values',option:'valueTarget'},{ref:'input',option:'inputTarget'}]
     }, config || {});

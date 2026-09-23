@@ -48,7 +48,7 @@ const referenceInitializer = Object.freeze({ initializer:Object.freeze({ mode:'c
 const noInitializer = Object.freeze({ initializer:false });
 
 function classApi(Type, extras = {}) {
-    return Object.freeze(Object.assign({ definition:createInitializer, create:function(){ return Type.create.apply(Type, arguments); } }, extras));
+    return Object.freeze(Utils.assignOwn({ definition:createInitializer, create:function(){ return Type.create.apply(Type, arguments); } }, extras));
 }
 const raw = Object.create(null);
 raw.Cascader = classApi(Cascader, { definition:enhanceInitializer, enhance:function(){return Cascader.enhance.apply(Cascader,arguments);}, createDefaultDOM:Cascader.createDefaultDOM });
@@ -78,7 +78,7 @@ raw.TimePicker = classApi(TimePicker, { definition:enhanceInitializer, enhance:f
 raw.ColorPicker = classApi(ColorPicker, { definition:enhanceInitializer, enhance:function(){return ColorPicker.enhance.apply(ColorPicker,arguments);}, gradientCSS:ColorPicker.gradientCSS });
 raw.DatePicker = classApi(DatePicker, { definition:enhanceInitializer, enhance:function(){return DatePicker.enhance.apply(DatePicker,arguments);}, formatDate:DatePicker.formatDate, parseDate:DatePicker.parseDate });
 
-Object.assign(raw, { Trigger, Ripple, Menu, Transfer, Tabs, Image, JSON:JSONComponent, Pagination, Tags, Upload, Table, Message, Notification });
+Utils.assignOwn(raw, { Trigger, Ripple, Menu, Transfer, Tabs, Image, JSON:JSONComponent, Pagination, Tags, Upload, Table, Message, Notification });
 raw.Scroll = Object.freeze(Utils.mergeOwn( Scroll, { definition:createInitializer }));
 
 export const Components = Object.freeze(Object.fromEntries(Object.entries(raw).map(([name, api]) => [name, publishComponentApi(name, api)])));

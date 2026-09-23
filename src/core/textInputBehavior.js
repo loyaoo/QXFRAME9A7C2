@@ -35,7 +35,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
     if (!adapter || typeof adapter.getValue !== 'function' || typeof adapter.setValue !== 'function') {
       throw new TypeError('[QXFRAME9A7C2] TextInputBehavior requires adapter.getValue() and adapter.setValue().');
     }
-    var opts = Object.assign({ count: false, maxLength: null, minLength: null, lengthMode: 'native', limitMode: 'hard' }, options || {});
+    var opts = Utils.assignOwn({ count: false, maxLength: null, minLength: null, lengthMode: 'native', limitMode: 'hard' }, options || {});
     lengthMode(opts.lengthMode);
     limitMode(opts.limitMode);
     var composing = false;

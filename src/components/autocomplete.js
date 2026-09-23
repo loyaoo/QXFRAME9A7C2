@@ -135,7 +135,7 @@ var selectionRangeScheduler = null;
           var normalized = next === undefined || next === null ? '' : String(next);
           var previous = draftValue();
           if (previous === normalized) return false;
-          var cfg = Object.assign({ silent: true, source: 'instance', reason: request ? 'request-change' : 'set-value' }, meta || {});
+          var cfg = Utils.assignOwn({ silent: true, source: 'instance', reason: request ? 'request-change' : 'set-value' }, meta || {});
           if (request === true) {
             valueState.setDraft(normalized, cfg);
             if (valueState.controlled) valueState.requestChange(normalized, cfg);
@@ -364,7 +364,7 @@ var selectionRangeScheduler = null;
           writeValue(nextValue, { source: 'autocomplete', reason: 'select', originalEvent: detail.originalEvent || null }, true); clearBackfill();
           optionList.clear({ silent: true, source: 'autocomplete', reason: 'selection-committed' });
           syncControl({ source: 'autocomplete', reason: 'select' });
-          payload = Object.assign(payload, { value: draftValue(), committedValue: committedValue(), selectionStart: selectionStart, selectionEnd: selectionEnd });
+          payload = Utils.assignOwn(payload, { value: draftValue(), committedValue: committedValue(), selectionStart: selectionStart, selectionEnd: selectionEnd });
           if (Utils.isFunction(opts.onSelect)) opts.onSelect(draftValue(), payload);
           if (destroyed) return true;
           emitter.emit('select', payload);

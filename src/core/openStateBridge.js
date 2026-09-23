@@ -3,9 +3,9 @@ import { Utils } from '../utils/utils.js';
 import { Events } from './events.js';
 
 function dispatchOpenState(opened, detail, options) {
-  var opts = options || {}, info = Object.assign({ open:opened === true, source:'api', reason:opened === true ? 'open' : 'close', originalEvent:null }, detail || {});
+  var opts = options || {}, info = Utils.assignOwn({ open:opened === true, source:'api', reason:opened === true ? 'open' : 'close', originalEvent:null }, detail || {});
   info.open = opened === true;
-  if (Utils.isFunction(opts.decorate)) info = Object.assign(info, opts.decorate(info) || {});
+  if (Utils.isFunction(opts.decorate)) info = Utils.assignOwn(info, opts.decorate(info) || {});
   function current() {
     if (Utils.isFunction(opts.isCurrent) && opts.isCurrent(info) === false) return false;
     if (Utils.isFunction(opts.shouldEmit) && opts.shouldEmit(info) === false) return false;
@@ -32,8 +32,8 @@ function createOpenStateBridge(options) {
   function emit(next, detail) {
     if (destroyed) return false;
     value = next === true;
-    var info = Object.assign({ open:value, source:'api', reason:value?'open':'close', originalEvent:null }, detail || {});
-    if (Utils.isFunction(opts.decorate)) info = Object.assign(info, opts.decorate(info) || {});
+    var info = Utils.assignOwn({ open:value, source:'api', reason:value?'open':'close', originalEvent:null }, detail || {});
+    if (Utils.isFunction(opts.decorate)) info = Utils.assignOwn(info, opts.decorate(info) || {});
     if (Utils.isFunction(opts.onChange)) opts.onChange(value, info);
     emitter.emit(opts.eventName || 'openChange', info);
     return info;

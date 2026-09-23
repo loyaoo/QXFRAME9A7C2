@@ -22,7 +22,7 @@ function finiteLength(value) {
 }
 
 function enhance(source, options) {
-    const opts = Object.assign({ clearable: undefined, count: undefined, clearVisibility: 'interaction', lengthMode: 'native', limitMode: 'hard' }, options || {});
+    const opts = Utils.assignOwn({ clearable: undefined, count: undefined, clearVisibility: 'interaction', lengthMode: 'native', limitMode: 'hard' }, options || {});
     const doc = opts.document || (isElement(source) && source.ownerDocument) || globalThis.document;
     let field = resolve(source, doc);
     if (!isTextEditor(field)) throw new TypeError('[QXFRAME9A7C2] TextField.enhance requires a text-like input or textarea.');

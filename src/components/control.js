@@ -164,7 +164,7 @@ function projectFormFieldLayout(input, root) {
 function createFormFieldBridge(options) { return FormBridge.create(options || {}); }
     
 function createProjection(options) {
-  var opts = Object.assign({ disabled: false, readOnly: false, required: false, editable: false, draftVisual: false, mode: 'input', tags: [], displayValue: '', inputValue: '' }, options || {});
+  var opts = Utils.assignOwn({ disabled: false, readOnly: false, required: false, editable: false, draftVisual: false, mode: 'input', tags: [], displayValue: '', inputValue: '' }, options || {});
   opts.mode = modeName(opts.mode);
   var doc = opts.document || globalThis.document;
   var reference = resolveElement(opts.reference, doc, 'reference');
@@ -663,7 +663,7 @@ function create(source, overrides) {
     else if (mode === 'value') hasValue = opts.hasValue === true || (displayValue !== undefined && displayValue !== null && displayValue !== '');
     else hasValue = opts.hasValue === true || inputValue !== '';
     if (!externalCommitted) {
-      var commitMeta = meta ? Object.assign({ source: 'control', reason: 'derived-value' }, meta) : { silent: true, source: 'control', reason: 'derived-value' };
+      var commitMeta = meta ? Utils.assignOwn({ source: 'control', reason: 'derived-value' }, meta) : { silent: true, source: 'control', reason: 'derived-value' };
       applyCommittedValue(derivedCommittedValue(), commitMeta, false);
     }
     syncView();
