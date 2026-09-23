@@ -7,6 +7,7 @@ import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Utils } from '../utils/utils.js';
 import { Selection } from '../core/selection.js';
+import { StateController } from '../core/stateController.js';
 import { ItemSchema } from '../core/itemSchema.js';
 import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
@@ -49,8 +50,27 @@ function initializeDropdown(instance, options) {
   if (!portalContainer) throw new TypeError('[QXFRAME9A7C2] Dropdown requires document.body or portalContainer.');
       
   var scope = Lifecycle.createScope();
-  var selection = Selection.create({ multiple: opts.multiple === true, value: opts.value !== undefined ? opts.value : opts.defaultValue });
+  function normalizeApiValue(value) {
+    var input = value === undefined || value === null || value === '' ? [] : (Array.isArray(value) ? value.slice() : [value]);
+    var seen = Object.create(null), values = [];
+    input.forEach(function (entry) {
+      var key = entry === undefined || entry === null ? '' : String(entry);
+      if (!key || seen[key]) return;
+      seen[key] = true;
+      values.push(key);
+    });
+    return opts.multiple === true ? values : (values[0] === undefined ? null : values[0]);
+  }
+  var valueState = StateController.createOptionValueBinding(opts, options || {}, normalizeApiValue);
+  var selection = Selection.create({ multiple: opts.multiple === true, value: valueState.value });
   scope.add(function () { selection.destroy(); });
+  scope.add(function () { valueState.destroy(); });
+  function syncSelectionProjection(reason) {
+    selection.set(valueState.value, { silent:true, source:valueState.controlled ? 'controlled' : 'state', reason:reason || 'value-sync' });
+    var values = selection.values;
+    selectionAnchorValue = values.length ? values[values.length - 1] : null;
+    return values;
+  }
   var panel = doc.createElement('div');
   var arrow = doc.createElement('div');
   panel.className = 'qxframe9a7c2-dropdown-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true;
@@ -180,18 +200,22 @@ function initializeDropdown(instance, options) {
   function emitSelection(item, actionPayload) {
     if (opts.selectable === false || isLocked() || actionPayload.defaultPrevented) return false;
     var value = rawValue(item.value);
-    var selected = opts.multiple === true ? !selection.has(value) : true;
-    var changed = selected ? selection.select(value, { source: actionPayload.source, reason: actionPayload.reason }) : selection.deselect(value, { source: actionPayload.source, reason: actionPayload.reason });
-    if (!changed && opts.multiple !== true && selection.has(value)) changed = true;
-    if (selection.has(value)) selectionAnchorValue = value;
-    else if (selectionAnchorValue !== null && rawValue(selectionAnchorValue) === value) { var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null; }
+    var current = selection.values.slice();
+    var selected = opts.multiple === true ? current.indexOf(value) < 0 : true;
+    var proposedValues = opts.multiple === true ? current.filter(function (entry) { return entry !== value; }) : [value];
+    if (opts.multiple === true && selected) proposedValues.push(value);
+    var proposed = normalizeApiValue(proposedValues);
+    var changed = valueState.write(proposed, { silent:true, source:actionPayload.source, reason:actionPayload.reason, originalEvent:actionPayload.originalEvent || null }, true);
+    if (!changed && opts.multiple !== true && valueState.value === proposed) changed = true;
+    if (!changed) return false;
+    syncSelectionProjection('selection');
     refreshSelectionSurfaces();
-    var detail = Utils.mergeOwn( actionPayload, { selected: selection.has(value), value: item.value, values: selection.values.slice(), valueState: selection.value });
+    var detail = Utils.mergeOwn(actionPayload, { selected:selected, value:item.value, values:proposedValues.slice(), valueState:proposed, controlled:valueState.controlled });
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(detail);
-    instance.emit(detail.selected ? 'select' : 'deselect', detail);
-    if (Utils.isFunction(opts.onChange)) opts.onChange(opts.multiple === true ? selection.values.slice() : selection.value, detail);
+    instance.emit(selected ? 'select' : 'deselect', detail);
+    if (Utils.isFunction(opts.onChange)) opts.onChange(opts.multiple === true ? proposedValues.slice() : proposed, detail);
     instance.emit('change', detail);
-    return changed;
+    return true;
   }
       
   function activateLeaf(item, detail) {
@@ -212,14 +236,15 @@ function initializeDropdown(instance, options) {
     var selectBranch = !state.checked;
     var next = selection.values.filter(function (value) { return branchValues.indexOf(rawValue(value)) < 0; });
     if (selectBranch) branchValues.forEach(function (value) { if (next.indexOf(value) < 0) next.push(value); });
-    selection.set(next, { source: actionPayload.source, reason: selectBranch ? 'branch-select' : 'branch-deselect' });
-    selectionAnchorValue = selectBranch && branchValues.length ? branchValues[branchValues.length - 1] : (selection.values.length ? selection.values[selection.values.length - 1] : null);
+    var proposed = normalizeApiValue(next);
+    var changed = valueState.write(proposed, { silent:true, source:actionPayload.source, reason:selectBranch ? 'branch-select' : 'branch-deselect', originalEvent:actionPayload.originalEvent || null }, true);
+    if (!changed) return false;
+    syncSelectionProjection('branch-selection');
     refreshSelectionSurfaces();
-    var checked = branchCheckState(item);
-    var result = Utils.mergeOwn( actionPayload, { selected: checked.checked, checked: checked.checked, indeterminate: checked.indeterminate, value: item.value, values: selection.values.slice(), valueState: selection.value, branch: true });
+    var result = Utils.mergeOwn(actionPayload, { selected:selectBranch, checked:selectBranch, indeterminate:false, value:item.value, values:next.slice(), valueState:proposed, branch:true, controlled:valueState.controlled });
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(result);
-    instance.emit(result.selected ? 'select' : 'deselect', result);
-    if (Utils.isFunction(opts.onChange)) opts.onChange(selection.values.slice(), result);
+    instance.emit(selectBranch ? 'select' : 'deselect', result);
+    if (Utils.isFunction(opts.onChange)) opts.onChange(next.slice(), result);
     instance.emit('change', result);
     return true;
   }
@@ -465,8 +490,16 @@ function initializeDropdown(instance, options) {
   function setOpen(value, reason, originalEvent) { return instance.setOpen(value, reason || 'set-open', originalEvent); }
   function setItems(items) { if (destroyed) return api; validateItems(items); opts.items = Array.isArray(items) ? items.slice() : []; rebuildActionSurfaces(); if (triggerSession.getState().open) triggerSession.reposition('items'); return api; }
   function setValue(value, meta) {
-    if (destroyed) return api; selection.set(value, { source: meta && meta.source || 'api', reason: meta && meta.reason || 'dropdown-set-value' }); var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null; opts.value = opts.multiple === true ? values.slice() : selection.value; refreshSelectionSurfaces();
-    if (!(meta && meta.silent)) { var detail = { value: selection.value, values: selection.values.slice(), reason: meta && meta.reason || 'set-value', source: meta && meta.source || 'api', dropdown: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(opts.multiple === true ? selection.values.slice() : selection.value, detail); instance.emit('change', detail); }
+    if (destroyed) return api;
+    var cfg = meta || {}, previous = valueState.value;
+    var changed = valueState.write(value, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'dropdown-set-value', originalEvent:cfg.originalEvent || null }, false);
+    syncSelectionProjection('set-value');
+    refreshSelectionSurfaces();
+    if (changed && !cfg.silent) {
+      var current = valueState.value, detail = { value:current, previousValue:previous, values:selection.values.slice(), controlled:valueState.controlled, reason:cfg.reason || 'set-value', source:cfg.source || 'api', dropdown:api };
+      if (Utils.isFunction(opts.onChange)) opts.onChange(opts.multiple === true ? selection.values.slice() : current, detail);
+      instance.emit('change', detail);
+    }
     return api;
   }
   function clear(meta) { var had = selection.values.length > 0; setValue([], meta || { reason: 'dropdown-clear' }); return had; }
@@ -479,7 +512,11 @@ function initializeDropdown(instance, options) {
     if (own(next, 'multiple') && next.multiple !== opts.multiple) throw new Error('[QXFRAME9A7C2] Dropdown multiple is immutable; destroy and recreate to change selection shape.');
     var rebuild = ['items','searchable','selectable','readOnly','size','selectionAppearance'].some(function (name) { return own(next, name); });
     Utils.copyOwn(opts, next);
-    if (own(next, 'value')) { selection.set(next.value, { silent: true, source: 'options', reason: 'options-value' }); var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null; }
+    if (own(next, 'value')) {
+      valueState.setControlled(true);
+      valueState.syncExternal(next.value, { silent:true, source:'options', reason:'options-value' });
+      syncSelectionProjection('options-value');
+    }
     if (own(next, 'showArrow')) syncFloatingView();
     triggerSession.updateOptions({ trigger: opts.trigger, placement: opts.placement, arrow: opts.showArrow === true, arrowElement: arrow, arrowPadding: opts.arrowPadding, offset: opts.offset, strategy: opts.strategy || 'absolute', middleware: opts.middleware, flipOnOverflow: opts.flipOnOverflow !== false, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnFocusOutside: true, closeOnTabExit: true, tabExitTarget: reference, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false, openDelay: opts.openDelay, closeDelay: opts.closeDelay, disabled: opts.disabled === true });
     if (rebuild) rebuildActionSurfaces(); else {
@@ -510,7 +547,7 @@ function initializeDropdown(instance, options) {
   function getState() {
     var listState = rootSurface && rootSurface.list ? rootSurface.list.getState() : { activeKey: null, searchValue: '' };
     var openDepth = 0; childTriggerRecords.forEach(function (record) { if (record.trigger && record.trigger.getState().open) openDepth += 1; });
-    return Object.freeze({ open: triggerSession.getState().open, value: selection.value, values: selection.values.slice(), activeKey: listState.activeKey, selectionAnchorValue: selectionAnchorValue, searchValue: listState.searchValue, openDepth: openDepth, multiple: opts.multiple === true, selectable: opts.selectable !== false, showArrow: opts.showArrow === true, flipOnOverflow: triggerSession.getState().flipOnOverflow, focusOnOpen: opts.focusOnOpen !== false, disabled: opts.disabled === true, destroyed: destroyed });
+    return Object.freeze({ open: triggerSession.getState().open, value: valueState.value, values: selection.values.slice(), controlled:valueState.controlled, activeKey: listState.activeKey, selectionAnchorValue: selectionAnchorValue, searchValue: listState.searchValue, openDepth: openDepth, multiple: opts.multiple === true, selectable: opts.selectable !== false, showArrow: opts.showArrow === true, flipOnOverflow: triggerSession.getState().flipOnOverflow, focusOnOpen: opts.focusOnOpen !== false, disabled: opts.disabled === true, destroyed: destroyed });
   }
   function destroyRuntime() {
     if (destroyed) return false; destroyed = true; destroyActionSurfaces(); scope.dispose(); triggerSession = null; DOM.removeNode(panel); reference.classList.remove('is-disabled'); return true;
