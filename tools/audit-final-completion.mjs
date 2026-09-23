@@ -112,7 +112,7 @@ const staleComments=[];
 for(const [file,text] of source){
   const lines=text.split(/\r?\n/);
   lines.forEach((line,i)=>{
-    if(/Migration stage|Runtime consumers remain on the legacy registry until Rollup cutover|TEMP-ESM-BRIDGE|\bStage\s+\d+\s*→\s*\d+|legacy-tail|extracted from (?:the )?frozen HOTFIX6/i.test(line)) staleComments.push({file,line:i+1,text:line.trim()});
+    if(/Migration[- ]stage|Runtime consumers remain on the legacy registry until Rollup cutover|TEMP-ESM-BRIDGE|\bStage\s+\d+\s*→\s*\d+|legacy-tail|extracted from (?:the )?frozen HOTFIX6/i.test(line)) staleComments.push({file,line:i+1,text:line.trim()});
   });
 }
 const activeMetadataFiles=[
