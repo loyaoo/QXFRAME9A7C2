@@ -176,7 +176,9 @@ function create(options) {
     navigationActive = false;
     var closeReason = String(detail && detail.reason || '');
     if (closeReason !== 'editor-pointer') editorPointerPending = false;
-    if (closeReason !== 'editor-context') suppressOpenEvent = null;
+    // Same-gesture suppression is only needed for pointerdown -> click. Never retain
+    // a ContextMenuEvent beyond the logical close lifecycle.
+    suppressOpenEvent = null;
     if (preserveEditorForReason(closeReason) && snapshot) {
       projectDisplayValue(snapshot.value);
       restoreSelection(snapshot);
@@ -288,7 +290,7 @@ function create(options) {
     scope.add(DOM.listen(selectorEditor, 'compositionstart', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
     scope.add(DOM.listen(selectorEditor, 'paste', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
     scope.add(DOM.listen(selectorEditor, 'cut', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
-    scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) { suppressOpenEvent = event; close('editor-context', event); } }));
+    scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-context', event); }));
     scope.add(DOM.listen(selectorEditor, 'keydown', function (event) { if (editorIntentKeydown(event)) close('editor-intent', event); }));
   }
 
