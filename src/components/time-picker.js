@@ -246,12 +246,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
       syncPanel(detail && detail.source === 'popup' ? 'time-picker-close-restore' : 'time-picker-cancel-sync');
       syncField(false);
     },
-    onCloseDraft: function (controller, detail) {
+    onCloseDraft: function (_controller, detail) {
       hoverPreviewValue = null;
-      if (!detail.rolledBack && opts.needConfirm !== true && controller.dirty && complete(controller.draftValue)) {
-        var closedCommit = instance.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
-        if (closedCommit === false && controller.dirty) controller.cancel({ silent: true, source: 'popup', reason: 'close-commit-rejected', originalEvent: detail && detail.originalEvent || null });
-      }
       if (!detail.rolledBack) syncField(false);
     }
   });
