@@ -20,6 +20,34 @@ function requireState(instance) {
     return record;
 }
 
+export function createPopupFieldTriggerSettings(options = {}, context = {}, overrides = {}) {
+    const opts = options || {};
+    const ctx = context || {};
+    return Object.assign({
+        trigger: opts.trigger,
+        keyboardActivation: false,
+        openDelay: opts.openDelay,
+        closeDelay: opts.closeDelay,
+        reference: ctx.reference || null,
+        triggerTarget: ctx.triggerTarget || null,
+        floating: ctx.floating || null,
+        document: ctx.document,
+        portalContainer: ctx.portalContainer,
+        placement: opts.placement,
+        transition: Trigger.motion.popupPlacement,
+        strategy: opts.strategy || 'absolute',
+        middleware: opts.middleware,
+        flipOnOverflow: opts.flipOnOverflow !== false,
+        matchReferenceWidth: opts.matchReferenceWidth === true,
+        autoUpdate: opts.autoUpdate !== false,
+        closeOnOutsidePress: true,
+        closeOnFocusOutside: true,
+        closeOnTabExit: true,
+        closeOnEscape: true,
+        destroyOnClose: opts.destroyOnClose !== false
+    }, overrides || {});
+}
+
 export class PopupFieldComponent extends FieldComponent {
     constructor(options = {}) {
         super(options);
