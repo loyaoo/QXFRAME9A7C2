@@ -150,12 +150,25 @@ for(const [file,text] of source){
 }
 const prototypeMergeCandidates=[];
 for(const [file,text] of source){
+  if(file.startsWith('src/vendor/')) continue;
   text.split(/\r?\n/).forEach((line,index)=>{
     if(/Object\.assign\s*\(/.test(line) || /Object\.keys\s*\([^\n]+\)\.forEach\s*\([^\n]+\[[^\]]+\]\s*=(?!=)/.test(line)) {
       prototypeMergeCandidates.push({file,line:index+1,text:line.trim().slice(0,260)});
     }
   });
 }
+function classifyPrototypeMerge(candidate){
+  var line=candidate.text, file=candidate.file;
+  if(/Object\.assign\s*\(/.test(line)) return {approved:false,reason:'Object.assign is forbidden in owned source; use Utils.assignOwn/copyOwn.'};
+  if(line.indexOf('Utils.safeOwnKey(')>=0) return {approved:true,reason:'dynamic key is guarded by canonical Utils.safeOwnKey'};
+  if(file==='src/core/domTemplate.js') return {approved:true,reason:'refs/slots targets are null-prototype maps built from static DOMTemplate markers'};
+  if(file==='src/core/motion.js' && line.indexOf('names[cssName(key)]')>=0) return {approved:true,reason:'motion property target is an Object.create(null) map'};
+  if(file==='src/core/motionPresets.js') return {approved:true,reason:'keys come from the frozen framework-owned PRESETS constant'};
+  if(file==='src/components/progress.js') return {approved:true,reason:'gradient keys are restricted to from/to/direction or percentage stops'};
+  return {approved:false,reason:'unclassified dynamic object write'};
+}
+const classifiedPrototypeMergeCandidates=prototypeMergeCandidates.map(function(candidate){return Utils.assignOwn({},candidate,classifyPrototypeMerge(candidate));});
+const unexpectedPrototypeMergeCandidates=classifiedPrototypeMergeCandidates.filter(function(candidate){return candidate.approved!==true;});
 const rawPrimitives=[];
 const asyncPrimitiveCandidates=[];
 const asyncPrimitiveRules=[
@@ -265,7 +278,8 @@ const report={
   files:srcFiles.length,
   security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,prototypeSecurity,contractPrototypeSecurity,secretFilePaths,secretFindings},
   duplicateCapabilityCandidates:rawPrimitives,
-  prototypeMergeCandidates:prototypeMergeCandidates,
+  prototypeMergeCandidates:classifiedPrototypeMergeCandidates,
+  unexpectedPrototypeMergeCandidates:unexpectedPrototypeMergeCandidates,
   asyncPrimitiveCandidates,
   staleMigrationComments:staleComments,
   staleActiveMetadata:staleMetadata,
@@ -281,6 +295,6 @@ const report={
   duplicateRegions:duplicateRegions,
   unexpectedDuplicateRegions:unexpectedDuplicateRegions
 };
-report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&contractPrototypeSecurity.failures.length===0&&contractPrototypeSecurity.utilitySafe===true&&contractPrototypeSecurity.rejected===contractPrototypeSecurity.components*3&&urlSinks.every(x=>x.urlPolicy)&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&unexpectedDuplicateRegions.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&contractPrototypeSecurity.failures.length===0&&contractPrototypeSecurity.utilitySafe===true&&contractPrototypeSecurity.rejected===contractPrototypeSecurity.components*3&&urlSinks.every(x=>x.urlPolicy)&&unexpectedPrototypeMergeCandidates.length===0&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&unexpectedDuplicateRegions.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
