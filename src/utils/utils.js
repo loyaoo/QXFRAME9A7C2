@@ -40,16 +40,20 @@ function finiteAtLeast(value, fallback, minimum, label) {
   if (!Number.isFinite(number)) throw new TypeError('[QXFRAME9A7C2] ' + String(label || 'value') + ' must be finite.');
   return minimum === undefined || minimum === null ? number : Math.max(Number(minimum), number);
 }
+function safeOwnKey(key) { return key !== '__proto__' && key !== 'prototype' && key !== 'constructor'; }
 function copyOwn(target, source) {
   Object.keys(Object(source || {})).forEach(function (key) {
-    if (key === '__proto__' || key === 'prototype' || key === 'constructor') return;
+    if (!safeOwnKey(key)) return;
     target[key] = source[key];
   });
   return target;
 }
 function immutablePatch(current, next, normalizers) {
   var output = copyOwn({}, current || {}), patch = next || {}, rules = normalizers || {};
-  Object.keys(Object(patch)).forEach(function (key) { output[key] = isFunction(rules[key]) ? rules[key](patch[key], output, patch) : patch[key]; });
+  Object.keys(Object(patch)).forEach(function (key) {
+    if (!safeOwnKey(key)) return;
+    output[key] = isFunction(rules[key]) ? rules[key](patch[key], output, patch) : patch[key];
+  });
   return Object.freeze(output);
 }
 
