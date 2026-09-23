@@ -6,6 +6,7 @@ import { OptionTransaction } from './optionTransaction.js';
 import { validateContractOptions } from './componentContracts.js';
 import { IdManager } from '../utils/id.js';
 import { Utils } from '../utils/utils.js';
+import { DOM } from './dom.js';
 
 const state = new WeakMap();
 
@@ -278,20 +279,7 @@ export class Component {
     listen(target, type, listener, options) {
         const record = requireState(this);
         assertAlive(record, 'listen from');
-        if (!target || typeof target.addEventListener !== 'function' || typeof target.removeEventListener !== 'function') {
-            throw new TypeError('[QXFRAME9A7C2] Component.listen target must support addEventListener/removeEventListener.');
-        }
-        if (typeof listener !== 'function') throw new TypeError('[QXFRAME9A7C2] Component.listen listener must be a function.');
-        const name = String(type || '').trim();
-        if (!name) throw new TypeError('[QXFRAME9A7C2] Component.listen event type is required.');
-        target.addEventListener(name, listener, options);
-        let active = true;
-        const cleanup = () => {
-            if (!active) return false;
-            active = false;
-            target.removeEventListener(name, listener, options);
-            return true;
-        };
+        const cleanup = DOM.listen(target, type, listener, options);
         record.scope.add(cleanup);
         return cleanup;
     }
