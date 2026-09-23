@@ -1,26 +1,25 @@
+import { Scheduler } from './scheduler.js';
+
 // Canonical ESM notice timer service extracted from the frozen NoticeClock building block.
 const DEFAULT_WATCHDOG_GRACE = 160;
-    
+
 function now(view) {
   var realm = view || globalThis;
   return realm.performance && typeof realm.performance.now === 'function'
     ? realm.performance.now()
     : Date.now();
 }
-    
+
 function finiteDuration(value) {
   var number = Number(value);
   return Number.isFinite(number) ? Math.max(0, number) : 0;
 }
-    
+
 function create(options) {
   var opts = options || {};
   var view = opts.view || (opts.document && opts.document.defaultView) || globalThis;
-  var setTimeoutFn = typeof view.setTimeout === 'function' ? view.setTimeout.bind(view) : globalThis.setTimeout.bind(globalThis);
-  var clearTimeoutFn = typeof view.clearTimeout === 'function' ? view.clearTimeout.bind(view) : globalThis.clearTimeout.bind(globalThis);
-  var requestFrameFn = typeof view.requestAnimationFrame === 'function' ? view.requestAnimationFrame.bind(view) : null;
-  var cancelFrameFn = typeof view.cancelAnimationFrame === 'function' ? view.cancelAnimationFrame.bind(view) : null;
   function currentNow() { return now(view); }
+
   var duration = finiteDuration(opts.duration);
   var remaining = duration;
   var deadline = 0;
@@ -28,32 +27,20 @@ function create(options) {
   var finished = false;
   var destroyed = false;
   var frameUpdates = opts.frameUpdates === true;
-  var frame = 0;
-  var watchdog = 0;
   var watchdogGrace = Number.isFinite(Number(opts.watchdogGrace))
     ? Math.max(0, Number(opts.watchdogGrace))
     : DEFAULT_WATCHDOG_GRACE;
   var onTick = typeof opts.onTick === 'function' ? opts.onTick : null;
   var onFinish = typeof opts.onFinish === 'function' ? opts.onFinish : null;
-    
-  function clearFrame() {
-    if (!frame) return;
-    if (cancelFrameFn) cancelFrameFn(frame);
-    else clearTimeoutFn(frame);
-    frame = 0;
-  }
-    
-  function clearWatchdog() {
-    if (!watchdog) return;
-    clearTimeoutFn(watchdog);
-    watchdog = 0;
-  }
-    
+  var frameScheduler = null;
+  var frameDelayScheduler = null;
+  var watchdogScheduler = null;
+
   function syncRemaining(timestamp) {
     if (running && deadline > 0) remaining = Math.max(0, deadline - (timestamp == null ? currentNow() : timestamp));
     return remaining;
   }
-    
+
   function snapshot(timestamp) {
     var current = syncRemaining(timestamp);
     var total = Math.max(0, duration);
@@ -68,13 +55,22 @@ function create(options) {
       destroyed: destroyed
     });
   }
-    
+
   function project(timestamp) {
     var state = snapshot(timestamp);
     if (onTick) onTick(state);
     return state;
   }
-    
+
+  function clearFrame() {
+    if (frameScheduler) frameScheduler.cancel();
+    if (frameDelayScheduler) frameDelayScheduler.cancel();
+  }
+
+  function clearWatchdog() {
+    if (watchdogScheduler) watchdogScheduler.cancel();
+  }
+
   function complete(timestamp) {
     if (destroyed || finished) return false;
     syncRemaining(timestamp);
@@ -88,32 +84,40 @@ function create(options) {
     if (onFinish) onFinish(state);
     return true;
   }
-    
-  function scheduleFrame() {
-    if (destroyed || finished || !running || !frameUpdates || frame) return;
-    var step = function (timestamp) {
-      frame = 0;
-      if (destroyed || finished || !running) return;
-      var state = project(typeof timestamp === 'number' ? timestamp : currentNow());
-      if (state.remaining <= 0) { complete(timestamp); return; }
-      scheduleFrame();
-    };
-    frame = requestFrameFn
-      ? requestFrameFn(step)
-      : setTimeoutFn(function () { step(currentNow()); }, 16);
+
+  function frameStep(timestamp) {
+    if (destroyed || finished || !running) return;
+    var state = project(typeof timestamp === 'number' ? timestamp : currentNow());
+    if (state.remaining <= 0) { complete(timestamp); return; }
+    scheduleFrame();
   }
-    
+
+  try {
+    frameScheduler = Scheduler.createFrameScheduler(frameStep, { view: view });
+  } catch (_) {
+    frameDelayScheduler = Scheduler.createDelayScheduler(function () { frameStep(currentNow()); }, { view: view });
+  }
+  watchdogScheduler = Scheduler.createDelayScheduler(function () {
+    if (!destroyed && !finished && running) complete(currentNow());
+  }, { view: view });
+
+  function scheduleFrame() {
+    if (destroyed || finished || !running || !frameUpdates) return;
+    if (frameScheduler) {
+      if (!frameScheduler.pending) frameScheduler.request('notice-frame');
+      return;
+    }
+    if (frameDelayScheduler && !frameDelayScheduler.pending) frameDelayScheduler.request(16, 'notice-frame');
+  }
+
   function armWatchdog() {
     clearWatchdog();
     if (destroyed || finished || !running || remaining <= 0) return;
     // The watchdog is intentionally late. It never owns progress; it only guarantees
     // completion if requestAnimationFrame is throttled or unavailable.
-    watchdog = setTimeoutFn(function () {
-      watchdog = 0;
-      if (!destroyed && !finished && running) complete(currentNow());
-    }, remaining + (frameUpdates ? watchdogGrace : 0));
+    watchdogScheduler.request(remaining + (frameUpdates ? watchdogGrace : 0), 'notice-watchdog');
   }
-    
+
   function resume() {
     if (destroyed || finished || running || remaining <= 0) return false;
     deadline = currentNow() + remaining;
@@ -123,7 +127,7 @@ function create(options) {
     armWatchdog();
     return true;
   }
-    
+
   function pause() {
     if (destroyed || finished) return false;
     if (running) syncRemaining();
@@ -134,7 +138,7 @@ function create(options) {
     project();
     return true;
   }
-    
+
   function restart(nextDuration, autoStart) {
     if (destroyed) return false;
     clearFrame();
@@ -148,7 +152,7 @@ function create(options) {
     if (autoStart !== false && remaining > 0) resume();
     return true;
   }
-    
+
   function setFrameUpdates(value) {
     if (destroyed) return false;
     var next = value === true;
@@ -166,11 +170,11 @@ function create(options) {
     }
     return true;
   }
-    
+
   function getState() {
     return snapshot();
   }
-    
+
   function destroy() {
     if (destroyed) return false;
     destroyed = true;
@@ -178,11 +182,17 @@ function create(options) {
     deadline = 0;
     clearFrame();
     clearWatchdog();
+    if (frameScheduler) frameScheduler.dispose();
+    if (frameDelayScheduler) frameDelayScheduler.dispose();
+    if (watchdogScheduler) watchdogScheduler.dispose();
+    frameScheduler = null;
+    frameDelayScheduler = null;
+    watchdogScheduler = null;
     onTick = null;
     onFinish = null;
     return true;
   }
-    
+
   const api = Object.freeze({
     pause: pause,
     resume: resume,
@@ -191,11 +201,10 @@ function create(options) {
     getState: getState,
     destroy: destroy
   });
-    
+
   project();
   if (opts.autoStart === true && remaining > 0) resume();
   return api;
 }
-    
 
 export const NoticeClock = Object.freeze({ create, now });
