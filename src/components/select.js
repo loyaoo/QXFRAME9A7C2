@@ -1,4 +1,4 @@
-import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings } from './popup-field.js';
+import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings, popupSelectionOpenPlan } from './popup-field.js';
 import { Control } from './control.js';
 import { OptionList } from './option-list.js';
 import { Item } from './item.js';
@@ -314,13 +314,8 @@ var controlHost = FieldHost.resolvePickerControl({
           focusScope: 'exit',
           tabExitTarget: function () { return fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root); },
           onOpen: function (detail) {
-            var eventType = detail && detail.originalEvent && detail.originalEvent.type || '';
-            var reason = String(detail && detail.reason || '');
-            var keyboardOpen = /^key/.test(eventType) || /keyboard/.test(reason);
-            var hasSelection = selectedValues().length > 0;
-            var passiveFirst = opts.defaultActiveFirstOption === true;
-            var strategy = hasSelection ? 'selected' : (keyboardOpen ? (/up/.test(reason) ? 'last' : 'first') : ((reason === 'input' || passiveFirst) ? 'first' : 'none'));
-            optionList.prepareOpen({ strategy: strategy, fallback: keyboardOpen || reason === 'input' ? 'first' : 'none', source: keyboardOpen || reason === 'input' ? 'keyboard' : (detail && detail.source || 'instance'), reason: 'select-open-' + strategy });
+            var plan = popupSelectionOpenPlan(detail, { hasSelection:selectedValues().length > 0, passiveFirst:opts.defaultActiveFirstOption === true });
+            optionList.prepareOpen({ strategy:plan.strategy, fallback:plan.fallback, source:plan.keyboard || plan.reason === 'input' ? 'keyboard' : plan.source, reason:'select-open-' + plan.strategy });
             // Logical open owns business/query/cursor readiness. Physical afterOpen is animation-only.
             beginSingleDraft({ reason: 'picker-opened', source: detail && detail.source || 'trigger' });
             renderValues();
