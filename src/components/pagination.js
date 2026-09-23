@@ -1,6 +1,7 @@
+import { Component } from '../core/component.js';
+import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
-import { Events } from '../core/events.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
 import { Utils } from '../utils/utils.js';
@@ -23,6 +24,29 @@ const DOMFactory = Object.freeze({ createDefaultDOM, createElement, blueprint })
 var SIZES = Object.freeze({ xs: true, sm: true, md: true, lg: true, xl: true });
 var DEFAULT_PAGE_SIZES = Object.freeze([5, 10, 20, 50, 100, 200]);
 var LAYOUT_TOKENS = Object.freeze({ prev: true, page: true, next: true, count: true, limit: true, skip: true, refresh: true, text: true });
+const PAGINATION_DEFAULTS = Object.freeze({
+  count: 0,
+  current: 1,
+  pageSize: 10,
+  pagerCount: 9,
+  first: true,
+  last: true,
+  ellipsis: true,
+  ellipsisJump: 0.1,
+  showTotal: false,
+  showSizeChanger: false,
+  components: null,
+  showJumper: false,
+  pageSizeOptions: DEFAULT_PAGE_SIZES,
+  size: 'md',
+  disabled: false,
+  hideOnSinglePage: false,
+  background: false,
+  simple: false,
+  responsive: true,
+  itemRender: null
+});
+const paginationState = new WeakMap();
 function mergeOptions(base, extra) { return Utils.mergeOwn(base, extra); }
     
 function validateSize(value) {
@@ -81,30 +105,8 @@ function normalizeLayout(opts) {
   return layout;
 }
     
-function create(options) {
-  ComponentContracts.validate(ComponentContracts.get('Pagination'), options, 'Pagination');
-  var opts = mergeOptions({
-    count: 0,
-    current: 1,
-    pageSize: 10,
-    pagerCount: 9,
-    first: true,
-    last: true,
-    ellipsis: true,
-    ellipsisJump: 0.1,
-    showTotal: false,
-    showSizeChanger: false,
-    components: null,
-    showJumper: false,
-    pageSizeOptions: DEFAULT_PAGE_SIZES,
-    size: 'md',
-    disabled: false,
-    hideOnSinglePage: false,
-    background: false,
-    simple: false,
-    responsive: true,
-    itemRender: null
-  }, options);
+function setupPagination(instance) {
+  var opts = mergeOptions({}, instance.options);
   var doc = opts.document || (opts.container && opts.container.ownerDocument) || global.document;
   opts.size = validateSize(opts.size);
   if (typeof opts.simple !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Pagination simple must be boolean.');
@@ -116,7 +118,6 @@ function create(options) {
   normalizeLayout(opts);
   if (!opts.container && opts.elements == null) throw new TypeError('[QXFRAME9A7C2] Pagination container is required unless options.elements supplies existing DOM.');
     
-  var emitter = Events.createEmitter();
   var scope = Lifecycle.createScope();
   var model = PaginationModel.create({
     total: nonNegativeInt(opts.count),
@@ -140,7 +141,7 @@ function create(options) {
   var appliedClassNames = [];
   var jumperDraft = String(model.page);
   var limitSelectChangeDepth = 0;
-  var api = null;
+  var api = instance;
   var viewScheduler = Scheduler.createFrameScheduler(function (_, reason) {
     if (!destroyed && mounted) render(reason || 'scheduled-model-change');
   });
@@ -386,7 +387,7 @@ function create(options) {
     renderCount += 1;
     var detail = { reason: reason || 'render', state: state(), controller: api };
     if (Utils.isFunction(opts.onRender)) opts.onRender(detail);
-    if (!destroyed) emitter.emit('render', detail);
+    if (!destroyed) api.emit('render', detail);
     return !destroyed;
   }
     
@@ -414,7 +415,7 @@ function create(options) {
     if (Utils.isFunction(opts.jump)) opts.jump(detail.state, false);
     if (destroyed) return detail;
     if (Utils.isFunction(opts.onChange)) opts.onChange(snapshot.page, snapshot.pageSize, detail);
-    if (!destroyed) emitter.emit('change', detail);
+    if (!destroyed) api.emit('change', detail);
     return detail;
   }
     
@@ -473,7 +474,7 @@ function create(options) {
       var source = DOM.activationSource(detail.event);
       if (role === 'refresh') {
         requestRender('refresh-action');
-        if (!destroyed) emitter.emit('refresh', { state: state(), source: source, reason: 'refresh', originalEvent: detail.event, controller: api });
+        if (!destroyed) api.emit('refresh', { state: state(), source: source, reason: 'refresh', originalEvent: detail.event, controller: api });
         return;
       }
       if (role === 'previous' && Utils.isFunction(opts.onPrevClick)) {
@@ -572,38 +573,36 @@ function create(options) {
     return api;
   }
     
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
-    ComponentContracts.validate(ComponentContracts.get('Pagination'), nextOptions, 'Pagination');
     var next = mergeOptions({}, nextOptions);
-    if (own(next, 'container') && next.container !== opts.container) throw new TypeError('[QXFRAME9A7C2] Pagination container is immutable after create.');
-    if (own(next, 'elements') && next.elements !== opts.elements) throw new TypeError('[QXFRAME9A7C2] Pagination elements are immutable after create.');
-    if (own(next, 'size')) next.size = validateSize(next.size);
-    if (own(next, 'simple') && typeof next.simple !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Pagination simple must be boolean.');
-    if (own(next, 'responsive') && typeof next.responsive !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Pagination responsive must be boolean.');
-    if (own(next, 'itemRender') && next.itemRender !== null && next.itemRender !== undefined && !Utils.isFunction(next.itemRender)) throw new TypeError('[QXFRAME9A7C2] Pagination itemRender must be a function or null.');
-    if (own(next, 'showSizeChanger') && typeof next.showSizeChanger !== 'boolean' && (!next.showSizeChanger || typeof next.showSizeChanger !== 'object' || Array.isArray(next.showSizeChanger))) throw new TypeError('[QXFRAME9A7C2] Pagination showSizeChanger must be boolean or a Select options object.');
-    if (own(next, 'components') && next.components !== null && next.components !== undefined && (!next.components || typeof next.components !== 'object' || Array.isArray(next.components))) throw new TypeError('[QXFRAME9A7C2] Pagination components must be an object or null.');
-    if (own(next, 'components') && next.components && next.components.sizeChanger !== undefined && !Utils.isFunction(next.components.sizeChanger)) throw new TypeError('[QXFRAME9A7C2] Pagination components.sizeChanger must be a factory function.');
-    if (own(next, 'layout') || own(next, 'simple')) normalizeLayout(mergeOptions(opts, next));
-    opts = mergeOptions(opts, next);
+    var changed = mergeOptions({}, patch || {});
+    next.size = validateSize(next.size);
+    if (typeof next.simple !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Pagination simple must be boolean.');
+    if (typeof next.responsive !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Pagination responsive must be boolean.');
+    if (next.itemRender !== null && next.itemRender !== undefined && !Utils.isFunction(next.itemRender)) throw new TypeError('[QXFRAME9A7C2] Pagination itemRender must be a function or null.');
+    if (typeof next.showSizeChanger !== 'boolean' && (!next.showSizeChanger || typeof next.showSizeChanger !== 'object' || Array.isArray(next.showSizeChanger))) throw new TypeError('[QXFRAME9A7C2] Pagination showSizeChanger must be boolean or a Select options object.');
+    if (next.components !== null && next.components !== undefined && (!next.components || typeof next.components !== 'object' || Array.isArray(next.components))) throw new TypeError('[QXFRAME9A7C2] Pagination components must be an object or null.');
+    if (next.components && next.components.sizeChanger !== undefined && !Utils.isFunction(next.components.sizeChanger)) throw new TypeError('[QXFRAME9A7C2] Pagination components.sizeChanger must be a factory function.');
+    normalizeLayout(next);
+    opts = next;
     var modelOptions = {};
-    if (own(next, 'current')) modelOptions.page = positiveInt(next.current, model.page);
-    if (own(next, 'pageSize')) modelOptions.pageSize = positiveInt(next.pageSize, model.pageSize);
-    if (own(next, 'count')) modelOptions.total = nonNegativeInt(next.count);
-    if (own(next, 'pagerCount')) modelOptions.pagerCount = Math.max(3, positiveInt(next.pagerCount, model.pagerCount));
-    if (own(next, 'first')) modelOptions.first = next.first !== false;
-    if (own(next, 'last')) modelOptions.last = next.last !== false;
-    if (own(next, 'ellipsis')) modelOptions.ellipsis = next.ellipsis !== false;
-    if (own(next, 'ellipsisJump')) modelOptions.ellipsisJump = next.ellipsisJump;
+    if (own(changed, 'current')) modelOptions.page = positiveInt(changed.current, model.page);
+    if (own(changed, 'pageSize')) modelOptions.pageSize = positiveInt(changed.pageSize, model.pageSize);
+    if (own(changed, 'count')) modelOptions.total = nonNegativeInt(changed.count);
+    if (own(changed, 'pagerCount')) modelOptions.pagerCount = Math.max(3, positiveInt(changed.pagerCount, model.pagerCount));
+    if (own(changed, 'first')) modelOptions.first = changed.first !== false;
+    if (own(changed, 'last')) modelOptions.last = changed.last !== false;
+    if (own(changed, 'ellipsis')) modelOptions.ellipsis = changed.ellipsis !== false;
+    if (own(changed, 'ellipsisJump')) modelOptions.ellipsisJump = changed.ellipsisJump;
     model.updateOptions(modelOptions);
-    if (own(next, 'current') || own(next, 'pageSize') || own(next, 'count')) jumperDraft = String(model.page);
+    if (own(changed, 'current') || own(changed, 'pageSize') || own(changed, 'count')) jumperDraft = String(model.page);
     if (mounted) requestRender('options');
     if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     return api;
   }
-    
-  function destroy() {
+
+  function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true;
     destroyLimitSelect('pagination-destroy');
@@ -611,7 +610,6 @@ function create(options) {
     delegation = null;
     keyboard = null;
     model.destroy();
-    emitter.dispose();
     if (domBinding) domBinding.release();
     domBinding = null;
     root = null;
@@ -627,15 +625,15 @@ function create(options) {
     emitChange(detail);
   }));
     
-  api = {
+  var record = {
     mount: mount,
-    render: function () { return requestRender('api'); },
+    render: requestRender,
     setCurrent: setCurrent,
     setPageSize: setPageSize,
     prev: function (meta) { return model.previous(mergeOptions({ source: 'api', reason: 'prev' }, meta)); },
     next: function (meta) { return model.next(mergeOptions({ source: 'api', reason: 'next' }, meta)); },
     refresh: function () { if (mounted) requestRender('refresh'); return api; },
-    updateOptions: updateOptions,
+    applyOptions: applyOptions,
     getState: state,
     getModel: function () { return model; },
     getItems: function () { return model.deriveItems(); },
@@ -645,28 +643,66 @@ function create(options) {
     getRootElement: function () { return root; },
     getRefs: function () { return domBinding ? domBinding.refs : null; },
     getDOMSource: function () { return domBinding ? domBinding.source : null; },
-    on: emitter.on,
-    once: emitter.once,
-    destroy: destroy
+    getCurrent: function () { return model.page; },
+    getPageSize: function () { return model.pageSize; },
+    getPageCount: function () { return model.pageCount; },
+    getTotal: function () { return model.total; },
+    isMounted: function () { return mounted; }
   };
-    
-  Object.defineProperties(api, {
-    current: { enumerable: true, get: function () { return model.page; } },
-    pageSize: { enumerable: true, get: function () { return model.pageSize; } },
-    pageCount: { enumerable: true, get: function () { return model.pageCount; } },
-    total: { enumerable: true, get: function () { return model.total; } },
-    mounted: { enumerable: true, get: function () { return mounted; } },
-    destroyed: { enumerable: true, get: function () { return destroyed; } }
-  });
-    
+  paginationState.set(instance, record);
+  instance.own(destroyRuntime);
+
   if (opts.container || opts.elements) mount(opts.container || null);
-  return api;
+  return root;
 }
 
-export const Pagination = Object.freeze({
-    definition: Object.freeze({ initializer: Object.freeze({ mode: 'create', bind: 'container' }) }),
-    create,
-    createDefaultDOM: DOMFactory.createDefaultDOM
-});
-export { create, createDefaultDOM };
+function recordFor(instance) {
+  var record = paginationState.get(instance);
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Pagination instance.');
+  return record;
+}
+
+export class Pagination extends Component {
+  static options = PAGINATION_DEFAULTS;
+  static immutableOptions = Object.freeze(['container', 'elements']);
+  static contract = ComponentContracts.get('Pagination');
+  static createDefaultDOM = DOMFactory.createDefaultDOM;
+
+  [componentHooks.render]() {
+    var existing = paginationState.get(this);
+    if (existing) {
+      existing.render('api');
+      return existing.getRootElement();
+    }
+    return setupPagination(this);
+  }
+
+  [componentHooks.optionsUpdated](next, _previous, patch) {
+    var record = paginationState.get(this);
+    if (record) record.applyOptions(next, patch);
+  }
+
+  mount(target) { return recordFor(this).mount(target); }
+  setCurrent(next, meta) { return recordFor(this).setCurrent(next, meta); }
+  setPageSize(next, meta) { return recordFor(this).setPageSize(next, meta); }
+  prev(meta) { return recordFor(this).prev(meta); }
+  next(meta) { return recordFor(this).next(meta); }
+  refresh() { return recordFor(this).refresh(); }
+  getState() { return recordFor(this).getState(); }
+  getModel() { return recordFor(this).getModel(); }
+  getItems() { return recordFor(this).getItems(); }
+  getEventDelegation() { return recordFor(this).getEventDelegation(); }
+  getKeyboardNavigation() { return recordFor(this).getKeyboardNavigation(); }
+  getSizeChanger() { return recordFor(this).getSizeChanger(); }
+  getRootElement() { return recordFor(this).getRootElement(); }
+  getRefs() { return recordFor(this).getRefs(); }
+  getDOMSource() { return recordFor(this).getDOMSource(); }
+  get current() { return recordFor(this).getCurrent(); }
+  get pageSize() { return recordFor(this).getPageSize(); }
+  get pageCount() { return recordFor(this).getPageCount(); }
+  get total() { return recordFor(this).getTotal(); }
+  get mounted() { return recordFor(this).isMounted(); }
+}
+
+export { createDefaultDOM };
 export default Pagination;
