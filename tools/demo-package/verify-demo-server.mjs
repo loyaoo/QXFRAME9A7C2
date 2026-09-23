@@ -3,11 +3,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const origin=process.env.DEMO_ORIGIN||'http://127.0.0.1:4173';
+const endpoint=new URL(origin);
 const demoRoot=path.resolve(process.argv[2]||'demo-package');
 
 function request(pathname, options={}) {
   return new Promise((resolve,reject)=>{
-    const req=http.request(origin+pathname,{method:options.method||'GET',headers:options.headers||{}},res=>{
+    const req=http.request({
+      protocol:endpoint.protocol,
+      hostname:endpoint.hostname,
+      port:endpoint.port,
+      path:pathname,
+      method:options.method||'GET',
+      headers:options.headers||{}
+    },res=>{
       const chunks=[];
       res.on('data',chunk=>chunks.push(chunk));
       res.on('end',()=>resolve({
