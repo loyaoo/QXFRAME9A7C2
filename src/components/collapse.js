@@ -228,6 +228,7 @@ export class Collapse extends Component {
         };
         const syncRecord = (itemRecord, item, open, reason) => {
             const current = this.options;
+            const previousItem = itemRecord.item;
             itemRecord.item = item;
             const mode = effectiveCollapsible(item);
             itemRecord.section.className = 'qxframe9a7c2-collapse-item' + (open ? ' is-open' : '') + (mode === 'disabled' ? ' is-disabled' : '') + (item.className ? ' ' + item.className : '');
@@ -246,8 +247,10 @@ export class Collapse extends Component {
             itemRecord.header.appendChild(itemRecord.main);
             if (hasExtra) itemRecord.header.appendChild(itemRecord.extra);
             if (String(current.indicatorPosition) === 'end') itemRecord.header.appendChild(itemRecord.indicator);
+            const contentChanged = !previousItem || previousItem.content !== item.content;
+            const structuralRefresh = reason === 'options' || reason === 'set-items';
             if ((open || current.destroyInactive !== true) && !itemRecord.contentRendered) { renderPart(itemRecord.content, item.content, item); itemRecord.contentRendered = true; }
-            else if (itemRecord.contentRendered && current.destroyInactive !== true) renderPart(itemRecord.content, item.content, item);
+            else if (itemRecord.contentRendered && current.destroyInactive !== true && (contentChanged || structuralRefresh)) renderPart(itemRecord.content, item.content, item);
             if (itemRecord.open === null) {
                 itemRecord.open = open;
                 itemRecord.panel.hidden = !open;
