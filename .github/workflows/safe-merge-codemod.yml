@@ -1,0 +1,31 @@
+name: Safe Merge Codemod
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/safe-merge-codemod.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  codemod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - name: Apply safe merge codemod
+        run: node tools/codemod-safe-merges.mjs
+      - name: Commit codemod
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src
+          git commit -m "security: replace empty Object.assign clones with safe merges"
+          git push origin HEAD:main
