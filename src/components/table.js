@@ -204,28 +204,10 @@ function normalizeEditEnterBehavior(value) {
   if (['commit','native'].indexOf(normalized) < 0) throw new TypeError('[QXFRAME9A7C2] Table editEnterBehavior must be commit or native.');
   return normalized;
 }
-function normalizeTableResolved(source) {
-  var input = Utils.mergeOwn(source || {});
-  ComponentContracts.validate(ComponentContracts.get('Table'), input, 'Table');
-  var opts = Utils.mergeOwn(TABLE_DEFAULTS, input);
-  if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Table container must be an Element.');
-  opts.size = normalizeSize(opts.size);
-  opts.columns = normalizeColumns(opts.columns);
-  opts.responsiveMode = normalizeResponsiveMode(opts.responsiveMode);
-  opts.keyboardNavigation = normalizeKeyboardNavigation(opts.keyboardNavigation);
-  opts.editEnterBehavior = normalizeEditEnterBehavior(opts.editEnterBehavior);
-  opts.virtual = normalizeVirtual(opts.virtual);
-  opts.virtualThreshold = normalizePositiveInteger(opts.virtualThreshold, 'virtualThreshold', 100);
-  opts.rowHeight = normalizePositiveNumber(opts.rowHeight, 'rowHeight', 44);
-  opts.overscan = normalizeNonNegativeInteger(opts.overscan, 'overscan', 4);
-  if (opts.load !== null && opts.load !== undefined && typeof opts.load !== 'function') throw new TypeError('[QXFRAME9A7C2] Table load must be a function or null.');
-  if (opts.searchMatcher !== null && opts.searchMatcher !== undefined && typeof opts.searchMatcher !== 'function') throw new TypeError('[QXFRAME9A7C2] Table searchMatcher must be a function or null.');
-  opts.searchValue = opts.searchValue == null ? '' : String(opts.searchValue);
-  opts.remoteSelectionScope = normalizeRemoteSelectionScope(opts.remoteSelectionScope);
-  opts.scrollPolicy = normalizeScrollPolicy(opts.scrollPolicy);
-  assertStableRowIdentity(opts.items, opts);
-  validateFeatureCombination(opts);
-  return opts;
+function normalizeTableInitial(source) {
+  var next = normalizeTablePatch(source || {}, TABLE_DEFAULTS);
+  if (!next.container || next.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Table container must be an Element.');
+  return next;
 }
 function normalizeTablePatch(patch, current) {
   var next = Utils.mergeOwn(patch || {});
@@ -243,14 +225,14 @@ function normalizeTablePatch(patch, current) {
   if (own(next, 'searchValue')) next.searchValue = next.searchValue == null ? '' : String(next.searchValue);
   if (own(next, 'remoteSelectionScope')) next.remoteSelectionScope = normalizeRemoteSelectionScope(next.remoteSelectionScope);
   if (own(next, 'scrollPolicy')) next.scrollPolicy = normalizeScrollPolicy(next.scrollPolicy);
-  var candidate = Utils.mergeOwn(current, next);
+  var candidate = Utils.mergeOwn(TABLE_DEFAULTS, current || {}, next);
   assertStableRowIdentity(candidate.items, candidate);
   validateFeatureCombination(candidate);
   return next;
 }
 
 function setupTable(instance) {
-  var opts = Utils.mergeOwn(instance.options);
+  var opts = Utils.mergeOwn(TABLE_DEFAULTS, instance.options);
   var initialColumns = opts.columns.map(function (column) { return Utils.mergeOwn(column); });
   var doc = opts.document || opts.container.ownerDocument || global.document;
   var tableId = IdManager.next('table');
@@ -2461,7 +2443,7 @@ export class Table extends Component {
   static immutableOptions = Object.freeze(['container','document']);
   static sizes = SIZES.slice();
 
-  constructor(options = {}) { super(normalizeTableResolved(options)); }
+  constructor(options = {}) { super(normalizeTableInitial(options)); }
   updateOptions(nextOptions = {}) {
     var next=Utils.mergeOwn(nextOptions||{});
     if(own(next,'container')){
