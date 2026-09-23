@@ -1090,6 +1090,7 @@ function createChannel(profile) {
     if (index >= 0) entry.records.splice(index, 1);
     records.delete(record.key);
     if (typeof record.options.onClose === 'function') record.options.onClose(payload(record, reason || 'close', event));
+    if (frames.get(entry.frameKey) !== entry || !entry.frame || !entry.frame.parentNode) return true;
     entry.layout.request('close');
     if (!entry.records.length) {
       layoutEntry(entry, 'close');
@@ -1099,9 +1100,15 @@ function createChannel(profile) {
   }
     
   function closeRecord(record, reason, immediate, event) {
-    if (!record || record.closed || record.closing) return false;
+    if (!record || record.closed || record.closing || record.closeGuard) return false;
     var data = payload(record, reason || 'close', event);
-    if (typeof record.options.onBeforeClose === 'function' && record.options.onBeforeClose(data) === false) return false;
+    var allowed = true;
+    if (typeof record.options.onBeforeClose === 'function') {
+      record.closeGuard = true;
+      try { allowed = record.options.onBeforeClose(data) !== false; }
+      finally { record.closeGuard = false; }
+    }
+    if (!allowed || record.closed || record.closing) return false;
     record.closing = true;
     clearExpiryFrame(record);
     if (record.clock) record.clock.pause();
@@ -1197,6 +1204,7 @@ function createChannel(profile) {
       pauseReasons: new Set(),
       closing: false,
       closed: false,
+      closeGuard: false,
       progress: null,
       closeButton: null,
       updateFlashDelay: null,
@@ -1341,7 +1349,9 @@ function createChannel(profile) {
         if (!action || action.disabled) return;
         var data = { action: action, index: index, event: event, instance: api, options: record.options };
         var localResult = typeof action.onClick === 'function' ? action.onClick(data) : undefined;
+        if (record.closed || record.closing) return;
         var globalResult = typeof record.options.onAction === 'function' ? record.options.onAction(data) : undefined;
+        if (record.closed || record.closing) return;
         if (action.closeOnClick && localResult !== false && globalResult !== false) record.close('action', false, event);
         return;
       }
