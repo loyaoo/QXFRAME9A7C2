@@ -55,6 +55,9 @@ export function popupSelectionOpenPlan(detail, options = {}) {
 export function createPopupFieldTriggerSettings(options = {}, context = {}, overrides = {}) {
     const opts = options || {};
     const ctx = context || {};
+    const focusReturnTarget = Object.prototype.hasOwnProperty.call(overrides, 'tabExitTarget')
+        ? overrides.tabExitTarget
+        : (ctx.triggerTarget || ctx.reference || null);
     return Utils.assignOwn({
         trigger: opts.trigger,
         keyboardActivation: false,
@@ -76,7 +79,10 @@ export function createPopupFieldTriggerSettings(options = {}, context = {}, over
         closeOnFocusOutside: true,
         closeOnTabExit: true,
         closeOnEscape: true,
-        restoreFocusTarget: ctx.triggerTarget || ctx.reference || null,
+        restoreFocusTarget: function (detail) {
+            const target = typeof focusReturnTarget === 'function' ? focusReturnTarget(detail) : focusReturnTarget;
+            return target || ctx.triggerTarget || ctx.reference || null;
+        },
         // Centralize non-modal popup focus return: Escape and non-focusable outside
         // dismissal return to the authored control, while Tab/focus-outside and clicks on
         // another focusable control keep the browser's new focus.

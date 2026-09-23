@@ -954,12 +954,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
     return activateCurrentPanelVirtualFocus(reason || 'region-change');
   }
   function handleFieldKeydown(event) {
-    if (!event || InteractionPolicy.mutationLocked(opts)) return false;
+    if (!event || opts.disabled === true) return false;
+    var mutationLocked = InteractionPolicy.mutationLocked(opts);
     if (selection === 'multiple' && tagNavigation && tagNavigation.handleKeydown(event)) return true;
     if (event.key === 'F6' && withTime && timePanel && field && field.getState().open) {
       return setKeyboardRegion(keyboardRegion === 'selection' ? 'time' : 'selection', event.shiftKey ? 'Shift+F6' : 'F6');
     }
-    if (selection === 'multiple' && event.key === 'Enter') {
+    if (!mutationLocked && selection === 'multiple' && event.key === 'Enter') {
       var input = field && field.getInputElement ? field.getInputElement() : null;
       var text = input && input.value !== undefined ? String(input.value || '') : rawInput;
       if (text.trim()) {

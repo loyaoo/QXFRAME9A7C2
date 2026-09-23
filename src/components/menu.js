@@ -1201,7 +1201,7 @@ function setupMenu(instance) {
       },
       beforeHandle:function(detail){
         var event = detail && detail.originalEvent;
-        if (!event) return false;
+        if (!event || event.isComposing === true || event.keyCode === 229) return false;
         if (!event.ctrlKey && !event.metaKey && !event.altKey && event.key && event.key.length === 1 && event.key !== ' ') { var typed=handleKeydown(event)===true; if(typed&&event.preventDefault)event.preventDefault(); return false; }
         return true;
       }
