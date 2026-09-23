@@ -134,11 +134,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var values = asValues(value, hierarchicalCheckMode());
           return hierarchicalCheckMode() ? values : values[0];
         }
-        valueState = StateController.createValueBinding({
-          value: normalizeApiValue(opts.value !== undefined ? opts.value : opts.defaultValue),
-          controlled: hasOwn(fieldInit.options, 'value'),
-          normalizeValue: normalizeApiValue
-        });
+        valueState = StateController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function restoreTreeFromApiValue(reason) {
