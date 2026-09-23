@@ -682,6 +682,7 @@ function create(options) {
     cancelMotion();
     if (behavior === 'smooth' && motionEnabled() && Math.max(0, Number(opts.snapDuration) || 0) > 0) {
       emitScrollStart(reason || 'programmatic');
+      if (destroyed) return false;
       snapSettling = snapIndex !== null && snapIndex !== undefined;
       motion = {
         fromX: readScrollX(),
@@ -840,6 +841,7 @@ function create(options) {
       clearScrollIdleTimer();
       cancelMotion();
       emitScrollStart('wheel-step');
+      if (destroyed) return;
       var axis = resolveSnapAxis();
       if (!snapStepGesture) snapStepGesture = { startIndex: current, targetIndex: current, axis: axis, count: 0, lastEventAt: now() };
       snapStepGesture.targetIndex = next;
@@ -865,6 +867,7 @@ function create(options) {
     activateScrollbar();
     cancelMotion();
     emitScrollStart('wheel');
+    if (destroyed) return;
     if (routed.axis === 'x') setScrollPosition(metrics.x + routed.value, undefined, 'auto', 'wheel');
     else setScrollPosition(undefined, metrics.y + routed.value, 'auto', 'wheel');
   }
@@ -1121,6 +1124,7 @@ function create(options) {
     requestProjection('scroll');
     if (!snapSettling && !motion && now() >= idleSuppressUntil) {
       emitScrollStart('scroll');
+      if (destroyed) return;
       scheduleScrollIdle('scroll-idle');
     }
   }, { passive: true }));
