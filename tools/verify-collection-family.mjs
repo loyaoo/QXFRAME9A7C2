@@ -16,9 +16,10 @@ const expected=Object.freeze({
   Calendar:'src/components/calendar.js',
   PeriodPanel:'src/components/period-panel.js'
 });
+const components=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/esm-component-authority.json'),'utf8')).authorities||[];
 const building=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/esm-building-block-authority.json'),'utf8')).authorities||[];
 const support=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/esm-support-authority.json'),'utf8')).authorities||[];
-const byName=new Map([...building,...support].map(entry=>[entry.name,entry]));
+const byName=new Map([...components,...building,...support].map(entry=>[entry.name,entry]));
 const forbidden=[
   /(?:Core|Headless|DOMHeadless|Component|BuildingBlock)Registry\.(?:get|define|assert)\s*\(/,
   /\bdefineModule\s*\(/,
