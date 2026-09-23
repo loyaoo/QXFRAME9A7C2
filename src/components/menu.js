@@ -316,7 +316,7 @@ function create(options) {
     var keys = Array.from(openKeys);
     var detail = { openKeys: keys.slice(), source: source || DOM.activationSource(originalEvent), reason: reason || 'open-change', originalEvent: originalEvent || null, menu: api };
     if (Utils.isFunction(opts.onOpenChange)) opts.onOpenChange(keys.slice(), detail);
-    emitter.emit('openChange', detail);
+    if (!destroyed) emitter.emit('openChange', detail);
   }
   function removeDescendantOpenKeys(key) {
     var prefix = pathByKey.get(key) || [];
@@ -918,6 +918,7 @@ function create(options) {
     };
   }
   function commitSelectedKeys(keys, meta) {
+    if (destroyed) return api;
     var next = normalizeKeys(keys);
     if (!opts.multiple && next.length > 1) throw new RangeError('[QXFRAME9A7C2] Menu single mode accepts at most one selected key.');
     next.forEach(function (key) { if (!itemByKey.has(key)) throw new RangeError('[QXFRAME9A7C2] Menu selectedKeys must reference item keys.'); });
@@ -932,13 +933,15 @@ function create(options) {
       var changedKey = meta && meta.key ? String(meta.key) : (next.length ? next[next.length - 1] : (previous.length ? previous[previous.length - 1] : ''));
       var detail = selectionDetail(changedKey, meta, previous, next);
       if (Utils.isFunction(opts.onSelectedKeysChange)) opts.onSelectedKeysChange(next.slice(), detail);
+      if (destroyed) return api;
       emitter.emit('selectedKeysChange', detail);
+      if (destroyed) return api;
       var previousSingle = previous.length ? previous[0] : '';
       var nextSingle = next.length ? next[0] : '';
       if (!opts.multiple && previousSingle !== nextSingle) {
         var scalarDetail = Utils.mergeOwn( detail, { previousKey: previousSingle || null, key: nextSingle || null, item: nextSingle ? itemByKey.get(nextSingle) : null });
         if (Utils.isFunction(opts.onSelectedKeyChange)) opts.onSelectedKeyChange(nextSingle, scalarDetail);
-        emitter.emit('selectedKeyChange', scalarDetail);
+        if (!destroyed) emitter.emit('selectedKeyChange', scalarDetail);
       }
     }
     return api;
@@ -953,15 +956,19 @@ function create(options) {
     var previous = selectedArray();
     var detail = selectionDetail(key, meta, previous, previous);
     if (Utils.isFunction(item.onClick) && item.onClick(detail) === false) detail.defaultPrevented = true;
+    if (destroyed) { detail.defaultPrevented = true; return detail; }
     if (Utils.isFunction(opts.onClick) && opts.onClick(detail) === false) detail.defaultPrevented = true;
+    if (destroyed) { detail.defaultPrevented = true; return detail; }
     emitter.emit('click', detail);
+    if (destroyed) detail.defaultPrevented = true;
     return detail;
   }
   function navigate(detail) {
-    if (detail.defaultPrevented) return false;
+    if (destroyed || detail.defaultPrevented) return false;
     if (Utils.isFunction(opts.onNavigate)) opts.onNavigate(detail);
+    if (destroyed) return false;
     emitter.emit('navigate', detail);
-    return true;
+    return !destroyed;
   }
   function closeLeafPopupTree(key, reason, originalEvent, source) {
     var button = buttonByKey.get(String(key || ''));
@@ -990,7 +997,7 @@ function create(options) {
     var item = itemByKey.get(key);
     if (!item || isDisabledItem(item)) return false;
     var clickDetail = runItemClick(key, meta);
-    if (clickDetail.defaultPrevented) return false;
+    if (destroyed || clickDetail.defaultPrevented) return false;
     if (!opts.selectable) return finishLeafActivation(key, clickDetail);
 
     var previous = selectedArray();
@@ -1000,29 +1007,36 @@ function create(options) {
       next = next.filter(function (entry) { return entry !== key; });
       var deselectDetail = selectionDetail(key, meta, previous, next);
       if (Utils.isFunction(item.onDeselect) && item.onDeselect(deselectDetail) === false) deselectDetail.defaultPrevented = true;
+      if (destroyed) return false;
       if (Utils.isFunction(opts.onDeselect) && opts.onDeselect(deselectDetail) === false) deselectDetail.defaultPrevented = true;
-      if (deselectDetail.defaultPrevented) return false;
+      if (destroyed || deselectDetail.defaultPrevented) return false;
       commitSelectedKeys(next, { source: meta && meta.source || 'api', reason: meta && meta.reason || 'deselect', originalEvent: meta && meta.originalEvent || null, key: key });
+      if (destroyed) return false;
       deselectDetail.selectedKeys = selectedArray(); deselectDetail.selectedKey = selectedKeyValue() || null;
       emitter.emit('deselect', deselectDetail);
-      return finishLeafActivation(key, deselectDetail);
+      return destroyed ? false : finishLeafActivation(key, deselectDetail);
     }
     next = opts.multiple ? previous.concat(key).filter(function (entry, index, list) { return list.indexOf(entry) === index; }) : [key];
     var selectDetail = selectionDetail(key, meta, previous, next);
     if (Utils.isFunction(item.onSelect) && item.onSelect(selectDetail) === false) selectDetail.defaultPrevented = true;
+    if (destroyed) return false;
     if (Utils.isFunction(opts.onSelect) && opts.onSelect(selectDetail) === false) selectDetail.defaultPrevented = true;
-    if (selectDetail.defaultPrevented) return false;
+    if (destroyed || selectDetail.defaultPrevented) return false;
     commitSelectedKeys(next, { source: meta && meta.source || 'api', reason: meta && meta.reason || 'select', originalEvent: meta && meta.originalEvent || null, key: key });
+    if (destroyed) return false;
     selectDetail.selectedKeys = selectedArray(); selectDetail.selectedKey = selectedKeyValue() || null;
     emitter.emit('select', selectDetail);
-    return finishLeafActivation(key, selectDetail);
+    return destroyed ? false : finishLeafActivation(key, selectDetail);
   }
 
   function emitTitleClick(key, item, event, source) {
     var detail = { key: key, item: item, open: openKeys.has(key), openKeys: Array.from(openKeys), source: source || DOM.activationSource(event), reason: 'submenu-title', originalEvent: event || null, menu: api };
     if (Utils.isFunction(item.onTitleClick)) item.onTitleClick(detail);
+    if (destroyed) return false;
     if (Utils.isFunction(opts.onTitleClick)) opts.onTitleClick(detail);
+    if (destroyed) return false;
     emitter.emit('titleClick', detail);
+    return !destroyed;
   }
   function handleButtonClick(event) {
     var button = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-menu-item') : null;
@@ -1036,7 +1050,7 @@ function create(options) {
     var key = (buttonMeta.get(button) && buttonMeta.get(button).key) || '';
     var item = itemByKey.get(key); if (!item || isDisabledItem(item)) return;
     if (hasChildren(item)) {
-      emitTitleClick(key, item, event, source);
+      if (emitTitleClick(key, item, event, source) === false || destroyed) return;
       if (!popupMode()) toggleSubmenu(key, 'submenu-activate', event);
       else if (opts.submenuTrigger !== 'click') openSubmenu(key, 'submenu-activate', event);
       syncClasses();
