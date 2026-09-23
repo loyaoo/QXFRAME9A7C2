@@ -6,7 +6,6 @@ import { DOMProjection } from '../src/core/domProjection.js';
 import { DOM } from '../src/core/dom.js';
 import { ComponentContracts } from '../src/core/componentContracts.js';
 import { Utils } from '../src/utils/utils.js';
-import { Utils } from '../src/utils/utils.js';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const posix=p=>p.split(path.sep).join('/');
