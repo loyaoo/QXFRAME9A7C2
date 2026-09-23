@@ -112,6 +112,7 @@ function create(options) {
     });
   }
   function canActivatePicker() { return interactionPolicy().activatable; }
+  function canEditSelector() { return opts.editable === true && interactionPolicy().editable; }
 
   function focusElement() {
     if (control && control.getFocusElement) return control.getFocusElement();
@@ -148,7 +149,7 @@ function create(options) {
     if (!control) { var editor = editorElement(); if (editor && editor.value !== undefined) editor.value = text; return; }
     control.setDisplayValue(text);
     if (!projectionMode && (String(opts.controlMode || 'input') === 'input' || String(opts.controlMode || 'input') === 'tags')) control.setInputValue(text);
-    else if (projectionMode && editorElement() && opts.editable === true) control.setInputValue(text);
+    else if (projectionMode && editorElement() && canEditSelector()) control.setInputValue(text);
   }
   function beginNavigationInteraction() {
     if (navigationActive) return false;
@@ -159,7 +160,7 @@ function create(options) {
   }
   function preserveEditorForReason(reason) {
     var value = String(reason || '');
-    return value === 'escape' || value === 'cancel' || value === 'editor-intent' || value === 'editor-pointer' || value === 'editor-context' || (opts.editable === true && (value === 'outside' || value === 'focus-outside'));
+    return value === 'escape' || value === 'cancel' || value === 'editor-intent' || value === 'editor-pointer' || value === 'editor-context' || (canEditSelector() && (value === 'outside' || value === 'focus-outside'));
   }
   function endNavigationInteraction(detail) {
     if (!navigationActive) return false;
@@ -181,7 +182,7 @@ function create(options) {
     return !!(navigationActive && triggerSession && triggerSession.getState().open && event && isSelectorEditor(event.target));
   }
   function editorIntentKeydown(event) {
-    if (!event || !navigationOwnsEvent(event) || opts.editable !== true || KeyboardNavigation.isComposing(event)) return false;
+    if (!event || !navigationOwnsEvent(event) || !canEditSelector() || KeyboardNavigation.isComposing(event)) return false;
     var key = String(event.key || '');
     if (key === 'Backspace' || key === 'Delete') return true;
     if ((event.ctrlKey || event.metaKey || event.altKey) && (key.indexOf('Arrow') === 0 || key === 'Home' || key === 'End')) return true;
@@ -275,11 +276,11 @@ function create(options) {
       close('editor-pointer', event);
     }));
     scope.add(DOM.listen(selectorEditor, 'pointercancel', function () { editorPointerPending = false; suppressOpenEvent = null; }));
-    scope.add(DOM.listen(selectorEditor, 'beforeinput', function (event) { if (navigationOwnsEvent(event) && opts.editable === true) close('editor-intent', event); }));
-    scope.add(DOM.listen(selectorEditor, 'compositionstart', function (event) { if (navigationOwnsEvent(event) && opts.editable === true) close('editor-intent', event); }));
-    scope.add(DOM.listen(selectorEditor, 'paste', function (event) { if (navigationOwnsEvent(event) && opts.editable === true) close('editor-intent', event); }));
-    scope.add(DOM.listen(selectorEditor, 'cut', function (event) { if (navigationOwnsEvent(event) && opts.editable === true) close('editor-intent', event); }));
-    scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && opts.editable === true) { suppressOpenEvent = event; close('editor-context', event); } }));
+    scope.add(DOM.listen(selectorEditor, 'beforeinput', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'compositionstart', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'paste', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'cut', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) { suppressOpenEvent = event; close('editor-context', event); } }));
     scope.add(DOM.listen(selectorEditor, 'keydown', function (event) { if (editorIntentKeydown(event)) close('editor-intent', event); }));
   }
 
