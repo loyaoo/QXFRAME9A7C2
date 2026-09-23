@@ -198,7 +198,9 @@ function create(source, overrides) {
         renderList();
         var enriched = Utils.mergeOwn( detail, { instance: api });
         if (detail.operation === 'move' && typeof opts.onSort === 'function') opts.onSort(value.slice(), enriched);
+        if (destroyed) return;
         if (detail.reason === 'remove' && typeof opts.onRemove === 'function') opts.onRemove(detail.file, enriched);
+        if (destroyed) return;
         if (typeof opts.onChange === 'function') opts.onChange(value, enriched);
       }
     };
@@ -385,12 +387,12 @@ function create(source, overrides) {
     if (!opts.drag) return;
     if (event.preventDefault) event.preventDefault();
     if (event.type === 'dragenter' || event.type === 'dragover') root.classList.add('is-dragover'); else root.classList.remove('is-dragover');
-    if (event.type === 'drop' && event.dataTransfer) { if (typeof opts.onDrop === 'function') opts.onDrop(event, api); addFiles(event.dataTransfer.files, { source: 'drop', event: event }); }
+    if (event.type === 'drop' && event.dataTransfer) { if (typeof opts.onDrop === 'function') opts.onDrop(event, api); if (!destroyed) addFiles(event.dataTransfer.files, { source: 'drop', event: event }); }
   }
   function handlePaste(event) {
     if (!opts.pastable || opts.disabled || !event.clipboardData) return;
     var files = Array.prototype.slice.call(event.clipboardData.files || []); if (!files.length) return;
-    if (event.preventDefault) event.preventDefault(); if (typeof opts.onPaste === 'function') opts.onPaste(files, event, api); addFiles(files, { source: 'paste', event: event });
+    if (event.preventDefault) event.preventDefault(); if (typeof opts.onPaste === 'function') opts.onPaste(files, event, api); if (!destroyed) addFiles(files, { source: 'paste', event: event });
   }
   function closePreview(reason, event) {
     if (previewMediaController && mediaPreviewOpen()) {
@@ -492,7 +494,7 @@ function create(source, overrides) {
       var url = customUrl || (isMediaPreviewKind(kind) ? previewMediaUrl(record) : previewUrl(record));
       var payload = { file:record,url:url,source:DOM.activationSource(event),reason:'preview',originalEvent:event||null,instance:api };
       if (typeof opts.onPreview === 'function' && opts.onPreview(record,payload) === false) return api;
-      if (!url) return api;
+      if (destroyed || !url) return api;
       if (opts.previewTarget === 'window') { var safeWindowUrl=URLPolicy.sanitize(url,kind==='image'?'image':(kind==='video'||kind==='audio'?'media':'download')); if (safeWindowUrl && typeof global.open === 'function') global.open(safeWindowUrl,'_blank','noopener'); return api; }
       if (isMediaPreviewKind(kind)) return openMediaPreview(record, url, event);
 
@@ -544,7 +546,7 @@ function create(source, overrides) {
     if (!record || !(opts.downloadable === true || record.url)) return api;
     var url = record.url || previewUrl(record), payload={file:record,url:url,instance:api};
     if (typeof opts.onDownload === 'function' && opts.onDownload(record,payload) === false) return api;
-    if (!url) return api;
+    if (destroyed || !url) return api;
     var anchor=doc.createElement('a'); var safeDownload=URLPolicy.sanitize(url,'download'); if(!safeDownload)return api; anchor.href=safeDownload; anchor.download=record.name||''; anchor.target='_blank'; anchor.rel='noopener noreferrer'; (doc.body || doc.documentElement).appendChild(anchor); anchor.click(); anchor.remove();
     return api;
   }
@@ -562,7 +564,7 @@ function create(source, overrides) {
       if (!destroyed && typeof opts.onError==='function') opts.onError(error,record,api);
       return api;
     });
-    if (gate!==false) commitRemove(record.uid,meta); return api;
+    if (!destroyed && gate!==false) commitRemove(record.uid,meta); return api;
   }
   function clear() {
     if (typeof opts.beforeRemove !== 'function') { lifecycle.setValue([],{source:'clear'}); return api; }

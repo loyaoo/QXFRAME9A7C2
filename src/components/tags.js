@@ -256,13 +256,13 @@ function create(options) {
     var items=publicItems();
     var payload = Utils.assignOwn({ items: items.slice(), reason: 'items', source: 'api', instance: api }, detail || {});
     if (payload.silent !== true && Utils.isFunction(opts.onItemsChange)) opts.onItemsChange(items.slice(), payload);
-    if (payload.silent !== true) emitter.emit('itemsChange', payload);
+    if (payload.silent !== true && !destroyed) emitter.emit('itemsChange', payload);
   }
   function emitSelection(values,detail){
     syncFormBridge(detail);
     var payload = Utils.assignOwn({ value: values.slice(), reason: 'selection', source: 'api', instance: api }, detail || {});
     if (payload.silent !== true && Utils.isFunction(opts.onChange)) opts.onChange(values.slice(), payload);
-    if (payload.silent !== true) emitter.emit('change', payload);
+    if (payload.silent !== true && !destroyed) emitter.emit('change', payload);
   }
     
   var selection = Selection.create({
@@ -314,6 +314,7 @@ function create(options) {
       var item = Utils.mergeOwn(tag, metadataByKey[tag.key]);
       delete metadataByKey[tag.key];
       if (Utils.isFunction(opts.onRemove)) opts.onRemove(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
+      if (destroyed) return;
       if (Utils.isFunction(opts.onClose)) opts.onClose(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
     },
     onTagsChange: function (_tags, detail) {
@@ -328,8 +329,9 @@ function create(options) {
       if (input.value !== value) input.value = value;
       var payload = Utils.mergeOwn( detail, { instance: api });
       if (Utils.isFunction(opts.onInput)) opts.onInput(value, payload);
+      if (destroyed) return;
       if (Utils.isFunction(opts.onSearch)) opts.onSearch(value, payload);
-      emitter.emit('input', Utils.assignOwn({ value: value }, payload));
+      if (!destroyed) emitter.emit('input', Utils.assignOwn({ value: value }, payload));
     },
     onTagInvalid: function (detail) {
       if (Utils.isFunction(opts.onInvalid)) opts.onInvalid(Utils.mergeOwn( detail, { instance: api }));
@@ -1514,7 +1516,7 @@ function create(options) {
       return;
     }
     var keyDetail={value:tokenInput.getState().inputValue,tags:publicItems(),hosted:opts.hosted===true,controlled:opts.controlled===true,instance:api,originalEvent:event};
-    if(Utils.isFunction(opts.onKeydown)){var ownerHandled=opts.onKeydown(event,keyDetail)===true;if(ownerHandled||event.defaultPrevented)return;}
+    if(Utils.isFunction(opts.onKeydown)){var ownerHandled=opts.onKeydown(event,keyDetail)===true;if(destroyed||ownerHandled||event.defaultPrevented)return;}
     var beforeTokenCount=tokenInput.getState().tags.length,beforePublicCount=publicItems().length;
     var handled=tokenInput.handleKeydown(event,{user:true,source:'keyboard',originalEvent:event});
     var externallyHandled=opts.controlled===true&&publicItems().length!==beforePublicCount;
