@@ -158,7 +158,7 @@ var MODES = ['none', 'exit', 'contain', 'trap'];
         guard.className = 'qxframe9a7c2-focus-guard';
         guard.tabIndex = 0;
         guard.setAttribute('data-qxframe9a7c2-focus-guard', direction);
-        guard.style.cssText = 'position:fixed;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
+        guard.style.position = 'fixed'; guard.style.width = '1px'; guard.style.height = '1px'; guard.style.overflow = 'hidden'; guard.style.opacity = '0'; guard.style.pointerEvents = 'none';
         return guard;
       }
       beforeGuard = makeGuard('before'); afterGuard = makeGuard('after');
