@@ -32,6 +32,7 @@ function create(options) {
     }
 
     function isTop() { return !handle || handle.isTop(); }
+    function allowsBackgroundOutsideDismiss() { return String(settings.kind || 'popup') === 'popup'; }
 
     function dispatchDismiss(reason, event, requireTop) {
       if (!active || destroyed || (requireTop !== false && !isTop())) return false;
@@ -51,7 +52,7 @@ function create(options) {
           layer: api
         }) === false) return;
       }
-      if (settings.closeOnOutsidePress !== false) dispatchDismiss('outside', event, false);
+      if (settings.closeOnOutsidePress !== false) dispatchDismiss('outside', event, !allowsBackgroundOutsideDismiss());
     }
 
     function onFocusIn(event) {
@@ -60,7 +61,7 @@ function create(options) {
       if (Utils.isFunction(settings.onFocusOutside)) {
         if (settings.onFocusOutside({ originalEvent: event, target: event.target, layer: api }) === false) return;
       }
-      dispatchDismiss('focus-outside', event, false);
+      dispatchDismiss('focus-outside', event, !allowsBackgroundOutsideDismiss());
     }
 
     function onKeyDown(event) {
