@@ -207,8 +207,10 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           return output;
         }
         function normalizeApiValue(value) {
-          var values = opts.multiple === true ? normalizeAssociatedValues(value) : normalizeValues(value, false);
-          return opts.multiple === true ? values : values[0];
+          if (opts.multiple === true) return normalizeAssociatedValues(value);
+          var values = normalizeValues(value, false);
+          if (!values.length) return undefined;
+          return findPathByValue(values[0]).length ? values[0] : undefined;
         }
         function copyApiValue(value) { return Array.isArray(value) ? value.slice() : value; }
         valueState = StateController.create({
@@ -486,6 +488,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         }
     
         function notifySelectionCallbacks(selectValue, changeValue, payload) {
+          payload.controlled = !!(valueState && valueState.controlled);
           if (Utils.isFunction(opts.onSelect)) opts.onSelect(selectValue, payload);
           if (destroyed) return false;
           emitter.emit('select', payload);
@@ -506,15 +509,13 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var targetMap = Object.create(null); targets.forEach(function (value) { targetMap[value] = true; });
           var nextValues = selection.values.filter(function (value) { return !targetMap[value]; });
           if (!state.checked) targets.forEach(function (value) { if (nextValues.indexOf(value) < 0) nextValues.push(value); });
-          selection.set(nextValues, { source: detail && detail.source || 'instance', reason: detail && detail.reason || 'cascade-check' });
-          var currentValues = selection.values;
-          if (!state.checked) selectionAnchorValue = targets.length ? targets[targets.length - 1] : (currentValues.length ? currentValues[currentValues.length - 1] : null);
-          else if (selectionAnchorValue !== null && targets.some(function (value) { return String(value) === String(selectionAnchorValue); })) selectionAnchorValue = currentValues.length ? currentValues[currentValues.length - 1] : null;
-          opts.value = currentValues.slice();
+          var proposed = normalizeApiValue(nextValues);
+          var changed = writeApiValue(proposed, { silent:true, source:detail && detail.source || 'instance', reason:detail && detail.reason || 'cascade-check', originalEvent:detail && detail.originalEvent || null }, true);
+          syncSelectionFromApiValue('cascade-check');
           refreshSelectionSurfaces(); syncControl({ source: detail && detail.source || 'instance', reason: detail && detail.reason || 'cascade-check' });
-          var payload = { value: item.value, values: selection.values.slice(), item: item, checked: !state.checked, indeterminate: false, pathItems: nextPath.slice(), pathKeys: nextPath.map(function (entry) { return String(entry.key); }), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'cascade-check', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-          notifySelectionCallbacks(item.value, selection.values.slice(), payload);
-          return true;
+          var payload = { value: item.value, values: proposed.slice(), item: item, checked: !state.checked, indeterminate: false, pathItems: nextPath.slice(), pathKeys: nextPath.map(function (entry) { return String(entry.key); }), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'cascade-check', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+          if (changed) notifySelectionCallbacks(item.value, proposed.slice(), payload);
+          return changed;
         }
     
         function activateAt(columnIndex, item, detail) {
@@ -526,9 +527,12 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (hasChildren(item)) {
             if (opts.multiple === true && ((detail && detail.reason === 'space') || isSelectionIndicatorEvent(detail))) return toggleAssociatedSelection(item, nextPath, detail);
             if (opts.multiple !== true && opts.changeOnSelect === true && !isLocked()) {
-              selection.set(String(item.value), { source: detail && detail.source || 'instance', reason: 'change-on-select' }); selectionAnchorValue = String(item.value); opts.value = selection.value; syncControl({ source: detail && detail.source || 'instance', reason: 'change-on-select' });
-              var branchPayload = { value: item.value, values: selection.values.slice(), item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: 'change-on-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-              notifySelectionCallbacks(item.value, item.value, branchPayload);
+              var branchValue = String(item.value);
+              var branchChanged = writeApiValue(branchValue, { silent:true, source:detail && detail.source || 'instance', reason:'change-on-select', originalEvent:detail && detail.originalEvent || null }, true);
+              syncSelectionFromApiValue('change-on-select');
+              syncControl({ source: detail && detail.source || 'instance', reason: 'change-on-select' });
+              var branchPayload = { value: item.value, values: [branchValue], item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: 'change-on-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+              if (branchChanged) notifySelectionCallbacks(item.value, branchValue, branchPayload);
               if (destroyed) return true;
             }
             activeColumnIndex = columnIndex;
@@ -538,14 +542,13 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (isLocked()) return false;
           var value = String(item.value);
           if (opts.multiple === true) return toggleAssociatedSelection(item, nextPath, detail);
-          else selection.set(value, { source: detail && detail.source || 'instance', reason: detail && detail.reason || 'select' });
-          selectionAnchorValue = value;
-          opts.value = opts.multiple === true ? selection.values.slice() : selection.value;
+          var changed = writeApiValue(value, { silent:true, source:detail && detail.source || 'instance', reason:detail && detail.reason || 'select', originalEvent:detail && detail.originalEvent || null }, true);
+          syncSelectionFromApiValue('select');
           refreshSelectionSurfaces(); syncControl({ source: detail && detail.source || 'instance', reason: detail && detail.reason || 'select' });
-          var payload = { value: item.value, values: selection.values.slice(), item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-          notifySelectionCallbacks(item.value, opts.multiple === true ? selection.values.slice() : item.value, payload);
+          var payload = { value: item.value, values: [value], item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+          if (changed) notifySelectionCallbacks(item.value, value, payload);
           if (!destroyed && shouldCloseOnSelect()) triggerSession.close('select', payload.originalEvent);
-          return true;
+          return changed;
         }
     
         function handlePanelKeydown(event) {
@@ -597,9 +600,11 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var item = result.item;
           if (opts.multiple === true) toggleAssociatedSelection(item, result.path, detail || { source: 'keyboard', reason: 'search-select' });
           else {
-            selection.set(String(item.value), { source: detail && detail.source || 'instance', reason: 'search-select' }); selectionAnchorValue = String(item.value); opts.value = selection.value;
-            var payload = { value: item.value, values: selection.values.slice(), item: item, pathItems: result.path.slice(), pathKeys: activePathKeys.slice(), pathLabels: result.path.map(function (entry) { return String(entry.label); }), reason: 'search-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-            notifySelectionCallbacks(item.value, item.value, payload);
+            var proposed = String(item.value);
+            var changed = writeApiValue(proposed, { silent:true, source:detail && detail.source || 'instance', reason:'search-select', originalEvent:detail && detail.originalEvent || null }, true);
+            syncSelectionFromApiValue('search-select');
+            var payload = { value: item.value, values: [proposed], item: item, pathItems: result.path.slice(), pathKeys: activePathKeys.slice(), pathLabels: result.path.map(function (entry) { return String(entry.label); }), reason: 'search-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+            if (changed) notifySelectionCallbacks(item.value, proposed, payload);
             if (!destroyed && shouldCloseOnSelect()) triggerSession.close('select', payload.originalEvent);
           }
           if (destroyed) return true;
