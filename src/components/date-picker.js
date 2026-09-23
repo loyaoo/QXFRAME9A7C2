@@ -482,7 +482,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
     onCloseDraft: function (controller, detail) {
       hoverPreviewValue = null;
       if ((!detail || detail.rolledBack !== true) && opts.needConfirm !== true && controller.dirty && rangeCommitReady(controller.draftValue)) {
-        controller.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+        var closedCommit = instance.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+        if (closedCommit === false && controller.dirty) controller.cancel({ silent: true, source: 'popup', reason: 'close-commit-rejected', originalEvent: detail && detail.originalEvent || null });
       }
       if (!detail || detail.rolledBack !== true) syncField(false);
     }
@@ -809,9 +810,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
     var complete = rangeCommitReady(draft.draftValue);
     if (opts.needConfirm !== true && complete) {
-      draft.commit({ source: detail.source, reason: 'select-commit' });
-      if (selection === 'single' && opts.closeOnSelect !== false) field.close('select', detail.originalEvent || null);
-      else if (selection === 'range' && opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
+      var selectedCommit = instance.commit({ source: detail.source, reason: 'select-commit', originalEvent: detail.originalEvent || null });
+      if (selectedCommit !== false && selection === 'single' && opts.closeOnSelect !== false) field.close('select', detail.originalEvent || null);
+      else if (selectedCommit !== false && selection === 'range' && opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
     }
   }
   function handleTimeChange(value, detail) {
@@ -835,7 +836,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       activeRangePart = selectedPart;
     }
     draft.setDraft(current, { source: detail.source || 'time', reason: 'time-select' });
-    if (opts.needConfirm !== true) draft.commit({ source: detail.source || 'time', reason: 'time-commit' });
+    if (opts.needConfirm !== true) instance.commit({ source: detail.source || 'time', reason: 'time-commit', originalEvent: detail.originalEvent || null });
   }
   function addMultipleInput(text, meta) {
     if (selection !== 'multiple') return false;
@@ -1035,7 +1036,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       return;
     }
     draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse' });
-    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true && rangeCommitReady(parsed.value)) draft.commit({ source: 'input', reason: 'blur-commit' });
+    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true && rangeCommitReady(parsed.value)) instance.commit({ source: 'input', reason: 'blur-commit', originalEvent: event || null });
     syncSelectionPanel(true);
     syncTimePanel();
     syncField(opts.needConfirm === true && field.getState().open);
@@ -1275,7 +1276,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         activeRangePart = selection === 'range' && normalized[1] ? 1 : 0;
         syncSelectionPanel(true); syncTimePanel(); syncField(true);
         if (opts.needConfirm !== true && rangeCommitReady(normalized)) {
-          var presetCommitted = draft.commit({ source: source, reason: 'preset-commit', originalEvent: event });
+          var presetCommitted = instance.commit({ source: source, reason: 'preset-commit', originalEvent: event });
           // A complete preset is an atomic immediate selection. Do not close if commit was
           // vetoed, but otherwise presets close unless the caller explicitly opted out.
           if (presetCommitted !== false && (!closeOnSelectExplicit || opts.closeOnSelect !== false)) field.close('preset', event);
