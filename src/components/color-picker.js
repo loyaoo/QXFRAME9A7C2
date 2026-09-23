@@ -326,7 +326,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          if (!draft) return;
          var completeDetail = detail || { source: 'panel', reason: 'panel-complete' };
          if (opts.needConfirm !== true && completeDetail.cancelled !== true && completeDetail.rolledBack !== true && draft.dirty) {
-           draft.commit({ source: completeDetail.source || 'panel', reason: completeDetail.reason || 'panel-commit', originalEvent: completeDetail.originalEvent || null });
+           instance.commit({ source: completeDetail.source || 'panel', reason: completeDetail.reason || 'panel-commit', originalEvent: completeDetail.originalEvent || null });
          }
          emitInteractionComplete(draft.draftValue, completeDetail);
        }
@@ -356,7 +356,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        onCancel: function (_controller, detail) { syncPanelFromModel(draft.value || seedValue(), detail && detail.source === 'popup' ? 'close-restore' : 'cancel-sync'); syncField(false); },
        onCloseDraft: function (controller, detail) {
          if (!detail.rolledBack && opts.needConfirm !== true && controller.dirty) {
-           controller.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+           var closedCommit = instance.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+           if (closedCommit === false && controller.dirty) controller.cancel({ silent: true, source: 'popup', reason: 'close-commit-rejected', originalEvent: detail && detail.originalEvent || null });
          }
          if (!detail.rolledBack) syncField(false);
        }
@@ -405,7 +406,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          next.stops[activeStopIndex].color = color;
        } else next = color;
        draft.setDraft(next, Utils.assignOwn({ source: 'api', reason: 'alpha' }, meta || {}));
-       if (opts.needConfirm !== true) draft.commit(Utils.assignOwn({ source: 'api', reason: 'alpha-commit' }, meta || {}));
+       if (opts.needConfirm !== true) instance.commit(Utils.assignOwn({ source: 'api', reason: 'alpha-commit' }, meta || {}));
        syncField(opts.needConfirm === true && field.getState().open); return true;
      }
      function canonicalizeModelForFormat(value) {
@@ -454,7 +455,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          var previewPayload = { value: cloneModel(next), color: activeColor(next), activeStopIndex: activeStopIndex, source: detail.source, reason: detail.reason, complete: false, colorPicker: api };
          if (Utils.isFunction(opts.onInput)) opts.onInput(cloneModel(next), previewPayload);
          emitter.emit('input', previewPayload);
-       } else if (opts.needConfirm !== true) draft.commit(Utils.mergeOwn( detail, { reason: detail.reason || 'gradient-commit' }));
+       } else if (opts.needConfirm !== true) instance.commit(Utils.mergeOwn( detail, { reason: detail.reason || 'gradient-commit' }));
        syncField(opts.needConfirm === true && field.getState().open);
        if (detail.complete === true) emitInteractionComplete(next, detail);
        return true;
