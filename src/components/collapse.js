@@ -111,7 +111,7 @@ export class Collapse extends Component {
                 seen[normalized] = true;
                 output.push(normalized);
             });
-            return opts.accordion === true ? output.slice(0, 1) : output;
+            return this.options.accordion === true ? output.slice(0, 1) : output;
         };
         const valueState = StateController.createOptionValueBinding(opts, opts, normalizeValue);
         this.own(valueState);
