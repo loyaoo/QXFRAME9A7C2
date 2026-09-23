@@ -779,6 +779,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
   function handlePanelSelect(value, detail) {
     hoverPreviewValue = null;
+    if (calendarSecondary && detail && detail.calendar) {
+      if (detail.calendar === calendarSecondary) activeCalendarPanel = 'secondary';
+      else if (detail.calendar === calendar) activeCalendarPanel = 'primary';
+      if (calendar && calendar.refreshStates) calendar.refreshStates();
+      if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
+    }
     var next = applyPanelSelection(value);
     if (next === null) return;
     draft.setDraft(next, { source: detail.source, reason: unit + '-select' });
@@ -892,7 +898,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var key = state && state.activeKey;
     if (!key && state && state.activeValue) key = DateUnit.key(state.activeValue, state.unit || unit, 0);
     if (!key) return false;
-    return domain.activate(String(key), { source:'keyboard', reason:reason || 'date-picker-panel', ensureVisible:true });
+    var activated = domain.activate(String(key), { source:'keyboard', reason:reason || 'date-picker-panel', ensureVisible:true });
+    if (calendar && calendar.refreshStates) calendar.refreshStates();
+    if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
+    return activated;
   }
   function activateCurrentPanelVirtualFocus(reason) {
     if (!field || !field.getKeyboardNavigation) return false;
