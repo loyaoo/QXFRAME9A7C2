@@ -479,8 +479,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
       syncTimePanel();
       syncField(false);
     },
-    onCloseDraft: function (_controller, detail) {
+    onCloseDraft: function (controller, detail) {
       hoverPreviewValue = null;
+      if ((!detail || detail.rolledBack !== true) && opts.needConfirm !== true && controller.dirty && rangeCommitReady(controller.draftValue)) {
+        controller.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+      }
       if (!detail || detail.rolledBack !== true) syncField(false);
     }
   });
