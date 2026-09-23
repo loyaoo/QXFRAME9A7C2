@@ -1,4 +1,3 @@
-// Stage 88→92/legacy-tail: canonical ESM notification authority extracted from frozen HOTFIX6.
 import { DOM } from '../core/dom.js';
 import { NoticeService } from '../core/noticeService.js';
 import { NoticePreset } from '../core/noticePreset.js';

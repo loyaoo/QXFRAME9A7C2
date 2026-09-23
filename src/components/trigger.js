@@ -1,5 +1,3 @@
-// Stage 50→58 migration: canonical Trigger behavior owner.
-// Preserves the frozen Trigger runtime while replacing Registry dependency lookup with static ESM imports.
 import { DOM } from '../core/dom.js';
 import { Events } from '../core/events.js';
 import { Config } from '../core/config.js';

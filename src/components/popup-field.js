@@ -1,5 +1,3 @@
-// Stage 64→70 foundation: canonical PopupField family base.
-// It extends FieldComponent and composes Trigger; it does not inherit PopupComponent.
 import { FieldComponent } from './field.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { componentHooks } from '../core/componentHooks.js';

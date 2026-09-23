@@ -1,4 +1,3 @@
-// Stage 88→92/legacy-tail: canonical ESM upload authority extracted from frozen HOTFIX6.
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { URLPolicy } from '../utils/url.js';

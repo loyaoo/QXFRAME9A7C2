@@ -1,5 +1,3 @@
-// Stage 35→40 preparation: canonical Component base.
-// It deliberately owns only universal instance lifecycle, options, events and resource cleanup.
 import { Events } from './events.js';
 import { Lifecycle } from './lifecycle.js';
 import { InstanceRegistry } from './instanceRegistry.js';

@@ -1,4 +1,3 @@
-// Stage 40→45 field-family migration: canonical TagInput component.
 import { FieldComponent, fieldHooks } from './field.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';

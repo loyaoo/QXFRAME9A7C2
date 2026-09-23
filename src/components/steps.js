@@ -1,4 +1,3 @@
-// Stage 45→50 class migration: canonical Steps component.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';

@@ -1,4 +1,3 @@
-// Stage 40→45: canonical field-family base. It owns only field-wide instance behavior.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { fieldHooks } from '../core/fieldHooks.js';

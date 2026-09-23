@@ -1,4 +1,3 @@
-// Stage 50→58 migration: Popconfirm family member backed by PopupComponent and canonical Popover.
 import { PopupComponent } from './popup.js';
 import { Popover } from './popover.js';
 import { componentHooks } from '../core/componentHooks.js';

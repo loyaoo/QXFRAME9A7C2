@@ -1,6 +1,3 @@
-// Stage 70→76: canonical Picker family base.
-// PickerComponent owns the shared popup-field/session/footer action lifecycle while
-// concrete pickers keep only domain-specific projection and panel logic.
 import { PopupFieldComponent, popupFieldHooks } from './popup-field.js';
 import { PickerSession } from '../core/pickerSession.js';
 import { DOM } from '../core/dom.js';

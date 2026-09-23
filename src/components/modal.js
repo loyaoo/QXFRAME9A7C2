@@ -1,4 +1,3 @@
-// Stage 58→64: Modal migrated to OverlayComponent source authority.
 import { OverlayComponent } from './overlay.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Utils } from '../utils/utils.js';

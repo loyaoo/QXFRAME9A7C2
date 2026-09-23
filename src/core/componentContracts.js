@@ -1,6 +1,3 @@
-// Stage 35→40 preparation: runtime-independent component contract catalog.
-// Extracted from the frozen component-contracts module; it contains no Registry/global runtime lookup.
-
 var NULLABLE_FUNCTION = Object.freeze({ type: 'function', nullable: true });
 var NULLABLE_OBJECT = Object.freeze({ type: 'object', nullable: true });
 var BOOLEAN_OPTIONS = Object.freeze(new Set([

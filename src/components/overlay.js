@@ -1,5 +1,3 @@
-// Stage 58→64: canonical Overlay family base.
-// Owns the public overlay lifecycle shell; concrete overlays keep only frame/view differences.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 

@@ -1,4 +1,3 @@
-// Stage 45→50 migration: canonical Sort component.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';

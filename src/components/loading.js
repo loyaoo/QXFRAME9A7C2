@@ -1,5 +1,3 @@
-// Stage 45→50 class migration: Loading composes the canonical Progress class and ESM overlay runtimes
-// while Component remains the sole public lifecycle/options owner.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';

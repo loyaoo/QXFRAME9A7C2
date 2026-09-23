@@ -1,4 +1,3 @@
-// Stage 84→88 migration: canonical VirtualList component.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { DOM } from '../core/dom.js';

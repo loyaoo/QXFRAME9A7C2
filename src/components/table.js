@@ -1,4 +1,3 @@
-// Stage 88→92/legacy-tail: canonical ESM table authority extracted from frozen HOTFIX6.
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Utils } from '../utils/utils.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';

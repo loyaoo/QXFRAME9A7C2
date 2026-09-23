@@ -1,5 +1,3 @@
-// Stage 35→40 preparation: canonical instance bookkeeping for Component.
-// This registry is ESM-local and does not participate in legacy runtime dependency resolution.
 const byId = new Map();
 const byRoot = typeof WeakMap === 'function' ? new WeakMap() : null;
 const roots = typeof WeakMap === 'function' ? new WeakMap() : null;

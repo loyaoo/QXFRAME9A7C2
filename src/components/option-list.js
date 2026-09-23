@@ -1,4 +1,3 @@
-// Stage 64→70 preparation: canonical OptionList building block.
 import { ItemCollection } from './item-collection.js';
 import { mergeOptions } from '../core/options.js';
 import { ItemAccessors } from '../core/itemAccessors.js';

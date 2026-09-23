@@ -1,5 +1,3 @@
-// Stage 45→50 class migration: Carousel uses Component as the sole public lifecycle/options owner
-// while preserving the frozen HOTFIX6 DOM and interaction behavior.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';

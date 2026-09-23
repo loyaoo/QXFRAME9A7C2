@@ -1,4 +1,3 @@
-// Stage 84→88: canonical ESM List building block.
 import { Utils } from '../utils/utils.js';
 import { mergeOptions } from '../core/options.js';
 import { ItemCollection } from './item-collection.js';

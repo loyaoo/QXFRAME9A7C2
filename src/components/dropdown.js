@@ -1,4 +1,3 @@
-// Stage 50→58 migration: Dropdown family member backed by PopupComponent.
 import { PopupComponent } from './popup.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';

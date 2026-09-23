@@ -1,5 +1,3 @@
-// Stage 45→50 class migration: Collapse uses the canonical Component lifecycle while
-// retaining the frozen HOTFIX6 public API/DOM/interaction behavior.
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';

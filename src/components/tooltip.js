@@ -1,4 +1,3 @@
-// Stage 50→58 migration: Tooltip family member backed by PopupComponent.
 import { PopupComponent } from './popup.js';
 import { Trigger } from './trigger.js';
 import { componentHooks } from '../core/componentHooks.js';

@@ -1,4 +1,3 @@
-// Stage 84→88: canonical ESM Tabs implementation.
 import { Events } from '../core/events.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';

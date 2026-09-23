@@ -1,5 +1,3 @@
-// Stage 50→58: canonical Popup family base.
-// Owns the shared Trigger-backed open/close lifecycle. Concrete popups keep only view/content differences.
 import { Component } from '../core/component.js';
 import { Trigger } from './trigger.js';
 

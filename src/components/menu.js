@@ -1,5 +1,3 @@
-// Stage 80→84 preparation: canonical ESM Menu implementation.
-// Runtime/API semantics are preserved while hierarchy lookup moves to TreeQuery.
 import { Events } from '../core/events.js';
 import { DOM } from '../core/dom.js';
 import { Config } from '../core/config.js';

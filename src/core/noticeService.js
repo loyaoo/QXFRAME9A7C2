@@ -1,4 +1,3 @@
-// Stage 88→92 tail: canonical ESM NoticeService building-block authority.
 import { NoticeClock } from './noticeClock.js';
 import { Utils } from '../utils/utils.js';
 import { DOM } from './dom.js';

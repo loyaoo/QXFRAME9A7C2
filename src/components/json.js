@@ -1,4 +1,3 @@
-// Stage 88→92/legacy-tail: canonical ESM json authority extracted from frozen HOTFIX6.
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { KeyboardRegion } from '../core/keyboardRegion.js';
