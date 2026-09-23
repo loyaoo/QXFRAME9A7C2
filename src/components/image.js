@@ -499,6 +499,7 @@ function create(options) {
     var item = currentPreviewItem();
     if (!item || !item.src) return api;
     if (call(cfg('onDownload', opts.onDownload), item, Object.freeze({ url: item.src, index: previewIndex, instance: api })) === false) return api;
+    if (destroyed) return api;
     var link = doc.createElement('a');
     var safeDownload = URLPolicy.sanitize(item.src, 'download');
     if (!safeDownload) return api;
