@@ -276,10 +276,12 @@ function create(options) {
       getElement:function(key){ var location=virtualLocation(key); return location ? location.record.itemElements[location.itemIndex] || null : null; },
       reconcile:function(key){
         var location=virtualLocation(key); if (location) return key;
-        var record=columnRecords[activeColumnIndex] || columnRecords[0]; if (!record) return null;
-        var selectedIndex=itemIndexForValue(record.items, value[activeColumnIndex]);
+        var normalizedColumn=Math.max(0,Math.min(activeColumnIndex,Math.max(0,columnRecords.length-1)));
+        var record=columnRecords[normalizedColumn]; if (!record) return null;
+        activeColumnIndex=normalizedColumn;
+        var selectedIndex=itemIndexForValue(record.items, value[normalizedColumn]);
         if (selectedIndex < 0) selectedIndex=nearestEnabledIndex(record.items, 0);
-        return selectedIndex >= 0 ? virtualKey(activeColumnIndex, selectedIndex) : null;
+        return selectedIndex >= 0 ? virtualKey(normalizedColumn, selectedIndex) : null;
       },
       ensureVisible:function(key){
         var location=virtualLocation(key); if (!location) return false;
@@ -499,6 +501,7 @@ function create(options) {
     var start = Math.max(0, Number(index) || 0);
     destroyColumns(start);
     for (var i = start; i < columns.length; i += 1) renderColumn(i);
+    activeColumnIndex = Math.max(0, Math.min(activeColumnIndex, Math.max(0, columnRecords.length - 1)));
     if (virtualFocusDomain) virtualFocusDomain.refresh({ reconcile:true });
   }
 
