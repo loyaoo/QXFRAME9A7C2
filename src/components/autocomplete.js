@@ -1,4 +1,4 @@
-import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings } from './popup-field.js';
+import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings, popupOpenContext } from './popup-field.js';
 import { Control } from './control.js';
 import { OptionList } from './option-list.js';
 import { Item } from './item.js';
@@ -423,12 +423,9 @@ var selectionRangeScheduler = null;
           onOpen: function (detail) {
             refreshSuggestions(detail && detail.reason || 'open', detail && detail.originalEvent || null);
             if (!loading) {
-              var eventType = detail && detail.originalEvent && detail.originalEvent.type || '';
-              var reason = String(detail && detail.reason || '');
-              var keyboardOpen = /^key/.test(eventType) || /keyboard/.test(reason);
-              var pointerOpen = /^(mouse|pointer|click)/.test(eventType) || reason === 'control-click';
-              if (keyboardOpen) optionList.prepareOpen({ strategy: /up/.test(reason) ? 'last' : 'first', source: 'keyboard', reason: 'autocomplete-keyboard-open' });
-              else if (!pointerOpen && opts.highlightFirst === true) syncActive(reason === 'input' ? 'input-open' : 'open');
+              var openContext = popupOpenContext(detail);
+              if (openContext.keyboard) optionList.prepareOpen({ strategy:/up/.test(openContext.reason) ? 'last' : 'first', source:'keyboard', reason:'autocomplete-keyboard-open' });
+              else if (!openContext.pointer && opts.highlightFirst === true) syncActive(openContext.reason === 'input' ? 'input-open' : 'open');
               else optionList.prepareOpen({ strategy: 'none', source: 'instance', reason: 'autocomplete-pointer-open' });
             }
             syncControl();
