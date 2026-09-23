@@ -1237,6 +1237,11 @@ function create(options) {
   function cancelSearchTimer() {
     if (searchDelayScheduler) searchDelayScheduler.cancel();
   }
+  function invalidateSearchLoad(reason) {
+    cancelSearchTimer();
+    if (searchTask.pending) searchTask.cancel(reason || 'list-search-invalidated');
+    loadingValue = false;
+  }
     
   function runSearchLoad(meta) {
     if (!Utils.isFunction(opts.loadItems) || destroyed) return;
@@ -1262,7 +1267,7 @@ function create(options) {
       if (destroyed) return;
       emitter.emit('load', detail);
     }, function (error) {
-      if (destroyed || searchTask.requestId !== requestId) return;
+      if (destroyed || searchTask.requestId !== requestId || searchTask.state !== 'error') return;
       loadingValue = false;
       errorValue = error || true;
       if (mounted) render('search-error');
@@ -1299,6 +1304,7 @@ function create(options) {
   }
   function setSearch(value, meta) { if (destroyed) return false; return searchState.set(value, meta || {}); }    
   function setItems(items, meta) {
+    invalidateSearchLoad((meta && meta.reason) || 'list-items-replaced');
     var result = collection.setItems(Array.isArray(items) ? items : [], { silent: true, source: 'api', reason: 'list-items' });
     errorValue = null;
     if (mounted) render((meta && meta.reason) || 'items');
@@ -1454,6 +1460,7 @@ function create(options) {
       throw new Error('[QXFRAME9A7C2] ItemCollection ownerPrefix is immutable; destroy and recreate to change semantic ownership.');
     }
     var next = mergeOptions({}, nextOptions);
+    if (hasOwn(next, 'items') || hasOwn(next, 'loadItems') || hasOwn(next, 'searchValue')) invalidateSearchLoad('list-options-replaced');
     opts = mergeOptions(opts, next);
     ownerPrefix = normalizeOwnerPrefix(opts.ownerPrefix, ownerPrefix);
     collection.updateOptions(next);
