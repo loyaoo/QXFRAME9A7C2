@@ -81,9 +81,10 @@ export const Utils = Object.freeze({
     booleanValue,
     enumValue,
     finiteAtLeast,
+    safeOwnKey,
     copyOwn,
     mergeOwn,
     immutablePatch
 });
 
-export { isFunction, noop, own, normalizeEnum, normalizeSize, finiteNumber, positiveInt, nonNegativeInt, booleanValue, enumValue, finiteAtLeast, copyOwn, mergeOwn, immutablePatch };
+export { isFunction, noop, own, normalizeEnum, normalizeSize, finiteNumber, positiveInt, nonNegativeInt, booleanValue, enumValue, finiteAtLeast, safeOwnKey, copyOwn, mergeOwn, immutablePatch };
