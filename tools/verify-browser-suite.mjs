@@ -21,12 +21,19 @@ const scripts = [
 ];
 const results = [];
 for (const script of scripts) {
-    const result = spawnSync(process.execPath, [path.join(root, 'tools', script)], {
-        cwd: root,
-        encoding: 'utf8',
-        env: { ...process.env, CHROMIUM_BIN: browser, QX_BROWSER_REQUIRED: '1' }
-    });
-    assert.equal(result.status, 0, `${script} failed:\n${result.stdout}\n${result.stderr}`);
+    let result = null;
+    let attempt = 0;
+    for (; attempt < 3; attempt += 1) {
+        result = spawnSync(process.execPath, [path.join(root, 'tools', script)], {
+            cwd: root,
+            encoding: 'utf8',
+            env: { ...process.env, CHROMIUM_BIN: browser, QX_BROWSER_REQUIRED: '1' }
+        });
+        if (result.status === 0) break;
+        const output = String(result.stdout || '') + '\n' + String(result.stderr || '');
+        if (!/Chromium DevTools endpoint timed out|CDP endpoint timeout/.test(output)) break;
+    }
+    assert.equal(result.status, 0, `${script} failed after ${attempt + 1} attempt(s):\n${result.stdout}\n${result.stderr}`);
     const lines = result.stdout.trim().split(/\r?\n/).filter(Boolean);
     const last = lines.at(-1) || '';
     assert.ok(last, `${script} produced no verification result.`);
@@ -35,6 +42,6 @@ for (const script of scripts) {
     catch { throw new Error(`${script} did not end with JSON verification output:\n${result.stdout}`); }
     assert.equal(payload.ok, true, `${script} did not report ok=true.`);
     assert.notEqual(payload.skipped, true, `${script} was skipped inside the strict release browser suite.`);
-    results.push({ script, ...payload });
+    results.push({ script, attempts: attempt + 1, ...payload });
 }
 console.log(JSON.stringify({ ok: true, strict: true, browser, layers: results.length, results }));
