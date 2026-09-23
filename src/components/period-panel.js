@@ -331,18 +331,7 @@ function create(options) {
       hosted: false,
       disabled: opts.disabled === true,
       navigation: {
-        handlers: {
-          ArrowLeft: function (detail) { return onKeydown(detail.originalEvent); },
-          ArrowRight: function (detail) { return onKeydown(detail.originalEvent); },
-          ArrowUp: function (detail) { return onKeydown(detail.originalEvent); },
-          ArrowDown: function (detail) { return onKeydown(detail.originalEvent); },
-          PageUp: function (detail) { return onKeydown(detail.originalEvent); },
-          PageDown: function (detail) { return onKeydown(detail.originalEvent); },
-          Home: function (detail) { return onKeydown(detail.originalEvent); },
-          End: function (detail) { return onKeydown(detail.originalEvent); },
-          Enter: function (detail) { return onKeydown(detail.originalEvent); },
-          ' ': function (detail) { return onKeydown(detail.originalEvent); }
-        }
+        handlers: KeyboardRegion.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' '], onKeydown)
       },
       onEnter: function (detail) {
         var key = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
