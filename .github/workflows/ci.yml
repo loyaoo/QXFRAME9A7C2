@@ -92,6 +92,8 @@ jobs:
           curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.js >/dev/null
           curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.css >/dev/null
 
+          node tools/verify-canonical-docs.mjs demo-package
+          node tools/demo-package/verify-canonical-docs-browser.mjs
           node tools/demo-package/verify-demo-server.mjs demo-package
 
           kill "$DEMO_PID"
