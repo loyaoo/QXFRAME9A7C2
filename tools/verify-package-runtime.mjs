@@ -6,6 +6,13 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+function parsePackJson(stdout) {
+    const text = String(stdout || '').trim();
+    const marker = text.lastIndexOf('\n[');
+    const start = marker >= 0 ? marker + 1 : text.indexOf('[');
+    if (start < 0) throw new Error('npm pack did not emit a JSON payload.');
+    return JSON.parse(text.slice(start));
+}
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const required = [
     'dist/esm/index.js',
@@ -30,7 +37,7 @@ try {
 
     let result = spawnSync('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', packDir], { cwd: root, encoding: 'utf8', shell: process.platform === 'win32' });
     assert.equal(result.status, 0, `npm pack failed:\n${result.stdout}\n${result.stderr}`);
-    const packed = JSON.parse(result.stdout)[0];
+    const packed = parsePackJson(result.stdout)[0];
     const tarball = path.join(packDir, packed.filename);
     assert.ok(fs.existsSync(tarball), `npm pack tarball was not created: ${tarball}`);
 
