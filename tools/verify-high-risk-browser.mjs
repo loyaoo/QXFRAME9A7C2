@@ -23,6 +23,7 @@ import {Autocomplete,QXFRAME9A7C2,Image,JSON as JSONView,Message,Notification,Pa
 import {NoticeService} from 'qx:/src/core/noticeService.js';
 import {NoticeClock} from 'qx:/src/core/noticeClock.js';
 import {ItemCollection} from 'qx:/src/components/item-collection.js';
+import {ColorPanel} from 'qx:/src/components/color-panel.js';
 const out=document.getElementById('result');
 function a(v,m){if(!v)throw new Error(m)}
 try{
@@ -38,6 +39,7 @@ try{
  const clockFrame=document.createElement('iframe');document.body.appendChild(clockFrame);let clockFinished=0;const realmClock=NoticeClock.create({view:clockFrame.contentWindow,duration:10,autoStart:true,frameUpdates:true,onFinish:()=>{clockFinished+=1;}});await new Promise(resolve=>setTimeout(resolve,60));a(realmClock.getState().finished===true&&clockFinished===1,'NoticeClock must finish once through Scheduler on an explicit window realm');realmClock.destroy();clockFrame.remove();
 
  const ih=document.createElement('div');document.body.appendChild(ih);const image=Image.create({document,container:ih,src:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',preview:false});a(image.getRootElement().classList.contains('qxframe9a7c2-image'),'Image create');image.destroy();
+ const originalEyeDropper=globalThis.EyeDropper;let rejectEyeDropper,eyeErrors=0;globalThis.EyeDropper=class{open(){return new Promise((resolve,reject)=>{rejectEyeDropper=reject;});}};const cph=document.createElement('div');document.body.appendChild(cph);const colorPanel=ColorPanel.create({document,container:cph,onError:()=>{eyeErrors+=1;}});colorPanel.getRefs().eye.click();await Promise.resolve();colorPanel.destroy();rejectEyeDropper(new Error('late-eyedropper'));await new Promise(resolve=>setTimeout(resolve,20));a(eyeErrors===0,'ColorPanel destroyed EyeDropper rejection must not call onError');if(originalEyeDropper===undefined)delete globalThis.EyeDropper;else globalThis.EyeDropper=originalEyeDropper;
  const jh=document.createElement('div');document.body.appendChild(jh);const json=JSONView.create({document,container:jh,data:{a:1,b:[2]}});a(json.getState().data.a===1,'JSON state');json.destroy();
  const ph=document.createElement('div');document.body.appendChild(ph);const pagination=Pagination.create({document,container:ph,count:45,current:2,pageSize:10});a(pagination.getState().current===2&&pagination.getState().pageCount===5,'Pagination state');pagination.setCurrent(3);a(pagination.getState().current===3,'Pagination setCurrent');pagination.destroy();
  const th=document.createElement('div');document.body.appendChild(th);const tags=Tags.create({document,container:th,items:[{key:'a',value:'a',label:'A'},{key:'b',value:'b',label:'B'}]});a(tags.getItems().length===2,'Tags items');tags.remove('a');a(tags.getItems().length===1,'Tags remove');tags.destroy();

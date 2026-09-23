@@ -564,7 +564,7 @@ function create(options) {
       if (!result || destroyed) return;
       setValue(result.sRGBHex, { source: 'eyedropper', reason: 'eyedropper', originalEvent: event, complete: true });
     }).catch(function (error) {
-      if (error && error.name === 'AbortError') return;
+      if (destroyed || (error && error.name === 'AbortError')) return;
       if (typeof opts.onError === 'function') opts.onError(error, { originalEvent: event, colorPanel: api });
     });
   }));
