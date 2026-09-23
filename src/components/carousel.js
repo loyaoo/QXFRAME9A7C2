@@ -416,6 +416,10 @@ export class Carousel extends Component {
         }));
         scope.add(DOM.listen(root, 'keydown', event => {
             if (opts.keyboard === false || !userUnlocked()) return;
+            const interactiveTarget = event.target && event.target !== root && event.target.closest
+                ? event.target.closest('button,a[href],input,select,textarea,[contenteditable="true"]')
+                : null;
+            if (interactiveTarget && root.contains(interactiveTarget)) return;
             let handled = true;
             if ((opts.direction === 'horizontal' && event.key === 'ArrowLeft') || (opts.direction === 'vertical' && event.key === 'ArrowUp')) prevSlide({ reason: 'keyboard', source: 'keyboard', user: true, originalEvent: event });
             else if ((opts.direction === 'horizontal' && event.key === 'ArrowRight') || (opts.direction === 'vertical' && event.key === 'ArrowDown')) nextSlide({ reason: 'keyboard', source: 'keyboard', user: true, originalEvent: event });
@@ -440,9 +444,10 @@ export class Carousel extends Component {
                 const keyedIndex = indexForKey(key);
                 current = count() ? (keyedIndex >= 0 ? keyedIndex : normalizeIndex(fallbackIndex)) : 0;
             }
-            // Preserve HOTFIX6 behavior: the legacy implementation calls an unresolved clearPointer()
-            // only when disabled becomes true. Do not silently change that path during structural migration.
-            if (opts.disabled === true) clearPointer(); // eslint-disable-line no-undef
+            if (opts.disabled === true) {
+                if (pointerSession) pointerSession.cancel('disabled');
+                clearPointerState();
+            }
             renderItems();
             return api;
         };
