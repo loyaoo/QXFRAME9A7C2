@@ -201,9 +201,15 @@ export class Collapse extends Component {
                 onBeforeEnter: () => { if (itemRecord.panel) { itemRecord.panel.hidden = false; itemRecord.panel.style.setProperty('--qxframe9a7c2-collapse-motion-height', itemRecord.panel.scrollHeight + 'px'); } },
                 onBeforeLeave: () => { if (itemRecord.panel) itemRecord.panel.style.setProperty('--qxframe9a7c2-collapse-motion-height', itemRecord.panel.scrollHeight + 'px'); },
                 onAfterLeave: () => {
-                    if (!itemRecord.panel) return;
+                    if (!itemRecord.panel || itemRecord.open === true) return;
                     itemRecord.panel.hidden = true;
+                    itemRecord.panel.style.removeProperty('--qxframe9a7c2-collapse-motion-height');
                     if (this.options.destroyInactive === true) { itemRecord.content.textContent = ''; itemRecord.contentRendered = false; }
+                },
+                onAfterEnter: () => {
+                    if (!itemRecord.panel || itemRecord.open !== true) return;
+                    itemRecord.panel.hidden = false;
+                    itemRecord.panel.style.removeProperty('--qxframe9a7c2-collapse-motion-height');
                 }
             });
             itemRecord.cleanups.push(DOM.listen(main, 'focus', () => { record.active.set(itemRecord.item.key, { silent: true, reason: 'focus', source: 'dom' }); syncRoving(); }));
@@ -258,7 +264,9 @@ export class Collapse extends Component {
             } else if (itemRecord.open !== open) {
                 itemRecord.open = open;
                 if (open) itemRecord.panel.hidden = false;
-                else if (current.destroyInactive === true) { itemRecord.content.textContent = ''; itemRecord.contentRendered = false; }
+                // Keep content mounted until leave actually settles. Removing it before
+                // setVisible(false) collapses the measured height to zero and makes rapid
+                // close -> reopen reversals jump instead of retargeting from the live frame.
                 itemRecord.transition.setVisible(open, { reason: reason || 'collapse-toggle' });
             } else if (open) itemRecord.panel.hidden = false;
             record.headers[item.key] = mode === 'icon' ? itemRecord.indicator : (mode === 'header' ? itemRecord.main : null);
