@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { generateComponentApi, generateModuleManifest } from './generate-release-metadata.mjs';
 import { DOMProjection } from '../src/core/domProjection.js';
 import { DOM } from '../src/core/dom.js';
+import { Utils } from '../src/utils/utils.js';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const posix=p=>p.split(path.sep).join('/');
@@ -108,6 +109,14 @@ const safeAttributeSecurity={
   styleAttributeRejected:DOM.setSafeAttribute(safeAttributeNode,'style','background:url(https://example.invalid/)')===false && !safeAttributeNode.hasAttribute('style'),
   httpsAccepted:DOM.setSafeAttribute(safeAttributeNode,'href','https://example.com/')===true && safeAttributeNode.getAttribute('href')==='https://example.com/'
 };
+const prototypeProbe=JSON.parse('{"__proto__":{"polluted":true},"constructor":{"polluted":true},"prototype":{"polluted":true},"safe":1}');
+const patchedProbe=Utils.immutablePatch({},prototypeProbe,{});
+const prototypeSecurity={
+  prototypeIntact:Object.getPrototypeOf(patchedProbe)===Object.prototype,
+  noDangerousOwnKeys:!Object.prototype.hasOwnProperty.call(patchedProbe,'__proto__')&&!Object.prototype.hasOwnProperty.call(patchedProbe,'constructor')&&!Object.prototype.hasOwnProperty.call(patchedProbe,'prototype'),
+  safeKeyPreserved:patchedProbe.safe===1,
+  globalPrototypeClean:Object.prototype.polluted===undefined
+};
 const urlSinks=[];
 for(const [file,text] of source){
   const sink=/(?:\.\s*(?:href|src|formAction)\s*=|setAttribute\s*\(\s*['"](?:href|src|action|formaction)['"])/g;
@@ -210,6 +219,6 @@ const report={
   },
   exactDuplicateBlocks:duplicates
 };
-report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&urlSinks.every(x=>x.urlPolicy)&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&urlSinks.every(x=>x.urlPolicy)&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
