@@ -9,6 +9,7 @@ import { WheelMetrics } from '../utils/wheelMetrics.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { Renderer } from '../core/renderer.js';
 import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { Scroll } from './scroll.js';
 
 var own = Utils.own;
@@ -255,11 +256,7 @@ function create(options) {
   }
   function ensureColumnVisible(index) {
     var record = columnRecords[index]; if (!record || !record.wrap || !columnsHost) return false;
-    var left = record.wrap.offsetLeft, right = left + record.wrap.offsetWidth;
-    var viewLeft = columnsHost.scrollLeft, viewRight = viewLeft + columnsHost.clientWidth;
-    if (left < viewLeft) columnsHost.scrollLeft = left;
-    else if (right > viewRight) columnsHost.scrollLeft = Math.max(0, right - columnsHost.clientWidth);
-    return true;
+    return ScrollVisibility.ensureVisible(columnsHost, record.wrap, { axis:'x', align:'nearest' });
   }
   function activateVirtualAt(columnIndex, itemIndex, meta) {
     activeColumnIndex = Math.max(0, Math.min(Number(columnIndex) || 0, Math.max(0, columnRecords.length - 1)));
