@@ -4,6 +4,7 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { TemporalGrid } from '../core/temporalGrid.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { DOMTemplate } from '../core/domTemplate.js';
@@ -352,14 +353,7 @@ function create(options) {
   }
   function ensureItemVisible(key) {
     var element = getItemElement(key);
-    if (!element || !grid) return false;
-    var top = element.offsetTop, left = element.offsetLeft;
-    var bottom = top + element.offsetHeight, right = left + element.offsetWidth;
-    if (top < grid.scrollTop) grid.scrollTop = top;
-    else if (bottom > grid.scrollTop + grid.clientHeight) grid.scrollTop = Math.max(0, bottom - grid.clientHeight);
-    if (left < grid.scrollLeft) grid.scrollLeft = left;
-    else if (right > grid.scrollLeft + grid.clientWidth) grid.scrollLeft = Math.max(0, right - grid.clientWidth);
-    return true;
+    return element && grid ? ScrollVisibility.ensureVisible(grid, element, { axis:'both', align:'nearest' }) : false;
   }
   function bindVirtualFocus(controller, hosted) {
     var currentKey = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
