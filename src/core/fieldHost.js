@@ -22,6 +22,26 @@ var DEFAULT_HEADLESS_FORBIDDEN = Object.freeze(['container','elements','createDO
     if (!present(opts.reference) && !present(opts.triggerTarget)) throw new TypeError('[QXFRAME9A7C2] ' + owner + ' headless:true requires reference or triggerTarget as the popup anchor.');
     return true;
   }
+  function resolvePickerControl(config) {
+    var host = resolve(config);
+    var refs = host.refs || {};
+    var rendered = !host.headless && !host.projection;
+    return Object.freeze({
+      host: host,
+      binding: host.binding,
+      root: host.root,
+      triggerTarget: host.triggerTarget,
+      controlElement: rendered ? host.root : null,
+      valuesNode: rendered ? (refs.values || null) : null,
+      input: host.headless ? null : (refs.input || null),
+      clearButton: rendered ? (refs.clear || null) : null,
+      toggle: rendered ? (refs.toggle || null) : null,
+      prefix: rendered ? (refs.prefix || null) : null,
+      suffix: rendered ? (refs.suffix || null) : null,
+      valueTarget: host.headless ? null : (refs.values || null)
+    });
+  }
+
   function resolve(config) {
     config = config || {};
     var opts = config.options || {};
@@ -64,5 +84,5 @@ var DEFAULT_HEADLESS_FORBIDDEN = Object.freeze(['container','elements','createDO
     return Object.freeze({ mode: headless ? 'headless' : (projection ? 'projection' : 'rendered'), headless:headless, projection:projection, binding:binding, refs:refs, root:root, triggerTarget:triggerTarget });
   }
 
-export const FieldHost = Object.freeze({ resolve, validateHeadless });
-export { resolve, validateHeadless };
+export const FieldHost = Object.freeze({ resolve, resolvePickerControl, validateHeadless });
+export { resolve, resolvePickerControl, validateHeadless };
