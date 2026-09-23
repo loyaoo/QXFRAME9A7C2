@@ -310,7 +310,7 @@ function create(source, overrides) {
   if (editorName(opts.editor) === 'textarea' && String(input.tagName || '').toLowerCase() !== 'textarea') {
     if (binding.source === 'external') throw new TypeError('[QXFRAME9A7C2] Control editor="textarea" requires a textarea in external DOM.');
     var textarea = doc.createElement('textarea');
-    Array.prototype.forEach.call(input.attributes || [], function (attr) { if (attr.name !== 'type') textarea.setAttribute(attr.name, attr.value); });
+    Array.prototype.forEach.call(input.attributes || [], function (attr) { if (attr.name !== 'type') DOM.setSafeAttribute(textarea, attr.name, attr.value); });
     input.parentNode.replaceChild(textarea, input); input = textarea; refs.input = input;
   }
   if (!host && formField && binding.source !== 'external') placeFieldRoot(root, host, formField);
