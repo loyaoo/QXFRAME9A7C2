@@ -48,6 +48,11 @@ function copyOwn(target, source) {
   });
   return target;
 }
+function mergeOwn() {
+  var output = {};
+  for (var i = 0; i < arguments.length; i += 1) copyOwn(output, arguments[i]);
+  return output;
+}
 function immutablePatch(current, next, normalizers) {
   var output = copyOwn({}, current || {}), patch = next || {}, rules = normalizers || {};
   Object.keys(Object(patch)).forEach(function (key) {
@@ -70,7 +75,8 @@ export const Utils = Object.freeze({
     enumValue,
     finiteAtLeast,
     copyOwn,
+    mergeOwn,
     immutablePatch
 });
 
-export { isFunction, noop, own, normalizeEnum, normalizeSize, finiteNumber, positiveInt, nonNegativeInt, booleanValue, enumValue, finiteAtLeast, copyOwn, immutablePatch };
+export { isFunction, noop, own, normalizeEnum, normalizeSize, finiteNumber, positiveInt, nonNegativeInt, booleanValue, enumValue, finiteAtLeast, copyOwn, mergeOwn, immutablePatch };
