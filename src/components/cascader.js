@@ -12,6 +12,7 @@ import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { SearchState } from '../core/searchState.js';
+import { StateController } from '../core/stateController.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
@@ -115,6 +116,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           }
         });
         var selection = Selection.create({ multiple: opts.multiple === true, value: opts.value !== undefined ? opts.value : opts.defaultValue });
+        var valueState = null;
         scope.add(function () { selection.destroy(); });
         var columnRecords = [];
         var activePathKeys = [];
@@ -204,6 +206,24 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           });
           return output;
         }
+        function normalizeApiValue(value) {
+          if (opts.multiple === true) return normalizeAssociatedValues(value);
+          var values = normalizeValues(value, false);
+          if (!values.length) return undefined;
+          return findPathByValue(values[0]).length ? values[0] : undefined;
+        }
+        valueState = StateController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
+        scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
+        function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
+        function apiValues(value) { return normalizeValues(value === undefined ? apiValue() : value, opts.multiple === true); }
+        function syncSelectionFromApiValue(reason) {
+          if (!selection) return false;
+          selection.set(apiValue(), { silent:true, source:valueState && valueState.controlled ? 'controlled' : 'state', reason:reason || 'value-sync' });
+          var values = selection.values;
+          selectionAnchorValue = values.length ? values[values.length - 1] : null;
+          return true;
+        }
+        syncSelectionFromApiValue('initial-value');
         function cascadeCheckState(item) {
           if (!item) return { checked:false, indeterminate:false, descendantSelected:false };
           if (!hasChildren(item)) return { checked:selection.has(String(item.value)), indeterminate:false, descendantSelected:false };
@@ -453,6 +473,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         }
     
         function notifySelectionCallbacks(selectValue, changeValue, payload) {
+          payload.controlled = !!(valueState && valueState.controlled);
           if (Utils.isFunction(opts.onSelect)) opts.onSelect(selectValue, payload);
           if (destroyed) return false;
           emitter.emit('select', payload);
@@ -473,15 +494,13 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var targetMap = Object.create(null); targets.forEach(function (value) { targetMap[value] = true; });
           var nextValues = selection.values.filter(function (value) { return !targetMap[value]; });
           if (!state.checked) targets.forEach(function (value) { if (nextValues.indexOf(value) < 0) nextValues.push(value); });
-          selection.set(nextValues, { source: detail && detail.source || 'instance', reason: detail && detail.reason || 'cascade-check' });
-          var currentValues = selection.values;
-          if (!state.checked) selectionAnchorValue = targets.length ? targets[targets.length - 1] : (currentValues.length ? currentValues[currentValues.length - 1] : null);
-          else if (selectionAnchorValue !== null && targets.some(function (value) { return String(value) === String(selectionAnchorValue); })) selectionAnchorValue = currentValues.length ? currentValues[currentValues.length - 1] : null;
-          opts.value = currentValues.slice();
+          var proposed = normalizeApiValue(nextValues);
+          var changed = valueState.write(proposed, { silent:true, source:detail && detail.source || 'instance', reason:detail && detail.reason || 'cascade-check', originalEvent:detail && detail.originalEvent || null }, true);
+          syncSelectionFromApiValue('cascade-check');
           refreshSelectionSurfaces(); syncControl({ source: detail && detail.source || 'instance', reason: detail && detail.reason || 'cascade-check' });
-          var payload = { value: item.value, values: selection.values.slice(), item: item, checked: !state.checked, indeterminate: false, pathItems: nextPath.slice(), pathKeys: nextPath.map(function (entry) { return String(entry.key); }), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'cascade-check', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-          notifySelectionCallbacks(item.value, selection.values.slice(), payload);
-          return true;
+          var payload = { value: item.value, values: proposed.slice(), item: item, checked: !state.checked, indeterminate: false, pathItems: nextPath.slice(), pathKeys: nextPath.map(function (entry) { return String(entry.key); }), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'cascade-check', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+          if (changed) notifySelectionCallbacks(item.value, proposed.slice(), payload);
+          return changed;
         }
     
         function activateAt(columnIndex, item, detail) {
@@ -493,9 +512,12 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (hasChildren(item)) {
             if (opts.multiple === true && ((detail && detail.reason === 'space') || isSelectionIndicatorEvent(detail))) return toggleAssociatedSelection(item, nextPath, detail);
             if (opts.multiple !== true && opts.changeOnSelect === true && !isLocked()) {
-              selection.set(String(item.value), { source: detail && detail.source || 'instance', reason: 'change-on-select' }); selectionAnchorValue = String(item.value); opts.value = selection.value; syncControl({ source: detail && detail.source || 'instance', reason: 'change-on-select' });
-              var branchPayload = { value: item.value, values: selection.values.slice(), item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: 'change-on-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-              notifySelectionCallbacks(item.value, item.value, branchPayload);
+              var branchValue = String(item.value);
+              var branchChanged = valueState.write(branchValue, { silent:true, source:detail && detail.source || 'instance', reason:'change-on-select', originalEvent:detail && detail.originalEvent || null }, true);
+              syncSelectionFromApiValue('change-on-select');
+              syncControl({ source: detail && detail.source || 'instance', reason: 'change-on-select' });
+              var branchPayload = { value: item.value, values: [branchValue], item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: 'change-on-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+              if (branchChanged) notifySelectionCallbacks(item.value, branchValue, branchPayload);
               if (destroyed) return true;
             }
             activeColumnIndex = columnIndex;
@@ -505,14 +527,13 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (isLocked()) return false;
           var value = String(item.value);
           if (opts.multiple === true) return toggleAssociatedSelection(item, nextPath, detail);
-          else selection.set(value, { source: detail && detail.source || 'instance', reason: detail && detail.reason || 'select' });
-          selectionAnchorValue = value;
-          opts.value = opts.multiple === true ? selection.values.slice() : selection.value;
+          var changed = valueState.write(value, { silent:true, source:detail && detail.source || 'instance', reason:detail && detail.reason || 'select', originalEvent:detail && detail.originalEvent || null }, true);
+          syncSelectionFromApiValue('select');
           refreshSelectionSurfaces(); syncControl({ source: detail && detail.source || 'instance', reason: detail && detail.reason || 'select' });
-          var payload = { value: item.value, values: selection.values.slice(), item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-          notifySelectionCallbacks(item.value, opts.multiple === true ? selection.values.slice() : item.value, payload);
+          var payload = { value: item.value, values: [value], item: item, pathItems: nextPath.slice(), pathKeys: activePathKeys.slice(), pathLabels: nextPath.map(function (entry) { return String(entry.label); }), reason: detail && detail.reason || 'select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+          if (changed) notifySelectionCallbacks(item.value, value, payload);
           if (!destroyed && shouldCloseOnSelect()) triggerSession.close('select', payload.originalEvent);
-          return true;
+          return changed;
         }
     
         function handlePanelKeydown(event) {
@@ -564,9 +585,11 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var item = result.item;
           if (opts.multiple === true) toggleAssociatedSelection(item, result.path, detail || { source: 'keyboard', reason: 'search-select' });
           else {
-            selection.set(String(item.value), { source: detail && detail.source || 'instance', reason: 'search-select' }); selectionAnchorValue = String(item.value); opts.value = selection.value;
-            var payload = { value: item.value, values: selection.values.slice(), item: item, pathItems: result.path.slice(), pathKeys: activePathKeys.slice(), pathLabels: result.path.map(function (entry) { return String(entry.label); }), reason: 'search-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
-            notifySelectionCallbacks(item.value, item.value, payload);
+            var proposed = String(item.value);
+            var changed = valueState.write(proposed, { silent:true, source:detail && detail.source || 'instance', reason:'search-select', originalEvent:detail && detail.originalEvent || null }, true);
+            syncSelectionFromApiValue('search-select');
+            var payload = { value: item.value, values: [proposed], item: item, pathItems: result.path.slice(), pathKeys: activePathKeys.slice(), pathLabels: result.path.map(function (entry) { return String(entry.label); }), reason: 'search-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
+            if (changed) notifySelectionCallbacks(item.value, proposed, payload);
             if (!destroyed && shouldCloseOnSelect()) triggerSession.close('select', payload.originalEvent);
           }
           if (destroyed) return true;
@@ -705,13 +728,15 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           onTagRemove: function (tag, detail) {
             if (opts.multiple !== true || isLocked()) return;
             var removeTargets = tagSelectionTargets(tag.value);
-            selection.set(selection.values.filter(function (value) { return removeTargets.indexOf(String(value)) < 0; }), { source: detail.source || 'control', reason: detail.reason || 'tag-remove' });
-            var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null;
-            opts.value = values.slice(); syncControl({ source: detail && detail.source || 'control', reason: detail && detail.reason || 'tag-remove' }); refreshSelectionSurfaces();
-            var payload = { value: selection.values.slice(), values: selection.values.slice(), removedValue: tag.value, reason: detail.reason || 'tag-remove', originalEvent: detail.originalEvent || null, cascader: instance };
-            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(selection.values.slice(), payload);
+            var proposed = normalizeApiValue(selection.values.filter(function (value) { return removeTargets.indexOf(String(value)) < 0; }));
+            var changed = valueState.write(proposed, { silent:true, source:detail.source || 'control', reason:detail.reason || 'tag-remove', originalEvent:detail.originalEvent || null }, true);
+            syncSelectionFromApiValue('tag-remove');
+            syncControl({ source: detail && detail.source || 'control', reason: detail && detail.reason || 'tag-remove' }); refreshSelectionSurfaces();
+            if (!changed) return;
+            var payload = { value: proposed.slice(), values: proposed.slice(), removedValue: tag.value, reason: detail.reason || 'tag-remove', originalEvent: detail.originalEvent || null, controlled:!!valueState.controlled, cascader: instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(proposed.slice(), payload);
             if (destroyed) return;
-            if (Utils.isFunction(opts.onChange)) opts.onChange(selection.values.slice(), payload);
+            if (Utils.isFunction(opts.onChange)) opts.onChange(proposed.slice(), payload);
             if (destroyed) return;
             emitter.emit('change', payload);
           },
@@ -799,37 +824,46 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         function normalizeSelection() {
           var valid = opts.multiple === true ? normalizeAssociatedValues(selection.values) : selection.values.filter(function (value) { return findPathByValue(value).length > 0; }).slice(0, 1);
           selection.set(valid, { silent: true, source: 'normalize', reason: 'items' });
+          if (valueState && !valueState.controlled) valueState.setValue(opts.multiple === true ? selection.values.slice() : selection.value, { silent:true, source:'normalize', reason:'items' });
           var values = selection.values;
           if (selectionAnchorValue === null || !values.some(function (value) { return String(value) === String(selectionAnchorValue); })) selectionAnchorValue = values.length ? values[values.length - 1] : null;
           if (!activePathKeys.length) { var seedPath = selectedAnchorPath(); if (seedPath.length) activePathKeys = seedPath.map(function (item) { return String(item.key); }); }
         }
         function setValue(next, meta) {
           if (destroyed) return instance;
-          selection.set(opts.multiple === true ? normalizeAssociatedValues(next) : normalizeValues(next, false), { source: meta && meta.source || 'instance', reason: meta && meta.reason || 'cascader-set-value' }); normalizeSelection();
-          opts.value = opts.multiple === true ? selection.values.slice() : selection.value;
+          var cfg = meta || {};
+          var previous = apiValue();
+          var changed = valueState.write(next, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'cascader-set-value', originalEvent:cfg.originalEvent || null }, false);
+          syncSelectionFromApiValue('set-value'); normalizeSelection();
+          var canonical = apiValue();
           var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null;
           var seedPath = selectedAnchorPath(); activePathKeys = seedPath.map(function (item) { return String(item.key); });
           activeColumnIndex = activePathKeys.length ? activePathKeys.length - 1 : 0;
           keyboardCursorKey = seedPath.length ? String(seedPath[seedPath.length - 1].key) : '';
-          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!(meta && meta.silent), source: meta && meta.source || 'instance', reason: meta && meta.reason || 'set-value' });
-          var payload = { value: opts.value, values: selection.values.slice(), reason: meta && meta.reason || 'set-value', source: meta && meta.source || 'instance', silent: !!(meta && meta.silent), originalEvent: meta && meta.originalEvent || null, cascader: instance };
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(opts.value, payload);
-          if (destroyed) return instance;
-          if (!(meta && meta.silent)) {
-            if (Utils.isFunction(opts.onChange)) opts.onChange(opts.value, payload);
+          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!cfg.silent, source: cfg.source || 'instance', reason: cfg.reason || 'set-value' });
+          if (changed) {
+            var payload = { value: valueState.copy(canonical), previousValue:valueState.copy(previous), values: apiValues(canonical), reason: cfg.reason || 'set-value', source: cfg.source || 'instance', silent: !!cfg.silent, originalEvent: cfg.originalEvent || null, controlled:!!valueState.controlled, cascader: instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(canonical), payload);
             if (destroyed) return instance;
-            emitter.emit('change', payload);
+            if (!cfg.silent) {
+              if (Utils.isFunction(opts.onChange)) opts.onChange(valueState.copy(canonical), payload);
+              if (destroyed) return instance;
+              emitter.emit('change', payload);
+            }
           }
           return instance;
         }
         function clear(meta) {
-          if (destroyed || isLocked()) return false; var had = selection.values.length > 0;
-          selection.clear({ source: meta && meta.source || 'instance', reason: meta && meta.reason || 'clear' }); opts.value = opts.multiple === true ? [] : undefined; activePathKeys = []; activeColumnIndex = 0; selectionAnchorValue = null; keyboardCursorKey = '';
-          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!(meta && meta.silent), source: meta && meta.source || 'instance', reason: meta && meta.reason || 'clear' });
-          var payload = { value: opts.value, values: [], reason: meta && meta.reason || 'clear', originalEvent: meta && meta.originalEvent || null, cascader: instance };
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(opts.value, payload);
+          if (destroyed || isLocked()) return false;
+          var cfg = meta || {}, had = selection.values.length > 0, proposed = opts.multiple === true ? [] : undefined;
+          var changed = valueState.write(proposed, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'clear', originalEvent:cfg.originalEvent || null }, true);
+          syncSelectionFromApiValue('clear'); activePathKeys = []; activeColumnIndex = 0; keyboardCursorKey = '';
+          if (triggerSession.getState().open) renderColumns(); syncControl({ silent: !!cfg.silent, source: cfg.source || 'instance', reason: cfg.reason || 'clear' });
+          if (!changed) return false;
+          var payload = { value: valueState.copy(proposed), values: [], reason: cfg.reason || 'clear', originalEvent: cfg.originalEvent || null, controlled:!!valueState.controlled, cascader: instance };
+          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(proposed), payload);
           if (destroyed) return had;
-          if (Utils.isFunction(opts.onChange)) opts.onChange(opts.value, payload);
+          if (Utils.isFunction(opts.onChange)) opts.onChange(valueState.copy(proposed), payload);
           if (destroyed) return had;
           emitter.emit('change', payload);
           if (destroyed) return had;
@@ -865,14 +899,19 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (own(next, 'loadChildren') && !own(next, 'items')) { loadTasks.invalidate('cascader-loader'); loadingKeys.clear(); }
           if (own(next, 'items')) replaceItems(next.items, { loadedKeys: own(next, 'loadedKeys') ? next.loadedKeys : [] });
           else if (own(next, 'loadedKeys')) loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String));
-          if (own(next, 'value')) selection.set(opts.multiple === true ? normalizeAssociatedValues(next.value) : normalizeValues(next.value, false), { silent: true, source: 'options', reason: 'options-value' });
+          if (own(next, 'value')) {
+            valueState.setControlled(true);
+            valueState.syncExternal(opts.value, { silent:true, source:'options', reason:'options-value', preserveDraft:true });
+            syncSelectionFromApiValue('options-value');
+          }
           normalizeSelection(); triggerSession.updateOptions({ trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, placement: opts.placement, strategy: opts.strategy || 'absolute', middleware: opts.middleware, matchReferenceWidth: opts.matchReferenceWidth === true, autoUpdate: opts.autoUpdate !== false, destroyOnClose: opts.destroyOnClose !== false, disabled: opts.disabled === true });
           if (triggerSession.getState().open) { renderColumns(); syncPopupContent(); } syncControl(); if (own(next, 'open')) triggerSession.setOpen(next.open === true, 'update-options'); if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
           return instance;
         }
         function getState() {
           var path = opts.multiple === true ? [] : displayPath();
-          return Object.freeze({ value: opts.multiple === true ? selection.values.slice() : selection.value, values: selection.values.slice(), searchValue: searchState.query, checkedStrategy: String(opts.checkedStrategy || 'child'), changeOnSelect: opts.changeOnSelect === true, searchable: opts.searchable === true, maxVisibleTags:opts.maxVisibleTags === 'responsive' ? 'responsive' : Math.max(0, Math.floor(Number(opts.maxVisibleTags) || 0)), popupCustomized:Utils.isFunction(opts.popupRender), loadedKeys: Array.from(loadedKeys), loadingKeys: Array.from(loadingKeys), pathKeys: path.map(function (item) { return String(item.key); }), pathLabels: path.map(function (item) { return String(item.label); }), activePathKeys: activePathKeys.slice(), activeColumnIndex: activeColumnIndex, keyboardCursorKey: keyboardCursorKey, selectionAnchorValue: selectionAnchorValue, keyboardHostStable: !triggerSession.getState().open || doc.activeElement === controlFocusElement(), open: triggerSession.getState().open, headless: headlessMode, projection: projectionMode, multiple: opts.multiple === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed });
+          var current = apiValue(), values = apiValues(current);
+          return Object.freeze({ value: opts.multiple === true ? values.slice() : current, values: values.slice(), controlled:!!(valueState && valueState.controlled), searchValue: searchState.query, checkedStrategy: String(opts.checkedStrategy || 'child'), changeOnSelect: opts.changeOnSelect === true, searchable: opts.searchable === true, maxVisibleTags:opts.maxVisibleTags === 'responsive' ? 'responsive' : Math.max(0, Math.floor(Number(opts.maxVisibleTags) || 0)), popupCustomized:Utils.isFunction(opts.popupRender), loadedKeys: Array.from(loadedKeys), loadingKeys: Array.from(loadingKeys), pathKeys: path.map(function (item) { return String(item.key); }), pathLabels: path.map(function (item) { return String(item.label); }), activePathKeys: activePathKeys.slice(), activeColumnIndex: activeColumnIndex, keyboardCursorKey: keyboardCursorKey, selectionAnchorValue: selectionAnchorValue, keyboardHostStable: !triggerSession.getState().open || doc.activeElement === controlFocusElement(), open: triggerSession.getState().open, headless: headlessMode, projection: projectionMode, multiple: opts.multiple === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed });
         }
         function disposeRuntime(reason) {
           if (destroyed) return false; destroyed = true; loadTasks.destroy(); if (searchState) searchState.destroy(); destroySearchList(); destroyColumns(); loadedChildren.clear(); loadedKeys.clear(); loadingKeys.clear(); triggerSession = null; scope.dispose(); if (fieldControl) fieldControl.destroy(reason || 'cascader-destroy'); fieldControl = null; DOM.removeNode(panel); if (binding) binding.release(); binding = null; root = controlElement = valuesNode = input = clearButton = arrow = panel = popupContentHost = columnsHost = null; return true;
