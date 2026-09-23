@@ -373,28 +373,35 @@ function create(options) {
     return true;
   }
   function bindVirtualFocus(controller, hosted) {
-    if (!controller || !controller.registerDomain) return null;
-    if (virtualFocusDomain) virtualFocusDomain.destroy();
-    virtualFocusController = controller;
-    hostedVirtualFocus = hosted !== false && (!keyboard || controller !== keyboard.virtualFocus);
-    if (keyboardRegion) keyboardRegion.setHosted(hostedVirtualFocus);
-    else if (root) root.tabIndex = hostedVirtualFocus ? -1 : 0;
-    virtualFocusDomain = controller.registerDomain({
-      name:'period-' + unit,
-      getElement:function(key){ return getItemElement(key); },
-      reconcile:function(key){
-        var match = items.find(function(entry){ return entry.key === String(key) && entry.disabled !== true; });
-        if (match) return match.key;
-        var currentKey = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
-        var current = currentKey && items.find(function(entry){ return entry.key === currentKey && entry.disabled !== true; });
-        if (current) return current.key;
-        var first = items.find(function(entry){ return entry.disabled !== true; });
-        return first ? first.key : null;
-      },
-      ensureVisible:function(key){ return ensureItemVisible(key); }
-    });
     var currentKey = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
-    if (currentKey && controller.getState().modality === 'keyboard') virtualFocusDomain.activate(currentKey, { source:'keyboard', reason:'period-bind', ensureVisible:true });
+    var binding = KeyboardRegion.bindVirtualFocus({
+      controller: controller,
+      previousDomain: virtualFocusDomain,
+      keyboard: keyboard,
+      region: keyboardRegion,
+      root: root,
+      hosted: hosted,
+      activeKey: currentKey,
+      activation: { reason:'period-bind', ensureVisible:true },
+      domain: {
+        name:'period-' + unit,
+        getElement:function(key){ return getItemElement(key); },
+        reconcile:function(key){
+          var match = items.find(function(entry){ return entry.key === String(key) && entry.disabled !== true; });
+          if (match) return match.key;
+          var activeKey = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
+          var current = activeKey && items.find(function(entry){ return entry.key === activeKey && entry.disabled !== true; });
+          if (current) return current.key;
+          var first = items.find(function(entry){ return entry.disabled !== true; });
+          return first ? first.key : null;
+        },
+        ensureVisible:function(key){ return ensureItemVisible(key); }
+      }
+    });
+    if (!binding) return null;
+    virtualFocusController = binding.controller;
+    hostedVirtualFocus = binding.hosted;
+    virtualFocusDomain = binding.domain;
     return virtualFocusDomain;
   }
     
