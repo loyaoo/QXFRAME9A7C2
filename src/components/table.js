@@ -1,3 +1,5 @@
+import { Component } from '../core/component.js';
+import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Utils } from '../utils/utils.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
@@ -184,40 +186,54 @@ function applyAttributes(node, attributes) {
   DOM.applySafeAttributes(node, attributes);
 }
     
-function create(options) {
-  var source = options || {};
-  ComponentContracts.validate(ComponentContracts.get('Table'), source, 'Table');
-  var opts = Utils.mergeOwn({
-    items: [], columns: [], getKey: null, isItemDisabled: null,
-    selectionMode: 'none', selectedKeys: [], expandedKeys: [], preserveSelectedKeys: false, remoteSelectionScope: 'page', forceRenderExpanded: false,
-    sortKey: null, sortOrder: null, filters: {}, searchValue: '', searchMatcher: null, load: null, total: null, filteredTotal: null, keepStaleData: true, page: 1, pageSize: 0, pager: {},
-    size: 'md', bordered: false, borderless: false, shadow: false, striped: false, hover: true, fixedLayout: false,
-    stickyHeader: false, stickySummary: false, disabled: false, readOnly: false,
-    loading: false, loadingText: 'Loading…', emptyText: 'No data', errorText: 'Failed to load data',
-    toolbar: null, toolbarStart: null, toolbarEnd: null, footerStart: null, footerEnd: null,
-    responsiveMode: 'hide', keyboardNavigation: false, editEnterBehavior: 'commit', columnReorder: false, rowReorder: false,
-    virtual: false, virtualThreshold: 100, rowHeight: 44, overscan: 4, height: null, maxHeight: null, scrollPolicy: 'auto'
-  }, source);
-  if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Table container must be an Element.');
-  opts.size = normalizeSize(opts.size);
-  opts.columns = normalizeColumns(opts.columns);
+const TABLE_DEFAULTS = Object.freeze({
+  items: [], columns: [], getKey: null, isItemDisabled: null,
+  selectionMode: 'none', selectedKeys: [], expandedKeys: [], preserveSelectedKeys: false, remoteSelectionScope: 'page', forceRenderExpanded: false,
+  sortKey: null, sortOrder: null, filters: {}, searchValue: '', searchMatcher: null, load: null, total: null, filteredTotal: null, keepStaleData: true, page: 1, pageSize: 0, pager: {},
+  size: 'md', bordered: false, borderless: false, shadow: false, striped: false, hover: true, fixedLayout: false,
+  stickyHeader: false, stickySummary: false, disabled: false, readOnly: false,
+  loading: false, loadingText: 'Loading…', emptyText: 'No data', errorText: 'Failed to load data',
+  toolbar: null, toolbarStart: null, toolbarEnd: null, footerStart: null, footerEnd: null,
+  responsiveMode: 'hide', keyboardNavigation: false, editEnterBehavior: 'commit', columnReorder: false, rowReorder: false,
+  virtual: false, virtualThreshold: 100, rowHeight: 44, overscan: 4, height: null, maxHeight: null, scrollPolicy: 'auto'
+});
+const tableState = new WeakMap();
+
+function normalizeEditEnterBehavior(value) {
+  var normalized = String(value == null ? 'commit' : value).toLowerCase();
+  if (['commit','native'].indexOf(normalized) < 0) throw new TypeError('[QXFRAME9A7C2] Table editEnterBehavior must be commit or native.');
+  return normalized;
+}
+function normalizeTableInitial(source) {
+  var next = normalizeTablePatch(source || {}, TABLE_DEFAULTS);
+  if (!next.container || next.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Table container must be an Element.');
+  return next;
+}
+function normalizeTablePatch(patch, current) {
+  var next = Utils.mergeOwn(patch || {});
+  if (own(next, 'size')) next.size = normalizeSize(next.size);
+  if (own(next, 'columns')) next.columns = normalizeColumns(next.columns);
+  if (own(next, 'responsiveMode')) next.responsiveMode = normalizeResponsiveMode(next.responsiveMode);
+  if (own(next, 'keyboardNavigation')) next.keyboardNavigation = normalizeKeyboardNavigation(next.keyboardNavigation);
+  if (own(next, 'editEnterBehavior')) next.editEnterBehavior = normalizeEditEnterBehavior(next.editEnterBehavior);
+  if (own(next, 'virtual')) next.virtual = normalizeVirtual(next.virtual);
+  if (own(next, 'virtualThreshold')) next.virtualThreshold = normalizePositiveInteger(next.virtualThreshold, 'virtualThreshold', current.virtualThreshold);
+  if (own(next, 'rowHeight')) next.rowHeight = normalizePositiveNumber(next.rowHeight, 'rowHeight', current.rowHeight);
+  if (own(next, 'overscan')) next.overscan = normalizeNonNegativeInteger(next.overscan, 'overscan', current.overscan);
+  if (own(next, 'load') && next.load !== null && next.load !== undefined && typeof next.load !== 'function') throw new TypeError('[QXFRAME9A7C2] Table load must be a function or null.');
+  if (own(next, 'searchMatcher') && next.searchMatcher !== null && next.searchMatcher !== undefined && typeof next.searchMatcher !== 'function') throw new TypeError('[QXFRAME9A7C2] Table searchMatcher must be a function or null.');
+  if (own(next, 'searchValue')) next.searchValue = next.searchValue == null ? '' : String(next.searchValue);
+  if (own(next, 'remoteSelectionScope')) next.remoteSelectionScope = normalizeRemoteSelectionScope(next.remoteSelectionScope);
+  if (own(next, 'scrollPolicy')) next.scrollPolicy = normalizeScrollPolicy(next.scrollPolicy);
+  var candidate = Utils.mergeOwn(TABLE_DEFAULTS, current || {}, next);
+  assertStableRowIdentity(candidate.items, candidate);
+  validateFeatureCombination(candidate);
+  return next;
+}
+
+function setupTable(instance) {
+  var opts = Utils.mergeOwn(TABLE_DEFAULTS, instance.options);
   var initialColumns = opts.columns.map(function (column) { return Utils.mergeOwn(column); });
-  opts.responsiveMode = normalizeResponsiveMode(opts.responsiveMode);
-  opts.keyboardNavigation = normalizeKeyboardNavigation(opts.keyboardNavigation);
-  opts.editEnterBehavior = String(opts.editEnterBehavior || 'commit').toLowerCase();
-  if (['commit','native'].indexOf(opts.editEnterBehavior) < 0) throw new TypeError('[QXFRAME9A7C2] Table editEnterBehavior must be commit or native.');
-  opts.virtual = normalizeVirtual(opts.virtual);
-  opts.virtualThreshold = normalizePositiveInteger(opts.virtualThreshold, 'virtualThreshold', 100);
-  opts.rowHeight = normalizePositiveNumber(opts.rowHeight, 'rowHeight', 44);
-  opts.overscan = normalizeNonNegativeInteger(opts.overscan, 'overscan', 4);
-  if (opts.load !== null && opts.load !== undefined && typeof opts.load !== 'function') throw new TypeError('[QXFRAME9A7C2] Table load must be a function or null.');
-  if (opts.searchMatcher !== null && opts.searchMatcher !== undefined && typeof opts.searchMatcher !== 'function') throw new TypeError('[QXFRAME9A7C2] Table searchMatcher must be a function or null.');
-  opts.searchValue = opts.searchValue == null ? '' : String(opts.searchValue);
-  opts.remoteSelectionScope = normalizeRemoteSelectionScope(opts.remoteSelectionScope);
-  opts.scrollPolicy = normalizeScrollPolicy(opts.scrollPolicy);
-  assertStableRowIdentity(opts.items, opts);
-  validateFeatureCombination(opts);
-    
   var doc = opts.document || opts.container.ownerDocument || global.document;
   var tableId = IdManager.next('table');
   var scope = Lifecycle.createScope();
@@ -245,7 +261,7 @@ function create(options) {
   var filterDraftValues = [];
   var filterSearchValue = '';
   var destroyed = false;
-  var api = null;
+  var api = instance;
   var renderProjection = null;
   var virtualizerSyncing = false;
   var keyboard = null;
@@ -2298,32 +2314,16 @@ function create(options) {
     if (filterTrigger && filterTrigger.reposition) filterTrigger.reposition(reason || 'table-reflow');
     return true;
   }
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
-    var next = nextOptions || {};
-    ComponentContracts.validate(ComponentContracts.get('Table'), next, 'Table');
-    if (own(next, 'container') && next.container !== opts.container) throw new TypeError('[QXFRAME9A7C2] Table container is immutable.');
-    if (own(next, 'document') && next.document !== opts.document && next.document !== doc) throw new TypeError('[QXFRAME9A7C2] Table document is immutable.');
-    if (own(next, 'size')) normalizeSize(next.size);
-    if (own(next, 'columns')) normalizeColumns(next.columns);
-    if (own(next, 'responsiveMode')) normalizeResponsiveMode(next.responsiveMode);
-    if (own(next, 'keyboardNavigation')) normalizeKeyboardNavigation(next.keyboardNavigation);
-    if (own(next, 'editEnterBehavior') && ['commit','native'].indexOf(String(next.editEnterBehavior).toLowerCase()) < 0) throw new TypeError('[QXFRAME9A7C2] Table editEnterBehavior must be commit or native.');
-    if (own(next, 'virtual')) normalizeVirtual(next.virtual);
-    if (own(next, 'virtualThreshold')) normalizePositiveInteger(next.virtualThreshold, 'virtualThreshold', opts.virtualThreshold);
-    if (own(next, 'rowHeight')) normalizePositiveNumber(next.rowHeight, 'rowHeight', opts.rowHeight);
-    if (own(next, 'overscan')) normalizeNonNegativeInteger(next.overscan, 'overscan', opts.overscan);
-    if (own(next, 'load') && next.load !== null && next.load !== undefined && typeof next.load !== 'function') throw new TypeError('[QXFRAME9A7C2] Table load must be a function or null.');
-    if (own(next, 'searchMatcher') && next.searchMatcher !== null && next.searchMatcher !== undefined && typeof next.searchMatcher !== 'function') throw new TypeError('[QXFRAME9A7C2] Table searchMatcher must be a function or null.');
-    if (own(next, 'remoteSelectionScope')) normalizeRemoteSelectionScope(next.remoteSelectionScope);
-    if (own(next, 'scrollPolicy')) normalizeScrollPolicy(next.scrollPolicy);
+    var next = patch || {};
     var loaderChanged = own(next, 'load') && next.load !== opts.load;
     var candidate = Utils.mergeOwn(opts, next);
     candidate.size = normalizeSize(candidate.size);
     candidate.columns = normalizeColumns(candidate.columns);
     candidate.responsiveMode = normalizeResponsiveMode(candidate.responsiveMode);
     candidate.keyboardNavigation = normalizeKeyboardNavigation(candidate.keyboardNavigation);
-    candidate.editEnterBehavior = String(candidate.editEnterBehavior || 'commit').toLowerCase();
+    candidate.editEnterBehavior = normalizeEditEnterBehavior(candidate.editEnterBehavior);
     candidate.virtual = normalizeVirtual(candidate.virtual);
     candidate.virtualThreshold = normalizePositiveInteger(candidate.virtualThreshold, 'virtualThreshold', 100);
     candidate.rowHeight = normalizePositiveNumber(candidate.rowHeight, 'rowHeight', 44);
@@ -2344,17 +2344,11 @@ function create(options) {
       if (own(next, name)) modelPatch[name] = opts[name];
     });
     if (own(next, 'load')) modelPatch.remote = typeof opts.load === 'function';
-    if (Object.keys(modelPatch).length) {
-      // TableModel.updateOptions emits one canonical options change. Its onChange
-      // callback renders with the already-merged view opts, so a second render here
-      // would rebuild body/header twice and execute user renderers twice.
-      model.updateOptions(modelPatch);
-    } else {
-      render('options');
-    }
+    if (Object.keys(modelPatch).length) model.updateOptions(modelPatch);
+    else render('options');
     return api;
   }
-  function destroy() {
+  function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true;
     remoteEpoch += 1;
@@ -2371,92 +2365,158 @@ function create(options) {
     return true;
   }
     
-  api = Object.freeze({
+  var record = {
     setItems: function (items, meta) { invalidateRemoteRequest('table-items-replaced'); opts.items = items; return model.setItems(items, meta); },
     updateRow: function (key, updater, meta) { return model.updateRow(key, updater, meta); },
     insertRows: function (index, rows, meta) { return model.insertRows(index, rows, meta); },
     removeRows: function (keys, meta) { return model.removeRows(keys, meta); },
     setColumns: function (columns, meta) { opts.columns = normalizeColumns(columns); return model.setColumns(opts.columns, meta); },
-    setColumnWidth: function (key, width, meta) { return commitColumnWidth(key, width, Utils.assignOwn({ source: 'api', reason: 'column-resize' }, meta || {})); },
-    setColumnVisible: setColumnVisible,
-    setColumnOrder: setColumnOrder,
-    applyColumnState: applyColumnState,
-    resetColumnState: resetColumnState,
-    reorderColumn: function (key, toIndex, meta) { return reorderColumnsByKey(key, toIndex, Utils.assignOwn({ source: 'api' }, meta || {})); },
-    reorderRow: function (key, toIndex, meta) { return reorderRowsByKey(key, toIndex, Utils.assignOwn({ source: 'api' }, meta || {})); },
-    getColumnState: columnStateSnapshot,
-    setSort: model.setSort,
-    setFilter: model.setFilter,
-    setFilters: model.setFilters,
-    setSearchValue: function (value, meta) { opts.searchValue = value == null ? '' : String(value); if (typeof opts.onSearchChange === 'function') opts.onSearchChange(opts.searchValue, Utils.assignOwn({ instance: api }, meta || {})); if (destroyed) return false; return model.setSearchValue(opts.searchValue, meta); },
-    setSelectedKeys: function (keys, meta) { resetRemoteSelection(); return model.setSelectedKeys(keys, meta); },
-    toggleSelected: function (key, desired, meta) { if (toggleQuerySelection(key, desired, meta)) return true; return model.toggleSelected(key, desired, meta); },
-    selectVisible: function (desired, meta) { if (isRemote() && opts.remoteSelectionScope === 'query') return setQuerySelectionAll(desired, meta); return model.selectVisible(desired, meta); },
-    getSelectionState: selectionStateSnapshot,
-    setExpandedKeys: model.setExpandedKeys,
-    toggleExpanded: model.toggleExpanded,
-    setPage: model.setPage,
-    setPageSize: model.setPageSize,
-    refresh: function (meta) { return isRemote() ? requestRemote(meta && meta.reason || 'refresh') : (render('refresh'), Promise.resolve(true)); },
-    retry: function () { return isRemote() ? requestRemote('retry') : Promise.resolve(false); },
-    scrollToRow: function (key, config) {
-      var entries = projectedEntries(), index = -1;
-      for (var i = 0; i < entries.length; i += 1) if (entries[i].key === String(key)) { index = i; break; }
-      if (index < 0) return false;
-      if (virtualizer && virtualizer.enabled) return virtualizer.scrollToIndex(index, config || { align: 'nearest' });
-      var row = DOM.findPrivate(root, 'tableRow', String(key));
-      if (!row) return false;
-      var local = config || {};
-      return ScrollVisibility.ensureVisible(root, row, { axis: 'y', align: local.align || 'nearest', offset: local.offset });
+    setColumnWidth: function (key, width, meta) { return commitColumnWidth(key, width, Utils.assignOwn({ source:'api', reason:'column-resize' }, meta || {})); },
+    setColumnVisible:setColumnVisible, setColumnOrder:setColumnOrder, applyColumnState:applyColumnState, resetColumnState:resetColumnState,
+    reorderColumn:function(key,toIndex,meta){return reorderColumnsByKey(key,toIndex,Utils.assignOwn({source:'api'},meta||{}));},
+    reorderRow:function(key,toIndex,meta){return reorderRowsByKey(key,toIndex,Utils.assignOwn({source:'api'},meta||{}));},
+    getColumnState:columnStateSnapshot,
+    setSort:function(){return model.setSort.apply(model,arguments);},
+    setFilter:function(){return model.setFilter.apply(model,arguments);},
+    setFilters:function(){return model.setFilters.apply(model,arguments);},
+    setSearchValue:function(value,meta){opts.searchValue=value==null?'':String(value);if(typeof opts.onSearchChange==='function')opts.onSearchChange(opts.searchValue,Utils.assignOwn({instance:api},meta||{}));if(destroyed)return false;return model.setSearchValue(opts.searchValue,meta);},
+    setSelectedKeys:function(keys,meta){resetRemoteSelection();return model.setSelectedKeys(keys,meta);},
+    toggleSelected:function(key,desired,meta){if(toggleQuerySelection(key,desired,meta))return true;return model.toggleSelected(key,desired,meta);},
+    selectVisible:function(desired,meta){if(isRemote()&&opts.remoteSelectionScope==='query')return setQuerySelectionAll(desired,meta);return model.selectVisible(desired,meta);},
+    getSelectionState:selectionStateSnapshot,
+    setExpandedKeys:function(){return model.setExpandedKeys.apply(model,arguments);},
+    toggleExpanded:function(){return model.toggleExpanded.apply(model,arguments);},
+    setPage:function(){return model.setPage.apply(model,arguments);},
+    setPageSize:function(){return model.setPageSize.apply(model,arguments);},
+    refresh:function(meta){return isRemote()?requestRemote(meta&&meta.reason||'refresh'):(render('refresh'),Promise.resolve(true));},
+    retry:function(){return isRemote()?requestRemote('retry'):Promise.resolve(false);},
+    scrollToRow:function(key,config){
+      var entries=projectedEntries(),index=-1;
+      for(var i=0;i<entries.length;i+=1)if(entries[i].key===String(key)){index=i;break;}
+      if(index<0)return false;
+      if(virtualizer&&virtualizer.enabled)return virtualizer.scrollToIndex(index,config||{align:'nearest'});
+      var row=DOM.findPrivate(root,'tableRow',String(key));if(!row)return false;
+      var local=config||{};return ScrollVisibility.ensureVisible(root,row,{axis:'y',align:local.align||'nearest',offset:local.offset});
     },
-    focusCell: function (rowKey, columnKey, config) {
-      if (!keyboard || !cellDomain) return false;
-      var projection = rebuildNavigationProjection(), row = String(rowKey), column = String(columnKey);
-      if (!own(projection.rowIndexByKey, row) || !own(projection.columnIndexByIdentity, 'data\u0000' + column)) return false;
-      var key = navigationCellKey(row, { kind: 'data', key: column }), local = config || {};
-      if (local.focusOwner !== false) DOM.focusElement(root, { preventScroll: true });
-      return cellDomain.activate(key, { source: local.source || 'keyboard', reason: local.reason || 'table-focus-cell', originalEvent: local.originalEvent || null, ensureVisible: local.ensureVisible !== false });
+    focusCell:function(rowKey,columnKey,config){
+      if(!keyboard||!cellDomain)return false;
+      var projection=rebuildNavigationProjection(),row=String(rowKey),column=String(columnKey);
+      if(!own(projection.rowIndexByKey,row)||!own(projection.columnIndexByIdentity,'data\u0000'+column))return false;
+      var key=navigationCellKey(row,{kind:'data',key:column}),local=config||{};
+      if(local.focusOwner!==false)DOM.focusElement(root,{preventScroll:true});
+      return cellDomain.activate(key,{source:local.source||'keyboard',reason:local.reason||'table-focus-cell',originalEvent:local.originalEvent||null,ensureVisible:local.ensureVisible!==false});
     },
-    enterEdit: function (rowKey, columnKey) {
-      if (rowKey !== undefined && columnKey !== undefined && !api.focusCell(rowKey, columnKey, { reason: 'table-enter-edit', ensureVisible: true })) return false;
-      if (!keyboard || !cellDomain) return false;
-      var state = keyboard.virtualFocus.getState();
-      return state.domain === cellDomain.name ? enterCellEdit(state.key, 'table-enter-edit', null) : false;
+    enterEdit:function(rowKey,columnKey){
+      if(rowKey!==undefined&&columnKey!==undefined&&!record.focusCell(rowKey,columnKey,{reason:'table-enter-edit',ensureVisible:true}))return false;
+      if(!keyboard||!cellDomain)return false;
+      var current=keyboard.virtualFocus.getState();return current.domain===cellDomain.name?enterCellEdit(current.key,'table-enter-edit',null):false;
     },
-    exitEdit: function () { return exitCellEdit('table-exit-edit', null, true); },
-    getCellElement: function (rowKey, columnKey) { return findNavigationCell(navigationCellKey(String(rowKey), { kind: 'data', key: String(columnKey) })); },
-    getViewState: viewStateSnapshot,
-    applyViewState: applyViewState,
-    resetViewState: function (meta) { return applyViewState(initialViewState, Utils.assignOwn({ source: 'api', reason: 'view-state-reset' }, meta || {})); },
-    getExportData: getExportData,
-    getExportCSV: getExportCSV,
-    reflow: reflow,
-    resize: reflow,
-    updateOptions: updateOptions,
-    getState: function () { var state = currentState(), focusState = keyboard ? keyboard.virtualFocus.getState() : null, decoded = focusState && cellDomain && focusState.domain === cellDomain.name ? decodeNavigationCellKey(focusState.key) : null; return Object.freeze(Utils.mergeOwn( state, { virtual: !!virtualizer && virtualizer.enabled, keyboardNavigation: opts.keyboardNavigation === true, activeCell: decoded ? Object.freeze({ rowKey: decoded.rowKey, kind: decoded.kind, columnKey: decoded.kind === 'data' ? decoded.columnKey : null }) : null, editingCell: editStateSnapshot(), forceRenderExpanded: opts.forceRenderExpanded === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || remoteProcessing, processing: remoteProcessing, remoteStatus: remoteStatus(), loadError: remoteError, remoteSummary: remoteSummary, remote: isRemote(), query: isRemote() ? remoteQuery() : null, requestEpoch: remoteEpoch, selection: selectionStateSnapshot(), destroyed: destroyed })); },
-    getDiagnostics: function () { return Object.freeze(Utils.mergeOwn( model.getDiagnostics ? model.getDiagnostics() : {}, tableDiagnostics)); },
-    getModel: function () { return model; },
-    getRootElement: function () { return root; },
-    getTableElement: function () { return table; },
-    getVirtualizer: function () { return virtualizer; },
-    getKeyboardNavigation: function () { return keyboard; },
-    getFilterPopup: function () { return filterPopup; },
-    openFilter: function (key) { var column = currentColumns().filter(function (entry) { return entry.key === String(key); })[0]; if (!column) return false; var reference = DOM.findPrivate(thead, 'tableFilter', column.key); if (!reference) return false; if (filterOpenControlled(column) && column.filterDropdownOpen !== true) { emitFilterOpenRequest(column, true, 'api-open', null); return false; } return openFilterPopup(reference, column, null); },
-    closeFilter: function () { if (!filterTrigger || !filterColumnKey) return false; var column = currentColumns().filter(function (entry) { return entry.key === filterColumnKey; })[0]; if (column && filterOpenControlled(column) && column.filterDropdownOpen === true) { emitFilterOpenRequest(column, false, 'api-close', null); return false; } return filterTrigger.close('api-close'); },
-    destroy: destroy
-  });
-    
+    exitEdit:function(){return exitCellEdit('table-exit-edit',null,true);},
+    getCellElement:function(rowKey,columnKey){return findNavigationCell(navigationCellKey(String(rowKey),{kind:'data',key:String(columnKey)}));},
+    getViewState:viewStateSnapshot, applyViewState:applyViewState,
+    resetViewState:function(meta){return applyViewState(initialViewState,Utils.assignOwn({source:'api',reason:'view-state-reset'},meta||{}));},
+    getExportData:getExportData, getExportCSV:getExportCSV, reflow:reflow, resize:reflow, applyOptions:applyOptions,
+    getState:function(){var state=currentState(),focusState=keyboard?keyboard.virtualFocus.getState():null,decoded=focusState&&cellDomain&&focusState.domain===cellDomain.name?decodeNavigationCellKey(focusState.key):null;return Object.freeze(Utils.mergeOwn(state,{virtual:!!virtualizer&&virtualizer.enabled,keyboardNavigation:opts.keyboardNavigation===true,activeCell:decoded?Object.freeze({rowKey:decoded.rowKey,kind:decoded.kind,columnKey:decoded.kind==='data'?decoded.columnKey:null}):null,editingCell:editStateSnapshot(),forceRenderExpanded:opts.forceRenderExpanded===true,disabled:opts.disabled===true,readOnly:opts.readOnly===true,loading:opts.loading===true||remoteProcessing,processing:remoteProcessing,remoteStatus:remoteStatus(),loadError:remoteError,remoteSummary:remoteSummary,remote:isRemote(),query:isRemote()?remoteQuery():null,requestEpoch:remoteEpoch,selection:selectionStateSnapshot(),destroyed:destroyed}));},
+    getDiagnostics:function(){return Object.freeze(Utils.mergeOwn(model.getDiagnostics?model.getDiagnostics():{},tableDiagnostics));},
+    getModel:function(){return model;}, getRootElement:function(){return root;}, getTableElement:function(){return table;},
+    getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFilterPopup:function(){return filterPopup;},
+    openFilter:function(key){var column=currentColumns().filter(function(entry){return entry.key===String(key);})[0];if(!column)return false;var reference=DOM.findPrivate(thead,'tableFilter',column.key);if(!reference)return false;if(filterOpenControlled(column)&&column.filterDropdownOpen!==true){emitFilterOpenRequest(column,true,'api-open',null);return false;}return openFilterPopup(reference,column,null);},
+    closeFilter:function(){if(!filterTrigger||!filterColumnKey)return false;var column=currentColumns().filter(function(entry){return entry.key===filterColumnKey;})[0];if(column&&filterOpenControlled(column)&&column.filterDropdownOpen===true){emitFilterOpenRequest(column,false,'api-close',null);return false;}return filterTrigger.close('api-close');}
+  };
+  tableState.set(instance, record);
+  instance.own(destroyRuntime);
   initialViewState = viewStateSnapshot();
   syncKeyboardNavigation();
   render('init');
   if (isRemote()) requestRemote('init');
-  return api;
+  return root;
 }
 
-export const Table = Object.freeze({
-    definition: Object.freeze({ initializer: Object.freeze({ mode: 'create', bind: 'container' }) }),
-    create,
-    sizes: SIZES.slice()
-});
-export { create, SIZES as TABLE_SIZES };
+function recordForTable(instance) {
+  var record = tableState.get(instance);
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Table instance.');
+  return record;
+}
+
+export class Table extends Component {
+  static contract = ComponentContracts.get('Table');
+  static immutableOptions = Object.freeze(['container','document']);
+  static sizes = SIZES.slice();
+
+  constructor(options = {}) { super(normalizeTableInitial(options)); }
+  updateOptions(nextOptions = {}) {
+    var next=Utils.mergeOwn(nextOptions||{});
+    if(own(next,'container')){
+      if(next.container!==this.options.container)throw new TypeError('[QXFRAME9A7C2] Table container is immutable.');
+      delete next.container;
+    }
+    if(own(next,'document')){
+      var doc=this.options.document||(this.options.container&&this.options.container.ownerDocument)||global.document;
+      if(next.document!==this.options.document&&next.document!==doc)throw new TypeError('[QXFRAME9A7C2] Table document is immutable.');
+      delete next.document;
+    }
+    return super.updateOptions(normalizeTablePatch(next,this.options));
+  }
+
+  [componentHooks.render]() {
+    var record = tableState.get(this);
+    return record ? record.getRootElement() : setupTable(this);
+  }
+  [componentHooks.optionsUpdated](next, _previous, patch) {
+    var record = tableState.get(this);
+    if (record) record.applyOptions(next, patch);
+  }
+
+  setItems(items,meta){return recordForTable(this).setItems(items,meta);}
+  updateRow(key,updater,meta){return recordForTable(this).updateRow(key,updater,meta);}
+  insertRows(index,rows,meta){return recordForTable(this).insertRows(index,rows,meta);}
+  removeRows(keys,meta){return recordForTable(this).removeRows(keys,meta);}
+  setColumns(columns,meta){return recordForTable(this).setColumns(columns,meta);}
+  setColumnWidth(key,width,meta){return recordForTable(this).setColumnWidth(key,width,meta);}
+  setColumnVisible(key,visible,meta){return recordForTable(this).setColumnVisible(key,visible,meta);}
+  setColumnOrder(keys,meta){return recordForTable(this).setColumnOrder(keys,meta);}
+  applyColumnState(state,meta){return recordForTable(this).applyColumnState(state,meta);}
+  resetColumnState(meta){return recordForTable(this).resetColumnState(meta);}
+  reorderColumn(key,toIndex,meta){return recordForTable(this).reorderColumn(key,toIndex,meta);}
+  reorderRow(key,toIndex,meta){return recordForTable(this).reorderRow(key,toIndex,meta);}
+  getColumnState(){return recordForTable(this).getColumnState();}
+  setSort(){return recordForTable(this).setSort.apply(null,arguments);}
+  setFilter(){return recordForTable(this).setFilter.apply(null,arguments);}
+  setFilters(){return recordForTable(this).setFilters.apply(null,arguments);}
+  setSearchValue(value,meta){return recordForTable(this).setSearchValue(value,meta);}
+  setSelectedKeys(keys,meta){return recordForTable(this).setSelectedKeys(keys,meta);}
+  toggleSelected(key,desired,meta){return recordForTable(this).toggleSelected(key,desired,meta);}
+  selectVisible(desired,meta){return recordForTable(this).selectVisible(desired,meta);}
+  getSelectionState(){return recordForTable(this).getSelectionState();}
+  setExpandedKeys(){return recordForTable(this).setExpandedKeys.apply(null,arguments);}
+  toggleExpanded(){return recordForTable(this).toggleExpanded.apply(null,arguments);}
+  setPage(){return recordForTable(this).setPage.apply(null,arguments);}
+  setPageSize(){return recordForTable(this).setPageSize.apply(null,arguments);}
+  refresh(meta){return recordForTable(this).refresh(meta);}
+  retry(){return recordForTable(this).retry();}
+  scrollToRow(key,config){return recordForTable(this).scrollToRow(key,config);}
+  focusCell(rowKey,columnKey,config){return recordForTable(this).focusCell(rowKey,columnKey,config);}
+  enterEdit(rowKey,columnKey){return recordForTable(this).enterEdit(rowKey,columnKey);}
+  exitEdit(){return recordForTable(this).exitEdit();}
+  getCellElement(rowKey,columnKey){return recordForTable(this).getCellElement(rowKey,columnKey);}
+  getViewState(){return recordForTable(this).getViewState();}
+  applyViewState(state,meta){return recordForTable(this).applyViewState(state,meta);}
+  resetViewState(meta){return recordForTable(this).resetViewState(meta);}
+  getExportData(config){return recordForTable(this).getExportData(config);}
+  getExportCSV(config){return recordForTable(this).getExportCSV(config);}
+  reflow(reason){return recordForTable(this).reflow(reason);}
+  resize(reason){return recordForTable(this).resize(reason);}
+  getState(){return recordForTable(this).getState();}
+  getDiagnostics(){return recordForTable(this).getDiagnostics();}
+  getModel(){return recordForTable(this).getModel();}
+  getRootElement(){return recordForTable(this).getRootElement();}
+  getTableElement(){return recordForTable(this).getTableElement();}
+  getVirtualizer(){return recordForTable(this).getVirtualizer();}
+  getKeyboardNavigation(){return recordForTable(this).getKeyboardNavigation();}
+  getFilterPopup(){return recordForTable(this).getFilterPopup();}
+  openFilter(key){return recordForTable(this).openFilter(key);}
+  closeFilter(){return recordForTable(this).closeFilter();}
+}
+
+export { SIZES as TABLE_SIZES };
 export default Table;
