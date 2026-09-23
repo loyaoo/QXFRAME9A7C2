@@ -75,18 +75,16 @@ var emitter=Object.freeze({emit:function(type,payload){return instance.emit(type
         var scope = Lifecycle.createScope();
                 var destroyed=false,api=instance;
 var binding = null, root = null, controlElement = null, valuesNode = null, input = null, clearButton = null, arrow = null, prefix = null, suffix = null, valueTarget = null, triggerTarget = null;
-        var fieldHost = FieldHost.resolve({
+        var controlHost = FieldHost.resolvePickerControl({
           owner:'Cascader', options:opts, document:doc, host:host, component:instance,
           requiredRefs:['root','values','input','clear','toggle'], defaultFactory:createDefaultDOM,
           projectionRefs:[{ref:'values',option:'valueTarget'},{ref:'input',option:'inputTarget'}]
         });
-        binding=fieldHost.binding; root=fieldHost.root; triggerTarget=fieldHost.triggerTarget;
-        if (projectionMode) { valueTarget=fieldHost.refs.values||null; input=fieldHost.refs.input||null; }
-        else if (!headlessMode) {
-          controlElement=root; valuesNode=fieldHost.refs.values; input=fieldHost.refs.input; clearButton=fieldHost.refs.clear; arrow=fieldHost.refs.toggle;
-          prefix=fieldHost.refs.prefix||null; suffix=fieldHost.refs.suffix||null; valueTarget=valuesNode;
-          if (!host && opts.formField && binding.source !== 'external') Control.placeFieldRoot(root, host, opts.formField);
-        }
+        var fieldHost=controlHost.host;
+        binding=controlHost.binding; root=controlHost.root; triggerTarget=controlHost.triggerTarget;
+        controlElement=controlHost.controlElement; valuesNode=controlHost.valuesNode; input=controlHost.input; clearButton=controlHost.clearButton; arrow=controlHost.toggle;
+        prefix=controlHost.prefix; suffix=controlHost.suffix; valueTarget=controlHost.valueTarget;
+        if (!headlessMode && !projectionMode && !host && opts.formField && binding.source !== 'external') Control.placeFieldRoot(root, host, opts.formField);
         var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-flush'; panel.hidden = true; panel.tabIndex = -1;
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
