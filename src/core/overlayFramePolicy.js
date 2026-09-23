@@ -1,6 +1,6 @@
-
+import { Utils } from '../utils/utils.js';
 function normalizeOverlayButton(button, index, options) {
-  var opts=options||{}, source=(typeof button==='string'||typeof button==='number')?{content:String(button)}:Object.assign({},button||{});
+  var opts=options||{}, source=(typeof button==='string'||typeof button==='number')?{content:String(button)}:Utils.mergeOwn(button);
   if(!source||typeof source!=='object'||Array.isArray(source)) throw new TypeError('[QXFRAME9A7C2] ' + String(opts.owner||'Overlay') + ' button must be a string, number, or object.');
   source.key=source.key===undefined?'button-'+index:String(source.key);
   source.role=source.role==null?'':String(source.role).toLowerCase();
@@ -27,10 +27,10 @@ function resolveOverlayButtons(options, config) {
 }
 function normalizeClosable(value, previousOptions, config) {
   var cfg=config||{}, previous=previousOptions&&previousOptions.closeOptions?previousOptions.closeOptions:{};
-  if(value===undefined) return {visible:previousOptions?previousOptions.closable!==false:true,options:Object.assign({},previous)};
+  if(value===undefined) return {visible:previousOptions?previousOptions.closable!==false:true,options:Utils.mergeOwn(previous)};
   if(typeof value==='boolean') return {visible:value,options:value?{}:Object.assign({},previous)};
   if(!value||typeof value!=='object'||Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] ' + String(cfg.owner||'Overlay') + ' closable must be boolean or an object.');
-  var options=Object.assign({},value);
+  var options=Utils.mergeOwn(value);
   if(options.disabled!==undefined&&typeof options.disabled!=='boolean') throw new TypeError('[QXFRAME9A7C2] ' + String(cfg.owner||'Overlay') + ' closable.disabled must be boolean.');
   if(cfg.placements&&options.placement!==undefined){ var placement=String(options.placement); if(cfg.placements.indexOf(placement)<0) throw new TypeError('[QXFRAME9A7C2] ' + String(cfg.owner||'Overlay') + ' closable.placement must be one of: '+cfg.placements.join(', ')+'.'); options.placement=placement; }
   if(options.afterClose!==undefined&&options.afterClose!==null&&typeof options.afterClose!=='function') throw new TypeError('[QXFRAME9A7C2] ' + String(cfg.owner||'Overlay') + ' closable.afterClose must be a function.');
