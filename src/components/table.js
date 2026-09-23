@@ -2462,7 +2462,19 @@ export class Table extends Component {
   static sizes = SIZES.slice();
 
   constructor(options = {}) { super(normalizeTableResolved(options)); }
-  updateOptions(nextOptions = {}) { return super.updateOptions(normalizeTablePatch(nextOptions, this.options)); }
+  updateOptions(nextOptions = {}) {
+    var next=Utils.mergeOwn(nextOptions||{});
+    if(own(next,'container')){
+      if(next.container!==this.options.container)throw new TypeError('[QXFRAME9A7C2] Table container is immutable.');
+      delete next.container;
+    }
+    if(own(next,'document')){
+      var doc=this.options.document||(this.options.container&&this.options.container.ownerDocument)||global.document;
+      if(next.document!==this.options.document&&next.document!==doc)throw new TypeError('[QXFRAME9A7C2] Table document is immutable.');
+      delete next.document;
+    }
+    return super.updateOptions(normalizeTablePatch(next,this.options));
+  }
 
   [componentHooks.render]() {
     var record = tableState.get(this);
