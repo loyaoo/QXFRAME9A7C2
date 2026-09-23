@@ -193,7 +193,7 @@ function create(options) {
       initialFocus: function () { return Utils.isFunction(settings.initialFocus) ? settings.initialFocus() : settings.initialFocus; },
       fallbackFocus: function () {
         var candidate = Utils.isFunction(settings.fallbackFocus) ? settings.fallbackFocus() : settings.fallbackFocus;
-        return candidate || (Utils.isFunction(settings.initialFocus) ? settings.initialFocus() : settings.initialFocus) || floating;
+        return candidate || (Utils.isFunction(settings.initialFocus) ? settings.initialFocus() : settings.initialFocus) || resolveTabExitTarget({ reason:'focus-scope-fallback' }) || floating;
       },
       focusOnActivate: focusOnScopeActivate,
       restoreFocus: false,
