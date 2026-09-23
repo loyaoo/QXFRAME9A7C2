@@ -357,10 +357,10 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         }
         function emitChange(value, detail) {
           var suppliedValues = detail && Array.isArray(detail.values) ? detail.values.slice() : null;
-          var payload = Utils.mergeOwn( detail || {}, { value: value), values: suppliedValues || selectedValues(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(value), payload);
+          var payload = Utils.mergeOwn( detail || {}, { value: valueState.copy(value), values: suppliedValues || selectedValues(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
+          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(value), payload);
           if (destroyed) return false;
-          if (Utils.isFunction(opts.onChange)) opts.onChange(value), payload);
+          if (Utils.isFunction(opts.onChange)) opts.onChange(valueState.copy(value), payload);
           if (destroyed) return false;
           emitter.emit('change', payload);
           return !destroyed;
@@ -488,7 +488,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           syncView({ silent: !!cfg.silent, source: cfg.source || 'api', reason: cfg.reason || 'set-value' });
           if (changed) {
             var current = apiValue();
-            if (cfg.silent) { if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(current), { value:current), values:selectedValues(), reason:cfg.reason || 'set-value', source:cfg.source || 'api', silent:true, controlled:!!valueState.controlled, treeSelect:api }); }
+            if (cfg.silent) { if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(current), { value:valueState.copy(current), values:selectedValues(), reason:cfg.reason || 'set-value', source:cfg.source || 'api', silent:true, controlled:!!valueState.controlled, treeSelect:api }); }
             else emitChange(current, { reason: cfg.reason || 'set-value', source: cfg.source || 'api', originalEvent: cfg.originalEvent || null });
           }
           return api;
