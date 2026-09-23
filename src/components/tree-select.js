@@ -689,17 +689,6 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (candidate.popupRender !== null && candidate.popupRender !== undefined && !Utils.isFunction(candidate.popupRender)) throw new TypeError('[QXFRAME9A7C2] TreeSelect popupRender must be a function or null.');
           if (hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getLabel') || hasOwn(next, 'getValue')) validateItems(candidate.items, candidate);
           Object.keys(next).forEach(function (name) { opts[name] = next[name]; });
-          triggerSession.updateOptions({
-            trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
-            placement: opts.placement,
-            strategy: opts.strategy || 'absolute',
-            middleware: opts.middleware,
-            flipOnOverflow: opts.flipOnOverflow !== false,
-            matchReferenceWidth: opts.matchReferenceWidth === true,
-            autoUpdate: opts.autoUpdate !== false,
-            destroyOnClose: opts.destroyOnClose !== false,
-            disabled: opts.disabled === true
-          });
           var checkMode = hierarchicalCheckMode();
           var treeOptions = {
             multiple: false, selectable: !checkMode,
