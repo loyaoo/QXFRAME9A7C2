@@ -1396,8 +1396,13 @@ export class Menu extends Component {
 
   constructor(options = {}) {
     var supplied = Utils.mergeOwn(options || {});
+    var canonical = Utils.mergeOwn(supplied);
+    if (!own(canonical, 'selectedKey') && own(canonical, 'defaultSelectedKey')) canonical.selectedKey = canonical.defaultSelectedKey;
+    if (!own(canonical, 'selectedKeys') && own(canonical, 'defaultSelectedKeys')) canonical.selectedKeys = canonical.defaultSelectedKeys;
+    delete canonical.defaultSelectedKey;
+    delete canonical.defaultSelectedKeys;
     var auto = !own(supplied, 'submenuMode');
-    super(normalizeMenuOptions(supplied, supplied));
+    super(normalizeMenuOptions(canonical, canonical));
     menuIntent.set(this, { supplied:supplied, submenuModeAuto:auto });
   }
 
