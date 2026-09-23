@@ -133,7 +133,7 @@ function normalizeItems(value) {
 function create(options) {
   var source = options || {};
   ComponentContracts.validate(ComponentContracts.get('Tags'), source, 'Tags');
-  var opts = Object.assign({
+  var opts = Utils.mergeOwn({
     items: [], value: [], editable: false, closable: true, checkable: false, multiple: true, variant: 'filled',
     overflow: 'wrap', maxVisible: 0, showOverflowPopover: true, hosted: false, controlled: false, creatable: true, formField: null, name: '',
     overflowTrigger: 'hover', overflowPlacement: 'bottom-start', overflowMaxHeight: 240,
@@ -225,14 +225,14 @@ function create(options) {
   }
   function publicItems() {
     return coreTags().map(function (tag) {
-      return copyPublicItem(Object.assign({}, tag, metadataByKey[tag.key] || {}));
+      return copyPublicItem(Utils.mergeOwn(tag, metadataByKey[tag.key]));
     });
   }
   function itemByValue(value) {
     var key = String(value);
     var tags = coreTags();
     for (var index = 0; index < tags.length; index += 1) {
-      if (tags[index].value === key) return Object.assign({}, metadataByKey[tags[index].key] || {}, tags[index]);
+      if (tags[index].value === key) return Utils.mergeOwn(metadataByKey[tags[index].key], tags[index]);
     }
     return null;
   }
@@ -300,16 +300,16 @@ function create(options) {
     normalizeTag: opts.normalizeTag,
     validateTag: opts.validateTag,
     beforeTagAdd:function(tag,detail){var item=copyPublicItem(tag);if(Utils.isFunction(opts.beforeAdd)&&opts.beforeAdd(item,Object.assign({},detail,{instance:api}))===false)return false;if(opts.controlled===true){if(detail&&detail.originalEvent&&detail.originalEvent.preventDefault)detail.originalEvent.preventDefault();var proposed=publicItems().concat([item]);if(Utils.isFunction(opts.onAddRequest))opts.onAddRequest(item,Object.assign({},detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
-    beforeTagEdit:function(tag,detail){var current=Object.assign({},tag,metadataByKey[tag.key]||{});if(Utils.isFunction(opts.beforeEdit))return opts.beforeEdit(copyPublicItem(current),Object.assign({},detail,{instance:api}))!==false;},
+    beforeTagEdit:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.beforeEdit))return opts.beforeEdit(copyPublicItem(current),Object.assign({},detail,{instance:api}))!==false;},
     beforeTagRemove:function(tag,detail){var current=Object.assign({},tag,metadataByKey[tag.key]||{}),item=copyPublicItem(current);if(detail&&detail.user===true&&!itemUserRemovable(current))return false;if(Utils.isFunction(opts.beforeRemove)&&opts.beforeRemove(item,Object.assign({},detail,{instance:api}))===false)return false;if(opts.controlled===true){var proposed=publicItems().filter(function(entry){return entry.key!==item.key;});if(Utils.isFunction(opts.onRemoveRequest))opts.onRemoveRequest(item,Object.assign({},detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
     onTagAdd: function (tag, detail) {
       var item = Object.assign({ color: '', icon: undefined, href: '', className: '' }, tag);
       metadataByKey[tag.key] = itemExtras(item);
       if (Utils.isFunction(opts.onAdd)) opts.onAdd(copyPublicItem(item), Object.assign({}, detail, { instance: api }));
     },
-    onTagEdit:function(tag,detail){var item=Object.assign({},tag,metadataByKey[tag.key]||{});if(Utils.isFunction(opts.onEdit))opts.onEdit(copyPublicItem(item),Object.assign({},detail,{instance:api}));},
+    onTagEdit:function(tag,detail){var item=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.onEdit))opts.onEdit(copyPublicItem(item),Object.assign({},detail,{instance:api}));},
     onTagRemove: function (tag, detail) {
-      var item = Object.assign({}, tag, metadataByKey[tag.key] || {});
+      var item = Utils.mergeOwn(tag, metadataByKey[tag.key]);
       delete metadataByKey[tag.key];
       if (Utils.isFunction(opts.onRemove)) opts.onRemove(copyPublicItem(item), Object.assign({}, detail, { instance: api }));
       if (Utils.isFunction(opts.onClose)) opts.onClose(copyPublicItem(item), Object.assign({}, detail, { instance: api }));
