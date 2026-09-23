@@ -76,6 +76,13 @@ export function createPopupFieldTriggerSettings(options = {}, context = {}, over
         closeOnFocusOutside: true,
         closeOnTabExit: true,
         closeOnEscape: true,
+        restoreFocusTarget: ctx.triggerTarget || ctx.reference || null,
+        restoreFocusOnClose: function (detail) {
+            var reason = String(detail && detail.reason || '');
+            if (reason === 'escape') return true;
+            var event = detail && detail.originalEvent;
+            return reason === 'select' && !!(event && /^key/.test(String(event.type || '')));
+        },
         destroyOnClose: opts.destroyOnClose !== false
     }, overrides || {});
 }
