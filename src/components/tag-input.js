@@ -5,6 +5,7 @@ import { getContract } from '../core/componentContracts.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { TagNavigation } from '../core/tagNavigation.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { StateController } from '../core/stateController.js';
 import { Utils } from '../utils/utils.js';
 
 const state = new WeakMap();
@@ -29,24 +30,32 @@ export class TagInput extends FieldComponent {
     static enhance(input, options){return this.create(input, options || {});}
 
     constructor(source={}, overrides){
-        const fieldInit=Control.resolveFieldOptions(source,overrides),incoming=fieldInit.options;
+        const fieldInit=Control.resolveFieldOptions(source,overrides),incoming=fieldInit.options,valueControlled=own(incoming,'value');
         if(fieldInit.formField&&!own(incoming,'value')&&!own(incoming,'defaultValue')&&fieldInit.nativeValue!=='')incoming.value=[{key:fieldInit.nativeValue,value:fieldInit.nativeValue,label:fieldInit.nativeValue}];
         if(!own(incoming,'value')&&own(incoming,'defaultValue'))incoming.value=copyValue(incoming.defaultValue);
         super(incoming);
         if(!this.options.container&&!this.options.formField)throw new TypeError('[QXFRAME9A7C2] TagInput requires target/container or formField.');
-        const record={fieldInit,control:null,keyboard:null,tagNavigation:null,inputValue:this.options.inputValue==null?'':String(this.options.inputValue),rendered:false};state.set(this,record);
-        this.setFieldValue(copyValue(this.options.value),{silent:true,force:true});
+        const valueState=this.own(StateController.createValueBinding({value:copyValue(this.options.value),controlled:valueControlled,normalizeValue:copyValue,copyValue:copyValue,equals:StateController.deepEquals}));
+        const record={fieldInit,valueState,control:null,keyboard:null,tagNavigation:null,inputValue:this.options.inputValue==null?'':String(this.options.inputValue),rendered:false};state.set(this,record);
+        this.setFieldValue(valueState.value,{silent:true,force:true});
     }
 
     #controlOptions(includeValue){
         const r=recordFor(this),opts=this.options,next={
-            container:opts.container,formField:opts.formField,mode:'tags',tags:includeValue?copyValue(this.value):undefined,inputValue:r.inputValue,
+            container:opts.container,formField:opts.formField,mode:'tags',tags:includeValue?r.valueState.value:undefined,inputValue:r.inputValue,
             creatableTags:opts.creatable!==false,tokenSeparators:opts.tokenSeparators,tokenizeOnPaste:opts.tokenizeOnPaste!==false,addOnEnter:opts.addOnEnter!==false,addOnTab:opts.addOnTab===true,addOnBlur:opts.addOnBlur===true,uniqueTags:opts.unique!==false,maxTags:opts.maxTags,maxTagLength:opts.maxTagLength,normalizeTag:opts.normalizeTag,validateTag:opts.validateTag,beforeTagAdd:opts.beforeAdd,beforeTagEdit:opts.beforeEdit,beforeTagRemove:opts.beforeRemove,clearable:opts.clearable===true,clearVisibility:opts.clearVisibility,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,size:opts.size,status:opts.status,variant:opts.variant,focusOutline:opts.focusOutline,placeholder:opts.placeholder,prefix:opts.prefix,suffix:opts.suffix,name:opts.name,
             onInput:(value,event)=>{r.inputValue=value;if(typeof this.options.onInput==='function')this.options.onInput(value,{originalEvent:event,instance:this});},
             onTagAdd:(tag,detail)=>{if(typeof this.options.onAdd==='function')this.options.onAdd(tag,{...detail,instance:this});},
             onTagEdit:(tag,detail)=>{if(typeof this.options.onEdit==='function')this.options.onEdit(tag,{...detail,instance:this});},
             onTagRemove:(tag,detail)=>{if(typeof this.options.onRemove==='function')this.options.onRemove(tag,{...detail,instance:this});},
-            onTagsChange:(tags,detail)=>{this.setFieldValue(copyValue(tags),{silent:true,force:true});if(typeof this.options.onChange==='function')this.options.onChange(copyValue(tags),{...detail,instance:this});},
+            onTagsChange:(tags,detail)=>{
+                const proposed=copyValue(tags),meta={silent:true,source:detail?.source||'tags',reason:detail?.reason||'tags-change',originalEvent:detail?.originalEvent||null};
+                r.valueState.write(proposed,meta,true);
+                const canonical=r.valueState.value;
+                this.setFieldValue(canonical,{silent:true,force:true});
+                if(r.valueState.controlled)r.control?.setTags(canonical);
+                if(typeof this.options.onChange==='function')this.options.onChange(proposed,{...detail,controlled:r.valueState.controlled,proposedValue:proposed,instance:this});
+            },
             onTagInvalid:detail=>{if(typeof this.options.onInvalid==='function')this.options.onInvalid({...detail,instance:this});},
             onFocus:event=>{if(typeof this.options.onFocus==='function')this.options.onFocus(event,this);},onBlur:event=>{if(typeof this.options.onBlur==='function')this.options.onBlur(event,this);},
             onKeydown:(event,controlApi,detail)=>{if(typeof this.options.onKeydown==='function'&&this.options.onKeydown(event,controlApi,detail)===true)return true;if(event&&event.defaultPrevented)return true;return this.#handleTagInputKeydown(event);}
@@ -60,9 +69,9 @@ export class TagInput extends FieldComponent {
         r.tagNavigation=this.own(TagNavigation.create({keyboard:r.keyboard,domainName:'tag-input-tags',owner:()=>r.control?.getTags?.()||null,getInputElement:()=>r.control?.getInputElement?.()||null,isLocked:()=>this.destroyed||InteractionPolicy.mutationLocked(this.options)}));return true;
     }
     [componentHooks.render](){const r=recordFor(this);if(r.rendered)return r.control.getRootElement();r.control=this.own(Control.create(this.#controlOptions(true)));r.control.getRootElement().classList.add('qxframe9a7c2-tag-input');this.#bindTagVirtualFocus();r.rendered=true;this.bindFocusTarget(r.control.getInputElement());return r.control.getRootElement();}
-    [fieldHooks.fieldOptionsUpdated](next,previous,patch){const r=recordFor(this);if(!r.control)return;const update=this.#controlOptions(false);delete update.container;if(own(patch,'value')){const value=copyValue(next.value);this.setFieldValue(value,{silent:true,force:true});update.tags=value;}if(own(patch,'inputValue')){r.inputValue=next.inputValue==null?'':String(next.inputValue);update.inputValue=r.inputValue;}r.control.updateOptions(update);}
+    [fieldHooks.fieldOptionsUpdated](next,previous,patch){const r=recordFor(this);if(!r.control)return;const update=this.#controlOptions(false);delete update.container;if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(copyValue(next.value),{silent:true,source:'options',reason:'options-value'});const value=r.valueState.value;this.setFieldValue(value,{silent:true,force:true});update.tags=value;}if(own(patch,'inputValue')){r.inputValue=next.inputValue==null?'':String(next.inputValue);update.inputValue=r.inputValue;}r.control.updateOptions(update);}
 
-    setValue(value){if(this.destroyed)return false;const r=recordFor(this),next=copyValue(value);this.setFieldValue(next,{silent:true,force:true});r.control?.setTags(next);return this;}
+    setValue(value){if(this.destroyed)return false;const r=recordFor(this);r.valueState.write(copyValue(value),{silent:true,source:'api',reason:'set-value'},false);const next=r.valueState.value;this.setFieldValue(next,{silent:true,force:true});r.control?.setTags(next);return this;}
     setInputValue(value){if(this.destroyed)return false;const r=recordFor(this);r.inputValue=value==null?'':String(value);r.control?.setInputValue(r.inputValue);return this;}
     #tagsOwner(){const r=recordFor(this);return r.control?.getTags?.()||null;}
     add(text,meta){return this.destroyed?false:(this.#tagsOwner()?.add(text,meta)??false);}
@@ -71,7 +80,7 @@ export class TagInput extends FieldComponent {
     clear(meta){return this.destroyed?false:(this.#tagsOwner()?.clear(meta)??false);}
     focus(){const c=recordFor(this).control;return this.destroyed||!c?false:c.focus();}
     blur(){const c=recordFor(this).control;return this.destroyed||!c?false:c.blur();}
-    getState(){const r=recordFor(this),c=r.control?r.control.getState():null;return Object.freeze({value:c?copyValue(c.tags):copyValue(this.value),inputValue:c?c.inputValue:r.inputValue,disabled:c?c.disabled:this.disabled,readOnly:c?c.readOnly:this.readOnly,focused:c?c.focused:false,destroyed:this.destroyed});}
+    getState(){const r=recordFor(this),c=r.control?r.control.getState():null;return Object.freeze({value:r.valueState.value,controlled:r.valueState.controlled,inputValue:c?c.inputValue:r.inputValue,disabled:c?c.disabled:this.disabled,readOnly:c?c.readOnly:this.readOnly,focused:c?c.focused:false,destroyed:this.destroyed});}
     getControl(){return recordFor(this).control;}
     getRootElement(){return recordFor(this).control?.getRootElement?.()||this.root;}
     getInputElement(){return recordFor(this).control?.getInputElement?.()||null;}
