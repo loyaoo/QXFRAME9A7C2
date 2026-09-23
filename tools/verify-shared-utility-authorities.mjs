@@ -63,4 +63,14 @@ assert.match(cascaderSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'Ca
 assert.match(cascaderSource,/ScrollVisibility\.ensureVisible\(columnsHost,\s*record\.host,\s*\{\s*axis:['"]x['"],\s*align:['"]nearest['"]\s*\}\)/, 'Cascader column reveal must use ScrollVisibility.');
 assert.ok(!/column\.offsetLeft|viewport\.scrollLeft\s*=/.test(cascaderSource), 'Cascader must not re-own horizontal scroll visibility geometry.');
 
-console.log(JSON.stringify({ok:true,timeUnit:true,wheelMetrics:true,tagNavigation:true,scrollVisibility:true,treeQuery:true,queryConsumers:queryConsumers.length}));
+const periodPanelSource=read('src/components/period-panel.js');
+assert.match(periodPanelSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'PeriodPanel must import ScrollVisibility.');
+assert.match(periodPanelSource,/ScrollVisibility\.ensureVisible\(grid,\s*element,\s*\{\s*axis:['"]both['"],\s*align:['"]nearest['"]\s*\}\)/, 'PeriodPanel item reveal must use ScrollVisibility.');
+assert.ok(!/grid\.scroll(?:Top|Left)\s*=|element\.offset(?:Top|Left)/.test(periodPanelSource), 'PeriodPanel must not re-own scroll visibility geometry.');
+
+const wheelPanelSource=read('src/components/wheel-panel.js');
+assert.match(wheelPanelSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'WheelPanel must import ScrollVisibility.');
+assert.match(wheelPanelSource,/ScrollVisibility\.ensureVisible\(columnsHost,\s*record\.wrap,\s*\{\s*axis:['"]x['"],\s*align:['"]nearest['"]\s*\}\)/, 'WheelPanel column reveal must use ScrollVisibility.');
+assert.ok(!/columnsHost\.scrollLeft\s*=|record\.wrap\.offsetLeft/.test(wheelPanelSource), 'WheelPanel must not re-own horizontal scroll visibility geometry.');
+
+console.log(JSON.stringify({ok:true,timeUnit:true,wheelMetrics:true,tagNavigation:true,scrollVisibility:true,scrollVisibilityConsumers:3,treeQuery:true,queryConsumers:queryConsumers.length}));
