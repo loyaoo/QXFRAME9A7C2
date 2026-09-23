@@ -20,6 +20,37 @@ function requireState(instance) {
     return record;
 }
 
+export function popupOpenContext(detail = {}) {
+    const originalEvent = detail && detail.originalEvent || null;
+    const eventType = String(originalEvent && originalEvent.type || '');
+    const reason = String(detail && detail.reason || '');
+    const keyboard = /^key/.test(eventType) || /keyboard/.test(reason);
+    const pointer = /^(?:mouse|pointer|click)/.test(eventType) || reason === 'control-click';
+    return Object.freeze({
+        originalEvent,
+        eventType,
+        reason,
+        keyboard,
+        pointer,
+        source: detail && detail.source || (keyboard ? 'keyboard' : (pointer ? 'pointer' : 'instance'))
+    });
+}
+
+export function popupSelectionOpenPlan(detail, options = {}) {
+    const context = popupOpenContext(detail);
+    const hasSelection = options.hasSelection === true;
+    const passiveFirst = options.passiveFirst === true;
+    const inputFirst = options.inputFirst !== false;
+    const strategy = hasSelection
+        ? 'selected'
+        : (context.keyboard ? (/up/.test(context.reason) ? 'last' : 'first') : ((inputFirst && context.reason === 'input') || passiveFirst ? 'first' : 'none'));
+    return Object.freeze({
+        ...context,
+        strategy,
+        fallback: context.keyboard || (inputFirst && context.reason === 'input') ? 'first' : 'none'
+    });
+}
+
 export function createPopupFieldTriggerSettings(options = {}, context = {}, overrides = {}) {
     const opts = options || {};
     const ctx = context || {};
