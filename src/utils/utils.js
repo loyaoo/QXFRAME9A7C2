@@ -55,10 +55,16 @@ function copyOwn(target, source) {
   }
   return target;
 }
-function mergeOwn() {
-  var output = {};
-  for (var i = 0; i < arguments.length; i += 1) copyOwn(output, arguments[i]);
+function assignOwn(target) {
+  if (target === null || target === undefined) throw new TypeError('[QXFRAME9A7C2] Utils.assignOwn target is required.');
+  var output = Object(target);
+  for (var i = 1; i < arguments.length; i += 1) copyOwn(output, arguments[i]);
   return output;
+}
+function mergeOwn() {
+  var args = [{}];
+  for (var i = 0; i < arguments.length; i += 1) args.push(arguments[i]);
+  return assignOwn.apply(null, args);
 }
 function immutablePatch(current, next, normalizers) {
   var output = copyOwn({}, current || {}), patch = next || {}, rules = normalizers || {};
@@ -83,8 +89,9 @@ export const Utils = Object.freeze({
     finiteAtLeast,
     safeOwnKey,
     copyOwn,
+    assignOwn,
     mergeOwn,
     immutablePatch
 });
 
-export { isFunction, noop, own, normalizeEnum, normalizeSize, finiteNumber, positiveInt, nonNegativeInt, booleanValue, enumValue, finiteAtLeast, safeOwnKey, copyOwn, mergeOwn, immutablePatch };
+export { isFunction, noop, own, normalizeEnum, normalizeSize, finiteNumber, positiveInt, nonNegativeInt, booleanValue, enumValue, finiteAtLeast, safeOwnKey, copyOwn, assignOwn, mergeOwn, immutablePatch };
