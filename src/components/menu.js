@@ -417,11 +417,12 @@ function setupMenu(instance) {
       var opened = openKeys.has(key);
       var presentation = (levelPresentation && levelPresentation.get(level)) || 'popup';
       if (presentation === 'expand') {
-        level.classList.toggle('is-open', opened);
         var inlineTransition = inlineTransitionByKey.get(key);
-        if (opened) level.hidden = false;
+        // Transition is the sole presence/geometry owner for inline expand levels.
+        // Business sync only requests visibility; hooks own hidden/is-open throughout
+        // enter, leave and rapid reversal.
         if (inlineTransition) inlineTransition.setVisible(opened, { source:'menu', reason:opened ? 'submenu-open' : 'submenu-close' });
-        else level.hidden = !opened;
+        else { level.classList.toggle('is-open', opened); level.hidden = !opened; }
       } else {
         level.hidden = !opened;
       }
@@ -515,14 +516,19 @@ function setupMenu(instance) {
           onBeforeEnter: function () {
             if (!inlineLevel) return;
             inlineLevel.hidden = false;
+            inlineLevel.classList.add('is-open');
             inlineLevel.style.setProperty('--qxframe9a7c2-menu-inline-motion-height', inlineLevel.scrollHeight + 'px');
           },
           onBeforeLeave: function () {
-            if (inlineLevel) inlineLevel.style.setProperty('--qxframe9a7c2-menu-inline-motion-height', inlineLevel.scrollHeight + 'px');
+            if (!inlineLevel) return;
+            inlineLevel.hidden = false;
+            inlineLevel.classList.add('is-open');
+            inlineLevel.style.setProperty('--qxframe9a7c2-menu-inline-motion-height', inlineLevel.scrollHeight + 'px');
           },
           onAfterEnter: function () { if (inlineLevel) inlineLevel.style.removeProperty('--qxframe9a7c2-menu-inline-motion-height'); },
           onAfterLeave: function () {
             if (!inlineLevel) return;
+            inlineLevel.classList.remove('is-open');
             inlineLevel.hidden = true;
             inlineLevel.style.removeProperty('--qxframe9a7c2-menu-inline-motion-height');
           }
