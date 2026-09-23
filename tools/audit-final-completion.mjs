@@ -118,26 +118,26 @@ for(const [file,text] of source){
 const rawPrimitives=[];
 const asyncPrimitiveCandidates=[];
 const asyncPrimitiveRules=[
-  ['setTimeout',/\b(?:globalThis\.|global\.)?setTimeout\s*\(/g],
-  ['setInterval',/\b(?:globalThis\.|global\.)?setInterval\s*\(/g],
-  ['requestAnimationFrame',/\b(?:globalThis\.|global\.)?requestAnimationFrame\s*\(/g],
-  ['AbortController',/\bnew\s+(?:globalThis\.|global\.)?AbortController\s*\(/g],
-  ['fetch',/\b(?:globalThis\.|global\.)?fetch\s*\(/g]
+  ['setTimeout',/\b(?:globalThis\.|global\.)?setTimeout\s*\(/g,['src/core/scheduler.js','src/core/motion.js','src/vendor/floating-ui.js']],
+  ['setInterval',/\b(?:globalThis\.|global\.)?setInterval\s*\(/g,[]],
+  ['requestAnimationFrame',/\b(?:globalThis\.|global\.)?requestAnimationFrame\s*\(/g,['src/core/scheduler.js','src/vendor/floating-ui.js']],
+  ['AbortController',/\bnew\s+(?:globalThis\.|global\.)?AbortController\s*\(/g,['src/core/motion.js']],
+  ['fetch',/\b(?:globalThis\.|global\.)?fetch\s*\(/g,[]]
 ];
 for(const [file,text] of source){
-  for(const [kind,re] of asyncPrimitiveRules){
+  for(const [kind,re,allowed] of asyncPrimitiveRules){
     const count=occurrences(text,re).length;
-    if(count) asyncPrimitiveCandidates.push({file,kind,count});
+    if(count && !allowed.includes(file)) asyncPrimitiveCandidates.push({file,kind,count});
   }
 }
 const primitiveRules=[
- ['ResizeObserver',/new\s+(?:global(?:This)?\.)?ResizeObserver\s*\(/g,['src/core/observerHub.js']],
+ ['ResizeObserver',/new\s+(?:global(?:This)?\.)?ResizeObserver\s*\(/g,['src/core/observerHub.js','src/vendor/floating-ui.js']],
  ['MutationObserver',/new\s+(?:global(?:This)?\.)?MutationObserver\s*\(/g,['src/core/observerHub.js']],
- ['IntersectionObserver',/new\s+(?:global(?:This)?\.)?IntersectionObserver\s*\(/g,['src/core/observerHub.js']],
+ ['IntersectionObserver',/new\s+(?:global(?:This)?\.)?IntersectionObserver\s*\(/g,['src/core/observerHub.js','src/vendor/floating-ui.js']],
  ['requestAnimationFrame',/\brequestAnimationFrame\s*\(/g,['src/core/scheduler.js','src/vendor/floating-ui.js']],
  ['cancelAnimationFrame',/\bcancelAnimationFrame\s*\(/g,['src/core/scheduler.js','src/vendor/floating-ui.js']],
- ['addEventListener',/\.addEventListener\s*\(/g,['src/core/dom.js','src/vendor/floating-ui.js']],
- ['removeEventListener',/\.removeEventListener\s*\(/g,['src/core/dom.js','src/vendor/floating-ui.js']]
+ ['addEventListener',/\.addEventListener\s*\(/g,['src/core/dom.js','src/core/motion.js','src/core/observerHub.js','src/vendor/floating-ui.js']],
+ ['removeEventListener',/\.removeEventListener\s*\(/g,['src/core/dom.js','src/core/motion.js','src/core/observerHub.js','src/vendor/floating-ui.js']]
 ];
 for(const [file,text] of source){
   for(const [kind,re,allowed] of primitiveRules){
@@ -210,6 +210,6 @@ const report={
   },
   exactDuplicateBlocks:duplicates
 };
-report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&urlSinks.every(x=>x.urlPolicy)&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&urlSinks.every(x=>x.urlPolicy)&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
