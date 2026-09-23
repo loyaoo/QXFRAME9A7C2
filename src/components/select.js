@@ -868,11 +868,11 @@ var controlHost = FieldHost.resolvePickerControl({
             Backspace: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
             Delete: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
             ArrowDown: function (detail) {
-              if (!triggerSession.getState().open) { open('keyboard-down', detail.originalEvent); return true; }
+              if (!triggerSession.getState().open) return open('keyboard-down', detail.originalEvent) === true;
               return optionList.handleKeydown(detail.originalEvent);
             },
             ArrowUp: function (detail) {
-              if (!triggerSession.getState().open) { open('keyboard-up', detail.originalEvent); return true; }
+              if (!triggerSession.getState().open) return open('keyboard-up', detail.originalEvent) === true;
               return optionList.handleKeydown(detail.originalEvent);
             },
             Enter: function (detail) { return triggerSession.getState().open ? optionList.handleKeydown(detail.originalEvent) : open('keyboard-enter', detail.originalEvent); },
