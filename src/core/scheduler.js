@@ -147,8 +147,8 @@ function createFrameScheduler(callback, options) {
   var settings = options || {};
   var realm = settings.view || global;
   var hasCustomBackend = settings.view !== undefined || settings.requestFrame !== undefined || settings.cancelFrame !== undefined;
-  var requestFrame = settings.requestFrame || realm.requestAnimationFrame;
-  var cancelFrame = settings.cancelFrame || realm.cancelAnimationFrame;
+  var requestFrame = settings.requestFrame || (Utils.isFunction(realm.requestAnimationFrame) ? realm.requestAnimationFrame.bind(realm) : realm.requestAnimationFrame);
+  var cancelFrame = settings.cancelFrame || (Utils.isFunction(realm.cancelAnimationFrame) ? realm.cancelAnimationFrame.bind(realm) : realm.cancelAnimationFrame);
   if (hasCustomBackend && (!Utils.isFunction(requestFrame) || !Utils.isFunction(cancelFrame))) {
     throw new Error('[QXFRAME9A7C2] requestFrame and cancelFrame must both be functions when a custom FrameScheduler backend is supplied.');
   }
@@ -242,8 +242,8 @@ function createDelayScheduler(callback, options) {
 
   var settings = options || {};
   var realm = settings.view || global;
-  var setTimer = settings.setTimer || realm.setTimeout;
-  var clearTimer = settings.clearTimer || realm.clearTimeout;
+  var setTimer = settings.setTimer || (Utils.isFunction(realm.setTimeout) ? realm.setTimeout.bind(realm) : realm.setTimeout);
+  var clearTimer = settings.clearTimer || (Utils.isFunction(realm.clearTimeout) ? realm.clearTimeout.bind(realm) : realm.clearTimeout);
   if (!Utils.isFunction(setTimer) || !Utils.isFunction(clearTimer)) {
     throw new Error('[QXFRAME9A7C2] setTimeout/clearTimeout are required for DelayScheduler.');
   }
