@@ -62,6 +62,16 @@ export class PickerComponent extends PopupFieldComponent {
         return field;
     }
 
+    open(reason, originalEvent) {
+        const field = requireState(this).field;
+        return !this.destroyed && field ? field.open(reason || 'api', originalEvent || null) : false;
+    }
+
+    toggle(reason, originalEvent) {
+        const field = requireState(this).field;
+        return !this.destroyed && field ? field.toggle(reason || 'api', originalEvent || null) : false;
+    }
+
     pickerOpen(detail) {
         const session = requireState(this).session;
         return session ? session.open(detail || {}) : false;
