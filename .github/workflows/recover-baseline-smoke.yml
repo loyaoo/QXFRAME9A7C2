@@ -1,0 +1,38 @@
+name: Recover Frozen Browser Smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/recover-baseline-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - name: Recover v31 frozen smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP_NAME='QXFRAME9A7C2-v2.19.81-HOTFIX6-ESM-MIGRATION-ACCELERATED-v31.zip'
+          SOURCE_COMMIT='f7d29c921dcbc4a641fac549426a3e05accacc1e'
+          git show "${SOURCE_COMMIT}:${ZIP_NAME}" > /tmp/qxframe-v31.zip
+          unzip -p /tmp/qxframe-v31.zip '*/tools/verify-browser-smoke.html' > migration/baseline-hotfix6-2026-09-22/verify-browser-smoke.html
+          test -s migration/baseline-hotfix6-2026-09-22/verify-browser-smoke.html
+          grep -q 'QX_BROWSER_SMOKE:' migration/baseline-hotfix6-2026-09-22/verify-browser-smoke.html
+      - name: Commit frozen smoke
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add migration/baseline-hotfix6-2026-09-22/verify-browser-smoke.html
+          git commit -m "test: freeze HOTFIX6 browser smoke source"
+          git push origin HEAD:main
