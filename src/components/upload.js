@@ -79,6 +79,7 @@ function create(source, overrides) {
   var renderCleanups = [];
   var previewCleanups = [];
   var objectUrls = Object.create(null);
+  var objectUrlFiles = Object.create(null);
   var recordEpochs = Object.create(null);
   var previewModal = null;
   var previewMask = null;
@@ -107,20 +108,28 @@ function create(source, overrides) {
   function clearPreviewListeners() { while (previewCleanups.length) { try { previewCleanups.pop()(); } catch (_) {} } }
   function revokeObjectUrl(uid) {
     var url = objectUrls[uid];
-    if (!url) return;
-    try { if (global.URL && typeof global.URL.revokeObjectURL === 'function') global.URL.revokeObjectURL(url); } catch (_) {}
+    if (url) {
+      try { if (global.URL && typeof global.URL.revokeObjectURL === 'function') global.URL.revokeObjectURL(url); } catch (_) {}
+    }
     delete objectUrls[uid];
+    delete objectUrlFiles[uid];
   }
   function reconcileObjectUrls(value) {
-    var alive = Object.create(null);
-    (value || []).forEach(function (record) { alive[record.uid] = true; });
-    Object.keys(objectUrls).forEach(function (uid) { if (!alive[uid]) revokeObjectUrl(uid); });
+    var alive = Object.create(null), files = Object.create(null);
+    (value || []).forEach(function (record) { alive[record.uid] = true; files[record.uid] = record.file || null; });
+    Object.keys(objectUrls).forEach(function (uid) { if (!alive[uid] || objectUrlFiles[uid] !== files[uid]) revokeObjectUrl(uid); });
     if (previewUid && !alive[previewUid]) closePreview('record-removed');
   }
   function getObjectUrl(record) {
     if (!record || !record.file) return '';
+    if (objectUrls[record.uid] && objectUrlFiles[record.uid] !== record.file) revokeObjectUrl(record.uid);
     if (!objectUrls[record.uid]) {
-      try { if (global.URL && typeof global.URL.createObjectURL === 'function') objectUrls[record.uid] = global.URL.createObjectURL(record.file); } catch (_) { return ''; }
+      try {
+        if (global.URL && typeof global.URL.createObjectURL === 'function') {
+          objectUrls[record.uid] = global.URL.createObjectURL(record.file);
+          objectUrlFiles[record.uid] = record.file;
+        }
+      } catch (_) { return ''; }
     }
     return objectUrls[record.uid] || '';
   }
