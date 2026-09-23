@@ -2,6 +2,7 @@ import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { InstanceRegistry } from '../core/instanceRegistry.js';
+import { Utils } from '../utils/utils.js';
 
 const definitions = Object.create(null);
 let components = Object.create(null);
@@ -61,11 +62,11 @@ function definitionFrom(name, api) {
     const contract = ComponentContracts.get(name) || {};
     const explicit = api && api.definition && typeof api.definition === 'object' ? api.definition : {};
     return Object.freeze({
-        defaults: Object.freeze(Object.assign({}, explicit.defaults || api && api.defaults || {})),
+        defaults: Object.freeze(Utils.mergeOwn(explicit.defaults || api && api.defaults || {})),
         schema: contract.schema || Object.freeze({}),
         immutable: Object.freeze((explicit.immutable || api && api.immutableOptions || []).slice ? (explicit.immutable || api && api.immutableOptions || []).slice() : []),
         legacy: contract.legacy || Object.freeze([]),
-        optionImpact: Object.freeze(Object.assign({}, explicit.optionImpact || api && api.optionImpact || {})),
+        optionImpact: Object.freeze(Utils.mergeOwn(explicit.optionImpact || api && api.optionImpact || {})),
         initializer: Object.prototype.hasOwnProperty.call(explicit, 'initializer') ? explicit.initializer : (api && Object.prototype.hasOwnProperty.call(api, 'initializer') ? api.initializer : null),
         allowUnknown: contract.allowUnknown !== false
     });
@@ -76,14 +77,14 @@ function validateOptions(name, options = {}) {
     const contract = ComponentContracts.get(key);
     return ComponentContracts.validate(contract, options || {}, key);
 }
-function mergeOptions(name, options) { const d = describe(name); return Object.assign({}, d && d.defaults || {}, validateOptions(name, options || {})); }
+function mergeOptions(name, options) { const d = describe(name); return Utils.mergeOwn(d && d.defaults || {}, validateOptions(name, options || {})); }
 function setDefaults(name, patch) {
     const key = normalize(name), current = definitions[key] || definitionFrom(key, components[key]);
     if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new TypeError('[QXFRAME9A7C2] Component defaults patch must be an object.');
-    definitions[key] = Object.freeze(Object.assign({}, current, { defaults: Object.freeze(Object.assign({}, current.defaults || {}, patch)) }));
+    definitions[key] = Object.freeze(Utils.mergeOwn(current, { defaults: Object.freeze(Utils.mergeOwn(current.defaults || {}, patch)) }));
     return definitions[key];
 }
-function getDefaults(name) { const d = describe(name); return Object.freeze(Object.assign({}, d && d.defaults || {})); }
+function getDefaults(name) { const d = describe(name); return Object.freeze(Utils.mergeOwn(d && d.defaults || {})); }
 function impactFor(name, patch) {
     const d = describe(name), priority = { state:0, data:1, layout:2, structure:3 };
     let impact = 'state';
@@ -174,7 +175,7 @@ function validatePublicCallArgs(name, method, argsLike) {
 }
 export function publishComponentApi(name, api) {
     const key = normalize(name), source = api || {}, published = Object.create(null);
-    Object.keys(source).forEach(prop => { published[prop] = source[prop]; });
+    Utils.copyOwn(published, source);
     if (typeof source.create === 'function') published.create = function () { const raw = arguments, args = validatePublicCallArgs(key, 'create', raw); return trackInstance(source.create.apply(source, args), key, resolveElement(raw[0])); };
     if (typeof source.enhance === 'function') published.enhance = function () { const raw = arguments, args = validatePublicCallArgs(key, 'enhance', raw); return trackInstance(source.enhance.apply(source, args), key, resolveElement(raw[0])); };
     published.getInstance ??= target => getInstance(key, target);
