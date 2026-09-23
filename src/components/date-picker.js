@@ -944,8 +944,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
         canEnter:function(){ return !field || !field.getState().open; }
       });
     }
-    // TimePanel keeps one outer real focus owner. Its columns/items remain virtual,
-    // so the panel participates in Tab order exactly once without hidden inner stops.
+    // TimePanel is a composite focus region of its own. Its columns/items are virtual;
+    // only the WheelPanel root participates in Tab order, so do not host it on the field.
     return true;
   }
   function setKeyboardRegion(next, reason) {
