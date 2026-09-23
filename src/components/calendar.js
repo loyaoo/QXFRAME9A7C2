@@ -204,7 +204,39 @@ function create(options) {
     return root;
   }
     
-  function render() {
+  function reconcileActiveToView(meta) {
+    if (!activeItem) return false;
+    var current = parseDate(activeItem.activeKey);
+    var currentEntry = current && sameMonth(current, viewValue)
+      ? cells.find(function (entry) { return entry.key === activeItem.activeKey && entry.disabled !== true && sameMonth(entry.date, viewValue); })
+      : null;
+    if (currentEntry) return true;
+
+    var preferred = current || (valueState.value && sameMonth(valueState.value, viewValue) ? valueState.value : null) || viewValue;
+    var lastDay = new Date(viewValue.getFullYear(), viewValue.getMonth() + 1, 0).getDate();
+    var target = new Date(viewValue.getFullYear(), viewValue.getMonth(), Math.min(preferred.getDate(), lastDay));
+    var enabled = cells.filter(function (entry) { return entry.disabled !== true && sameMonth(entry.date, viewValue); });
+    var candidate = enabled.find(function (entry) { return sameDay(entry.date, target); }) || null;
+    if (!candidate && enabled.length) {
+      candidate = enabled.reduce(function (best, entry) {
+        if (!best) return entry;
+        var distance = Math.abs(entry.date.getTime() - target.getTime());
+        var bestDistance = Math.abs(best.date.getTime() - target.getTime());
+        return distance < bestDistance ? entry : best;
+      }, null);
+    }
+
+    var detail = {
+      silent: true,
+      source: meta && meta.source || 'view',
+      reason: meta && meta.reason || 'view-active-reconcile',
+      originalEvent: meta && meta.originalEvent || null
+    };
+    if (!candidate) return activeItem.clear(detail);
+    return activeItem.set(candidate.key, detail);
+  }
+
+  function render(meta) {
     if (!root || destroyed) return;
     buildCells();
     if (domBinding && domBinding.refs.yearTitle && domBinding.refs.monthTitle) {
@@ -230,12 +262,14 @@ function create(options) {
       fragment.appendChild(button);
     });
     grid.appendChild(fragment);
-    if (activeItem.activeKey && !cells.some(function (entry) { return entry.key === activeItem.activeKey && !entry.disabled; })) {
-      var parsed = parseDate(activeItem.activeKey);
-      if (parsed && sameMonth(parsed, viewValue)) activeItem.ensureValid({ silent: true, source: 'render' });
-    }
+    reconcileActiveToView(meta);
     syncCellStates();
-    if (virtualFocusDomain) virtualFocusDomain.refresh({ reconcile:true });
+    if (virtualFocusDomain) virtualFocusDomain.refresh({
+      reconcile:true,
+      source: meta && meta.source || 'render',
+      reason: meta && meta.reason || 'calendar-render',
+      originalEvent: meta && meta.originalEvent || null
+    });
     root.classList.toggle('is-disabled', opts.disabled === true);
     root.classList.toggle('is-readonly', isReadOnly());
   }
@@ -265,7 +299,7 @@ function create(options) {
   function changeView(next, meta) {
     if (destroyed) return false;
     var parsed = parseDate(next); if (!parsed) return false;
-    var previous = cloneDate(viewValue); viewValue = startMonth(parsed); render();
+    var previous = cloneDate(viewValue); viewValue = startMonth(parsed); render(meta);
     var detail = { viewValue: cloneDate(viewValue), previousViewValue: previous, source: meta && meta.source || 'api', reason: meta && meta.reason || 'set-view', originalEvent: meta && meta.originalEvent || null, calendar: api };
     if (!(meta && meta.silent)) { if (typeof opts.onViewChange === 'function') opts.onViewChange(cloneDate(viewValue), detail); emitter.emit('viewChange', detail); }
     return true;
@@ -344,7 +378,9 @@ function create(options) {
       }
       return false;
     }
-    var current = parseDate(activeItem.activeKey) || valueState.value || new Date(viewValue.getFullYear(), viewValue.getMonth(), 1);
+    var activeDate = parseDate(activeItem.activeKey);
+    var committedInView = valueState.value && sameMonth(valueState.value, viewValue) ? valueState.value : null;
+    var current = activeDate && sameMonth(activeDate, viewValue) ? activeDate : (committedInView || new Date(viewValue.getFullYear(), viewValue.getMonth(), 1));
     var action = TemporalGrid.keyAction(event.key, { columns:7 });
     if (!action) return false;
     if (action.type === 'activate') { selectDate(current, { source:'keyboard', reason:'activate', originalEvent:event }); return true; }
