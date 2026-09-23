@@ -3,6 +3,7 @@ import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
 import { InteractionDetails } from './interactionDetails.js';
 import { FocusManager } from './focusManager.js';
+import { Utils } from '../utils/utils.js';
 
 const global = globalThis;
 
@@ -30,7 +31,7 @@ var MODES = ['none', 'exit', 'contain', 'trap'];
 
   function create(options) {
     focusScopesCreated += 1;
-    var settings = Object.assign({}, options || {});
+    var settings = Utils.mergeOwn(options || {});
     var root = settings.root;
     var doc = settings.document || global.document;
     if (!root || root.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] FocusScope root is required.');
