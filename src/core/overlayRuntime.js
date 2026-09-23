@@ -202,10 +202,15 @@ function create(options) {
         var event = payload && payload.originalEvent || null;
         var accepted = dismissLayer.dismiss('tab-exit', event);
         if (accepted !== true) return false;
-        var target = resolveTabExitTarget({ reason: 'tab-exit', originalEvent: event, direction: payload && payload.direction || 'forward' });
-        if (target) focusManager.focus(target);
-        // Do not preventDefault(): after the synchronous handoff the browser continues the
-        // authored Tab order from the reference/control instead of from the portaled popup.
+        var current = payload && payload.current || null;
+        var currentInReference = !!(reference && current && (current === reference || (reference.contains && reference.contains(current))));
+        // When real focus is already on the authored reference/control, do not synchronously
+        // refocus it during Tab exit. Let the browser advance naturally after the popup closes.
+        // Only a real focus that lives inside a portaled popup needs a reference handoff first.
+        if (!currentInReference) {
+          var target = resolveTabExitTarget({ reason: 'tab-exit', originalEvent: event, direction: payload && payload.direction || 'forward' });
+          if (target) focusManager.focus(target);
+        }
         return true;
       }
     });
