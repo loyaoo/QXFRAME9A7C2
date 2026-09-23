@@ -136,7 +136,7 @@ function render(container, output, doc) {
   Renderer.replace(container, value == null ? '' : value, doc);
 }
 function setupImage(instance) {
-  var opts = normalizeOptions(Utils.assignOwn(instance.options));
+  var opts = normalizeOptions(Utils.mergeOwn(instance.options));
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Image container must be an Element.');
     
   var doc = opts.document || opts.container.ownerDocument || global.document;
