@@ -283,6 +283,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       if (controlled) {
         var proposed = records.slice();
         proposed.splice(index, 1);
+        invalidatePendingMutations();
         emit('remove', record, proposalMeta(meta, proposed));
         return true;
       }
