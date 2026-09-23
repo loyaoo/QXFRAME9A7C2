@@ -79,6 +79,7 @@ function create(source, overrides) {
   var renderCleanups = [];
   var previewCleanups = [];
   var objectUrls = Object.create(null);
+  var recordEpochs = Object.create(null);
   var previewModal = null;
   var previewMask = null;
   var previewPanel = null;
@@ -155,6 +156,24 @@ function create(source, overrides) {
       opts.onPreviewVisibleChange(false, { source: DOM.activationSource(event), reason: reason || 'replace', event: event || null, originalEvent: event || null, file: activeFile, instance: api });
     }
   }
+  function recordEpoch(uid) { return recordEpochs[String(uid == null ? '' : uid)] || 0; }
+  function bumpRecordEpoch(uid) {
+    var key = String(uid == null ? '' : uid);
+    if (!key) return 0;
+    recordEpochs[key] = recordEpoch(key) + 1;
+    return recordEpochs[key];
+  }
+  function invalidateRecordEpochs(value, detail) {
+    var operation = detail && detail.operation;
+    if (operation === 'set-value') {
+      (value || []).forEach(function (record) { if (record && record.uid != null) bumpRecordEpoch(record.uid); });
+      return;
+    }
+    if ((operation === 'add' || operation === 'remove') && detail && detail.file && detail.file.uid != null) bumpRecordEpoch(detail.file.uid);
+  }
+  function asyncRecordCurrent(record, epoch) {
+    return !!(!destroyed && opts.disabled !== true && record && lifecycle.find(record.uid) && recordEpoch(record.uid) === epoch);
+  }
   function maxReached() {
     var max = Number(opts.maxCount || 0);
     return max > 0 && lifecycle.getValue().length >= max;
@@ -180,6 +199,7 @@ function create(source, overrides) {
       onSuccess: function (response, record) { if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
       onError: function (error, record) { if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
+        invalidateRecordEpochs(value, detail);
         if (formBridge) formBridge.setValue(value, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(value);
         renderList();
@@ -467,12 +487,14 @@ function create(source, overrides) {
   }
   function preview(target, event) {
     var record = lifecycle.find(target);
-    if (!record || opts.previewable === false) return Promise.resolve(api);
+    if (!record || opts.previewable === false || opts.disabled === true) return Promise.resolve(api);
+    var previewEpoch = recordEpoch(record.uid);
     var resolved = null;
     if (typeof opts.previewFile === 'function' && record.file) {
       try { resolved = opts.previewFile(record.file,record,api); } catch (_) { resolved = null; }
     }
     return Promise.resolve(resolved).catch(function () { return ''; }).then(function (customUrl) {
+      if (!asyncRecordCurrent(record, previewEpoch) || opts.previewable === false) return api;
       var kind = kindOf(record);
       var url = customUrl || (isMediaPreviewKind(kind) ? previewMediaUrl(record) : previewUrl(record));
       var payload = { file:record,url:url,source:DOM.activationSource(event),reason:'preview',originalEvent:event||null,instance:api };
@@ -537,9 +559,16 @@ function create(source, overrides) {
   function remove(target, meta) {
     var record=lifecycle.find(target); if (!record || opts.disabled) return api;
     if (typeof opts.beforeRemove !== 'function') return commitRemove(record.uid,meta);
+    var removeEpoch = recordEpoch(record.uid);
     var gate;
     try { gate=opts.beforeRemove(record,lifecycle.getValue(),api); } catch (error) { if (typeof opts.onError==='function') opts.onError(error,record,api); return api; }
-    if (gate && typeof gate.then === 'function') return Promise.resolve(gate).then(function (allowed) { if (allowed!==false && lifecycle.find(record.uid)) commitRemove(record.uid,meta); return api; },function (error) { if (typeof opts.onError==='function') opts.onError(error,record,api); return api; });
+    if (gate && typeof gate.then === 'function') return Promise.resolve(gate).then(function (allowed) {
+      if (allowed!==false && asyncRecordCurrent(record, removeEpoch)) commitRemove(record.uid,meta);
+      return api;
+    },function (error) {
+      if (!destroyed && typeof opts.onError==='function') opts.onError(error,record,api);
+      return api;
+    });
     if (gate!==false) commitRemove(record.uid,meta); return api;
   }
   function clear() {
