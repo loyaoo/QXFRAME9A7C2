@@ -2283,7 +2283,8 @@ function setupTable(instance) {
   function escapeCSVCell(value, delimiter, escapeFormula) {
     if (value === undefined || value === null) return '';
     var text = String(value);
-    if (escapeFormula !== false && /^[=+\-@\t\r]/.test(text)) text = "'" + text;
+    var numericScalar = typeof value === 'number' || typeof value === 'bigint';
+    if (escapeFormula !== false && !numericScalar && /^[=+\-@\t\r\n]/.test(text)) text = "'" + text;
     if (text.indexOf('"') >= 0) text = text.replace(/"/g, '""');
     return (text.indexOf('"') >= 0 || text.indexOf('\n') >= 0 || text.indexOf('\r') >= 0 || text.indexOf(delimiter) >= 0) ? '"' + text + '"' : text;
   }
