@@ -23,7 +23,15 @@ const state = new WeakMap();
 
 function appendNode(parent, spec, doc) {
     const node = doc.createElementNS(NS, spec[0]);
-    Object.keys(spec[1] || {}).forEach(key => node.setAttribute(key, spec[1][key]));
+    Object.keys(spec[1] || {}).forEach(key => {
+        const value = spec[1][key];
+        if (key === 'class') node.setAttribute('class', value);
+        else if (key === 'd') node.setAttribute('d', value);
+        else if (key === 'cx') node.setAttribute('cx', value);
+        else if (key === 'cy') node.setAttribute('cy', value);
+        else if (key === 'r') node.setAttribute('r', value);
+        else throw new TypeError('[QXFRAME9A7C2] Result internal SVG attribute is not allowed: ' + key);
+    });
     (spec[2] || []).forEach(child => appendNode(node, child, doc));
     parent.appendChild(node);
     return node;
