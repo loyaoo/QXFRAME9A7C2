@@ -51,13 +51,6 @@
       "namespace": "bootstrap-behavior"
     },
     {
-      "name": "Table",
-      "module": "table",
-      "source": "src/components/table.js",
-      "phase": "88→92",
-      "namespace": "components"
-    },
-    {
       "name": "Trigger",
       "module": "trigger",
       "source": "src/components/trigger.js",
