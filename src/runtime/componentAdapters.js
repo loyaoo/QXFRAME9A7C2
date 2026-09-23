@@ -79,9 +79,10 @@ raw.ColorPicker = classApi(ColorPicker, { definition:enhanceInitializer, enhance
 raw.DatePicker = classApi(DatePicker, { definition:enhanceInitializer, enhance:function(){return DatePicker.enhance.apply(DatePicker,arguments);}, formatDate:DatePicker.formatDate, parseDate:DatePicker.parseDate });
 
 raw.Pagination = classApi(Pagination, { createDefaultDOM:Pagination.createDefaultDOM });
-Utils.assignOwn(raw, { Trigger, Ripple, Menu, Transfer, Tabs, Image, JSON:JSONComponent, Tags, Upload, Table, Message, Notification });
+raw.Tags = classApi(Tags);
+Utils.assignOwn(raw, { Trigger, Ripple, Menu, Transfer, Tabs, Image, JSON:JSONComponent, Upload, Table, Message, Notification });
 raw.Scroll = Object.freeze(Utils.mergeOwn( Scroll, { definition:createInitializer }));
 
 export const Components = Object.freeze(Object.fromEntries(Object.entries(raw).map(([name, api]) => [name, publishComponentApi(name, api)])));
-export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, InputNumber, InputOTP, Loading, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Select, Slider, Sort, Steps, TagInput, TimePicker, Tooltip, TreeSelect, WheelPicker });
+export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, InputNumber, InputOTP, Loading, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Select, Slider, Sort, Steps, TagInput, Tags, TimePicker, Tooltip, TreeSelect, WheelPicker });
 export default Components;
