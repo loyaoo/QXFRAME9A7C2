@@ -922,17 +922,6 @@ var fieldHost = FieldHost.resolve({
             if (nextPortal !== portalContainer) throw new Error('[QXFRAME9A7C2] Select portalContainer is immutable; destroy and recreate to change it.');
           }
           Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
-          triggerSession.updateOptions({
-            trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
-            placement: opts.placement,
-            strategy: opts.strategy || 'absolute',
-            middleware: opts.middleware,
-            flipOnOverflow: opts.flipOnOverflow !== false,
-            matchReferenceWidth: opts.matchReferenceWidth === true,
-            autoUpdate: opts.autoUpdate !== false,
-            destroyOnClose: opts.destroyOnClose !== false,
-            disabled: opts.disabled === true
-          });
           var listOptions = {
             multiple: opts.multiple === true,
             maxCount: opts.maxCount,
