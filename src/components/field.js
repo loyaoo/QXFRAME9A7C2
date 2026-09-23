@@ -2,6 +2,7 @@ import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { FormBridge } from '../core/formBridge.js';
+import { DOM } from '../core/dom.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 
@@ -38,9 +39,8 @@ export class FieldComponent extends Component {
         const state = fieldState.get(this);
         const hook = this[fieldHooks.focusElement];
         const target = typeof hook === 'function' ? hook.call(this) : (state.focusTarget || this.root);
-        if (!target || typeof target.focus !== 'function') return false;
-        target.focus(options);
-        return true;
+        if (!target) return false;
+        return arguments.length ? DOM.focusElement(target, options) : DOM.focusElement(target);
     }
 
     blur() {
