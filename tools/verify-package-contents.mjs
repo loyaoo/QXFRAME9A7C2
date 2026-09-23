@@ -6,9 +6,17 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
+function parsePackJson(stdout) {
+  const text = String(stdout || '').trim();
+  const marker = text.lastIndexOf('\n[');
+  const start = marker >= 0 ? marker + 1 : text.indexOf('[');
+  if (start < 0) throw new Error('npm pack did not emit a JSON payload.');
+  return JSON.parse(text.slice(start));
+}
+
 const result = spawnSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], { cwd: root, encoding: 'utf8', shell: process.platform === 'win32' });
 assert.equal(result.status, 0, `npm pack --dry-run failed:\n${result.stderr}`);
-const payload = JSON.parse(result.stdout)[0];
+const payload = parsePackJson(result.stdout)[0];
 const files = new Set((payload.files || []).map(record => record.path));
 const required = [
   'package.json',
