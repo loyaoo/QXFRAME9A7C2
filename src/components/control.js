@@ -779,7 +779,7 @@ function create(source, overrides) {
     var maxLength = opts.maxLength === null || opts.maxLength === undefined || opts.maxLength === '' ? null : Math.max(0, Math.floor(Number(opts.maxLength) || 0));
     if (minLength === null) input.removeAttribute('minlength'); else input.minLength = minLength;
     if (maxLength === null) input.removeAttribute('maxlength'); else input.maxLength = maxLength;
-    var projectedInputValue = opts.draftVisual === true && opts.draftDisplayValue !== undefined ? stringValue(opts.draftDisplayValue) : inputValue;
+    var projectedInputValue = mode === 'input' && opts.draftVisual === true && opts.draftDisplayValue !== undefined ? stringValue(opts.draftDisplayValue) : inputValue;
     if (input.value !== projectedInputValue) input.value = projectedInputValue;
     var showClear = clearVisible();
     setHiddenState(clearButton, !showClear); clearButton.disabled = !policy.clearable; clearButton.tabIndex = -1;
