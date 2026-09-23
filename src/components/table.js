@@ -182,13 +182,7 @@ function renderOutput(host, output, doc) {
   Renderer.replace(host, value == null ? '' : value, doc);
 }
 function applyAttributes(node, attributes) {
-  if (!attributes || typeof attributes !== 'object') return;
-  Object.keys(attributes).forEach(function (name) {
-    if (/^on/i.test(name) || name === 'className' || name === 'style') return;
-    var value = attributes[name];
-    if (value === undefined || value === null || value === false) node.removeAttribute(name);
-    else node.setAttribute(name, value === true ? '' : String(value));
-  });
+  DOM.applySafeAttributes(node, attributes);
 }
     
 function create(options) {
@@ -1626,7 +1620,7 @@ function create(options) {
     if (!target || !source || target === source) return target;
     disposeRenderedSubtree(target);
     Array.prototype.slice.call(target.attributes || []).forEach(function (attribute) { target.removeAttribute(attribute.name); });
-    Array.prototype.slice.call(source.attributes || []).forEach(function (attribute) { target.setAttribute(attribute.name, attribute.value); });
+    Array.prototype.slice.call(source.attributes || []).forEach(function (attribute) { DOM.setSafeAttribute(target, attribute.name, attribute.value); });
     while (target.firstChild) target.removeChild(target.firstChild);
     while (source.firstChild) target.appendChild(source.firstChild);
     return target;
