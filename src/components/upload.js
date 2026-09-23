@@ -1,19 +1,30 @@
 import { ComponentContracts } from '../core/componentContracts.js';
+import { componentHooks } from '../core/componentHooks.js';
+import { fieldHooks } from '../core/fieldHooks.js';
 import { DOM } from '../core/dom.js';
 import { URLPolicy } from '../utils/url.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { UploadLifecycle } from '../core/uploadLifecycle.js';
-import { OptionTransaction } from '../core/optionTransaction.js';
 import { Renderer } from '../core/renderer.js';
 import { OverlayRuntime } from '../core/overlayRuntime.js';
 import { ReorderInteraction } from '../core/reorderInteraction.js';
 import { Utils } from '../utils/utils.js';
+import { FieldComponent } from './field.js';
 import { Image } from './image.js';
 import { Control } from './control.js';
 import { Item } from './item.js';
 
 const global = globalThis;
 const own = Utils.own;
+const UPLOAD_DEFAULTS = Object.freeze({
+  multiple: false, disabled: false, drag: false, pastable: false, autoUpload: true,
+  showList: true, listType: 'text', removable: true, previewable: true, downloadable: false,
+  retryable: true, abortable: true, dragSort: false, openFileDialogOnClick: true,
+  hideTriggerAtMax: true, previewTarget: 'modal', triggerText: 'Select files',
+  dragText: 'Click or drop files here', dropHint: 'Drop, paste, or select files',
+  progressView: Object.freeze({ thickness: 6, showLabel: true }), actionVisibility: null
+});
+const uploadState = new WeakMap();
 
 function validateViewOptions(options) {
   if (options.progressView != null && (typeof options.progressView !== 'object' || Array.isArray(options.progressView))) throw new TypeError('[QXFRAME9A7C2] Upload progressView must be an object.');
@@ -58,24 +69,15 @@ function statusText(record) {
   return record.skipAutoUpload ? 'Manual upload' : 'Ready';
 }
     
-function create(source, overrides) {
-  var fieldInit = Control.resolveFieldOptions(source, overrides);
-  var incoming = fieldInit.options;
-  var opts = Utils.mergeOwn({
-    multiple: false, disabled: false, drag: false, pastable: false, autoUpload: true,
-    showList: true, listType: 'text', removable: true, previewable: true, downloadable: false,
-    retryable: true, abortable: true, dragSort: false, openFileDialogOnClick: true,
-    hideTriggerAtMax: true, previewTarget: 'modal', triggerText: 'Select files',
-    dragText: 'Click or drop files here', dropHint: 'Drop, paste, or select files',
-    progressView: { thickness: 6, showLabel: true }, actionVisibility: null
-  }, incoming);
-  ComponentContracts.validate(ComponentContracts.get('Upload'), opts, 'Upload');
+function setupUpload(instance) {
+  var state = uploadState.get(instance);
+  if (!state) throw new TypeError('[QXFRAME9A7C2] Invalid Upload instance.');
+  var fieldInit = state.fieldInit;
+  var opts = Utils.mergeOwn(instance.options);
   validateViewOptions(opts);
-  if (!opts.container && !opts.formField) throw new TypeError('[QXFRAME9A7C2] Upload requires target/container or formField.');
-  opts.listType = listType(opts.listType);
   var scope = Lifecycle.createScope();
   var destroyed = false;
-  var api = null;
+  var api = instance;
   var renderCleanups = [];
   var previewCleanups = [];
   var objectUrls = Object.create(null);
@@ -193,6 +195,7 @@ function create(source, overrides) {
       onSuccess: function (response, record) { if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
       onError: function (error, record) { if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
+        api.setFieldValue(value, { silent: true, force: true });
         if (formBridge) formBridge.setValue(value, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(value);
         renderList();
@@ -577,51 +580,154 @@ function create(source, overrides) {
   ['dragenter','dragover','dragleave','drop'].forEach(function (name) { scope.add(DOM.listen(root,name,handleDrag)); });
   scope.add(DOM.listen(root,'paste',handlePaste));
     
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
-    var next = nextOptions || {}; ComponentContracts.validate(ComponentContracts.get('Upload'), next, 'Upload');
-    OptionTransaction.rejectImmutable(next, ['target','container','formField'], 'Upload field binding');
-    if (own(next,'drag') && (next.drag === true) !== (opts.drag === true)) throw new Error('[QXFRAME9A7C2] Upload drag structure is immutable; destroy and recreate to change it.');
+    var next = patch || {};
     if (reorderInteraction && reorderInteraction.getState().dragging && (own(next,'dragSort') || own(next,'disabled'))) reorderInteraction.cancelDrag('options');
-    var candidate = Utils.mergeOwn(opts, next); candidate.listType = listType(candidate.listType); validateViewOptions(candidate); opts = candidate;
+    var candidate = Utils.mergeOwn(nextOptions);
+    candidate.listType = listType(candidate.listType);
+    validateViewOptions(candidate);
+    opts = candidate;
     lifecycle.updateOptions(Utils.assignOwn(lifecycleOptions(false), own(next,'value') ? { value: next.value } : {}));
-    var currentValue = lifecycle.getValue(); reconcileObjectUrls(currentValue);
-    syncStructure(); renderList(); if (formBridge) { formBridge.updateOptions({ name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, serializeValue: serializeFormValue }); formBridge.setValue(currentValue, { silent: true }); } return api;
+    var currentValue = lifecycle.getValue();
+    api.setFieldValue(currentValue, { silent: true, force: true });
+    reconcileObjectUrls(currentValue);
+    syncStructure();
+    renderList();
+    if (formBridge) {
+      formBridge.updateOptions({ name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, serializeValue: serializeFormValue });
+      formBridge.setValue(currentValue, { silent: true });
+    }
+    return api;
   }
-    
+
   var initialValue = lifecycle.getValue();
   formBridge = Control.createFormFieldBridge({ root: root, target: opts.container, formField: opts.formField, document: doc, name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, value: lifecycle.getValue(), serializeValue: serializeFormValue, getValue: lifecycle.getValue, onReset: function () {
     lifecycle.setValue(initialValue, { silent: true, source: 'form', reason: 'reset' });
     var resetValue = lifecycle.getValue();
+    api.setFieldValue(resetValue, { silent: true, force: true });
     reconcileObjectUrls(resetValue);
     renderList();
     if (formBridge) formBridge.setValue(resetValue, { silent: true });
   } });
     
-  api = Object.freeze({
+  function destroyRuntime() {
+    if (destroyed) return false;
+    destroyed = true;
+    if (previewModal) closePreview('destroy');
+    if (previewMediaController) { previewMediaController.destroy(); previewMediaController=null; previewUid=''; }
+    Object.keys(objectUrls).forEach(revokeObjectUrl);
+    if (reorderInteraction) reorderInteraction.destroy();
+    reorderInteraction=null;
+    lifecycle.destroy();
+    scope.dispose();
+    if (formBridge) formBridge.destroy();
+    formBridge=null;
+    root.remove();
+    return true;
+  }
+  var record = {
     open: open, addFiles: addFiles,
     upload: function (target) { return lifecycle.upload(target,{source:'api'}); },
     retry: function (target) { return lifecycle.retry(target,{source:'retry'}); },
     abort: function (target) { lifecycle.abort(target,{source:'api'}); return api; },
     remove: remove,
     move: function (from,to) { lifecycle.move(from,to,{source:'api'}); return api; },
-    preview: preview, closePreview: closePreview, download: download,
-    clear: clear,
+    preview: preview, closePreview: closePreview, download: download, clear: clear,
     setValue: function (value) { lifecycle.setValue(value,{source:'api'}); return api; },
-    getValue: lifecycle.getValue, updateOptions: updateOptions,
-    getState: function () { var state=lifecycle.getState(); return Object.freeze({ value: state.value, uploading: state.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
-    getLifecycle: function () { return lifecycle; }, getFormField: function () { return formBridge ? formBridge.getFormField() : null; }, getFormBridge: function () { return formBridge; }, getReorderInteraction: function () { return reorderInteraction; }, getRootElement: function () { return root; }, getInputElement: function () { return input; }, getTriggerElement: function () { return trigger; }, getListElement: function () { return list; }, getPreviewElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewElement() : previewModal; }, getPreviewMaskElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewMaskElement() : previewMask; }, getPreviewPanelElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewStageElement() : previewPanel; }, getPreviewMediaElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewMediaElement() : null; }, getPreviewOverlayRuntime: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewOverlayRuntime() : previewOverlay; },
-    destroy: function () { if (destroyed) return false; destroyed=true; if (previewModal) closePreview('destroy'); if (previewMediaController) { previewMediaController.destroy(); previewMediaController=null; previewUid=''; } Object.keys(objectUrls).forEach(revokeObjectUrl); if (reorderInteraction) reorderInteraction.destroy(); reorderInteraction=null; lifecycle.destroy(); scope.dispose(); if (formBridge) formBridge.destroy(); formBridge=null; root.remove(); return true; }
-  });
+    getValue: lifecycle.getValue, applyOptions: applyOptions,
+    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: current.value, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
+    getLifecycle: function () { return lifecycle; },
+    getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
+    getFormBridge: function () { return formBridge; },
+    getReorderInteraction: function () { return reorderInteraction; },
+    getRootElement: function () { return root; },
+    getInputElement: function () { return input; },
+    getTriggerElement: function () { return trigger; },
+    getListElement: function () { return list; },
+    getPreviewElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewElement() : previewModal; },
+    getPreviewMaskElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewMaskElement() : previewMask; },
+    getPreviewPanelElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewStageElement() : previewPanel; },
+    getPreviewMediaElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewMediaElement() : null; },
+    getPreviewOverlayRuntime: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewOverlayRuntime() : previewOverlay; }
+  };
+  state.runtime = record;
+  api.own(destroyRuntime);
+  api.bindFocusTarget(trigger);
+  api.setFieldValue(lifecycle.getValue(), { silent: true, force: true });
+
   syncStructure(); renderList();
-  return api;
+  return root;
 }
 
-export const Upload = Object.freeze({
-    definition: Object.freeze({ initializer: Object.freeze({ mode: 'create', bind: 'source' }) }),
-    create,
-    enhance: function (input, options) { return create(input, options || {}); },
-    LIST_IGNORE: UploadLifecycle.LIST_IGNORE
-});
-export { create };
+function resolveUploadOptions(source, overrides) {
+  var fieldInit = Control.resolveFieldOptions(source, overrides);
+  var opts = Utils.mergeOwn(UPLOAD_DEFAULTS, fieldInit.options);
+  validateViewOptions(opts);
+  if (!opts.container && !opts.formField) throw new TypeError('[QXFRAME9A7C2] Upload requires target/container or formField.');
+  opts.listType = listType(opts.listType);
+  return { fieldInit: fieldInit, options: opts };
+}
+function recordForUpload(instance) {
+  var state = uploadState.get(instance), record = state && state.runtime;
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Upload instance.');
+  return record;
+}
+
+export class Upload extends FieldComponent {
+  static contract = ComponentContracts.get('Upload');
+  static immutableOptions = Object.freeze(['target','container','formField']);
+  static optionNormalizers = Object.freeze({ listType:listType });
+  static LIST_IGNORE = UploadLifecycle.LIST_IGNORE;
+  static create(source = {}, overrides) { return new this(source, overrides).render(); }
+  static enhance(input, options) { return this.create(input, options || {}); }
+
+  constructor(source = {}, overrides) {
+    var resolved = resolveUploadOptions(source, overrides);
+    super(resolved.options);
+    uploadState.set(this, { fieldInit: resolved.fieldInit, runtime: null });
+  }
+
+  [componentHooks.beforeOptionsUpdate](patch, previous) {
+    if (own(patch,'drag') && (patch.drag === true) !== (previous.drag === true)) throw new Error('[QXFRAME9A7C2] Upload drag structure is immutable; destroy and recreate to change it.');
+    validateViewOptions(Utils.mergeOwn(previous, patch || {}));
+  }
+  [componentHooks.render]() {
+    var state = uploadState.get(this);
+    return state.runtime ? state.runtime.getRootElement() : setupUpload(this);
+  }
+  [fieldHooks.fieldOptionsUpdated](next, _previous, patch) {
+    var state = uploadState.get(this);
+    if (state && state.runtime) state.runtime.applyOptions(next, patch);
+  }
+
+  open() { return recordForUpload(this).open(); }
+  addFiles(files, meta) { return recordForUpload(this).addFiles(files, meta); }
+  upload(target) { return recordForUpload(this).upload(target); }
+  retry(target) { return recordForUpload(this).retry(target); }
+  abort(target) { return recordForUpload(this).abort(target); }
+  remove(target, meta) { return recordForUpload(this).remove(target, meta); }
+  move(from, to) { return recordForUpload(this).move(from, to); }
+  preview(target, event) { return recordForUpload(this).preview(target, event); }
+  closePreview(reason, event) { return recordForUpload(this).closePreview(reason, event); }
+  download(target) { return recordForUpload(this).download(target); }
+  clear() { return recordForUpload(this).clear(); }
+  setValue(value) { return recordForUpload(this).setValue(value); }
+  getValue() { return recordForUpload(this).getValue(); }
+  getState() { return recordForUpload(this).getState(); }
+  getLifecycle() { return recordForUpload(this).getLifecycle(); }
+  getFormField() { return recordForUpload(this).getFormField(); }
+  getFormBridge() { return recordForUpload(this).getFormBridge(); }
+  getReorderInteraction() { return recordForUpload(this).getReorderInteraction(); }
+  getRootElement() { return recordForUpload(this).getRootElement(); }
+  getInputElement() { return recordForUpload(this).getInputElement(); }
+  getTriggerElement() { return recordForUpload(this).getTriggerElement(); }
+  getListElement() { return recordForUpload(this).getListElement(); }
+  getPreviewElement() { return recordForUpload(this).getPreviewElement(); }
+  getPreviewMaskElement() { return recordForUpload(this).getPreviewMaskElement(); }
+  getPreviewPanelElement() { return recordForUpload(this).getPreviewPanelElement(); }
+  getPreviewMediaElement() { return recordForUpload(this).getPreviewMediaElement(); }
+  getPreviewOverlayRuntime() { return recordForUpload(this).getPreviewOverlayRuntime(); }
+}
+
 export default Upload;
