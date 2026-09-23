@@ -125,7 +125,7 @@ function normalizeColumns(columns) {
   if (!Array.isArray(columns)) throw new TypeError('[QXFRAME9A7C2] Table columns must be an array.');
   return columns.map(function (column) {
     if (!column || typeof column !== 'object') throw new TypeError('[QXFRAME9A7C2] Table columns must be objects.');
-    var copy = Object.assign({}, column);
+    var copy = Utils.mergeOwn(column);
     if (Array.isArray(column.children) && column.children.length) throw new TypeError('[QXFRAME9A7C2] Table group-header columns are unsupported by the current single-row header renderer.');
     copy.key = String(column.key == null ? '' : column.key);
     if (!copy.key) throw new TypeError('[QXFRAME9A7C2] Table column.key is required.');
@@ -187,7 +187,7 @@ function applyAttributes(node, attributes) {
 function create(options) {
   var source = options || {};
   ComponentContracts.validate(ComponentContracts.get('Table'), source, 'Table');
-  var opts = Object.assign({
+  var opts = Utils.mergeOwn({
     items: [], columns: [], getKey: null, isItemDisabled: null,
     selectionMode: 'none', selectedKeys: [], expandedKeys: [], preserveSelectedKeys: false, remoteSelectionScope: 'page', forceRenderExpanded: false,
     sortKey: null, sortOrder: null, filters: {}, searchValue: '', searchMatcher: null, load: null, total: null, filteredTotal: null, keepStaleData: true, page: 1, pageSize: 0, pager: {},
@@ -201,7 +201,7 @@ function create(options) {
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Table container must be an Element.');
   opts.size = normalizeSize(opts.size);
   opts.columns = normalizeColumns(opts.columns);
-  var initialColumns = opts.columns.map(function (column) { return Object.assign({}, column); });
+  var initialColumns = opts.columns.map(function (column) { return Utils.mergeOwn(column); });
   opts.responsiveMode = normalizeResponsiveMode(opts.responsiveMode);
   opts.keyboardNavigation = normalizeKeyboardNavigation(opts.keyboardNavigation);
   opts.editEnterBehavior = String(opts.editEnterBehavior || 'commit').toLowerCase();
@@ -1141,7 +1141,7 @@ function create(options) {
       var nextWidth = clampColumnWidth(column, width);
       if (Number(column.width) === nextWidth) return column;
       changed = true;
-      return Object.assign({}, column, { width: nextWidth });
+      return Utils.mergeOwn(column, { width: nextWidth });
     });
     if (!changed) return true;
     opts.columns = normalizeColumns(nextColumns);
@@ -1223,7 +1223,7 @@ function create(options) {
       var nextVisible = visible !== false;
       if ((column.visible !== false) === nextVisible) return column;
       changed = true;
-      return Object.assign({}, column, { visible: nextVisible });
+      return Utils.mergeOwn(column, { visible: nextVisible });
     });
     if (!found) return false;
     if (!changed) return true;
@@ -1272,7 +1272,7 @@ function create(options) {
         else { var flex = Number(entry.flex); if (!Number.isFinite(flex) || flex <= 0) throw new TypeError('[QXFRAME9A7C2] Table column state flex must be a positive finite number.'); patch.flex = flex; }
       }
       if (own(entry, 'fixed')) patch.fixed = normalizeFixed(entry.fixed);
-      return Object.assign({}, column, patch);
+      return Utils.mergeOwn(column, patch);
     });
     columns.sort(function (a, b) {
       var ao = own(order, a.key) ? order[a.key] : Number.MAX_SAFE_INTEGER;
@@ -2177,12 +2177,12 @@ function create(options) {
     var current = allColumns(), byKey = Object.create(null), stateColumns = viewState.columns && typeof viewState.columns === 'object' ? viewState.columns : {};
     current.forEach(function (column) {
       var saved = stateColumns[column.key];
-      if (!saved || typeof saved !== 'object') { byKey[column.key] = Object.assign({}, column); return; }
+      if (!saved || typeof saved !== 'object') { byKey[column.key] = Utils.mergeOwn(column); return; }
       var patch = {};
       if (own(saved, 'visible')) patch.visible = saved.visible !== false;
       if (own(saved, 'width')) patch.width = saved.width == null || saved.width === '' ? null : clampColumnWidth(column, saved.width);
       if (own(saved, 'fixed')) patch.fixed = normalizeFixed(saved.fixed);
-      byKey[column.key] = Object.assign({}, column, patch);
+      byKey[column.key] = Utils.mergeOwn(column, patch);
     });
     var nextColumns = current.slice().sort(function (a, b) {
       var aSaved = stateColumns[a.key], bSaved = stateColumns[b.key];
@@ -2211,7 +2211,7 @@ function create(options) {
       filters: filters
     };
     var previousOpts = opts;
-    var candidate = Object.assign({}, opts, { columns: nextColumns, page: patch.page, pageSize: patch.pageSize, searchValue: patch.searchValue, sortKey: patch.sortKey, sortOrder: patch.sortOrder, filters: patch.filters });
+    var candidate = Utils.mergeOwn(opts, { columns: nextColumns, page: patch.page, pageSize: patch.pageSize, searchValue: patch.searchValue, sortKey: patch.sortKey, sortOrder: patch.sortOrder, filters: patch.filters });
     if (viewState.size !== undefined) candidate.size = normalizeSize(viewState.size);
     opts = candidate;
     try {
@@ -2307,7 +2307,7 @@ function create(options) {
     if (own(next, 'searchMatcher') && next.searchMatcher !== null && next.searchMatcher !== undefined && typeof next.searchMatcher !== 'function') throw new TypeError('[QXFRAME9A7C2] Table searchMatcher must be a function or null.');
     if (own(next, 'remoteSelectionScope')) normalizeRemoteSelectionScope(next.remoteSelectionScope);
     if (own(next, 'scrollPolicy')) normalizeScrollPolicy(next.scrollPolicy);
-    var candidate = Object.assign({}, opts, next);
+    var candidate = Utils.mergeOwn(opts, next);
     candidate.size = normalizeSize(candidate.size);
     candidate.columns = normalizeColumns(candidate.columns);
     candidate.responsiveMode = normalizeResponsiveMode(candidate.responsiveMode);
