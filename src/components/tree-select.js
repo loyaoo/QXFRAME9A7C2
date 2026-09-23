@@ -134,24 +134,13 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var values = asValues(value, hierarchicalCheckMode());
           return hierarchicalCheckMode() ? values : values[0];
         }
-        function copyApiValue(value) { return Array.isArray(value) ? value.slice() : value; }
-        valueState = StateController.create({
+        valueState = StateController.createValueBinding({
           value: normalizeApiValue(opts.value !== undefined ? opts.value : opts.defaultValue),
           controlled: hasOwn(fieldInit.options, 'value'),
-          normalizeValue: normalizeApiValue,
-          equals: StateController.deepEquals,
-          copyValue: copyApiValue
+          normalizeValue: normalizeApiValue
         });
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
-        function apiValue() { return valueState ? copyApiValue(valueState.value) : normalizeApiValue(undefined); }
-        function writeApiValue(next, meta, request) {
-          if (!valueState) return false;
-          var cfg = Utils.assignOwn({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta || {});
-          var normalized = normalizeApiValue(next);
-          if (StateController.deepEquals(valueState.value, normalized)) return false;
-          if (request === true && valueState.controlled) return valueState.requestChange(normalized, cfg);
-          return valueState.setValue(normalized, cfg);
-        }
+        function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function restoreTreeFromApiValue(reason) {
           if (!tree || !valueState || !valueState.controlled) return;
           var committed = apiValue();
@@ -368,10 +357,10 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         }
         function emitChange(value, detail) {
           var suppliedValues = detail && Array.isArray(detail.values) ? detail.values.slice() : null;
-          var payload = Utils.mergeOwn( detail || {}, { value: copyApiValue(value), values: suppliedValues || selectedValues(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(value), payload);
+          var payload = Utils.mergeOwn( detail || {}, { value: value), values: suppliedValues || selectedValues(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
+          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(value), payload);
           if (destroyed) return false;
-          if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(value), payload);
+          if (Utils.isFunction(opts.onChange)) opts.onChange(value), payload);
           if (destroyed) return false;
           emitter.emit('change', payload);
           return !destroyed;
@@ -423,7 +412,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           onCheck: function (keys, detail) {
             if (!hierarchicalCheckMode()) return;
             var values = checkedValues();
-            var changed = writeApiValue(values, Utils.mergeOwn( detail, { reason:'check', source:detail && detail.source || 'tree' }), true);
+            var changed = valueState.write(values, Utils.mergeOwn( detail, { reason:'check', source:detail && detail.source || 'tree' }), true);
             restoreTreeFromApiValue('controlled-check');
             searchState.clear({ silent:true, notify:false, source:'tree', reason:'selection' });
             tree.setSearch('');
@@ -436,7 +425,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           onChange: function (value, detail) {
             if (hierarchicalCheckMode()) return;
             var proposed = opts.multiple === true ? tree.getState().values.slice() : value;
-            var changed = writeApiValue(proposed, Utils.mergeOwn( detail, { reason:'select', source:detail && detail.source || 'tree' }), true);
+            var changed = valueState.write(proposed, Utils.mergeOwn( detail, { reason:'select', source:detail && detail.source || 'tree' }), true);
             restoreTreeFromApiValue('controlled-select');
             searchState.clear({ silent:true, notify:false, source:'tree', reason:'selection' });
             tree.setSearch('');
@@ -489,17 +478,17 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (destroyed) return api;
           var cfg = meta || {};
           var desired = normalizeApiValue(value);
-          var changed = writeApiValue(desired, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value', originalEvent:cfg.originalEvent || null }, false);
+          var changed = valueState.write(desired, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value', originalEvent:cfg.originalEvent || null }, false);
           var canonical = apiValue();
           if (hierarchicalCheckMode()) tree.setCheckedKeys(checkedKeysForValues(canonical), { silent: true, source: cfg.source || 'api', reason: cfg.reason || 'tree-select-set-value' });
           else tree.setValue(asValues(canonical, false)[0], { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value' });
-          if (hierarchicalCheckMode() && !valueState.controlled) writeApiValue(checkedValues(), { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value-normalize' }, false);
+          if (hierarchicalCheckMode() && !valueState.controlled) valueState.write(checkedValues(), { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value-normalize' }, false);
           searchState.clear({ silent:true, notify:false, source:cfg.source || 'api', reason:cfg.reason || 'set-value' });
           tree.setSearch('');
           syncView({ silent: !!cfg.silent, source: cfg.source || 'api', reason: cfg.reason || 'set-value' });
           if (changed) {
             var current = apiValue();
-            if (cfg.silent) { if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(current), { value:copyApiValue(current), values:selectedValues(), reason:cfg.reason || 'set-value', source:cfg.source || 'api', silent:true, controlled:!!valueState.controlled, treeSelect:api }); }
+            if (cfg.silent) { if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(current), { value:current), values:selectedValues(), reason:cfg.reason || 'set-value', source:cfg.source || 'api', silent:true, controlled:!!valueState.controlled, treeSelect:api }); }
             else emitChange(current, { reason: cfg.reason || 'set-value', source: cfg.source || 'api', originalEvent: cfg.originalEvent || null });
           }
           return api;
@@ -511,7 +500,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var nextValue = multipleMode() ? [] : undefined;
           if (hierarchicalCheckMode()) tree.setCheckedKeys([], { silent: true, source: cfg.source || 'api', reason: 'tree-select-clear' });
           else tree.clear({ silent:true, source:cfg.source || 'api', reason:'tree-select-clear', originalEvent:cfg.originalEvent || null });
-          var changed = writeApiValue(nextValue, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'clear', originalEvent:cfg.originalEvent || null }, true);
+          var changed = valueState.write(nextValue, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'clear', originalEvent:cfg.originalEvent || null }, true);
           restoreTreeFromApiValue('controlled-clear');
           searchState.clear({ silent:true, notify:false, source:cfg.source || 'api', reason:cfg.reason || 'set-value' });
           tree.setSearch('');
@@ -706,7 +695,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           }
           if (hasOwn(next, 'expandedKeys')) treeOptions.expandedKeys = opts.expandedKeys;
           tree.updateOptions(treeOptions);
-          if (checkMode && !valueState.controlled) writeApiValue(checkedValues(), { silent:true, source:'options', reason:'options-check-normalize' }, false);
+          if (checkMode && !valueState.controlled) valueState.write(checkedValues(), { silent:true, source:'options', reason:'options-check-normalize' }, false);
           else restoreTreeFromApiValue('options-controlled');
           if (opts.disabled === true && triggerSession.getState().open) close('disabled');
           if (hasOwn(next, 'popupRender') || triggerSession.getState().open) syncPopupContent();
