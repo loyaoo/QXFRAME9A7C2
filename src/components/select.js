@@ -20,7 +20,6 @@ import { DOMTemplate } from '../core/domTemplate.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Utils } from '../utils/utils.js';
-import { ValueEquality } from '../utils/valueEquality.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 
 const blueprint = DOMTemplate.staticHTML`
