@@ -158,6 +158,12 @@
       "phase": "45→50-prep"
     },
     {
+      "name": "Table",
+      "module": "table",
+      "source": "src/components/table.js",
+      "phase": "99→100"
+    },
+    {
       "name": "Tabs",
       "module": "tabs",
       "source": "src/components/tabs.js",
