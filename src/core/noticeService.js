@@ -50,10 +50,10 @@ function cssLength(value, fallback, label, owner) {
 function styleObject(value, label, owner) {
   if (value === undefined || value === null) return null;
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] ' + owner + ' ' + label + ' must be an object.');
-  return Object.assign({}, value);
+  return Utils.mergeOwn(value);
 }
 function normalizeAction(raw, index, owner) {
-  var action = (typeof raw === 'string' || typeof raw === 'number') ? { label: String(raw) } : Object.assign({}, raw || {});
+  var action = (typeof raw === 'string' || typeof raw === 'number') ? { label: String(raw) } : Utils.mergeOwn(raw);
   if (!action || typeof action !== 'object' || Array.isArray(action)) throw new TypeError('[QXFRAME9A7C2] ' + owner + ' action must be a string, number, or object.');
   if (action.onClick != null && typeof action.onClick !== 'function') throw new TypeError('[QXFRAME9A7C2] ' + owner + ' action.onClick must be a function.');
   action.key = action.key == null ? 'action-' + index : String(action.key);
@@ -80,7 +80,7 @@ var DEFAULT_NOTICE_ICONS = Object.freeze({ success:'check-circle', error:'error-
 function beginRender(record, config) {
   var cfg = config || {}, opts = record.options, item = record.item;
   clearStyleObject(item, record.appliedStyle);
-  record.appliedStyle = opts.style ? Object.assign({}, opts.style) : null;
+  record.appliedStyle = opts.style ? Utils.mergeOwn(opts.style) : null;
   item.className = String(typeof cfg.className === 'function' ? cfg.className(opts, record) : (cfg.className || item.className || ''));
   record.slot.style.setProperty('--qxframe9a7c2-notice-enter-duration', opts.enterDuration + 'ms');
   record.slot.style.setProperty('--qxframe9a7c2-notice-leave-duration', opts.leaveDuration + 'ms');
@@ -135,6 +135,7 @@ function layoutRecords(entry) {
     
 var utils = Object.freeze({
   own: own,
+  mergeOwn: Utils.mergeOwn,
   bool: bool,
   finite: finite,
   enumValue: enumValue,
@@ -206,7 +207,7 @@ function createChannel(profile) {
   function applyFrameOptions(entry, opts) {
     var frame = entry.frame;
     clearStyleObject(frame, entry.appliedStackStyle);
-    entry.appliedStackStyle = opts.stackStyle ? Object.assign({}, opts.stackStyle) : null;
+    entry.appliedStackStyle = opts.stackStyle ? Utils.mergeOwn(opts.stackStyle) : null;
     (entry.appliedStackClassTokens || []).forEach(function (token) { if (token) frame.classList.remove(token); });
     frame.classList.add('qxframe9a7c2-notice-stack', 'qxframe9a7c2-' + slug + '-stack', 'is-' + entry.placement);
     entry.appliedStackClassTokens = String(opts.stackClassName || '').split(/\s+/).filter(Boolean);
@@ -222,7 +223,7 @@ function createChannel(profile) {
     frame.style.left = '';
     frame.style.transform = '';
     applyStyle(frame, entry.appliedStackStyle);
-    entry.options = Object.assign({}, opts);
+    entry.options = Utils.mergeOwn(opts);
     entry.stack = stackConfig(opts);
     frame.classList.toggle('is-stack-enabled', entry.stack.enabled);
     if (entry.hovering && !entry.stack.enabled) setFrameHover(entry, false);
@@ -1158,7 +1159,7 @@ function createChannel(profile) {
     if (existing && !existing.closed && !existing.closing) {
       if (opts.placement !== existing.entry.placement && own(source, 'placement')) throw new Error('[QXFRAME9A7C2] ' + owner + ' placement is immutable for an existing key; close and recreate to move it.');
       if (own(source, 'document') && opts.document && opts.document !== existing.entry.document) throw new Error('[QXFRAME9A7C2] ' + owner + ' document is immutable for an existing key; close and recreate to move it across documents.');
-      return updateRecord(existing, Object.assign({}, source, { key: key }));
+      return updateRecord(existing, Utils.mergeOwn(source, { key: key }));
     }
     opts.key = key;
     var entry = getFrame(opts.placement, opts);
