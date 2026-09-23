@@ -105,6 +105,7 @@ export class Collapse extends Component {
         state.set(this, record);
 
         const normalizeValue = value => {
+            if (value === undefined || value === null) value = [];
             if (!Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] Collapse value must be an array of keys.');
             const seen = Object.create(null), output = [];
             value.forEach(key => {
