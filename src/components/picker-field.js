@@ -87,7 +87,7 @@ function create(options) {
 
   control = headlessMode ? null : projectionMode ? Control.createProjection({
     document: doc, reference: root, valueTarget: valueHost, inputTarget: input, formTarget: opts.formTarget, formField: opts.formField, name: opts.name, committedValue: opts.committedValue, serializeValue: opts.serializeValue,
-    mode: opts.controlMode || 'input', tags: tags, displayValue: displayValue, inputValue: displayValue, editable: opts.editable === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder,
+    mode: opts.controlMode || 'input', tags: tags, displayValue: displayValue, inputValue: displayValue, editable: opts.editable === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder,
     onInput: function (value, event) { displayValue = value; if (typeof opts.onInput === 'function') opts.onInput(value, event, api); },
     onBlur: function (event) { if (typeof opts.onBlur === 'function') opts.onBlur(event, api); },
   }) : Control.create({
@@ -95,7 +95,7 @@ function create(options) {
     document: doc, formField: opts.formField, committedValue: opts.committedValue, serializeValue: opts.serializeValue, mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true,
     tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName,
     size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable,
-    clearable: opts.clearable, clearVisibility: 'interaction', hasValue: clearVisible, draftVisual: opts.draftVisual === true, inputValue: displayValue,
+    clearable: opts.clearable, clearVisibility: 'interaction', hasValue: clearVisible, draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, inputValue: displayValue,
     placeholder: displayPlaceholder, expanded: false, toggleVisible: true, toggle: opts.toggle,
     onInput: function (value, event) { displayValue = value; if (typeof opts.onInput === 'function') opts.onInput(value, event, api); },
     onBlur: function (event) { if (typeof opts.onBlur === 'function') opts.onBlur(event, api); },
@@ -333,7 +333,7 @@ function create(options) {
   function syncControl() {
     if (!control) return;
     var editorValue = navigationActive && editorSnapshot ? editorSnapshot.value : displayValue;
-    control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: editorValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
+    control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: editorValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
     if (navigationActive) projectNavigationVisual(opts.draftVisual === true ? draftDisplayValue : displayValue);
   }
   function writeExternalValue(target, value) { if (!target) return; var text = value == null ? '' : String(value); if (/^(input|textarea|select)$/i.test(String(target.tagName || ''))) target.value = text; else target.textContent = text; }
@@ -348,7 +348,8 @@ function create(options) {
   function setDraftDisplayValue(value) {
     draftDisplayValue = value == null ? '' : String(value);
     if (projectionMode) writeExternalValue(draftValueTarget, draftDisplayValue);
-    else if (navigationActive && opts.draftVisual === true) projectNavigationVisual(draftDisplayValue);
+    else if (control && control.setDraftDisplayValue) control.setDraftDisplayValue(draftDisplayValue);
+    if (!projectionMode && navigationActive && opts.draftVisual === true) projectNavigationVisual(draftDisplayValue);
     return api;
   }
   function setPlaceholder(value) { displayPlaceholder = value == null ? '' : String(value); if (control) control.updateOptions({ placeholder: displayPlaceholder }); return api; }
