@@ -34,7 +34,7 @@ function normalize(input, previous) {
   var incoming = input || {};
   if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new TypeError('[QXFRAME9A7C2] Message options must be an object.');
   rejectUnsupported(incoming);
-  var source = Object.assign({}, DEFAULTS, previous || {}, incoming);
+  var source = U.mergeOwn(DEFAULTS, previous, incoming);
   source.key = source.key === undefined || source.key === null || source.key === '' ? '' : String(source.key);
   source.type = U.enumValue(source.type, TYPES, 'info', 'type', 'Message');
   source.placement = U.enumValue(source.placement, PLACEMENTS, 'top', 'placement', 'Message');
@@ -87,7 +87,7 @@ function createTyped(type, content, options) {
   if (options !== undefined && (!options || typeof options !== 'object' || Array.isArray(options) || options.nodeType)) {
     throw new TypeError('[QXFRAME9A7C2] Message.' + type + '() options must be an object.');
   }
-  var input = Object.assign({}, options || {}, { content: content, type: type });
+  var input = U.mergeOwn(options, { content: content, type: type });
   return channel.create(input);
 }
 
