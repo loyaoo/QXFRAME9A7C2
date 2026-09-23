@@ -637,7 +637,7 @@ function setupUpload(instance) {
     preview: preview, closePreview: closePreview, download: download, clear: clear,
     setValue: function (value) { lifecycle.setValue(value,{source:'api'}); return api; },
     getValue: lifecycle.getValue, applyOptions: applyOptions,
-    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: current.value, controlled:current.controlled===true, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (previewMediaState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
+    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: current.value, controlled:current.controlled===true, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
     getLifecycle: function () { return lifecycle; },
     getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
     getFormBridge: function () { return formBridge; },
