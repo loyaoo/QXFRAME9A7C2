@@ -321,11 +321,14 @@ function setupColorPickerRuntime(instance, fieldInit) {
          var payload = { value: cloneModel(next), color: value, activeStopIndex: mode === 'gradient' ? activeStopIndex : null, rgba: detail.rgba, hsv: detail.hsv, source: detail.source, reason: detail.reason, complete: detail.complete === true, colorPicker: api };
          if (Utils.isFunction(opts.onInput)) opts.onInput(cloneModel(next), payload);
          emitter.emit('input', payload);
-         if (opts.needConfirm !== true && detail.complete === true) draft.commit({ source: detail.source, reason: 'panel-commit' });
        },
        onChangeComplete: function (value, detail) {
          if (!draft) return;
-         emitInteractionComplete(draft.draftValue, detail || { source: 'panel', reason: 'panel-complete' });
+         var completeDetail = detail || { source: 'panel', reason: 'panel-complete' };
+         if (opts.needConfirm !== true && completeDetail.cancelled !== true && completeDetail.rolledBack !== true && draft.dirty) {
+           draft.commit({ source: completeDetail.source || 'panel', reason: completeDetail.reason || 'panel-commit', originalEvent: completeDetail.originalEvent || null });
+         }
+         emitInteractionComplete(draft.draftValue, completeDetail);
        }
      });
 
@@ -341,7 +344,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        copyValue: cloneModel,
        equals: modelEquals,
        onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, colorPicker: api })); if (detail.silent !== true) { var payload = { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, reason: detail.reason, source: detail.source || 'api', colorPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneModel(value), payload); emitter.emit('change', payload); } },
-       onDraftChange: function (value, detail) { if (!(detail && detail.valueChanged === true && opts.needConfirm !== true)) syncField(field && field.getState().open && opts.needConfirm === true); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(draft.value), draftValue: cloneModel(value), mode: mode, colorPicker: api })); }
+       onDraftChange: function (value, detail) { if (!(detail && detail.valueChanged === true && opts.needConfirm !== true)) syncField(field && field.getState().open); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(draft.value), draftValue: cloneModel(value), mode: mode, colorPicker: api })); }
      });
 
      var pickerSession = instance.setupPickerSession({
