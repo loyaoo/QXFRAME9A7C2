@@ -195,11 +195,12 @@ function setupUpload(instance) {
       onSuccess: function (response, record) { if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
       onError: function (error, record) { if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
-        api.setFieldValue(value, { silent: true, force: true });
-        if (formBridge) formBridge.setValue(value, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
-        reconcileObjectUrls(value);
+        var canonical = detail && detail.controlled === true ? lifecycle.getValue() : value;
+        api.setFieldValue(canonical, { silent: true, force: true });
+        if (formBridge) formBridge.setValue(canonical, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
+        reconcileObjectUrls(canonical);
         renderList();
-        var enriched = Utils.mergeOwn( detail, { instance: api });
+        var enriched = Utils.mergeOwn(detail, { instance: api });
         if (detail.operation === 'move' && typeof opts.onSort === 'function') opts.onSort(value.slice(), enriched);
         if (destroyed) return;
         if (detail.reason === 'remove' && typeof opts.onRemove === 'function') opts.onRemove(detail.file, enriched);
@@ -636,7 +637,7 @@ function setupUpload(instance) {
     preview: preview, closePreview: closePreview, download: download, clear: clear,
     setValue: function (value) { lifecycle.setValue(value,{source:'api'}); return api; },
     getValue: lifecycle.getValue, applyOptions: applyOptions,
-    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: current.value, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
+    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: current.value, controlled:current.controlled===true, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
     getLifecycle: function () { return lifecycle; },
     getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
     getFormBridge: function () { return formBridge; },
