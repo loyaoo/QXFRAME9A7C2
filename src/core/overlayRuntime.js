@@ -200,7 +200,7 @@ function create(options) {
       onExit: function (payload) {
         if (!dismissLayer) return false;
         var event = payload && payload.originalEvent || null;
-        var accepted = dismissLayer.dismiss('tab-exit', event);
+        var accepted = dismissLayer.requestDismiss('tab-exit', event);
         if (accepted !== true) return false;
         var current = payload && payload.current || null;
         var currentInReference = !!(reference && current && (current === reference || (reference.contains && reference.contains(current))));
