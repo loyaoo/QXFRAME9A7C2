@@ -198,7 +198,7 @@ const addedBehavior=[...currentChecks].filter(x=>!oldChecks.has(x)).sort();
 const duplicateBlocks=new Map();
 for(const [file,text] of source){
   if(file.startsWith('src/vendor/')) continue;
-  const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(x=>x && !x.startsWith('//') && !x.startsWith('/*') && !x.startsWith('*'));
+  const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(x=>x && !x.startsWith('//') && !x.startsWith('/*') && !x.startsWith('*') && !x.startsWith('import '));
   for(let i=0;i+7<lines.length;i++){
     const block=lines.slice(i,i+8).join(' ').replace(/\s+/g,' ');
     if(block.length<360) continue;
