@@ -79,12 +79,17 @@ raw.ColorPicker = classApi(ColorPicker, { definition:enhanceInitializer, enhance
 raw.DatePicker = classApi(DatePicker, { definition:enhanceInitializer, enhance:function(){return DatePicker.enhance.apply(DatePicker,arguments);}, formatDate:DatePicker.formatDate, parseDate:DatePicker.parseDate });
 
 raw.Pagination = classApi(Pagination, { createDefaultDOM:Pagination.createDefaultDOM });
+raw.Menu = classApi(Menu, { createDefaultDOM:Menu.createDefaultDOM });
+raw.Scroll = classApi(Scroll, { attachViewport:Scroll.attachViewport, createDefaultDOM:Scroll.createDefaultDOM });
+raw.Transfer = classApi(Transfer, { definition:sourceInitializer, enhance:function(){return Transfer.enhance.apply(Transfer,arguments);}, createDefaultDOM:Transfer.createDefaultDOM });
 raw.Tabs = classApi(Tabs);
 raw.Image = classApi(Image, { createPreview:Image.createPreview });
 raw.JSON = classApi(JSONComponent);
-Utils.assignOwn(raw, { Trigger, Ripple, Menu, Transfer, Tags, Upload, Table, Message, Notification });
-raw.Scroll = Object.freeze(Utils.mergeOwn( Scroll, { definition:createInitializer }));
+raw.Tags = classApi(Tags);
+raw.Upload = classApi(Upload, { definition:sourceInitializer, enhance:function(){return Upload.enhance.apply(Upload,arguments);}, LIST_IGNORE:Upload.LIST_IGNORE });
+raw.Table = classApi(Table, { sizes:Table.sizes.slice() });
+Utils.assignOwn(raw, { Trigger, Ripple, Message, Notification });
 
 export const Components = Object.freeze(Object.fromEntries(Object.entries(raw).map(([name, api]) => [name, publishComponentApi(name, api)])));
-export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Select, Slider, Sort, Steps, TagInput, Tabs, TimePicker, Tooltip, TreeSelect, WheelPicker });
+export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Menu, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Scroll, Select, Slider, Sort, Steps, Table, TagInput, Tags, Tabs, TimePicker, Tooltip, Transfer, TreeSelect, Upload, WheelPicker });
 export default Components;

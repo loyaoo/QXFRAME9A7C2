@@ -6,9 +6,11 @@ import { Component } from '../src/core/component.js';
 import { componentHooks } from '../src/core/componentHooks.js';
 import { InstanceRegistry } from '../src/core/instanceRegistry.js';
 import { ComponentContracts } from '../src/core/componentContracts.js';
+import { Table } from '../src/components/table.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const componentSource = fs.readFileSync(path.join(root, 'src/core/component.js'), 'utf8');
+const tableSource = fs.readFileSync(path.join(root, 'src/components/table.js'), 'utf8');
 
 for (const pattern of [
     /CoreRegistry|HeadlessRegistry|DOMHeadlessRegistry|ComponentRegistry|BuildingBlockRegistry/,
@@ -139,6 +141,16 @@ assert.ok(explicit.id.startsWith('qxframe9a7c2-component-'), 'instance identity 
 assert.equal(explicit.options.id, 'public-option-id', 'Component must preserve an id option for concrete component semantics without reusing it as registry identity.');
 assert.equal(InstanceRegistry.get(explicit.id), explicit);
 explicit.destroy();
+
+assert.match(tableSource, /class\s+Table\s+extends\s+Component/, 'Table must extend Component.');
+assert.ok(!/^\s*destroy\s*\(/m.test(tableSource), 'Table must inherit Component.destroy.');
+assert.ok(!/function\s+updateOptions\s*\(/.test(tableSource), 'Table must not keep a parallel function-style updateOptions authority.');
+const tableProbe = new Table({ container:{ nodeType:1, ownerDocument:null }, columns:[], items:[] });
+assert.ok(tableProbe instanceof Component);
+tableProbe.updateOptions({ disabled:true });
+assert.equal(tableProbe.options.disabled, true);
+assert.throws(() => tableProbe.updateOptions({ container:{ nodeType:1 } }), /immutable/);
+tableProbe.destroy();
 
 class FactoryComponent extends Component {
     [componentHooks.render]() { lifecycleEvents.push('factory-render'); }

@@ -1,5 +1,6 @@
 import { ComponentContracts } from '../core/componentContracts.js';
-import { Events } from '../core/events.js';
+import { componentHooks } from '../core/componentHooks.js';
+import { fieldHooks } from '../core/fieldHooks.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
 import { DOM } from '../core/dom.js';
@@ -15,10 +16,21 @@ import { Renderer } from '../core/renderer.js';
 import { TokenInput } from '../core/tokenInput.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { Selection } from '../core/selection.js';
+import { FieldComponent } from './field.js';
 import { Scroll } from './scroll.js';
 import { Popover } from './popover.js';
 
 const global = globalThis;
+
+const TAGS_DEFAULTS = Object.freeze({
+  items: [], value: [], editable: false, closable: true, checkable: false, multiple: true, variant: 'filled',
+  overflow: 'wrap', maxVisible: 0, showOverflowPopover: true, hosted: false, controlled: false, creatable: true,
+  formField: null, name: '', overflowTrigger: 'hover', overflowPlacement: 'bottom-start', overflowMaxHeight: 240,
+  scrollbarVisibility: 'auto', size: 'md', disabled: false, readOnly: false, required: false,
+  inputValue: '', tokenSeparators: [','], tokenizeOnPaste: true, addOnEnter: true, addOnTab: false, addOnBlur: true,
+  unique: true, maxCount: 0, maxTagLength: 0, tagRemoveContent: null, classes: null, styles: null
+});
+const tagsState = new WeakMap();
 
 var SIZES = Object.freeze(['xs', 'sm', 'md', 'lg', 'xl']);
 var OVERFLOWS = Object.freeze(['wrap', 'scroll', 'collapse', 'responsive']);
@@ -131,43 +143,27 @@ function normalizeItems(value) {
   });
 }
     
-function create(options) {
-  var source = options || {};
-  ComponentContracts.validate(ComponentContracts.get('Tags'), source, 'Tags');
-  var opts = Utils.mergeOwn({
-    items: [], value: [], editable: false, closable: true, checkable: false, multiple: true, variant: 'filled',
-    overflow: 'wrap', maxVisible: 0, showOverflowPopover: true, hosted: false, controlled: false, creatable: true, formField: null, name: '',
-    overflowTrigger: 'hover', overflowPlacement: 'bottom-start', overflowMaxHeight: 240,
-    scrollbarVisibility:'auto',size:'md',disabled:false,readOnly:false,required:false,
-    inputValue: '', tokenSeparators: [','], tokenizeOnPaste: true,
-    addOnEnter: true, addOnTab: false, addOnBlur: true, unique: true,
-    maxCount: 0, maxTagLength: 0, tagRemoveContent: null, classes: null, styles: null }, source);
-  var doc=opts.document||(opts.formField&&opts.formField.ownerDocument)||(opts.container&&opts.container.ownerDocument)||global.document;
-  var view=doc&&doc.defaultView||global;
-  var formField=opts.formField||null;
-  if(formField&&typeof formField==='string')formField=DOM.query(doc,formField);
-  if(formField&&!FormBridge.isFormField(formField))throw new TypeError('[QXFRAME9A7C2] Tags formField must resolve to input, textarea, or select.');
-  var container=opts.container||null;
-  if(container&&typeof container==='string')container=DOM.query(doc,container);
-  var ownsContainer=false;
-  if(!container&&formField&&formField.parentNode){container=doc.createElement('span');formField.parentNode.insertBefore(container,formField);ownsContainer=true;}
-  if(!container||container.nodeType!==1)throw new TypeError('[QXFRAME9A7C2] Tags requires container or a connected formField.');
-  opts.container=container;opts.formField=formField;if(formField){if(!own(source,'name')&&formField.name)opts.name=formField.name;if(!own(source,'disabled'))opts.disabled=formField.disabled===true;if(!own(source,'readOnly')&&'readOnly' in formField)opts.readOnly=formField.readOnly===true;if(!own(source,'required'))opts.required=formField.required===true;}
-    
-  opts.size=normalizeSize(opts.size);opts.overflow=normalizeOverflow(opts.overflow);opts.maxVisible=normalizeMaxVisible(opts.maxVisible);opts.variant=normalizeVariant(opts.variant);
-  if (String(opts.overflowTrigger || 'hover').trim() !== 'hover') throw new TypeError('[QXFRAME9A7C2] Tags overflowTrigger is hover-only; click/focus overflow toggles are not supported.');
-  opts.overflowTrigger = 'hover';
-  opts.value=normalizeStringArray(own(source,'value')?source.value:(own(source,'defaultValue')?source.defaultValue:[]),'value');
-  var normalized=normalizeItems(opts.items||[]);
-  if((!Array.isArray(source.items)||source.items.length===0)&&formField){var nativeInitial=FormBridge.read(formField),nativeValues=Array.isArray(nativeInitial)?nativeInitial.slice():(nativeInitial===''?[]:[nativeInitial]);normalized=nativeValues.map(function(value){var label=String(value);if(String(formField.tagName||'').toLowerCase()==='select'){var option=Array.prototype.find.call(formField.options||[],function(entry){return String(entry.value)===String(value);});if(option)label=String(option.textContent||option.label||option.value);}return {key:String(value),value:String(value),label:label,removable:true,disabled:false,color:'',icon:undefined,href:'',className:''};});}
-  if(!own(source,'value')&&!own(source,'defaultValue')&&formField&&opts.checkable===true){var nativeChecked=FormBridge.read(formField);opts.value=normalizeStringArray(Array.isArray(nativeChecked)?nativeChecked:(nativeChecked===''?[]:[nativeChecked]),'value');}
-  var initialValues = Object.create(null);
-  normalized.forEach(function (item) { initialValues[item.value] = true; });
-  opts.value.forEach(function (value) {
-    if (!initialValues[value]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
-  });
+function setupTags(instance) {
+  var state = tagsState.get(instance);
+  if (!state) throw new TypeError('[QXFRAME9A7C2] Invalid Tags instance.');
+  var source = state.source;
+  var opts = Utils.mergeOwn(instance.options);
+  var doc = state.document;
+  var view = doc && doc.defaultView || global;
+  var formField = state.formField;
+  var container = state.container;
+  var ownsContainer = false;
+  if (!container && formField && formField.parentNode) {
+    container = doc.createElement('span');
+    formField.parentNode.insertBefore(container, formField);
+    ownsContainer = true;
+  }
+  if (!container || container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Tags requires container or a connected formField.');
+  state.container = container;
+  opts.container = container;
+  opts.formField = formField;
+  var normalized = normalizeItems(opts.items || []);
   var scope = Lifecycle.createScope();
-  var emitter = Events.createEmitter();
   var destroyed = false;
   var root = doc.createElement('div');
   var surface = doc.createElement('div');
@@ -186,7 +182,7 @@ function create(options) {
   var overflowLayout = null;
   var visibleCount = normalized.length;
   var metadataByKey = Object.create(null);
-  var api = null;
+  var api = instance;
   var syncingItems = false;
   var composing=false;
   var formBridge=null;
@@ -256,25 +252,23 @@ function create(options) {
     var items=publicItems();
     var payload = Utils.assignOwn({ items: items.slice(), reason: 'items', source: 'api', instance: api }, detail || {});
     if (payload.silent !== true && Utils.isFunction(opts.onItemsChange)) opts.onItemsChange(items.slice(), payload);
-    if (payload.silent !== true && !destroyed) emitter.emit('itemsChange', payload);
+    if (payload.silent !== true && !destroyed) api.emit('itemsChange', payload);
   }
   function emitSelection(values,detail){
     syncFormBridge(detail);
     var payload = Utils.assignOwn({ value: values.slice(), reason: 'selection', source: 'api', instance: api }, detail || {});
     if (payload.silent !== true && Utils.isFunction(opts.onChange)) opts.onChange(values.slice(), payload);
-    if (payload.silent !== true && !destroyed) emitter.emit('change', payload);
+    if (payload.silent !== true && !destroyed) api.emit('change', payload);
   }
     
   var selection = Selection.create({
     multiple: opts.multiple !== false,
     values: opts.value,
     onChange: function (values, detail) {
-      opts.value = values.slice();
       if (!syncingItems) render('selection');
       emitSelection(values, detail);
     }
   });
-  opts.value = selection.values.slice();
   scope.add(function () { selection.destroy(); });
     
   function pruneSelection(meta) {
@@ -282,7 +276,7 @@ function create(options) {
     coreTags().forEach(function (tag) { allowed[tag.value] = true; });
     var next = selection.values.filter(function (value) { return !!allowed[value]; });
     if (next.length === selection.values.length) return;
-    if (selection.set(next, Utils.assignOwn({ reason: 'items-prune', source: 'items' }, meta || {})) !== false) opts.value = selection.values.slice();
+    selection.set(next, Utils.assignOwn({ reason: 'items-prune', source: 'items' }, meta || {}));
   }
     
   var tokenInput = TokenInput.create({
@@ -331,7 +325,7 @@ function create(options) {
       if (Utils.isFunction(opts.onInput)) opts.onInput(value, payload);
       if (destroyed) return;
       if (Utils.isFunction(opts.onSearch)) opts.onSearch(value, payload);
-      if (!destroyed) emitter.emit('input', Utils.assignOwn({ value: value }, payload));
+      if (!destroyed) api.emit('input', Utils.assignOwn({ value: value }, payload));
     },
     onTagInvalid: function (detail) {
       if (Utils.isFunction(opts.onInvalid)) opts.onInvalid(Utils.mergeOwn( detail, { instance: api }));
@@ -1119,7 +1113,7 @@ function create(options) {
     } else destroyOverflow();
     syncTagTabStops();
     if (containerScroll) containerScroll.refresh('tags-' + (reason || 'overflow'));
-    var overflowDetail={reason:reason||'refresh',visibleCount:visibleCount,hiddenCount:Math.max(0,items.length-visibleCount),instance:api};emitter.emit('overflow',overflowDetail);if(Utils.isFunction(opts.onOverflow))opts.onOverflow(overflowDetail);
+    var overflowDetail={reason:reason||'refresh',visibleCount:visibleCount,hiddenCount:Math.max(0,items.length-visibleCount),instance:api};api.emit('overflow',overflowDetail);if(Utils.isFunction(opts.onOverflow))opts.onOverflow(overflowDetail);
     return true;
   }
   function scheduleOverflow(reason) { if (overflowLayout && opts.overflow === 'responsive') overflowLayout.request(reason || 'responsive'); }
@@ -1206,7 +1200,7 @@ function create(options) {
       if (!allowed[entry]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
     });
     var changed = selection.set(values, Utils.assignOwn({ reason: 'set-value', source: 'api' }, meta || {}));
-    if (changed !== false) opts.value = selection.values.slice();
+    if (changed !== false) syncFormBridge(meta);
     return changed;
   }
   function toggle(value, desired, meta) {
@@ -1214,7 +1208,7 @@ function create(options) {
     var item = itemByValue(value);
     if (!item || item.disabled === true || mutationLocked(meta)) return false;
     var changed = selection.toggle(item.value, desired, Utils.assignOwn({ reason: 'toggle', source: 'api' }, meta || {}));
-    if (changed !== false) opts.value = selection.values.slice();
+    if (changed !== false) syncFormBridge(meta);
     return changed;
   }
   function remove(value, meta) {
@@ -1238,7 +1232,11 @@ function create(options) {
   function beginAdd() { if (destroyed || opts.editable !== true || InteractionPolicy.mutationLocked(opts)) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
   function cancelAdd() { if (destroyed || opts.hosted === true) return false; adding=false; tokenInput.setInputValue('',{silent:true,reason:'cancel-add',source:'tags'}); opts.inputValue=''; render('cancel-add'); return true; }
   function canonicalFormValue() { return opts.checkable === true ? selection.values.slice() : coreTags().map(function(tag){return tag.value;}); }
-  function syncFormBridge(meta) { if (!formBridge) return; formBridge.setValue(canonicalFormValue(), Utils.assignOwn({silent:true,source:'tags',reason:'sync'},meta||{})); }
+  function syncFormBridge(meta) {
+    var value = canonicalFormValue();
+    api.setFieldValue(value, { silent:true, force:true });
+    if (formBridge) formBridge.setValue(value, Utils.assignOwn({silent:true,source:'tags',reason:'sync'},meta||{}));
+  }
   function setItems(items, meta) {
     if (destroyed) return false;
     var next = normalizeItems(items);
@@ -1262,11 +1260,9 @@ function create(options) {
     return changed;
   }
   function commitInput(reason,event){if(destroyed||opts.editable!==true)return false;var committed=tokenInput.commitInput({reason:reason||'commit-input',source:'api',originalEvent:event||null});if(committed&&opts.hosted!==true){adding=false;render('commit-add');}return committed;}
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
-    var next = nextOptions || {};
-    ComponentContracts.validate(ComponentContracts.get('Tags'), next, 'Tags');
-    if(own(next,'container')&&next.container!==opts.container)throw new Error('[QXFRAME9A7C2] Tags container is immutable; destroy and recreate to change it.');if(own(next,'document')&&next.document!==doc)throw new Error('[QXFRAME9A7C2] Tags document is immutable; destroy and recreate to change it.');if(own(next,'formField')&&next.formField!==opts.formField)throw new Error('[QXFRAME9A7C2] Tags formField is immutable; destroy and recreate to change it.');if(own(next,'hosted')&&next.hosted!==opts.hosted)throw new Error('[QXFRAME9A7C2] Tags hosted context is immutable; destroy and recreate to change it.');
+    var next = patch || {};
     var nextSize = normalizeSize(own(next, 'size') ? next.size : opts.size);
     var nextOverflow = normalizeOverflow(own(next, 'overflow') ? next.overflow : opts.overflow);
     var nextMaxVisible = normalizeMaxVisible(own(next, 'maxVisible') ? next.maxVisible : opts.maxVisible);
@@ -1282,14 +1278,15 @@ function create(options) {
         if (!allowed[entry]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
       });
     }
-    Utils.copyOwn(opts, next);
+    var runtimeInputValue = tokenInput.getState().inputValue;
+    opts = Utils.mergeOwn(nextOptions);
     opts.size = nextSize;
     opts.overflow = nextOverflow;
     opts.maxVisible = nextMaxVisible;
     opts.variant = nextVariant;
     opts.overflowTrigger = 'hover';
+    if (!own(next, 'inputValue')) opts.inputValue = runtimeInputValue;
     selection.updateOptions({ multiple: opts.multiple !== false });
-    opts.value = selection.values.slice();
     tokenInput.updateOptions({
       unique: opts.unique !== false,
       tokenSeparators: opts.tokenSeparators,
@@ -1302,24 +1299,24 @@ function create(options) {
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
       normalizeTag: opts.normalizeTag,
-      validateTag:opts.validateTag,creatable:opts.creatable!==false
+      validateTag: opts.validateTag,
+      creatable: opts.creatable !== false
     });
     if (own(next, 'items')) {
       rebuildMetadata(itemList);
       syncingItems = true;
-      tokenInput.setTags(itemList.map(itemCore), { silent: true, reason: 'options-items', source: 'options' });
-      pruneSelection({ silent: true, reason: 'items-prune', source: 'options' });
+      tokenInput.setTags(itemList.map(itemCore), { silent:true, reason:'options-items', source:'options' });
+      pruneSelection({ silent:true, reason:'items-prune', source:'options' });
       syncingItems = false;
     }
-    if (own(next, 'value')) {
-      selection.set(values, { silent: true, reason: 'options-value', source: 'options' });
-      opts.value = selection.values.slice();
-    }
-    if(own(next,'inputValue'))tokenInput.setInputValue(next.inputValue,{silent:true,reason:'options-input',source:'options'});if(formBridge)formBridge.updateOptions({name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true});
+    if (own(next, 'value')) selection.set(values, { silent:true, reason:'options-value', source:'options' });
+    if (own(next,'inputValue')) tokenInput.setInputValue(next.inputValue,{silent:true,reason:'options-input',source:'options'});
+    if (formBridge) formBridge.updateOptions({name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true});
+    syncFormBridge({silent:true,source:'options',reason:'options'});
     render('options');
     return api;
   }
-    
+
   function getState() {
     var items = publicItems();
     return Object.freeze({
@@ -1430,7 +1427,7 @@ function create(options) {
     scope.add(function () { if (standaloneTagNavigation) standaloneTagNavigation.destroy(); standaloneTagNavigation=null; standaloneTagDomain=null; if (keyboardRegion) keyboardRegion.destroy(); keyboardRegion=null; keyboard=null; });
   }
     
-  function destroy() {
+  function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true;
     destroyOverflow();
@@ -1439,46 +1436,45 @@ function create(options) {
     if (overflowLayout) overflowLayout.destroy();
     overflowLayout = null;
     scope.dispose();
-    emitter.dispose();
     if(formBridge)formBridge.destroy();formBridge=null;
     if(root.parentNode)root.parentNode.removeChild(root);if(ownsContainer&&container&&container.parentNode)container.parentNode.removeChild(container);
     return true;
   }
     
-  api = Object.freeze({
-    add:add,addMany:addMany,remove:remove,toggle:toggle,setItems:setItems,setValue:setValue,clear:clear,has:function(value){return itemIndexByValue(value)>=0;},getValue:canonicalFormValue,getItems:publicItems,beginAdd:beginAdd,cancelAdd:cancelAdd,editAt:function(index,text,meta){return tokenInput.editAt(index,text,meta);},removeAt:function(index,meta){return tokenInput.removeAt(index,meta);},
-    setInputValue: setInputValue,
-    commitInput: commitInput,
-    refreshOverflow: function () { return refreshOverflow('api'); },
-    updateOptions: updateOptions,
-    setDisabled: function (value) { return updateOptions({ disabled: value === true }); },
-    setReadOnly: function (value) { return updateOptions({ readOnly: value === true }); },
-    focus: function () { if (opts.hosted === true) { if (opts.editable) focusWithoutScroll(input); return api; } focusWithoutScroll(adding === true ? input : root); return api; },
-    blur: function () { var active = doc.activeElement; if (active && root.contains(active) && Utils.isFunction(active.blur)) active.blur(); return api; },
-    getState: getState,
-    getRootElement: function () { return root; },
-    getSurfaceElement: function () { return surface; },
+  function focusRuntime() {
+    if (opts.hosted === true) { if (opts.editable) focusWithoutScroll(input); return api; }
+    focusWithoutScroll(adding === true ? input : root);
+    return api;
+  }
+  function blurRuntime() {
+    var active = doc.activeElement;
+    if (active && root.contains(active) && Utils.isFunction(active.blur)) active.blur();
+    return api;
+  }
+  var record = {
+    add:add, addMany:addMany, remove:remove, toggle:toggle, setItems:setItems, setValue:setValue, clear:clear,
+    has:function(value){return itemIndexByValue(value)>=0;}, getValue:canonicalFormValue, getItems:publicItems,
+    beginAdd:beginAdd, cancelAdd:cancelAdd,
+    editAt:function(index,text,meta){return tokenInput.editAt(index,text,meta);},
+    removeAt:function(index,meta){return tokenInput.removeAt(index,meta);},
+    setInputValue:setInputValue, commitInput:commitInput,
+    refreshOverflow:function(){return refreshOverflow('api');}, applyOptions:applyOptions,
+    focus:focusRuntime, blur:blurRuntime, getState:getState,
+    getRootElement:function(){return root;}, getSurfaceElement:function(){return surface;},
     getInputElement:function(){return opts.editable&&(opts.hosted===true||adding)?input:null;},
     getAddTriggerElement:function(){return opts.editable&&opts.hosted!==true&&!adding?addTrigger:null;},
-    getOverflowElement:function(){return summary;},
-    getFormField:function(){return formBridge?formBridge.getFormField():null;},
-    getTokenInput: function () { return tokenInput; },
-    getSelection: function () { return selection; },
-    getKeyboardNavigation:function(){return keyboard;},
-    getKeyboardRegion:function(){return keyboardRegion;},
-    getVirtualTagElement: getVirtualTagElement,
-    moveVirtualTag: moveVirtualTag,
-    reconcileVirtualTagKey: reconcileVirtualTagKey,
-    ensureVirtualTagVisible: ensureVirtualTagVisible,
-    removeVirtualTag: removeVirtualTag,
-    getScroll: function () { return containerScroll; },
-    getOverflowPopover: function () { return overflowPopover; },
-    getOverflowScroll: function () { return overflowScroll; },
-    on: emitter.on,
-    once: emitter.once,
-    destroy: destroy
-  });
-    
+    getOverflowElement:function(){return summary;}, getFormField:function(){return formBridge?formBridge.getFormField():null;},
+    getTokenInput:function(){return tokenInput;}, getSelection:function(){return selection;},
+    getKeyboardNavigation:function(){return keyboard;}, getKeyboardRegion:function(){return keyboardRegion;},
+    getVirtualTagElement:getVirtualTagElement, moveVirtualTag:moveVirtualTag,
+    reconcileVirtualTagKey:reconcileVirtualTagKey, ensureVirtualTagVisible:ensureVirtualTagVisible,
+    removeVirtualTag:removeVirtualTag, getScroll:function(){return containerScroll;},
+    getOverflowPopover:function(){return overflowPopover;}, getOverflowScroll:function(){return overflowScroll;}
+  };
+  state.runtime = record;
+  api.own(destroyRuntime);
+  api.bindFocusTarget(root);
+
   scope.add(DOM.listen(root,'keydown',function(event){
     if (opts.hosted === true || adding === true || opts.editable !== true || InteractionPolicy.mutationLocked(opts) || event.defaultPrevented) return;
     var state = keyboard && keyboard.virtualFocus ? keyboard.virtualFocus.getState() : null;
@@ -1546,12 +1542,149 @@ function create(options) {
   var initialItemsSnapshot=publicItems(),initialSelectionSnapshot=selection.values.slice();
   if(opts.hosted!==true&&(formField||opts.name)){formBridge=FormBridge.create({document:doc,root:root,target:container,formField:formField,name:opts.name,value:canonicalFormValue(),disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,moveIntoRoot:false,onNativeChange:function(value){var values=Array.isArray(value)?value.slice():(value===''?[]:[value]);if(opts.checkable===true)setValue(values,{silent:true,source:'form-field',reason:'native-change'});else setItems(values.map(function(entry){var label=String(entry);if(formField&&String(formField.tagName||'').toLowerCase()==='select'){var option=Array.prototype.find.call(formField.options||[],function(o){return String(o.value)===String(entry);});if(option)label=String(option.textContent||option.label||option.value);}return {key:String(entry),value:String(entry),label:label};}),{silent:true,source:'form-field',reason:'native-change'});},onReset:function(){setItems(initialItemsSnapshot,{silent:true,source:'form',reason:'reset'});if(opts.checkable===true)setValue(initialSelectionSnapshot,{silent:true,source:'form',reason:'reset'});}});}
   render('mount');syncFormBridge({silent:true});
-  return api;
+  return root;
 }
 
-export const Tags = Object.freeze({
-    definition: Object.freeze({ initializer: Object.freeze({ mode: 'create', bind: 'container' }) }),
-    create
-});
-export { create };
+function resolveTagsOptions(options) {
+  var source = Utils.mergeOwn(options || {});
+  var opts = Utils.mergeOwn(TAGS_DEFAULTS, source);
+  var doc = opts.document || (opts.formField && opts.formField.ownerDocument) || (opts.container && opts.container.ownerDocument) || global.document;
+  var formField = opts.formField || null;
+  if (formField && typeof formField === 'string') formField = DOM.query(doc, formField);
+  if (formField && !FormBridge.isFormField(formField)) throw new TypeError('[QXFRAME9A7C2] Tags formField must resolve to input, textarea, or select.');
+  var container = opts.container || null;
+  if (container && typeof container === 'string') container = DOM.query(doc, container);
+  if (formField) {
+    if (!own(source,'name') && formField.name) opts.name=formField.name;
+    if (!own(source,'disabled')) opts.disabled=formField.disabled===true;
+    if (!own(source,'readOnly') && 'readOnly' in formField) opts.readOnly=formField.readOnly===true;
+    if (!own(source,'required')) opts.required=formField.required===true;
+  }
+  opts.size=normalizeSize(opts.size);
+  opts.overflow=normalizeOverflow(opts.overflow);
+  opts.maxVisible=normalizeMaxVisible(opts.maxVisible);
+  opts.variant=normalizeVariant(opts.variant);
+  if (String(opts.overflowTrigger || 'hover').trim() !== 'hover') throw new TypeError('[QXFRAME9A7C2] Tags overflowTrigger is hover-only; click/focus overflow toggles are not supported.');
+  opts.overflowTrigger='hover';
+  opts.value=normalizeStringArray(own(source,'value')?source.value:(own(source,'defaultValue')?source.defaultValue:[]),'value');
+  var normalized=normalizeItems(opts.items||[]);
+  if((!Array.isArray(source.items)||source.items.length===0)&&formField){
+    var nativeInitial=FormBridge.read(formField),nativeValues=Array.isArray(nativeInitial)?nativeInitial.slice():(nativeInitial===''?[]:[nativeInitial]);
+    normalized=nativeValues.map(function(value){
+      var label=String(value);
+      if(String(formField.tagName||'').toLowerCase()==='select'){
+        var option=Array.prototype.find.call(formField.options||[],function(entry){return String(entry.value)===String(value);});
+        if(option)label=String(option.textContent||option.label||option.value);
+      }
+      return {key:String(value),value:String(value),label:label,removable:true,disabled:false,color:'',icon:undefined,href:'',className:''};
+    });
+  }
+  if(!own(source,'value')&&!own(source,'defaultValue')&&formField&&opts.checkable===true){
+    var nativeChecked=FormBridge.read(formField);
+    opts.value=normalizeStringArray(Array.isArray(nativeChecked)?nativeChecked:(nativeChecked===''?[]:[nativeChecked]),'value');
+  }
+  var initialValues=Object.create(null);
+  normalized.forEach(function(item){initialValues[item.value]=true;});
+  opts.value.forEach(function(value){if(!initialValues[value])throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');});
+  opts.items=normalized;
+  opts.document=doc;
+  opts.container=container;
+  opts.formField=formField;
+  return { source:source, options:opts, document:doc, formField:formField, container:container, initialFieldValue:opts.checkable===true?opts.value.slice():normalized.map(function(item){return item.value;}) };
+}
+function recordForTags(instance) {
+  var state=tagsState.get(instance), record=state&&state.runtime;
+  if(!record) throw new TypeError('[QXFRAME9A7C2] Invalid Tags instance.');
+  return record;
+}
+
+export class Tags extends FieldComponent {
+  static options = TAGS_DEFAULTS;
+  static contract = ComponentContracts.get('Tags');
+  static immutableOptions = Object.freeze(['container','document','formField','hosted']);
+
+  constructor(options = {}) {
+    var resolved=resolveTagsOptions(options);
+    super(resolved.options);
+    tagsState.set(this,{source:resolved.source,document:resolved.document,formField:resolved.formField,container:resolved.container,runtime:null});
+    this.setFieldValue(resolved.initialFieldValue,{silent:true,force:true});
+  }
+
+  updateOptions(nextOptions = {}) {
+    var next=Utils.mergeOwn(nextOptions||{});
+    var state=tagsState.get(this)||{};
+    var immutableCurrent={container:state.container,document:state.document,formField:state.formField,hosted:this.options.hosted};
+    ['container','document','formField','hosted'].forEach(function(name){
+      if(!own(next,name))return;
+      if(next[name]!==immutableCurrent[name])throw new Error('[QXFRAME9A7C2] Tags option "'+name+'" is immutable; destroy and recreate to change it.');
+      delete next[name];
+    });
+    if(own(next,'size'))next.size=normalizeSize(next.size);
+    if(own(next,'overflow'))next.overflow=normalizeOverflow(next.overflow);
+    if(own(next,'maxVisible'))next.maxVisible=normalizeMaxVisible(next.maxVisible);
+    if(own(next,'variant'))next.variant=normalizeVariant(next.variant);
+    if(own(next,'overflowTrigger')&&String(next.overflowTrigger||'hover').trim()!=='hover')throw new TypeError('[QXFRAME9A7C2] Tags overflowTrigger is hover-only; click/focus overflow toggles are not supported.');
+    if(own(next,'overflowTrigger'))next.overflowTrigger='hover';
+    if(own(next,'items'))next.items=normalizeItems(next.items);
+    if(own(next,'value')){
+      next.value=normalizeStringArray(next.value,'value');
+      var record=tagsState.get(this)&&tagsState.get(this).runtime;
+      var items=own(next,'items')?next.items:(record?record.getItems():this.options.items);
+      var allowed=Object.create(null);(items||[]).forEach(function(item){allowed[item.value]=true;});
+      next.value.forEach(function(value){if(!allowed[value])throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');});
+    }
+    return super.updateOptions(next);
+  }
+
+  [componentHooks.render]() {
+    var state=tagsState.get(this);
+    return state.runtime?state.runtime.getRootElement():setupTags(this);
+  }
+  [fieldHooks.fieldOptionsUpdated](next,_previous,patch) {
+    var state=tagsState.get(this);
+    if(state&&state.runtime)state.runtime.applyOptions(next,patch);
+  }
+
+  add(text,meta){return recordForTags(this).add(text,meta);}
+  addMany(values,meta){return recordForTags(this).addMany(values,meta);}
+  remove(value,meta){return recordForTags(this).remove(value,meta);}
+  toggle(value,desired,meta){return recordForTags(this).toggle(value,desired,meta);}
+  setItems(items,meta){return recordForTags(this).setItems(items,meta);}
+  setValue(value,meta){return recordForTags(this).setValue(value,meta);}
+  clear(meta){return recordForTags(this).clear(meta);}
+  has(value){return recordForTags(this).has(value);}
+  getValue(){return recordForTags(this).getValue();}
+  getItems(){return recordForTags(this).getItems();}
+  beginAdd(){return recordForTags(this).beginAdd();}
+  cancelAdd(){return recordForTags(this).cancelAdd();}
+  editAt(index,text,meta){return recordForTags(this).editAt(index,text,meta);}
+  removeAt(index,meta){return recordForTags(this).removeAt(index,meta);}
+  setInputValue(value,meta){return recordForTags(this).setInputValue(value,meta);}
+  commitInput(reason,event){return recordForTags(this).commitInput(reason,event);}
+  refreshOverflow(){return recordForTags(this).refreshOverflow();}
+  setDisabled(value){return this.updateOptions({disabled:value===true});}
+  setReadOnly(value){return this.updateOptions({readOnly:value===true});}
+  focus(){return recordForTags(this).focus();}
+  blur(){return recordForTags(this).blur();}
+  getState(){return recordForTags(this).getState();}
+  getRootElement(){return recordForTags(this).getRootElement();}
+  getSurfaceElement(){return recordForTags(this).getSurfaceElement();}
+  getInputElement(){return recordForTags(this).getInputElement();}
+  getAddTriggerElement(){return recordForTags(this).getAddTriggerElement();}
+  getOverflowElement(){return recordForTags(this).getOverflowElement();}
+  getFormField(){return recordForTags(this).getFormField();}
+  getTokenInput(){return recordForTags(this).getTokenInput();}
+  getSelection(){return recordForTags(this).getSelection();}
+  getKeyboardNavigation(){return recordForTags(this).getKeyboardNavigation();}
+  getKeyboardRegion(){return recordForTags(this).getKeyboardRegion();}
+  getVirtualTagElement(key){return recordForTags(this).getVirtualTagElement(key);}
+  moveVirtualTag(key,step){return recordForTags(this).moveVirtualTag(key,step);}
+  reconcileVirtualTagKey(key){return recordForTags(this).reconcileVirtualTagKey(key);}
+  ensureVirtualTagVisible(key){return recordForTags(this).ensureVirtualTagVisible(key);}
+  removeVirtualTag(key,meta){return recordForTags(this).removeVirtualTag(key,meta);}
+  getScroll(){return recordForTags(this).getScroll();}
+  getOverflowPopover(){return recordForTags(this).getOverflowPopover();}
+  getOverflowScroll(){return recordForTags(this).getOverflowScroll();}
+}
+
 export default Tags;

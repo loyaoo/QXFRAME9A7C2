@@ -16,13 +16,6 @@
       "namespace": "domHeadless"
     },
     {
-      "name": "Menu",
-      "module": "menu",
-      "source": "src/components/menu.js",
-      "phase": "80→84-prep",
-      "namespace": "components"
-    },
-    {
       "name": "Message",
       "module": "message",
       "source": "src/components/message.js",
@@ -51,13 +44,6 @@
       "namespace": "components"
     },
     {
-      "name": "Scroll",
-      "module": "scroll",
-      "source": "src/components/scroll.js",
-      "phase": "88→92-prep",
-      "namespace": "components"
-    },
-    {
       "name": "SwitchLoadingGuard",
       "module": "switch",
       "source": "src/core/switchLoadingGuard.js",
@@ -65,38 +51,10 @@
       "namespace": "bootstrap-behavior"
     },
     {
-      "name": "Table",
-      "module": "table",
-      "source": "src/components/table.js",
-      "phase": "88→92",
-      "namespace": "components"
-    },
-    {
-      "name": "Tags",
-      "module": "tags",
-      "source": "src/components/tags.js",
-      "phase": "88→92-tail",
-      "namespace": "components"
-    },
-    {
-      "name": "Transfer",
-      "module": "transfer",
-      "source": "src/components/transfer.js",
-      "phase": "80→84-prep",
-      "namespace": "components"
-    },
-    {
       "name": "Trigger",
       "module": "trigger",
       "source": "src/components/trigger.js",
       "phase": "50→58-foundation",
-      "namespace": "components"
-    },
-    {
-      "name": "Upload",
-      "module": "upload",
-      "source": "src/components/upload.js",
-      "phase": "88→92",
       "namespace": "components"
     },
     {

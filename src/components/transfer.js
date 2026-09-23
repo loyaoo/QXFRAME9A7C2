@@ -1,17 +1,18 @@
 // Canonical ESM Transfer implementation with direct Pagination/Table dependencies.
 import { InteractionPolicy } from '../core/interactionPolicy.js';
-import { Events } from '../core/events.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Utils } from '../utils/utils.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { Renderer } from '../core/renderer.js';
 import { Collection } from '../core/collection.js';
-import { OptionTransaction } from '../core/optionTransaction.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 import { ComponentContracts } from '../core/componentContracts.js';
+import { componentHooks } from '../core/componentHooks.js';
+import { fieldHooks } from '../core/fieldHooks.js';
 import { DOMTemplate } from '../core/domTemplate.js';
+import { FieldComponent } from './field.js';
 import { ItemCollection } from './item-collection.js';
 import { Item } from './item.js';
 import { Control } from './control.js';
@@ -19,6 +20,13 @@ import { Pagination } from './pagination.js';
 import { Table } from './table.js';
 
 const global=globalThis;
+
+const transferState = new WeakMap();
+const TRANSFER_DEFAULTS = Object.freeze({
+  items: [], value: [], titles: ['Source', 'Target'], searchable: true, sortable: true,
+  oneWay: false, disabled: false, readOnly: false, required: false, size: 'md',
+  virtual: false, pagination: false, table: false, status: 'default'
+});
 
 const blueprint=DOMTemplate.staticHTML`
   <div class="qxframe9a7c2-transfer" data-qxframe9a7c2-ref="root">
@@ -105,27 +113,12 @@ function tableConfig(value, side) {
   return base;
 }
 
-function create(source, overrides) {
-  var fieldInit = Control.resolveFieldOptions(source, overrides);
-  var incoming = fieldInit.options;
-  if (fieldInit.hasNativeValue && !own(incoming, 'value')) {
-    var rawNative = String(fieldInit.nativeValue == null ? '' : fieldInit.nativeValue);
-    incoming.value = rawNative === '' ? [] : rawNative.split(',').filter(function (value) { return value !== ''; });
-  }
-  var opts = Utils.assignOwn({
-    items: [], value: [], titles: ['Source', 'Target'], searchable: true, sortable: true,
-    oneWay: false, disabled: false, readOnly: false, required: false, size: 'md', virtual: false, pagination: false, table: false, status: 'default'
-  }, incoming);
-  ComponentContracts.validate(ComponentContracts.get('Transfer'),incoming,'Transfer');
+function setupTransfer(instance) {
+  var state = transferState.get(instance);
+  if (!state) throw new TypeError('[QXFRAME9A7C2] Invalid Transfer instance.');
+  var fieldInit = state.fieldInit;
+  var opts = Utils.mergeOwn(instance.options);
   var host = opts.container || null;
-  if (!host && opts.elements == null && !opts.formField) throw new TypeError('[QXFRAME9A7C2] Transfer requires target/container, formField, or options.elements.');
-  if (!Array.isArray(opts.items)) throw new TypeError('[QXFRAME9A7C2] Transfer items must be an array.');
-  if (!Array.isArray(opts.value)) throw new TypeError('[QXFRAME9A7C2] Transfer value must be an array.');
-  opts.status = statusName(opts.status);
-  paginationConfig(opts.pagination, 'source'); paginationConfig(opts.pagination, 'target');
-  tableConfig(opts.table, 'source'); tableConfig(opts.table, 'target');
-
-  var emitter = Events.createEmitter();
   var scope = Lifecycle.createScope();
   var domBinding = null;
   var root = null;
@@ -138,39 +131,7 @@ function create(source, overrides) {
   var sourceTable = null;
   var targetTable = null;
   var destroyed = false;
-  var api = null;
-  api = {
-    move: move,
-    moveToRight: moveToRight,
-    moveToLeft: moveToLeft,
-    selectAll: selectAll,
-    setSearch: setSearch,
-    setPage: function (side, current) {
-      var pager = pagerForSide(side);
-      if (!pager) throw new TypeError('[QXFRAME9A7C2] Transfer setPage() requires pagination for side "' + side + '".');
-      pager.setCurrent(current, { source: 'api', reason: 'set-page' });
-      return api;
-    },
-    setValue: setValue,
-    setItems: setItems,
-    updateOptions: updateOptions,
-    setDisabled: function (value) { return updateOptions({ disabled: value === true }); },
-    setReadOnly: function (value) { return updateOptions({ readOnly: value === true }); },
-    getState: getState,
-    getSourceList: function () { return sourceList; },
-    getTargetList: function () { return targetList; },
-    getSourcePagination: function () { return sourcePagination; },
-    getTargetPagination: function () { return targetPagination; },
-    getSourceTable: function () { return sourceTable; },
-    getTargetTable: function () { return targetTable; },
-    getRootElement: function () { return root; },
-    getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
-    getFormBridge: function () { return formBridge; },
-    getRefs: function () { return refs; },
-    on: emitter.on,
-    once: emitter.once,
-    destroy: destroy
-  };
+  var api = instance;
   var formBridge = null;
   var doc = fieldInit.document || opts.document || (host && host.ownerDocument) || (opts.formField && opts.formField.ownerDocument) || global.document;
   var items = [];
@@ -355,7 +316,7 @@ function create(source, overrides) {
         if (Utils.isFunction(userChange)) userChange(current, pageSize, detail);
         if (destroyed) return;
         if (Utils.isFunction(opts.onPageChange)) opts.onPageChange(side, current, pageSize, payload);
-        if (!destroyed) emitter.emit('page-change', payload);
+        if (!destroyed) api.emit('page-change', payload);
       },
       onSizeChange: function (pageSize, detail) {
         if (Utils.isFunction(userSizeChange)) userSizeChange(pageSize, detail);
@@ -593,7 +554,7 @@ function create(source, overrides) {
         var payload = { side: side, value: searchValue, source: source, reason: detail && detail.reason || 'search', originalEvent: detail && detail.originalEvent || null, transfer: api };
         if (Utils.isFunction(opts.onSearch)) opts.onSearch(side, searchValue, payload);
         if (destroyed) return;
-        emitter.emit('search', payload);
+        api.emit('search', payload);
         if (destroyed) return;
         syncHeader();
       }
@@ -632,6 +593,7 @@ function create(source, overrides) {
 
   function emitChange(previous, detail) {
     detail = detail || {};
+    api.setFieldValue(targetValues, { silent: true, force: true });
     if (formBridge) formBridge.setValue(targetValues, { forceEvent: true, source: detail.source || 'api', reason: detail.reason || 'change' });
     var payload = {
       value: targetValues.slice(), previousValue: previous.slice(), direction: detail.direction || 'set',
@@ -640,7 +602,7 @@ function create(source, overrides) {
     };
     if (Utils.isFunction(opts.onChange)) opts.onChange(targetValues.slice(), payload);
     if (destroyed) return;
-    emitter.emit('change', payload);
+    api.emit('change', payload);
   }
 
   function setValue(nextValue, meta) {
@@ -649,6 +611,7 @@ function create(source, overrides) {
     if (sameArray(next, targetValues)) return api;
     var previous = targetValues.slice();
     targetValues = next;
+    api.setFieldValue(targetValues, { silent: true, force: true });
     refreshLists(meta && meta.reason || 'set-value');
     if (!(meta && meta.silent === true)) emitChange(previous, Utils.assignOwn({ direction: 'set' }, meta || {}));
     return api;
@@ -661,6 +624,7 @@ function create(source, overrides) {
     indexItems(items);
     var previous = targetValues.slice();
     targetValues = targetValues.filter(function (value) { return !!records[value]; });
+    api.setFieldValue(targetValues, { silent: true, force: true });
     refreshLists(meta && meta.reason || 'set-items');
     if (!sameArray(previous, targetValues) && !(meta && meta.silent === true)) {
       emitChange(previous, { direction: 'set', movedValues: [], source: meta && meta.source || 'api', reason: meta && meta.reason || 'items-pruned' });
@@ -782,14 +746,12 @@ function create(source, overrides) {
     return api;
   }
 
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
-    var next = nextOptions || {};
-    ComponentContracts.validate(ComponentContracts.get('Transfer'),next,'Transfer');
-    OptionTransaction.rejectImmutable(next, ['target','container','formField'], 'Transfer field binding');
-    if (own(next, 'items') && !Array.isArray(next.items)) throw new TypeError('[QXFRAME9A7C2] Transfer items must be an array.');
-    if (own(next, 'value') && !Array.isArray(next.value)) throw new TypeError('[QXFRAME9A7C2] Transfer value must be an array.');
-    var candidate = Utils.mergeOwn( opts, next);
+    var next = patch || {};
+    var candidate = Utils.mergeOwn(nextOptions);
+    if (!Array.isArray(candidate.items)) throw new TypeError('[QXFRAME9A7C2] Transfer items must be an array.');
+    if (!Array.isArray(candidate.value)) throw new TypeError('[QXFRAME9A7C2] Transfer value must be an array.');
     candidate.status = statusName(candidate.status);
     paginationConfig(candidate.pagination, 'source'); paginationConfig(candidate.pagination, 'target');
     tableConfig(candidate.table, 'source'); tableConfig(candidate.table, 'target');
@@ -801,6 +763,7 @@ function create(source, overrides) {
       targetValues = targetValues.filter(function (value) { return !!records[value]; });
     }
     if (own(next, 'value')) targetValues = validateTargetValues(next.value);
+    api.setFieldValue(targetValues, { silent: true, force: true });
     syncClasses();
     if (own(next, 'pagination')) syncPaginationControllers(true);
     else syncPaginationControllers(false);
@@ -828,7 +791,7 @@ function create(source, overrides) {
     });
   }
 
-  function destroy() {
+  function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true;
     destroyPagination('source');
@@ -840,7 +803,6 @@ function create(source, overrides) {
     if (targetOrder) targetOrder.destroy();
     sourceList = null; targetList = null; targetOrder = null; sourcePagination = null; targetPagination = null; sourceTable = null; targetTable = null;
     scope.dispose();
-    emitter.dispose();
     if (formBridge) formBridge.destroy(); formBridge = null;
     if (domBinding) domBinding.release();
     domBinding = null; root = null; refs = null; host = null;
@@ -883,15 +845,96 @@ function create(source, overrides) {
 
 
 
+  var record = {
+    move: move, moveToRight: moveToRight, moveToLeft: moveToLeft, selectAll: selectAll, setSearch: setSearch,
+    setPage: function (side, current) {
+      var pager = pagerForSide(side);
+      if (!pager) throw new TypeError('[QXFRAME9A7C2] Transfer setPage() requires pagination for side "' + side + '".');
+      pager.setCurrent(current, { source: 'api', reason: 'set-page' });
+      return api;
+    },
+    setValue: setValue, setItems: setItems, applyOptions: applyOptions, getState: getState,
+    getSourceList: function () { return sourceList; }, getTargetList: function () { return targetList; },
+    getSourcePagination: function () { return sourcePagination; }, getTargetPagination: function () { return targetPagination; },
+    getSourceTable: function () { return sourceTable; }, getTargetTable: function () { return targetTable; },
+    getRootElement: function () { return root; }, getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
+    getFormBridge: function () { return formBridge; }, getRefs: function () { return refs; }
+  };
+  state.runtime = record;
+  api.own(destroyRuntime);
+  api.bindFocusTarget(root);
+  api.setFieldValue(targetValues, { silent: true, force: true });
   syncTableProjections('init');
   syncClasses(); syncHeader(); syncOperations();
-  return api;
+  return root;
 }
 
-export const Transfer=Object.freeze({
-  definition:Object.freeze({initializer:Object.freeze({mode:'create',bind:'source'})}),
-  create,
-  enhance:function(input,options){return create(input,options||{});},
-  createDefaultDOM:DOMFactory.createDefaultDOM
-});
-export { create };
+function resolveTransferOptions(source, overrides) {
+  var fieldInit = Control.resolveFieldOptions(source, overrides);
+  var incoming = Utils.mergeOwn(fieldInit.options);
+  if (fieldInit.hasNativeValue && !own(incoming, 'value')) {
+    var rawNative = String(fieldInit.nativeValue == null ? '' : fieldInit.nativeValue);
+    incoming.value = rawNative === '' ? [] : rawNative.split(',').filter(function (value) { return value !== ''; });
+  }
+  var opts = Utils.mergeOwn(TRANSFER_DEFAULTS, incoming);
+  if (!opts.container && opts.elements == null && !opts.formField) throw new TypeError('[QXFRAME9A7C2] Transfer requires target/container, formField, or options.elements.');
+  if (!Array.isArray(opts.items)) throw new TypeError('[QXFRAME9A7C2] Transfer items must be an array.');
+  if (!Array.isArray(opts.value)) throw new TypeError('[QXFRAME9A7C2] Transfer value must be an array.');
+  opts.status = statusName(opts.status);
+  paginationConfig(opts.pagination, 'source'); paginationConfig(opts.pagination, 'target');
+  tableConfig(opts.table, 'source'); tableConfig(opts.table, 'target');
+  return { fieldInit: fieldInit, options: opts };
+}
+function recordForTransfer(instance) {
+  var state = transferState.get(instance), record = state && state.runtime;
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Transfer instance.');
+  return record;
+}
+
+export class Transfer extends FieldComponent {
+  static contract = ComponentContracts.get('Transfer');
+  static immutableOptions = Object.freeze(['target','container','formField']);
+  static createDefaultDOM = DOMFactory.createDefaultDOM;
+  static create(source = {}, overrides) { return new this(source, overrides).render(); }
+  static enhance(input, options) { return this.create(input, options || {}); }
+
+  constructor(source = {}, overrides) {
+    var resolved = resolveTransferOptions(source, overrides);
+    super(resolved.options);
+    transferState.set(this, { fieldInit: resolved.fieldInit, runtime: null });
+  }
+
+  [componentHooks.render]() {
+    var state = transferState.get(this);
+    return state.runtime ? state.runtime.getRootElement() : setupTransfer(this);
+  }
+  [fieldHooks.fieldOptionsUpdated](next, _previous, patch) {
+    var state = transferState.get(this);
+    if (state && state.runtime) state.runtime.applyOptions(next, patch);
+  }
+
+  move(value, toIndex, meta) { return recordForTransfer(this).move(value, toIndex, meta); }
+  moveToRight(values, meta) { return recordForTransfer(this).moveToRight(values, meta); }
+  moveToLeft(values, meta) { return recordForTransfer(this).moveToLeft(values, meta); }
+  selectAll(side, selected) { return recordForTransfer(this).selectAll(side, selected); }
+  setSearch(side, value) { return recordForTransfer(this).setSearch(side, value); }
+  setPage(side, current) { return recordForTransfer(this).setPage(side, current); }
+  setValue(value, meta) { return recordForTransfer(this).setValue(value, meta); }
+  setItems(items, meta) { return recordForTransfer(this).setItems(items, meta); }
+  setDisabled(value) { return this.updateOptions({ disabled: value === true }); }
+  setReadOnly(value) { return this.updateOptions({ readOnly: value === true }); }
+  getState() { return recordForTransfer(this).getState(); }
+  getSourceList() { return recordForTransfer(this).getSourceList(); }
+  getTargetList() { return recordForTransfer(this).getTargetList(); }
+  getSourcePagination() { return recordForTransfer(this).getSourcePagination(); }
+  getTargetPagination() { return recordForTransfer(this).getTargetPagination(); }
+  getSourceTable() { return recordForTransfer(this).getSourceTable(); }
+  getTargetTable() { return recordForTransfer(this).getTargetTable(); }
+  getRootElement() { return recordForTransfer(this).getRootElement(); }
+  getFormField() { return recordForTransfer(this).getFormField(); }
+  getFormBridge() { return recordForTransfer(this).getFormBridge(); }
+  getRefs() { return recordForTransfer(this).getRefs(); }
+}
+
+export { createDefaultDOM };
+export default Transfer;

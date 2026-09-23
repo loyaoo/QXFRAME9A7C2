@@ -80,6 +80,12 @@
       "phase": "45→50-prep"
     },
     {
+      "name": "Menu",
+      "module": "menu",
+      "source": "src/components/menu.js",
+      "phase": "98→99"
+    },
+    {
       "name": "Modal",
       "module": "modal",
       "source": "src/components/modal.js",
@@ -122,6 +128,12 @@
       "phase": "45→50-prep"
     },
     {
+      "name": "Scroll",
+      "module": "scroll",
+      "source": "src/components/scroll.js",
+      "phase": "98→99"
+    },
+    {
       "name": "Select",
       "module": "select",
       "source": "src/components/select.js",
@@ -146,6 +158,12 @@
       "phase": "45→50-prep"
     },
     {
+      "name": "Table",
+      "module": "table",
+      "source": "src/components/table.js",
+      "phase": "99→100"
+    },
+    {
       "name": "Tabs",
       "module": "tabs",
       "source": "src/components/tabs.js",
@@ -156,6 +174,12 @@
       "module": "tag-input",
       "source": "src/components/tag-input.js",
       "phase": "40→45"
+    },
+    {
+      "name": "Tags",
+      "module": "tags",
+      "source": "src/components/tags.js",
+      "phase": "99→100"
     },
     {
       "name": "TimePicker",
@@ -170,10 +194,22 @@
       "phase": "50→58"
     },
     {
+      "name": "Transfer",
+      "module": "transfer",
+      "source": "src/components/transfer.js",
+      "phase": "98→99"
+    },
+    {
       "name": "TreeSelect",
       "module": "tree-select",
       "source": "src/components/tree-select.js",
       "phase": "64→70"
+    },
+    {
+      "name": "Upload",
+      "module": "upload",
+      "source": "src/components/upload.js",
+      "phase": "98→99"
     },
     {
       "name": "WheelPicker",
