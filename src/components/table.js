@@ -353,6 +353,7 @@ function create(options) {
           }
         }
         if (typeof opts.onChange === 'function') opts.onChange(state, Utils.mergeOwn( detail, { instance: api }));
+        if (destroyed) return;
         if (isRemoteQueryReason(detail && detail.reason)) requestRemote(detail && detail.reason || 'query');
       }
     };
@@ -2384,7 +2385,7 @@ function create(options) {
     setSort: model.setSort,
     setFilter: model.setFilter,
     setFilters: model.setFilters,
-    setSearchValue: function (value, meta) { opts.searchValue = value == null ? '' : String(value); if (typeof opts.onSearchChange === 'function') opts.onSearchChange(opts.searchValue, Utils.assignOwn({ instance: api }, meta || {})); return model.setSearchValue(opts.searchValue, meta); },
+    setSearchValue: function (value, meta) { opts.searchValue = value == null ? '' : String(value); if (typeof opts.onSearchChange === 'function') opts.onSearchChange(opts.searchValue, Utils.assignOwn({ instance: api }, meta || {})); if (destroyed) return false; return model.setSearchValue(opts.searchValue, meta); },
     setSelectedKeys: function (keys, meta) { resetRemoteSelection(); return model.setSelectedKeys(keys, meta); },
     toggleSelected: function (key, desired, meta) { if (toggleQuerySelection(key, desired, meta)) return true; return model.toggleSelected(key, desired, meta); },
     selectVisible: function (desired, meta) { if (isRemote() && opts.remoteSelectionScope === 'query') return setQuerySelectionAll(desired, meta); return model.selectVisible(desired, meta); },
