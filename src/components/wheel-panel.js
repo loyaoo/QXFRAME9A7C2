@@ -306,8 +306,12 @@ function create(options) {
     var index=Math.max(0, Math.min(activeColumnIndex, Math.max(0,columnRecords.length-1)));
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       var nextColumn=event.key === 'ArrowLeft' ? index-1 : index+1;
-      if (!columnRecords[nextColumn]) return false;
-      return setActiveColumn(nextColumn, { source:'keyboard', reason:event.key, originalEvent:event });
+      if (!columnRecords[nextColumn]) {
+        setActiveColumn(index, { source:'keyboard', reason:event.key + '-boundary', originalEvent:event });
+        return true;
+      }
+      setActiveColumn(nextColumn, { source:'keyboard', reason:event.key, originalEvent:event });
+      return true;
     }
     var record=columnRecords[index]; if (!record) return false;
     var enabled=[]; record.items.forEach(function(item,itemIndex){ if(!item.disabled) enabled.push(itemIndex); }); if(!enabled.length) return false;
@@ -321,9 +325,11 @@ function create(options) {
     else if(event.key==='End') next=enabled.length-1;
     else return false;
     var target=enabled[next]; if(target===undefined) return false;
-    var changed=selectIndex(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
-    if(changed) activateVirtualAt(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
-    return changed;
+    selectIndex(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
+    activateVirtualAt(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
+    // Recognized navigation remains owned by the open Picker even when the target is
+    // already selected at a boundary. Never leak the arrow back to the hosted input caret.
+    return true;
   }
 
   function renderColumn(index) {
