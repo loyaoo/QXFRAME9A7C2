@@ -74,10 +74,12 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
   }
 
   function create(options) {
-    var opts = mergeOptions({ multiple: false, autoUpload: true, maxCount: 0, maxSize: 0 }, options);
+    var supplied = options || {};
+    var opts = mergeOptions({ multiple: false, autoUpload: true, maxCount: 0, maxSize: 0 }, supplied);
     var emitter = Events.createEmitter();
     var destroyed = false;
-    var records = asArray(own(opts, 'value') ? opts.value : opts.defaultValue).map(function (item) { return normalizeRecord(item); });
+    var controlled = own(supplied, 'value');
+    var records = asArray(own(supplied, 'value') ? supplied.value : supplied.defaultValue).map(function (item) { return normalizeRecord(item); });
     var tasks = Object.create(null);
     var mutationGeneration = 0;
     var api = null;
@@ -87,7 +89,12 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       return mutationGeneration;
     }
 
-    function snapshots() { return records.map(snapshotRecord); }
+    function snapshotList(list) { return (list || []).map(snapshotRecord); }
+    function snapshots() { return snapshotList(records); }
+    function proposalMeta(meta, list) {
+      var value = snapshotList(list);
+      return mergeOptions(mergeOptions({}, meta), { value: value, proposedValue: value.slice(), controlled: true });
+    }
     function findIndex(target) {
       if (typeof target === 'number' && isFinite(target)) return Math.trunc(target);
       var uid = target && typeof target === 'object' ? target.uid : target;
@@ -100,7 +107,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       if (destroyed) return;
       // `operation` is the stable lifecycle verb. `reason` remains semantic metadata and
       // may be refined by an interaction owner (for example drag-sort -> drag).
-      var detail = mergeOptions({ operation: reason, reason: reason, file: record ? snapshotRecord(record) : null, value: snapshots(), controller: api }, meta);
+      var detail = mergeOptions({ operation: reason, reason: reason, file: record ? snapshotRecord(record) : null, value: snapshots(), controlled: controlled, controller: api }, meta);
       if (detail.silent !== true) {
         if (Utils.isFunction(opts.onChange)) opts.onChange(detail.value.slice(), detail);
         emitter.emit('change', detail);
@@ -131,7 +138,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
     }
     function setValue(next, meta) {
       if (destroyed) return api;
-      invalidatePendingMutations();
+      if (!(meta && meta.preservePending === true)) invalidatePendingMutations();
       var incoming = asArray(next).map(function (item) { return normalizeRecord(item); });
       var incomingUids = Object.create(null);
       incoming.forEach(function (record) { incomingUids[record.uid] = true; });
@@ -214,13 +221,14 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
         throw error;
       });
     }
-    function prepareFile(file, meta, sourceGeneration) {
+    function prepareFile(file, meta, sourceGeneration, workingRecords) {
       if (!file) return Promise.resolve(null);
       if (!acceptFile(file, opts.accept)) { reject(file, 'accept', { accept: opts.accept }); return Promise.resolve(null); }
       if (Number(opts.maxSize || 0) > 0 && Number(file.size || 0) > Number(opts.maxSize)) { reject(file, 'maxSize', { maxSize: Number(opts.maxSize) }); return Promise.resolve(null); }
       var initial = normalizeRecord(file);
       var generation = sourceGeneration === undefined ? mutationGeneration : sourceGeneration;
-      var before = Utils.isFunction(opts.beforeUpload) ? Promise.resolve().then(function () { return opts.beforeUpload(file, snapshots()); }) : Promise.resolve(undefined);
+      var targetRecords = workingRecords || records;
+      var before = Utils.isFunction(opts.beforeUpload) ? Promise.resolve().then(function () { return opts.beforeUpload(file, snapshotList(targetRecords)); }) : Promise.resolve(undefined);
       return before.then(function (result) {
         if (destroyed || generation !== mutationGeneration) return null;
         if (result === LIST_IGNORE) return null;
@@ -230,19 +238,19 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
         }
         var max = Number(opts.maxCount || 0);
         if (max === 1) {
-          records.slice().forEach(function (old) { cancelTask(old.uid, 'replace'); });
-          records = [];
-        } else if (max > 0 && records.length >= max) {
+          if (!controlled) targetRecords.slice().forEach(function (old) { cancelTask(old.uid, 'replace'); });
+          targetRecords.splice(0, targetRecords.length);
+        } else if (max > 0 && targetRecords.length >= max) {
           reject(file, 'maxCount', { maxCount: max });
           return null;
         }
-        if (opts.multiple !== true && max !== 1 && records.length) {
-          records.slice().forEach(function (old) { cancelTask(old.uid, 'replace'); });
-          records = [];
+        if (opts.multiple !== true && max !== 1 && targetRecords.length) {
+          if (!controlled) targetRecords.slice().forEach(function (old) { cancelTask(old.uid, 'replace'); });
+          targetRecords.splice(0, targetRecords.length);
         }
-        records.push(initial);
-        emit('add', initial, meta);
-        if (opts.autoUpload !== false && !initial.skipAutoUpload && Utils.isFunction(opts.request)) {
+        targetRecords.push(initial);
+        emit('add', initial, controlled ? proposalMeta(meta, targetRecords) : meta);
+        if (!controlled && opts.autoUpload !== false && !initial.skipAutoUpload && Utils.isFunction(opts.request)) {
           return upload(initial.uid, mergeOptions({ source: 'auto' }, meta)).then(function () { return snapshotRecord(initial); }, function () { return snapshotRecord(initial); });
         }
         return snapshotRecord(initial);
@@ -258,11 +266,12 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       var list = Array.prototype.slice.call(files || []);
       var accepted = [];
       var generation = mutationGeneration;
+      var workingRecords = controlled ? records.slice() : records;
       var chain = Promise.resolve();
       list.forEach(function (file) {
         chain = chain.then(function () {
           if (opts.multiple !== true && accepted.length) return null;
-          return prepareFile(file, meta, generation).then(function (record) { if (record) accepted.push(record); });
+          return prepareFile(file, meta, generation, workingRecords).then(function (record) { if (record) accepted.push(record); });
         });
       });
       return chain.then(function () { return accepted.slice(); });
@@ -271,6 +280,13 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       var index = findIndex(target);
       if (index < 0 || opts.disabled === true) return false;
       var record = records[index];
+      if (controlled) {
+        var proposed = records.slice();
+        proposed.splice(index, 1);
+        invalidatePendingMutations();
+        emit('remove', record, proposalMeta(meta, proposed));
+        return true;
+      }
       cancelTask(record.uid, 'remove');
       records.splice(index, 1);
       emit('remove', record, meta);
@@ -281,9 +297,10 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       var toIndex = typeof to === 'number' ? Math.trunc(to) : findIndex(to);
       if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex || opts.disabled === true) return false;
       toIndex = Math.max(0, Math.min(records.length - 1, toIndex));
-      var record = records.splice(fromIndex, 1)[0];
-      records.splice(toIndex, 0, record);
-      emit('move', record, mergeOptions({ fromIndex: fromIndex, toIndex: toIndex }, meta));
+      var proposed = controlled ? records.slice() : records;
+      var record = proposed.splice(fromIndex, 1)[0];
+      proposed.splice(toIndex, 0, record);
+      emit('move', record, controlled ? proposalMeta(mergeOptions({ fromIndex: fromIndex, toIndex: toIndex }, meta), proposed) : mergeOptions({ fromIndex: fromIndex, toIndex: toIndex }, meta));
       return true;
     }
     function abort(target, meta) {
@@ -303,8 +320,19 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
     function updateOptions(nextOptions) {
       if (destroyed) return api;
       var next = nextOptions || {};
+      var previousUids = Object.create(null);
+      records.forEach(function (record) { previousUids[record.uid] = true; });
       opts = mergeOptions(opts, next);
-      if (own(next, 'value')) setValue(next.value, { source: 'options', silent: true });
+      if (own(next, 'value')) {
+        controlled = true;
+        setValue(next.value, { source: 'options', silent: true, preservePending: true });
+        if (opts.autoUpload !== false && Utils.isFunction(opts.request)) {
+          records.forEach(function (record) {
+            if (previousUids[record.uid] || !record.file || record.skipAutoUpload || record.status === 'uploading' || record.status === 'success') return;
+            upload(record.uid, { source: 'controlled-sync', reason: 'controlled-sync' }).catch(function () {});
+          });
+        }
+      }
       return api;
     }
     function destroy() {
@@ -321,7 +349,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       addFiles: addFiles, upload: upload, retry: upload, abort: abort, remove: remove, move: move,
       setValue: setValue, getValue: snapshots, find: function (target) { var record = findRecord(target); return record ? snapshotRecord(record) : null; },
       updateOptions: updateOptions, on: emitter.on, once: emitter.once, destroy: destroy,
-      getState: function () { return Object.freeze({ value: snapshots(), uploading: Object.keys(tasks).length, disabled: opts.disabled === true, mutationGeneration: mutationGeneration, destroyed: destroyed }); }
+      getState: function () { return Object.freeze({ value: snapshots(), controlled: controlled, uploading: Object.keys(tasks).length, disabled: opts.disabled === true, mutationGeneration: mutationGeneration, destroyed: destroyed }); }
     };
     return api;
   }
