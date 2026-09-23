@@ -5,7 +5,11 @@ import { fileURLToPath } from 'node:url';
 import { getWebSocketConstructor } from './websocket-client.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const required = process.env.QX_BROWSER_REQUIRED === '1';
+const cliArgs = process.argv.slice(2);
+const smokeArg = cliArgs.find(arg => arg.startsWith('--smoke='));
+const smokePath = smokeArg ? path.resolve(root, smokeArg.slice('--smoke='.length)) : path.join(root, 'tools', 'verify-browser-smoke.html');
+const skipDocs = cliArgs.includes('--skip-docs') || process.env.QX_BROWSER_SKIP_DOCS === '1';
+const required = cliArgs.includes('--required') || process.env.QX_BROWSER_REQUIRED === '1';
 const candidates = [
     process.env.CHROMIUM_BIN,
     '/usr/bin/chromium',
@@ -22,7 +26,7 @@ function skipped(reason) {
 }
 
 function smokeArtifacts() {
-    const source = fs.readFileSync(path.join(root, 'tools', 'verify-browser-smoke.html'), 'utf8');
+    const source = fs.readFileSync(smokePath, 'utf8');
     const css = fs.readFileSync(path.join(root, 'dist', 'qxframe9a7c2.css'), 'utf8');
     const framework = fs.readFileSync(path.join(root, 'dist', 'qxframe9a7c2.js'), 'utf8');
     const scripts = [];
@@ -244,9 +248,10 @@ async function main() {
         launched = await launchBrowser();
         cdp = await connectCDP(launched.endpoint);
         const payload = await runSmoke(cdp);
-        const docs = await runDocsPlayground(cdp);
+        const docs = skipDocs ? { ok:true, skipped:true } : await runDocsPlayground(cdp);
         payload.docs = docs;
         payload.ok = payload.ok && docs.ok;
+        payload.smokeSource = path.relative(root, smokePath).split(path.sep).join('/');
         payload.browser = browser;
         payload.skipped = false;
         payload.transport = 'cdp-setDocumentContent+theme-playground';
