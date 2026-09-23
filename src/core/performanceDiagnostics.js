@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 import { Scheduler } from './scheduler.js';
 import { Lifecycle } from './lifecycle.js';
 import { DOM } from './dom.js';
@@ -13,7 +14,7 @@ import { MotionCore } from './motion.js';
 import { LogicalOwnership } from './logicalOwnership.js';
 import { ComponentRuntime } from '../runtime/componentRuntime.js';
 
-function cloneStats(value) { return Object.freeze(Object.assign({}, value || {})); }
+function cloneStats(value) { return Object.freeze(Utils.mergeOwn( value || {})); }
 function stats(api) { return api && typeof api.getStats === 'function' ? cloneStats(api.getStats()) : Object.freeze({}); }
 function now() { return globalThis.performance && typeof globalThis.performance.now === 'function' ? globalThis.performance.now() : Date.now(); }
 function snapshot(label) {

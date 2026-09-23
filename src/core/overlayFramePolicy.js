@@ -28,7 +28,7 @@ function resolveOverlayButtons(options, config) {
 function normalizeClosable(value, previousOptions, config) {
   var cfg=config||{}, previous=previousOptions&&previousOptions.closeOptions?previousOptions.closeOptions:{};
   if(value===undefined) return {visible:previousOptions?previousOptions.closable!==false:true,options:Utils.mergeOwn(previous)};
-  if(typeof value==='boolean') return {visible:value,options:value?{}:Object.assign({},previous)};
+  if(typeof value==='boolean') return {visible:value,options:value?{}:Utils.mergeOwn(previous)};
   if(!value||typeof value!=='object'||Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] ' + String(cfg.owner||'Overlay') + ' closable must be boolean or an object.');
   var options=Utils.mergeOwn(value);
   if(options.disabled!==undefined&&typeof options.disabled!=='boolean') throw new TypeError('[QXFRAME9A7C2] ' + String(cfg.owner||'Overlay') + ' closable.disabled must be boolean.');

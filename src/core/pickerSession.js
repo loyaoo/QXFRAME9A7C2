@@ -41,7 +41,7 @@ function createPickerSession(options) {
     return resolveFlag(opts.needConfirm, detail);
   }
   function close(detail) {
-    var info = Object.assign({}, detail || {}), rolledBack = false;
+    var info = Utils.mergeOwn( detail || {}), rolledBack = false;
     if (controller.dirty && shouldRollback(info)) { rolledBack = cancel({ silent:true, source:'popup', reason: info.reason || 'close', originalEvent:info.originalEvent || null }) !== false; }
     info.rolledBack = rolledBack;
     info.dirty = controller.dirty === true;

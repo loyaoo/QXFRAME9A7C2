@@ -136,8 +136,8 @@ var THEMES = ['light','dark'];
       });
     }
     scopedConfigs.set(root,current);projectScope();
-    function update(next){if(destroyed)return false;var patch=validate(next||{}),hadMotion=own(patch,'motion');current=Object.assign({},current,patch);scopedConfigs.set(root,current);projectScope();if(hadMotion)emitMotionChange('scope',null,root);return snapshotScope();}
-    function snapshotScope(){var out=Object.assign({},current);if(out.tokens)out.tokens=Object.freeze(cloneTokens(out.tokens));return Object.freeze(out);}
+    function update(next){if(destroyed)return false;var patch=validate(next||{}),hadMotion=own(patch,'motion');current=Utils.mergeOwn(current,patch);scopedConfigs.set(root,current);projectScope();if(hadMotion)emitMotionChange('scope',null,root);return snapshotScope();}
+    function snapshotScope(){var out=Utils.mergeOwn(current);if(out.tokens)out.tokens=Object.freeze(cloneTokens(out.tokens));return Object.freeze(out);}
     function destroy(){if(destroyed)return false;var hadMotion=own(current,'motion');destroyed=true;scopedConfigs.delete(root);Object.keys(tokenOriginals).forEach(restoreToken);if(originalTheme===null)root.removeAttribute('data-qxframe9a7c2-theme');else root.setAttribute('data-qxframe9a7c2-theme',originalTheme);if(root.classList)root.classList.toggle('qxframe9a7c2-motion-disabled',originalClasses.motionDisabled);if(hadMotion)emitMotionChange('scope-destroy',null,root);return true;}
     return Object.freeze({root:root,update:update,getState:snapshotScope,destroy:destroy});
   }

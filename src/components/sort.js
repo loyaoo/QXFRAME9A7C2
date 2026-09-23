@@ -31,7 +31,7 @@ function normalizeItems(items) {
         const key = String(item.key);
         if (seen[key]) throw new TypeError('[QXFRAME9A7C2] Sort item.key must be unique: ' + key + '.');
         seen[key] = true;
-        return Object.assign({}, item, { key, label: item.label, disabled: item.disabled === true });
+        return Utils.mergeOwn( item, { key, label: item.label, disabled: item.disabled === true });
     });
 }
 
@@ -74,7 +74,7 @@ export class Sort extends Component {
         const incoming = applyNativeOrder(fieldInit.options, fieldInit);
         if (!incoming.container && !incoming.formField) throw new TypeError('[QXFRAME9A7C2] Sort requires target/container or formField.');
         const doc = fieldInit.document || incoming.document || (incoming.container && incoming.container.ownerDocument) || (incoming.formField && incoming.formField.ownerDocument) || globalThis.document;
-        super(Object.assign({}, incoming, { document: doc }));
+        super(Utils.mergeOwn( incoming, { document: doc }));
         state.set(this, {
             fieldInit, doc, root: null, rowByKey: new Map(), collection: null, transitionGroup: null,
             delegation: null, reorderInteraction: null, formBridge: null, initialItems: []
@@ -96,7 +96,7 @@ export class Sort extends Component {
             getKey: item => item.key,
             getLabel: item => item.label,
             isDisabled: item => item.disabled === true,
-            beforeMove: detail => typeof this.options.beforeMove !== 'function' || this.options.beforeMove(Object.assign({}, detail, { instance: this })) !== false
+            beforeMove: detail => typeof this.options.beforeMove !== 'function' || this.options.beforeMove(Utils.mergeOwn( detail, { instance: this })) !== false
         }));
 
         r.transitionGroup = this.own(TransitionGroup.create({

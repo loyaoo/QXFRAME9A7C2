@@ -186,7 +186,7 @@ function initializeDropdown(instance, options) {
     if (selection.has(value)) selectionAnchorValue = value;
     else if (selectionAnchorValue !== null && rawValue(selectionAnchorValue) === value) { var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null; }
     refreshSelectionSurfaces();
-    var detail = Object.assign({}, actionPayload, { selected: selection.has(value), value: item.value, values: selection.values.slice(), valueState: selection.value });
+    var detail = Utils.mergeOwn( actionPayload, { selected: selection.has(value), value: item.value, values: selection.values.slice(), valueState: selection.value });
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(detail);
     instance.emit(detail.selected ? 'select' : 'deselect', detail);
     if (Utils.isFunction(opts.onChange)) opts.onChange(opts.multiple === true ? selection.values.slice() : selection.value, detail);
@@ -216,7 +216,7 @@ function initializeDropdown(instance, options) {
     selectionAnchorValue = selectBranch && branchValues.length ? branchValues[branchValues.length - 1] : (selection.values.length ? selection.values[selection.values.length - 1] : null);
     refreshSelectionSurfaces();
     var checked = branchCheckState(item);
-    var result = Object.assign({}, actionPayload, { selected: checked.checked, checked: checked.checked, indeterminate: checked.indeterminate, value: item.value, values: selection.values.slice(), valueState: selection.value, branch: true });
+    var result = Utils.mergeOwn( actionPayload, { selected: checked.checked, checked: checked.checked, indeterminate: checked.indeterminate, value: item.value, values: selection.values.slice(), valueState: selection.value, branch: true });
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(result);
     instance.emit(result.selected ? 'select' : 'deselect', result);
     if (Utils.isFunction(opts.onChange)) opts.onChange(selection.values.slice(), result);
@@ -295,7 +295,7 @@ function initializeDropdown(instance, options) {
       } : undefined,
       onActiveChange: function (detail) {
         if (detail && detail.key) clearSurfaceActives(surface, detail.source || 'api');
-        var payload = Object.assign({}, detail, { dropdown: api });
+        var payload = Utils.mergeOwn( detail, { dropdown: api });
         if (Utils.isFunction(opts.onActiveChange)) opts.onActiveChange(payload); instance.emit('activeChange', payload);
       }
     });

@@ -342,7 +342,7 @@ function create(source, overrides) {
     var userChange = cfg.onChange;
     var userSizeChange = cfg.onSizeChange;
     var initialCount = sideItems(side).length;
-    var pager = Pagination.create(Object.assign({}, cfg, {
+    var pager = Pagination.create(Utils.mergeOwn( cfg, {
       container: hostNode,
       count: initialCount,
       size: sizeName(opts.size),
@@ -388,7 +388,7 @@ function create(source, overrides) {
     var list = listForSide(side);
     var userRowClassName = config.rowClassName;
     var userRowClick = config.onRowClick;
-    var output = Object.assign({}, config);
+    var output = Utils.mergeOwn( config);
     delete output.source; delete output.target;
     output.container = refs[side + 'Table'];
     output.document = doc;
@@ -413,7 +413,7 @@ function create(source, overrides) {
       if (record && !record.disabled && !mutationLocked() && list) {
         list.toggleValue(record.value, { source: 'pointer', reason: 'transfer-table-row', originalEvent: detail && detail.originalEvent || null });
       }
-      if (Utils.isFunction(userRowClick)) userRowClick(item, Object.freeze(Object.assign({}, detail || {}, { side: side, transfer: api })));
+      if (Utils.isFunction(userRowClick)) userRowClick(item, Object.freeze(Utils.mergeOwn( detail || {}, { side: side, transfer: api })));
     };
     return output;
   }
@@ -542,7 +542,7 @@ function create(source, overrides) {
   function itemRendererForSide(side) {
     if (!Utils.isFunction(opts.itemRender)) return null;
     return function (item, ctx) {
-      return opts.itemRender(item, Item.createContext(item, Object.assign({}, ctx || {}, { component:api, controller:api, side:side })));
+      return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:api, controller:api, side:side })));
     };
   }
 
@@ -788,7 +788,7 @@ function create(source, overrides) {
     OptionTransaction.rejectImmutable(next, ['target','container','formField'], 'Transfer field binding');
     if (own(next, 'items') && !Array.isArray(next.items)) throw new TypeError('[QXFRAME9A7C2] Transfer items must be an array.');
     if (own(next, 'value') && !Array.isArray(next.value)) throw new TypeError('[QXFRAME9A7C2] Transfer value must be an array.');
-    var candidate = Object.assign({}, opts, next);
+    var candidate = Utils.mergeOwn( opts, next);
     candidate.status = statusName(candidate.status);
     paginationConfig(candidate.pagination, 'source'); paginationConfig(candidate.pagination, 'target');
     tableConfig(candidate.table, 'source'); tableConfig(candidate.table, 'target');

@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
@@ -187,7 +188,7 @@ export class Result extends Component {
         }
         const key = this.#defaultIconKey();
         if (force || record.iconMode !== 'default' || !record.svg || record.iconKey !== key) {
-            record.svg = build(record.doc, record.name, Object.assign({}, opts, { visible: record.visible }));
+            record.svg = build(record.doc, record.name, Utils.mergeOwn( opts, { visible: record.visible }));
             Renderer.replace(record.icon, record.svg, record.doc);
             record.iconMode = 'default';
             record.iconValue = undefined;

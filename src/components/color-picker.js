@@ -298,11 +298,11 @@ function setupColorPickerRuntime(instance, fieldInit) {
        keyboard: opts.keyboard !== false,
        eyeDropper: opts.eyeDropper !== false,
        onEscape: function (event) { if (field && field.getState().open) field.close('escape', event); },
-       onInvalid: function (value, detail) { if (Utils.isFunction(opts.onInvalid)) opts.onInvalid(value, Object.assign({}, detail, { colorPicker: api })); },
-       onError: function (error, detail) { if (Utils.isFunction(opts.onError)) opts.onError(error, Object.assign({}, detail, { colorPicker: api })); },
+       onInvalid: function (value, detail) { if (Utils.isFunction(opts.onInvalid)) opts.onInvalid(value, Utils.mergeOwn( detail, { colorPicker: api })); },
+       onError: function (error, detail) { if (Utils.isFunction(opts.onError)) opts.onError(error, Utils.mergeOwn( detail, { colorPicker: api })); },
        onFormatChange: function (format, detail) {
          if (api) api.setFormat(format); else opts.format = format;
-         var payload = Object.assign({}, detail, { format: format, colorPicker: api });
+         var payload = Utils.mergeOwn( detail, { format: format, colorPicker: api });
          if (Utils.isFunction(opts.onFormatChange)) opts.onFormatChange(format, payload);
          emitter.emit('formatChange', payload);
        },
@@ -340,8 +340,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        },
        copyValue: cloneModel,
        equals: modelEquals,
-       onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneModel(value), Object.assign({}, detail, { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, colorPicker: api })); if (detail.silent !== true) { var payload = { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, reason: detail.reason, source: detail.source || 'api', colorPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneModel(value), payload); emitter.emit('change', payload); } },
-       onDraftChange: function (value, detail) { if (!(detail && detail.valueChanged === true && opts.needConfirm !== true)) syncField(field && field.getState().open && opts.needConfirm === true); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneModel(value), Object.assign({}, detail, { value: cloneModel(draft.value), draftValue: cloneModel(value), mode: mode, colorPicker: api })); }
+       onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, colorPicker: api })); if (detail.silent !== true) { var payload = { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, reason: detail.reason, source: detail.source || 'api', colorPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneModel(value), payload); emitter.emit('change', payload); } },
+       onDraftChange: function (value, detail) { if (!(detail && detail.valueChanged === true && opts.needConfirm !== true)) syncField(field && field.getState().open && opts.needConfirm === true); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(draft.value), draftValue: cloneModel(value), mode: mode, colorPicker: api })); }
      });
 
      var pickerSession = instance.setupPickerSession({
@@ -446,7 +446,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          var previewPayload = { value: cloneModel(next), color: activeColor(next), activeStopIndex: activeStopIndex, source: detail.source, reason: detail.reason, complete: false, colorPicker: api };
          if (Utils.isFunction(opts.onInput)) opts.onInput(cloneModel(next), previewPayload);
          emitter.emit('input', previewPayload);
-       } else if (opts.needConfirm !== true) draft.commit(Object.assign({}, detail, { reason: detail.reason || 'gradient-commit' }));
+       } else if (opts.needConfirm !== true) draft.commit(Utils.mergeOwn( detail, { reason: detail.reason || 'gradient-commit' }));
        syncField(opts.needConfirm === true && field.getState().open);
        if (detail.complete === true) emitInteractionComplete(next, detail);
        return true;

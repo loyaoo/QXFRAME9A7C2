@@ -34,7 +34,7 @@ function decimals(value) { const text = String(value); if (/e-/i.test(text)) ret
 function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
 function cloneExternal(values, range) { return range ? values.slice() : values[0]; }
 function normalizeSliderOptions(input) {
-    const candidate = Object.assign({}, input || {});
+    const candidate = Utils.mergeOwn( input || {});
     candidate.min = finite(candidate.min == null ? 0 : candidate.min, 'min');
     candidate.max = finite(candidate.max == null ? 100 : candidate.max, 'max');
     if (!(candidate.max > candidate.min)) throw new RangeError('[QXFRAME9A7C2] Slider max must be greater than min.');
@@ -67,7 +67,7 @@ function prepare(source, overrides) {
 
 function createRuntime(instance, prepared) {
     const { fieldInit, incoming, doc } = prepared;
-    let opts = normalizeSliderOptions(Object.assign({}, instance.options));
+    let opts = normalizeSliderOptions(Utils.mergeOwn( instance.options));
     let projectionScope = Lifecycle.createScope();
     let root = doc.createElement('div');
     let rail = null, track = null, stepsHolder = null, marksHolder = null;
@@ -179,8 +179,8 @@ function createRuntime(instance, prepared) {
     function pointFromEvent(event){const rect=root.getBoundingClientRect();if(opts.vertical){const vertical=clamp((rect.bottom-Number(event.clientY||0))/Math.max(1,rect.height),0,1);return opts.reverse===true?1-vertical:vertical;}const horizontal=clamp((Number(event.clientX||0)-rect.left)/Math.max(1,rect.width),0,1);return opts.reverse===true?1-horizontal:horizontal;}
     const valueFromPointer=event=>align(opts.min+pointFromEvent(event)*(opts.max-opts.min));
     function moveRangeTrack(event){const delta=(pointFromEvent(event)-dragStartPoint)*(opts.max-opts.min),low=Math.min.apply(Math,dragStartValues),high=Math.max.apply(Math,dragStartValues);let adjusted=delta;if(low+adjusted<opts.min)adjusted=opts.min-low;if(high+adjusted>opts.max)adjusted=opts.max-high;setValues(dragStartValues.map(value=>align(value+adjusted)),{user:true,reason:'track-drag',originalEvent:event});}
-    function addHandle(value,config){if(destroyed||!editableRange())return false;const settings=config||{};if(settings.user===true&&!interactive())return false;if(values.length>=maxHandleCount())return false;let output=values.concat([align(value)]);if(opts.allowCross===false)output.sort((a,b)=>a-b);const addedValue=align(value),changed=setValues(output,Object.assign({},settings,{reason:settings.reason||'add-handle'}));if(changed){activeHandle=values.indexOf(addedValue);buildProjection();}return changed;}
-    function removeHandle(index,config){if(destroyed||!editableRange())return false;index=Number(index);if(!Number.isInteger(index)||index<0||index>=values.length)return false;const settings=config||{};if(settings.user===true&&!interactive(index))return false;if(values.length<=minHandleCount())return false;const output=values.slice(0,index).concat(values.slice(index+1)),changed=setValues(output,Object.assign({},settings,{reason:settings.reason||'remove-handle'}));activeHandle=Math.max(0,Math.min(values.length-1,index));if(changed)buildProjection();return changed;}
+    function addHandle(value,config){if(destroyed||!editableRange())return false;const settings=config||{};if(settings.user===true&&!interactive())return false;if(values.length>=maxHandleCount())return false;let output=values.concat([align(value)]);if(opts.allowCross===false)output.sort((a,b)=>a-b);const addedValue=align(value),changed=setValues(output,Utils.mergeOwn(settings,{reason:settings.reason||'add-handle'}));if(changed){activeHandle=values.indexOf(addedValue);buildProjection();}return changed;}
+    function removeHandle(index,config){if(destroyed||!editableRange())return false;index=Number(index);if(!Number.isInteger(index)||index<0||index>=values.length)return false;const settings=config||{};if(settings.user===true&&!interactive(index))return false;if(values.length<=minHandleCount())return false;const output=values.slice(0,index).concat(values.slice(index+1)),changed=setValues(output,Utils.mergeOwn(settings,{reason:settings.reason||'remove-handle'}));activeHandle=Math.max(0,Math.min(values.length-1,index));if(changed)buildProjection();return changed;}
     function endDrag(event){if(!dragging)return;const reason=dragMode==='track'?'track-drag':'drag';dragging=false;updateProjection();emit('onAfterChange',reason,event);const handle=handles[activeHandle];if(handle&&handle.tabIndex>=0)DOM.focusElement(handle);}
     function beginDrag(event,mode){dragging=true;dragMode=mode==='track'?'track':'handle';dragStartValues=values.slice();dragStartPoint=pointFromEvent(event);emit('onBeforeChange',dragMode==='track'?'track-drag':'drag',event);updateProjection();}
     const directionalKey=key=>key==='ArrowRight'||key==='ArrowUp'||key==='ArrowLeft'||key==='ArrowDown'||key==='PageUp'||key==='PageDown'||key==='Home'||key==='End';
@@ -201,11 +201,11 @@ function createRuntime(instance, prepared) {
     buildProjection();
     return {
         get root(){return root;},
-        setValue(next,config){setValues(next,Object.assign({},config||{},{reason:(config&&config.reason)||'set-value'}));return api;},
+        setValue(next,config){setValues(next,Utils.mergeOwn(config||{},{reason:(config&&config.reason)||'set-value'}));return api;},
         addHandle,removeHandle,getValue:externalValue,
         focus(index,focusOptions){if(destroyed)return false;const handle=handles[Math.max(0,Math.min(handles.length-1,Number(index)||0))];if(!handle||handle.tabIndex<0)return false;DOM.focusElement(handle,focusOptions||{preventScroll:true});return doc.activeElement===handle;},
         blur(){if(destroyed)return false;const active=handles.find(handle=>handle===doc.activeElement);if(active)active.blur();return !active||doc.activeElement!==active;},
-        applyOptions(next,patch){if(destroyed)return false;const candidate=normalizeSliderOptions(Object.assign({},next));cancelKeyboardSession(null,'options-update');if(dragging){dragging=false;pointerSession.cancel('options-update');}opts=candidate;valueState.updateOptions({normalizeValue:normalize,equals:sameValues,copyValue:list=>list.slice()});if(hasOwn(patch||{},'value')){valueState.setControlled(true);valueState.syncExternal(next.value,{silent:true,source:'options',reason:'external-sync'});}else valueState.setValue(values,{silent:true,source:'options',reason:'renormalize'});values=valueState.value;instance.setFieldValue(externalValue(),{force:true,silent:true,reason:'slider-options'});activeHandle=Math.max(0,Math.min(values.length-1,activeHandle));buildProjection();if(formBridge){formBridge.updateOptions({name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,serializeValue:opts.serializeValue});formBridge.setValue(externalValue(),{silent:true});}return api;},
+        applyOptions(next,patch){if(destroyed)return false;const candidate=normalizeSliderOptions(Utils.mergeOwn(next));cancelKeyboardSession(null,'options-update');if(dragging){dragging=false;pointerSession.cancel('options-update');}opts=candidate;valueState.updateOptions({normalizeValue:normalize,equals:sameValues,copyValue:list=>list.slice()});if(hasOwn(patch||{},'value')){valueState.setControlled(true);valueState.syncExternal(next.value,{silent:true,source:'options',reason:'external-sync'});}else valueState.setValue(values,{silent:true,source:'options',reason:'renormalize'});values=valueState.value;instance.setFieldValue(externalValue(),{force:true,silent:true,reason:'slider-options'});activeHandle=Math.max(0,Math.min(values.length-1,activeHandle));buildProjection();if(formBridge){formBridge.updateOptions({name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,serializeValue:opts.serializeValue});formBridge.setValue(externalValue(),{silent:true});}return api;},
         getState(){return Object.freeze({value:externalValue(),values:values.slice(),min:opts.min,max:opts.max,step:opts.step,range:rangeMode(),editable:editableRange(),minCount:minHandleCount(),maxCount:maxHandleCount(),included:opts.included!==false,vertical:opts.vertical===true,reverse:opts.reverse===true,dragging,activeHandle,handleDisabled:values.map((_,index)=>handleDisabled(index)),disabled:opts.disabled===true,readOnly:opts.readOnly===true,destroyed});},
         getFormField(){return formBridge?formBridge.getFormField():null;},getFormBridge(){return formBridge;},getHandles(){return handles.slice();},
         dispose(){if(destroyed)return false;cancelKeyboardSession(null,'destroy');destroyed=true;dragging=false;try{projectionScope.dispose();}catch{}try{if(pointerSession)pointerSession.destroy();}catch{}pointerSession=null;try{if(valueState)valueState.destroy();}catch{}valueState=null;try{if(formBridge)formBridge.destroy();}catch{}formBridge=null;DOM.removeNode(root);root=rail=track=stepsHolder=marksHolder=null;handles=[];return true;}
@@ -227,10 +227,10 @@ export class Slider extends FieldComponent {
 
     constructor(source = {}, overrides) {
         const prepared = prepare(source, overrides);
-        super(Object.assign({}, prepared.incoming, { document: prepared.doc }));
+        super(Utils.mergeOwn( prepared.incoming, { document: prepared.doc }));
         state.set(this, { prepared, runtime:null });
     }
-    [componentHooks.beforeOptionsUpdate](patch, previous) { normalizeSliderOptions(Object.assign({}, previous, patch)); }
+    [componentHooks.beforeOptionsUpdate](patch, previous) { normalizeSliderOptions(Utils.mergeOwn( previous, patch)); }
     [componentHooks.render]() {
         const record=recordFor(this);if(record.runtime)return record.runtime.root;
         record.runtime=createRuntime(this,record.prepared);this.own(record.runtime);return record.runtime.root;

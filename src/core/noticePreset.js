@@ -18,7 +18,7 @@ function createNoticePreset(options) {
     Object.keys(next).forEach(function(key){if(allowed.indexOf(key)<0) throw new TypeError('[QXFRAME9A7C2] '+owner+' configure() unsupported option "'+key+'".');});
     var normalized=normalize(Utils.mergeOwn(target,next));
     allowed.forEach(function(key){target[key]=normalized[key];});
-    return Object.freeze(Object.assign({},target));
+    return Object.freeze(Utils.mergeOwn(target));
   }
   function createTyped(type, input, channel) {
     if(!input||typeof input!=='object'||Array.isArray(input)||input.nodeType) throw new TypeError('[QXFRAME9A7C2] '+owner+'.'+type+'() requires a canonical options object.');

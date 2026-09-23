@@ -299,20 +299,20 @@ function create(options) {
     readOnly: opts.readOnly === true,
     normalizeTag: opts.normalizeTag,
     validateTag: opts.validateTag,
-    beforeTagAdd:function(tag,detail){var item=copyPublicItem(tag);if(Utils.isFunction(opts.beforeAdd)&&opts.beforeAdd(item,Object.assign({},detail,{instance:api}))===false)return false;if(opts.controlled===true){if(detail&&detail.originalEvent&&detail.originalEvent.preventDefault)detail.originalEvent.preventDefault();var proposed=publicItems().concat([item]);if(Utils.isFunction(opts.onAddRequest))opts.onAddRequest(item,Object.assign({},detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
-    beforeTagEdit:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.beforeEdit))return opts.beforeEdit(copyPublicItem(current),Object.assign({},detail,{instance:api}))!==false;},
-    beforeTagRemove:function(tag,detail){var current=Object.assign({},tag,metadataByKey[tag.key]||{}),item=copyPublicItem(current);if(detail&&detail.user===true&&!itemUserRemovable(current))return false;if(Utils.isFunction(opts.beforeRemove)&&opts.beforeRemove(item,Object.assign({},detail,{instance:api}))===false)return false;if(opts.controlled===true){var proposed=publicItems().filter(function(entry){return entry.key!==item.key;});if(Utils.isFunction(opts.onRemoveRequest))opts.onRemoveRequest(item,Object.assign({},detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
+    beforeTagAdd:function(tag,detail){var item=copyPublicItem(tag);if(Utils.isFunction(opts.beforeAdd)&&opts.beforeAdd(item,Utils.mergeOwn(detail,{instance:api}))===false)return false;if(opts.controlled===true){if(detail&&detail.originalEvent&&detail.originalEvent.preventDefault)detail.originalEvent.preventDefault();var proposed=publicItems().concat([item]);if(Utils.isFunction(opts.onAddRequest))opts.onAddRequest(item,Utils.mergeOwn(detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
+    beforeTagEdit:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.beforeEdit))return opts.beforeEdit(copyPublicItem(current),Utils.mergeOwn(detail,{instance:api}))!==false;},
+    beforeTagRemove:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]||{}),item=copyPublicItem(current);if(detail&&detail.user===true&&!itemUserRemovable(current))return false;if(Utils.isFunction(opts.beforeRemove)&&opts.beforeRemove(item,Utils.mergeOwn(detail,{instance:api}))===false)return false;if(opts.controlled===true){var proposed=publicItems().filter(function(entry){return entry.key!==item.key;});if(Utils.isFunction(opts.onRemoveRequest))opts.onRemoveRequest(item,Utils.mergeOwn(detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
     onTagAdd: function (tag, detail) {
       var item = Object.assign({ color: '', icon: undefined, href: '', className: '' }, tag);
       metadataByKey[tag.key] = itemExtras(item);
-      if (Utils.isFunction(opts.onAdd)) opts.onAdd(copyPublicItem(item), Object.assign({}, detail, { instance: api }));
+      if (Utils.isFunction(opts.onAdd)) opts.onAdd(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
     },
-    onTagEdit:function(tag,detail){var item=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.onEdit))opts.onEdit(copyPublicItem(item),Object.assign({},detail,{instance:api}));},
+    onTagEdit:function(tag,detail){var item=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.onEdit))opts.onEdit(copyPublicItem(item),Utils.mergeOwn(detail,{instance:api}));},
     onTagRemove: function (tag, detail) {
       var item = Utils.mergeOwn(tag, metadataByKey[tag.key]);
       delete metadataByKey[tag.key];
-      if (Utils.isFunction(opts.onRemove)) opts.onRemove(copyPublicItem(item), Object.assign({}, detail, { instance: api }));
-      if (Utils.isFunction(opts.onClose)) opts.onClose(copyPublicItem(item), Object.assign({}, detail, { instance: api }));
+      if (Utils.isFunction(opts.onRemove)) opts.onRemove(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
+      if (Utils.isFunction(opts.onClose)) opts.onClose(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
     },
     onTagsChange: function (_tags, detail) {
       syncingItems = true;
@@ -324,13 +324,13 @@ function create(options) {
     onInputChange: function (value, detail) {
       opts.inputValue = value;
       if (input.value !== value) input.value = value;
-      var payload = Object.assign({}, detail, { instance: api });
+      var payload = Utils.mergeOwn( detail, { instance: api });
       if (Utils.isFunction(opts.onInput)) opts.onInput(value, payload);
       if (Utils.isFunction(opts.onSearch)) opts.onSearch(value, payload);
       emitter.emit('input', Object.assign({ value: value }, payload));
     },
     onTagInvalid: function (detail) {
-      if (Utils.isFunction(opts.onInvalid)) opts.onInvalid(Object.assign({}, detail, { instance: api }));
+      if (Utils.isFunction(opts.onInvalid)) opts.onInvalid(Utils.mergeOwn( detail, { instance: api }));
     }
   });
   scope.add(function () { tokenInput.destroy(); });
@@ -675,7 +675,7 @@ function create(options) {
     close.type = 'button';
     close.tabIndex = -1;
     close.className=(overflow?'qxframe9a7c2-tag-close qxframe9a7c2-overflow-close':'qxframe9a7c2-tag-close')+(opts.tagRemoveClassName?' '+String(opts.tagRemoveClassName):'');
-    syncCloseContent(close, publicItem, Object.assign({}, projection || {}, { overflow: overflow === true }));
+    syncCloseContent(close, publicItem, Utils.mergeOwn( projection || {}, { overflow: overflow === true }));
     if (!overflow) {
       applyClasses(close, opts.classes && opts.classes.close, publicItem, projection);
       applyStyles(close, opts.styles && opts.styles.close, publicItem, projection);

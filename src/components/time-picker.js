@@ -141,8 +141,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
     normalizeValue: normalizeValue,
     copyValue: cloneValue,
     equals: sameValue,
-    onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Object.assign({}, detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), timePicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), reason: detail.reason, source: detail.source || 'api', timePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
-    onDraftChange: function (value, detail) { if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open); if (field && field.getState().open) rebuildFooter(); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Object.assign({}, detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), timePicker: api })); }
+    onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), timePicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), reason: detail.reason, source: detail.source || 'api', timePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
+    onDraftChange: function (value, detail) { if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open); if (field && field.getState().open) rebuildFooter(); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), timePicker: api })); }
   });
 
   function syncField(preferDraft, meta) {
@@ -227,7 +227,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function syncPanel(reason) {
     if (!panel) return;
     var value = panelSeed();
-    panel.updateOptions(Object.assign({}, resolvedPanelOptions(value), { value: value }));
+    panel.updateOptions(Utils.mergeOwn( resolvedPanelOptions(value), { value: value }));
     if (panel.refresh) panel.refresh(reason || 'time-picker-sync');
   }
   var pickerSession = instance.setupPickerSession({
@@ -361,7 +361,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   });
   instance.adoptPickerField(field);
 
-  panel = TimePanel.create(Object.assign({}, resolvedPanelOptions(panelSeed()), {
+  panel = TimePanel.create(Utils.mergeOwn( resolvedPanelOptions(panelSeed()), {
     container: field.getPanelHost(),
     value: panelSeed(),
     onSelect: function (value, detail) { applyPanelValue(value, Object.assign({ panelOrigin: true }, detail || {})); }
@@ -427,7 +427,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     var next = nextOptions || {};
       OptionTransaction.rejectImmutable(next, ['target','container','formField','reference','triggerTarget','valueTarget','draftValueTarget','inputTarget','formTarget','renderControl','headless'], 'TimePicker field binding');
     if (own(next, 'selection') && normalizeSelectionName(next.selection) !== selection) throw new Error('[QXFRAME9A7C2] TimePicker selection is immutable.');
-    var previous = Object.assign({}, opts);
+    var previous = Utils.mergeOwn( opts);
     Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
     if (selection === 'range' && String(opts.rangeSeparator || '') === '') { opts = previous; throw new TypeError('[QXFRAME9A7C2] TimePicker rangeSeparator must not be empty in range selection.'); }
     if (opts.previewValue !== false && opts.previewValue !== 'hover') { opts = previous; throw new TypeError("[QXFRAME9A7C2] TimePicker previewValue must be false or 'hover'."); }

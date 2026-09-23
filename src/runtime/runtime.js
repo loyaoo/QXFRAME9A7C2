@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 import { capabilityBindings } from './capabilityBindings.js';
 import { moduleManifestData } from './moduleManifestData.js';
 import { Components } from './componentAdapters.js';
@@ -23,9 +24,9 @@ import { NoticeService } from '../core/noticeService.js';
 function namespaceFor(namespace) {
     return Object.freeze(Object.fromEntries(capabilityBindings.filter(entry => entry.namespace === namespace).map(entry => [entry.name, entry.value])));
 }
-export const Core = Object.freeze(Object.assign({}, namespaceFor('core'), { PerformanceDiagnostics }));
+export const Core = Object.freeze(Utils.mergeOwn( namespaceFor('core'), { PerformanceDiagnostics }));
 export const Headless = namespaceFor('headless');
-export const DOMHeadless = Object.freeze(Object.assign({}, namespaceFor('domHeadless'), { EmptyProjection }));
+export const DOMHeadless = Object.freeze(Utils.mergeOwn( namespaceFor('domHeadless'), { EmptyProjection }));
 
 export const BuildingBlocks = Object.freeze({
     Calendar, ColorPanel, Control, Item, ItemCollection, List, NoticeClock, NoticeService, OptionList, PeriodPanel, TextField, TimePanel, Tree,

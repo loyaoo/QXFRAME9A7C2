@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 import { Component } from '../core/component.js';
 import { Trigger } from './trigger.js';
 
@@ -25,7 +26,7 @@ export class PopupComponent extends Component {
     setupPopupRuntime(options = {}) {
         const record = requireState(this);
         if (record.trigger) throw new Error('[QXFRAME9A7C2] Popup runtime is already initialized.');
-        const config = Object.assign({}, options);
+        const config = Utils.mergeOwn( options);
         record.reference = config.reference || null;
         record.popup = config.floating || null;
         const beforeOpen = config.beforeOpen;

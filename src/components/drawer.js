@@ -39,14 +39,14 @@ function easingPair(input) {
   ];
 }
 var overlayButtonPolicy = Object.freeze({ owner:'Drawer', dangerType:'error', closeOnClickDefault:true, autoLoadingDefault:true, classNamePolicy:true });
-function resolveButtons(opts) { return OverlayFramePolicy.resolveButtons(opts, Object.assign({}, overlayButtonPolicy, { requireExplicitFooter:true })); }
+function resolveButtons(opts) { return OverlayFramePolicy.resolveButtons(opts, Utils.mergeOwn( overlayButtonPolicy, { requireExplicitFooter:true })); }
 function validRenderable(value) {
   return value === undefined || value === null || typeof value === 'boolean' || typeof value === 'function' || typeof value === 'string' || typeof value === 'number' || Renderer.isNodeLike(value);
 }
 function normalize(input, previous) {
   var incoming = input || {};
   if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new TypeError('[QXFRAME9A7C2] Drawer options must be an object.');
-    var next = Object.assign({}, previous || {}, incoming);
+    var next = Utils.mergeOwn( previous || {}, incoming);
   next.placement = enumValue(next.placement, PLACEMENTS, 'right', 'placement');
   var closable = OverlayFramePolicy.normalizeClosable(own(incoming, 'closable') ? incoming.closable : undefined, previous, { owner:'Drawer', placements:['start','end'] });
   next.closable = closable.visible;

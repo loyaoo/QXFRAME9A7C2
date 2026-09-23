@@ -331,7 +331,7 @@ function create(options) {
       page: opts.page,
       pageSize: opts.pageSize,
       onSelectionChange: function (values, detail) {
-        if (typeof opts.onSelectionChange === 'function') opts.onSelectionChange(values.slice(), Object.assign({}, detail, { instance: api, selection: selectionStateSnapshot() }));
+        if (typeof opts.onSelectionChange === 'function') opts.onSelectionChange(values.slice(), Utils.mergeOwn( detail, { instance: api, selection: selectionStateSnapshot() }));
       },
       onChange: function (state, detail) {
         if (destroyed) return;
@@ -352,7 +352,7 @@ function create(options) {
             if (restoredFilterReference) DOM.focusElement(restoredFilterReference, { preventScroll: true });
           }
         }
-        if (typeof opts.onChange === 'function') opts.onChange(state, Object.assign({}, detail, { instance: api }));
+        if (typeof opts.onChange === 'function') opts.onChange(state, Utils.mergeOwn( detail, { instance: api }));
         if (isRemoteQueryReason(detail && detail.reason)) requestRemote(detail && detail.reason || 'query');
       }
     };
@@ -648,7 +648,7 @@ function create(options) {
   function resolveEditTarget(key) {
     var detail = resolveDataCellContext(key);
     if (!detail || !columnEditable(detail)) return null;
-    var target = detail.column.getEditTarget(detail.cell, Object.freeze(Object.assign({}, detail.context, { cell: detail.cell })));
+    var target = detail.column.getEditTarget(detail.cell, Object.freeze(Utils.mergeOwn( detail.context, { cell: detail.cell })));
     if (target == null) return null;
     if (!target.nodeType || (target !== detail.cell && !detail.cell.contains(target))) throw new TypeError('[QXFRAME9A7C2] Table column.getEditTarget must return a descendant Element or null.');
     if (typeof target.focus !== 'function') throw new TypeError('[QXFRAME9A7C2] Table column.getEditTarget must return a focusable descendant Element or null.');
@@ -1857,7 +1857,7 @@ function create(options) {
     while (tfoot.firstChild) tfoot.removeChild(tfoot.firstChild);
     if (typeof opts.summary !== 'function') { setOptionalNode(tfoot, table, false); return; }
     var state = currentState();
-    var summaryState = isRemote() ? Object.freeze(Object.assign({}, state, { summary: remoteSummary, summaryScope: remoteSummary == null ? 'page' : 'remote' })) : Object.freeze(Object.assign({}, state, { summary: null, summaryScope: 'local' }));
+    var summaryState = isRemote() ? Object.freeze(Utils.mergeOwn( state, { summary: remoteSummary, summaryScope: remoteSummary == null ? 'page' : 'remote' })) : Object.freeze(Utils.mergeOwn( state, { summary: null, summaryScope: 'local' }));
     var output = opts.summary(state.visibleItems.slice(), summaryState, api);
     if (output === undefined || output === null || output === false || output === '') { setOptionalNode(tfoot, table, false); return; }
     setOptionalNode(tfoot, table, true, null);
@@ -1871,7 +1871,7 @@ function create(options) {
   }
   function paginationOptions(state) {
     var local = opts.pager && typeof opts.pager === 'object' ? opts.pager : {};
-    return Object.assign({}, local, {
+    return Utils.mergeOwn( local, {
       container: pager, document: doc, count: state.filteredTotal === undefined ? state.total : state.filteredTotal,
       current: state.page, pageSize: state.pageSize, size: local.size || opts.size,
       disabled: viewBlocked(), hideOnSinglePage: true,
@@ -2140,7 +2140,7 @@ function create(options) {
       if (typeof rowProps[rowPropName] === 'function') rowProps[rowPropName](detail.event, context);
       if (destroyed) return true;
     }
-    if (typeof opts[optionName] === 'function') opts[optionName](entry.item, Object.assign({}, context, { originalEvent: detail.event }));
+    if (typeof opts[optionName] === 'function') opts[optionName](entry.item, Utils.mergeOwn( context, { originalEvent: detail.event }));
     return true;
   }
   delegation.on('click', DOM.privateMatcher('tableRow'), function (detail) { dispatchRowEvent(detail, 'onClick', 'onRowClick'); });
@@ -2422,8 +2422,8 @@ function create(options) {
     reflow: reflow,
     resize: reflow,
     updateOptions: updateOptions,
-    getState: function () { var state = currentState(), focusState = keyboard ? keyboard.virtualFocus.getState() : null, decoded = focusState && cellDomain && focusState.domain === cellDomain.name ? decodeNavigationCellKey(focusState.key) : null; return Object.freeze(Object.assign({}, state, { virtual: !!virtualizer && virtualizer.enabled, keyboardNavigation: opts.keyboardNavigation === true, activeCell: decoded ? Object.freeze({ rowKey: decoded.rowKey, kind: decoded.kind, columnKey: decoded.kind === 'data' ? decoded.columnKey : null }) : null, editingCell: editStateSnapshot(), forceRenderExpanded: opts.forceRenderExpanded === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || remoteProcessing, processing: remoteProcessing, remoteStatus: remoteStatus(), loadError: remoteError, remoteSummary: remoteSummary, remote: isRemote(), query: isRemote() ? remoteQuery() : null, requestEpoch: remoteEpoch, selection: selectionStateSnapshot(), destroyed: destroyed })); },
-    getDiagnostics: function () { return Object.freeze(Object.assign({}, model.getDiagnostics ? model.getDiagnostics() : {}, tableDiagnostics)); },
+    getState: function () { var state = currentState(), focusState = keyboard ? keyboard.virtualFocus.getState() : null, decoded = focusState && cellDomain && focusState.domain === cellDomain.name ? decodeNavigationCellKey(focusState.key) : null; return Object.freeze(Utils.mergeOwn( state, { virtual: !!virtualizer && virtualizer.enabled, keyboardNavigation: opts.keyboardNavigation === true, activeCell: decoded ? Object.freeze({ rowKey: decoded.rowKey, kind: decoded.kind, columnKey: decoded.kind === 'data' ? decoded.columnKey : null }) : null, editingCell: editStateSnapshot(), forceRenderExpanded: opts.forceRenderExpanded === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || remoteProcessing, processing: remoteProcessing, remoteStatus: remoteStatus(), loadError: remoteError, remoteSummary: remoteSummary, remote: isRemote(), query: isRemote() ? remoteQuery() : null, requestEpoch: remoteEpoch, selection: selectionStateSnapshot(), destroyed: destroyed })); },
+    getDiagnostics: function () { return Object.freeze(Utils.mergeOwn( model.getDiagnostics ? model.getDiagnostics() : {}, tableDiagnostics)); },
     getModel: function () { return model; },
     getRootElement: function () { return root; },
     getTableElement: function () { return table; },

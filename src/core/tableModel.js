@@ -29,7 +29,7 @@ function normalizeColumns(columns) {
       throw new TypeError('[QXFRAME9A7C2] TableModel column.sortable must be boolean or function.');
     }
     if (column.filter !== undefined && typeof column.filter !== 'function') throw new TypeError('[QXFRAME9A7C2] TableModel column.filter must be a function.');
-    return Object.assign({}, column, { key: key });
+    return Utils.mergeOwn( column, { key: key });
   });
 }
 function normalizeSelectionMode(value) {
@@ -560,7 +560,7 @@ function create(options) {
       return pagination.setPageSize(opts.pageSize, mergeOptions({ source: 'api' }, meta));
     },
     getProjectionVersion: function () { return projectionVersion; },
-    getDiagnostics: function () { return Object.freeze(Object.assign({}, projectionDiagnostics)); },
+    getDiagnostics: function () { return Object.freeze(Utils.mergeOwn( projectionDiagnostics)); },
     getCellValue: function (item, columnOrKey, index) {
       var column = typeof columnOrKey === 'string' ? columnByKey(columnOrKey) : columnOrKey;
       return column ? cellValue(item, column, index == null ? items.indexOf(item) : index) : undefined;

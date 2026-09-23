@@ -446,7 +446,7 @@ export class Carousel extends Component {
             renderItems();
             return api;
         };
-        const apiMeta = (config, defaults) => Object.assign({}, defaults || {}, config || {}, { source: 'api', user: false });
+        const apiMeta = (config, defaults) => Utils.mergeOwn( defaults || {}, config || {}, { source: 'api', user: false });
         const destroyRuntime = () => {
             if (pointerSession) pointerSession.cancel('destroy');
             clearPointerState();

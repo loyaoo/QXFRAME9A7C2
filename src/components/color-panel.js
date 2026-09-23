@@ -647,7 +647,7 @@ function create(options) {
     var next = nextOptions || {};
     ['colorFormat','predefine'].forEach(function (name) { if (hasOwn(next, name)) throw new TypeError('[QXFRAME9A7C2] ColorPanel does not accept legacy/non-canonical option "' + name + '".'); });
     if (hasOwn(next, 'container') && next.container !== host) throw new Error('[QXFRAME9A7C2] ColorPanel container is immutable; destroy and recreate to change it.');
-    var candidateOptions = Object.assign({}, opts, next);
+    var candidateOptions = Utils.mergeOwn( opts, next);
     candidateOptions.format = formatName(candidateOptions.format);
     var candidateState = hasOwn(next, 'value') ? parseColor(next.value) : null;
     if (hasOwn(next, 'value') && !candidateState) throw new TypeError('[QXFRAME9A7C2] ColorPanel value is not a supported color.');

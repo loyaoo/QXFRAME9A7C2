@@ -37,12 +37,12 @@ function durationPair(input, enterKey, leaveKey, fallbackEnter, fallbackLeave) {
   return [finite(enter, fallbackEnter, enterKey), finite(leave, fallbackLeave, leaveKey)];
 }
 var overlayButtonPolicy = Object.freeze({ owner:'Modal', dangerType:'error', closeOnClickDefault:true, autoLoadingDefault:true, classNamePolicy:true });
-function resolveButtons(opts) { return OverlayFramePolicy.resolveButtons(opts, Object.assign({}, overlayButtonPolicy, { requireExplicitFooter:false })); }
+function resolveButtons(opts) { return OverlayFramePolicy.resolveButtons(opts, Utils.mergeOwn( overlayButtonPolicy, { requireExplicitFooter:false })); }
 function normalize(input, previous) {
   var incoming = input || {};
   if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new TypeError('[QXFRAME9A7C2] Modal options must be an object.');
   rejectRemoved(incoming);
-  var next = Object.assign({}, previous || {}, incoming);
+  var next = Utils.mergeOwn( previous || {}, incoming);
   next.placement = enumValue(next.placement, PLACEMENTS, 'center', 'placement');
   var closable = OverlayFramePolicy.normalizeClosable(own(incoming, 'closable') ? incoming.closable : undefined, previous, { owner:'Modal' });
   next.closable = closable.visible;

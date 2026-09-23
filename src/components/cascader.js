@@ -36,7 +36,7 @@ const CASCADER_DEFAULTS=Object.freeze({items:[],multiple:false,clearable:false,d
 const runtimeState=new WeakMap();
 const own=Utils.own;
 function validateCascaderOptions(opts){if(['click','hover'].indexOf(String(opts.expandTrigger||'click'))<0)throw new TypeError('[QXFRAME9A7C2] Cascader expandTrigger must be click or hover.');if(['child','parent','all'].indexOf(String(opts.checkedStrategy||'child'))<0)throw new TypeError('[QXFRAME9A7C2] Cascader checkedStrategy must be "child", "parent", or "all".');if(opts.maxVisibleTags!=='responsive'&&opts.maxVisibleTags!=null&&(!Number.isFinite(Number(opts.maxVisibleTags))||Number(opts.maxVisibleTags)<0))throw new TypeError('[QXFRAME9A7C2] Cascader maxVisibleTags must be a non-negative number or "responsive".');if(opts.popupRender!=null&&!Utils.isFunction(opts.popupRender))throw new TypeError('[QXFRAME9A7C2] Cascader popupRender must be a function or null.');validateItems(opts.items);return opts;}
-function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;if(fieldInit.formField&&!Utils.own(incoming,'value')&&!Utils.own(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;rejectObsolete(incoming);return{fieldInit,opts:validateCascaderOptions(Object.assign({},CASCADER_DEFAULTS,incoming))};}
+function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;if(fieldInit.formField&&!Utils.own(incoming,'value')&&!Utils.own(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;rejectObsolete(incoming);return{fieldInit,opts:validateCascaderOptions(Utils.mergeOwn(CASCADER_DEFAULTS,incoming))};}
 
 function normalizeValues(value, multiple) {
   if (value === undefined || value === null || value === '') return [];
@@ -65,7 +65,7 @@ function rejectObsolete(options) {
     
 
 function setupCascaderRuntime(instance,fieldInit){
-        var opts=Object.assign({},instance.options);
+        var opts=Utils.mergeOwn(instance.options);
         var doc=opts.document||globalThis.document;
         var host=opts.container||null;
         var headlessMode=opts.headless===true;
@@ -355,7 +355,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (Utils.isFunction(opts.itemRender)) {
             var path = searchMode && item && Array.isArray(item.path) ? item.path.slice() : pathByKeys(activePathKeys).slice(0, Math.max(0, Number(columnIndex) || 0));
             if (!searchMode) path.push(item);
-            return opts.itemRender(item, Item.createContext(item, Object.assign({}, ctx || {}, { component:instance, controller:instance, columnIndex:Number(columnIndex) || 0, path:path, search:searchMode === true, searchValue:searchState.query })));
+            return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, columnIndex:Number(columnIndex) || 0, path:path, search:searchMode === true, searchValue:searchState.query })));
           }
           var label = doc.createElement('span');
           label.className = 'qxframe9a7c2-cascader-option-label';

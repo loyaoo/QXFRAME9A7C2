@@ -46,7 +46,7 @@ function validateSelectOptions(opts){
  if(opts.popupRender!=null&&!Utils.isFunction(opts.popupRender))throw new TypeError('[QXFRAME9A7C2] Select popupRender must be a function or null.');
  return opts;
 }
-function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;const authoredSelect=fieldInit.formField&&String(fieldInit.formField.tagName||'').toLowerCase()==='select'?fieldInit.formField:null;if(authoredSelect){if(!Object.prototype.hasOwnProperty.call(incoming,'multiple'))incoming.multiple=authoredSelect.multiple===true;if(!Object.prototype.hasOwnProperty.call(incoming,'items'))incoming.items=nativeSelectItems(authoredSelect);}if(fieldInit.formField&&!Object.prototype.hasOwnProperty.call(incoming,'value')&&!Object.prototype.hasOwnProperty.call(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;const opts=validateSelectOptions(Object.assign({},SELECT_DEFAULTS,incoming));return{fieldInit,opts};}
+function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;const authoredSelect=fieldInit.formField&&String(fieldInit.formField.tagName||'').toLowerCase()==='select'?fieldInit.formField:null;if(authoredSelect){if(!Object.prototype.hasOwnProperty.call(incoming,'multiple'))incoming.multiple=authoredSelect.multiple===true;if(!Object.prototype.hasOwnProperty.call(incoming,'items'))incoming.items=nativeSelectItems(authoredSelect);}if(fieldInit.formField&&!Object.prototype.hasOwnProperty.call(incoming,'value')&&!Object.prototype.hasOwnProperty.call(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;const opts=validateSelectOptions(Utils.mergeOwn(SELECT_DEFAULTS,incoming));return{fieldInit,opts};}
 
 function labelOf(item, fallback) {
   if (item && typeof item === 'object' && item.label !== undefined) return String(item.label);
@@ -71,7 +71,7 @@ function nativeSelectItems(select) {
 function nativeSelectFlatItems(items) { var output=[]; (items||[]).forEach(function(item){if(item&&Array.isArray(item.items))Array.prototype.push.apply(output,nativeSelectFlatItems(item.items));else output.push(item);}); return output; }
 
 function setupSelectRuntime(instance,fieldInit){
-        var opts=Object.assign({},instance.options);
+        var opts=Utils.mergeOwn(instance.options);
         var doc=opts.document||globalThis.document;
         var host=opts.container||null;
         var headlessMode=opts.headless===true;
@@ -350,7 +350,7 @@ var controlHost = FieldHost.resolvePickerControl({
             originalEvent: detail && detail.originalEvent || null
           }) !== false;
           if (changed) {
-            var payload = Object.assign({}, detail || {}, { value:needle, item:item, selected:false, select:instance });
+            var payload = Utils.mergeOwn( detail || {}, { value:needle, item:item, selected:false, select:instance });
             if (Utils.isFunction(opts.onDeselect)) opts.onDeselect(needle, payload);
             emitter.emit('deselect', payload);
           }
@@ -569,7 +569,7 @@ var controlHost = FieldHost.resolvePickerControl({
         }
     
         function handleOptionSelect(detail) {
-          var payload = Object.assign({}, detail, { select: instance });
+          var payload = Utils.mergeOwn( detail, { select: instance });
           if (detail && detail.selected === false) {
             if (Utils.isFunction(opts.onDeselect)) opts.onDeselect(detail.value, payload);
             if (destroyed) return;
@@ -604,7 +604,7 @@ var controlHost = FieldHost.resolvePickerControl({
             optionList.setSearch('');
           }
           renderValues({ silent: !!(detail && detail.silent), source: detail && detail.source || 'selection', reason: detail && detail.reason || 'change' });
-          var payload = Object.assign({}, detail || {}, { value: value, select: instance });
+          var payload = Utils.mergeOwn( detail || {}, { value: value, select: instance });
           if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(value, payload);
           if (destroyed) return;
           if (!(detail && detail.silent)) {
@@ -642,7 +642,7 @@ var controlHost = FieldHost.resolvePickerControl({
           getValue: optionGetter('getValue'),
           isItemDisabled: opts.isItemDisabled,
           selectionAppearance: opts.selectionAppearance,
-          itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Object.assign({}, ctx || {}, { component:instance, controller:instance, searchValue:searchState.query, multiple:opts.multiple === true }))); } : null,
+          itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, searchValue:searchState.query, multiple:opts.multiple === true }))); } : null,
           filterItem: selectFilterItem(),
           sortItems: opts.sortItems,
           loading: opts.loading === true,
@@ -654,7 +654,7 @@ var controlHost = FieldHost.resolvePickerControl({
           onSelect: handleOptionSelect,
           onChange: handleOptionChange,
           onActiveChange: function (detail) {
-            var payload = Object.assign({}, detail, { select: instance });
+            var payload = Utils.mergeOwn( detail, { select: instance });
             if (Utils.isFunction(opts.onActiveChange)) opts.onActiveChange(payload);
             if (detail && detail.item && detail.source !== 'pointer' && Utils.isFunction(opts.onActive)) { var location = optionLocation(detail.item); opts.onActive(optionValue(detail.item, location ? location.index : 0), payload); }
             emitter.emit('activeChange', payload);
@@ -662,7 +662,7 @@ var controlHost = FieldHost.resolvePickerControl({
           onHoverChange: function (detail) {
             if (!detail || !detail.item || !Utils.isFunction(opts.onActive)) return;
             var location = optionLocation(detail.item);
-            opts.onActive(optionValue(detail.item, location ? location.index : 0), Object.assign({}, detail, { select:instance }));
+            opts.onActive(optionValue(detail.item, location ? location.index : 0), Utils.mergeOwn( detail, { select:instance }));
           }
         });
     
@@ -731,7 +731,7 @@ var controlHost = FieldHost.resolvePickerControl({
           beforeTagAdd: function (tag, detail) {
             var existing = findOptionByToken(tag && tag.value);
             if (existing && existing.disabled) {
-              var invalidPayload = Object.assign({}, detail || {}, { candidate:String(tag.value), invalidReason:'disabled-option', item:existing.item, select:instance });
+              var invalidPayload = Utils.mergeOwn( detail || {}, { candidate:String(tag.value), invalidReason:'disabled-option', item:existing.item, select:instance });
               if (Utils.isFunction(opts.onTagInvalid)) opts.onTagInvalid(invalidPayload);
               emitter.emit('tagInvalid', invalidPayload);
               return false;
@@ -747,13 +747,13 @@ var controlHost = FieldHost.resolvePickerControl({
             if (nextValues.indexOf(String(tag.value)) < 0) nextValues.push(String(tag.value));
             setValue(nextValues, { reason: detail.reason || 'tag-add', source: detail.source || 'control', originalEvent: detail.originalEvent || null });
             var createdItem = selectedItem(tag.value);
-            var selectPayload = Object.assign({}, detail || {}, { value:String(tag.value), item:createdItem, selected:true, select:instance });
+            var selectPayload = Utils.mergeOwn( detail || {}, { value:String(tag.value), item:createdItem, selected:true, select:instance });
             if (Utils.isFunction(opts.onSelect)) opts.onSelect(String(tag.value), selectPayload);
             emitter.emit('select', selectPayload);
           },
           onTagInvalid: function (detail) {
-            if (Utils.isFunction(opts.onTagInvalid)) opts.onTagInvalid(Object.assign({}, detail, { select: instance }));
-            emitter.emit('tagInvalid', Object.assign({}, detail, { select: instance }));
+            if (Utils.isFunction(opts.onTagInvalid)) opts.onTagInvalid(Utils.mergeOwn( detail, { select: instance }));
+            emitter.emit('tagInvalid', Utils.mergeOwn( detail, { select: instance }));
           },
           onTagRemove: function (tag, detail) {
             return removeSelectedTagValue(tag.value, detail);
@@ -892,7 +892,7 @@ var controlHost = FieldHost.resolvePickerControl({
         function applyOptions(nextOptions) {
           if (destroyed) return instance;
           var next = nextOptions || {};
-                    var proposed = Object.assign({}, opts, next);
+                    var proposed = Utils.mergeOwn( opts, next);
           if (proposed.creatable === true && proposed.multiple !== true) throw new TypeError('[QXFRAME9A7C2] Select creatable requires multiple:true.');
           if (proposed.creatable === true && proposed.searchable !== true) throw new TypeError('[QXFRAME9A7C2] Select creatable requires searchable:true so Control owns one editable token input path.');
           if (!Array.isArray(proposed.tokenSeparators) && !Utils.isFunction(proposed.tokenSeparators)) throw new TypeError('[QXFRAME9A7C2] Select tokenSeparators must be an array or tokenizer function.');
@@ -930,7 +930,7 @@ var controlHost = FieldHost.resolvePickerControl({
             getValue: optionGetter('getValue'),
             isItemDisabled: opts.isItemDisabled,
             selectionAppearance: opts.selectionAppearance,
-            itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Object.assign({}, ctx || {}, { component:instance, controller:instance, searchValue:searchState.query, multiple:opts.multiple === true }))); } : null,
+            itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, searchValue:searchState.query, multiple:opts.multiple === true }))); } : null,
             filterItem: selectFilterItem(),
             sortItems: opts.sortItems,
             loading: opts.loading === true,

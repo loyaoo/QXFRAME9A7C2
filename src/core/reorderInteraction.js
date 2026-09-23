@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
@@ -241,7 +242,7 @@ function updateDrag(event) {
   var moving = rowForKey(session.key);
   if (moving) { moving.classList.add('is-dragging'); }
   if (slot.markerRow && session.dropAllowed) slot.markerRow.classList.add(slot.before ? 'is-drag-before' : 'is-drag-after');
-  if (typeof source.onPreview === 'function') source.onPreview(Object.assign({}, dropDetail, { allowed: session.dropAllowed }));
+  if (typeof source.onPreview === 'function') source.onPreview(Utils.mergeOwn( dropDetail, { allowed: session.dropAllowed }));
   if (changedSlot) notify('onDragMove', { key: session.key, fromIndex: session.fromIndex, toIndex: slot.targetIndex, allowed: session.dropAllowed, originalEvent: event });
   return true;
 }
@@ -265,7 +266,7 @@ function finishDrag(event) {
   }
   var commitDetail = { key: active.key, sourceKey: active.key, fromIndex: active.fromIndex, toIndex: active.targetIndex, source: 'pointer', reason: 'drag', originalEvent: event || null };
   var changed = source.onMove(commitDetail) !== false;
-  if (changed && typeof source.onCommit === 'function') source.onCommit(Object.assign({}, commitDetail));
+  if (changed && typeof source.onCommit === 'function') source.onCommit(Utils.mergeOwn( commitDetail));
   var finalIndex = changed ? indexOfKey(active.key) : active.fromIndex;
   notify('onDragEnd', { key: active.key, fromIndex: active.fromIndex, toIndex: finalIndex < 0 ? active.targetIndex : finalIndex, changed: changed, originalEvent: event || null });
   return changed;

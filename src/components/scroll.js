@@ -95,7 +95,7 @@ function assertAxisCompatibility(axis, wheelAxis, snapAxis) {
 }
     
 function attachViewport(options) {
-  var input = Object.assign({}, options || {});
+  var input = Utils.mergeOwn( options || {});
   var doc = input.document || (input.root && input.root.ownerDocument) || globalThis.document;
   var root = ensureElement(input.root, 'attachViewport root');
   var viewport = ensureElement(input.viewport, 'attachViewport viewport');
@@ -728,7 +728,7 @@ function create(options) {
     var targets = getSnapTargets();
     var numeric = Math.floor(Number(index));
     if (!Number.isFinite(numeric) || numeric < 0 || numeric >= targets.length) return false;
-    var settings = Object.assign({}, normalizeScrollOptions(local, 'goToSnap'), {
+    var settings = Utils.mergeOwn( normalizeScrollOptions(local, 'goToSnap'), {
       axis: resolveSnapAxis(),
       align: opts.snapAlign
     });
@@ -1003,7 +1003,7 @@ function create(options) {
         throw new Error('[QXFRAME9A7C2] Scroll ' + key + ' is immutable; destroy and recreate to change it.');
       }
     });
-    var candidate = Object.assign({}, opts, next);
+    var candidate = Utils.mergeOwn( opts, next);
     candidate.axis = normalizeEnum(candidate.axis, AXES, 'y', 'axis');
     candidate.wheelAxis = normalizeEnum(candidate.wheelAxis, WHEEL_AXES, 'auto', 'wheelAxis');
     candidate.scrollbarVisibility = normalizeEnum(candidate.scrollbarVisibility, VISIBILITIES, 'auto', 'scrollbarVisibility');

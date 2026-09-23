@@ -53,7 +53,7 @@ function create(options) {
   task = AsyncTask.create({
     ignoreStale: opts.cancelPrevious !== false,
     AbortController: opts.AbortController,
-    task: function (input, context) { return opts.action(input, Object.assign({}, context, { action: api })); },
+    task: function (input, context) { return opts.action(input, Utils.mergeOwn( context, { action: api })); },
     onStateChange: function (state, detail) {
       var name = state.state;
       if (name === 'pending' || name === 'success' || name === 'error' || name === 'cancelled' || name === 'idle') notify(name, detail || {});

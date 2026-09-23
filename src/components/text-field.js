@@ -40,7 +40,7 @@ function enhance(source, options) {
         const EventCtor = doc.defaultView && doc.defaultView.Event || globalThis.Event;
         if (EventCtor && field && field.dispatchEvent) field.dispatchEvent(new EventCtor(type, { bubbles: true }));
     }
-    const controlOptions = Object.assign({}, opts, {
+    const controlOptions = Utils.mergeOwn( opts, {
         elements: { root, input: field }, document: doc, mode: 'input', editor: String(field.tagName).toLowerCase() === 'textarea' ? 'textarea' : 'input',
         clearable, count: countEnabled, inputValue: field.value, disabled: field.disabled === true, readOnly: field.readOnly === true, required: field.required === true,
         placeholder: field.placeholder || '', minLength: field.hasAttribute('minlength') ? field.minLength : null, maxLength: field.hasAttribute('maxlength') ? field.maxLength : null,
@@ -62,7 +62,7 @@ function enhance(source, options) {
             if (hasOwn(patch, 'maxLength')) { const max = finiteLength(patch.maxLength); if (max === null) field.removeAttribute('maxlength'); else field.maxLength = max; }
             if (hasOwn(patch, 'minLength')) { const min = finiteLength(patch.minLength); if (min === null) field.removeAttribute('minlength'); else field.minLength = min; }
             Object.keys(patch).forEach(key => { opts[key] = patch[key]; });
-            control.updateOptions(Object.assign({}, patch, { clearable, count: countEnabled, minLength: field.hasAttribute('minlength') ? field.minLength : null, maxLength: field.hasAttribute('maxlength') ? field.maxLength : null }));
+            control.updateOptions(Utils.mergeOwn( patch, { clearable, count: countEnabled, minLength: field.hasAttribute('minlength') ? field.minLength : null, maxLength: field.hasAttribute('maxlength') ? field.maxLength : null }));
             return api;
         },
         getState() { const current = control.getState(); return Object.freeze({ value: field.value, count: current.count, focused: current.focused, hovered: current.focused ? false : root.classList.contains('is-hovered'), disabled: field.disabled === true, readOnly: field.readOnly === true, destroyed }); },

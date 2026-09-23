@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
@@ -55,12 +56,12 @@ function create(options) {
     };
     next.scale = Math.max(opts.minScale, Math.min(opts.maxScale, next.scale));
     if (!skipConstraint && typeof opts.constrain === 'function') {
-      var constrained = opts.constrain(Object.freeze(Object.assign({}, next)), api);
+      var constrained = opts.constrain(Object.freeze(Utils.mergeOwn( next)), api);
       if (constrained !== undefined && constrained !== null) {
         if (!constrained || typeof constrained !== 'object' || Array.isArray(constrained)) {
           throw new TypeError('[QXFRAME9A7C2] TransformModel constrain must return an object, null, or undefined.');
         }
-        next = normalizeState(Object.assign({}, next, constrained), next, true);
+        next = normalizeState(Utils.mergeOwn( next, constrained), next, true);
         next.scale = Math.max(opts.minScale, Math.min(opts.maxScale, next.scale));
       }
     }
@@ -88,7 +89,7 @@ function create(options) {
     var changed = !same(previous, normalized);
     if (!changed && !(meta && meta.force === true)) return true;
     state = normalized;
-    var detail = mergeOptions({ reason: 'set', source: 'api', previous: Object.freeze(Object.assign({}, previous)), state: snapshot(), controller: api, changed: changed }, meta);
+    var detail = mergeOptions({ reason: 'set', source: 'api', previous: Object.freeze(Utils.mergeOwn( previous)), state: snapshot(), controller: api, changed: changed }, meta);
     if (detail.silent !== true) {
       if (typeof opts.onChange === 'function') opts.onChange(detail.state, detail);
       emitter.emit('change', detail);

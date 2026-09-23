@@ -31,7 +31,7 @@ function normalizeSize(value, fallback = 'md') { return Utils.normalizeEnum(valu
 function styleObject(value, label) {
     if (value === undefined || value === null) return null;
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] Loading ' + label + ' must be an object.');
-    return Object.assign({}, value);
+    return Utils.mergeOwn( value);
 }
 function applyStyle(element, style) {
     if (!element || !style) return;
@@ -70,7 +70,7 @@ function contextualOptions(options) {
     if (fullscreen !== isGlobal) {
         throw new Error('[QXFRAME9A7C2] Loading fullscreen must match target scope; omit target or use document.body/documentElement for fullscreen, and use a non-global target for container loading.');
     }
-    return Object.assign({}, input, { target, fullscreen });
+    return Utils.mergeOwn( input, { target, fullscreen });
 }
 
 export class Loading extends Component {
@@ -214,8 +214,8 @@ export class Loading extends Component {
         const applyVisualOptions = () => {
             clearStyle(mask, record.appliedMaskStyle);
             clearStyle(box, record.appliedBoxStyle);
-            record.appliedMaskStyle = opts.style ? Object.assign({}, opts.style) : null;
-            record.appliedBoxStyle = opts.boxStyle ? Object.assign({}, opts.boxStyle) : null;
+            record.appliedMaskStyle = opts.style ? Utils.mergeOwn( opts.style) : null;
+            record.appliedBoxStyle = opts.boxStyle ? Utils.mergeOwn( opts.boxStyle) : null;
             root.className = ('qxframe9a7c2-loading-root ' + (isGlobal ? 'is-global' : 'is-local') + ' is-' + opts.size + (opts.blocking ? '' : ' is-nonblocking') + (opts.className ? ' ' + opts.className : '')).trim();
             mask.className = 'qxframe9a7c2-loading-mask' + (opts.showMask ? '' : ' is-maskless');
             mask.style.background = opts.maskColor || '';

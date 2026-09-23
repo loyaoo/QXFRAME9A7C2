@@ -73,10 +73,10 @@ function validateItems(items, opts) {
 const TREE_SELECT_DEFAULTS=Object.freeze({items:[],multiple:false,checkable:false,checkStrictly:false,checkedStrategy:'child',searchable:true,clearable:false,maxCount:0,maxVisibleTags:0,renderTag:null,renderTagOverflow:null,popupRender:null,itemStyles:null,tagClasses:null,tagStyles:null,disabled:false,readOnly:false,size:'md',placeholder:'',trigger:'click',placement:'bottom-start',closeOnSelect:undefined,matchReferenceWidth:true,renderControl:true,headless:false});
 const runtimeState=new WeakMap();
 function validateTreeSelectOptions(opts){validateItems(opts.items,opts);if(['child','parent','all'].indexOf(String(opts.checkedStrategy||'child'))<0)throw new TypeError('[QXFRAME9A7C2] TreeSelect checkedStrategy must be "child", "parent", or "all".');if(opts.maxCount!=null&&(!Number.isFinite(Number(opts.maxCount))||Number(opts.maxCount)<0))throw new TypeError('[QXFRAME9A7C2] TreeSelect maxCount must be a non-negative number.');if(opts.maxVisibleTags!=='responsive'&&opts.maxVisibleTags!=null&&(!Number.isFinite(Number(opts.maxVisibleTags))||Number(opts.maxVisibleTags)<0))throw new TypeError('[QXFRAME9A7C2] TreeSelect maxVisibleTags must be a non-negative number or "responsive".');if(opts.popupRender!=null&&!Utils.isFunction(opts.popupRender))throw new TypeError('[QXFRAME9A7C2] TreeSelect popupRender must be a function or null.');return opts;}
-function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;if(fieldInit.formField&&!hasOwn(incoming,'value')&&!hasOwn(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;return{fieldInit,opts:validateTreeSelectOptions(Object.assign({},TREE_SELECT_DEFAULTS,incoming))};}
+function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;if(fieldInit.formField&&!hasOwn(incoming,'value')&&!hasOwn(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;return{fieldInit,opts:validateTreeSelectOptions(Utils.mergeOwn(TREE_SELECT_DEFAULTS,incoming))};}
 
 function setupTreeSelectRuntime(instance,fieldInit) {
-        var opts = Object.assign({}, instance.options);
+        var opts = Utils.mergeOwn( instance.options);
         validateItems(opts.items, opts);
         if (['child','parent','all'].indexOf(String(opts.checkedStrategy || 'child')) < 0) throw new TypeError('[QXFRAME9A7C2] TreeSelect checkedStrategy must be "child", "parent", or "all".');
         if (opts.maxCount !== undefined && opts.maxCount !== null && (!Number.isFinite(Number(opts.maxCount)) || Number(opts.maxCount) < 0)) throw new TypeError('[QXFRAME9A7C2] TreeSelect maxCount must be a non-negative number.');
@@ -368,7 +368,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         }
         function emitChange(value, detail) {
           var suppliedValues = detail && Array.isArray(detail.values) ? detail.values.slice() : null;
-          var payload = Object.assign({}, detail || {}, { value: copyApiValue(value), values: suppliedValues || selectedValues(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
+          var payload = Utils.mergeOwn( detail || {}, { value: copyApiValue(value), values: suppliedValues || selectedValues(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
           if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(value), payload);
           if (destroyed) return false;
           if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(value), payload);
@@ -416,37 +416,37 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           onLoad: opts.onLoad,
           onLoadError: opts.onLoadError,
           onSelect: function (detail) {
-            var payload = Object.assign({}, detail, { treeSelect: api });
+            var payload = Utils.mergeOwn( detail, { treeSelect: api });
             if (Utils.isFunction(opts.onSelect)) opts.onSelect(detail.value, payload);
             emitter.emit('select', payload);
           },
           onCheck: function (keys, detail) {
             if (!hierarchicalCheckMode()) return;
             var values = checkedValues();
-            var changed = writeApiValue(values, Object.assign({}, detail, { reason:'check', source:detail && detail.source || 'tree' }), true);
+            var changed = writeApiValue(values, Utils.mergeOwn( detail, { reason:'check', source:detail && detail.source || 'tree' }), true);
             restoreTreeFromApiValue('controlled-check');
             searchState.clear({ silent:true, notify:false, source:'tree', reason:'selection' });
             tree.setSearch('');
             syncView({ source: detail && detail.source || 'tree', reason: 'check' });
-            var payload = Object.assign({}, detail, { checkedKeys: keys.slice(), values: values.slice(), value: values.slice(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
+            var payload = Utils.mergeOwn( detail, { checkedKeys: keys.slice(), values: values.slice(), value: values.slice(), controlled:!!(valueState && valueState.controlled), treeSelect: api });
             if (Utils.isFunction(opts.onCheck)) opts.onCheck(values.slice(), payload);
             emitter.emit('check', payload);
-            if (changed) emitChange(values.slice(), Object.assign({}, detail, { reason: 'check', checkedKeys: keys.slice(), values:values.slice() }));
+            if (changed) emitChange(values.slice(), Utils.mergeOwn( detail, { reason: 'check', checkedKeys: keys.slice(), values:values.slice() }));
           },
           onChange: function (value, detail) {
             if (hierarchicalCheckMode()) return;
             var proposed = opts.multiple === true ? tree.getState().values.slice() : value;
-            var changed = writeApiValue(proposed, Object.assign({}, detail, { reason:'select', source:detail && detail.source || 'tree' }), true);
+            var changed = writeApiValue(proposed, Utils.mergeOwn( detail, { reason:'select', source:detail && detail.source || 'tree' }), true);
             restoreTreeFromApiValue('controlled-select');
             searchState.clear({ silent:true, notify:false, source:'tree', reason:'selection' });
             tree.setSearch('');
             syncView({ source: detail && detail.source || 'tree', reason: 'select' });
-            if (changed) emitChange(proposed, Object.assign({}, detail, { reason: 'select', values:asValues(proposed, multipleMode()) }));
+            if (changed) emitChange(proposed, Utils.mergeOwn( detail, { reason: 'select', values:asValues(proposed, multipleMode()) }));
             var shouldClose = opts.closeOnSelect !== undefined ? opts.closeOnSelect !== false : opts.multiple !== true;
             if (shouldClose && triggerSession) triggerSession.close('select', detail && detail.originalEvent || null);
           },
           onExpand: function (keys, detail) {
-            var payload = Object.assign({}, detail, { expandedKeys: keys.slice(), treeSelect: api });
+            var payload = Utils.mergeOwn( detail, { expandedKeys: keys.slice(), treeSelect: api });
             if (Utils.isFunction(opts.onExpand)) opts.onExpand(keys.slice(), payload);
             emitter.emit('expand', payload);
           }
@@ -673,7 +673,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             var nextPortal = typeof next.portalContainer === 'string' ? DOM.resolveElement(next.portalContainer, doc) : next.portalContainer;
             if (nextPortal !== portalContainer) throw new Error('[QXFRAME9A7C2] TreeSelect portalContainer is immutable; destroy and recreate to change it.');
           }
-          var candidate = Object.assign({}, opts, next);
+          var candidate = Utils.mergeOwn( opts, next);
           if (['child','parent','all'].indexOf(String(candidate.checkedStrategy || 'child')) < 0) throw new TypeError('[QXFRAME9A7C2] TreeSelect checkedStrategy must be "child", "parent", or "all".');
           if (candidate.maxCount !== undefined && candidate.maxCount !== null && (!Number.isFinite(Number(candidate.maxCount)) || Number(candidate.maxCount) < 0)) throw new TypeError('[QXFRAME9A7C2] TreeSelect maxCount must be a non-negative number.');
           if (candidate.maxVisibleTags !== 'responsive' && candidate.maxVisibleTags !== undefined && candidate.maxVisibleTags !== null && (!Number.isFinite(Number(candidate.maxVisibleTags)) || Number(candidate.maxVisibleTags) < 0)) throw new TypeError('[QXFRAME9A7C2] TreeSelect maxVisibleTags must be a non-negative number or \"responsive\".');

@@ -14,7 +14,7 @@ function create(options) {
     task = AsyncTask.create({
       ignoreStale: opts.ignoreStale !== false,
       AbortController: opts.AbortController,
-      task: function (input, context) { return opts.task(input, Object.assign({}, context, { key: key, dataVersion: dataVersion, group: api })); },
+      task: function (input, context) { return opts.task(input, Utils.mergeOwn( context, { key: key, dataVersion: dataVersion, group: api })); },
       onStateChange: opts.onStateChange
     });
     tasks.set(normalized, task);
@@ -23,7 +23,7 @@ function create(options) {
   function run(key, input, meta) {
     if (destroyed) return Promise.reject(new Error('[QXFRAME9A7C2] AsyncTaskGroup is destroyed.'));
     var version = dataVersion;
-    return ensure(key).run(input, Object.assign({}, meta || {}, { dataVersion: version }));
+    return ensure(key).run(input, Utils.mergeOwn( meta || {}, { dataVersion: version }));
   }
   function cancel(key, reason) { var task = tasks.get(keyOf(key)); return !!(task && task.cancel(reason || 'cancel')); }
   function cancelAll(reason) { var count = 0; tasks.forEach(function (task) { if (task.cancel(reason || 'cancel-all')) count += 1; }); return count; }

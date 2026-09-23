@@ -936,7 +936,7 @@ function create(options) {
       var previousSingle = previous.length ? previous[0] : '';
       var nextSingle = next.length ? next[0] : '';
       if (!opts.multiple && previousSingle !== nextSingle) {
-        var scalarDetail = Object.assign({}, detail, { previousKey: previousSingle || null, key: nextSingle || null, item: nextSingle ? itemByKey.get(nextSingle) : null });
+        var scalarDetail = Utils.mergeOwn( detail, { previousKey: previousSingle || null, key: nextSingle || null, item: nextSingle ? itemByKey.get(nextSingle) : null });
         if (Utils.isFunction(opts.onSelectedKeyChange)) opts.onSelectedKeyChange(nextSingle, scalarDetail);
         emitter.emit('selectedKeyChange', scalarDetail);
       }
@@ -1256,7 +1256,7 @@ function create(options) {
   }
   function updateOptions(nextOptions) {
     if (destroyed) return api;
-    var next = Object.assign({}, nextOptions || {}); rejectNonCanonical(next);
+    var next = Utils.mergeOwn( nextOptions || {}); rejectNonCanonical(next);
     if (own(next, 'container') && next.container !== host) throw new Error('[QXFRAME9A7C2] Menu container is immutable; destroy and recreate to change it.');
     if (own(next, 'portalContainer')) throw new Error('[QXFRAME9A7C2] Menu portalContainer is immutable; destroy and recreate to change it.');
     if (own(next, 'items')) validateItems(next.items);

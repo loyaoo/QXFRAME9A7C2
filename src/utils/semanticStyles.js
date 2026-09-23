@@ -1,3 +1,4 @@
+import { Utils } from './utils.js';
 
 import { DOMProjection } from '../core/domProjection.js';
 
@@ -17,7 +18,7 @@ function isPlainObject(value){if(!value||Object.prototype.toString.call(value)!=
     Object.keys(map).forEach(function(slot){
       if (!own(slots,slot)) throw new TypeError('[QXFRAME9A7C2] SemanticStyles unknown slot: '+slot+'.');
       if (label==='classNames') out[slot]=normalizeClasses(map[slot]);
-      else { if (map[slot]!==null && !isPlainObject(map[slot])) throw new TypeError('[QXFRAME9A7C2] SemanticStyles styles.'+slot+' must be a plain object.'); out[slot]=Object.assign({},map[slot]||{}); }
+      else { if (map[slot]!==null && !isPlainObject(map[slot])) throw new TypeError('[QXFRAME9A7C2] SemanticStyles styles.'+slot+' must be a plain object.'); out[slot]=Utils.mergeOwn(map[slot]||{}); }
     });
     return out;
   }

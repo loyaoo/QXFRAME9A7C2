@@ -228,7 +228,7 @@ var listenerAdds = 0;
 
   function configureTextInput(input, policy) {
     if (!input || input.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] DOM.configureTextInput requires an Element.');
-    var local = typeof policy === 'string' ? { mode: policy } : Object.assign({}, policy || {});
+    var local = typeof policy === 'string' ? { mode: policy } : Utils.mergeOwn( policy || {});
     var mode = String(local.mode || 'text').toLowerCase();
     var presets = {
       search: { autocomplete: 'off', spellcheck: false, autocapitalize: 'none', autocorrect: 'off', inputMode: 'search' },
@@ -239,7 +239,7 @@ var listenerAdds = 0;
       freeform: { autocomplete: 'off', spellcheck: true, autocapitalize: 'sentences', autocorrect: 'on', inputMode: 'text' }
     };
     if (!presets[mode]) throw new TypeError('[QXFRAME9A7C2] DOM.configureTextInput mode must be search, text, numeric, otp, email, or freeform.');
-    var resolved = Object.assign({}, presets[mode], local);
+    var resolved = Utils.mergeOwn( presets[mode], local);
     delete resolved.mode;
     if (resolved.autocomplete != null) input.autocomplete = String(resolved.autocomplete);
     if (resolved.spellcheck != null) input.spellcheck = resolved.spellcheck === true;

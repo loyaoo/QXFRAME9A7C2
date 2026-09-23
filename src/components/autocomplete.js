@@ -62,13 +62,13 @@ function prepareOptions(source, overrides) {
   const fieldInit = Control.resolveFieldOptions(source, overrides);
   const incoming = fieldInit.options;
   if (fieldInit.formField && !own(incoming, 'value') && !own(incoming, 'defaultValue')) incoming.value = fieldInit.nativeValue;
-  const opts = Object.assign({}, AUTOCOMPLETE_DEFAULTS, incoming);
+  const opts = Utils.mergeOwn( AUTOCOMPLETE_DEFAULTS, incoming);
   validateItems(opts.items, opts);
   return { fieldInit, opts };
 }
 
 function setupAutocompleteRuntime(instance, fieldInit) {
-        var opts = Object.assign({}, instance.options);
+        var opts = Utils.mergeOwn( instance.options);
         var doc = opts.document || globalThis.document;
         var host = opts.container || null;
         var headlessMode = opts.headless === true;
@@ -156,7 +156,7 @@ var selectionRangeScheduler = null;
           var query = current, context = null;
           if (result && typeof result === 'object' && !Array.isArray(result)) {
             query = result.query === undefined || result.query === null ? '' : String(result.query);
-            context = Object.assign({}, result);
+            context = Utils.mergeOwn( result);
           } else query = result === undefined || result === null ? '' : String(result);
           lastQuery = query; lastQueryContext = context;
           return { query: query, context: context, payload: payload };
@@ -349,7 +349,7 @@ var selectionRangeScheduler = null;
           var item = detail.item;
           var baseValue = itemAccessors.value(item, detail.index || 0, opts);
           var info = deriveQuery('select', detail.originalEvent || null);
-          var payload = Object.assign({}, detail, { value: baseValue, inputValue: draftValue(), committedValue: committedValue(), query: info.query, queryContext: info.context, autocomplete: instance });
+          var payload = Utils.mergeOwn( detail, { value: baseValue, inputValue: draftValue(), committedValue: committedValue(), query: info.query, queryContext: info.context, autocomplete: instance });
           var applied = Utils.isFunction(opts.applySuggestion) ? opts.applySuggestion(item, payload) : undefined;
           if (destroyed) return false;
           var nextValue = baseValue, selectionStart = null, selectionEnd = null;
@@ -389,14 +389,14 @@ var selectionRangeScheduler = null;
           disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
           itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems,
           loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText,
-          getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Object.assign({}, ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null,
+          getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null,
           keyboardFocusOwner: function () { return input; },
           onActiveChange: function (detail) {
             if (opts.backfill === true && detail && detail.item && detail.source === 'keyboard') {
               backfillKey = detail.key === undefined || detail.key === null ? null : String(detail.key);
               backfillValue = itemAccessors.value(detail.item, detail.index || 0, opts);
               syncControl();
-              var backfillDetail = Object.assign({}, detail, { value: backfillValue, committedValue: committedValue(), autocomplete: instance });
+              var backfillDetail = Utils.mergeOwn( detail, { value: backfillValue, committedValue: committedValue(), autocomplete: instance });
               if (Utils.isFunction(opts.onBackfill)) opts.onBackfill(backfillValue, backfillDetail);
               if (destroyed) return;
               emitter.emit('backfill', backfillDetail);
@@ -504,10 +504,10 @@ var selectionRangeScheduler = null;
             var nextPortal = typeof next.portalContainer === 'string' ? DOM.resolveElement(next.portalContainer, doc) : next.portalContainer;
             if (nextPortal !== portalContainer) throw new Error('[QXFRAME9A7C2] Autocomplete portalContainer is immutable; destroy and recreate to change it.');
           }
-          var candidate = Object.assign({}, opts, next);
+          var candidate = Utils.mergeOwn( opts, next);
           if (hasOwn(next,'items') || hasOwn(next,'getKey') || hasOwn(next,'getLabel') || hasOwn(next,'getValue')) validateItems(candidate.items, candidate);
           Object.keys(next).forEach(function (name) { opts[name] = next[name]; });
-          var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Object.assign({}, ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
+          var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }
           optionList.updateOptions(listOptions);
           if (hasOwn(next, 'value')) { valueState.setControlled(true); valueState.syncExternal(opts.value, { silent: true, source: 'options', reason: 'options-value', preserveDraft: true }); clearBackfill(); }

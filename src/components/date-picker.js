@@ -35,7 +35,7 @@ function normalizeSelectionName(value) {
 }
 function timeConfig(value) {
   if (value === true) return {};
-  if (value && typeof value === 'object' && !Array.isArray(value)) return Object.assign({}, value);
+  if (value && typeof value === 'object' && !Array.isArray(value)) return Utils.mergeOwn( value);
   if (value === false || value === undefined || value === null) return null;
   throw new TypeError('[QXFRAME9A7C2] DatePicker time must be false, true, or an options object.');
 }
@@ -451,13 +451,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
       syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' });
       syncSelectionPanel(false);
       syncTimePanel();
-      if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value, selection), Object.assign({}, detail, { value: cloneValue(value, selection), previousValue: cloneValue(detail.previousValue, selection), datePicker: api }));
+      if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value, selection), Utils.mergeOwn( detail, { value: cloneValue(value, selection), previousValue: cloneValue(detail.previousValue, selection), datePicker: api }));
       if (detail.silent !== true) { var payload = { value: cloneValue(value, selection), previousValue: cloneValue(detail.previousValue, selection), reason: detail.reason, source: detail.source || 'api', datePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value, selection), payload); emitter.emit('change', payload); }
     },
     onDraftChange: function (value, detail) {
       if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open);
       if (field && field.getState().open) { syncSelectionPanel(false); syncTimePanel(); rebuildFooter(); }
-      if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value, selection), Object.assign({}, detail, { value: cloneValue(draft.value, selection), draftValue: cloneValue(value, selection), datePicker: api }));
+      if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value, selection), Utils.mergeOwn( detail, { value: cloneValue(draft.value, selection), draftValue: cloneValue(value, selection), datePicker: api }));
     }
   });
   var pickerSession = instance.setupPickerSession({
@@ -593,7 +593,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     }
     if (calendar) calendar.setViewValue(bounded, { silent: true, source: 'sync', reason: fromSecondary ? 'secondary-panel-anchor' : 'primary-panel-anchor' });
     if (calendarSecondary) syncCalendarPair(bounded, { source: 'sync', reason: 'dual-panel-navigation' });
-    var panelDetail = Object.assign({}, detail || {}, { panelIndex: fromSecondary ? 1 : 0, panelViewValue: cloneDate(value) });
+    var panelDetail = Utils.mergeOwn( detail || {}, { panelIndex: fromSecondary ? 1 : 0, panelViewValue: cloneDate(value) });
     emitPanelChange(bounded, panelDetail, mode);
     restoreControlledPanelValue();
     return true;
@@ -727,7 +727,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     activateCurrentPanelVirtualFocus('month-drill-select');
   }
   function resolvedTimeOptions(anchor) {
-    var resolved = Object.assign({}, timeOptions || {});
+    var resolved = Utils.mergeOwn( timeOptions || {});
     resolved.size = opts.size;
     if (Utils.isFunction(opts.disabledTime)) {
       var extra = opts.disabledTime(cloneDate(anchor), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? activeRangePart : null, unit: unit, datePicker: api })) || {};
@@ -742,7 +742,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function syncTimePanel() {
     if (!timePanel) return;
     var anchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value);
-    timePanel.updateOptions(Object.assign({}, resolvedTimeOptions(anchor), { disabled: opts.disabled === true, readOnly: opts.readOnly === true }));
+    timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(anchor), { disabled: opts.disabled === true, readOnly: opts.readOnly === true }));
     timePanel.setValue(timeFromDate(anchor, timeOptions && timeOptions.defaultValue), { silent: true, source: 'sync', reason: 'date-time-sync' });
     if (timePanel && timePanel.refresh) timePanel.refresh('date-time-sync');
   }
@@ -1177,7 +1177,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     });
   }
   if (withTime) {
-    timePanel = TimePanel.create(Object.assign({}, resolvedTimeOptions(selectionAnchor(draft.draftValue)), {
+    timePanel = TimePanel.create(Utils.mergeOwn( resolvedTimeOptions(selectionAnchor(draft.draftValue)), {
       container: timeHost,
       value: timeFromDate(selectionAnchor(draft.draftValue), timeOptions.defaultValue),
       disabled: opts.disabled === true,
@@ -1347,7 +1347,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
     if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
     if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
-    if (timePanel) { var timeAnchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value); timePanel.updateOptions(Object.assign({}, resolvedTimeOptions(timeAnchor), { disabled: opts.disabled === true, readOnly: opts.readOnly === true })); if (timePanel.refresh) timePanel.refresh('date-picker-options'); }
+    if (timePanel) { var timeAnchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value); timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(timeAnchor), { disabled: opts.disabled === true, readOnly: opts.readOnly === true })); if (timePanel.refresh) timePanel.refresh('date-picker-options'); }
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     if (opts.previewValue === false) hoverPreviewValue = null;
     if (own(next, 'panelRender')) syncPanelProjection();

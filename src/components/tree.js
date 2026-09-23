@@ -30,7 +30,7 @@ function assertCanonicalOptions(options) {
 }
 
 function setupTreeRuntime(instance) {
-        var opts = Object.assign({}, instance.options);
+        var opts = Utils.mergeOwn( instance.options);
         validateItems(opts.items, opts);
     
         var doc = opts.document || (opts.container && opts.container.ownerDocument) || globalThis.document;

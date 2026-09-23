@@ -53,7 +53,7 @@ function normalizeItem(item, index) {
   if (typeof item !== 'object' || Array.isArray(item) || Renderer.isNodeLike(item)) {
     throw new TypeError('[QXFRAME9A7C2] Tabs item ' + index + ' must be a primitive label or object.');
   }
-  var next = Object.assign({}, item);
+  var next = Utils.mergeOwn( item);
   if (next.key === undefined || next.key === null) next.key = String(index);
   next.key = String(next.key);
   if (next.label === undefined || next.label === null) next.label = next.key;
@@ -793,7 +793,7 @@ function create(options) {
     activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'remove-fallback' });
     render(true);
     emitEdit('remove', item, index, meta);
-    if (previousActive !== activeKey && (!meta || meta.silent !== true)) emitChange(previousActive, Object.assign({}, meta || {}, { reason: 'remove' }));
+    if (previousActive !== activeKey && (!meta || meta.silent !== true)) emitChange(previousActive, Utils.mergeOwn( meta || {}, { reason: 'remove' }));
     return true;
   }
   function add(item, meta) {
@@ -802,7 +802,7 @@ function create(options) {
     if (itemByKey(nextItem.key)) throw new TypeError('[QXFRAME9A7C2] Tabs item keys must be unique: ' + nextItem.key + '.');
     syncCollection(items.concat([nextItem]));
     render(true);
-    if (!meta || meta.activate !== false) setActiveKey(nextItem.key, Object.assign({}, meta || {}, { reason: meta && meta.reason || 'add' }));
+    if (!meta || meta.activate !== false) setActiveKey(nextItem.key, Utils.mergeOwn( meta || {}, { reason: meta && meta.reason || 'add' }));
     return true;
   }
   function setItems(nextItems, meta) {
@@ -811,7 +811,7 @@ function create(options) {
     activeKey = validActive(activeKey);
     if (!itemByKey(activeItem.activeKey) || itemByKey(activeItem.activeKey).disabled === true) activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'items-fallback' });
     render(true);
-    if (previousActive !== activeKey && (!meta || meta.silent !== true)) emitChange(previousActive, Object.assign({}, meta || {}, { reason: meta && meta.reason || 'set-items' }));
+    if (previousActive !== activeKey && (!meta || meta.silent !== true)) emitChange(previousActive, Utils.mergeOwn( meta || {}, { reason: meta && meta.reason || 'set-items' }));
     return api;
   }
 
@@ -833,7 +833,7 @@ function create(options) {
     IMMUTABLE_OPTIONS.forEach(function (name) {
       if (own(next, name) && next[name] !== opts[name]) throw new TypeError('[QXFRAME9A7C2] Tabs ' + name + ' is immutable after create.');
     });
-    var candidate = normalizeOptions(Object.assign({}, opts, next, { items: own(next, 'items') ? next.items : items }), next);
+    var candidate = normalizeOptions(Utils.mergeOwn( opts, next, { items: own(next, 'items') ? next.items : items }), next);
     var nextItems = candidate.items.slice();
     candidate.items = nextItems;
     opts = candidate;

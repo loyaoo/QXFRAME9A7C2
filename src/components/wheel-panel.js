@@ -594,7 +594,7 @@ function create(options) {
 
   function updateOptions(nextOptions) {
     if (destroyed) return api;
-    var next = Object.assign({}, nextOptions || {});
+    var next = Utils.mergeOwn( nextOptions || {});
     if (own(next, 'wheelStepInterval')) throw new TypeError('[QXFRAME9A7C2] WheelPanel wheelStepInterval was removed; continuous step targeting is owned by Scroll.');
     if (own(next, 'container') && next.container !== host) throw new Error('[QXFRAME9A7C2] WheelPanel container is immutable.');
     if (own(next, 'document') && next.document !== doc) throw new Error('[QXFRAME9A7C2] WheelPanel document is immutable.');
@@ -613,7 +613,7 @@ function create(options) {
     if (own(next, 'loop') && typeof next.loop !== 'boolean') throw new TypeError('[QXFRAME9A7C2] WheelPanel loop must be boolean.');
     if (own(next, 'changeOnScroll') && typeof next.changeOnScroll !== 'boolean') throw new TypeError('[QXFRAME9A7C2] WheelPanel changeOnScroll must be boolean.');
     if (own(next, 'size')) next.size = candidateSize;
-    var candidateOptions = Object.assign({}, opts, next);
+    var candidateOptions = Utils.mergeOwn( opts, next);
     var requestedValue = own(next, 'value') ? next.value : value;
     var candidateValue = normalizeValueForColumns(requestedValue, candidateColumns);
 

@@ -31,7 +31,7 @@ function normalizeItems(items) {
             next = { key: 'step-' + index, title: item == null ? 'Step ' + (index + 1) : String(item) };
         } else {
             if (typeof item !== 'object' || Array.isArray(item) || Renderer.isNodeLike(item)) throw new TypeError('[QXFRAME9A7C2] Steps item ' + index + ' must be a primitive title or object.');
-            next = Object.assign({}, item);
+            next = Utils.mergeOwn( item);
             if (next.key === undefined || next.key === null || next.key === '') next.key = 'step-' + index;
             else next.key = String(next.key);
             if (own(next, 'status')) next.status = enumValue(next.status, STEPS_STATUSES, 'wait', 'item.status');
@@ -88,7 +88,7 @@ export class Steps extends Component {
         if (!options || typeof options !== 'object' || Array.isArray(options)) throw new TypeError('[QXFRAME9A7C2] Steps options must be an object.');
         if (!options.container || options.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Steps container must be an Element.');
         const doc = options.document || options.container.ownerDocument || globalThis.document;
-        super(Object.assign({}, options, { document: doc }));
+        super(Utils.mergeOwn( options, { document: doc }));
     }
 
     [componentHooks.render]() {
@@ -259,7 +259,7 @@ export class Steps extends Component {
     setItems(items) { if (this.destroyed) return false; this.updateOptions({ items }); return this; }
     getState() { const r = recordFor(this), opts = this.options; return Object.freeze({ current: r.current, activeKey: r.activeItem.activeKey || null, count: opts.items.length, status: opts.items.length ? this.#itemStatus(opts.items[r.current] || {}, r.current) : opts.status, direction: opts.direction, type: opts.type, labelPlacement: opts.labelPlacement, progressDot: opts.progressDot !== false, responsive: opts.responsive, disabled: opts.disabled, size: opts.size, destroyed: this.destroyed }); }
     getRootElement() { return recordFor(this).root; }
-    getItems() { return this.options.items.map(item => Object.assign({}, item)); }
+    getItems() { return this.options.items.map(item => Utils.mergeOwn( item)); }
     getCollection() { return recordFor(this).collection; }
     getActiveItem() { return recordFor(this).activeItem; }
     getKeyboardNavigation() { return recordFor(this).keyboard; }

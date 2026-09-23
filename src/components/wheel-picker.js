@@ -30,7 +30,7 @@ function assertValue(value, label) {
 function setupWheelPickerRuntime(instance, fieldInit) {
 var incoming = fieldInit.options;
 var itemHeightExplicit = own(incoming, 'itemHeight');
-var opts = Object.assign({}, instance.options);
+var opts = Utils.mergeOwn( instance.options);
 if (!Array.isArray(opts.columns) || opts.columns.length === 0) throw new TypeError('[QXFRAME9A7C2] WheelPicker columns must be a non-empty array.');
 if (opts.value !== undefined) opts.value = assertValue(opts.value, 'value');
 opts.defaultValue = assertValue(opts.defaultValue || [], 'defaultValue');
@@ -50,8 +50,8 @@ var draft = StateController.create({
   copyValue: cloneValue,
   normalizeValue: function (value) { return assertValue(value || [], 'value'); },
   equals: equalValue,
-  onValueChange: function (value, detail) { syncField(false, { panelSynced: panelSelectionDepth > 0, commitMeta: { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' } }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Object.assign({}, detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), wheelPicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), reason: detail.reason, source: detail.source, wheelPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
-  onDraftChange: function (value, detail) { syncField(field && field.getState().open && opts.needConfirm === true, { panelSynced: panelSelectionDepth > 0 }); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Object.assign({}, detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), wheelPicker: api })); }
+  onValueChange: function (value, detail) { syncField(false, { panelSynced: panelSelectionDepth > 0, commitMeta: { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' } }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), wheelPicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), reason: detail.reason, source: detail.source, wheelPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
+  onDraftChange: function (value, detail) { syncField(field && field.getState().open && opts.needConfirm === true, { panelSynced: panelSelectionDepth > 0 }); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), wheelPicker: api })); }
 });
     
 function formatDisplay(useDraft) {

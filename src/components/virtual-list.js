@@ -72,7 +72,7 @@ export class VirtualList extends Component {
     constructor(options = {}) {
         if (!options || typeof options !== 'object' || Array.isArray(options)) throw new TypeError('[QXFRAME9A7C2] VirtualList options must be an object.');
         const doc = options.document || (options.container && options.container.ownerDocument) || globalThis.document;
-        super(Object.assign({}, options, { document: doc }));
+        super(Utils.mergeOwn( options, { document: doc }));
         const items = Array.isArray(options.items) ? options.items.slice() : [];
         state.set(this, {
             doc, items, host: null, root: null, viewport: null, spacer: null, layer: null,

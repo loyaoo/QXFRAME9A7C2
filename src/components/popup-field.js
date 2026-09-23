@@ -1,3 +1,4 @@
+import { Utils } from '../utils/utils.js';
 import { FieldComponent } from './field.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { componentHooks } from '../core/componentHooks.js';
@@ -88,7 +89,7 @@ export class PopupFieldComponent extends FieldComponent {
     setupPopupFieldRuntime(options = {}) {
         const record = requireState(this);
         if (record.trigger) throw new Error('[QXFRAME9A7C2] PopupField runtime is already initialized.');
-        const config = Object.assign({}, options);
+        const config = Utils.mergeOwn( options);
         record.reference = config.reference || null;
         record.popup = config.floating || null;
         record.tabExitTarget = config.tabExitTarget || null;

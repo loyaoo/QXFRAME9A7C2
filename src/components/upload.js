@@ -176,14 +176,14 @@ function create(source, overrides) {
       accept: opts.accept, maxCount: opts.maxCount, maxSize: opts.maxSize, beforeUpload: opts.beforeUpload,
       transformFile: opts.transformFile, request: opts.request,
       onProgress: function (percent, record) { if (typeof opts.onProgress === 'function') opts.onProgress(percent, record, api); },
-      onReject: function (file, detail) { if (typeof opts.onReject === 'function') opts.onReject(file, Object.assign({}, detail, { instance: api })); },
+      onReject: function (file, detail) { if (typeof opts.onReject === 'function') opts.onReject(file, Utils.mergeOwn( detail, { instance: api })); },
       onSuccess: function (response, record) { if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
       onError: function (error, record) { if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
         if (formBridge) formBridge.setValue(value, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(value);
         renderList();
-        var enriched = Object.assign({}, detail, { instance: api });
+        var enriched = Utils.mergeOwn( detail, { instance: api });
         if (detail.operation === 'move' && typeof opts.onSort === 'function') opts.onSort(value.slice(), enriched);
         if (detail.reason === 'remove' && typeof opts.onRemove === 'function') opts.onRemove(detail.file, enriched);
         if (typeof opts.onChange === 'function') opts.onChange(value, enriched);
@@ -440,7 +440,7 @@ function create(source, overrides) {
       onChange: function (index, detail) {
         var active = mediaRecords[index] || null;
         previewUid = active ? active.uid : '';
-        if (typeof opts.onPreviewChange === 'function') opts.onPreviewChange(index, Object.assign({}, detail, { file: active, instance: api, previewInstance: detail && detail.instance }));
+        if (typeof opts.onPreviewChange === 'function') opts.onPreviewChange(index, Utils.mergeOwn( detail, { file: active, instance: api, previewInstance: detail && detail.instance }));
       },
       onDownload: function (item, detail) {
         var active = mediaRecords[detail && detail.index || 0] || null;
@@ -453,7 +453,7 @@ function create(source, overrides) {
         if (!visible) previewUid = '';
         else if (active) previewUid = active.uid;
         if (typeof opts.onPreviewVisibleChange === 'function') {
-          opts.onPreviewVisibleChange(visible, Object.assign({}, detail || {}, {
+          opts.onPreviewVisibleChange(visible, Utils.mergeOwn( detail || {}, {
             file: active,
             url: detail && detail.item ? detail.item.src : (active ? previewMediaUrl(active) : ''),
             instance: api,
