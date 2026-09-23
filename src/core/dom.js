@@ -1,5 +1,6 @@
 
 import { Utils } from '../utils/utils.js';
+import { URLPolicy } from '../utils/url.js';
 
 const global = globalThis;
 
@@ -122,6 +123,49 @@ var listenerAdds = 0;
     var element = resolveElement(value, root);
     if (!element) throw new TypeError('[QXFRAME9A7C2] ' + String(label || 'element') + ' must resolve to an Element.');
     return element;
+  }
+
+  function attributeUrlKind(node, name) {
+    var lower = String(name || '').toLowerCase();
+    var tag = String(node && node.tagName || '').toLowerCase();
+    if (lower === 'src' && (tag === 'img' || tag === 'image')) return 'image';
+    if ((lower === 'src' || lower === 'poster') && (tag === 'audio' || tag === 'video' || tag === 'source')) return 'media';
+    if (lower === 'download') return 'download';
+    return 'navigation';
+  }
+
+  function setSafeAttribute(node, name, value, options) {
+    if (!node || !Utils.isFunction(node.setAttribute) || !Utils.isFunction(node.removeAttribute)) {
+      throw new TypeError('[QXFRAME9A7C2] DOM.setSafeAttribute requires an Element-like target.');
+    }
+    var raw = String(name == null ? '' : name).trim();
+    var lower = raw.toLowerCase();
+    if (!raw || !/^[A-Za-z_:][A-Za-z0-9:._-]*$/.test(raw)) return false;
+    var blocked = options && Array.isArray(options.blocked) ? options.blocked.map(function (entry) { return String(entry).toLowerCase(); }) : [];
+    if (/^on/.test(lower) || lower === 'srcdoc' || lower === 'style' || lower === 'classname' || blocked.indexOf(lower) >= 0) {
+      node.removeAttribute(raw);
+      return false;
+    }
+    if (value === undefined || value === null || value === false) {
+      node.removeAttribute(raw);
+      return true;
+    }
+    if (['href','xlink:href','action','formaction','src','poster'].indexOf(lower) >= 0) {
+      var safe = URLPolicy.sanitize(value, attributeUrlKind(node, lower));
+      if (!safe) {
+        node.removeAttribute(raw);
+        return false;
+      }
+      value = safe;
+    }
+    node.setAttribute(raw, value === true ? '' : String(value));
+    return true;
+  }
+
+  function applySafeAttributes(node, attributes, options) {
+    if (!attributes || typeof attributes !== 'object' || Array.isArray(attributes)) return node;
+    Object.keys(attributes).forEach(function (name) { setSafeAttribute(node, name, attributes[name], options); });
+    return node;
   }
 
   function listen(target, eventName, handler, options) {
@@ -254,6 +298,6 @@ var listenerAdds = 0;
 
 export const DOM = Object.freeze({
   listen, query, queryAll, matches, closest, documentOf, viewOf, resolveElement, requireElement,
-  canFocus, focusElement, configureTextInput, activationSource, isComposingEvent, removeNode, setText,
+  canFocus, focusElement, configureTextInput, activationSource, isComposingEvent, removeNode, setText, setSafeAttribute, applySafeAttributes,
   setPrivate, getPrivate, hasPrivate, deletePrivate, closestPrivate, findPrivate, findAllPrivate, privateMatcher, getStats
 });
