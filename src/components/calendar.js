@@ -14,6 +14,7 @@ import { DateUnit } from '../utils/dateUnit.js';
 
 let DOMFactory;
 var WEEKDAYS = ['日','一','二','三','四','五','六'];
+var calendarDomainSequence = 0;
 var blueprint = DOMTemplate.staticHTML`
   <div class="qxframe9a7c2-calendar qxframe9a7c2-date-panel" data-qxframe9a7c2-ref="root">
     <div class="qxframe9a7c2-calendar-header qxframe9a7c2-date-panel-header" data-qxframe9a7c2-ref="header">
@@ -49,6 +50,7 @@ function create(options) {
   var opts = mergeOptions({}, options);
   var doc = opts.document || (opts.container && opts.container.ownerDocument) || globalThis.document;
   var emitter = Events.createEmitter();
+  var virtualFocusDomainName = 'calendar-' + (++calendarDomainSequence);
   var scope = Lifecycle.createScope();
   var destroyed = false;
   var root = null;
@@ -419,7 +421,7 @@ function create(options) {
       activeKey: activeItem.activeKey,
       activation: { reason:'calendar-bind', ensureVisible:false },
       domain: {
-        name:'calendar',
+        name:virtualFocusDomainName,
         getElement:function(key){ return getCellElement(key); },
         reconcile:function(key){ var cell=cells.find(function(entry){return entry.key===String(key)&&entry.disabled!==true;}); if(cell)return cell.key; return activeItem.activeKey || null; },
         ensureVisible:function(){ return true; }
