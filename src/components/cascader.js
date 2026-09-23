@@ -20,6 +20,7 @@ import { FieldHost } from '../core/fieldHost.js';
 import { Renderer } from '../core/renderer.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { TagNavigation } from '../core/tagNavigation.js';
+import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
@@ -377,12 +378,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
     
         function ensureColumnVisible(record) {
           if (!record || !record.host || !columnsHost) return false;
-          var column = record.host, viewport = columnsHost;
-          var left = column.offsetLeft, right = left + column.offsetWidth;
-          var viewLeft = viewport.scrollLeft, viewRight = viewLeft + viewport.clientWidth;
-          if (left < viewLeft) viewport.scrollLeft = left;
-          else if (right > viewRight) viewport.scrollLeft = Math.max(0, right - viewport.clientWidth);
-          return true;
+          return ScrollVisibility.ensureVisible(columnsHost, record.host, { axis:'x', align:'nearest' });
         }
         function bindListVirtualFocus(record) {
           if (!record || !record.list || !keyboard || !keyboard.virtualFocus || !record.list.bindVirtualFocus) return null;
