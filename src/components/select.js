@@ -109,9 +109,7 @@ var emitter = Object.freeze({ emit:function(type,payload){return instance.emit(t
         var draftDirty = false;
                 var api = instance;
 var controlHost = FieldHost.resolvePickerControl({
-          owner: 'Select', options: opts, document: doc, host: host, component: instance,
-          requiredRefs: ['root','values','input','clear','toggle'], defaultFactory: createDefaultDOM,
-          projectionRefs: [{ ref:'values', option:'valueTarget' }, { ref:'input', option:'inputTarget' }]
+          owner: 'Select', options: opts, document: doc, host: host, component: instance, defaultFactory: createDefaultDOM
         });
         var fieldHost = controlHost.host;
         domBinding = controlHost.binding; root = controlHost.root; triggerTarget = controlHost.triggerTarget;
