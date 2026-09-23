@@ -94,9 +94,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         var api = instance;
         var binding = null, root = null, controlElement = null, valuesNode = null, input = null, clearButton = null, arrow = null, prefix = null, suffix = null, valueTarget = null, triggerTarget = null;
         var controlHost = FieldHost.resolvePickerControl({
-          owner:'TreeSelect', options:opts, document:doc, host:host, component:instance,
-          requiredRefs:['root','values','input','clear','toggle'], defaultFactory:createDefaultDOM,
-          projectionRefs:[{ref:'values',option:'valueTarget'},{ref:'input',option:'inputTarget'}]
+          owner:'TreeSelect', options:opts, document:doc, host:host, component:instance, defaultFactory:createDefaultDOM
         });
         var fieldHost=controlHost.host;
         binding=controlHost.binding; root=controlHost.root; triggerTarget=controlHost.triggerTarget;
