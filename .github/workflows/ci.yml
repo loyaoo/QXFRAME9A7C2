@@ -50,6 +50,34 @@ jobs:
           mkdir -p artifacts
           npm pack --pack-destination artifacts
 
+      - name: Build standalone dist + docs demo
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf demo-package
+          mkdir -p demo-package
+          cp -a dist demo-package/
+          cp -a docs demo-package/
+          cp tools/demo-package/demo-server.mjs demo-package/
+          cp tools/demo-package/START-DEMO.cmd demo-package/
+          cp tools/demo-package/README-DEMO.txt demo-package/
+          printf 'commit=%s\nworkflow_run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > demo-package/BUILD-INFO.txt
+
+          node demo-package/demo-server.mjs >/tmp/qxframe-demo.log 2>&1 &
+          DEMO_PID=$!
+          trap 'kill "$DEMO_PID" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4173/docs/ >/dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/docs/ >/dev/null
+          curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.js >/dev/null
+          curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.css >/dev/null
+          kill "$DEMO_PID"
+          trap - EXIT
+
+          (cd demo-package && zip -qr ../artifacts/qxframe9a7c2-dist-docs-demo.zip .)
+
       - name: Upload dist and npm package
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
@@ -57,4 +85,11 @@ jobs:
           path: |
             dist/
             artifacts/*.tgz
+          retention-days: 30
+
+      - name: Upload standalone dist + docs demo
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: qxframe9a7c2-dist-docs-demo-${{ github.sha }}
+          path: artifacts/qxframe9a7c2-dist-docs-demo.zip
           retention-days: 30
