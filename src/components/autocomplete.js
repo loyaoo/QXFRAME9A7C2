@@ -1,9 +1,8 @@
-import { PopupFieldComponent, popupFieldHooks } from './popup-field.js';
+import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings } from './popup-field.js';
 import { Control } from './control.js';
 import { OptionList } from './option-list.js';
 import { Item } from './item.js';
 import { Scroll } from './scroll.js';
-import { Trigger } from './trigger.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { AsyncTask } from '../core/asyncTask.js';
@@ -409,13 +408,14 @@ var selectionRangeScheduler = null;
         });
         applyQuery('init');
     
-        var triggerSettings = {
-          trigger: opts.trigger, keyboardActivation: false,
-          openDelay: opts.openDelay, closeDelay: opts.closeDelay,
-          reference: root, triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)), floating: panel, document: doc, portalContainer: portalContainer, placement: opts.placement, transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', middleware: opts.middleware,
-          flipOnOverflow: opts.flipOnOverflow !== false, matchReferenceWidth: opts.matchReferenceWidth === true,
-          autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, tabExitTarget: function () { return input || triggerTarget || root; }, closeOnEscape: true,
-          destroyOnClose: opts.destroyOnClose !== false,
+        var triggerSettings = createPopupFieldTriggerSettings(opts, {
+          reference: root,
+          triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)),
+          floating: panel,
+          document: doc,
+          portalContainer: portalContainer
+        }, {
+          tabExitTarget: function () { return input || triggerTarget || root; },
           beforeOpen: function (detail) {
             var reason = detail && detail.reason || 'open', event = detail && detail.originalEvent || null;
             if (destroyed || opts.disabled === true || !canOpen(reason, event)) return false;
@@ -435,7 +435,7 @@ var selectionRangeScheduler = null;
             emitOpen(true, detail);
           },
           onClose: function (detail) { clearBackfill(); syncControl(); emitOpen(false, detail); }
-        };
+        });
         triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
     
         function open(reason, originalEvent) { return destroyed || opts.disabled === true || !canOpen(reason, originalEvent) ? false : triggerSession.open(reason || 'instance', originalEvent || null); }
