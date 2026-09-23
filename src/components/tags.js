@@ -159,6 +159,7 @@ function setupTags(instance) {
     ownsContainer = true;
   }
   if (!container || container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Tags requires container or a connected formField.');
+  state.container = container;
   opts.container = container;
   opts.formField = formField;
   var normalized = normalizeItems(opts.items || []);
@@ -1611,6 +1612,13 @@ export class Tags extends FieldComponent {
 
   updateOptions(nextOptions = {}) {
     var next=Utils.mergeOwn(nextOptions||{});
+    var state=tagsState.get(this)||{};
+    var immutableCurrent={container:state.container,document:state.document,formField:state.formField,hosted:this.options.hosted};
+    ['container','document','formField','hosted'].forEach(function(name){
+      if(!own(next,name))return;
+      if(next[name]!==immutableCurrent[name])throw new Error('[QXFRAME9A7C2] Tags option "'+name+'" is immutable; destroy and recreate to change it.');
+      delete next[name];
+    });
     if(own(next,'size'))next.size=normalizeSize(next.size);
     if(own(next,'overflow'))next.overflow=normalizeOverflow(next.overflow);
     if(own(next,'maxVisible'))next.maxVisible=normalizeMaxVisible(next.maxVisible);
