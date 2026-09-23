@@ -3,6 +3,7 @@ import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
 import { PressInteraction } from './pressInteraction.js';
 import { Utils } from '../utils/utils.js';
+import { Scheduler } from './scheduler.js';
 
 const global = globalThis;
 
@@ -34,11 +35,18 @@ var SUPPORTED_TRIGGERS = ['click', 'hover', 'focus', 'contextMenu'];
     var scope = Lifecycle.createScope();
     var triggers = normalizeTriggers(settings.trigger);
     var destroyed = false;
-    var openTimer = 0;
-    var closeTimer = 0;
+    var openDelay = Scheduler.createDelayScheduler(function (_timestamp, payload) {
+      if (!payload) return;
+      emitIntent('onOpenIntent', payload.reason, payload.event);
+    });
+    var closeDelay = Scheduler.createDelayScheduler(function (_timestamp, payload) {
+      if (!payload) return;
+      emitIntent('onCloseIntent', payload.reason, payload.event);
+    });
+    scope.add(function () { openDelay.dispose(); closeDelay.dispose(); });
 
-    function clearOpenTimer() { if (openTimer) global.clearTimeout(openTimer); openTimer = 0; }
-    function clearCloseTimer() { if (closeTimer) global.clearTimeout(closeTimer); closeTimer = 0; }
+    function clearOpenTimer() { return openDelay.cancel(); }
+    function clearCloseTimer() { return closeDelay.cancel(); }
     function clearTimers() { clearOpenTimer(); clearCloseTimer(); }
 
     function containsLogicalTarget(target) {
@@ -79,7 +87,7 @@ var SUPPORTED_TRIGGERS = ['click', 'hover', 'focus', 'contextMenu'];
       clearOpenTimer();
       var delay = resolveDelay(settings.openDelay);
       if (delay === 0) { emitIntent('onOpenIntent', reason, event); return; }
-      openTimer = global.setTimeout(function () { openTimer = 0; emitIntent('onOpenIntent', reason, event); }, delay);
+      openDelay.request(delay, { reason: reason, event: event || null });
     }
 
     function delayedClose(reason, event, notifyLeave) {
@@ -92,7 +100,7 @@ var SUPPORTED_TRIGGERS = ['click', 'hover', 'focus', 'contextMenu'];
       if (notifyLeave !== false && Utils.isFunction(settings.onInteractionLeave)) settings.onInteractionLeave(reason, event || null);
       var delay = resolveDelay(settings.closeDelay) + Math.max(0, Number(settings.interactiveDebounce) || 0);
       if (delay === 0) { emitIntent('onCloseIntent', reason, event); return; }
-      closeTimer = global.setTimeout(function () { closeTimer = 0; emitIntent('onCloseIntent', reason, event); }, delay);
+      closeDelay.request(delay, { reason: reason, event: event || null });
     }
 
     function requestClose(reason, event) {
