@@ -68,6 +68,12 @@
       "phase": "45→50-prep"
     },
     {
+      "name": "Menu",
+      "module": "menu",
+      "source": "src/components/menu.js",
+      "phase": "98→99"
+    },
+    {
       "name": "Modal",
       "module": "modal",
       "source": "src/components/modal.js",
@@ -108,6 +114,12 @@
       "module": "result",
       "source": "src/components/result.js",
       "phase": "45→50-prep"
+    },
+    {
+      "name": "Scroll",
+      "module": "scroll",
+      "source": "src/components/scroll.js",
+      "phase": "98→99"
     },
     {
       "name": "Select",
