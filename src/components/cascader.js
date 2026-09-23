@@ -12,6 +12,7 @@ import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { SearchState } from '../core/searchState.js';
+import { StateController } from '../core/stateController.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
@@ -115,6 +116,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           }
         });
         var selection = Selection.create({ multiple: opts.multiple === true, value: opts.value !== undefined ? opts.value : opts.defaultValue });
+        var valueState = null;
         scope.add(function () { selection.destroy(); });
         var columnRecords = [];
         var activePathKeys = [];
@@ -204,6 +206,37 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           });
           return output;
         }
+        function normalizeApiValue(value) {
+          var values = opts.multiple === true ? normalizeAssociatedValues(value) : normalizeValues(value, false);
+          return opts.multiple === true ? values : values[0];
+        }
+        function copyApiValue(value) { return Array.isArray(value) ? value.slice() : value; }
+        valueState = StateController.create({
+          value: normalizeApiValue(opts.value !== undefined ? opts.value : opts.defaultValue),
+          controlled: own(fieldInit.options, 'value'),
+          normalizeValue: normalizeApiValue,
+          equals: StateController.deepEquals,
+          copyValue: copyApiValue
+        });
+        scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
+        function apiValue() { return valueState ? copyApiValue(valueState.value) : normalizeApiValue(undefined); }
+        function apiValues(value) { return normalizeValues(value === undefined ? apiValue() : value, opts.multiple === true); }
+        function writeApiValue(next, meta, request) {
+          if (!valueState) return false;
+          var cfg = Utils.assignOwn({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta || {});
+          var normalized = normalizeApiValue(next);
+          if (StateController.deepEquals(valueState.value, normalized)) return false;
+          if (request === true && valueState.controlled) return valueState.requestChange(normalized, cfg);
+          return valueState.setValue(normalized, cfg);
+        }
+        function syncSelectionFromApiValue(reason) {
+          if (!selection) return false;
+          selection.set(apiValue(), { silent:true, source:valueState && valueState.controlled ? 'controlled' : 'state', reason:reason || 'value-sync' });
+          var values = selection.values;
+          selectionAnchorValue = values.length ? values[values.length - 1] : null;
+          return true;
+        }
+        syncSelectionFromApiValue('initial-value');
         function cascadeCheckState(item) {
           if (!item) return { checked:false, indeterminate:false, descendantSelected:false };
           if (!hasChildren(item)) return { checked:selection.has(String(item.value)), indeterminate:false, descendantSelected:false };
