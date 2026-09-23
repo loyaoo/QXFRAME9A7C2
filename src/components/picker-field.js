@@ -149,7 +149,7 @@ function create(options) {
     if (!control) { var editor = editorElement(); if (editor && editor.value !== undefined) editor.value = text; return; }
     control.setDisplayValue(text);
     if (!projectionMode && (String(opts.controlMode || 'input') === 'input' || String(opts.controlMode || 'input') === 'tags')) control.setInputValue(text);
-    else if (projectionMode && editorElement() && canEditSelector()) control.setInputValue(text);
+    else if (projectionMode && editorElement() && opts.editable === true) control.setInputValue(text);
   }
   function beginNavigationInteraction() {
     if (navigationActive) return false;
@@ -271,7 +271,7 @@ function create(options) {
   if (selectorEditor) {
     scope.add(DOM.listen(selectorEditor, 'pointerdown', function (event) {
       editorPointerPending = false;
-      if (!navigationOwnsEvent(event) || opts.editable !== true) return;
+      if (!navigationOwnsEvent(event) || !canEditSelector()) return;
       editorPointerPending = true;
       close('editor-pointer', event);
     }));
