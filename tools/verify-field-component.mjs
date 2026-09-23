@@ -21,6 +21,10 @@ const controlSource = fs.readFileSync(path.join(root, 'src/components/control.js
 for (const [label, source] of [['FieldComponent', fieldSource], ['InputNumber', numberSource], ['InputOTP', otpSource], ['Rate', rateSource], ['TagInput', tagInputSource], ['Slider', sliderSource], ['Control', controlSource]]) {
     for (const pattern of [/Registry\.(?:get|assert|define)/, /defineModule\s*\(/, /(?:globalThis|window)\.QXFRAME9A7C2/]) assert.ok(!pattern.test(source), `${label} contains legacy runtime dependency: ${pattern}`);
 }
+assert.match(fieldSource, /from ['"]\.\.\/core\/dom\.js['"]/, 'FieldComponent must import DOM focus authority.');
+assert.match(fieldSource, /DOM\.focusElement\(target/, 'FieldComponent focus must use DOM.focusElement.');
+assert.ok(!/target\.focus\s*\(/.test(fieldSource), 'FieldComponent must not bypass DOM.focusElement with native focus.');
+
 assert.match(numberSource, /class\s+InputNumber\s+extends\s+FieldComponent/, 'InputNumber must extend FieldComponent.');
 assert.ok(!/\bdestroy\s*\(/.test(numberSource), 'InputNumber must inherit Component.destroy.');
 assert.ok(!/\bupdateOptions\s*\(/.test(numberSource.replace(/\.updateOptions\s*\(/g, '')), 'InputNumber must inherit Component.updateOptions.');
