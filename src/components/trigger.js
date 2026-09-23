@@ -247,7 +247,7 @@ function create(options) {
       focusScope: opts.focusScope, trapFocus: opts.trapFocus === true, lockScroll: opts.lockScroll === true, scrollLockTarget: opts.scrollLockTarget,
       compensateScrollbar: opts.compensateScrollbar !== false, restoreFocus: opts.restoreFocus !== false,
       restoreFocusTarget: opts.restoreFocusTarget, restoreFocusOnDeactivate: false, tabExitTarget: resolveTabExitTarget,
-      focusOnActivate: opts.focusOnOpen === true, initialFocus: opts.initialFocus, fallbackFocus: opts.fallbackFocus,
+      focusOnActivate: opts.focusOnOpen === true, initialFocus: opts.initialFocus,
       position: opts.position !== false, manageZIndex: opts.manageZIndex !== false,
       positionReference: opts.positionReference || null, useTransformPosition: opts.useTransformPosition === true, inlinePositioning: opts.inlinePositioning === true, inlinePositioningOptions: opts.inlinePositioningOptions,
       destroyOnDeactivate: opts.destroyOnClose !== false, parentLayerId: opts.parentLayerId, layerKind: opts.layerKind || 'popup', componentType: opts.componentType || null, group: opts.group, zIndex: opts.zIndex, exclude: opts.exclude,
@@ -502,7 +502,7 @@ function create(options) {
   function removeChild(child) { if (isTriggerInstance(child) && child.getParent() === api) child.setParent(null); return api; }
     
   function syncRuntimeSettings(next) {
-    var keys = ['reference','allowReferenceUpdate','placement','strategy','offset','middleware','arrow','arrowElement','arrowPadding','flipOnOverflow','matchReferenceWidth','autoUpdate','autoUpdateOptions','closeOnOutsidePress','closeOnFocusOutside','closeOnTabExit','closeOnEscape','focusScope','trapFocus','lockScroll','scrollLockTarget','compensateScrollbar','restoreFocus','restoreFocusTarget','initialFocus','fallbackFocus','position','manageZIndex','parentLayerId','layerKind','componentType','group','zIndex','positionReference','useTransformPosition','inlinePositioning','inlinePositioningOptions','exclude','applyPosition','onPositionUpdate','onPositionError'];
+    var keys = ['reference','allowReferenceUpdate','placement','strategy','offset','middleware','arrow','arrowElement','arrowPadding','flipOnOverflow','matchReferenceWidth','autoUpdate','autoUpdateOptions','closeOnOutsidePress','closeOnFocusOutside','closeOnTabExit','closeOnEscape','focusScope','trapFocus','lockScroll','scrollLockTarget','compensateScrollbar','restoreFocus','restoreFocusTarget','initialFocus','position','manageZIndex','parentLayerId','layerKind','componentType','group','zIndex','positionReference','useTransformPosition','inlinePositioning','inlinePositioningOptions','exclude','applyPosition','onPositionUpdate','onPositionError'];
     var patch = {};
     keys.forEach(function (key) {
       if (!own(next, key)) return;
