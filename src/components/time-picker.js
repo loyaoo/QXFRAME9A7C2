@@ -353,7 +353,15 @@ function setupTimePickerRuntime(instance, fieldInit) {
     closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnEscape: opts.closeOnEscape !== false, focusScope: 'contain', destroyOnClose: opts.destroyOnClose !== false,
     beforeOpen: function (detail) { if (Utils.isFunction(opts.beforeOpen) && opts.beforeOpen(detail) === false) return false; return !destroyed && opts.disabled !== true; },
     beforeClose: function (detail) { var forcedDisabled = !!(detail && detail.forceClose === 'disabled'); var vetoed = Utils.isFunction(opts.beforeClose) && opts.beforeClose(detail) === false; if (destroyed) return false; if (vetoed && !forcedDisabled) return false; },
-    onOpen: function (detail) { pickerSession.open(detail); if (panel && detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || '')))) panel.setActiveColumn(0, { source:'keyboard', reason:'time-picker-open', originalEvent:detail.originalEvent || null }); },
+    onOpen: function (detail) {
+      var openDetail = detail || {};
+      var openInput = field && field.getInputElement ? field.getInputElement() : null;
+      var openText = openInput && openInput.value !== undefined ? String(openInput.value || '') : rawInput;
+      var parsedOpen = openText.trim() ? parseTextValue(openText) : null;
+      if (parsedOpen && parsedOpen.valid && hasValue(parsedOpen.value)) openDetail = Utils.assignOwn({}, openDetail, { draftSeed: parsedOpen.value });
+      pickerSession.open(openDetail);
+      if (panel && detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || '')))) panel.setActiveColumn(0, { source:'keyboard', reason:'time-picker-open', originalEvent:detail.originalEvent || null });
+    },
     onClose: function (detail) { pickerSession.close(detail); },
     onOpenChange: emitOpen, onInput: handleInput, onBlur: handleBlur,
     onKeydown: function (event) { return field && field.getState().open && panel ? panel.handleKeydown(event) : false; },
