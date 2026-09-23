@@ -22,7 +22,7 @@ function own(object, key) {
 }
 
 function create(options) {
-  var settings = Object.assign({}, options || {});
+  var settings = Utils.mergeOwn(options || {});
   var reference = settings.reference || null;
   var floating = settings.floating;
   if (!floating || floating.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] OverlayRuntime floating must be an Element.');
@@ -405,7 +405,7 @@ function create(options) {
     var dismissChanged = referenceChanged || dismissKeys.some(function (key) { return own(next, key) && next[key] !== settings[key]; });
     var positionChanged = referenceChanged || positionKeys.some(function (key) { return own(next, key) && next[key] !== settings[key]; });
     if (referenceChanged) reference = next.reference;
-    Object.keys(next).forEach(function (key) { settings[key] = next[key]; });
+    Utils.copyOwn(settings, next);
     if (referenceChanged && popupHost) {
       syncTransportContext();
       if (active) startContextObserver();
