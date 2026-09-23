@@ -2,7 +2,7 @@
 import { Utils } from '../utils/utils.js';
 
 function createNoticePreset(options) {
-  var opts=options||{}, owner=String(opts.owner||'Notice'), allowed=opts.allowedConfigure||[], stackDefaults=Object.assign({threshold:3,offset:8,scale:0.95},opts.stackDefaults||{});
+  var opts=options||{}, owner=String(opts.owner||'Notice'), allowed=opts.allowedConfigure||[], stackDefaults=Utils.mergeOwn({threshold:3,offset:8,scale:0.95},opts.stackDefaults);
   function normalizeStack(value) {
     if(value===undefined||value===false)return false;
     if(value===true)return true;
@@ -13,16 +13,16 @@ function createNoticePreset(options) {
     return {threshold:Math.max(1,Math.floor(Utils.finiteAtLeast(value.threshold,stackDefaults.threshold,1,owner+' stack.threshold'))),offset:Utils.finiteAtLeast(value.offset,stackDefaults.offset,0,owner+' stack.offset'),scale:scale};
   }
   function configure(target, next, normalize) {
-    if(next===undefined) return Object.freeze(Object.assign({},target));
+    if(next===undefined) return Object.freeze(Utils.mergeOwn(target));
     if(!next||typeof next!=='object'||Array.isArray(next)) throw new TypeError('[QXFRAME9A7C2] '+owner+' configure() requires an object.');
     Object.keys(next).forEach(function(key){if(allowed.indexOf(key)<0) throw new TypeError('[QXFRAME9A7C2] '+owner+' configure() unsupported option "'+key+'".');});
-    var normalized=normalize(Object.assign({},target,next));
+    var normalized=normalize(Utils.mergeOwn(target,next));
     allowed.forEach(function(key){target[key]=normalized[key];});
     return Object.freeze(Object.assign({},target));
   }
   function createTyped(type, input, channel) {
     if(!input||typeof input!=='object'||Array.isArray(input)||input.nodeType) throw new TypeError('[QXFRAME9A7C2] '+owner+'.'+type+'() requires a canonical options object.');
-    return channel.create(Object.assign({},input,{type:type}));
+    return channel.create(Utils.mergeOwn(input,{type:type}));
   }
   return Object.freeze({ configure:configure, createTyped:createTyped, normalizeStack:normalizeStack });
 }
