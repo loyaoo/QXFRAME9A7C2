@@ -74,33 +74,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.js >/dev/null
           curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.css >/dev/null
 
-          test "$(curl --path-as-is --silent --output /dev/null --write-out '%{http_code}' 'http://127.0.0.1:4173/%2e%2e/package.json')" = "403"
-          test "$(curl --path-as-is --silent --output /dev/null --write-out '%{http_code}' 'http://127.0.0.1:4173/%')" = "400"
-          test "$(curl --silent --output /dev/null --write-out '%{http_code}' --request POST 'http://127.0.0.1:4173/docs/')" = "405"
-          test "$(curl --silent --head --output /dev/null --write-out '%{http_code}' 'http://127.0.0.1:4173/docs/')" = "200"
-          test "$(curl --silent --head 'http://127.0.0.1:4173/docs/' | tr -d '\r' | grep -i '^X-Content-Type-Options: nosniff
-          (cd demo-package && zip -qr ../artifacts/qxframe9a7c2-dist-docs-demo.zip .)
-
-      - name: Upload dist and npm package
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
-        with:
-          name: qxframe9a7c2-${{ github.sha }}
-          path: |
-            dist/
-            artifacts/*.tgz
-          retention-days: 30
-
-      - name: Upload standalone dist + docs demo
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
-        with:
-          name: qxframe9a7c2-dist-docs-demo-${{ github.sha }}
-          path: artifacts/qxframe9a7c2-dist-docs-demo.zip
-          retention-days: 30
- | wc -l)" = "1"
-
-          ln -s /etc/passwd demo-package/escape-test
-          test "$(curl --path-as-is --silent --output /dev/null --write-out '%{http_code}' 'http://127.0.0.1:4173/escape-test')" = "403"
-          rm demo-package/escape-test
+          node tools/demo-package/verify-demo-server.mjs demo-package
 
           kill "$DEMO_PID"
           trap - EXIT
