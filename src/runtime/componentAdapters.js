@@ -82,9 +82,10 @@ raw.Pagination = classApi(Pagination, { createDefaultDOM:Pagination.createDefaul
 raw.Tabs = classApi(Tabs);
 raw.Image = classApi(Image, { createPreview:Image.createPreview });
 raw.JSON = classApi(JSONComponent);
-Utils.assignOwn(raw, { Trigger, Ripple, Menu, Transfer, Tags, Upload, Table, Message, Notification });
+raw.Table = classApi(Table, { sizes:Table.sizes.slice() });
+Utils.assignOwn(raw, { Trigger, Ripple, Menu, Transfer, Tags, Upload, Message, Notification });
 raw.Scroll = Object.freeze(Utils.mergeOwn( Scroll, { definition:createInitializer }));
 
 export const Components = Object.freeze(Object.fromEntries(Object.entries(raw).map(([name, api]) => [name, publishComponentApi(name, api)])));
-export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Select, Slider, Sort, Steps, TagInput, Tabs, TimePicker, Tooltip, TreeSelect, WheelPicker });
+export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Select, Slider, Sort, Steps, Table, TagInput, Tabs, TimePicker, Tooltip, TreeSelect, WheelPicker });
 export default Components;
