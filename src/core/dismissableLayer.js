@@ -43,7 +43,7 @@ function create(options) {
     function requestDismiss(reason, event) { return dispatchDismiss(reason, event, false); }
 
     function onPointerDown(event) {
-      if (!active || !isTop() || !event || contains(event.target)) return;
+      if (!active || !event || contains(event.target)) return;
       if (Utils.isFunction(settings.onPointerDownOutside)) {
         if (settings.onPointerDownOutside({
           originalEvent: event,
@@ -51,16 +51,16 @@ function create(options) {
           layer: api
         }) === false) return;
       }
-      if (settings.closeOnOutsidePress !== false) dismiss('outside', event);
+      if (settings.closeOnOutsidePress !== false) dispatchDismiss('outside', event, false);
     }
 
     function onFocusIn(event) {
-      if (!active || !isTop() || !event || contains(event.target)) return;
+      if (!active || !event || contains(event.target)) return;
       if (settings.closeOnFocusOutside !== true) return;
       if (Utils.isFunction(settings.onFocusOutside)) {
         if (settings.onFocusOutside({ originalEvent: event, target: event.target, layer: api }) === false) return;
       }
-      dismiss('focus-outside', event);
+      dispatchDismiss('focus-outside', event, false);
     }
 
     function onKeyDown(event) {
