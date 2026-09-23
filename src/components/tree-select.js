@@ -454,14 +454,13 @@ function setupTreeSelectRuntime(instance,fieldInit) {
     
         var triggerSettings = createPopupFieldTriggerSettings(opts, {
           reference: root,
-          triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)),
+          triggerTarget: triggerTarget || root,
           floating: panel,
           document: doc,
           portalContainer: portalContainer
         }, {
           focusScope: 'exit',
           tabExitTarget: function () { return fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root); },
-          beforeOpen: function () { if (destroyed || opts.disabled === true) return false; },
           onOpen: function (detail) {
             var eventType = detail && detail.originalEvent && detail.originalEvent.type || '';
             var reason = String(detail && detail.reason || '');
