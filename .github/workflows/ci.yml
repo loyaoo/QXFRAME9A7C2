@@ -64,6 +64,21 @@ jobs:
           cp tools/demo-package/START-DEMO.cmd demo-package/
           cp tools/demo-package/README-DEMO.txt demo-package/
           printf 'commit=%s\nworkflow_run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > demo-package/BUILD-INFO.txt
+          touch demo-package/.nojekyll
+          cat > demo-package/index.html <<'HTML'
+          <!doctype html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <meta http-equiv="refresh" content="0; url=./docs/">
+            <title>QXFRAME9A7C2 DEMO</title>
+          </head>
+          <body>
+            <p><a href="./docs/">打开 QXFRAME9A7C2 Components DEMO</a></p>
+          </body>
+          </html>
+          HTML
 
           node demo-package/demo-server.mjs >/tmp/qxframe-demo.log 2>&1 &
           DEMO_PID=$!
@@ -72,6 +87,7 @@ jobs:
             if curl --fail --silent http://127.0.0.1:4173/docs/ >/dev/null; then break; fi
             sleep 1
           done
+          curl --fail --silent http://127.0.0.1:4173/ >/dev/null
           curl --fail --silent http://127.0.0.1:4173/docs/ >/dev/null
           curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.js >/dev/null
           curl --fail --silent http://127.0.0.1:4173/dist/qxframe9a7c2.css >/dev/null
@@ -98,3 +114,26 @@ jobs:
           name: qxframe9a7c2-dist-docs-demo-${{ github.sha }}
           path: artifacts/qxframe9a7c2-dist-docs-demo.zip
           retention-days: 30
+
+      - name: Upload GitHub Pages artifact
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: demo-package
+
+  deploy-pages:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
