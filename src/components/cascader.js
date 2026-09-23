@@ -1,4 +1,4 @@
-import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings } from './popup-field.js';
+import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings, popupOpenContext } from './popup-field.js';
 import { Control } from './control.js';
 import { ItemCollection } from './item-collection.js';
 import { Item } from './item.js';
@@ -736,9 +736,9 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           restoreFocus: false,
           disabled: opts.disabled === true,
           onOpen: function (detail) {
-            var eventType = detail && detail.originalEvent && detail.originalEvent.type || '';
-            var reason = String(detail && detail.reason || '');
-            var keyboardOpen = /^key/.test(eventType) || /keyboard/.test(reason);
+            var openContext = popupOpenContext(detail);
+            var reason = openContext.reason;
+            var keyboardOpen = openContext.keyboard;
             var anchorPath = selectedAnchorPath();
             if (anchorPath.length) {
               activePathKeys = anchorPath.map(function (entry) { return String(entry.key); });
