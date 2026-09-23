@@ -20,7 +20,6 @@ function createPickerSession(options) {
   function open(meta) {
     var detail = Utils.assignOwn({ silent:true, source:'popup', reason:'open' }, meta || {});
     controller.begin(detail);
-    if (Object.prototype.hasOwnProperty.call(detail, 'draftSeed')) controller.setDraft(detail.draftSeed, { silent:true, source:detail.source || 'popup', reason:'open-seed', originalEvent:detail.originalEvent || null });
     if (Utils.isFunction(opts.onOpenDraft)) opts.onOpenDraft(controller, detail);
     return true;
   }
