@@ -748,7 +748,7 @@ function create(options) {
     } else {
       record.close.className='qxframe9a7c2-tag-close'+(opts.tagRemoveClassName?' '+String(opts.tagRemoveClassName):'');
       syncCloseContent(record.close, publicItem, projection);
-      record.close.style.cssText = '';
+      record.close.removeAttribute('style');
       applyClasses(record.close, opts.classes && opts.classes.close, publicItem, projection);
       applyStyles(record.close, opts.styles && opts.styles.close, publicItem, projection);
     }
@@ -789,14 +789,14 @@ function create(options) {
     });
     
     record.shell.className = 'qxframe9a7c2-tag-shell';
-    record.shell.style.cssText = '';
+    record.shell.removeAttribute('style');
     record.shell.setAttribute('data-tags-shell-value', item.value);
     record.shell.setAttribute('data-tags-shell-key', item.key);
     applyClasses(record.shell, opts.classes && opts.classes.shell, publicItem, projection);
     applyStyles(record.shell, opts.styles && opts.styles.shell, publicItem, projection);
     
     record.tag.className='qxframe9a7c2-tag'+(opts.tagClassName?' '+String(opts.tagClassName):'');
-    record.tag.style.cssText = '';
+    record.tag.removeAttribute('style');
     if (item.color) record.tag.classList.add('is-colored', 'is-' + item.color);
     if (item.disabled) record.tag.classList.add('is-disabled');
     if (selection.has(item.value)) record.tag.classList.add('is-checked', 'is-selected');
@@ -810,7 +810,7 @@ function create(options) {
     syncRecordIcon(record, item.icon);
     
     record.content.className='qxframe9a7c2-tag-label qxframe9a7c2-tag-content'+(opts.tagTextClassName?' '+String(opts.tagTextClassName):'');
-    record.content.style.cssText = '';
+    record.content.removeAttribute('style');
     var rendered = Utils.isFunction(opts.renderTag) ? opts.renderTag(publicItem, projection) : item.label;
     renderNodeContent(record.content, rendered);
     applyClasses(record.content, opts.classes && opts.classes.content, publicItem, projection);
