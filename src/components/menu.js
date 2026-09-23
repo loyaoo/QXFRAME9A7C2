@@ -132,7 +132,7 @@ const menuIntent = new WeakMap();
 
 function normalizeMenuOptions(input, intent) {
   var supplied = intent || {};
-  var opts = Utils.assignOwn(MENU_DEFAULTS, input || {});
+  var opts = Utils.mergeOwn(MENU_DEFAULTS, input || {});
   rejectNonCanonical(supplied);
   validateItems(opts.items);
   opts.mode = normalizeMode(opts.mode);
@@ -156,7 +156,7 @@ function setupMenu(instance) {
   var intent = menuIntent.get(instance) || { supplied: {}, submenuModeAuto: true };
   var supplied = intent.supplied;
   var submenuModeAuto = intent.submenuModeAuto;
-  var opts = Utils.assignOwn(instance.options);
+  var opts = Utils.mergeOwn(instance.options);
 
   function initialSelected() {
     var hasSingle = own(supplied, 'selectedKey') || own(supplied, 'defaultSelectedKey');
