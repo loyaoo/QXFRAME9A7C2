@@ -118,7 +118,7 @@ function renderOutput(host, value, item, api, slot, doc) {
 
 function setupTabs(instance) {
   var source = instance.options;
-  var opts = normalizeOptions(Utils.assignOwn(source), source);
+  var opts = normalizeOptions(Utils.mergeOwn(source), source);
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Tabs container must be an Element.');
 
   var doc = opts.document || opts.container.ownerDocument || global.document;
