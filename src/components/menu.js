@@ -1,4 +1,6 @@
-import { Events } from '../core/events.js';
+import { Component } from '../core/component.js';
+import { componentHooks } from '../core/componentHooks.js';
+import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Config } from '../core/config.js';
 import { IdManager } from '../utils/id.js';
@@ -118,18 +120,20 @@ function validateItems(items) {
 
 var DEFAULT_OVERFLOW_INDICATOR = Object.freeze({ kind: 'qxframe9a7c2-menu-default-overflow' });
 
-function create(options) {
-  var menuInstanceId = IdManager.next('menu').replace('qxframe9a7c2-menu-', '');
-  var supplied = options || {};
+const MENU_DEFAULTS = Object.freeze({
+  items: [], mode: 'vertical', selectedKey: undefined, selectedKeys: undefined, openKeys: undefined,
+  multiple: false, selectable: true, submenuMode: undefined, itemDisplay: 'icon-label', collapsed: false,
+  disabled: false, size: 'md', submenuTrigger: 'hover', submenuOpenDelay: 0, submenuLeaveDelay: 100, submenuOffset: 8,
+  placement: undefined, selectionAppearance: 'highlight', inlineIndent: 24, collapsedWidth: 80,
+  theme: 'inherit', forceSubMenuRender: false, disabledOverflow: false, overflowedIndicator: DEFAULT_OVERFLOW_INDICATOR, tooltip: true
+});
+const menuState = new WeakMap();
+const menuIntent = new WeakMap();
+
+function normalizeMenuOptions(input, intent) {
+  var supplied = intent || {};
+  var opts = Utils.assignOwn(MENU_DEFAULTS, input || {});
   rejectNonCanonical(supplied);
-  var submenuModeAuto = !own(supplied, 'submenuMode');
-  var opts = Utils.assignOwn({
-    items: [], mode: 'vertical', selectedKey: undefined, selectedKeys: undefined, openKeys: undefined,
-    multiple: false, selectable: true, submenuMode: undefined, itemDisplay: 'icon-label', collapsed: false,
-    disabled: false, size: 'md', submenuTrigger: 'hover', submenuOpenDelay: 0, submenuLeaveDelay: 100, submenuOffset: 8,
-    placement: undefined, selectionAppearance: 'highlight', inlineIndent: 24, collapsedWidth: 80,
-    theme: 'inherit', forceSubMenuRender: false, disabledOverflow: false, overflowedIndicator: DEFAULT_OVERFLOW_INDICATOR, tooltip: true
-  }, supplied);
   validateItems(opts.items);
   opts.mode = normalizeMode(opts.mode);
   opts.submenuTrigger = normalizeSubmenuTrigger(opts.submenuTrigger);
@@ -144,6 +148,15 @@ function create(options) {
   opts.inlineIndent = normalizePositiveNumber(opts.inlineIndent, 'inlineIndent', 24, true);
   opts.collapsedWidth = normalizePositiveNumber(opts.collapsedWidth, 'collapsedWidth', 80, false);
   opts.selectionAppearance = Item.normalizeSelectionAppearance(opts.selectionAppearance);
+  return opts;
+}
+
+function setupMenu(instance) {
+  var menuInstanceId = IdManager.next('menu').replace('qxframe9a7c2-menu-', '');
+  var intent = menuIntent.get(instance) || { supplied: {}, submenuModeAuto: true };
+  var supplied = intent.supplied;
+  var submenuModeAuto = intent.submenuModeAuto;
+  var opts = Utils.assignOwn(instance.options);
 
   function initialSelected() {
     var hasSingle = own(supplied, 'selectedKey') || own(supplied, 'defaultSelectedKey');
@@ -167,16 +180,15 @@ function create(options) {
   if (!portalContainer) portalContainer = doc.body;
   if (!portalContainer || !portalContainer.appendChild) throw new TypeError('[QXFRAME9A7C2] Menu portalContainer must be an Element.');
 
-  var emitter = Events.createEmitter();
   var scope = Lifecycle.createScope();
   var destroyed = false;
   var focusSyncScheduler = null;
   var overflowLayout = null;
-  var api = null;
+  var api = instance;
   var keyboard = null;
   var keyboardRegion = null;
   var virtualFocusDomain = null;
-  var binding = DOMBinding.resolve({ options: opts, target: host, component: null, requiredRefs: ['root', 'level'], defaultFactory: DOMFactory.createDefaultDOM });
+  var binding = DOMBinding.resolve({ options: opts, target: host, component: api, requiredRefs: ['root', 'level'], defaultFactory: DOMFactory.createDefaultDOM });
   var root = binding.refs.root;
   var rootLevel = binding.refs.level;
   var selection = Selection.create({ values: initialSelected(), multiple: opts.multiple === true });
@@ -316,7 +328,7 @@ function create(options) {
     var keys = Array.from(openKeys);
     var detail = { openKeys: keys.slice(), source: source || DOM.activationSource(originalEvent), reason: reason || 'open-change', originalEvent: originalEvent || null, menu: api };
     if (Utils.isFunction(opts.onOpenChange)) opts.onOpenChange(keys.slice(), detail);
-    if (!destroyed) emitter.emit('openChange', detail);
+    if (!destroyed) api.emit('openChange', detail);
   }
   function removeDescendantOpenKeys(key) {
     var prefix = pathByKey.get(key) || [];
@@ -663,7 +675,7 @@ function create(options) {
       overflowLi.style.visibility = '';
       if (overflowTrigger) overflowTrigger.closeTree('overflow-clear');
       syncClasses();
-      emitter.emit('overflow', { reason: reason || 'refresh', overflowedKeys: [], visibleCount: rootEntryNodes.length, menu: api });
+      api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: [], visibleCount: rootEntryNodes.length, menu: api });
       return true;
     }
     var visibleCount = ResponsiveOverflow.fitPrefix({ lengths:widths, available:available, gap:gap, tailWidths:[moreWidth] });
@@ -674,7 +686,7 @@ function create(options) {
     overflowLi.hidden = false;
     overflowLi.style.visibility = '';
     syncClasses();
-    emitter.emit('overflow', { reason: reason || 'refresh', overflowedKeys: Array.from(overflowedKeys), visibleCount: visibleCount, menu: api });
+    api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: Array.from(overflowedKeys), visibleCount: visibleCount, menu: api });
     return true;
   }
   function scheduleOverflow(reason) { if (overflowLayout && opts.mode === 'horizontal' && opts.disabledOverflow !== true) overflowLayout.request(reason || 'layout'); }
@@ -934,14 +946,14 @@ function create(options) {
       var detail = selectionDetail(changedKey, meta, previous, next);
       if (Utils.isFunction(opts.onSelectedKeysChange)) opts.onSelectedKeysChange(next.slice(), detail);
       if (destroyed) return api;
-      emitter.emit('selectedKeysChange', detail);
+      api.emit('selectedKeysChange', detail);
       if (destroyed) return api;
       var previousSingle = previous.length ? previous[0] : '';
       var nextSingle = next.length ? next[0] : '';
       if (!opts.multiple && previousSingle !== nextSingle) {
         var scalarDetail = Utils.mergeOwn( detail, { previousKey: previousSingle || null, key: nextSingle || null, item: nextSingle ? itemByKey.get(nextSingle) : null });
         if (Utils.isFunction(opts.onSelectedKeyChange)) opts.onSelectedKeyChange(nextSingle, scalarDetail);
-        if (!destroyed) emitter.emit('selectedKeyChange', scalarDetail);
+        if (!destroyed) api.emit('selectedKeyChange', scalarDetail);
       }
     }
     return api;
@@ -959,7 +971,7 @@ function create(options) {
     if (destroyed) { detail.defaultPrevented = true; return detail; }
     if (Utils.isFunction(opts.onClick) && opts.onClick(detail) === false) detail.defaultPrevented = true;
     if (destroyed) { detail.defaultPrevented = true; return detail; }
-    emitter.emit('click', detail);
+    api.emit('click', detail);
     if (destroyed) detail.defaultPrevented = true;
     return detail;
   }
@@ -967,7 +979,7 @@ function create(options) {
     if (destroyed || detail.defaultPrevented) return false;
     if (Utils.isFunction(opts.onNavigate)) opts.onNavigate(detail);
     if (destroyed) return false;
-    emitter.emit('navigate', detail);
+    api.emit('navigate', detail);
     return !destroyed;
   }
   function closeLeafPopupTree(key, reason, originalEvent, source) {
@@ -1013,7 +1025,7 @@ function create(options) {
       commitSelectedKeys(next, { source: meta && meta.source || 'api', reason: meta && meta.reason || 'deselect', originalEvent: meta && meta.originalEvent || null, key: key });
       if (destroyed) return false;
       deselectDetail.selectedKeys = selectedArray(); deselectDetail.selectedKey = selectedKeyValue() || null;
-      emitter.emit('deselect', deselectDetail);
+      api.emit('deselect', deselectDetail);
       return destroyed ? false : finishLeafActivation(key, deselectDetail);
     }
     next = opts.multiple ? previous.concat(key).filter(function (entry, index, list) { return list.indexOf(entry) === index; }) : [key];
@@ -1025,7 +1037,7 @@ function create(options) {
     commitSelectedKeys(next, { source: meta && meta.source || 'api', reason: meta && meta.reason || 'select', originalEvent: meta && meta.originalEvent || null, key: key });
     if (destroyed) return false;
     selectDetail.selectedKeys = selectedArray(); selectDetail.selectedKey = selectedKeyValue() || null;
-    emitter.emit('select', selectDetail);
+    api.emit('select', selectDetail);
     return destroyed ? false : finishLeafActivation(key, selectDetail);
   }
 
@@ -1035,7 +1047,7 @@ function create(options) {
     if (destroyed) return false;
     if (Utils.isFunction(opts.onTitleClick)) opts.onTitleClick(detail);
     if (destroyed) return false;
-    emitter.emit('titleClick', detail);
+    api.emit('titleClick', detail);
     return !destroyed;
   }
   function handleButtonClick(event) {
@@ -1264,43 +1276,26 @@ function create(options) {
     else if (virtualFocusDomain) virtualFocusDomain.activate(next, { source:meta && meta.source || 'api', modality:meta && meta.source === 'pointer' ? 'pointer' : (keyboard ? keyboard.virtualFocus.getState().modality : 'pointer'), reason:meta && meta.reason || 'set-active', ensureVisible:false });
     return true;
   }
-  function setItems(items) {
+  function setItemsRuntime(items) {
     if (destroyed) return api;
     validateItems(items); opts.items = Array.isArray(items) ? items.slice() : []; rebuild(); return api;
   }
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
-    var next = Utils.mergeOwn( nextOptions || {}); rejectNonCanonical(next);
-    if (own(next, 'container') && next.container !== host) throw new Error('[QXFRAME9A7C2] Menu container is immutable; destroy and recreate to change it.');
-    if (own(next, 'portalContainer')) throw new Error('[QXFRAME9A7C2] Menu portalContainer is immutable; destroy and recreate to change it.');
-    if (own(next, 'items')) validateItems(next.items);
-    if (own(next, 'mode')) next.mode = normalizeMode(next.mode);
-    if (own(next, 'submenuTrigger')) next.submenuTrigger = normalizeSubmenuTrigger(next.submenuTrigger);
-    if (own(next, 'submenuMode')) { next.submenuMode = normalizeSubmenuMode(next.submenuMode); submenuModeAuto = false; }
-    if (own(next, 'itemDisplay')) next.itemDisplay = normalizeItemDisplay(next.itemDisplay);
-    if (own(next, 'collapsed')) next.collapsed = normalizeBoolean(next.collapsed, 'collapsed', false);
-    if (own(next, 'multiple')) next.multiple = normalizeBoolean(next.multiple, 'multiple', false);
-    if (own(next, 'selectable')) next.selectable = normalizeBoolean(next.selectable, 'selectable', true);
-    if (own(next, 'forceSubMenuRender')) next.forceSubMenuRender = normalizeBoolean(next.forceSubMenuRender, 'forceSubMenuRender', false);
-    if (own(next, 'disabledOverflow')) next.disabledOverflow = normalizeBoolean(next.disabledOverflow, 'disabledOverflow', false);
-    if (own(next, 'theme')) next.theme = normalizeTheme(next.theme);
-    if (own(next, 'inlineIndent')) next.inlineIndent = normalizePositiveNumber(next.inlineIndent, 'inlineIndent', 24, true);
-    if (own(next, 'collapsedWidth')) next.collapsedWidth = normalizePositiveNumber(next.collapsedWidth, 'collapsedWidth', 80, false);
-    if (own(next, 'selectionAppearance')) next.selectionAppearance = Item.normalizeSelectionAppearance(next.selectionAppearance);
-    if (own(next, 'mode') && submenuModeAuto && !own(next, 'submenuMode')) next.submenuMode = next.mode === 'inline' ? 'expand' : 'popup';
-
+    var next = Utils.mergeOwn(patch || {});
     var modeBefore = opts.mode;
     var collapsedBefore = inlineCollapsed();
     var popupBefore = popupMode();
     var multipleBefore = opts.multiple;
     if (own(next, 'multiple') && next.multiple !== opts.multiple && selection.size > 1 && next.multiple === false) throw new Error('[QXFRAME9A7C2] Menu cannot switch to single mode while multiple keys are selected.');
     if (own(next, 'selectedKey') && own(next, 'selectedKeys')) throw new TypeError('[QXFRAME9A7C2] Menu updateOptions accepts selectedKey or selectedKeys, not both.');
-    if ((own(next, 'selectedKey') && (own(next, 'multiple') ? next.multiple : opts.multiple))) throw new TypeError('[QXFRAME9A7C2] Menu multiple mode uses selectedKeys.');
+    if (own(next, 'selectedKey') && (own(next, 'multiple') ? next.multiple : opts.multiple)) throw new TypeError('[QXFRAME9A7C2] Menu multiple mode uses selectedKeys.');
     var selectedUpdate = own(next, 'selectedKey') || own(next, 'selectedKeys');
     var nextSelected = selectedUpdate ? (own(next, 'selectedKeys') ? normalizeKeys(next.selectedKeys) : normalizeKeys(next.selectedKey)) : selectedArray();
     var openUpdate = own(next, 'openKeys');
     var explicitNextOpen = openUpdate ? new Set(normalizeKeys(next.openKeys)) : null;
-    Utils.copyOwn(opts, next);
+    opts = Utils.assignOwn(nextOptions);
+    submenuModeAuto = (menuIntent.get(instance) || {}).submenuModeAuto === true;
     switchInlineOpenProjection(modeBefore, collapsedBefore);
     var popupAfter = popupMode();
     var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','theme','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
@@ -1318,6 +1313,7 @@ function create(options) {
     }
     return api;
   }
+
   function containsSurface(target) {
     if (!target) return false;
     if (root === target || (root.contains && root.contains(target))) return true;
@@ -1334,16 +1330,14 @@ function create(options) {
       theme: opts.theme, overflowedKeys: Array.from(overflowedKeys), disabled: opts.disabled === true, destroyed: destroyed
     });
   }
-  function destroy(reason) {
+  function destroyRuntime(reason) {
     if (destroyed) return false;
-    destroyed = true; destroySubmenuResources(); themeScopes.forEach(function (themeScope) { themeScope.destroy(); }); themeScopes.clear(); scope.dispose(); emitter.dispose(); if (binding) binding.release(); binding = null; root = rootLevel = null; return true;
+    destroyed = true; destroySubmenuResources(); themeScopes.forEach(function (themeScope) { themeScope.destroy(); }); themeScopes.clear(); scope.dispose(); if (binding) binding.release(); binding = null; root = rootLevel = null; return true;
   }
 
-  api = Object.freeze({
-    setItems: setItems, setSelectedKey: setSelectedKey, setSelectedKeys: setSelectedKeys, setOpenKeys: setOpenKeys, setActiveKey: setActiveKey,
-    setCollapsed: function (value) { return updateOptions({ collapsed: normalizeBoolean(value, 'collapsed', false) }); },
-    setDisabled: function (value) { return updateOptions({ disabled: value === true }); },
-    setSelectable: function (value) { return updateOptions({ selectable: normalizeBoolean(value, 'selectable', true) }); },
+  var record = {
+    setItemsRuntime: setItemsRuntime, setSelectedKey: setSelectedKey, setSelectedKeys: setSelectedKeys, setOpenKeys: setOpenKeys, setActiveKey: setActiveKey,
+    applyOptions: applyOptions,
     openSubmenu: function (key, reason, event) { return openSubmenu(key, reason || 'api', event || null); },
     closeSubmenu: function (key, reason, event) { return closeSubmenu(key, reason || 'api', event || null); },
     toggleSubmenu: function (key, reason, event) { return toggleSubmenu(key, reason || 'api', event || null); },
@@ -1354,23 +1348,104 @@ function create(options) {
       return focusButton(candidate, { source:'keyboard', reason:'menu-focus-api' });
     },
     refreshOverflow: function () { return refreshOverflow('api'); },
-    containsSurface: containsSurface, updateOptions: updateOptions, getState: getState,
+    containsSurface: containsSurface, getState: getState,
     getRootElement: function () { return root; }, getListElement: function () { return rootLevel; },
     getButtonElement: function (key) { return buttonByKey.get(String(key)) || null; },
     findItem: function (query) { var key = query && typeof query === 'object' ? query.key : query; return itemByKey.get(String(key || '')) || null; },
     getSubmenuElement: function (key) { return panelByKey.get(String(key)) || panelLevelByKey.get(String(key)) || null; },
     getTrigger: function (key) { return triggerByKey.get(String(key)) || null; },
-    getOverflowElement: function () { return overflowButton; }, getOverflowTrigger: function () { return overflowTrigger; },
-    on: emitter.on, once: emitter.once, destroy: destroy
-  });
+    getOverflowElement: function () { return overflowButton; }, getOverflowTrigger: function () { return overflowTrigger; }
+  };
+  menuState.set(instance, record);
+  instance.own(destroyRuntime);
+
 
   indexItems(); rebuild();
-  return api;
+  return root;
 }
 
-export const Menu=Object.freeze({
-  definition:Object.freeze({initializer:Object.freeze({mode:'create',bind:'container'})}),
-  create,
-  createDefaultDOM:DOMFactory.createDefaultDOM
-});
-export { create };
+function recordForMenu(instance) {
+  var record = menuState.get(instance);
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Menu instance.');
+  return record;
+}
+function normalizeMenuPatch(instance, nextOptions) {
+  var next = Utils.mergeOwn(nextOptions || {});
+  rejectNonCanonical(next);
+  if (own(next, 'items')) validateItems(next.items);
+  if (own(next, 'mode')) next.mode = normalizeMode(next.mode);
+  if (own(next, 'submenuTrigger')) next.submenuTrigger = normalizeSubmenuTrigger(next.submenuTrigger);
+  var meta = menuIntent.get(instance) || { submenuModeAuto:true };
+  if (own(next, 'submenuMode')) {
+    next.submenuMode = normalizeSubmenuMode(next.submenuMode);
+  } else if (own(next, 'mode') && meta.submenuModeAuto) {
+    next.submenuMode = next.mode === 'inline' ? 'expand' : 'popup';
+  }
+  if (own(next, 'itemDisplay')) next.itemDisplay = normalizeItemDisplay(next.itemDisplay);
+  if (own(next, 'collapsed')) next.collapsed = normalizeBoolean(next.collapsed, 'collapsed', false);
+  if (own(next, 'multiple')) next.multiple = normalizeBoolean(next.multiple, 'multiple', false);
+  if (own(next, 'selectable')) next.selectable = normalizeBoolean(next.selectable, 'selectable', true);
+  if (own(next, 'forceSubMenuRender')) next.forceSubMenuRender = normalizeBoolean(next.forceSubMenuRender, 'forceSubMenuRender', false);
+  if (own(next, 'disabledOverflow')) next.disabledOverflow = normalizeBoolean(next.disabledOverflow, 'disabledOverflow', false);
+  if (own(next, 'theme')) next.theme = normalizeTheme(next.theme);
+  if (own(next, 'inlineIndent')) next.inlineIndent = normalizePositiveNumber(next.inlineIndent, 'inlineIndent', 24, true);
+  if (own(next, 'collapsedWidth')) next.collapsedWidth = normalizePositiveNumber(next.collapsedWidth, 'collapsedWidth', 80, false);
+  if (own(next, 'selectionAppearance')) next.selectionAppearance = Item.normalizeSelectionAppearance(next.selectionAppearance);
+  return next;
+}
+
+export class Menu extends Component {
+  static options = MENU_DEFAULTS;
+  static immutableOptions = Object.freeze(['container','portalContainer']);
+  static contract = ComponentContracts.get('Menu');
+  static createDefaultDOM = DOMFactory.createDefaultDOM;
+
+  constructor(options = {}) {
+    var supplied = Utils.mergeOwn(options || {});
+    var auto = !own(supplied, 'submenuMode');
+    super(normalizeMenuOptions(supplied, supplied));
+    menuIntent.set(this, { supplied:supplied, submenuModeAuto:auto });
+  }
+
+  updateOptions(nextOptions = {}) {
+    var next = normalizeMenuPatch(this, nextOptions);
+    var hadExplicitSubmenu = own(nextOptions || {}, 'submenuMode');
+    var result = super.updateOptions(next);
+    if (hadExplicitSubmenu) {
+      var meta = menuIntent.get(this) || {};
+      meta.submenuModeAuto = false;
+      menuIntent.set(this, meta);
+    }
+    return result;
+  }
+
+  [componentHooks.render]() { var record = menuState.get(this); return record ? record.getRootElement() : setupMenu(this); }
+  [componentHooks.optionsUpdated](next, _previous, patch) { var record = menuState.get(this); if (record) record.applyOptions(next, patch); }
+
+  setItems(items) { validateItems(items); return this.updateOptions({ items:Array.isArray(items) ? items.slice() : [] }); }
+  setSelectedKey(key, meta) { return recordForMenu(this).setSelectedKey(key, meta); }
+  setSelectedKeys(keys, meta) { return recordForMenu(this).setSelectedKeys(keys, meta); }
+  setOpenKeys(keys, meta) { return recordForMenu(this).setOpenKeys(keys, meta); }
+  setActiveKey(key, meta) { return recordForMenu(this).setActiveKey(key, meta); }
+  setCollapsed(value) { return this.updateOptions({ collapsed:normalizeBoolean(value, 'collapsed', false) }); }
+  setDisabled(value) { return this.updateOptions({ disabled:value === true }); }
+  setSelectable(value) { return this.updateOptions({ selectable:normalizeBoolean(value, 'selectable', true) }); }
+  openSubmenu(key, reason, event) { return recordForMenu(this).openSubmenu(key, reason, event); }
+  closeSubmenu(key, reason, event) { return recordForMenu(this).closeSubmenu(key, reason, event); }
+  toggleSubmenu(key, reason, event) { return recordForMenu(this).toggleSubmenu(key, reason, event); }
+  focus() { return recordForMenu(this).focus(); }
+  refreshOverflow() { return recordForMenu(this).refreshOverflow(); }
+  containsSurface(target) { return recordForMenu(this).containsSurface(target); }
+  getState() { return recordForMenu(this).getState(); }
+  getRootElement() { return recordForMenu(this).getRootElement(); }
+  getListElement() { return recordForMenu(this).getListElement(); }
+  getButtonElement(key) { return recordForMenu(this).getButtonElement(key); }
+  findItem(query) { return recordForMenu(this).findItem(query); }
+  getSubmenuElement(key) { return recordForMenu(this).getSubmenuElement(key); }
+  getTrigger(key) { return recordForMenu(this).getTrigger(key); }
+  getOverflowElement() { return recordForMenu(this).getOverflowElement(); }
+  getOverflowTrigger() { return recordForMenu(this).getOverflowTrigger(); }
+}
+
+export { createDefaultDOM };
+export default Menu;
