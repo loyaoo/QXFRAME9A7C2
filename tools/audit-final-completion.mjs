@@ -270,7 +270,12 @@ for (const duplicate of duplicates) {
   }
   region.windows+=1;
 }
-const allowedFamilyDuplicatePairs=new Set(['src/components/drawer.js|src/components/modal.js']);
+const allowedFamilyDuplicatePairs=new Map([
+  ['src/components/drawer.js|src/components/modal.js','Modal and Drawer intentionally retain family-local transition/open-close orchestration while sharing OverlayFrameShell, OverlayFramePolicy, OverlayRuntime, Transition and Scroll canonical owners.']
+]);
+const allowedDuplicateRegions=duplicateRegions.filter(region=>allowedFamilyDuplicatePairs.has(region.signature)).map(function(region){
+  return Utils.assignOwn({},region,{reason:allowedFamilyDuplicatePairs.get(region.signature)});
+});
 const unexpectedDuplicateRegions=duplicateRegions.filter(region=>!allowedFamilyDuplicatePairs.has(region.signature));
 
 const report={
@@ -293,6 +298,7 @@ const report={
   },
   exactDuplicateBlocks:duplicates,
   duplicateRegions:duplicateRegions,
+  allowedDuplicateRegions:allowedDuplicateRegions,
   unexpectedDuplicateRegions:unexpectedDuplicateRegions
 };
 report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&contractPrototypeSecurity.failures.length===0&&contractPrototypeSecurity.utilitySafe===true&&contractPrototypeSecurity.rejected===contractPrototypeSecurity.components*3&&urlSinks.every(x=>x.urlPolicy)&&unexpectedPrototypeMergeCandidates.length===0&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&unexpectedDuplicateRegions.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
