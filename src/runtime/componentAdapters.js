@@ -86,5 +86,5 @@ Utils.assignOwn(raw, { Trigger, Ripple, Menu, Transfer, Tags, Upload, Table, Mes
 raw.Scroll = Object.freeze(Utils.mergeOwn( Scroll, { definition:createInitializer }));
 
 export const Components = Object.freeze(Object.fromEntries(Object.entries(raw).map(([name, api]) => [name, publishComponentApi(name, api)])));
-export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Select, Slider, Sort, Steps, TabInput:TagInput, TagInput, Tabs, TimePicker, Tooltip, TreeSelect, WheelPicker });
+export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Select, Slider, Sort, Steps, TagInput, Tabs, TimePicker, Tooltip, TreeSelect, WheelPicker });
 export default Components;
