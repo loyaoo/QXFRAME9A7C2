@@ -74,6 +74,7 @@ const SCROLL_DEFAULTS = Object.freeze({
   scrollIdleDelay: 100
 });
 const scrollState = new WeakMap();
+const attachedScrollInstances = new WeakSet();
     
 function normalizeEnum(value, allowed, fallback, label) {
   var normalized = value === undefined || value === null || value === '' ? fallback : String(value);
@@ -157,7 +158,9 @@ function attachViewport(options) {
   if (input.focusable === undefined) input.focusable = false;
   if (input.keyboard === undefined) input.keyboard = false;
   if (input.scrollbarVisibility === undefined) input.scrollbarVisibility = 'auto';
-  var instance = Scroll.create(input);
+  var instance = new Scroll(input);
+  attachedScrollInstances.add(instance);
+  instance.render();
   var destroyed = false;
   var bound = new Map();
   function destroyAttached() {
@@ -1150,9 +1153,10 @@ export class Scroll extends Component {
 
   [componentHooks.render]() {
     var existing = scrollState.get(this);
-    if (existing) return existing.getRootElement();
+    if (existing) return attachedScrollInstances.has(this) ? undefined : existing.getRootElement();
     assertAxisCompatibility(this.options.axis, this.options.wheelAxis, this.options.snapAxis);
-    return setupScroll(this);
+    var root = setupScroll(this);
+    return attachedScrollInstances.has(this) ? undefined : root;
   }
   [componentHooks.beforeOptionsUpdate](patch) {
     var candidate = Utils.mergeOwn(this.options, patch || {});
