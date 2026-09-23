@@ -48,7 +48,7 @@ function isNodeLike(value) {
   function disposeOwners(owners, keepOwners) {
     (owners || []).forEach(function (owner) {
       if (!owner || (keepOwners && keepOwners.indexOf(owner) >= 0) || typeof owner.destroy !== 'function') return;
-      try { owner.destroy('renderer-replace'); } catch (error) { global.setTimeout(function () { throw error; }, 0); }
+      try { owner.destroy('renderer-replace'); } catch (error) { if (typeof global.queueMicrotask === 'function') global.queueMicrotask(function () { throw error; }); else Promise.resolve().then(function () { throw error; }); }
     });
   }
   function dispose(container, keepOutput) {
