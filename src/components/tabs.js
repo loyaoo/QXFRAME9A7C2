@@ -1,4 +1,5 @@
-import { Events } from '../core/events.js';
+import { Component } from '../core/component.js';
+import { componentHooks } from '../core/componentHooks.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
 import { DOM } from '../core/dom.js';
@@ -18,6 +19,15 @@ import { Scroll } from './scroll.js';
 import { Popover } from './popover.js';
 
 const global=globalThis;
+
+const TABS_DEFAULTS = Object.freeze({
+  items: [], orientation: 'horizontal', placement: 'top', type: 'line', activationMode: 'auto',
+  destroyInactive: false, overflow: true, edgeShadow: true, wheelPropagation: true,
+  editable: false, addable: undefined, closable: false, disabled: false, readOnly: false,
+  stretch: false, centered: false, indicator: null, animated: undefined, overflowPopupRender: null,
+  transition: 'qxframe9a7c2-tabs-transition', size: 'md', className: ''
+});
+const tabsState = new WeakMap();
 
 var ORIENTATIONS = Object.freeze(['horizontal', 'vertical']);
 var PLACEMENTS = Object.freeze(['top', 'right', 'bottom', 'left']);
@@ -106,23 +116,16 @@ function renderOutput(host, value, item, api, slot, doc) {
   Renderer.replace(host, output == null ? '' : output, doc);
 }
 
-function create(options) {
-  var source = options || {};
-  ComponentContracts.validate(ComponentContracts.get('Tabs'),source,'Tabs');
-  var opts = normalizeOptions(Utils.assignOwn({
-    items: [], orientation: 'horizontal', placement: 'top', type: 'line', activationMode: 'auto',
-    destroyInactive: false, overflow: true, edgeShadow: true, wheelPropagation: true,
-    editable: false, addable: undefined, closable: false, disabled: false, readOnly: false,
-    stretch: false, centered: false, indicator: null, animated: undefined, overflowPopupRender: null, transition: 'qxframe9a7c2-tabs-transition', size: 'md', className: ''
-  }, source), source);
+function setupTabs(instance) {
+  var source = instance.options;
+  var opts = normalizeOptions(Utils.assignOwn(source), source);
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Tabs container must be an Element.');
 
   var doc = opts.document || opts.container.ownerDocument || global.document;
   var view = doc && doc.defaultView || global;
   var scope = Lifecycle.createScope();
-  var emitter = Events.createEmitter();
   var destroyed = false;
-  var api = null;
+  var api = instance;
   var items = opts.items.slice();
   var collection = Collection.create({
     items: items,
@@ -663,7 +666,7 @@ function create(options) {
       originalEvent: meta && meta.originalEvent || null, instance: api
     };
     if (typeof opts.onChange === 'function') opts.onChange(activeKey, detail);
-    if (!destroyed) emitter.emit('change', detail);
+    if (!destroyed) api.emit('change', detail);
     return detail;
   }
   function setActiveKey(next, meta) {
@@ -757,7 +760,7 @@ function create(options) {
     };
     var callbackResult;
     if (typeof opts.onEdit === 'function') callbackResult = opts.onEdit(item ? item.key : undefined, action, detail);
-    if (!destroyed) emitter.emit('edit', detail);
+    if (!destroyed) api.emit('edit', detail);
     return { detail: detail, callbackResult: callbackResult };
   }
   function beforeEdit(action, item, index, meta) {
@@ -832,14 +835,10 @@ function create(options) {
     return api;
   }
 
-  function updateOptions(nextOptions) {
+  function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
-    ComponentContracts.validate(ComponentContracts.get('Tabs'),nextOptions,'Tabs');
-    var next = nextOptions || {};
-    IMMUTABLE_OPTIONS.forEach(function (name) {
-      if (own(next, name) && next[name] !== opts[name]) throw new TypeError('[QXFRAME9A7C2] Tabs ' + name + ' is immutable after create.');
-    });
-    var candidate = normalizeOptions(Utils.mergeOwn( opts, next, { items: own(next, 'items') ? next.items : items }), next);
+    var next = patch || {};
+    var candidate = normalizeOptions(Utils.mergeOwn(nextOptions, { items: own(next, 'items') ? nextOptions.items : items }), next);
     var nextItems = candidate.items.slice();
     candidate.items = nextItems;
     opts = candidate;
@@ -953,7 +952,7 @@ function create(options) {
       destroyed: destroyed
     });
   }
-  function destroy() {
+  function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true;
     scope.dispose();
@@ -968,7 +967,6 @@ function create(options) {
     overflowPopover.destroy();
     scroll.destroy();
     collection.destroy();
-    emitter.dispose();
     tabByKey.clear();
     tabShellByKey.clear();
     overflowRowsByKey.clear();
@@ -980,14 +978,14 @@ function create(options) {
     return true;
   }
 
-  api = {
+  var record = {
     setActiveKey: function (key, meta) { setActiveKey(key, meta); return api; },
     remove: function (key, meta) { remove(key, meta); return api; },
     add: function (item, meta) { add(item, meta); return api; },
     setItems: setItems,
-    updateOptions: updateOptions,
-    setDisabled: function (value) { return updateOptions({ disabled: value === true }); },
-    setReadOnly: function (value) { return updateOptions({ readOnly: value === true }); },
+    applyOptions: applyOptions,
+    setDisabled: function (value) { return api.updateOptions({ disabled: value === true }); },
+    setReadOnly: function (value) { return api.updateOptions({ readOnly: value === true }); },
     openOverflow: function () { openOverflow(); return api; },
     closeOverflow: function () { closeOverflow(); return api; },
     refreshOverflow: function () { scheduleOverflow('api'); return api; },
@@ -1009,20 +1007,80 @@ function create(options) {
     getTabElement: function (key) { return tabByKey.get(String(key)) || null; },
     getPanelElement: function (key) { return panelByKey.get(String(key)) || null; },
     getPanelTransition: function (key) { return panelTransitionByKey.get(String(key)) || null; },
-    on: emitter.on,
-    once: emitter.once,
-    destroy: destroy
+    getActiveKey: function () { return activeKey; },
+    isDisabled: function () { return opts.disabled === true; },
+    isReadOnly: function () { return opts.readOnly === true; }
   };
-  Object.defineProperties(api, {
-    activeKey: { enumerable: true, get: function () { return activeKey; } },
-    disabled: { enumerable: true, get: function () { return opts.disabled === true; } },
-    readOnly: { enumerable: true, get: function () { return opts.readOnly === true; } },
-    destroyed: { enumerable: true, get: function () { return destroyed; } }
-  });
+  tabsState.set(instance, record);
+  instance.own(destroyRuntime);
+
 
   render(true);
-  return api;
+  return root;
 }
 
-export const Tabs=Object.freeze({definition:Object.freeze({initializer:Object.freeze({mode:'create',bind:'container'})}),create});
-export {create};
+function recordForTabs(instance) {
+  var record = tabsState.get(instance);
+  if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Tabs instance.');
+  return record;
+}
+function canonicalTabsOptions(source, previousItems) {
+  var input = source || {};
+  var items = own(input, 'items') ? input.items : (previousItems || TABS_DEFAULTS.items);
+  return normalizeOptions(Utils.mergeOwn(TABS_DEFAULTS, input, { items: items }), input);
+}
+
+export class Tabs extends Component {
+  static options = TABS_DEFAULTS;
+  static immutableOptions = IMMUTABLE_OPTIONS;
+  static contract = ComponentContracts.get('Tabs');
+
+  constructor(options = {}) { super(canonicalTabsOptions(options)); }
+
+  updateOptions(nextOptions = {}) {
+    var next = nextOptions || {};
+    var record = tabsState.get(this);
+    var currentItems = record ? record.getItems() : this.options.items;
+    var candidate = normalizeOptions(Utils.mergeOwn(this.options, next, { items: own(next, 'items') ? next.items : currentItems }), next);
+    var patch = Utils.mergeOwn(next);
+    ['type','activationMode','size','centered','animated','indicator','items'].forEach(function (key) { if (own(next, key)) patch[key] = candidate[key]; });
+    if (own(next, 'placement') || own(next, 'orientation')) { patch.placement = candidate.placement; patch.orientation = candidate.orientation; }
+    return super.updateOptions(patch);
+  }
+
+  [componentHooks.render]() { var record = tabsState.get(this); return record ? record.getRootElement() : setupTabs(this); }
+  [componentHooks.optionsUpdated](next, _previous, patch) { var record = tabsState.get(this); if (record) record.applyOptions(next, patch); }
+
+  setActiveKey(key, meta) { return recordForTabs(this).setActiveKey(key, meta); }
+  remove(key, meta) { return recordForTabs(this).remove(key, meta); }
+  add(item, meta) { return recordForTabs(this).add(item, meta); }
+  setItems(items, meta) { return recordForTabs(this).setItems(items, meta); }
+  setDisabled(value) { return this.updateOptions({ disabled: value === true }); }
+  setReadOnly(value) { return this.updateOptions({ readOnly: value === true }); }
+  openOverflow() { return recordForTabs(this).openOverflow(); }
+  closeOverflow() { return recordForTabs(this).closeOverflow(); }
+  refreshOverflow() { return recordForTabs(this).refreshOverflow(); }
+  getState() { return recordForTabs(this).getState(); }
+  getItems() { return recordForTabs(this).getItems(); }
+  getActiveItem() { return recordForTabs(this).getActiveItem(); }
+  getKeyboardNavigation() { return recordForTabs(this).getKeyboardNavigation(); }
+  getScroll() { return recordForTabs(this).getScroll(); }
+  getOverflowScroll() { return recordForTabs(this).getOverflowScroll(); }
+  getOverflowPopover() { return recordForTabs(this).getOverflowPopover(); }
+  getRootElement() { return recordForTabs(this).getRootElement(); }
+  getNavElement() { return recordForTabs(this).getNavElement(); }
+  getTabListElement() { return recordForTabs(this).getTabListElement(); }
+  getPanelsElement() { return recordForTabs(this).getPanelsElement(); }
+  getOverflowButton() { return recordForTabs(this).getOverflowButton(); }
+  getOverflowPanel() { return recordForTabs(this).getOverflowPanel(); }
+  getOverflowListElement() { return recordForTabs(this).getOverflowListElement(); }
+  getOverflowOriginElement() { return recordForTabs(this).getOverflowOriginElement(); }
+  getTabElement(key) { return recordForTabs(this).getTabElement(key); }
+  getPanelElement(key) { return recordForTabs(this).getPanelElement(key); }
+  getPanelTransition(key) { return recordForTabs(this).getPanelTransition(key); }
+  get activeKey() { return recordForTabs(this).getActiveKey(); }
+  get disabled() { return recordForTabs(this).isDisabled(); }
+  get readOnly() { return recordForTabs(this).isReadOnly(); }
+}
+
+export default Tabs;
