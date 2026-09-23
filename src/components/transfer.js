@@ -67,7 +67,7 @@ function paginationConfig(value, side) {
     var scoped = value[side];
     if (scoped === false || scoped === null) return null;
     if (scoped !== true && (!scoped || typeof scoped !== 'object' || Array.isArray(scoped))) throw new TypeError('[QXFRAME9A7C2] Transfer pagination.' + side + ' must be boolean or an object.');
-    if (scoped && scoped !== true) base = Object.assign(base, scoped);
+    if (scoped && scoped !== true) Utils.copyOwn(base, scoped);
   }
   base.pageSize = positiveInt(base.pageSize, 10);
   if (base.current !== undefined) base.current = positiveInt(base.current, 1);
@@ -82,12 +82,12 @@ function tableConfig(value, side) {
   if (value === true) return {};
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] Transfer table must be boolean or an object.');
   var base = {};
-  Object.keys(value).forEach(function (key) { if (key !== 'source' && key !== 'target') base[key] = value[key]; });
+  Object.keys(value).forEach(function (key) { if (key !== 'source' && key !== 'target' && Utils.safeOwnKey(key)) base[key] = value[key]; });
   if (own(value, side)) {
     var scoped = value[side];
     if (scoped === false || scoped === null) return null;
     if (scoped !== true && (!scoped || typeof scoped !== 'object' || Array.isArray(scoped))) throw new TypeError('[QXFRAME9A7C2] Transfer table.' + side + ' must be boolean or an object.');
-    if (scoped && scoped !== true) base = Object.assign(base, scoped);
+    if (scoped && scoped !== true) Utils.copyOwn(base, scoped);
   }
   TABLE_OWNERSHIP_OPTIONS.forEach(function (name) {
     if (own(base, name)) throw new TypeError('[QXFRAME9A7C2] Transfer table projection does not own ' + name + '. Search/filter/selection/pagination remain owned by Transfer List/Pagination.');
