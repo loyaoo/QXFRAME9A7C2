@@ -353,8 +353,9 @@ function create(source, overrides) {
         syncHeader();
         var payload = { side: side, current: current, pageSize: pageSize, count: detail && detail.state ? detail.state.count : initialCount, originalEvent: detail && detail.originalEvent || null, transfer: api };
         if (Utils.isFunction(userChange)) userChange(current, pageSize, detail);
+        if (destroyed) return;
         if (Utils.isFunction(opts.onPageChange)) opts.onPageChange(side, current, pageSize, payload);
-        emitter.emit('page-change', payload);
+        if (!destroyed) emitter.emit('page-change', payload);
       },
       onSizeChange: function (pageSize, detail) {
         if (Utils.isFunction(userSizeChange)) userSizeChange(pageSize, detail);
