@@ -9,9 +9,10 @@ const expected={
   Tags:'src/components/tags.js', Upload:'src/components/upload.js', Table:'src/components/table.js',
   Message:'src/components/message.js', Notification:'src/components/notification.js', NoticeService:'src/core/noticeService.js'
 };
+const components=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/esm-component-authority.json'),'utf8')).authorities;
 const support=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/esm-support-authority.json'),'utf8')).authorities;
 const blocks=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/esm-building-block-authority.json'),'utf8')).authorities;
-const authorityByName=new Map([...support,...blocks].map(entry=>[entry.name,entry]));
+const authorityByName=new Map([...components,...support,...blocks].map(entry=>[entry.name,entry]));
 const forbidden=[/\bdefineModule\s*\(/,/(?:Core|Headless|DOMHeadless|Component|BuildingBlock)Registry\.(?:get|define|assert)\s*\(/,/(?:globalThis|window|self)\.QXFRAME9A7C2/,/\bbrand\.(?:CoreRegistry|HeadlessRegistry|DOMHeadlessRegistry|ComponentRegistry|BuildingBlockRegistry)/,/\(function\s*\(global\)/];
 for(const [name,sourcePath] of Object.entries(expected)){
   const authority=authorityByName.get(name);assert.ok(authority,`Missing ESM authority manifest entry: ${name}`);assert.equal(authority.source,sourcePath,`${name} authority source drifted`);

@@ -74,6 +74,12 @@
       "phase": "58→64"
     },
     {
+      "name": "Pagination",
+      "module": "pagination",
+      "source": "src/components/pagination.js",
+      "phase": "92→96"
+    },
+    {
       "name": "Popconfirm",
       "module": "popconfirm",
       "source": "src/components/popconfirm.js",

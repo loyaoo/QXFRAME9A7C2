@@ -51,13 +51,6 @@
       "namespace": "components"
     },
     {
-      "name": "Pagination",
-      "module": "pagination",
-      "source": "src/components/pagination.js",
-      "phase": "88→92-tail",
-      "namespace": "components"
-    },
-    {
       "name": "PickerField",
       "module": "picker-field-base",
       "source": "src/components/picker-field.js",
