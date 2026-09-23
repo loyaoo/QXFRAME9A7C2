@@ -7,6 +7,25 @@ import { Utils } from '../utils/utils.js';
 
 const global = globalThis;
 
+function bindVirtualFocus(options) {
+    var settings = options || {};
+    var controller = settings.controller;
+    if (!controller || !Utils.isFunction(controller.registerDomain)) return null;
+    var previous = settings.previousDomain;
+    if (previous && Utils.isFunction(previous.destroy)) previous.destroy();
+    var keyboard = settings.keyboard || (settings.region && settings.region.keyboard) || null;
+    var hosted = settings.hosted !== false && (!keyboard || controller !== keyboard.virtualFocus);
+    if (settings.region && Utils.isFunction(settings.region.setHosted)) settings.region.setHosted(hosted);
+    else if (settings.root) settings.root.tabIndex = hosted ? -1 : 0;
+    var domain = controller.registerDomain(settings.domain || {});
+    var activeKey = Utils.isFunction(settings.getActiveKey) ? settings.getActiveKey() : settings.activeKey;
+    var state = Utils.isFunction(controller.getState) ? controller.getState() : null;
+    if (activeKey !== null && activeKey !== undefined && activeKey !== '' && state && state.modality === 'keyboard') {
+      domain.activate(activeKey, Object.assign({ source:'keyboard', reason:'keyboard-region-bind', ensureVisible:true }, settings.activation || {}));
+    }
+    return Object.freeze({ controller:controller, domain:domain, hosted:hosted });
+  }
+
 function create(options) {
     var settings = options || {};
     var root = settings.root;
@@ -82,5 +101,5 @@ function create(options) {
     return api;
   }
 
-export const KeyboardRegion = Object.freeze({ create });
-export { create };
+export const KeyboardRegion = Object.freeze({ create, bindVirtualFocus });
+export { create, bindVirtualFocus };
