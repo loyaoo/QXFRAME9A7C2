@@ -151,6 +151,14 @@ function create(options) {
     if (!projectionMode && (String(opts.controlMode || 'input') === 'input' || String(opts.controlMode || 'input') === 'tags')) control.setInputValue(text);
     else if (projectionMode && editorElement() && opts.editable === true) control.setInputValue(text);
   }
+  function projectNavigationVisual(value) {
+    if (!navigationActive || projectionMode || !control) return false;
+    var editor = editorElement();
+    if (!editor || editor.value === undefined) return false;
+    var text = value == null ? '' : String(value);
+    if (String(editor.value || '') !== text) editor.value = text;
+    return true;
+  }
   function beginNavigationInteraction() {
     if (navigationActive) return false;
     interactionGeneration += 1;
@@ -326,6 +334,7 @@ function create(options) {
     if (!control) return;
     var editorValue = navigationActive && editorSnapshot ? editorSnapshot.value : displayValue;
     control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: editorValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
+    if (navigationActive) projectNavigationVisual(opts.draftVisual === true ? draftDisplayValue : displayValue);
   }
   function writeExternalValue(target, value) { if (!target) return; var text = value == null ? '' : String(value); if (/^(input|textarea|select)$/i.test(String(target.tagName || ''))) target.value = text; else target.textContent = text; }
   function setDisplayValue(value) {
@@ -336,7 +345,12 @@ function create(options) {
     if (!navigationActive) projectDisplayValue(displayValue);
     return api;
   }
-  function setDraftDisplayValue(value) { draftDisplayValue = value == null ? '' : String(value); if (projectionMode) writeExternalValue(draftValueTarget, draftDisplayValue); return api; }
+  function setDraftDisplayValue(value) {
+    draftDisplayValue = value == null ? '' : String(value);
+    if (projectionMode) writeExternalValue(draftValueTarget, draftDisplayValue);
+    else if (navigationActive && opts.draftVisual === true) projectNavigationVisual(draftDisplayValue);
+    return api;
+  }
   function setPlaceholder(value) { displayPlaceholder = value == null ? '' : String(value); if (control) control.updateOptions({ placeholder: displayPlaceholder }); return api; }
   function setCommittedValue(value, meta) {
     var detail = meta || { silent: true, source: 'picker', reason: 'projection' };
@@ -353,7 +367,12 @@ function create(options) {
   }
   function setTags(value) { tags = Array.isArray(value) ? value.slice() : []; if (control) control.setTags(tags); return api; }
   function setClearVisible(value) { clearVisible = value === true; if (control) control.setHasValue(clearVisible); return api; }
-  function setDraftVisual(value) { opts.draftVisual = value === true; if (control && control.setDraftVisual) control.setDraftVisual(opts.draftVisual); return api; }
+  function setDraftVisual(value) {
+    opts.draftVisual = value === true;
+    if (control && control.setDraftVisual) control.setDraftVisual(opts.draftVisual);
+    if (navigationActive) projectNavigationVisual(opts.draftVisual ? draftDisplayValue : displayValue);
+    return api;
+  }
   function open(reason, event) { return destroyed || !canActivatePicker() ? false : triggerSession.open(reason || 'api', event || null); }
   function close(reason, event) { return destroyed ? false : triggerSession.close(reason || 'api', event || null); }
   function setOpen(value, reason, event) { return value === true ? open(reason || 'set-open', event) : close(reason || 'set-open', event); }
