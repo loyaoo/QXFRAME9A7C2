@@ -42,10 +42,17 @@ function finiteAtLeast(value, fallback, minimum, label) {
 }
 function safeOwnKey(key) { return key !== '__proto__' && key !== 'prototype' && key !== 'constructor'; }
 function copyOwn(target, source) {
-  Object.keys(Object(source || {})).forEach(function (key) {
+  var object = Object(source || {});
+  Object.keys(object).forEach(function (key) {
     if (!safeOwnKey(key)) return;
-    target[key] = source[key];
+    target[key] = object[key];
   });
+  if (typeof Object.getOwnPropertySymbols === 'function') {
+    Object.getOwnPropertySymbols(object).forEach(function (symbol) {
+      var descriptor = Object.getOwnPropertyDescriptor(object, symbol);
+      if (descriptor && descriptor.enumerable) target[symbol] = object[symbol];
+    });
+  }
   return target;
 }
 function mergeOwn() {
