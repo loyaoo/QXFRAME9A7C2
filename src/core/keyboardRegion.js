@@ -26,6 +26,16 @@ function bindVirtualFocus(options) {
     return Object.freeze({ controller:controller, domain:domain, hosted:hosted });
   }
 
+function forwardHandlers(keys, handler) {
+    if (!Array.isArray(keys)) throw new TypeError('[QXFRAME9A7C2] KeyboardRegion.forwardHandlers keys must be an array.');
+    if (!Utils.isFunction(handler)) throw new TypeError('[QXFRAME9A7C2] KeyboardRegion.forwardHandlers handler must be a function.');
+    var handlers = {};
+    keys.forEach(function (key) {
+      handlers[String(key)] = function (detail) { return handler(detail.originalEvent, detail); };
+    });
+    return handlers;
+  }
+
 function create(options) {
     var settings = options || {};
     var root = settings.root;
@@ -101,5 +111,5 @@ function create(options) {
     return api;
   }
 
-export const KeyboardRegion = Object.freeze({ create, bindVirtualFocus });
-export { create, bindVirtualFocus };
+export const KeyboardRegion = Object.freeze({ create, bindVirtualFocus, forwardHandlers });
+export { create, bindVirtualFocus, forwardHandlers };
