@@ -82,6 +82,22 @@ assert.equal(instance.options, beforeRejectedPatch, 'a rejected option transacti
 instance.updateOptions({ size: 'SM', extra: true });
 assert.deepEqual(instance.options, { size: 'sm', enabled: false, child: true, custom: 7, extra: true });
 assert.equal(optionEvents.length, 2, 'option hook and public options event must both run once.');
+
+class FailingUpdateComponent extends Component {
+    static options = Object.freeze({ mode:'safe', count:1 });
+    static contract = Object.freeze({ schema:Object.freeze({ mode:'string', count:'number' }), allowUnknown:false });
+    [componentHooks.optionsUpdated](next) {
+        if (next.mode === 'invalid') throw new TypeError('runtime option combination rejected');
+    }
+}
+const failingUpdate = new FailingUpdateComponent();
+const failingSnapshot = failingUpdate.options;
+assert.throws(() => failingUpdate.updateOptions({ mode:'invalid', count:2 }), /runtime option combination rejected/);
+assert.equal(failingUpdate.options, failingSnapshot, 'failed optionsUpdated hooks must restore the previous Component options object.');
+assert.deepEqual(failingUpdate.options, { mode:'safe', count:1 }, 'failed optionsUpdated hooks must leave public options unchanged.');
+failingUpdate.updateOptions({ count:3 });
+assert.deepEqual(failingUpdate.options, { mode:'safe', count:3 }, 'OptionTransaction internal state must also roll back after a failed hook.');
+failingUpdate.destroy();
 assert.equal(optionEvents[0].previous.size, 'lg');
 assert.equal(optionEvents[0].next.size, 'sm');
 assert.equal(optionEvents[1].emitted.options, instance.options);
