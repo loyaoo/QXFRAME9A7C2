@@ -233,6 +233,33 @@ for(const [file,text] of source){
 }
 const duplicates=[...duplicateBlocks.entries()].filter(([,locs])=>locs.length>1).map(([block,locs])=>({locs,preview:block.slice(0,220)})).slice(0,80);
 
+const duplicateRegions=[];
+for (const duplicate of duplicates) {
+  const locs=duplicate.locs.slice().sort((a,b)=>a.file.localeCompare(b.file));
+  const signature=locs.map(x=>x.file).join('|');
+  let region=duplicateRegions.find(candidate=>{
+    if(candidate.signature!==signature) return false;
+    return locs.every(loc=>{
+      const range=candidate.ranges[loc.file];
+      return range && loc.line<=range.end+8 && loc.line>=range.start-8;
+    });
+  });
+  if(!region){
+    region={signature,files:locs.map(x=>x.file),ranges:{},windows:0,preview:duplicate.preview};
+    locs.forEach(loc=>{region.ranges[loc.file]={start:loc.line,end:loc.line+7};});
+    duplicateRegions.push(region);
+  } else {
+    locs.forEach(loc=>{
+      const range=region.ranges[loc.file];
+      range.start=Math.min(range.start,loc.line);
+      range.end=Math.max(range.end,loc.line+7);
+    });
+  }
+  region.windows+=1;
+}
+const allowedFamilyDuplicatePairs=new Set(['src/components/drawer.js|src/components/modal.js']);
+const unexpectedDuplicateRegions=duplicateRegions.filter(region=>!allowedFamilyDuplicatePairs.has(region.signature));
+
 const report={
   ok:false,
   files:srcFiles.length,
@@ -250,8 +277,10 @@ const report={
     missingBehaviorChecks:missingBehavior,
     addedBehaviorChecks:addedBehavior
   },
-  exactDuplicateBlocks:duplicates
+  exactDuplicateBlocks:duplicates,
+  duplicateRegions:duplicateRegions,
+  unexpectedDuplicateRegions:unexpectedDuplicateRegions
 };
-report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&urlSinks.every(x=>x.urlPolicy)&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&contractPrototypeSecurity.failures.length===0&&contractPrototypeSecurity.utilitySafe===true&&contractPrototypeSecurity.rejected===contractPrototypeSecurity.components*3&&urlSinks.every(x=>x.urlPolicy)&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&unexpectedDuplicateRegions.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
