@@ -165,9 +165,10 @@ function create(options) {
     if (!navigationActive) return false;
     var snapshot = editorSnapshot;
     navigationActive = false;
-    editorPointerPending = false;
-    suppressOpenEvent = null;
-    if (preserveEditorForReason(detail && detail.reason) && snapshot) {
+    var closeReason = String(detail && detail.reason || '');
+    if (closeReason !== 'editor-pointer') editorPointerPending = false;
+    if (closeReason !== 'editor-context') suppressOpenEvent = null;
+    if (preserveEditorForReason(closeReason) && snapshot) {
       projectDisplayValue(snapshot.value);
       restoreSelection(snapshot);
     } else {
