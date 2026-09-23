@@ -2,7 +2,6 @@ export { Component } from './component.js';
 export { componentHooks } from './componentHooks.js';
 export { InstanceRegistry } from './instanceRegistry.js';
 export { ComponentContracts } from './componentContracts.js';
-// Migration-stage core barrel. Expand only when a kernel section has a real ESM candidate and parity coverage.
 export { Events } from './events.js';
 export { Scheduler } from './scheduler.js';
 export { InteractionDetails } from './interactionDetails.js';
