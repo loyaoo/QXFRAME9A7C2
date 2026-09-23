@@ -7,6 +7,7 @@ import { InputNumber } from '../src/components/input-number.js';
 import { InputOTP } from '../src/components/input-otp.js';
 import { Rate } from '../src/components/rate.js';
 import { TagInput } from '../src/components/tag-input.js';
+import { Tags } from '../src/components/tags.js';
 import { Slider } from '../src/components/slider.js';
 import { Control } from '../src/components/control.js';
 
@@ -16,9 +17,10 @@ const numberSource = fs.readFileSync(path.join(root, 'src/components/input-numbe
 const otpSource = fs.readFileSync(path.join(root, 'src/components/input-otp.js'), 'utf8');
 const rateSource = fs.readFileSync(path.join(root, 'src/components/rate.js'), 'utf8');
 const tagInputSource = fs.readFileSync(path.join(root, 'src/components/tag-input.js'), 'utf8');
+const tagsSource = fs.readFileSync(path.join(root, 'src/components/tags.js'), 'utf8');
 const sliderSource = fs.readFileSync(path.join(root, 'src/components/slider.js'), 'utf8');
 const controlSource = fs.readFileSync(path.join(root, 'src/components/control.js'), 'utf8');
-for (const [label, source] of [['FieldComponent', fieldSource], ['InputNumber', numberSource], ['InputOTP', otpSource], ['Rate', rateSource], ['TagInput', tagInputSource], ['Slider', sliderSource], ['Control', controlSource]]) {
+for (const [label, source] of [['FieldComponent', fieldSource], ['InputNumber', numberSource], ['InputOTP', otpSource], ['Rate', rateSource], ['TagInput', tagInputSource], ['Tags', tagsSource], ['Slider', sliderSource], ['Control', controlSource]]) {
     for (const pattern of [/Registry\.(?:get|assert|define)/, /defineModule\s*\(/, /(?:globalThis|window)\.QXFRAME9A7C2/]) assert.ok(!pattern.test(source), `${label} contains legacy runtime dependency: ${pattern}`);
 }
 assert.match(fieldSource, /from ['"]\.\.\/core\/dom\.js['"]/, 'FieldComponent must import DOM focus authority.');
@@ -31,6 +33,8 @@ assert.ok(!/\bupdateOptions\s*\(/.test(numberSource.replace(/\.updateOptions\s*\
 assert.match(tagInputSource, /class\s+TagInput\s+extends\s+FieldComponent/, 'TagInput must extend FieldComponent.');
 assert.ok(!/\bdestroy\s*\(/.test(tagInputSource), 'TagInput must inherit Component.destroy.');
 assert.ok(!/\bupdateOptions\s*\(/.test(tagInputSource.replace(/\.updateOptions\s*\(/g, '')), 'TagInput must inherit Component.updateOptions.');
+assert.match(tagsSource, /class\s+Tags\s+extends\s+FieldComponent/, 'Tags must extend FieldComponent.');
+assert.ok(!/^\s*destroy\s*\(/m.test(tagsSource), 'Tags must inherit Component.destroy.');
 assert.match(rateSource, /class\s+Rate\s+extends\s+FieldComponent/, 'Rate must extend FieldComponent.');
 assert.ok(!/\bdestroy\s*\(/.test(rateSource), 'Rate must inherit Component.destroy.');
 assert.ok(!/\bupdateOptions\s*\(/.test(rateSource.replace(/\.updateOptions\s*\(/g, '')), 'Rate must inherit Component.updateOptions.');
