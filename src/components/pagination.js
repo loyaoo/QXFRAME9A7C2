@@ -23,7 +23,7 @@ const DOMFactory = Object.freeze({ createDefaultDOM, createElement, blueprint })
 var SIZES = Object.freeze({ xs: true, sm: true, md: true, lg: true, xl: true });
 var DEFAULT_PAGE_SIZES = Object.freeze([5, 10, 20, 50, 100, 200]);
 var LAYOUT_TOKENS = Object.freeze({ prev: true, page: true, next: true, count: true, limit: true, skip: true, refresh: true, text: true });
-function mergeOptions(base, extra) { return Object.assign({}, base || {}, extra || {}); }
+function mergeOptions(base, extra) { return Utils.mergeOwn(base, extra); }
     
 function validateSize(value) {
   var size = String(value === undefined || value === null ? 'md' : value).toLowerCase();
@@ -310,9 +310,9 @@ function create(options) {
       if (!limitSelect) throw new TypeError('[QXFRAME9A7C2] Pagination components.sizeChanger factory must return a controller or Element.');
       return;
     }
-    var selectOptions = opts.showSizeChanger && typeof opts.showSizeChanger === 'object' ? Object.assign({}, opts.showSizeChanger) : {};
+    var selectOptions = opts.showSizeChanger && typeof opts.showSizeChanger === 'object' ? Utils.mergeOwn(opts.showSizeChanger) : {};
     ['container','value','items','onChange','multiple','creatable'].forEach(function (key) { delete selectOptions[key]; });
-    limitSelect = Select.create(Object.assign({}, selectOptions, {
+    limitSelect = Select.create(Utils.mergeOwn(selectOptions, {
       container: mount,
       value: String(snapshot.pageSize),
       items: items,
