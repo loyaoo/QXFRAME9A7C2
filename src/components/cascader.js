@@ -1,9 +1,8 @@
-import { PopupFieldComponent, popupFieldHooks } from './popup-field.js';
+import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings } from './popup-field.js';
 import { Control } from './control.js';
 import { ItemCollection } from './item-collection.js';
 import { Item } from './item.js';
 import { Scroll } from './scroll.js';
-import { Trigger } from './trigger.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { Selection } from '../core/selection.js';
@@ -729,10 +728,17 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
         });
     
-        triggerSession = instance.setupPopupFieldRuntime({
-          reference:root, triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)), floating: panel, document: doc, portalContainer: portalContainer, trigger: opts.trigger, keyboardActivation: false, openDelay: opts.openDelay, closeDelay: opts.closeDelay, placement: opts.placement, transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', middleware: opts.middleware,
-          matchReferenceWidth: opts.matchReferenceWidth === true, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, focusScope: 'exit', tabExitTarget: controlFocusElement, closeOnEscape: true, destroyOnClose: opts.destroyOnClose !== false,
-          restoreFocus: false, disabled: opts.disabled === true,
+        var triggerSettings = createPopupFieldTriggerSettings(opts, {
+          reference: root,
+          triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)),
+          floating: panel,
+          document: doc,
+          portalContainer: portalContainer
+        }, {
+          focusScope: 'exit',
+          tabExitTarget: controlFocusElement,
+          restoreFocus: false,
+          disabled: opts.disabled === true,
           beforeOpen: function () { if (destroyed || opts.disabled === true) return false; },
           onOpen: function (detail) {
             var eventType = detail && detail.originalEvent && detail.originalEvent.type || '';
@@ -760,6 +766,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           },
           onClose: function (detail) { if (destroyed) return; searchState.set('', {silent:true,notify:false,source:'popup',reason:'close-search'}); if (keyboard && keyboard.virtualFocus) keyboard.virtualFocus.clear({ modality:keyboard.virtualFocus.getState().modality }); renderColumns(); emitOpen(false, detail); }
         });
+        triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
     
     
         var keyboardTarget = headlessMode ? triggerTarget : controlFocusElement();
