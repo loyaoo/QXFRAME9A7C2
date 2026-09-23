@@ -116,6 +116,20 @@ for(const [file,text] of source){
   urlSinks.push({file,count:hits.length,urlPolicy:/\bURLPolicy\b/.test(text)});
 }
 const rawPrimitives=[];
+const asyncPrimitiveCandidates=[];
+const asyncPrimitiveRules=[
+  ['setTimeout',/\b(?:globalThis\.|global\.)?setTimeout\s*\(/g],
+  ['setInterval',/\b(?:globalThis\.|global\.)?setInterval\s*\(/g],
+  ['requestAnimationFrame',/\b(?:globalThis\.|global\.)?requestAnimationFrame\s*\(/g],
+  ['AbortController',/\bnew\s+(?:globalThis\.|global\.)?AbortController\s*\(/g],
+  ['fetch',/\b(?:globalThis\.|global\.)?fetch\s*\(/g]
+];
+for(const [file,text] of source){
+  for(const [kind,re] of asyncPrimitiveRules){
+    const count=occurrences(text,re).length;
+    if(count) asyncPrimitiveCandidates.push({file,kind,count});
+  }
+}
 const primitiveRules=[
  ['ResizeObserver',/new\s+(?:global(?:This)?\.)?ResizeObserver\s*\(/g,['src/core/observerHub.js']],
  ['MutationObserver',/new\s+(?:global(?:This)?\.)?MutationObserver\s*\(/g,['src/core/observerHub.js']],
@@ -183,6 +197,7 @@ const report={
   files:srcFiles.length,
   security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,secretFilePaths,secretFindings},
   duplicateCapabilityCandidates:rawPrimitives,
+  asyncPrimitiveCandidates,
   staleMigrationComments:staleComments,
   staleActiveMetadata:staleMetadata,
   parity:{
