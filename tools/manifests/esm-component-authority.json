@@ -152,10 +152,22 @@
       "phase": "50→58"
     },
     {
+      "name": "Transfer",
+      "module": "transfer",
+      "source": "src/components/transfer.js",
+      "phase": "98→99"
+    },
+    {
       "name": "TreeSelect",
       "module": "tree-select",
       "source": "src/components/tree-select.js",
       "phase": "64→70"
+    },
+    {
+      "name": "Upload",
+      "module": "upload",
+      "source": "src/components/upload.js",
+      "phase": "98→99"
     },
     {
       "name": "WheelPicker",
