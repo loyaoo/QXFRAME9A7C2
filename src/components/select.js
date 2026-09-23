@@ -9,6 +9,7 @@ import { OptionTransaction } from '../core/optionTransaction.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SearchState } from '../core/searchState.js';
+import { StateController } from '../core/stateController.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { FieldHost } from '../core/fieldHost.js';
@@ -35,6 +36,7 @@ const blueprint = DOMTemplate.staticHTML`
 function createDefaultDOM(context){const instance=blueprint.instantiate(context.document);instance.refs.control=instance.root;return{root:instance.root,refs:instance.refs};}
 const SELECT_DEFAULTS=Object.freeze({items:[],multiple:false,searchable:false,clearable:false,disabled:false,readOnly:false,size:'md',placement:'bottom-start',trigger:'click',open:false,placeholder:'',hideSelectedOptions:false,clearSearchOnSelect:true,creatable:false,tokenSeparators:[],defaultActiveFirstOption:false,maxCount:0,maxVisibleTags:0,tagTextMaxLength:0,searchFields:null,tagInputMinWidth:32,popupRender:null,loadingIcon:null,itemStyles:null,tagClasses:null,tagStyles:null,matchReferenceWidth:true,renderControl:true,headless:false});
 const runtimeState=new WeakMap();
+const hasOwn=Utils.own;
 function validateSelectOptions(opts){
  if(opts.creatable===true&&opts.multiple!==true)throw new TypeError('[QXFRAME9A7C2] Select creatable requires multiple:true.');
  if(opts.creatable===true&&opts.searchable!==true)throw new TypeError('[QXFRAME9A7C2] Select creatable requires searchable:true so Control owns one editable token input path.');
@@ -107,6 +109,34 @@ var emitter = Object.freeze({ emit:function(type,payload){return instance.emit(t
         var draftValue = '';
         var draftActive = false;
         var draftDirty = false;
+        var valueState = null;
+        function normalizeApiValue(value) {
+          var values = asValues(value, opts.multiple === true);
+          return opts.multiple === true ? values : values[0];
+        }
+        function copyApiValue(value) { return Array.isArray(value) ? value.slice() : value; }
+        valueState = StateController.create({
+          value: normalizeApiValue(opts.value !== undefined ? opts.value : opts.defaultValue),
+          controlled: hasOwn(fieldInit.options, 'value'),
+          normalizeValue: normalizeApiValue,
+          equals: StateController.deepEquals,
+          copyValue: copyApiValue
+        });
+        scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
+        function apiValue() { return valueState ? copyApiValue(valueState.value) : normalizeApiValue(undefined); }
+        function writeApiValue(next, meta, request) {
+          if (!valueState) return false;
+          var cfg = Utils.assignOwn({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta || {});
+          var normalized = normalizeApiValue(next);
+          if (StateController.deepEquals(valueState.value, normalized)) return false;
+          if (request === true && valueState.controlled) return valueState.requestChange(normalized, cfg);
+          return valueState.setValue(normalized, cfg);
+        }
+        function restoreOptionListFromApiValue(reason) {
+          if (!optionList || !valueState || !valueState.controlled) return false;
+          optionList.setValue(apiValue(), { silent:true, source:'controlled', reason:reason || 'controlled-restore' });
+          return true;
+        }
                 var api = instance;
 var controlHost = FieldHost.resolvePickerControl({
           owner: 'Select', options: opts, document: doc, host: host, component: instance, defaultFactory: createDefaultDOM
@@ -142,9 +172,7 @@ var controlHost = FieldHost.resolvePickerControl({
         }
     
         function selectedValues() {
-          if (!optionList) return asValues(opts.value !== undefined ? opts.value : opts.defaultValue, opts.multiple === true);
-          var state = optionList.getState();
-          return opts.multiple === true ? state.values.slice() : (state.value === undefined || state.value === null ? [] : [String(state.value)]);
+          return asValues(apiValue(), opts.multiple === true);
         }
     
         function selectedItem(value) {
@@ -575,7 +603,6 @@ var controlHost = FieldHost.resolvePickerControl({
             if (destroyed) return;
             emitter.emit('deselect', payload);
             if (destroyed) return;
-            renderValues();
             return;
           }
           if (Utils.isFunction(opts.onSelect)) opts.onSelect(detail.value, payload);
@@ -592,23 +619,26 @@ var controlHost = FieldHost.resolvePickerControl({
             searchState.clear({ silent:true, notify:false, source:'selection', reason:'clear-search-on-select' });
             optionList.setSearch('');
           }
-          renderValues();
         }
     
         function handleOptionChange(value, detail) {
-          opts.value = value;
-        if (opts.multiple !== true && opts.searchable === true) {
+          var cfg = detail || {};
+          var proposed = normalizeApiValue(value);
+          var changed = writeApiValue(proposed, { silent:true, source:cfg.source || 'selection', reason:cfg.reason || 'change', originalEvent:cfg.originalEvent || null }, true);
+          restoreOptionListFromApiValue('controlled-option-change');
+          if (opts.multiple !== true && opts.searchable === true) {
             draftValue = '';
             draftDirty = false;
             searchState.clear({ silent:true, notify:false, source:'selection', reason:'clear-search-on-select' });
             optionList.setSearch('');
           }
-          renderValues({ silent: !!(detail && detail.silent), source: detail && detail.source || 'selection', reason: detail && detail.reason || 'change' });
-          var payload = Utils.mergeOwn( detail || {}, { value: value, select: instance });
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(value, payload);
+          renderValues({ silent: !!cfg.silent, source: cfg.source || 'selection', reason: cfg.reason || 'change' });
+          if (!changed) return;
+          var payload = Utils.mergeOwn(cfg, { value: copyApiValue(proposed), controlled:!!valueState.controlled, select: instance });
+          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(proposed), payload);
           if (destroyed) return;
-          if (!(detail && detail.silent)) {
-            if (Utils.isFunction(opts.onChange)) opts.onChange(value, payload);
+          if (!cfg.silent) {
+            if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(proposed), payload);
             if (destroyed) return;
             emitter.emit('change', payload);
           }
@@ -623,7 +653,7 @@ var controlHost = FieldHost.resolvePickerControl({
           container: optionHost,
           scrollAdapter: function (config) { return Scroll.attachViewport(config); },
           items: Array.isArray(opts.items) ? opts.items.slice() : [],
-          value: opts.value !== undefined ? opts.value : opts.defaultValue,
+          value: apiValue(),
           multiple: opts.multiple === true,
           maxCount: opts.maxCount,
           searchable: false,
@@ -827,13 +857,21 @@ var controlHost = FieldHost.resolvePickerControl({
         }
         function setValue(value, meta) {
           if (destroyed) return instance;
-          var previousValue = opts.multiple === true ? optionList.getState().values.slice() : optionList.getState().value;
-          var nextValue = opts.multiple === true ? asValues(value, true) : asValues(value, false)[0];
-          optionList.setValue(nextValue, meta || { reason: 'select-set-value' });
-          var state = optionList.getState();
-          opts.value = opts.multiple === true ? state.values.slice() : state.value;
-          renderValues();
-          if (meta && meta.silent && Utils.isFunction(opts.onValueChange)) { var changed = opts.multiple === true ? !ValueEquality.array(previousValue, opts.value) : !Object.is(previousValue, opts.value); if (changed) opts.onValueChange(opts.value, { value:opts.value, previousValue:previousValue, source:meta.source || 'instance', reason:meta.reason || 'select-set-value', silent:true, select:instance }); }
+          var cfg = meta || {};
+          var previousValue = apiValue();
+          var nextValue = normalizeApiValue(value);
+          var changed = writeApiValue(nextValue, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', originalEvent:cfg.originalEvent || null }, false);
+          var canonical = apiValue();
+          optionList.setValue(canonical, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
+          renderValues({ silent:!!cfg.silent, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
+          if (changed) {
+            var payload = { value:copyApiValue(canonical), previousValue:copyApiValue(previousValue), source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', silent:!!cfg.silent, controlled:!!valueState.controlled, select:instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(canonical), payload);
+            if (!cfg.silent) {
+              if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(canonical), payload);
+              if (!destroyed) emitter.emit('change', payload);
+            }
+          }
           return instance;
         }
         function clear(meta) {
@@ -910,6 +948,12 @@ var controlHost = FieldHost.resolvePickerControl({
             if (nextPortal !== portalContainer) throw new Error('[QXFRAME9A7C2] Select portalContainer is immutable; destroy and recreate to change it.');
           }
           Utils.copyOwn(opts, next);
+          if (hasOwn(next, 'value')) {
+            valueState.setControlled(true);
+            valueState.syncExternal(opts.value, { silent:true, source:'options', reason:'options-value', preserveDraft:true });
+          } else if (hasOwn(next, 'multiple')) {
+            valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
+          }
           var listOptions = {
             multiple: opts.multiple === true,
             maxCount: opts.maxCount,
@@ -939,13 +983,12 @@ var controlHost = FieldHost.resolvePickerControl({
             error: opts.error,
             errorText: opts.errorText
           };
-          if (Object.prototype.hasOwnProperty.call(next, 'items')) listOptions.items = Array.isArray(opts.items) ? opts.items.slice() : [];
-          if (Object.prototype.hasOwnProperty.call(next, 'value')) listOptions.value = opts.value;
+          if (hasOwn(next, 'items')) listOptions.items = Array.isArray(opts.items) ? opts.items.slice() : [];
+          if (hasOwn(next, 'value') || hasOwn(next, 'multiple')) listOptions.value = apiValue();
           optionList.updateOptions(listOptions);
-          if (Object.prototype.hasOwnProperty.call(next, 'popupRender')) syncPopupProjection();
-          var canonicalState = optionList.getState();
-          opts.value = opts.multiple === true ? canonicalState.values.slice() : canonicalState.value;
-          if (opts.multiple !== true && Object.prototype.hasOwnProperty.call(next, 'value')) {
+          if (hasOwn(next, 'popupRender')) syncPopupProjection();
+          restoreOptionListFromApiValue('options-controlled');
+          if (opts.multiple !== true && hasOwn(next, 'value')) {
             draftValue = ''; draftDirty = false; searchState.clear({ silent:true, notify:false, source:'options', reason:'value-update' }); optionList.setSearch('');
           }
           if (opts.disabled === true && triggerSession.getState().open) close('disabled');
@@ -958,10 +1001,13 @@ var controlHost = FieldHost.resolvePickerControl({
     
         function getState() {
           var state = optionList.getState();
+          var current = apiValue();
+          var values = asValues(current, opts.multiple === true);
           return Object.freeze({
             open: !!triggerSession.getState().open,
-            value: opts.multiple === true ? state.values.slice() : state.value,
-            values: state.values.slice(),
+            value: opts.multiple === true ? values.slice() : values[0],
+            values: values.slice(),
+            controlled: !!(valueState && valueState.controlled),
             searchValue: searchState.query,
             draftValue: opts.multiple === true ? searchState.query : draftValue,
             draftActive: opts.multiple === true ? !!triggerSession.getState().open : draftActive,
