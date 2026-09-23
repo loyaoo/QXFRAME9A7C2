@@ -106,6 +106,16 @@ export class InputOTP extends FieldComponent {
         record.control.setSegmentFocusIndex(index);
         return index;
     }
+    #syncControlledProjection() {
+        if (!this.valueControlled) return false;
+        const record = state.get(this);
+        if (!record.control) return false;
+        const value = this.#sanitize(this.options.value);
+        this.setFieldValue(value, { silent: true, force: true });
+        record.control.updateOptions({ value });
+        this.#syncFocusPolicy();
+        return true;
+    }
 
     [componentHooks.render]() {
         const record = state.get(this);
@@ -124,10 +134,12 @@ export class InputOTP extends FieldComponent {
             size: this.options.size, status: this.options.status, variant: this.options.variant, focusOutline: this.options.focusOutline, name: this.options.name,
             onSegmentInput: (values, detail) => {
                 control.setSegmentFocusIndex(this.#canonicalFocusIndex(values));
+                this.#syncControlledProjection();
                 if (typeof this.options.onInput === 'function') this.options.onInput(values.join(''), { ...detail, instance: this });
             },
             onChange: (value, detail) => {
-                this.setFieldValue(value, { silent: true, force: true });
+                if (this.valueControlled) this.#syncControlledProjection();
+                else this.setFieldValue(value, { silent: true, force: true });
                 const payload = { ...detail, instance: this };
                 if (typeof this.options.onChange === 'function') this.options.onChange(value, payload);
                 if (detail && detail.complete === true) {
