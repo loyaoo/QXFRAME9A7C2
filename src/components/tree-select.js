@@ -1,8 +1,7 @@
-import { PopupFieldComponent, popupFieldHooks } from './popup-field.js';
+import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings } from './popup-field.js';
 import { Control } from './control.js';
 import { Tree } from './tree.js';
 import { Scroll } from './scroll.js';
-import { Trigger } from './trigger.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
@@ -457,28 +456,15 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           }
         });
     
-        var triggerSettings = {
-          trigger: opts.trigger, keyboardActivation: false,
-          openDelay: opts.openDelay, closeDelay: opts.closeDelay,
+        var triggerSettings = createPopupFieldTriggerSettings(opts, {
           reference: root,
           triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)),
           floating: panel,
           document: doc,
-          portalContainer: portalContainer,
-          placement: opts.placement,
-          transition: Trigger.motion.popupPlacement,
-          strategy: opts.strategy || 'absolute',
-          middleware: opts.middleware,
-          flipOnOverflow: opts.flipOnOverflow !== false,
-          matchReferenceWidth: opts.matchReferenceWidth === true,
-          autoUpdate: opts.autoUpdate !== false,
-          closeOnOutsidePress: true,
-          closeOnFocusOutside: true,
-          closeOnTabExit: true,
+          portalContainer: portalContainer
+        }, {
           focusScope: 'exit',
           tabExitTarget: function () { return fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root); },
-          closeOnEscape: true,
-          destroyOnClose: opts.destroyOnClose !== false,
           beforeOpen: function () { if (destroyed || opts.disabled === true) return false; },
           onOpen: function (detail) {
             var eventType = detail && detail.originalEvent && detail.originalEvent.type || '';
@@ -492,7 +478,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             emitOpen(true, detail);
           },
           onClose: function (detail) { searchState.clear({ silent:true, notify:false, source:'popup', reason:'close-search' }); if (tree) { tree.setSearch(''); var domain = tree.getVirtualFocusDomain && tree.getVirtualFocusDomain(); if (domain) domain.clear({ modality:keyboard && keyboard.virtualFocus ? keyboard.virtualFocus.getState().modality : 'pointer' }); } syncView(); emitOpen(false, detail); }
-        };
+        });
         triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
     
         function open(reason, event) { return destroyed || opts.disabled === true ? false : instance.open(reason || 'api', event || null); }
