@@ -58,4 +58,9 @@ assert.match(tagsSource,/standaloneTagNavigation\s*=\s*TagNavigation\.create\s*\
 assert.match(tagsSource,/standaloneTagNavigation\.handleKeydown\(event\)/, 'Standalone Tags key handling must flow through TagNavigation.');
 assert.ok(!/var\s+preferred\s*=\s*moveVirtualTag\(currentKey,\s*key\s*===\s*['"]Delete['"]\s*\?\s*1\s*:\s*-1\)/.test(tagsSource), 'Tags must not re-own TagNavigation delete reconciliation.');
 
-console.log(JSON.stringify({ok:true,timeUnit:true,wheelMetrics:true,tagNavigation:true,treeQuery:true,queryConsumers:queryConsumers.length}));
+const cascaderSource=read('src/components/cascader.js');
+assert.match(cascaderSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'Cascader must import ScrollVisibility.');
+assert.match(cascaderSource,/ScrollVisibility\.ensureVisible\(columnsHost,\s*record\.host,\s*\{\s*axis:['"]x['"],\s*align:['"]nearest['"]\s*\}\)/, 'Cascader column reveal must use ScrollVisibility.');
+assert.ok(!/column\.offsetLeft|viewport\.scrollLeft\s*=/.test(cascaderSource), 'Cascader must not re-own horizontal scroll visibility geometry.');
+
+console.log(JSON.stringify({ok:true,timeUnit:true,wheelMetrics:true,tagNavigation:true,scrollVisibility:true,treeQuery:true,queryConsumers:queryConsumers.length}));
