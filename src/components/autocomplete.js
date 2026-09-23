@@ -293,7 +293,10 @@ var selectionRangeScheduler = null;
           optionList.setItems([]);
           optionList.setSearch('');
           optionList.resetActive({ source: 'autocomplete', reason: 'suggestions-loading' });
-          return createSuggestionTask().run({ info: info, meta: meta, originalEvent: originalEvent || null }, { source: meta.reason }).then(function (result) {
+          var task = createSuggestionTask();
+          var promise = task.run({ info: info, meta: meta, originalEvent: originalEvent || null }, { source: meta.reason });
+          var requestId = task.requestId;
+          return promise.then(function (result) {
             if (!result || !result.isCurrent || !result.isCurrent() || destroyed) return [];
             if (result.error) { setLoading(false); notifyLoadError(result.error, info, meta); return []; }
             try {
@@ -308,7 +311,7 @@ var selectionRangeScheduler = null;
               return [];
             }
           }, function (error) {
-            if (destroyed) return [];
+            if (destroyed || !suggestionTask || suggestionTask.requestId !== requestId || suggestionTask.state !== 'error') return [];
             if (error && error.name === 'AbortError') return [];
             setLoading(false); notifyLoadError(error, info, meta); return [];
           });
@@ -326,7 +329,10 @@ var selectionRangeScheduler = null;
         }
     
         function setItems(items) {
-          if (destroyed) return instance; validateItems(items, opts); opts.items = Array.isArray(items) ? items.slice() : []; currentItems = opts.items.slice();
+          if (destroyed) return instance; validateItems(items, opts);
+          if (suggestionTask && suggestionTask.pending) suggestionTask.cancel('autocomplete-items-replaced');
+          setLoading(false);
+          opts.items = Array.isArray(items) ? items.slice() : []; currentItems = opts.items.slice();
           var info = deriveQuery('set-items'); setLoadedItems(currentItems, info, { reason: 'set-items' }); return instance;
         }
     
