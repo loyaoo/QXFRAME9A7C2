@@ -65,13 +65,6 @@
       "namespace": "bootstrap-behavior"
     },
     {
-      "name": "Table",
-      "module": "table",
-      "source": "src/components/table.js",
-      "phase": "88→92",
-      "namespace": "components"
-    },
-    {
       "name": "Tags",
       "module": "tags",
       "source": "src/components/tags.js",
