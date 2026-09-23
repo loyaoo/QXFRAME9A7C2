@@ -12,7 +12,8 @@ function createOptionTransaction(initial, normalizers, validate) {
   var value = resolve({}, initial || {});
   return Object.freeze({
     get:function(){return value;},
-    update:function(next){var candidate=resolve(value,next||{});value=candidate;return value;}
+    update:function(next){var candidate=resolve(value,next||{});value=candidate;return value;},
+    restore:function(previous){value=previous;return value;}
   });
 }
 function rejectImmutable(next, names, owner) {
