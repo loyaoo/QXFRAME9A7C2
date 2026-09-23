@@ -23,6 +23,7 @@ export class FieldComponent extends Component {
     }
 
     get value() { return cloneValue(fieldState.get(this).value); }
+    get valueControlled() { return own(this.options, 'value'); }
     get disabled() { return this.options.disabled === true; }
     get readOnly() { return this.options.readOnly === true; }
     get busy() { return this.options.busy === true || this.options.loading === true; }
