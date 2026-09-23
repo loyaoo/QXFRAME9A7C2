@@ -321,7 +321,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       addFiles: addFiles, upload: upload, retry: upload, abort: abort, remove: remove, move: move,
       setValue: setValue, getValue: snapshots, find: function (target) { var record = findRecord(target); return record ? snapshotRecord(record) : null; },
       updateOptions: updateOptions, on: emitter.on, once: emitter.once, destroy: destroy,
-      getState: function () { return Object.freeze({ value: snapshots(), uploading: Object.keys(tasks).length, disabled: opts.disabled === true, destroyed: destroyed }); }
+      getState: function () { return Object.freeze({ value: snapshots(), uploading: Object.keys(tasks).length, disabled: opts.disabled === true, mutationGeneration: mutationGeneration, destroyed: destroyed }); }
     };
     return api;
   }
