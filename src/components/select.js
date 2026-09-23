@@ -622,11 +622,11 @@ var controlHost = FieldHost.resolvePickerControl({
           }
           renderValues({ silent: !!cfg.silent, source: cfg.source || 'selection', reason: cfg.reason || 'change' });
           if (!changed) return;
-          var payload = Utils.mergeOwn(cfg, { value: proposed), controlled:!!valueState.controlled, select: instance });
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(proposed), payload);
+          var payload = Utils.mergeOwn(cfg, { value: valueState.copy(proposed), controlled:!!valueState.controlled, select: instance });
+          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(proposed), payload);
           if (destroyed) return;
           if (!cfg.silent) {
-            if (Utils.isFunction(opts.onChange)) opts.onChange(proposed), payload);
+            if (Utils.isFunction(opts.onChange)) opts.onChange(valueState.copy(proposed), payload);
             if (destroyed) return;
             emitter.emit('change', payload);
           }
@@ -853,10 +853,10 @@ var controlHost = FieldHost.resolvePickerControl({
           optionList.setValue(canonical, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
           renderValues({ silent:!!cfg.silent, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
           if (changed) {
-            var payload = { value:canonical), previousValue:previousValue), source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', silent:!!cfg.silent, controlled:!!valueState.controlled, select:instance };
-            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(canonical), payload);
+            var payload = { value:valueState.copy(canonical), previousValue:valueState.copy(previousValue), source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', silent:!!cfg.silent, controlled:!!valueState.controlled, select:instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(canonical), payload);
             if (!cfg.silent) {
-              if (Utils.isFunction(opts.onChange)) opts.onChange(canonical), payload);
+              if (Utils.isFunction(opts.onChange)) opts.onChange(valueState.copy(canonical), payload);
               if (!destroyed) emitter.emit('change', payload);
             }
           }
