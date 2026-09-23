@@ -909,7 +909,7 @@ var controlHost = FieldHost.resolvePickerControl({
             var nextPortal = typeof next.portalContainer === 'string' ? DOM.resolveElement(next.portalContainer, doc) : next.portalContainer;
             if (nextPortal !== portalContainer) throw new Error('[QXFRAME9A7C2] Select portalContainer is immutable; destroy and recreate to change it.');
           }
-          Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+          Utils.copyOwn(opts, next);
           var listOptions = {
             multiple: opts.multiple === true,
             maxCount: opts.maxCount,

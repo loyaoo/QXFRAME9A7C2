@@ -477,7 +477,7 @@ function initializeDropdown(instance, options) {
     if (own(next, 'items')) validateItems(next.items);
     if (own(next, 'multiple') && next.multiple !== opts.multiple) throw new Error('[QXFRAME9A7C2] Dropdown multiple is immutable; destroy and recreate to change selection shape.');
     var rebuild = ['items','searchable','selectable','readOnly','size','selectionAppearance'].some(function (name) { return own(next, name); });
-    Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+    Utils.copyOwn(opts, next);
     if (own(next, 'value')) { selection.set(next.value, { silent: true, source: 'options', reason: 'options-value' }); var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null; }
     if (own(next, 'showArrow')) syncFloatingView();
     triggerSession.updateOptions({ trigger: opts.trigger, placement: opts.placement, arrow: opts.showArrow === true, arrowElement: arrow, arrowPadding: opts.arrowPadding, offset: opts.offset, strategy: opts.strategy || 'absolute', middleware: opts.middleware, flipOnOverflow: opts.flipOnOverflow !== false, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnFocusOutside: true, closeOnTabExit: true, tabExitTarget: reference, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false, openDelay: opts.openDelay, closeDelay: opts.closeDelay, disabled: opts.disabled === true });

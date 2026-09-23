@@ -245,7 +245,7 @@ function create(options) {
     var next = nextOptions || {};
     var previousConfiguredPlaceholder = opts.placeholder == null ? '' : String(opts.placeholder);
     OptionTransaction.rejectImmutable(next, ['target','container','formField','reference','triggerTarget','valueTarget','draftValueTarget','inputTarget','formTarget','renderControl','headless'], 'PickerField field binding');
-    Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+    Utils.copyOwn(opts, next);
     SIZES.forEach(function (size) { panel.classList.remove('is-' + size); });
     panel.classList.add('is-' + sizeName(opts.size));
     if (Object.prototype.hasOwnProperty.call(next, 'placeholder') && displayPlaceholder === previousConfiguredPlaceholder) displayPlaceholder = opts.placeholder == null ? '' : String(opts.placeholder);

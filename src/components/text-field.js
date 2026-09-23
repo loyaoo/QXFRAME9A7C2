@@ -61,7 +61,7 @@ function enhance(source, options) {
             if (hasOwn(patch, 'count')) countEnabled = patch.count === true;
             if (hasOwn(patch, 'maxLength')) { const max = finiteLength(patch.maxLength); if (max === null) field.removeAttribute('maxlength'); else field.maxLength = max; }
             if (hasOwn(patch, 'minLength')) { const min = finiteLength(patch.minLength); if (min === null) field.removeAttribute('minlength'); else field.minLength = min; }
-            Object.keys(patch).forEach(key => { opts[key] = patch[key]; });
+            Utils.copyOwn(opts, patch);
             control.updateOptions(Utils.mergeOwn( patch, { clearable, count: countEnabled, minLength: field.hasAttribute('minlength') ? field.minLength : null, maxLength: field.hasAttribute('maxlength') ? field.maxLength : null }));
             return api;
         },

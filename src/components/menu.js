@@ -354,7 +354,7 @@ function create(options) {
   function applyRootUserStyle() {
     root.style.setProperty('--qxframe9a7c2-menu-inline-indent', String(opts.inlineIndent) + 'px');
     root.style.setProperty('--qxframe9a7c2-menu-collapsed-width', String(opts.collapsedWidth) + 'px');
-    if (opts.style && typeof opts.style === 'object') Object.keys(opts.style).forEach(function (name) { root.style[name] = opts.style[name]; });
+    if (opts.style && typeof opts.style === 'object') Object.keys(opts.style).forEach(function (name) { if (Utils.safeOwnKey(name)) root.style[name] = opts.style[name]; });
   }
   function syncClasses() {
     if (!root) return;
@@ -452,7 +452,7 @@ function create(options) {
     button.tabIndex = -1;
     button.id = 'qxframe9a7c2-menu-' + menuInstanceId + '-item-' + key.replace(/[^a-zA-Z0-9_-]/g, '-');
     button.style.setProperty('--qxframe9a7c2-menu-depth', String(depth));
-    if (item.style && typeof item.style === 'object') Object.keys(item.style).forEach(function (name) { button.style[name] = item.style[name]; });
+    if (item.style && typeof item.style === 'object') Object.keys(item.style).forEach(function (name) { if (Utils.safeOwnKey(name)) button.style[name] = item.style[name]; });
     Item.applySelectionAppearance(button, opts.selectionAppearance);
     var selectionIndicator = Item.createSelectionIndicator({ document: doc, appearance: opts.selectionAppearance, checked: isSelected(key), disabled: isDisabledItem(item) });
     if (selectionIndicatorByButton && selectionIndicator) selectionIndicatorByButton.set(button, selectionIndicator);
@@ -1286,7 +1286,7 @@ function create(options) {
     var nextSelected = selectedUpdate ? (own(next, 'selectedKeys') ? normalizeKeys(next.selectedKeys) : normalizeKeys(next.selectedKey)) : selectedArray();
     var openUpdate = own(next, 'openKeys');
     var explicitNextOpen = openUpdate ? new Set(normalizeKeys(next.openKeys)) : null;
-    Object.keys(next).forEach(function (name) { opts[name] = next[name]; });
+    Utils.copyOwn(opts, next);
     switchInlineOpenProjection(modeBefore, collapsedBefore);
     var popupAfter = popupMode();
     var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','theme','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;

@@ -865,7 +865,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var proposedStrategy = own(next, 'checkedStrategy') ? next.checkedStrategy : opts.checkedStrategy; if (['child','parent','all'].indexOf(String(proposedStrategy || 'child')) < 0) throw new TypeError('[QXFRAME9A7C2] Cascader checkedStrategy must be "child", "parent", or "all".');
           var proposedVisibleTags = own(next, 'maxVisibleTags') ? next.maxVisibleTags : opts.maxVisibleTags; if (proposedVisibleTags !== 'responsive' && proposedVisibleTags !== undefined && proposedVisibleTags !== null && (!Number.isFinite(Number(proposedVisibleTags)) || Number(proposedVisibleTags) < 0)) throw new TypeError('[QXFRAME9A7C2] Cascader maxVisibleTags must be a non-negative number or \"responsive\".');
           var proposedPopupRender = own(next, 'popupRender') ? next.popupRender : opts.popupRender; if (proposedPopupRender !== null && proposedPopupRender !== undefined && !Utils.isFunction(proposedPopupRender)) throw new TypeError('[QXFRAME9A7C2] Cascader popupRender must be a function or null.');
-          Object.keys(next).forEach(function (name) { if (name !== 'items') opts[name] = next[name]; });
+          Object.keys(next).forEach(function (name) { if (name !== 'items' && Utils.safeOwnKey(name)) opts[name] = next[name]; });
           if (own(next, 'loadChildren') && !own(next, 'items')) { loadTasks.invalidate('cascader-loader'); loadingKeys.clear(); }
           if (own(next, 'items')) replaceItems(next.items, { loadedKeys: own(next, 'loadedKeys') ? next.loadedKeys : [] });
           else if (own(next, 'loadedKeys')) loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String));

@@ -533,7 +533,7 @@ function create(options) {
     var interactionChanged = referenceChanged || ['trigger','openDelay','closeDelay','disabled','interactiveBorder','interactiveDebounce','keyboardActivation'].some(function (key) { return own(next, key); });
     if (referenceChanged) { reference = nextReference; if (!triggerTargetExplicit) triggerTarget = nextReference; }
     if (own(next, 'offset')) offsetExplicit = next.offset !== undefined && next.offset !== null;
-    Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+    Utils.copyOwn(opts, next);
     if (!offsetExplicit && (own(next, 'arrow') || own(next, 'offset'))) opts.offset = opts.arrow === true ? 12 : 8;
     triggers = normalizeTriggers(opts.trigger);
     syncRuntimeSettings(next);

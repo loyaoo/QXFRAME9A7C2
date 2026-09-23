@@ -225,7 +225,7 @@ function createProjection(options) {
     var next = nextOptions || {};
     ['reference','valueTarget','inputTarget','formField','formTarget','document'].forEach(function (name) { if (hasOwn(next, name)) throw new Error('[QXFRAME9A7C2] Control projection structural option "' + name + '" is immutable; destroy and recreate.'); });
     if (hasOwn(next, 'mode')) next.mode = modeName(next.mode);
-    Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+    Utils.copyOwn(opts, next);
     if (hasOwn(next, 'displayValue')) displayValue = stringValue(next.displayValue);
     if (hasOwn(next, 'inputValue')) inputValue = stringValue(next.inputValue);
     if (hasOwn(next, 'tags')) tags = Array.isArray(next.tags) ? next.tags.slice() : [];
@@ -846,7 +846,7 @@ function create(source, overrides) {
     if (hasOwn(next, 'showArrow') && !hasOwn(next, 'toggleVisible')) next.toggleVisible = next.showArrow === true;
     var nextMode = hasOwn(next, 'mode') ? modeName(next.mode) : mode;
     var modeChanged = nextMode !== mode;
-    Object.keys(next).forEach(function (name) { if (name !== 'committedValue') opts[name] = next[name]; });
+    Object.keys(next).forEach(function (name) { if (name !== 'committedValue' && Utils.safeOwnKey(name)) opts[name] = next[name]; });
     if (hasOwn(next, 'inputValue')) inputValue = stringValue(next.inputValue);
     if (hasOwn(next, 'displayValue')) displayValue = next.displayValue;
     if (hasOwn(next, 'hasValue')) hasValue = next.hasValue === true;

@@ -35,11 +35,11 @@ function styleObject(value, label) {
 }
 function applyStyle(element, style) {
     if (!element || !style) return;
-    Object.keys(style).forEach(key => { element.style[key] = style[key] == null ? '' : String(style[key]); });
+    Object.keys(style).forEach(key => { if (Utils.safeOwnKey(key)) element.style[key] = style[key] == null ? '' : String(style[key]); });
 }
 function clearStyle(element, style) {
     if (!element || !style) return;
-    Object.keys(style).forEach(key => { element.style[key] = ''; });
+    Object.keys(style).forEach(key => { if (Utils.safeOwnKey(key)) element.style[key] = ''; });
 }
 function normalizeBlur(value) {
     if (value === undefined || value === null || value === false || value === 0 || value === '') return '';

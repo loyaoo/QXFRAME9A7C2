@@ -1,4 +1,5 @@
 
+import { Utils } from './utils.js';
 function equals(left, right, comparator) {
   return typeof comparator === 'function' ? comparator(left, right) === true : Object.is(left, right);
 }
@@ -52,7 +53,7 @@ function copyDeep(value, seen) {
   if (tag !== '[object Object]') return value;
   var output = Object.getPrototypeOf(value) === null ? Object.create(null) : {};
   if (memo) memo.set(value, output);
-  Object.keys(value).forEach(function (key) { output[key] = copyDeep(value[key], memo); });
+  Object.keys(value).forEach(function (key) { if (Utils.safeOwnKey(key)) output[key] = copyDeep(value[key], memo); });
   return output;
 }
 

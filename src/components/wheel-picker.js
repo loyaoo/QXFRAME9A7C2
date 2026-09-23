@@ -242,7 +242,7 @@ function applyOptions(nextOptions) {
   if (own(next, 'value')) next.value = assertValue(next.value || [], 'value');
   if (own(next, 'defaultValue')) next.defaultValue = assertValue(next.defaultValue || [], 'defaultValue');
   if (own(next, 'loop') && typeof next.loop !== 'boolean') throw new TypeError('[QXFRAME9A7C2] WheelPicker loop must be boolean.');
-  Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+  Utils.copyOwn(opts, next);
   field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, matchReferenceWidth: opts.matchReferenceWidth === true, focusScope: opts.needConfirm === true ? 'contain' : 'exit', destroyOnClose: opts.destroyOnClose !== false });
   panel.updateOptions({ columns: opts.columns, visibleItemCount: opts.visibleItemCount, itemHeight: opts.itemHeight, scrollbarVisibility: opts.scrollbarVisibility, wheelPropagation: opts.wheelPropagation, snapBehavior: opts.snapBehavior, snapDuration: opts.snapDuration, scrollIdleDelay: opts.scrollIdleDelay, loop: opts.loop === true, size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true, value: own(next, 'value') ? next.value : draft.draftValue });
   if (own(next, 'value')) {

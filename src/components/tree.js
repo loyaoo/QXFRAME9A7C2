@@ -886,7 +886,7 @@ function setupTreeRuntime(instance) {
           var candidate = mergeOptions(opts, next);
           if (hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getLabel') || hasOwn(next, 'getValue')) validateItems(candidate.items, candidate);
           var structuralChanged = hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getParentKey');
-          Object.keys(next).forEach(function (name) { opts[name] = next[name]; });
+          Utils.copyOwn(opts, next);
           if (structuralChanged) {
             loadTasks.invalidate('tree-structure'); loadedChildren.clear(); loadingKeys.clear();
             if (!hasOwn(next, 'loadedKeys')) loadedKeys.clear();

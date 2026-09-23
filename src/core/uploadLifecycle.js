@@ -46,7 +46,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       file: file,
       skipAutoUpload: source.skipAutoUpload === true
     };
-    Object.keys(patch || {}).forEach(function (key) { record[key] = patch[key]; });
+    Utils.copyOwn(record, patch || {});
     record.status = statusName(record.status);
     record.percent = clamp(record.percent, 0, 100);
     return record;
@@ -123,7 +123,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
     }
     function patchRecord(record, patch, reason, meta) {
       if (!record) return null;
-      Object.keys(patch || {}).forEach(function (key) { record[key] = patch[key]; });
+      Utils.copyOwn(record, patch || {});
       record.status = statusName(record.status);
       record.percent = clamp(record.percent, 0, 100);
       emit(reason || 'update', record, meta);
@@ -147,7 +147,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
         var activeTask = tasks[nextRecord.uid];
         if (!current || !activeTask) return nextRecord;
         var live = { status: current.status, percent: current.percent, response: current.response, error: current.error, file: current.file };
-        Object.keys(nextRecord).forEach(function (key) { current[key] = nextRecord[key]; });
+        Utils.copyOwn(current, nextRecord);
         current.status = 'uploading';
         current.percent = live.percent;
         current.response = live.response;

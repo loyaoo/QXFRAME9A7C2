@@ -1,4 +1,5 @@
 
+import { Utils } from '../utils/utils.js';
 import { Scheduler } from './scheduler.js';
 import { Config } from './config.js';
 import { MotionPresets } from './motionPresets.js';
@@ -76,7 +77,7 @@ function cloneStyle(value) {
   if (!value) return null;
   if (typeof value !== 'object' || Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] MotionCore patch.style must be an object.');
   var output = {};
-  Object.keys(value).forEach(function (key) { output[key] = value[key]; });
+  Utils.copyOwn(output, value);
   return output;
 }
 function normalizePatch(value) {
@@ -438,7 +439,7 @@ function create(options) {
       reason: currentContext && currentContext.reason || 'api',
       originalEvent: currentContext && currentContext.originalEvent || null
     };
-    if (extra) Object.keys(extra).forEach(function (key) { base[key] = extra[key]; });
+    if (extra) Utils.copyOwn(base, extra);
     return Object.freeze(base);
   }
   function emit(extra) {

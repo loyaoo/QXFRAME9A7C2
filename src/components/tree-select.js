@@ -679,7 +679,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (candidate.maxVisibleTags !== 'responsive' && candidate.maxVisibleTags !== undefined && candidate.maxVisibleTags !== null && (!Number.isFinite(Number(candidate.maxVisibleTags)) || Number(candidate.maxVisibleTags) < 0)) throw new TypeError('[QXFRAME9A7C2] TreeSelect maxVisibleTags must be a non-negative number or \"responsive\".');
           if (candidate.popupRender !== null && candidate.popupRender !== undefined && !Utils.isFunction(candidate.popupRender)) throw new TypeError('[QXFRAME9A7C2] TreeSelect popupRender must be a function or null.');
           if (hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getLabel') || hasOwn(next, 'getValue')) validateItems(candidate.items, candidate);
-          Object.keys(next).forEach(function (name) { opts[name] = next[name]; });
+          Utils.copyOwn(opts, next);
           var checkMode = hierarchicalCheckMode();
           var treeOptions = {
             multiple: false, selectable: !checkMode,

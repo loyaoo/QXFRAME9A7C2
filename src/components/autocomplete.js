@@ -506,7 +506,7 @@ var selectionRangeScheduler = null;
           }
           var candidate = Utils.mergeOwn( opts, next);
           if (hasOwn(next,'items') || hasOwn(next,'getKey') || hasOwn(next,'getLabel') || hasOwn(next,'getValue')) validateItems(candidate.items, candidate);
-          Object.keys(next).forEach(function (name) { opts[name] = next[name]; });
+          Utils.copyOwn(opts, next);
           var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }
           optionList.updateOptions(listOptions);

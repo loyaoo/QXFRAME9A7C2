@@ -35,7 +35,7 @@ var THEMES = ['light','dark'];
     if (event) emitMotionChange('media', event, null);
   }, { schedule:'sync', immediate:true, window:global });
   function own(object, key) { return Object.prototype.hasOwnProperty.call(object || {}, key); }
-  function cloneTokens(tokens) { var out = {}; Object.keys(tokens || {}).forEach(function (key) { out[key] = tokens[key]; }); return out; }
+  function cloneTokens(tokens) { return Utils.copyOwn({}, tokens || {}); }
   function snapshot() { return Object.freeze({ theme: state.theme, size: state.size, variant: state.variant, focusOutline: state.focusOutline, motion: state.motion, triggerOpenDelay: state.triggerOpenDelay, triggerCloseDelay: state.triggerCloseDelay, tokens: Object.freeze(cloneTokens(state.tokens)) }); }
   function nonNegativeDelay(value, name) { var number = Number(value); if (!Number.isFinite(number) || number < 0) throw new TypeError('[QXFRAME9A7C2] Config ' + name + ' must be a finite non-negative number.'); return number; }
   function validateTokens(value) {
@@ -81,7 +81,7 @@ var THEMES = ['light','dark'];
   function configure(next) {
     if (!isPlainObject(next || {})) throw new TypeError('[QXFRAME9A7C2] Config configure expects a plain object.');
     var patch=validate(next || {}), previous=snapshot();
-    Object.keys(patch).forEach(function (key) { state[key]=key==='tokens'?validateTokens(patch[key]):patch[key]; });
+    Object.keys(patch).forEach(function (key) { if (!Utils.safeOwnKey(key)) return; state[key]=key==='tokens'?validateTokens(patch[key]):patch[key]; });
     applyDocument();
     var current=snapshot(), changed=Object.keys(patch);
     emitter.emit('change',{previous:previous,current:current,changed:changed});
@@ -144,8 +144,8 @@ var THEMES = ['light','dark'];
   function captureContext(element) {
     var tokens = Object.create(null), chain = [], node = element && element.nodeType === 1 ? element : null;
     while (node) { chain.unshift(node); node = node.parentElement; }
-    chain.forEach(function (currentNode) { var scoped = scopedPatchAt(currentNode); if (scoped && scoped.tokens) Object.keys(scoped.tokens).forEach(function (key) { tokens[key] = scoped.tokens[key]; }); });
-    Object.keys(state.tokens).forEach(function (key) { if (!own(tokens,key)) tokens[key] = state.tokens[key]; });
+    chain.forEach(function (currentNode) { var scoped = scopedPatchAt(currentNode); if (scoped && scoped.tokens) Utils.copyOwn(tokens, scoped.tokens); });
+    Object.keys(state.tokens).forEach(function (key) { if (Utils.safeOwnKey(key) && !own(tokens,key)) tokens[key] = state.tokens[key]; });
     return Object.freeze({ theme: resolveScoped('theme', element), size: resolveScoped('size', element), variant: resolveScoped('variant', element), motion: resolveScoped('motion', element), tokens: Object.freeze(cloneTokens(tokens)) });
   }
   function projectContext(snapshotValue, target) {

@@ -1,5 +1,6 @@
 // Canonical ESM owner for the Item building block.
 // Pure DOM/item projection capability; intentionally not a Component subclass because it has no instance lifecycle.
+import { Utils } from '../utils/utils.js';
 import { DOM } from '../core/dom.js';
 import { DOMProjection } from '../core/domProjection.js';
 
@@ -210,7 +211,7 @@ import { DOMProjection } from '../core/domProjection.js';
       function createContext(item, details) {
         let source = details || {};
         let context = {};
-        Object.keys(source).forEach(function (key) { context[key] = source[key]; });
+        Utils.copyOwn(context, source);
         context.index = Number.isFinite(Number(source.index)) ? Number(source.index) : 0;
         context.key = source.key === undefined || source.key === null ? '' : String(source.key);
         context.element = source.element || null;

@@ -1,11 +1,12 @@
 
+import { Utils } from '../utils/utils.js';
 import { DOM } from './dom.js';
 import { URLPolicy } from '../utils/url.js';
 import { Renderer } from './renderer.js';
 import { AsyncAction } from './asyncAction.js';
 
 function renderValue(host,value,context,doc){var output=typeof value==='function'?value(context):value;Renderer.replace(host,output==null?'':output,doc);}
-function applyStyle(element,style){if(!style||typeof style!=='object')return;Object.keys(style).forEach(function(key){element.style[key]=style[key]==null?'':String(style[key]);});}
+function applyStyle(element,style){if(!style||typeof style!=='object')return;Object.keys(style).forEach(function(key){if(Utils.safeOwnKey(key))element.style[key]=style[key]==null?'':String(style[key]);});}
 function create(config) {
   var cfg=config||{}, doc=cfg.document, root=cfg.root, wrap=cfg.wrap, surface=cfg.surface, header=cfg.header, title=cfg.title, body=cfg.body, footer=cfg.footer, closeButton=cfg.closeButton;
   var actionCleanups=[], closeGuard=false;

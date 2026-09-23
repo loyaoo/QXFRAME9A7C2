@@ -1,4 +1,5 @@
 
+import { Utils } from '../utils/utils.js';
 const global = globalThis;
 
 function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Object(object), key); }
@@ -82,7 +83,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
       var patch = next || {};
       if (hasOwn(patch, 'lengthMode')) lengthMode(patch.lengthMode);
       if (hasOwn(patch, 'limitMode')) limitMode(patch.limitMode);
-      Object.keys(patch).forEach(function (key) { opts[key] = patch[key]; });
+      Utils.copyOwn(opts, patch);
       emit();
       return api;
     }

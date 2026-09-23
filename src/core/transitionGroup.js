@@ -1,4 +1,5 @@
 
+import { Utils } from '../utils/utils.js';
 import { MotionCore } from './motion.js';
 import { Scheduler } from './scheduler.js';
 import { Config } from './config.js';
@@ -179,7 +180,7 @@ function create(options) {
       reversal: !!(coreContext && coreContext.reversal),
       signal: coreContext && coreContext.signal || null
     };
-    if (extra) Object.keys(extra).forEach(function (key) { base[key] = extra[key]; });
+    if (extra) Utils.copyOwn(base, extra);
     return Object.freeze(base);
   }
   function call(name, record, coreContext, extra) {

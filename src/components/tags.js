@@ -1278,7 +1278,7 @@ function create(options) {
         if (!allowed[entry]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
       });
     }
-    Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+    Utils.copyOwn(opts, next);
     opts.size = nextSize;
     opts.overflow = nextOverflow;
     opts.maxVisible = nextMaxVisible;

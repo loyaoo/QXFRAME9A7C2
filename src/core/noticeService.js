@@ -66,11 +66,11 @@ function normalizeAction(raw, index, owner) {
 }
 function applyStyle(element, style) {
   if (!element || !style) return;
-  Object.keys(style).forEach(function (key) { element.style[key] = style[key] == null ? '' : String(style[key]); });
+  Object.keys(style).forEach(function (key) { if (Utils.safeOwnKey(key)) element.style[key] = style[key] == null ? '' : String(style[key]); });
 }
 function clearStyleObject(element, previous) {
   if (!element || !previous) return;
-  Object.keys(previous).forEach(function (key) { element.style[key] = ''; });
+  Object.keys(previous).forEach(function (key) { if (Utils.safeOwnKey(key)) element.style[key] = ''; });
 }
 function renderValue(host, value, record) {
   var output = typeof value === 'function' ? value({ instance: record.instance, options: record.options }) : value;

@@ -1,4 +1,5 @@
 
+import { Utils } from '../utils/utils.js';
 function inferSource(event) {
   if (!event) return 'api';
   var type = String(event.type || '').toLowerCase();
@@ -27,7 +28,7 @@ function create(reason, event, extras) {
     cancelled: false,
     propagationAllowed: false
   };
-  if (extras) Object.keys(extras).forEach(function (key) { if (!(key in detail)) detail[key] = extras[key]; });
+  if (extras) Object.keys(extras).forEach(function (key) { if (Utils.safeOwnKey(key) && !(key in detail)) detail[key] = extras[key]; });
   detail.cancel = function () {
     if (detail.cancelled) return false;
     detail.cancelled = true;

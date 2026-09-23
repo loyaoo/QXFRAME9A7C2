@@ -428,7 +428,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       OptionTransaction.rejectImmutable(next, ['target','container','formField','reference','triggerTarget','valueTarget','draftValueTarget','inputTarget','formTarget','renderControl','headless'], 'TimePicker field binding');
     if (own(next, 'selection') && normalizeSelectionName(next.selection) !== selection) throw new Error('[QXFRAME9A7C2] TimePicker selection is immutable.');
     var previous = Utils.mergeOwn( opts);
-    Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+    Utils.copyOwn(opts, next);
     if (selection === 'range' && String(opts.rangeSeparator || '') === '') { opts = previous; throw new TypeError('[QXFRAME9A7C2] TimePicker rangeSeparator must not be empty in range selection.'); }
     if (opts.previewValue !== false && opts.previewValue !== 'hover') { opts = previous; throw new TypeError("[QXFRAME9A7C2] TimePicker previewValue must be false or 'hover'."); }
     dependentPanelSyncScheduler.cancel();

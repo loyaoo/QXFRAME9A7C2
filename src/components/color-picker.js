@@ -636,7 +636,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var nextGradientEnabled = own(next, 'gradient') ? next.gradient === true : gradientEnabled;
        if (own(next, 'mode') && nextMode === 'gradient') nextGradientEnabled = true;
        if (!nextGradientEnabled && nextMode === 'gradient') nextMode = 'solid';
-       Object.keys(next).forEach(function (key) { opts[key] = next[key]; });
+       Utils.copyOwn(opts, next);
        gradientEnabled = nextGradientEnabled;
        opts.gradient = gradientEnabled;
        field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: fieldPrefixContent(), suffix: fieldSuffixContent(), required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, focusScope: opts.needConfirm === true ? 'contain' : 'exit', destroyOnClose: opts.destroyOnClose !== false });
