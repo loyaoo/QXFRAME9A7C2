@@ -249,7 +249,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
     onCloseDraft: function (controller, detail) {
       hoverPreviewValue = null;
       if (!detail.rolledBack && opts.needConfirm !== true && controller.dirty && complete(controller.draftValue)) {
-        controller.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+        var closedCommit = instance.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+        if (closedCommit === false && controller.dirty) controller.cancel({ silent: true, source: 'popup', reason: 'close-commit-rejected', originalEvent: detail && detail.originalEvent || null });
       }
       if (!detail.rolledBack) syncField(false);
     }
@@ -291,8 +292,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
       else if (draft.draftValue && draft.draftValue[0] && draft.draftValue[1] && selectedPart !== null) activeRangePart = selectedPart;
     }
     if (opts.needConfirm !== true && complete(draft.draftValue)) {
-      draft.commit({ source: detail.source, reason: 'select-commit' });
-      if (opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
+      var selectedCommit = instance.commit({ source: detail.source, reason: 'select-commit', originalEvent: detail.originalEvent || null });
+      if (selectedCommit !== false && opts.closeOnSelect === true) field.close('select', detail.originalEvent || null);
     }
     var panelSource = detail && detail.panelOrigin === true;
     var rangePartChanged = selection === 'range' && activeRangePart !== previousRangePart;
@@ -343,7 +344,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (!parsed.valid || !complete(parsed.value)) { if (opts.preserveInvalidOnBlur !== true) syncField(field.getState().open); return; }
     draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse' });
     syncPanel('time-picker-blur-sync');
-    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true) draft.commit({ source: 'input', reason: 'blur-commit' });
+    if (opts.commitInputOnBlur !== false && opts.needConfirm !== true) instance.commit({ source: 'input', reason: 'blur-commit', originalEvent: event || null });
     syncField(opts.needConfirm === true && field.getState().open);
   }
 
