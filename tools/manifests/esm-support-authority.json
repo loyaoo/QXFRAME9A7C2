@@ -100,24 +100,10 @@
       "namespace": "components"
     },
     {
-      "name": "Transfer",
-      "module": "transfer",
-      "source": "src/components/transfer.js",
-      "phase": "80→84-prep",
-      "namespace": "components"
-    },
-    {
       "name": "Trigger",
       "module": "trigger",
       "source": "src/components/trigger.js",
       "phase": "50→58-foundation",
-      "namespace": "components"
-    },
-    {
-      "name": "Upload",
-      "module": "upload",
-      "source": "src/components/upload.js",
-      "phase": "88→92",
       "namespace": "components"
     },
     {
