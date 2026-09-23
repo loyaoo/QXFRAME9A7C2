@@ -386,8 +386,8 @@ function create(options) {
     renderCount += 1;
     var detail = { reason: reason || 'render', state: state(), controller: api };
     if (Utils.isFunction(opts.onRender)) opts.onRender(detail);
-    emitter.emit('render', detail);
-    return true;
+    if (!destroyed) emitter.emit('render', detail);
+    return !destroyed;
   }
     
   function requestRender(reason) {
@@ -412,8 +412,9 @@ function create(options) {
       controller: api
     };
     if (Utils.isFunction(opts.jump)) opts.jump(detail.state, false);
+    if (destroyed) return detail;
     if (Utils.isFunction(opts.onChange)) opts.onChange(snapshot.page, snapshot.pageSize, detail);
-    emitter.emit('change', detail);
+    if (!destroyed) emitter.emit('change', detail);
     return detail;
   }
     
@@ -472,7 +473,7 @@ function create(options) {
       var source = DOM.activationSource(detail.event);
       if (role === 'refresh') {
         requestRender('refresh-action');
-        emitter.emit('refresh', { state: state(), source: source, reason: 'refresh', originalEvent: detail.event, controller: api });
+        if (!destroyed) emitter.emit('refresh', { state: state(), source: source, reason: 'refresh', originalEvent: detail.event, controller: api });
         return;
       }
       if (role === 'previous' && Utils.isFunction(opts.onPrevClick)) {
