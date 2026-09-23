@@ -136,7 +136,7 @@ function render(container, output, doc) {
   Renderer.replace(container, value == null ? '' : value, doc);
 }
 function setupImage(instance) {
-  var opts = normalizeOptions(Utils.mergeOwn(instance.options));
+  var opts = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, instance.options));
   if (!opts.container || opts.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Image container must be an Element.');
     
   var doc = opts.document || opts.container.ownerDocument || global.document;
@@ -828,7 +828,7 @@ function setupImage(instance) {
   function applyOptions(nextOptions, patch) {
     if (destroyed) return false;
     var changed = patch || {};
-    var candidate = normalizeOptions(Utils.assignOwn(nextOptions));
+    var candidate = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, nextOptions));
     var sourceChanged = own(changed, 'src');
     opts = candidate;
     renderPlaceholder();
@@ -907,8 +907,8 @@ function createPreview(options) {
     document: doc,
     src: '',
     alt: '',
-    placeholder: false,
-    errorContent: false,
+    placeholder: '',
+    errorContent: '',
     previewMask: false,
     preview: previewOptions,
     destroyOnClose: source.destroyOnClose !== false
@@ -968,7 +968,7 @@ function recordForImage(instance) {
 }
 
 export class Image extends Component {
-  static options = IMAGE_DEFAULTS;
+  static options = Object.freeze({});
   static optionNormalizers = Object.freeze({
     fit: normalizeFit,
     preview: normalizePreview,
@@ -985,13 +985,13 @@ export class Image extends Component {
   [componentHooks.render]() {
     var existing = imageState.get(this);
     if (existing) return existing.getRootElement();
-    var options = normalizeOptions(Utils.assignOwn(this.options));
+    var options = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, this.options));
     if (options.maxScale < options.minScale) throw new TypeError('[QXFRAME9A7C2] Image maxScale must be >= minScale.');
     return setupImage(this);
   }
   [componentHooks.beforeOptionsUpdate](patch) {
     rejectRemoved(patch || {});
-    var candidate = normalizeOptions(Utils.mergeOwn(this.options, patch || {}));
+    var candidate = normalizeOptions(Utils.mergeOwn(IMAGE_DEFAULTS, this.options, patch || {}));
     if (candidate.maxScale < candidate.minScale) throw new TypeError('[QXFRAME9A7C2] Image maxScale must be >= minScale.');
   }
   [componentHooks.optionsUpdated](next, _previous, patch) { var record = imageState.get(this); if (record) record.applyOptions(next, patch); }
