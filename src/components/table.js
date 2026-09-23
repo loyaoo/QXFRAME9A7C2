@@ -1876,10 +1876,11 @@ function create(options) {
     if (row.children.length && row.children.length < expected) row.lastElementChild.colSpan = expected - row.children.length + 1;
     tfoot.appendChild(row);
   }
-  function paginationOptions(state) {
-    var local = opts.pager && typeof opts.pager === 'object' ? opts.pager : {};
-    return Utils.mergeOwn( local, {
-      container: pager, document: doc, count: state.filteredTotal === undefined ? state.total : state.filteredTotal,
+  function paginationOptions(state, includeStructure) {
+    var local = opts.pager && typeof opts.pager === 'object' ? Utils.mergeOwn(opts.pager) : {};
+    delete local.container; delete local.document; delete local.elements;
+    var next = Utils.mergeOwn(local, {
+      count: state.filteredTotal === undefined ? state.total : state.filteredTotal,
       current: state.page, pageSize: state.pageSize, size: local.size || opts.size,
       disabled: viewBlocked(), hideOnSinglePage: true,
       onChange: function (current, pageSize, detail) {
@@ -1892,6 +1893,8 @@ function create(options) {
         else if (pageChanged) model.setPage(current, meta);
       }
     });
+    if (includeStructure === true) { next.container = pager; next.document = doc; }
+    return next;
   }
   function renderPager() {
     var state = currentState();
@@ -1903,8 +1906,8 @@ function create(options) {
     }
     syncingPagination = true;
     try {
-      if (!pagination) pagination = Pagination.create(paginationOptions(state));
-      else pagination.updateOptions(paginationOptions(state));
+      if (!pagination) pagination = Pagination.create(paginationOptions(state, true));
+      else pagination.updateOptions(paginationOptions(state, false));
     } finally { syncingPagination = false; }
   }
   function syncRoot() {
