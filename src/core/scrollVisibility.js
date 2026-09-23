@@ -1,3 +1,5 @@
+import { Utils } from '../utils/utils.js';
+
 
 var AXES = Object.freeze(['x', 'y', 'both']);
   var ALIGNS = Object.freeze(['start', 'center', 'end', 'nearest']);
@@ -96,7 +98,7 @@ var AXES = Object.freeze(['x', 'y', 'both']);
 
   function calculateElementScroll(owner, target, local) {
     assertOwnedTarget(owner, target);
-    var options = local && typeof local === 'object' ? Object.assign({}, local) : {};
+    var options = local && typeof local === 'object' ? Utils.mergeOwn(local) : {};
     options.axis = normalizeAxis(options.axis);
     options.align = normalizeAlign(options.align);
 
