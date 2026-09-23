@@ -470,7 +470,7 @@ function create(options) {
     if (emitScroll === true) {
       var detail = { state: state, reason: reason || 'scroll', controller: api };
       if (Utils.isFunction(opts.onScroll)) opts.onScroll(detail);
-      emitter.emit('scroll', detail);
+      if (!destroyed) emitter.emit('scroll', detail);
     }
     return state;
   }
@@ -491,27 +491,28 @@ function create(options) {
   function clearScrollIdleTimer() { scrollIdleDelay.cancel(); }
     
   function emitScrollStart(reason) {
-    if (scrolling) return;
+    if (destroyed || scrolling) return;
     scrolling = true;
     var detail = { state: getState(), reason: reason || 'scroll', controller: api };
     if (Utils.isFunction(opts.onScrollStart)) opts.onScrollStart(detail);
-    emitter.emit('scroll-start', detail);
+    if (!destroyed) emitter.emit('scroll-start', detail);
   }
     
   function emitScrollEnd(reason) {
-    if (!scrolling) return;
+    if (destroyed || !scrolling) return;
     scrolling = false;
     var detail = { state: getState(), reason: reason || 'scroll-end', controller: api };
     if (Utils.isFunction(opts.onScrollEnd)) opts.onScrollEnd(detail);
-    emitter.emit('scroll-end', detail);
+    if (!destroyed) emitter.emit('scroll-end', detail);
   }
     
   function emitSnapSettle(index, reason) {
+    if (destroyed) return;
     var targets = getSnapTargets();
     var element = index >= 0 && index < targets.length ? targets[index] : null;
     var detail = { index: index, element: element, state: getState(), reason: reason || 'snap-settle', controller: api };
     if (Utils.isFunction(opts.onSnapSettle)) opts.onSnapSettle(detail);
-    emitter.emit('snap-settle', detail);
+    if (!destroyed) emitter.emit('snap-settle', detail);
   }
     
   var motionFrame = Scheduler.createFrameScheduler(function (timestamp) {
