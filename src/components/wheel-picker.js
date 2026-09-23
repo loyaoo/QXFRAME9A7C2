@@ -110,7 +110,8 @@ var pickerSession = instance.setupPickerSession({
   },
   onCloseDraft: function (controller, detail) {
     if (!detail.rolledBack && opts.needConfirm !== true && controller.dirty) {
-      controller.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+      var closedCommit = instance.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
+      if (closedCommit === false && controller.dirty) controller.cancel({ silent: true, source: 'popup', reason: 'close-commit-rejected', originalEvent: detail && detail.originalEvent || null });
     }
     if (!detail.rolledBack) syncField(false);
   }
@@ -206,8 +207,8 @@ panel = WheelPanel.create({
       if (Utils.isFunction(opts.onSelect)) opts.onSelect(cloneValue(value), payload);
       emitter.emit('select', payload);
       if (opts.needConfirm !== true) {
-        draft.commit({ source: detail.source, reason: 'select-commit' });
-        if (opts.closeOnSelect === true && value.length === opts.columns.length && value.every(function (entry) { return entry !== null; })) field.close('select', detail.originalEvent || null);
+        var selectedCommit = instance.commit({ source: detail.source, reason: 'select-commit', originalEvent: detail.originalEvent || null });
+        if (selectedCommit !== false && opts.closeOnSelect === true && value.length === opts.columns.length && value.every(function (entry) { return entry !== null; })) field.close('select', detail.originalEvent || null);
       } else {
         syncField(true, { panelSynced: true });
       }
