@@ -34,7 +34,7 @@ function normalize(input, previous) {
   var incoming = input || {};
   if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new TypeError('[QXFRAME9A7C2] Notification options must be an object.');
   rejectUnsupported(incoming);
-  var source = Object.assign({}, DEFAULTS, previous || {}, incoming);
+  var source = U.mergeOwn(DEFAULTS, previous, incoming);
   source.key = source.key === undefined || source.key === null || source.key === '' ? '' : String(source.key);
   source.type = U.enumValue(source.type, TYPES, 'info', 'type', 'Notification');
   source.placement = U.enumValue(source.placement, PLACEMENTS, 'top-right', 'placement', 'Notification');
