@@ -80,7 +80,6 @@ function create(source, overrides) {
   var previewCleanups = [];
   var objectUrls = Object.create(null);
   var objectUrlFiles = Object.create(null);
-  var recordEpochs = Object.create(null);
   var previewModal = null;
   var previewMask = null;
   var previewPanel = null;
@@ -165,23 +164,9 @@ function create(source, overrides) {
       opts.onPreviewVisibleChange(false, { source: DOM.activationSource(event), reason: reason || 'replace', event: event || null, originalEvent: event || null, file: activeFile, instance: api });
     }
   }
-  function recordEpoch(uid) { return recordEpochs[String(uid == null ? '' : uid)] || 0; }
-  function bumpRecordEpoch(uid) {
-    var key = String(uid == null ? '' : uid);
-    if (!key) return 0;
-    recordEpochs[key] = recordEpoch(key) + 1;
-    return recordEpochs[key];
-  }
-  function invalidateRecordEpochs(value, detail) {
-    var operation = detail && detail.operation;
-    if (operation === 'set-value') {
-      (value || []).forEach(function (record) { if (record && record.uid != null) bumpRecordEpoch(record.uid); });
-      return;
-    }
-    if ((operation === 'add' || operation === 'remove') && detail && detail.file && detail.file.uid != null) bumpRecordEpoch(detail.file.uid);
-  }
-  function asyncRecordCurrent(record, epoch) {
-    return !!(!destroyed && opts.disabled !== true && record && lifecycle.find(record.uid) && recordEpoch(record.uid) === epoch);
+  function asyncRecordCurrent(record, generation) {
+    var state = lifecycle.getState();
+    return !!(!destroyed && opts.disabled !== true && record && lifecycle.find(record.uid) && state.mutationGeneration === generation);
   }
   function maxReached() {
     var max = Number(opts.maxCount || 0);
@@ -208,7 +193,6 @@ function create(source, overrides) {
       onSuccess: function (response, record) { if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
       onError: function (error, record) { if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
-        invalidateRecordEpochs(value, detail);
         if (formBridge) formBridge.setValue(value, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(value);
         renderList();
@@ -497,13 +481,13 @@ function create(source, overrides) {
   function preview(target, event) {
     var record = lifecycle.find(target);
     if (!record || opts.previewable === false || opts.disabled === true) return Promise.resolve(api);
-    var previewEpoch = recordEpoch(record.uid);
+    var previewGeneration = lifecycle.getState().mutationGeneration;
     var resolved = null;
     if (typeof opts.previewFile === 'function' && record.file) {
       try { resolved = opts.previewFile(record.file,record,api); } catch (_) { resolved = null; }
     }
     return Promise.resolve(resolved).catch(function () { return ''; }).then(function (customUrl) {
-      if (!asyncRecordCurrent(record, previewEpoch) || opts.previewable === false) return api;
+      if (!asyncRecordCurrent(record, previewGeneration) || opts.previewable === false) return api;
       var kind = kindOf(record);
       var url = customUrl || (isMediaPreviewKind(kind) ? previewMediaUrl(record) : previewUrl(record));
       var payload = { file:record,url:url,source:DOM.activationSource(event),reason:'preview',originalEvent:event||null,instance:api };
@@ -568,11 +552,11 @@ function create(source, overrides) {
   function remove(target, meta) {
     var record=lifecycle.find(target); if (!record || opts.disabled) return api;
     if (typeof opts.beforeRemove !== 'function') return commitRemove(record.uid,meta);
-    var removeEpoch = recordEpoch(record.uid);
+    var removeGeneration = lifecycle.getState().mutationGeneration;
     var gate;
     try { gate=opts.beforeRemove(record,lifecycle.getValue(),api); } catch (error) { if (typeof opts.onError==='function') opts.onError(error,record,api); return api; }
     if (gate && typeof gate.then === 'function') return Promise.resolve(gate).then(function (allowed) {
-      if (allowed!==false && asyncRecordCurrent(record, removeEpoch)) commitRemove(record.uid,meta);
+      if (allowed!==false && asyncRecordCurrent(record, removeGeneration)) commitRemove(record.uid,meta);
       return api;
     },function (error) {
       if (!destroyed && typeof opts.onError==='function') opts.onError(error,record,api);
@@ -599,11 +583,18 @@ function create(source, overrides) {
     if (reorderInteraction && reorderInteraction.getState().dragging && (own(next,'dragSort') || own(next,'disabled'))) reorderInteraction.cancelDrag('options');
     var candidate = Utils.mergeOwn(opts, next); candidate.listType = listType(candidate.listType); validateViewOptions(candidate); opts = candidate;
     lifecycle.updateOptions(Utils.assignOwn(lifecycleOptions(false), own(next,'value') ? { value: next.value } : {}));
-    syncStructure(); renderList(); if (formBridge) { formBridge.updateOptions({ name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, serializeValue: serializeFormValue }); formBridge.setValue(lifecycle.getValue(), { silent: true }); } return api;
+    var currentValue = lifecycle.getValue(); reconcileObjectUrls(currentValue);
+    syncStructure(); renderList(); if (formBridge) { formBridge.updateOptions({ name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, serializeValue: serializeFormValue }); formBridge.setValue(currentValue, { silent: true }); } return api;
   }
     
   var initialValue = lifecycle.getValue();
-  formBridge = Control.createFormFieldBridge({ root: root, target: opts.container, formField: opts.formField, document: doc, name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, value: lifecycle.getValue(), serializeValue: serializeFormValue, getValue: lifecycle.getValue, onReset: function () { lifecycle.setValue(initialValue, { silent: true, source: 'form', reason: 'reset' }); } });
+  formBridge = Control.createFormFieldBridge({ root: root, target: opts.container, formField: opts.formField, document: doc, name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, value: lifecycle.getValue(), serializeValue: serializeFormValue, getValue: lifecycle.getValue, onReset: function () {
+    lifecycle.setValue(initialValue, { silent: true, source: 'form', reason: 'reset' });
+    var resetValue = lifecycle.getValue();
+    reconcileObjectUrls(resetValue);
+    renderList();
+    if (formBridge) formBridge.setValue(resetValue, { silent: true });
+  } });
     
   api = Object.freeze({
     open: open, addFiles: addFiles,
