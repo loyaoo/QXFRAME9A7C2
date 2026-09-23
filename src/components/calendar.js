@@ -373,19 +373,26 @@ function create(options) {
     return null;
   }
   function bindVirtualFocus(controller, hosted) {
-    if (!controller || !controller.registerDomain) return null;
-    if (virtualFocusDomain) virtualFocusDomain.destroy();
-    virtualFocusController = controller;
-    hostedVirtualFocus = hosted !== false && (!keyboard || controller !== keyboard.virtualFocus);
-    if (keyboardRegion) keyboardRegion.setHosted(hostedVirtualFocus);
-    else if (root) root.tabIndex = hostedVirtualFocus ? -1 : 0;
-    virtualFocusDomain = controller.registerDomain({
-      name:'calendar',
-      getElement:function(key){ return getCellElement(key); },
-      reconcile:function(key){ var cell=cells.find(function(entry){return entry.key===String(key)&&entry.disabled!==true;}); if(cell)return cell.key; return activeItem.activeKey || null; },
-      ensureVisible:function(){ return true; }
+    var binding = KeyboardRegion.bindVirtualFocus({
+      controller: controller,
+      previousDomain: virtualFocusDomain,
+      keyboard: keyboard,
+      region: keyboardRegion,
+      root: root,
+      hosted: hosted,
+      activeKey: activeItem.activeKey,
+      activation: { reason:'calendar-bind', ensureVisible:false },
+      domain: {
+        name:'calendar',
+        getElement:function(key){ return getCellElement(key); },
+        reconcile:function(key){ var cell=cells.find(function(entry){return entry.key===String(key)&&entry.disabled!==true;}); if(cell)return cell.key; return activeItem.activeKey || null; },
+        ensureVisible:function(){ return true; }
+      }
     });
-    if (activeItem.activeKey && controller.getState().modality === 'keyboard') virtualFocusDomain.activate(activeItem.activeKey, { source:'keyboard', reason:'calendar-bind', ensureVisible:false });
+    if (!binding) return null;
+    virtualFocusController = binding.controller;
+    hostedVirtualFocus = binding.hosted;
+    virtualFocusDomain = binding.domain;
     return virtualFocusDomain;
   }
     
