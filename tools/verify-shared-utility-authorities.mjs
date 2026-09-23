@@ -51,4 +51,11 @@ for(const file of queryConsumers){
   assert.ok(!/function\s+(?:visit|walk)\s*\([^)]*\)\s*\{[^]{]{0,240}(?:childrenOf|\.items)/s.test(source),`${file} must not own recursive hierarchy traversal.`);
 }
 
-console.log(JSON.stringify({ok:true,timeUnit:true,wheelMetrics:true,treeQuery:true,queryConsumers:queryConsumers.length}));
+// Tag keyboard navigation has one authority across standalone and hosted tag fields.
+const tagsSource=read('src/components/tags.js');
+assert.match(tagsSource,/from ['"]\.\.\/core\/tagNavigation\.js['"]/, 'Tags must import TagNavigation.');
+assert.match(tagsSource,/standaloneTagNavigation\s*=\s*TagNavigation\.create\s*\(/, 'Standalone Tags must delegate to TagNavigation.');
+assert.match(tagsSource,/standaloneTagNavigation\.handleKeydown\(event\)/, 'Standalone Tags key handling must flow through TagNavigation.');
+assert.ok(!/var\s+preferred\s*=\s*moveVirtualTag\(currentKey,\s*key\s*===\s*['"]Delete['"]\s*\?\s*1\s*:\s*-1\)/.test(tagsSource), 'Tags must not re-own TagNavigation delete reconciliation.');
+
+console.log(JSON.stringify({ok:true,timeUnit:true,wheelMetrics:true,tagNavigation:true,treeQuery:true,queryConsumers:queryConsumers.length}));

@@ -7,6 +7,7 @@ import { URLPolicy } from '../utils/url.js';
 import { Utils } from '../utils/utils.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { TagNavigation } from '../core/tagNavigation.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { ResponsiveOverflow } from '../core/responsiveOverflow.js';
 import { FormBridge } from '../core/formBridge.js';
@@ -192,6 +193,7 @@ function create(options) {
   var keyboard=null;
   var keyboardRegion=null;
   var standaloneTagDomain=null;
+  var standaloneTagNavigation=null;
   var editorProjectionMutation=false;
   var ADD_VIRTUAL_KEY='__qxframe9a7c2_tags_add__';
     
@@ -1353,9 +1355,13 @@ function create(options) {
       }
       return false;
     }
-    if (key === 'ArrowLeft' || key === 'ArrowRight') {
-      var next = moveVirtualTag(currentKey, key === 'ArrowLeft' ? -1 : 1);
-      if (next) return activateStandaloneTag(next, key === 'ArrowLeft' ? 'tag-left' : 'tag-right', event);
+    if ((key === 'Backspace' || key === 'Delete') && !currentKey) return false;
+    if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Escape') {
+      var delegated = standaloneTagNavigation ? standaloneTagNavigation.handleKeydown(event) : false;
+      if (delegated) {
+        syncTagTabStops(standaloneTagNavigation.currentKey() || '');
+        return true;
+      }
       // Standalone Tags has no right-side real-focus destination. Clamp the virtual
       // cursor at the final visible tag/+ Add instead of clearing it into nowhere.
       if (currentKey && key === 'ArrowRight') return true;
@@ -1364,15 +1370,6 @@ function create(options) {
     if (key === 'ArrowUp' || key === 'ArrowDown') {
       var spatial = moveVirtualTagSpatial(currentKey, key === 'ArrowUp' ? -1 : 1);
       return spatial ? activateStandaloneTag(spatial, key === 'ArrowUp' ? 'tag-up' : 'tag-down', event) : false;
-    }
-    if ((key === 'Backspace' || key === 'Delete') && currentKey) {
-      if (currentKey === ADD_VIRTUAL_KEY) return false;
-      var preferred = moveVirtualTag(currentKey, key === 'Delete' ? 1 : -1);
-      if (!removeVirtualTag(currentKey, { user:true, source:'keyboard', reason:'tag-keyboard-remove', originalEvent:event })) return false;
-      var reconciled = preferred || reconcileVirtualTagKey(currentKey);
-      if (reconciled) activateStandaloneTag(reconciled, 'tag-remove-reconcile', event);
-      else keyboard.virtualFocus.clear({ reason:'tag-remove-empty' });
-      return true;
     }
     if ((key === 'Enter' || key === ' ') && currentKey) {
       if (currentKey === ADD_VIRTUAL_KEY) return key === 'Enter' ? beginAdd() : false;
@@ -1384,7 +1381,6 @@ function create(options) {
       return false;
     }
     if (key === 'Enter' && opts.editable === true && !currentKey) return beginAdd();
-    if (key === 'Escape' && currentKey) { keyboard.virtualFocus.clear({ reason:'escape-tag-cursor' }); syncTagTabStops(''); return true; }
     return false;
   }
   if (opts.hosted !== true) {
@@ -1415,13 +1411,21 @@ function create(options) {
       }
     });
     keyboard = keyboardRegion.keyboard;
-    standaloneTagDomain = keyboard.virtualFocus.registerDomain({
-      name:'tags',
-      getElement:getVirtualTagElement,
-      reconcile:function(key){ return reconcileVirtualTagKey(key); },
-      ensureVisible:function(key){ return ensureVirtualTagVisible(key); }
+    standaloneTagNavigation = TagNavigation.create({
+      keyboard:keyboard,
+      domainName:'tags',
+      owner:{
+        getVirtualTagElement:getVirtualTagElement,
+        moveVirtualTag:moveVirtualTag,
+        reconcileVirtualTagKey:reconcileVirtualTagKey,
+        ensureVirtualTagVisible:ensureVirtualTagVisible,
+        removeVirtualTag:removeVirtualTag
+      },
+      isLocked:function(){ return opts.hosted === true || adding === true || opts.disabled === true; },
+      exitRight:false
     });
-    scope.add(function () { if (standaloneTagDomain) standaloneTagDomain.destroy(); standaloneTagDomain=null; if (keyboardRegion) keyboardRegion.destroy(); keyboardRegion=null; keyboard=null; });
+    standaloneTagDomain = standaloneTagNavigation.domain;
+    scope.add(function () { if (standaloneTagNavigation) standaloneTagNavigation.destroy(); standaloneTagNavigation=null; standaloneTagDomain=null; if (keyboardRegion) keyboardRegion.destroy(); keyboardRegion=null; keyboard=null; });
   }
     
   function destroy() {
