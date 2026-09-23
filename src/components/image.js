@@ -919,19 +919,19 @@ function createPreview(options) {
     openPreview: function (index, event) { owner.openPreview(index, event); return api; },
     close: function (reason, event) { owner.closePreview(reason, event); return api; },
     closePreview: function (reason, event) { owner.closePreview(reason, event); return api; },
-    next: owner.next,
-    prev: owner.prev,
-    setIndex: owner.setPreviewIndex,
-    setPreviewIndex: owner.setPreviewIndex,
-    setItems: owner.setPreviewItems,
-    setPreviewItems: owner.setPreviewItems,
-    zoomIn: owner.zoomIn,
-    zoomOut: owner.zoomOut,
-    rotateLeft: owner.rotateLeft,
-    rotateRight: owner.rotateRight,
-    flipX: owner.flipX,
-    flipY: owner.flipY,
-    reset: owner.reset,
+    next: function () { owner.next(); return api; },
+    prev: function () { owner.prev(); return api; },
+    setIndex: function (index, reason) { owner.setPreviewIndex(index, reason); return api; },
+    setPreviewIndex: function (index, reason) { owner.setPreviewIndex(index, reason); return api; },
+    setItems: function (items) { owner.setPreviewItems(items); return api; },
+    setPreviewItems: function (items) { owner.setPreviewItems(items); return api; },
+    zoomIn: function () { owner.zoomIn(); return api; },
+    zoomOut: function () { owner.zoomOut(); return api; },
+    rotateLeft: function () { owner.rotateLeft(); return api; },
+    rotateRight: function () { owner.rotateRight(); return api; },
+    flipX: function () { owner.flipX(); return api; },
+    flipY: function () { owner.flipY(); return api; },
+    reset: function () { owner.reset(); return api; },
     updateOptions: function (next) {
       var config = Utils.mergeOwn(previewOptions, next);
       if (own(config, 'items')) owner.setPreviewItems(config.items);
@@ -939,12 +939,12 @@ function createPreview(options) {
       previewOptions = config;
       return api;
     },
-    getState: owner.getState,
-    getPreviewElement: owner.getPreviewElement,
-    getPreviewMaskElement: owner.getPreviewMaskElement,
-    getPreviewStageElement: owner.getPreviewStageElement,
-    getPreviewMediaElement: owner.getPreviewMediaElement,
-    getPreviewOverlayRuntime: owner.getPreviewOverlayRuntime,
+    getState: function () { return owner.getState(); },
+    getPreviewElement: function () { return owner.getPreviewElement(); },
+    getPreviewMaskElement: function () { return owner.getPreviewMaskElement(); },
+    getPreviewStageElement: function () { return owner.getPreviewStageElement(); },
+    getPreviewMediaElement: function () { return owner.getPreviewMediaElement(); },
+    getPreviewOverlayRuntime: function () { return owner.getPreviewOverlayRuntime(); },
     destroy: function () {
       if (destroyed) return false;
       destroyed = true;
