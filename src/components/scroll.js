@@ -159,8 +159,8 @@ function attachViewport(options) {
   if (input.scrollbarVisibility === undefined) input.scrollbarVisibility = 'auto';
   var instance = Scroll.create(input);
   var destroyed = false;
-  var proxy = Object.create(instance);
-  Object.defineProperty(proxy, 'destroy', { enumerable:true, value:function () {
+  var bound = new Map();
+  function destroyAttached() {
     if (destroyed) return false;
     destroyed = true;
     var result = instance.destroy();
@@ -169,8 +169,17 @@ function attachViewport(options) {
     ['is-axis-x','is-axis-y','is-axis-both','is-scrollbar-auto','is-scrollbar-always','is-scrollbar-hidden','is-scrollbar-interactive','is-scrollbar-manual-show','is-scrollbar-manual-hide','has-edge-shadow','is-disabled','is-readonly','is-scrollbar-active','can-scroll-up','can-scroll-down','can-scroll-left','can-scroll-right'].forEach(function (name) { root.classList.remove(name); });
     if (originalTabindex === null) root.removeAttribute('tabindex'); else root.setAttribute('tabindex', originalTabindex);
     return result;
-  }});
-  return Object.freeze(proxy);
+  }
+  return new Proxy(instance, {
+    get: function (target, key) {
+      if (key === 'destroy') return destroyAttached;
+      var value = Reflect.get(target, key, target);
+      if (typeof value !== 'function') return value;
+      if (!bound.has(key)) bound.set(key, value.bind(target));
+      return bound.get(key);
+    },
+    set: function (target, key, value) { return Reflect.set(target, key, value, target); }
+  });
 }
     
 function setupScroll(instance) {
