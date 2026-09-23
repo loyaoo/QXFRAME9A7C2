@@ -921,7 +921,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       var wheel = timePanel.getWheelPanel && timePanel.getWheelPanel();
       var wheelState = wheel && wheel.getState ? wheel.getState() : null;
       timePanel.setActiveColumn(wheelState ? wheelState.activeColumnIndex : 0, { source:'keyboard', reason:reason || 'date-picker-time' });
-      return true;
+      return timePanel.focus ? timePanel.focus() : true;
     }
     return activatePanelDomain(currentSelectionKeyboardPanel(), reason || 'date-picker-selection');
   }
@@ -933,7 +933,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
     [calendar, calendarSecondary, yearPanel, monthPanel, periodPanel].forEach(function (panel) {
       if (panel && panel.bindVirtualFocus) panel.bindVirtualFocus(controller, true);
     });
-    if (timePanel && timePanel.bindVirtualFocus) timePanel.bindVirtualFocus(controller, true);
     if (tagNavigation) { tagNavigation.destroy(); tagNavigation = null; }
     if (selection === 'multiple') {
       tagNavigation = TagNavigation.create({
@@ -945,8 +944,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
         canEnter:function(){ return !field || !field.getState().open; }
       });
     }
-    // All DatePicker sub-panels share the field's single real focus host.
-    // Calendar/Period/Time items remain virtual and do not add hidden Tab stops.
+    // TimePanel keeps one outer real focus owner. Its columns/items remain virtual,
+    // so the panel participates in Tab order exactly once without hidden inner stops.
     return true;
   }
   function setKeyboardRegion(next, reason) {
