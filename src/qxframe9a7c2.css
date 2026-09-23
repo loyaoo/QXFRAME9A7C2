@@ -14621,10 +14621,10 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 .qxframe9a7c2-menu-item.is-open>.qxframe9a7c2-menu-submenu-arrow{transform:rotate(90deg)}
 
 /* Inline hierarchy: collapse/expand stays in the same Menu owner; no Collapse side owner. */
-.qxframe9a7c2-menu-inline-level{margin:0;padding:0;height:0;opacity:0;visibility:hidden;overflow:hidden}
-.qxframe9a7c2-menu-inline-level.is-open{height:auto;opacity:1;visibility:visible}
-.qxframe9a7c2-menu-inline-transition-enter-from,.qxframe9a7c2-menu-inline-transition-leave-to{height:0;opacity:0;visibility:visible}
-.qxframe9a7c2-menu-inline-transition-enter-to,.qxframe9a7c2-menu-inline-transition-leave-from{height:var(--qxframe9a7c2-menu-inline-motion-height);opacity:1;visibility:visible}
+.qxframe9a7c2-menu-inline-level{margin:0;padding:0;overflow:hidden}
+.qxframe9a7c2-menu-inline-level[hidden]{display:none}
+.qxframe9a7c2-menu-inline-transition-enter-from,.qxframe9a7c2-menu-inline-transition-leave-to{height:0;opacity:0}
+.qxframe9a7c2-menu-inline-transition-enter-to,.qxframe9a7c2-menu-inline-transition-leave-from{height:var(--qxframe9a7c2-menu-inline-motion-height);opacity:1}
 .qxframe9a7c2-menu-inline-transition-enter-active,.qxframe9a7c2-menu-inline-transition-leave-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard),opacity var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard)}
 
 /* Popup hierarchy: Trigger remains the one popup interaction/positioning owner. */
