@@ -25,6 +25,7 @@ function createPickerSession(options) {
   }
   function commit(meta) {
     var detail = Utils.assignOwn({ source:'api', reason:'confirm' }, meta || {});
+    if (Utils.isFunction(opts.beforeCommit) && opts.beforeCommit(controller, detail) === false) return false;
     if (Utils.isFunction(opts.canCommit) && opts.canCommit(controller, detail) === false) return false;
     var ok=controller.commit(detail);
     if(ok && Utils.isFunction(opts.onCommit)) opts.onCommit(controller, detail);
@@ -40,9 +41,25 @@ function createPickerSession(options) {
     if (opts.rollbackDirtyOnClose !== undefined) return resolveFlag(opts.rollbackDirtyOnClose, detail);
     return resolveFlag(opts.needConfirm, detail);
   }
+  function shouldCommitDirtyOnClose(detail) {
+    if (opts.commitDirtyOnClose !== undefined) return resolveFlag(opts.commitDirtyOnClose, detail);
+    return !resolveFlag(opts.needConfirm, detail);
+  }
   function close(detail) {
-    var info = Utils.mergeOwn( detail || {}), rolledBack = false;
-    if (controller.dirty && shouldRollback(info)) { rolledBack = cancel({ silent:true, source:'popup', reason: info.reason || 'close', originalEvent:info.originalEvent || null }) !== false; }
+    var info = Utils.mergeOwn( detail || {}), rolledBack = false, committed = false, commitRejected = false;
+    if (controller.dirty) {
+      if (shouldRollback(info)) {
+        rolledBack = cancel({ silent:true, source:'popup', reason: info.reason || 'close', originalEvent:info.originalEvent || null }) !== false;
+      } else if (shouldCommitDirtyOnClose(info)) {
+        committed = commit({ source:info.source || 'popup', reason:(info.reason || 'close') + '-commit', originalEvent:info.originalEvent || null }) !== false;
+        commitRejected = !committed && controller.dirty;
+        if (commitRejected && opts.cancelDirtyOnCommitReject !== false) {
+          rolledBack = cancel({ silent:true, source:'popup', reason:'close-commit-rejected', originalEvent:info.originalEvent || null }) !== false;
+        }
+      }
+    }
+    info.committed = committed;
+    info.commitRejected = commitRejected;
     info.rolledBack = rolledBack;
     info.dirty = controller.dirty === true;
     if (Utils.isFunction(opts.onCloseDraft)) opts.onCloseDraft(controller, info);
