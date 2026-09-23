@@ -466,7 +466,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
     canCommit: function (controller) { return rangeCommitReady(controller.draftValue); },
     onOpenDraft: function () {
       hoverPreviewValue = null;
-      rawInput = '';
+      var openEditor = field && field.getInputElement ? field.getInputElement() : null;
+      rawInput = openEditor && openEditor.value !== undefined ? String(openEditor.value || '') : rawInput;
       if (selection === 'range') activeRangePart = draft.draftValue && !draft.draftValue[0] ? 0 : (draft.draftValue && !draft.draftValue[1] ? 1 : 0);
       else activeRangePart = 0;
       syncSelectionPanel(true);
@@ -1046,12 +1047,20 @@ function setupDatePickerRuntime(instance, fieldInit) {
     trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
     closeOnOutsidePress: opts.closeOnOutsidePress !== false,
     closeOnEscape: opts.closeOnEscape !== false,
-    focusScope: opts.needConfirm === true ? 'contain' : 'exit',
+    focusScope: 'contain',
     destroyOnClose: opts.destroyOnClose !== false,
     matchReferenceWidth: false,
     beforeOpen: function (detail) { if (Utils.isFunction(opts.beforeOpen) && opts.beforeOpen(detail) === false) return false; return !destroyed && opts.disabled !== true; },
     beforeClose: function (detail) { var forcedDisabled = !!(detail && detail.forceClose === 'disabled'); var vetoed = Utils.isFunction(opts.beforeClose) && opts.beforeClose(detail) === false; if (destroyed) return false; if (vetoed && !forcedDisabled) return false; },
-    onOpen: function (detail) { pickerSession.open(detail); keyboardRegion = 'selection'; activeCalendarPanel = 'primary'; if (calendar) setCalendarPanelMode('date', calendar.getState().viewValue); bindPickerVirtualFocus(); if (detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || '')))) activateCurrentPanelVirtualFocus('date-picker-open'); },
+    onOpen: function (detail) {
+      var openDetail = detail || {};
+      if (selection !== 'multiple') {
+        var openInput = field && field.getInputElement ? field.getInputElement() : null;
+        var openText = openInput && openInput.value !== undefined ? String(openInput.value || '') : rawInput;
+        var parsedOpen = openText.trim() ? parseTextSelection(openText) : null;
+        if (parsedOpen && parsedOpen.valid) openDetail = Utils.assignOwn({}, openDetail, { draftSeed: parsedOpen.value });
+      }
+      pickerSession.open(openDetail); keyboardRegion = 'selection'; activeCalendarPanel = 'primary'; if (calendar) setCalendarPanelMode('date', calendar.getState().viewValue); bindPickerVirtualFocus(); if (detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || '')))) activateCurrentPanelVirtualFocus('date-picker-open'); },
     onClose: function (detail) { pickerSession.close(detail); keyboardRegion = 'selection'; },
     afterOpen: function () { if (timePanel && timePanel.refresh) timePanel.refresh('date-picker-open'); var nav=field&&field.getKeyboardNavigation?field.getKeyboardNavigation():null; if(nav&&nav.virtualFocus&&nav.virtualFocus.getState().modality==='keyboard') activateCurrentPanelVirtualFocus('date-picker-after-open-refresh'); },
     onOpenChange: emitOpen,
@@ -1341,7 +1350,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     }
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
     if (own(next, 'closeOnSelect')) closeOnSelectExplicit = true;
-    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, focusScope: opts.needConfirm === true ? 'contain' : 'exit', destroyOnClose: opts.destroyOnClose !== false });
+    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, focusScope: 'contain', destroyOnClose: opts.destroyOnClose !== false });
     if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
     if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });

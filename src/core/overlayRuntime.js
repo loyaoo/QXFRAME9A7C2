@@ -49,6 +49,7 @@ function create(options) {
   var contextObserver = null;
   var contextProjection = null;
   var active = false;
+  var interactionActive = false;
   var destroyed = false;
   var zIndexProjection = null;
   var previousLayerMarker = floating[LAYER_ID_PROPERTY] || null;
@@ -192,7 +193,7 @@ function create(options) {
       initialFocus: function () { return Utils.isFunction(settings.initialFocus) ? settings.initialFocus() : settings.initialFocus; },
       fallbackFocus: function () {
         var candidate = Utils.isFunction(settings.fallbackFocus) ? settings.fallbackFocus() : settings.fallbackFocus;
-        return candidate || (Utils.isFunction(settings.initialFocus) ? settings.initialFocus() : settings.initialFocus) || floating;
+        return candidate || (Utils.isFunction(settings.initialFocus) ? settings.initialFocus() : settings.initialFocus) || resolveTabExitTarget({ reason:'focus-scope-fallback' }) || floating;
       },
       focusOnActivate: focusOnScopeActivate,
       restoreFocus: false,
@@ -213,7 +214,7 @@ function create(options) {
 
   function rebuildFocusScope() {
     if (focusScope) { focusScope.destroy(); focusScope = null; }
-    if (!active || resolvedFocusScopeMode() === 'none') return null;
+    if (!active || !interactionActive || resolvedFocusScopeMode() === 'none') return null;
     createFocusScope();
     if (focusScope) focusScope.activate();
     return focusScope;
@@ -311,7 +312,7 @@ function create(options) {
     if (dismissLayer) { dismissLayer.deactivate(); dismissLayer.destroy(); dismissLayer = null; }
     if (!active) return;
     ensureResources();
-    dismissLayer.activate();
+    if (interactionActive) dismissLayer.activate();
     rebuildFocusScope();
     projectZIndex();
   }
@@ -322,11 +323,36 @@ function create(options) {
     return true;
   }
 
+  function activateInteraction(meta) {
+    if (destroyed || !active || interactionActive) return false;
+    interactionActive = true;
+    ensureResources();
+    if (dismissLayer) dismissLayer.activate();
+    if (focusScope) focusScope.activate();
+    else if (resolvedFocusScopeMode() !== 'none') { createFocusScope(); if (focusScope) focusScope.activate(); }
+    if (scrollLock) scrollLock.lock();
+    if (interactionIsolation) interactionIsolation.activate();
+    if (Utils.isFunction(settings.onInteractionActivate)) settings.onInteractionActivate(meta || null, api);
+    return true;
+  }
+
+  function deactivateInteraction(meta) {
+    if (!active || !interactionActive) return false;
+    interactionActive = false;
+    if (dismissLayer) dismissLayer.deactivate();
+    if (focusScope) focusScope.deactivate({ restoreFocus: false });
+    if (interactionIsolation) interactionIsolation.deactivate();
+    if (scrollLock) scrollLock.unlock();
+    if (Utils.isFunction(settings.onInteractionDeactivate)) settings.onInteractionDeactivate(meta || null, api);
+    return true;
+  }
+
   function activate(meta) {
     if (destroyed || active) return false;
     ensureTransport();
     ensureResources();
     active = true;
+    interactionActive = true;
     startContextObserver();
     dismissLayer.activate();
     projectZIndex();
@@ -348,13 +374,10 @@ function create(options) {
   function deactivate(meta) {
     if (!active) return false;
     var detail = meta || {};
+    deactivateInteraction(detail);
     active = false;
     stopContextObserver();
     if (positionMount) { positionMount.destroy(); positionMount = null; }
-    if (dismissLayer) dismissLayer.deactivate();
-    if (focusScope) focusScope.deactivate({ restoreFocus: false });
-    if (interactionIsolation) interactionIsolation.deactivate();
-    if (scrollLock) scrollLock.unlock();
     clearProjectedZIndex();
     if (shouldRestoreFocus(detail)) {
       var restoreTarget = resolveRestoreTarget(detail);
@@ -413,7 +436,7 @@ function create(options) {
 
     if (active && lockChanged) {
       if (scrollLock) { scrollLock.destroy(); scrollLock = null; }
-      if (settings.lockScroll === true) { ensureResources(); if (scrollLock) scrollLock.lock(); }
+      if (settings.lockScroll === true) { ensureResources(); if (scrollLock && interactionActive) scrollLock.lock(); }
     }
     if (dismissChanged) rebuildDismissLayer();
     else if (active && focusScopeChanged) rebuildFocusScope();
@@ -454,6 +477,8 @@ function create(options) {
   api = Object.freeze({
     mount: mount,
     activate: activate,
+    activateInteraction: activateInteraction,
+    deactivateInteraction: deactivateInteraction,
     deactivate: deactivate,
     updatePosition: updatePosition,
     preparePosition: preparePosition,
@@ -462,6 +487,7 @@ function create(options) {
     getState: function () {
       return Object.freeze({
         active: active,
+        interactionActive: interactionActive,
         mounted: !!(popupHost && popupHost.parentNode && floating.parentNode === popupHost),
         layerId: dismissLayer ? dismissLayer.layerId : (settings.manageLayer !== false ? String(settings.layerId || '') || null : null),
         parentLayerId: resolvedParentLayerId(),

@@ -375,6 +375,7 @@ function create(options) {
     runtime.mount();
     surface.show(info);
     if (!runtime.getState().active) runtime.activate(info);
+    else if (runtime.activateInteraction) runtime.activateInteraction(info);
     emitOpen(true, info);
     // A logical callback may synchronously close or destroy this Trigger.
     if (destroyed || !opened) return true;
@@ -412,6 +413,7 @@ function create(options) {
     // A logical callback may synchronously reopen or destroy this Trigger. Only the
     // internal destroy authority is guarded; a public reason string cannot spoof teardown.
     if (destroyed || opened) return true;
+    if (runtime.deactivateInteraction) runtime.deactivateInteraction(info);
     transition.setVisible(false, { reason: info.reason, originalEvent: info.originalEvent, immediate: !opts.transition || forceClose === 'destroy' });
     return true;
   }
@@ -563,6 +565,7 @@ function create(options) {
       present: transitionState.present,
       transition: transitionState,
       overlayActive: runtimeState.active,
+      overlayInteractionActive: runtimeState.interactionActive === true,
       mounted: runtimeState.mounted,
       disabled: opts.disabled === true,
       trigger: triggers.slice(),

@@ -44,7 +44,7 @@ function create(options) {
   var opts = Utils.assignOwn({
     size: 'md', disabled: false, readOnly: false, editable: false, clearable: false, draftVisual: false, controlMode: 'input', tags: [], tokenSeparators: [],
     placeholder: '', placement: 'bottom-start', open: false, trigger: 'click',
-    closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true, focusScope: 'exit', matchReferenceWidth: false, renderControl: true, headless: false
+    closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: false, closeOnEscape: true, focusScope: 'contain', matchReferenceWidth: false, renderControl: true, headless: false
   }, options || {});
   var doc = opts.document || globalThis.document;
   var host = opts.container || null;
@@ -78,6 +78,7 @@ function create(options) {
   var tags = Array.isArray(opts.tags) ? opts.tags.slice() : [];
   var clearVisible = opts.clearVisible === true;
   var footerCleanups = [], footerActionButtons = [];
+  var interactionGeneration = 0, navigationActive = false, editorSnapshot = null, editorPointerPending = false, suppressOpenEvent = null;
 
   if (!projectionMode && !headlessMode) { root.classList.add('qxframe9a7c2-picker-field'); if (opts.className) root.classList.add(String(opts.className)); }
   panel.className = 'qxframe9a7c2-picker-field-panel qxframe9a7c2-popup-surface is-' + sizeName(opts.size) + (opts.panelClass ? ' ' + String(opts.panelClass) : '');
@@ -111,10 +112,82 @@ function create(options) {
     });
   }
   function canActivatePicker() { return interactionPolicy().activatable; }
+  function canEditSelector() { return opts.editable === true && interactionPolicy().editable; }
 
   function focusElement() {
     if (control && control.getFocusElement) return control.getFocusElement();
     return triggerTarget || root || null;
+  }
+  function editorElement() {
+    return control && control.getInputElement ? control.getInputElement() : input;
+  }
+  function isSelectorEditor(target) {
+    var editor = editorElement();
+    return !!(editor && target === editor);
+  }
+  function captureEditorSnapshot() {
+    var editor = editorElement();
+    if (!editor || editor.value === undefined) return null;
+    var snapshot = { value:String(editor.value || ''), selectionStart:null, selectionEnd:null, selectionDirection:null };
+    try {
+      snapshot.selectionStart = typeof editor.selectionStart === 'number' ? editor.selectionStart : null;
+      snapshot.selectionEnd = typeof editor.selectionEnd === 'number' ? editor.selectionEnd : null;
+      snapshot.selectionDirection = editor.selectionDirection || null;
+    } catch (_) {}
+    return snapshot;
+  }
+  function restoreSelection(snapshot) {
+    var editor = editorElement();
+    if (!editor || !snapshot || snapshot.selectionStart === null || !Utils.isFunction(editor.setSelectionRange)) return false;
+    var length = String(editor.value || '').length;
+    var start = Math.max(0, Math.min(length, Number(snapshot.selectionStart) || 0));
+    var end = Math.max(start, Math.min(length, Number(snapshot.selectionEnd) || start));
+    try { editor.setSelectionRange(start, end, snapshot.selectionDirection || 'none'); return true; } catch (_) { return false; }
+  }
+  function projectDisplayValue(value) {
+    var text = value == null ? '' : String(value);
+    if (!control) { var editor = editorElement(); if (editor && editor.value !== undefined) editor.value = text; return; }
+    control.setDisplayValue(text);
+    if (!projectionMode && (String(opts.controlMode || 'input') === 'input' || String(opts.controlMode || 'input') === 'tags')) control.setInputValue(text);
+    else if (projectionMode && editorElement() && opts.editable === true) control.setInputValue(text);
+  }
+  function beginNavigationInteraction() {
+    if (navigationActive) return false;
+    interactionGeneration += 1;
+    editorSnapshot = captureEditorSnapshot();
+    navigationActive = true;
+    return true;
+  }
+  function preserveEditorForReason(reason) {
+    var value = String(reason || '');
+    return value === 'escape' || value === 'cancel' || value === 'editor-intent' || value === 'editor-pointer' || value === 'editor-context' || (canEditSelector() && (value === 'outside' || value === 'focus-outside'));
+  }
+  function endNavigationInteraction(detail) {
+    if (!navigationActive) return false;
+    var snapshot = editorSnapshot;
+    navigationActive = false;
+    var closeReason = String(detail && detail.reason || '');
+    if (closeReason !== 'editor-pointer') editorPointerPending = false;
+    if (closeReason !== 'editor-context') suppressOpenEvent = null;
+    if (preserveEditorForReason(closeReason) && snapshot) {
+      projectDisplayValue(snapshot.value);
+      restoreSelection(snapshot);
+    } else {
+      projectDisplayValue(displayValue);
+    }
+    editorSnapshot = null;
+    return true;
+  }
+  function navigationOwnsEvent(event) {
+    return !!(navigationActive && triggerSession && triggerSession.getState().open && event && isSelectorEditor(event.target));
+  }
+  function editorIntentKeydown(event) {
+    if (!event || !navigationOwnsEvent(event) || !canEditSelector() || KeyboardNavigation.isComposing(event)) return false;
+    var key = String(event.key || '');
+    if (key === 'Backspace' || key === 'Delete') return true;
+    if ((event.ctrlKey || event.metaKey || event.altKey) && (key.indexOf('Arrow') === 0 || key === 'Home' || key === 'End')) return true;
+    if ((event.ctrlKey || event.metaKey) && ['a','A','z','Z','y','Y','x','X','v','V'].indexOf(key) >= 0) return true;
+    return false;
   }
   function pointerWillMoveFocus(target) {
     var node = target && target.nodeType === 1 ? target : target && target.parentElement;
@@ -168,7 +241,7 @@ function create(options) {
     autoUpdate: opts.autoUpdate !== false,
     closeOnOutsidePress: opts.closeOnOutsidePress !== false,
     closeOnFocusOutside: opts.closeOnFocusOutside !== false,
-    closeOnTabExit: opts.closeOnTabExit !== false,
+    closeOnTabExit: opts.closeOnTabExit === true,
     focusScope: opts.focusScope,
     tabExitTarget: focusElement,
     closeOnEscape: opts.closeOnEscape !== false,
@@ -177,13 +250,44 @@ function create(options) {
     openDelay: opts.openDelay,
     closeDelay: opts.closeDelay,
     disabled: !canActivatePicker(),
-    beforeOpen: function (detail) { if (destroyed || !canActivatePicker()) return false; if (typeof opts.beforeOpen === 'function') return opts.beforeOpen(detail); },
+    beforeOpen: function (detail) {
+      if (destroyed || !canActivatePicker()) return false;
+      if (suppressOpenEvent && detail && detail.originalEvent === suppressOpenEvent) { suppressOpenEvent = null; return false; }
+      if (typeof opts.beforeOpen === 'function') return opts.beforeOpen(detail);
+    },
     beforeClose: function (detail) { if (typeof opts.beforeClose === 'function') return opts.beforeClose(detail); },
-    onOpen: function (detail) { if (typeof opts.onOpen === 'function') opts.onOpen(detail); if (!destroyed) emitOpen(true, detail); },
-    onClose: function (detail) { if (typeof opts.onClose === 'function') opts.onClose(detail); if (!destroyed) { if (keyboard && keyboard.virtualFocus) keyboard.virtualFocus.clear({ modality:keyboard.virtualFocus.getState().modality }); restoreFocusAfterLogicalClose(detail); emitOpen(false, detail); } },
+    onOpen: function (detail) { beginNavigationInteraction(); if (typeof opts.onOpen === 'function') opts.onOpen(detail); if (!destroyed) emitOpen(true, detail); },
+    onClose: function (detail) { if (typeof opts.onClose === 'function') opts.onClose(detail); if (!destroyed) { endNavigationInteraction(detail); if (keyboard && keyboard.virtualFocus) keyboard.virtualFocus.clear({ modality:keyboard.virtualFocus.getState().modality }); restoreFocusAfterLogicalClose(detail); emitOpen(false, detail); } },
     afterOpen: function (detail) { if (typeof opts.afterOpen === 'function') opts.afterOpen(detail); },
     afterClose: function (detail) { if (typeof opts.afterClose === 'function') opts.afterClose(detail); }
   });
+
+  if (root) scope.add(DOM.listen(root, 'click', function (event) {
+    if (!editorPointerPending || !isSelectorEditor(event.target)) return;
+    suppressOpenEvent = event;
+    editorPointerPending = false;
+  }, true));
+  var selectorEditor = editorElement();
+  if (selectorEditor) {
+    scope.add(DOM.listen(selectorEditor, 'pointerdown', function (event) {
+      editorPointerPending = false;
+      if (!navigationOwnsEvent(event) || !canEditSelector()) return;
+      editorPointerPending = true;
+      close('editor-pointer', event);
+    }));
+    scope.add(DOM.listen(selectorEditor, 'pointercancel', function () { editorPointerPending = false; suppressOpenEvent = null; }));
+    scope.add(DOM.listen(selectorEditor, 'beforeinput', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'compositionstart', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'paste', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'cut', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
+    scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) { suppressOpenEvent = event; close('editor-context', event); } }));
+    scope.add(DOM.listen(selectorEditor, 'keydown', function (event) { if (editorIntentKeydown(event)) close('editor-intent', event); }));
+  }
+
+  function routeOwnedNavigation(detail) {
+    if (typeof opts.onKeydown === 'function') opts.onKeydown(detail.originalEvent, api);
+    return true;
+  }
 
   keyboard = KeyboardNavigation.create({
     root: focusElement(),
@@ -192,22 +296,27 @@ function create(options) {
     allowEditableKey: function (key, detail) {
       var event = detail && detail.originalEvent;
       if (!event) return false;
+      if (navigationOwnsEvent(event)) {
+        if (key === 'Backspace' || key === 'Delete') return false;
+        if ((event.ctrlKey || event.metaKey || event.altKey) && (key.indexOf('Arrow') === 0 || key === 'Home' || key === 'End')) return false;
+        return true;
+      }
       if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Home' || key === 'End') return opts.editable !== true || !KeyboardNavigation.shouldPreserveNativeTextEditing(event, event.target);
       return true;
     },
     handlers: {
-      ArrowDown: function (detail) { if (!triggerSession.getState().open && canActivatePicker()) return open('keyboard-down', detail.originalEvent); return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      ArrowUp: function (detail) { if (!triggerSession.getState().open && canActivatePicker()) return open('keyboard-up', detail.originalEvent); return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
+      ArrowDown: function (detail) { if (!triggerSession.getState().open && canActivatePicker()) return open('keyboard-down', detail.originalEvent); return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
+      ArrowUp: function (detail) { if (!triggerSession.getState().open && canActivatePicker()) return open('keyboard-up', detail.originalEvent); return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
       Escape: function (detail) { if (triggerSession.getState().open && opts.closeOnEscape !== false) return close('escape', detail.originalEvent); return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      ArrowLeft: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      ArrowRight: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      Backspace: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      Delete: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      Enter: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      Home: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      End: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      PageUp: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
-      PageDown: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
+      ArrowLeft: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
+      ArrowRight: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
+      Backspace: function (detail) { return false; },
+      Delete: function (detail) { return false; },
+      Enter: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
+      Home: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
+      End: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
+      PageUp: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
+      PageDown: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
       F6: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; }
     }
   });
@@ -215,25 +324,33 @@ function create(options) {
 
   function syncControl() {
     if (!control) return;
-    control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: displayValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
+    var editorValue = navigationActive && editorSnapshot ? editorSnapshot.value : displayValue;
+    control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: editorValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
   }
   function writeExternalValue(target, value) { if (!target) return; var text = value == null ? '' : String(value); if (/^(input|textarea|select)$/i.test(String(target.tagName || ''))) target.value = text; else target.textContent = text; }
   function setDisplayValue(value) {
     displayValue = value == null ? '' : String(value);
-    if (control) {
-      control.setDisplayValue(displayValue);
-      // Owned PickerField controls use Control(input) as the visible value surface.
-      // Keep the input projection in lockstep with picker display text even when the
-      // field is read-only/editable:false. Projection mode keeps authored value/input
-      // targets independent and therefore only mirrors into an editable input target.
-      if (!projectionMode && (String(opts.controlMode || 'input') === 'input' || String(opts.controlMode || 'input') === 'tags')) control.setInputValue(displayValue);
-      else if (projectionMode && input && opts.editable === true) control.setInputValue(displayValue);
-    }
+    // While the picker owns navigation, component draft projection must never rewrite
+    // the selector editor buffer/caret. The final committed/cancelled text is projected
+    // exactly once when the logical picker interaction ends.
+    if (!navigationActive) projectDisplayValue(displayValue);
     return api;
   }
   function setDraftDisplayValue(value) { draftDisplayValue = value == null ? '' : String(value); if (projectionMode) writeExternalValue(draftValueTarget, draftDisplayValue); return api; }
   function setPlaceholder(value) { displayPlaceholder = value == null ? '' : String(value); if (control) control.updateOptions({ placeholder: displayPlaceholder }); return api; }
-  function setCommittedValue(value, meta) { committedValue = value; if (control) control.setCommittedValue(value, meta || { silent: true, source: 'picker', reason: 'projection' }); return api; }
+  function setCommittedValue(value, meta) {
+    var detail = meta || { silent: true, source: 'picker', reason: 'projection' };
+    committedValue = value;
+    if (navigationActive && editorSnapshot && String(detail.reason || 'projection') !== 'projection') {
+      editorSnapshot.value = displayValue;
+      var nextLength = editorSnapshot.value.length;
+      editorSnapshot.selectionStart = nextLength;
+      editorSnapshot.selectionEnd = nextLength;
+      editorSnapshot.selectionDirection = 'none';
+    }
+    if (control) control.setCommittedValue(value, detail);
+    return api;
+  }
   function setTags(value) { tags = Array.isArray(value) ? value.slice() : []; if (control) control.setTags(tags); return api; }
   function setClearVisible(value) { clearVisible = value === true; if (control) control.setHasValue(clearVisible); return api; }
   function setDraftVisual(value) { opts.draftVisual = value === true; if (control && control.setDraftVisual) control.setDraftVisual(opts.draftVisual); return api; }
@@ -262,7 +379,7 @@ function create(options) {
       autoUpdate: opts.autoUpdate !== false,
       closeOnOutsidePress: opts.closeOnOutsidePress !== false,
       closeOnFocusOutside: opts.closeOnFocusOutside !== false,
-      closeOnTabExit: opts.closeOnTabExit !== false,
+      closeOnTabExit: opts.closeOnTabExit === true,
       focusScope: opts.focusScope,
       tabExitTarget: focusElement,
       closeOnEscape: opts.closeOnEscape !== false,
@@ -329,7 +446,7 @@ function create(options) {
     open: open, close: close, toggle: function (reason,event) { return destroyed || !canActivatePicker() ? false : triggerSession.toggle(reason || 'api', event || null); }, setOpen: setOpen,
     setDisplayValue: setDisplayValue, setDraftDisplayValue: setDraftDisplayValue, setPlaceholder: setPlaceholder, setCommittedValue: setCommittedValue, setTags: setTags, setClearVisible: setClearVisible, setDraftVisual: setDraftVisual, createFooter: createFooter, createConfirmFooter: createConfirmFooter,
     reposition: function () { return destroyed ? false : triggerSession.reposition('api'); }, updateOptions: updateOptions, focus: function () { if (control) return control.focus(); return DOM.focusElement(triggerTarget || root, { preventScroll: true }); },
-    getState: function () { return Object.freeze({ open: !!(triggerSession && triggerSession.getState().open), displayValue: displayValue, draftDisplayValue: draftDisplayValue, placeholder: displayPlaceholder, draftVisual: opts.draftVisual === true, hasDraftValueTarget: !!draftValueTarget, renderControl: !projectionMode && !headlessMode, projection: projectionMode, headless: headlessMode, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true, focusScope: opts.focusScope, destroyed: destroyed }); },
+    getState: function () { return Object.freeze({ open: !!(triggerSession && triggerSession.getState().open), displayValue: displayValue, draftDisplayValue: draftDisplayValue, placeholder: displayPlaceholder, draftVisual: opts.draftVisual === true, hasDraftValueTarget: !!draftValueTarget, renderControl: !projectionMode && !headlessMode, projection: projectionMode, headless: headlessMode, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true, focusScope: opts.focusScope, interactionMode: navigationActive ? 'navigation' : 'text', keyboardOwner: navigationActive ? 'picker' : 'editor', editorSuspended: navigationActive, interactionGeneration: interactionGeneration, destroyed: destroyed }); },
     getRootElement: function () { return root; }, getControlElement: function () { return control ? control.getControlElement() : controlElement; }, getInputElement: function () { return control && control.getInputElement ? control.getInputElement() : input; }, getDraftValueElement: function () { return draftValueTarget; },
     getPanelElement: function () { return panel; }, getPanelHost: function () { return body; }, getFooterElement: function () { return footer; },
     getControl: function () { return control; }, getKeyboardNavigation: function () { return keyboard; }, getFormField: function () { return control ? control.getFormField() : null; }, getCommittedValue: function () { return control ? control.getCommittedValue() : committedValue; }, getTrigger: function () { return triggerSession; },
@@ -339,6 +456,7 @@ function create(options) {
       destroyed = true;
       if (control) control.destroy(reason || 'picker-field-destroy'); control = null; DOM.removeNode(panel); if (binding) binding.release(); binding = null;
       if (draftValueTarget && draftValueSnapshot) { if (draftValueSnapshot.kind === 'value') draftValueTarget.value = draftValueSnapshot.value; else draftValueTarget.textContent = draftValueSnapshot.value; }
+      navigationActive = false; editorSnapshot = null; editorPointerPending = false; suppressOpenEvent = null;
       root = controlElement = valueHost = input = clearButton = toggleElement = body = footer = panel = triggerTarget = draftValueTarget = null; draftValueSnapshot = null; return true;
     }
   });
