@@ -565,6 +565,7 @@ function create(options) {
       present: transitionState.present,
       transition: transitionState,
       overlayActive: runtimeState.active,
+      overlayInteractionActive: runtimeState.interactionActive === true,
       mounted: runtimeState.mounted,
       disabled: opts.disabled === true,
       trigger: triggers.slice(),
