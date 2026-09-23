@@ -937,8 +937,6 @@ function setupMenu(instance) {
     var previous = selectedArray();
     if (sameKeys(previous, next)) return api;
     selection.set(next, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'selection-change' });
-    opts.selectedKeys = next.slice();
-    opts.selectedKey = next.length ? next[0] : undefined;
     if (meta && meta.source === 'keyboard' && next.length) { activeKey = next[next.length - 1]; activeOverflow = false; }
     syncClasses();
     if (!(meta && meta.silent)) {
@@ -1276,10 +1274,6 @@ function setupMenu(instance) {
     else if (virtualFocusDomain) virtualFocusDomain.activate(next, { source:meta && meta.source || 'api', modality:meta && meta.source === 'pointer' ? 'pointer' : (keyboard ? keyboard.virtualFocus.getState().modality : 'pointer'), reason:meta && meta.reason || 'set-active', ensureVisible:false });
     return true;
   }
-  function setItemsRuntime(items) {
-    if (destroyed) return api;
-    validateItems(items); opts.items = Array.isArray(items) ? items.slice() : []; rebuild(); return api;
-  }
   function applyOptions(nextOptions, patch) {
     if (destroyed) return api;
     var next = Utils.mergeOwn(patch || {});
@@ -1336,7 +1330,7 @@ function setupMenu(instance) {
   }
 
   var record = {
-    setItemsRuntime: setItemsRuntime, setSelectedKey: setSelectedKey, setSelectedKeys: setSelectedKeys, setOpenKeys: setOpenKeys, setActiveKey: setActiveKey,
+    setSelectedKey: setSelectedKey, setSelectedKeys: setSelectedKeys, setOpenKeys: setOpenKeys, setActiveKey: setActiveKey,
     applyOptions: applyOptions,
     openSubmenu: function (key, reason, event) { return openSubmenu(key, reason || 'api', event || null); },
     closeSubmenu: function (key, reason, event) { return closeSubmenu(key, reason || 'api', event || null); },
