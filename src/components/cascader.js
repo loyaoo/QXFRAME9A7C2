@@ -824,7 +824,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         function normalizeSelection() {
           var valid = opts.multiple === true ? normalizeAssociatedValues(selection.values) : selection.values.filter(function (value) { return findPathByValue(value).length > 0; }).slice(0, 1);
           selection.set(valid, { silent: true, source: 'normalize', reason: 'items' });
-          if (valueState && !valueState.controlled) valueState.setValue(opts.multiple === true ? selection.values.slice() : selection.value, { silent:true, source:'normalize', reason:'items' });
+          if (valueState && !valueState.controlled) valueState.write(opts.multiple === true ? selection.values.slice() : selection.value, { silent:true, source:'normalize', reason:'items' }, false);
           var values = selection.values;
           if (selectionAnchorValue === null || !values.some(function (value) { return String(value) === String(selectionAnchorValue); })) selectionAnchorValue = values.length ? values[values.length - 1] : null;
           if (!activePathKeys.length) { var seedPath = selectedAnchorPath(); if (seedPath.length) activePathKeys = seedPath.map(function (item) { return String(item.key); }); }
