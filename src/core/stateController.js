@@ -27,6 +27,7 @@ function createValueBinding(options) {
     return Object.freeze({
         get value() { return copyValue(controller.value); },
         get controlled() { return controller.controlled; },
+        copy(value) { return copyValue(value); },
         write,
         syncExternal(next, meta) { return controller.syncExternal(next, meta); },
         setControlled(value) { controller.setControlled(value); return this; },
