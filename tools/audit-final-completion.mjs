@@ -158,7 +158,7 @@ for(const [file,text] of source){
   });
 }
 function classifyPrototypeMerge(candidate){
-  var line=candidate.text, file=candidate.file;
+  var file=candidate.file, fileText=source.get(file)||'', fullLine=(fileText.split(/\r?\n/)[candidate.line-1]||candidate.text), line=fullLine.trim();
   if(/Object\.assign\s*\(/.test(line)) return {approved:false,reason:'Object.assign is forbidden in owned source; use Utils.assignOwn/copyOwn.'};
   if(line.indexOf('Utils.safeOwnKey(')>=0) return {approved:true,reason:'dynamic key is guarded by canonical Utils.safeOwnKey'};
   if(file==='src/core/domTemplate.js') return {approved:true,reason:'refs/slots targets are null-prototype maps built from static DOMTemplate markers'};
