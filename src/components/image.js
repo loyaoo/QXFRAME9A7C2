@@ -92,7 +92,7 @@ function normalizePreview(value) {
   if (typeof value !== 'object' || Array.isArray(value) || Renderer.isNodeLike(value)) {
     throw new TypeError('[QXFRAME9A7C2] Image preview must be true, false, or an object.');
   }
-  var next = Object.assign({}, value);
+  var next = Utils.mergeOwn(value);
   if (own(next, 'previewList') || own(next, 'previewGroup')) {
     throw new TypeError('[QXFRAME9A7C2] Image preview does not accept legacy list aliases.');
   }
@@ -103,7 +103,7 @@ function normalizePreview(value) {
   return next;
 }
 function normalizeOptions(options) {
-  var next = Object.assign({}, options || {});
+  var next = Utils.mergeOwn(options);
   rejectRemoved(next);
   next.fit = String(next.fit == null ? 'cover' : next.fit).toLowerCase();
   if (FITS.indexOf(next.fit) < 0) throw new TypeError('[QXFRAME9A7C2] Image fit must be one of: ' + FITS.join(', ') + '.');
@@ -826,7 +826,7 @@ function create(options) {
       if (!Array.isArray(items)) throw new TypeError('[QXFRAME9A7C2] Image preview items must be an array.');
       var normalized = items.map(normalizePreviewItem);
       var config = previewConfig();
-      opts.preview = Object.assign({}, config || {}, { items: normalized });
+      opts.preview = Utils.mergeOwn(config, { items: normalized });
       previewIndex = 0;
       if (previewImage) syncPreviewMedia('set-items');
       return api;
@@ -837,7 +837,7 @@ function create(options) {
       rejectRemoved(next);
       if (own(next, 'container') && next.container !== opts.container) throw new Error('[QXFRAME9A7C2] Image container is immutable.');
       if (own(next, 'document') && next.document !== doc) throw new Error('[QXFRAME9A7C2] Image document is immutable.');
-      var candidate = normalizeOptions(Object.assign({}, opts, next));
+      var candidate = normalizeOptions(Utils.mergeOwn(opts, next));
       var sourceChanged = own(next, 'src');
       opts = candidate;
       renderPlaceholder();
@@ -911,7 +911,7 @@ function create(options) {
 }
     
 function createPreview(options) {
-  var source = Object.assign({}, options || {});
+  var source = Utils.mergeOwn(options);
   var doc = source.document || global.document;
   if (!doc || !doc.createElement || !doc.body) throw new TypeError('[QXFRAME9A7C2] Image.createPreview requires a document with body.');
   var items = Array.isArray(source.items) ? source.items : [];
@@ -919,7 +919,7 @@ function createPreview(options) {
   host.className = 'qxframe9a7c2-image-preview-controller-host';
   host.hidden = true;
   doc.body.appendChild(host);
-  var previewOptions = Object.assign({}, source, { items: items, initialIndex: source.initialIndex == null ? 0 : source.initialIndex, trajectory: source.trajectory === true });
+  var previewOptions = Utils.mergeOwn(source, { items: items, initialIndex: source.initialIndex == null ? 0 : source.initialIndex, trajectory: source.trajectory === true });
   delete previewOptions.document;
   delete previewOptions.container;
   delete previewOptions.portalContainer;
@@ -954,7 +954,7 @@ function createPreview(options) {
     flipY: owner.flipY,
     reset: owner.reset,
     updateOptions: function (next) {
-      var config = Object.assign({}, previewOptions, next || {});
+      var config = Utils.mergeOwn(previewOptions, next);
       if (own(config, 'items')) owner.setPreviewItems(config.items);
       owner.updateOptions({ preview: config });
       previewOptions = config;
