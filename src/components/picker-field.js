@@ -159,7 +159,7 @@ function create(options) {
   }
   function preserveEditorForReason(reason) {
     var value = String(reason || '');
-    return value === 'escape' || value === 'cancel' || value === 'editor-intent' || value === 'editor-pointer' || value === 'editor-context';
+    return value === 'escape' || value === 'cancel' || value === 'editor-intent' || value === 'editor-pointer' || value === 'editor-context' || (opts.editable === true && (value === 'outside' || value === 'focus-outside'));
   }
   function endNavigationInteraction(detail) {
     if (!navigationActive) return false;
@@ -338,7 +338,19 @@ function create(options) {
   }
   function setDraftDisplayValue(value) { draftDisplayValue = value == null ? '' : String(value); if (projectionMode) writeExternalValue(draftValueTarget, draftDisplayValue); return api; }
   function setPlaceholder(value) { displayPlaceholder = value == null ? '' : String(value); if (control) control.updateOptions({ placeholder: displayPlaceholder }); return api; }
-  function setCommittedValue(value, meta) { committedValue = value; if (control) control.setCommittedValue(value, meta || { silent: true, source: 'picker', reason: 'projection' }); return api; }
+  function setCommittedValue(value, meta) {
+    var detail = meta || { silent: true, source: 'picker', reason: 'projection' };
+    committedValue = value;
+    if (navigationActive && editorSnapshot && String(detail.reason || 'projection') !== 'projection') {
+      editorSnapshot.value = displayValue;
+      var nextLength = editorSnapshot.value.length;
+      editorSnapshot.selectionStart = nextLength;
+      editorSnapshot.selectionEnd = nextLength;
+      editorSnapshot.selectionDirection = 'none';
+    }
+    if (control) control.setCommittedValue(value, detail);
+    return api;
+  }
   function setTags(value) { tags = Array.isArray(value) ? value.slice() : []; if (control) control.setTags(tags); return api; }
   function setClearVisible(value) { clearVisible = value === true; if (control) control.setHasValue(clearVisible); return api; }
   function setDraftVisual(value) { opts.draftVisual = value === true; if (control && control.setDraftVisual) control.setDraftVisual(opts.draftVisual); return api; }
