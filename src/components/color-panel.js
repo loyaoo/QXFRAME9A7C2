@@ -495,6 +495,13 @@ function create(options) {
     if (!isDirectionalKey(event && event.key)) return;
     finishKeyboardInteraction(event, 'saturation-keyboard-complete');
   }));
+  // Hosted virtual focus keeps real DOM focus on the PickerField editor. In that mode
+  // directional keyup never reaches the saturation element, so complete the same
+  // keyboard interaction from the document capture phase as well.
+  if (doc) scope.add(DOM.listen(doc, 'keyup', function (event) {
+    if (!keyboardSnapshot || !isDirectionalKey(event && event.key)) return;
+    finishKeyboardInteraction(event, 'saturation-keyboard-complete');
+  }, true));
   if (globalThis && globalThis.addEventListener) scope.add(DOM.listen(globalThis, 'blur', function (event) {
     finishKeyboardInteraction(event, 'saturation-keyboard-blur');
     if (dragging) { dragging = false; if (dragSnapshot) { var initialDrag = cloneState(dragSnapshot); dragSnapshot = null; emitChange(initialDrag, { source: 'blur', reason: 'saturation-pointer-blur', originalEvent: event }, true); } }
