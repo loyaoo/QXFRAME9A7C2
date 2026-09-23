@@ -32,7 +32,7 @@ function clamp(value, min, max) {
   }
 
   function create(options) {
-    var settings = Object.assign({}, options || {});
+    var settings = Utils.mergeOwn(options || {});
     var viewport = settings.viewport;
     if (!viewport) throw new TypeError('[QXFRAME9A7C2] Virtualizer viewport is required.');
 
