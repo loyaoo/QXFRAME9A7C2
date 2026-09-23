@@ -1239,7 +1239,7 @@ function setupTags(instance) {
     if (selectionValueState.controlled) {
       syncSelectionProjection('controlled-toggle');
       render('selection');
-      emitSelection(proposed, Utils.assignOwn(detail, { controlled:true, proposedValue:proposed.slice() }));
+      emitSelection(proposed, Utils.assignOwn(detail, { valueControlled:true, proposedValue:proposed.slice() }));
       return true;
     }
     selection.set(selectionValue(), detail);
