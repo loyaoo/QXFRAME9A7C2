@@ -479,12 +479,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
       syncTimePanel();
       syncField(false);
     },
-    onCloseDraft: function (controller, detail) {
+    onCloseDraft: function (_controller, detail) {
       hoverPreviewValue = null;
-      if ((!detail || detail.rolledBack !== true) && opts.needConfirm !== true && controller.dirty && rangeCommitReady(controller.draftValue)) {
-        var closedCommit = instance.commit({ source: detail && detail.source || 'popup', reason: (detail && detail.reason || 'close') + '-commit', originalEvent: detail && detail.originalEvent || null });
-        if (closedCommit === false && controller.dirty) controller.cancel({ silent: true, source: 'popup', reason: 'close-commit-rejected', originalEvent: detail && detail.originalEvent || null });
-      }
       if (!detail || detail.rolledBack !== true) syncField(false);
     }
   });
