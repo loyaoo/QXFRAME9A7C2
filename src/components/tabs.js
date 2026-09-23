@@ -663,7 +663,7 @@ function create(options) {
       originalEvent: meta && meta.originalEvent || null, instance: api
     };
     if (typeof opts.onChange === 'function') opts.onChange(activeKey, detail);
-    emitter.emit('change', detail);
+    if (!destroyed) emitter.emit('change', detail);
     return detail;
   }
   function setActiveKey(next, meta) {
@@ -683,7 +683,10 @@ function create(options) {
       source: meta && meta.source || 'api', reason: meta && meta.reason || 'set-active',
       originalEvent: meta && meta.originalEvent || null, instance: api
     };
-    if (typeof opts.onBeforeChange === 'function' && opts.onBeforeChange(key, previous, detail) === false) return false;
+    if (typeof opts.onBeforeChange === 'function') {
+      var allowed = opts.onBeforeChange(key, previous, detail);
+      if (destroyed || allowed === false) return false;
+    }
     activeKey = key;
     activeItem.set(key, { silent: true, source: detail.source, reason: 'active-sync', originalEvent: detail.originalEvent });
     syncTabRoving();
@@ -754,7 +757,7 @@ function create(options) {
     };
     var callbackResult;
     if (typeof opts.onEdit === 'function') callbackResult = opts.onEdit(item ? item.key : undefined, action, detail);
-    emitter.emit('edit', detail);
+    if (!destroyed) emitter.emit('edit', detail);
     return { detail: detail, callbackResult: callbackResult };
   }
   function beforeEdit(action, item, index, meta) {
@@ -763,7 +766,9 @@ function create(options) {
       items: items.slice(), source: meta && meta.source || 'api', reason: meta && meta.reason || action,
       originalEvent: meta && meta.originalEvent || null, instance: api
     };
-    return typeof opts.onBeforeEdit !== 'function' || opts.onBeforeEdit(detail) !== false;
+    if (typeof opts.onBeforeEdit !== 'function') return true;
+    var allowed = opts.onBeforeEdit(detail);
+    return !destroyed && allowed !== false;
   }
   function syncCollection(nextItems) {
     items = nextItems.slice();
@@ -793,8 +798,9 @@ function create(options) {
     activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'remove-fallback' });
     render(true);
     emitEdit('remove', item, index, meta);
+    if (destroyed) return false;
     if (previousActive !== activeKey && (!meta || meta.silent !== true)) emitChange(previousActive, Utils.mergeOwn( meta || {}, { reason: 'remove' }));
-    return true;
+    return !destroyed;
   }
   function add(item, meta) {
     if (destroyed || editLocked(meta)) return false;
@@ -908,11 +914,17 @@ function create(options) {
   scope.add(DOM.listen(addButton, 'click', function (event) {
     if (InteractionPolicy.mutationLocked(opts)) return;
     var detail = { action: 'add', items: items.slice(), source: DOM.activationSource(event), reason: 'add-button', originalEvent: event, instance: api };
-    if (typeof opts.onBeforeEdit === 'function' && opts.onBeforeEdit(detail) === false) return;
+    if (typeof opts.onBeforeEdit === 'function') {
+      var allowed = opts.onBeforeEdit(detail);
+      if (destroyed || allowed === false) return;
+    }
     var candidate;
     if (typeof opts.createItem === 'function') candidate = opts.createItem(detail);
+    if (destroyed) return;
     if (candidate === undefined && typeof opts.onAdd === 'function') candidate = opts.onAdd(detail);
+    if (destroyed) return;
     var editResult = emitEdit('add', null, items.length, { source: DOM.activationSource(event), reason: 'add-button', originalEvent: event });
+    if (destroyed) return;
     if (candidate === undefined && editResult.callbackResult && typeof editResult.callbackResult === 'object') candidate = editResult.callbackResult;
     if (candidate !== undefined && candidate !== null) add(candidate, { source: DOM.activationSource(event), reason: 'add-button', originalEvent: event });
   }));
