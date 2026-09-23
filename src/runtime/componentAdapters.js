@@ -87,8 +87,9 @@ raw.Image = classApi(Image, { createPreview:Image.createPreview });
 raw.JSON = classApi(JSONComponent);
 raw.Tags = classApi(Tags);
 raw.Upload = classApi(Upload, { definition:sourceInitializer, enhance:function(){return Upload.enhance.apply(Upload,arguments);}, LIST_IGNORE:Upload.LIST_IGNORE });
-Utils.assignOwn(raw, { Trigger, Ripple, Table, Message, Notification });
+raw.Table = classApi(Table, { sizes:Table.sizes.slice() });
+Utils.assignOwn(raw, { Trigger, Ripple, Message, Notification });
 
 export const Components = Object.freeze(Object.fromEntries(Object.entries(raw).map(([name, api]) => [name, publishComponentApi(name, api)])));
-export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Menu, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Scroll, Select, Slider, Sort, Steps, TagInput, Tags, Tabs, TimePicker, Tooltip, Transfer, TreeSelect, Upload, WheelPicker });
+export const componentTypes = Object.freeze({ Autocomplete, Cascader, Carousel, Collapse, ColorPicker, DatePicker, Drawer, Dropdown, Image, InputNumber, InputOTP, JSON:JSONComponent, Loading, Menu, Modal, Pagination, Popconfirm, Popover, Progress, Rate, Result, Scroll, Select, Slider, Sort, Steps, Table, TagInput, Tags, Tabs, TimePicker, Tooltip, Transfer, TreeSelect, Upload, WheelPicker });
 export default Components;
