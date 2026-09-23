@@ -454,6 +454,12 @@ function create(options) {
     }
   });
   scope.add(function () { if (remoteTask) remoteTask.destroy(); remoteTask = null; });
+  function invalidateRemoteRequest(reason) {
+    remoteEpoch += 1;
+    if (remoteTask && remoteTask.pending) remoteTask.cancel(reason || 'remote-data-owner-replaced');
+    remoteProcessing = false;
+    remoteError = null;
+  }
   function requestRemote(reason) {
     if (destroyed || !isRemote() || !remoteTask) return Promise.resolve(false);
     var query = remoteQuery();
@@ -2307,6 +2313,7 @@ function create(options) {
     if (own(next, 'searchMatcher') && next.searchMatcher !== null && next.searchMatcher !== undefined && typeof next.searchMatcher !== 'function') throw new TypeError('[QXFRAME9A7C2] Table searchMatcher must be a function or null.');
     if (own(next, 'remoteSelectionScope')) normalizeRemoteSelectionScope(next.remoteSelectionScope);
     if (own(next, 'scrollPolicy')) normalizeScrollPolicy(next.scrollPolicy);
+    var loaderChanged = own(next, 'load') && next.load !== opts.load;
     var candidate = Utils.mergeOwn(opts, next);
     candidate.size = normalizeSize(candidate.size);
     candidate.columns = normalizeColumns(candidate.columns);
@@ -2325,7 +2332,7 @@ function create(options) {
     var remoteSelectionContractChanged = own(next, 'remoteSelectionScope') || own(next, 'selectedKeys') || (own(next, 'load') && typeof candidate.load !== 'function');
     opts = candidate;
     if (remoteSelectionContractChanged) resetRemoteSelection();
-    if (own(next, 'load') && typeof opts.load !== 'function' && remoteTask) { remoteEpoch += 1; remoteTask.cancel('load-disabled'); remoteProcessing = false; remoteError = null; }
+    if (loaderChanged || own(next, 'items')) invalidateRemoteRequest(loaderChanged ? 'load-options-replaced' : 'items-options-replaced');
     syncKeyboardNavigation();
     syncReorderInteractions();
     var modelPatch = {};
@@ -2361,7 +2368,7 @@ function create(options) {
   }
     
   api = Object.freeze({
-    setItems: function (items, meta) { opts.items = items; return model.setItems(items, meta); },
+    setItems: function (items, meta) { invalidateRemoteRequest('table-items-replaced'); opts.items = items; return model.setItems(items, meta); },
     updateRow: function (key, updater, meta) { return model.updateRow(key, updater, meta); },
     insertRows: function (index, rows, meta) { return model.insertRows(index, rows, meta); },
     removeRows: function (keys, meta) { return model.removeRows(keys, meta); },
