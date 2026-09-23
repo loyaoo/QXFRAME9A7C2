@@ -113,24 +113,13 @@ var emitter = Object.freeze({ emit:function(type,payload){return instance.emit(t
           var values = asValues(value, opts.multiple === true);
           return opts.multiple === true ? values : values[0];
         }
-        function copyApiValue(value) { return Array.isArray(value) ? value.slice() : value; }
-        valueState = StateController.create({
+        valueState = StateController.createValueBinding({
           value: normalizeApiValue(opts.value !== undefined ? opts.value : opts.defaultValue),
           controlled: hasOwn(fieldInit.options, 'value'),
-          normalizeValue: normalizeApiValue,
-          equals: StateController.deepEquals,
-          copyValue: copyApiValue
+          normalizeValue: normalizeApiValue
         });
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
-        function apiValue() { return valueState ? copyApiValue(valueState.value) : normalizeApiValue(undefined); }
-        function writeApiValue(next, meta, request) {
-          if (!valueState) return false;
-          var cfg = Utils.assignOwn({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta || {});
-          var normalized = normalizeApiValue(next);
-          if (StateController.deepEquals(valueState.value, normalized)) return false;
-          if (request === true && valueState.controlled) return valueState.requestChange(normalized, cfg);
-          return valueState.setValue(normalized, cfg);
-        }
+        function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function restoreOptionListFromApiValue(reason) {
           if (!optionList || !valueState || !valueState.controlled) return false;
           optionList.setValue(apiValue(), { silent:true, source:'controlled', reason:reason || 'controlled-restore' });
@@ -623,7 +612,7 @@ var controlHost = FieldHost.resolvePickerControl({
         function handleOptionChange(value, detail) {
           var cfg = detail || {};
           var proposed = normalizeApiValue(value);
-          var changed = writeApiValue(proposed, { silent:true, source:cfg.source || 'selection', reason:cfg.reason || 'change', originalEvent:cfg.originalEvent || null }, true);
+          var changed = valueState.write(proposed, { silent:true, source:cfg.source || 'selection', reason:cfg.reason || 'change', originalEvent:cfg.originalEvent || null }, true);
           restoreOptionListFromApiValue('controlled-option-change');
           if (opts.multiple !== true && opts.searchable === true) {
             draftValue = '';
@@ -633,11 +622,11 @@ var controlHost = FieldHost.resolvePickerControl({
           }
           renderValues({ silent: !!cfg.silent, source: cfg.source || 'selection', reason: cfg.reason || 'change' });
           if (!changed) return;
-          var payload = Utils.mergeOwn(cfg, { value: copyApiValue(proposed), controlled:!!valueState.controlled, select: instance });
-          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(proposed), payload);
+          var payload = Utils.mergeOwn(cfg, { value: proposed), controlled:!!valueState.controlled, select: instance });
+          if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(proposed), payload);
           if (destroyed) return;
           if (!cfg.silent) {
-            if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(proposed), payload);
+            if (Utils.isFunction(opts.onChange)) opts.onChange(proposed), payload);
             if (destroyed) return;
             emitter.emit('change', payload);
           }
@@ -859,15 +848,15 @@ var controlHost = FieldHost.resolvePickerControl({
           var cfg = meta || {};
           var previousValue = apiValue();
           var nextValue = normalizeApiValue(value);
-          var changed = writeApiValue(nextValue, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', originalEvent:cfg.originalEvent || null }, false);
+          var changed = valueState.write(nextValue, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', originalEvent:cfg.originalEvent || null }, false);
           var canonical = apiValue();
           optionList.setValue(canonical, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
           renderValues({ silent:!!cfg.silent, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
           if (changed) {
-            var payload = { value:copyApiValue(canonical), previousValue:copyApiValue(previousValue), source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', silent:!!cfg.silent, controlled:!!valueState.controlled, select:instance };
-            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(copyApiValue(canonical), payload);
+            var payload = { value:canonical), previousValue:previousValue), source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', silent:!!cfg.silent, controlled:!!valueState.controlled, select:instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(canonical), payload);
             if (!cfg.silent) {
-              if (Utils.isFunction(opts.onChange)) opts.onChange(copyApiValue(canonical), payload);
+              if (Utils.isFunction(opts.onChange)) opts.onChange(canonical), payload);
               if (!destroyed) emitter.emit('change', payload);
             }
           }
