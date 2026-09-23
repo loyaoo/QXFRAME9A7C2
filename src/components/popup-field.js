@@ -148,7 +148,7 @@ export class PopupFieldComponent extends FieldComponent {
         const record = requireState(this);
         if (record.trigger) {
             const triggerPatch = {};
-            for (const key of ['disabled','openDelay','closeDelay','placement','strategy','matchReferenceWidth','flipOnOverflow','closeOnEscape','closeOnOutsidePress','closeOnTabExit','zIndex']) {
+            for (const key of ['disabled','trigger','openDelay','closeDelay','placement','strategy','middleware','matchReferenceWidth','flipOnOverflow','autoUpdate','closeOnEscape','closeOnOutsidePress','closeOnTabExit','destroyOnClose','zIndex']) {
                 if (Object.prototype.hasOwnProperty.call(patch, key)) triggerPatch[key] = next[key];
             }
             if (Object.keys(triggerPatch).length) record.trigger.updateOptions(triggerPatch);
