@@ -47,6 +47,7 @@ function create(options) {
   var columnsHost = null;
   var domBinding = null;
   var wheel = null;
+  var focusController = null;
   var columnIndex = Object.create(null);
   var api = null;
   var structuralRefreshScheduler = Scheduler.createDelayScheduler(function (_timestamp, reason) {
