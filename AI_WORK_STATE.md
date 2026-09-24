@@ -10,47 +10,45 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `cd53968dee909f551bfc1b8ac3ab9d235580d066` (PR #73 merge)
-- Current branch: `refactor/phase-f-selector-specificity-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-005 selector-specificity PR
+- Last code-affecting main commit: `885b5202e69a8b43fe6d82bdbac8839c28aff957` (PR #74 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase F PR CI: #399 / `36014584198` (PR #73)
-- Latest green main CI + Pages: #400 / `36015116050`
+- Latest green Phase F PR CI: #401 / `36016034020` (PR #74)
+- Latest green main CI + Pages: #402 / `36016716760`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-005`
+- Current Task: `PHASE-F-006`
 
 ## CURRENT
 
-### PHASE-F-005 — repeated compound selector specificity normalization
-Status: IN_PROGRESS
-Task progress: 65%
+### PHASE-F-006 — duplicate CSS owner / dead-rule cleanup
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-F-004 is merged through PR #73; exact-head CI #399 / `36014584198` and main release + Pages #400 / `36015116050` are green.
-- a post-F-004 selector audit found four genuine repeated state atoms, all on Table expand-trigger compound selectors.
-- these selectors repeat `:hover:not(:disabled)`, `:focus-visible:not(:disabled)`, `.is-keyboard-focus:not(:disabled)`, or `:disabled` inside the same compound selector, adding accidental specificity without adding semantics.
-- the FormCheck adjacent-sibling selector repeats `:not(...)` on two different sibling compounds and is not a defect.
+- PHASE-F-005 is merged through PR #74; exact-head CI #401 / `36016034020` and main release + Pages #402 / `36016716760` are green.
+- the final duplicate-selector audit distinguishes intentional staged selectors from true duplicate/dead ownership.
+- Button visual-state rules versus paint-z rules are intentional independent priority channels and must remain separate.
+- Image Preview base geometry versus presence-motion rules and JSON base versus code-reader refinement are intentional staged projections and must not be mechanically merged.
+- the following rules are proven redundant/dead and can be consolidated without changing computed behavior.
 
 Frozen impact map:
-- normalize only the four Table expand-trigger selectors; declarations and rule order remain unchanged.
-- add a build-time specificity gate that detects repeated state atoms inside one compound selector while not flagging the same state on separate sibling/descendant compounds.
-- do not merge unrelated intentional multi-rule state channels merely because a selector name appears more than once.
-- no visual redesign, no new token owner, no `@layer`, `:is()` or `:where()`.
-
-Implemented in current PHASE-F-005 pack:
-- normalized the four Table expand-trigger selector defects to one state atom per compound; declarations and rule order are unchanged.
-- added a compound-aware parser that separates relationship compounds before detecting repeated state atoms, so legitimate adjacent-sibling state repetition is not flagged.
-- current canonical CSS reports zero repeated state atoms inside one selector compound.
-- required `verify:phase-f-selector-specificity` is wired into the full verification chain and keeps the no-`@layer` / no-`:is()` / no-`:where()` constraints.
+- remove the earlier duplicate `.qxframe9a7c2-control-contract.is-secondary` and `.is-danger` accent definitions; the later shared Color Variant contract is the canonical owner and must remain.
+- remove the early Notice "slimmer passive scrollbar" block because the canonical Notice viewport later sets `scrollbar-width:none` and WebKit `display:none;width:0;height:0`.
+- fold ItemCollection/List item `gap` into their canonical item base rules instead of reopening the same selector in parity blocks.
+- fold image-grid SelectGroup label `width:100%` into its canonical image-grid label rule.
+- remove the second Image Preview `[hidden]` rule; the canonical first hidden rule already owns `display:none!important`, making the later pointer-events patch unreachable while hidden.
+- preserve intentional staged duplicate selectors and document/gate the classified cleanup; no broad mechanical deduplication.
 
 Next exact step:
-1. open PHASE-F-005 PR and run exact-head full release/browser/package CI;
-2. fix only real selector-specificity regressions without restoring duplicate state atoms;
-3. merge only exact-head green and verify main + Pages;
-4. continue Phase F final state-completeness / duplicate-selector audit.
+1. create `refactor/phase-f-duplicate-owner-cleanup-20260924` from this checkpoint;
+2. apply only the frozen duplicate/dead-rule cleanup with no visual redesign;
+3. add `verify:phase-f-duplicate-owners` to prevent these retired owners from returning;
+4. open PR, require exact-head full CI, merge only green, verify main + Pages;
+5. run Phase F final completeness/static-fixture closeout audit.
 
 ## Current authority snapshot — after Phase A
 
@@ -80,6 +78,18 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-005 — repeated compound selector specificity normalization
+Status: DONE
+Evidence:
+- PR #74 merged
+- merge commit `885b5202e69a8b43fe6d82bdbac8839c28aff957`
+- exact-head CI #401 / `36016034020`: success
+- main CI + Pages #402 / `36016716760`: success
+Outcome:
+- four Table expand-trigger selector chains were normalized so one compound no longer repeats the same state atom.
+- declarations and rule order were preserved.
+- required `verify:phase-f-selector-specificity` performs compound-aware duplicate-state detection and does not flag legitimate state constraints on separate relationship compounds.
 
 ### PHASE-F-004 — state cascade / specificity ownership closeout
 Status: DONE
