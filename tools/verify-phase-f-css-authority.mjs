@@ -4,10 +4,21 @@ import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { Config } from '../src/core/config.js';
+import { ComponentProfile } from '../src/core/componentProfile.js';
 import { getWebSocketConstructor } from './websocket-client.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
+function collectRuntimeJs(dir) {
+  var output=[];
+  fs.readdirSync(dir,{withFileTypes:true}).forEach(function (entry) {
+    var full=path.join(dir,entry.name);
+    if (entry.isDirectory()) output.push(...collectRuntimeJs(full));
+    else if (entry.isFile() && entry.name.endsWith('.js')) output.push(full);
+  });
+  return output;
+}
+const runtimeJsFiles=collectRuntimeJs(path.join(root,'src'));
 const configSource=read('src/core/config.js');
 const overlaySource=read('src/core/overlayRuntime.js');
 const menuSource=read('src/components/menu.js');
@@ -18,6 +29,20 @@ const postbuild=read('tools/postbuild-release.mjs');
 const tokenDocs=read('docs/assets/qxframe9a7c2-token-reference.js');
 const siteDocs=read('docs/assets/qxframe9a7c2-component-site.js');
 const cssOrder=JSON.parse(read('tools/manifests/css-order.json'));
+
+for (const file of runtimeJsFiles) {
+  const source=fs.readFileSync(file,'utf8');
+  const relative=path.relative(root,file).replaceAll('\\','/');
+  assert.doesNotMatch(source,/\b(?:ThemeController|TokenController|ThemeRuntime|TokenRuntime)\b/,'Runtime JS must not declare/reference Theme/Token controllers or runtimes: '+relative);
+  assert.doesNotMatch(source,/data-qxframe9a7c2-theme|qxframe9a7c2-theme-(?:light|dark)/,'Runtime JS must not project/read the CSS theme selector contract: '+relative);
+}
+assert.equal(ComponentProfile.capabilities.includes('theme'),false,'ComponentProfile runtime capabilities must not include theme.');
+assert.equal(ComponentProfile.capabilities.includes('tokens'),false,'ComponentProfile runtime capabilities must not include tokens.');
+assert.equal(ComponentProfile.controllers.includes('ThemeController'),false,'ComponentProfile controllers must not include ThemeController.');
+assert.equal(ComponentProfile.controllers.includes('TokenController'),false,'ComponentProfile controllers must not include TokenController.');
+assert.throws(()=>ComponentProfile.define({name:'ThemeRuntimeProbe',theme:{}}),/Unknown ComponentProfile field: theme/,'ComponentProfile.theme must be rejected as a runtime capability.');
+assert.throws(()=>ComponentProfile.define({name:'TokenRuntimeProbe',tokens:{}}),/Unknown ComponentProfile field: tokens/,'ComponentProfile.tokens must be rejected as a runtime capability.');
+assert.throws(()=>ComponentProfile.define({name:'ThemeDependencyProbe',dependencies:{feedback:['theme']}}),/Unknown ComponentProfile dependency: theme/,'ComponentProfile dependencies must not route through theme runtime state.');
 
 assert.equal(fs.existsSync(path.join(root,'src/css')),false,'src/css split mirror must be removed; src/qxframe9a7c2.css is the sole CSS source.');
 assert.equal(cssOrder.files.length,1,'CSS order manifest must expose one physical source.');
