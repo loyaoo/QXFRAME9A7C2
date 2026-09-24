@@ -6,7 +6,7 @@ import { Scheduler } from './scheduler.js';
 import { Config } from './config.js';
 import { IdManager } from '../utils/id.js';
 import { Renderer } from './renderer.js';
-import { LayerManager } from './layerManager.js';
+import { OverlayController } from './overlayController.js';
 import { TransitionGroup } from './transitionGroup.js';
 import { ObserverHub } from './observerHub.js';
 
@@ -227,9 +227,9 @@ function createChannel(profile) {
     entry.stack = stackConfig(opts);
     frame.classList.toggle('is-stack-enabled', entry.stack.enabled);
     if (entry.hovering && !entry.stack.enabled) setFrameHover(entry, false);
-    if (entry.layerHandle) {
-      entry.layerHandle.update({ zIndexOffset: opts.zIndex });
-      var resolved = entry.layerHandle.getZIndex();
+    if (entry.layerLease) {
+      entry.layerLease.update({ zIndexOffset: opts.zIndex });
+      var resolved = entry.layerLease.getZIndex();
       frame.style.zIndex = resolved === null || resolved === undefined ? '' : String(resolved);
     }
   }
@@ -383,7 +383,7 @@ function createChannel(profile) {
       appliedStackClassTokens: [],
       layout: null,
       transitionGroup: null,
-      layerHandle: null,
+      layerLease: null,
       // While a keyed child is waiting to enter, sibling top/size WAAPI is paused at its
       // painted origin. The exact child's MotionCore active commit releases that bucket.
       // This makes the incoming fade/translate and existing-item displacement one frame.
@@ -392,7 +392,9 @@ function createChannel(profile) {
     };
     // Every animated child now owns its own painted FROM baseline; the placement frame
     // itself no longer acts as a one-time proxy barrier for later insertions.
-    entry.layerHandle = LayerManager.getShared(doc).register(frame, {
+    entry.layerLease = OverlayController.createLayerLease({
+      element: frame,
+      document: doc,
       id: IdManager.next(slug + '-layer'),
       kind: 'notice',
       componentType: slug,
@@ -483,7 +485,7 @@ function createChannel(profile) {
     if (!entry || activeRecords(entry).length || entry.list.children.length) return false;
     frames.delete(entry.frameKey);
     if (entry.listHeightAnimation) { try { entry.listHeightAnimation.cancel(); } catch (_) {} entry.listHeightAnimation = null; }
-    if (entry.layerHandle) { entry.layerHandle.unregister(); entry.layerHandle = null; }
+    if (entry.layerLease) { entry.layerLease.destroy(); entry.layerLease = null; }
     if (entry.transitionGroup) { entry.transitionGroup.destroy(); entry.transitionGroup = null; }
     entry.scope.dispose();
     DOM.removeNode(entry.frame);
