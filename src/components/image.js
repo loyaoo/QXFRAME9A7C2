@@ -7,7 +7,7 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { Config } from '../core/config.js';
 import { TransformModel } from '../core/transformModel.js';
 import { Renderer } from '../core/renderer.js';
-import { OverlayRuntime } from '../core/overlayRuntime.js';
+import { OverlayController } from '../core/overlayController.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { Transition } from '../core/transition.js';
 import { PointerSession } from '../core/pointerSession.js';
@@ -667,7 +667,7 @@ function setupImage(instance) {
     }));
     scope.add(DOM.listen(previewRoot, 'keydown', function (event) {
       if (cfg('keyboard', opts.keyboard) === false || !previewOpen) return;
-      // Preserve native video/audio keyboard controls. Escape is owned by OverlayRuntime.
+      // Preserve native video/audio keyboard controls. Escape is owned by the overlay resource controller.
       if (event.target === previewVideo || event.target === previewAudio) return;
       var handled = true;
       if (event.key === 'ArrowLeft') prevPreview();
@@ -719,7 +719,7 @@ function setupImage(instance) {
       }
     });
     surface.hide({ reason: 'initial' });
-    overlay = OverlayRuntime.create({
+    overlay = OverlayController.create({
       reference: root,
       floating: previewRoot,
       document: doc,
@@ -876,7 +876,10 @@ function setupImage(instance) {
     setSrc: setSrc, setPreviewItems: setPreviewItems, applyOptions: applyOptions, getState: getState,
     getRootElement: function () { return root; }, getImageElement: function () { return image; }, getPreviewElement: function () { return previewRoot; },
     getPreviewMaskElement: function () { return previewMask; }, getPreviewStageElement: function () { return previewStage; },
-    getPreviewMediaElement: function () { return previewMedia; }, getPreviewOverlayRuntime: function () { return overlay; }
+    getPreviewMediaElement: function () { return previewMedia; },
+    getPreviewOverlayController: function () { return overlay; },
+    getPreviewOverlayRuntime: function () { return overlay && overlay.getRuntime ? overlay.getRuntime() : null; },
+    getPreviewMotionControllers: function () { return Object.freeze({ mask: maskPresence && maskPresence.getMotionController ? maskPresence.getMotionController() : null, content: presence && presence.getMotionController ? presence.getMotionController() : null }); }
   };
   imageState.set(instance, record);
   instance.own(destroyRuntime);
@@ -944,7 +947,9 @@ function createPreview(options) {
     getPreviewMaskElement: function () { return owner.getPreviewMaskElement(); },
     getPreviewStageElement: function () { return owner.getPreviewStageElement(); },
     getPreviewMediaElement: function () { return owner.getPreviewMediaElement(); },
+    getPreviewOverlayController: function () { return owner.getPreviewOverlayController(); },
     getPreviewOverlayRuntime: function () { return owner.getPreviewOverlayRuntime(); },
+    getPreviewMotionControllers: function () { return owner.getPreviewMotionControllers(); },
     destroy: function () {
       if (destroyed) return false;
       destroyed = true;
@@ -1017,7 +1022,9 @@ export class Image extends Component {
   getPreviewMaskElement() { return recordForImage(this).getPreviewMaskElement(); }
   getPreviewStageElement() { return recordForImage(this).getPreviewStageElement(); }
   getPreviewMediaElement() { return recordForImage(this).getPreviewMediaElement(); }
+  getPreviewOverlayController() { return recordForImage(this).getPreviewOverlayController(); }
   getPreviewOverlayRuntime() { return recordForImage(this).getPreviewOverlayRuntime(); }
+  getPreviewMotionControllers() { return recordForImage(this).getPreviewMotionControllers(); }
 }
 export { createPreview };
 export default Image;
