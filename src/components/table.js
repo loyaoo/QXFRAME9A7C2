@@ -14,7 +14,7 @@ import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { EmptyProjection } from '../core/emptyProjection.js';
 import { Virtualizer } from '../core/virtualizer.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
 import { InteractionModality } from '../core/interactionModality.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { PointerSession } from '../core/pointerSession.js';
@@ -265,6 +265,7 @@ function setupTable(instance) {
   var renderProjection = null;
   var virtualizerSyncing = false;
   var keyboard = null;
+  var focusController = null;
   var cellDomain = null;
   var headerDomain = null;
   var pagination = null;
@@ -621,6 +622,7 @@ function setupTable(instance) {
     if (!projection.entries.length || !projection.columns.length || !cellDomain) return false;
     rowIndex = Math.max(0, Math.min(projection.entries.length - 1, rowIndex));
     columnIndex = Math.max(0, Math.min(projection.columns.length - 1, columnIndex));
+    if (focusController) focusController.setActiveRegion('cells', { source:'keyboard', reason:reason || 'table-cell-nav', originalEvent:event || null });
     return cellDomain.activate(navigationCellKey(projection.entries[rowIndex].key, projection.columns[columnIndex]), { source: 'keyboard', reason: reason || 'table-cell-nav', originalEvent: event || null, ensureVisible: true });
   }
   function currentNavigationCoordinates() {
@@ -701,7 +703,9 @@ function setupTable(instance) {
     if (!editTransaction) return false;
     var transaction = editTransaction, key = transaction.key;
     editTransaction = null;
-    if (restoreFocus !== false) DOM.focusElement(root, { preventScroll: true });
+    if (focusController) focusController.endEdit({ restore: restoreFocus !== false, reason: reason || 'table-edit-exit', originalEvent: event || null });
+    else if (restoreFocus !== false) DOM.focusElement(root, { preventScroll: true });
+    if (focusController) focusController.setActiveRegion('cells', { source:'keyboard', reason:reason || 'table-edit-exit', originalEvent:event || null });
     if (cellDomain) cellDomain.activate(key, { source: 'keyboard', reason: reason || 'table-edit-exit', originalEvent: event || null, ensureVisible: restoreFocus !== false });
     var decoded = decodeNavigationCellKey(key);
     if (decoded && deferredEditRows.has(decoded.rowKey)) { deferredEditRows.delete(decoded.rowKey); render('edit-reconcile'); }
@@ -760,7 +764,11 @@ function setupTable(instance) {
     var detail = resolveDataCellContext(key);
     if (!detail) return false;
     editTransaction = { key: String(key), status: 'begin', initialValue: editorValue(target), draftValue: editorValue(target), target: target, row: detail.entry.item, context: detail.context, column: detail.column, error: null, reason: reason || 'edit-begin', epoch: ++editTransactionEpoch };
-    if (!DOM.focusElement(target, { preventScroll: true }) || doc.activeElement !== target) { editTransaction = null; return false; }
+    if (focusController) {
+      focusController.setActiveRegion('cells', { source:'keyboard', reason:reason || 'edit-begin', originalEvent:event || null });
+      focusController.beginEdit(target, { source:'table', reason:reason || 'edit-begin' });
+    }
+    if (!DOM.focusElement(target, { preventScroll: true }) || doc.activeElement !== target) { if (focusController) focusController.endEdit({ restore:false, reason:'table-edit-focus-failed' }); editTransaction = null; return false; }
     editTransaction.status = 'draft';
     if (detail.column && typeof detail.column.onEditBegin === 'function') { try { detail.column.onEditBegin(editTransaction.draftValue, detail.entry.item, Object.freeze({ reason: reason || 'edit-begin', originalEvent: event || null, context: detail.context, instance: api })); } catch (_) {} }
     return true;
@@ -818,6 +826,7 @@ function setupTable(instance) {
     var state = keyboard.virtualFocus.getState(), index = state.domain === headerDomain.name ? keys.indexOf(String(state.key || '')) : -1;
     if (edge === 'first') index = 0; else if (edge === 'last') index = keys.length - 1;
     else if (index < 0) index = delta < 0 ? keys.length - 1 : 0; else index = Math.max(0, Math.min(keys.length - 1, index + delta));
+    if (focusController) focusController.setActiveRegion('header', { source:'keyboard', reason:'table-header-nav', originalEvent:event || null });
     return headerDomain.activate(keys[index], { source: 'keyboard', reason: 'table-header-nav', originalEvent: event || null, ensureVisible: true });
   }
   function focusFilterEditor() {
@@ -862,50 +871,61 @@ function setupTable(instance) {
   }
   function destroyKeyboardNavigation() {
     editTransaction = null; pendingCellVisibilityKey = null; navigationProjection = null;
-    if (keyboard) keyboard.destroy();
-    keyboard = null; cellDomain = null; headerDomain = null;
+    if (focusController) focusController.destroy();
+    focusController = null; keyboard = null; cellDomain = null; headerDomain = null;
     return true;
   }
   function installKeyboardNavigation() {
     if (keyboard || !opts.keyboardNavigation) return false;
-    keyboard = KeyboardNavigation.create({
+    focusController = FocusController.create({
       root: root,
-      focusRoot: root,
-      editableKeys: ['F6','Escape','Enter'],
-      shouldHandle: function (ctx) {
-        if (editTransaction) return ctx.target === editTransaction.target;
-        return ctx.target === root;
-      },
-      handlers: {
-        F6: function (ctx) { if (editTransaction) { exitCellEdit('table-edit-f6', ctx.originalEvent, true); return true; } return cycleNavigationRegion(!!(ctx.originalEvent && ctx.originalEvent.shiftKey), ctx.originalEvent); },
-        Escape: function (ctx) { return editTransaction ? exitCellEdit('table-edit-escape', ctx.originalEvent, true) : false; },
-        ArrowLeft: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(-1,null,ctx.originalEvent); return moveNavigationCell(0,-1,'table-arrow-left',ctx.originalEvent); },
-        ArrowRight: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(1,null,ctx.originalEvent); return moveNavigationCell(0,1,'table-arrow-right',ctx.originalEvent); },
-        ArrowUp: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain === cellDomain.name || !state.domain ? moveNavigationCell(-1,0,'table-arrow-up',ctx.originalEvent) : false; },
-        ArrowDown: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain === cellDomain.name || !state.domain ? moveNavigationCell(1,0,'table-arrow-down',ctx.originalEvent) : false; },
-        Home: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(0,'first',ctx.originalEvent); return moveNavigationCell(0,0,'table-home',ctx.originalEvent,ctx.originalEvent&&ctx.originalEvent.ctrlKey?'table-start':'row-start'); },
-        End: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(0,'last',ctx.originalEvent); return moveNavigationCell(0,0,'table-end',ctx.originalEvent,ctx.originalEvent&&ctx.originalEvent.ctrlKey?'table-end':'row-end'); },
-        PageUp: function (ctx) { return pageNavigationCell(-1,ctx.originalEvent); },
-        PageDown: function (ctx) { return pageNavigationCell(1,ctx.originalEvent); },
-        Enter: function (ctx) {
-          if (editTransaction) {
-            var editTarget = editTransaction.target;
-            var tag = String(editTarget && editTarget.tagName || '').toLowerCase();
-            if (opts.editEnterBehavior === 'native' || tag === 'textarea' || (editTarget && editTarget.isContentEditable === true)) return false;
-            return exitCellEdit('table-edit-enter-commit', ctx.originalEvent, true);
-          }
-          var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return activateHeaderAction(ctx.originalEvent); return activateCurrentCell(ctx.originalEvent);
+      document: doc,
+      disabled: opts.disabled === true,
+      activeRegion: 'cells',
+      navigation: {
+        focusRoot: root,
+        editableKeys: ['F6','Escape','Enter'],
+        shouldHandle: function (ctx) {
+          if (editTransaction) return ctx.target === editTransaction.target;
+          return ctx.target === root;
         },
-        ' ': function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return activateHeaderAction(ctx.originalEvent); var decoded=state.domain===cellDomain.name?decodeNavigationCellKey(state.key):null; return decoded&&(decoded.kind==='selection'||decoded.kind==='expand')?activateCurrentCell(ctx.originalEvent):false; },
-        F2: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain===cellDomain.name?enterCellEdit(state.key,'table-edit-f2',ctx.originalEvent):false; }
+        handlers: {
+          F6: function (ctx) { if (editTransaction) { exitCellEdit('table-edit-f6', ctx.originalEvent, true); return true; } return cycleNavigationRegion(!!(ctx.originalEvent && ctx.originalEvent.shiftKey), ctx.originalEvent); },
+          Escape: function (ctx) { return editTransaction ? exitCellEdit('table-edit-escape', ctx.originalEvent, true) : false; },
+          ArrowLeft: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(-1,null,ctx.originalEvent); return moveNavigationCell(0,-1,'table-arrow-left',ctx.originalEvent); },
+          ArrowRight: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(1,null,ctx.originalEvent); return moveNavigationCell(0,1,'table-arrow-right',ctx.originalEvent); },
+          ArrowUp: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain === cellDomain.name || !state.domain ? moveNavigationCell(-1,0,'table-arrow-up',ctx.originalEvent) : false; },
+          ArrowDown: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain === cellDomain.name || !state.domain ? moveNavigationCell(1,0,'table-arrow-down',ctx.originalEvent) : false; },
+          Home: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(0,'first',ctx.originalEvent); return moveNavigationCell(0,0,'table-home',ctx.originalEvent,ctx.originalEvent&&ctx.originalEvent.ctrlKey?'table-start':'row-start'); },
+          End: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(0,'last',ctx.originalEvent); return moveNavigationCell(0,0,'table-end',ctx.originalEvent,ctx.originalEvent&&ctx.originalEvent.ctrlKey?'table-end':'row-end'); },
+          PageUp: function (ctx) { return pageNavigationCell(-1,ctx.originalEvent); },
+          PageDown: function (ctx) { return pageNavigationCell(1,ctx.originalEvent); },
+          Enter: function (ctx) {
+            if (editTransaction) {
+              var editTarget = editTransaction.target;
+              var tag = String(editTarget && editTarget.tagName || '').toLowerCase();
+              if (opts.editEnterBehavior === 'native' || tag === 'textarea' || (editTarget && editTarget.isContentEditable === true)) return false;
+              return exitCellEdit('table-edit-enter-commit', ctx.originalEvent, true);
+            }
+            var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return activateHeaderAction(ctx.originalEvent); return activateCurrentCell(ctx.originalEvent);
+          },
+          ' ': function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return activateHeaderAction(ctx.originalEvent); var decoded=state.domain===cellDomain.name?decodeNavigationCellKey(state.key):null; return decoded&&(decoded.kind==='selection'||decoded.kind==='expand')?activateCurrentCell(ctx.originalEvent):false; },
+          F2: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain===cellDomain.name?enterCellEdit(state.key,'table-edit-f2',ctx.originalEvent):false; }
+        }
       }
     });
-    cellDomain = keyboard.virtualFocus.registerDomain({ name: 'table-cells-' + tableId, getElement: findNavigationCell, reconcile: reconcileNavigationCell, ensureVisible: ensureNavigationCellVisible });
-    headerDomain = keyboard.virtualFocus.registerDomain({ name: 'table-header-' + tableId, getElement: headerActionElement, reconcile: headerReconcile, ensureVisible: function (key) { var element=headerActionElement(key); return element?ScrollVisibility.ensureVisible(root,element,{axis:'both',align:'nearest'}):false; } });
+    keyboard = focusController.keyboard;
+    var cellBinding = focusController.bindVirtualFocus({ controller:focusController.virtualFocus, hosted:false, domain:{ name:'table-cells-' + tableId, getElement:findNavigationCell, reconcile:reconcileNavigationCell, ensureVisible:ensureNavigationCellVisible } });
+    cellDomain = cellBinding ? cellBinding.domain : null;
+    var headerBinding = focusController.bindVirtualFocus({ controller:focusController.virtualFocus, hosted:false, domain:{ name:'table-header-' + tableId, getElement:headerActionElement, reconcile:headerReconcile, ensureVisible:function (key) { var element=headerActionElement(key); return element?ScrollVisibility.ensureVisible(root,element,{axis:'both',align:'nearest'}):false; } } });
+    headerDomain = headerBinding ? headerBinding.domain : null;
     return true;
   }
   function syncKeyboardNavigation() {
-    if (opts.keyboardNavigation) installKeyboardNavigation(); else if (keyboard) destroyKeyboardNavigation();
+    if (opts.keyboardNavigation) {
+      installKeyboardNavigation();
+      if (focusController) focusController.setDisabled(opts.disabled === true);
+    } else if (keyboard || focusController) destroyKeyboardNavigation();
     return !!keyboard;
   }
   function setColumnGeometry(cell, column, offsets) {
@@ -1933,7 +1953,7 @@ function setupTable(instance) {
       ((opts.loading || remoteProcessing) ? ' is-loading' : '') + (remoteError ? ' is-error' : '') + (isRemote() ? ' is-remote-' + remoteStatus() : '') + (opts.disabled ? ' is-disabled' : '') + (opts.keyboardNavigation ? ' is-keyboard-navigation' : '') + (opts.className ? ' ' + opts.className : '');
     table.className = 'qxframe9a7c2-table is-' + opts.size + (opts.bordered ? ' is-bordered' : '') +
       (opts.striped ? ' is-striped' : '') + (opts.hover ? ' is-hover' : '') + (opts.fixedLayout ? ' is-fixed' : '');
-    if (opts.keyboardNavigation) root.tabIndex = opts.disabled === true ? -1 : 0; else root.removeAttribute('tabindex');
+    if (opts.keyboardNavigation) { if (focusController) focusController.setDisabled(opts.disabled === true); else root.tabIndex = opts.disabled === true ? -1 : 0; } else root.removeAttribute('tabindex');
     if (opts.height != null) root.style.height = typeof opts.height === 'number' ? opts.height + 'px' : String(opts.height); else root.style.removeProperty('height');
     if (opts.maxHeight != null) root.style.maxHeight = typeof opts.maxHeight === 'number' ? opts.maxHeight + 'px' : String(opts.maxHeight); else root.style.removeProperty('max-height');
     if ((opts.virtual === true || opts.virtual === 'auto') && opts.height == null && opts.maxHeight == null) root.style.maxHeight = '320px';
@@ -2080,7 +2100,7 @@ function setupTable(instance) {
   delegation.on('pointerdown', DOM.privateMatcher('tableNavigationCell'), function (detail) {
     if (!keyboard || !cellDomain) return;
     var key = DOM.getPrivate(detail.target, 'tableNavigationCell');
-    if (key != null) cellDomain.activate(String(key), { source: 'table-cell-pointer', modality: 'pointer', reason: 'table-cell-pointer', originalEvent: detail.event, ensureVisible: false });
+    if (key != null) { if (focusController) focusController.setActiveRegion('cells', { source:'pointer', reason:'table-cell-pointer', originalEvent:detail.event }); cellDomain.activate(String(key), { source: 'table-cell-pointer', modality: 'pointer', reason: 'table-cell-pointer', originalEvent: detail.event, ensureVisible: false }); }
   });
   scope.add(DOM.listen(root, 'focusin', function (event) {
     if (!keyboard) return;
@@ -2405,7 +2425,7 @@ function setupTable(instance) {
       var projection=rebuildNavigationProjection(),row=String(rowKey),column=String(columnKey);
       if(!own(projection.rowIndexByKey,row)||!own(projection.columnIndexByIdentity,'data\u0000'+column))return false;
       var key=navigationCellKey(row,{kind:'data',key:column}),local=config||{};
-      if(local.focusOwner!==false)DOM.focusElement(root,{preventScroll:true});
+      if(local.focusOwner!==false){if(focusController)focusController.focus();else DOM.focusElement(root,{preventScroll:true});}
       return cellDomain.activate(key,{source:local.source||'keyboard',reason:local.reason||'table-focus-cell',originalEvent:local.originalEvent||null,ensureVisible:local.ensureVisible!==false});
     },
     enterEdit:function(rowKey,columnKey){
@@ -2421,7 +2441,7 @@ function setupTable(instance) {
     getState:function(){var state=currentState(),focusState=keyboard?keyboard.virtualFocus.getState():null,decoded=focusState&&cellDomain&&focusState.domain===cellDomain.name?decodeNavigationCellKey(focusState.key):null;return Object.freeze(Utils.mergeOwn(state,{virtual:!!virtualizer&&virtualizer.enabled,keyboardNavigation:opts.keyboardNavigation===true,activeCell:decoded?Object.freeze({rowKey:decoded.rowKey,kind:decoded.kind,columnKey:decoded.kind==='data'?decoded.columnKey:null}):null,editingCell:editStateSnapshot(),forceRenderExpanded:opts.forceRenderExpanded===true,disabled:opts.disabled===true,readOnly:opts.readOnly===true,loading:opts.loading===true||remoteProcessing,processing:remoteProcessing,remoteStatus:remoteStatus(),loadError:remoteError,remoteSummary:remoteSummary,remote:isRemote(),query:isRemote()?remoteQuery():null,requestEpoch:remoteEpoch,selection:selectionStateSnapshot(),destroyed:destroyed}));},
     getDiagnostics:function(){return Object.freeze(Utils.mergeOwn(model.getDiagnostics?model.getDiagnostics():{},tableDiagnostics));},
     getModel:function(){return model;}, getRootElement:function(){return root;}, getTableElement:function(){return table;},
-    getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFilterPopup:function(){return filterPopup;},
+    getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFocusController:function(){return focusController;}, getFilterPopup:function(){return filterPopup;},
     openFilter:function(key){var column=currentColumns().filter(function(entry){return entry.key===String(key);})[0];if(!column)return false;var reference=DOM.findPrivate(thead,'tableFilter',column.key);if(!reference)return false;if(filterOpenControlled(column)&&column.filterDropdownOpen!==true){emitFilterOpenRequest(column,true,'api-open',null);return false;}return openFilterPopup(reference,column,null);},
     closeFilter:function(){if(!filterTrigger||!filterColumnKey)return false;var column=currentColumns().filter(function(entry){return entry.key===filterColumnKey;})[0];if(column&&filterOpenControlled(column)&&column.filterDropdownOpen===true){emitFilterOpenRequest(column,false,'api-close',null);return false;}return filterTrigger.close('api-close');}
   };
@@ -2441,6 +2461,12 @@ function recordForTable(instance) {
 }
 
 export class Table extends Component {
+  static profile = Object.freeze({
+    name:'Table',
+    focus:Object.freeze({ mode:'virtual-navigation', editLease:'cell-editor', regions:Object.freeze(['cells','header']) }),
+    interaction:Object.freeze({ keymap:'table' }),
+    ownership:Object.freeze({ focus:'FocusController' })
+  });
   static contract = ComponentContracts.get('Table');
   static immutableOptions = Object.freeze(['container','document']);
   static sizes = SIZES.slice();
@@ -2515,6 +2541,7 @@ export class Table extends Component {
   getTableElement(){return recordForTable(this).getTableElement();}
   getVirtualizer(){return recordForTable(this).getVirtualizer();}
   getKeyboardNavigation(){return recordForTable(this).getKeyboardNavigation();}
+  getFocusController(){return recordForTable(this).getFocusController();}
   getFilterPopup(){return recordForTable(this).getFilterPopup();}
   openFilter(key){return recordForTable(this).openFilter(key);}
   closeFilter(){return recordForTable(this).closeFilter();}
