@@ -46,6 +46,7 @@ const env=EnvironmentPort.create({
 });
 const observer=env.createResizeObserver(()=>{});
 assert.equal(typeof observer.observe,'function');
+assert.equal(EnvironmentPort.create({window:{}}).createResizeObserver(()=>{}),null);
 observer.disconnect();
 assert.equal(observerDisconnected,true);
 
