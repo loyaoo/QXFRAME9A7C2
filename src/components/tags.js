@@ -15,6 +15,7 @@ import { FormBridge } from '../core/formBridge.js';
 import { Renderer } from '../core/renderer.js';
 import { TokenInput } from '../core/tokenInput.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { Selection } from '../core/selection.js';
 import { StateController } from '../core/stateController.js';
 import { FieldComponent } from './field.js';
@@ -189,10 +190,13 @@ function setupTags(instance) {
   var formBridge=null;
   var keyboard=null;
   var focusController=null;
+  var interactionController=null;
+  var capabilityController=CapabilityController.create({ getState:function(){ return opts; } });
   var standaloneTagDomain=null;
   var standaloneTagNavigation=null;
   var editorProjectionMutation=false;
   var ADD_VIRTUAL_KEY='__qxframe9a7c2_tags_add__';
+  scope.add(function(){ if(capabilityController) capabilityController.destroy(); capabilityController=null; });
     
   root.className='qxframe9a7c2-tags'+(opts.hosted===true?' is-hosted':'');
   surface.className = 'qxframe9a7c2-tags-surface';
@@ -242,10 +246,10 @@ function setupTags(instance) {
     return -1;
   }
   function mutationLocked(meta) {
-    return !!(meta && meta.user === true && CapabilityController.mutationLocked(opts));
+    return !!(meta && meta.user === true && (!capabilityController || !capabilityController.can('edit')));
   }
   function itemUserRemovable(item) {
-    return !!item && opts.closable !== false && item.removable !== false && item.disabled !== true && !CapabilityController.mutationLocked(opts);
+    return !!item && opts.closable !== false && item.removable !== false && item.disabled !== true && !!capabilityController && capabilityController.can('remove');
   }
     
   function emitItemsChange(detail){
@@ -499,7 +503,7 @@ function setupTags(instance) {
     return fallback || null;
   }
     
-  function virtualAddAvailable() { return opts.hosted !== true && opts.editable === true && adding !== true && !CapabilityController.mutationLocked(opts) && !!addTrigger.parentNode; }
+  function virtualAddAvailable() { return opts.hosted !== true && opts.editable === true && adding !== true && !!capabilityController && capabilityController.can('edit') && !!addTrigger.parentNode; }
   function virtualTagEntries() {
     var entries = publicItems().map(function (item) {
       var record = tagRecordsByKey[item.key];
@@ -1273,7 +1277,7 @@ function setupTags(instance) {
     values.forEach(function (value) { if (add(value, meta)) changed = true; });
     return changed;
   }
-  function beginAdd() { if (destroyed || opts.editable !== true || CapabilityController.mutationLocked(opts)) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(focusController&&input)focusController.beginEdit(input,{source:'tags',reason:'begin-add'}); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
+  function beginAdd() { if (destroyed || opts.editable !== true || !capabilityController || !capabilityController.can('edit')) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(focusController&&input)focusController.beginEdit(input,{source:'tags',reason:'begin-add'}); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
   function cancelAdd() { if (destroyed || opts.hosted === true) return false; adding=false; tokenInput.setInputValue('',{silent:true,reason:'cancel-add',source:'tags'}); opts.inputValue=''; render('cancel-add'); return true; }
   function canonicalFormValue() { return opts.checkable === true ? selection.values.slice() : coreTags().map(function(tag){return tag.value;}); }
   function syncFormBridge(meta) {
@@ -1342,6 +1346,7 @@ function setupTags(instance) {
     }
     var runtimeInputValue = tokenInput.getState().inputValue;
     opts = Utils.mergeOwn(nextOptions);
+    if (capabilityController) capabilityController.updateOptions({});
     opts.size = nextSize;
     opts.overflow = nextOverflow;
     opts.maxVisible = nextMaxVisible;
@@ -1454,7 +1459,52 @@ function setupTags(instance) {
     if (key === 'Enter' && opts.editable === true && !currentKey) return beginAdd();
     return false;
   }
+  function resolveStandaloneInteractionAction(event) {
+    var current = standaloneTagNavigation ? standaloneTagNavigation.currentKey() : null;
+    if (event && event.target === root && current === ADD_VIRTUAL_KEY && !event.ctrlKey && !event.metaKey && !event.altKey && !event.isComposing && event.key && event.key.length === 1 && event.key !== ' ') return 'START_EDIT';
+    return InteractionController.resolveKeyboardAction(event, { keymap:{ Backspace:'REMOVE', Delete:'REMOVE', Escape:'DISMISS' } });
+  }
+  function dispatchStandaloneInteraction(event) {
+    if (!interactionController || !event) return false;
+    return interactionController.dispatch(event, { ownerId:'tags' }) !== 'pass';
+  }
+  function handleStandaloneInteractionAction(action, context) {
+    var event = context && context.originalEvent || null;
+    if (!event) return 'pass';
+    var current = standaloneTagNavigation ? standaloneTagNavigation.currentKey() : null;
+    if (action === 'START_EDIT') {
+      if (!capabilityController || !capabilityController.can('edit')) return 'blocked';
+      if (current !== ADD_VIRTUAL_KEY || event.target !== root) return 'pass';
+      var key = String(event.key || '');
+      if (key.length !== 1 || key === ' ') return 'pass';
+      if (!beginAdd()) return 'pass';
+      tokenInput.handleInput(key, { user:true, source:'keyboard', reason:'add-printable-key', originalEvent:event });
+      input.value = tokenInput.getState().inputValue;
+      return 'handled';
+    }
+    if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT' || action === 'MOVE_UP' || action === 'MOVE_DOWN') {
+      if (!capabilityController || !capabilityController.can('navigate')) return 'blocked';
+      return handleStandaloneTagKeydown(event) ? 'handled' : 'pass';
+    }
+    if (action === 'REMOVE') {
+      if (!capabilityController || !capabilityController.can('remove')) return 'blocked';
+      return handleStandaloneTagKeydown(event) ? 'handled' : 'pass';
+    }
+    if (action === 'DISMISS') return handleStandaloneTagKeydown(event) ? 'handled' : 'pass';
+    if (action === 'ACTIVATE') {
+      if (current === ADD_VIRTUAL_KEY || (!current && opts.editable === true)) {
+        if (!capabilityController || !capabilityController.can('edit')) return 'blocked';
+      } else if (current && opts.checkable === true) {
+        if (!capabilityController || !capabilityController.can('select')) return 'blocked';
+      } else if (!capabilityController || !capabilityController.can('activate')) return 'blocked';
+      return handleStandaloneTagKeydown(event) ? 'handled' : 'pass';
+    }
+    return 'pass';
+  }
   if (opts.hosted !== true) {
+    interactionController = InteractionController.create();
+    interactionController.registerScope({ id:'tags', root:root, document:doc, profile:{ allowEditableKeys:true }, resolveAction:resolveStandaloneInteractionAction, onAction:handleStandaloneInteractionAction });
+    scope.add(function(){ if(interactionController) interactionController.destroy(); interactionController=null; });
     focusController = FocusController.create({
       root: root,
       document: doc,
@@ -1463,16 +1513,12 @@ function setupTags(instance) {
       hosted: adding === true,
       navigation: {
         focusRoot: function () { return adding === true ? input : root; },
-        handlers: {
-          ArrowLeft: function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          ArrowRight: function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          ArrowUp: function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          ArrowDown: function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          Backspace: function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          Delete: function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          Enter: function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          ' ': function (ctx) { return handleStandaloneTagKeydown(ctx.event); },
-          Escape: function (ctx) { return handleStandaloneTagKeydown(ctx.event); }
+        handlers: FocusController.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Backspace','Delete','Enter',' ','Escape'], dispatchStandaloneInteraction),
+        beforeHandle:function(detail){
+          var event=detail&&detail.originalEvent;
+          if(!event||event.defaultPrevented||event.isComposing===true||event.keyCode===229)return false;
+          if(event.target===root&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&event.key&&event.key.length===1&&event.key!==' '){ var handled=dispatchStandaloneInteraction(event); if(handled&&event.preventDefault)event.preventDefault(); return false; }
+          return true;
         },
         editableKeys:['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Backspace','Delete','Enter',' ','Escape'],
         allowEditableKey:function(){ return adding !== true; }
@@ -1541,7 +1587,7 @@ function setupTags(instance) {
     getAddTriggerElement:function(){return opts.editable&&opts.hosted!==true&&!adding?addTrigger:null;},
     getOverflowElement:function(){return summary;}, getFormField:function(){return formBridge?formBridge.getFormField():null;},
     getTokenInput:function(){return tokenInput;}, getSelection:function(){return selection;},
-    getKeyboardNavigation:function(){return keyboard;}, getKeyboardRegion:function(){return focusController&&focusController.getKeyboardRegion?focusController.getKeyboardRegion():null;}, getFocusController:function(){return focusController;},
+    getKeyboardNavigation:function(){return keyboard;}, getKeyboardRegion:function(){return focusController&&focusController.getKeyboardRegion?focusController.getKeyboardRegion():null;}, getFocusController:function(){return focusController;}, getInteractionController:function(){return interactionController;}, getCapabilityController:function(){return capabilityController;},
     getVirtualTagElement:getVirtualTagElement, moveVirtualTag:moveVirtualTag,
     reconcileVirtualTagKey:reconcileVirtualTagKey, ensureVirtualTagVisible:ensureVirtualTagVisible,
     removeVirtualTag:removeVirtualTag, getScroll:function(){return containerScroll;},
@@ -1551,17 +1597,6 @@ function setupTags(instance) {
   api.own(destroyRuntime);
   api.bindFocusTarget(root);
 
-  scope.add(DOM.listen(root,'keydown',function(event){
-    if (opts.hosted === true || adding === true || opts.editable !== true || CapabilityController.mutationLocked(opts) || event.defaultPrevented) return;
-    var state = keyboard && keyboard.virtualFocus ? keyboard.virtualFocus.getState() : null;
-    if (!state || state.domain !== 'tags' || state.key !== ADD_VIRTUAL_KEY || event.target !== root) return;
-    var key = String(event.key || '');
-    if (key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey || event.isComposing) return;
-    if (event.preventDefault) event.preventDefault();
-    if (!beginAdd()) return;
-    tokenInput.handleInput(key, { user:true, source:'keyboard', reason:'add-printable-key', originalEvent:event });
-    input.value = tokenInput.getState().inputValue;
-  }));
   scope.add(DOM.listen(addTrigger,'click',function(event){if(event.preventDefault)event.preventDefault();beginAdd();}));
   scope.add(DOM.listen(input, 'compositionstart', function () { composing = true; }));
   scope.add(DOM.listen(input, 'compositionend', function (event) {
@@ -1680,7 +1715,7 @@ export class Tags extends FieldComponent {
     focus:Object.freeze({ mode:'virtual-navigation', editLease:'input' }),
     interaction:Object.freeze({ keymap:'tags' }),
     form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ focus:'FocusController' })
+    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController' })
   });
   static options = TAGS_DEFAULTS;
   static contract = ComponentContracts.get('Tags');
@@ -1761,6 +1796,8 @@ export class Tags extends FieldComponent {
   getKeyboardNavigation(){return recordForTags(this).getKeyboardNavigation();}
   getKeyboardRegion(){return recordForTags(this).getKeyboardRegion();}
   getFocusController(){return recordForTags(this).getFocusController();}
+  getInteractionController(){return recordForTags(this).getInteractionController();}
+  getCapabilityController(){return recordForTags(this).getCapabilityController();}
   getVirtualTagElement(key){return recordForTags(this).getVirtualTagElement(key);}
   moveVirtualTag(key,step){return recordForTags(this).moveVirtualTag(key,step);}
   reconcileVirtualTagKey(key){return recordForTags(this).reconcileVirtualTagKey(key);}
