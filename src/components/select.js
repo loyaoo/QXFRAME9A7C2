@@ -880,6 +880,7 @@ var controlHost = FieldHost.resolvePickerControl({
           root: keyboardTarget,
           document: doc,
           disabled: opts.disabled === true,
+          manageTabIndex: false,
           activeRegion: 'options',
           navigation: {
             shouldHandle: function (detail) { return !(detail.originalEvent && detail.originalEvent.defaultPrevented); },
