@@ -702,6 +702,7 @@ function create(options) {
     bindVirtualFocus: bindVirtualFocus,
     focus: function () { return keyboardRegion ? keyboardRegion.focus() : false; },
     getKeyboardNavigation: function () { return keyboardRegion ? keyboardRegion.keyboard : null; },
+    getFocusController: function () { return keyboardRegion; },
     getVirtualFocusDomain: function () { return virtualFocusDomain; },
     on: emitter.on,
     once: emitter.once,
