@@ -48,6 +48,7 @@ function create(options) {
   var domBinding = null;
   var wheel = null;
   var focusController = null;
+  var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
   var columnIndex = Object.create(null);
   var api = null;
   var structuralRefreshScheduler = Scheduler.createDelayScheduler(function (_timestamp, reason) {
@@ -197,8 +198,9 @@ function create(options) {
       onItemHover: handleItemHover,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       onChange: function (next, detail) {
-        if (destroyed || CapabilityController.mutationLocked(opts)) return;
+        if (destroyed || !capabilityController.can('select')) return;
         var previous = TimeUnit.clone(value);
         value = valueFromWheel(next);
         if (TimeUnit.equal(previous, value)) return;
@@ -243,14 +245,15 @@ function create(options) {
       renderItem: renderWheelItem,
       onItemHover: handleItemHover,
       disabled: opts.disabled === true,
-      readOnly: opts.readOnly === true
+      readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true
     });
     wheel.refreshVisible(reason || 'time-panel-refresh');
     syncClass();
     return true;
   }
   function changeUnit(unit, next, detail) {
-    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
+    if (destroyed || !capabilityController.can('select')) return false;
     var previous = TimeUnit.clone(value);
     value[unit] = TimeUnit.clamp(Number(next), 0, unit === 'hour' ? 23 : 59);
     if (TimeUnit.equal(previous, value)) return true;
@@ -275,6 +278,7 @@ function create(options) {
     var next = nextOptions || {};
     if (own(next, 'itemHeight')) itemHeightExplicit = true;
     opts = mergeOptions(opts, next);
+    capabilityController.updateOptions({});
     if (!itemHeightExplicit && own(next, 'size')) opts.itemHeight = WheelMetrics.itemHeight(opts.size);
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) value = TimeUnit.normalizeClamped(next.value);
     structuralRefreshScheduler.cancel();
@@ -289,6 +293,7 @@ function create(options) {
     structuralRefreshScheduler.dispose();
     if (wheel) wheel.destroy(); wheel = null;
     if (focusController) focusController.destroy(); focusController = null;
+    if (capabilityController) capabilityController.destroy(); capabilityController = null;
     emitter.dispose();
     if (domBinding) domBinding.release();
     domBinding = null; columnsHost = root = null;
@@ -308,6 +313,8 @@ function create(options) {
     getDOMSource: function () { return domBinding ? domBinding.source : null; },
     getWheelPanel: function () { return wheel; },
     getFocusController: function () { return focusController; },
+    getInteractionController: function () { return wheel && wheel.getInteractionController ? wheel.getInteractionController() : null; },
+    getCapabilityController: function () { return capabilityController; },
     setActiveColumn: function (index, meta) { if (wheel) wheel.setActiveColumn(index, meta); return api; },
     handleKeydown: function (event) { return wheel ? wheel.handleKeydown(event) : false; },
     focus: function () { return focusController ? focusController.focus() : false; },

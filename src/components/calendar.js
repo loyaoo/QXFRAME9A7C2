@@ -5,6 +5,8 @@ import { ActiveItem } from '../core/activeItem.js';
 import { StateController } from '../core/stateController.js';
 import { TemporalGrid } from '../core/temporalGrid.js';
 import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { DOMBinding } from '../core/domBinding.js';
@@ -59,6 +61,9 @@ function create(options) {
   var grid = null;
   var delegation = null;
   var keyboard = null, keyboardRegion = null, virtualFocusController = null, virtualFocusDomain = null, hostedVirtualFocus = false;
+  var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
+  var interactionController = null;
+  scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
   var cells = [];
   var initialCommitted = parseDate(opts.value !== undefined ? opts.value : opts.defaultValue);
   var valueState = StateController.create({
@@ -78,6 +83,8 @@ function create(options) {
   function weekStartsOn() { var n = Number(opts.weekStartsOn); return Number.isFinite(n) ? ((n % 7) + 7) % 7 : 0; }
   function isDisabledDate(date) { return opts.disabled === true || (typeof opts.disabledDate === 'function' && opts.disabledDate(cloneDate(date)) === true); }
   function isReadOnly() { return opts.readOnly === true; }
+  function canNavigate() { return capabilityController.can('navigate'); }
+  function canSelect() { return capabilityController.can('select'); }
     
   function buildCells() {
     var first = startMonth(viewValue);
@@ -178,12 +185,12 @@ function create(options) {
       if (hoveredKey !== null) setHoverDate(null, { source: 'pointer', reason: 'panel-leave', originalEvent: event });
     }));
     delegation.on('click', DOM.privateMatcher('calendarNav'), function (payload) {
-      if (opts.disabled === true) return;
+      if (!canNavigate()) return;
       changeView(addMonths(viewValue, Number(DOM.getPrivate(payload.target, 'calendarNav'))), { source: DOM.activationSource(payload.event), reason: 'nav' });
       focusKeyboardHost();
     });
     delegation.on('click', DOM.privateMatcher('calendarTitle'), function (payload) {
-      if (opts.disabled === true) return;
+      if (!canNavigate()) return;
       var unit = String(DOM.getPrivate(payload.target, 'calendarTitle') || '');
       var detail = { unit: unit, viewValue: cloneDate(viewValue), originalEvent: payload.event, source: DOM.activationSource(payload.event), reason: 'title', calendar: api };
       if (unit === 'year' && typeof opts.onYearRequest === 'function') opts.onYearRequest(cloneDate(viewValue), detail);
@@ -197,6 +204,12 @@ function create(options) {
       selectDate(date, { source: DOM.activationSource(payload.event), reason: 'cell', originalEvent: payload.event });
       focusKeyboardHost();
     });
+    interactionController = InteractionController.create();
+    interactionController.registerScope({
+      id:'calendar', root:root, document:doc, profile:{ allowEditableKeys:true },
+      onAction:function (action, context) { return handleInteractionAction(action, context.originalEvent) ? 'handled' : 'pass'; }
+    });
+    scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; });
     keyboardRegion = FocusController.create({
       root: root,
       hosted: false,
@@ -329,7 +342,7 @@ function create(options) {
   }
     
   function selectDate(next, meta) {
-    if (destroyed || isReadOnly() || opts.disabled === true) return false;
+    if (destroyed || !canSelect()) return false;
     var parsed = parseDate(next); if (!parsed || isDisabledDate(parsed)) return false;
     var selected = stripTime(parsed);
     var previous = cloneDate(valueState.value);
@@ -368,23 +381,23 @@ function create(options) {
     return true;
   }
     
-  function onKeydown(event) {
-    if (!event || opts.disabled === true) return false;
+  function handleInteractionAction(actionName, event) {
+    if (!event || !canNavigate()) return false;
     var target = event.target || null;
     var navTarget = target ? DOM.closestPrivate(target, root, 'calendarNav') : null;
     var titleTarget = target ? DOM.closestPrivate(target, root, 'calendarTitle') : null;
-    if (navTarget && (event.key === 'Enter' || event.key === ' ')) return false;
+    if (navTarget && actionName === 'ACTIVATE') return false;
     if (titleTarget) {
       var titleUnit = String(DOM.getPrivate(titleTarget, 'calendarTitle') || '');
-      if (event.key === 'Enter' || event.key === ' ') {
+      if (actionName === 'ACTIVATE') {
         var requestDetail = { unit:titleUnit, viewValue:cloneDate(viewValue), originalEvent:event, source:'keyboard', reason:'title-keyboard', calendar:api };
         if (titleUnit === 'year' && typeof opts.onYearRequest === 'function') opts.onYearRequest(cloneDate(viewValue), requestDetail);
         else if (titleUnit === 'month' && typeof opts.onMonthRequest === 'function') opts.onMonthRequest(cloneDate(viewValue), requestDetail);
         else return false;
         return true;
       }
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-        var direction = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1;
+      if (['MOVE_LEFT','MOVE_RIGHT','MOVE_UP','MOVE_DOWN'].indexOf(actionName) >= 0) {
+        var direction = actionName === 'MOVE_LEFT' || actionName === 'MOVE_UP' ? -1 : 1;
         var monthDelta = titleUnit === 'year' ? direction * 12 : direction;
         if (titleUnit !== 'year' && titleUnit !== 'month') return false;
         changeView(addMonths(viewValue, monthDelta), { source:'keyboard', reason:'title-' + titleUnit + '-step', originalEvent:event });
@@ -392,17 +405,23 @@ function create(options) {
       }
       return false;
     }
+    var key = InteractionController.keyboardKeyForAction(actionName);
+    if (!key) return false;
     var activeDate = parseDate(activeItem.activeKey);
     var committedInView = valueState.value && sameMonth(valueState.value, viewValue) ? valueState.value : null;
     var current = activeDate && sameMonth(activeDate, viewValue) ? activeDate : (committedInView || new Date(viewValue.getFullYear(), viewValue.getMonth(), 1));
-    var action = TemporalGrid.keyAction(event.key, { columns:7 });
-    if (!action) return false;
-    if (action.type === 'activate') { selectDate(current, { source:'keyboard', reason:'activate', originalEvent:event }); return true; }
-    var next = TemporalGrid.moveDateByKey(current, event.key, { columns:7, weekStartsOn:weekStartsOn() });
-    var guard = 0, backward = action.action === 'left' || action.action === 'up' || action.action === 'home' || action.action === 'page-up';
+    var gridAction = TemporalGrid.keyAction(key, { columns:7 });
+    if (!gridAction) return false;
+    if (gridAction.type === 'activate') { if (canSelect()) selectDate(current, { source:'keyboard', reason:'activate', originalEvent:event }); return true; }
+    var next = TemporalGrid.moveDateByKey(current, key, { columns:7, weekStartsOn:weekStartsOn() });
+    var guard = 0, backward = gridAction.action === 'left' || gridAction.action === 'up' || gridAction.action === 'home' || gridAction.action === 'page-up';
     while (next && isDisabledDate(next) && guard < 370) { next = addDays(next, backward ? -1 : 1); guard += 1; }
-    if (next && guard < 370) setActiveDate(next, { source: 'keyboard', reason: event.key });
+    if (next && guard < 370) setActiveDate(next, { source: 'keyboard', reason: key, originalEvent:event });
     return true;
+  }
+  function onKeydown(event) {
+    if (!event || !interactionController) return false;
+    return interactionController.dispatch(event, { ownerId:'calendar' }) === 'handled';
   }
     
   function getCellElement(key) {
@@ -435,6 +454,7 @@ function create(options) {
   function updateOptions(nextOptions) {
     if (destroyed) return api;
     var next = nextOptions || {}; opts = mergeOptions(opts, next);
+    capabilityController.updateOptions({});
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) { valueState.setControlled(true); setValue(next.value, { source: 'options', reason: 'controlled', silent: true }); }
     if (Object.prototype.hasOwnProperty.call(Object(next), 'viewValue')) changeView(next.viewValue, { source: 'options', reason: 'controlled-view', silent: true });
     if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true);
@@ -469,6 +489,8 @@ function create(options) {
     getKeyboardNavigation: function () { return keyboard; },
     getKeyboardRegion: function () { return keyboardRegion && keyboardRegion.getKeyboardRegion ? keyboardRegion.getKeyboardRegion() : keyboardRegion; },
     getFocusController: function () { return keyboardRegion; },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
     on: emitter.on,
     once: emitter.once,
     destroy: destroy

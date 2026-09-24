@@ -204,6 +204,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       hideDisabledOptions: opts.hideDisabledOptions === true,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       size: opts.size
     };
     if (Utils.isFunction(opts.disabledTime)) {

@@ -7,6 +7,7 @@ import { Scheduler } from '../core/scheduler.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 import { WheelMetrics } from '../utils/wheelMetrics.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { Renderer } from '../core/renderer.js';
 import { FocusController } from '../core/focusController.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
@@ -134,6 +135,7 @@ function create(options) {
   var visibleRefreshPass = 0;
   var virtualFocusController = null, virtualFocusDomain = null, activeColumnIndex = 0;
   var keyboardRegion = null, hostedVirtualFocus = false;
+  var capabilityController = null, interactionController = null;
   var api = null;
 
   root.className = 'qxframe9a7c2-wheel-panel is-' + opts.size;
@@ -310,17 +312,18 @@ function create(options) {
     if (selectedIndex < 0) return false;
     return activateVirtualAt(next, selectedIndex, meta || { source:'keyboard', reason:'set-active-column' });
   }
-  function handleKeydown(event) {
-    if (destroyed || !event || opts.disabled === true) return false;
-    var readOnly = opts.readOnly === true;
+  function handleInteractionAction(action, event) {
+    if (destroyed || !event || !capabilityController || !capabilityController.can('navigate')) return false;
+    var key = InteractionController.keyboardKeyForAction(action);
+    if (!key) return false;
     var index=Math.max(0, Math.min(activeColumnIndex, Math.max(0,columnRecords.length-1)));
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      var nextColumn=event.key === 'ArrowLeft' ? index-1 : index+1;
+    if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT') {
+      var nextColumn=action === 'MOVE_LEFT' ? index-1 : index+1;
       if (!columnRecords[nextColumn]) {
-        setActiveColumn(index, { source:'keyboard', reason:event.key + '-boundary', originalEvent:event });
+        setActiveColumn(index, { source:'keyboard', reason:key + '-boundary', originalEvent:event });
         return true;
       }
-      setActiveColumn(nextColumn, { source:'keyboard', reason:event.key, originalEvent:event });
+      setActiveColumn(nextColumn, { source:'keyboard', reason:key, originalEvent:event });
       return true;
     }
     var record=columnRecords[index]; if (!record) return false;
@@ -335,19 +338,23 @@ function create(options) {
     }
     var position=enabled.indexOf(current); if(position<0) position=0;
     var next=position;
-    if(event.key==='ArrowDown') next=record.loop?(position+1)%enabled.length:Math.min(enabled.length-1,position+1);
-    else if(event.key==='ArrowUp') next=record.loop?(position-1+enabled.length)%enabled.length:Math.max(0,position-1);
-    else if(event.key==='PageDown') next=record.loop?(position+5)%enabled.length:Math.min(enabled.length-1,position+5);
-    else if(event.key==='PageUp') next=record.loop?(position-(5%enabled.length)+enabled.length)%enabled.length:Math.max(0,position-5);
-    else if(event.key==='Home') next=0;
-    else if(event.key==='End') next=enabled.length-1;
+    if(action==='MOVE_DOWN') next=record.loop?(position+1)%enabled.length:Math.min(enabled.length-1,position+1);
+    else if(action==='MOVE_UP') next=record.loop?(position-1+enabled.length)%enabled.length:Math.max(0,position-1);
+    else if(action==='PAGE_NEXT') next=record.loop?(position+5)%enabled.length:Math.min(enabled.length-1,position+5);
+    else if(action==='PAGE_PREVIOUS') next=record.loop?(position-(5%enabled.length)+enabled.length)%enabled.length:Math.max(0,position-5);
+    else if(action==='MOVE_FIRST') next=0;
+    else if(action==='MOVE_LAST') next=enabled.length-1;
     else return false;
     var target=enabled[next]; if(target===undefined) return false;
-    if (!readOnly) selectIndex(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
-    activateVirtualAt(index,target,{source:'keyboard',reason:event.key,originalEvent:event});
+    if (capabilityController.can('select')) selectIndex(index,target,{source:'keyboard',reason:key,originalEvent:event});
+    activateVirtualAt(index,target,{source:'keyboard',reason:key,originalEvent:event});
     // Recognized navigation remains owned by the open Picker even when the target is
     // already selected at a boundary or the Picker is read-only.
     return true;
+  }
+  function handleKeydown(event) {
+    if (destroyed || !event || !interactionController) return false;
+    return interactionController.dispatch(event, { ownerId:'wheel-panel' }) === 'handled';
   }
 
   function renderColumn(index) {
@@ -460,7 +467,7 @@ function create(options) {
       });
     });
     record.offClick = DOM.listen(scroll.getRootElement(), 'click', function (event) {
-      if (destroyed || CapabilityController.mutationLocked(opts)) return;
+      if (destroyed || !capabilityController || !capabilityController.can('select')) return;
       var node = event.target && event.target.closest ? event.target.closest('[data-wheel-index]') : null;
       if (!node || !scroll.getRootElement().contains(node)) return;
       var target = Number(node.getAttribute('data-wheel-index'));
@@ -548,7 +555,7 @@ function create(options) {
   }
 
   function selectIndex(columnIndex, itemIndex, meta) {
-    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
+    if (destroyed || !capabilityController || !capabilityController.can('select')) return false;
     var record = columnRecords[columnIndex];
     if (!record || !record.items[itemIndex] || record.items[itemIndex].disabled) return false;
     if (meta && (meta.source === 'keyboard' || meta.source === 'pointer')) activeColumnIndex = columnIndex;
@@ -646,6 +653,7 @@ function create(options) {
     itemHeightExplicit = candidateItemHeightExplicit;
     itemHeight = candidateItemHeight;
     opts = candidateOptions;
+    if (capabilityController) capabilityController.updateOptions({});
     value = candidateValue.value;
     selectedItems = candidateValue.selectedItems;
     root.style.setProperty('--qxframe9a7c2-wheel-item-height', String(itemHeight) + 'px');
@@ -685,6 +693,8 @@ function create(options) {
     visibleRefreshFrame.dispose();
     if (virtualFocusDomain) virtualFocusDomain.destroy(); virtualFocusDomain = null; virtualFocusController = null;
     if (keyboardRegion) keyboardRegion.destroy(); keyboardRegion = null;
+    if (interactionController) interactionController.destroy(); interactionController = null;
+    if (capabilityController) capabilityController.destroy(); capabilityController = null;
     destroyColumns(0);
     emitter.dispose();
     if (root.parentNode) root.parentNode.removeChild(root);
@@ -712,6 +722,8 @@ function create(options) {
     focus: function () { return keyboardRegion ? keyboardRegion.focus() : false; },
     getKeyboardNavigation: function () { return keyboardRegion ? keyboardRegion.keyboard : null; },
     getFocusController: function () { return keyboardRegion; },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
     getVirtualFocusDomain: function () { return virtualFocusDomain; },
     on: emitter.on,
     once: emitter.once,
@@ -724,6 +736,16 @@ function create(options) {
   value = initial.value;
   selectedItems = initial.selectedItems;
   rebuildFrom(0);
+  capabilityController = CapabilityController.create({ getState:function () { return opts; } });
+  interactionController = InteractionController.create();
+  interactionController.registerScope({
+    id:'wheel-panel', root:root, document:doc, profile:{ allowEditableKeys:true },
+    resolveAction:function (event) {
+      var action = InteractionController.resolveKeyboardAction(event);
+      return ['MOVE_LEFT','MOVE_RIGHT','MOVE_UP','MOVE_DOWN','MOVE_FIRST','MOVE_LAST','PAGE_PREVIOUS','PAGE_NEXT'].indexOf(action) >= 0 ? action : null;
+    },
+    onAction:function (action, context) { return handleInteractionAction(action, context.originalEvent) ? 'handled' : 'pass'; }
+  });
   keyboardRegion = FocusController.create({
     root: root,
     document: doc,

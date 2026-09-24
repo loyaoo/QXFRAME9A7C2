@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `599076ed92b88b2464e45b3a926acbb9324ce757` (PR #56 merge; PR #57 Selection/Transfer merge is `fb4e5fb5ee8ba8644916431d431de5e18e1edd5a`)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-c-interaction-capability-composite-20260924`
+- Open PRs at this checkpoint: pending PHASE-C-004 composite PR
 - Branch inventory at this checkpoint: `main` only; 67 stale/superseded non-main branches are no longer present
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 65%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -50,12 +50,22 @@ Scope:
 - preserve existing ValueController, SelectionController, OpenStateBridge/overlay and FocusController authorities;
 - turn `FOUR_UNIFICATIONS_ACCEPTANCE.md` C-partial rows into signed-off evidence only after source ownership + browser regressions + exact-head CI exist.
 
+Implemented in current PHASE-C-004 first composite pack:
+- WheelPanel creates one InteractionController scope and one CapabilityController snapshot owner; existing FocusController/KeyboardNavigation remains the sole DOM keydown listener.
+- WheelPanel routes arrow/Home/End/Page semantics through InteractionController and uses CapabilityController for navigate/select decisions, preserving readOnly virtual navigation without value mutation.
+- TimePanel owns a CapabilityController for mutation sinks and delegates semantic keyboard ownership to its canonical WheelPanel interaction scope instead of creating a parallel key listener.
+- Calendar and PeriodPanel create InteractionController + CapabilityController owners; grid/title semantic actions flow through the interaction scope while select mutation sinks use one capability snapshot.
+- readOnly keeps navigation/title drill available while blocking value selection; disabled blocks navigation; loading remains focus-preserving/non-selecting according to InteractionPolicy semantics.
+- public `handleKeydown()` paths also pass through InteractionController, so hosted DatePicker/TimePicker delegation receives repeat suppression and IME handling without another DOM listener.
+- new required `verify:phase-c-composite` performs structural ownership checks plus Chromium behavior checks for readOnly navigation/no mutation, loading/busy navigation-without-mutation, disabled blocking, IME pass-through, and repeat-Enter suppression.
+- sandbox gates pass: `verify:focus-controller`, `verify:modern-architecture`, `verify:picker-family`, `verify-source-esm-browser`, and `verify:phase-c-composite`.
+
 Next exact step:
-1. map the remaining Phase C priority gaps against PR #56's acceptance ledger and current main;
-2. migrate the smallest coherent Interaction/Capability component pack without broad search/replace;
-3. add structural and browser gates for scope bubbling, repeat suppression, native/IME pass-through and unified readOnly/loading/disabled mutation locks;
-4. run full PR release CI, merge only green, then verify main CI + Pages;
-5. once Phase C is actually complete, resume Phase D with Table remote/local selection semantics, then Tags and Select/TreeSelect/Cascader.
+1. open the PHASE-C-004 first composite PR from the current nine-file audited diff;
+2. run full Completion audit + release/browser/package CI and fix only real failures without weakening Focus/Interaction/Capability ownership gates;
+3. merge only the exact green head and verify main CI + Pages;
+4. then continue PHASE-C-004 with popup-hosted Select/TreeSelect/Cascader and standalone Tags/Table capability+interaction ownership;
+5. update `FOUR_UNIFICATIONS_ACCEPTANCE.md` only after exact-head CI evidence exists; resume Phase D only after Phase C is fully signed off.
 
 ## Current authority snapshot — after Phase A
 
@@ -65,8 +75,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
 - Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Focus migration is complete; full Phase C acceptance is still pending Interaction/Capability owner signoff.
-- Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Menu owns an explicit interaction scope. Phase C owner-by-owner conformance remains in progress.
-- Interaction/capability: PR #56 adds canonical `InteractionController` scope routing and `CapabilityController` operation semantics above `InteractionPolicy`. Menu is the first explicit scoped InteractionController owner; many components currently use CapabilityController compatibility forwarding. Phase C remains partial until the priority component owners are signed off.
+- Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. PR #56 established the foundation and Menu scope; PHASE-C-004 is moving priority composites from static compatibility calls to explicit per-component ownership. Phase C remains partial until those owners are signed off.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.

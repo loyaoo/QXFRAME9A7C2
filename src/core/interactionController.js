@@ -8,6 +8,7 @@ const DEFAULT_KEYS = Object.freeze({
   Enter: 'ACTIVATE', ' ': 'ACTIVATE', Spacebar: 'ACTIVATE'
 });
 const REPEATABLE = Object.freeze(['MOVE_UP', 'MOVE_DOWN', 'MOVE_LEFT', 'MOVE_RIGHT', 'MOVE_FIRST', 'MOVE_LAST', 'PAGE_PREVIOUS', 'PAGE_NEXT']);
+const ACTION_KEYS = Object.freeze({ MOVE_UP:'ArrowUp', MOVE_DOWN:'ArrowDown', MOVE_LEFT:'ArrowLeft', MOVE_RIGHT:'ArrowRight', MOVE_FIRST:'Home', MOVE_LAST:'End', PAGE_PREVIOUS:'PageUp', PAGE_NEXT:'PageDown', ACTIVATE:'Enter' });
 const OUTCOMES = Object.freeze(['pass', 'handled', 'blocked']);
 const ACTION_OPERATIONS = Object.freeze({
   ACTIVATE: 'activate', TOGGLE: 'select', OPEN: 'open', CLOSE: 'close',
@@ -16,6 +17,8 @@ const ACTION_OPERATIONS = Object.freeze({
   CANCEL_EDIT: 'abort', DELETE: 'remove', BACKSPACE: 'remove', CONFIRM: 'submit',
   CANCEL: 'abort', DISMISS: 'close'
 });
+
+function keyboardKeyForAction(action) { return ACTION_KEYS[String(action || '')] || ''; }
 
 function operationForAction(action) {
   return ACTION_OPERATIONS[action] || (String(action).startsWith('MOVE_') || String(action).startsWith('PAGE_') ? 'navigate' : 'activate');
@@ -112,5 +115,5 @@ function create(options) {
   return Object.freeze({ registerScope, dispatch, getState: () => Object.freeze({ scopeIds: Object.freeze([...scopes.keys()]), destroyed }), destroy });
 }
 
-export const InteractionController = Object.freeze({ create, resolveKeyboardAction, outcomes: OUTCOMES });
-export { create, resolveKeyboardAction };
+export const InteractionController = Object.freeze({ create, resolveKeyboardAction, keyboardKeyForAction, outcomes: OUTCOMES });
+export { create, resolveKeyboardAction, keyboardKeyForAction };

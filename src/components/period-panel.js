@@ -3,6 +3,7 @@ import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { TemporalGrid } from '../core/temporalGrid.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { FocusController } from '../core/focusController.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { EventDelegation } from '../core/eventDelegation.js';
@@ -82,6 +83,8 @@ function create(options) {
   var title = null;
   var grid = null;
   var keyboard = null, keyboardRegion = null, virtualFocusController = null, virtualFocusDomain = null, hostedVirtualFocus = false;
+  var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
+  var interactionController = null;
   var delegation = null;
   var items = [];
   var value = DateUnit.start(opts.value !== undefined ? DateUnit.parse(opts.value, { unit: unit }) : null, unit, 0, false);
@@ -89,6 +92,7 @@ function create(options) {
   var activeValue = DateUnit.start(DateUnit.parse(opts.activeValue, { unit: unit }) || value || viewValue, unit, 0, false);
   var hoveredKey = null;
   var api = null;
+  scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
     
   function isDisabled(date) {
     return opts.disabled === true || (typeof opts.disabledValue === 'function' && opts.disabledValue(clone(date), Object.freeze({ unit: unit, periodPanel: api })) === true);
@@ -192,7 +196,7 @@ function create(options) {
     return true;
   }
   function select(next, meta) {
-    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
+    if (destroyed || !capabilityController.can('select')) return false;
     var parsed = DateUnit.parse(next, { unit: unit });
     if (!parsed || isDisabled(parsed)) return false;
     var normalized = DateUnit.start(parsed, unit, 0, false);
@@ -235,31 +239,37 @@ function create(options) {
     if (!next || guard >= 240) return false;
     return setActiveValue(next, meta);
   }
-  function onKeydown(event) {
-    if (!event || opts.disabled === true) return false;
+  function handleInteractionAction(actionName, event) {
+    if (!event || !capabilityController.can('navigate')) return false;
     var eventTarget = event.target || null;
     var navTarget = eventTarget ? DOM.closestPrivate(eventTarget, root, 'periodNav') : null;
     var titleTarget = eventTarget ? DOM.closestPrivate(eventTarget, root, 'periodTitle') : null;
-    if (navTarget && (event.key === 'Enter' || event.key === ' ')) return false;
+    if (navTarget && actionName === 'ACTIVATE') return false;
     if (titleTarget) {
-      if ((event.key === 'Enter' || event.key === ' ') && typeof opts.onTitleRequest === 'function') {
+      if (actionName === 'ACTIVATE' && typeof opts.onTitleRequest === 'function') {
         var titleDetail = { unit:unit, viewValue:clone(viewValue), source:'keyboard', reason:'title-keyboard', originalEvent:event, periodPanel:api };
         opts.onTitleRequest(clone(viewValue), titleDetail);
         emitter.emit('titleRequest', titleDetail);
         return true;
       }
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') return changeView(addPage(viewValue, unit, -1), { source:'keyboard', reason:'title-page-prev', originalEvent:event });
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') return changeView(addPage(viewValue, unit, 1), { source:'keyboard', reason:'title-page-next', originalEvent:event });
+      if (actionName === 'MOVE_LEFT' || actionName === 'MOVE_UP') return changeView(addPage(viewValue, unit, -1), { source:'keyboard', reason:'title-page-prev', originalEvent:event });
+      if (actionName === 'MOVE_RIGHT' || actionName === 'MOVE_DOWN') return changeView(addPage(viewValue, unit, 1), { source:'keyboard', reason:'title-page-next', originalEvent:event });
       return false;
     }
-    var action = TemporalGrid.keyAction(event.key, { columns:4 });
-    if (!action) return false;
-    if (action.type === 'step') return moveActive(action.amount, { source:'keyboard', reason:event.key });
-    if (action.type === 'page') return changeView(addPage(viewValue, unit, action.amount), { source:'keyboard', reason:event.key, originalEvent:event });
-    if (action.type === 'home') return setActiveValue(items[0] && items[0].date, { source:'keyboard', reason:'Home' });
-    if (action.type === 'end') return setActiveValue(items[items.length - 1] && items[items.length - 1].date, { source:'keyboard', reason:'End' });
-    if (action.type === 'activate') return select(activeValue || value || viewValue, { source:'keyboard', reason:'activate', originalEvent:event });
+    var key = InteractionController.keyboardKeyForAction(actionName);
+    if (!key) return false;
+    var gridAction = TemporalGrid.keyAction(key, { columns:4 });
+    if (!gridAction) return false;
+    if (gridAction.type === 'step') return moveActive(gridAction.amount, { source:'keyboard', reason:key, originalEvent:event });
+    if (gridAction.type === 'page') return changeView(addPage(viewValue, unit, gridAction.amount), { source:'keyboard', reason:key, originalEvent:event });
+    if (gridAction.type === 'home') return setActiveValue(items[0] && items[0].date, { source:'keyboard', reason:'Home', originalEvent:event });
+    if (gridAction.type === 'end') return setActiveValue(items[items.length - 1] && items[items.length - 1].date, { source:'keyboard', reason:'End', originalEvent:event });
+    if (gridAction.type === 'activate') { if (capabilityController.can('select')) select(activeValue || value || viewValue, { source:'keyboard', reason:'activate', originalEvent:event }); return true; }
     return false;
+  }
+  function onKeydown(event) {
+    if (!event || !interactionController) return false;
+    return interactionController.dispatch(event, { ownerId:'period-panel' }) === 'handled';
   }
   function setHoverValue(next, meta) {
     if (destroyed) return false;
@@ -310,12 +320,12 @@ function create(options) {
       if (hoveredKey !== null) setHoverValue(null, { source: 'pointer', reason: 'panel-leave', originalEvent: event });
     }));
     delegation.on('click', DOM.privateMatcher('periodNav'), function (payload) {
-      if (opts.disabled === true) return;
+      if (!capabilityController.can('navigate')) return;
       changeView(addPage(viewValue, unit, Number(DOM.getPrivate(payload.target, 'periodNav'))), { source: DOM.activationSource(payload.event), reason: 'nav' });
       if (!hostedVirtualFocus) DOM.focusElement(root);
     });
     delegation.on('click', DOM.privateMatcher('periodTitle'), function (payload) {
-      if (opts.disabled === true || typeof opts.onTitleRequest !== 'function') return;
+      if (!capabilityController.can('navigate') || typeof opts.onTitleRequest !== 'function') return;
       var detail = { unit:unit, viewValue:clone(viewValue), source:DOM.activationSource(payload.event), reason:'title', originalEvent:payload.event, periodPanel:api };
       opts.onTitleRequest(clone(viewValue), detail);
       emitter.emit('titleRequest', detail);
@@ -327,6 +337,12 @@ function create(options) {
       select(entry.date, { source: DOM.activationSource(payload.event), reason: 'cell', originalEvent: payload.event });
       if (!hostedVirtualFocus) DOM.focusElement(root);
     });
+    interactionController = InteractionController.create();
+    interactionController.registerScope({
+      id:'period-panel', root:root, document:doc, profile:{ allowEditableKeys:true },
+      onAction:function (action, context) { return handleInteractionAction(action, context.originalEvent) ? 'handled' : 'pass'; }
+    });
+    scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; });
     keyboardRegion = FocusController.create({
       root: root,
       hosted: false,
@@ -391,6 +407,7 @@ function create(options) {
     var next = nextOptions || {};
     if (Object.prototype.hasOwnProperty.call(next, 'unit') && normalizeUnit(next.unit) !== unit) throw new Error('[QXFRAME9A7C2] PeriodPanel unit is immutable.');
     opts = mergeOptions(opts, next);
+    capabilityController.updateOptions({});
     if (Object.prototype.hasOwnProperty.call(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     if (Object.prototype.hasOwnProperty.call(next, 'viewValue')) changeView(next.viewValue, { silent: true, source: 'options', reason: 'controlled-view' });
     if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true);
@@ -429,6 +446,8 @@ function create(options) {
     bindVirtualFocus: bindVirtualFocus,
     getKeyboardRegion: function () { return keyboardRegion && keyboardRegion.getKeyboardRegion ? keyboardRegion.getKeyboardRegion() : keyboardRegion; },
     getFocusController: function () { return keyboardRegion; },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
     getVirtualFocusDomain: function () { return virtualFocusDomain; },
     updateOptions: updateOptions,
     getState: function () { var hoverValue = hoveredKey ? items.filter(function (entry) { return entry.key === hoveredKey; }).map(function (entry) { return clone(entry.date); })[0] || null : null; return Object.freeze({ unit: unit, value: clone(value), viewValue: clone(viewValue), activeValue: clone(activeValue), hoverValue: hoverValue, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed }); },
