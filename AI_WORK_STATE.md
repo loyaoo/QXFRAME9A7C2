@@ -8,19 +8,20 @@
 
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
+- Current main HEAD at Phase A kickoff: `b54e8be325498b680df7059ee53929d40caf13b0`
 - Last code-affecting main commit: `a459e28f2486ce89615322c6e49094fddd8464a4`
-- Current branch: `main`
+- Current branch: `refactor/phase-a-shared-protocol-20260924`
 - Bootstrap PR: #46 merged
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #307 / `35949535252`
 - Latest green main CI + Pages: run #308 / `35949774749`
-- Controller migration implementation progress: 0% (bootstrap hygiene complete; Phase A ready to start)
+- Controller migration implementation progress: 1% (Phase A authority inventory started; no business behavior changed)
 
 ## CURRENT
 
 ### PHASE-A-001 — Baseline inventory and Controller migration kickoff
-Status: READY
+Status: IN_PROGRESS
 
 Prerequisites:
 - OPS-001 repository cleanup merged green in PR #46;
@@ -47,7 +48,7 @@ Primary first-wave components:
 - Collapse (autosize Motion)
 
 Next exact step:
-- perform Phase A authority inventory on current main; do not start by creating 11 empty Controller files.
+- finish the Phase A authority inventory on branch `refactor/phase-a-shared-protocol-20260924`, freeze the owner/action/value/focus/overlay/form/token map in this checkpoint, then implement the smallest Shared Protocol primitives by evolving existing authorities; do not create 11 empty Controller files.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
