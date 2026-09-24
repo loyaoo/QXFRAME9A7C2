@@ -15,20 +15,20 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #312 / `35952642035` (PR #47)
-- Latest green main CI + Pages: run #308 / `35949774749`; replacement main run #313 / `35952965100` is in progress for PR #47 merge
-- Controller migration implementation progress: 9% (Phase A authority inventory frozen; first Shared Protocol infrastructure batch merged; main CI/Pages verification in progress; no component business behavior changed)
+- Latest green main CI + Pages: run #313 / `35952965100` for merge `51b7f317037fc538beaadc6f710da077a8429d0f`
+- Controller migration implementation progress: 10% (Phase A authority inventory + first Shared Protocol infrastructure batch merged and fully green; second authority-integration batch next; no component business behavior changed)
 
 ## CURRENT
 
-### PHASE-A-001 — Baseline inventory and Controller migration kickoff
-Status: IN_PROGRESS
+### PHASE-A-001 — Baseline inventory and Shared Protocol foundation
+Status: DONE
 
 Merge / CI evidence:
 - PR #47 merged to `main`;
 - merge commit: `51b7f317037fc538beaadc6f710da077a8429d0f`;
 - PR CI #312 / `35952642035`: success (Completion audit, Full release verification, npm pack, standalone docs demo, artifact upload);
 - earlier PR CI #309/#310 exposed 3 source-side prototype-safety violations; the audit gate was not weakened and the source was corrected;
-- main CI + Pages #313 / `35952965100`: in progress.
+- main CI + Pages #313 / `35952965100`: success, including release artifact build/upload and Pages deployment.
 
 Prerequisites:
 - OPS-001 repository cleanup merged green in PR #46;
@@ -83,7 +83,17 @@ Completed in current code batch:
 - added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
 
 Next exact step:
-- verify main CI + Pages #313 for merge `51b7f317037fc538beaadc6f710da077a8429d0f`. If green, mark PHASE-A-001 first batch done and start PHASE-A-002: wire Shared Protocol metadata/revision/projection into the existing authorities (not directly into every component), with contract regressions and no business-behavior change.
+- start PHASE-A-002 on a fresh branch from current main: integrate the Shared Protocol into existing authorities rather than components. First targets: make DataRevision the stale-transaction revision authority for Collection, make ControllableStateCore the ownership/request metadata authority behind StateController/ValueDraft without adding a second value truth, and connect ProjectionScheduler only where an existing projection authority can adopt revision gating without behavior changes. Add focused protocol regressions and keep full release gates green.
+
+### PHASE-A-002 — Shared Protocol authority integration
+Status: READY
+
+Scope guard:
+- no direct picker/component migration yet;
+- no second committed/controlled truth;
+- do not change public controlled/uncontrolled semantics;
+- prefer replacing private revision/ownership metadata with Shared Protocol authority rather than mirroring it;
+- if ProjectionScheduler cannot replace an existing private projection revision safely in this batch, record it as deferred instead of adding parallel scheduling.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
