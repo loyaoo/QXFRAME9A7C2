@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `b2ecdb4e33bea642932092693d0ad5a8a47fd4e3` (PR #49 merge)
-- Current branch: `main`
+- Current branch: `refactor/phase-b-value-picker-family-20260924`
 - Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #320 / `35955216461` (PR #49)
 - Latest green main CI + Pages: #321 / `35955524890`
-- Controller migration implementation progress: 25%
+- Controller migration implementation progress: 26%
 - Current Phase: Phase B
 - Current Task: `PHASE-B-001`
 
 ## CURRENT
 
 ### PHASE-B-001 — ValueController + Picker Family first migration pack
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 5%
 
 Why this is current:
 - Phase A Shared Protocol foundation and authority adoption are complete and green on PR + main.
@@ -52,9 +52,8 @@ Frozen Picker family contract for this task:
 - control showing draft is projection only; FormData/getValue stay committed until commit.
 
 Next exact step:
-1. create a fresh Phase B branch from current main;
-2. inspect the exact ValueDraft/PickerSession direct-consumer set only, not the whole repository;
-3. implement ValueController by evolving/wrapping the existing single value authority, with no duplicate state;
+1. on `refactor/phase-b-value-picker-family-20260924`, inspect the exact ValueDraft/PickerSession direct-consumer set only, not the whole repository;
+2. implement ValueController by evolving/wrapping the existing single value authority, with no duplicate state;
 4. migrate PickerSession/PickerComponent plus DatePicker/TimePicker/ColorPicker/WheelPicker in the same migration pack;
 5. add browser regressions for draft display, immediate commit, confirm rollback, Enter, presets and FormData;
 6. run complete PR release CI, then main CI + Pages before advancing.
