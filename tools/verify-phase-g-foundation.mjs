@@ -95,6 +95,7 @@ adapterValue='changed';adapterDirty=true;adapterDirtyField.notifyValue(context('
 assert.equal(form.getField('adapter-dirty').dirty,true,'FormController must consume owner dirty state without storing a value baseline');
 adapterValue='seed';adapterDirty=false;adapterDirtyField.notifyValue(context('adapter-dirty-return'));
 assert.equal(form.getField('adapter-dirty').dirty,false,'owner-reported clean state must clear dirty even without a copied baseline');
+assert.equal(adapterDirtyField.unregister(context('adapter-dirty-unregister')).status,'applied');
 assert.equal(leftField.markTouched(true,context('left-touch')).status,'applied');
 assert.equal(form.getField('left').touched,true);
 
