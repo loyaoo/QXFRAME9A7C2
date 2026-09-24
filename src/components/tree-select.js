@@ -809,7 +809,7 @@ export class TreeSelect extends PopupFieldComponent {
     overlay:Object.freeze({mode:'popup'}),
     form:Object.freeze({serialize:true}),
     selection:Object.freeze({channels:Object.freeze(['selected','checked']),valueOwner:'ValueController'}),
-     ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController'})
+     ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',form:'FormController'})
   });
   static contract=getContract('TreeSelect');
   static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
