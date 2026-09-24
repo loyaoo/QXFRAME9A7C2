@@ -188,6 +188,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (Utils.isFunction(opts.onPreviewChange)) opts.onPreviewChange(previewValue, payload);
     emitter.emit('previewChange', payload);
   }
+  function panelCapabilityOptions() { return { disabled:opts.disabled === true, readOnly:opts.readOnly === true, loading:opts.loading === true || opts.busy === true }; }
   function resolvedPanelOptions(value) {
     var resolved = {
       showSecond: opts.showSecond !== false,
@@ -204,6 +205,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       hideDisabledOptions: opts.hideDisabledOptions === true,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       size: opts.size
     };
     if (Utils.isFunction(opts.disabledTime)) {
@@ -217,7 +219,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function syncPanel(reason) {
     if (!panel) return;
     var value = panelSeed();
-    panel.updateOptions(Utils.mergeOwn( resolvedPanelOptions(value), { value: value }));
+    panel.updateOptions(Utils.mergeOwn( resolvedPanelOptions(value), panelCapabilityOptions(), { value: value }));
     if (panel.refresh) panel.refresh(reason || 'time-picker-sync');
   }
   var pickerSession = instance.setupPickerSession({
@@ -367,7 +369,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   });
   instance.adoptPickerField(field);
 
-  panel = TimePanel.create(Utils.mergeOwn( resolvedPanelOptions(panelSeed()), {
+  panel = TimePanel.create(Utils.mergeOwn( resolvedPanelOptions(panelSeed()), panelCapabilityOptions(), {
     container: field.getPanelHost(),
     value: panelSeed(),
     onSelect: function (value, detail) { applyPanelValue(value, Utils.assignOwn({ panelOrigin: true }, detail || {})); }
