@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `b4b1f506d4f14db8f1bd521c9ca4611515a19e5b` (PR #69 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-f-css-authority-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-001 CSS authority PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-F-001 — CSS authority + JS Theme/Token decoupling
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 85%
 
 Why this is current:
 - handbook Phase E Overlay + Motion scope is fully accepted through PR #65–#69.
@@ -53,12 +53,25 @@ Scope:
 - update canonical-system manifest/docs references and add a required Phase F CSS-authority gate.
 - do not yet perform broad token renaming/hard-coded-color cleanup across the 85万字节 canonical CSS; that follows after authority is singular.
 
+Implemented in current PHASE-F-001 CSS authority pack:
+- Core.Config no longer owns theme/tokens, getToken, captureContext or projectContext; it retains runtime-only size/variant/focusOutline/motion/trigger-delay settings and scoped runtime behavior.
+- Config.configure({theme/tokens}) now rejects those keys instead of silently maintaining a second visual truth.
+- OverlayRuntime removes Config-based theme/token capture, mutation observer and portal CSS-variable copying. Scoped theme now depends on DOM ancestry / caller-provided scoped portalContainer as specified by the handbook.
+- Menu removes the runtime theme option and Config.createScope theme projection. Nested item.theme is explicitly rejected with CSS-scope guidance rather than silently ignored.
+- ColorPicker default preset values are self-contained JS data and no longer read CSS palette custom properties through getComputedStyle.
+- runtime Menu contract and generated component API remove the theme option; docs shell no longer updates/passes Menu.theme.
+- token reference docs keep Theme Inspector as docs-only CSS tooling but no longer advertise Config.theme/tokens; Config section is behavior-only.
+- canonical-system manifests now identify src/qxframe9a7c2.css / CSS inheritance as Theme/Token authority.
+- stale unbuilt src/css/00-foundation.css ... 10-compatibility.css duplicate sources are deleted. tools/docs CSS source-order manifests point to one physical source: src/qxframe9a7c2.css.
+- canonical CSS header explicitly declares itself the sole production visual authority.
+- new required verify:phase-f-css-authority structurally forbids JS Theme/Token authority and duplicate CSS sources, and runs Chromium with only CSS loaded to prove root light/dark + scoped dark inheritance without QXFRAME runtime JS.
+
 Next exact step:
-1. create PHASE-F-001 branch from green main #386;
-2. migrate Config/OverlayRuntime/Menu/ColorPicker away from JS Theme/Token authority and update affected docs/manifests/contracts;
-3. delete stale split CSS duplicate source files and lock the single-source rule in CI;
-4. run source/browser/contracts/release gates, merge only exact-head green and verify main + Pages;
-5. continue Phase F with canonical token graph / light-dark / visual-state CSS audit once authority is singular.
+1. open/run the PHASE-F-001 PR from the audited branch;
+2. fix exact-head contract/docs/browser/release failures only, without restoring Config theme/tokens or split CSS mirrors;
+3. merge only green and verify main release + Pages;
+4. checkpoint PHASE-F-001 as DONE;
+5. continue PHASE-F-002 with canonical token graph / white-light black-dark baseline / duplicate alias and hard-coded-color audit on the now-singular src/qxframe9a7c2.css authority.
 
 ## Current authority snapshot — after Phase A
 

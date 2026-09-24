@@ -3,14 +3,12 @@ import { Utils } from '../utils/utils.js';
 import { IdManager } from '../utils/id.js';
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
-import { Config } from './config.js';
 import { DOMProjection } from './domProjection.js';
 import { DismissableLayer } from './dismissableLayer.js';
 import { LayerManager } from './layerManager.js';
 import { FocusManager } from './focusManager.js';
 import { FocusScope } from './focusScope.js';
 import { InteractionIsolation } from './interactionIsolation.js';
-import { ObserverHub } from './observerHub.js';
 import { ScrollLock } from './scrollLock.js';
 import { PositionAdapter } from './position.js';
 
@@ -46,8 +44,6 @@ function create(options) {
   var interactionIsolation = null;
   var scrollLock = null;
   var positionMount = null;
-  var contextObserver = null;
-  var contextProjection = null;
   var active = false;
   var interactionActive = false;
   var destroyed = false;
@@ -84,49 +80,17 @@ function create(options) {
   }
   var api = null;
 
-  function syncTransportContext() {
-    if (!popupHost) return;
-    if (contextProjection) contextProjection.destroy();
-    contextProjection = Config.projectContext(Config.captureContext(reference), popupHost);
-  }
-
-  function stopContextObserver() {
-    if (contextObserver) contextObserver();
-    contextObserver = null;
-  }
-
-  function startContextObserver() {
-    stopContextObserver();
-    if (!reference) return;
-    var targets = [];
-    var current = reference;
-    while (current && current.nodeType === 1) { targets.push(current); current = current.parentElement; }
-    contextObserver = ObserverHub.mutation(targets, function () { syncTransportContext(); }, {
-      schedule: 'measure',
-      observeOptions: { attributes: true, attributeFilter: ['style', 'data-qxframe9a7c2-theme'] }
-    });
-  }
-
   function ensureTransport() {
-    if (popupHost && popupHost.parentNode === portalContainer && floating.parentNode === popupHost) {
-      syncTransportContext();
-      if (active && !contextObserver) startContextObserver();
-      return popupHost;
-    }
+    if (popupHost && popupHost.parentNode === portalContainer && floating.parentNode === popupHost) return popupHost;
     popupHost = documentRef.createElement('div');
     try { popupHost.__qxframe9a7c2PopupHost = true; } catch (_) {}
     portalContainer.appendChild(popupHost);
     popupHost.appendChild(floating);
-    syncTransportContext();
-    if (active) startContextObserver();
     return popupHost;
   }
 
   function unmountTransport(restoreInitial) {
     if (active) throw new Error('[QXFRAME9A7C2] OverlayRuntime cannot unmount transport while active.');
-    stopContextObserver();
-    if (contextProjection) contextProjection.destroy();
-    contextProjection = null;
     if (popupHost && floating.parentNode === popupHost) popupHost.removeChild(floating);
     if (popupHost && popupHost.parentNode) popupHost.parentNode.removeChild(popupHost);
     popupHost = null;
@@ -358,7 +322,6 @@ function create(options) {
     ensureResources();
     active = true;
     interactionActive = true;
-    startContextObserver();
     dismissLayer.activate();
     projectZIndex();
     if (scrollLock) scrollLock.lock();
@@ -381,7 +344,6 @@ function create(options) {
     var detail = meta || {};
     deactivateInteraction(detail);
     active = false;
-    stopContextObserver();
     if (positionMount) { positionMount.destroy(); positionMount = null; }
     clearProjectedZIndex();
     if (shouldRestoreFocus(detail)) {
@@ -434,11 +396,6 @@ function create(options) {
     var positionChanged = referenceChanged || positionKeys.some(function (key) { return own(next, key) && next[key] !== settings[key]; });
     if (referenceChanged) reference = next.reference;
     Utils.copyOwn(settings, next);
-    if (referenceChanged && popupHost) {
-      syncTransportContext();
-      if (active) startContextObserver();
-    }
-
     if (active && lockChanged) {
       if (scrollLock) { scrollLock.destroy(); scrollLock = null; }
       if (settings.lockScroll === true) { ensureResources(); if (scrollLock && interactionActive) scrollLock.lock(); }

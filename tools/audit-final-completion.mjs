@@ -231,8 +231,19 @@ const baselineApi=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/lega
 const baselineModules=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/qxframe9a7c2-module-manifest.json'),'utf8'));
 const currentApi=generateComponentApi({root});
 const currentModules=generateModuleManifest({root});
+const compatibility=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/compatibility.json'),'utf8'));
 const json=v=>JSON.stringify(v);
-const apiParity=json(baselineApi)===json(currentApi);
+const expectedApi=JSON.parse(JSON.stringify(baselineApi));
+const authorizedApiRemovals=[];
+for(const entry of compatibility.entries||[]){
+  if(entry&&entry.kind==='option'&&entry.apiParityAction==='remove'){
+    const component=(expectedApi.components||[]).find(record=>record&&record.name===entry.component);
+    if(!component||!component.schema||!Object.prototype.hasOwnProperty.call(component.schema,entry.name)) throw new Error('Authorized API removal is absent from frozen baseline: '+entry.component+'.'+entry.name);
+    delete component.schema[entry.name];
+    authorizedApiRemovals.push(entry.component+'.'+entry.name);
+  }
+}
+const apiParity=json(expectedApi)===json(currentApi);
 const moduleParity=json(baselineModules)===json(currentModules);
 
 const oldBrowser=fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/verify-browser.log'),'utf8');
@@ -300,6 +311,7 @@ const report={
   staleActiveMetadata:staleMetadata,
   parity:{
     api:apiParity,
+    authorizedApiRemovals,
     modules:moduleParity,
     baselineBrowserChecks:oldChecks.size,
     currentBrowserChecks:currentChecks.size,

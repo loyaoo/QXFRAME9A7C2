@@ -35,14 +35,9 @@ var DEFAULT_PRESET_TOKENS = Object.freeze([
   Object.freeze({ name: 'pink-6', fallback: 'rgb(246, 106, 155)' }),
   Object.freeze({ name: 'purple-6', fallback: 'rgb(210, 117, 233)' })
 ]);
-function defaultPresetColors(doc) {
-  var view = doc && doc.defaultView || globalThis;
-  var style = null;
-  try { style = view && view.getComputedStyle && doc && doc.documentElement ? view.getComputedStyle(doc.documentElement) : null; } catch (error) { style = null; }
+function defaultPresetColors() {
   return DEFAULT_PRESET_TOKENS.map(function (entry) {
-    var raw = style && style.getPropertyValue ? String(style.getPropertyValue('--qxframe9a7c2-palette-' + entry.name) || '').trim() : '';
-    var value = /^\d+(?:\.\d+)?\s*,\s*\d+(?:\.\d+)?\s*,\s*\d+(?:\.\d+)?$/.test(raw) ? 'rgb(' + raw + ')' : entry.fallback;
-    return { label: entry.name, value: value };
+    return { label: entry.name, value: entry.fallback };
   });
 }
 var own = Utils.own;

@@ -2,7 +2,6 @@ import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
-import { Config } from '../core/config.js';
 import { IdManager } from '../utils/id.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
@@ -32,8 +31,6 @@ var MODES = Object.freeze(['vertical', 'horizontal', 'inline']);
 var SUBMENU_TRIGGERS = Object.freeze(['hover', 'click']);
 var SUBMENU_MODES = Object.freeze(['popup', 'expand']);
 var ITEM_DISPLAYS = Object.freeze(['icon', 'icon-label']);
-var THEMES = Object.freeze(['inherit', 'light', 'dark']);
-var ITEM_THEMES = Object.freeze(['light', 'dark']);
 var NON_CANONICAL_OPTIONS = Object.freeze([
   'value', 'defaultValue', 'values', 'searchable', 'searchValue', 'defaultSearchValue',
   'closeOnSelect', 'virtual', 'virtualThreshold', 'height', 'maxHeight', 'target', 'el', 'mount'
@@ -58,16 +55,6 @@ function normalizeItemDisplay(value) {
   var display = String(value || 'icon-label').toLowerCase();
   if (ITEM_DISPLAYS.indexOf(display) < 0) throw new TypeError('[QXFRAME9A7C2] Menu itemDisplay must be icon or icon-label.');
   return display;
-}
-function normalizeTheme(value) {
-  var theme = String(value == null || value === '' ? 'inherit' : value).toLowerCase();
-  if (THEMES.indexOf(theme) < 0) throw new TypeError('[QXFRAME9A7C2] Menu theme must be inherit, light, or dark.');
-  return theme;
-}
-function normalizeItemTheme(value) {
-  var theme = String(value || '').toLowerCase();
-  if (ITEM_THEMES.indexOf(theme) < 0) throw new TypeError('[QXFRAME9A7C2] Menu item.theme must be light or dark.');
-  return theme;
 }
 function normalizeBoolean(value, name, fallback) {
   if (value === undefined) return fallback === true;
@@ -113,7 +100,7 @@ function validateItems(items) {
       if (type !== 'divider' && (item.label === undefined || item.label === null)) throw new TypeError('[QXFRAME9A7C2] Menu item.label is required.');
       if (type === 'divider' && item.items !== undefined) throw new TypeError('[QXFRAME9A7C2] Menu divider items cannot contain item.items.');
       if (type === 'group' && item.items !== undefined && !Array.isArray(item.items)) throw new TypeError('[QXFRAME9A7C2] Menu group item.items must be an array.');
-      if (item.theme !== undefined) normalizeItemTheme(item.theme);
+      if (item.theme !== undefined) throw new TypeError('[QXFRAME9A7C2] Menu item.theme was removed. Apply theme through CSS scope or a scoped portalContainer.');
       if (item.popupClassName !== undefined && typeof item.popupClassName !== 'string') throw new TypeError('[QXFRAME9A7C2] Menu item.popupClassName must be a string.');
     }
   });
@@ -126,7 +113,7 @@ const MENU_DEFAULTS = Object.freeze({
   multiple: false, selectable: true, submenuMode: undefined, itemDisplay: 'icon-label', collapsed: false,
   disabled: false, size: 'md', submenuTrigger: 'hover', submenuOpenDelay: 0, submenuLeaveDelay: 100, submenuOffset: 8,
   placement: undefined, selectionAppearance: 'highlight', inlineIndent: 24, collapsedWidth: 80,
-  theme: 'inherit', forceSubMenuRender: false, disabledOverflow: false, overflowedIndicator: DEFAULT_OVERFLOW_INDICATOR, tooltip: true
+  forceSubMenuRender: false, disabledOverflow: false, overflowedIndicator: DEFAULT_OVERFLOW_INDICATOR, tooltip: true
 });
 const menuState = new WeakMap();
 const menuIntent = new WeakMap();
@@ -145,7 +132,6 @@ function normalizeMenuOptions(input, intent) {
   opts.selectable = normalizeBoolean(opts.selectable, 'selectable', true);
   opts.forceSubMenuRender = normalizeBoolean(opts.forceSubMenuRender, 'forceSubMenuRender', false);
   opts.disabledOverflow = normalizeBoolean(opts.disabledOverflow, 'disabledOverflow', false);
-  opts.theme = normalizeTheme(opts.theme);
   opts.inlineIndent = normalizePositiveNumber(opts.inlineIndent, 'inlineIndent', 24, true);
   opts.collapsedWidth = normalizePositiveNumber(opts.collapsedWidth, 'collapsedWidth', 80, false);
   opts.selectionAppearance = Item.normalizeSelectionAppearance(opts.selectionAppearance);
@@ -225,7 +211,6 @@ function setupMenu(instance) {
   var overflowLevel = null;
   var overflowTrigger = null;
   var overflowedKeys = new Set();
-  var themeScopes = new Map();
 
   function childrenOf(item) { return item && Array.isArray(item.items) ? item.items : []; }
   var itemAccessors=ItemAccessors.create({
@@ -345,24 +330,10 @@ function setupMenu(instance) {
   }
   function visibleActiveKey() { return ownsBrowserFocus() ? activeKey : ''; }
 
-  function resolvedPanelTheme(itemTheme) {
-    if (itemTheme !== undefined && itemTheme !== null && itemTheme !== '') return normalizeItemTheme(itemTheme);
-    if (opts.theme === 'light' || opts.theme === 'dark') return opts.theme;
-    return null;
-  }
-  function syncThemeScope(element, theme) {
-    if (!element) return;
-    var normalized = theme === 'light' || theme === 'dark' ? theme : null;
-    var scopeHandle = themeScopes.get(element) || null;
-    if (!normalized) { if (scopeHandle) { scopeHandle.destroy(); themeScopes.delete(element); } return; }
-    if (scopeHandle) scopeHandle.update({ theme: normalized });
-    else themeScopes.set(element, Config.createScope(element, { theme: normalized }));
-  }
-  function syncPanelContext(panel, itemTheme) {
+  function syncPanelContext(panel) {
     if (!panel || !panel.classList) return;
     ['xs','sm','md','lg','xl'].forEach(function (size) { panel.classList.remove('is-' + size); });
     panel.classList.add('is-' + sizeName());
-    syncThemeScope(panel, resolvedPanelTheme(itemTheme));
   }
 
   function applyRootUserStyle() {
@@ -374,14 +345,13 @@ function setupMenu(instance) {
     if (!root) return;
     root.className = 'qxframe9a7c2-menu is-' + opts.mode + ' is-' + sizeName();
     if (opts.className) String(opts.className).split(/\s+/).filter(Boolean).forEach(function (name) { root.classList.add(name); });
-    syncThemeScope(root, opts.theme === 'inherit' ? null : opts.theme);
     root.classList.toggle('is-icon-only', opts.itemDisplay === 'icon');
     root.classList.toggle('is-collapsed', inlineCollapsed());
     root.classList.toggle('is-submenu-expand', !popupMode());
     root.classList.toggle('is-disabled', opts.disabled === true);
     if (focusController) focusController.setDisabled(opts.disabled === true); else root.tabIndex = opts.disabled === true ? -1 : 0;
     applyRootUserStyle();
-    panelByKey.forEach(function (panel, key) { var item = itemByKey.get(key); syncPanelContext(panel, item && item.theme); });
+    panelByKey.forEach(function (panel) { syncPanelContext(panel); });
     if (overflowPanel) syncPanelContext(overflowPanel, null);
 
     var selectedPaths = selectedArray().map(function (key) { return pathByKey.get(key) || []; });
@@ -1324,7 +1294,7 @@ function setupMenu(instance) {
     submenuModeAuto = (menuIntent.get(instance) || {}).submenuModeAuto === true;
     switchInlineOpenProjection(modeBefore, collapsedBefore);
     var popupAfter = popupMode();
-    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','theme','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
+    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
     if (structural) {
       selection.updateOptions({ multiple: opts.multiple === true, values: nextSelected });
       if (openUpdate) { openKeys = explicitNextOpen; rememberInlineOpenKeys(); }
@@ -1353,12 +1323,12 @@ function setupMenu(instance) {
       selectedKey: selectedKeyValue() || null, selectedKeys: selectedArray(), multiple: opts.multiple === true, selectable: opts.selectable === true,
       activeKey: activeKey || null, openKeys: Array.from(openKeys), mode: opts.mode, submenuMode: opts.submenuMode,
       itemDisplay: opts.itemDisplay, collapsed: inlineCollapsed(), inlineIndent: opts.inlineIndent, collapsedWidth: opts.collapsedWidth,
-      theme: opts.theme, overflowedKeys: Array.from(overflowedKeys), disabled: opts.disabled === true, destroyed: destroyed
+      overflowedKeys: Array.from(overflowedKeys), disabled: opts.disabled === true, destroyed: destroyed
     });
   }
   function destroyRuntime(reason) {
     if (destroyed) return false;
-    destroyed = true; destroySubmenuResources(); themeScopes.forEach(function (themeScope) { themeScope.destroy(); }); themeScopes.clear(); scope.dispose(); if (binding) binding.release(); binding = null; root = rootLevel = null; return true;
+    destroyed = true; destroySubmenuResources(); scope.dispose(); if (binding) binding.release(); binding = null; root = rootLevel = null; return true;
   }
 
   var record = {
@@ -1414,7 +1384,6 @@ function normalizeMenuPatch(instance, nextOptions) {
   if (own(next, 'selectable')) next.selectable = normalizeBoolean(next.selectable, 'selectable', true);
   if (own(next, 'forceSubMenuRender')) next.forceSubMenuRender = normalizeBoolean(next.forceSubMenuRender, 'forceSubMenuRender', false);
   if (own(next, 'disabledOverflow')) next.disabledOverflow = normalizeBoolean(next.disabledOverflow, 'disabledOverflow', false);
-  if (own(next, 'theme')) next.theme = normalizeTheme(next.theme);
   if (own(next, 'inlineIndent')) next.inlineIndent = normalizePositiveNumber(next.inlineIndent, 'inlineIndent', 24, true);
   if (own(next, 'collapsedWidth')) next.collapsedWidth = normalizePositiveNumber(next.collapsedWidth, 'collapsedWidth', 80, false);
   if (own(next, 'selectionAppearance')) next.selectionAppearance = Item.normalizeSelectionAppearance(next.selectionAppearance);
