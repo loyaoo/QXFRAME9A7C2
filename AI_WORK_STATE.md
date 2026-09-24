@@ -10,52 +10,44 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `885b5202e69a8b43fe6d82bdbac8839c28aff957` (PR #74 merge)
-- Current branch: `refactor/phase-f-duplicate-owner-cleanup-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-006 duplicate-owner PR
-- Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
+- Last code-affecting main commit: `108fa1d67d6a129c13f7f9397e11968867a05adb` (PR #75 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
+- Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase F PR CI: #401 / `36016034020` (PR #74)
-- Latest green main CI + Pages: #402 / `36016716760`
+- Latest green Phase F PR CI: #403 / `36017571445` (PR #75)
+- Latest green main CI + Pages: #404 / `36018227817`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-006`
+- Current Task: `PHASE-F-007`
 
 ## CURRENT
 
-### PHASE-F-006 — duplicate CSS owner / dead-rule cleanup
-Status: IN_PROGRESS
-Task progress: 65%
+### PHASE-F-007 — static CSS / scoped-theme closeout
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-F-005 is merged through PR #74; exact-head CI #401 / `36016034020` and main release + Pages #402 / `36016716760` are green.
-- the final duplicate-selector audit distinguishes intentional staged selectors from true duplicate/dead ownership.
-- Button visual-state rules versus paint-z rules are intentional independent priority channels and must remain separate.
-- Image Preview base geometry versus presence-motion rules and JSON base versus code-reader refinement are intentional staged projections and must not be mechanically merged.
-- the following rules are proven redundant/dead and can be consolidated without changing computed behavior.
+- PHASE-F-006 is merged through PR #75; exact-head CI #403 / `36017571445` and main release + Pages #404 / `36018227817` are green.
+- the remaining Phase F handbook gates are closeout evidence rather than a new visual redesign.
+- `docs/all-components-static.html` is a 1.8 MB static state matrix with 1500+ authored state markers and loads no framework runtime JS; it loads only docs theme/Inspector helpers.
+- existing CSS-only browser coverage proves root/scoped Light/Dark resolution, but the final gate must explicitly cover a scoped portal container and prove theme changes do not mutate value/selection/open/focus state.
+- the static page / docs-tool boundary is not yet a required Phase F verifier.
 
 Frozen impact map:
-- remove the earlier duplicate `.qxframe9a7c2-control-contract.is-secondary` and `.is-danger` accent definitions; the later shared Color Variant contract is the canonical owner and must remain.
-- remove the early Notice "slimmer passive scrollbar" block because the canonical Notice viewport later sets `scrollbar-width:none` and WebKit `display:none;width:0;height:0`.
-- fold ItemCollection/List item `gap` into their canonical item base rules instead of reopening the same selector in parity blocks.
-- fold image-grid SelectGroup label `width:100%` into its canonical image-grid label rule.
-- remove the second Image Preview `[hidden]` rule; the canonical first hidden rule already owns `display:none!important`, making the later pointer-events patch unreachable while hidden.
-- preserve intentional staged duplicate selectors and document/gate the classified cleanup; no broad mechanical deduplication.
-
-Implemented in current PHASE-F-006 pack:
-- retired the earlier duplicate Control Contract secondary/danger accent owners; the later shared Color Variant contract remains canonical.
-- removed the dead Notice passive-scrollbar block; the later hidden-scrollbar Notice viewport is now the sole owner.
-- folded ItemCollection/List item gaps and SelectGroup image-label width into their canonical owner rules.
-- removed the unreachable second Image Preview hidden-state pointer-events patch.
-- preserved intentional staged duplicates for Button paint-z priority, Image Preview presence motion and JSON code-reader refinement.
-- required `verify:phase-f-duplicate-owners` guards both retired-owner cleanup and preservation of classified staged owners.
+- add `verify:phase-f-static-closeout` for the all-components static page: canonical dist CSS only, no framework JS bundle, representative authored hover/focus/active/disabled/loading/selected/error/warning/success/keyboard-focus states, and docs-only helper scripts.
+- extend the existing CSS-authority browser fixture with a popup-surface inside a scoped theme container (portal-host simulation) and business-state/focus snapshots across theme changes.
+- do not add ThemeController/TokenController/runtime theme state or CSS-variable projection.
+- do not change component visual tokens unless a closeout gate finds a reproducible defect.
+- no `@layer`, `:is()`, `:where()`.
 
 Next exact step:
-1. open PHASE-F-006 PR and run exact-head full release/browser/package CI;
-2. merge only exact-head green and verify main + Pages;
-3. run Phase F final completeness/static-fixture closeout audit;
-4. sign off Phase F only if all handbook gates are evidenced.
+1. create `refactor/phase-f-static-closeout-20260924` from this green checkpoint;
+2. add the static docs gate and scoped portal/state-invariance browser fixture;
+3. run exact-head full release/browser/package CI;
+4. merge only exact-head green and verify main + Pages;
+5. sign off Phase F and update `FOUR_UNIFICATIONS_ACCEPTANCE.md`; then prune merged Phase F task branches and advance to Phase G.
 
 ## Current authority snapshot — after Phase A
 
@@ -85,6 +77,21 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-006 — duplicate CSS owner / dead-rule cleanup
+Status: DONE
+Evidence:
+- PR #75 merged
+- merge commit `108fa1d67d6a129c13f7f9397e11968867a05adb`
+- exact-head CI #403 / `36017571445`: success
+- main CI + Pages #404 / `36018227817`: success
+Outcome:
+- retired duplicate early Control Contract secondary/danger accent owners while keeping the shared Color Variant contract canonical.
+- removed dead Notice passive-scrollbar rules in favor of the canonical hidden-scrollbar Notice viewport.
+- folded ItemCollection/List item gaps and SelectGroup image-grid width into their canonical owner rules.
+- removed the unreachable second Image Preview hidden-state patch.
+- preserved intentional staged Button paint-z, Image Preview motion and JSON refinement rules.
+- required `verify:phase-f-duplicate-owners` prevents the retired owners from returning.
 
 ### PHASE-F-005 — repeated compound selector specificity normalization
 Status: DONE
