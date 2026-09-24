@@ -12,7 +12,7 @@ import { Selection } from '../core/selection.js';
 import { ItemSchema } from '../core/itemSchema.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { DOMBinding } from '../core/domBinding.js';
-import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { FocusController } from '../core/focusController.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { ResponsiveOverflow } from '../core/responsiveOverflow.js';
 import { Transition } from '../core/transition.js';
@@ -186,7 +186,7 @@ function setupMenu(instance) {
   var overflowLayout = null;
   var api = instance;
   var keyboard = null;
-  var keyboardRegion = null;
+  var focusController = null;
   var virtualFocusDomain = null;
   var binding = DOMBinding.resolve({ options: opts, target: host, component: api, requiredRefs: ['root', 'level'], defaultFactory: DOMFactory.createDefaultDOM });
   var root = binding.refs.root;
@@ -377,7 +377,7 @@ function setupMenu(instance) {
     root.classList.toggle('is-collapsed', inlineCollapsed());
     root.classList.toggle('is-submenu-expand', !popupMode());
     root.classList.toggle('is-disabled', opts.disabled === true);
-    if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true); else root.tabIndex = opts.disabled === true ? -1 : 0;
+    if (focusController) focusController.setDisabled(opts.disabled === true); else root.tabIndex = opts.disabled === true ? -1 : 0;
     applyRootUserStyle();
     panelByKey.forEach(function (panel, key) { var item = itemByKey.get(key); syncPanelContext(panel, item && item.theme); });
     if (overflowPanel) syncPanelContext(overflowPanel, null);
@@ -823,7 +823,7 @@ function setupMenu(instance) {
   function syncTabStops() {
     buttonByKey.forEach(function (button) { button.tabIndex = -1; });
     if (overflowButton) overflowButton.tabIndex = -1;
-    if (root) { if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true); else root.tabIndex = opts.disabled === true ? -1 : 0; }
+    if (root) { if (focusController) focusController.setDisabled(opts.disabled === true); else root.tabIndex = opts.disabled === true ? -1 : 0; }
   }
   function focusButton(button, meta) {
     if (!button || button.disabled) return false;
@@ -1182,7 +1182,8 @@ function setupMenu(instance) {
     if (hoverKey === ((buttonMeta.get(button) && buttonMeta.get(button).key) || '')) { hoverKey = ''; syncClasses(); }
   }
 
-  keyboardRegion = KeyboardRegion.create({
+  focusController = FocusController.create({
+    activeRegion: 'menu',
     root: root,
     disabled: opts.disabled === true,
     navigation: {
@@ -1211,21 +1212,27 @@ function setupMenu(instance) {
       if (preferred) focusButton(preferred, { source:'keyboard', reason:'menu-region-enter', originalEvent:detail.originalEvent, ensureVisible:false });
     }
   });
-  keyboard = keyboardRegion.keyboard;
-  virtualFocusDomain = keyboard.virtualFocus.registerDomain({
-    name:'menu',
-    getElement:function(key){ return key === '__overflow__' ? overflowButton : buttonByKey.get(String(key)) || null; },
-    reconcile:function(key){
-      if (key === '__overflow__' && rovingCandidate(overflowButton)) return '__overflow__';
-      var button = buttonByKey.get(String(key));
-      if (rovingCandidate(button)) return String(key);
-      var candidate = preferredTabStop();
-      if (!candidate) return null;
-      return candidate === overflowButton ? '__overflow__' : ((buttonMeta.get(candidate) && buttonMeta.get(candidate).key) || null);
-    },
-    ensureVisible:function(key){ var button=key === '__overflow__' ? overflowButton : buttonByKey.get(String(key)); return !!(button && ensureButtonVisible(button)); }
+  keyboard = focusController.keyboard;
+  var menuFocusBinding = focusController.bindVirtualFocus({
+    controller: focusController.virtualFocus,
+    previousDomain: virtualFocusDomain,
+    hosted: false,
+    domain: {
+      name:'menu',
+      getElement:function(key){ return key === '__overflow__' ? overflowButton : buttonByKey.get(String(key)) || null; },
+      reconcile:function(key){
+        if (key === '__overflow__' && rovingCandidate(overflowButton)) return '__overflow__';
+        var button = buttonByKey.get(String(key));
+        if (rovingCandidate(button)) return String(key);
+        var candidate = preferredTabStop();
+        if (!candidate) return null;
+        return candidate === overflowButton ? '__overflow__' : ((buttonMeta.get(candidate) && buttonMeta.get(candidate).key) || null);
+      },
+      ensureVisible:function(key){ var button=key === '__overflow__' ? overflowButton : buttonByKey.get(String(key)); return !!(button && ensureButtonVisible(button)); }
+    }
   });
-  scope.add(function(){ if (virtualFocusDomain) virtualFocusDomain.destroy(); virtualFocusDomain=null; if(keyboardRegion) keyboardRegion.destroy(); keyboardRegion=null; keyboard=null; });
+  virtualFocusDomain = menuFocusBinding ? menuFocusBinding.domain : null;
+  scope.add(function(){ virtualFocusDomain=null; if(focusController) focusController.destroy(); focusController=null; keyboard=null; });
   function handleNavigationPointerDown(event) {
     var button = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-menu-item') : null;
     if (!button || (!root.contains(button) && !targetInPanels(button))) return;
@@ -1358,7 +1365,8 @@ function setupMenu(instance) {
     findItem: function (query) { var key = query && typeof query === 'object' ? query.key : query; return itemByKey.get(String(key || '')) || null; },
     getSubmenuElement: function (key) { return panelByKey.get(String(key)) || panelLevelByKey.get(String(key)) || null; },
     getTrigger: function (key) { return triggerByKey.get(String(key)) || null; },
-    getOverflowElement: function () { return overflowButton; }, getOverflowTrigger: function () { return overflowTrigger; }
+    getOverflowElement: function () { return overflowButton; }, getOverflowTrigger: function () { return overflowTrigger; },
+    getFocusController: function () { return focusController; }
   };
   menuState.set(instance, record);
   instance.own(destroyRuntime);
@@ -1399,6 +1407,13 @@ function normalizeMenuPatch(instance, nextOptions) {
 }
 
 export class Menu extends Component {
+  static profile = Object.freeze({
+    name:'Menu',
+    focus:Object.freeze({ mode:'virtual-navigation', host:'composite-root' }),
+    interaction:Object.freeze({ keymap:'menu' }),
+    selection:Object.freeze({ mode:'menu-selection' }),
+    ownership:Object.freeze({ focus:'FocusController', selection:'SelectionController' })
+  });
   static options = MENU_DEFAULTS;
   static immutableOptions = Object.freeze(['container','portalContainer']);
   static contract = ComponentContracts.get('Menu');
@@ -1454,6 +1469,7 @@ export class Menu extends Component {
   getTrigger(key) { return recordForMenu(this).getTrigger(key); }
   getOverflowElement() { return recordForMenu(this).getOverflowElement(); }
   getOverflowTrigger() { return recordForMenu(this).getOverflowTrigger(); }
+  getFocusController() { return recordForMenu(this).getFocusController(); }
 }
 
 export { createDefaultDOM };
