@@ -10,65 +10,56 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `a7b6d55ba1fe755adb9409d045e67f12f211ac54` (PR #65 merge)
-- Current branch: `refactor/phase-e-popup-facades-20260924`
-- Open PRs at this checkpoint: pending PHASE-E-002 popup facade PR
+- Last code-affecting main commit: `a3a8bb87c538741568266d38ee68a540edab99a2` (PR #66 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #374 / `35992315155` (PR #65)
-- Latest green main CI + Pages: #375 / `35992675173`
+- Latest green Controller PR CI: #376 / `35994260669` (PR #66)
+- Latest green main CI + Pages: #377 / `35994605514`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase E — Overlay + Motion
-- Current Task: `PHASE-E-002`
+- Current Task: `PHASE-E-003`
 
 ## CURRENT
 
-### PHASE-E-002 — Trigger/Popup facade propagation + overlay naming closeout
+### PHASE-E-003 — Modal/Drawer physical Overlay + multi-motion migration
 Status: IN_PROGRESS
 Task progress: 80%
 
 Why this is current:
-- PHASE-E-001 foundation is merged and green through PR #65 / CI #374 and main CI + Pages #375.
-- Trigger now enters physical overlay resources through the canonical OverlayController and motion through MotionController-backed Transition.
-- PopupComponent / PopupFieldComponent and Trigger-derived families already reuse Trigger, but they do not yet expose the new resource/motion controller facades consistently.
-- historical `OverlayComponent.getOverlayController()` predates the new controller and currently returns the Modal/Drawer family-local logical open/close adapter; blindly reusing that name for the new resource controller would create an API/ownership ambiguity.
-- direct OverlayRuntime consumers still exist in Modal, Drawer, Image preview, Loading and Upload preview and must migrate in later coherent packs after the base naming boundary is frozen.
+- PHASE-E-002 popup facade propagation is merged and green through PR #66 / CI #376 and main CI + Pages #377.
+- Popup/PopupField Trigger families now expose canonical OverlayController/MotionController identities without moving logical open/value truth.
+- OverlayComponent now separates the legacy Modal/Drawer family logical adapter from the physical resource-controller accessor.
+- Modal and Drawer are the next direct OverlayRuntime consumers and each own two Transition surfaces (mask + dialog/panel), so they are the first real multi-motion overlay family migration.
+- the implementation is already sandbox-verified; remaining work is exact-head GitHub CI and main acceptance.
 
 Frozen impact map:
-- logical open remains OpenStateBridge / family-local open adapter authority.
-- `OverlayController` means physical overlay-resource facade only; it must never be aliased to a family object that owns `open`.
-- PopupComponent and PopupFieldComponent may safely forward their owned Trigger's OverlayController/MotionController identity without adding stores.
-- OverlayComponent must separate its legacy/family controller accessor from the new resource-controller accessor before Modal/Drawer migration.
-- no component should import OverlayRuntime directly after its Phase E migration pack.
-- Transition remains the public compatibility facade over MotionController; components do not need to bypass Transition solely to claim motion ownership.
-- direct native/physical subdomains (Tooltip singleton Trigger, nested Dropdown submenu Trigger, native editor focus) remain delegated to their existing Trigger sessions.
+- Modal/Drawer logical `opened` state and family open/close transaction remain in their existing family controller; OverlayController owns only physical overlay resources.
+- callback payload field `overlayRuntime` remains the raw OverlayRuntime object for compatibility even after internal creation moves through OverlayController.
+- `getOverlayResourceController()` returns the real OverlayController; `getOverlayRuntime()` returns its underlying runtime.
+- mask and dialog/panel Transition instances remain distinct visual channels but each exposes its MotionController; no aggregate second generation is introduced.
+- close keeps overlay resource active through both leave motions and deactivates only after both settle.
+- rapid close → reopen must invalidate stale leave completion so the reopened layer/isolation/scroll-lock lease cannot be released.
+- Phase C focus/interaction and Phase D selection are unchanged.
 
-Scope:
-- freeze a non-ambiguous base-class API for logical overlay family adapters versus physical OverlayController resources.
-- propagate Trigger controller facades through PopupComponent / PopupFieldComponent without changing their open/close semantics.
-- add source/browser conformance proving Popover/Tooltip/Dropdown/picker-style popup bases expose the same Trigger controller identities.
-- do not migrate Modal/Drawer/Image/Loading/Upload direct OverlayRuntime ownership in the same base-API PR unless the change is mechanical and independently gated.
-- preserve all Phase C focus/interaction and Phase D selection behavior.
-
-Implemented in current PHASE-E-002 popup facade pack:
-- PopupComponent forwards `getOverlayController()` and `getMotionController()` through `this.getTrigger()`, so subclasses with custom Trigger adapters still expose the physical controller identities without a second store.
-- PopupFieldComponent forwards the same controller identities through its canonical Trigger.
-- Popover, Tooltip, Dropdown and Select therefore expose the same OverlayController/MotionController objects as their owned Trigger sessions; no logical-open/value authority moved.
-- OverlayComponent now names its existing Modal/Drawer logical family adapter explicitly as `getOverlayFamilyController()` / `adoptOverlayFamilyController()`.
-- legacy `getOverlayController()` / `adoptOverlayController()` remain compatibility aliases for the family adapter; they are not redefined as physical resource ownership.
-- `getOverlayResourceController()` is a distinct accessor reserved for the real Phase E physical OverlayController. It intentionally returns null for Modal/Drawer until their direct OverlayRuntime migration pack lands.
-- Modal/Drawer internals stop calling the ambiguous legacy accessor and use the explicit family-controller names; their open/close behavior and direct OverlayRuntime ownership are otherwise unchanged.
-- `getOverlayRuntime()` remains compatible and will prefer a migrated resource controller's underlying runtime once available.
-- new required `verify:phase-e-popup-facades` covers structural naming plus Chromium identity checks for Popover/Tooltip/Dropdown/Select and Modal/Drawer compatibility.
-- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, popup family, popup-field family, overlay family, platform, modern architecture (181 source files / 40 components / 0 legacy violations), component-base and 40 component contracts.
+Implemented in sandbox:
+- Modal/Drawer import and create OverlayController instead of OverlayRuntime directly.
+- OverlayComponent forwards `getMotionControllers()` from the family adapter.
+- Modal family adapter exposes resource controller + raw runtime compatibility + mask/dialog MotionControllers.
+- Drawer family adapter exposes resource controller + raw runtime compatibility + mask/panel MotionControllers.
+- callback payloads preserve the old raw `overlayRuntime` identity.
+- dedicated Chromium gate verifies resource/controller identity, logical-open/resource separation, leave lease lifetime, rapid reopen stale-completion safety and final resource release.
+- updated PHASE-E-002 verifier accepts the now-migrated Modal/Drawer resource controller identities.
+- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, overlay family, platform, modern architecture (181 source files / 40 components / 0 legacy violations), component-base and 40 component contracts.
 
 Next exact step:
-1. open/run the PHASE-E-002 popup facade PR from the audited branch;
-2. fix only exact-head Completion/release/browser failures without changing Modal/Drawer direct OverlayRuntime ownership in this PR;
-3. merge only green and verify main release + Pages;
-4. checkpoint PHASE-E-002 as DONE;
-5. migrate Modal/Drawer physical OverlayRuntime plus their multi-Transition orchestration behind OverlayController/MotionController in PHASE-E-003.
+1. create PHASE-E-003 branch from this green main checkpoint;
+2. sync Modal/Drawer/OverlayComponent + updated E-002 verifier + new E-003 verifier and required package gate;
+3. run exact-head Completion/release/browser/package CI and fix only real failures;
+4. merge only green and verify main + Pages;
+5. continue Phase E with remaining direct OverlayRuntime consumers (Image/Loading/Upload/runtime adapter), then Collapse/Tabs/Dropdown motion closeout.
 
 ## Current authority snapshot — after Phase A
 
@@ -99,6 +90,20 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-E-002 — Popup facade propagation + overlay naming closeout
+Status: DONE
+Evidence:
+- PR #66 merged
+- merge commit `a3a8bb87c538741568266d38ee68a540edab99a2`
+- PR CI #376 / `35994260669`: success
+- main CI + Pages #377 / `35994605514`: success
+Outcome:
+- PopupComponent and PopupFieldComponent forward the exact Trigger OverlayController/MotionController identities.
+- Popover/Tooltip/Dropdown/Select browser conformance proves facade identity without duplicate open/value state.
+- OverlayComponent explicitly separates its Modal/Drawer family logical adapter from the physical resource-controller accessor.
+- legacy OverlayComponent accessor names remain compatibility aliases while internal Modal/Drawer code uses explicit family naming.
+- required `verify:phase-e-popup-facades` passed.
 
 ### PHASE-E-001 — OverlayController + MotionController foundations
 Status: DONE
