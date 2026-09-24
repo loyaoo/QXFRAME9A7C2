@@ -40,6 +40,10 @@ assert.equal(feedback.snapshot().records.length,1);
 assert.equal(feedback.snapshot().records[0].target,'global');
 assert.ok(localEvents.some(entry=>entry[0]==='close'&&entry[2]==='retarget'));
 assert.equal(globalEvents.filter(entry=>entry[0]==='show').length,1);
+const distinctAction=context('feedback-same-message-new-action');
+result=feedback.publish({operation:'validate',status:'success',message:'Ready',target:'global'},distinctAction);
+assert.equal(result.status,'applied','same message on a different action identity must not be text-deduplicated');
+assert.equal(feedback.snapshot().records.length,2,'feedback de-dup identity must include actionId/requestId, not message text');
 feedback.destroy();
 
 const noticeEvents=[];
