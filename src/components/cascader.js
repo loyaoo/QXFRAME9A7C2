@@ -791,6 +791,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           root: keyboardTarget,
           document: doc,
           disabled: opts.disabled === true,
+          manageTabIndex: false,
           activeRegion: 'column',
           navigation: {
             focusRoot: controlFocusElement,
