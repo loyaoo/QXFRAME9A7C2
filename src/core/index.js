@@ -16,6 +16,7 @@ export { ComponentProfile } from './componentProfile.js';
 export { SharedProtocol } from './sharedProtocol.js';
 export { Options, mergeOptions } from './options.js';
 export { Selection } from './selection.js';
+export { ValueController } from './valueController.js';
 export { ValueDraft } from './valueDraft.js';
 export { StateController } from './stateController.js';
 export { TreeModel } from './treeModel.js';
