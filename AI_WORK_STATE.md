@@ -11,22 +11,22 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `e7903d9ff08ecde8bdb000da64b6a77ceea837f1` (PR #78 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-g-feedback-form-foundation-20260924`
+- Open PRs at this checkpoint: pending PHASE-G-001 foundation PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
 - Latest green Phase F PR CI: #408 / `36021985007` (PR #78)
 - Latest green main CI + Pages: #409 / `36022470128`
-- Controller migration implementation progress: 99%
+- Overall handbook implementation progress: 90%
 - Current Phase: Phase G — Feedback + Form
 - Current Task: `PHASE-G-001`
 
 ## CURRENT
 
 ### PHASE-G-001 — FeedbackController + FormController foundations
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 65%
 
 Why this is current:
 - Phase F is accepted through PR #70–#76 and #78; the attempted signoff PR #77 was closed unmerged after correctly exposing the final runtime-profile residue.
@@ -48,13 +48,22 @@ Frozen first-pack impact map:
 - foundation pack proves controller contracts first; direct consumers migrate in coherent follow-up packs.
 - no component-name dispatch, no second committed value, no duplicate native carrier, no new notice timer/stack.
 
+Implemented in current PHASE-G-001 pack:
+- added `FeedbackController` as feedback projection/de-dup facade without owning task/value state or notice timing.
+- feedback identity is owner + operation + action/request identity; generation rejects stale feedback and retargeting local↔global keeps one canonical record.
+- added `FormController` as field registry + dirty/touched/pending/valid + validate/submit/reset transaction authority.
+- duplicate field `name` values are preserved through unique `fieldId`; serialized entries retain both.
+- async validation uses AsyncTaskGroup plus captured form/field revisions so stale failures cannot overwrite newer values.
+- controlled reset remains `requested` until owner acknowledgement; touched/validation feedback clear immediately while dirty/serialized value remain owner-confirmed.
+- native reset cancellation is respected; native successful reset refreshes baseline after browser default action.
+- controllers are exported through `src/core/index.js`.
+- required `verify:phase-g-foundation` covers Node contracts; strict source-ESM Chromium verification now covers same-name FormData, native submit, cancelled reset, and native reset baseline semantics.
+
 Next exact step:
-1. create `refactor/phase-g-feedback-form-foundation-20260924` from this checkpoint;
-2. implement FeedbackController and FormController facades around existing authorities;
-3. add focused Node/browser contract gates for same-name fields, native reset/submit, stale async validation, external reset and feedback de-dup;
-4. export through core/index and freeze ComponentProfile ownership compatibility;
-5. open exact-head PR, merge only green, verify main + Pages;
-6. continue Phase G direct-consumer migration.
+1. open PHASE-G-001 PR and run exact-head full release/browser/package CI;
+2. fix only real foundation contract regressions without duplicating FormBridge/ValueController/NoticeService authorities;
+3. merge only exact-head green and verify main + Pages;
+4. continue Phase G direct-consumer migration and local/global feedback integration.
 
 ## Current authority snapshot — after Phase A
 
