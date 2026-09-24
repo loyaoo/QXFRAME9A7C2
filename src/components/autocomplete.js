@@ -6,7 +6,7 @@ import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { AsyncTask } from '../core/asyncTask.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { ItemSchema } from '../core/itemSchema.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
@@ -122,7 +122,7 @@ var selectionRangeScheduler = null;
         panel.className = 'qxframe9a7c2-autocomplete-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true; optionHost.className = 'qxframe9a7c2-autocomplete-option-host'; panel.appendChild(optionHost);
     
         var initialValue = opts.value !== undefined ? opts.value : opts.defaultValue;
-        var valueState = StateController.create({
+        var valueState = ValueController.create({
           value: initialValue === undefined || initialValue === null ? '' : String(initialValue),
           controlled: hasOwn(fieldInit.options, 'value'),
           normalizeValue: function (next) { return next === undefined || next === null ? '' : String(next); }
@@ -567,6 +567,15 @@ var selectionRangeScheduler = null;
 
 
 export class Autocomplete extends PopupFieldComponent {
+  static profile = Object.freeze({
+    name:'Autocomplete',
+    value:Object.freeze({mode:'controlled-or-default',channels:Object.freeze(['committed','draft'])}),
+    focus:Object.freeze({mode:'virtual-navigation'}),
+    interaction:Object.freeze({keymap:'autocomplete'}),
+    overlay:Object.freeze({mode:'popup'}),
+    form:Object.freeze({serialize:true}),
+    ownership:Object.freeze({value:'ValueController'})
+  });
   static contract = getContract('Autocomplete');
   static immutableOptions = Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
   static create(source, overrides) { return new this(source, overrides).render(); }
