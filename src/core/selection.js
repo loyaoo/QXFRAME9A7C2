@@ -2,6 +2,7 @@
 import { Utils } from '../utils/utils.js';
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
+import { DataRevision } from './dataRevision.js';
 
 function asArray(value) {
   if (value === undefined || value === null || value === '') return [];
@@ -22,7 +23,7 @@ function create(options) {
   var store = new Set();
   var emitter = Events.createEmitter();
   var destroyed = false;
-  var mutationVersion = 0;
+  var dataRevision = DataRevision.create();
   var api = null;
 
   function keyOf(value) {
@@ -81,13 +82,13 @@ function create(options) {
     }
 
     if (sameKeys(previous, normalized)) return true;
-    var versionBefore = mutationVersion;
+    var versionBefore = dataRevision.current();
     if (Utils.isFunction(opts.beforeChange) && opts.beforeChange(payload) === false) return false;
-    if (mutationVersion !== versionBefore) return false;
+    if (dataRevision.current() !== versionBefore) return false;
 
     store.clear();
     normalized.forEach(function (key) { store.add(key); });
-    mutationVersion += 1;
+    dataRevision.advance();
     payload.values = values();
     if (payload.silent !== true) {
       if (Utils.isFunction(opts.onChange)) opts.onChange(payload.values.slice(), payload);
@@ -122,7 +123,7 @@ function create(options) {
   function updateOptions(nextOptions) {
     if (destroyed) return api;
     var next = nextOptions || {};
-    if (Object.keys(Object(next)).length) mutationVersion += 1;
+    if (Object.keys(Object(next)).length) dataRevision.advance();
     opts = mergeOptions(opts, next);
     if (Object.prototype.hasOwnProperty.call(Object(next), 'values')) {
       commit(next.values, { silent: true, reason: 'options', source: 'options' });
@@ -136,10 +137,11 @@ function create(options) {
 
   function destroy() {
     if (destroyed) return false;
-    mutationVersion += 1;
+    dataRevision.advance();
     destroyed = true;
     store.clear();
     emitter.dispose();
+    dataRevision.destroy();
     return true;
   }
 
@@ -156,12 +158,15 @@ function create(options) {
     },
     clear: function (meta) { return commit([], mergeOptions({ reason: 'clear' }, meta)); },
     updateOptions: updateOptions,
+    createRef: function (key) { return dataRevision.capture(String(key)); },
+    isCurrentRef: function (ref) { return dataRevision.isCurrent(ref); },
     snapshot: function () {
       return Object.freeze({
         values: values(),
         value: opts.multiple === true ? values() : (values()[0] === undefined ? null : values()[0]),
         size: store.size,
         multiple: opts.multiple === true,
+        dataRevision: dataRevision.current(),
         destroyed: destroyed
       });
     },
@@ -181,6 +186,7 @@ function create(options) {
     },
     size: { enumerable: true, get: function () { return store.size; } },
     multiple: { enumerable: true, get: function () { return opts.multiple === true; } },
+    dataRevision: { enumerable: true, get: function () { return dataRevision.current(); } },
     destroyed: { enumerable: true, get: function () { return destroyed; } }
   });
 
