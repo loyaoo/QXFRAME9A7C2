@@ -68,11 +68,35 @@ Do not create numbered stage demos as an alternate documentation system.
 
 ## Reporting
 
-Each substantial work cycle records and reports:
-- overall program progress;
-- current phase/task;
+Before starting or resuming every Task ID / meaningful subtask, report a short pre-task checkpoint before doing the work:
+
+- overall program completion %;
+- current Phase completion %;
+- current Task ID and Task completion %;
+- what is already complete and must not be repeated;
+- the exact work about to be performed;
+- current branch / PR / CI state when relevant.
+
+Progress percentages are engineering estimates based on completed handbook phases, migrated consumers, required regression coverage and remaining gates. Do not inflate progress merely because files were created.
+
+After each substantial work cycle, record and report:
+
+- updated overall program progress %;
+- updated Phase and Task progress %;
 - completed changes;
 - remaining work/blockers;
 - tests and CI;
 - PR/merge evidence;
 - next exact step.
+
+### Continue / timeout behavior
+
+When the user says only `继续`, `继续工作`, `continue`, or equivalent after a timeout/interruption:
+
+1. Treat it as a resume command, not a new project request.
+2. Execute the full Resume Protocol above.
+3. Reconcile `AI_WORK_STATE.md` against Git / PR / CI.
+4. Report the pre-task progress checkpoint.
+5. Continue directly from `CURRENT -> Next exact step`.
+6. Do not restart the current Phase, redo completed audits, or re-decide frozen conclusions unless new repository evidence requires it.
+7. If the previous session stopped mid-command/build/CI, determine from repository/CI evidence whether it completed before deciding what to rerun.
