@@ -19,7 +19,7 @@
   "scripts": {
     "build": "node tools/build-release.mjs",
     "build:rollup": "node tools/build-release.mjs",
-    "verify": "npm run verify:architecture && npm run verify:shared-protocol && npm run verify:value-controller && npm run verify:value-family && npm run verify:esm-graph && npm run verify:rollup-source && npm run verify:rollup-provider && npm run verify:tool-cwd && npm run verify:release-transaction && npm run verify:release-build-rollback && npm run verify:entry && npm run verify:component-base && npm run verify:field-base && npm run verify:popup-family && npm run verify:overlay-family && npm run verify:popup-field-family && npm run verify:picker-family && npm run verify:shared-utilities && npm run verify:collection-family && npm run verify:high-risk-authorities && npm run verify:registry-readiness && npm run verify:contracts && npm run verify:types && npm run verify:release-metadata && npm run verify:postbuild-independence && npm run verify:platform && npm run verify:release-preflight && npm run verify:clean-pack && npm run verify:docs-canonical && npm run verify:package-entry && npm run verify:final",
+    "verify": "npm run verify:architecture && npm run verify:shared-protocol && npm run verify:value-controller && npm run verify:value-family && npm run verify:focus-controller && npm run verify:esm-graph && npm run verify:rollup-source && npm run verify:rollup-provider && npm run verify:tool-cwd && npm run verify:release-transaction && npm run verify:release-build-rollback && npm run verify:entry && npm run verify:component-base && npm run verify:field-base && npm run verify:popup-family && npm run verify:overlay-family && npm run verify:popup-field-family && npm run verify:picker-family && npm run verify:shared-utilities && npm run verify:collection-family && npm run verify:high-risk-authorities && npm run verify:registry-readiness && npm run verify:contracts && npm run verify:types && npm run verify:release-metadata && npm run verify:postbuild-independence && npm run verify:platform && npm run verify:release-preflight && npm run verify:clean-pack && npm run verify:docs-canonical && npm run verify:package-entry && npm run verify:final",
     "test": "npm run verify",
     "verify:shared-protocol": "node tools/verify-shared-protocol.mjs",
     "verify:platform": "node tools/verify-platform.mjs",
@@ -67,7 +67,8 @@
     "verify:clean-pack": "node tools/verify-clean-pack.mjs",
     "prepare": "npm run build",
     "verify:value-controller": "node tools/verify-value-controller.mjs",
-    "verify:value-family": "node tools/verify-value-family.mjs"
+    "verify:value-family": "node tools/verify-value-family.mjs",
+    "verify:focus-controller": "node tools/verify-focus-controller.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",
