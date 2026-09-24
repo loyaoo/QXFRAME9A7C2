@@ -8,61 +8,36 @@
 
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
-- Main baseline before bootstrap cleanup: `156453275a9c6073a0962bff74ba20d3283b922b`
-- Current bootstrap branch: `chore/ai-state-doc-cleanup-20260924`
-- Current PR: not created yet
+- Current main HEAD after bootstrap cleanup: `a459e28f2486ce89615322c6e49094fddd8464a4`
+- Current branch: `main`
+- Bootstrap PR: #46 merged
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Controller migration implementation progress: 0% (architecture/specification frozen; bootstrap repository hygiene in progress)
+- Latest green PR CI: run #307 / `35949535252`
+- Latest green main CI + Pages: run #308 / `35949774749`
+- Controller migration implementation progress: 0% (bootstrap hygiene complete; Phase A ready to start)
 
 ## CURRENT
 
-### OPS-001 — AI persistent state + repository documentation cleanup
-Status: IN_PROGRESS
-
-Goal:
-- install the master handbook in-repo;
-- create durable AI resume/checkpoint rules;
-- remove obsolete migration/stage/audit documents from the active work tree;
-- retain any legacy evidence still required by automated gates as clearly named test fixtures rather than active migration documentation.
-
-Completed in this branch:
-- added the complete 2244-line master handbook;
-- created this persistent work-state design checkpoint (this file);
-- created `AGENTS.md` resume/checkpoint rules.
-
-Still to do:
-1. relocate required HOTFIX6 compatibility fixtures from `migration/**` into `tools/fixtures/legacy-hotfix6/**`;
-2. update consumers in `package.json`, `tools/audit-final-completion.mjs` and `tools/verify-release-preflight.mjs`;
-3. remove obsolete root development/hardening/migration documents after replacing active references;
-4. remove historical `migration/**` logs/snapshots no longer needed after fixture relocation;
-5. remove numbered `docs/stage-02.html` … `stage-09.html` and matching stage assets;
-6. remove stale stage links from the current component docs shell;
-7. remove unreferenced one-time docs audit/validation artifacts;
-8. run PR CI; repair only real regressions;
-9. merge and reconcile this checkpoint to the resulting main HEAD.
-
-Next exact step:
-- create the four required `tools/fixtures/legacy-hotfix6/**` files from the currently referenced HOTFIX6 baseline evidence, then retarget the verifier/audit scripts.
-
-## NEXT
-
 ### PHASE-A-001 — Baseline inventory and Controller migration kickoff
-Status: TODO
-Dependency: OPS-001 merged green.
+Status: READY
 
-Start conditions:
-- repository documentation cleanup merged;
-- `AI_WORK_STATE.md` reconciled to current main;
-- master handbook is the only Controller migration specification in the active tree.
+Prerequisites:
+- OPS-001 repository cleanup merged green in PR #46;
+- master handbook is present and complete;
+- AGENTS resume protocol is active;
+- obsolete migration/stage/audit documents are removed from the active tree;
+- legacy HOTFIX6 evidence still required by release gates lives only under `tools/fixtures/legacy-hotfix6/**`.
 
 First work package:
-- execute handbook Phase A baseline inventory;
-- map existing authorities before creating new Controllers;
-- freeze initial owner/action/value/focus/overlay/form/token inventory;
-- begin Shared Protocol Layer only after the inventory proves reuse boundaries.
+1. read `AGENTS.md`, this checkpoint, and the master handbook;
+2. re-query current main HEAD / open PRs / latest CI and reconcile this file if newer work exists;
+3. execute handbook Phase A baseline inventory against current source;
+4. map existing authorities before creating any new Controller;
+5. freeze the initial owner/action/value/focus/overlay/form/token inventory;
+6. only then begin Shared Protocol Layer implementation.
 
-Primary first-wave components from the handbook:
+Primary first-wave components:
 - DatePicker
 - TimePicker / TimePanel
 - ColorPicker
@@ -70,6 +45,9 @@ Primary first-wave components from the handbook:
 - TreeSelect
 - Cascader
 - Collapse (autosize Motion)
+
+Next exact step:
+- perform Phase A authority inventory on current main; do not start by creating 11 empty Controller files.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
@@ -84,6 +62,18 @@ These are real current QA targets for the Controller migration and must not be m
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### OPS-001 — AI persistent state + repository documentation cleanup
+Status: DONE
+Evidence:
+- PR #46 merged
+- merge commit `a459e28f2486ce89615322c6e49094fddd8464a4`
+- PR CI run #307 succeeded
+- main CI + GitHub Pages run #308 succeeded
+- added `AGENTS.md`, `AI_WORK_STATE.md`, and the complete 2244-line master handbook
+- removed 47 obsolete historical migration/stage/audit files
+- retained four still-required HOTFIX6 compatibility artifacts only as test fixtures under `tools/fixtures/legacy-hotfix6/**`
+- canonical docs navigation no longer links to numbered Stage pages
 
 These items were completed before the Controller program. Do not repeat their original full audit just to rediscover them; only check migration impact when the new architecture touches them.
 
@@ -132,8 +122,8 @@ Important:
 ### RELEASE-LEGACY-001 — Pages/release baseline
 Status: VERIFIED_EXISTING
 Evidence:
-- main baseline includes successful release/Pages deployment after the controlled-value series.
-- On resume, always query current GitHub Actions rather than assuming this historical run is still the latest.
+- main CI + Pages run #308 (`35949774749`) succeeded for cleanup merge `a459e28f2486ce89615322c6e49094fddd8464a4`.
+- On resume, always query current GitHub Actions rather than assuming this run remains the latest.
 
 ## DO NOT REDO
 
