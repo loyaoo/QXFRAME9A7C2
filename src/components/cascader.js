@@ -5,12 +5,11 @@ import { Item } from './item.js';
 import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
-import { Selection } from '../core/selection.js';
+import { SelectionController } from '../core/selectionController.js';
 import { AsyncTaskGroup } from '../core/asyncTaskGroup.js';
 import { ItemSchema } from '../core/itemSchema.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
-import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { SearchState } from '../core/searchState.js';
 import { ValueController } from '../core/valueController.js';
 import { CapabilityController } from '../core/capabilityController.js';
@@ -118,15 +117,16 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             });
           }
         });
-        var selection = Selection.create({ multiple: opts.multiple === true, value: opts.value !== undefined ? opts.value : opts.defaultValue });
+        var selectionController = SelectionController.create({ channels:{ selected:{ multiple:opts.multiple === true, value:opts.value !== undefined ? opts.value : opts.defaultValue } } });
+        var selection = selectionController.selected;
         var valueState = null;
-        scope.add(function () { selection.destroy(); });
+        scope.add(function () { if (selectionController) selectionController.destroy(); selectionController = null; selection = null; });
         scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
         var columnRecords = [];
         var activePathKeys = [];
         var activeColumnIndex = 0;
         var initialSelectionValues = selection.values;
-        var selectionAnchorValue = initialSelectionValues.length ? initialSelectionValues[initialSelectionValues.length - 1] : null;
+        if (initialSelectionValues.length) selectionController.setAnchor('selected', initialSelectionValues[initialSelectionValues.length - 1]);
         var keyboardCursorKey = '';
     
         function childrenOf(item) {
@@ -148,7 +148,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           return !loadedKeys.has(key) && childrenOf(item).length === 0;
         }
         function hasChildren(item) { return childrenOf(item).length > 0 || isLazyExpandable(item); }
-        var hierarchy = HierarchicalSelection.create({
+        var hierarchy = selectionController.createHierarchy({
           childrenOf:childrenOf, keyOf:function(item){return String(item && item.value);}, disabledOf:function(item){return !item || item.disabled===true;},
           isLeaf:function(item,_index,children){return !!item && item.disabled!==true && children.length===0 && !isLazyExpandable(item);}
         });
@@ -183,6 +183,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
               return [];
             }
             loadedChildren.set(key, normalized); loadedKeys.add(key);
+            selectionController.advanceDataRevision('selected');
             var payload = { key: key, item: item, items: normalized.slice(), loadedKeys: Array.from(loadedKeys), reason: meta && meta.reason || 'load-children', originalEvent: meta && meta.originalEvent || null, cascader: instance };
             if (Utils.isFunction(opts.onLoad)) opts.onLoad(normalized.slice(), payload);
             if (destroyed) return [];
@@ -224,7 +225,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (!selection) return false;
           selection.set(apiValue(), { silent:true, source:valueState && valueState.controlled ? 'controlled' : 'state', reason:reason || 'value-sync' });
           var values = selection.values;
-          selectionAnchorValue = values.length ? values[values.length - 1] : null;
+          selectionController.setAnchor('selected', values.length ? values[values.length - 1] : null);
           return true;
         }
         syncSelectionFromApiValue('initial-value');
@@ -242,13 +243,14 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         function selectedPaths() { return selection.values.map(findPathByValue).filter(function (path) { return path.length > 0; }); }
         function selectedAnchorPath() {
           var values = selection.values;
-          var path = selectionAnchorValue === null ? [] : findPathByValue(selectionAnchorValue);
-          if (path.length && values.some(function (value) { return String(value) === String(selectionAnchorValue); })) return path;
+          var anchorValue = selectionController.getAnchor('selected');
+          var path = anchorValue === null ? [] : findPathByValue(anchorValue);
+          if (path.length && values.some(function (value) { return String(value) === String(anchorValue); })) return path;
           for (var i = values.length - 1; i >= 0; i -= 1) {
             path = findPathByValue(values[i]);
-            if (path.length) { selectionAnchorValue = values[i]; return path; }
+            if (path.length) { selectionController.setAnchor('selected', values[i]); return path; }
           }
-          selectionAnchorValue = null;
+          selectionController.clearAnchor('selected');
           return [];
         }
         function tagFromPath(path, targets) {
@@ -855,7 +857,8 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           selection.set(valid, { silent: true, source: 'normalize', reason: 'items' });
           if (valueState && !valueState.controlled) valueState.write(opts.multiple === true ? selection.values.slice() : selection.value, { silent:true, source:'normalize', reason:'items' }, false);
           var values = selection.values;
-          if (selectionAnchorValue === null || !values.some(function (value) { return String(value) === String(selectionAnchorValue); })) selectionAnchorValue = values.length ? values[values.length - 1] : null;
+          var anchorValue = selectionController.getAnchor('selected');
+          if (anchorValue === null || !values.some(function (value) { return String(value) === String(anchorValue); })) selectionController.setAnchor('selected', values.length ? values[values.length - 1] : null);
           if (!activePathKeys.length) { var seedPath = selectedAnchorPath(); if (seedPath.length) activePathKeys = seedPath.map(function (item) { return String(item.key); }); }
         }
         function setValue(next, meta) {
@@ -865,7 +868,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var changed = valueState.write(next, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'cascader-set-value', originalEvent:cfg.originalEvent || null }, false);
           syncSelectionFromApiValue('set-value'); normalizeSelection();
           var canonical = apiValue();
-          var values = selection.values; selectionAnchorValue = values.length ? values[values.length - 1] : null;
+          var values = selection.values; selectionController.setAnchor('selected', values.length ? values[values.length - 1] : null);
           var seedPath = selectedAnchorPath(); activePathKeys = seedPath.map(function (item) { return String(item.key); });
           activeColumnIndex = activePathKeys.length ? activePathKeys.length - 1 : 0;
           keyboardCursorKey = seedPath.length ? String(seedPath[seedPath.length - 1].key) : '';
@@ -905,6 +908,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           validateItems(items);
           loadTasks.invalidate('cascader-dataset');
           opts.items = Array.isArray(items) ? items.slice() : [];
+          selectionController.advanceDataRevision('selected');
           loadedChildren.clear();
           loadedKeys = new Set((meta && Array.isArray(meta.loadedKeys) ? meta.loadedKeys : []).map(String));
           loadingKeys.clear();
@@ -942,7 +946,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         function getState() {
           var path = opts.multiple === true ? [] : displayPath();
           var current = apiValue(), values = apiValues(current);
-          return Object.freeze({ value: opts.multiple === true ? values.slice() : current, values: values.slice(), controlled:!!(valueState && valueState.controlled), searchValue: searchState.query, checkedStrategy: String(opts.checkedStrategy || 'child'), changeOnSelect: opts.changeOnSelect === true, searchable: opts.searchable === true, maxVisibleTags:opts.maxVisibleTags === 'responsive' ? 'responsive' : Math.max(0, Math.floor(Number(opts.maxVisibleTags) || 0)), popupCustomized:Utils.isFunction(opts.popupRender), loadedKeys: Array.from(loadedKeys), loadingKeys: Array.from(loadingKeys), pathKeys: path.map(function (item) { return String(item.key); }), pathLabels: path.map(function (item) { return String(item.label); }), activePathKeys: activePathKeys.slice(), activeColumnIndex: activeColumnIndex, keyboardCursorKey: keyboardCursorKey, selectionAnchorValue: selectionAnchorValue, keyboardHostStable: !triggerSession.getState().open || doc.activeElement === controlFocusElement(), open: triggerSession.getState().open, headless: headlessMode, projection: projectionMode, multiple: opts.multiple === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed });
+          return Object.freeze({ value: opts.multiple === true ? values.slice() : current, values: values.slice(), controlled:!!(valueState && valueState.controlled), searchValue: searchState.query, checkedStrategy: String(opts.checkedStrategy || 'child'), changeOnSelect: opts.changeOnSelect === true, searchable: opts.searchable === true, maxVisibleTags:opts.maxVisibleTags === 'responsive' ? 'responsive' : Math.max(0, Math.floor(Number(opts.maxVisibleTags) || 0)), popupCustomized:Utils.isFunction(opts.popupRender), loadedKeys: Array.from(loadedKeys), loadingKeys: Array.from(loadingKeys), pathKeys: path.map(function (item) { return String(item.key); }), pathLabels: path.map(function (item) { return String(item.label); }), activePathKeys: activePathKeys.slice(), activeColumnIndex: activeColumnIndex, keyboardCursorKey: keyboardCursorKey, selectionAnchorValue: selectionController.getAnchor('selected'), keyboardHostStable: !triggerSession.getState().open || doc.activeElement === controlFocusElement(), open: triggerSession.getState().open, headless: headlessMode, projection: projectionMode, multiple: opts.multiple === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed });
         }
         function disposeRuntime(reason) {
           if (destroyed) return false; destroyed = true; loadTasks.destroy(); if (searchState) searchState.destroy(); destroySearchList(); destroyColumns(); loadedChildren.clear(); loadedKeys.clear(); loadingKeys.clear(); triggerSession = null; scope.dispose(); if (fieldControl) fieldControl.destroy(reason || 'cascader-destroy'); fieldControl = null; DOM.removeNode(panel); if (binding) binding.release(); binding = null; root = controlElement = valuesNode = input = clearButton = arrow = panel = popupContentHost = columnsHost = null; return true;
@@ -962,7 +966,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           root:root,input:input,panel:panel,columnsHost:columnsHost,triggerTarget:triggerTarget,
           setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,getState:getState,
           loadChildren:function(key,meta){var path=pathByKeys([key]);var item=path[0]||null;if(!item){var found=findPathByValue(key);item=found.length?found[found.length-1]:null;}return item?loadChildrenFor(item,meta):Promise.resolve([]);},
-          getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
+          getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getSelectionController:function(){return selectionController;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
           applyOptions:applyOptions,dispose:disposeRuntime
         });
       
@@ -977,7 +981,8 @@ export class Cascader extends PopupFieldComponent{
   interaction:Object.freeze({keymap:'cascader'}),
   overlay:Object.freeze({mode:'popup'}),
   form:Object.freeze({serialize:true}),
-  ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController'})
+  selection:Object.freeze({channels:Object.freeze(['selected']),hierarchical:true,valueOwner:'ValueController'}),
+   ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController'})
  });
  static contract=getContract('Cascader');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless','portalContainer','multiple']);
@@ -997,6 +1002,7 @@ export class Cascader extends PopupFieldComponent{
  getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
  getInteractionController(){const r=runtimeState.get(this).runtime;return r?r.getInteractionController():null;}
  getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
+ getSelectionController(){const r=runtimeState.get(this).runtime;return r?r.getSelectionController():null;}
  getColumns(){const r=runtimeState.get(this).runtime;return r?r.getColumns():[];}
  getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
  getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
