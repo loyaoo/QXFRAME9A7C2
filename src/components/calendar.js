@@ -455,7 +455,7 @@ function create(options) {
     prev: function () { return changeView(addMonths(viewValue, -1), { source: 'api', reason: 'prev' }); },
     next: function () { return changeView(addMonths(viewValue, 1), { source: 'api', reason: 'next' }); },
     setActiveDate: setActiveDate,
-    focus: function () { return hostedVirtualFocus ? false : !!(root && DOM.focusElement(root)); },
+    focus: function () { return hostedVirtualFocus ? false : !!(keyboardRegion && keyboardRegion.focus()); },
     handleKeydown: onKeydown,
     bindVirtualFocus: bindVirtualFocus,
     getVirtualFocusDomain: function () { return virtualFocusDomain; },
@@ -470,6 +470,7 @@ function create(options) {
     getEventDelegation: function () { return delegation; },
     getKeyboardNavigation: function () { return keyboard; },
     getKeyboardRegion: function () { return keyboardRegion && keyboardRegion.getKeyboardRegion ? keyboardRegion.getKeyboardRegion() : keyboardRegion; },
+    getFocusController: function () { return keyboardRegion; },
     on: emitter.on,
     once: emitter.once,
     destroy: destroy
