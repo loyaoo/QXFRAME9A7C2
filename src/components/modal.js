@@ -482,10 +482,10 @@ export class Modal extends OverlayComponent {
 
     constructor(options = {}) {
         super(options);
-        this.adoptOverlayController(createModalController(this, this.options));
+        this.adoptOverlayFamilyController(createModalController(this, this.options));
     }
 
-    getDialogElement() { const c = this.getOverlayController(); return c && c.getDialogElement ? c.getDialogElement() : null; }
+    getDialogElement() { const c = this.getOverlayFamilyController(); return c && c.getDialogElement ? c.getDialogElement() : null; }
 }
 
 export { PLACEMENTS };
