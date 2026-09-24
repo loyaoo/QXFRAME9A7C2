@@ -17,10 +17,9 @@ const selectionSource=fs.readFileSync(path.join(root,'src/core/selection.js'),'u
 assert.ok(/DataRevision\.create\s*\(/.test(selectionSource),'Selection must use shared DataRevision instead of a private mutation counter.');
 assert.ok(!/mutationVersion/.test(selectionSource),'Selection must not retain the old private mutationVersion authority.');
 
-let reentrant=null;
-const selection=Selection.create({
-  multiple:true,
-  value:['a'],
+let reentrant=false;
+const selection=Selection.create({multiple:true,value:['a']});
+selection.updateOptions({
   beforeChange:function(){
     if(!reentrant){
       reentrant=true;
