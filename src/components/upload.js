@@ -6,7 +6,7 @@ import { URLPolicy } from '../utils/url.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { UploadLifecycle } from '../core/uploadLifecycle.js';
 import { Renderer } from '../core/renderer.js';
-import { OverlayRuntime } from '../core/overlayRuntime.js';
+import { OverlayController } from '../core/overlayController.js';
 import { ReorderInteraction } from '../core/reorderInteraction.js';
 import { Utils } from '../utils/utils.js';
 import { FieldComponent } from './field.js';
@@ -405,16 +405,16 @@ function setupUpload(instance) {
     }
     if (!previewModal) return api;
     var node = previewModal;
-    var overlayRuntime = previewOverlay;
+    var overlayController = previewOverlay;
     previewModal = null;
     previewMask = null;
     previewPanel = null;
     previewOverlay = null;
     previewUid = '';
     clearPreviewListeners();
-    if (overlayRuntime) {
-      if (overlayRuntime.getState().active) overlayRuntime.deactivate({ reason: reason || 'close', originalEvent: event || null });
-      overlayRuntime.destroy();
+    if (overlayController) {
+      if (overlayController.getState().active) overlayController.deactivate({ reason: reason || 'close', originalEvent: event || null });
+      overlayController.destroy();
     }
     if (node.parentNode) node.parentNode.removeChild(node);
     if (typeof opts.onPreviewVisibleChange === 'function') opts.onPreviewVisibleChange(false,{source:DOM.activationSource(event),reason:reason,event:event||null,instance:api});
@@ -514,7 +514,7 @@ function setupUpload(instance) {
       var media;
       if (kind==='pdf') { media=doc.createElement('iframe'); media.src=URLPolicy.sanitize(url,'document'); media.title=record.name||'PDF'; media.setAttribute('sandbox','allow-same-origin allow-downloads'); body.appendChild(media); }
       else { var link=doc.createElement('a'); link.href=URLPolicy.sanitize(url,'download'); link.target='_blank'; link.rel='noopener noreferrer'; link.textContent='Open '+record.name; body.appendChild(link); }
-      previewOverlay = OverlayRuntime.create({
+      previewOverlay = OverlayController.create({
         reference: root,
         floating: previewModal,
         document: doc,
@@ -650,7 +650,9 @@ function setupUpload(instance) {
     getPreviewMaskElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewMaskElement() : previewMask; },
     getPreviewPanelElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewStageElement() : previewPanel; },
     getPreviewMediaElement: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewMediaElement() : null; },
-    getPreviewOverlayRuntime: function () { return previewMediaController && mediaPreviewPresent() ? previewMediaController.getPreviewOverlayRuntime() : previewOverlay; }
+    getPreviewOverlayController: function () { return previewMediaController && mediaPreviewPresent() && previewMediaController.getPreviewOverlayController ? previewMediaController.getPreviewOverlayController() : previewOverlay; },
+    getPreviewOverlayRuntime: function () { var controller = previewMediaController && mediaPreviewPresent() && previewMediaController.getPreviewOverlayController ? previewMediaController.getPreviewOverlayController() : previewOverlay; return controller && controller.getRuntime ? controller.getRuntime() : null; },
+    getPreviewMotionControllers: function () { return previewMediaController && mediaPreviewPresent() && previewMediaController.getPreviewMotionControllers ? previewMediaController.getPreviewMotionControllers() : Object.freeze({}); }
   };
   state.runtime = record;
   api.own(destroyRuntime);
@@ -728,7 +730,9 @@ export class Upload extends FieldComponent {
   getPreviewMaskElement() { return recordForUpload(this).getPreviewMaskElement(); }
   getPreviewPanelElement() { return recordForUpload(this).getPreviewPanelElement(); }
   getPreviewMediaElement() { return recordForUpload(this).getPreviewMediaElement(); }
+  getPreviewOverlayController() { return recordForUpload(this).getPreviewOverlayController(); }
   getPreviewOverlayRuntime() { return recordForUpload(this).getPreviewOverlayRuntime(); }
+  getPreviewMotionControllers() { return recordForUpload(this).getPreviewMotionControllers(); }
 }
 
 export default Upload;

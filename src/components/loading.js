@@ -3,7 +3,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Scheduler } from '../core/scheduler.js';
 import { DOMProjection } from '../core/domProjection.js';
-import { OverlayRuntime } from '../core/overlayRuntime.js';
+import { OverlayController } from '../core/overlayController.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { Transition } from '../core/transition.js';
 import { MotionPresets } from '../core/motionPresets.js';
@@ -231,7 +231,7 @@ export class Loading extends Component {
 
         record.surface = PopupSurface.create({ element: root, setVisible: setVisibleState });
         record.surface.hide({ reason: 'initial' });
-        record.overlay = OverlayRuntime.create({
+        record.overlay = OverlayController.create({
             floating: root, document: doc, portalContainer, position: false,
             closeOnOutsidePress: false, closeOnEscape: false, trapFocus: false,
             focusOnActivate: false, restoreFocusOnDeactivate: false,
@@ -403,7 +403,9 @@ export class Loading extends Component {
     getTextElement() { const record = state.get(this); return record ? record.text : null; }
     getProgress() { const record = state.get(this); return record ? record.progress : null; }
     getDelayScheduler() { const record = state.get(this); return record ? record.delayScheduler : null; }
-    getOverlayRuntime() { const record = state.get(this); return record ? record.overlay : null; }
+    getOverlayController() { const record = state.get(this); return record ? record.overlay : null; }
+    getOverlayRuntime() { const controller = this.getOverlayController(); return controller && controller.getRuntime ? controller.getRuntime() : null; }
+    getMotionController() { const record = state.get(this); return record && record.presence && record.presence.getMotionController ? record.presence.getMotionController() : null; }
     getTarget() { const record = state.get(this); return record ? record.target : this.options.target; }
 }
 
