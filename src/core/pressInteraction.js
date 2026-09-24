@@ -3,6 +3,8 @@ import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
 import { InteractionDetails } from './interactionDetails.js';
 import { CapabilityController } from './capabilityController.js';
+import { InteractionController } from './interactionController.js';
+import { IdManager } from '../utils/id.js';
 
 const global = globalThis;
 
@@ -39,7 +41,13 @@ function guard(event, options) {
     var visualSource = null;
     var synthesizeKeyboard = opts.keyboard === false ? false : (opts.keyboard === true ? true : !isNativeActivationTarget(target));
     function state() { return typeof opts.getState === 'function' ? (opts.getState() || {}) : (opts.state || {}); }
-    function policy() { return CapabilityController.resolve(state(), opts.capabilities || {}); }
+    var ownsCapability = !opts.capabilityController;
+    var capability = opts.capabilityController || CapabilityController.create({ getState: state, getCapabilities: function () { return opts.capabilities || {}; } });
+    var ownsInteractionController = !opts.interactionController;
+    var interactionController = opts.interactionController || InteractionController.create();
+    var interactionScopeId = String(opts.interactionScopeId || IdManager.next('press'));
+    var interactionScope = null;
+    function policy() { return capability.getState(); }
     function blocked(event) { return guard(event, { policy: policy(), preventDefaultWhenBlocked: opts.preventDefaultWhenBlocked, stopPropagationWhenBlocked: opts.stopPropagationWhenBlocked, stopImmediatePropagationWhenBlocked: opts.stopImmediatePropagationWhenBlocked }); }
     function detailFor(reason, event, source) { return InteractionDetails.create(reason, event || null, { source: source || DOM.activationSource(event), trigger: target, currentTarget: target }); }
     function press(event, source, reason) {
@@ -85,31 +93,60 @@ function guard(event, options) {
       press(event, DOM.activationSource(event), 'click');
     }));
     if (opts.keyboard !== false) {
-      scope.add(DOM.listen(target, 'keydown', function (event) {
-        // A nested keyboard owner (Input/Select/virtual composite/etc.) gets first refusal.
-        // Trigger/Press may live on an ancestor shell, so honoring defaultPrevented here
-        // prevents one Enter/Space from both committing the child action and toggling
-        // the ancestor trigger a second time.
-        if (event && event.defaultPrevented === true) return;
-        if (DOM.isComposingEvent(event)) return;
-        var key = event.key;
-        var allowEnter = opts.enter !== false;
-        var allowSpace = opts.space !== false;
-        var activationKey = (key === 'Enter' && allowEnter) || ((key === ' ' || key === 'Spacebar') && allowSpace);
-        if (!activationKey) return;
-        if (!event.repeat) startVisual(event, 'keyboard', key === 'Enter' ? 'enter-start' : 'space-start');
-        if (synthesizeKeyboard && !event.repeat) {
-          if (opts.preventDefaultOnKeyboard !== false && event.preventDefault) event.preventDefault();
+      interactionScope = interactionController.registerScope({
+        id: interactionScopeId,
+        root: target,
+        capability: capability,
+        resolveAction: function (event) {
+          if (!event) return null;
+          var key = event.key;
+          if (key === 'Enter' && opts.enter !== false) return 'ACTIVATE';
+          if ((key === ' ' || key === 'Spacebar') && opts.space !== false) return 'ACTIVATE';
+          return null;
+        },
+        onAction: function (action, context) {
+          if (action !== 'ACTIVATE') return 'pass';
+          var event = context && context.originalEvent || null;
+          var key = event && event.key;
+          if (!event || event.repeat === true) return 'pass';
+          startVisual(event, 'keyboard', key === 'Enter' ? 'enter-start' : 'space-start');
+          if (!synthesizeKeyboard) return 'pass';
           keyboardActivationPending = true;
           press(event, 'keyboard', key === 'Enter' ? 'enter' : 'space');
+          return opts.preventDefaultOnKeyboard === false ? 'pass' : 'handled';
         }
+      });
+      scope.add(DOM.listen(target, 'keydown', function (event) {
+        // A nested keyboard owner gets first refusal; InteractionController owns the
+        // semantic ACTIVATE mapping while PressInteraction retains pointer/visual execution.
+        if (event && event.defaultPrevented === true) return;
+        var outcome = interactionController.dispatch(event, { ownerId: interactionScopeId, source: 'keyboard' });
+        if (outcome === 'blocked') blocked(event);
       }));
       scope.add(DOM.listen(target, 'keyup', function (event) {
         if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') endVisual(event, event.key === 'Enter' ? 'enter-end' : 'space-end');
       }));
     }
-    function destroy() { if (destroyed) return false; if (visualActive) cancelVisual(null, 'destroy'); destroyed = true; scope.dispose(); target = null; return true; }
-    return Object.freeze({ press: press, pressStart: startVisual, pressEnd: endVisual, cancel: cancelVisual, canActivate: function () { return !destroyed && policy().activatable; }, getPolicy: policy, getState: function () { return Object.freeze({ active: visualActive, source: visualSource, destroyed: destroyed }); }, destroy: destroy });
+    function destroy() {
+      if (destroyed) return false;
+      if (visualActive) cancelVisual(null, 'destroy');
+      destroyed = true;
+      scope.dispose();
+      if (interactionScope) { interactionScope.release(); interactionScope = null; }
+      if (ownsInteractionController) interactionController.destroy();
+      if (ownsCapability) capability.destroy();
+      target = null;
+      return true;
+    }
+    return Object.freeze({
+      press: press, pressStart: startVisual, pressEnd: endVisual, cancel: cancelVisual,
+      canActivate: function () { return !destroyed && capability.can('activate'); },
+      getPolicy: policy,
+      getCapabilityController: function () { return capability; },
+      getInteractionController: function () { return interactionController; },
+      getState: function () { return Object.freeze({ active: visualActive, source: visualSource, destroyed: destroyed }); },
+      destroy: destroy
+    });
   }
 
 export const PressInteraction = Object.freeze({ create, guard, isNativeActivationTarget });

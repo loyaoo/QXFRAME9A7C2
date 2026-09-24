@@ -162,6 +162,7 @@ export const FocusController = Object.freeze({
   bindVirtualFocus: KeyboardRegion.bindVirtualFocus,
   forwardHandlers: KeyboardRegion.forwardHandlers,
   createManager: FocusManager.create,
-  createScope: FocusScope.create
+  createScope: FocusScope.create,
+  normalizeScopeMode: FocusScope.normalizeMode
 });
 export { create };
