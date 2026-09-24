@@ -10,61 +10,52 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `6bb926b93c4f0f16dae042cc41f8426bf77d4733` (PR #53 merge)
-- Current branch: `refactor/phase-c-table-hybrid-edit-20260924`
-- Open PRs at this checkpoint: pending PHASE-C-003 PR
+- Last code-affecting main commit: `37a506d3c6dc2bfdfe3e00a059e7f0fb9970bd49` (PR #54 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #335 / `35962474270` (PR #53)
-- Latest green main CI + Pages: #336 / `35962763162`
-- Controller migration implementation progress: 77%
-- Current Phase: Phase C
-- Current Task: `PHASE-C-003`
+- Latest green Controller PR CI: #337 / `35965963724` (PR #54)
+- Latest green main CI + Pages: #338 / `35966293514`
+- Controller migration implementation progress: 80%
+- Current Phase: Phase D
+- Current Task: `PHASE-D-001`
 
 ## CURRENT
 
-### PHASE-C-003 — Table Hybrid Edit focus lease
-Status: IN_PROGRESS
-Task progress: 75%
+### PHASE-D-001 — SelectionController foundation + ItemCollection/List/OptionList/Tree first pack
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-C-002 is merged and green through PR #53 and main #336.
-- The handbook Phase C list has one remaining first-wave target: Table Hybrid Edit.
-- A targeted Table audit is already complete; do not repeat whole-Table architecture analysis.
+- PHASE-C-003 is merged and green through PR #54 and main #338, so Phase C is complete.
+- The handbook Phase D order starts with OptionList/List/Tree before Transfer/Table/Tags/Select/TreeSelect/Cascader.
+- A targeted selection-owner audit is already complete; do not repeat a whole-repository selection survey.
 
 Frozen impact map:
-- TableModel remains data/projection/sort/filter/page/selection authority.
-- existing Table edit transaction remains validation/save/cancel/draft authority; do not replace it with ValueController.
-- Table currently owns keyboard navigation directly through KeyboardNavigation plus two virtual domains (cells/header).
-- Hybrid Edit currently moves real focus directly from Table root to an authored descendant editor (required tabIndex=-1), then directly restores root focus.
-- existing browser smoke already covers virtual editable cells and scroll/edit transaction survival; extend it with lease/native-edit/rollback ownership checks instead of replacing it.
+- List and OptionList are thin wrappers over ItemCollection; ItemCollection owns the shared flat selection hot path through core Selection.
+- ItemCollection also keeps selectionAnchorValue locally; activeKey remains owned by ActiveItem and must not move into SelectionController.
+- Tree reuses ItemCollection for selected values, plus a separate checked Selection and HierarchicalSelection for checked/indeterminate cascade projection.
+- Transfer composes two ItemCollections; defer it until the first ItemCollection/Tree authority pack is stable.
+- Table has local/page selection in TableModel plus remote query allMatching/excludedKeys semantics; defer it to a later Phase D pack.
+- Tags and Cascader hold direct Selection instances; Select/TreeSelect mostly consume selection through OptionList/Tree and SelectionTags.
+- current core Selection still owns stable keys but uses a private mutationVersion; shared DataRevision already exists and must be reused rather than adding another revision engine.
 
 Scope:
-- route Table keyboard root through FocusController while preserving existing two virtual domains and F6/Home/End/Page behavior;
-- bind cell/header domains through FocusController canonical binding rather than direct registerDomain calls;
-- use FocusController edit lease for root -> cell editor -> root handoff;
-- keep native textarea/contenteditable Enter ownership and IME/native editing priority;
-- preserve disabled/readOnly/loading mutation gates;
-- author explicit Table ComponentProfile focus/interaction ownership;
-- do not migrate Table selection into SelectionController yet; that belongs to Phase D.
-
-Implemented in current PHASE-C-003 branch:
-- Table root keyboard owner now enters through FocusController; the existing F6/arrows/Home/End/Page/Enter/Space/F2 keymap is preserved under the canonical KeyboardRegion navigation layer.
-- cells/header virtual domains bind through FocusController canonical binding; their reconcile and ensureVisible algorithms are unchanged.
-- FocusController activeRegion tracks cells/header navigation without replacing Table's existing virtual-domain state.
-- Hybrid Edit keeps editTransaction as the only draft/validate/save/cancel authority; FocusController only owns the real-focus lease from root to the authored tabIndex=-1 cell editor and back.
-- Escape rollback restores the editor value, releases the lease and restores root focus; validation/save errors keep the lease/editor focus.
-- native textarea/contenteditable or editEnterBehavior=native retains Enter ownership.
-- readOnly/disabled/loading mutation locks remain owned by InteractionPolicy/Table viewBlocked.
-- Table ComponentProfile now declares FocusController focus ownership only; Table selection remains deferred to Phase D.
-- structural gate forbids direct Table KeyboardNavigation owner/direct registerDomain and requires edit lease + cells/header region publication.
-- browser smoke covers lease acquire/release, Escape rollback/root return, native Enter ownership and readOnly/disabled edit blocking while retaining existing virtual-scroll transaction coverage.
+- add SelectionController as an aggregate/evolution facade over existing Selection / HierarchicalSelection / DataRevision semantics; do not create a second selected-key store;
+- first migration pack: ItemCollection, List, OptionList, Tree;
+- keep activeKey in ActiveItem and search/filter state in their current authorities;
+- make selected vs checked channels explicit where Tree needs both;
+- move range/anchor ownership out of component-local ad hoc state only when the new controller can become the single owner;
+- preserve stable-key, maxCount, disabled/readOnly/loading and controlled/defaultValue behavior;
+- add focused structural/browser regressions for selected/checked separation, stable keys, anchor/data revision and no duplicate selection truth.
 
 Next exact step:
-1. create/run the PHASE-C-003 PR against current main;
-2. fix only real Completion audit/browser/release failures without weakening the new or existing gates;
-3. merge only a green PR head and verify main CI + Pages;
-4. mark PHASE-C-003 DONE and close Phase C, then advance to the handbook's next phase.
+1. create a fresh PHASE-D-001 branch from current main;
+2. map the exact Selection + ItemCollection anchor/revision APIs needed by the facade and implement SelectionController without duplicating store state;
+3. migrate ItemCollection/List/OptionList first, then Tree checked/indeterminate channels;
+4. add a required `verify:selection-controller` gate plus only missing browser regressions;
+5. run full PR release CI, merge only green, then verify main CI + Pages.
 
 ## Current authority snapshot — after Phase A
 
@@ -73,11 +64,11 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
 - Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
-- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. PHASE-C-003 finishes Phase C with Table Hybrid Edit.
+- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Phase C is complete.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
-- Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem` and `TableModel` remain selection/collection authorities. `Collection` now uses shared `DataRevision` for stale-transaction revision ownership.
+- Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem` and `TableModel` remain the current execution authorities. `Collection` uses shared `DataRevision`; PHASE-D-001 now elevates SelectionController over the existing selection stores without moving activeKey out of ActiveItem or creating a second selected-key truth.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
 - Motion: `MotionCore`, `Transition` and `TransitionGroup` remain the low-level motion authority; no parallel generation counter may be introduced.
 - Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
@@ -95,6 +86,23 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-C-003 — Table Hybrid Edit focus lease
+Status: DONE
+Evidence:
+- PR #54 merged
+- merge commit `37a506d3c6dc2bfdfe3e00a059e7f0fb9970bd49`
+- PR CI #337 / `35965963724`: success
+- main CI + Pages #338 / `35966293514`: success
+Outcome:
+- Table root keyboard navigation enters through FocusController with the existing F6/arrows/Home/End/Page/Enter/Space/F2 keymap preserved.
+- cells/header virtual domains use FocusController canonical binding with existing reconcile/visibility algorithms intact.
+- Hybrid Edit keeps editTransaction as draft/validate/save/cancel authority; FocusController owns only the root-to-editor real-focus lease.
+- Escape rollback restores initial editor value, releases the lease and returns focus to the Table root.
+- native textarea/contenteditable Enter remains editor-owned; readOnly/disabled/loading mutation gates remain Table/InteractionPolicy owned.
+- Table ComponentProfile declares FocusController ownership only; Table selection remains deferred to Phase D.
+- browser coverage verifies lease acquire/release, rollback/root return, native Enter and readOnly/disabled blocking while retaining virtual-scroll edit survival.
+
 
 ### PHASE-C-002 — Popup-hosted + standalone composite focus migration
 Status: DONE
@@ -257,7 +265,7 @@ Evidence:
 - merge commit `6558fc5d1d008725a43a40fa869a0f9ba69cd367`
 Rule:
 - do not repeat the old investigation from zero;
-- current QA reports remaining TimePanel focus defects, so reopen only the specific remaining FocusController/region ownership issue.
+- PHASE-C-001 superseded the remaining TimePanel owner defect; reopen only if a new reproducible regression appears.
 
 ## DO NOT REDO
 
