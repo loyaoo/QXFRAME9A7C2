@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `af757cb76c7511c46ae4953da4da718a08a3c20e` (PR #62 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-d-tags-selection-20260924`
+- Open PRs at this checkpoint: pending PHASE-D-004 Tags selection PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-D-004 — Tags SelectionController semantics
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 80%
 
 Why this is current:
 - PHASE-D-003 Table selection is merged and green through PR #62 / CI #366 and main CI + Pages #367.
@@ -49,11 +49,21 @@ Scope:
 - expose SelectionController and declare ComponentProfile ownership;
 - add Chromium/source gates for store identity, data-revision anchor invalidation, selection pruning and controlled proposal/external sync.
 
+Implemented in current PHASE-D-004 Tags selection pack:
+- Tags no longer imports Selection directly; one SelectionController owns the canonical `selected` execution/projection channel.
+- existing ValueController/StateController option-value binding remains the public controlled/uncontrolled value authority; SelectionController does not become a second public value truth.
+- controlled checkable Tags still emit proposed selection values and wait for external `value` sync before the controller channel changes.
+- Tags item mutations advance the selected-channel dataset revision on normal TokenInput changes, silent add/remove/edit/clear/setItems paths, and options item replacement.
+- stale selection anchors are invalidated when tag item membership/order/value data changes.
+- SelectionController is exposed publicly and declared in ComponentProfile ownership; TagNavigation/FocusController remain active-key/navigation owners.
+- new required `verify:phase-d-tags-selection` passes sandbox Chromium for controller/store identity, silent item replacement revision invalidation/pruning and controlled proposal/external-sync behavior.
+- adjacent sandbox gates pass: `verify:selection-controller`, `verify:phase-c-tail`, `verify-source-esm-browser`, `verify:high-risk-browser`, `verify:architecture`, `verify:contracts`.
+
 Next exact step:
-1. create the PHASE-D-004 Tags branch from current green main;
-2. apply the sandbox-verified SelectionController migration without moving public value ownership;
-3. add the required Tags selection verifier to the release chain;
-4. run exact-head PR CI, merge only green and verify main + Pages;
+1. open/run the PHASE-D-004 Tags selection PR from the audited branch;
+2. fix only exact-head release/browser failures without moving public value ownership into SelectionController;
+3. merge only green and verify main release + Pages;
+4. checkpoint PHASE-D-004 as DONE;
 5. finish Phase D with Select/TreeSelect/Cascader selection closeout.
 
 ## Current authority snapshot — after Phase A
