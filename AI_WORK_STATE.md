@@ -10,50 +10,42 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `c5f5eb654c20c62b97f32ba0d2f88ba9303ab8d4` (PR #72 merge)
-- Current branch: `refactor/phase-f-state-cascade-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-004 state-cascade PR
+- Last code-affecting main commit: `cd53968dee909f551bfc1b8ac3ab9d235580d066` (PR #73 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase F PR CI: #397 / `36012650779` (PR #72)
-- Latest green main CI + Pages: #398 / `36013188043`
+- Latest green Phase F PR CI: #399 / `36014584198` (PR #73)
+- Latest green main CI + Pages: #400 / `36015116050`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-004`
+- Current Task: `PHASE-F-005`
 
 ## CURRENT
 
-### PHASE-F-004 — state cascade / specificity ownership closeout
-Status: IN_PROGRESS
-Task progress: 65%
+### PHASE-F-005 — repeated compound selector specificity normalization
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-F-003 is merged through PR #72; exact-head CI #397 / `36012650779` and main release + Pages #398 / `36013188043` are green.
-- the canonical CSS still contains a late `unlayered overrides (kept last to preserve original cascade strength)` patch bucket, which makes Picker/Table styling depend on file-tail order rather than component ownership.
-- additional tail fixes duplicate Card and InputGroup owner rules even though their canonical component sections already exist.
+- PHASE-F-004 is merged through PR #73; exact-head CI #399 / `36014584198` and main release + Pages #400 / `36015116050` are green.
+- a post-F-004 selector audit found four genuine repeated state atoms, all on Table expand-trigger compound selectors.
+- these selectors repeat `:hover:not(:disabled)`, `:focus-visible:not(:disabled)`, `.is-keyboard-focus:not(:disabled)`, or `:disabled` inside the same compound selector, adding accidental specificity without adding semantics.
+- the FormCheck adjacent-sibling selector repeats `:not(...)` on two different sibling compounds and is not a defect.
 
 Frozen impact map:
-- move Picker footer and TimePicker footer-action rules into the Picker/TimePicker owner sections.
-- move Table filter popup/options/search/action rules into the Table owner section before Transfer begins.
-- make InputGroup item stacking resolve through its existing private `--_qxframe9a7c2-group-stack` channel instead of a second late z-index rule.
-- keep Card `overflow:visible` in its canonical root and move cover-corner specificity into the Card cover rules; remove the tail duplicate.
-- preserve the existing keyboard focus-visible/modality contract; this pack does not redesign focus visuals.
-- no `@layer`, `:is()`, `:where()`, new theme runtime, new token family or visual redesign.
-
-Implemented in current PHASE-F-004 pack:
-- Picker footer width and TimePicker footer-action composition now live in their canonical Picker/TimePicker sections.
-- Table filter popup/options/search/action CSS moved unchanged into the Table owner section before Transfer.
-- InputGroup item stacking now consumes the existing private `--_qxframe9a7c2-group-stack` channel; the duplicate late hover/focus z-index patch is removed.
-- Card keeps `overflow:visible` only on its canonical root; direct-child cover corner correction now lives beside Card cover rules.
-- the generic late `unlayered overrides` patch bucket is removed while the existing unified keyboard focus/modality contract is preserved.
-- required `verify:phase-f-state-cascade` guards owner placement, duplicate reopening and forbidden late-patch recovery.
+- normalize only the four Table expand-trigger selectors; declarations and rule order remain unchanged.
+- add a build-time specificity gate that detects repeated state atoms inside one compound selector while not flagging the same state on separate sibling/descendant compounds.
+- do not merge unrelated intentional multi-rule state channels merely because a selector name appears more than once.
+- no visual redesign, no new token owner, no `@layer`, `:is()` or `:where()`.
 
 Next exact step:
-1. open PHASE-F-004 PR and run exact-head full release/browser/package CI;
-2. fix only real state-cascade/regression failures without restoring a late override bucket;
-3. merge only exact-head green and verify main + Pages;
-4. continue Phase F with repeated-selector specificity normalization.
+1. create `refactor/phase-f-selector-specificity-20260924` from the latest green main checkpoint;
+2. normalize the four repeated Table state selectors without changing declarations;
+3. add `verify:phase-f-selector-specificity` and run structural checks;
+4. open PR, require exact-head full CI, merge only green, verify main + Pages;
+5. continue Phase F final state-completeness / duplicate-selector audit.
 
 ## Current authority snapshot — after Phase A
 
@@ -83,6 +75,20 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-004 — state cascade / specificity ownership closeout
+Status: DONE
+Evidence:
+- PR #73 merged
+- merge commit `cd53968dee909f551bfc1b8ac3ab9d235580d066`
+- exact-head CI #399 / `36014584198`: success
+- main CI + Pages #400 / `36015116050`: success
+Outcome:
+- the late `unlayered overrides (kept last to preserve original cascade strength)` patch bucket is removed.
+- Picker/TimePicker and Table filter rules now live with their canonical component owners.
+- InputGroup stacking resolves through its existing private state channel instead of a duplicate late z-index patch.
+- Card overflow/corner ownership is consolidated in the Card section while the unified keyboard focus/modality contract remains unchanged.
+- required `verify:phase-f-state-cascade` prevents late cascade-patch recovery and owner drift.
 
 ### PHASE-F-003 — semantic overlay / shadow color-channel closeout
 Status: DONE
