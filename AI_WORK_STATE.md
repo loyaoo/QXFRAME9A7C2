@@ -17,7 +17,7 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #324 / `35957442947` (PR #50)
 - Latest green main CI + Pages: #325 / `35957755294`
-- Controller migration implementation progress: 41%
+- Controller migration implementation progress: 47%
 - Current Phase: Phase B
 - Current Task: `PHASE-B-002`
 
@@ -25,7 +25,7 @@
 
 ### PHASE-B-002 — ValueController + picker-like popup second migration pack
 Status: IN_PROGRESS
-Task progress: 5%
+Task progress: 70%
 
 Why this is current:
 - PHASE-B-001 first Picker pack is merged and green on PR + main.
@@ -40,12 +40,19 @@ Scope:
 - do not fold FocusController/SelectionController work into this task beyond value-session correctness;
 - add structural + browser regressions proving controlled/uncontrolled parity and no duplicate value owner.
 
+Implemented in current PHASE-B-002 branch:
+- `ValueController.createValueBinding()` and `createOptionValueBinding()` are now canonical; StateController forwards them only for compatibility.
+- Select / TreeSelect / Cascader call ValueController.createOptionValueBinding directly.
+- Autocomplete calls ValueController.create directly and declares committed+draft value channels.
+- all four components declare explicit ValueController ComponentProfile ownership without moving Search/Selection/Focus authorities.
+- `verify:value-family` prevents these components from regressing to StateController and verifies authored value vs defaultValue ownership.
+- browser smoke adds missing TreeSelect and Autocomplete controlled proposal/external-sync/defaultValue coverage; existing source browser coverage already protects Select and Cascader.
+
 Next exact step:
-1. create a fresh PHASE-B-002 branch from current main;
-2. move value-binding helper factories to ValueController and reduce StateController to compatibility forwarding;
-3. migrate Select / TreeSelect / Cascader / Autocomplete to the canonical ValueController entry point;
-4. add profiles and focused controlled/defaultValue browser coverage;
-5. run full PR release CI, merge only green, then verify main CI + Pages.
+1. create the PHASE-B-002 pull request;
+2. run Completion audit + full release/browser CI and fix implementation failures without weakening gates;
+3. merge only the green PR head and verify main CI + Pages;
+4. then close Phase B value-family migration or move only remaining value-owner consumers required by the handbook.
 
 ## Current authority snapshot — after Phase A
 
