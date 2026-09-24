@@ -48,16 +48,34 @@ for (const script of ['verify-browser-smoke.mjs','verify-source-esm-browser.mjs'
 assert.match(browserSuite, /Release browser verification requires Chromium\/Chrome/, 'Strict browser suite must fail closed when Chromium is unavailable.');
 assert.equal(
     pkg.scripts['verify:legacy-browser'],
-    'node tools/verify-browser-smoke.mjs --required --skip-docs --smoke=tools/fixtures/legacy-hotfix6/verify-browser-smoke.html',
-    'Frozen HOTFIX6 browser compatibility gate must remain explicit and strict.'
+    'node tools/verify-browser-smoke.mjs --required --skip-docs --smoke=tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html',
+    'HOTFIX6-derived Phase C browser compatibility gate must remain explicit and strict.'
 );
 const frozenBrowserSmoke = path.join(root, 'tools', 'fixtures', 'legacy-hotfix6', 'verify-browser-smoke.html');
-assert.ok(fs.existsSync(frozenBrowserSmoke), 'Frozen HOTFIX6 browser smoke source must remain available.');
-assert.match(fs.readFileSync(frozenBrowserSmoke, 'utf8'), /QX_BROWSER_SMOKE:/, 'Frozen HOTFIX6 browser smoke must contain the original result marker.');
+const phaseCLegacyBrowserSmoke = path.join(root, 'tools', 'fixtures', 'legacy-hotfix6', 'verify-browser-smoke-phase-c.html');
+assert.ok(fs.existsSync(frozenBrowserSmoke), 'Frozen HOTFIX6 browser smoke source must remain available and unchanged as archival evidence.');
+assert.ok(fs.existsSync(phaseCLegacyBrowserSmoke), 'Phase C legacy compatibility smoke must remain available.');
+const frozenBrowserSmokeSource = fs.readFileSync(frozenBrowserSmoke, 'utf8');
+const phaseCLegacyBrowserSmokeSource = fs.readFileSync(phaseCLegacyBrowserSmoke, 'utf8');
+assert.match(frozenBrowserSmokeSource, /QX_BROWSER_SMOKE:/, 'Frozen HOTFIX6 browser smoke must contain the original result marker.');
+assert.match(phaseCLegacyBrowserSmokeSource, /QX_BROWSER_SMOKE:/, 'Phase C legacy compatibility smoke must contain the result marker.');
+const supersededFocusChecks = ['regression-time-panel-outer-focus-owner','regression-date-time-panel-focusable'];
+function normalizeSupersededFocusChecks(source) {
+    return source.split('\n').map((line) => supersededFocusChecks.some((name) => line.includes(name)) ? '__PHASE_C_SUPERSEDED_FOCUS_CHECK__' : line).join('\n');
+}
+assert.equal(
+    normalizeSupersededFocusChecks(phaseCLegacyBrowserSmokeSource),
+    normalizeSupersededFocusChecks(frozenBrowserSmokeSource),
+    'Phase C legacy compatibility fixture may differ from frozen HOTFIX6 only in the two superseded TimePanel focus-owner checks.'
+);
+for (const name of supersededFocusChecks) {
+    assert.equal((frozenBrowserSmokeSource.match(new RegExp(name, 'g')) || []).length, 1, 'Frozen HOTFIX6 smoke must contain exactly one ' + name + ' check.');
+    assert.equal((phaseCLegacyBrowserSmokeSource.match(new RegExp(name, 'g')) || []).length, 1, 'Phase C compatibility smoke must contain exactly one ' + name + ' check.');
+}
 assert.equal(
     pkg.scripts.release,
     'npm run build && npm run verify && npm run verify:browser && npm run verify:legacy-browser && npm run verify:release && npm run verify:package',
-    'Release must run current browser verification and the frozen HOTFIX6 compatibility smoke before artifact/package gates.'
+    'Release must run current browser verification and the strict HOTFIX6-derived Phase C compatibility smoke before artifact/package gates.'
 );
 assert.equal(pkg.exports['.'].import, './dist/esm/index.js');
 assert.equal(pkg.exports['.'].default, './dist/esm/index.js');

@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `7f3a475565fec5548871e7c6c52a7ed8c0e945bc` (PR #51 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-c-focus-time-date-20260924`
+- Open PRs at this checkpoint: pending PHASE-C-001 PR
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #326 / `35958353342` (PR #51)
 - Latest green main CI + Pages: #327 / `35958853046`
-- Controller migration implementation progress: 50%
+- Controller migration implementation progress: 56%
 - Current Phase: Phase C
 - Current Task: `PHASE-C-001`
 
 ## CURRENT
 
 ### PHASE-C-001 — FocusController foundation + Time/Date composite regions
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 70%
 
 Why this is current:
 - Phase B Value + Picker Family is complete and green through PR #51 and main #327.
@@ -48,12 +48,20 @@ Audit already completed before implementation:
 - Calendar and PeriodPanel already use KeyboardRegion.bindVirtualFocus and ActiveItem; DatePicker can host those domains on its editor.
 - Existing browser smoke already covers TimePanel inner nodes non-tabbable, PeriodPanel single keyboard ring, DatePicker dual-panel seam and title/drill handoff. New tests should extend these contracts, not duplicate them.
 
+Implemented in current PHASE-C-001 branch:
+- added `FocusController` as an aggregate facade over FocusManager / FocusScope / KeyboardRegion / KeyboardNavigation virtual focus; it does not implement another DOM listener or virtual-domain engine;
+- exported FocusController through the core entry and added `verify:focus-controller` to the required verify chain;
+- WheelPanel / Calendar / PeriodPanel now enter composite focus through FocusController and delegate virtual-domain lifecycle through its canonical binding;
+- TimePanel root is now the single real-focus/Tab owner; its inner WheelPanel is hosted and non-tabbable while the active wheel item owns the visible keyboard ring;
+- standalone Wheel/Time composite roots explicitly suppress their own focus-visible outline so root + item cannot draw two rings;
+- DatePicker-hosted Calendar remains `tabIndex=-1` with real focus on the picker editor and exactly one hosted calendar item ring;
+- browser regressions cover TimePanel canonical root ownership, single virtual ring, readonly navigation without mutation, disabled non-focusability, Date hosted focus ownership, and DatePicker+TimePanel root ownership.
+
 Next exact step:
-1. create a fresh PHASE-C-001 branch from current main after this checkpoint;
-2. implement the FocusController facade by composing existing focus authorities;
-3. migrate WheelPanel/TimePanel and Calendar/PeriodPanel adapters without changing value/selection ownership;
-4. add focused Phase C verification and missing browser regressions;
-5. run full PR release CI, merge only green, then verify main CI + Pages.
+1. create the PHASE-C-001 pull request from this branch;
+2. run Completion audit + full release/browser CI and fix real implementation failures without weakening gates;
+3. merge only a green PR head and verify main CI + Pages;
+4. then continue Phase C with Select / TreeSelect / Cascader / Menu / Tags focus+interaction migration.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,7 +87,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 
 These are current QA targets for later Controller/family migration. They are not PHASE-A-003 scope unless an authority adoption directly touches them.
 
-- TimePanel must have one canonical real-focus owner; internal columns must not become extra Tab stops.
+- TimePanel canonical real-focus ownership is implemented on the current PHASE-C-001 branch and remains pending PR/main verification; internal columns/items are non-tabbable.
 - DatePicker dual-panel/month-year navigation can retain stale cursor state and jump on the first arrow after returning to the date region.
 - DatePicker/TimePicker preset selection must respect `needConfirm`; preset regions need one Tab stop plus virtual arrow navigation.
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.

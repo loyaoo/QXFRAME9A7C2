@@ -45,6 +45,7 @@ export { PressInteraction } from './pressInteraction.js';
 export { PointerSession } from './pointerSession.js';
 export { EventDelegation } from './eventDelegation.js';
 export { FormBridge } from './formBridge.js';
+export { FocusController } from './focusController.js';
 export { FocusManager } from './focusManager.js';
 export { ScrollLock } from './scrollLock.js';
 export { PopupSurface } from './popupSurface.js';
