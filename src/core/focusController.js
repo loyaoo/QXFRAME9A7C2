@@ -132,6 +132,7 @@ function create(options) {
   api = {
     keyboard: region.keyboard,
     virtualFocus: region.virtualFocus,
+    getKeyboardRegion: function () { return region; },
     bindVirtualFocus: bindVirtualFocus,
     setActiveRegion: setActiveRegion,
     setReturnTarget: setReturnTarget,
