@@ -1,15 +1,13 @@
 import assert from 'node:assert/strict';
-import { ActionContext } from '../src/core/actionContext.js';
-import { OperationResult } from '../src/core/operationResult.js';
-import { ComponentProfile } from '../src/core/componentProfile.js';
-import { FeedbackController } from '../src/core/feedbackController.js';
-import { FormController } from '../src/core/formController.js';
+import { ActionContext, OperationResult, ComponentProfile, FeedbackController, FormController } from '../src/core/index.js';
 
 function context(reason){return ActionContext.create(reason,{source:'programmatic'});}
 
 assert.equal(ComponentProfile.controllers.length,9);
 assert.ok(ComponentProfile.controllers.includes('FeedbackController'));
 assert.ok(ComponentProfile.controllers.includes('FormController'));
+assert.equal(typeof FeedbackController.create,'function','FeedbackController must export through core/index.');
+assert.equal(typeof FormController.create,'function','FormController must export through core/index.');
 
 const localEvents=[],globalEvents=[];
 function projector(log){
@@ -43,6 +41,19 @@ assert.equal(feedback.snapshot().records[0].target,'global');
 assert.ok(localEvents.some(entry=>entry[0]==='close'&&entry[2]==='retarget'));
 assert.equal(globalEvents.filter(entry=>entry[0]==='show').length,1);
 feedback.destroy();
+
+const noticeEvents=[];
+const noticeProjector=FeedbackController.createNoticeProjector({
+  create(payload){noticeEvents.push(payload);return {updateOptions(next){noticeEvents.push(next);return this;},close(){return true;}};}
+});
+const noticeFeedback=FeedbackController.create({ownerId:'task:notice',globalProjector:noticeProjector});
+noticeFeedback.publish({operation:'upload',status:'progress',message:'Uploading',target:'global'},context('notice-progress'));
+noticeFeedback.publish({operation:'upload',status:'pending',message:'Waiting',target:'global'},context('notice-pending'));
+assert.equal(noticeEvents[0].type,'loading','progress must map to NoticeService loading type');
+assert.equal(noticeEvents[1].type,'loading','pending must map to NoticeService loading type');
+noticeFeedback.destroy();
+
+
 
 let left='A',right='B',submitted=null;
 const form=FormController.create({
