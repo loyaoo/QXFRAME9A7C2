@@ -20,6 +20,7 @@ import { OptionTransaction } from '../core/optionTransaction.js';
 import { FieldHost } from '../core/fieldHost.js';
 import { Renderer } from '../core/renderer.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { DOMTemplate } from '../core/domTemplate.js';
@@ -88,7 +89,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-flush'; panel.hidden = true; panel.tabIndex = -1;
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
-        var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, tagNavigation = null;
+        var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, focusController = null, tagNavigation = null;
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if(destroyed)return; if(triggerSession&&triggerSession.getState().open)renderColumns(); syncControl(); var payload={searchValue:value,reason:meta.reason||'search',originalEvent:meta.originalEvent||null,cascader:instance}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(!destroyed&&meta.silent!==true)emitter.emit('search',payload); } });
         var loadedChildren = new Map(), loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String)), loadingKeys = new Set();
         var loadTasks = AsyncTaskGroup.create({
@@ -786,40 +787,54 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
     
     
         var keyboardTarget = headlessMode ? triggerTarget : controlFocusElement();
-        keyboard = keyboardTarget ? KeyboardNavigation.create({
+        focusController = keyboardTarget ? FocusController.create({
           root: keyboardTarget,
-          focusRoot: controlFocusElement,
-          editableKeys:['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter','Escape','Home','End','PageUp','PageDown',' '],
-          allowEditableKey:function(key, detail){
-            var event=detail&&detail.originalEvent;
-            if (!event) return false;
-            if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Home' || key === 'End') return !KeyboardNavigation.shouldPreserveNativeTextEditing(event, event.target);
-            return true;
-          },
-          handlers:{
-            Escape:function(detail){ return triggerSession.getState().open ? triggerSession.close('escape', detail.originalEvent) : handleHostedTagKeydown(detail.originalEvent); },
-            ArrowDown:function(detail){ if (!triggerSession.getState().open) return triggerSession.open('keyboard-down', detail.originalEvent) === true; var record=columnRecords[activeColumnIndex]||columnRecords[0]; if (!record || !record.list) return false; if (!recordActiveItem(record)) { var seeded=seedColumnActive(record,null,{source:'keyboard',reason:'arrow-down',strategy:'first'}); if (seeded) { activateRecordVirtualFocus(record,'arrow-down',detail.originalEvent); if (detail.originalEvent&&detail.originalEvent.preventDefault) detail.originalEvent.preventDefault(); return true; } } return record.list.handleKeydown(detail.originalEvent)!==false; },
-            ArrowUp:function(detail){ if (!triggerSession.getState().open) return triggerSession.open('keyboard-up', detail.originalEvent) === true; var record=columnRecords[activeColumnIndex]||columnRecords[0]; if (!record || !record.list) return false; if (!recordActiveItem(record)) { var seeded=seedColumnActive(record,null,{source:'keyboard',reason:'arrow-up',strategy:'last'}); if (seeded) { activateRecordVirtualFocus(record,'arrow-up',detail.originalEvent); if (detail.originalEvent&&detail.originalEvent.preventDefault) detail.originalEvent.preventDefault(); return true; } } return record.list.handleKeydown(detail.originalEvent)!==false; },
-            ArrowLeft:function(detail){ return handleHorizontalKey(detail.originalEvent); },
-            ArrowRight:function(detail){ return handleHorizontalKey(detail.originalEvent); },
-            Backspace:function(detail){ return handleHostedTagKeydown(detail.originalEvent); },
-            Delete:function(detail){ return handleHostedTagKeydown(detail.originalEvent); },
-            Home:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-            End:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-            PageUp:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-            PageDown:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-            Enter:function(detail){
-              if (!triggerSession.getState().open) return triggerSession.open('keyboard-enter', detail.originalEvent) === true;
-              var record=columnRecords[activeColumnIndex]||columnRecords[0]; return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false;
+          document: doc,
+          disabled: opts.disabled === true,
+          activeRegion: 'column',
+          navigation: {
+            focusRoot: controlFocusElement,
+            editableKeys:['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter','Escape','Home','End','PageUp','PageDown',' '],
+            allowEditableKey:function(key, detail){
+              var event=detail&&detail.originalEvent;
+              if (!event) return false;
+              if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Home' || key === 'End') return !KeyboardNavigation.shouldPreserveNativeTextEditing(event, event.target);
+              return true;
             },
-            ' ':function(detail){
-              if (!triggerSession.getState().open || opts.multiple !== true) return false;
-              var record=columnRecords[activeColumnIndex]||columnRecords[0], item=recordActiveItem(record);
-              return record && item ? activateAt(record.index, item, { source:'keyboard', reason:'space', originalEvent:detail.originalEvent }) : false;
+            handlers:{
+              Escape:function(detail){ return triggerSession.getState().open ? triggerSession.close('escape', detail.originalEvent) : handleHostedTagKeydown(detail.originalEvent); },
+              ArrowDown:function(detail){ if (!triggerSession.getState().open) return triggerSession.open('keyboard-down', detail.originalEvent) === true; var record=columnRecords[activeColumnIndex]||columnRecords[0]; if (!record || !record.list) return false; if (!recordActiveItem(record)) { var seeded=seedColumnActive(record,null,{source:'keyboard',reason:'arrow-down',strategy:'first'}); if (seeded) { activateRecordVirtualFocus(record,'arrow-down',detail.originalEvent); if (detail.originalEvent&&detail.originalEvent.preventDefault) detail.originalEvent.preventDefault(); return true; } } return record.list.handleKeydown(detail.originalEvent)!==false; },
+              ArrowUp:function(detail){ if (!triggerSession.getState().open) return triggerSession.open('keyboard-up', detail.originalEvent) === true; var record=columnRecords[activeColumnIndex]||columnRecords[0]; if (!record || !record.list) return false; if (!recordActiveItem(record)) { var seeded=seedColumnActive(record,null,{source:'keyboard',reason:'arrow-up',strategy:'last'}); if (seeded) { activateRecordVirtualFocus(record,'arrow-up',detail.originalEvent); if (detail.originalEvent&&detail.originalEvent.preventDefault) detail.originalEvent.preventDefault(); return true; } } return record.list.handleKeydown(detail.originalEvent)!==false; },
+              ArrowLeft:function(detail){ return handleHorizontalKey(detail.originalEvent); },
+              ArrowRight:function(detail){ return handleHorizontalKey(detail.originalEvent); },
+              Backspace:function(detail){ return handleHostedTagKeydown(detail.originalEvent); },
+              Delete:function(detail){ return handleHostedTagKeydown(detail.originalEvent); },
+              Home:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
+              End:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
+              PageUp:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
+              PageDown:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
+              Enter:function(detail){
+                if (!triggerSession.getState().open) return triggerSession.open('keyboard-enter', detail.originalEvent) === true;
+                var record=columnRecords[activeColumnIndex]||columnRecords[0]; return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false;
+              },
+              ' ':function(detail){
+                if (!triggerSession.getState().open || opts.multiple !== true) return false;
+                var record=columnRecords[activeColumnIndex]||columnRecords[0], item=recordActiveItem(record);
+                return record && item ? activateAt(record.index, item, { source:'keyboard', reason:'space', originalEvent:detail.originalEvent }) : false;
+              }
             }
           }
         }) : null;
-        if (keyboard) { bindCompositeVirtualFocus(); scope.add(function(){ if (tagNavigation) { tagNavigation.destroy(); tagNavigation=null; } keyboard.destroy(); }); }
+        keyboard = focusController ? focusController.keyboard : null;
+        if (keyboard) {
+          bindCompositeVirtualFocus();
+          scope.add(function(){
+            if (tagNavigation) { tagNavigation.destroy(); tagNavigation=null; }
+            if (focusController) focusController.destroy();
+            focusController=null;
+            keyboard=null;
+          });
+        }
     
         function normalizeSelection() {
           var valid = opts.multiple === true ? normalizeAssociatedValues(selection.values) : selection.values.filter(function (value) { return findPathByValue(value).length > 0; }).slice(0, 1);
@@ -896,6 +911,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var proposedVisibleTags = own(next, 'maxVisibleTags') ? next.maxVisibleTags : opts.maxVisibleTags; if (proposedVisibleTags !== 'responsive' && proposedVisibleTags !== undefined && proposedVisibleTags !== null && (!Number.isFinite(Number(proposedVisibleTags)) || Number(proposedVisibleTags) < 0)) throw new TypeError('[QXFRAME9A7C2] Cascader maxVisibleTags must be a non-negative number or \"responsive\".');
           var proposedPopupRender = own(next, 'popupRender') ? next.popupRender : opts.popupRender; if (proposedPopupRender !== null && proposedPopupRender !== undefined && !Utils.isFunction(proposedPopupRender)) throw new TypeError('[QXFRAME9A7C2] Cascader popupRender must be a function or null.');
           Object.keys(next).forEach(function (name) { if (name !== 'items' && Utils.safeOwnKey(name)) opts[name] = next[name]; });
+          if (focusController) focusController.setDisabled(opts.disabled === true);
           if (own(next, 'loadChildren') && !own(next, 'items')) { loadTasks.invalidate('cascader-loader'); loadingKeys.clear(); }
           if (own(next, 'items')) replaceItems(next.items, { loadedKeys: own(next, 'loadedKeys') ? next.loadedKeys : [] });
           else if (own(next, 'loadedKeys')) loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String));
@@ -931,7 +947,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           root:root,input:input,panel:panel,columnsHost:columnsHost,triggerTarget:triggerTarget,
           setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,getState:getState,
           loadChildren:function(key,meta){var path=pathByKeys([key]);var item=path[0]||null;if(!item){var found=findPathByValue(key);item=found.length?found[found.length-1]:null;}return item?loadChildrenFor(item,meta):Promise.resolve([]);},
-          getControl:function(){return fieldControl;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
+          getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
           applyOptions:applyOptions,dispose:disposeRuntime
         });
       
@@ -946,7 +962,7 @@ export class Cascader extends PopupFieldComponent{
   interaction:Object.freeze({keymap:'cascader'}),
   overlay:Object.freeze({mode:'popup'}),
   form:Object.freeze({serialize:true}),
-  ownership:Object.freeze({value:'ValueController'})
+  ownership:Object.freeze({value:'ValueController',focus:'FocusController'})
  });
  static contract=getContract('Cascader');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless','portalContainer','multiple']);
@@ -963,6 +979,7 @@ export class Cascader extends PopupFieldComponent{
  clear(meta){const r=runtimeState.get(this).runtime;return r?r.clear(meta):false;}
  getState(){const r=runtimeState.get(this).runtime;return r?r.getState():Object.freeze({open:false,destroyed:this.destroyed});}
  getControl(){const r=runtimeState.get(this).runtime;return r?r.getControl():null;}
+ getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
  getColumns(){const r=runtimeState.get(this).runtime;return r?r.getColumns():[];}
  getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
  getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
