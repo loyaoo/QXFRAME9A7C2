@@ -300,13 +300,18 @@ export class Collapse extends Component {
             root.classList.toggle('is-accordion', current.accordion === true);
             root.classList.toggle('is-indicator-end', String(current.indicatorPosition) === 'end');
             const disclosureState = record.disclosure.getState();
+            let orderCursor = root.firstChild;
             record.items.forEach(item => {
                 const open = disclosureState.value.indexOf(item.key) >= 0;
                 const itemRecord = record.records[item.key] || createRecord(item, open);
                 record.records[item.key] = itemRecord;
                 live[item.key] = true;
+                // Project physical order before starting/reversing motion. Re-appending an
+                // already-positioned section after setVisible() resets the browser's native
+                // transition and makes rapid close/reopen jump to 0/full height.
+                if (itemRecord.section !== orderCursor) root.insertBefore(itemRecord.section, orderCursor);
+                orderCursor = itemRecord.section.nextSibling;
                 syncRecord(itemRecord, item, open, reason);
-                root.appendChild(itemRecord.section);
             });
             Object.keys(record.records).forEach(key => { if (!live[key]) { destroyRecord(record.records[key]); delete record.records[key]; } });
             record.active.updateOptions({ entries: record.items });

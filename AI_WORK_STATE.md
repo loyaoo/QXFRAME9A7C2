@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `30034b15d1d19acff0c3ff5cef44981568074ffd` (PR #68 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-e-motion-closeout-20260924`
+- Open PRs at this checkpoint: PR #69
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-9-Runtime-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,19 +25,19 @@
 ## CURRENT
 
 ### PHASE-E-005 — Motion closeout: rapid reversal + TransitionGroup adoption
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 95%
 
 Why this is current:
 - PHASE-E-004 remaining OverlayRuntime consumer migration is merged and green through PR #68 / CI #380 and main CI + Pages #381.
 - direct component OverlayRuntime bypasses are now closed for Image Preview, Loading and Upload document preview.
 - the active user-visible blocker is Collapse rapid open/close reversal: mid-animation reversal currently jumps through 0/full height instead of continuing from the live rendered height.
-- root cause is shared MotionCore reversal handoff, so the fix belongs in MotionCore rather than a Collapse-local timeout.
+- verified root cause is Collapse DOM projection order: it started/reversed Transition and then re-appended the same section node, resetting the browser-native transition to an endpoint. MotionCore reversal itself remains continuous.
 - TransitionGroup still consumes MotionCore directly and must enter MotionController before Phase E motion ownership can be signed off.
 
 Frozen impact map:
 - MotionCore remains canonical generation/timing/style execution authority; MotionController remains intent facade.
-- rapid reversal must capture the live rendered snapshot, transfer ownership to the new generation and prevent stale cleanup from restoring base/target styles during the handoff.
+- rapid reversal must preserve the live rendered height by keeping physical DOM order stable before Transition.setVisible() starts/reverses motion.
 - autosize height transitions must reverse from the current non-zero rendered height, not from collapsed 0 or measured full height.
 - stale generation completion must never settle or clean styles for the newer generation.
 - TransitionGroup must use MotionController without introducing a second group-level generation truth.
@@ -45,18 +45,26 @@ Frozen impact map:
 - Phase C interaction/focus, Phase D selection and Phase E overlay resource ownership remain unchanged.
 
 Scope:
-- inspect MotionCore reversal/cleanup ownership and TransitionGroup direct MotionCore construction only.
+- keep MotionCore canonical reversal logic unchanged unless a shared regression proves otherwise; close the actual Collapse projection bug and TransitionGroup direct MotionCore construction.
 - fix live-style handoff at the shared MotionCore level.
 - migrate TransitionGroup through MotionController.
 - add dedicated Chromium regression for repeated Collapse reversal, live-height continuity, dynamic content retarget and final settled state.
 - verify Tabs/Dropdown/Notice/Sort TransitionGroup consumers through existing browser/release suites.
 
+Implemented in current PHASE-E-005 motion closeout pack:
+- Collapse projects section DOM order before syncRecord()/Transition.setVisible() and only moves a section when physical order differs, preventing rapid close/reopen from resetting the native height transition to 0/full endpoints.
+- no Collapse-local timeout, duplicate motion state or second generation authority is introduced.
+- TransitionGroup no longer imports/creates MotionCore directly; child motion and move completion enter through MotionController while MotionCore remains canonical execution authority.
+- required `verify:phase-e-motion-closeout` runs Chromium live-height continuity, repeated rapid-toggle, final-settle, stable-order and TransitionGroup enter/leave checks.
+- previous E-004 overlay-consumer verifier was corrected to require an overlay lease only while leave motion is actually unsettled, eliminating reduced/zero-duration CI timing flakiness without changing Image/Loading business code.
+- PR #69 exact-head CI #383 passed before the Phase F documentation correction; this branch has now been replayed on the corrected pure-CSS Phase F main and requires one final exact-head CI.
+
 Next exact step:
-1. patch MotionCore reversal ownership so a new generation inherits the live snapshot before stale generation cleanup can mutate styles;
-2. migrate TransitionGroup construction to MotionController while preserving public group behavior;
-3. add a required rapid-reversal Chromium gate centered on Collapse autosize and repeated Enter-like toggles;
-4. run adjacent motion/high-risk/source/browser gates, then exact-head CI;
-5. merge only green, verify main + Pages, then sign off Phase E or isolate any remaining motion consumer.
+1. run PR #69 exact-head Completion/release/browser/package CI on the replayed current-main head;
+2. fix only real failures without expanding Phase E scope;
+3. merge only green and verify main release + Pages;
+4. sign off Phase E in AI_WORK_STATE.md and FOUR_UNIFICATIONS_ACCEPTANCE.md;
+5. begin corrected Phase F — CSS Theme / Token System Unification as a pure CSS audit/unification phase with no ThemeController/TokenController/runtime.
 
 ## Current authority snapshot — after Phase A
 
