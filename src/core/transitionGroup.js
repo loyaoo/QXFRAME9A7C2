@@ -1,6 +1,6 @@
 
 import { Utils } from '../utils/utils.js';
-import { MotionCore } from './motion.js';
+import { MotionController } from './motionController.js';
 import { Scheduler } from './scheduler.js';
 import { Config } from './config.js';
 
@@ -385,7 +385,7 @@ function create(options) {
     run.scheduler = Scheduler.createFrameScheduler(function () {
       if (!record.move || record.move.token !== token || destroyed || syncGeneration !== run.syncGeneration) return;
       setStyle(element.style, 'transform', baseTransform, '');
-      run.cancelWait = MotionCore.waitMotionEnd(element, 'transition', {
+      run.cancelWait = MotionController.waitMotionEnd(element, 'transition', {
         immediate: prefReduced(settings),
         deadlinePadding: settings.deadlinePadding,
         properties: ['transform']
@@ -434,7 +434,7 @@ function create(options) {
       leaveLayoutSnapshot: null,
       initialBatch: initialBatch
     };
-    record.core = MotionCore.create({
+    record.core = MotionController.create({
       element: record.element,
       motion: function (coreContext) { return resolveTransition(record, coreContext); },
       appear: initialBatch && settings.appear !== false,
