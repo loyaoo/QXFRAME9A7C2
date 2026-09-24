@@ -8,7 +8,7 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { Config } from '../core/config.js';
 import { OverlayFramePolicy } from '../core/overlayFramePolicy.js';
 import { Renderer } from '../core/renderer.js';
-import { OverlayRuntime } from '../core/overlayRuntime.js';
+import { OverlayController } from '../core/overlayController.js';
 import { OverlayFrameShell } from '../core/overlayFrameShell.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { Transition } from '../core/transition.js';
@@ -147,7 +147,7 @@ function createDrawerController(instance, options) {
     return fn.apply(null, Array.prototype.slice.call(arguments, 1));
   }
   function payload(reason, event) {
-    return { instance: api, source: DOM.activationSource(event), reason: reason || 'api', event: event || null, root: root, mask: mask, wrap: wrap, panel: panel, body: body, title: title, footer: footer, side: opts.placement, overlayRuntime: overlay };
+    return { instance: api, source: DOM.activationSource(event), reason: reason || 'api', event: event || null, root: root, mask: mask, wrap: wrap, panel: panel, body: body, title: title, footer: footer, side: opts.placement, overlayRuntime: overlay && overlay.getRuntime ? overlay.getRuntime() : null };
   }
   function transitionEnabled() {
     return opts.animation !== false && Config.motionEnabled(root, undefined, opts.respectReducedMotion !== false);
@@ -342,7 +342,7 @@ function createDrawerController(instance, options) {
     }
   });
   surface.hide({ reason: 'initial' });
-  overlay = OverlayRuntime.create(overlayOptions());
+  overlay = OverlayController.create(overlayOptions());
   maskTransition = Transition.create({
     element: mask,
     transition: MotionPresets.fade,
@@ -394,7 +394,9 @@ function createDrawerController(instance, options) {
     getWrapElement: function () { return wrap; },
     getPanelElement: function () { return panel; },
     getBodyElement: function () { return body; },
-    getOverlayRuntime: function () { return overlay; },
+    getOverlayResourceController: function () { return overlay; },
+    getOverlayRuntime: function () { return overlay && overlay.getRuntime ? overlay.getRuntime() : null; },
+    getMotionControllers: function () { return Object.freeze({ mask: maskTransition && maskTransition.getMotionController ? maskTransition.getMotionController() : null, panel: panelTransition && panelTransition.getMotionController ? panelTransition.getMotionController() : null }); },
     getScroll: function () { return scroll; },
     on: emitter.on, once: emitter.once,
     destroy: destroy
