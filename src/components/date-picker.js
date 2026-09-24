@@ -1021,9 +1021,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
       return;
     }
     if (!draft.rawInput.trim() && field.getState().open) { draft.setRawInput('', { silent:true, active:false, source:'input', reason:'blur-empty' }); syncField(true); return; }
-    var parsed = parseTextSelection(rawInput);
+    var parsed = parseTextSelection(draft.rawInput);
     if (!parsed.valid) {
-      if (opts.preserveInvalidOnBlur !== true) syncField(field.getState().open);
+      if (opts.preserveInvalidOnBlur !== true) {
+        draft.setRawInput(draft.rawInput, { silent:true, active:false, source:'input', reason:'blur-invalid-restore' });
+        syncField(field.getState().open);
+      }
       return;
     }
     draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse', preserveRawInput:true });
