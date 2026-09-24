@@ -15,8 +15,8 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #315 / `35953604691` (PR #48)
-- Latest green main CI + Pages: run #313 / `35952965100`; replacement main run #316 / `35953925660` is in progress for PR #48 merge
-- Controller migration implementation progress: 16% (PHASE-A-002 first authority-integration batch merged; main CI/Pages verification in progress; no component files changed)
+- Latest green main CI + Pages: run #316 / `35953925660`, attempt 2, for merge `01875c583fe99c47ee249a4e9eeb6e86304f23f2`
+- Controller migration implementation progress: 18% (PHASE-A-002 authority integration merged and fully green; next protocol adoption batch ready; no component files changed)
 
 ## CURRENT
 
@@ -93,17 +93,24 @@ PR / CI evidence:
 - PR #48 merged;
 - merge commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2`;
 - PR CI #315 / `35953604691`: success;
-- main CI + Pages #316 / `35953925660`: in progress.
+- main CI + Pages #316 / `35953925660`: success on attempt 2, including release + Pages.
+- attempt 1 failed only `tabs-indicator-measured` with empty inline width while the same code passed PR #315; retry of the identical main commit passed all browser checks. Recorded as a browser timing flake; no framework/test gate was changed.
 
 Next exact step:
-- verify main CI + Pages #316 for merge `01875c583fe99c47ee249a4e9eeb6e86304f23f2`. If green, close this PHASE-A-002 batch and continue with a fresh branch for EnvironmentPort/Diagnostics/ComponentProfile adoption into existing authorities before direct component migration.
+- start PHASE-A-003 on a fresh branch from current main: adopt EnvironmentPort, Diagnostics, and ComponentProfile through existing core/runtime authorities before direct component migration. First inspect ObserverHub, Component/ComponentRuntime, and semantic diagnostics insertion points; replace existing environment/metadata paths where possible instead of adding parallel owners.
 
 ### PHASE-A-002 — Shared Protocol authority integration
-Status: IN_PROGRESS
+Status: DONE
+
+Merge / CI evidence:
+- PR #48 merged;
+- merge commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2`;
+- PR CI #315 / `35953604691`: success;
+- main CI + Pages #316 / `35953925660`: success on attempt 2; attempt 1 was the isolated Tabs indicator timing flake noted above.
 
 Scope guard:
-- branch: `refactor/phase-a-authority-integration-20260924`
-- code batch HEAD: `f5b013cb5e8dc9f39e75d9ba91895b3a6feaf3d2`
+- completed branch: `refactor/phase-a-authority-integration-20260924`
+- code batch commit: `f5b013cb5e8dc9f39e75d9ba91895b3a6feaf3d2`
 - no direct picker/component migration yet;
 - no second committed/controlled truth;
 - do not change public controlled/uncontrolled semantics;
@@ -224,3 +231,14 @@ Keep this file compact:
 - CURRENT may be detailed enough to resume without re-investigation.
 - DONE retains Task ID + outcome + PR/commit/test evidence, not full historical prose.
 - Move superseded investigation details to Git/PR history rather than growing this file indefinitely.
+
+
+### PHASE-A-003 — Environment / Diagnostics / Profile authority adoption
+Status: READY
+
+Scope guard:
+- no direct picker/component migration yet;
+- EnvironmentPort should replace ad hoc environment constructor/global resolution inside an existing core authority, not create a second observer/scheduler owner;
+- Diagnostics adoption must use stable codes and remain observational; it must not mutate business state;
+- ComponentProfile adoption must attach capability metadata to existing Component/ComponentRuntime paths without runtime component-name dispatch;
+- preserve static ESM and all existing public component behavior.
