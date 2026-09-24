@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `599076ed92b88b2464e45b3a926acbb9324ce757` (PR #56 merge; PR #57 Selection/Transfer merge is `fb4e5fb5ee8ba8644916431d431de5e18e1edd5a`)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-c-interaction-capability-composite-20260924`
+- Open PRs at this checkpoint: pending PHASE-C-004 composite PR
 - Branch inventory at this checkpoint: `main` only; 67 stale/superseded non-main branches are no longer present
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 55%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -50,12 +50,22 @@ Scope:
 - preserve existing ValueController, SelectionController, OpenStateBridge/overlay and FocusController authorities;
 - turn `FOUR_UNIFICATIONS_ACCEPTANCE.md` C-partial rows into signed-off evidence only after source ownership + browser regressions + exact-head CI exist.
 
+Implemented in current PHASE-C-004 first composite pack:
+- WheelPanel creates one InteractionController scope and one CapabilityController snapshot owner; existing FocusController/KeyboardNavigation remains the sole DOM keydown listener.
+- WheelPanel routes arrow/Home/End/Page semantics through InteractionController and uses CapabilityController for navigate/select decisions, preserving readOnly virtual navigation without value mutation.
+- TimePanel owns a CapabilityController for mutation sinks and delegates semantic keyboard ownership to its canonical WheelPanel interaction scope instead of creating a parallel key listener.
+- Calendar and PeriodPanel create InteractionController + CapabilityController owners; grid/title semantic actions flow through the interaction scope while select mutation sinks use one capability snapshot.
+- readOnly keeps navigation/title drill available while blocking value selection; disabled blocks navigation; loading remains focus-preserving/non-selecting according to InteractionPolicy semantics.
+- public `handleKeydown()` paths also pass through InteractionController, so hosted DatePicker/TimePicker delegation receives repeat suppression and IME handling without another DOM listener.
+- new required `verify:phase-c-composite` performs structural ownership checks plus Chromium behavior checks for readOnly navigation/no mutation, disabled blocking, IME pass-through, and repeat-Enter suppression.
+- sandbox gates pass: `verify:focus-controller`, `verify:modern-architecture`, `verify:picker-family`, `verify-source-esm-browser`, and `verify:phase-c-composite`.
+
 Next exact step:
-1. map the remaining Phase C priority gaps against PR #56's acceptance ledger and current main;
-2. migrate the smallest coherent Interaction/Capability component pack without broad search/replace;
-3. add structural and browser gates for scope bubbling, repeat suppression, native/IME pass-through and unified readOnly/loading/disabled mutation locks;
-4. run full PR release CI, merge only green, then verify main CI + Pages;
-5. once Phase C is actually complete, resume Phase D with Table remote/local selection semantics, then Tags and Select/TreeSelect/Cascader.
+1. open the PHASE-C-004 first composite PR from the current six-file audited diff;
+2. run full Completion audit + release/browser/package CI and fix only real failures without weakening Focus/Interaction/Capability ownership gates;
+3. merge only the exact green head and verify main CI + Pages;
+4. then continue PHASE-C-004 with popup-hosted Select/TreeSelect/Cascader and standalone Tags/Table capability+interaction ownership;
+5. update `FOUR_UNIFICATIONS_ACCEPTANCE.md` only after exact-head CI evidence exists; resume Phase D only after Phase C is fully signed off.
 
 ## Current authority snapshot — after Phase A
 
