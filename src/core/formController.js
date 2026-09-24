@@ -14,7 +14,7 @@ function copyValue(value){
   if(value&&typeof value==='object'){
     var proto=Object.getPrototypeOf(value);
     if(proto===Object.prototype||proto===null){
-      var out={};Object.keys(value).forEach(function(key){out[key]=copyValue(value[key]);});return out;
+      var out={};Object.keys(value).forEach(function(key){if(Utils.safeOwnKey(key))out[key]=copyValue(value[key]);});return out;
     }
   }
   return value;
