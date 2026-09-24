@@ -1,4 +1,5 @@
 import { OverlayRuntime } from './overlayRuntime.js';
+import { LayerManager } from './layerManager.js';
 import { Utils } from '../utils/utils.js';
 
 function own(object, key) { return Object.prototype.hasOwnProperty.call(Object(object), key); }
@@ -11,6 +12,48 @@ function normalizeReason(reason) {
   if (value === 'api' || value === 'set-open') return 'programmatic';
   if (value === 'parent-teardown' || value === 'layer-manager') return 'ancestor-close';
   return value;
+}
+
+
+function createLayerLease(options) {
+  var settings = options || {};
+  if (!settings || typeof settings !== 'object' || Array.isArray(settings)) throw new TypeError('[QXFRAME9A7C2] OverlayController.createLayerLease(options) requires an object.');
+  var element = settings.element || null;
+  if (!element || element.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] OverlayController layer lease requires an Element.');
+  var documentRef = settings.document || element.ownerDocument || globalThis.document;
+  var manager = settings.layerManager || (documentRef ? LayerManager.getShared(documentRef) : null);
+  if (!manager || typeof manager.register !== 'function') throw new TypeError('[QXFRAME9A7C2] OverlayController layer lease requires a LayerManager-compatible owner.');
+  var entry = {
+    id: settings.id,
+    parentId: settings.parentId,
+    kind: settings.kind,
+    componentType: settings.componentType,
+    group: settings.group,
+    zIndexOffset: own(settings, 'zIndexOffset') ? settings.zIndexOffset : settings.zIndex,
+    requestDismiss: settings.requestDismiss,
+    requestTeardown: settings.requestTeardown
+  };
+  Object.keys(entry).forEach(function (key) { if (entry[key] === undefined) delete entry[key]; });
+  var handle = manager.register(element, entry);
+  var destroyed = false;
+  var api = Object.freeze({
+    update:function (next) {
+      if (destroyed) return false;
+      handle.update(next || {});
+      return api;
+    },
+    bringToFront:function () { return !destroyed && handle.bringToFront ? handle.bringToFront() : false; },
+    getZIndex:function () { return !destroyed && handle.getZIndex ? handle.getZIndex() : null; },
+    getState:function () { return !destroyed && handle.getState ? handle.getState() : null; },
+    destroy:function () {
+      if (destroyed) return false;
+      destroyed = true;
+      if (handle.destroy) return handle.destroy();
+      if (handle.unregister) return handle.unregister();
+      return false;
+    }
+  });
+  return api;
 }
 
 function create(options) {
@@ -47,5 +90,5 @@ function create(options) {
   return api;
 }
 
-export const OverlayController = Object.freeze({ create:create, normalizeReason:normalizeReason, CLOSE_REASONS:CLOSE_REASONS });
-export { create, normalizeReason, CLOSE_REASONS };
+export const OverlayController = Object.freeze({ create:create, createLayerLease:createLayerLease, normalizeReason:normalizeReason, CLOSE_REASONS:CLOSE_REASONS });
+export { create, createLayerLease, normalizeReason, CLOSE_REASONS };
