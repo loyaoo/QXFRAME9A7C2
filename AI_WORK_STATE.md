@@ -10,68 +10,65 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `b4b1f506d4f14db8f1bd521c9ca4611515a19e5b` (PR #69 merge)
-- Current branch: `refactor/phase-f-css-authority-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-001 CSS authority PR
+- Last code-affecting main commit: `7c9e9455d7102dc0ba945bb5ab29ea28a5ab827d` (PR #70 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Controller PR CI: #385 / `36005279398` (PR #69)
-- Latest green main CI + Pages: #386 / `36005795095`
+- Latest green Controller PR CI: #392 / `36009735693` (PR #70)
+- Latest green main CI + Pages: #393 / `36010087461`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-001`
+- Current Task: `PHASE-F-002`
 
 ## CURRENT
 
-### PHASE-F-001 — CSS authority + JS Theme/Token decoupling
-Status: IN_PROGRESS
-Task progress: 85%
+### PHASE-F-002 — canonical CSS token graph closeout
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- handbook Phase E Overlay + Motion scope is fully accepted through PR #65–#69.
-- PR #69 exact-head CI #385 / `36005279398` succeeded and merged main release + Pages #386 / `36005795095` succeeded.
-- Phase F architecture is corrected: Theme/Token are pure CSS Design System concerns, not Runtime Controllers.
-- current main still contains historical JS Theme/Token authority in `Core.Config`, OverlayRuntime portal theme copying, Menu Config theme scopes and ColorPicker CSS-token reads.
-- release build copies only `src/qxframe9a7c2.css`; `src/css/00-foundation.css ... 10-compatibility.css` are stale duplicate CSS sources and have already drifted from the canonical file.
+- PHASE-F-001 is merged and fully green through PR #70 exact-head CI #392 / `36009735693` and main release + Pages #393 / `36010087461`.
+- CSS is now the sole Theme/Token authority: no Config theme/tokens, no OverlayRuntime theme copy, no Menu runtime theme scope, no ColorPicker CSS-token behavioral read and no stale `src/css/00...10.css` mirror.
+- the remaining Phase F work is inside the single canonical `src/qxframe9a7c2.css` graph itself.
+
+Verified audit findings:
+- canonical CSS: 842,940 bytes / 16,814 lines / 1,517 defined custom properties.
+- raw unresolved references are mostly intentional public override slots with fallback; 460 such unresolved names are safe override inputs.
+- only seven unresolved names have a no-fallback use. Four are intentional per-instance dynamic values projected by JS: Collapse motion height, Menu inline motion height, ColorPicker gradient stop offset and Steps progress percent.
+- three are real static broken references:
+  - `--qxframe9a7c2-control-height-md` in Sort;
+  - `--qxframe9a7c2-font-family-base` in native form controls;
+  - `--qxframe9a7c2-font-family` in JSON toolbar.
+- the 1,517-node custom-property dependency graph has exactly one cycle: `--_qxframe9a7c2-scroll-edge-shadow` falls back to itself.
+- Light and Dark mode recipes each define the same 93 variables; standard Light bg/surface/raised are white and Dark bg/surface/raised are black; keyboard focus-visible resolves black in Light and white in Dark.
+- the Light/Dark mode selectors contain one real duplicate member each: duplicated `[data-qxframe9a7c2-theme="light"]` and duplicated `[data-qxframe9a7c2-theme="dark"]`.
+- public `--qxframe9a7c2-color-*` compatibility aliases have zero internal canonical consumers.
+- physical-palette/hard-coded color usage is concentrated in shadows/overlays and intrinsic ColorPanel color-model rendering; these must be classified before cleanup, not blindly replaced.
 
 Frozen impact map:
-- `src/qxframe9a7c2.css` is the sole production CSS source; Phase F must not create another generated/runtime CSS truth.
-- Config keeps legitimate runtime settings (size, variant, focusOutline, motion, trigger delays) but must stop owning theme/tokens or projecting theme/token CSS.
-- OverlayRuntime must stop copying theme attributes/CSS variables from reference ancestry into portal hosts; scoped theme inheritance is solved by DOM ancestry / caller-provided scoped portalContainer.
-- Menu must stop using Config.createScope to project light/dark theme. Runtime geometry CSS vars (indent, depth, measured motion height) are not Theme/Token authority and remain allowed.
-- ColorPicker must not read CSS palette variables through getComputedStyle to generate behavioral preset values; default preset data must be self-contained JS data or explicit user options.
-- docs Theme Inspector / token reference may read or write CSS variables as demo tooling only, but docs must no longer advertise Core.Config theme/tokens as production API.
-- static CSS and docs must still work without QXFRAME runtime JS.
+- do not define global defaults for the four JS-owned dynamic CSS variables; their absence outside the owning instance is intentional.
+- repair static broken references by consuming existing canonical private/family owners rather than creating more public aliases.
+- remove the Scroll custom-property cycle with an existing semantic/token fallback.
+- remove only real duplicate selector members; do not rewrite selector structure because a naive comma parser reports false positives inside :not(...).
+- preserve Light white / Dark black standard baseline and exact Light/Dark recipe symmetry.
+- preserve public compatibility aliases as output-only; canonical internals must not start consuming them.
+- intrinsic ColorPanel hue/saturation spectrum colors are color-model data, not theme colors.
+- physical black/white used for overlays/shadows must migrate only where an existing semantic overlay/shadow owner expresses the same meaning.
 
 Scope:
-- remove Config theme/tokens/getToken/captureContext/projectContext JS truth while preserving non-visual runtime config.
-- remove OverlayRuntime theme-context observer/projection.
-- remove Menu JS theme-scope ownership and update docs shell that passed Menu.theme.
-- remove ColorPicker CSS-token read dependency for default presets.
-- delete stale unbuilt `src/css/00...10.css` duplicate sources after verifying build only consumes `src/qxframe9a7c2.css`.
-- update canonical-system manifest/docs references and add a required Phase F CSS-authority gate.
-- do not yet perform broad token renaming/hard-coded-color cleanup across the 85万字节 canonical CSS; that follows after authority is singular.
-
-Implemented in current PHASE-F-001 CSS authority pack:
-- Core.Config no longer owns theme/tokens, getToken, captureContext or projectContext; it retains runtime-only size/variant/focusOutline/motion/trigger-delay settings and scoped runtime behavior.
-- Config.configure({theme/tokens}) now rejects those keys instead of silently maintaining a second visual truth.
-- OverlayRuntime removes Config-based theme/token capture, mutation observer and portal CSS-variable copying. Scoped theme now depends on DOM ancestry / caller-provided scoped portalContainer as specified by the handbook.
-- Menu removes the runtime theme option and Config.createScope theme projection. Nested item.theme is explicitly rejected with CSS-scope guidance rather than silently ignored.
-- ColorPicker default preset values are self-contained JS data and no longer read CSS palette custom properties through getComputedStyle.
-- runtime Menu contract and generated component API remove the theme option; docs shell no longer updates/passes Menu.theme.
-- token reference docs keep Theme Inspector as docs-only CSS tooling but no longer advertise Config.theme/tokens; Config section is behavior-only.
-- canonical-system manifests now identify src/qxframe9a7c2.css / CSS inheritance as Theme/Token authority.
-- stale unbuilt src/css/00-foundation.css ... 10-compatibility.css duplicate sources are deleted. tools/docs CSS source-order manifests point to one physical source: src/qxframe9a7c2.css.
-- canonical CSS header explicitly declares itself the sole production visual authority.
-- new required verify:phase-f-css-authority structurally forbids JS Theme/Token authority and duplicate CSS sources, and runs Chromium with only CSS loaded to prove root light/dark + scoped dark inheritance without QXFRAME runtime JS.
+1. fix the three static broken references, the Scroll self-cycle and duplicate Light/Dark selector members;
+2. add required `verify:phase-f-token-graph` that classifies unresolved references, recognizes only the four verified JS dynamic variables, rejects static no-fallback gaps, rejects custom-property cycles, requires Light/Dark recipe symmetry and requires zero internal public color-compat consumption;
+3. verify Light/Dark white/black baseline in CSS-only Chromium;
+4. audit remaining physical-palette/shadow/overlay channels and move only semantically equivalent cases to existing semantic/family owners;
+5. leave broad cosmetic rewrites or new token families out unless the graph proves an owner is missing.
 
 Next exact step:
-1. open/run the PHASE-F-001 PR from the audited branch;
-2. fix exact-head contract/docs/browser/release failures only, without restoring Config theme/tokens or split CSS mirrors;
-3. merge only green and verify main release + Pages;
-4. checkpoint PHASE-F-001 as DONE;
-5. continue PHASE-F-002 with canonical token graph / white-light black-dark baseline / duplicate alias and hard-coded-color audit on the now-singular src/qxframe9a7c2.css authority.
+1. create `refactor/phase-f-token-graph-20260924` from current green main;
+2. land the four graph fixes + selector dedupe and the required graph verifier;
+3. run exact-head full release/browser/package CI and fix only real Phase F graph failures;
+4. merge only green, verify main + Pages, then continue the remaining physical-color/state-channel cleanup within Phase F.
 
 ## Current authority snapshot — after Phase A
 
@@ -101,6 +98,21 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-001 — CSS authority + JS Theme/Token decoupling
+Status: DONE
+Evidence:
+- PR #70 merged
+- merge commit `7c9e9455d7102dc0ba945bb5ab29ea28a5ab827d`
+- exact-head CI #392 / `36009735693`: success
+- main CI + Pages #393 / `36010087461`: success
+Outcome:
+- Core.Config no longer owns or projects Theme/Token state; runtime behavior configuration remains.
+- OverlayRuntime no longer copies theme/token CSS context; Menu runtime theme scopes/options are removed with an explicit migration record.
+- ColorPicker behavioral defaults no longer read CSS token state.
+- `src/qxframe9a7c2.css` is the one physical production CSS authority and the stale split `src/css/00...10.css` mirror is removed.
+- immutable HOTFIX6 API baseline remains untouched; completion audit permits only manifest-authorized `Menu.theme` removal.
+- required CSS-only Chromium gate proves Light white / Dark black / scoped theme resolution without framework JS.
 
 ### PHASE-E-005 — Motion closeout
 Status: DONE
