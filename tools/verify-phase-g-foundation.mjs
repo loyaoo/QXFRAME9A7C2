@@ -163,6 +163,26 @@ assert.equal(controlledForm.getField('controlled').pendingResetRequestId,null);
 assert.equal(controlledForm.serializeEntries()[0].value,'initial');
 controlledForm.destroy();
 
+let resolveSubmit=null;
+const pendingSubmitForm=FormController.create({
+  onSubmit(){return new Promise(resolve=>{resolveSubmit=resolve;});}
+});
+pendingSubmitForm.registerField({
+  fieldId:'pending-submit',name:'pending-submit',
+  adapter:{getValue:()=>1,getSerializedValue:()=>1,reset(){return true;}}
+});
+const pendingSubmitPromise=pendingSubmitForm.submit(context('pending-submit'));
+for(let index=0;index<6&&typeof resolveSubmit!=='function';index+=1)await Promise.resolve();
+assert.equal(typeof resolveSubmit,'function');
+assert.equal(pendingSubmitForm.snapshot().submitPending,true);
+const pendingReset=await pendingSubmitForm.reset(context('reset-pending-submit'));
+assert.equal(pendingReset.status,'applied');
+assert.equal(pendingSubmitForm.snapshot().submitPending,false,'reset must clear submitPending immediately after cancelling the submit task');
+resolveSubmit(true);
+const staleSubmit=await pendingSubmitPromise;
+assert.equal(staleSubmit.status,'stale','a submit completed after reset must stay stale');
+pendingSubmitForm.destroy();
+
 let resetCalls=0;
 const cancellationForm=FormController.create();
 cancellationForm.registerField({
