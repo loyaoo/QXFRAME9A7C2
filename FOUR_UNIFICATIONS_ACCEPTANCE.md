@@ -14,8 +14,8 @@ Evidence shared by all 40 rows: `verify:architecture` reports 40 components and 
 | Collapse | Base; E accepted (Motion) | Rapid autosize reversal fixed without local timer; stable DOM projection before Transition | Base; `verify:phase-e-motion-closeout` | PR #69 CI #385; main #386 | Base | E accepted; F–I pending |
 | InputNumber | Base; C partial (Capability) | Pending audit | Base | Base #338; C pending | Base | Pending |
 | InputOTP | Base | Pending audit | Base | Base #338 | Base | Pending |
-| Loading | Base; E accepted (Overlay/Motion) | Physical overlay resource behind OverlayController; leave lease tied to motion settle | Base; `verify:phase-e-overlay-consumers` | PR #68 CI #380; main #381 | Base | E accepted; F–I pending |
-| Progress | Base | Pending audit | Base | Base #338 | Base | Pending |
+| Loading | Base; E accepted; H accepted (Capability/Motion/Overlay/Feedback) | Open path enters CapabilityController; physical overlay remains OverlayController-owned; presence remains Transition→MotionController; operation feedback projects through FeedbackController | Base; `verify:phase-e-overlay-consumers`; `verify:phase-h-feedback-presenters`; source-ESM presenter browser | PR #68 CI #380; PR #83 CI #430; main #431 | Base | H accepted; I pending |
+| Progress | Base; H accepted (Feedback) | Presentation-only progress/status stays caller-owned; operation-visible status/progress projection enters FeedbackController without a second business value owner | Base; `verify:phase-h-feedback-presenters`; source-ESM presenter browser | PR #83 CI #430; main #431 | Base | H accepted; I pending |
 | Slider | Base | Pending audit | Base | Base #338 | Base | Pending |
 | Sort | Base; C partial (Capability) | Pending audit | Base | Base #338; C pending | Base | Pending |
 | Steps | Base | Pending audit | Base | Base #338 | Base | Pending |
@@ -27,7 +27,7 @@ Evidence shared by all 40 rows: `verify:architecture` reports 40 components and 
 | Dropdown | Base; C partial; E accepted (Trigger/Motion) | Trigger overlay path retained; TransitionGroup motion enters MotionController | Base; popup/high-risk; `verify:phase-e-motion-closeout` | PR #66 / #69; main #386 | Base | E accepted; F–I pending |
 | Modal | Base; E accepted (Overlay/Motion) | Logical family controller separated from physical OverlayController; mask/dialog motion channels canonical | Base; `verify:phase-e-modal-drawer` | PR #67 CI #378; main #379 | Base | E accepted; F–I pending |
 | Drawer | Base; E accepted (Overlay/Motion) | Logical family controller separated from physical OverlayController; mask/panel motion channels canonical | Base; `verify:phase-e-modal-drawer` | PR #67 CI #378; main #379 | Base | E accepted; F–I pending |
-| Result | Base | Pending audit | Base | Base #338 | Base | Pending |
+| Result | Base; H accepted (Feedback) | Presentation-only result status enters FeedbackController projector; no Value/Interaction owner is invented; clear hides the result surface | Base; `verify:phase-h-feedback-presenters`; source-ESM presenter browser | PR #83 CI #430; main #431 | Base | H accepted; I pending |
 | WheelPicker | Base; C partial (Capability) | Pending audit | Base | Base #338; C pending | Base | Pending |
 | TimePicker | Base; C accepted; E accepted (Trigger Overlay/Motion) | Capability state canonical; picker popup enters Trigger/Transition controller path | Base; policy/picker/high-risk browser | PR #58; Phase E #65–#66; main #386 | Base | E accepted; F–I pending |
 | ColorPicker | Base; C partial; E accepted (Trigger Overlay/Motion) | Picker overlay uses canonical Trigger/Transition path; Color preset CSS-token read remains Phase F target | Base; picker/high-risk browser | Phase E #65–#66; main #386 | Base | E accepted; F–I pending |
