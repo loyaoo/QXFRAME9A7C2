@@ -4,41 +4,44 @@
   "purpose": "Single-source ownership manifest for historical multi-system convergence. Every framework responsibility has one canonical owner; compatibility is an adapter boundary, never a second implementation.",
   "systems": {
     "Theme": {
-      "status": "converged",
+      "status": "converged-css-only",
       "canonicalOwner": [
-        "Core.Config",
-        "Config.createScope",
-        "CSS data-qxframe9a7c2-theme boundary"
+        "src/qxframe9a7c2.css theme selectors",
+        "CSS custom-property inheritance",
+        "caller-owned scoped portalContainer"
       ],
       "legacyOwners": [
-        "component-local theme resolvers",
-        "legacy theme classes"
+        "Core.Config theme",
+        "Config.createScope theme",
+        "OverlayRuntime theme-context copying",
+        "Menu theme runtime option"
       ],
       "legacyConsumerCount": 0,
       "runtimeOverlap": false,
       "cssOverlap": false,
       "publicCompatibility": false,
-      "migrationAction": "delete/redirect legacy consumers to canonical owner",
-      "deleteCondition": "legacy consumer count must remain zero",
-      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+      "migrationAction": "runtime theme authority removed; use CSS selectors/variables and DOM scope only",
+      "deleteCondition": "no runtime JS theme state/projection consumer remains",
+      "verifyRule": "Phase F CSS-authority gate forbids runtime theme projection and duplicate CSS sources"
     },
     "Tokens": {
-      "status": "converged",
+      "status": "converged-css-only",
       "canonicalOwner": [
-        "Core.Config tokens",
-        "canonical --qxframe9a7c2-* / --_qxframe9a7c2-* token graph"
+        "src/qxframe9a7c2.css canonical --qxframe9a7c2-* / --_qxframe9a7c2-* graph"
       ],
       "legacyOwners": [
-        "legacy --color-* tokens",
-        "component-local token aliases"
+        "Core.Config tokens/getToken",
+        "runtime CSS-variable projection",
+        "stale src/css split copies",
+        "component JS CSS-token reads"
       ],
       "legacyConsumerCount": 0,
       "runtimeOverlap": false,
       "cssOverlap": false,
       "publicCompatibility": false,
-      "migrationAction": "delete/redirect legacy consumers to canonical owner",
-      "deleteCondition": "legacy consumer count must remain zero",
-      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+      "migrationAction": "runtime token authority removed; CSS custom properties are the sole visual token truth",
+      "deleteCondition": "no runtime JS token state/read/projection and no duplicate CSS source remain",
+      "verifyRule": "Phase F CSS-authority gate enforces one CSS source and no runtime token authority"
     },
     "Motion": {
       "status": "converged",
