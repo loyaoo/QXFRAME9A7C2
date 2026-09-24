@@ -16,12 +16,19 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #307 / `35949535252`
 - Latest green main CI + Pages: run #308 / `35949774749`
-- Controller migration implementation progress: 3% (Phase A authority inventory frozen; Shared Protocol implementation next; no business behavior changed)
+- Controller migration implementation progress: 7% (Phase A authority inventory frozen; first Shared Protocol infrastructure batch implemented; CI pending; no component business behavior changed)
 
 ## CURRENT
 
 ### PHASE-A-001 — Baseline inventory and Controller migration kickoff
 Status: IN_PROGRESS
+
+Branch evidence:
+- branch: `refactor/phase-a-shared-protocol-20260924`
+- current branch HEAD: `e83ff0ce5d3047d2df4bb828662da7b6a780e2d2`
+- branch is 16 commits ahead / 0 behind kickoff main `b54e8be325498b680df7059ee53929d40caf13b0`
+- PR: not created yet
+- CI: pending PR creation
 
 Prerequisites:
 - OPS-001 repository cleanup merged green in PR #46;
@@ -62,8 +69,21 @@ Frozen Phase A authority inventory:
 - Diagnostics: `PerformanceDiagnostics` covers resource balance only; semantic duplicate-owner/stale-action diagnostics are not yet implemented.
 - Component capability declaration: `ComponentContracts` validates public options, but no `ComponentProfile` capability/ownership schema exists.
 
+Completed in current code batch:
+- added `ActionContext` + causal action IDs/source/reason/modality snapshots;
+- added structured `OperationResult` statuses;
+- added metadata-only `ControllableStateCore` ownership/revision/request lifecycle without duplicating committed value;
+- added `DataRevision` stable-key revision refs;
+- added `EnvironmentPort` with observer adapter validation;
+- added revision-aware `ProjectionScheduler` over existing `Scheduler`;
+- added stable-code semantic `Diagnostics`;
+- added `ComponentProfile` schema;
+- added `LogicalOwnerTree` facade over existing `LogicalOwnership`;
+- evolved existing `InteractionModality` authority to expose touch/programmatic modalities and `InputModality` alias;
+- added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
+
 Next exact step:
-- implement the smallest Shared Protocol batch on `refactor/phase-a-shared-protocol-20260924`: ActionContext, OperationResult, DataRevision, EnvironmentPort, revision-aware ProjectionScheduler, semantic Diagnostics, ComponentProfile, and a LogicalOwnerTree facade over existing `LogicalOwnership`; add contract verification and exports without changing component behavior.
+- create the Phase A PR, run full GitHub Actions release CI, fix any failures without weakening gates, then wire ControllableStateCore/DataRevision/ProjectionScheduler into existing authorities in a second Phase A batch only after this infrastructure is green.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
