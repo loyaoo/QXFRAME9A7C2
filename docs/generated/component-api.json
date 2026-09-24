@@ -1922,7 +1922,6 @@
         },
         "submenuOpenDelay": "number",
         "submenuTrigger": "any",
-        "theme": "any",
         "tooltip": "any",
         "triggerTarget": "any",
         "valueTarget": "any"
