@@ -266,31 +266,40 @@ function create(options) {
     return virtualFocusDomain.activate(key, { source:source, modality:source === 'keyboard' ? 'keyboard' : 'pointer', reason:meta && meta.reason || 'wheel-active', originalEvent:meta && meta.originalEvent || null, ensureVisible:source === 'keyboard' });
   }
   function bindVirtualFocus(controller, hosted) {
-    if (!controller || !Utils.isFunction(controller.registerDomain)) return null;
-    if (virtualFocusDomain) virtualFocusDomain.destroy();
-    virtualFocusController = controller;
-    hostedVirtualFocus = hosted === true || !!(keyboardRegion && controller !== keyboardRegion.virtualFocus);
-    if (keyboardRegion) keyboardRegion.setHosted(hostedVirtualFocus);
-    virtualFocusDomain = controller.registerDomain({
-      name:'wheel-panel-' + panelId,
-      getElement:function(key){ var location=virtualLocation(key); return location ? location.record.itemElements[location.itemIndex] || null : null; },
-      reconcile:function(key){
-        var location=virtualLocation(key); if (location) return key;
-        var normalizedColumn=Math.max(0,Math.min(activeColumnIndex,Math.max(0,columnRecords.length-1)));
-        var record=columnRecords[normalizedColumn]; if (!record) return null;
-        activeColumnIndex=normalizedColumn;
-        var selectedIndex=itemIndexForValue(record.items, value[normalizedColumn]);
-        if (selectedIndex < 0) selectedIndex=nearestEnabledIndex(record.items, 0);
-        return selectedIndex >= 0 ? virtualKey(normalizedColumn, selectedIndex) : null;
-      },
-      ensureVisible:function(key){
-        var location=virtualLocation(key); if (!location) return false;
-        ensureColumnVisible(location.columnIndex);
-        return centerRecordItem(location.record, location.itemIndex, 'auto', 'virtual-focus');
+    if (!controller || !Utils.isFunction(controller.registerDomain) || !keyboardRegion) return null;
+    var record=columnRecords[activeColumnIndex] || columnRecords[0];
+    var selectedIndex=record ? itemIndexForValue(record.items, value[activeColumnIndex]) : -1;
+    if (record && selectedIndex < 0) selectedIndex=nearestEnabledIndex(record.items, 0);
+    var activeKey=record && selectedIndex >= 0 ? virtualKey(activeColumnIndex, selectedIndex) : null;
+    var binding=keyboardRegion.bindVirtualFocus({
+      controller:controller,
+      previousDomain:virtualFocusDomain,
+      hosted:hosted,
+      activeKey:activeKey,
+      activation:{ reason:'bind-virtual-focus', ensureVisible:true },
+      domain:{
+        name:'wheel-panel-' + panelId,
+        getElement:function(key){ var location=virtualLocation(key); return location ? location.record.itemElements[location.itemIndex] || null : null; },
+        reconcile:function(key){
+          var location=virtualLocation(key); if (location) return key;
+          var normalizedColumn=Math.max(0,Math.min(activeColumnIndex,Math.max(0,columnRecords.length-1)));
+          var currentRecord=columnRecords[normalizedColumn]; if (!currentRecord) return null;
+          activeColumnIndex=normalizedColumn;
+          var currentIndex=itemIndexForValue(currentRecord.items, value[normalizedColumn]);
+          if (currentIndex < 0) currentIndex=nearestEnabledIndex(currentRecord.items, 0);
+          return currentIndex >= 0 ? virtualKey(normalizedColumn, currentIndex) : null;
+        },
+        ensureVisible:function(key){
+          var location=virtualLocation(key); if (!location) return false;
+          ensureColumnVisible(location.columnIndex);
+          return centerRecordItem(location.record, location.itemIndex, 'auto', 'virtual-focus');
+        }
       }
     });
-    var record=columnRecords[activeColumnIndex] || columnRecords[0];
-    if (record) { var selectedIndex=itemIndexForValue(record.items, value[activeColumnIndex]); if (selectedIndex >= 0 && controller.getState().modality === 'keyboard') activateVirtualAt(activeColumnIndex, selectedIndex, { source:'keyboard', reason:'bind-virtual-focus' }); }
+    if (!binding) return null;
+    virtualFocusController=binding.controller;
+    hostedVirtualFocus=binding.hosted;
+    virtualFocusDomain=binding.domain;
     return virtualFocusDomain;
   }
   function setActiveColumn(index, meta) {
