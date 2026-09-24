@@ -112,7 +112,10 @@ function create(options){
       data:own(value,'data')?value.data:undefined,revision:revision+1
     });
     var previous=records.get(identity)||null;
-    if(previous&&ValueEquality.deep(previous.snapshot,nextSnapshot))return OperationResult.unchanged(context,{reason:'feedback-unchanged',generation:generation===null?undefined:generation});
+    if(previous&&ValueEquality.deep(
+      {ownerId:previous.snapshot.ownerId,operation:previous.snapshot.operation,actionId:previous.snapshot.actionId,requestId:previous.snapshot.requestId,generation:previous.snapshot.generation,status:previous.snapshot.status,target:previous.snapshot.target,message:previous.snapshot.message,progress:previous.snapshot.progress,data:previous.snapshot.data},
+      {ownerId:nextSnapshot.ownerId,operation:nextSnapshot.operation,actionId:nextSnapshot.actionId,requestId:nextSnapshot.requestId,generation:nextSnapshot.generation,status:nextSnapshot.status,target:nextSnapshot.target,message:nextSnapshot.message,progress:nextSnapshot.progress,data:nextSnapshot.data}
+    ))return OperationResult.unchanged(context,{reason:'feedback-unchanged',generation:generation===null?undefined:generation});
     if(previous&&previous.target!==target)closeProjection(previous,'retarget');
     var handle=previous&&previous.target===target?previous.handle:null;
     try{
