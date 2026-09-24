@@ -32,6 +32,7 @@ for(const file of ['select.js','tree-select.js','cascader.js']){
   assert.ok(!/KeyboardNavigation\.create\s*\(/.test(source),file+' must not keep a parallel outer KeyboardNavigation owner.');
   assert.ok(/focus:\s*'FocusController'/.test(source),file+' ComponentProfile must declare FocusController ownership.');
   assert.ok(/focusController\s*=\s*null/.test(source),file+' must declare its FocusController runtime owner.');
+  assert.ok(/manageTabIndex:\s*false/.test(source),file+' editable host tabindex must remain owned by the existing Control/Field layer.');
 }
 for(const file of ['menu.js','tags.js']){
   const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
