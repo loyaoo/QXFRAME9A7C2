@@ -1412,7 +1412,7 @@ export class Menu extends Component {
     focus:Object.freeze({ mode:'virtual-navigation', host:'composite-root' }),
     interaction:Object.freeze({ keymap:'menu' }),
     selection:Object.freeze({ mode:'menu-selection' }),
-    ownership:Object.freeze({ focus:'FocusController', selection:'SelectionController' })
+    ownership:Object.freeze({ focus:'FocusController' })
   });
   static options = MENU_DEFAULTS;
   static immutableOptions = Object.freeze(['container','portalContainer']);
