@@ -178,7 +178,10 @@ function create(options){
 }
 function createNoticeProjector(channel,options){
   if(!channel||!Utils.isFunction(channel.create))throw new TypeError('[QXFRAME9A7C2] FeedbackController notice projector requires a NoticeService-compatible channel.');
-  var opts=options||{},map=Utils.isFunction(opts.map)?opts.map:function(record){return {content:record.message,type:record.status};};
+  var opts=options||{},map=Utils.isFunction(opts.map)?opts.map:function(record){
+    var type=record.status==='pending'||record.status==='progress'?'loading':(record.status==='warning'||record.status==='error'||record.status==='success'?record.status:'info');
+    return {content:record.message,type:type};
+  };
   return Object.freeze({
     show:function(record){
       var payload=map(record)||{};
