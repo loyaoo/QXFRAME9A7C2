@@ -6,7 +6,7 @@ import { TimePanel } from './time-panel.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
@@ -149,9 +149,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   var presetCleanups = [];
   var panelCleanups = [];
   var api = instance;
-  var rawInput = '';
   var activeRangePart = 0;
-  var hoverPreviewValue = null;
   var panelProjection = null;
   var keyboardRegion = 'selection';
   var activeCalendarPanel = 'primary';
@@ -386,7 +384,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   if (opts.previewValue !== false && opts.previewValue !== 'hover') throw new TypeError("[QXFRAME9A7C2] DatePicker previewValue must be false or 'hover'.");
   if (opts.panelRender !== null && opts.panelRender !== undefined && !Utils.isFunction(opts.panelRender)) throw new TypeError('[QXFRAME9A7C2] DatePicker panelRender must be a function or null.');
   function visualValue() {
-    if (field && field.getState().open && selection === 'range' && opts.previewValue !== false && hoverPreviewValue !== null) return hoverPreviewValue;
+    if (field && field.getState().open && selection === 'range' && opts.previewValue !== false && draft.hasPreview) return draft.previewValue;
     if (field && field.getState().open) return draft.draftValue;
     return draft.value;
   }
@@ -442,7 +440,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var nativeInitial = parseTextSelection(fieldInit.nativeValue);
     if (nativeInitial.valid) opts.value = nativeInitial.value;
   }
-  var draft = StateController.create({
+  var draft = ValueController.create({
     value: opts.value !== undefined ? opts.value : opts.defaultValue,
     normalizeValue: normalizeValue,
     copyValue: function (value) { return cloneValue(value, selection); },
@@ -464,11 +462,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
     controller: draft,
     needConfirm: function () { return opts.needConfirm === true; },
     canCommit: function (controller) { return rangeCommitReady(controller.draftValue); },
-    onOpenDraft: function () {
-      hoverPreviewValue = null;
+    onOpenDraft: function (controller) {
+      controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
       var openEditor = field && field.getInputElement ? field.getInputElement() : null;
-      rawInput = openEditor && openEditor.value !== undefined ? String(openEditor.value || '') : rawInput;
-      if (selection === 'range') activeRangePart = draft.draftValue && !draft.draftValue[0] ? 0 : (draft.draftValue && !draft.draftValue[1] ? 1 : 0);
+      var openText = openEditor && openEditor.value !== undefined ? String(openEditor.value || '') : controller.rawInput;
+      controller.setRawInput(openText, { silent:true, active:selection === 'multiple' && openText.trim() !== '', source:'popup', reason:'open-raw-input' });
+      if (selection === 'range') activeRangePart = controller.draftValue && !controller.draftValue[0] ? 0 : (controller.draftValue && !controller.draftValue[1] ? 1 : 0);
       else activeRangePart = 0;
       syncSelectionPanel(true);
       syncTimePanel();
@@ -480,41 +479,32 @@ function setupDatePickerRuntime(instance, fieldInit) {
       syncField(false);
     },
     onCloseDraft: function (_controller, detail) {
-      hoverPreviewValue = null;
       if (!detail || detail.rolledBack !== true) syncField(false);
     }
   });
 
   function syncField(preferDraft, meta) {
     if (!field) return;
-    var draftSession = preferDraft === true;
-    var previewing = field.getState().open && opts.previewValue !== false && hoverPreviewValue !== null && selection !== 'multiple';
-    var value = previewing ? hoverPreviewValue : (draftSession && draft.dirty ? draft.draftValue : draft.value);
+    var open = preferDraft === true && field.getState().open;
     var committedText = formatSelection(draft.value);
     var draftText = formatSelection(draft.draftValue);
-    var previewText = previewing ? formatSelection(hoverPreviewValue) : '';
     var hasDraftTarget = field.getState().hasDraftValueTarget;
     if (selection === 'multiple') {
-      field.setTags(dateTags(value));
-      field.setDisplayValue(hasDraftTarget ? committedText : rawInput);
+      var tagValue = open && draft.dirty ? draft.draftValue : draft.value;
+      field.setTags(dateTags(tagValue));
+      field.setDisplayValue(hasDraftTarget ? committedText : (draft.rawInputActive ? draft.rawInput : ''));
       field.setPlaceholder(opts.placeholder);
-    } else if (hasDraftTarget) {
-      field.setDisplayValue(previewing ? previewText : committedText);
-      field.setPlaceholder(opts.placeholder);
-    } else if (draftSession) {
-      var visibleDraft = previewing ? previewText : (draft.dirty ? draftText : '');
-      rawInput = visibleDraft;
-      field.setDisplayValue(visibleDraft);
-      field.setPlaceholder(committedText || String(opts.placeholder || ''));
     } else {
-      rawInput = committedText;
-      field.setDisplayValue(committedText);
-      field.setPlaceholder(opts.placeholder);
+      var projection = draft.projection({ open:open, previewControl:selection === 'range' && opts.previewValue !== false, draftControl:true });
+      var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatSelection(projection.value);
+      var displayText = hasDraftTarget && projection.channel !== 'rawInput' && projection.channel !== 'preview' ? committedText : projectedText;
+      field.setDisplayValue(displayText);
+      field.setPlaceholder(!hasDraftTarget && open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
     }
-    field.setDraftDisplayValue(draftSession && draft.dirty ? draftText : '');
-    field.setDraftVisual(draftSession && draft.dirty && !hasDraftTarget);
+    field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
+    field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
     field.setClearVisible(hasValue(draft.value, selection));
-    field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-draft', reason: 'projection' });
+    field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
   function previewSelection(date) {
     if (!date) return null;
@@ -529,13 +519,16 @@ function setupDatePickerRuntime(instance, fieldInit) {
     return current;
   }
   function handlePanelHover(value, detail) {
-    hoverPreviewValue = opts.previewValue === false ? null : previewSelection(value);
+    var preview = opts.previewValue === false ? null : previewSelection(value);
+    if (preview === null) draft.clearPreview({ silent:true, source:detail && detail.source || 'pointer', reason:detail && detail.reason || 'hover-leave' });
+    else draft.setPreview(preview, { silent:true, source:detail && detail.source || 'pointer', reason:detail && detail.reason || 'hover' });
     if (field && field.getState().open) syncField(true);
     if (calendar && calendar.refreshStates) calendar.refreshStates();
     if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
     if (periodPanel && periodPanel.refreshStates) periodPanel.refreshStates();
-    var payload = { value: cloneDate(value), previewValue: cloneValue(hoverPreviewValue, selection), source: detail && detail.source || 'pointer', reason: detail && detail.reason || (value ? 'hover' : 'hover-leave'), originalEvent: detail && detail.originalEvent || null, datePicker: api };
-    if (Utils.isFunction(opts.onPreviewChange)) opts.onPreviewChange(cloneValue(hoverPreviewValue, selection), payload);
+    var previewValue = draft.hasPreview ? cloneValue(draft.previewValue, selection) : null;
+    var payload = { value: cloneDate(value), previewValue: previewValue, source: detail && detail.source || 'pointer', reason: detail && detail.reason || (value ? 'hover' : 'hover-leave'), originalEvent: detail && detail.originalEvent || null, datePicker: api };
+    if (Utils.isFunction(opts.onPreviewChange)) opts.onPreviewChange(previewValue, payload);
     emitter.emit('previewChange', payload);
   }
   function emitPanelChange(value, detail, mode) {
@@ -790,7 +783,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     return changed;
   }
   function handlePanelSelect(value, detail) {
-    hoverPreviewValue = null;
+    draft.clearPreview({ silent:true, source:detail && detail.source || 'selection', reason:'selection-preview-clear' });
     if (calendarSecondary && detail && detail.calendar) {
       if (detail.calendar === calendarSecondary) activeCalendarPanel = 'secondary';
       else if (detail.calendar === calendar) activeCalendarPanel = 'primary';
@@ -845,7 +838,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (!base.some(function (current) { return DateUnit.same(current, entry, unit, opts.weekStartsOn); })) base.push(entry);
     });
     draft.setValue(base, Utils.assignOwn({ source: 'input', reason: 'multiple-input' }, meta || {}));
-    rawInput = '';
+    draft.clearRawInput({ silent:true, source:'input', reason:'multiple-input-clear' });
     if (field) field.setDisplayValue('');
     syncSelectionPanel(true);
     return true;
@@ -858,7 +851,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var next = source.filter(function (entry) { return String(entry.getTime()) !== target; });
     if (next.length === source.length) return false;
     draft.setValue(next, { source: detail && detail.source || 'control', reason: detail && detail.reason || 'tag-remove', originalEvent: detail && detail.originalEvent || null });
-    rawInput = '';
+    draft.clearRawInput({ silent:true, source:detail && detail.source || 'control', reason:'tag-remove-input-clear' });
     syncField(false);
     syncSelectionPanel(true);
     return true;
@@ -962,10 +955,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
     }
     if (!mutationLocked && selection === 'multiple' && event.key === 'Enter') {
       var input = field && field.getInputElement ? field.getInputElement() : null;
-      var text = input && input.value !== undefined ? String(input.value || '') : rawInput;
+      var text = input && input.value !== undefined ? String(input.value || '') : draft.rawInput;
       if (text.trim()) {
         var valid = addMultipleInput(text, { source: 'keyboard', reason: 'multiple-enter', originalEvent: event });
-        if (!valid && opts.preserveInvalidOnBlur !== true) { rawInput = ''; if (field) field.setDisplayValue(''); }
+        if (!valid && opts.preserveInvalidOnBlur !== true) { draft.clearRawInput({ silent:true, source:'keyboard', reason:'multiple-enter-invalid' }); if (field) field.setDisplayValue(''); }
         return true;
       }
     }
@@ -986,8 +979,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
 
   function handleInput(text, event) {
-    hoverPreviewValue = null;
-    rawInput = String(text || '');
+    draft.clearPreview({ silent:true, source:'input', reason:'typing-preview-clear' });
+    var rawInput = String(text || '');
+    draft.setRawInput(rawInput, { silent:true, active:true, source:'input', reason:'typing' });
     if (selection === 'multiple') {
       var additive = rawInput.trim() ? parseTextSelection(rawInput) : { valid: true, value: [] };
       var payloadMultiple = { text: rawInput, value: additive.valid ? cloneValue(additive.value, selection) : null, valid: additive.valid, additive: true, originalEvent: event, datePicker: api };
@@ -995,9 +989,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
       emitter.emit('input', payloadMultiple);
       return;
     }
-    var parsed = parseTextSelection(rawInput);
+    var parsed = parseTextSelection(draft.rawInput);
     if (parsed.valid) {
-      draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'typing' });
+      draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'typing', preserveRawInput:true });
       syncSelectionPanel(true);
       syncTimePanel();
       // Panel synchronization must not replace the user's in-progress editor text.
@@ -1018,22 +1012,23 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var popup = field && field.getPanelElement ? field.getPanelElement() : null;
     if (related && popup && (related === popup || (popup.contains && popup.contains(related)))) return;
     var currentInput = field && field.getInputElement ? field.getInputElement() : null;
-    if (currentInput && currentInput.value !== undefined) rawInput = String(currentInput.value || '');
+    if (currentInput && currentInput.value !== undefined) draft.setRawInput(String(currentInput.value || ''), { silent:true, active:true, source:'input', reason:'blur-read' });
     if (selection === 'multiple') {
-      if (!rawInput.trim()) { syncField(field.getState().open); return; }
-      var validMultiple = opts.commitInputOnBlur === false ? true : addMultipleInput(rawInput, { source: 'input', reason: 'multiple-blur', originalEvent: event });
-      if (!validMultiple && opts.preserveInvalidOnBlur !== true) { rawInput = ''; field.setDisplayValue(''); }
+      if (!draft.rawInput.trim()) { syncField(field.getState().open); return; }
+      var validMultiple = opts.commitInputOnBlur === false ? true : addMultipleInput(draft.rawInput, { source: 'input', reason: 'multiple-blur', originalEvent: event });
+      if (!validMultiple && opts.preserveInvalidOnBlur !== true) { draft.clearRawInput({ silent:true, source:'input', reason:'multiple-blur-invalid' }); field.setDisplayValue(''); }
       syncField(field.getState().open);
       return;
     }
-    if (!rawInput.trim() && field.getState().open) { syncField(true); return; }
+    if (!draft.rawInput.trim() && field.getState().open) { draft.setRawInput('', { silent:true, active:false, source:'input', reason:'blur-empty' }); syncField(true); return; }
     var parsed = parseTextSelection(rawInput);
     if (!parsed.valid) {
       if (opts.preserveInvalidOnBlur !== true) syncField(field.getState().open);
       return;
     }
-    draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse' });
+    draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse', preserveRawInput:true });
     if (opts.commitInputOnBlur !== false && opts.needConfirm !== true && rangeCommitReady(parsed.value)) instance.commit({ source: 'input', reason: 'blur-commit', originalEvent: event || null });
+    else draft.setRawInput(draft.rawInput, { silent:true, active:false, source:'input', reason:'blur-draft-projection' });
     syncSelectionPanel(true);
     syncTimePanel();
     syncField(opts.needConfirm === true && field.getState().open);
@@ -1077,7 +1072,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       var openDetail = detail || {};
       if (selection !== 'multiple') {
         var openInput = field && field.getInputElement ? field.getInputElement() : null;
-        var openText = openInput && openInput.value !== undefined ? String(openInput.value || '') : rawInput;
+        var openText = openInput && openInput.value !== undefined ? String(openInput.value || '') : draft.rawInput;
         var parsedOpen = openText.trim() ? parseTextSelection(openText) : null;
         if (parsedOpen && parsedOpen.valid) openDetail = Utils.assignOwn({}, openDetail, { draftSeed: parsedOpen.value });
       }
@@ -1378,7 +1373,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
     if (timePanel) { var timeAnchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value); timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(timeAnchor), { disabled: opts.disabled === true, readOnly: opts.readOnly === true })); if (timePanel.refresh) timePanel.refresh('date-picker-options'); }
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
-    if (opts.previewValue === false) hoverPreviewValue = null;
+    if (opts.previewValue === false) draft.clearPreview({ silent:true, source:'options', reason:'preview-disabled' });
     if (own(next, 'panelRender')) syncPanelProjection();
     rebuildPresets();
     rebuildFooter();
@@ -1408,7 +1403,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       minDate: cloneDate(minBound()),
       maxDate: cloneDate(maxBound()),
       pickerValue: currentPanelValue(),
-      previewValue: cloneValue(hoverPreviewValue, selection),
+      previewValue: draft.hasPreview ? cloneValue(draft.previewValue, selection) : null,
       panelCustomized: Utils.isFunction(opts.panelRender),
       panelMode: calendar ? calendarPanelMode : unit,
       panelCount: Number(opts.panelCount),
@@ -1437,7 +1432,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
     draft.destroy();
   
     timePanel = calendarSecondary = calendar = periodPanel = yearPanel = monthPanel = field = panelShell = selectionHost = timeHost = presetsHost = panelProjection = calendarGroup = calendarPrimaryHost = calendarSecondaryHost = null;
-    hoverPreviewValue = null;
     return true;
   }
 
@@ -1446,7 +1440,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   var formControl = field && field.getControl ? field.getControl() : null;
   if (formControl && formControl.onFormReset) formControl.onFormReset(function () {
     draft.reset({ silent: true, source: 'form', reason: 'reset' });
-    rawInput = formatSelection(draft.value); syncField(false); syncSelectionPanel(false); syncTimePanel();
+    draft.setRawInput(formatSelection(draft.value), { silent:true, active:false, source:'form', reason:'reset-raw-input' }); syncField(false); syncSelectionPanel(false); syncTimePanel();
   });
   if (opts.open === true) field.open('initial');
   return Object.freeze({ root:field.getRootElement(), panel:field.getPanelElement(), field:field, calendar:calendar, calendarSecondary:calendarSecondary, periodPanel:periodPanel, yearPanel:yearPanel, monthPanel:monthPanel, timePanel:timePanel, panelShell:panelShell, presetsHost:presetsHost, clear:clear, setValue:setValue, setPickerValue:setPickerValue, setPanelValue:setPanelValue, applyOptions:applyOptions, getState:getState, dispose:disposeRuntime });
@@ -1455,6 +1449,15 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
 export class DatePicker extends PickerComponent {
   static contract = getContract('DatePicker');
+  static profile = Object.freeze({
+    name:'DatePicker',
+    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview','rawInput']) }),
+    focus:Object.freeze({ mode:'virtual-navigation' }),
+    interaction:Object.freeze({ keymap:'picker' }),
+    overlay:Object.freeze({ mode:'popup' }),
+    form:Object.freeze({ serialize:true }),
+    ownership:Object.freeze({ value:'ValueController' })
+  });
   static options = DATE_PICKER_DEFAULTS;
   static immutableOptions = DATE_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }
