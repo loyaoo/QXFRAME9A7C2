@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { ValueController } from '../src/core/valueController.js';
+import { StateController } from '../src/core/stateController.js';
+import { Select } from '../src/components/select.js';
+import { TreeSelect } from '../src/components/tree-select.js';
+import { Cascader } from '../src/components/cascader.js';
+import { Autocomplete } from '../src/components/autocomplete.js';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+
+const controlled=ValueController.createOptionValueBinding({value:'a',defaultValue:'x'},{value:'a'},value=>String(value||''));
+assert.equal(controlled.controlled,true,'authored value must create external ownership.');
+assert.equal(controlled.write('b',{source:'keyboard',reason:'proposal'},true),true);
+assert.equal(controlled.value,'a','controlled proposal must not replace canonical value.');
+const pending=controlled.getOwnershipState().pendingRequestIds[0];
+assert.ok(pending,'controlled proposal must create a pending request.');
+assert.equal(controlled.syncExternal('b',{requestId:pending}),true);
+assert.equal(controlled.value,'b','external sync must update canonical value.');
+
+const uncontrolled=ValueController.createOptionValueBinding({defaultValue:'a'},{defaultValue:'a'},value=>String(value||''));
+assert.equal(uncontrolled.controlled,false,'defaultValue must remain internally owned.');
+assert.equal(uncontrolled.write('b',{source:'keyboard',reason:'interaction'},true),true);
+assert.equal(uncontrolled.value,'b','uncontrolled interaction must update canonical value.');
+
+const compat=StateController.createOptionValueBinding({defaultValue:'x'},{defaultValue:'x'},String);
+assert.equal(compat.controlled,false,'StateController compatibility facade must preserve ValueController binding semantics.');
+compat.write('y',{source:'programmatic',reason:'compat'},false);
+assert.equal(compat.value,'y');
+
+for(const Type of [Select,TreeSelect,Cascader,Autocomplete]){
+  assert.equal(Type.profile?.ownership?.value,'ValueController',Type.name+' must declare ValueController ownership.');
+  assert.equal(Type.profile?.overlay?.mode,'popup',Type.name+' must declare popup overlay capability.');
+}
+for(const file of ['select.js','tree-select.js','cascader.js','autocomplete.js']){
+  const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
+  assert.ok(!/stateController\.js|StateController\./.test(source),file+' must not depend on the StateController compatibility facade.');
+  assert.ok(/ValueController\./.test(source),file+' must use the canonical ValueController entry point.');
+}
+
+controlled.destroy();
+uncontrolled.destroy();
+compat.destroy();
+
+console.log(JSON.stringify({ok:true,family:'picker-like-value',members:['Select','TreeSelect','Cascader','Autocomplete'],owner:'ValueController',stateController:'compatibility-facade'}));
