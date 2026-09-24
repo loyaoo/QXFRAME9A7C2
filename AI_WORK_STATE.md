@@ -11,14 +11,14 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `a2cf08c4777d1afbc94b958cc229415b1ef255a5` (PR #60 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
-- Branch inventory at this checkpoint: `main` + current task branch; 67 stale/superseded historical branches remain removed
+- Current branch: `refactor/phase-c-tags-table-interaction-20260924`
+- Open PRs at this checkpoint: pending final PHASE-C-004 Tags/Table PR
+- Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #362 / `35979415228` (PR #60)
 - Latest green main CI + Pages: #363 / `35979815823`
-- Controller migration implementation progress: 97%
+- Controller migration implementation progress: 98%
 - Current Phase: Phase C acceptance closeout (Phase D first two packs already landed)
 - Current Task: `PHASE-C-004`
 
@@ -26,7 +26,7 @@
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
 Status: IN_PROGRESS
-Task progress: 96%
+Task progress: 99%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -78,12 +78,25 @@ Completed PHASE-C-004 TreeSelect/Cascader pack (PR #60):
 - required verify:phase-c-popup-composites passed in PR #60 CI #362 / `35979415228`.
 - merge commit `a2cf08c4777d1afbc94b958cc229415b1ef255a5`; main release + Pages #363 / `35979815823`: success.
 
+Implemented in current final PHASE-C-004 Tags/Table pack:
+- standalone Tags owns one InteractionController scope + one instance CapabilityController while FocusController/KeyboardNavigation remains the sole root DOM keydown owner.
+- Tags printable-key transition on virtual +Add flows through the existing FocusController listener into InteractionController; the real input keydown remains a separate native edit subdomain.
+- Tags remove/check/add mutation sinks use instance capability decisions; static CapabilityController.mutationLocked(opts) is removed from the component-local authority path.
+- Table owns one InteractionController + one CapabilityController snapshot; existing loading/remote-processing navigation blocking and readOnly mutation rules are preserved through component capabilities.
+- Table main grid semantics (F6/arrows/Home/End/Page/Enter/Space/F2/Escape) route through the table interaction scope.
+- Table filter popup F6 is a logical child interaction scope and column-resize Escape is a resize-session interaction scope; their separate DOM listeners remain delivery surfaces, not business-key authorities.
+- native Table cell editor behavior remains an edit subdomain; native textarea/contenteditable Enter behavior is preserved.
+- new required `verify:phase-c-tail` passes in sandbox Chromium and structurally forbids a second Tags root keydown owner, raw Table filter F6 business branching, and static mutation authority.
+- adjacent sandbox gates pass: `verify-source-esm-browser`, `verify-focus-controller`, `verify-high-risk-browser`, `verify-modern-architecture`, `verify-component-base`, `verify-component-contracts`.
+
 Next exact step:
-1. create the final PHASE-C-004 Tags/Table branch from green main #363;
-2. move standalone Tags root keyboard ownership into InteractionController while retaining its native input edit subdomain;
-3. move Table main grid semantics plus filter-popup F6 and resize Escape into explicit InteractionController scopes, with one instance CapabilityController preserving existing loading/readOnly rules;
-4. require dedicated Chromium regressions plus source-ESM / focus / high-risk / architecture / component-contract gates;
-5. merge only exact-head green, verify main + Pages, update FOUR_UNIFICATIONS_ACCEPTANCE.md, and sign off Phase C before resuming Phase D.
+1. open/run the final PHASE-C-004 Tags/Table PR from the audited branch;
+2. fix only exact-head Completion/release/browser failures without collapsing native editor/filter/resize subdomains into the wrong owner;
+3. merge only green and verify main release + Pages;
+4. update `FOUR_UNIFICATIONS_ACCEPTANCE.md` with exact PR/main evidence and sign off Phase C;
+5. resume Phase D with Table remote/local selection semantics and later Tags/remaining selection consumers.
+
+## Current authority snapshot — after Phase A
 
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 

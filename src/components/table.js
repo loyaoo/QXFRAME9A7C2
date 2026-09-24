@@ -3,6 +3,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Utils } from '../utils/utils.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
@@ -266,6 +267,10 @@ function setupTable(instance) {
   var virtualizerSyncing = false;
   var keyboard = null;
   var focusController = null;
+  var interactionController = null;
+  var capabilityController = null;
+  var filterInteractionLease = null;
+  var filterKeydownCleanup = null;
   var cellDomain = null;
   var headerDomain = null;
   var pagination = null;
@@ -295,6 +300,13 @@ function setupTable(instance) {
   var rowReorderInteraction = null;
   var initialViewState = null;
   var tableDiagnostics = { rowRenders: 0, cellRenders: 0 };
+  capabilityController = CapabilityController.create({
+    getState:function(){ return { disabled:opts.disabled===true, readOnly:opts.readOnly===true, loading:opts.loading===true||remoteProcessing===true }; },
+    getCapabilities:function(){ return { navigable:opts.loading!==true&&remoteProcessing!==true }; }
+  });
+  interactionController = InteractionController.create();
+  interactionController.registerScope({ id:'table', root:root, document:doc, profile:{ allowEditableKeys:['F6','Escape','Enter'] }, resolveAction:resolveTableInteractionAction, onAction:handleTableInteractionAction });
+  interactionController.registerScope({ id:'table-resize', parentId:'table', root:doc, document:doc, resolveAction:function(event){ return event&&event.key==='Escape'?'CANCEL_RESIZE':null; }, onAction:function(action,context){ if(action!=='CANCEL_RESIZE'||!activeColumnResize)return 'pass'; activeColumnResize.session.cancel('escape'); return 'handled'; } });
     
   title.className = 'qxframe9a7c2-table-title';
   toolbar.className = 'qxframe9a7c2-table-toolbar';
@@ -502,8 +514,8 @@ function setupTable(instance) {
     finally { renderProjection = previous; }
   }
   function currentState() { return renderProjection ? renderProjection.state : model.getState(); }
-  function viewBlocked() { return destroyed || opts.disabled === true || opts.loading === true || remoteProcessing; }
-  function mutationLocked() { return viewBlocked() || CapabilityController.mutationLocked(opts); }
+  function viewBlocked() { return destroyed || !capabilityController || !capabilityController.can('navigate'); }
+  function mutationLocked() { return destroyed || !capabilityController || !capabilityController.can('edit'); }
   function allColumns() { return renderProjection ? renderProjection.state.columns : model.columns; }
   function currentColumns() { return allColumns().filter(function (column) { return column.visible !== false; }); }
   function columnByKey(key) { var normalized = String(key); return allColumns().filter(function (column) { return column.key === normalized; })[0] || null; }
@@ -869,6 +881,71 @@ function setupTable(instance) {
     completePendingCellVisibility();
     return true;
   }
+  function resolveTableInteractionAction(event) {
+    if (!event) return null;
+    if (event.key === 'F6') return 'CYCLE_REGION';
+    if (event.key === 'Escape') return 'CANCEL_EDIT';
+    if (event.key === 'F2') return 'ENTER_EDIT';
+    if (event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey && event.key === 'Home') return 'MOVE_FIRST';
+    if (event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey && event.key === 'End') return 'MOVE_LAST';
+    return InteractionController.resolveKeyboardAction(event);
+  }
+  function dispatchTableInteraction(event) {
+    if (!interactionController || !event) return false;
+    return interactionController.dispatch(event, { ownerId:'table' }) !== 'pass';
+  }
+  function handleTableInteractionAction(action, context) {
+    var event = context && context.originalEvent || null;
+    if (!event) return 'pass';
+    if (action === 'CANCEL_EDIT') return editTransaction && cancelEditTransaction('table-edit-escape', event, true) ? 'handled' : 'pass';
+    if (action === 'CYCLE_REGION') {
+      if (!capabilityController || !capabilityController.can('navigate')) return 'blocked';
+      if (editTransaction) exitCellEdit('table-edit-f6', event, true);
+      return cycleNavigationRegion(event.shiftKey === true, event) ? 'handled' : 'pass';
+    }
+    if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT' || action === 'MOVE_UP' || action === 'MOVE_DOWN' || action === 'MOVE_FIRST' || action === 'MOVE_LAST' || action === 'PAGE_PREVIOUS' || action === 'PAGE_NEXT') {
+      if (!capabilityController || !capabilityController.can('navigate')) return 'blocked';
+      var state=keyboard&&keyboard.virtualFocus?keyboard.virtualFocus.getState():null;
+      if (!state) return 'pass';
+      if (action === 'MOVE_LEFT') return (state.domain===headerDomain.name?moveHeader(-1,null,event):moveNavigationCell(0,-1,'table-arrow-left',event))?'handled':'pass';
+      if (action === 'MOVE_RIGHT') return (state.domain===headerDomain.name?moveHeader(1,null,event):moveNavigationCell(0,1,'table-arrow-right',event))?'handled':'pass';
+      if (action === 'MOVE_UP') return (state.domain===cellDomain.name||!state.domain)&&moveNavigationCell(-1,0,'table-arrow-up',event)?'handled':'pass';
+      if (action === 'MOVE_DOWN') return (state.domain===cellDomain.name||!state.domain)&&moveNavigationCell(1,0,'table-arrow-down',event)?'handled':'pass';
+      if (action === 'MOVE_FIRST') {
+        if (state.domain===headerDomain.name) return moveHeader(0,'first',event)?'handled':'pass';
+        return moveNavigationCell(0,0,'table-home',event,event.ctrlKey?'table-start':'row-start')?'handled':'pass';
+      }
+      if (action === 'MOVE_LAST') {
+        if (state.domain===headerDomain.name) return moveHeader(0,'last',event)?'handled':'pass';
+        return moveNavigationCell(0,0,'table-end',event,event.ctrlKey?'table-end':'row-end')?'handled':'pass';
+      }
+      if (action === 'PAGE_PREVIOUS') return pageNavigationCell(-1,event)?'handled':'pass';
+      if (action === 'PAGE_NEXT') return pageNavigationCell(1,event)?'handled':'pass';
+    }
+    if (action === 'ENTER_EDIT') {
+      if (!capabilityController || !capabilityController.can('edit')) return 'blocked';
+      var editState=keyboard&&keyboard.virtualFocus?keyboard.virtualFocus.getState():null;
+      return editState&&editState.domain===cellDomain.name&&enterCellEdit(editState.key,'table-edit-f2',event)?'handled':'pass';
+    }
+    if (action === 'ACTIVATE') {
+      if (editTransaction) {
+        var editTarget=editTransaction.target, tag=String(editTarget&&editTarget.tagName||'').toLowerCase();
+        if (opts.editEnterBehavior==='native'||tag==='textarea'||(editTarget&&editTarget.isContentEditable===true)) return 'pass';
+        if (!capabilityController || !capabilityController.can('edit')) return 'blocked';
+        return exitCellEdit('table-edit-enter-commit',event,true)?'handled':'pass';
+      }
+      if (!capabilityController || !capabilityController.can('navigate')) return 'blocked';
+      var activeState=keyboard&&keyboard.virtualFocus?keyboard.virtualFocus.getState():null;
+      if (!activeState) return 'pass';
+      if (activeState.domain===headerDomain.name) return activateHeaderAction(event)?'handled':'pass';
+      if (event.key===' '||event.key==='Spacebar') {
+        var decoded=activeState.domain===cellDomain.name?decodeNavigationCellKey(activeState.key):null;
+        return decoded&&(decoded.kind==='selection'||decoded.kind==='expand')&&activateCurrentCell(event)?'handled':'pass';
+      }
+      return activateCurrentCell(event)?'handled':'pass';
+    }
+    return 'pass';
+  }
   function destroyKeyboardNavigation() {
     editTransaction = null; pendingCellVisibilityKey = null; navigationProjection = null;
     if (focusController) focusController.destroy();
@@ -889,29 +966,7 @@ function setupTable(instance) {
           if (editTransaction) return ctx.target === editTransaction.target;
           return ctx.target === root;
         },
-        handlers: {
-          F6: function (ctx) { if (editTransaction) { exitCellEdit('table-edit-f6', ctx.originalEvent, true); return true; } return cycleNavigationRegion(!!(ctx.originalEvent && ctx.originalEvent.shiftKey), ctx.originalEvent); },
-          Escape: function (ctx) { return editTransaction ? exitCellEdit('table-edit-escape', ctx.originalEvent, true) : false; },
-          ArrowLeft: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(-1,null,ctx.originalEvent); return moveNavigationCell(0,-1,'table-arrow-left',ctx.originalEvent); },
-          ArrowRight: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(1,null,ctx.originalEvent); return moveNavigationCell(0,1,'table-arrow-right',ctx.originalEvent); },
-          ArrowUp: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain === cellDomain.name || !state.domain ? moveNavigationCell(-1,0,'table-arrow-up',ctx.originalEvent) : false; },
-          ArrowDown: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain === cellDomain.name || !state.domain ? moveNavigationCell(1,0,'table-arrow-down',ctx.originalEvent) : false; },
-          Home: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(0,'first',ctx.originalEvent); return moveNavigationCell(0,0,'table-home',ctx.originalEvent,ctx.originalEvent&&ctx.originalEvent.ctrlKey?'table-start':'row-start'); },
-          End: function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return moveHeader(0,'last',ctx.originalEvent); return moveNavigationCell(0,0,'table-end',ctx.originalEvent,ctx.originalEvent&&ctx.originalEvent.ctrlKey?'table-end':'row-end'); },
-          PageUp: function (ctx) { return pageNavigationCell(-1,ctx.originalEvent); },
-          PageDown: function (ctx) { return pageNavigationCell(1,ctx.originalEvent); },
-          Enter: function (ctx) {
-            if (editTransaction) {
-              var editTarget = editTransaction.target;
-              var tag = String(editTarget && editTarget.tagName || '').toLowerCase();
-              if (opts.editEnterBehavior === 'native' || tag === 'textarea' || (editTarget && editTarget.isContentEditable === true)) return false;
-              return exitCellEdit('table-edit-enter-commit', ctx.originalEvent, true);
-            }
-            var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return activateHeaderAction(ctx.originalEvent); return activateCurrentCell(ctx.originalEvent);
-          },
-          ' ': function (ctx) { var state=keyboard.virtualFocus.getState(); if (state.domain === headerDomain.name) return activateHeaderAction(ctx.originalEvent); var decoded=state.domain===cellDomain.name?decodeNavigationCellKey(state.key):null; return decoded&&(decoded.kind==='selection'||decoded.kind==='expand')?activateCurrentCell(ctx.originalEvent):false; },
-          F2: function (ctx) { var state=keyboard.virtualFocus.getState(); return state.domain===cellDomain.name?enterCellEdit(state.key,'table-edit-f2',ctx.originalEvent):false; }
-        }
+        handlers: FocusController.forwardHandlers(['F6','Escape','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' ','F2'], dispatchTableInteraction)
       }
     });
     keyboard = focusController.keyboard;
@@ -1441,6 +1496,8 @@ function setupTable(instance) {
     return doc.body;
   }
   function destroyFilterPopup(reason) {
+    if (filterKeydownCleanup) { filterKeydownCleanup(); filterKeydownCleanup = null; }
+    if (filterInteractionLease) { filterInteractionLease.release(); filterInteractionLease = null; }
     if (filterTrigger) filterTrigger.destroy(reason || 'table-filter-popup-destroy');
     filterTrigger = null;
     if (filterPopup) { Renderer.dispose(filterPopup); DOM.removeNode(filterPopup); }
@@ -1466,14 +1523,21 @@ function setupTable(instance) {
     filterPopup = doc.createElement('div');
     filterPopup.className = 'qxframe9a7c2-table-filter-popup qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset';
     filterPopup.hidden = true;
-    if (opts.keyboardNavigation) scope.add(DOM.listen(filterPopup, 'keydown', function (filterEvent) {
-      if (filterEvent.key !== 'F6' || filterEvent.defaultPrevented) return;
-      filterEvent.preventDefault();
-      var backward = filterEvent.shiftKey === true;
-      if (filterTrigger) filterTrigger.close('table-filter-f6', filterEvent);
-      DOM.focusElement(root, { preventScroll: true });
-      cycleNavigationRegion(backward, filterEvent);
-    }));
+    if (opts.keyboardNavigation && interactionController) {
+      filterInteractionLease = interactionController.registerScope({
+        id:'table-filter', parentId:'table', root:filterPopup, document:doc, profile:{ allowEditableKeys:['F6'] },
+        resolveAction:function(filterEvent){ return filterEvent&&filterEvent.key==='F6'?'CYCLE_REGION':null; },
+        onAction:function(action,context){
+          if(action!=='CYCLE_REGION'||!capabilityController||!capabilityController.can('navigate'))return action==='CYCLE_REGION'?'blocked':'pass';
+          var filterEvent=context.originalEvent, backward=filterEvent&&filterEvent.shiftKey===true;
+          if(filterTrigger)filterTrigger.close('table-filter-f6',filterEvent);
+          DOM.focusElement(root,{preventScroll:true});
+          cycleNavigationRegion(backward,filterEvent);
+          return 'handled';
+        }
+      });
+      filterKeydownCleanup = DOM.listen(filterPopup,'keydown',function(filterEvent){ if(!filterEvent.defaultPrevented) interactionController.dispatch(filterEvent,{ownerId:'table-filter'}); });
+    }
     function setSelectedValues(values) { filterDraftValues = Array.isArray(values) ? values.slice() : (values === null || values === undefined || values === '' ? [] : [values]); return filterDraftValues.slice(); }
     function confirm(meta) {
       if (destroyed) return false;
@@ -2093,9 +2157,8 @@ function setupTable(instance) {
   delegation = EventDelegation.create({ root: root });
   scope.add(function () { delegation.destroy(); });
   scope.add(DOM.listen(doc, 'keydown', function (event) {
-    if (!activeColumnResize || event.key !== 'Escape') return;
-    if (event.preventDefault) event.preventDefault();
-    activeColumnResize.session.cancel('escape');
+    if (!activeColumnResize || event.defaultPrevented) return;
+    interactionController.dispatch(event, { ownerId:'table-resize' });
   }, true));
   delegation.on('pointerdown', DOM.privateMatcher('tableNavigationCell'), function (detail) {
     if (!keyboard || !cellDomain) return;
@@ -2357,6 +2420,7 @@ function setupTable(instance) {
     validateFeatureCombination(candidate);
     var remoteSelectionContractChanged = own(next, 'remoteSelectionScope') || own(next, 'selectedKeys') || (own(next, 'load') && typeof candidate.load !== 'function');
     opts = candidate;
+    if (capabilityController) capabilityController.updateOptions({});
     if (remoteSelectionContractChanged) resetRemoteSelection();
     if (loaderChanged || own(next, 'items')) invalidateRemoteRequest(loaderChanged ? 'load-options-replaced' : 'items-options-replaced');
     syncKeyboardNavigation();
@@ -2380,6 +2444,8 @@ function setupTable(instance) {
     destroyReorderInteractions();
     if (pagination) { pagination.destroy(); pagination = null; }
     destroyKeyboardNavigation();
+    if (interactionController) { interactionController.destroy(); interactionController = null; }
+    if (capabilityController) { capabilityController.destroy(); capabilityController = null; }
     scope.dispose();
     Renderer.dispose(root);
     model.destroy();
@@ -2441,7 +2507,7 @@ function setupTable(instance) {
     getState:function(){var state=currentState(),focusState=keyboard?keyboard.virtualFocus.getState():null,decoded=focusState&&cellDomain&&focusState.domain===cellDomain.name?decodeNavigationCellKey(focusState.key):null;return Object.freeze(Utils.mergeOwn(state,{virtual:!!virtualizer&&virtualizer.enabled,keyboardNavigation:opts.keyboardNavigation===true,activeCell:decoded?Object.freeze({rowKey:decoded.rowKey,kind:decoded.kind,columnKey:decoded.kind==='data'?decoded.columnKey:null}):null,editingCell:editStateSnapshot(),forceRenderExpanded:opts.forceRenderExpanded===true,disabled:opts.disabled===true,readOnly:opts.readOnly===true,loading:opts.loading===true||remoteProcessing,processing:remoteProcessing,remoteStatus:remoteStatus(),loadError:remoteError,remoteSummary:remoteSummary,remote:isRemote(),query:isRemote()?remoteQuery():null,requestEpoch:remoteEpoch,selection:selectionStateSnapshot(),destroyed:destroyed}));},
     getDiagnostics:function(){return Object.freeze(Utils.mergeOwn(model.getDiagnostics?model.getDiagnostics():{},tableDiagnostics));},
     getModel:function(){return model;}, getRootElement:function(){return root;}, getTableElement:function(){return table;},
-    getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFocusController:function(){return focusController;}, getFilterPopup:function(){return filterPopup;},
+    getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFocusController:function(){return focusController;}, getInteractionController:function(){return interactionController;}, getCapabilityController:function(){return capabilityController;}, getFilterPopup:function(){return filterPopup;},
     openFilter:function(key){var column=currentColumns().filter(function(entry){return entry.key===String(key);})[0];if(!column)return false;var reference=DOM.findPrivate(thead,'tableFilter',column.key);if(!reference)return false;if(filterOpenControlled(column)&&column.filterDropdownOpen!==true){emitFilterOpenRequest(column,true,'api-open',null);return false;}return openFilterPopup(reference,column,null);},
     closeFilter:function(){if(!filterTrigger||!filterColumnKey)return false;var column=currentColumns().filter(function(entry){return entry.key===filterColumnKey;})[0];if(column&&filterOpenControlled(column)&&column.filterDropdownOpen===true){emitFilterOpenRequest(column,false,'api-close',null);return false;}return filterTrigger.close('api-close');}
   };
@@ -2465,7 +2531,7 @@ export class Table extends Component {
     name:'Table',
     focus:Object.freeze({ mode:'virtual-navigation', editLease:'cell-editor', regions:Object.freeze(['cells','header']) }),
     interaction:Object.freeze({ keymap:'table' }),
-    ownership:Object.freeze({ focus:'FocusController' })
+    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController' })
   });
   static contract = ComponentContracts.get('Table');
   static immutableOptions = Object.freeze(['container','document']);
@@ -2542,6 +2608,8 @@ export class Table extends Component {
   getVirtualizer(){return recordForTable(this).getVirtualizer();}
   getKeyboardNavigation(){return recordForTable(this).getKeyboardNavigation();}
   getFocusController(){return recordForTable(this).getFocusController();}
+  getInteractionController(){return recordForTable(this).getInteractionController();}
+  getCapabilityController(){return recordForTable(this).getCapabilityController();}
   getFilterPopup(){return recordForTable(this).getFilterPopup();}
   openFilter(key){return recordForTable(this).openFilter(key);}
   closeFilter(){return recordForTable(this).closeFilter();}
