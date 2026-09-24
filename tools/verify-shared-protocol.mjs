@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol, Collection, ValueDraft, StateController, ObserverHub } from '../src/core/index.js';
+import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol, Collection, ValueDraft, ValueController, StateController, ObserverHub } from '../src/core/index.js';
 import { ComponentRuntime, configureComponents, publishComponentApi } from '../src/runtime/componentRuntime.js';
 
 const keyEvent={type:'keydown',isTrusted:true};
@@ -154,6 +154,14 @@ assert.equal(controlledDraft.getOwnershipState().ownership,'internal');
 assert.equal(controlledDraft.requestChange('C',{source:'programmatic',reason:'probe-uncontrolled'}),true);
 assert.equal(controlledDraft.value,'C');
 
+const canonicalBinding=ValueController.createValueBinding({value:'X',controlled:true});
+assert.equal(canonicalBinding.controlled,true);
+assert.equal(canonicalBinding.ownership,'external');
+assert.equal(canonicalBinding.write('Y',{reason:'canonical-binding-proposal'},true),true);
+assert.equal(canonicalBinding.value,'X');
+canonicalBinding.syncExternal('Y',{requestId:canonicalBinding.getOwnershipState().pendingRequestIds[0]});
+assert.equal(canonicalBinding.value,'Y');
+
 const binding=StateController.createValueBinding({value:'X',controlled:true});
 assert.equal(binding.controlled,true);
 assert.equal(binding.ownership,'external');
@@ -172,6 +180,7 @@ external.destroy();
 collection.destroy();
 reentrantCollection.destroy();
 controlledDraft.destroy();
+canonicalBinding.destroy();
 binding.destroy();
 
-console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,collectionDataRevision:true,valueDraftOwnership:true,stateControllerOwnership:true,environmentPort:true,observerHubEnvironment:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,collectionDiagnostics:true,componentProfile:true,componentRuntimeProfile:true,inputModality:true}));
+console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,collectionDataRevision:true,valueDraftOwnership:true,valueControllerBinding:true,stateControllerOwnership:true,environmentPort:true,observerHubEnvironment:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,collectionDiagnostics:true,componentProfile:true,componentRuntimeProfile:true,inputModality:true}));

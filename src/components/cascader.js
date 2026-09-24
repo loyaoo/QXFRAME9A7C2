@@ -12,7 +12,7 @@ import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { SearchState } from '../core/searchState.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
@@ -212,7 +212,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (!values.length) return undefined;
           return findPathByValue(values[0]).length ? values[0] : undefined;
         }
-        valueState = StateController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
+        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function apiValues(value) { return normalizeValues(value === undefined ? apiValue() : value, opts.multiple === true); }
@@ -939,6 +939,15 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
 
 
 export class Cascader extends PopupFieldComponent{
+ static profile=Object.freeze({
+  name:'Cascader',
+  value:Object.freeze({mode:'controlled-or-default',channels:Object.freeze(['committed'])}),
+  focus:Object.freeze({mode:'virtual-navigation'}),
+  interaction:Object.freeze({keymap:'cascader'}),
+  overlay:Object.freeze({mode:'popup'}),
+  form:Object.freeze({serialize:true}),
+  ownership:Object.freeze({value:'ValueController'})
+ });
  static contract=getContract('Cascader');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless','portalContainer','multiple']);
  static create(source,overrides){return new this(source,overrides).render();}

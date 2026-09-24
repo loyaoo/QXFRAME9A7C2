@@ -6,7 +6,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { ItemSchema } from '../core/itemSchema.js';
@@ -134,7 +134,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var values = asValues(value, hierarchicalCheckMode());
           return hierarchicalCheckMode() ? values : values[0];
         }
-        valueState = StateController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
+        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function restoreTreeFromApiValue(reason) {
@@ -749,6 +749,15 @@ function setupTreeSelectRuntime(instance,fieldInit) {
 }
 
 export class TreeSelect extends PopupFieldComponent {
+  static profile=Object.freeze({
+    name:'TreeSelect',
+    value:Object.freeze({mode:'controlled-or-default',channels:Object.freeze(['committed'])}),
+    focus:Object.freeze({mode:'virtual-navigation'}),
+    interaction:Object.freeze({keymap:'tree-select'}),
+    overlay:Object.freeze({mode:'popup'}),
+    form:Object.freeze({serialize:true}),
+    ownership:Object.freeze({value:'ValueController'})
+  });
   static contract=getContract('TreeSelect');
   static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
   static create(source,overrides){return new this(source,overrides).render();}

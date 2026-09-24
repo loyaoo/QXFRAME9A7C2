@@ -481,5 +481,53 @@ return true;
   return api;
 }
 
-export const ValueController = Object.freeze({ create });
-export { create };
+function createValueBinding(options) {
+  const opts = mergeOptions({}, options);
+  const normalizeValue = typeof opts.normalizeValue === 'function' ? opts.normalizeValue : value => value;
+  const copyValue = typeof opts.copyValue === 'function' ? opts.copyValue : value => Array.isArray(value) ? value.slice() : value;
+  const equals = typeof opts.equals === 'function' ? opts.equals : ValueEquality.deep;
+  const controller = create({ ...opts, normalizeValue, copyValue, equals });
+
+  function write(next, meta, request) {
+    const cfg = mergeOptions({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta);
+    const normalized = normalizeValue(next, cfg);
+    if (equals(controller.value, normalized)) return false;
+    if (request === true && controller.controlled) return controller.requestChange(normalized, cfg);
+    return controller.setValue(normalized, cfg);
+  }
+
+  return Object.freeze({
+    get value() { return copyValue(controller.value); },
+    get controlled() { return controller.controlled; },
+    get ownership() { return controller.getOwnershipState().ownership; },
+    getOwnershipState() { return controller.getOwnershipState(); },
+    copy(value) { return copyValue(value); },
+    write,
+    syncExternal(next, meta) { return controller.syncExternal(next, meta); },
+    setControlled(value) { controller.setControlled(value); return this; },
+    destroy() { return controller.destroy(); }
+  });
+}
+
+function createOptionValueBinding(options, authoredOptions, normalizeValue, config = {}) {
+  const source = options || {};
+  const authored = authoredOptions || {};
+  const normalize = typeof normalizeValue === 'function' ? normalizeValue : value => value;
+  const initial = Object.prototype.hasOwnProperty.call(source, 'value') ? source.value : source.defaultValue;
+  return createValueBinding({
+    ...config,
+    value: normalize(initial),
+    controlled: Object.prototype.hasOwnProperty.call(authored, 'value'),
+    normalizeValue: normalize
+  });
+}
+
+export const ValueController = Object.freeze({
+  create,
+  createValueBinding,
+  createOptionValueBinding,
+  equals: ValueEquality.equals,
+  deepEquals: ValueEquality.deep,
+  arrayEquals: ValueEquality.array
+});
+export { create, createValueBinding, createOptionValueBinding };
