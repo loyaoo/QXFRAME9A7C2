@@ -649,8 +649,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
       } else periodPanel.clear({ silent: true, source: 'sync', reason: 'picker-clear' });
       periodPanel.refresh();
     }
-    if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
-    if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
+    if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (controlledView) restoreControlledPanelValue();
   }
   function setCalendarPanelMode(mode, anchorValue) {
@@ -738,6 +738,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (source === 'keyboard') focusFieldHost();
     activateCurrentPanelVirtualFocus('month-drill-select');
   }
+  function panelCapabilityOptions() { return { disabled:opts.disabled === true, readOnly:opts.readOnly === true, loading:opts.loading === true || opts.busy === true }; }
   function resolvedTimeOptions(anchor) {
     var resolved = Utils.mergeOwn( timeOptions || {});
     resolved.size = opts.size;
@@ -754,7 +755,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function syncTimePanel() {
     if (!timePanel) return;
     var anchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value);
-    timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(anchor), { disabled: opts.disabled === true, readOnly: opts.readOnly === true }));
+    timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(anchor), panelCapabilityOptions()));
     timePanel.setValue(timeFromDate(anchor, timeOptions && timeOptions.defaultValue), { silent: true, source: 'sync', reason: 'date-time-sync' });
     if (timePanel && timePanel.refresh) timePanel.refresh('date-time-sync');
   }
@@ -1139,6 +1140,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       onHoverChange: handlePanelHover,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       onYearRequest: requestCalendarYear,
       onMonthRequest: requestCalendarMonth,
       onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'date'); },
@@ -1157,6 +1159,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         onHoverChange: handlePanelHover,
         disabled: opts.disabled === true,
         readOnly: opts.readOnly === true,
+        loading: opts.loading === true || opts.busy === true,
         onYearRequest: requestCalendarYear,
         onMonthRequest: requestCalendarMonth,
         onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'date'); },
@@ -1177,6 +1180,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       onHoverChange: handlePanelHover,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'year'); },
       onSelect: handleYearDrillSelect
     });
@@ -1190,6 +1194,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       onHoverChange: handlePanelHover,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'month'); },
       onTitleRequest: function (viewValue, detail) { var changed = setCalendarPanelMode('year', viewValue); if (changed && detail && detail.source === 'keyboard') focusFieldHost(); },
       onSelect: handleMonthDrillSelect
@@ -1207,6 +1212,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       onHoverChange: handlePanelHover,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       onViewChange: function (value, detail) { handlePanelViewChange(value, detail, unit); },
       onSelect: handlePanelSelect
     });
@@ -1217,6 +1223,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       value: timeFromDate(selectionAnchor(draft.draftValue), timeOptions.defaultValue),
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       onChange: handleTimeChange
     }));
   }
@@ -1423,12 +1430,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
     if (own(next, 'closeOnSelect')) closeOnSelectExplicit = true;
     field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
-    if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
-    if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
-    if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
-    if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
-    if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true });
-    if (timePanel) { var timeAnchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value); timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(timeAnchor), { disabled: opts.disabled === true, readOnly: opts.readOnly === true })); if (timePanel.refresh) timePanel.refresh('date-picker-options'); }
+    if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (timePanel) { var timeAnchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value); timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(timeAnchor), panelCapabilityOptions())); if (timePanel.refresh) timePanel.refresh('date-picker-options'); }
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     if (opts.previewValue === false) draft.clearPreview({ silent:true, source:'options', reason:'preview-disabled' });
     if (own(next, 'panelRender')) syncPanelProjection();
