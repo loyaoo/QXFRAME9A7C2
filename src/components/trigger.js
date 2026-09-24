@@ -3,6 +3,8 @@ import { Events } from '../core/events.js';
 import { Config } from '../core/config.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { OverlayController } from '../core/overlayController.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { TriggerInteraction } from '../core/triggerInteraction.js';
 import { Transition } from '../core/transition.js';
@@ -80,6 +82,11 @@ function create(options) {
   var logicalNode = null;
   var opened = false;
   var destroyed = false;
+  var capability = CapabilityController.create({
+    getState: function () { return { disabled: destroyed || opts.disabled === true }; },
+    capabilities: { expandable: true, activatable: true }
+  });
+  var interactionController = InteractionController.create();
   var destroying = false;
   var destroyCloseGuard = false;
   var beforeOpenGuard = false;
@@ -201,7 +208,7 @@ function create(options) {
     return false;
   }
   function beforeOpen(info) {
-    if (destroyed || destroying || destroyCloseGuard || hasDestroyingAncestor() || opts.disabled === true || beforeOpenGuard) return false;
+    if (destroyed || destroying || destroyCloseGuard || hasDestroyingAncestor() || !capability.can('open') || beforeOpenGuard) return false;
     beforeOpenGuard = true;
     var accepted = true;
     try {
@@ -209,7 +216,7 @@ function create(options) {
     } finally {
       beforeOpenGuard = false;
     }
-    return accepted && !destroyed && !destroying && !destroyCloseGuard && !hasDestroyingAncestor() && !opened && opts.disabled !== true;
+    return accepted && !destroyed && !destroying && !destroyCloseGuard && !hasDestroyingAncestor() && !opened && capability.can('open');
   }
   function beforeClose(info, forceClose) {
     if (forceClose === 'destroy') return true;
@@ -340,6 +347,8 @@ function create(options) {
       floating: floating,
       trigger: triggers,
       keyboard: opts.keyboardActivation !== false,
+      capabilityController: capability,
+      interactionController: interactionController,
       openDelay: function () { return resolvedDelay(opts.openDelay, 'triggerOpenDelay', reference); },
       closeDelay: function () { return resolvedDelay(opts.closeDelay, 'triggerCloseDelay', reference); },
       containsTarget: function (target) { return containsElement(target); },
@@ -361,13 +370,13 @@ function create(options) {
   }
     
   function open(reason, originalEvent) {
-    if (destroyed || destroying || destroyCloseGuard || treeCloseDepth > 0 || hasDestroyingAncestor() || opened || opts.disabled === true) return false;
+    if (destroyed || destroying || destroyCloseGuard || treeCloseDepth > 0 || hasDestroyingAncestor() || opened || !capability.can('open')) return false;
     cancelCloseCascade();
     var openReason = reason || 'api';
     var openEvent = originalEvent || null;
     var beforeInfo = detail(openReason, openEvent);
     if (!beforeOpen(beforeInfo)) return false;
-    if (destroyed || destroying || destroyCloseGuard || treeCloseDepth > 0 || hasDestroyingAncestor() || opened || opts.disabled === true) return false;
+    if (destroyed || destroying || destroyCloseGuard || treeCloseDepth > 0 || hasDestroyingAncestor() || opened || !capability.can('open')) return false;
     opened = true;
     var info = detail(openReason, openEvent);
     pendingCloseDetail = null;
@@ -612,6 +621,8 @@ function create(options) {
     surface.destroy();
     if (logicalNode) logicalNode.destroy();
     logicalNode = null;
+    interactionController.destroy();
+    capability.destroy();
     emitter.dispose();
     destroyed = true;
     destroying = false;
@@ -647,6 +658,8 @@ function create(options) {
     getPopupElement: function () { return floating; },
     getOverlayController: function () { return runtime; },
     getMotionController: function () { return transition && transition.getMotionController ? transition.getMotionController() : null; },
+    getCapabilityController: function () { return capability; },
+    getInteractionController: function () { return interactionController; },
     on: emitter.on,
     once: emitter.once,
     destroy: destroy
@@ -663,6 +676,21 @@ function create(options) {
 
 export const Trigger = Object.freeze({
   definition: Object.freeze({ initializer: Object.freeze({ mode: 'create', bind: 'reference' }) }),
+  profile: Object.freeze({
+    name: 'Trigger',
+    focus: Object.freeze({ mode: 'overlay-scope' }),
+    interaction: Object.freeze({ keymap: 'trigger-activation' }),
+    capability: Object.freeze({ open: true, activate: true }),
+    motion: Object.freeze({ mode: 'presence' }),
+    overlay: Object.freeze({ mode: 'popup' }),
+    ownership: Object.freeze({
+      focus: 'FocusController',
+      interaction: 'InteractionController',
+      capability: 'CapabilityController',
+      motion: 'MotionController',
+      overlay: 'OverlayController'
+    })
+  }),
   create: create,
   motion: MotionPresets
 });
