@@ -113,6 +113,9 @@ var SUPPORTED_TRIGGERS = ['click', 'hover', 'focus', 'contextMenu'];
       var press = PressInteraction.create({
         target: reference,
         keyboard: settings.keyboard !== false,
+        capabilityController: settings.capabilityController || null,
+        interactionController: settings.interactionController || null,
+        interactionScopeId: settings.interactionScopeId,
         getState: function () { return { disabled: settings.disabled === true, loading: settings.loading === true, readOnly: settings.readOnly === true }; },
         capabilities: { activateWhenReadOnly: settings.activateWhenReadOnly !== false, preserveFocusWhileLoading: true, tabbableWhileLoading: true },
         onPress: function (detail) {
