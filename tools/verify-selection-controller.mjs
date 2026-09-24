@@ -13,6 +13,25 @@ assert.ok(/Selection\.create\s*\(/.test(source),'SelectionController must compos
 assert.ok(/HierarchicalSelection\.create\s*\(/.test(source),'SelectionController hierarchy support must delegate to HierarchicalSelection.');
 assert.ok(!/new\s+Set\s*\(/.test(source),'SelectionController must not create a second selected-key Set store.');
 
+const itemCollectionSource=fs.readFileSync(path.join(root,'src/components/item-collection.js'),'utf8');
+assert.ok(/selectionController\.js/.test(itemCollectionSource),'ItemCollection must enter selection authority through SelectionController.');
+assert.ok(!/from ['"]\.\.\/core\/selection\.js['"]/.test(itemCollectionSource),'ItemCollection must not import Selection directly after migration.');
+assert.ok(!/Selection\.create\s*\(/.test(itemCollectionSource),'ItemCollection must not create a parallel Selection store.');
+assert.ok(/selectionController\.getAnchor\(selectionChannel\)/.test(itemCollectionSource),'ItemCollection selected anchor must be read from SelectionController.');
+assert.ok(!/var selectionAnchorValue\s*=\s*initialSelectionValues/.test(itemCollectionSource),'ItemCollection must not retain its old component-local anchor owner.');
+assert.ok(/getSelectionController/.test(itemCollectionSource),'ItemCollection must expose its canonical SelectionController.');
+
+const treeSource=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
+assert.ok(/selectionController\.js/.test(treeSource),'Tree must enter selection authority through SelectionController.');
+assert.ok(!/from ['"]\.\.\/core\/(?:selection|hierarchicalSelection)\.js['"]/.test(treeSource),'Tree must not import direct Selection/HierarchicalSelection owners after migration.');
+assert.ok(/selected:\s*\{[^}]*multiple:/.test(treeSource),'Tree must declare a selected channel.');
+assert.ok(/checked:\s*\{[^}]*multiple:\s*true/.test(treeSource),'Tree must declare a separate checked channel.');
+assert.ok(/selectionController\.createHierarchy\s*\(/.test(treeSource),'Tree checked/indeterminate projection must delegate hierarchy through SelectionController.');
+assert.ok(/selection:\s*'SelectionController'/.test(treeSource),'Tree ComponentProfile must declare SelectionController ownership.');
+assert.ok(/selectionController:\s*selectionController/.test(treeSource),'Tree ItemCollection must share the same SelectionController instead of creating another selected store.');
+
+const optionListSource=fs.readFileSync(path.join(root,'src/components/option-list.js'),'utf8');
+assert.ok(/getSelectionController/.test(optionListSource),'OptionList must expose the ItemCollection SelectionController authority.');
 const selectionSource=fs.readFileSync(path.join(root,'src/core/selection.js'),'utf8');
 assert.ok(/DataRevision\.create\s*\(/.test(selectionSource),'Selection must use shared DataRevision instead of a private mutation counter.');
 assert.ok(!/mutationVersion/.test(selectionSource),'Selection must not retain the old private mutationVersion authority.');
@@ -79,5 +98,6 @@ console.log(JSON.stringify({
   channels:['selected','checked'],
   activeKeyOwner:'ActiveItem',
   duplicateStore:false,
-  revisionBoundAnchor:true
+  revisionBoundAnchor:true,
+  firstPack:['ItemCollection','List','OptionList','Tree']
 }));
