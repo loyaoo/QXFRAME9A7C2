@@ -164,7 +164,7 @@ function create(options) {
       root: root,
       document: doc,
       disabled: opts.disabled === true,
-      activeRegion: 'time',
+      activeRegion: 'column',
       navigation: {
         editableKeys: true,
         handlers: FocusController.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'], function (event) {
