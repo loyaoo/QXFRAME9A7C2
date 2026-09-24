@@ -32,6 +32,14 @@ a(fgController.getFieldsByName('choice').join(',')==='left,right','phase-g same-
 a(new FormData(fgForm).getAll('choice').map(String).join(',')==='A,B','phase-g same-name FormData');
 fgForm.requestSubmit();await new Promise(resolve=>setTimeout(resolve,40));
 a(fgSubmitted&&fgSubmitted.length===2&&fgSubmitted[0][0]==='left'&&fgSubmitted[1][0]==='right','phase-g native submit');
+fgController.updateOptions({interceptNativeSubmit:false});
+let fgSubmitToggle=new SubmitEvent('submit',{bubbles:true,cancelable:true});
+fgForm.dispatchEvent(fgSubmitToggle);
+a(fgSubmitToggle.defaultPrevented===false,'phase-g native submit listener removed when interception disables');
+fgController.updateOptions({interceptNativeSubmit:true});fgSubmitted=null;
+fgSubmitToggle=new SubmitEvent('submit',{bubbles:true,cancelable:true});
+fgForm.dispatchEvent(fgSubmitToggle);await new Promise(resolve=>setTimeout(resolve,40));
+a(fgSubmitToggle.defaultPrevented===true&&fgSubmitted&&fgSubmitted.length===2,'phase-g native submit listener restored when interception enables');
 
 const fgCancelForm=document.createElement('form'),fgCancelInput=document.createElement('input');
 fgCancelInput.defaultValue='default';fgCancelInput.value='changed';fgCancelForm.appendChild(fgCancelInput);document.body.appendChild(fgCancelForm);
