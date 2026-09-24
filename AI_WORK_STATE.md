@@ -10,73 +10,54 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `7c9e9455d7102dc0ba945bb5ab29ea28a5ab827d` (PR #70 merge)
-- Current branch: `refactor/phase-f-token-graph-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-002 token graph PR
+- Last code-affecting main commit: `85921cfc12e7af95a1b8f64cf54b4dbf6c50056d` (PR #71 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Controller PR CI: #392 / `36009735693` (PR #70)
-- Latest green main CI + Pages: #393 / `36010087461`
+- Latest green Controller PR CI: #395 / `36011237135` (PR #71)
+- Latest green main CI + Pages: #396 / `36011730662`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-002`
+- Current Task: `PHASE-F-003`
 
 ## CURRENT
 
-### PHASE-F-002 — canonical CSS token graph closeout
-Status: IN_PROGRESS
-Task progress: 45%
+### PHASE-F-003 — semantic overlay / shadow color-channel closeout
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-F-001 is merged and fully green through PR #70 exact-head CI #392 / `36009735693` and main release + Pages #393 / `36010087461`.
-- CSS is now the sole Theme/Token authority: no Config theme/tokens, no OverlayRuntime theme copy, no Menu runtime theme scope, no ColorPicker CSS-token behavioral read and no stale `src/css/00...10.css` mirror.
-- the remaining Phase F work is inside the single canonical `src/qxframe9a7c2.css` graph itself.
-
-Verified audit findings:
-- canonical CSS: 842,940 bytes / 16,814 lines / 1,517 defined custom properties.
-- raw unresolved references are mostly intentional public override slots with fallback; 460 such unresolved names are safe override inputs.
-- only seven unresolved names have a no-fallback use. Four are intentional per-instance dynamic values projected by JS: Collapse motion height, Menu inline motion height, ColorPicker gradient stop offset and Steps progress percent.
-- three are real static broken references:
-  - `--qxframe9a7c2-control-height-md` in Sort;
-  - `--qxframe9a7c2-font-family-base` in native form controls;
-  - `--qxframe9a7c2-font-family` in JSON toolbar.
-- the 1,517-node custom-property dependency graph has exactly one cycle: `--_qxframe9a7c2-scroll-edge-shadow` falls back to itself.
-- Light and Dark mode recipes each define the same 93 variables; standard Light bg/surface/raised are white and Dark bg/surface/raised are black; keyboard focus-visible resolves black in Light and white in Dark.
-- the Light/Dark mode selectors contain one real duplicate member each: duplicated `[data-qxframe9a7c2-theme="light"]` and duplicated `[data-qxframe9a7c2-theme="dark"]`.
-- public `--qxframe9a7c2-color-*` compatibility aliases have zero internal canonical consumers.
-- physical-palette/hard-coded color usage is concentrated in shadows/overlays and intrinsic ColorPanel color-model rendering; these must be classified before cleanup, not blindly replaced.
+- PHASE-F-002 token-graph first pack is merged and green through PR #71 exact-head CI #395 / `36011237135` and main release + Pages #396 / `36011730662`.
+- the canonical CSS graph now has no static unresolved no-fallback references, no custom-property dependency cycle, symmetric 93-variable Light/Dark mode recipes and no internal consumption of public `--qxframe9a7c2-color-*` compatibility outputs.
+- remaining direct physical-palette use after the foundation/theme area is only 20 lines, concentrated in elevation shadows and overlay/mask chrome.
+- hard-coded color use after the foundation/theme area is 10 lines, concentrated in ColorPanel/ColorPicker HSV-Hue rendering and drag-stop affordances. Hue/saturation spectrum colors are intrinsic color-model data, not theme colors, and must not be semanticized blindly.
 
 Frozen impact map:
-- do not define global defaults for the four JS-owned dynamic CSS variables; their absence outside the owning instance is intentional.
-- repair static broken references by consuming existing canonical private/family owners rather than creating more public aliases.
-- remove the Scroll custom-property cycle with an existing semantic/token fallback.
-- remove only real duplicate selector members; do not rewrite selector structure because a naive comma parser reports false positives inside :not(...).
-- preserve Light white / Dark black standard baseline and exact Light/Dark recipe symmetry.
-- preserve public compatibility aliases as output-only; canonical internals must not start consuming them.
-- intrinsic ColorPanel hue/saturation spectrum colors are color-model data, not theme colors.
-- physical black/white used for overlays/shadows must migrate only where an existing semantic overlay/shadow owner expresses the same meaning.
+- reuse existing `--_qxframe9a7c2-semantic-overlay-base`, `overlay-text`, `overlay-control`, `overlay-control-hover`, `mask`, `mask-strong`, `overlay-divider`, `popup-shadow` and `overlay-shadow` owners before inventing any new color token.
+- shadows that only need black-alpha pigment should derive through semantic overlay-base with the same opacity, preserving visual output while removing direct palette coupling.
+- white-alpha overlay chrome should derive through semantic overlay-text with the same opacity.
+- Upload preview mask should use semantic overlay-base/mask semantics rather than raw palette black.
+- Carousel overlay controls should converge on semantic overlay control/text channels where equivalent.
+- Image preview black/white chrome should consume semantic overlay channels; video black backing is overlay-base.
+- Card/Table/Slider/Switch/Badge/SelectGroup shadows may preserve their existing geometry/opacities but the color pigment must come from semantic overlay-base.
+- ColorPanel hue/saturation spectrum and its explicit white/black contrast knobs remain functional color-space data. They are excluded from Theme-token cleanup unless a separate functional owner is justified.
+- no new public aliases, no global physical palette ban in Foundation, and no change to user-provided component color override slots.
 
 Scope:
-1. fix the three static broken references, the Scroll self-cycle and duplicate Light/Dark selector members;
-2. add required `verify:phase-f-token-graph` that classifies unresolved references, recognizes only the four verified JS dynamic variables, rejects static no-fallback gaps, rejects custom-property cycles, requires Light/Dark recipe symmetry and requires zero internal public color-compat consumption;
-3. verify Light/Dark white/black baseline in CSS-only Chromium;
-4. audit remaining physical-palette/shadow/overlay channels and move only semantically equivalent cases to existing semantic/family owners;
-5. leave broad cosmetic rewrites or new token families out unless the graph proves an owner is missing.
-
-Implemented in current PHASE-F-002 first pack:
-- Sort no longer references nonexistent `--qxframe9a7c2-control-height-md`; it consumes canonical `--_qxframe9a7c2-control-height`.
-- native/text form surfaces and JSON toolbar no longer reference nonexistent public font-family aliases; both consume canonical `--_qxframe9a7c2-font-family`.
-- Scroll edge shadow self-cycle is removed; the public override falls back to existing semantic border-strong.
-- duplicate Light/Dark mode selector members are removed without changing either mode's 93-variable contract.
-- required `verify:phase-f-token-graph` now rejects static unresolved no-fallback variables, permits only the four verified JS-owned dynamic projection channels, rejects custom-property dependency cycles, requires Light/Dark recipe symmetry and white/black baseline, and forbids internal consumption of public `--qxframe9a7c2-color-*` compatibility outputs.
-- physical-palette / hard-coded color counts are reported by the verifier for the next Phase F cleanup pack but are not yet treated as blanket failures because ColorPanel intrinsic color-model data is intentional.
+1. replace all 20 post-foundation direct `var(--qxframe9a7c2-palette-black|white)` component uses with semantically equivalent existing overlay/shadow owners;
+2. preserve current alpha/geometry where a direct semantic token would materially change appearance; use `color-mix(... semantic-overlay-base/text ... transparent)` for exact visual parity;
+3. add a required Phase F color-channel gate that requires zero post-foundation direct physical black/white palette consumption outside explicit ColorPanel functional-data allowlist;
+4. keep ColorPanel HSV/Hue intrinsic colors and ColorPicker gradient-stop physical contrast affordances as classified functional data for now;
+5. run exact-head full release/browser/package CI, merge only green, verify main + Pages, then audit remaining state selectors and CSS specificity/duplication.
 
 Next exact step:
-1. open the PHASE-F-002 token graph PR and run exact-head full release/browser/package CI;
-2. fix only graph/verifier regressions without globalizing the four dynamic variables or inventing new aliases;
-3. merge only exact-head green and verify main + Pages;
-4. continue Phase F with classified physical-palette/shadow/overlay cleanup and state-channel audit.
+1. create `refactor/phase-f-semantic-color-channels-20260924` from green main;
+2. migrate the 20 classified physical black/white component uses to existing semantic overlay channels without changing visual opacity/geometry;
+3. add `verify:phase-f-color-channels` and run full exact-head CI;
+4. merge only green and verify main + Pages;
+5. continue Phase F with state-channel/specificity/selector duplication audit.
 
 ## Current authority snapshot — after Phase A
 
@@ -106,6 +87,20 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-002 — canonical CSS token graph closeout
+Status: DONE
+Evidence:
+- PR #71 merged
+- merge commit `85921cfc12e7af95a1b8f64cf54b4dbf6c50056d`
+- exact-head CI #395 / `36011237135`: success
+- main CI + Pages #396 / `36011730662`: success
+Outcome:
+- three real static unresolved references were redirected to existing canonical control/font owners.
+- four JS-owned dynamic CSS variables remain intentionally instance-scoped and are verified against their JS projection owners.
+- the sole custom-property dependency cycle (Scroll edge shadow self-fallback) is removed.
+- duplicate Light/Dark selector members are removed while the symmetric 93-variable mode contract remains unchanged.
+- required `verify:phase-f-token-graph` enforces acyclic token dependencies, unresolved-input classification, Light/Dark symmetry, white/black baseline and output-only compatibility aliases.
 
 ### PHASE-F-001 — CSS authority + JS Theme/Token decoupling
 Status: DONE
