@@ -59,7 +59,50 @@ const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-b
 if(!browser){console.log(JSON.stringify({ok:true,structural:true,browserSkipped:true,reason:'chromium not found'}));process.exit(0);}
 const WebSocketClient=await getWebSocketConstructor();
 const safeCss=css.replace(/<\/style/gi,'<\\/style');
-const html=`<!doctype html><meta charset=utf-8><style>${safeCss}</style><div id=light style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div><div id=scope data-qxframe9a7c2-theme=dark><div id=dark style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div></div><div id=result>pending</div><script>try{const light=document.getElementById('light'),dark=document.getElementById('dark'),scope=document.getElementById('scope'),cs=e=>getComputedStyle(e);document.documentElement.setAttribute('data-qxframe9a7c2-theme','light');const l={bg:cs(light).backgroundColor,color:cs(light).color,scheme:cs(document.documentElement).colorScheme};const d={bg:cs(dark).backgroundColor,color:cs(dark).color,scheme:cs(scope).colorScheme};if(!l.bg||!d.bg||l.bg===d.bg)throw new Error('light/dark background must differ through CSS only: '+JSON.stringify({l,d}));if(l.scheme!=='light'||d.scheme!=='dark')throw new Error('scoped color-scheme mismatch: '+JSON.stringify({l,d}));document.documentElement.setAttribute('data-qxframe9a7c2-theme','dark');const rootDark=cs(light).backgroundColor;if(rootDark!==d.bg)throw new Error('root dark selector must resolve same CSS theme as scoped dark');document.getElementById('result').textContent='F1:'+JSON.stringify({ok:true,l,d,rootDark});}catch(e){document.getElementById('result').textContent='F1:'+JSON.stringify({ok:false,error:String(e&&e.stack||e)})}</script>`;
+const html=`<!doctype html><meta charset=utf-8><style>${safeCss}</style>
+<div id="light" style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div>
+<div id="lightPopup" class="qxframe9a7c2-popup-surface">light popup</div>
+<div id="scope" data-qxframe9a7c2-theme="dark">
+  <div id="dark" style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div>
+  <div id="portalPopup" class="qxframe9a7c2-popup-surface">scoped portal popup</div>
+</div>
+<input id="stateProbe" class="qxframe9a7c2-form-input is-selected" value="alpha" data-open="true" data-selected-key="alpha">
+<div id=result>pending</div>
+<script>
+try{
+  const light=document.getElementById('light');
+  const dark=document.getElementById('dark');
+  const scope=document.getElementById('scope');
+  const lightPopup=document.getElementById('lightPopup');
+  const portalPopup=document.getElementById('portalPopup');
+  const probe=document.getElementById('stateProbe');
+  const cs=e=>getComputedStyle(e);
+  document.documentElement.setAttribute('data-qxframe9a7c2-theme','light');
+  probe.focus();
+  const before={value:probe.value,className:probe.className,open:probe.dataset.open,selectedKey:probe.dataset.selectedKey,focused:document.activeElement===probe};
+  const l={bg:cs(light).backgroundColor,color:cs(light).color,scheme:cs(document.documentElement).colorScheme};
+  const d={bg:cs(dark).backgroundColor,color:cs(dark).color,scheme:cs(scope).colorScheme};
+  const popupLight=cs(lightPopup).backgroundColor;
+  const popupDark=cs(portalPopup).backgroundColor;
+  if(!l.bg||!d.bg||l.bg===d.bg)throw new Error('light/dark background must differ through CSS only: '+JSON.stringify({l,d}));
+  if(l.scheme!=='light'||d.scheme!=='dark')throw new Error('scoped color-scheme mismatch: '+JSON.stringify({l,d}));
+  if(!popupLight||!popupDark||popupLight===popupDark)throw new Error('scoped portal popup must inherit the physical theme container: '+JSON.stringify({popupLight,popupDark}));
+  scope.setAttribute('data-qxframe9a7c2-theme','light');
+  const popupScopedLight=cs(portalPopup).backgroundColor;
+  if(popupScopedLight!==popupLight)throw new Error('scoped portal light projection mismatch: '+JSON.stringify({popupLight,popupScopedLight}));
+  scope.setAttribute('data-qxframe9a7c2-theme','dark');
+  const popupDarkAgain=cs(portalPopup).backgroundColor;
+  if(popupDarkAgain!==popupDark)throw new Error('scoped portal dark projection did not restore: '+JSON.stringify({popupDark,popupDarkAgain}));
+  document.documentElement.setAttribute('data-qxframe9a7c2-theme','dark');
+  const rootDark=cs(light).backgroundColor;
+  if(rootDark!==d.bg)throw new Error('root dark selector must resolve same CSS theme as scoped dark');
+  const after={value:probe.value,className:probe.className,open:probe.dataset.open,selectedKey:probe.dataset.selectedKey,focused:document.activeElement===probe};
+  if(JSON.stringify(before)!==JSON.stringify(after))throw new Error('theme-only CSS change mutated business/focus state: '+JSON.stringify({before,after}));
+  document.getElementById('result').textContent='F1:'+JSON.stringify({ok:true,l,d,rootDark,popupLight,popupDark,popupScopedLight,before,after});
+}catch(e){
+  document.getElementById('result').textContent='F1:'+JSON.stringify({ok:false,error:String(e&&e.stack||e)})
+}
+</script>`;
 const profile='/tmp/qx-f1-'+process.pid+'-'+Date.now();
 const child=cp.spawn(browser,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--disable-background-networking','--no-first-run','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
 let stderr='',endpoint=null;child.stderr.setEncoding('utf8');child.stderr.on('data',c=>{stderr+=c;const m=stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/);if(m)endpoint=m[1];});
