@@ -121,6 +121,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         var tree = null;
         var triggerSession = null;
         var keyboard = null;
+        var focusController = null;
         var fieldControl = null;
         var tagNavigation = null;
         var searchState = SearchState.create({ query:'' });
