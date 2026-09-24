@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `108fa1d67d6a129c13f7f9397e11968867a05adb` (PR #75 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-f-static-closeout-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-007 static-closeout PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-F-007 — static CSS / scoped-theme closeout
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 65%
 
 Why this is current:
 - PHASE-F-006 is merged through PR #75; exact-head CI #403 / `36017571445` and main release + Pages #404 / `36018227817` are green.
@@ -42,12 +42,19 @@ Frozen impact map:
 - do not change component visual tokens unless a closeout gate finds a reproducible defect.
 - no `@layer`, `:is()`, `:where()`.
 
+Implemented in current PHASE-F-007 pack:
+- added required `verify:phase-f-static-closeout` for `docs/all-components-static.html`: final dist CSS, no framework runtime bundle, docs-only helpers and direct authored visual-state matrix.
+- the static gate verifies representative hover/focus/active/disabled/loading/selected/error/warning/success/keyboard-focus states exist in HTML and docs helpers do not synthesize component states.
+- extended `verify:phase-f-css-authority` with a real `.qxframe9a7c2-popup-surface` under a scoped theme container to model a scoped portal host.
+- the CSS-only browser fixture now snapshots value/class/open/selected-key/real-focus before and after theme changes and requires them to remain identical.
+- no production component CSS or runtime JS changed in this pack.
+
 Next exact step:
-1. create `refactor/phase-f-static-closeout-20260924` from this green checkpoint;
-2. add the static docs gate and scoped portal/state-invariance browser fixture;
-3. run exact-head full release/browser/package CI;
-4. merge only exact-head green and verify main + Pages;
-5. sign off Phase F and update `FOUR_UNIFICATIONS_ACCEPTANCE.md`; then prune merged Phase F task branches and advance to Phase G.
+1. open PHASE-F-007 PR and run exact-head full release/browser/package CI;
+2. merge only exact-head green and verify main + Pages;
+3. sign off Phase F in `AI_WORK_STATE.md` and `FOUR_UNIFICATIONS_ACCEPTANCE.md`;
+4. prune merged Phase F task branches;
+5. advance immediately to Phase G — Feedback + Form.
 
 ## Current authority snapshot — after Phase A
 
