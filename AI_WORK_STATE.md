@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `75d07e96d6648ee2f7a695b05a722b1252817383` (PR #58 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-c-select-interaction-capability-20260924`
+- Open PRs at this checkpoint: pending PHASE-C-004 Select reference PR
 - Branch inventory at this checkpoint: `main` only; 67 stale/superseded non-main branches are no longer present
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -26,7 +26,7 @@
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
 Status: IN_PROGRESS
-Task progress: 75%
+Task progress: 85%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -60,13 +60,26 @@ Completed PHASE-C-004 first composite pack (PR #58):
 - required `verify:phase-c-composite` passed in PR #58 CI #358 / `35976568725`.
 - merge commit `75d07e96d6648ee2f7a695b05a722b1252817383`; main release + Pages #359 / `35977068529` succeeded.
 
-Next exact step:
-1. start the PHASE-C-004 second pack with Select as the reference popup-hosted composite;
-2. replace Select's component-local physical-key business map with one InteractionController scope while keeping FocusController/KeyboardNavigation as the only DOM keydown owner;
-3. make PopupField open/expand permission use the semantic `open` capability so readOnly/loading can browse without mutation, while disabled still blocks;
-4. add required Chromium regression coverage for readOnly/loading/disabled, IME, repeat activation, native caret preservation and controlled proposal semantics;
-5. after Select is exact-head green, apply the verified pattern to TreeSelect/Cascader, then close Tags/Table in a higher-risk final Phase C pack.
+Implemented in current PHASE-C-004 Select reference pack:
+- PopupField open/toggle authorization now uses semantic `open` capability rather than old activation permission.
+- InteractionPolicy keeps expand/open available for readOnly and non-conflicting loading/busy browsing while disabled still rejects navigation/open.
+- FieldComponent exposes bounded `canOpen()` compatibility for PopupField lifecycle; value/select/edit mutation semantics are unchanged.
+- Select creates one InteractionController scope on the authored keyboard host and one instance CapabilityController snapshot owner.
+- FocusController/KeyboardNavigation remains the only DOM keydown listener and retains native editor/caret, IME and repeat guards before dispatch.
+- closed composite keys route to semantic OPEN; open option navigation routes MOVE/PAGE; Enter routes SELECT; Escape routes DISMISS; hosted tag left/right/remove runs only after native caret priority.
+- Select mutation sinks use the same CapabilityController: readOnly/loading can browse but cannot select/remove/clear; disabled cannot open/navigate.
+- controlled Select remains request/external-sync based: keyboard selection emits the proposal but does not internally replace controlled value.
+- new required `verify:phase-c-select` locks source ownership and Chromium behavior for readOnly/loading/disabled, IME, held activation, native caret and controlled proposal semantics.
+- sandbox gates pass: `verify:phase-c-select`, `verify-source-esm-browser`, `verify-popup-field-family`, `verify-picker-family`, `verify-field-component`, `verify-modern-architecture`, `verify-high-risk-browser`.
 
+Next exact step:
+1. open/run the PHASE-C-004 Select reference PR from the audited branch;
+2. fix only exact-head Completion/release/browser failures without reintroducing physical-key business maps or activation-based PopupField open gates;
+3. merge only green and verify main CI + Pages;
+4. apply the proven popup-hosted pattern to TreeSelect and Cascader in the next pack;
+5. close Tags/Table in a final higher-risk Phase C pack, update acceptance evidence, then resume Phase D Table selection.
+
+## Current authority snapshot — after Phase A
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.

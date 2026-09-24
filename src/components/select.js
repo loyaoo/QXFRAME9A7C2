@@ -7,6 +7,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SearchState } from '../core/searchState.js';
 import { ValueController } from '../core/valueController.js';
@@ -104,6 +105,8 @@ var emitter = Object.freeze({ emit:function(type,payload){return instance.emit(t
         var triggerSession = null;
         var keyboard = null;
         var focusController = null;
+        var interactionController = null;
+        var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
         var tagNavigation = null;
         var fieldControl = null;
         var searchState = SearchState.create({ query:'' });
@@ -111,6 +114,7 @@ var emitter = Object.freeze({ emit:function(type,payload){return instance.emit(t
         var draftActive = false;
         var draftDirty = false;
         var valueState = null;
+        scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
         function normalizeApiValue(value) {
           var values = asValues(value, opts.multiple === true);
           return opts.multiple === true ? values : values[0];
@@ -348,7 +352,7 @@ var controlHost = FieldHost.resolvePickerControl({
         });
         triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
     
-        function userMutationLocked() { return CapabilityController.mutationLocked(opts); }
+        function userMutationLocked() { return !capabilityController || !capabilityController.can('select'); }
     
         function removeSelectedTagValue(value, detail) {
           if (opts.multiple !== true || userMutationLocked()) return false;
@@ -875,7 +879,63 @@ var controlHost = FieldHost.resolvePickerControl({
         }
     
     
+        function resolveInteractionAction(event) {
+          var opened = !!(triggerSession && triggerSession.getState().open);
+          var keymap = { Escape:'DISMISS', Backspace:'REMOVE', Delete:'REMOVE' };
+          if (!opened) {
+            keymap.ArrowDown = 'OPEN'; keymap.ArrowUp = 'OPEN'; keymap.Enter = 'OPEN';
+            keymap[' '] = opts.searchable === true ? '' : 'OPEN'; keymap.Spacebar = keymap[' '];
+          } else {
+            keymap.Enter = 'SELECT'; keymap[' '] = opts.searchable === true ? '' : 'SELECT'; keymap.Spacebar = keymap[' '];
+          }
+          return InteractionController.resolveKeyboardAction(event, { keymap:keymap });
+        }
+        function dispatchInteraction(event) {
+          if (!interactionController || !event) return false;
+          return interactionController.dispatch(event, { ownerId:'select' }) !== 'pass';
+        }
+        function handleInteractionAction(action, context) {
+          var event = context && context.originalEvent || null;
+          if (!event) return 'pass';
+          if (action === 'DISMISS') {
+            if (triggerSession.getState().open) return close('escape', event) ? 'handled' : 'pass';
+            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+          }
+          if (action === 'REMOVE') {
+            if (!capabilityController.can('remove')) return 'blocked';
+            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+          }
+          if (action === 'OPEN') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            var reason = event.key === 'ArrowDown' ? 'keyboard-down' : (event.key === 'ArrowUp' ? 'keyboard-up' : (event.key === ' ' || event.key === 'Spacebar' ? 'keyboard-space' : 'keyboard-enter'));
+            return open(reason, event) === true ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_DOWN' || action === 'MOVE_UP' || action === 'PAGE_PREVIOUS' || action === 'PAGE_NEXT') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            return triggerSession.getState().open && optionList.handleKeydown(event) !== false ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_FIRST' || action === 'MOVE_LAST') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            if (!triggerSession.getState().open) return 'pass';
+            if (action === 'MOVE_FIRST') optionList.focusFirst(); else optionList.focusLast();
+            return 'handled';
+          }
+          if (action === 'SELECT') {
+            if (!capabilityController.can('select')) return 'blocked';
+            return triggerSession.getState().open && optionList.handleKeydown(event) !== false ? 'handled' : 'pass';
+          }
+          return 'pass';
+        }
         var keyboardTarget = headlessMode ? triggerTarget : (fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root));
+        if (keyboardTarget) {
+          interactionController = InteractionController.create();
+          interactionController.registerScope({ id:'select', root:keyboardTarget, document:doc, profile:{ allowEditableKeys:true }, resolveAction:resolveInteractionAction, onAction:handleInteractionAction });
+          scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; });
+        }
         focusController = keyboardTarget ? FocusController.create({
           root: keyboardTarget,
           document: doc,
@@ -890,27 +950,7 @@ var controlHost = FieldHost.resolvePickerControl({
               if (['ArrowLeft','ArrowRight','Backspace','Delete','Home','End'].indexOf(key) >= 0 && KeyboardNavigation.shouldPreserveNativeTextEditing(detail.originalEvent, detail.target)) return false;
               return true;
             },
-            handlers: {
-              Escape: function (detail) { if (triggerSession.getState().open) return close('escape', detail.originalEvent); return handleHostedTagKeydown(detail.originalEvent); },
-              ArrowLeft: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-              ArrowRight: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-              Backspace: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-              Delete: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-              ArrowDown: function (detail) {
-                if (!triggerSession.getState().open) return open('keyboard-down', detail.originalEvent) === true;
-                return optionList.handleKeydown(detail.originalEvent);
-              },
-              ArrowUp: function (detail) {
-                if (!triggerSession.getState().open) return open('keyboard-up', detail.originalEvent) === true;
-                return optionList.handleKeydown(detail.originalEvent);
-              },
-              Enter: function (detail) { return triggerSession.getState().open ? optionList.handleKeydown(detail.originalEvent) : open('keyboard-enter', detail.originalEvent); },
-              Home: function () { if (!triggerSession.getState().open) return false; optionList.focusFirst(); return true; },
-              End: function () { if (!triggerSession.getState().open) return false; optionList.focusLast(); return true; },
-              PageUp: function (detail) { return triggerSession.getState().open ? optionList.handleKeydown(detail.originalEvent) : false; },
-              PageDown: function (detail) { return triggerSession.getState().open ? optionList.handleKeydown(detail.originalEvent) : false; },
-              ' ': function (detail) { return opts.searchable === true ? false : (triggerSession.getState().open ? optionList.handleKeydown(detail.originalEvent) : open('keyboard-space', detail.originalEvent)); }
-            }
+            handlers: FocusController.forwardHandlers(['Escape','ArrowLeft','ArrowRight','Backspace','Delete','ArrowDown','ArrowUp','Enter','Home','End','PageUp','PageDown',' '], dispatchInteraction)
           }
         }) : null;
         keyboard = focusController ? focusController.keyboard : null;
@@ -941,6 +981,7 @@ var controlHost = FieldHost.resolvePickerControl({
             if (nextPortal !== portalContainer) throw new Error('[QXFRAME9A7C2] Select portalContainer is immutable; destroy and recreate to change it.');
           }
           Utils.copyOwn(opts, next);
+          if (capabilityController) capabilityController.updateOptions({});
           if (focusController) focusController.setDisabled(opts.disabled === true);
           if (hasOwn(next, 'value')) {
             valueState.setControlled(true);
@@ -1057,7 +1098,7 @@ var controlHost = FieldHost.resolvePickerControl({
           root:root,input:input,panel:panel,optionHost:optionHost,triggerTarget:triggerTarget,
           getState:getState,setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,
           refreshTagOverflow:function(){return !destroyed&&fieldControl&&fieldControl.refreshTagOverflow?fieldControl.refreshTagOverflow():false;},
-          getOptionList:function(){return optionList;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},
+          getOptionList:function(){return optionList;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},
           getTagOverflowPopover:function(){var tags=fieldControl&&fieldControl.getTags?fieldControl.getTags():null;return tags&&tags.getOverflowPopover?tags.getOverflowPopover():null;},
           getTagOverflowScroll:function(){var tags=fieldControl&&fieldControl.getTags?fieldControl.getTags():null;return tags&&tags.getOverflowScroll?tags.getOverflowScroll():null;},
           getTagOverflowReference:function(){var tags=fieldControl&&fieldControl.getTags?fieldControl.getTags():null;return tags&&tags.getOverflowElement?tags.getOverflowElement():null;},
@@ -1075,7 +1116,7 @@ export class Select extends PopupFieldComponent {
   interaction:Object.freeze({keymap:'select'}),
   overlay:Object.freeze({mode:'popup'}),
   form:Object.freeze({serialize:true}),
-  ownership:Object.freeze({value:'ValueController',focus:'FocusController'})
+  ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController'})
  });
  static contract=getContract('Select');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
@@ -1094,6 +1135,8 @@ export class Select extends PopupFieldComponent {
  getOptionList(){const r=runtimeState.get(this).runtime;return r?r.getOptionList():null;}
  getControl(){const r=runtimeState.get(this).runtime;return r?r.getControl():null;}
  getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
+ getInteractionController(){const r=runtimeState.get(this).runtime;return r?r.getInteractionController():null;}
+ getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
  getTagOverflowPopover(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowPopover():null;}
  getTagOverflowScroll(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowScroll():null;}
  getTagOverflowReference(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowReference():null;}
