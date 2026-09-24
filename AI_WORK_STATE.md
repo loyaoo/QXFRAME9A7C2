@@ -89,8 +89,13 @@ Completed in current authority-integration batch:
 - `verify:shared-protocol` now covers Collection stale refs/reentrancy plus controlled proposal/external-sync/uncontrolled transition behavior through ValueDraft and StateController.
 - ProjectionScheduler integration was evaluated against current `DOMProjection` / `RovingProjection` / keyboard visual projection. Those authorities are synchronous and do not currently own a competing async revision counter; inserting ProjectionScheduler now would create parallel scheduling rather than replace an owner. Deferred until a Controller projection snapshot actually replaces an async/stale-prone path.
 
+PR / CI evidence:
+- PR #48 open from `refactor/phase-a-authority-integration-20260924` to `main`;
+- PR head before this checkpoint: `98e7da17674381a4448071bf2e62a4d7c4e3c53d`;
+- CI: pending.
+
 Next exact step:
-- create the PHASE-A-002 PR from `refactor/phase-a-authority-integration-20260924`, run full PR release CI, fix implementation failures without weakening gates, then merge and verify main CI + Pages. After green merge, proceed to the next Shared Protocol authority integration (EnvironmentPort/Diagnostics/ComponentProfile adoption) before direct component migration.
+- run full PR #48 release CI, fix implementation failures without weakening gates, then merge and verify main CI + Pages. After green merge, proceed to the next Shared Protocol authority integration (EnvironmentPort/Diagnostics/ComponentProfile adoption) before direct component migration.
 
 ### PHASE-A-002 — Shared Protocol authority integration
 Status: IN_PROGRESS
