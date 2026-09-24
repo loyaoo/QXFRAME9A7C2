@@ -97,6 +97,8 @@ export class PopupComponent extends Component {
 
     getRootElement() { return this.root; }
     getTrigger() { return requireState(this).trigger; }
+    getInteractionController() { const trigger = this.getTrigger(); return trigger && typeof trigger.getInteractionController === 'function' ? trigger.getInteractionController() : null; }
+    getCapabilityController() { const trigger = this.getTrigger(); return trigger && typeof trigger.getCapabilityController === 'function' ? trigger.getCapabilityController() : null; }
     getOverlayController() { const trigger = this.getTrigger(); return trigger && typeof trigger.getOverlayController === 'function' ? trigger.getOverlayController() : null; }
     getMotionController() { const trigger = this.getTrigger(); return trigger && typeof trigger.getMotionController === 'function' ? trigger.getMotionController() : null; }
     getReferenceElement() { return requireState(this).reference; }
