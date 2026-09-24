@@ -9,7 +9,7 @@ import { Scheduler } from '../core/scheduler.js';
 import { Utils } from '../utils/utils.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { Collection } from '../core/collection.js';
-import { Selection } from '../core/selection.js';
+import { SelectionController } from '../core/selectionController.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { AsyncTask } from '../core/asyncTask.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
@@ -74,11 +74,22 @@ function create(options) {
     getChildren: opts.getChildren,
     isDisabled: opts.isItemDisabled
   });
-  var selection = Selection.create({
-    multiple: opts.multiple === true,
-    maxCount: opts.maxCount,
-    value: opts.value !== undefined ? opts.value : opts.defaultValue
-  });
+  var selectionChannel = String(opts.selectionChannel || 'selected');
+  var selectionController = opts.selectionController || null;
+  var ownsSelectionController = !selectionController;
+  if (!selectionController) {
+    var channelSpecs = {};
+    channelSpecs[selectionChannel] = {
+      multiple: opts.multiple === true,
+      maxCount: opts.maxCount,
+      value: opts.value !== undefined ? opts.value : opts.defaultValue
+    };
+    selectionController = SelectionController.create({ revisionSource:collection, channels:channelSpecs });
+  } else {
+    if (!Utils.isFunction(selectionController.getChannel) || !Utils.isFunction(selectionController.setAnchor)) throw new TypeError('[QXFRAME9A7C2] ItemCollection selectionController must be a SelectionController.');
+    if (Utils.isFunction(selectionController.setRevisionSource)) selectionController.setRevisionSource(collection);
+  }
+  var selection = selectionController.getChannel(selectionChannel);
   var activeItem = ActiveItem.create({
     getEntries: function () { return interactiveRows(); },
     getKey: function (row) { return row.key; },
@@ -139,7 +150,7 @@ function create(options) {
   var interactionSource = 'api';
   var focusVisible = false;
   var initialSelectionValues = selection.values;
-  var selectionAnchorValue = initialSelectionValues.length ? initialSelectionValues[initialSelectionValues.length - 1] : null;
+  selectionController.setAnchor(selectionChannel, initialSelectionValues.length ? initialSelectionValues[initialSelectionValues.length - 1] : null);
   var renderCount = 0;
   var rowMetaByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
   var nodeByKey = new Map();
@@ -734,10 +745,11 @@ function create(options) {
     var beforeValues = selection.values.join('\u0000');
     var changed = nextSelected ? selection.select(row.value, meta) : selection.deselect(row.value, meta);
     if (!changed) return false;
-    if (selection.has(row.value)) selectionAnchorValue = row.value;
+    var selectionAnchorValue = selectionController.getAnchor(selectionChannel);
+    if (selection.has(row.value)) selectionController.setAnchor(selectionChannel, row.value);
     else if (selectionAnchorValue !== null && String(selectionAnchorValue) === String(row.value)) {
       var remainingValues = selection.values;
-      selectionAnchorValue = remainingValues.length ? remainingValues[remainingValues.length - 1] : null;
+      selectionController.setAnchor(selectionChannel, remainingValues.length ? remainingValues[remainingValues.length - 1] : null);
     }
     var afterValues = selection.values.join('\u0000');
     var detail = selectionDetail(row, selection.has(row.value), meta);
@@ -1316,7 +1328,7 @@ function create(options) {
     var accepted = selection.set(value, { silent: true, source: (meta && meta.source) || 'api', reason: (meta && meta.reason) || 'set-value' });
     if (!accepted) return false;
     var currentValues = selection.values;
-    selectionAnchorValue = currentValues.length ? currentValues[currentValues.length - 1] : null;
+    selectionController.setAnchor(selectionChannel, currentValues.length ? currentValues[currentValues.length - 1] : null);
     var after = currentValues.join('\u0000');
     if (opts.hideSelected === true && opts.multiple === true && mounted) render('set-value-hide');
     else syncRowStates();
@@ -1373,13 +1385,18 @@ function create(options) {
   }
     
   function selectedAnchorRow() {
+    var selectionAnchorValue = selectionController.getAnchor(selectionChannel);
     var row = selectionAnchorValue === null ? null : rowByValue(selectionAnchorValue);
     if (row && !isRowDisabled(row)) return row;
     var values = selection.values;
     for (var i = values.length - 1; i >= 0; i -= 1) {
       row = rowByValue(values[i]);
-      if (row && !isRowDisabled(row)) return row;
+      if (row && !isRowDisabled(row)) {
+        selectionController.setAnchor(selectionChannel, row.value);
+        return row;
+      }
     }
+    selectionController.clearAnchor(selectionChannel);
     return null;
   }
     
@@ -1459,6 +1476,8 @@ function create(options) {
     if (hasOwn(nextOptions, 'ownerPrefix') && normalizeOwnerPrefix(nextOptions.ownerPrefix, ownerPrefix) !== ownerPrefix) {
       throw new Error('[QXFRAME9A7C2] ItemCollection ownerPrefix is immutable; destroy and recreate to change semantic ownership.');
     }
+    if (hasOwn(nextOptions, 'selectionController') && nextOptions.selectionController !== selectionController) throw new Error('[QXFRAME9A7C2] ItemCollection selectionController is immutable.');
+    if (hasOwn(nextOptions, 'selectionChannel') && String(nextOptions.selectionChannel || 'selected') !== selectionChannel) throw new Error('[QXFRAME9A7C2] ItemCollection selectionChannel is immutable.');
     var next = mergeOptions({}, nextOptions);
     if (hasOwn(next, 'items') || hasOwn(next, 'loadItems') || hasOwn(next, 'searchValue')) invalidateSearchLoad('list-options-replaced');
     opts = mergeOptions(opts, next);
@@ -1495,7 +1514,8 @@ function create(options) {
       interactionSource: interactionSource,
       focusVisible: focusVisible === true,
       visibleActiveKey: visibleActiveKey() || null,
-      selectionAnchorValue: selectionAnchorValue,
+      selectionAnchorValue: selectionController.getAnchor(selectionChannel),
+      selectionDataRevision: selectionController.dataRevision,
       searchValue: searchState.query,
       disabled: isComponentDisabled(),
       readOnly: isReadOnly(),
@@ -1528,7 +1548,9 @@ function create(options) {
     keyboard = null;
     delegation = null;
     activeItem.destroy();
-    selection.destroy();
+    if (ownsSelectionController && selectionController) selectionController.destroy();
+    selection = null;
+    selectionController = null;
     collection.destroy();
     searchState.destroy();
     emitter.dispose();
@@ -1592,6 +1614,7 @@ function create(options) {
     getState: getState,
     getCollection: function () { return collection; },
     getSelection: function () { return selection; },
+    getSelectionController: function () { return selectionController; },
     getActiveItem: function () { return activeItem; },
     getVirtualList: function () { return virtualList; },
     getScroll: function () { return scrollSurface; },
