@@ -10,46 +10,45 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `fccf929b03170b9e6eff1331274b7a81b5dfebfb` (PR #84 merge)
-- Current branch: `refactor/phase-h-trigger-controller-family-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-005 Trigger controller-family PR
+- Last code-affecting main commit: `bc56d9cd1377ebd34d5a898413852a2b29a1c180` (PR #85 merge)
+- Current branch: `refactor/phase-h-popup-facades-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-006 Tooltip/Popover popup-facade PR
 - Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-005 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #432 / `36072251524` (PR #84)
-- Latest green main CI + Pages: #433 / `36072642871`
+- Latest green Phase H PR CI: #434 / `36074443611` (PR #85)
+- Latest green main CI + Pages: #435 / `36074753673`
 - Overall handbook implementation progress: 96%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-005`
+- Current Task: `PHASE-H-006`
 
 ## CURRENT
 
-### PHASE-H-005 — Trigger F/I/C/M/O controller-family migration
+### PHASE-H-006 — Tooltip + Popover popup-facade migration
 Status: IN_PROGRESS
 Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-004 is DONE through PR #84, exact-head CI #432 / `36072251524`, merge `fccf929b03170b9e6eff1331274b7a81b5dfebfb`, main release + Pages #433 / `36072642871`.
-- FieldComponent internal Form path is H-migrated. Autocomplete, Cascader, ColorPicker, DatePicker, Select, TreeSelect, TimePicker, WheelPicker, Tags and Transfer now inherit the canonical FormController binding path without a second value/native-carrier owner.
+- PHASE-H-005 is DONE through PR #85, exact-head CI #434 / `36074443611`, merge `bc56d9cd1377ebd34d5a898413852a2b29a1c180`, main release + Pages #435 / `36074753673`.
+- Trigger is H accepted for the exact handbook Focus/Interaction/Capability/Motion/Overlay target.
+- Popup/Trigger keyboard semantics, capability gating, FocusController scope resources, MotionController presence and OverlayController resources now share one controller path.
 
 Implemented in current pack:
-- Trigger now declares the exact handbook Focus/Interaction/Capability/Motion/Overlay profile and canonical ownership.
-- Trigger owns one shared CapabilityController for open/activation policy and one shared InteractionController for semantic keyboard actions.
-- TriggerInteraction forwards those shared controllers into PressInteraction instead of allowing PressInteraction to build a parallel semantic/capability authority.
-- PressInteraction keyboard Enter/Space semantics now register/dispatch through InteractionController; pointer/visual execution remains PressInteraction authority.
-- OverlayRuntime creates/normalizes focus manager/scope resources through FocusController instead of importing FocusManager/FocusScope directly.
-- existing Trigger presence remains Transition→MotionController and popup resources remain OverlayController→OverlayRuntime; logical open remains OpenStateBridge.
-- removed an unused OverlayController singleton facade that had no consumer in this pack.
-- `verify:phase-h-trigger-controller-family` freezes the five-controller profile, shared-controller routing and no-direct-focus-import constraints.
-- strict source-ESM Chromium verifies controller access, Enter activation through InteractionController and disabled open blocking through CapabilityController.
-- Phase H profile regression floor rises to 18.
+- OverlayController gains consumed high-level `findParentLayerId()` and `acquireSingleton()` facades over canonical LayerManager; `createLayerLease()` reuses the same resolver.
+- Tooltip no longer imports/accesses LayerManager directly for singleton or parent-layer lookup.
+- Tooltip declares the exact handbook Motion/Overlay profile and reuses Trigger for physical overlay/motion.
+- PopupComponent exposes inherited Interaction/Capability/Overlay/Motion controller facades from its canonical Trigger.
+- Popover declares the exact handbook Focus/Interaction/Capability/Motion/Overlay profile and continues to enter those authorities only through PopupComponent→Trigger.
+- `verify:phase-h-popup-facades` rejects Tooltip LayerManager bypass and freezes both target profiles.
+- strict source-ESM Chromium verifies Popover inherited controller facade access while retaining existing Tooltip singleton-switch behavior.
+- Phase H profile regression floor rises to 20.
 
 Next exact step:
-1. perform final diff/self-audit and open PHASE-H-005 PR.
+1. perform final diff/self-audit and open PHASE-H-006 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Trigger H accepted.
-5. immediately batch the next shared popup/overlay family that reuses Trigger instead of one-component PRs.
+4. mark Tooltip and Popover H accepted.
+5. continue to Popconfirm feedback + remaining Trigger-family components before moving to form/value families.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,6 +78,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-005 — Trigger F/I/C/M/O controller-family migration
+Status: DONE
+Evidence:
+- PR #85 merged
+- merge commit `bc56d9cd1377ebd34d5a898413852a2b29a1c180`
+- exact-head CI #434 / `36074443611`: success
+- main CI + Pages #435 / `36074753673`: success
+Outcome:
+- Trigger declares and consumes the exact handbook Focus/Interaction/Capability/Motion/Overlay authorities.
+- Trigger shares one CapabilityController and InteractionController through TriggerInteraction→PressInteraction.
+- OverlayRuntime focus manager/scope resources enter FocusController; direct FocusManager/FocusScope imports are removed.
+- presence remains Transition→MotionController, physical popup resources remain OverlayController→OverlayRuntime, and logical open remains OpenStateBridge.
+- strict Chromium verifies Enter activation through InteractionController and disabled blocking through CapabilityController.
+- Trigger is H accepted.
+
+
 
 ### PHASE-H-004 — FieldComponent → FormController shared binding
 Status: DONE
