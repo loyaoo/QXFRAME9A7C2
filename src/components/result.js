@@ -2,6 +2,7 @@ import { Utils } from '../utils/utils.js';
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { DOM } from '../core/dom.js';
 import { Scheduler } from '../core/scheduler.js';
 import { Renderer } from '../core/renderer.js';
@@ -72,7 +73,31 @@ function data(instance) {
     return value;
 }
 
+function feedbackName(status) {
+    if (status === 'pending' || status === 'progress') return 'loading';
+    if (status === 'success' || status === 'warning' || status === 'error') return status;
+    return 'info';
+}
+function applyFeedback(instance, record) {
+    const patch = { name: feedbackName(record.status), visible: true };
+    if (record.message) patch.title = record.message;
+    instance.updateOptions(patch);
+    return instance;
+}
+function feedbackProjector(instance) {
+    return Object.freeze({
+        show: record => applyFeedback(instance, record),
+        update: (_handle, record) => applyFeedback(instance, record),
+        close: () => { instance.hide(); return true; }
+    });
+}
+
 export class Result extends Component {
+    static profile = Object.freeze({
+        name: 'Result',
+        feedback: Object.freeze({ mode: 'result-status-projection' }),
+        ownership: Object.freeze({ feedback: 'FeedbackController' })
+    });
     static options = Object.freeze({ name: 'question', visible: false });
     static optionNormalizers = Object.freeze({
         name: normalizeName,
@@ -141,6 +166,7 @@ export class Result extends Component {
         return this;
     }
     setName(next) { if (this.destroyed) return false; this.updateOptions({ name: next }); return this; }
+    createFeedbackController(options = {}) { return FeedbackController.createForProjector(feedbackProjector(this), Utils.mergeOwn({ ownerId: this.id }, options), 'local'); }
     getState() {
         const record = data(this);
         const opts = this.options;
