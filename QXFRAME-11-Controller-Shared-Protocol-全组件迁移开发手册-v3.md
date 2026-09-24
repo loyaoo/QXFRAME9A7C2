@@ -998,3 +998,1247 @@ rapid reverse: 从当前视觉帧继续，不重新从 0/full 开始
 正式 channel 可包括：
 
 ```text
+selected
+checked
+target
+sourceChecked
+targetChecked
+rangeAnchor
+allMatching
+```
+
+典型：
+
+- TreeSelect：checked / selected / active 分离
+- Transfer：左右 checked 与最终 target value 分离
+- Table：explicit selected 与 remote allMatching 分离
+
+## 10.3 DataRevision
+
+range anchor、focus key、remote query、lazy tree 必须绑定 dataRevision/queryRevision。
+
+旧数据 revision 的索引、anchor、异步 load 不能继续修改新集合。
+
+## 10.4 Remote allMatching
+
+模型：
+
+```text
+queryKey
+excludedKeys
+datasetRevision
+known/unknown count
+```
+
+不能把“所有匹配项”错误展开为当前页面已经加载的 keys。
+
+---
+
+# 11. OverlayController
+
+## 11.1 Owns
+
+- layer
+- portal
+- position
+- logical child relationship
+- outside/dismiss registration
+- isolation
+- scroll lock
+- overlay resource lease
+
+不拥有 open。
+
+## 11.2 Open / Overlay / Motion 三态分离
+
+```text
+OpenPort：逻辑 open/close
+Overlay：mounted/activated/deactivating/disposed
+Motion：entering/shown/leaving/hidden
+```
+
+## 11.3 Open / Close Reason 枚举
+
+必须统一 reason：
+
+```text
+select
+confirm
+cancel
+escape
+outside-pointer
+focus-outside
+tab-exit
+programmatic
+ancestor-close
+destroy
+reopen
+```
+
+`close` 本身绝不表示 commit。
+
+## 11.4 Escape 路由
+
+Escape 顺序：
+
+1. IME / native editor
+2. current edit lease
+3. drag/pointer session
+4. innermost dismissable overlay
+5. current temporary navigation/session
+6. pass
+
+内层 close 被 `blocked` 后默认不能继续把同一个 Escape 关闭父层。
+
+## 11.5 Closing 期间
+
+视觉 leave 与资源释放不是同一时间点。
+
+Modal/Drawer 背景隔离、scroll lock、pointer interception 在屏障尚存在时不得提前释放。
+
+父层 destroy 时：
+
+- descendants 按逻辑树失效
+- 不允许每个 child 逐个 focus restore
+- 最终 restore 由外层关闭事务统一决定
+
+---
+
+# 12. FeedbackController
+
+## 12.1 Owns
+
+与 operation/task 关联的可见反馈：
+
+```text
+idle
+pending
+success
+warning
+error
+progress
+```
+
+不拥有任务或 value。
+
+## 12.2 去重
+
+```text
+owner + operation + actionId/requestId
+```
+
+而不是只按 message 文本去重。
+
+## 12.3 局部优先
+
+- field error → field
+- form summary → form
+- upload progress → upload item
+- 明确需要全局通知 → Message/Notification
+
+禁止同一错误自动 field + toast 双重出现。
+
+旧 task generation 的失败不得覆盖新成功。
+
+---
+
+# 13. ThemeController
+
+## 13.1 Owns
+
+- theme mode
+- managed scope
+- context revision
+- context inheritance
+- portal theme context
+
+当前保证范围：light / dark；品牌变化走 Token preset，不随意增加无 CSS 支持的主题名。
+
+## 13.2 Portal
+
+Theme context 至少包含：
+
+```text
+ownerDocument
+scope chain
+theme
+token overrides
+size/variant/motion 等正式上下文字段
+```
+
+不复制整个 computedStyle。
+
+主题变化不能：
+
+- 重置 draft
+- 重置 activeKey
+- 清 selection
+- 重新触发不必要 enter animation
+
+---
+
+# 14. TokenController
+
+## 14.1 Owns
+
+- token catalog
+- token kind
+- dependency / alias
+- scope override
+- CSS variable projection
+
+组织：
+
+```text
+primitive seed
+→ semantic
+→ family
+→ component/state（仅确实需要时）
+```
+
+## 14.2 Visual State Channels
+
+Token / CSS 必须定义状态通道，不允许靠 selector specificity 碰运气。
+
+建议：
+
+```text
+interaction: hover / active
+keyboard-focus: focus-visible
+semantic: selected / error / warning / success
+availability: disabled / readonly / loading
+surface/elevation: popup / floating / pressed
+```
+
+组合示例：
+
+```text
+error + keyboard-focus
+border  = error token
+outline = keyboard focus token
+background = interaction token
+```
+
+这保证：
+
+- selected 不抢 focus outline
+- error 不吞 keyboard focus
+- loading 不靠一种颜色表达所有状态
+
+## 14.3 Catalog Gate
+
+CI 检查：
+
+- 未登记 CSS var
+- token 循环引用
+- 无 fallback 的断链
+- 非主题化硬编码颜色
+- 非法 z-index 越权
+- light/dark/state token 缺失
+
+---
+
+# 15. FormController
+
+## 15.1 Owns
+
+- field registry
+- dirty/touched/pending/valid
+- validation task coordination
+- submit/reset transaction
+
+字段值仍由 ValueController 持有，原生载体仍由 FormBridge 管。
+
+## 15.2 Field identity
+
+`fieldId` 是唯一身份，`name` 可以重复。
+
+不能 `Map<name, field>` 覆盖 checkbox/multiple 同名字段。
+
+## 15.3 Submit
+
+```text
+capture form revision
+→ sync validation
+→ async validation generation
+→ confirm revision still current
+→ serialize committed values
+→ submit
+```
+
+值变更后旧 validator 返回：stale。
+
+## 15.4 Reset
+
+```text
+respect native reset cancellation
+→ cancel validation/submit tasks
+→ ValueController reset baseline
+→ clear draft/preview/feedback/touched
+→ project FormBridge
+```
+
+external controlled field：发 reset request，未 ack 前 committed/FormData 不能假装已重置。
+
+---
+
+# 16. 跨 Controller 统一事务
+
+正式顺序：
+
+```text
+1. resolve owner + semantic action
+2. native / IME / edit guard
+3. snapshot capability/value/data/session/lifecycle revision
+4. prepare candidate（纯计算，不写 DOM）
+5. before* veto / candidate transform
+6. re-check revision / generation / disposed
+7. authority accept 或 external request
+8. build single ProjectionSnapshot
+9. project Control / Selection / FormBridge / CSS
+10. publish public events
+11. schedule Motion / Feedback / async validate / ensureVisible
+```
+
+关键：
+
+- `before*` 是 veto；普通 `emit` 不是 veto
+- callback 内 `destroy/updateOptions/setValue` 会让外层旧事务 stale
+- notify 前关键 DOM/Form projection 已同步，回调读取状态一致
+- 非关键 Motion/Toast 失败不能回滚 committed
+
+---
+
+# 17. Reentrant Dispatch 规则
+
+仅靠 revision 防旧写还不够，必须固定 dispatch 调度语义。
+
+建议：
+
+- authority accept 与关键 projection 同一同步事务完成
+- public callback 可触发新 action
+- 新 action 允许嵌套进入新的 actionId/revision
+- 旧 action callback 返回后必须 re-check；不能继续覆盖新 revision
+- 同一事务最多发布一次公开 `change`
+- 非关键重复 render/feedback 可进入 microtask/frame queue 合并
+- 禁止无限同步递归；Diagnostics 检测过深 reentry
+
+---
+
+# 18. Public Event Order Contract
+
+输入型组件统一事件语义：
+
+```text
+native input / pointer / keyboard
+→ onInput / onDraftChange（如适用）
+→ beforeChange / beforeConfirm
+→ applied 或 requested
+→ DOM/Form projection
+→ onChange / onChangeRequest
+→ Feedback / Motion
+```
+
+要求：
+
+- `onInput` ≠ `onChange`
+- preview 不冒充 change
+- controlled `requested` 不冒充 applied
+- silent 只抑制通知，不得跳过必要投影和 owner 同步
+
+事件顺序属于公开 API 契约。
+
+---
+
+# 19. Picker Family Contract
+
+适用：
+
+- DatePicker
+- TimePicker
+- ColorPicker
+- WheelPicker
+- Cascader
+- TreeSelect
+- Select/Autocomplete 中的 picker-like popup 部分
+
+## 19.1 状态定义
+
+```text
+committed = 已确认值 / FormData
+ draft     = popup 当前候选
+ preview   = hover/drag/keyboard 临时视觉状态
+ rawInput  = 可编辑 control 的原始文本
+```
+
+## 19.2 Display Projection
+
+为解决当前 Picker control 显示不统一，冻结默认 family rule：
+
+```text
+Popup closed:
+  control = committed
+
+Popup open + rawInput active:
+  control = rawInput
+
+Popup open + preview exists:
+  control = preview（若该组件 profile 声明 previewControl=true）
+
+Popup open + dirty draft:
+  control = draft
+
+Otherwise:
+  control = committed
+```
+
+重要：
+
+**control 显示 draft 不等于 committed 已改变。**
+
+所以 `needConfirm=true`：
+
+```text
+用户选 B
+control 显示 B
+panel 显示 B
+getValue/FormData 仍然 A
+onChange 不触发
+```
+
+Confirm：
+
+```text
+B → committed
+```
+
+Esc：
+
+```text
+丢弃 B
+control 恢复 A
+```
+
+组件如果确有独立 `draftValueTarget`，可以配置 control 保持 committed，但整个 family 必须统一声明，不允许每个 Picker 靠局部 render 偶然形成不同表现。
+
+## 19.3 needConfirm=false
+
+完成一次有效选择：
+
+```text
+draft/preview
+→ commit
+→ control立即显示 committed
+→ onChange
+→ 按 closeOnSelect profile 关闭
+```
+
+不能等待 Esc/close 才补提交。
+
+## 19.4 needConfirm=true
+
+完成选择只更新 draft。
+
+确认来源：
+
+- Confirm button
+- 明确 confirm action
+- 当前 family 规范允许的 Enter
+
+Esc/outside/tab-exit 默认 rollback 未提交 draft。
+
+## 19.5 Presets
+
+Preset 与普通日期/时间选项遵守同一提交语义：
+
+### needConfirm=false
+
+```text
+activate preset
+→ commit
+→ close
+```
+
+### needConfirm=true
+
+```text
+activate preset
+→ update draft
+→ keep popup open
+→ wait confirm
+```
+
+Preset region 使用虚拟焦点：
+
+- ArrowUp/Down（或 profile 的 Left/Right）移动 preset activeKey
+- Tab 只进入/离开整个 preset region
+- 每个 preset item 不成为独立 Tab stop
+
+## 19.6 Esc
+
+Esc 永远不是“补确认”。
+
+即时模式已经完成并提交的选择不会被 Esc 撤销；Esc 只取消仍未提交的 draft/preview/editor session。
+
+## 19.7 TimePicker / ColorPicker Enter
+
+TimePicker、ColorPicker 必须与其他 Picker 拥有明确 Enter confirm 行为；不存在“只能 Esc 关闭并顺便确认”。
+
+Color drag：
+
+```text
+pointer move → preview
+pointer up   → selection-complete
+needConfirm=false → commit
+needConfirm=true  → draft only
+```
+
+---
+
+# 20. Composite Navigation Contract
+
+适用于：
+
+- Select
+- Menu
+- Tree
+- TreeSelect
+- Cascader
+- Calendar / PeriodPanel
+- TimePanel
+- Preset list
+- Transfer
+- Tags
+- Table navigation
+- OptionList
+
+共同规则：
+
+1. 一个 canonical real-focus owner，除非进入 Hybrid Edit。
+2. 内部 navigation 用 activeKey，不通过 `.focus()` 在 item 间跳。
+3. Tab 在 region 之间移动；Arrow/Home/End/Page 在 region 内移动。
+4. activeKey ≠ selectedKey。
+5. item 被卸载/disabled/dataRevision 改变后必须 reconcile。
+6. VirtualList ensureVisible 只是请求；异步挂载后再次检查 revision。
+
+---
+
+# 21. DatePicker 双面板导航专项规范
+
+双面板不能把左/右面板的旧 index 当作唯一焦点状态。
+
+建议模型：
+
+```text
+calendarDataRevision
+activeDateKey
+activePanel = left | right
+leftVisibleMonth
+rightVisibleMonth
+rangeAnchorKey
+```
+
+切换年月后：
+
+```text
+1. bump dataRevision
+2. recompute visible month ranges
+3. reconcile activeDateKey into new visible domain
+4. invalidate stale range/index references
+5. project active cell
+```
+
+第一次 Arrow 必须从**新 activeDateKey**计算，不得从旧开始日期/结束日期/index 恢复。
+
+验收：
+
+- 左面板切年/月后回 Calendar，第一次四向不跳旧结束日期
+- 右面板同样
+- range start/end 独立于 activeDate
+- 双面板跨边界导航连续
+
+---
+
+# 22. Visual Interaction State Contract
+
+统一视觉状态职责：
+
+```text
+hover            pointer interaction background/border helper
+active           pressed state
+selected         semantic selection border/background
+keyboard-focus   2px outline
+error/warning/success semantic border/status
+loading          busy projection + mutation blocked
+readonly         readonly projection
+ disabled         disabled projection
+```
+
+禁止：
+
+- selected 改 focus outline
+- error 吞掉 keyboard outline
+- box-shadow 模拟双倍边框
+- root + virtual item 同时出现 keyboard outline
+
+视觉状态投影读取同一个 ProjectionSnapshot。
+
+---
+
+# 23. ComponentProfile
+
+每个组件声明需要哪些能力，而不是强制实例化 11 Controller。
+
+示例：
+
+```js
+const profile = {
+  name: 'TreeGrid',
+  value: { mode: 'controlled-or-default', adapter: treeGridValueAdapter },
+  selection: { mode: 'multiple', channels: ['selected'], keyOf: rowKey },
+  focus: { mode: 'virtual-navigation', regions: treeGridRegions },
+  interaction: { keymap: TreeGridKeymap, actions: treeGridActions },
+  capability: { role: 'composite', itemDisabled: rowDisabled },
+  overlay: null,
+  motion: null,
+  feedback: { localStatus: true },
+  form: { serialize: selectedRowsToFormValue },
+  tokens: ['semantic-accent', 'family-control', 'component-tree-grid'],
+  ownership: {
+    value: 'ValueController',
+    selection: 'SelectionController',
+    focus: 'FocusController'
+  },
+  dependencies: {
+    interaction: ['focus', 'capability']
+  }
+};
+```
+
+Profile 只描述能力，不成为状态容器。
+
+## 23.1 Adapter
+
+新组件只实现领域差异：
+
+```text
+normalizeValue
+copyValue
+equals
+keyOf
+collectionRevision
+navigation math
+semantic action handler
+serialize
+render
+```
+
+## 23.2 composeControllers
+
+可以提供内部 helper：
+
+```text
+composeControllers(profile, context)
+```
+
+但它必须是静态组合工具，不是 service locator；不能根据组件名字运行时猜测能力。
+
+---
+
+# 24. 40 个公开组件接入矩阵
+
+缩写：
+
+- V Value
+- F Focus
+- I Interaction
+- C Capability
+- M Motion
+- S Selection
+- O Overlay
+- B Feedback
+- H Theme
+- T Token
+- R Form
+
+H/T 是所有组件 CSS/context 基线，不表示每个组件都要创建 Theme/Token 实例。
+
+| 组件 | 运行时组合与必须保留的差异 |
+|---|---|
+| Autocomplete | V F I C S O B R；搜索 rawInput、suggestion activeKey、selected value 分离；async suggestions 带 query/dataRevision。 |
+| Carousel | V F I C M；autoplay、pointer swipe、keyboard 同一 current index；focus/hover pause profile。 |
+| Cascader | V F I C S O B R；path、selected、active column、lazy data 四种状态独立。 |
+| Collapse | V F I C M；expanded value 受控/非受控；autosize Motion 快速反转。 |
+| ColorPicker | V F I C M O B R；preview/draft/commit、gradient stop、EyeDropper generation、drag completion。 |
+| DatePicker | V F I C S M O B R；single/multiple/range/time、rawInput、preset、双面板 dataRevision。 |
+| Drawer | F I C M O B；modal resources、child overlays、focus return、async actions。 |
+| Dropdown | V F I C S M O；selectable menu 与 action menu 不同 profile。 |
+| Image | F I C M O B；preview/transform；src 不是 Form value。 |
+| InputNumber | V F I C B R；parser/formatter/rawInput、precision、step、blurCommit profile。 |
+| InputOTP | V F I C B R；multi-input focus mode，一个聚合 value owner；paste/IME/auto-advance。 |
+| JSON | F I C B；navigation + Hybrid Edit；默认无 V。 |
+| Loading | C M B O；blocking/local scope 与 focus/scroll resources 对齐。 |
+| Menu | V F I C S O；virtual navigation/typeahead/submenu owner/action-selection 分离。 |
+| Message | M O B；timer、dedupe、dismiss reason。 |
+| Modal | F I C M O B；trap、async confirm、nested overlay、focus return。 |
+| Notification | M O B；stacking、persistent actions。 |
+| Pagination | V F I C；current controlled/uncontrolled、page count reconcile。 |
+| Popconfirm | F I C M O B；confirm/cancel/blocked close 语义明确。 |
+| Popover | F I C M O；interactive 与 display-only profiles。 |
+| Progress | B；status/progress projection，不建无意义 Value。 |
+| Rate | V F I C B R；hover preview、quantization、keyboard/pointer 同步。 |
+| Result | B；展示型，不建无意义 Interaction。 |
+| Ripple | I C M；pointer/keyboard activation 去重、reduced motion。 |
+| Scroll | F I C M；native scroll 优先、边界/惯性 profile。 |
+| Select | V F I C S O B R；search rawInput、option active、multiple tags、controlled request。 |
+| Slider | V F I C B R；drag preview/commit、range thumbs、disabled intervals。 |
+| Sort | V F I C S M O；drag session、keyboard reorder、ghost overlay。 |
+| Steps | V F I C B；current/reachable；display mode 不注册 interaction。 |
+| Table | V F I C S O B R；cell/row Hybrid Edit、virtualization、remote allMatching、async load。 |
+| Tabs | V F I C S M O；activeKey、manual/auto activation、overflow menu。 |
+| TagInput | V F I C S B R；rawInput、tokenize、tag edit/remove。 |
+| Tags | V F I C S O B R；hosted mode、overflow overlay、controlled remove request。 |
+| TimePicker | V F I C S M O B R；TimePanel virtual columns、rawInput、range、last-step completion。 |
+| Tooltip | M O；non-interactive 不抢 focus/key；interactive profile 才装配 F/I。 |
+| Transfer | V F I C S B R；sourceChecked/targetChecked/targetValue channels 分离。 |
+| TreeSelect | V F I C S O B R；checked/selected/expanded/active/lazy/search 分离。 |
+| Trigger | F I C M O；open port authority，不持业务 value。 |
+| Upload | V F I C S O B R；file lifecycle、progress generation、preview overlay、controlled file list。 |
+| WheelPicker | V F I C S M O B R；wheel settle 完成选择，confirm/cancel 与 Picker family 一致。 |
+
+---
+
+# 25. 内部构件也必须迁移
+
+不能只签收 40 个公开名字。
+
+必须覆盖：
+
+```text
+Component
+FieldComponent
+PopupComponent
+PopupFieldComponent
+PickerComponent
+Control
+PickerField
+TextField
+OptionList
+ItemCollection
+Tree
+Calendar
+PeriodPanel
+TimePanel
+WheelPanel
+ColorPanel
+OverlayComponent
+Popup
+VirtualList
+```
+
+原则：
+
+- 基类只负责 lifecycle/port wiring，不存第二份业务 truth
+- hosted internal component 不重复注册 overlay/focus owner
+- Panel 负责领域算法，不独立创建另一套 committed value
+- VirtualList 负责卸载后的 key/revision reconcile
+
+---
+
+# 26. 当前 P0 问题与目标架构映射
+
+| 当前问题 | 根因 owner | 必须由本次架构解决 |
+|---|---|---|
+| TimePicker 选择中 control 不显示 draft，Esc 后才变化 | Value + Projection | Picker Display Contract；Esc 不 commit；Enter confirm |
+| ColorPicker 新颜色闪一下又恢复旧值 | Projection revision 竞争 | ProjectionSnapshot/Scheduler |
+| DatePicker/TreeSelect/Cascader 等 Picker control 显示不统一 | Family profile 不统一 | Picker Family Contract |
+| TimePanel Tab 进入 column1/2/3 不可视焦点 | Focus owner 错 | canonical root + virtual region |
+| DatePicker 双面板改年月后第一箭头跳旧日期 | old key/index + data revision | StableKey/DataRevision reconcile |
+| Date/Time preset 不按 needConfirm 自动提交/关闭 | Picker selection completion 不统一 | Preset 使用同一 Value commit policy |
+| Preset 每项通过 Tab | region 模型缺失 | Focus Region Graph |
+| Collapse 快速 Enter 动画撕裂/跳跃 | autosize reverse 不完整 | AutoSizeMotion Contract |
+| multiple checkbox 键盘不统一 | key→action 写死 | Interaction Keymap Profile |
+
+这些问题应转成浏览器 regression，不允许只通过 Controller unit test 判定完成。
+
+---
+
+# 27. 迁移包与实施顺序
+
+## Phase A：冻结基线与 Shared Protocol
+
+新增/固化：
+
+- ActionContext / OperationResult
+- LogicalOwnerTree
+- ControllableStateCore
+- InputModality
+- DataRevision
+- ProjectionScheduler
+- EnvironmentPort
+- Diagnostics
+- ComponentProfile schema
+
+门槛：
+
+- 不修改业务行为
+- ESM graph 无环
+- 现有 release gates 仍绿
+
+## Phase B：Value + Picker Family
+
+优先：
+
+- DatePicker
+- TimePicker
+- ColorPicker
+- WheelPicker
+- PickerField / PickerSession / PickerComponent
+
+然后：
+
+- Select
+- TreeSelect
+- Cascader
+- Autocomplete
+
+门槛：
+
+- controlled/uncontrolled
+- needConfirm true/false
+- Esc/outside/Tab
+- Enter confirm
+- presets
+- FormData
+- projection no-flicker
+
+## Phase C：Focus + Interaction + Capability
+
+优先：
+
+- TimePanel
+- Date Calendar/PeriodPanel
+- Select
+- TreeSelect
+- Cascader
+- Menu
+- Tags
+- Table Hybrid Edit
+
+门槛：
+
+- 一个 canonical real-focus owner
+- child scope 不被 parent 抢键
+- IME/native editing
+- multiple checkbox Space
+- Home/End/Page
+- loading/readonly/disabled 同源门禁
+
+## Phase D：Selection
+
+迁移：
+
+- OptionList/List/Tree
+- Transfer
+- Table
+- Tags
+- Select/TreeSelect/Cascader
+
+门槛：
+
+- multi-channel
+- stable key
+- dataRevision
+- lazy/remote/range
+
+## Phase E：Overlay + Motion
+
+迁移：
+
+- Trigger
+- Popup base
+- Modal / Drawer
+- Popover / Tooltip / Popconfirm
+- all picker overlays
+- Collapse / Tabs / Dropdown motion
+
+门槛：
+
+- nested overlay
+- logical parent
+- quick reverse
+- autosize
+- focus restore
+- scroll lock / isolation lease
+
+## Phase F：Theme + Token + Visual State
+
+门槛：
+
+- root/light/dark/scope/portal
+- state channels
+- token catalog
+- unmanaged var lint
+- theme switch 不清业务状态
+
+## Phase G：Feedback + Form
+
+门槛：
+
+- same-name fields
+- native submit/reset
+- async validator stale
+- external reset
+- local/global feedback de-dup
+
+## Phase H：全组件迁移与旧路径删除
+
+- 40 个公开组件
+- 内部 panels/base classes
+- docs canonical demos
+- static native controls
+- delete duplicate authority
+
+## Phase I：发布验收
+
+- architecture
+- contracts
+- esm graph
+- types + negative type tests
+- Node contract tests
+- browser interaction suite
+- visual matrix
+- package/release
+- GitHub Pages canonical demo
+
+---
+
+# 28. Controller Conformance Test Kit
+
+框架必须提供统一测试工具，而不是每个组件自己想一套。
+
+## 28.1 Value Contract
+
+自动矩阵：
+
+```text
+internal/external
+value/defaultValue
+request/ack/reject
+commit/cancel
+rawInput
+preview
+external sync conflict
+reset
+destroy in callback
+stale async
+```
+
+## 28.2 Focus Contract
+
+```text
+native
+virtual
+hybrid edit
+region graph
+Tab exit
+item removed
+item disabled
+dataRevision changed
+ensureVisible async
+portal restore
+destroy
+```
+
+## 28.3 Interaction Contract
+
+```text
+keyboard
+pointer
+touch
+IME
+repeat
+modifier
+child scope
+parent scope
+handled/blocked/pass
+native default preservation
+```
+
+## 28.4 Capability Contract
+
+```text
+normal
+readonly
+loading/busy
+disabled
+item disabled
+state changes mid-gesture
+external sync always allowed
+```
+
+## 28.5 Motion Contract
+
+```text
+enter
+leave
+reverse
+10x rapid reverse
+auto-size
+content resize
+reduced motion
+destroy mid-frame
+stale completion
+```
+
+## 28.6 Overlay Contract
+
+```text
+nested portal
+outside pointer
+Esc chain
+Tab exit
+modal trap
+ancestor destroy
+reopen during leave
+focus return
+multi-document
+```
+
+## 28.7 Selection Contract
+
+```text
+single
+multiple
+range
+tree checked/indeterminate
+remote allMatching
+query revision
+lazy data
+reconcileData
+controlled request
+```
+
+## 28.8 Form Contract
+
+```text
+native formdata
+submitter
+reset cancel
+same name
+array values
+disabled/readonly
+external reset
+async validation
+first invalid reveal/focus
+```
+
+---
+
+# 29. Modifier / Typeahead 规范
+
+必须在实现 Interaction 时冻结：
+
+- `Shift+Arrow`：仅 range/extend profile
+- `Ctrl/Meta+A`：仅明确 multiple selectable domain
+- `Ctrl/Meta+Arrow`：由组件 profile 定义，不全局劫持
+- `Alt+Arrow`：只有既有组件明确需要时使用
+- Typeahead：Menu/Select/Tree 等支持；IME composition 期间停用
+- repeated characters：按缓冲时间与同字符循环规则统一
+- Mac `Meta` 与 Windows/Linux `Ctrl` 通过 platform abstraction 映射
+
+禁止组件自己实现另一套 typeahead timer。
+
+---
+
+# 30. Fault Containment
+
+必须定义异常发生在哪一阶段时如何处理：
+
+## prepare/normalize throw
+
+- authority 不改变
+- DOM 不改变
+- 返回 invalid/error
+
+## before callback throw
+
+- 事务拒绝或转 error result
+- 不接受 candidate
+
+## public onChange throw
+
+- committed 已接受，不回滚业务值
+- Diagnostics 记录
+- 后续非关键通知可继续按策略
+
+## projection throw
+
+- authority 不回滚
+- 标记 projection dirty
+- 尝试从最新 ProjectionSnapshot 重建
+- 禁止用旧快照恢复
+
+## Motion/Feedback throw
+
+- 不回滚 committed/open
+- 清理自身 lease
+- Diagnostics
+
+---
+
+# 31. Architecture Lint
+
+CI 默认拒绝新增以下模式，除非明确 allowlist：
+
+```text
+组件内新增裸 document/window keydown listener
+组件直接管理全局 Escape
+复杂组件 item 之间直接 .focus()
+组件自己创建 portal/layer stack
+组件直接维护 hidden form carrier
+组件同时出现第二份 committed/selected truth
+组件新增 setTimeout 模拟 Motion completion
+组件 keydown 大量 if(event.key===...)
+组件直接写绝对 z-index
+组件 CSS 新增未登记主题色
+```
+
+Lint 不要求禁止所有 `keydown`：原生 editor adapter 等特殊场景允许，但必须登记 owner/reason。
+
+---
+
+# 32. 新组件一次性接入流程
+
+新组件 PR 必须包含：
+
+1. Identity / State Owner 表
+2. `ComponentProfile`
+3. Domain adapters
+4. action→capability map
+5. Focus Region Graph（如适用）
+6. Form serialize/reset（如适用）
+7. Theme/Token consumption
+8. Controller Contract Tests
+9. Browser combination test
+10. destroy/resource proof
+
+新增组件不需要：
+
+- 修改中央 `switch(componentName)`
+- 复制 keydown state machine
+- 自己监听 document Esc
+- 自己实现 controlled/defaultValue
+- 自己实现 popup outside / focus restore
+
+做到这一点，才证明 Controller 架构真正降低新增组件成本。
+
+---
+
+# 33. AI 实施时的硬性规则
+
+后续让 AI/Codex 迁移时，任务说明必须包含：
+
+1. **先审计现有 authority，再修改。** 不允许先新增新 Controller 后再想怎么接。
+2. **一个 PR / migration pack 必须包含所有直接消费者。** 不允许半迁移 owner 发布。
+3. **旧路径删除是完成条件。** 只把新 Controller 接上但旧 local state 仍可写，视为未完成。
+4. **不能为了过测试改变契约。** 测试应证明规范，而不是规范迁就当前 bug。
+5. **每次修改必须新增 regression。** 当前视频问题必须固化浏览器测试。
+6. **不允许隐藏失败。** stale/blocked/invalid 必须可诊断。
+7. **不使用组件名分支。** 差异通过 adapter/profile。
+8. **不破坏静态 ESM。** 不引入全局 runtime locator。
+9. **更新 docs canonical demo。** 完成的行为必须可在 `docs/components/*.html` 和指定 canonical 页面复现。
+10. **每轮汇报总进度、已完成、未完成、CI、Pages。**
+
+---
+
+# 34. 完成定义
+
+整个方案只有同时满足以下条件才算完成：
+
+1. 11 Controller 各自只有一个 authority，且没有第二份镜像 truth。
+2. Shared Protocol Layer 全部落地：Action、OwnerTree、Controllable、Modality、DataRevision、Projection、Environment、Diagnostics。
+3. 40 个公开组件逐项签收。
+4. 内部 Panel / Base / VirtualList / native controls 逐项签收。
+5. Picker Family 的 control/draft/confirm/cancel 行为完全统一。
+6. TimePanel、Calendar、Tree、Menu、Tags 等 composite 全部使用统一 region/navigation 协议。
+7. Multiple checkbox Space/Enter/Arrow/Home/End 等行为按 profile 统一。
+8. Collapse 等 autosize motion 快速反转无闪烁、撕裂、旧 completion 干扰。
+9. Value/Selection/Focus/Overlay/Form 的旧异步结果全部有 stale 防护。
+10. CSS visual state channel 与 Token catalog 一致。
+11. native submit/reset/FormData、portal、IME、pointer、touch、multi-document 有真实浏览器回归。
+12. ESM graph 无循环、types/contracts/manifests/build/release 全部通过。
+13. Architecture Lint 无未授权双 owner / global listener / direct focus / duplicate keymap。
+14. 新增一个代表性复合组件可以只通过 profile + adapter 接入，不修改中央分发器。
+15. GitHub Pages canonical docs 部署最新通过版本，人工可复核。
+
+---
+
+# 35. 当前建议的第一批实际实施目标
+
+不要同时动全部 40 组件。第一批用于验证架构本身：
+
+```text
+Shared Protocol Layer
+↓
+ValueController + Picker Family
+↓
+FocusController + InteractionController + CapabilityController
+```
+
+试点组件：
+
+1. DatePicker
+2. TimePicker / TimePanel
+3. ColorPicker
+4. Select
+5. TreeSelect
+6. Cascader
+7. Collapse（Motion autosize）
+
+这批恰好覆盖当前真实暴露的：
+
+- draft/control 显示不统一
+- Esc/Enter 语义错误
+- Preset 行为错误
+- TimePanel 不可视真实焦点
+- DatePicker 双面板旧焦点跳跃
+- multiple selection keyboard
+- rapid transition reverse
+
+第一批通过后，再迁移 Menu/Tags/Transfer/Table/Upload 等复杂消费者。
+
+---
+
+# 36. 最终架构判断
+
+本方案不再追求增加更多 Controller。
+
+真正的框架内核是：
+
+```text
+11 Controllers
++
+Shared Protocol Layer
++
+Family Contracts
++
+Component Profiles / Adapters
++
+Conformance Test Kit
++
+Architecture Lint
+```
+
+11 Controller 解决“谁负责什么”；Shared Protocol 解决“它们如何共同工作”；Family Contract 解决“同类组件如何保持人机交互一致”；Conformance + Lint 解决“以后不会重新烂回组件各写一套”。
+
+后续实施阶段发现的新问题，应优先判断是：
+
+```text
+协议缺口？
+家族规范缺口？
+领域 adapter 问题？
+具体组件 bug？
+```
+
+只有确实无法落入上述层次时，才考虑新增框架概念。禁止因为一个组件特殊就继续扩张 Controller 数量。
