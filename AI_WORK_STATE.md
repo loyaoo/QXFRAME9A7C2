@@ -24,38 +24,37 @@
 
 ## CURRENT
 
-### PHASE-E-004 — Remaining component OverlayController consumers
-Status: IN_PROGRESS
-Task progress: 80%
+### PHASE-E-004 — Remaining direct OverlayRuntime consumers
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-E-003 Modal/Drawer physical Overlay + multi-motion migration is merged and green through PR #67 / CI #378 and main CI + Pages #379.
-- after Modal/Drawer, the remaining public components that still directly import/create OverlayRuntime are Image preview, Loading and Upload document preview.
-- Image and Loading already use Transition and therefore already have MotionController-backed presence channels; Upload media preview delegates to Image while document preview intentionally has no transition.
-- low-level OverlayRuntime remains valid inside OverlayController and runtime capability exposure; this pack removes direct component bypasses, not the canonical runtime itself.
+- PHASE-E-003 Modal/Drawer resource migration is merged and green through PR #67 / CI #378 and main CI + Pages #379.
+- Modal/Drawer now expose real OverlayController resource identities while preserving family logical-open controllers and raw runtime compatibility.
+- remaining direct OverlayRuntime consumers must be migrated before Phase E overlay ownership can be considered closed.
+- Motion work is not yet complete: Collapse rapid reversal remains a known issue and TransitionGroup/direct MotionCore consumers still require a later motion closeout pack.
 
 Frozen impact map:
-- Image preview creates OverlayController instead of OverlayRuntime, preserves raw `getPreviewOverlayRuntime()`, and adds `getPreviewOverlayController()` plus dual `getPreviewMotionControllers()` for mask/content.
-- Image.createPreview facade forwards the same controller identities.
-- Loading creates OverlayController, preserves raw `getOverlayRuntime()`, and exposes `getOverlayController()` plus its Transition-backed MotionController.
-- Upload document/PDF fallback creates OverlayController; media preview continues delegating to Image preview.
-- Upload preserves raw `getPreviewOverlayRuntime()`, adds `getPreviewOverlayController()`, and forwards Image motion controllers only for media preview; document preview must not invent a synthetic MotionController.
-- close/destroy semantics stay unchanged: presence-owning components release overlay resources only after leave; Upload document fallback remains immediate because it has no motion.
-- Open/value/file lifecycle ownership is unchanged.
+- direct OverlayRuntime imports/creation after PHASE-E-003 are the authoritative scope for this pack; do not migrate Trigger-derived popup families again.
+- Image Preview, Loading overlay, Upload preview/runtime adapters must preserve their current logical visibility/value authorities and only move physical overlay resources behind OverlayController.
+- any callback/public field named `overlayRuntime` remains raw-runtime compatible unless the public contract explicitly changes.
+- no new logical `open` store is allowed in OverlayController.
+- resource release must remain synchronized with the owning visual lifecycle; migrating construction must not shorten leave/presence lifetime.
+- Phase C focus/interaction and Phase D selection remain unchanged.
 
-Implemented in sandbox:
-- all three component imports/creates are migrated from OverlayRuntime to OverlayController.
-- compatibility raw-runtime getters return `controller.getRuntime()`.
-- controller/motion getters are propagated through Image.createPreview and Upload media preview.
-- dedicated Chromium gate verifies Image dual motion + delayed resource release, Loading motion + delayed resource release, and Upload document resource identity/cleanup.
-- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, platform, component-base and 40 component contracts.
+Scope:
+- enumerate every remaining direct `OverlayRuntime` import/create path on current main.
+- migrate them in the smallest coherent component/runtime pack.
+- expose OverlayController identity where inspection/conformance is needed while preserving raw runtime compatibility.
+- add source + Chromium gates proving no direct migrated consumer bypasses OverlayController and resource lifetime remains correct.
+- leave Collapse/Tabs/Dropdown/TransitionGroup motion closeout for the following PHASE-E-005 unless a direct dependency requires a small adapter.
 
 Next exact step:
-1. create PHASE-E-004 branch from green main #379;
-2. sync Image/Loading/Upload + dedicated verifier + package gate + checkpoint;
-3. run exact-head Completion/release/browser/package CI and fix only real failures;
-4. merge only green and verify main + Pages;
-5. audit remaining direct OverlayRuntime imports to ensure only OverlayController/runtime low-level bindings remain, then continue PHASE-E-005 Motion closeout.
+1. enumerate remaining direct OverlayRuntime imports/creates and classify component/runtime-adapter ownership;
+2. migrate the smallest coherent group without changing logical visibility/open/value state;
+3. add dedicated resource-lifetime/browser conformance;
+4. run exact-head release CI, merge only green, then verify main + Pages;
+5. continue PHASE-E-005 Motion closeout, including Collapse rapid reversal.
 
 ## Current authority snapshot — after Phase A
 
