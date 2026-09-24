@@ -600,6 +600,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           root: keyboardTarget,
           document: doc,
           disabled: opts.disabled === true,
+          manageTabIndex: false,
           activeRegion: 'tree',
           navigation: {
             focusRoot: function () { return headlessMode ? triggerTarget : (fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : keyboardTarget); },
