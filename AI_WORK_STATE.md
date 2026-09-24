@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `7f3a475565fec5548871e7c6c52a7ed8c0e945bc` (PR #51 merge)
-- Current branch: `main`
+- Current branch: `refactor/phase-c-focus-time-date-20260924`
 - Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #326 / `35958353342` (PR #51)
 - Latest green main CI + Pages: #327 / `35958853046`
-- Controller migration implementation progress: 50%
+- Controller migration implementation progress: 51%
 - Current Phase: Phase C
 - Current Task: `PHASE-C-001`
 
 ## CURRENT
 
 ### PHASE-C-001 — FocusController foundation + Time/Date composite regions
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 5%
 
 Why this is current:
 - Phase B Value + Picker Family is complete and green through PR #51 and main #327.
@@ -48,11 +48,17 @@ Audit already completed before implementation:
 - Calendar and PeriodPanel already use KeyboardRegion.bindVirtualFocus and ActiveItem; DatePicker can host those domains on its editor.
 - Existing browser smoke already covers TimePanel inner nodes non-tabbable, PeriodPanel single keyboard ring, DatePicker dual-panel seam and title/drill handoff. New tests should extend these contracts, not duplicate them.
 
+Current branch plan:
+- branch: `refactor/phase-c-focus-time-date-20260924`
+- FocusController will compose existing FocusManager / FocusScope / KeyboardRegion / KeyboardNavigation virtual focus rather than replace them.
+- first adapters: WheelPanel/TimePanel and Calendar/PeriodPanel.
+- no value, selection, popup-open, or CSS-state ownership moves in this pack.
+
 Next exact step:
-1. create a fresh PHASE-C-001 branch from current main after this checkpoint;
-2. implement the FocusController facade by composing existing focus authorities;
-3. migrate WheelPanel/TimePanel and Calendar/PeriodPanel adapters without changing value/selection ownership;
-4. add focused Phase C verification and missing browser regressions;
+1. implement FocusController facade + focused verifier;
+2. export it through core/shared protocol;
+3. migrate WheelPanel's canonical region and Calendar/PeriodPanel hosted virtual bindings;
+4. add missing browser ownership/region/readonly-disabled regressions;
 5. run full PR release CI, merge only green, then verify main CI + Pages.
 
 ## Current authority snapshot — after Phase A
