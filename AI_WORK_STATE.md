@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `85921cfc12e7af95a1b8f64cf54b4dbf6c50056d` (PR #71 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-f-semantic-color-channels-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-003 semantic color-channel PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-F-003 — semantic overlay / shadow color-channel closeout
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 55%
 
 Why this is current:
 - PHASE-F-002 token-graph first pack is merged and green through PR #71 exact-head CI #395 / `36011237135` and main release + Pages #396 / `36011730662`.
@@ -52,12 +52,19 @@ Scope:
 4. keep ColorPanel HSV/Hue intrinsic colors and ColorPicker gradient-stop physical contrast affordances as classified functional data for now;
 5. run exact-head full release/browser/package CI, merge only green, verify main + Pages, then audit remaining state selectors and CSS specificity/duplication.
 
+Implemented in current PHASE-F-003 semantic color-channel pack:
+- all 20 component/family lines that directly consumed physical black/white palettes are migrated; 22 pigment occurrences now derive from semantic overlay-base/overlay-text.
+- original opacity and elevation geometry are preserved exactly through color-mix percentages, so this is authority cleanup rather than visual redesign.
+- Badge ribbon, Card, Switch, SelectGroup, Table, Upload preview, Slider, Carousel and Image/ImagePreview no longer bind component chrome directly to physical black/white palette tokens.
+- Image preview video backing consumes semantic overlay-base directly; Carousel dots and hover chrome consume semantic overlay-text.
+- ColorPanel HSV/Hue spectrum colors and ColorPicker gradient-stop contrast affordances remain explicitly classified functional data rather than theme colors.
+- required `verify:phase-f-color-channels` forbids post-foundation direct physical palette consumption and rejects new hard-coded component colors outside the classified ColorPanel/gradient-stop boundary.
+
 Next exact step:
-1. create `refactor/phase-f-semantic-color-channels-20260924` from green main;
-2. migrate the 20 classified physical black/white component uses to existing semantic overlay channels without changing visual opacity/geometry;
-3. add `verify:phase-f-color-channels` and run full exact-head CI;
-4. merge only green and verify main + Pages;
-5. continue Phase F with state-channel/specificity/selector duplication audit.
+1. open PHASE-F-003 PR and run exact-head full release/browser/package CI;
+2. fix only real semantic-color verifier or visual regressions without creating new color-token families;
+3. merge only exact-head green and verify main + Pages;
+4. continue Phase F with state-channel/specificity/selector duplication audit.
 
 ## Current authority snapshot — after Phase A
 
