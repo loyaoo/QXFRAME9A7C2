@@ -102,15 +102,15 @@ function create(options) {
   }
 
   function getState() {
-    var virtualState = region.virtualFocus && Utils.isFunction(region.virtualFocus.getState) ? region.virtualFocus.getState() : null;
+    var virtualState = region && region.virtualFocus && Utils.isFunction(region.virtualFocus.getState) ? region.virtualFocus.getState() : null;
     return Object.freeze({
       activeRegion: activeRegion,
       activeKey: virtualState && virtualState.key || null,
       domain: virtualState && virtualState.domain || null,
       modality: virtualState && virtualState.modality || null,
       realFocusOwned: !!(documentRef && documentRef.activeElement === root),
-      hosted: region.hosted === true,
-      disabled: region.disabled === true,
+      hosted: !!(region && region.hosted === true),
+      disabled: !!(region && region.disabled === true),
       editLease: editLease,
       editLeaseActive: !!editLease,
       revision: revision,
