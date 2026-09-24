@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `7a03e956ed227170418906614294d27964286a33` (PR #67 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-e-overlay-consumers-20260924`
+- Open PRs at this checkpoint: pending PHASE-E-004 remaining overlay consumers PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-E-004 — Remaining direct OverlayRuntime consumers
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 90%
 
 Why this is current:
 - PHASE-E-003 Modal/Drawer resource migration is merged and green through PR #67 / CI #378 and main CI + Pages #379.
@@ -49,12 +49,21 @@ Scope:
 - add source + Chromium gates proving no direct migrated consumer bypasses OverlayController and resource lifetime remains correct.
 - leave Collapse/Tabs/Dropdown/TransitionGroup motion closeout for the following PHASE-E-005 unless a direct dependency requires a small adapter.
 
+Implemented in current PHASE-E-004 pack:
+- Image Preview, Loading and Upload document preview no longer import/create OverlayRuntime directly; each enters resource execution through OverlayController.
+- Image preserves raw `getPreviewOverlayRuntime()` compatibility while adding `getPreviewOverlayController()` and dual mask/content MotionController accessors; Image.createPreview forwards the same owners.
+- Loading preserves raw `getOverlayRuntime()`, exposes `getOverlayController()` and its Transition-backed MotionController.
+- Upload document/PDF preview exposes OverlayController/raw-runtime identity; media preview delegates Image's overlay + motion owners; document preview intentionally reports no synthetic MotionController.
+- logical preview/loading/file lifecycle state remains in existing component authorities.
+- dedicated Chromium gate verifies owner identity, Image/Loading leave resource lifetime and Upload document cleanup.
+- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, platform, component-base and 40 component contracts.
+
 Next exact step:
-1. enumerate remaining direct OverlayRuntime imports/creates and classify component/runtime-adapter ownership;
-2. migrate the smallest coherent group without changing logical visibility/open/value state;
-3. add dedicated resource-lifetime/browser conformance;
-4. run exact-head release CI, merge only green, then verify main + Pages;
-5. continue PHASE-E-005 Motion closeout, including Collapse rapid reversal.
+1. open/run the PHASE-E-004 Image/Loading/Upload PR from the audited branch;
+2. fix only exact-head Completion/release/browser failures without replacing canonical OverlayRuntime itself or inventing document-preview motion;
+3. merge only green and verify main release + Pages;
+4. audit direct component OverlayRuntime imports and require zero remaining component bypasses;
+5. checkpoint PHASE-E-004 as DONE and continue PHASE-E-005 Motion closeout (TransitionGroup / Collapse autosize / Tabs / Dropdown).
 
 ## Current authority snapshot — after Phase A
 
