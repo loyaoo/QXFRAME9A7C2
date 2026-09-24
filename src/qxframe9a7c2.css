@@ -880,7 +880,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   /* Mode recipe: solid tones use perceptual OKLab mixing; translucent channels mix with
    * transparent in sRGB. Neutral base inputs are stored as paired Light/Dark slots so a
    * global mode switch never leaks one mode's public semantic values into a nested boundary. */
-  :root,[data-qxframe9a7c2-theme="light"],[data-qxframe9a7c2-theme="light"] {
+  :root,[data-qxframe9a7c2-theme="light"] {
     color-scheme: light;
     --_qxframe9a7c2-accent-tone-target: black;
     --_qxframe9a7c2-accent-base-weight: 100%;
@@ -977,7 +977,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
     --qxframe9a7c2-ripple-outside-opacity: 1;
   }
 
-  [data-qxframe9a7c2-theme="dark"],[data-qxframe9a7c2-theme="dark"] {
+  [data-qxframe9a7c2-theme="dark"] {
     color-scheme: dark;
     --_qxframe9a7c2-accent-tone-target: white;
     --_qxframe9a7c2-accent-base-weight: 84%;
@@ -14232,7 +14232,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --_qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-scroll-track-radius, 999px);
   --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-bg, var(--qxframe9a7c2-scroll-track-color));
   --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, var(--qxframe9a7c2-scroll-thumb-color));
-  --_qxframe9a7c2-scroll-edge-shadow: var(--qxframe9a7c2-scroll-edge-shadow, var(--_qxframe9a7c2-scroll-edge-shadow));
+  --_qxframe9a7c2-scroll-edge-shadow: var(--qxframe9a7c2-scroll-edge-shadow, var(--_qxframe9a7c2-semantic-border-strong));
   --_qxframe9a7c2-scroll-motion-duration: var(--qxframe9a7c2-scroll-motion-duration, 120ms);
   --_qxframe9a7c2-scroll-motion-easing: var(--qxframe9a7c2-scroll-motion-easing, ease);
   position: relative;
@@ -15503,7 +15503,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-native-form select,
 .qxframe9a7c2-native-form textarea{
   --_qxframe9a7c2-native-field-bg:var(--_qxframe9a7c2-control-bg);--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border);--_qxframe9a7c2-native-field-text:var(--_qxframe9a7c2-control-text);--_qxframe9a7c2-native-field-outline:0 solid transparent;--_qxframe9a7c2-native-field-cursor:text;
-  box-sizing:border-box;width:100%;min-width:0;min-height:var(--_qxframe9a7c2-control-height);margin:0;padding:0 var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-native-field-border);border-radius:var(--_qxframe9a7c2-control-radius);outline:var(--_qxframe9a7c2-native-field-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);background:var(--_qxframe9a7c2-native-field-bg);color:var(--_qxframe9a7c2-native-field-text);box-shadow:none;cursor:var(--_qxframe9a7c2-native-field-cursor);font-family:var(--qxframe9a7c2-font-family-base);font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height);transition:border-color var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard),outline-color var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard),background-color var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard)
+  box-sizing:border-box;width:100%;min-width:0;min-height:var(--_qxframe9a7c2-control-height);margin:0;padding:0 var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-native-field-border);border-radius:var(--_qxframe9a7c2-control-radius);outline:var(--_qxframe9a7c2-native-field-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);background:var(--_qxframe9a7c2-native-field-bg);color:var(--_qxframe9a7c2-native-field-text);box-shadow:none;cursor:var(--_qxframe9a7c2-native-field-cursor);font-family:var(--_qxframe9a7c2-font-family);font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height);transition:border-color var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard),outline-color var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard),background-color var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard)
 }
 .qxframe9a7c2-form-input::placeholder,
 .qxframe9a7c2-form-textarea::placeholder,
@@ -16130,7 +16130,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 
 .qxframe9a7c2-sort{--_qxframe9a7c2-sort-item-radius:var(--qxframe9a7c2-sort-item-radius,var(--_qxframe9a7c2-navigation-radius));display:flex;flex-direction:column;gap:var(--qxframe9a7c2-space-2);min-width:0;color:var(--_qxframe9a7c2-semantic-text)}
 .qxframe9a7c2-sort.is-horizontal{flex-direction:row;align-items:stretch;overflow-x:auto}
-.qxframe9a7c2-sort-item{--_qxframe9a7c2-sort-item-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-sort-item-bg:var(--_qxframe9a7c2-item-bg,var(--_qxframe9a7c2-semantic-surface));--_qxframe9a7c2-sort-item-ring:var(--_qxframe9a7c2-item-ring,none);--_qxframe9a7c2-sort-item-opacity:1;--_qxframe9a7c2-sort-item-cursor:var(--_qxframe9a7c2-item-cursor,default);position:relative;display:flex;align-items:center;gap:var(--qxframe9a7c2-space-2);min-width:0;min-height:var(--qxframe9a7c2-control-height-md);padding:var(--qxframe9a7c2-space-2) var(--qxframe9a7c2-space-3);border:1px solid var(--_qxframe9a7c2-sort-item-border);border-radius:var(--_qxframe9a7c2-sort-item-radius);background:var(--_qxframe9a7c2-sort-item-bg);box-shadow:var(--_qxframe9a7c2-sort-item-ring);outline:none;opacity:var(--_qxframe9a7c2-sort-item-opacity);cursor:var(--_qxframe9a7c2-sort-item-cursor);transition:border-color .14s ease,box-shadow .14s ease,opacity .14s ease,transform .14s ease}
+.qxframe9a7c2-sort-item{--_qxframe9a7c2-sort-item-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-sort-item-bg:var(--_qxframe9a7c2-item-bg,var(--_qxframe9a7c2-semantic-surface));--_qxframe9a7c2-sort-item-ring:var(--_qxframe9a7c2-item-ring,none);--_qxframe9a7c2-sort-item-opacity:1;--_qxframe9a7c2-sort-item-cursor:var(--_qxframe9a7c2-item-cursor,default);position:relative;display:flex;align-items:center;gap:var(--qxframe9a7c2-space-2);min-width:0;min-height:var(--_qxframe9a7c2-control-height);padding:var(--qxframe9a7c2-space-2) var(--qxframe9a7c2-space-3);border:1px solid var(--_qxframe9a7c2-sort-item-border);border-radius:var(--_qxframe9a7c2-sort-item-radius);background:var(--_qxframe9a7c2-sort-item-bg);box-shadow:var(--_qxframe9a7c2-sort-item-ring);outline:none;opacity:var(--_qxframe9a7c2-sort-item-opacity);cursor:var(--_qxframe9a7c2-sort-item-cursor);transition:border-color .14s ease,box-shadow .14s ease,opacity .14s ease,transform .14s ease}
 .qxframe9a7c2-sort-item:focus-visible{--_qxframe9a7c2-sort-item-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-sort-item-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-sort-item.is-readonly{--_qxframe9a7c2-sort-item-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-sort-item-cursor:default}
 .qxframe9a7c2-sort-item.is-dragging{--_qxframe9a7c2-sort-item-ring:var(--_qxframe9a7c2-popup-shadow);--_qxframe9a7c2-sort-item-opacity:.55;--_qxframe9a7c2-sort-item-cursor:grabbing}
@@ -16523,7 +16523,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-json-root:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);box-shadow:none;border-radius:var(--_qxframe9a7c2-json-radius)}
 .qxframe9a7c2-json-root.is-virtual-focus-owner:focus-visible{outline:none}
 .qxframe9a7c2-json-action.is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
-.qxframe9a7c2-json-toolbar{display:flex;flex-wrap:wrap;gap:.375rem;margin-bottom:.5rem;font-family:var(--qxframe9a7c2-font-family)}
+.qxframe9a7c2-json-toolbar{display:flex;flex-wrap:wrap;gap:.375rem;margin-bottom:.5rem;font-family:var(--_qxframe9a7c2-font-family)}
 .qxframe9a7c2-json-tree{min-width:0}
 .qxframe9a7c2-json-tree>.qxframe9a7c2-tree{border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-json-radius);background:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-json-tree .qxframe9a7c2-tree-item{align-items:flex-start}

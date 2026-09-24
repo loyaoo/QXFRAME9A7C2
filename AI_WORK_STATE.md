@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `7c9e9455d7102dc0ba945bb5ab29ea28a5ab827d` (PR #70 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-f-token-graph-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-002 token graph PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-F-002 — canonical CSS token graph closeout
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 45%
 
 Why this is current:
 - PHASE-F-001 is merged and fully green through PR #70 exact-head CI #392 / `36009735693` and main release + Pages #393 / `36010087461`.
@@ -64,11 +64,19 @@ Scope:
 4. audit remaining physical-palette/shadow/overlay channels and move only semantically equivalent cases to existing semantic/family owners;
 5. leave broad cosmetic rewrites or new token families out unless the graph proves an owner is missing.
 
+Implemented in current PHASE-F-002 first pack:
+- Sort no longer references nonexistent `--qxframe9a7c2-control-height-md`; it consumes canonical `--_qxframe9a7c2-control-height`.
+- native/text form surfaces and JSON toolbar no longer reference nonexistent public font-family aliases; both consume canonical `--_qxframe9a7c2-font-family`.
+- Scroll edge shadow self-cycle is removed; the public override falls back to existing semantic border-strong.
+- duplicate Light/Dark mode selector members are removed without changing either mode's 93-variable contract.
+- required `verify:phase-f-token-graph` now rejects static unresolved no-fallback variables, permits only the four verified JS-owned dynamic projection channels, rejects custom-property dependency cycles, requires Light/Dark recipe symmetry and white/black baseline, and forbids internal consumption of public `--qxframe9a7c2-color-*` compatibility outputs.
+- physical-palette / hard-coded color counts are reported by the verifier for the next Phase F cleanup pack but are not yet treated as blanket failures because ColorPanel intrinsic color-model data is intentional.
+
 Next exact step:
-1. create `refactor/phase-f-token-graph-20260924` from current green main;
-2. land the four graph fixes + selector dedupe and the required graph verifier;
-3. run exact-head full release/browser/package CI and fix only real Phase F graph failures;
-4. merge only green, verify main + Pages, then continue the remaining physical-color/state-channel cleanup within Phase F.
+1. open the PHASE-F-002 token graph PR and run exact-head full release/browser/package CI;
+2. fix only graph/verifier regressions without globalizing the four dynamic variables or inventing new aliases;
+3. merge only exact-head green and verify main + Pages;
+4. continue Phase F with classified physical-palette/shadow/overlay cleanup and state-channel audit.
 
 ## Current authority snapshot — after Phase A
 
