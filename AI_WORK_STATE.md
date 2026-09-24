@@ -10,15 +10,15 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `460895256268187c5a795aa9c7e2348e558239f3` (PR #59 merge)
-- Current branch: `refactor/phase-c-tree-cascader-interaction-20260924`
-- Open PRs at this checkpoint: pending PHASE-C-004 TreeSelect/Cascader PR
+- Last code-affecting main commit: `a2cf08c4777d1afbc94b958cc229415b1ef255a5` (PR #60 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; 67 stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #360 / `35977872248` (PR #59)
-- Latest green main CI + Pages: #361 / `35978193325`
-- Controller migration implementation progress: 96%
+- Latest green Controller PR CI: #362 / `35979415228` (PR #60)
+- Latest green main CI + Pages: #363 / `35979815823`
+- Controller migration implementation progress: 97%
 - Current Phase: Phase C acceptance closeout (Phase D first two packs already landed)
 - Current Task: `PHASE-C-004`
 
@@ -26,7 +26,7 @@
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
 Status: IN_PROGRESS
-Task progress: 92%
+Task progress: 96%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -69,25 +69,21 @@ Completed PHASE-C-004 Select reference pack (PR #59):
 - required `verify:phase-c-select` passed in PR #59 CI #360 / `35977872248`.
 - merge commit `460895256268187c5a795aa9c7e2348e558239f3`; main release + Pages #361 / `35978193325` succeeded.
 
-Implemented in current PHASE-C-004 TreeSelect/Cascader pack:
-- TreeSelect and Cascader each own one InteractionController scope plus one instance CapabilityController snapshot.
-- Control-level business `onKeydown` callbacks are removed; FocusController/KeyboardNavigation remains the only DOM keydown owner and forwards allowed keys into InteractionController.
-- TreeSelect routes OPEN / MOVE / SELECT / DISMISS / REMOVE semantics through the scope while preserving native editable caret priority and hierarchical Enter/Space check behavior.
-- Cascader separates ACTIVATE navigation from SELECT mutation: readOnly/busy may enter child columns, but leaf selection remains blocked.
-- Cascader's unused legacy `handlePanelKeydown()` path is removed so there is no second dormant physical-key implementation.
-- component mutation helpers no longer use static `CapabilityController.mutationLocked(opts)`; instance capability owners gate select/remove/clear paths and refresh on option updates.
-- ComponentProfile ownership and public controller accessors are explicit for both components.
-- new required `verify:phase-c-popup-composites` passes in sandbox Chromium and covers readOnly/busy/disabled, TreeSelect Enter/Space checks + controlled proposals, Cascader child navigation + repeat activation.
-- adjacent sandbox gates pass: `verify-source-esm-browser`, `verify-popup-field-family`, `verify-focus-controller`, `verify-modern-architecture`, `verify-high-risk-browser`.
+Completed PHASE-C-004 TreeSelect/Cascader pack (PR #60):
+- TreeSelect and Cascader each own one InteractionController scope + one CapabilityController snapshot.
+- Control-level business keydown callbacks are removed; FocusController/KeyboardNavigation remains the only DOM keyboard owner.
+- TreeSelect preserves hierarchical Enter/Space checks, controlled proposal semantics, native editable priority and readOnly/busy browsing.
+- Cascader separates child-column ACTIVATE navigation from leaf SELECT mutation, so readOnly/busy may traverse descendants without committing a value.
+- unused Cascader legacy handlePanelKeydown path is removed.
+- required verify:phase-c-popup-composites passed in PR #60 CI #362 / `35979415228`.
+- merge commit `a2cf08c4777d1afbc94b958cc229415b1ef255a5`; main release + Pages #363 / `35979815823`: success.
 
 Next exact step:
-1. open/run the PHASE-C-004 TreeSelect/Cascader PR from the audited five-file branch;
-2. fix only exact-head Completion/release/browser failures without reintroducing Control-level keydown or static mutation authority;
-3. merge only green and verify main CI + Pages;
-4. finish Phase C with the higher-risk Tags/Table pack, update `FOUR_UNIFICATIONS_ACCEPTANCE.md`, and sign off Phase C;
-5. resume Phase D with Table remote/local selection semantics after Phase C acceptance is complete.
-
-## Current authority snapshot — after Phase A
+1. create the final PHASE-C-004 Tags/Table branch from green main #363;
+2. move standalone Tags root keyboard ownership into InteractionController while retaining its native input edit subdomain;
+3. move Table main grid semantics plus filter-popup F6 and resize Escape into explicit InteractionController scopes, with one instance CapabilityController preserving existing loading/readOnly rules;
+4. require dedicated Chromium regressions plus source-ESM / focus / high-risk / architecture / component-contract gates;
+5. merge only exact-head green, verify main + Pages, update FOUR_UNIFICATIONS_ACCEPTANCE.md, and sign off Phase C before resuming Phase D.
 
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
@@ -117,6 +113,20 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-C-004C — TreeSelect/Cascader Interaction + Capability owners
+Status: DONE
+Evidence:
+- PR #60 merged
+- merge commit `a2cf08c4777d1afbc94b958cc229415b1ef255a5`
+- PR CI #362 / `35979415228`: success
+- main CI + Pages #363 / `35979815823`: success
+Outcome:
+- TreeSelect/Cascader use explicit InteractionController + CapabilityController ownership.
+- FocusController/KeyboardNavigation is the sole DOM keyboard owner.
+- readOnly/busy browse behavior is separated from mutation authority.
+- Cascader child traversal remains available without leaf commit while locked.
+- legacy duplicate Cascader panel-keydown logic is removed.
 
 ### PHASE-C-004B — Select Interaction + Capability reference
 Status: DONE
