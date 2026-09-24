@@ -1,6 +1,7 @@
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { Renderer } from '../core/renderer.js';
 import { IdManager } from '../utils/id.js';
 import { Utils } from '../utils/utils.js';
@@ -377,7 +378,32 @@ function renderProgress(instance) {
     return instance;
 }
 
+function applyFeedback(instance, record) {
+    const patch = {};
+    if (record.progress !== null) patch.percent = clamp(record.progress, 0, 100);
+    if (record.status === 'success') {
+        patch.status = 'success';
+        if (record.progress === null) patch.percent = 100;
+    } else if (record.status === 'error') patch.status = 'exception';
+    else if (record.status === 'pending' || record.status === 'progress') patch.status = 'active';
+    else patch.status = 'normal';
+    instance.updateOptions(patch);
+    return instance;
+}
+function feedbackProjector(instance) {
+    return Object.freeze({
+        show: record => applyFeedback(instance, record),
+        update: (_handle, record) => applyFeedback(instance, record),
+        close: () => true
+    });
+}
+
 export class Progress extends Component {
+    static profile = Object.freeze({
+        name: 'Progress',
+        feedback: Object.freeze({ mode: 'status-progress-projection' }),
+        ownership: Object.freeze({ feedback: 'FeedbackController' })
+    });
     static options = Object.freeze({
         percent: 0,
         type: 'line',
@@ -471,6 +497,7 @@ export class Progress extends Component {
         return this.#patchFromMethod({ success: { percent: clamp(percent, 0, 100), strokeColor: opts.success.strokeColor } }, 'setSuccessPercent');
     }
     setStatus(status) { return this.#patchFromMethod({ status: enumValue(status, STATUSES, 'normal', 'status') }, 'setStatus'); }
+    createFeedbackController(options = {}) { return FeedbackController.createForProjector(feedbackProjector(this), Utils.mergeOwn({ ownerId: this.id }, options), 'local'); }
     getState() {
         const opts = this.options;
         return Object.freeze({
