@@ -8,7 +8,7 @@
 
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
-- Current main HEAD after bootstrap cleanup: `a459e28f2486ce89615322c6e49094fddd8464a4`
+- Last code-affecting main commit: `a459e28f2486ce89615322c6e49094fddd8464a4`
 - Current branch: `main`
 - Bootstrap PR: #46 merged
 - Package version: `2.19.81`
