@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `37a506d3c6dc2bfdfe3e00a059e7f0fb9970bd49` (PR #54 merge)
-- Current branch: `main`
+- Current branch: `refactor/phase-d-selection-foundation-20260924`
 - Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #337 / `35965963724` (PR #54)
 - Latest green main CI + Pages: #338 / `35966293514`
-- Controller migration implementation progress: 80%
+- Controller migration implementation progress: 81%
 - Current Phase: Phase D
 - Current Task: `PHASE-D-001`
 
 ## CURRENT
 
 ### PHASE-D-001 — SelectionController foundation + ItemCollection/List/OptionList/Tree first pack
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 5%
 
 Why this is current:
 - PHASE-C-003 is merged and green through PR #54 and main #338, so Phase C is complete.
