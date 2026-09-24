@@ -10,51 +10,45 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `108fa1d67d6a129c13f7f9397e11968867a05adb` (PR #75 merge)
-- Current branch: `refactor/phase-f-static-closeout-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-007 static-closeout PR
+- Last code-affecting main commit: `b764a1a378cf8fc2dde8edc83dc6c0bc4155b3d8` (PR #76 merge)
+- Current branch: `docs/phase-f-signoff-phase-g-start-20260924`
+- Open PRs at this checkpoint: pending Phase F signoff / Phase G start PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase F PR CI: #403 / `36017571445` (PR #75)
-- Latest green main CI + Pages: #404 / `36018227817`
+- Latest green Phase F PR CI: #405 / `36019147203` (PR #76)
+- Latest green main CI + Pages: #406 / `36019711807`
 - Controller migration implementation progress: 99%
-- Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-007`
+- Current Phase: Phase G — Feedback + Form
+- Current Task: `PHASE-G-001`
 
 ## CURRENT
 
-### PHASE-F-007 — static CSS / scoped-theme closeout
-Status: IN_PROGRESS
-Task progress: 65%
+### PHASE-G-001 — FeedbackController + FormController foundations
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-F-006 is merged through PR #75; exact-head CI #403 / `36017571445` and main release + Pages #404 / `36018227817` are green.
-- the remaining Phase F handbook gates are closeout evidence rather than a new visual redesign.
-- `docs/all-components-static.html` is a 1.8 MB static state matrix with 1500+ authored state markers and loads no framework runtime JS; it loads only docs theme/Inspector helpers.
-- existing CSS-only browser coverage proves root/scoped Light/Dark resolution, but the final gate must explicitly cover a scoped portal container and prove theme changes do not mutate value/selection/open/focus state.
-- the static page / docs-tool boundary is not yet a required Phase F verifier.
+- Phase F is accepted through PR #70–#76; final exact-head CI #405 / `36019147203` and main release + Pages #406 / `36019711807` are green.
+- the repository does not yet contain `FeedbackController` or `FormController`; Phase G must evolve the existing mature authorities instead of creating parallel truth.
+- `NoticeService` + `NoticeClock` are the existing global feedback/lifecycle execution authorities.
+- `FormBridge` is the existing native field/FormData/reset carrier authority; committed values remain ValueController-owned.
+- handbook Phase G gates are same-name fields, native submit/reset, async validator stale protection, external controlled reset, and local/global feedback de-dup.
 
-Frozen impact map:
-- add `verify:phase-f-static-closeout` for the all-components static page: canonical dist CSS only, no framework JS bundle, representative authored hover/focus/active/disabled/loading/selected/error/warning/success/keyboard-focus states, and docs-only helper scripts.
-- extend the existing CSS-authority browser fixture with a popup-surface inside a scoped theme container (portal-host simulation) and business-state/focus snapshots across theme changes.
-- do not add ThemeController/TokenController/runtime theme state or CSS-variable projection.
-- do not change component visual tokens unless a closeout gate finds a reproducible defect.
-- no `@layer`, `:is()`, `:where()`.
-
-Implemented in current PHASE-F-007 pack:
-- added required `verify:phase-f-static-closeout` for `docs/all-components-static.html`: final dist CSS, no framework runtime bundle, docs-only helpers and direct authored visual-state matrix.
-- the static gate verifies representative hover/focus/active/disabled/loading/selected/error/warning/success/keyboard-focus states exist in HTML and docs helpers do not synthesize component states.
-- extended `verify:phase-f-css-authority` with a real `.qxframe9a7c2-popup-surface` under a scoped theme container to model a scoped portal host.
-- the CSS-only browser fixture now snapshots value/class/open/selected-key/real-focus before and after theme changes and requires them to remain identical.
-- no production component CSS or runtime JS changed in this pack.
+Frozen first-pack impact map:
+- add `FeedbackController` as the operation/task feedback facade over existing local-feedback adapters and NoticeService channels; it must not own task/value state or duplicate NoticeClock timing.
+- add `FormController` as field registry + dirty/touched/pending/valid + validation/submit/reset transaction authority while delegating native carrier/FormData work to FormBridge and value reset/commit to field adapters/ValueController.
+- field identity is `fieldId`; duplicate `name` values are valid and must not overwrite one another.
+- use revision/generation checks for async validation so stale failures cannot overwrite newer success.
+- do not migrate every Form/Feedback consumer in the foundation pack; prove one-owner identity and contract behavior first, then migrate direct consumers in coherent follow-up packs.
+- no component-name dispatch, no second committed value, no duplicate native carrier, no new global notice implementation.
 
 Next exact step:
-1. open PHASE-F-007 PR and run exact-head full release/browser/package CI;
-2. merge only exact-head green and verify main + Pages;
-3. sign off Phase F in `AI_WORK_STATE.md` and `FOUR_UNIFICATIONS_ACCEPTANCE.md`;
-4. prune merged Phase F task branches;
-5. advance immediately to Phase G — Feedback + Form.
+1. after this signoff PR is green/merged, create `refactor/phase-g-feedback-form-foundation-20260924` from latest green main;
+2. audit exact public/core export and ComponentProfile integration points for the two controller facades;
+3. implement FeedbackController + FormController foundations with dedicated structural/Node/browser contract gates for same-name fields, stale validation and reset semantics;
+4. open exact-head PR, merge only green, verify main + Pages;
+5. continue Phase G direct-consumer migration and local/global feedback de-dup.
 
 ## Current authority snapshot — after Phase A
 
@@ -84,6 +78,35 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-007 — static CSS / scoped-theme closeout
+Status: DONE
+Evidence:
+- PR #76 merged
+- merge commit `b764a1a378cf8fc2dde8edc83dc6c0bc4155b3d8`
+- exact-head CI #405 / `36019147203`: success
+- main CI + Pages #406 / `36019711807`: success
+Outcome:
+- `verify:phase-f-static-closeout` proves the 1.8 MB all-components static matrix consumes final dist CSS without framework runtime JS and authors representative visual states directly in HTML.
+- docs theme/Inspector helpers remain docs-only and do not instantiate framework runtime or synthesize component visual states.
+- the CSS-only Chromium fixture verifies a popup surface under a scoped theme container inherits the physical theme boundary.
+- value/class/open/selected-key/real-focus snapshots remain invariant across root/scoped theme changes.
+- no production component CSS or runtime JS changed in this closeout pack.
+
+### PHASE-F — CSS Theme / Token System Unification
+Status: ACCEPTED
+Evidence:
+- implementation packs PR #70–#76
+- exact-head CI #392 / #395 / #397 / #399 / #401 / #403 / #405: success
+- corresponding main release + Pages #393 / #396 / #398 / #400 / #402 / #404 / #406: success
+Outcome:
+- one canonical CSS source and one final self-contained dist CSS authority.
+- no ThemeController/TokenController/ThemeRuntime/TokenRuntime or core JS theme/token truth.
+- canonical primitive → semantic → family → component → state graph, Light/Dark/scoped theme contract, semantic overlay/shadow channels and state cascade are statically/browser gated.
+- token graph is acyclic; unresolved channels are classified; component physical palette/hard-color use is gated.
+- late override bucket, repeated manufactured specificity and proven duplicate/dead CSS owners are removed.
+- static no-framework-JS state matrix, scoped portal inheritance and theme/business-state separation are required CI gates.
+- Phase F acceptance does not claim Phase G–I completion.
 
 ### PHASE-F-006 — duplicate CSS owner / dead-rule cleanup
 Status: DONE
