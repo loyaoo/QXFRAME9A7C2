@@ -9,7 +9,7 @@
 
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
-- Current repository HEAD: `f8f5047d76f8d9978284d3cb62508e9188c20051`
+- Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2` (PR #48 merge)
 - Current branch: `main`
 - Open PRs at this checkpoint: none
