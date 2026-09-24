@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `56bbf6698a9116630c37158fbdd9879269c18a25` (PR #61 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-d-table-selection-20260924`
+- Open PRs at this checkpoint: pending PHASE-D-003 Table selection PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-D-003 — Table local/remote SelectionController semantics
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 80%
 
 Why this is current:
 - handbook Phase C priority scope is now fully accepted through PR #56 and PR #58–#61.
@@ -51,12 +51,23 @@ Scope:
 - preserve pagination/virtualization/sort/filter/edit/controlled contracts.
 - add structural + Chromium regression gates for local multiple selection, controlled proposal, remote allMatching exclusions, query-revision invalidation and no duplicate activeKey/selected-key owner.
 
+Implemented in current PHASE-D-003 Table selection pack:
+- SelectionController now supports generic remote semantic channels without creating a second selected-key Set; remote exclusions reuse the canonical Selection primitive.
+- remote semantic state carries allMatching, queryKey, excludedKeys, knownCount and its own query-selection revision; query-key reconciliation clears stale allMatching state.
+- TableModel no longer imports Selection directly; it creates one SelectionController and uses the controller's `selected` channel as its canonical local selection store.
+- TableModel owns dataset DataRevision and advances it on item/remote-data/row/data-contract mutations; the selected channel anchor binds that revision source.
+- Table reuses `model.selectionController` and removes its component-local `remoteSelection = { allMatching, excludedKeys:Set, fingerprint }` truth.
+- Table query-wide selection uses the controller remote channel, keeps exclusions semantic, never materializes allMatching into current-page selectedKeys, and exposes knownCount/queryRevision/dataRevision in the selection snapshot.
+- Table ComponentProfile declares SelectionController ownership and public `getSelectionController()` exposes the same controller identity as TableModel.
+- new required `verify:phase-d-table-selection` passes Node + Chromium coverage for store identity, stale anchor invalidation, allMatching exclusions, known count and query-fingerprint invalidation.
+- adjacent sandbox gates pass: `verify:selection-controller`, `verify-source-esm-browser`, `verify:collection-family`, `verify:focus-controller`, `verify:phase-c-tail`, `verify:high-risk-browser`, `verify:architecture`, `verify:component-base`, `verify:contracts`.
+
 Next exact step:
-1. map current Table/TableModel local and remote selection writable paths on current main;
-2. decide the minimal SelectionController adapter contract that reuses existing TableModel state rather than mirroring it;
-3. implement the smallest coherent Table selection pack with dedicated source/browser verification;
-4. run exact-head PR Completion audit + release/browser/package CI, merge only green, then verify main + Pages;
-5. continue Phase D with Tags and remaining Select/TreeSelect/Cascader selection consumers after Table is signed off.
+1. open/run the PHASE-D-003 Table selection PR from the audited branch;
+2. fix only exact-head Completion/release/browser failures without restoring component-local remote selection truth or direct TableModel Selection ownership;
+3. merge only green and verify main release + Pages;
+4. checkpoint PHASE-D-003 as DONE;
+5. continue Phase D with Tags selection semantics, then remaining Select/TreeSelect/Cascader selection consumers.
 
 ## Current authority snapshot — after Phase A
 
