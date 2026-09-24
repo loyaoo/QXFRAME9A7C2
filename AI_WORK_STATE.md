@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `2933f1feae0b6bf6891f4db5fe578984aca8aa54` (PR #55 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-d-transfer-selection-20260924`
+- Open PRs at this checkpoint: pending PHASE-D-002 PR
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #341 / `35970615817` (PR #55)
 - Latest green main CI + Pages: #342 / `35970931277`
-- Controller migration implementation progress: 86%
+- Controller migration implementation progress: 89%
 - Current Phase: Phase D
 - Current Task: `PHASE-D-002`
 
 ## CURRENT
 
 ### PHASE-D-002 — Transfer multi-channel selection + per-channel DataRevision
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 80%
 
 Why this is current:
 - PHASE-D-001 is merged and green through PR #55 / PR CI #341 and main CI + Pages #342.
@@ -46,12 +46,22 @@ Scope:
 - preserve search, pagination, table projection, disabled/readOnly/loading and move/reorder behavior;
 - add structural/browser regressions proving source/target checked independence, per-channel stale-anchor invalidation and no duplicate selected-key truth.
 
+Implemented in current PHASE-D-002 sandbox/branch:
+- SelectionController now owns revision source/local revision state per channel while retaining the one-argument global `setRevisionSource(source)` compatibility path.
+- new `revisionSources` creation option plus `setRevisionSource(channel, source)`, `getRevisionSource(channel)`, `getDataRevision(channel)` and `dataRevisions` expose channel-scoped revision authority without adding a second key store.
+- ItemCollection binds its own Collection revision source to its explicit selection channel; its state reports that channel revision instead of a controller-global revision.
+- Transfer owns one SelectionController facade with independent `sourceChecked` and `targetChecked` Selection channels; both ItemCollections share that facade and expose the same raw channel stores.
+- Transfer final `targetValues` + `targetOrder` remain the sole transferred-value/order authority and FormBridge source; they were not mirrored into SelectionController.
+- Transfer ComponentProfile declares SelectionController ownership and exposes `getSelectionController()` for authority inspection/compatibility.
+- structural verification covers no duplicate Selection store, per-channel source binding, Transfer single-facade ownership and independent source/target revision invalidation.
+- source-ESM Chromium regression passes shared-controller identity, checked-channel independence, one-sided stale-anchor invalidation and target-value independence.
+- local sandbox gates pass: `verify:selection-controller`, `verify:shared-protocol`, `verify:collection-family`, `verify:component-base`, `verify:component-contracts`, `verify:high-risk-authorities`, `verify:registry-removal-readiness`, `verify:architecture`, `verify-source-esm-browser`.
+
 Next exact step:
-1. create a fresh PHASE-D-002 branch from current main;
-2. extend SelectionController anchor/revision APIs to bind revisionSource per channel while preserving the existing global-source compatibility path;
-3. migrate Transfer source/target ItemCollections onto explicit `sourceChecked` / `targetChecked` channels without moving final target order into a second writable store;
-4. add/update `verify:selection-controller` and browser regressions for independent channel revisions;
-5. run full PR release CI, merge only green, then verify main CI + Pages.
+1. create/push the PHASE-D-002 branch from current main with only the seven audited changed files;
+2. run full PR Completion audit + release/browser/package CI and fix only real failures without weakening per-channel revision or single-store gates;
+3. merge only the green PR head and verify main CI + Pages;
+4. checkpoint PHASE-D-002 as DONE, then continue Phase D with Table remote selection semantics before Tags/Cascader consumers.
 
 ## Current authority snapshot — after Phase A
 

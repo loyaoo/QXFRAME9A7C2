@@ -84,10 +84,10 @@ function create(options) {
       maxCount: opts.maxCount,
       value: opts.value !== undefined ? opts.value : opts.defaultValue
     };
-    selectionController = SelectionController.create({ revisionSource:collection, channels:channelSpecs });
+    selectionController = SelectionController.create({ channels:channelSpecs, revisionSources:{ [selectionChannel]:collection } });
   } else {
     if (!Utils.isFunction(selectionController.getChannel) || !Utils.isFunction(selectionController.setAnchor)) throw new TypeError('[QXFRAME9A7C2] ItemCollection selectionController must be a SelectionController.');
-    if (Utils.isFunction(selectionController.setRevisionSource)) selectionController.setRevisionSource(collection);
+    if (Utils.isFunction(selectionController.setRevisionSource)) selectionController.setRevisionSource(selectionChannel, collection);
   }
   var selection = selectionController.getChannel(selectionChannel);
   var activeItem = ActiveItem.create({
@@ -1515,7 +1515,7 @@ function create(options) {
       focusVisible: focusVisible === true,
       visibleActiveKey: visibleActiveKey() || null,
       selectionAnchorValue: selectionController.getAnchor(selectionChannel),
-      selectionDataRevision: selectionController.dataRevision,
+      selectionDataRevision: Utils.isFunction(selectionController.getDataRevision) ? selectionController.getDataRevision(selectionChannel) : selectionController.dataRevision,
       searchValue: searchState.query,
       disabled: isComponentDisabled(),
       readOnly: isReadOnly(),
