@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 
 Branch evidence:
 - branch: `refactor/phase-a-shared-protocol-20260924`
-- current branch HEAD: `e83ff0ce5d3047d2df4bb828662da7b6a780e2d2`
+- current branch HEAD: `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`
 - branch is 16 commits ahead / 0 behind kickoff main `b54e8be325498b680df7059ee53929d40caf13b0`
 - PR: #47 open
-- CI: run #309 / `35952426342` queued on PR creation
+- CI: runs #309 / `35952426342` and #310 / `35952462790` failed at `audit:completion` because the new Shared Protocol code violated the existing prototype-merge safety gate (2 `Object.assign` uses + 1 unguarded dynamic write); gate unchanged, source fixed in `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`; replacement CI pending
 
 Prerequisites:
 - OPS-001 repository cleanup merged green in PR #46;
@@ -83,7 +83,7 @@ Completed in current code batch:
 - added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
 
 Next exact step:
-- create the Phase A PR, run full GitHub Actions release CI, fix any failures without weakening gates, then wire ControllableStateCore/DataRevision/ProjectionScheduler into existing authorities in a second Phase A batch only after this infrastructure is green.
+- wait for replacement PR CI after `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`; if it fails, fix the implementation without changing safety/release gates. When green, merge PR #47, verify main CI + Pages, then start the second Phase A batch wiring protocol metadata/revision/projection into the existing authorities.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
