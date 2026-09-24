@@ -7,45 +7,46 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-24
+- Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `4c901ed23be08b71e8c938d346f2730060b6d766` (PR #81 merge)
-- Current branch: `refactor/phase-h-notice-feedback-20260924`
-- Open PRs at this checkpoint: pending PHASE-H-002 notice/feedback PR
+- Last code-affecting main commit: `deede43a127e525458c1b3163b24c048881c56dc` (PR #82 merge)
+- Current branch: `refactor/phase-h-feedback-presenters-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-003 feedback-presenters PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #423 / `36028486399` (PR #81)
-- Latest green main CI + Pages: #424 / `36028914790`
+- Latest green Phase H PR CI: #427 / `36029897206` (PR #82)
+- Latest green main CI + Pages: #428 / `36070432617`
 - Overall handbook implementation progress: 95%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-002`
+- Current Task: `PHASE-H-003`
 
 ## CURRENT
 
-### PHASE-H-002 — NoticeService + Message/Notification M/O/B migration
+### PHASE-H-003 — Progress + Result + Loading feedback presenters
 Status: IN_PROGRESS
 Task progress: 75%
 
 Completed prerequisite:
-- PHASE-H-001 executable target matrix is DONE through PR #81, exact-head CI #423 / `36028486399`, merge `4c901ed23be08b71e8c938d346f2730060b6d766`, main release + Pages #424 / `36028914790`.
-- the target matrix now makes all 40 public target combinations and internal/base migration targets executable CI input.
+- PHASE-H-002 is DONE through PR #82, exact-head CI #427 / `36029897206`, merge `deede43a127e525458c1b3163b24c048881c56dc`, main release + Pages #428 / `36070432617`.
+- Message and Notification are H accepted for Motion/Overlay/Feedback; NoticeService no longer bypasses OverlayController for notice layer ownership.
 
 Implemented in current pack:
-- added `OverlayController.createLayerLease()` as the high-level layer-resource facade over canonical LayerManager; it owns no logical open state and adds no second layer stack.
-- migrated NoticeService away from direct LayerManager access; notice frame layer registration/update/z-index/release now enters through OverlayController.
-- existing NoticeService lifecycle/timing remains NoticeService + NoticeClock authority; presence remains TransitionGroup → MotionController.
-- Message and Notification now declare exact handbook M/O/B ComponentProfiles and canonical ownership: MotionController, OverlayController, FeedbackController.
-- Message/Notification expose `createFeedbackController()` for operation/task-linked global feedback while preserving their existing raw notice APIs.
-- dedicated structural/contract gate proves no NoticeService LayerManager bypass and identity-preserving FeedbackController notice updates.
-- strict source-ESM Chromium coverage exercises Message/Notification pending→success update under one request identity.
+- added generic `FeedbackController.createForProjector()` so local/form/global visible projectors bind without duplicating controller setup.
+- Progress now has exact handbook Feedback profile/ownership and an instance-bound FeedbackController projector mapping pending/progress/success/error to canonical progress state.
+- Result now has exact handbook Feedback profile/ownership and an instance-bound FeedbackController projector mapping operation status to result presentation and clear→hide.
+- Loading now has exact handbook Capability/Motion/Overlay/Feedback profile/ownership.
+- Loading open enters a real CapabilityController; existing Transition→MotionController and OverlayController paths remain the sole motion/overlay authorities.
+- Loading exposes an instance-bound FeedbackController projector for pending/progress visible state and terminal/clear close.
+- Phase H profile regression floor rises from 14 after H-002 to 17 in this pack.
+- dedicated Node conformance gate plus strict source-ESM Chromium checks cover all three presenter mappings and Loading controller access.
 
 Next exact step:
-1. open PHASE-H-002 PR and run exact-head full release/browser/package CI.
+1. run PHASE-H-003 exact-head full release/browser/package CI.
 2. merge only exact-head green; verify main + Pages.
-3. mark Message + Notification H accepted and NoticeService internal overlay path migrated.
-4. immediately batch the next simple presentation/state families from the Phase H matrix.
+3. mark Progress, Result and Loading H accepted.
+4. continue with the next high-leverage shared family instead of one-component PRs.
 
 ## Current authority snapshot — after Phase A
 
@@ -57,7 +58,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
 - Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
 - Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
-- Form: `FormBridge` remains native field/FormData/reset carrier authority. Phase G will add FormController above it without duplicating carrier/value ownership.
+- Form: `FormBridge` remains native field/FormData/reset carrier authority. `FormController` is now the accepted Phase G field/form transaction coordinator above it; Phase H direct field consumers still need migration without duplicating carrier/value ownership.
 - Theme/token: Phase F is accepted. CSS is the sole visual authority; ComponentProfile exposes exactly 9 Runtime Controllers and no theme/tokens runtime capabilities. CI recursively rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical CSS theme selector.
 - Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
@@ -75,6 +76,22 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-002 — NoticeService + Message/Notification M/O/B migration
+Status: DONE
+Evidence:
+- PR #82 merged
+- merge commit `deede43a127e525458c1b3163b24c048881c56dc`
+- exact-head CI #427 / `36029897206`: success
+- main CI + Pages #428 / `36070432617`: success
+Outcome:
+- NoticeService no longer accesses LayerManager directly; notice layer resource ownership enters OverlayController through `createLayerLease()`.
+- NoticeService/NoticeClock remain notice lifecycle/timing authorities and TransitionGroup→MotionController remains presence authority.
+- Message and Notification declare exact handbook Motion/Overlay/Feedback profiles.
+- operation/task-linked global feedback uses FeedbackController identity de-dup while raw Message/Notification APIs remain compatible.
+- Message and Notification are H accepted; NoticeService internal overlay path is H-migrated.
+
+
 
 ### PHASE-H-001 — executable 40-component target matrix
 Status: DONE
