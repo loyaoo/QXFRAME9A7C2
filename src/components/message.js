@@ -1,4 +1,5 @@
 import { NoticeService } from '../core/noticeService.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { NoticePreset } from '../core/noticePreset.js';
 
 var U = NoticeService.utils;
@@ -80,6 +81,14 @@ var channel = NoticeService.createChannel({ name: 'Message', slug: 'message', co
     
 function configure(next) { return preset.configure(DEFAULTS, next, normalize); }
     
+function createFeedbackController(options) {
+  var source = U.mergeOwn(options || {});
+  var projectorOptions = source.projectorOptions;
+  delete source.projectorOptions;
+  if (!source.globalProjector) source.globalProjector = FeedbackController.createNoticeProjector(channel, projectorOptions);
+  return FeedbackController.create(source);
+}
+
 function createTyped(type, content, options) {
   if (content && typeof content === 'object' && !Array.isArray(content) && !content.nodeType) {
     throw new TypeError('[QXFRAME9A7C2] Message.' + type + '() accepts (content, options?) only; options-object shorthand was removed.');
@@ -93,6 +102,14 @@ function createTyped(type, content, options) {
 
 export const Message = Object.freeze({
     definition: Object.freeze({ initializer: false }),
+    profile: Object.freeze({
+      name: 'Message',
+      motion: Object.freeze({ mode: 'notice-presence' }),
+      overlay: Object.freeze({ mode: 'notice-layer' }),
+      feedback: Object.freeze({ global: true }),
+      ownership: Object.freeze({ motion: 'MotionController', overlay: 'OverlayController', feedback: 'FeedbackController' })
+    }),
+    createFeedbackController: createFeedbackController,
     create: channel.create,
     info: function (value, options) { return createTyped('info', value, options); },
     success: function (value, options) { return createTyped('success', value, options); },
