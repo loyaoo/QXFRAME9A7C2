@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { ActionContext, OperationResult, ComponentProfile, FeedbackController, FormController } from '../src/core/index.js';
 
 function context(reason){return ActionContext.create(reason,{source:'programmatic'});}
+
+const formControllerSource=fs.readFileSync(new URL('../src/core/formController.js',import.meta.url),'utf8');
+assert.doesNotMatch(formControllerSource,/\bbaseline\b/,'FormController must not copy the business value/reset baseline owned by ValueController.');
 
 assert.equal(ComponentProfile.controllers.length,9);
 assert.ok(ComponentProfile.controllers.includes('FeedbackController'));
@@ -81,6 +85,16 @@ left='A2';
 assert.equal(leftField.notifyValue(context('left-change')).status,'applied');
 assert.equal(form.getField('left').dirty,true);
 assert.equal(form.getField('right').dirty,false);
+let adapterDirty=false,adapterValue='seed';
+const adapterDirtyField=form.registerField({
+  fieldId:'adapter-dirty',
+  name:'dirty-probe',
+  adapter:{getValue:()=>adapterValue,getSerializedValue:()=>adapterValue,isDirty:()=>adapterDirty}
+});
+adapterValue='changed';adapterDirty=true;adapterDirtyField.notifyValue(context('adapter-dirty-change'));
+assert.equal(form.getField('adapter-dirty').dirty,true,'FormController must consume owner dirty state without storing a value baseline');
+adapterValue='seed';adapterDirty=false;adapterDirtyField.notifyValue(context('adapter-dirty-return'));
+assert.equal(form.getField('adapter-dirty').dirty,false,'owner-reported clean state must clear dirty even without a copied baseline');
 assert.equal(leftField.markTouched(true,context('left-touch')).status,'applied');
 assert.equal(form.getField('left').touched,true);
 
