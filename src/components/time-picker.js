@@ -360,12 +360,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     onOpenChange: emitOpen, onInput: handleInput, onBlur: handleBlur,
     onKeydown: function (event) {
       if (!field || !field.getState().open || !panel) return false;
-      if (event && event.key === 'Enter' && opts.needConfirm === true && event.isComposing !== true && !InteractionPolicy.mutationLocked(opts)) {
-        if (event.preventDefault) event.preventDefault();
-        var committed = instance.commit({ source:'keyboard', reason:'enter-confirm', originalEvent:event });
-        if (committed !== false) field.close('confirm', event);
-        return true;
-      }
+      if (instance.confirmFromKeyboard(event)) return true;
       return panel.handleKeydown(event);
     },
     onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
