@@ -48,6 +48,17 @@ const tagsSource=fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8'
 assert.ok(/activeRegion:\s*'tags'/.test(tagsSource),'Tags must declare the tags focus region.');
 assert.ok(/focusController\.beginEdit\(input/.test(tagsSource),'Tags standalone add editor must acquire a FocusController edit lease.');
 assert.ok(/editLeaseActive/.test(tagsSource),'Tags render state must release the FocusController edit lease when add editing ends.');
+const tableSource=fs.readFileSync(path.join(root,'src/components/table.js'),'utf8');
+assert.ok(/focusController\.js/.test(tableSource),'Table must enter navigation focus through FocusController.');
+assert.ok(/FocusController\.create\s*\(/.test(tableSource),'Table must create its root keyboard owner through FocusController.');
+assert.ok(!/KeyboardNavigation\.create\s*\(/.test(tableSource),'Table must not keep a parallel root KeyboardNavigation owner.');
+assert.ok(!/\.registerDomain\s*\(/.test(tableSource),'Table cell/header domains must bind through FocusController canonical binding.');
+assert.ok(/focus:\s*'FocusController'/.test(tableSource),'Table ComponentProfile must declare FocusController ownership.');
+assert.ok(/focusController\.beginEdit\(target/.test(tableSource),'Table Hybrid Edit must acquire a FocusController edit lease.');
+assert.ok(/focusController\.endEdit/.test(tableSource),'Table Hybrid Edit must release its FocusController edit lease.');
+assert.ok(/activeRegion:\s*'cells'/.test(tableSource),'Table FocusController must start in the cells region.');
+assert.ok(/setActiveRegion\('header'/.test(tableSource),'Table header navigation must publish the header region.');
+assert.ok(/setActiveRegion\('cells'/.test(tableSource),'Table cell navigation must publish the cells region.');
 const timeSource=fs.readFileSync(path.join(root,'src/components/time-panel.js'),'utf8');
 assert.ok(/FocusController\.create\s*\(/.test(timeSource),'TimePanel must own its canonical real-focus host through FocusController.');
 assert.ok(/var focusController\s*=\s*null/.test(timeSource),'TimePanel must declare its FocusController runtime owner before mount.');
@@ -63,5 +74,6 @@ console.log(JSON.stringify({
   firstPack:['WheelPanel','TimePanel','Calendar','PeriodPanel'],
   popupHostedPack:['Select','TreeSelect','Cascader'],
   standalonePack:['Menu','Tags'],
+  hybridEditPack:['Table'],
   timePanelRealFocusOwner:'TimePanel.root'
 }));

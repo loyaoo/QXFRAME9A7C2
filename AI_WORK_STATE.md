@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `6bb926b93c4f0f16dae042cc41f8426bf77d4733` (PR #53 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-c-table-hybrid-edit-20260924`
+- Open PRs at this checkpoint: pending PHASE-C-003 PR
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #335 / `35962474270` (PR #53)
 - Latest green main CI + Pages: #336 / `35962763162`
-- Controller migration implementation progress: 70%
+- Controller migration implementation progress: 77%
 - Current Phase: Phase C
 - Current Task: `PHASE-C-003`
 
 ## CURRENT
 
 ### PHASE-C-003 — Table Hybrid Edit focus lease
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 75%
 
 Why this is current:
 - PHASE-C-002 is merged and green through PR #53 and main #336.
@@ -48,12 +48,23 @@ Scope:
 - author explicit Table ComponentProfile focus/interaction ownership;
 - do not migrate Table selection into SelectionController yet; that belongs to Phase D.
 
+Implemented in current PHASE-C-003 branch:
+- Table root keyboard owner now enters through FocusController; the existing F6/arrows/Home/End/Page/Enter/Space/F2 keymap is preserved under the canonical KeyboardRegion navigation layer.
+- cells/header virtual domains bind through FocusController canonical binding; their reconcile and ensureVisible algorithms are unchanged.
+- FocusController activeRegion tracks cells/header navigation without replacing Table's existing virtual-domain state.
+- Hybrid Edit keeps editTransaction as the only draft/validate/save/cancel authority; FocusController only owns the real-focus lease from root to the authored tabIndex=-1 cell editor and back.
+- Escape rollback restores the editor value, releases the lease and restores root focus; validation/save errors keep the lease/editor focus.
+- native textarea/contenteditable or editEnterBehavior=native retains Enter ownership.
+- readOnly/disabled/loading mutation locks remain owned by InteractionPolicy/Table viewBlocked.
+- Table ComponentProfile now declares FocusController focus ownership only; Table selection remains deferred to Phase D.
+- structural gate forbids direct Table KeyboardNavigation owner/direct registerDomain and requires edit lease + cells/header region publication.
+- browser smoke covers lease acquire/release, Escape rollback/root return, native Enter ownership and readOnly/disabled edit blocking while retaining existing virtual-scroll transaction coverage.
+
 Next exact step:
-1. create a fresh PHASE-C-003 branch from current main;
-2. migrate Table keyboard owner/domains into FocusController;
-3. connect enter/finalize/cancel edit paths to FocusController edit lease without changing edit transaction semantics;
-4. add structural + browser lease/native-edit/readonly-disabled regressions;
-5. run full PR release CI, merge only green, then verify main CI + Pages and close Phase C.
+1. create/run the PHASE-C-003 PR against current main;
+2. fix only real Completion audit/browser/release failures without weakening the new or existing gates;
+3. merge only a green PR head and verify main CI + Pages;
+4. mark PHASE-C-003 DONE and close Phase C, then advance to the handbook's next phase.
 
 ## Current authority snapshot — after Phase A
 
