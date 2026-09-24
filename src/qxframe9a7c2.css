@@ -13946,6 +13946,8 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 .qxframe9a7c2-card-cover{position:relative;overflow:hidden;background:var(--_qxframe9a7c2-card-muted-bg)}
 .qxframe9a7c2-card-cover:first-child{border-radius:calc(var(--_qxframe9a7c2-card-radius) - .0625rem) calc(var(--_qxframe9a7c2-card-radius) - .0625rem) 0 0}
 .qxframe9a7c2-card-cover:last-child,.qxframe9a7c2-card-cover.is-bottom{border-radius:0 0 calc(var(--_qxframe9a7c2-card-radius) - .0625rem) calc(var(--_qxframe9a7c2-card-radius) - .0625rem)}
+.qxframe9a7c2-card>.qxframe9a7c2-card-cover:first-child{border-start-start-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px);border-start-end-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px)}
+.qxframe9a7c2-card>.qxframe9a7c2-card-cover:last-child{border-end-start-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px);border-end-end-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px)}
 .qxframe9a7c2-card-cover>img,.qxframe9a7c2-card-cover>video{display:block;width:100%;height:auto;object-fit:cover}
 .qxframe9a7c2-card-meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.625rem;align-items:center}
 .qxframe9a7c2-card-meta.is-block{grid-template-columns:1fr}
@@ -15785,7 +15787,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-picker-field-footer{display:flex;align-items:center;justify-content:flex-end;gap:var(--qxframe9a7c2-space-3);margin-top:var(--qxframe9a7c2-space-3);padding-top:var(--qxframe9a7c2-space-3);border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
 .qxframe9a7c2-picker-field-footer[hidden]{display:none}
 .qxframe9a7c2-picker-field-footer-start{display:flex;align-items:center;gap:var(--qxframe9a7c2-space-2);margin-right:auto;min-width:0}
-.qxframe9a7c2-picker-field-footer-actions{display:flex;align-items:center;gap:var(--qxframe9a7c2-space-3)}
+.qxframe9a7c2-picker-field-footer-actions{display:flex;width:100%;align-items:center;gap:var(--qxframe9a7c2-space-3)}
 .qxframe9a7c2-picker-field-footer-end{display:flex;align-items:center;gap:var(--qxframe9a7c2-space-2);min-width:0}
 
 
@@ -15914,6 +15916,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-time-picker-now:hover:not(:disabled){--_qxframe9a7c2-time-picker-now-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
 .qxframe9a7c2-time-picker-now:focus-visible:not(:disabled){--_qxframe9a7c2-time-picker-now-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-time-picker-now-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-time-picker-now:disabled{--_qxframe9a7c2-time-picker-now-bg:transparent;--_qxframe9a7c2-time-picker-now-ring:none;--_qxframe9a7c2-time-picker-now-cursor:not-allowed;--_qxframe9a7c2-time-picker-now-opacity:.45}
+.qxframe9a7c2-time-picker-now.is-footer-action{width:auto;margin-right:auto;border-top:0;min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:left}
 
 .qxframe9a7c2-color-picker-panel{width:max-content;min-width:0;max-width:min(24rem,calc(100vw - 2rem))}
 .qxframe9a7c2-color-picker-panel .qxframe9a7c2-picker-field-body{width:max-content;max-width:100%}
@@ -16081,6 +16084,19 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-table-pagination .is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-table-page-info{min-width:3.5rem;text-align:center;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:var(--qxframe9a7c2-font-size-sm)}
 .qxframe9a7c2-table .qxframe9a7c2-table-virtual-spacer>td{padding:0!important;border:0!important;background:transparent!important;pointer-events:none}
+
+.qxframe9a7c2-table-filter-popup{min-width:11rem;max-width:min(22rem,calc(100vw - 2rem));background:var(--_qxframe9a7c2-popup-bg);border:1px solid var(--_qxframe9a7c2-popup-border);border-radius:var(--_qxframe9a7c2-popup-radius);box-shadow:var(--_qxframe9a7c2-popup-shadow);color:var(--_qxframe9a7c2-popup-text)}
+.qxframe9a7c2-table-filter-options{display:grid;gap:.125rem;max-height:16rem;overflow:auto}
+.qxframe9a7c2-table-filter-option{display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);border-radius:var(--_qxframe9a7c2-action-radius);cursor:pointer}
+.qxframe9a7c2-table-filter-option:hover{background:var(--_qxframe9a7c2-semantic-subtle-hover)}
+.qxframe9a7c2-table-filter-actions{display:flex;justify-content:space-between;gap:var(--_qxframe9a7c2-control-gap);margin-top:var(--_qxframe9a7c2-control-gap);padding-top:var(--_qxframe9a7c2-control-gap);border-top:1px solid var(--_qxframe9a7c2-semantic-border)}
+.qxframe9a7c2-table-filter-search{margin-bottom:.375rem}
+.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control{box-sizing:border-box;width:100%;min-height:var(--_qxframe9a7c2-control-height);padding:.25rem .5rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-action-radius);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text);outline:0}
+.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus{border-color:var(--_qxframe9a7c2-semantic-accent);box-shadow:none}
+.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
+.qxframe9a7c2-table-filter-options.is-tree .qxframe9a7c2-table-filter-option{padding-inline-start:calc(.375rem + var(--qxframe9a7c2-table-filter-depth,0) * 1rem)}
+.qxframe9a7c2-table-filter-option.has-children > span:last-child{font-weight:600}
+.qxframe9a7c2-table-filter-option-spacer{width:1rem;height:1rem;flex:0 0 1rem}
 
 .qxframe9a7c2-transfer{
   --_qxframe9a7c2-transfer-panel-width:var(--qxframe9a7c2-transfer-panel-width,18rem);
@@ -16584,7 +16600,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-form-input-group.is-vertical{flex-direction:column}
 /* Connected composition is the size owner by default. Child size classes are ignored in this layer; `.is-mixed-size` is the explicit escape hatch. */
 .qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-group-control,.qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{--_qxframe9a7c2-control-height:inherit;--_qxframe9a7c2-control-font-size:inherit;--_qxframe9a7c2-control-padding-inline:inherit;--_qxframe9a7c2-control-padding-block:inherit;--_qxframe9a7c2-control-gap:inherit;--_qxframe9a7c2-control-radius:inherit;--_qxframe9a7c2-control-border-width:inherit;--_qxframe9a7c2-control-icon-size:inherit;--_qxframe9a7c2-control-line-height:inherit}
-.qxframe9a7c2-form-input-group-item{position:relative;display:flex;align-items:stretch;flex:1 1 0;min-width:0}
+.qxframe9a7c2-form-input-group-item{--_qxframe9a7c2-group-stack:1;position:relative;z-index:var(--_qxframe9a7c2-group-stack);display:flex;align-items:stretch;flex:1 1 0;min-width:0}
 /* Auto-width slots keep intrinsic width when space exists, but must still shrink under zoom/long-copy pressure. */
 .qxframe9a7c2-form-input-group-item.is-auto{flex:0 1 auto;min-width:0;max-width:100%}
 .qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{width:100%;min-width:0}
@@ -16730,9 +16746,6 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item.is-current{z-index:var(--qxframe9a7c2-z-local-overlay)}
 .qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
 
-/* unlayered overrides (kept last to preserve original cascade strength) */
-.qxframe9a7c2-picker-field-footer-actions{width:100%}.qxframe9a7c2-time-picker-now.is-footer-action{width:auto;margin-right:auto;border-top:0;min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:left}.qxframe9a7c2-table-filter-popup{min-width:11rem;max-width:min(22rem,calc(100vw - 2rem));background:var(--_qxframe9a7c2-popup-bg);border:1px solid var(--_qxframe9a7c2-popup-border);border-radius:var(--_qxframe9a7c2-popup-radius);box-shadow:var(--_qxframe9a7c2-popup-shadow);color:var(--_qxframe9a7c2-popup-text)}.qxframe9a7c2-table-filter-options{display:grid;gap:.125rem;max-height:16rem;overflow:auto}.qxframe9a7c2-table-filter-option{display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);border-radius:var(--_qxframe9a7c2-action-radius);cursor:pointer}.qxframe9a7c2-table-filter-option:hover{background:var(--_qxframe9a7c2-semantic-subtle-hover)}.qxframe9a7c2-table-filter-actions{display:flex;justify-content:space-between;gap:var(--_qxframe9a7c2-control-gap);margin-top:var(--_qxframe9a7c2-control-gap);padding-top:var(--_qxframe9a7c2-control-gap);border-top:1px solid var(--_qxframe9a7c2-semantic-border)}.qxframe9a7c2-table-filter-search{margin-bottom:.375rem}.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control{box-sizing:border-box;width:100%;min-height:var(--_qxframe9a7c2-control-height);padding:.25rem .5rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-action-radius);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text);outline:0}.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus{border-color:var(--_qxframe9a7c2-semantic-accent);box-shadow:none}.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}.qxframe9a7c2-table-filter-options.is-tree .qxframe9a7c2-table-filter-option{padding-inline-start:calc(.375rem + var(--qxframe9a7c2-table-filter-depth,0) * 1rem)}.qxframe9a7c2-table-filter-option.has-children > span:last-child{font-weight:600}.qxframe9a7c2-table-filter-option-spacer{width:1rem;height:1rem;flex:0 0 1rem}
-
 /* Unified keyboard focus-visible contract.
  * Mouse/programmatic focus stays on border/background; keyboard navigation gets the only
  * heavy focus edge: 2px, -1px, black in Light and white in Dark via the semantic token. */
@@ -16775,13 +16788,6 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input:focus-visible{outline:none}
 /* SelectGroup already exposes one focus ring on the label; never draw a second ring on its indicator. */
 .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator{outline:none}
-/* Connected input-group children must paint over adjacent seams while hovered/focused. */
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{z-index:var(--qxframe9a7c2-z-local-above)}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
-/* Card is a generic container: clipping belongs to the media/clip owner, not to the card root. */
-.qxframe9a7c2-card{overflow:visible}
-.qxframe9a7c2-card>.qxframe9a7c2-card-cover:first-child{border-start-start-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px);border-start-end-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px)}
-.qxframe9a7c2-card>.qxframe9a7c2-card-cover:last-child{border-end-start-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px);border-end-end-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px)}
 /* Pointer focus must not accidentally inherit UA :focus-visible heuristics on text-editing controls. */
 html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-input:focus-visible,
 html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-select:focus-visible,
