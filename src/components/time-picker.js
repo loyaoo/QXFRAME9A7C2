@@ -149,10 +149,11 @@ function setupTimePickerRuntime(instance, fieldInit) {
     var projection = draft.projection({ open: open, previewControl: opts.previewValue !== false, draftControl: true });
     var committedText = formatValue(draft.value);
     var draftText = formatValue(draft.draftValue);
-    var displayText = projection.channel === 'rawInput' ? String(projection.value || '') : formatValue(projection.value);
+    var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatValue(projection.value);
     var hasDraftTarget = field.getState().hasDraftValueTarget;
+    var displayText = hasDraftTarget && projection.channel !== 'rawInput' && projection.channel !== 'preview' ? committedText : projectedText;
     field.setDisplayValue(displayText);
-    field.setPlaceholder(open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
+    field.setPlaceholder(!hasDraftTarget && open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
     field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
     field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
     field.setClearVisible(hasValue(draft.value));
@@ -441,7 +442,6 @@ function setupTimePickerRuntime(instance, fieldInit) {
     return api;
   }
   function getState() {
-    var visual = field.getState().open && opts.needConfirm === true && draft.dirty ? draft.draftValue : draft.value;
     return Object.freeze({
       open: field.getState().open,
       headless: opts.headless === true,
@@ -449,7 +449,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       value: cloneValue(draft.value),
       draftValue: cloneValue(draft.draftValue),
       dirty: draft.dirty,
-      text: formatValue(visual),
+      text: field.getState().displayValue,
       activeRangePart: selection === 'range' ? activeRangePart : null,
       hideDisabledOptions: opts.hideDisabledOptions === true,
       changeOnScroll: opts.changeOnScroll === true,
