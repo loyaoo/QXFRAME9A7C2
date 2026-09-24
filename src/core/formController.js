@@ -333,9 +333,10 @@ function create(options){
   }
   function updateOptions(next){
     if(destroyed)return false;
-    var value=next||{};
-    if(own(value,'form')&&value.form!==form)bindForm(value.form);
+    var value=next||{},currentForm=form,requestedForm=own(value,'form')?value.form:currentForm;
+    var submitBindingChanged=own(value,'interceptNativeSubmit')&&value.interceptNativeSubmit!==opts.interceptNativeSubmit;
     ['onSubmit','onReset','onValidation','onStateChange','interceptNativeSubmit'].forEach(function(key){if(own(value,key))opts[key]=value[key];});
+    if(requestedForm!==currentForm||(submitBindingChanged&&currentForm))bindForm(requestedForm);
     return true;
   }
   function destroy(){
