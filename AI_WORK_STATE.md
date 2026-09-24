@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `be2263e5c9cd388efe42142cfa28657fe0c8f5b4` (PR #50 merge)
-- Current branch: `main`
+- Current branch: `refactor/phase-b-picker-like-value-20260924`
 - Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #324 / `35957442947` (PR #50)
 - Latest green main CI + Pages: #325 / `35957755294`
-- Controller migration implementation progress: 40%
+- Controller migration implementation progress: 41%
 - Current Phase: Phase B
 - Current Task: `PHASE-B-002`
 
 ## CURRENT
 
 ### PHASE-B-002 — ValueController + picker-like popup second migration pack
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 5%
 
 Why this is current:
 - PHASE-B-001 first Picker pack is merged and green on PR + main.
