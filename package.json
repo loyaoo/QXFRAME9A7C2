@@ -62,7 +62,7 @@
     "verify:tool-cwd": "node tools/verify-tool-cwd-independence.mjs",
     "verify:browser:optional": "node tools/verify-browser-smoke.mjs && node tools/verify-source-esm-browser.mjs && node tools/verify-source-umd-browser.mjs && node tools/verify-high-risk-browser.mjs && npm run verify:subpath-browser",
     "audit:completion": "node tools/audit-final-completion.mjs",
-    "verify:legacy-browser": "node tools/verify-browser-smoke.mjs --required --skip-docs --smoke=tools/fixtures/legacy-hotfix6/verify-browser-smoke.html",
+    "verify:legacy-browser": "node tools/verify-browser-smoke.mjs --required --skip-docs --smoke=tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html",
     "verify:docs-canonical": "node tools/verify-canonical-docs.mjs",
     "verify:clean-pack": "node tools/verify-clean-pack.mjs",
     "prepare": "npm run build",
