@@ -8,27 +8,27 @@
 
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
-- Current main HEAD at Phase A kickoff: `b54e8be325498b680df7059ee53929d40caf13b0`
-- Last code-affecting main commit: `a459e28f2486ce89615322c6e49094fddd8464a4`
-- Current branch: `refactor/phase-a-shared-protocol-20260924`
+- Phase A kickoff main: `b54e8be325498b680df7059ee53929d40caf13b0`
+- Last code-affecting main commit: `51b7f317037fc538beaadc6f710da077a8429d0f` (PR #47 merge)
+- Current branch: `main`
 - Bootstrap PR: #46 merged
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green PR CI: run #307 / `35949535252`
-- Latest green main CI + Pages: run #308 / `35949774749`
-- Controller migration implementation progress: 7% (Phase A authority inventory frozen; first Shared Protocol infrastructure batch implemented; CI pending; no component business behavior changed)
+- Latest green PR CI: run #312 / `35952642035` (PR #47)
+- Latest green main CI + Pages: run #308 / `35949774749`; replacement main run #313 / `35952965100` is in progress for PR #47 merge
+- Controller migration implementation progress: 9% (Phase A authority inventory frozen; first Shared Protocol infrastructure batch merged; main CI/Pages verification in progress; no component business behavior changed)
 
 ## CURRENT
 
 ### PHASE-A-001 — Baseline inventory and Controller migration kickoff
 Status: IN_PROGRESS
 
-Branch evidence:
-- branch: `refactor/phase-a-shared-protocol-20260924`
-- current branch HEAD: `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`
-- branch is 16 commits ahead / 0 behind kickoff main `b54e8be325498b680df7059ee53929d40caf13b0`
-- PR: #47 open
-- CI: runs #309 / `35952426342` and #310 / `35952462790` failed at `audit:completion` because the new Shared Protocol code violated the existing prototype-merge safety gate (2 `Object.assign` uses + 1 unguarded dynamic write); gate unchanged, source fixed in `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`; replacement CI pending
+Merge / CI evidence:
+- PR #47 merged to `main`;
+- merge commit: `51b7f317037fc538beaadc6f710da077a8429d0f`;
+- PR CI #312 / `35952642035`: success (Completion audit, Full release verification, npm pack, standalone docs demo, artifact upload);
+- earlier PR CI #309/#310 exposed 3 source-side prototype-safety violations; the audit gate was not weakened and the source was corrected;
+- main CI + Pages #313 / `35952965100`: in progress.
 
 Prerequisites:
 - OPS-001 repository cleanup merged green in PR #46;
@@ -83,7 +83,7 @@ Completed in current code batch:
 - added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
 
 Next exact step:
-- wait for replacement PR CI after `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`; if it fails, fix the implementation without changing safety/release gates. When green, merge PR #47, verify main CI + Pages, then start the second Phase A batch wiring protocol metadata/revision/projection into the existing authorities.
+- verify main CI + Pages #313 for merge `51b7f317037fc538beaadc6f710da077a8429d0f`. If green, mark PHASE-A-001 first batch done and start PHASE-A-002: wire Shared Protocol metadata/revision/projection into the existing authorities (not directly into every component), with contract regressions and no business-behavior change.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
