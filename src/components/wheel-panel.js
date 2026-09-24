@@ -8,7 +8,7 @@ import { ValueEquality } from '../utils/valueEquality.js';
 import { WheelMetrics } from '../utils/wheelMetrics.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { Renderer } from '../core/renderer.js';
-import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { FocusController } from '../core/focusController.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { Scroll } from './scroll.js';
 
@@ -714,7 +714,7 @@ function create(options) {
   value = initial.value;
   selectedItems = initial.selectedItems;
   rebuildFrom(0);
-  keyboardRegion = KeyboardRegion.create({
+  keyboardRegion = FocusController.create({
     root: root,
     document: doc,
     disabled: opts.disabled === true,
