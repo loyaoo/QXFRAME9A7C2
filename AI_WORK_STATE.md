@@ -10,69 +10,49 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `b2ecdb4e33bea642932092693d0ad5a8a47fd4e3` (PR #49 merge)
-- Current branch: `refactor/phase-b-value-picker-family-20260924`
-- Open PRs at this checkpoint: pending Phase B PR
+- Last code-affecting main commit: `be2263e5c9cd388efe42142cfa28657fe0c8f5b4` (PR #50 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #320 / `35955216461` (PR #49)
-- Latest green main CI + Pages: #321 / `35955524890`
-- Controller migration implementation progress: 33%
+- Latest green Controller PR CI: #324 / `35957442947` (PR #50)
+- Latest green main CI + Pages: #325 / `35957755294`
+- Controller migration implementation progress: 40%
 - Current Phase: Phase B
-- Current Task: `PHASE-B-001`
+- Current Task: `PHASE-B-002`
 
 ## CURRENT
 
-### PHASE-B-001 — ValueController + Picker Family first migration pack
-Status: IN_PROGRESS
-Task progress: 70%
+### PHASE-B-002 — ValueController + picker-like popup second migration pack
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- Phase A Shared Protocol foundation and authority adoption are complete and green on PR + main.
-- Handbook Phase B is next: Value + Picker Family.
-- Current real QA issues are concentrated in DatePicker / TimePicker / ColorPicker draft-control projection, confirm/cancel semantics, Enter behavior and preset consistency.
+- PHASE-B-001 first Picker pack is merged and green on PR + main.
+- Select / TreeSelect / Cascader already use `StateController.createOptionValueBinding()`, which now delegates to ValueController; Autocomplete uses `StateController.create()`, which also delegates.
+- The remaining work is to make ValueController the explicit public/internal authority for this picker-like family, preserve existing controlled/defaultValue semantics, and declare capability profiles without creating a second value engine.
 
 Scope:
-- evolve the existing `ValueDraft / StateController` authority into the handbook `ValueController` contract; do not create a second committed/draft truth;
-- make preview/rawInput/edit-session/revision channels explicit at the value authority layer where required by Picker family behavior;
-- reduce `PickerSession` to close/confirm policy over ValueController instead of owning a parallel edit session;
-- migrate the first picker pack together: `PickerComponent`, `PickerSession`, DatePicker, TimePicker, ColorPicker, WheelPicker and their direct value/session adapters;
-- preserve `PickerField` as field/open/focus projection authority; do not move FocusController work into Phase B unless required for value correctness;
-- after the first picker pack is green, continue Select / TreeSelect / Cascader / Autocomplete as the second Phase B pack.
-
-Frozen Picker family contract for this task:
-- closed control projects committed;
-- open raw editor projects rawInput;
-- open preview projects preview only when profile enables previewControl;
-- otherwise open dirty session projects draft;
-- `needConfirm=false`: completed selection commits immediately; close does not perform a hidden late commit;
-- `needConfirm=true`: selection changes draft only; Confirm/explicit confirm action commits;
-- Esc / outside / tab-exit roll back uncommitted draft by default;
-- presets obey the same needConfirm rule as ordinary selection;
-- control showing draft is projection only; FormData/getValue stay committed until commit.
-
-Implemented in current Phase B pack:
-- canonical `ValueController` now owns committed/draft plus preview/rawInput/session/revision channels; `ValueDraft` is a compatibility alias and `StateController.create()` routes to the same authority.
-- `PickerSession` no longer commits dirty values during close; close rolls back uncommitted draft by default and ends the value session.
-- DatePicker / TimePicker / ColorPicker / WheelPicker now create ValueController directly and declare ComponentProfile ownership.
-- Date/Time raw editor text and hover preview are controller channels rather than local competing state.
-- ColorPicker pointer/keyboard hot-path changes use preview and promote to draft only on interaction completion.
-- TimePicker / ColorPicker / WheelPicker use scoped Enter confirmation only when `needConfirm=true`.
-- browser regressions cover Date preset draft projection + FormData isolation + Esc rollback, immediate preset commit, and scoped Enter confirmation for Time/Color/Wheel.
-- structural gates forbid direct StateController picker ownership from returning.
+- move reusable `createValueBinding` / `createOptionValueBinding` helpers onto ValueController while keeping StateController as compatibility facade only;
+- migrate Select / TreeSelect / Cascader / Autocomplete imports/calls to ValueController;
+- add ComponentProfile declarations for their actual value/focus/interaction/overlay/form capabilities;
+- preserve their existing controlled proposal/external-sync behavior and current selection/search authorities;
+- do not fold FocusController/SelectionController work into this task beyond value-session correctness;
+- add structural + browser regressions proving controlled/uncontrolled parity and no duplicate value owner.
 
 Next exact step:
-1. create the Phase B PR from the current branch;
-2. run full release/browser CI and fix implementation failures without weakening gates;
-3. merge only a green PR head and verify main CI + Pages;
-4. after the first Picker pack is green, continue Phase B second pack: Select / TreeSelect / Cascader / Autocomplete.
+1. create a fresh PHASE-B-002 branch from current main;
+2. move value-binding helper factories to ValueController and reduce StateController to compatibility forwarding;
+3. migrate Select / TreeSelect / Cascader / Autocomplete to the canonical ValueController entry point;
+4. add profiles and focused controlled/defaultValue browser coverage;
+5. run full PR release CI, merge only green, then verify main CI + Pages.
 
 ## Current authority snapshot — after Phase A
 
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
-- Value ownership: `ValueController` is now the Phase B canonical committed/draft/preview/rawInput/session/revision authority on this branch. `ValueDraft` is its compatibility alias and `StateController` delegates creation to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. There is no second committed value.
+- Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
 - Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardNavigation`, `RovingProjection` and `ActiveItem` remain the existing authorities. FocusController migration has not started.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
@@ -91,15 +71,28 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 
 These are current QA targets for later Controller/family migration. They are not PHASE-A-003 scope unless an authority adoption directly touches them.
 
-- Picker-family control/draft/preview display timing is inconsistent across DatePicker, TimePicker, ColorPicker and related popup fields.
-- Escape must cancel uncommitted Picker draft; Enter/explicit Confirm must own confirmation where the profile defines it.
-- TimePicker and ColorPicker still need consistent Enter confirmation behavior.
 - TimePanel must have one canonical real-focus owner; internal columns must not become extra Tab stops.
 - DatePicker dual-panel/month-year navigation can retain stale cursor state and jump on the first arrow after returning to the date region.
 - DatePicker/TimePicker preset selection must respect `needConfirm`; preset regions need one Tab stop plus virtual arrow navigation.
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-B-001 — ValueController + Picker Family first migration pack
+Status: DONE
+Evidence:
+- PR #50 merged
+- merge commit `be2263e5c9cd388efe42142cfa28657fe0c8f5b4`
+- PR CI #324 / `35957442947`: success
+- main CI + Pages #325 / `35957755294`: success
+- CI #322 initially failed only because TimePicker/WheelPicker duplicated the same scoped Enter-confirm block; the implementation was centralized in `PickerComponent.confirmFromKeyboard()`, then Completion audit and full release passed.
+Outcome:
+- canonical `ValueController` owns committed/draft/preview/rawInput/session/revision channels; `ValueDraft` is its compatibility alias.
+- `PickerSession.close()` no longer performs hidden dirty commit; uncommitted draft rolls back by default.
+- DatePicker / TimePicker / ColorPicker / WheelPicker create ValueController directly and declare ComponentProfile ownership.
+- Date/Time raw input and hover preview are controller channels; ColorPicker hot-path interaction is preview-first and promotes to draft on completion.
+- scoped Enter confirmation is shared by PickerComponent and used by TimePicker / ColorPicker / WheelPicker only in their open confirm session.
+- browser coverage verifies draft projection without FormData commit, Esc rollback, immediate preset commit, and scoped Enter confirm.
 
 ### PHASE-A-003 — EnvironmentPort / Diagnostics / ComponentProfile authority adoption
 Status: DONE
