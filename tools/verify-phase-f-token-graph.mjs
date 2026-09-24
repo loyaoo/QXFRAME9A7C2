@@ -46,7 +46,7 @@ function varCalls(text){
 }
 
 const definitions=new Map();
-const declaration=/\b(--_?qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]*)(?:;|(?=}))/ig;
+const declaration=/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]*)(?:;|(?=}))/ig;
 let match;
 while((match=declaration.exec(css))){
   const name=match[1],value=match[2].trim();
