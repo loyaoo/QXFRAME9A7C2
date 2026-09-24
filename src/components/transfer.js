@@ -907,7 +907,8 @@ export class Transfer extends FieldComponent {
   static profile = Object.freeze({
     name:'Transfer',
     selection:Object.freeze({ channels:Object.freeze(['sourceChecked','targetChecked']), targetValueOwner:'Transfer/targetOrder' }),
-    ownership:Object.freeze({ selection:'SelectionController' })
+    form:Object.freeze({ serialize:true }),
+    ownership:Object.freeze({ selection:'SelectionController', form:'FormController' })
   });
   static contract = ComponentContracts.get('Transfer');
   static immutableOptions = Object.freeze(['target','container','formField']);
