@@ -85,12 +85,14 @@ export { OverlayFramePolicy } from './overlayFramePolicy.js';
 export { NoticePreset } from './noticePreset.js';
 export { ReorderInteraction } from './reorderInteraction.js';
 export { MotionCore } from './motion.js';
+export { MotionController } from './motionController.js';
 export { MotionPresets } from './motionPresets.js';
 export { Transition } from './transition.js';
 export { TransitionGroup } from './transitionGroup.js';
 
 export { PositionAdapter } from './position.js';
 export { OverlayRuntime } from './overlayRuntime.js';
+export { OverlayController } from './overlayController.js';
 export { OverlayFrameShell } from './overlayFrameShell.js';
 
 export { fieldHooks } from './fieldHooks.js';

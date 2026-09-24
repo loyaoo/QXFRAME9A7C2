@@ -409,7 +409,7 @@ function create(options) {
 
   function isSettled() { return currentDirection === null && (phase === 'shown' || phase === 'hidden'); }
   function state() {
-    return Object.freeze({ visible: visible, present: present, status: status, step: step, phase: phase, settled: isSettled(), destroyed: disposed });
+    return Object.freeze({ visible: visible, present: present, status: status, step: step, phase: phase, settled: isSettled(), generation: generation, destroyed: disposed });
   }
   function resolveSettleWaiters(runGeneration) {
     if (!disposed && (runGeneration !== generation || !isSettled())) return false;
@@ -686,6 +686,11 @@ function create(options) {
     }
     return true;
   }
+  function cancel(meta) {
+    if (disposed || currentDirection === null) return false;
+    currentContext = meta && typeof meta === 'object' ? meta : currentContext || {};
+    return finish(generation, currentDirection, 'cancelled');
+  }
   function destroy() {
     if (disposed) return false;
     disposed = true;
@@ -700,7 +705,7 @@ function create(options) {
     return true;
   }
 
-  var api = Object.freeze({ setVisible: setVisible, getState: state, whenSettled: whenSettled, destroy: destroy });
+  var api = Object.freeze({ setVisible: setVisible, cancel: cancel, getState: state, whenSettled: whenSettled, destroy: destroy });
   // `appear:false` means an element that is already logically visible at construction
   // commits directly to its entered state. A later hidden -> visible request still uses
   // the normal enter motion, matching Vue/React Transition appear semantics.
