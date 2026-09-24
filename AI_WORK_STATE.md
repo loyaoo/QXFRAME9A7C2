@@ -10,15 +10,15 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `75d07e96d6648ee2f7a695b05a722b1252817383` (PR #58 merge)
-- Current branch: `refactor/phase-c-select-interaction-capability-20260924`
-- Open PRs at this checkpoint: pending PHASE-C-004 Select reference PR
+- Last code-affecting main commit: `460895256268187c5a795aa9c7e2348e558239f3` (PR #59 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` only; 67 stale/superseded non-main branches are no longer present
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #358 / `35976568725` (PR #58)
-- Latest green main CI + Pages: #359 / `35977068529`
-- Controller migration implementation progress: 93%
+- Latest green Controller PR CI: #360 / `35977872248` (PR #59)
+- Latest green main CI + Pages: #361 / `35978193325`
+- Controller migration implementation progress: 95%
 - Current Phase: Phase C acceptance closeout (Phase D first two packs already landed)
 - Current Task: `PHASE-C-004`
 
@@ -26,7 +26,7 @@
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
 Status: IN_PROGRESS
-Task progress: 85%
+Task progress: 90%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -60,24 +60,21 @@ Completed PHASE-C-004 first composite pack (PR #58):
 - required `verify:phase-c-composite` passed in PR #58 CI #358 / `35976568725`.
 - merge commit `75d07e96d6648ee2f7a695b05a722b1252817383`; main release + Pages #359 / `35977068529` succeeded.
 
-Implemented in current PHASE-C-004 Select reference pack:
-- PopupField open/toggle authorization now uses semantic `open` capability rather than old activation permission.
-- InteractionPolicy keeps expand/open available for readOnly and non-conflicting loading/busy browsing while disabled still rejects navigation/open.
-- FieldComponent exposes bounded `canOpen()` compatibility for PopupField lifecycle; value/select/edit mutation semantics are unchanged.
-- Select creates one InteractionController scope on the authored keyboard host and one instance CapabilityController snapshot owner.
-- FocusController/KeyboardNavigation remains the only DOM keydown listener and retains native editor/caret, IME and repeat guards before dispatch.
-- closed composite keys route to semantic OPEN; open option navigation routes MOVE/PAGE; Enter routes SELECT; Escape routes DISMISS; hosted tag left/right/remove runs only after native caret priority.
-- Select mutation sinks use the same CapabilityController: readOnly/loading can browse but cannot select/remove/clear; disabled cannot open/navigate.
-- controlled Select remains request/external-sync based: keyboard selection emits the proposal but does not internally replace controlled value.
-- new required `verify:phase-c-select` locks source ownership and Chromium behavior for readOnly/loading/disabled, IME, held activation, native caret and controlled proposal semantics.
-- sandbox gates pass: `verify:phase-c-select`, `verify-source-esm-browser`, `verify-popup-field-family`, `verify-picker-family`, `verify-field-component`, `verify-modern-architecture`, `verify-high-risk-browser`.
+Completed PHASE-C-004 Select reference pack (PR #59):
+- PopupField open/toggle authorization uses semantic `open` capability instead of activation permission.
+- readOnly/loading may browse popup content without mutation; disabled still blocks open/navigation.
+- Select owns one InteractionController scope and one instance CapabilityController; FocusController/KeyboardNavigation remains the sole DOM keydown listener.
+- native editor/caret, IME and held activation guards run before semantic dispatch.
+- Select mutation sinks share one operation-level capability snapshot for select/remove/clear while controlled mode remains proposal + external-sync.
+- required `verify:phase-c-select` passed in PR #59 CI #360 / `35977872248`.
+- merge commit `460895256268187c5a795aa9c7e2348e558239f3`; main release + Pages #361 / `35978193325` succeeded.
 
 Next exact step:
-1. open/run the PHASE-C-004 Select reference PR from the audited branch;
-2. fix only exact-head Completion/release/browser failures without reintroducing physical-key business maps or activation-based PopupField open gates;
-3. merge only green and verify main CI + Pages;
-4. apply the proven popup-hosted pattern to TreeSelect and Cascader in the next pack;
-5. close Tags/Table in a final higher-risk Phase C pack, update acceptance evidence, then resume Phase D Table selection.
+1. start the PHASE-C-004 popup tree pack with TreeSelect + Cascader from current main;
+2. give both explicit InteractionController + CapabilityController ownership without adding a second DOM keydown listener;
+3. use operation-level permissions: edit/search, remove tags, clear, select/check, open/navigate; propagate busy into inner tree/list mutation gates while preserving safe browsing;
+4. add required browser regressions for readOnly/loading/disabled, IME, repeat Space/Enter, native caret and controlled proposal/external-sync;
+5. after exact-head green merge, finish Tags/Table as the final high-risk Phase C pack and then resume Phase D Table selection.
 
 ## Current authority snapshot — after Phase A
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
@@ -108,6 +105,19 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-C-004B — Select popup-hosted Interaction + Capability reference
+Status: DONE
+Evidence:
+- PR #59 merged
+- merge commit `460895256268187c5a795aa9c7e2348e558239f3`
+- PR CI #360 / `35977872248`: success
+- main CI + Pages #361 / `35978193325`: success
+Outcome:
+- PopupField uses semantic open capability, allowing readOnly/loading browsing while disabled remains closed.
+- Select has explicit InteractionController + CapabilityController ownership with no second DOM keyboard listener.
+- semantic open/navigation/select/dismiss/tag-remove routing is operation-gated.
+- native caret, IME, repeat activation and controlled proposal semantics are browser-gated.
 
 ### PHASE-C-004A — Date/Time composite Interaction + Capability owners
 Status: DONE
