@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `cd53968dee909f551bfc1b8ac3ab9d235580d066` (PR #73 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-f-selector-specificity-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-005 selector-specificity PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-F-005 — repeated compound selector specificity normalization
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 65%
 
 Why this is current:
 - PHASE-F-004 is merged through PR #73; exact-head CI #399 / `36014584198` and main release + Pages #400 / `36015116050` are green.
@@ -40,12 +40,17 @@ Frozen impact map:
 - do not merge unrelated intentional multi-rule state channels merely because a selector name appears more than once.
 - no visual redesign, no new token owner, no `@layer`, `:is()` or `:where()`.
 
+Implemented in current PHASE-F-005 pack:
+- normalized the four Table expand-trigger selector defects to one state atom per compound; declarations and rule order are unchanged.
+- added a compound-aware parser that separates relationship compounds before detecting repeated state atoms, so legitimate adjacent-sibling state repetition is not flagged.
+- current canonical CSS reports zero repeated state atoms inside one selector compound.
+- required `verify:phase-f-selector-specificity` is wired into the full verification chain and keeps the no-`@layer` / no-`:is()` / no-`:where()` constraints.
+
 Next exact step:
-1. create `refactor/phase-f-selector-specificity-20260924` from the latest green main checkpoint;
-2. normalize the four repeated Table state selectors without changing declarations;
-3. add `verify:phase-f-selector-specificity` and run structural checks;
-4. open PR, require exact-head full CI, merge only green, verify main + Pages;
-5. continue Phase F final state-completeness / duplicate-selector audit.
+1. open PHASE-F-005 PR and run exact-head full release/browser/package CI;
+2. fix only real selector-specificity regressions without restoring duplicate state atoms;
+3. merge only exact-head green and verify main + Pages;
+4. continue Phase F final state-completeness / duplicate-selector audit.
 
 ## Current authority snapshot — after Phase A
 
