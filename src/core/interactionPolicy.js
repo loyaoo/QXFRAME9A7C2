@@ -11,7 +11,7 @@ function resolve(state, capabilities) {
   var activatable = !disabled && !loading && caps.activatable !== false && (!readOnly || caps.activateWhenReadOnly === true);
   var editable = !disabled && !loading && !readOnly && caps.editable !== false;
   var navigable = !disabled && caps.navigable !== false;
-  var expandable = !disabled && !loading && caps.expandable !== false;
+  var expandable = !disabled && caps.expandable !== false;
   var selectable = !disabled && !loading && (!readOnly || caps.selectWhenReadOnly === true) && caps.selectable !== false;
   var checkable = !disabled && !loading && !readOnly && caps.checkable !== false;
   var clearable = activatable && !readOnly && caps.clearable !== false;
