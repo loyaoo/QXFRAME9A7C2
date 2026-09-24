@@ -10,62 +10,54 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `bf3823248a7a5725b20a9711dfc12736bf7ff60e` (PR #63 merge)
-- Current branch: `refactor/phase-d-popup-selection-closeout-20260924`
-- Open PRs at this checkpoint: pending final PHASE-D-005 selection PR
+- Last code-affecting main commit: `eef0048a5f2c88f1a0e9fcf1de23eb8a064d7c4a` (PR #64 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #368 / `35985407152` (PR #63)
-- Latest green main CI + Pages: #369 / `35985810168`
+- Latest green Controller PR CI: #371 / `35986798091` (PR #64)
+- Latest green main CI + Pages: #372 / `35990367837`
 - Controller migration implementation progress: 99%
-- Current Phase: Phase D — Selection
-- Current Task: `PHASE-D-005`
+- Current Phase: Phase E — Overlay + Motion
+- Current Task: `PHASE-E-001`
 
 ## CURRENT
 
-### PHASE-D-005 — Select / TreeSelect / Cascader selection closeout
-Status: IN_PROGRESS
-Task progress: 80%
+### PHASE-E-001 — OverlayController + MotionController foundations
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-D-004 Tags selection is merged and green through PR #63 / CI #368 and main CI + Pages #369.
-- Select and TreeSelect already consume canonical SelectionController stores indirectly through OptionList and Tree; their remaining work is explicit component ownership/facade signoff rather than another store migration.
-- Cascader still owns a direct Selection plus a component-local selectionAnchorValue and direct HierarchicalSelection facade; it is the final substantive Phase D selection owner.
-- public value authority for all three remains ValueController; SelectionController must stay the selection execution/anchor/revision authority only.
+- handbook Phase D selection scope is fully accepted through PR #55 / #57 / #62 / #63 / #64.
+- PR #64 exact-head CI #371 / `35986798091` succeeded and merged main release + Pages #372 / `35990367837` succeeded.
+- Phase E is the next handbook phase and must evolve existing OverlayRuntime / LayerManager / DismissableLayer / PopupSurface and MotionCore / Transition authorities rather than duplicate them.
+- neither `src/core/overlayController.js` nor `src/core/motionController.js` exists on current main, so the first Phase E pack is a foundation/adapter pack before broad component migration.
 
 Frozen impact map:
-- Select must expose/reuse OptionList SelectionController identity and declare selection ownership without creating another store.
-- TreeSelect must expose/reuse Tree SelectionController selected/checked channels and declare selection ownership without duplicating checked state.
-- Cascader selected values move behind one SelectionController selected channel; hierarchical state delegates through the controller facade.
-- Cascader component-local selectionAnchorValue is removed; controller anchor is revision-bound.
-- Cascader item replacement and lazy child-load dataset changes advance selection data revision.
-- active path/column/keyboard cursor remains Cascader navigation state, not SelectionController activeKey.
-- Phase C Interaction/Capability and ValueController controlled/proposal semantics remain unchanged.
+- OverlayController owns overlay resource intent/lease only: layer, portal, position, logical parent, outside/dismiss registration, isolation, scroll lock and overlay lifecycle. It must not own logical `open`.
+- MotionController owns motion intent, visual presence, generation and animation-resource lifecycle by composing existing MotionCore/Transition. It must not own business `open` or value.
+- OpenStateBridge remains logical open authority. Overlay active/mounted state and Motion presence state remain separate.
+- LayerManager remains z-index/layer-stack authority; DismissableLayer remains outside/Escape delivery authority; OverlayRuntime remains the mature resource execution layer until the controller facade replaces direct component entry points.
+- MotionCore remains low-level generation/timing/style authority; no second generation counter may be introduced in MotionController.
+- close reasons must converge on handbook semantics without turning close into commit.
+- closing motion must not release modal isolation/scroll lock before the blocking surface is actually safe to release.
+- parent teardown must suppress descendant focus-restore cascades.
+- Phase C Interaction/Focus and Phase D Selection authorities remain unchanged.
 
 Scope:
-- explicit SelectionController facades/profile ownership for Select and TreeSelect;
-- migrate Cascader direct Selection/HierarchicalSelection/anchor ownership into SelectionController;
-- preserve Cascader multiple/checkedStrategy/changeOnSelect/search/lazy-load/controlled behavior;
-- add dedicated source + Chromium regression gates for controller identity, selected/checked channels, Cascader dataset revision and stale-anchor invalidation;
-- run full release acceptance, then sign off Phase D.
-
-Implemented in current PHASE-D-005 final selection pack:
-- Select explicitly exposes and declares the existing OptionList SelectionController; no second selected store is created.
-- TreeSelect explicitly exposes and declares the existing Tree SelectionController with selected/checked channels; no duplicate checked store is created.
-- Cascader removes direct Selection and HierarchicalSelection imports and creates one SelectionController selected channel; hierarchy delegates through `selectionController.createHierarchy()`.
-- Cascader removes component-local `selectionAnchorValue`; the selection anchor is owned by SelectionController and read through the revision-bound anchor API.
-- Cascader item replacement and lazy child loads advance selected-channel dataset revision so stale anchors cannot survive changed hierarchy data.
-- Cascader public value remains ValueController-owned; active path/column/cursor remain Cascader navigation state and are not moved into SelectionController.
-- new required `verify:phase-d-popup-selection` passes sandbox Chromium for Select/OptionList controller identity, TreeSelect/Tree selected+checked identity and Cascader dataset-revision anchor invalidation.
-- adjacent sandbox gates pass: `verify:selection-controller`, `verify:phase-c-popup-composites`, `verify-source-esm-browser`, `verify:high-risk-browser`, `verify:architecture`, `verify:contracts`.
+- audit existing OverlayRuntime/Trigger/PopupSurface and MotionCore/Transition contracts before adding facades.
+- add minimal OverlayController and MotionController facades that delegate to existing authorities and expose structured state/results without duplicate truth.
+- wire only the smallest representative foundation consumer(s) needed to prove the boundary; do not migrate Modal/Drawer/all pickers in the foundation PR.
+- add architecture/source tests proving controllers do not own open/value or duplicate layer/generation state.
+- add browser regressions for nested overlay routing, blocked inner Escape propagation, focus restore/resource lease lifetime, motion reverse/stale completion where the foundation touches them.
 
 Next exact step:
-1. open/run the final PHASE-D-005 selection PR from the audited branch;
-2. fix only exact-head release/browser failures without adding duplicate selection/value/active-key stores;
-3. merge only green and verify main release + Pages;
-4. mark Phase D Selection as DONE and update the acceptance ledger;
-5. advance CURRENT to Phase E — Overlay + Motion.
+1. map OverlayRuntime + Trigger + PopupSurface resource/open boundaries and MotionCore + Transition generation/presence boundaries on current main;
+2. define the minimal OverlayController/MotionController adapter APIs directly from handbook contracts;
+3. implement the foundation without moving OpenStateBridge state or MotionCore generation into a second store;
+4. add dedicated source/Node/browser conformance gates and run the existing release suite;
+5. merge only exact-head green, verify main + Pages, then migrate Trigger/Popup base before Modal/Drawer/pickers and Collapse motion.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,7 +71,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
-- Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem` and `TableModel` remain the current execution authorities. `Collection` uses shared `DataRevision`; PHASE-D-001 now elevates SelectionController over the existing selection stores without moving activeKey out of ActiveItem or creating a second selected-key truth.
+- Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
 - Motion: `MotionCore`, `Transition` and `TransitionGroup` remain the low-level motion authority; no parallel generation counter may be introduced.
 - Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
@@ -96,6 +88,33 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-D-005 — Select/TreeSelect/Cascader selection closeout
+Status: DONE
+Evidence:
+- PR #64 merged
+- merge commit `eef0048a5f2c88f1a0e9fcf1de23eb8a064d7c4a`
+- PR CI #371 / `35986798091`: success
+- main CI + Pages #372 / `35990367837`: success
+Outcome:
+- Select exposes/reuses OptionList SelectionController identity without a second selected store.
+- TreeSelect exposes/reuses Tree selected/checked channels from the same SelectionController.
+- Cascader direct Selection/HierarchicalSelection/component-local anchor ownership is replaced by one SelectionController facade.
+- Cascader item replacement/lazy child data changes advance selection data revision and stale anchors invalidate.
+- ValueController and Phase C focus/interaction/capability authorities remain unchanged.
+- required `verify:phase-d-popup-selection` covers source ownership and Chromium identity/revision behavior.
+
+### PHASE-D — Selection scope
+Status: DONE
+Evidence:
+- PR #55 / #57 / #62 / #63 / #64 merged
+- exact-head CI #341 / #344 / #366 / #368 / #371: success
+- main CI + Pages #342 / #345 / #367 / #369 / #372: success
+Outcome:
+- handbook Phase D scope (OptionList/List/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader) is accepted.
+- multi-channel selection, stable keys, DataRevision-bound anchors, remote allMatching/exclusions, lazy-data revision and no-duplicate-selection-truth constraints are covered.
+- `FOUR_UNIFICATIONS_ACCEPTANCE.md` records D accepted only for public Phase D consumers; later E–I signoff remains pending.
+- Phase D acceptance does not imply overall migration completion; current work advances to Phase E.
 
 ### PHASE-D-004 — Tags SelectionController semantics
 Status: DONE
