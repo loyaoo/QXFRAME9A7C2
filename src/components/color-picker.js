@@ -237,12 +237,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      }
      function handleColorKeydown(event) {
        if (!event || !field || !field.getState().open || !panel || !panel.handleKeydown) return false;
-       if (event.key === 'Enter' && opts.needConfirm === true && event.isComposing !== true && !InteractionPolicy.mutationLocked(opts)) {
-         if (event.preventDefault) event.preventDefault();
-         var committed = instance.commit({ source:'keyboard', reason:'enter-confirm', originalEvent:event });
-         if (committed !== false) field.close('confirm', event);
-         return true;
-       }
+      if (instance.confirmFromKeyboard(event)) return true;
        var handled = panel.handleKeydown(event) === true;
        if (handled) activateColorVirtualFocus(event.key || 'color-keyboard');
        return handled;
