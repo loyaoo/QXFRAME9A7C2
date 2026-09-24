@@ -12,12 +12,12 @@
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `37a506d3c6dc2bfdfe3e00a059e7f0fb9970bd49` (PR #54 merge)
 - Current branch: `refactor/phase-d-selection-foundation-20260924`
-- Open PRs at this checkpoint: none
+- Open PRs at this checkpoint: pending PHASE-D-001 PR
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #337 / `35965963724` (PR #54)
 - Latest green main CI + Pages: #338 / `35966293514`
-- Controller migration implementation progress: 81%
+- Controller migration implementation progress: 86%
 - Current Phase: Phase D
 - Current Task: `PHASE-D-001`
 
@@ -25,7 +25,7 @@
 
 ### PHASE-D-001 — SelectionController foundation + ItemCollection/List/OptionList/Tree first pack
 Status: IN_PROGRESS
-Task progress: 5%
+Task progress: 70%
 
 Why this is current:
 - PHASE-C-003 is merged and green through PR #54 and main #338, so Phase C is complete.
@@ -50,12 +50,23 @@ Scope:
 - preserve stable-key, maxCount, disabled/readOnly/loading and controlled/defaultValue behavior;
 - add focused structural/browser regressions for selected/checked separation, stable keys, anchor/data revision and no duplicate selection truth.
 
+Implemented in current PHASE-D-001 branch:
+- core Selection now uses shared DataRevision for reentrant/stale mutation protection and exposes revision refs; the old private mutationVersion is removed.
+- SelectionController is an aggregate facade over canonical Selection channels + HierarchicalSelection + revision-bound anchors; it contains no second selected-key Set store.
+- ItemCollection owns/accepts a SelectionController selected channel, keeps getSelection() compatibility, exposes getSelectionController(), and no longer owns a component-local selectionAnchorValue.
+- ItemCollection anchors bind to its canonical Collection dataRevision; dataset replacement invalidates stale anchors and focusSelected falls back/rebases only against current rows.
+- List inherits the ItemCollection controller surface; OptionList explicitly forwards getSelection()/getSelectionController().
+- Tree owns one SelectionController with separate selected and checked channels, shares the selected channel with its ItemCollection, and delegates checked/indeterminate hierarchy through SelectionController.createHierarchy().
+- ActiveItem remains the sole activeKey owner.
+- Tree ComponentProfile declares SelectionController ownership; no SelectionController ownership is claimed yet for Transfer/Table/Tags/Cascader.
+- required verify:selection-controller gate checks no duplicate Set store, DataRevision reentrancy, selected/checked channel separation, revision-bound anchor invalidation, and first-pack source ownership.
+- browser smoke covers List/OptionList single-store identity, stale-anchor invalidation, and Tree selected/checked channel identity + independence.
+
 Next exact step:
-1. create a fresh PHASE-D-001 branch from current main;
-2. map the exact Selection + ItemCollection anchor/revision APIs needed by the facade and implement SelectionController without duplicating store state;
-3. migrate ItemCollection/List/OptionList first, then Tree checked/indeterminate channels;
-4. add a required `verify:selection-controller` gate plus only missing browser regressions;
-5. run full PR release CI, merge only green, then verify main CI + Pages.
+1. create/run the PHASE-D-001 PR against current main;
+2. fix only real Completion audit/browser/release failures without weakening stable-key/channel/revision gates;
+3. merge only a green PR head and verify main CI + Pages;
+4. then continue Phase D with Transfer and the later Table/Tags/Cascader selection semantics.
 
 ## Current authority snapshot — after Phase A
 
