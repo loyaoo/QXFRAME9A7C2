@@ -70,11 +70,12 @@ function create(options){
     revision+=1;
     return true;
   }
-  function clearOlder(owner,operation,generation){
+  function clearOlder(owner,operation,generation,preserveIdentity){
     if(!Number.isFinite(generation))return 0;
     var count=0;
     records.forEach(function(record,key){
       if(record.ownerId!==owner||record.operation!==operation)return;
+      if(String(key)===String(preserveIdentity||''))return;
       if(!Number.isFinite(record.generation)||record.generation>=generation)return;
       if(removeRecord(key,'superseded'))count+=1;
     });
@@ -90,14 +91,14 @@ function create(options){
     var operation=normalizeText(value.operation||'operation');
     if(!recordOwner||!operation)return OperationResult.invalid(context,{reason:'feedback-owner-operation-required'});
     var generation=Number.isFinite(Number(value.generation))?Number(value.generation):null;
+    var identity=identityOf(value,context,recordOwner,operation);
     var opKey=operationKey(recordOwner,operation);
     var latest=latestGeneration.get(opKey);
     if(generation!==null&&latest!==undefined&&generation<latest)return OperationResult.stale(context,{reason:'feedback-generation-stale',generation:generation});
     if(generation!==null&&(latest===undefined||generation>latest)){
       latestGeneration.set(opKey,generation);
-      clearOlder(recordOwner,operation,generation);
+      clearOlder(recordOwner,operation,generation,identity);
     }
-    var identity=identityOf(value,context,recordOwner,operation);
     if(status==='idle'){
       return removeRecord(identity,value.clearReason||'idle')
         ? OperationResult.applied(context,{reason:'feedback-cleared',generation:generation===null?undefined:generation})
