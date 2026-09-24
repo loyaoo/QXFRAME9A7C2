@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol } from '../src/core/index.js';
+import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol, Collection, ValueDraft, StateController } from '../src/core/index.js';
 
 const keyEvent={type:'keydown',isTrusted:true};
 const parent=ActionContext.create('activate',{originalEvent:keyEvent,scopeId:'scope-a',ownerId:'owner-a'});
@@ -82,10 +82,54 @@ assert.ok(InputModality);
 assert.equal(SharedProtocol.ActionContext,ActionContext);
 assert.equal(SharedProtocol.LogicalOwnerTree,LogicalOwnerTree);
 
+const collection=Collection.create({items:[{key:'a',value:'A'}]});
+assert.equal(collection.dataRevision,0);
+const collectionRef=collection.createRef('a');
+assert.equal(collection.isCurrentRef(collectionRef),true);
+assert.equal(collection.setItems([{key:'a',value:'A2'}]).changed,true);
+assert.equal(collection.dataRevision,1);
+assert.equal(collection.isCurrentRef(collectionRef),false);
+let reentrantCollection;
+reentrantCollection=Collection.create({
+  items:[{key:'x'}],
+  beforeItemsChange(){
+    reentrantCollection.updateOptions({getLabel:item=>item.key});
+    return true;
+  }
+});
+assert.equal(reentrantCollection.setItems([{key:'y'}]).reason,'stale-transaction');
+
+const controlledDraft=ValueDraft.create({value:'A',controlled:true});
+assert.equal(controlledDraft.controlled,true);
+assert.equal(controlledDraft.getOwnershipState().ownership,'external');
+assert.equal(controlledDraft.requestChange('B',{source:'keyboard',reason:'probe-change'}),true);
+assert.equal(controlledDraft.value,'A');
+assert.equal(controlledDraft.getOwnershipState().pendingRequestIds.length,1);
+const pendingId=controlledDraft.getOwnershipState().pendingRequestIds[0];
+assert.equal(controlledDraft.syncExternal('B',{requestId:pendingId}),true);
+assert.equal(controlledDraft.value,'B');
+assert.equal(controlledDraft.getOwnershipState().pendingRequestIds.length,0);
+controlledDraft.setControlled(false);
+assert.equal(controlledDraft.getOwnershipState().ownership,'internal');
+assert.equal(controlledDraft.requestChange('C',{source:'programmatic',reason:'probe-uncontrolled'}),true);
+assert.equal(controlledDraft.value,'C');
+
+const binding=StateController.createValueBinding({value:'X',controlled:true});
+assert.equal(binding.controlled,true);
+assert.equal(binding.ownership,'external');
+assert.equal(binding.write('Y',{reason:'binding-proposal'},true),true);
+assert.equal(binding.value,'X');
+binding.syncExternal('Y',{requestId:binding.getOwnershipState().pendingRequestIds[0]});
+assert.equal(binding.value,'Y');
+
 projection.destroy();
 tree.destroy();
 diagnostics.destroy();
 internal.destroy();
 external.destroy();
+collection.destroy();
+reentrantCollection.destroy();
+controlledDraft.destroy();
+binding.destroy();
 
-console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,environmentPort:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,componentProfile:true,inputModality:true}));
+console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,collectionDataRevision:true,valueDraftOwnership:true,stateControllerOwnership:true,environmentPort:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,componentProfile:true,inputModality:true}));

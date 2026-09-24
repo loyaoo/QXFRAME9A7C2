@@ -4,6 +4,7 @@ import { ValueEquality } from '../utils/valueEquality.js';
 import { Events } from './events.js';
 import { InteractionDetails } from './interactionDetails.js';
 import { mergeOptions } from './options.js';
+import { ControllableStateCore } from './controllableStateCore.js';
 
 function create(options) {
   var opts = mergeOptions({}, options);
@@ -11,6 +12,10 @@ function create(options) {
   var destroyed = false;
   var mutationVersion = 0;
   var api = null;
+  var ownershipCore = ControllableStateCore.create({
+    controlled: opts.controlled === true,
+    allowOwnershipTransition: true
+  });
 
   function copy(value) {
     return Utils.isFunction(opts.copyValue) ? opts.copyValue(value) : value;
@@ -219,10 +224,11 @@ return true;
     committedValue = undefined;
     draftValue = undefined;
     emitter.dispose();
+    ownershipCore.destroy({ source: 'programmatic', reason: 'value-draft-destroy' });
     return true;
   }
 
-  var controlled = opts.controlled === true;
+  function isControlled() { return ownershipCore.getState().controlled; }
 
   function requestChange(next, meta) {
     if (destroyed) return false;
@@ -233,19 +239,30 @@ return true;
       reason: 'request-change'
     }, meta);
     if (Utils.isFunction(opts.beforeChangeRequest) && opts.beforeChangeRequest(detail) === false) return false;
+    var ownershipRequest = isControlled() ? ownershipCore.requestChange(detail) : null;
     if (Utils.isFunction(opts.onChangeRequest)) opts.onChangeRequest(normalized, detail);
     if (detail.silent !== true) emitter.emit('change-request', detail);
-    if (controlled) return true;
+    if (isControlled()) {
+      if (!ownershipRequest) ownershipCore.requestChange(detail);
+      return true;
+    }
     return setValue(normalized, mergeOptions({ reason: detail.reason || 'request-change' }, meta));
   }
 
   function syncExternal(next, meta) {
     if (destroyed) return false;
     var cfg = mergeOptions({ silent: true, reason: 'external-sync', source: 'external' }, meta);
-    if (cfg.preserveDraft !== true || equals(committedValue, draftValue)) return setValue(next, cfg);
+    if (cfg.preserveDraft !== true || equals(committedValue, draftValue)) {
+      var directResult = setValue(next, cfg);
+      if (directResult && isControlled()) ownershipCore.syncExternal(cfg, { requestId: cfg.requestId });
+      return directResult;
+    }
     var normalized = normalize(next, cfg);
     var previousValue = committedValue;
-    if (equals(previousValue, normalized)) return true;
+    if (equals(previousValue, normalized)) {
+      if (isControlled()) ownershipCore.syncExternal(cfg, { requestId: cfg.requestId });
+      return true;
+    }
     var detail = payload({ nextValue: normalized, previousValue: previousValue, previousDraftValue: draftValue, reason: cfg.reason }, cfg);
     var versionBefore = mutationVersion;
     if (Utils.isFunction(opts.beforeValueChange) && opts.beforeValueChange(detail) === false) return false;
@@ -259,10 +276,14 @@ return true;
     detail.draftChanged = false;
     if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(committedValue, detail);
     if (detail.silent !== true) emitter.emit('value-change', detail);
+    if (isControlled()) ownershipCore.syncExternal(cfg, { requestId: cfg.requestId });
     return true;
   }
 
-  function setControlled(value) { controlled = value === true; return api; }
+  function setControlled(value) {
+    ownershipCore.transitionOwnership(value === true ? 'external' : 'internal', { source: 'programmatic', reason: 'set-controlled' });
+    return api;
+  }
 
   api = {
     begin: begin,
@@ -271,6 +292,7 @@ return true;
     requestChange: requestChange,
     syncExternal: syncExternal,
     setControlled: setControlled,
+    getOwnershipState: function () { return ownershipCore.getState(); },
     commit: commit,
     cancel: cancel,
     rollback: cancel,
@@ -296,7 +318,7 @@ return true;
       enumerable: true,
       get: function () { return !destroyed && !equals(committedValue, draftValue); }
     },
-    controlled: { enumerable: true, get: function () { return controlled; } },
+    controlled: { enumerable: true, get: function () { return isControlled(); } },
     destroyed: { enumerable: true, get: function () { return destroyed; } }
   });
 

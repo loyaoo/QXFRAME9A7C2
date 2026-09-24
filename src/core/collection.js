@@ -2,6 +2,7 @@
 import { Utils } from '../utils/utils.js';
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
+import { DataRevision } from './dataRevision.js';
 
 function defaultKey(item, index) {
     if (item && typeof item === 'object') {
@@ -37,7 +38,7 @@ function defaultKey(item, index) {
     var localItems = Array.isArray(opts.items) ? opts.items.slice() : [];
     var emitter = Events.createEmitter();
     var destroyed = false;
-    var mutationVersion = 0;
+    var dataRevision = DataRevision.create();
     var api = null;
 
     function currentItems() {
@@ -117,13 +118,13 @@ function defaultKey(item, index) {
         controller: api
       }, meta);
 
-      var versionBefore = mutationVersion;
+      var versionBefore = dataRevision.current();
       if (Utils.isFunction(opts.beforeItemsChange) && opts.beforeItemsChange(payload) === false) {
         payload.changed = false;
         payload.reason = payload.reason || 'cancelled';
         return payload;
       }
-      if (mutationVersion !== versionBefore) {
+      if (dataRevision.current() !== versionBefore) {
         payload.changed = false;
         payload.reason = 'stale-transaction';
         return payload;
@@ -131,7 +132,7 @@ function defaultKey(item, index) {
 
       if (Utils.isFunction(opts.setItems)) opts.setItems(next.slice(), payload);
       else localItems = next;
-      mutationVersion += 1;
+      dataRevision.advance();
 
       payload.changed = true;
       payload.items = next.slice();
@@ -175,13 +176,13 @@ function defaultKey(item, index) {
         payload.reason = 'disabled';
         return payload;
       }
-      var versionBeforeMove = mutationVersion;
+      var versionBeforeMove = dataRevision.current();
       if (Utils.isFunction(opts.beforeMove) && opts.beforeMove(payload) === false) {
         payload.changed = false;
         payload.reason = payload.reason || 'cancelled';
         return payload;
       }
-      if (mutationVersion !== versionBeforeMove) {
+      if (dataRevision.current() !== versionBeforeMove) {
         payload.changed = false;
         payload.reason = 'stale-transaction';
         return payload;
@@ -206,21 +207,22 @@ function defaultKey(item, index) {
     function updateOptions(nextOptions) {
       if (destroyed) return api;
       var next = nextOptions || {};
-      if (Object.keys(Object(next)).length) mutationVersion += 1;
+      if (Object.keys(Object(next)).length) dataRevision.advance();
       opts = mergeOptions(opts, next);
       if (Object.prototype.hasOwnProperty.call(Object(next), 'items')) {
         localItems = Array.isArray(next.items) ? next.items.slice() : [];
-        mutationVersion += 1;
+        dataRevision.advance();
       }
       return api;
     }
 
     function destroy() {
       if (destroyed) return false;
-      mutationVersion += 1;
+      dataRevision.advance();
       destroyed = true;
       localItems = [];
       emitter.dispose();
+      dataRevision.destroy();
       return true;
     }
 
@@ -241,6 +243,8 @@ function defaultKey(item, index) {
         return index < 0 ? null : currentItems()[index];
       },
       setItems: commitItems,
+      createRef: function (key) { return dataRevision.capture(String(key)); },
+      isCurrentRef: function (ref) { return dataRevision.isCurrent(ref); },
       move: move,
       moveBy: function (key, delta, meta) {
         var index = indexOf(key);
@@ -263,6 +267,7 @@ function defaultKey(item, index) {
         }
       },
       size: { enumerable: true, get: function () { return currentItems().length; } },
+      dataRevision: { enumerable: true, get: function () { return dataRevision.current(); } },
       destroyed: { enumerable: true, get: function () { return destroyed; } }
     });
 
