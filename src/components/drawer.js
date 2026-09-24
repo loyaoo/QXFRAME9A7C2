@@ -427,10 +427,10 @@ export class Drawer extends OverlayComponent {
 
     constructor(options = {}) {
         super(options);
-        this.adoptOverlayController(createDrawerController(this, this.options));
+        this.adoptOverlayFamilyController(createDrawerController(this, this.options));
     }
 
-    getPanelElement() { const c = this.getOverlayController(); return c && c.getPanelElement ? c.getPanelElement() : null; }
+    getPanelElement() { const c = this.getOverlayFamilyController(); return c && c.getPanelElement ? c.getPanelElement() : null; }
 }
 
 export { PLACEMENTS, ANIMATIONS };
