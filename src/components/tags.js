@@ -1724,7 +1724,7 @@ export class Tags extends FieldComponent {
     interaction:Object.freeze({ keymap:'tags' }),
     form:Object.freeze({ serialize:true }),
     selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController/StateController binding' }),
-    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController' })
+    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController', form:'FormController' })
   });
   static options = TAGS_DEFAULTS;
   static contract = ComponentContracts.get('Tags');
