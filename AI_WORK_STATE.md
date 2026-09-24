@@ -10,43 +10,47 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `deede43a127e525458c1b3163b24c048881c56dc` (PR #82 merge)
-- Current branch: `refactor/phase-h-feedback-presenters-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-003 feedback-presenters PR
+- Last code-affecting main commit: `a7eb78ca9db866acd0bc60f470b241bfe7858bce` (PR #83 merge)
+- Current branch: `refactor/phase-h-form-field-base-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-004 field/form-base PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #427 / `36029897206` (PR #82)
-- Latest green main CI + Pages: #428 / `36070432617`
-- Overall handbook implementation progress: 95%
+- Latest green Phase H PR CI: #430 / `36071355296` (PR #83)
+- Latest green main CI + Pages: #431 / `36071805997`
+- Overall handbook implementation progress: 96%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-003`
+- Current Task: `PHASE-H-004`
 
 ## CURRENT
 
-### PHASE-H-003 — Progress + Result + Loading feedback presenters
+### PHASE-H-004 — FieldComponent → FormController shared binding
 Status: IN_PROGRESS
-Task progress: 75%
+Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-002 is DONE through PR #82, exact-head CI #427 / `36029897206`, merge `deede43a127e525458c1b3163b24c048881c56dc`, main release + Pages #428 / `36070432617`.
-- Message and Notification are H accepted for Motion/Overlay/Feedback; NoticeService no longer bypasses OverlayController for notice layer ownership.
+- PHASE-H-003 is DONE through PR #83, exact-head CI #430 / `36071355296`, merge `a7eb78ca9db866acd0bc60f470b241bfe7858bce`, main release + Pages #431 / `36071805997`.
+- Progress, Result and Loading are H accepted; public H-accepted count is now 5/40.
 
 Implemented in current pack:
-- added generic `FeedbackController.createForProjector()` so local/form/global visible projectors bind without duplicating controller setup.
-- Progress now has exact handbook Feedback profile/ownership and an instance-bound FeedbackController projector mapping pending/progress/success/error to canonical progress state.
-- Result now has exact handbook Feedback profile/ownership and an instance-bound FeedbackController projector mapping operation status to result presentation and clear→hide.
-- Loading now has exact handbook Capability/Motion/Overlay/Feedback profile/ownership.
-- Loading open enters a real CapabilityController; existing Transition→MotionController and OverlayController paths remain the sole motion/overlay authorities.
-- Loading exposes an instance-bound FeedbackController projector for pending/progress visible state and terminal/clear close.
-- Phase H profile regression floor rises from 14 after H-002 to 17 in this pack.
-- dedicated Node conformance gate plus strict source-ESM Chromium checks cover all three presenter mappings and Loading controller access.
+- added canonical `FormController.bindField()` entry over the existing unique-field registry; no second form registry or value owner was introduced.
+- FieldComponent can now bind/unbind a FormController and exposes registration/touched/validate/reset-ack helpers.
+- the shared adapter reads the canonical FieldComponent value and current FormBridge serialized value; FormBridge remains the native form carrier.
+- FieldComponent value changes notify the bound FormController revision/dirty state; external/options/form sources can remain clean.
+- implicit component `name` changes re-register the same fieldId so FormController's name index stays current.
+- component destroy automatically unregisters its FormController field.
+- Autocomplete, Cascader, ColorPicker, DatePicker, Select, TreeSelect, TimePicker, WheelPicker, Tags and Transfer now declare FormController ownership through this inherited FieldComponent path; Transfer also declares its form capability.
+- dedicated Node gate covers same-name fields, value notification, touched, validation, rename re-indexing, serialization and destroy cleanup.
+- strict source-ESM Chromium coverage uses a real Rate FieldComponent consumer to prove bind → dirty/serialize → destroy unregister.
+
+Scope note:
+- this pack migrates the shared Form path and Form ownership declaration only. It does not mark those ten public components H accepted until their remaining target controllers/duplicate paths are also signed off.
 
 Next exact step:
-1. run PHASE-H-003 exact-head full release/browser/package CI.
-2. merge only exact-head green; verify main + Pages.
-3. mark Progress, Result and Loading H accepted.
-4. continue with the next high-leverage shared family instead of one-component PRs.
+1. run PHASE-H-004 exact-head full release/browser/package CI.
+2. fix only real shared-form regressions; do not duplicate FormBridge, ValueController or FormController state.
+3. merge only exact-head green and verify main + Pages.
+4. mark FieldComponent internal Form path H-migrated, then use this base to accelerate remaining R-capable public families.
 
 ## Current authority snapshot — after Phase A
 
@@ -76,6 +80,22 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-003 — Progress + Result + Loading feedback presenters
+Status: DONE
+Evidence:
+- PR #83 merged
+- merge commit `a7eb78ca9db866acd0bc60f470b241bfe7858bce`
+- exact-head CI #430 / `36071355296`: success
+- main CI + Pages #431 / `36071805997`: success
+Outcome:
+- FeedbackController gained generic local/form/global projector binding without new state ownership.
+- Progress is H accepted for Feedback-only presentation projection.
+- Result is H accepted for Feedback-only result projection.
+- Loading is H accepted for Capability/Motion/Overlay/Feedback; open enters CapabilityController while existing Motion/Overlay authorities remain canonical.
+- strict source-ESM Chromium covers pending/progress/terminal/clear presenter behavior.
+
+
 
 ### PHASE-H-002 — NoticeService + Message/Notification M/O/B migration
 Status: DONE

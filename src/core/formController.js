@@ -363,5 +363,10 @@ function create(options){
   return api;
 }
 
-export const FormController=Object.freeze({create});
-export {create};
+function bindField(controller,spec){
+  if(!controller||!Utils.isFunction(controller.registerField))throw new TypeError('[QXFRAME9A7C2] FormController.bindField requires a FormController-compatible instance.');
+  return controller.registerField(spec||{});
+}
+
+export const FormController=Object.freeze({create,bindField});
+export {create,bindField};

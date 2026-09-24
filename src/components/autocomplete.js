@@ -574,7 +574,7 @@ export class Autocomplete extends PopupFieldComponent {
     interaction:Object.freeze({keymap:'autocomplete'}),
     overlay:Object.freeze({mode:'popup'}),
     form:Object.freeze({serialize:true}),
-    ownership:Object.freeze({value:'ValueController'})
+    ownership:Object.freeze({value:'ValueController',form:'FormController'})
   });
   static contract = getContract('Autocomplete');
   static immutableOptions = Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);

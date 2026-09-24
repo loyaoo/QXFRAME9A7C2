@@ -2,6 +2,7 @@ import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { FormBridge } from '../core/formBridge.js';
+import { FormController } from '../core/formController.js';
 import { DOM } from '../core/dom.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { ValueEquality } from '../utils/valueEquality.js';
@@ -16,10 +17,38 @@ function currentValue(options) {
     return undefined;
 }
 
+function createFormAdapter(instance, record, config) {
+    const adapter = {
+        getValue: () => cloneValue(record.value),
+        getSerializedValue: () => record.bridge ? record.bridge.getSerializedValue() : cloneValue(record.value),
+        focus: () => instance.focus()
+    };
+    if (typeof config.reset === 'function') adapter.reset = context => config.reset(context, instance);
+    if (typeof config.validateSync === 'function') adapter.validateSync = (value, context) => config.validateSync(value, context, instance);
+    if (typeof config.validateAsync === 'function') adapter.validateAsync = (value, context) => config.validateAsync(value, context, instance);
+    if (typeof config.getOwnershipState === 'function') adapter.getOwnershipState = () => config.getOwnershipState(instance);
+    if (typeof config.isDirty === 'function') adapter.isDirty = () => config.isDirty(instance) === true;
+    if (typeof config.reveal === 'function') adapter.reveal = context => config.reveal(context, instance);
+    return Object.freeze(adapter);
+}
+
+function releaseFormRegistration(record, meta) {
+    const registration = record.formRegistration;
+    record.formRegistration = null;
+    if (!registration || typeof registration.unregister !== 'function') return false;
+    return registration.unregister(meta || { source:'component', reason:'form-unbind' });
+}
+
 export class FieldComponent extends Component {
     constructor(options = {}) {
         super(options);
-        fieldState.set(this, { value: currentValue(this.options), bridge: null, focusTarget: null });
+        const record = { value: currentValue(this.options), bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null };
+        fieldState.set(this, record);
+        this.own(() => {
+            releaseFormRegistration(record, { source:'component', reason:'destroy' });
+            record.formController = null;
+            record.formBindingOptions = null;
+        });
     }
 
     get value() { return cloneValue(fieldState.get(this).value); }
@@ -76,6 +105,50 @@ export class FieldComponent extends Component {
 
     getFormBridge() { return fieldState.get(this).bridge; }
 
+    bindFormController(controller, options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FormController to a destroyed FieldComponent.');
+        if (!options || typeof options !== 'object' || Array.isArray(options)) throw new TypeError('[QXFRAME9A7C2] FieldComponent form binding options must be an object.');
+        const record = fieldState.get(this);
+        releaseFormRegistration(record, { source:'component', reason:'form-rebind' });
+        record.formController = null;
+        const config = { ...options };
+        const fieldId = String(config.fieldId || this.id);
+        const name = own(config, 'name') ? config.name : (this.options.name || '');
+        const registration = FormController.bindField(controller, {
+            fieldId,
+            name,
+            adapter: createFormAdapter(this, record, config),
+            metadata: config.metadata || null
+        });
+        record.formController = controller;
+        record.formRegistration = registration;
+        record.formBindingOptions = Object.freeze(config);
+        return registration;
+    }
+
+    unbindFormController(meta = {}) {
+        const record = fieldState.get(this);
+        const result = releaseFormRegistration(record, { source:meta.source || 'component', reason:meta.reason || 'form-unbind' });
+        record.formController = null;
+        record.formBindingOptions = null;
+        return result;
+    }
+
+    getFormController() { return fieldState.get(this).formController; }
+    getFormRegistration() { return fieldState.get(this).formRegistration; }
+    markFormTouched(value = true, meta = {}) {
+        const registration = fieldState.get(this).formRegistration;
+        return registration ? registration.markTouched(value, meta) : false;
+    }
+    validateFormField(meta = {}) {
+        const registration = fieldState.get(this).formRegistration;
+        return registration ? registration.validate(meta) : Promise.resolve(false);
+    }
+    acknowledgeFormReset(requestId, meta = {}) {
+        const registration = fieldState.get(this).formRegistration;
+        return registration ? registration.acknowledgeReset(requestId, meta) : false;
+    }
+
     setFieldValue(value, detail = {}) {
         if (this.destroyed) return false;
         if (detail.force !== true && !this.canMutate(detail.capabilities || {})) return false;
@@ -85,6 +158,12 @@ export class FieldComponent extends Component {
         if (ValueEquality.deep(previous, next) && detail.forceEvent !== true) return false;
         state.value = next;
         if (state.bridge) state.bridge.setValue(next, { silent: detail.silent === true, forceEvent: detail.forceEvent === true });
+        if (state.formRegistration && detail.notifyForm !== false) {
+            const formMeta = { source:detail.source || 'component', reason:detail.reason || 'field-value' };
+            if (own(detail, 'dirty')) formMeta.dirty = detail.dirty === true;
+            else if (formMeta.source === 'external' || formMeta.source === 'options' || formMeta.source === 'form') formMeta.dirty = false;
+            state.formRegistration.notifyValue(formMeta);
+        }
         const hook = this[fieldHooks.valueChanged];
         if (typeof hook === 'function') hook.call(this, cloneValue(next), cloneValue(previous), detail);
         if (detail.silent !== true) this.emit('change', { instance: this, value: cloneValue(next), previous: cloneValue(previous), detail });
@@ -99,6 +178,9 @@ export class FieldComponent extends Component {
             for (const key of ['name', 'disabled', 'readOnly', 'required', 'serializeValue']) if (own(patch, key)) bridgePatch[key] = next[key];
             if (Object.keys(bridgePatch).length) state.bridge.updateOptions(bridgePatch);
             if (own(patch, 'value')) state.bridge.setValue(state.value, { silent: true });
+        }
+        if (own(patch, 'name') && state.formRegistration && state.formController && !(state.formBindingOptions && own(state.formBindingOptions, 'name'))) {
+            this.bindFormController(state.formController, state.formBindingOptions || {});
         }
         const hook = this[fieldHooks.fieldOptionsUpdated];
         if (typeof hook === 'function') hook.call(this, next, previous, patch);

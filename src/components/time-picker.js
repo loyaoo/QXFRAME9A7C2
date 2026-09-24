@@ -499,7 +499,7 @@ export class TimePicker extends PickerComponent {
     interaction:Object.freeze({ keymap:'picker' }),
     overlay:Object.freeze({ mode:'popup' }),
     form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController' })
+    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
   });
   static options = TIME_PICKER_DEFAULTS;
   static immutableOptions = TIME_PICKER_IMMUTABLE;

@@ -729,7 +729,7 @@ export class ColorPicker extends PickerComponent {
     interaction:Object.freeze({ keymap:'picker' }),
     overlay:Object.freeze({ mode:'popup' }),
     form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController' })
+    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
   });
   static options = COLOR_PICKER_DEFAULTS;
   static immutableOptions = COLOR_PICKER_IMMUTABLE;

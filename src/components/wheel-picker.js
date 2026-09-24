@@ -330,7 +330,7 @@ export class WheelPicker extends PickerComponent {
     interaction:Object.freeze({ keymap:'picker' }),
     overlay:Object.freeze({ mode:'popup' }),
     form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController' })
+    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
   });
   static options = WHEEL_PICKER_DEFAULTS;
   static immutableOptions = STRUCTURAL_OPTIONS;
