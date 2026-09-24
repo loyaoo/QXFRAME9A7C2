@@ -16,7 +16,7 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #307 / `35949535252`
 - Latest green main CI + Pages: run #308 / `35949774749`
-- Controller migration implementation progress: 1% (Phase A authority inventory started; no business behavior changed)
+- Controller migration implementation progress: 3% (Phase A authority inventory frozen; Shared Protocol implementation next; no business behavior changed)
 
 ## CURRENT
 
@@ -47,8 +47,23 @@ Primary first-wave components:
 - Cascader
 - Collapse (autosize Motion)
 
+Frozen Phase A authority inventory:
+- Action/event metadata: `InteractionDetails`, `OpenStateBridge`, logical events. Preserve them; add ActionContext/action IDs and structured OperationResult above them.
+- Value ownership: `StateController -> ValueDraft` is the existing value authority used by the first-wave components. Preserve it; ControllableStateCore must evolve controlled/external ownership rather than duplicate committed value.
+- Logical ownership: `LogicalOwnership` already owns parent/child logical nodes and bubbling. Preserve node authority; add a shared tree/registry facade for event/root resolution and descendant queries.
+- Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardNavigation`, `RovingProjection`, `ActiveItem` are existing authorities. Future FocusController must compose these, not replace them.
+- Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer`, `PopupSurface` are existing authorities. OverlayController must not own public open state.
+- Form: `FormBridge` is the native field/FormData/reset carrier authority. FormController will consume it; no second hidden-carrier implementation.
+- Theme/token: `Config` owns root/scoped theme and token projection today. Theme/Token Controllers must evolve it; catalog enforcement is still missing.
+- Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem`, `TableModel` own current selection/collection behavior. `Collection.mutationVersion` is local stale protection, but there is no shared DataRevision protocol yet.
+- Projection/scheduling: `Scheduler` and `DOMProjection` are mature primitives, but there is no revision-aware ProjectionSnapshot/ProjectionScheduler stale gate yet.
+- Motion: `MotionCore`, `Transition`, `TransitionGroup` remain the low-level motion authority; no second generation counter may be introduced.
+- Environment: core/components still resolve `globalThis.document/window` ad hoc; no shared EnvironmentPort exists.
+- Diagnostics: `PerformanceDiagnostics` covers resource balance only; semantic duplicate-owner/stale-action diagnostics are not yet implemented.
+- Component capability declaration: `ComponentContracts` validates public options, but no `ComponentProfile` capability/ownership schema exists.
+
 Next exact step:
-- finish the Phase A authority inventory on branch `refactor/phase-a-shared-protocol-20260924`, freeze the owner/action/value/focus/overlay/form/token map in this checkpoint, then implement the smallest Shared Protocol primitives by evolving existing authorities; do not create 11 empty Controller files.
+- implement the smallest Shared Protocol batch on `refactor/phase-a-shared-protocol-20260924`: ActionContext, OperationResult, DataRevision, EnvironmentPort, revision-aware ProjectionScheduler, semantic Diagnostics, ComponentProfile, and a LogicalOwnerTree facade over existing `LogicalOwnership`; add contract verification and exports without changing component behavior.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
