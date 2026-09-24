@@ -10,61 +10,52 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `af757cb76c7511c46ae4953da4da718a08a3c20e` (PR #62 merge)
-- Current branch: `refactor/phase-d-tags-selection-20260924`
-- Open PRs at this checkpoint: pending PHASE-D-004 Tags selection PR
+- Last code-affecting main commit: `bf3823248a7a5725b20a9711dfc12736bf7ff60e` (PR #63 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #366 / `35984401592` (PR #62)
-- Latest green main CI + Pages: #367 / `35984812326`
-- Controller migration implementation progress: 98%
+- Latest green Controller PR CI: #368 / `35985407152` (PR #63)
+- Latest green main CI + Pages: #369 / `35985810168`
+- Controller migration implementation progress: 99%
 - Current Phase: Phase D — Selection
-- Current Task: `PHASE-D-004`
+- Current Task: `PHASE-D-005`
 
 ## CURRENT
 
-### PHASE-D-004 — Tags SelectionController semantics
-Status: IN_PROGRESS
-Task progress: 80%
+### PHASE-D-005 — Select / TreeSelect / Cascader selection closeout
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-D-003 Table selection is merged and green through PR #62 / CI #366 and main CI + Pages #367.
-- Tags is the next handbook Phase D consumer before the remaining Select/TreeSelect/Cascader selection closeout.
-- Tags already has ValueController/StateController option-value binding as the public controlled/uncontrolled value authority; SelectionController must not become a second public value truth.
-- the current direct Selection store is an execution/projection selection owner and can be elevated behind SelectionController without changing public value ownership.
+- PHASE-D-004 Tags selection is merged and green through PR #63 / CI #368 and main CI + Pages #369.
+- Select and TreeSelect already consume canonical SelectionController stores indirectly through OptionList and Tree; their remaining work is explicit component ownership/facade signoff rather than another store migration.
+- Cascader still owns a direct Selection plus a component-local selectionAnchorValue and direct HierarchicalSelection facade; it is the final substantive Phase D selection owner.
+- public value authority for all three remains ValueController; SelectionController must stay the selection execution/anchor/revision authority only.
 
 Frozen impact map:
-- SelectionController selected channel becomes the canonical Tags selection execution store.
-- public `value/defaultValue/onChange` controlledness remains owned by the existing ValueController/StateController binding and continues proposal/external-sync semantics.
-- Tags item membership/order/value changes advance a dataset revision so old selection anchors cannot survive stale tag data.
-- TagNavigation/FocusController remain the virtual active-key/navigation authority; SelectionController does not own activeKey.
-- editable TokenInput item membership remains the data source for tag items; SelectionController does not duplicate item storage.
-- Phase C Interaction/Capability ownership remains unchanged.
+- Select must expose/reuse OptionList SelectionController identity and declare selection ownership without creating another store.
+- TreeSelect must expose/reuse Tree SelectionController selected/checked channels and declare selection ownership without duplicating checked state.
+- Cascader selected values move behind one SelectionController selected channel; hierarchical state delegates through the controller facade.
+- Cascader component-local selectionAnchorValue is removed; controller anchor is revision-bound.
+- Cascader item replacement and lazy child-load dataset changes advance selection data revision.
+- active path/column/keyboard cursor remains Cascader navigation state, not SelectionController activeKey.
+- Phase C Interaction/Capability and ValueController controlled/proposal semantics remain unchanged.
 
 Scope:
-- replace direct Tags Selection import/ownership with one SelectionController selected channel;
-- preserve controlled/uncontrolled checkable value semantics, FormBridge projection, add/remove/edit and hosted-tag behavior;
-- advance Tags selection data revision on both normal and silent item mutations/options item replacement;
-- expose SelectionController and declare ComponentProfile ownership;
-- add Chromium/source gates for store identity, data-revision anchor invalidation, selection pruning and controlled proposal/external sync.
-
-Implemented in current PHASE-D-004 Tags selection pack:
-- Tags no longer imports Selection directly; one SelectionController owns the canonical `selected` execution/projection channel.
-- existing ValueController/StateController option-value binding remains the public controlled/uncontrolled value authority; SelectionController does not become a second public value truth.
-- controlled checkable Tags still emit proposed selection values and wait for external `value` sync before the controller channel changes.
-- Tags item mutations advance the selected-channel dataset revision on normal TokenInput changes, silent add/remove/edit/clear/setItems paths, and options item replacement.
-- stale selection anchors are invalidated when tag item membership/order/value data changes.
-- SelectionController is exposed publicly and declared in ComponentProfile ownership; TagNavigation/FocusController remain active-key/navigation owners.
-- new required `verify:phase-d-tags-selection` passes sandbox Chromium for controller/store identity, silent item replacement revision invalidation/pruning and controlled proposal/external-sync behavior.
-- adjacent sandbox gates pass: `verify:selection-controller`, `verify:phase-c-tail`, `verify-source-esm-browser`, `verify:high-risk-browser`, `verify:architecture`, `verify:contracts`.
+- explicit SelectionController facades/profile ownership for Select and TreeSelect;
+- migrate Cascader direct Selection/HierarchicalSelection/anchor ownership into SelectionController;
+- preserve Cascader multiple/checkedStrategy/changeOnSelect/search/lazy-load/controlled behavior;
+- add dedicated source + Chromium regression gates for controller identity, selected/checked channels, Cascader dataset revision and stale-anchor invalidation;
+- run full release acceptance, then sign off Phase D.
 
 Next exact step:
-1. open/run the PHASE-D-004 Tags selection PR from the audited branch;
-2. fix only exact-head release/browser failures without moving public value ownership into SelectionController;
-3. merge only green and verify main release + Pages;
-4. checkpoint PHASE-D-004 as DONE;
-5. finish Phase D with Select/TreeSelect/Cascader selection closeout.
+1. create the PHASE-D-005 final selection branch from green main #369;
+2. apply the sandbox-verified Select/TreeSelect facades and Cascader migration;
+3. add required `verify:phase-d-popup-selection` to release verification;
+4. merge only exact-head green and verify main + Pages;
+5. update Phase D acceptance and advance to Phase E — Overlay + Motion.
 
 ## Current authority snapshot — after Phase A
 
@@ -95,6 +86,20 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-D-004 — Tags SelectionController semantics
+Status: DONE
+Evidence:
+- PR #63 merged
+- merge commit `bf3823248a7a5725b20a9711dfc12736bf7ff60e`
+- PR CI #368 / `35985407152`: success
+- main CI + Pages #369 / `35985810168`: success
+Outcome:
+- Tags direct Selection ownership is replaced by one SelectionController selected channel.
+- public controlled/uncontrolled value remains owned by the existing ValueController/StateController binding.
+- item membership/order/value mutations advance selection dataset revision and invalidate stale anchors.
+- controlled proposal/external-sync, FormBridge and Phase C interaction/capability behavior remain intact.
+- required `verify:phase-d-tags-selection` covers controller identity, pruning, revision invalidation and controlled semantics.
 
 ### PHASE-D-003 — Table local/remote SelectionController semantics
 Status: DONE
