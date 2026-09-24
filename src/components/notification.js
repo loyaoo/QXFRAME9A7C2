@@ -109,13 +109,7 @@ var channel = NoticeService.createChannel({ name: 'Notification', slug: 'notific
     
 function configure(next) { return preset.configure(DEFAULTS, next, normalize); }
     
-function createFeedbackController(options) {
-  var source = U.mergeOwn(options || {});
-  var projectorOptions = source.projectorOptions;
-  delete source.projectorOptions;
-  if (!source.globalProjector) source.globalProjector = FeedbackController.createNoticeProjector(channel, projectorOptions);
-  return FeedbackController.create(source);
-}
+var createFeedbackController = FeedbackController.bindNoticeChannel(channel);
 
 function createTyped(type, options) { return preset.createTyped(type, options, channel); }
 
