@@ -331,6 +331,7 @@ function create(options) {
       root: root,
       hosted: false,
       disabled: opts.disabled === true,
+      activeRegion: 'period',
       navigation: {
         handlers: FocusController.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' '], onKeydown)
       },
@@ -357,12 +358,9 @@ function create(options) {
   }
   function bindVirtualFocus(controller, hosted) {
     var currentKey = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
-    var binding = FocusController.bindVirtualFocus({
+    var binding = keyboardRegion.bindVirtualFocus({
       controller: controller,
       previousDomain: virtualFocusDomain,
-      keyboard: keyboard,
-      region: keyboardRegion,
-      root: root,
       hosted: hosted,
       activeKey: currentKey,
       activation: { reason:'period-bind', ensureVisible:true },
