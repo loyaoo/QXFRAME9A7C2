@@ -13,6 +13,107 @@ function normalizeChannelName(value) {
   return name;
 }
 
+function createRemoteChannel(options) {
+  var opts = options || {};
+  var excluded = Selection.create({ multiple:true, values:Array.isArray(opts.excludedKeys) ? opts.excludedKeys : [] });
+  var revision = DataRevision.create();
+  var destroyed = false;
+  var allMatching = opts.allMatching === true;
+  var queryKey = allMatching && opts.queryKey != null ? String(opts.queryKey) : null;
+  var knownCount = Number.isFinite(Number(opts.knownCount)) ? Math.max(0, Math.floor(Number(opts.knownCount))) : null;
+  var api = null;
+
+  function notify(meta) {
+    if (destroyed) return false;
+    revision.advance();
+    if (Utils.isFunction(opts.onChange) && !(meta && meta.silent === true)) opts.onChange(api.snapshot(), meta || {});
+    return true;
+  }
+  function clear(meta) {
+    if (destroyed) return false;
+    var changed = allMatching || queryKey !== null || excluded.size > 0 || knownCount !== null;
+    allMatching = false;
+    queryKey = null;
+    knownCount = null;
+    excluded.clear({ silent:true, source:'remote-selection', reason:'clear' });
+    if (changed) notify(meta);
+    return true;
+  }
+  function setAllMatching(nextQueryKey, selected, meta) {
+    if (destroyed) return false;
+    if (selected === false) return clear(meta);
+    var normalized = nextQueryKey == null ? '' : String(nextQueryKey);
+    var changed = !allMatching || queryKey !== normalized || excluded.size > 0;
+    allMatching = true;
+    queryKey = normalized;
+    excluded.clear({ silent:true, source:'remote-selection', reason:'all-matching' });
+    if (changed) notify(meta);
+    return true;
+  }
+  function reconcileQuery(nextQueryKey, meta) {
+    if (destroyed || !allMatching) return false;
+    var normalized = nextQueryKey == null ? '' : String(nextQueryKey);
+    if (queryKey === normalized) return false;
+    clear(meta);
+    return true;
+  }
+  function toggle(key, selected, meta) {
+    if (destroyed || !allMatching) return false;
+    var normalized = key == null ? '' : String(key);
+    if (!normalized) return false;
+    var shouldSelect = selected === undefined ? excluded.has(normalized) : selected !== false;
+    var changed = shouldSelect ? excluded.has(normalized) : !excluded.has(normalized);
+    if (!changed) return true;
+    if (shouldSelect) excluded.deselect(normalized, { silent:true, source:'remote-selection', reason:'include' });
+    else excluded.select(normalized, { silent:true, source:'remote-selection', reason:'exclude' });
+    notify(meta);
+    return true;
+  }
+  function setKnownCount(value, meta) {
+    if (destroyed) return false;
+    var next = value == null || value === '' || !Number.isFinite(Number(value)) ? null : Math.max(0, Math.floor(Number(value)));
+    if (knownCount === next) return true;
+    knownCount = next;
+    notify(meta);
+    return true;
+  }
+  function snapshot() {
+    return Object.freeze({
+      allMatching:allMatching,
+      queryKey:allMatching ? queryKey : null,
+      excludedKeys:Object.freeze(allMatching ? excluded.values.slice() : []),
+      knownCount:knownCount,
+      revision:revision.current(),
+      destroyed:destroyed
+    });
+  }
+  function destroy() {
+    if (destroyed) return false;
+    destroyed = true;
+    excluded.destroy();
+    revision.destroy();
+    return true;
+  }
+
+  api = Object.freeze({
+    setAllMatching:setAllMatching,
+    clear:clear,
+    reconcileQuery:reconcileQuery,
+    toggle:toggle,
+    isSelected:function (key) { return !destroyed && allMatching && !excluded.has(String(key)); },
+    setKnownCount:setKnownCount,
+    snapshot:snapshot,
+    destroy:destroy,
+    get excluded() { return destroyed ? null : excluded; },
+    get allMatching() { return allMatching; },
+    get queryKey() { return allMatching ? queryKey : null; },
+    get knownCount() { return knownCount; },
+    get revision() { return revision.current(); },
+    get destroyed() { return destroyed; }
+  });
+  return api;
+}
+
 function create(options) {
   var settings = options || {};
   var channelSpecs = settings.channels && typeof settings.channels === 'object'
@@ -21,6 +122,7 @@ function create(options) {
   var anchors = new Map();
   var revisionSources = new Map();
   var localRevisions = new Map();
+  var remoteChannels = new Map();
   var destroyed = false;
   var defaultRevisionSource = isRevisionSource(settings.revisionSource) ? settings.revisionSource : null;
   var configuredRevisionSources = settings.revisionSources && typeof settings.revisionSources === 'object' ? settings.revisionSources : null;
@@ -31,6 +133,12 @@ function create(options) {
     channels.set(name, Selection.create(spec));
   });
   if (!channels.size) channels.set('selected', Selection.create({}));
+  if (settings.remoteChannels && typeof settings.remoteChannels === 'object') {
+    Object.keys(settings.remoteChannels).forEach(function (rawName) {
+      var name = normalizeChannelName(rawName);
+      remoteChannels.set(name, createRemoteChannel(settings.remoteChannels[rawName] || {}));
+    });
+  }
 
   function requireChannel(name) {
     if (destroyed) throw new Error('[QXFRAME9A7C2] SelectionController is destroyed.');
@@ -181,8 +289,11 @@ function create(options) {
       var anchor = getAnchor(name);
       if (anchor !== null) anchorState[name] = anchor;
     });
+    var remoteState = {};
+    remoteChannels.forEach(function (channel, name) { remoteState[name] = channel.snapshot(); });
     return Object.freeze({
       channels: Object.freeze(channelState),
+      remoteChannels: Object.freeze(remoteState),
       anchors: Object.freeze(anchorState),
       dataRevision: currentDataRevision(defaultChannelName()),
       dataRevisions: dataRevisionsSnapshot(),
@@ -199,6 +310,8 @@ function create(options) {
     localRevisions.forEach(function (revision) { revision.destroy(); });
     localRevisions.clear();
     revisionSources.clear();
+    remoteChannels.forEach(function (channel) { channel.destroy(); });
+    remoteChannels.clear();
     return true;
   }
 
@@ -206,6 +319,15 @@ function create(options) {
     getChannel: requireChannel,
     hasChannel: function (name) { return !destroyed && channels.has(String(name || defaultChannelName())); },
     channelNames: function () { return Array.from(channels.keys()); },
+    getRemoteChannel: function (name) {
+      if (destroyed) throw new Error('[QXFRAME9A7C2] SelectionController is destroyed.');
+      var normalized = normalizeChannelName(name);
+      var channel = remoteChannels.get(normalized);
+      if (!channel) throw new RangeError('[QXFRAME9A7C2] Unknown SelectionController remote channel: ' + normalized);
+      return channel;
+    },
+    hasRemoteChannel: function (name) { return !destroyed && remoteChannels.has(String(name || '')); },
+    remoteChannelNames: function () { return Array.from(remoteChannels.keys()); },
     setRevisionSource: setRevisionSource,
     getRevisionSource: getRevisionSource,
     getDataRevision: currentDataRevision,
