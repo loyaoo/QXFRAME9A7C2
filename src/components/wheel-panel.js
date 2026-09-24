@@ -312,15 +312,9 @@ function create(options) {
     if (selectedIndex < 0) return false;
     return activateVirtualAt(next, selectedIndex, meta || { source:'keyboard', reason:'set-active-column' });
   }
-  function keyForInteractionAction(action) {
-    return action === 'MOVE_LEFT' ? 'ArrowLeft' : action === 'MOVE_RIGHT' ? 'ArrowRight' :
-      action === 'MOVE_UP' ? 'ArrowUp' : action === 'MOVE_DOWN' ? 'ArrowDown' :
-      action === 'PAGE_PREVIOUS' ? 'PageUp' : action === 'PAGE_NEXT' ? 'PageDown' :
-      action === 'MOVE_FIRST' ? 'Home' : action === 'MOVE_LAST' ? 'End' : '';
-  }
   function handleInteractionAction(action, event) {
     if (destroyed || !event || !capabilityController || !capabilityController.can('navigate')) return false;
-    var key = keyForInteractionAction(action);
+    var key = InteractionController.keyboardKeyForAction(action);
     if (!key) return false;
     var index=Math.max(0, Math.min(activeColumnIndex, Math.max(0,columnRecords.length-1)));
     if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT') {
