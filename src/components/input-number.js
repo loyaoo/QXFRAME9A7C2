@@ -5,7 +5,7 @@ import { getContract } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Scheduler } from '../core/scheduler.js';
 import { NumericInput } from '../core/numericInput.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { Utils } from '../utils/utils.js';
 
 const state = new WeakMap();
@@ -108,7 +108,7 @@ export class InputNumber extends FieldComponent {
         this.own(DOM.listen(frame,'blur',event=>{const next=event.relatedTarget;if(next&&frame.contains(next))return;if(!record.composing)this.#syncNumericFromLiveEditor({reason:'blur-live-editor',source:'blur',originalEvent:event});if(this.options.changeOnBlur!==false)numeric.flush({reason:'blur',source:'blur',originalEvent:event});else numeric.restoreInput({reason:'blur-restore',source:'blur',originalEvent:event});this.#syncProjection(false,{source:'blur',reason:this.options.changeOnBlur!==false?'blur':'blur-restore'});if(typeof this.options.onBlur==='function')this.options.onBlur(event,this);},true));
         const bindAction=(button,isUp)=>{let pointerStepped=false;const suppress=this.own(Scheduler.createDelayScheduler(()=>{pointerStepped=false;}));this.own(DOM.listen(button,'pointerdown',event=>{event.preventDefault?.();pointerStepped=this.#startRepeat(isUp,event)===true;}));this.own(DOM.listen(button,'pointerup',()=>{this.#stopRepeat();suppress.request(0,'pointerup');}));this.own(DOM.listen(button,'pointercancel',()=>{pointerStepped=false;suppress.cancel();this.#stopRepeat();}));this.own(DOM.listen(button,'pointerleave',()=>{pointerStepped=false;suppress.cancel();this.#stopRepeat();}));this.own(DOM.listen(button,'click',event=>{event.preventDefault?.();event.stopPropagation?.();if(pointerStepped){pointerStepped=false;suppress.cancel();return;}this.#step(isUp,DOM.activationSource(event),'action',event);}));};bindAction(up,true);bindAction(down,false);
         this.own(DOM.listen(field,'compositionstart',()=>{record.composing=true;}));this.own(DOM.listen(field,'compositionend',event=>{record.composing=false;numeric.collectInput(field.value,{reason:'compositionend',source:'input',originalEvent:event,composing:false});this.#syncProjection(true,{source:'input',reason:'compositionend'});}));
-        this.own(DOM.listen(frame,'wheel',event=>{if(this.options.changeOnWheel!==true||InteractionPolicy.mutationLocked(this.options))return;event.preventDefault?.();event.stopPropagation?.();this.#step(event.deltaY<0,'wheel','wheel',event);},{passive:false}));
+        this.own(DOM.listen(frame,'wheel',event=>{if(this.options.changeOnWheel!==true||CapabilityController.mutationLocked(this.options))return;event.preventDefault?.();event.stopPropagation?.();this.#step(event.deltaY<0,'wheel','wheel',event);},{passive:false}));
         if(control.onFormReset)control.onFormReset(()=>{numeric.setValue(initial.value,{silent:true,source:'form',reason:'reset'});this.#syncProjection(false);});
         this.#renderActions();this.#syncProjection(false);record.rendered=true;this.bindFocusTarget(field);this.setFieldValue(initial.value,{silent:true,force:true});return root;
     }

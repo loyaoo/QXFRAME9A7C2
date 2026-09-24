@@ -7,7 +7,7 @@ import { getContract } from '../core/componentContracts.js';
 import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 import { TimeUnit } from '../utils/timeUnit.js';
 import { Scheduler } from '../core/scheduler.js';
@@ -243,7 +243,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function commit(meta) { return instance.commit(meta || {}); }
   function cancel(meta) { return instance.cancel(meta || {}); }
   function clear(meta) {
-    if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value);
     draft.setValue(emptyValue(), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
@@ -291,7 +291,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     return true;
   }
   function setNow(value, meta) {
-    if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var now = TimeUnit.normalizeStrict(value === undefined || value === null ? TimeUnit.now() : value);
     if (!now) return false;
     var detail = Utils.assignOwn({ source: 'now', reason: 'now' }, meta || {});
@@ -396,7 +396,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       if (opts.showNow !== false) { if (nowButton.parentNode !== panelHost) panelHost.appendChild(nowButton); }
       else if (nowButton.parentNode) nowButton.parentNode.removeChild(nowButton);
     }
-    nowButton.disabled = InteractionPolicy.mutationLocked(opts);
+    nowButton.disabled = CapabilityController.mutationLocked(opts);
     nowButton.tabIndex = opts.showNow !== false && !nowButton.disabled ? 0 : -1;
     nowButton.textContent = opts.nowText || '此刻';
   }

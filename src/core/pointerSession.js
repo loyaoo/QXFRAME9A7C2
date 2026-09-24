@@ -3,7 +3,7 @@ import { Utils } from '../utils/utils.js';
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
 import { InteractionDetails } from './interactionDetails.js';
-import { InteractionPolicy } from './interactionPolicy.js';
+import { CapabilityController } from './capabilityController.js';
 
 const global = globalThis;
 
@@ -16,18 +16,20 @@ function create(options) {
     var scope = Lifecycle.createScope();
     var activeScope = null;
     var active = false, dragging = false, destroyed = false, pointerId = null, startX = 0, startY = 0, lastX = 0, lastY = 0;
+    function coordinate(event, axis, fallback) { return event && event[axis] !== undefined && event[axis] !== null ? Number(event[axis]) : fallback; }
     function state() { return typeof opts.getState === 'function' ? (opts.getState() || {}) : (opts.state || {}); }
-    function policy() { return InteractionPolicy.resolve(state(), Utils.assignOwn({ draggable: true }, opts.capabilities || {})); }
+    function policy() { return CapabilityController.resolve(state(), Utils.assignOwn({ draggable: true }, opts.capabilities || {})); }
     function payload(reason, event) {
-      var dx = Number(event && event.clientX || lastX) - startX, dy = Number(event && event.clientY || lastY) - startY;
+      var x = coordinate(event, 'clientX', lastX), y = coordinate(event, 'clientY', lastY);
+      var dx = x - startX, dy = y - startY;
       if (opts.axis === 'x') dy = 0; else if (opts.axis === 'y') dx = 0;
-      return InteractionDetails.create(reason, event || null, { source: 'pointer', trigger: target, currentTarget: target, pointerId: pointerId, startX: startX, startY: startY, x: Number(event && event.clientX || lastX), y: Number(event && event.clientY || lastY), deltaX: dx, deltaY: dy, dragging: dragging });
+      return InteractionDetails.create(reason, event || null, { source: 'pointer', trigger: target, currentTarget: target, pointerId: pointerId, startX: startX, startY: startY, x: x, y: y, deltaX: dx, deltaY: dy, dragging: dragging });
     }
     function teardownActive() { if (activeScope) { activeScope.dispose(); activeScope = null; } var releasedPointerId = pointerId; active = false; dragging = false; pointerId = null; if (releasedPointerId !== null && target && target.releasePointerCapture) { try { if (!target.hasPointerCapture || target.hasPointerCapture(releasedPointerId)) target.releasePointerCapture(releasedPointerId); } catch (_) {} } }
     function finish(event, cancelled, reason) {
       if (!active) return false;
       if (event && pointerId !== null && event.pointerId !== undefined && event.pointerId !== pointerId) return false;
-      lastX = Number(event && event.clientX || lastX); lastY = Number(event && event.clientY || lastY);
+      lastX = coordinate(event, 'clientX', lastX); lastY = coordinate(event, 'clientY', lastY);
       var detail = payload(reason || (cancelled ? 'pointer-cancel' : 'pointer-end'), event);
       var wasDragging = dragging;
       teardownActive();

@@ -14,7 +14,7 @@ import { ResponsiveOverflow } from '../core/responsiveOverflow.js';
 import { FormBridge } from '../core/formBridge.js';
 import { Renderer } from '../core/renderer.js';
 import { TokenInput } from '../core/tokenInput.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { Selection } from '../core/selection.js';
 import { StateController } from '../core/stateController.js';
 import { FieldComponent } from './field.js';
@@ -242,10 +242,10 @@ function setupTags(instance) {
     return -1;
   }
   function mutationLocked(meta) {
-    return !!(meta && meta.user === true && InteractionPolicy.mutationLocked(opts));
+    return !!(meta && meta.user === true && CapabilityController.mutationLocked(opts));
   }
   function itemUserRemovable(item) {
-    return !!item && opts.closable !== false && item.removable !== false && item.disabled !== true && !InteractionPolicy.mutationLocked(opts);
+    return !!item && opts.closable !== false && item.removable !== false && item.disabled !== true && !CapabilityController.mutationLocked(opts);
   }
     
   function emitItemsChange(detail){
@@ -499,7 +499,7 @@ function setupTags(instance) {
     return fallback || null;
   }
     
-  function virtualAddAvailable() { return opts.hosted !== true && opts.editable === true && adding !== true && !InteractionPolicy.mutationLocked(opts) && !!addTrigger.parentNode; }
+  function virtualAddAvailable() { return opts.hosted !== true && opts.editable === true && adding !== true && !CapabilityController.mutationLocked(opts) && !!addTrigger.parentNode; }
   function virtualTagEntries() {
     var entries = publicItems().map(function (item) {
       var record = tagRecordsByKey[item.key];
@@ -1273,7 +1273,7 @@ function setupTags(instance) {
     values.forEach(function (value) { if (add(value, meta)) changed = true; });
     return changed;
   }
-  function beginAdd() { if (destroyed || opts.editable !== true || InteractionPolicy.mutationLocked(opts)) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(focusController&&input)focusController.beginEdit(input,{source:'tags',reason:'begin-add'}); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
+  function beginAdd() { if (destroyed || opts.editable !== true || CapabilityController.mutationLocked(opts)) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(focusController&&input)focusController.beginEdit(input,{source:'tags',reason:'begin-add'}); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
   function cancelAdd() { if (destroyed || opts.hosted === true) return false; adding=false; tokenInput.setInputValue('',{silent:true,reason:'cancel-add',source:'tags'}); opts.inputValue=''; render('cancel-add'); return true; }
   function canonicalFormValue() { return opts.checkable === true ? selection.values.slice() : coreTags().map(function(tag){return tag.value;}); }
   function syncFormBridge(meta) {
@@ -1552,7 +1552,7 @@ function setupTags(instance) {
   api.bindFocusTarget(root);
 
   scope.add(DOM.listen(root,'keydown',function(event){
-    if (opts.hosted === true || adding === true || opts.editable !== true || InteractionPolicy.mutationLocked(opts) || event.defaultPrevented) return;
+    if (opts.hosted === true || adding === true || opts.editable !== true || CapabilityController.mutationLocked(opts) || event.defaultPrevented) return;
     var state = keyboard && keyboard.virtualFocus ? keyboard.virtualFocus.getState() : null;
     if (!state || state.domain !== 'tags' || state.key !== ADD_VIRTUAL_KEY || event.target !== root) return;
     var key = String(event.key || '');

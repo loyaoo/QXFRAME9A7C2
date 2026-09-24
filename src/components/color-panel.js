@@ -7,7 +7,7 @@ import { Renderer } from '../core/renderer.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { PointerSession } from '../core/pointerSession.js';
 import { DOMTemplate } from '../core/domTemplate.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { mergeOptions } from '../core/options.js';
 import { Utils } from '../utils/utils.js';
 
@@ -270,7 +270,7 @@ function create(options) {
     if (typeof globalThis.EyeDropper === 'function' && opts.eyeDropper !== false) fields.appendChild(eye); else detach(eye);
   }
     
-  function locked() { return InteractionPolicy.mutationLocked(opts); }
+  function locked() { return CapabilityController.mutationLocked(opts); }
   function syncInteractionLock() {
     if (!root) return;
     var disabled = opts.disabled === true;

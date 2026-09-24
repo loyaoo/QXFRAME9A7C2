@@ -3,7 +3,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { FormBridge } from '../core/formBridge.js';
 import { DOM } from '../core/dom.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 
 const fieldState = new WeakMap();
@@ -28,11 +28,11 @@ export class FieldComponent extends Component {
     get busy() { return this.options.busy === true || this.options.loading === true; }
 
     interactionPolicy(capabilities = {}) {
-        return InteractionPolicy.resolve(InteractionPolicy.stateFromOptions(this.options), capabilities);
+        return CapabilityController.resolve(CapabilityController.stateFromOptions(this.options), capabilities);
     }
 
-    canMutate(capabilities = {}) { return !InteractionPolicy.mutationLocked(this.options, capabilities); }
-    canActivate(capabilities = {}) { return !InteractionPolicy.activationLocked(this.options, capabilities); }
+    canMutate(capabilities = {}) { return !CapabilityController.mutationLocked(this.options, capabilities); }
+    canActivate(capabilities = {}) { return !CapabilityController.activationLocked(this.options, capabilities); }
 
     focus(options) {
         if (this.destroyed || !this.interactionPolicy({ preserveFocusWhileLoading: true }).focusable) return false;

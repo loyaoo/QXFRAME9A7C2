@@ -12,7 +12,7 @@ function resolve(state, capabilities) {
   var editable = !disabled && !loading && !readOnly && caps.editable !== false;
   var navigable = !disabled && caps.navigable !== false;
   var expandable = !disabled && !loading && caps.expandable !== false;
-  var selectable = !disabled && !loading && (!readOnly || caps.selectWhenReadOnly !== false) && caps.selectable !== false;
+  var selectable = !disabled && !loading && (!readOnly || caps.selectWhenReadOnly === true) && caps.selectable !== false;
   var checkable = !disabled && !loading && !readOnly && caps.checkable !== false;
   var clearable = activatable && !readOnly && caps.clearable !== false;
   var draggable = activatable && !readOnly && caps.draggable !== false;

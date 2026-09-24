@@ -5,7 +5,7 @@ import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
@@ -229,7 +229,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           }
           return asValues(apiValue(), multipleMode());
         }
-        function mutationLocked() { return InteractionPolicy.mutationLocked(opts); }
+        function mutationLocked() { return CapabilityController.mutationLocked(opts); }
         var selectionTags = SelectionTags.create({
           getValues:selectedValues,
           keyOf:function(value){return String(value);}, valueOf:function(value){return String(value);},

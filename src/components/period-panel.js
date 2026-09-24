@@ -2,7 +2,7 @@ import { Events } from '../core/events.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { TemporalGrid } from '../core/temporalGrid.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { FocusController } from '../core/focusController.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { EventDelegation } from '../core/eventDelegation.js';
@@ -192,7 +192,7 @@ function create(options) {
     return true;
   }
   function select(next, meta) {
-    if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var parsed = DateUnit.parse(next, { unit: unit });
     if (!parsed || isDisabled(parsed)) return false;
     var normalized = DateUnit.start(parsed, unit, 0, false);

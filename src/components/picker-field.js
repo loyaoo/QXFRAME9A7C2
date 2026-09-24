@@ -5,7 +5,7 @@ import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { FieldHost } from '../core/fieldHost.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { Utils } from '../utils/utils.js';
 import { Control } from './control.js';
@@ -105,7 +105,7 @@ function create(options) {
 
 
   function interactionPolicy() {
-    return InteractionPolicy.resolve({ disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true }, {
+    return CapabilityController.resolve({ disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true }, {
       activateWhenReadOnly: true,
       preserveFocusWhileLoading: true,
       tabbableWhileLoading: true

@@ -2,13 +2,13 @@
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
 import { InteractionDetails } from './interactionDetails.js';
-import { InteractionPolicy } from './interactionPolicy.js';
+import { CapabilityController } from './capabilityController.js';
 
 const global = globalThis;
 
 function guard(event, options) {
     var opts = options || {};
-    var resolved = opts.policy || InteractionPolicy.resolve(typeof opts.getState === 'function' ? (opts.getState() || {}) : (opts.state || {}), opts.capabilities || {});
+    var resolved = opts.policy || CapabilityController.resolve(typeof opts.getState === 'function' ? (opts.getState() || {}) : (opts.state || {}), opts.capabilities || {});
     if (resolved.activatable) return false;
     if (opts.preventDefaultWhenBlocked !== false && event && event.preventDefault) event.preventDefault();
     if (opts.stopImmediatePropagationWhenBlocked === true && event && event.stopImmediatePropagation) event.stopImmediatePropagation();
@@ -39,7 +39,7 @@ function guard(event, options) {
     var visualSource = null;
     var synthesizeKeyboard = opts.keyboard === false ? false : (opts.keyboard === true ? true : !isNativeActivationTarget(target));
     function state() { return typeof opts.getState === 'function' ? (opts.getState() || {}) : (opts.state || {}); }
-    function policy() { return InteractionPolicy.resolve(state(), opts.capabilities || {}); }
+    function policy() { return CapabilityController.resolve(state(), opts.capabilities || {}); }
     function blocked(event) { return guard(event, { policy: policy(), preventDefaultWhenBlocked: opts.preventDefaultWhenBlocked, stopPropagationWhenBlocked: opts.stopPropagationWhenBlocked, stopImmediatePropagationWhenBlocked: opts.stopImmediatePropagationWhenBlocked }); }
     function detailFor(reason, event, source) { return InteractionDetails.create(reason, event || null, { source: source || DOM.activationSource(event), trigger: target, currentTarget: target }); }
     function press(event, source, reason) {

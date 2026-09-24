@@ -3,7 +3,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Collection } from '../core/collection.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { TransitionGroup } from '../core/transitionGroup.js';
@@ -199,7 +199,7 @@ export class Sort extends Component {
         r.root = r.collection = r.transitionGroup = r.delegation = r.reorderInteraction = r.formBridge = null;
     }
 
-    #locked() { return this.destroyed || InteractionPolicy.mutationLocked(this.options); }
+    #locked() { return this.destroyed || CapabilityController.mutationLocked(this.options); }
     #effectiveHandleOnly() { return this.options.handleOnly !== false && this.options.showHandle !== false; }
     #items() { return recordFor(this).collection.items; }
     #renderOutput(host, value, item) { const output = typeof value === 'function' ? value(item, this) : value; Renderer.replace(host, output == null ? '' : output, recordFor(this).doc); }

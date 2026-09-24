@@ -2,7 +2,7 @@ import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Utils } from '../utils/utils.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
@@ -503,7 +503,7 @@ function setupTable(instance) {
   }
   function currentState() { return renderProjection ? renderProjection.state : model.getState(); }
   function viewBlocked() { return destroyed || opts.disabled === true || opts.loading === true || remoteProcessing; }
-  function mutationLocked() { return viewBlocked() || InteractionPolicy.mutationLocked(opts); }
+  function mutationLocked() { return viewBlocked() || CapabilityController.mutationLocked(opts); }
   function allColumns() { return renderProjection ? renderProjection.state.columns : model.columns; }
   function currentColumns() { return allColumns().filter(function (column) { return column.visible !== false; }); }
   function columnByKey(key) { var normalized = String(key); return allColumns().filter(function (column) { return column.key === normalized; })[0] || null; }

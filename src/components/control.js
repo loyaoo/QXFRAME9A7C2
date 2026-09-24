@@ -8,7 +8,7 @@ import { FormBridge } from '../core/formBridge.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { InteractionModality } from '../core/interactionModality.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ClearAction } from '../core/clearAction.js';
 import { SegmentedInput } from '../core/segmentedInput.js';
 import { TextInputBehavior } from '../core/textInputBehavior.js';
@@ -572,7 +572,7 @@ function create(source, overrides) {
   }
     
   function interactionPolicy() {
-    return InteractionPolicy.resolve({ disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true }, {
+    return CapabilityController.resolve({ disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true }, {
       preserveFocusWhileLoading: true,
       tabbableWhileLoading: true,
       editable: opts.editable !== false,

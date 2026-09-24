@@ -1,6 +1,7 @@
 
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
+import { InteractionController } from './interactionController.js';
 import { Utils } from '../utils/utils.js';
 
 const global = globalThis;
@@ -401,21 +402,21 @@ var KEYBOARD_FOCUS_CLASS = 'is-keyboard-focus';
 
     function invokeDefault(event) {
       if (!activeItem) return false;
-      var key = event.key;
-      if (key === 'Home') return navigate(function () { activeItem.first(meta('home', event)); }, 'home', event);
-      if (key === 'End') return navigate(function () { activeItem.last(meta('end', event)); }, 'end', event);
-      if (key === 'PageUp') return movePage(-1, event);
-      if (key === 'PageDown') return movePage(1, event);
-      if ((orientation === 'vertical' || orientation === 'both') && key === 'ArrowDown') return navigate(function () { activeItem.next(meta('arrow-down', event)); }, 'arrow-down', event);
-      if ((orientation === 'vertical' || orientation === 'both') && key === 'ArrowUp') return navigate(function () { activeItem.previous(meta('arrow-up', event)); }, 'arrow-up', event);
-      if ((orientation === 'horizontal' || orientation === 'both') && key === 'ArrowRight') return navigate(function () {
+      var action = InteractionController.resolveKeyboardAction(event, { keymap: settings.defaultActions, repeatActions: settings.repeatActions });
+      if (action === 'MOVE_FIRST') return navigate(function () { activeItem.first(meta('home', event)); }, 'home', event);
+      if (action === 'MOVE_LAST') return navigate(function () { activeItem.last(meta('end', event)); }, 'end', event);
+      if (action === 'PAGE_PREVIOUS') return movePage(-1, event);
+      if (action === 'PAGE_NEXT') return movePage(1, event);
+      if ((orientation === 'vertical' || orientation === 'both') && action === 'MOVE_DOWN') return navigate(function () { activeItem.next(meta('arrow-down', event)); }, 'arrow-down', event);
+      if ((orientation === 'vertical' || orientation === 'both') && action === 'MOVE_UP') return navigate(function () { activeItem.previous(meta('arrow-up', event)); }, 'arrow-up', event);
+      if ((orientation === 'horizontal' || orientation === 'both') && action === 'MOVE_RIGHT') return navigate(function () {
         (rtl ? activeItem.previous : activeItem.next)(meta('arrow-right', event));
       }, 'arrow-right', event);
-      if ((orientation === 'horizontal' || orientation === 'both') && key === 'ArrowLeft') return navigate(function () {
+      if ((orientation === 'horizontal' || orientation === 'both') && action === 'MOVE_LEFT') return navigate(function () {
         (rtl ? activeItem.next : activeItem.previous)(meta('arrow-left', event));
       }, 'arrow-left', event);
-      if ((key === 'Enter' || key === ' ') && Utils.isFunction(settings.onActivate)) {
-        return settings.onActivate(context(event, key === 'Enter' ? 'enter' : 'space')) !== false;
+      if (action === 'ACTIVATE' && Utils.isFunction(settings.onActivate)) {
+        return settings.onActivate(context(event, event.key === 'Enter' ? 'enter' : 'space')) !== false;
       }
       return false;
     }
@@ -425,6 +426,7 @@ var KEYBOARD_FOCUS_CLASS = 'is-keyboard-focus';
       var key = String(event.key || '');
       if (!key) return false;
       if (isComposing(event)) return false;
+      if (event.repeat === true && (key === 'Enter' || key === ' ' || key === 'Spacebar') && settings.allowActivationRepeat !== true) return false;
       if (Utils.isFunction(settings.shouldHandle) && settings.shouldHandle(context(event, 'should-handle')) === false) return false;
       if (!editableKeyAllowed(key, event)) return false;
 

@@ -6,7 +6,7 @@ import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SearchState } from '../core/searchState.js';
 import { ValueController } from '../core/valueController.js';
@@ -348,7 +348,7 @@ var controlHost = FieldHost.resolvePickerControl({
         });
         triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
     
-        function userMutationLocked() { return InteractionPolicy.mutationLocked(opts); }
+        function userMutationLocked() { return CapabilityController.mutationLocked(opts); }
     
         function removeSelectedTagValue(value, detail) {
           if (opts.multiple !== true || userMutationLocked()) return false;

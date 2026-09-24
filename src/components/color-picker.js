@@ -7,7 +7,7 @@ import { getContract } from '../core/componentContracts.js';
 import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { PointerSession } from '../core/pointerSession.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 import { DOM } from '../core/dom.js';
@@ -384,7 +384,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      function commit(meta) { return instance.commit(meta || {}); }
      function cancel(meta) { return instance.cancel(meta || {}); }
      function clear(meta) {
-       if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+       if (destroyed || CapabilityController.mutationLocked(opts)) return false;
        var changed = !!draft.value;
        draft.setValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
        syncField(false);
@@ -543,7 +543,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          threshold: 0,
          getState: function () { return { disabled: opts.disabled === true, readOnly: opts.readOnly === true }; },
          canStart: function (detail) {
-           if (InteractionPolicy.mutationLocked(opts)) return false;
+           if (CapabilityController.mutationLocked(opts)) return false;
            var event = detail.originalEvent;
            var stopNode = event && event.target ? DOM.closestPrivate(event.target, gradientHost, 'gradientStop') : null;
            if (!stopNode || !gradientHost.contains(stopNode)) return false;
@@ -585,7 +585,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        });
      }
      gradientClickHandler = function (event) {
-       if (InteractionPolicy.mutationLocked(opts)) return;
+       if (CapabilityController.mutationLocked(opts)) return;
        var modeTarget = event.target ? DOM.closestPrivate(event.target, modeHost, 'colorMode') : null;
        if (modeTarget && modeHost.contains(modeTarget)) { setMode(DOM.getPrivate(modeTarget, 'colorMode'), { source: DOM.activationSource(event), reason: 'mode-button', originalEvent: event }); return; }
        var target = event.target;
@@ -616,16 +616,16 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (solidModeButton && gradientModeButton) {
          solidModeButton.classList.toggle('is-active', mode === 'solid'); gradientModeButton.classList.toggle('is-active', mode === 'gradient');
 
-         solidModeButton.disabled = InteractionPolicy.mutationLocked(opts); gradientModeButton.disabled = InteractionPolicy.mutationLocked(opts);
+         solidModeButton.disabled = CapabilityController.mutationLocked(opts); gradientModeButton.disabled = CapabilityController.mutationLocked(opts);
        }
        if (!gradientEnabled || mode !== 'gradient') return;
        var gradient = isGradient(value) ? cloneGradient(value) : currentGradient();
        activeStopIndex = Math.max(0, Math.min(gradient.stops.length - 1, activeStopIndex));
        gradientTrack.style.background = gradientCSS(gradient);
        gradientAngleInput.value = String(Number(gradient.angle));
-       gradientAngleInput.disabled = InteractionPolicy.mutationLocked(opts);
-       gradientAddButton.disabled = InteractionPolicy.mutationLocked(opts);
-       gradientRemoveButton.disabled = InteractionPolicy.mutationLocked(opts) || gradient.stops.length <= 2;
+       gradientAngleInput.disabled = CapabilityController.mutationLocked(opts);
+       gradientAddButton.disabled = CapabilityController.mutationLocked(opts);
+       gradientRemoveButton.disabled = CapabilityController.mutationLocked(opts) || gradient.stops.length <= 2;
        var structureKey = gradient.stops.map(function (stop) { return String(Math.round(clamp(stop.offset, 0, 1) * 100000) / 100000); }).join('|');
        var reuseStops = gradientStopStructureKey === structureKey && gradientStops.children.length === gradient.stops.length;
        if (!reuseStops) {
@@ -643,7 +643,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          button.title = 'Stop ' + (index + 1) + ' · ' + Math.round(clamp(stop.offset, 0, 1) * 100) + '%';
          button.style.setProperty('--qxframe9a7c2-gradient-stop-offset', String(clamp(stop.offset, 0, 1) * 100) + '%');
          button.style.background = String(stop.color);
-         button.disabled = InteractionPolicy.mutationLocked(opts);
+         button.disabled = CapabilityController.mutationLocked(opts);
          button.classList.toggle('is-active', index === activeStopIndex);
          button.tabIndex = !button.disabled && index === activeStopIndex ? 0 : -1;
        });

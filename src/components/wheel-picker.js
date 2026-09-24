@@ -7,7 +7,7 @@ import { getContract } from '../core/componentContracts.js';
 import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { DOM } from '../core/dom.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 import { WheelMetrics } from '../utils/wheelMetrics.js';
 import { Utils } from '../utils/utils.js';
@@ -122,7 +122,7 @@ function commit(meta) { return instance.commit(meta || {}); }
 function cancel(meta) { return instance.cancel(meta || {}); }
     
 function clear(meta) {
-  if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+  if (destroyed || CapabilityController.mutationLocked(opts)) return false;
   var changed = !!(draft.value && draft.value.length);
   draft.setValue([], Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
   panel.setValue([], { silent: true, source: 'api', reason: 'clear-sync' });

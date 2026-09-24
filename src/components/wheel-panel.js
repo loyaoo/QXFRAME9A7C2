@@ -6,7 +6,7 @@ import { IdManager } from '../utils/id.js';
 import { Scheduler } from '../core/scheduler.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 import { WheelMetrics } from '../utils/wheelMetrics.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { Renderer } from '../core/renderer.js';
 import { FocusController } from '../core/focusController.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
@@ -460,7 +460,7 @@ function create(options) {
       });
     });
     record.offClick = DOM.listen(scroll.getRootElement(), 'click', function (event) {
-      if (destroyed || InteractionPolicy.mutationLocked(opts)) return;
+      if (destroyed || CapabilityController.mutationLocked(opts)) return;
       var node = event.target && event.target.closest ? event.target.closest('[data-wheel-index]') : null;
       if (!node || !scroll.getRootElement().contains(node)) return;
       var target = Number(node.getAttribute('data-wheel-index'));
@@ -548,7 +548,7 @@ function create(options) {
   }
 
   function selectIndex(columnIndex, itemIndex, meta) {
-    if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var record = columnRecords[columnIndex];
     if (!record || !record.items[itemIndex] || record.items[itemIndex].disabled) return false;
     if (meta && (meta.source === 'keyboard' || meta.source === 'pointer')) activeColumnIndex = columnIndex;
