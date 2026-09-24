@@ -32,8 +32,6 @@ export class PickerComponent extends PopupFieldComponent {
             controller: options.controller,
             needConfirm: () => this.options.needConfirm === true,
             rollbackDirtyOnClose: options.rollbackDirtyOnClose,
-            commitDirtyOnClose: options.commitDirtyOnClose,
-            cancelDirtyOnCommitReject: options.cancelDirtyOnCommitReject,
             beforeCommit: typeof options.beforeCommit === 'function' ? (_controller, detail) => options.beforeCommit(detail) : null,
             canCommit: (controller, detail) => !this.destroyed && (typeof options.canCommit !== 'function' || options.canCommit(controller, detail) !== false),
             onOpenDraft: options.onOpenDraft,
@@ -94,6 +92,14 @@ export class PickerComponent extends PopupFieldComponent {
     cancel(meta = {}) {
         const session = requireState(this).session;
         return session ? session.cancel(Utils.assignOwn({ source: 'api', reason: 'cancel' }, meta)) : false;
+    }
+
+    confirmFromKeyboard(event) {
+        if (!event || event.key !== 'Enter' || this.options.needConfirm !== true || event.isComposing === true || !this.canMutate()) return false;
+        if (event.preventDefault) event.preventDefault();
+        const committed = this.commit({ source: 'keyboard', reason: 'enter-confirm', originalEvent: event });
+        if (committed !== false) this.close('confirm', event);
+        return true;
     }
 
     clear(meta = {}) {

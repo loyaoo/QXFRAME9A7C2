@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `b2ecdb4e33bea642932092693d0ad5a8a47fd4e3` (PR #49 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-b-value-picker-family-20260924`
+- Open PRs at this checkpoint: pending Phase B PR
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #320 / `35955216461` (PR #49)
 - Latest green main CI + Pages: #321 / `35955524890`
-- Controller migration implementation progress: 25%
+- Controller migration implementation progress: 33%
 - Current Phase: Phase B
 - Current Task: `PHASE-B-001`
 
 ## CURRENT
 
 ### PHASE-B-001 — ValueController + Picker Family first migration pack
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 70%
 
 Why this is current:
 - Phase A Shared Protocol foundation and authority adoption are complete and green on PR + main.
@@ -51,20 +51,28 @@ Frozen Picker family contract for this task:
 - presets obey the same needConfirm rule as ordinary selection;
 - control showing draft is projection only; FormData/getValue stay committed until commit.
 
+Implemented in current Phase B pack:
+- canonical `ValueController` now owns committed/draft plus preview/rawInput/session/revision channels; `ValueDraft` is a compatibility alias and `StateController.create()` routes to the same authority.
+- `PickerSession` no longer commits dirty values during close; close rolls back uncommitted draft by default and ends the value session.
+- DatePicker / TimePicker / ColorPicker / WheelPicker now create ValueController directly and declare ComponentProfile ownership.
+- Date/Time raw editor text and hover preview are controller channels rather than local competing state.
+- ColorPicker pointer/keyboard hot-path changes use preview and promote to draft only on interaction completion.
+- TimePicker / ColorPicker / WheelPicker use scoped Enter confirmation only when `needConfirm=true`.
+- browser regressions cover Date preset draft projection + FormData isolation + Esc rollback, immediate preset commit, and scoped Enter confirmation for Time/Color/Wheel.
+- structural gates forbid direct StateController picker ownership from returning.
+
 Next exact step:
-1. create a fresh Phase B branch from current main;
-2. inspect the exact ValueDraft/PickerSession direct-consumer set only, not the whole repository;
-3. implement ValueController by evolving/wrapping the existing single value authority, with no duplicate state;
-4. migrate PickerSession/PickerComponent plus DatePicker/TimePicker/ColorPicker/WheelPicker in the same migration pack;
-5. add browser regressions for draft display, immediate commit, confirm rollback, Enter, presets and FormData;
-6. run complete PR release CI, then main CI + Pages before advancing.
+1. create the Phase B PR from the current branch;
+2. run full release/browser CI and fix implementation failures without weakening gates;
+3. merge only a green PR head and verify main CI + Pages;
+4. after the first Picker pack is green, continue Phase B second pack: Select / TreeSelect / Cascader / Autocomplete.
 
 ## Current authority snapshot — after Phase A
 
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
-- Value ownership: `StateController -> ValueDraft` remains the committed/draft value authority. `ControllableStateCore` owns controlled/external-vs-internal and pending-request metadata within that path; there is no second committed value.
+- Value ownership: `ValueController` is now the Phase B canonical committed/draft/preview/rawInput/session/revision authority on this branch. `ValueDraft` is its compatibility alias and `StateController` delegates creation to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
 - Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardNavigation`, `RovingProjection` and `ActiveItem` remain the existing authorities. FocusController migration has not started.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.

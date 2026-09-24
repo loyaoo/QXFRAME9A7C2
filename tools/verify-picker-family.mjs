@@ -21,5 +21,15 @@ for(const [name,file] of [['WheelPicker','wheel-picker.js'],['TimePicker','time-
   assert.ok(!/globalThis\.QXFRAME9A7C2|\bbrand\./.test(source),`${name} must not use global runtime lookup.`);
   assert.ok(!/function\s+(?:updateOptions|destroy)\s*\(/.test(source),`${name} must leave public update/destroy lifecycle to Component.`);
 }
+const pickerTypes=[WheelPicker,TimePicker,ColorPicker,DatePicker];
+for(const Type of pickerTypes){
+  assert.equal(Type.profile?.ownership?.value,'ValueController',Type.name+' must declare ValueController as its value owner.');
+  assert.equal(Type.profile?.value?.mode,'picker-session',Type.name+' must declare picker-session value semantics.');
+}
+for(const file of ['wheel-picker.js','time-picker.js','color-picker.js','date-picker.js']){
+  const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
+  assert.ok(!/StateController\.create\s*\(/.test(source),file+' must not keep a direct StateController picker value owner after Phase B migration.');
+  assert.ok(/ValueController\.create\s*\(/.test(source),file+' must use the canonical ValueController authority.');
+}
 for(const [name,api] of [['PickerField',PickerField],['WheelPanel',WheelPanel],['TimePanel',TimePanel]]) assert.equal(typeof api.create,'function',`${name} ESM support authority must expose create().`);
 console.log(JSON.stringify({ok:true,family:'PickerComponent',extends:'PopupFieldComponent',members:['WheelPicker','TimePicker','ColorPicker','DatePicker'],support:['PickerField','WheelPanel','TimePanel'],publicLifecycleOwner:'PickerComponent'}));

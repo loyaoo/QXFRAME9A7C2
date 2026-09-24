@@ -4,7 +4,7 @@ import { ColorPanel } from './color-panel.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
@@ -183,7 +183,10 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (mode === 'gradient') return seedGradient(solid);
        return solid;
      }
-     function visualValue(preferDraft) { return preferDraft && draft && draft.dirty ? draft.draftValue : (draft ? draft.value : null); }
+     function visualValue(preferDraft) {
+       if (!draft) return null;
+       return draft.projection({ open:preferDraft === true, previewControl:true, draftControl:true }).value;
+     }
      function activeColor(value) {
        if (!isGradient(value)) return value;
        if (!value.stops.length) return null;
@@ -204,13 +207,18 @@ function setupColorPickerRuntime(instance, fieldInit) {
      }
      function syncField(preferDraft, meta) {
        if (!field || !draft) return;
-       var value = visualValue(preferDraft);
+       var open = preferDraft === true && field.getState().open;
+       var projection = draft.projection({ open:open, previewControl:true, draftControl:true });
+       var value = projection.value;
        var display = fieldDisplay(value);
-       field.setDisplayValue(opts.swatchOnly === true && opts.renderControl !== false && opts.headless !== true ? '' : (field.getState().hasDraftValueTarget ? fieldDisplay(draft.value) : display));
-       field.setDraftDisplayValue(preferDraft && draft.dirty ? fieldDisplay(draft.draftValue) : '');
-       field.setDraftVisual(preferDraft && draft.dirty && !field.getState().hasDraftValueTarget);
+       var committedDisplay = fieldDisplay(draft.value);
+       var hasDraftTarget = field.getState().hasDraftValueTarget;
+       var controlDisplay = hasDraftTarget && projection.channel !== 'preview' ? committedDisplay : display;
+       field.setDisplayValue(opts.swatchOnly === true && opts.renderControl !== false && opts.headless !== true ? '' : controlDisplay);
+       field.setDraftDisplayValue(open && draft.dirty ? fieldDisplay(draft.draftValue) : '');
+       field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
        field.setClearVisible(!!draft.value);
-       field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-draft', reason: 'projection' });
+       field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
        swatch.style.background = display || 'transparent';
        renderGradientEditor(value);
      }
@@ -229,6 +237,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      }
      function handleColorKeydown(event) {
        if (!event || !field || !field.getState().open || !panel || !panel.handleKeydown) return false;
+      if (instance.confirmFromKeyboard(event)) return true;
        var handled = panel.handleKeydown(event) === true;
        if (handled) activateColorVirtualFocus(event.key || 'color-keyboard');
        return handled;
@@ -314,27 +323,37 @@ function setupColorPickerRuntime(instance, fieldInit) {
            activeStopIndex = Math.max(0, Math.min(next.stops.length - 1, activeStopIndex));
            next.stops[activeStopIndex].color = value;
          } else next = value;
-         // ColorPanel emits live preview changes with complete:false and exactly one completed
-         // change at the end of the keyboard/pointer interaction. Keep the hot path in draft
-         // projection; only the completed interaction may advance the committed value.
-         draft.setDraft(next, { source: detail.source, reason: detail.reason || 'panel-change' });
+         // ColorPanel hot-path changes are preview-only. Selection completion promotes
+         // the preview into draft; only the family commit policy may change committed.
+         draft.setPreview(next, { silent:true, source: detail.source, reason: detail.reason || 'panel-preview' });
+         syncField(true);
          var payload = { value: cloneModel(next), color: value, activeStopIndex: mode === 'gradient' ? activeStopIndex : null, rgba: detail.rgba, hsv: detail.hsv, source: detail.source, reason: detail.reason, complete: detail.complete === true, colorPicker: api };
          if (Utils.isFunction(opts.onInput)) opts.onInput(cloneModel(next), payload);
          emitter.emit('input', payload);
        },
-       onChangeComplete: function (value, detail) {
+       onChangeComplete: function (_value, detail) {
          if (!draft) return;
          var completeDetail = detail || { source: 'panel', reason: 'panel-complete' };
-         if (opts.needConfirm !== true && completeDetail.cancelled !== true && completeDetail.rolledBack !== true && draft.dirty) {
+         if (completeDetail.cancelled === true || completeDetail.rolledBack === true) {
+           draft.clearPreview({ silent:true, source:completeDetail.source || 'panel', reason:completeDetail.reason || 'panel-cancel' });
+           syncField(field && field.getState().open);
+           emitInteractionComplete(draft.draftValue, completeDetail);
+           return;
+         }
+         var completed = draft.hasPreview ? cloneModel(draft.previewValue) : cloneModel(draft.draftValue);
+         draft.setDraft(completed, { source:completeDetail.source || 'panel', reason:completeDetail.reason || 'panel-complete' });
+         draft.clearPreview({ silent:true, source:completeDetail.source || 'panel', reason:'panel-preview-promote' });
+         if (opts.needConfirm !== true && draft.dirty) {
            instance.commit({ source: completeDetail.source || 'panel', reason: completeDetail.reason || 'panel-commit', originalEvent: completeDetail.originalEvent || null });
          }
+         syncField(field && field.getState().open);
          emitInteractionComplete(draft.draftValue, completeDetail);
        }
      });
 
      bindColorVirtualFocus();
 
-     draft = StateController.create({
+     draft = ValueController.create({
        value: initialCanonical,
        normalizeValue: function (value) {
          var normalized = normalizeModel(value);
@@ -349,9 +368,13 @@ function setupColorPickerRuntime(instance, fieldInit) {
 
      var pickerSession = instance.setupPickerSession({
        controller: draft,
-       rollbackDirtyOnClose: function () { return opts.needConfirm === true; },
        canCommit: function () { return !destroyed; },
-       onOpenDraft: function (controller) { syncPanelFromModel(controller.draftValue || seedValue(), 'open-sync'); syncField(true); },
+       onOpenDraft: function (controller) {
+         controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
+         controller.clearRawInput({ silent:true, source:'popup', reason:'open-raw-input-clear' });
+         syncPanelFromModel(controller.draftValue || seedValue(), 'open-sync');
+         syncField(true);
+       },
        onCommit: function () { syncField(false); },
        onCancel: function (_controller, detail) { syncPanelFromModel(draft.value || seedValue(), detail && detail.source === 'popup' ? 'close-restore' : 'cancel-sync'); syncField(false); },
        onCloseDraft: function (_controller, detail) {
@@ -445,14 +468,18 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (!gradientEnabled) return false;
        if (mode !== 'gradient') setMode('gradient', { silent: true });
        var detail = Utils.assignOwn({ source: 'api', reason: 'gradient-change' }, meta || {});
-       draft.setDraft(next, detail);
        syncPanelFromModel(next, 'gradient-sync');
        if (detail.preview === true) {
+         draft.setPreview(next, Utils.assignOwn({ silent:true }, detail));
          var previewPayload = { value: cloneModel(next), color: activeColor(next), activeStopIndex: activeStopIndex, source: detail.source, reason: detail.reason, complete: false, colorPicker: api };
          if (Utils.isFunction(opts.onInput)) opts.onInput(cloneModel(next), previewPayload);
          emitter.emit('input', previewPayload);
-       } else if (opts.needConfirm !== true) instance.commit(Utils.mergeOwn( detail, { reason: detail.reason || 'gradient-commit' }));
-       syncField(opts.needConfirm === true && field.getState().open);
+       } else {
+         draft.setDraft(next, detail);
+         draft.clearPreview({ silent:true, source:detail.source, reason:'gradient-preview-promote' });
+         if (opts.needConfirm !== true) instance.commit(Utils.mergeOwn(detail, { reason:detail.reason || 'gradient-commit' }));
+       }
+       syncField(field.getState().open);
        if (detail.complete === true) emitInteractionComplete(next, detail);
        return true;
      }
@@ -700,6 +727,15 @@ function setupColorPickerRuntime(instance, fieldInit) {
 
 export class ColorPicker extends PickerComponent {
   static contract = getContract('ColorPicker');
+  static profile = Object.freeze({
+    name:'ColorPicker',
+    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview']) }),
+    focus:Object.freeze({ mode:'virtual-navigation' }),
+    interaction:Object.freeze({ keymap:'picker' }),
+    overlay:Object.freeze({ mode:'popup' }),
+    form:Object.freeze({ serialize:true }),
+    ownership:Object.freeze({ value:'ValueController' })
+  });
   static options = COLOR_PICKER_DEFAULTS;
   static immutableOptions = COLOR_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }

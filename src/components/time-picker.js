@@ -4,7 +4,7 @@ import { TimePanel } from './time-panel.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
@@ -61,9 +61,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   var nowHandler = null;
   var panelScrollSettleOff = null;
   var api = instance;
-  var rawInput = '';
   var activeRangePart = 0;
-  var hoverPreviewValue = null;
   var dependentPanelSyncScheduler = Scheduler.createDelayScheduler(function (_timestamp, reason) {
     if (!destroyed) syncPanel(reason || 'time-picker-dependent-idle');
   });
@@ -136,7 +134,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     var nativeInitial = parseTextValue(fieldInit.nativeValue);
     if (nativeInitial.valid) opts.value = nativeInitial.value;
   }
-  var draft = StateController.create({
+  var draft = ValueController.create({
     value: opts.value !== undefined ? opts.value : opts.defaultValue,
     normalizeValue: normalizeValue,
     copyValue: cloneValue,
@@ -147,30 +145,19 @@ function setupTimePickerRuntime(instance, fieldInit) {
 
   function syncField(preferDraft, meta) {
     if (!field) return;
-    var draftSession = preferDraft === true;
+    var open = preferDraft === true && field.getState().open;
+    var projection = draft.projection({ open: open, previewControl: opts.previewValue !== false, draftControl: true });
     var committedText = formatValue(draft.value);
     var draftText = formatValue(draft.draftValue);
-    var previewing = field.getState().open && opts.previewValue !== false && hoverPreviewValue !== null;
-    var previewText = previewing ? formatValue(hoverPreviewValue) : '';
+    var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatValue(projection.value);
     var hasDraftTarget = field.getState().hasDraftValueTarget;
-    if (hasDraftTarget) {
-      rawInput = previewing ? previewText : committedText;
-      field.setDisplayValue(rawInput);
-      field.setPlaceholder(opts.placeholder);
-    } else if (draftSession) {
-      var visibleDraft = previewing ? previewText : (draft.dirty ? draftText : '');
-      rawInput = visibleDraft;
-      field.setDisplayValue(visibleDraft);
-      field.setPlaceholder(committedText || String(opts.placeholder || ''));
-    } else {
-      rawInput = committedText;
-      field.setDisplayValue(committedText);
-      field.setPlaceholder(opts.placeholder);
-    }
-    field.setDraftDisplayValue(draftSession && draft.dirty ? draftText : '');
-    field.setDraftVisual(draftSession && draft.dirty && !hasDraftTarget);
+    var displayText = hasDraftTarget && projection.channel !== 'rawInput' && projection.channel !== 'preview' ? committedText : projectedText;
+    field.setDisplayValue(displayText);
+    field.setPlaceholder(!hasDraftTarget && open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
+    field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
+    field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
     field.setClearVisible(hasValue(draft.value));
-    field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-draft', reason: 'projection' });
+    field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
   function emitOpen(opened, detail) {
     if (!opened) syncField(false);
@@ -192,10 +179,13 @@ function setupTimePickerRuntime(instance, fieldInit) {
     return next;
   }
   function handlePanelHover(value, detail) {
-    hoverPreviewValue = opts.previewValue === false ? null : previewSelection(value);
+    var preview = opts.previewValue === false ? null : previewSelection(value);
+    if (preview === null) draft.clearPreview({ silent:true, source:detail && detail.source || 'pointer', reason:detail && detail.reason || 'hover-leave' });
+    else draft.setPreview(preview, { silent:true, source:detail && detail.source || 'pointer', reason:detail && detail.reason || 'hover' });
     if (field && field.getState().open) syncField(true);
-    var payload = { value: TimeUnit.clone(value), previewValue: cloneValue(hoverPreviewValue), source: detail && detail.source || 'pointer', reason: detail && detail.reason || (value ? 'hover' : 'hover-leave'), originalEvent: detail && detail.originalEvent || null, timePicker: api };
-    if (Utils.isFunction(opts.onPreviewChange)) opts.onPreviewChange(cloneValue(hoverPreviewValue), payload);
+    var previewValue = draft.hasPreview ? cloneValue(draft.previewValue) : null;
+    var payload = { value: TimeUnit.clone(value), previewValue: previewValue, source: detail && detail.source || 'pointer', reason: detail && detail.reason || (value ? 'hover' : 'hover-leave'), originalEvent: detail && detail.originalEvent || null, timePicker: api };
+    if (Utils.isFunction(opts.onPreviewChange)) opts.onPreviewChange(previewValue, payload);
     emitter.emit('previewChange', payload);
   }
   function resolvedPanelOptions(value) {
@@ -235,8 +225,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
     needConfirm: function () { return opts.needConfirm === true; },
     canCommit: function (controller) { return !destroyed && complete(controller.draftValue); },
     onOpenDraft: function (controller) {
-      hoverPreviewValue = null;
-      rawInput = '';
+      controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
+      controller.clearRawInput({ silent:true, source:'popup', reason:'open-raw-input-clear' });
       if (selection === 'range') activeRangePart = controller.draftValue && !controller.draftValue[0] ? 0 : (controller.draftValue && !controller.draftValue[1] ? 1 : 0);
       syncPanel('time-picker-open-sync');
       syncField(true);
@@ -247,7 +237,6 @@ function setupTimePickerRuntime(instance, fieldInit) {
       syncField(false);
     },
     onCloseDraft: function (_controller, detail) {
-      hoverPreviewValue = null;
       if (!detail.rolledBack) syncField(false);
     }
   });
@@ -266,7 +255,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     return changed;
   }
   function applyPanelValue(value, detail) {
-    hoverPreviewValue = null;
+    draft.clearPreview({ silent:true, source:detail.source || 'panel', reason:'selection-preview-clear' });
     var next;
     var selectedPart = selection === 'range' ? activeRangePart : null;
     var previousRangePart = activeRangePart;
@@ -280,6 +269,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       }
     }
     draft.setDraft(next, { source: detail.source, reason: 'time-select' });
+    if (field && field.getState().open) syncField(true);
     var payload = { selectedValue: TimeUnit.clone(value), value: cloneValue(draft.draftValue), activeRangePart: selectedPart, unit: detail.unit, source: detail.source, reason: detail.reason, timePicker: api };
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(TimeUnit.clone(value), payload);
     emitter.emit('select', payload);
@@ -317,14 +307,13 @@ function setupTimePickerRuntime(instance, fieldInit) {
     return true;
   }
   function handleInput(text, event) {
-    hoverPreviewValue = null;
-    rawInput = String(text || '');
+    draft.clearPreview({ silent:true, source:'input', reason:'typing-preview-clear' });
+    var rawInput = String(text || '');
+    draft.setRawInput(rawInput, { silent:true, active:true, source:'input', reason:'typing' });
     var parsed = parseTextValue(rawInput);
     if (parsed.valid && hasValue(parsed.value)) {
       draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'typing' });
       syncPanel('time-picker-input-sync');
-      // Wheel synchronization is projection-only and must not overwrite live typing.
-      if (field) field.setDisplayValue(rawInput);
     }
     var payload = { text: rawInput, value: parsed.valid ? cloneValue(parsed.value) : null, valid: parsed.valid, originalEvent: event, timePicker: api };
     if (Utils.isFunction(opts.onInput)) opts.onInput(rawInput, payload);
@@ -333,15 +322,20 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function handleBlur(event) {
     if (opts.readOnly === true || opts.disabled === true) return;
     var currentInput = field && field.getInputElement ? field.getInputElement() : null;
-    if (currentInput && currentInput.value !== undefined) rawInput = String(currentInput.value || '');
+    var rawInput = currentInput && currentInput.value !== undefined ? String(currentInput.value || '') : draft.rawInput;
+    draft.setRawInput(rawInput, { silent:true, active:true, source:'input', reason:'blur-read' });
     var trimmed = rawInput.trim();
-    if (!trimmed) { if (field.getState().open) syncField(true); else syncField(false); return; }
+    if (!trimmed) { draft.setRawInput('', { silent:true, active:false, source:'input', reason:'blur-empty' }); if (field.getState().open) syncField(true); else syncField(false); return; }
     var parsed = parseTextValue(trimmed);
-    if (!parsed.valid || !complete(parsed.value)) { if (opts.preserveInvalidOnBlur !== true) syncField(field.getState().open); return; }
+    if (!parsed.valid || !complete(parsed.value)) {
+      if (opts.preserveInvalidOnBlur !== true) { draft.setRawInput(rawInput, { silent:true, active:false, source:'input', reason:'blur-invalid-restore' }); syncField(field.getState().open); }
+      return;
+    }
     draft.setDraft(parsed.value, { silent: true, source: 'input', reason: 'blur-parse' });
     syncPanel('time-picker-blur-sync');
     if (opts.commitInputOnBlur !== false && opts.needConfirm !== true) instance.commit({ source: 'input', reason: 'blur-commit', originalEvent: event || null });
-    syncField(opts.needConfirm === true && field.getState().open);
+    draft.setRawInput('', { silent:true, active:false, source:'input', reason:'blur-complete' });
+    syncField(field.getState().open);
   }
 
   field = PickerField.create({
@@ -356,7 +350,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     onOpen: function (detail) {
       var openDetail = detail || {};
       var openInput = field && field.getInputElement ? field.getInputElement() : null;
-      var openText = openInput && openInput.value !== undefined ? String(openInput.value || '') : rawInput;
+      var openText = openInput && openInput.value !== undefined ? String(openInput.value || '') : draft.rawInput;
       var parsedOpen = openText.trim() ? parseTextValue(openText) : null;
       if (parsedOpen && parsedOpen.valid && hasValue(parsedOpen.value)) openDetail = Utils.assignOwn({}, openDetail, { draftSeed: parsedOpen.value });
       pickerSession.open(openDetail);
@@ -364,7 +358,11 @@ function setupTimePickerRuntime(instance, fieldInit) {
     },
     onClose: function (detail) { pickerSession.close(detail); },
     onOpenChange: emitOpen, onInput: handleInput, onBlur: handleBlur,
-    onKeydown: function (event) { return field && field.getState().open && panel ? panel.handleKeydown(event) : false; },
+    onKeydown: function (event) {
+      if (!field || !field.getState().open || !panel) return false;
+      if (instance.confirmFromKeyboard(event)) return true;
+      return panel.handleKeydown(event);
+    },
     onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
   });
   instance.adoptPickerField(field);
@@ -443,13 +441,12 @@ function setupTimePickerRuntime(instance, fieldInit) {
     field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     else syncPanel('time-picker-options');
-    if (opts.previewValue === false) hoverPreviewValue = null;
+    if (opts.previewValue === false) draft.clearPreview({ silent:true, source:'options', reason:'preview-disabled' });
     rebuildFooter(); syncNowButton(); syncField(field.getState().open);
     if (own(next, 'open')) field.setOpen(next.open === true, 'update-options');
     return api;
   }
   function getState() {
-    var visual = field.getState().open && opts.needConfirm === true && draft.dirty ? draft.draftValue : draft.value;
     return Object.freeze({
       open: field.getState().open,
       headless: opts.headless === true,
@@ -457,11 +454,11 @@ function setupTimePickerRuntime(instance, fieldInit) {
       value: cloneValue(draft.value),
       draftValue: cloneValue(draft.draftValue),
       dirty: draft.dirty,
-      text: formatValue(visual),
+      text: field.getState().displayValue,
       activeRangePart: selection === 'range' ? activeRangePart : null,
       hideDisabledOptions: opts.hideDisabledOptions === true,
       changeOnScroll: opts.changeOnScroll === true,
-      previewValue: cloneValue(hoverPreviewValue),
+      previewValue: draft.hasPreview ? cloneValue(draft.previewValue) : null,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
       needConfirm: opts.needConfirm === true,
@@ -479,7 +476,6 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (panel) panel.destroy(reason || 'time-picker-destroy');
     draft.destroy();
     panel = field = nowButton = nowHandler = panelScrollSettleOff = null;
-    hoverPreviewValue = null;
     return true;
   }
 
@@ -495,6 +491,15 @@ function setupTimePickerRuntime(instance, fieldInit) {
 
 export class TimePicker extends PickerComponent {
   static contract = getContract('TimePicker');
+  static profile = Object.freeze({
+    name:'TimePicker',
+    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview','rawInput']) }),
+    focus:Object.freeze({ mode:'virtual-navigation' }),
+    interaction:Object.freeze({ keymap:'picker' }),
+    overlay:Object.freeze({ mode:'popup' }),
+    form:Object.freeze({ serialize:true }),
+    ownership:Object.freeze({ value:'ValueController' })
+  });
   static options = TIME_PICKER_DEFAULTS;
   static immutableOptions = TIME_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }

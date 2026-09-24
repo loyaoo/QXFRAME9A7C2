@@ -4,7 +4,7 @@ import { WheelPanel } from './wheel-panel.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { DOM } from '../core/dom.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
@@ -45,7 +45,7 @@ var field = null;
 var panel = null;
 var api = instance;
 var panelSelectionDepth = 0;
-var draft = StateController.create({
+var draft = ValueController.create({
   value: opts.value !== undefined ? cloneValue(opts.value) : cloneValue(opts.defaultValue),
   copyValue: cloneValue,
   normalizeValue: function (value) { return assertValue(value || [], 'value'); },
@@ -65,15 +65,19 @@ function formatDisplay(useDraft) {
     
 function syncField(useDraft, config) {
   if (!field || !panel) return;
-  var value = useDraft ? draft.draftValue : draft.value;
+  var open = useDraft === true && field.getState().open;
+  var projection = draft.projection({ open:open, previewControl:false, draftControl:true });
+  var value = projection.value;
   if (!(config && config.panelSynced === true)) {
-    panel.setValue(value || [], { silent: true, source: 'field-sync', reason: 'field-sync' });
+    panel.setValue((open ? draft.draftValue : draft.value) || [], { silent: true, source: 'field-sync', reason: 'field-sync' });
   }
-  field.setDisplayValue(field.getState().hasDraftValueTarget ? (draft.value && draft.value.length ? formatDisplay(false) : '') : (value && value.length ? formatDisplay(useDraft) : ''));
-  field.setDraftDisplayValue(useDraft && draft.dirty && draft.draftValue && draft.draftValue.length ? formatDisplay(true) : '');
-  field.setDraftVisual(useDraft && draft.dirty && !field.getState().hasDraftValueTarget);
+  var hasDraftTarget = field.getState().hasDraftValueTarget;
+  var displayValue = hasDraftTarget && projection.channel === 'draft' ? draft.value : value;
+  field.setDisplayValue(displayValue && displayValue.length ? formatDisplay(!hasDraftTarget && projection.channel === 'draft') : '');
+  field.setDraftDisplayValue(open && draft.dirty && draft.draftValue && draft.draftValue.length ? formatDisplay(true) : '');
+  field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
   field.setClearVisible(opts.clearable === true && !!(draft.value && draft.value.length));
-  field.setCommittedValue(draft.value, config && config.commitMeta || { silent: true, source: 'value-draft', reason: 'projection' });
+  field.setCommittedValue(draft.value, config && config.commitMeta || { silent: true, source: 'value-controller', reason: 'projection' });
 }
     
 function emitOpen(opened, detail) {
@@ -92,6 +96,8 @@ var pickerSession = instance.setupPickerSession({
   needConfirm: function () { return opts.needConfirm === true; },
   canCommit: function () { return !destroyed; },
   onOpenDraft: function (controller) {
+    controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
+    controller.clearRawInput({ silent:true, source:'popup', reason:'open-raw-input-clear' });
     panel.setValue(controller.draftValue || [], { silent: true, source: 'open', reason: 'open-sync' });
     controller.setDraft(panel.getState().value, { silent: true, source: 'open', reason: 'open-normalize' });
     syncField(opts.needConfirm === true);
@@ -173,7 +179,11 @@ field = PickerField.create({
   afterOpen: function (detail) { panel.refreshVisible('open'); if (Utils.isFunction(opts.afterOpen)) opts.afterOpen(detail); },
   afterClose: function (detail) { if (Utils.isFunction(opts.afterClose)) opts.afterClose(detail); },
   onOpenChange: emitOpen,
-  onKeydown: function (event) { return field && field.getState().open && panel ? panel.handleKeydown(event) : false; },
+  onKeydown: function (event) {
+    if (!field || !field.getState().open || !panel) return false;
+      if (instance.confirmFromKeyboard(event)) return true;
+    return panel.handleKeydown(event);
+  },
   onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
 });
 instance.adoptPickerField(field);
@@ -313,6 +323,15 @@ return Object.freeze({ root:field.getRootElement(), panel:field.getPanelElement(
 
 export class WheelPicker extends PickerComponent {
   static contract = getContract('WheelPicker');
+  static profile = Object.freeze({
+    name:'WheelPicker',
+    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft']) }),
+    focus:Object.freeze({ mode:'virtual-navigation' }),
+    interaction:Object.freeze({ keymap:'picker' }),
+    overlay:Object.freeze({ mode:'popup' }),
+    form:Object.freeze({ serialize:true }),
+    ownership:Object.freeze({ value:'ValueController' })
+  });
   static options = WHEEL_PICKER_DEFAULTS;
   static immutableOptions = STRUCTURAL_OPTIONS;
   static create(source, overrides) { return new this(source, overrides).render(); }
