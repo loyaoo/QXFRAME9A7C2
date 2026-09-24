@@ -115,7 +115,7 @@ export class PopupFieldComponent extends FieldComponent {
         const onOpen = config.onOpen;
         const onClose = config.onClose;
         config.beforeOpen = detail => {
-            if (!this.canActivate({ preserveFocusWhileLoading: true })) return false;
+            if (!this.canOpen()) return false;
             const hook = this[popupFieldHooks.beforeOpen];
             if (typeof hook === 'function' && hook.call(this, detail) === false) return false;
             return typeof beforeOpen === 'function' ? beforeOpen(detail) : undefined;
@@ -150,7 +150,7 @@ export class PopupFieldComponent extends FieldComponent {
     }
 
     open(reason, originalEvent) {
-        if (this.destroyed || !this.canActivate({ preserveFocusWhileLoading: true })) return false;
+        if (this.destroyed || !this.canOpen()) return false;
         const trigger = requireState(this).trigger;
         return trigger ? trigger.open(reason || 'api', originalEvent || null) : false;
     }
@@ -160,7 +160,7 @@ export class PopupFieldComponent extends FieldComponent {
         return trigger ? trigger.close(reason || 'api', originalEvent || null) : false;
     }
     toggle(reason, originalEvent) {
-        if (this.destroyed || !this.canActivate({ preserveFocusWhileLoading: true })) return false;
+        if (this.destroyed || !this.canOpen()) return false;
         const trigger = requireState(this).trigger;
         return trigger ? trigger.toggle(reason || 'api', originalEvent || null) : false;
     }
