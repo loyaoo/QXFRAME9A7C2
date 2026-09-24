@@ -10,61 +10,50 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `85921cfc12e7af95a1b8f64cf54b4dbf6c50056d` (PR #71 merge)
-- Current branch: `refactor/phase-f-semantic-color-channels-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-003 semantic color-channel PR
+- Last code-affecting main commit: `c5f5eb654c20c62b97f32ba0d2f88ba9303ab8d4` (PR #72 merge)
+- Current branch: `refactor/phase-f-state-cascade-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-004 state-cascade PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Controller PR CI: #395 / `36011237135` (PR #71)
-- Latest green main CI + Pages: #396 / `36011730662`
+- Latest green Phase F PR CI: #397 / `36012650779` (PR #72)
+- Latest green main CI + Pages: #398 / `36013188043`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-003`
+- Current Task: `PHASE-F-004`
 
 ## CURRENT
 
-### PHASE-F-003 — semantic overlay / shadow color-channel closeout
+### PHASE-F-004 — state cascade / specificity ownership closeout
 Status: IN_PROGRESS
-Task progress: 55%
+Task progress: 65%
 
 Why this is current:
-- PHASE-F-002 token-graph first pack is merged and green through PR #71 exact-head CI #395 / `36011237135` and main release + Pages #396 / `36011730662`.
-- the canonical CSS graph now has no static unresolved no-fallback references, no custom-property dependency cycle, symmetric 93-variable Light/Dark mode recipes and no internal consumption of public `--qxframe9a7c2-color-*` compatibility outputs.
-- remaining direct physical-palette use after the foundation/theme area is only 20 lines, concentrated in elevation shadows and overlay/mask chrome.
-- hard-coded color use after the foundation/theme area is 10 lines, concentrated in ColorPanel/ColorPicker HSV-Hue rendering and drag-stop affordances. Hue/saturation spectrum colors are intrinsic color-model data, not theme colors, and must not be semanticized blindly.
+- PHASE-F-003 is merged through PR #72; exact-head CI #397 / `36012650779` and main release + Pages #398 / `36013188043` are green.
+- the canonical CSS still contains a late `unlayered overrides (kept last to preserve original cascade strength)` patch bucket, which makes Picker/Table styling depend on file-tail order rather than component ownership.
+- additional tail fixes duplicate Card and InputGroup owner rules even though their canonical component sections already exist.
 
 Frozen impact map:
-- reuse existing `--_qxframe9a7c2-semantic-overlay-base`, `overlay-text`, `overlay-control`, `overlay-control-hover`, `mask`, `mask-strong`, `overlay-divider`, `popup-shadow` and `overlay-shadow` owners before inventing any new color token.
-- shadows that only need black-alpha pigment should derive through semantic overlay-base with the same opacity, preserving visual output while removing direct palette coupling.
-- white-alpha overlay chrome should derive through semantic overlay-text with the same opacity.
-- Upload preview mask should use semantic overlay-base/mask semantics rather than raw palette black.
-- Carousel overlay controls should converge on semantic overlay control/text channels where equivalent.
-- Image preview black/white chrome should consume semantic overlay channels; video black backing is overlay-base.
-- Card/Table/Slider/Switch/Badge/SelectGroup shadows may preserve their existing geometry/opacities but the color pigment must come from semantic overlay-base.
-- ColorPanel hue/saturation spectrum and its explicit white/black contrast knobs remain functional color-space data. They are excluded from Theme-token cleanup unless a separate functional owner is justified.
-- no new public aliases, no global physical palette ban in Foundation, and no change to user-provided component color override slots.
+- move Picker footer and TimePicker footer-action rules into the Picker/TimePicker owner sections.
+- move Table filter popup/options/search/action rules into the Table owner section before Transfer begins.
+- make InputGroup item stacking resolve through its existing private `--_qxframe9a7c2-group-stack` channel instead of a second late z-index rule.
+- keep Card `overflow:visible` in its canonical root and move cover-corner specificity into the Card cover rules; remove the tail duplicate.
+- preserve the existing keyboard focus-visible/modality contract; this pack does not redesign focus visuals.
+- no `@layer`, `:is()`, `:where()`, new theme runtime, new token family or visual redesign.
 
-Scope:
-1. replace all 20 post-foundation direct `var(--qxframe9a7c2-palette-black|white)` component uses with semantically equivalent existing overlay/shadow owners;
-2. preserve current alpha/geometry where a direct semantic token would materially change appearance; use `color-mix(... semantic-overlay-base/text ... transparent)` for exact visual parity;
-3. add a required Phase F color-channel gate that requires zero post-foundation direct physical black/white palette consumption outside explicit ColorPanel functional-data allowlist;
-4. keep ColorPanel HSV/Hue intrinsic colors and ColorPicker gradient-stop physical contrast affordances as classified functional data for now;
-5. run exact-head full release/browser/package CI, merge only green, verify main + Pages, then audit remaining state selectors and CSS specificity/duplication.
-
-Implemented in current PHASE-F-003 semantic color-channel pack:
-- all 20 component/family lines that directly consumed physical black/white palettes are migrated; 22 pigment occurrences now derive from semantic overlay-base/overlay-text.
-- original opacity and elevation geometry are preserved exactly through color-mix percentages, so this is authority cleanup rather than visual redesign.
-- Badge ribbon, Card, Switch, SelectGroup, Table, Upload preview, Slider, Carousel and Image/ImagePreview no longer bind component chrome directly to physical black/white palette tokens.
-- Image preview video backing consumes semantic overlay-base directly; Carousel dots and hover chrome consume semantic overlay-text.
-- ColorPanel HSV/Hue spectrum colors and ColorPicker gradient-stop contrast affordances remain explicitly classified functional data rather than theme colors.
-- required `verify:phase-f-color-channels` forbids post-foundation direct physical palette consumption and rejects new hard-coded component colors outside the classified ColorPanel/gradient-stop boundary.
+Implemented in current PHASE-F-004 pack:
+- Picker footer width and TimePicker footer-action composition now live in their canonical Picker/TimePicker sections.
+- Table filter popup/options/search/action CSS moved unchanged into the Table owner section before Transfer.
+- InputGroup item stacking now consumes the existing private `--_qxframe9a7c2-group-stack` channel; the duplicate late hover/focus z-index patch is removed.
+- Card keeps `overflow:visible` only on its canonical root; direct-child cover corner correction now lives beside Card cover rules.
+- the generic late `unlayered overrides` patch bucket is removed while the existing unified keyboard focus/modality contract is preserved.
+- required `verify:phase-f-state-cascade` guards owner placement, duplicate reopening and forbidden late-patch recovery.
 
 Next exact step:
-1. open PHASE-F-003 PR and run exact-head full release/browser/package CI;
-2. fix only real semantic-color verifier or visual regressions without creating new color-token families;
+1. open PHASE-F-004 PR and run exact-head full release/browser/package CI;
+2. fix only real state-cascade/regression failures without restoring a late override bucket;
 3. merge only exact-head green and verify main + Pages;
-4. continue Phase F with state-channel/specificity/selector duplication audit.
+4. continue Phase F with repeated-selector specificity normalization.
 
 ## Current authority snapshot — after Phase A
 
@@ -94,6 +83,18 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-003 — semantic overlay / shadow color-channel closeout
+Status: DONE
+Evidence:
+- PR #72 merged
+- merge commit `c5f5eb654c20c62b97f32ba0d2f88ba9303ab8d4`
+- exact-head CI #397 / `36012650779`: success
+- main CI + Pages #398 / `36013188043`: success
+Outcome:
+- all post-foundation component/family physical black/white palette consumers were routed through existing semantic overlay-base/overlay-text channels.
+- original alpha and shadow geometry were preserved; ColorPanel HSV/Hue and ColorPicker contrast-stop colors remain classified functional color-model data.
+- required `verify:phase-f-color-channels` forbids new post-foundation physical palette consumption and unexpected component hard-coded colors.
 
 ### PHASE-F-002 — canonical CSS token graph closeout
 Status: DONE
