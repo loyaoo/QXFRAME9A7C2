@@ -6,6 +6,7 @@ import { Utils } from '../utils/utils.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { Renderer } from '../core/renderer.js';
 import { Collection } from '../core/collection.js';
+import { SelectionController } from '../core/selectionController.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 import { ComponentContracts } from '../core/componentContracts.js';
@@ -126,6 +127,7 @@ function setupTransfer(instance) {
   var sourceList = null;
   var targetList = null;
   var targetOrder = null;
+  var selectionController = null;
   var sourcePagination = null;
   var targetPagination = null;
   var sourceTable = null;
@@ -546,6 +548,8 @@ function setupTransfer(instance) {
       container: side === 'source' ? refs.sourceHost : refs.targetHost,
       items: listItems,
       multiple: true,
+      selectionController: selectionController,
+      selectionChannel: side === 'source' ? 'sourceChecked' : 'targetChecked',
       onChange: function () { syncOperations(); syncHeader(); syncTableProjection(side, 'selection'); },
       onSearch: function (searchValue, detail) {
         var source = detail && detail.source || 'api';
@@ -801,7 +805,8 @@ function setupTransfer(instance) {
     if (sourceList) sourceList.destroy();
     if (targetList) targetList.destroy();
     if (targetOrder) targetOrder.destroy();
-    sourceList = null; targetList = null; targetOrder = null; sourcePagination = null; targetPagination = null; sourceTable = null; targetTable = null;
+    if (selectionController) selectionController.destroy();
+    sourceList = null; targetList = null; targetOrder = null; selectionController = null; sourcePagination = null; targetPagination = null; sourceTable = null; targetTable = null;
     scope.dispose();
     if (formBridge) formBridge.destroy(); formBridge = null;
     if (domBinding) domBinding.release();
@@ -830,6 +835,12 @@ function setupTransfer(instance) {
   });
   createPagination('source');
   createPagination('target');
+  selectionController = SelectionController.create({
+    channels: {
+      sourceChecked: { multiple: true, value: [] },
+      targetChecked: { multiple: true, value: [] }
+    }
+  });
   sourceList = ItemCollection.create(listOptions('source', sourceItems()));
   targetList = ItemCollection.create(listOptions('target', targetItems()));
   scope.add(sourceList.on('render', function () { syncPaginationCount('source'); syncTableProjection('source', 'list-render'); }));
@@ -855,6 +866,7 @@ function setupTransfer(instance) {
     },
     setValue: setValue, setItems: setItems, applyOptions: applyOptions, getState: getState,
     getSourceList: function () { return sourceList; }, getTargetList: function () { return targetList; },
+    getSelectionController: function () { return selectionController; },
     getSourcePagination: function () { return sourcePagination; }, getTargetPagination: function () { return targetPagination; },
     getSourceTable: function () { return sourceTable; }, getTargetTable: function () { return targetTable; },
     getRootElement: function () { return root; }, getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
@@ -892,6 +904,11 @@ function recordForTransfer(instance) {
 }
 
 export class Transfer extends FieldComponent {
+  static profile = Object.freeze({
+    name:'Transfer',
+    selection:Object.freeze({ channels:Object.freeze(['sourceChecked','targetChecked']), targetValueOwner:'Transfer/targetOrder' }),
+    ownership:Object.freeze({ selection:'SelectionController' })
+  });
   static contract = ComponentContracts.get('Transfer');
   static immutableOptions = Object.freeze(['target','container','formField']);
   static createDefaultDOM = DOMFactory.createDefaultDOM;
@@ -926,6 +943,7 @@ export class Transfer extends FieldComponent {
   getState() { return recordForTransfer(this).getState(); }
   getSourceList() { return recordForTransfer(this).getSourceList(); }
   getTargetList() { return recordForTransfer(this).getTargetList(); }
+  getSelectionController() { return recordForTransfer(this).getSelectionController(); }
   getSourcePagination() { return recordForTransfer(this).getSourcePagination(); }
   getTargetPagination() { return recordForTransfer(this).getTargetPagination(); }
   getSourceTable() { return recordForTransfer(this).getSourceTable(); }
