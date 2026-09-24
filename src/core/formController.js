@@ -4,7 +4,6 @@ import { AsyncTask } from './asyncTask.js';
 import { AsyncTaskGroup } from './asyncTaskGroup.js';
 import { Scheduler } from './scheduler.js';
 import { DOM } from './dom.js';
-import { ValueEquality } from '../utils/valueEquality.js';
 import { Utils } from '../utils/utils.js';
 
 function own(object,key){return Object.prototype.hasOwnProperty.call(Object(object),key);}
@@ -46,6 +45,7 @@ function normalizeAdapter(spec){
     validateSync:Utils.isFunction(source.validateSync)?source.validateSync:null,
     validateAsync:Utils.isFunction(source.validateAsync)?source.validateAsync:(Utils.isFunction(source.validate)?source.validate:null),
     getOwnershipState:Utils.isFunction(source.getOwnershipState)?source.getOwnershipState:null,
+    isDirty:Utils.isFunction(source.isDirty)?source.isDirty:null,
     focus:Utils.isFunction(source.focus)?source.focus:null,
     reveal:Utils.isFunction(source.reveal)?source.reveal:null,
     bridge:bridge
@@ -93,9 +93,18 @@ function create(options){
   }
   function readValue(field){return copyValue(field.adapter.getValue());}
   function readSerialized(field){return copyValue(field.adapter.getSerializedValue());}
-  function refreshDirty(field){
-    field.dirty=!ValueEquality.deep(field.baseline,readValue(field));
-    return field.dirty;
+  function resolveDirty(field,fallback,meta){
+    if(meta&&own(meta,'dirty'))return meta.dirty===true;
+    if(field.adapter.isDirty){
+      try{return field.adapter.isDirty()===true;}catch(_){}
+    }
+    if(field.adapter.getOwnershipState){
+      try{
+        var state=field.adapter.getOwnershipState();
+        if(state&&own(state,'dirty'))return state.dirty===true;
+      }catch(_){}
+    }
+    return fallback===true;
   }
   function resetVisualState(field){
     field.touched=false;field.pending=false;field.valid=true;field.error=null;
@@ -113,7 +122,7 @@ function create(options){
     if(!fieldId)throw new TypeError('[QXFRAME9A7C2] FormController fieldId must not be empty.');
     if(fields.has(fieldId))throw new Error('[QXFRAME9A7C2] FormController duplicate fieldId: '+fieldId);
     var adapter=normalizeAdapter(source),name=text(source.name),field={
-      fieldId:fieldId,name:name,adapter:adapter,baseline:readAdapterValue(adapter),
+      fieldId:fieldId,name:name,adapter:adapter,
       dirty:false,touched:false,pending:false,valid:true,error:null,valueRevision:0,
       validationGeneration:0,pendingResetRequestId:null,metadata:source.metadata||null
     };
@@ -140,7 +149,7 @@ function create(options){
     if(destroyed)return OperationResult.disposed(contextFor('form-value-disposed',meta),{reason:'form-controller-destroyed'});
     var context=contextFor('form-value-change',meta),field=fields.get(text(fieldId));
     if(!field)return OperationResult.invalid(context,{reason:'field-not-registered'});
-    field.valueRevision+=1;refreshDirty(field);advanceRevision('field-value',field.fieldId);
+    field.valueRevision+=1;field.dirty=resolveDirty(field,true,meta);advanceRevision('field-value',field.fieldId);
     return OperationResult.applied(context,{reason:'field-value-observed',revision:revision,generation:field.valueRevision});
   }
   function markTouched(fieldId,value,meta){
@@ -254,7 +263,7 @@ function create(options){
     return OperationResult.applied(context,{reason:'submit-complete',revision:capturedRevision,generation:generation});
   }
   function settleResetField(field){
-    field.baseline=readValue(field);field.dirty=false;field.pendingResetRequestId=null;resetVisualState(field);
+    field.dirty=false;field.pendingResetRequestId=null;resetVisualState(field);
   }
   async function reset(meta){
     if(destroyed)return OperationResult.disposed(contextFor('form-reset-disposed',meta),{reason:'form-controller-destroyed'});
@@ -275,7 +284,7 @@ function create(options){
         if(outcome.status==='requested'){
           field.pendingResetRequestId=outcome.requestId||null;
           resetVisualState(field);
-          refreshDirty(field);
+          field.dirty=resolveDirty(field,field.dirty);
           requested=true;continue;
         }
         if(outcome.status!=='applied'&&outcome.status!=='unchanged')continue;
