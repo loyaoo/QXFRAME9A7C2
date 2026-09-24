@@ -6,8 +6,7 @@ import { Lifecycle } from './lifecycle.js';
 import { DOMProjection } from './domProjection.js';
 import { DismissableLayer } from './dismissableLayer.js';
 import { LayerManager } from './layerManager.js';
-import { FocusManager } from './focusManager.js';
-import { FocusScope } from './focusScope.js';
+import { FocusController } from './focusController.js';
 import { InteractionIsolation } from './interactionIsolation.js';
 import { ScrollLock } from './scrollLock.js';
 import { PositionAdapter } from './position.js';
@@ -37,7 +36,7 @@ function create(options) {
   if (floating.parentNode) floating.parentNode.removeChild(floating);
 
   var positioner = settings.positionAdapter || PositionAdapter.create({ floating: settings.floatingApi });
-  var focusManager = settings.focusManager || FocusManager.create({ document: documentRef });
+  var focusManager = settings.focusManager || FocusController.createManager({ document: documentRef });
   var popupHost = null;
   var dismissLayer = null;
   var focusScope = null;
@@ -110,7 +109,7 @@ function create(options) {
     if (settings.trapFocus === true) return 'trap';
     var value = settings.focusScope;
     if (value === undefined || value === null || value === '' || value === 'auto') return settings.closeOnTabExit === true ? 'exit' : 'none';
-    return FocusScope.normalizeMode(value);
+    return FocusController.normalizeScopeMode(value);
   }
 
   function popupTreeElements() {
@@ -145,7 +144,7 @@ function create(options) {
   function createFocusScope() {
     var mode = resolvedFocusScopeMode();
     if (mode === 'none' || focusScope) return focusScope;
-    focusScope = FocusScope.create({
+    focusScope = FocusController.createScope({
       root: mode === 'trap' ? floating : (reference || floating),
       mode: mode,
       document: documentRef,
