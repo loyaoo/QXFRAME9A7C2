@@ -13,7 +13,7 @@ import { DOMBinding } from '../core/domBinding.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { PointerSession } from '../core/pointerSession.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 
 var DOMFactory;
@@ -789,7 +789,7 @@ function setupScroll(instance) {
   }
     
   function userInteractionBlocked() {
-    return InteractionPolicy.mutationLocked(opts);
+    return CapabilityController.mutationLocked(opts);
   }
     
   function wheelDelta(event) {

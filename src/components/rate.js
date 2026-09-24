@@ -5,7 +5,7 @@ import { getContract } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Renderer } from '../core/renderer.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { StateController } from '../core/stateController.js';
 import { Utils } from '../utils/utils.js';
 
@@ -64,7 +64,7 @@ export class Rate extends FieldComponent {
         this.setFieldValue(valueState.value, { silent:true, force:true });
     }
 
-    #interactionPolicy() { const opts=this.options; return InteractionPolicy.resolve({ disabled:this.destroyed||opts.disabled===true, readOnly:opts.readOnly===true }, { focusable:opts.mode==='interactive', tabbable:opts.mode==='interactive', activatable:opts.mode==='interactive', editable:false, selectable:false }); }
+    #interactionPolicy() { const opts=this.options; return CapabilityController.resolve({ disabled:this.destroyed||opts.disabled===true, readOnly:opts.readOnly===true }, { focusable:opts.mode==='interactive', tabbable:opts.mode==='interactive', activatable:opts.mode==='interactive', editable:false, selectable:false }); }
     #interactive() { return this.#interactionPolicy().activatable; }
     #stepSize() { return this.options.half === true ? 0.5 : 1; }
     #context(index, layer) { const r=recordFor(this); return Object.freeze({ index, position:index+1, value:r.valueState.value, hoverValue:r.hoverValue, layer, instance:this }); }

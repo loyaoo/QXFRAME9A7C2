@@ -13,6 +13,7 @@ import { ItemSchema } from '../core/itemSchema.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { ResponsiveOverflow } from '../core/responsiveOverflow.js';
 import { Transition } from '../core/transition.js';
@@ -187,6 +188,7 @@ function setupMenu(instance) {
   var api = instance;
   var keyboard = null;
   var focusController = null;
+  var interactionController = null;
   var virtualFocusDomain = null;
   var binding = DOMBinding.resolve({ options: opts, target: host, component: api, requiredRefs: ['root', 'level'], defaultFactory: DOMFactory.createDefaultDOM });
   var root = binding.refs.root;
@@ -1101,16 +1103,16 @@ function setupMenu(instance) {
     }
     return false;
   }
-  function handleKeydown(event) {
+  function handleResolvedKeydown(action, event) {
     var button = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-menu-item') : null;
     if (!button && activeOverflow && overflowButton) button = overflowButton;
-    if (!button && !activeKey && ['ArrowDown','ArrowUp','Home','End','ArrowRight','ArrowLeft'].indexOf(event.key) >= 0) {
+    if (!button && !activeKey && ['MOVE_DOWN','MOVE_UP','MOVE_FIRST','MOVE_LAST','MOVE_RIGHT','MOVE_LEFT'].indexOf(action) >= 0) {
       var rootButtons = visibleButtons(rootLevel);
       var selectedKey = selectedKeyValue();
       var selectedPath = selectedKey ? (pathByKey.get(selectedKey) || []) : [];
       var selectedRoot = selectedPath.length ? buttonByKey.get(selectedPath[0]) : null;
       if (selectedRoot && overflowedKeys.has(selectedPath[0])) selectedRoot = null;
-      var seedButton = selectedRoot && !selectedRoot.disabled ? selectedRoot : rootButtons[(event.key === 'ArrowUp' || event.key === 'End' || event.key === 'ArrowLeft') ? rootButtons.length - 1 : 0];
+      var seedButton = selectedRoot && !selectedRoot.disabled ? selectedRoot : rootButtons[(action === 'MOVE_UP' || action === 'MOVE_LAST' || action === 'MOVE_LEFT') ? rootButtons.length - 1 : 0];
       if (seedButton && focusButton(seedButton, { source:'keyboard', reason:'menu-seed', originalEvent:event })) { if (event.preventDefault) event.preventDefault(); return true; }
     }
     if (!button) button = buttonByKey.get(activeKey) || null;
@@ -1118,11 +1120,11 @@ function setupMenu(instance) {
     var meta = buttonMeta.get(button); if (!meta) return false;
     var handled = false;
     if (meta.overflow) {
-      if (event.key === 'ArrowRight') handled = focusSibling(button, 1);
-      else if (event.key === 'ArrowLeft') handled = focusSibling(button, -1);
-      else if (event.key === 'ArrowDown') {
+      if (action === 'MOVE_RIGHT') handled = focusSibling(button, 1);
+      else if (action === 'MOVE_LEFT') handled = focusSibling(button, -1);
+      else if (action === 'MOVE_DOWN') {
         if (overflowTrigger) { overflowTrigger.open('keyboard-overflow', event); handled = true; var overflowButtons = visibleButtons(overflowLevel); if (overflowButtons.length) focusButton(overflowButtons[0]); }
-      } else if (event.key === 'Enter' || event.key === ' ') { if (overflowTrigger) { overflowTrigger.open('keyboard-overflow-activate', event); handled = true; } } else if (event.key === 'Escape') { if (overflowTrigger) overflowTrigger.closeTree('escape', event); handled = true; }
+      } else if (action === 'ACTIVATE' || action === 'TOGGLE') { if (overflowTrigger) { overflowTrigger.open('keyboard-overflow-activate', event); handled = true; } } else if (action === 'DISMISS') { if (overflowTrigger) overflowTrigger.closeTree('escape', event); handled = true; }
       if (handled && event.preventDefault) event.preventDefault();
       return handled;
     }
@@ -1130,19 +1132,19 @@ function setupMenu(instance) {
     if (isDisabledItem(item)) return false;
     var isRootLevel = parentKey === '' && !meta.overflowParent;
     var inlineTreeNavigation = !popupMode() && opts.mode !== 'horizontal';
-    if (event.key === 'Home') handled = inlineTreeNavigation ? focusInlineEdge(false) : focusEdge(button, false);
-    else if (event.key === 'End') handled = inlineTreeNavigation ? focusInlineEdge(true) : focusEdge(button, true);
-    else if (opts.mode === 'horizontal' && isRootLevel && event.key === 'ArrowRight') handled = focusSibling(button, 1);
-    else if (opts.mode === 'horizontal' && isRootLevel && event.key === 'ArrowLeft') handled = focusSibling(button, -1);
-    else if (event.key === 'ArrowDown') {
+    if (action === 'MOVE_FIRST') handled = inlineTreeNavigation ? focusInlineEdge(false) : focusEdge(button, false);
+    else if (action === 'MOVE_LAST') handled = inlineTreeNavigation ? focusInlineEdge(true) : focusEdge(button, true);
+    else if (opts.mode === 'horizontal' && isRootLevel && action === 'MOVE_RIGHT') handled = focusSibling(button, 1);
+    else if (opts.mode === 'horizontal' && isRootLevel && action === 'MOVE_LEFT') handled = focusSibling(button, -1);
+    else if (action === 'MOVE_DOWN') {
       if (opts.mode === 'horizontal' && isRootLevel && hasChildren(item)) handled = openSubmenu(key, 'keyboard-down', event, true);
       else handled = inlineTreeNavigation ? focusInlineLinear(button, 1) : focusSibling(button, 1);
-    } else if (event.key === 'ArrowUp') {
+    } else if (action === 'MOVE_UP') {
       if (opts.mode === 'horizontal' && isRootLevel && hasChildren(item)) { handled = openSubmenu(key, 'keyboard-up', event); if (handled) focusFirstChild(key, true); }
       else handled = inlineTreeNavigation ? focusInlineLinear(button, -1) : focusSibling(button, -1);
-    } else if (event.key === 'ArrowRight') {
+    } else if (action === 'MOVE_RIGHT') {
       if (hasChildren(item)) handled = openSubmenu(key, 'keyboard-right', event, !inlineTreeNavigation);
-    } else if (event.key === 'ArrowLeft') {
+    } else if (action === 'MOVE_LEFT') {
       if (inlineTreeNavigation) {
         if (hasChildren(item) && openKeys.has(key)) handled = closeSubmenu(key, 'keyboard-left', event);
         else handled = false;
@@ -1152,12 +1154,12 @@ function setupMenu(instance) {
       } else if (meta.overflowParent && overflowTrigger) {
         overflowTrigger.closeTree('keyboard-left', event); handled = focusButton(overflowButton);
       } else if (hasChildren(item) && openKeys.has(key)) handled = closeSubmenu(key, 'keyboard-left', event);
-    } else if (event.key === 'Enter' || event.key === ' ') {
+    } else if (action === 'ACTIVATE' || action === 'TOGGLE') {
       if (hasChildren(item)) {
         emitTitleClick(key, item, event, 'keyboard');
         handled = popupMode() ? openSubmenu(key, 'keyboard-activate', event, true) : toggleSubmenu(key, 'keyboard-activate', event);
       } else handled = selectKey(key, { source:'keyboard', reason:'item-activate', originalEvent:event }) !== false;
-    } else if (event.key === 'Escape') {
+    } else if (action === 'DISMISS') {
       if (parentKey) { closeSubmenu(parentKey, 'escape', event); handled = focusButton(buttonByKey.get(parentKey), { source:'keyboard', reason:'escape-parent', originalEvent:event }); }
       else if (meta.overflowParent && overflowTrigger) { overflowTrigger.closeTree('escape', event); handled = focusButton(overflowButton, { source:'keyboard', reason:'escape-overflow', originalEvent:event }); }
       else { Array.from(openKeys).forEach(function (openKey) { closeSubmenu(openKey, 'escape', event); }); handled = true; }
@@ -1165,6 +1167,19 @@ function setupMenu(instance) {
     if (handled && event.preventDefault) event.preventDefault();
     return handled;
   }
+
+  interactionController = InteractionController.create();
+  interactionController.registerScope({
+    id:'menu', root:root,
+    resolveAction:function (event) {
+      var action = InteractionController.resolveKeyboardAction(event, { keymap:{ ' ':'TOGGLE', Escape:'DISMISS' } });
+      if (action) return action;
+      return event && !event.ctrlKey && !event.metaKey && !event.altKey && !event.isComposing && event.key && event.key.length === 1 && event.key !== ' ' ? 'TYPEAHEAD' : null;
+    },
+    onAction:function (action, context) { return handleResolvedKeydown(action, context.originalEvent) ? 'handled' : 'pass'; }
+  });
+  scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; });
+  function handleKeydown(event) { return !!(interactionController && interactionController.dispatch(event, { ownerId:'menu' }) === 'handled'); }
 
   function handlePointerOver(event) {
     var button = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-menu-item') : null;
@@ -1412,7 +1427,7 @@ export class Menu extends Component {
     focus:Object.freeze({ mode:'virtual-navigation', host:'composite-root' }),
     interaction:Object.freeze({ keymap:'menu' }),
     selection:Object.freeze({ mode:'menu-selection' }),
-    ownership:Object.freeze({ focus:'FocusController' })
+    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController' })
   });
   static options = MENU_DEFAULTS;
   static immutableOptions = Object.freeze(['container','portalContainer']);

@@ -3,7 +3,7 @@ import { DOMTemplate } from '../core/domTemplate.js';
 import { Events } from '../core/events.js';
 import { Scheduler } from '../core/scheduler.js';
 import { DOMBinding } from '../core/domBinding.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { FocusController } from '../core/focusController.js';
 import { Utils } from '../utils/utils.js';
 import { TimeUnit } from '../utils/timeUnit.js';
@@ -198,7 +198,7 @@ function create(options) {
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
       onChange: function (next, detail) {
-        if (destroyed || InteractionPolicy.mutationLocked(opts)) return;
+        if (destroyed || CapabilityController.mutationLocked(opts)) return;
         var previous = TimeUnit.clone(value);
         value = valueFromWheel(next);
         if (TimeUnit.equal(previous, value)) return;
@@ -250,7 +250,7 @@ function create(options) {
     return true;
   }
   function changeUnit(unit, next, detail) {
-    if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var previous = TimeUnit.clone(value);
     value[unit] = TimeUnit.clamp(Number(next), 0, unit === 'hour' ? 23 : 59);
     if (TimeUnit.equal(previous, value)) return true;

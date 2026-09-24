@@ -10,7 +10,7 @@ import { ItemAccessors } from '../core/itemAccessors.js';
 import { SelectionController } from '../core/selectionController.js';
 import { Disclosure } from '../core/disclosure.js';
 import { AsyncTaskGroup } from '../core/asyncTaskGroup.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { Renderer } from '../core/renderer.js';
 import { ItemCollection } from './item-collection.js';
 import { Item } from './item.js';
@@ -101,7 +101,7 @@ function setupTreeRuntime(instance) {
         }
     
         function draggableOf(item, index) {
-          if (InteractionPolicy.mutationLocked(opts) || disabledOf(item, index)) return false;
+          if (CapabilityController.mutationLocked(opts) || disabledOf(item, index)) return false;
           if (Utils.isFunction(opts.draggable)) return opts.draggable(item, index) === true;
           if (item && typeof item === 'object' && item.draggable === false) return false;
           return opts.draggable === true;
@@ -348,7 +348,7 @@ function setupTreeRuntime(instance) {
             var checkbox = doc.createElement('input'); checkbox.type = 'checkbox'; checkbox.className = 'qxframe9a7c2-tree-check'; checkbox.tabIndex = -1;
             if (checkKeyByNode) checkKeyByNode.set(checkbox, row.key);
             checkbox.checked = checkedSelection.has(row.key); checkbox.indeterminate = indeterminateKeys.has(row.key);
-            checkbox.disabled = !checkableOf(row.item, row.record.index) || InteractionPolicy.mutationLocked(opts);
+            checkbox.disabled = !checkableOf(row.item, row.record.index) || CapabilityController.mutationLocked(opts);
             var indicator = doc.createElement('span'); indicator.className = 'qxframe9a7c2-tree-check-indicator';
             checkboxWrap.appendChild(checkbox); checkboxWrap.appendChild(indicator); return checkboxWrap;
           }
@@ -423,7 +423,7 @@ function setupTreeRuntime(instance) {
               var canCheck = checkableOf(record.item, record.index);
               checkbox.checked = isChecked;
               checkbox.indeterminate = isMixed;
-              checkbox.disabled = !canCheck || InteractionPolicy.mutationLocked(opts);
+              checkbox.disabled = !canCheck || CapabilityController.mutationLocked(opts);
             }
           });
         }
@@ -579,7 +579,7 @@ function setupTreeRuntime(instance) {
           var record = activeRecord();
           if (!record) return false;
           var disclosureLocked = opts.disabled === true;
-          var valueLocked = InteractionPolicy.mutationLocked(opts);
+          var valueLocked = CapabilityController.mutationLocked(opts);
           if (event.key === 'ArrowRight') {
             if (!canExpand(record) || isExpanded(record.key) || disclosureLocked) return false;
             return expand(record.key, { source: 'keyboard', reason: 'arrow-right-expand', originalEvent: event });
@@ -700,7 +700,7 @@ function setupTreeRuntime(instance) {
               return;
             }
             if (checkbox && root.contains(checkbox)) {
-              if (InteractionPolicy.mutationLocked(opts)) return;
+              if (CapabilityController.mutationLocked(opts)) return;
               /* Native checkbox activation flips .checked before click dispatch. Do not
                  preventDefault() here: cancelling the click would roll that native
                  activation back after Tree has already projected canonical state. */
@@ -816,7 +816,7 @@ function setupTreeRuntime(instance) {
           },
           onClick: function (detail) {
             var row = detail && detail.item;
-            if (!row || InteractionPolicy.mutationLocked(opts)) return true;
+            if (!row || CapabilityController.mutationLocked(opts)) return true;
             var originalTarget = detail && detail.originalEvent && detail.originalEvent.target;
             var inlineControl = originalTarget && originalTarget.closest ? originalTarget.closest('.qxframe9a7c2-tree-toggle,.qxframe9a7c2-tree-check') : null;
             if (inlineControl && root && root.contains(inlineControl)) return false;

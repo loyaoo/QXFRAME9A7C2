@@ -13,7 +13,7 @@ import { SelectionTags } from '../core/selectionTags.js';
 import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { SearchState } from '../core/searchState.js';
 import { ValueController } from '../core/valueController.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
@@ -149,7 +149,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           childrenOf:childrenOf, keyOf:function(item){return String(item && item.value);}, disabledOf:function(item){return !item || item.disabled===true;},
           isLeaf:function(item,_index,children){return !!item && item.disabled!==true && children.length===0 && !isLazyExpandable(item);}
         });
-        function isLocked() { return InteractionPolicy.mutationLocked(opts); }
+        function isLocked() { return CapabilityController.mutationLocked(opts); }
         function shouldCloseOnSelect() { return opts.closeOnSelect !== undefined ? opts.closeOnSelect !== false : opts.multiple !== true; }
         function loadChildrenFor(item, meta) {
           if (!isLazyExpandable(item) || loadingKeys.has(String(item.key))) return Promise.resolve(childrenOf(item));

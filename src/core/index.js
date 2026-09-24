@@ -24,6 +24,8 @@ export { TreeModel } from './treeModel.js';
 export { PaginationModel } from './paginationModel.js';
 export { TableModel } from './tableModel.js';
 export { InteractionPolicy } from './interactionPolicy.js';
+export { CapabilityController } from './capabilityController.js';
+export { InteractionController } from './interactionController.js';
 export { TransformModel } from './transformModel.js';
 export { AsyncTask } from './asyncTask.js';
 export { AsyncTaskGroup } from './asyncTaskGroup.js';

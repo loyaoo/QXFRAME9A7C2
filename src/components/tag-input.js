@@ -4,7 +4,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { TagNavigation } from '../core/tagNavigation.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { StateController } from '../core/stateController.js';
 import { Utils } from '../utils/utils.js';
 
@@ -66,7 +66,7 @@ export class TagInput extends FieldComponent {
     #bindTagVirtualFocus(){
         const r=recordFor(this),input=r.control?.getInputElement?.();if(!input||!r.control?.getTags?.())return false;
         r.keyboard=this.own(KeyboardNavigation.create({root:input,focusRoot:()=>input,editableKeys:true,handlers:{}}));
-        r.tagNavigation=this.own(TagNavigation.create({keyboard:r.keyboard,domainName:'tag-input-tags',owner:()=>r.control?.getTags?.()||null,getInputElement:()=>r.control?.getInputElement?.()||null,isLocked:()=>this.destroyed||InteractionPolicy.mutationLocked(this.options)}));return true;
+        r.tagNavigation=this.own(TagNavigation.create({keyboard:r.keyboard,domainName:'tag-input-tags',owner:()=>r.control?.getTags?.()||null,getInputElement:()=>r.control?.getInputElement?.()||null,isLocked:()=>this.destroyed||CapabilityController.mutationLocked(this.options)}));return true;
     }
     [componentHooks.render](){const r=recordFor(this);if(r.rendered)return r.control.getRootElement();r.control=this.own(Control.create(this.#controlOptions(true)));r.control.getRootElement().classList.add('qxframe9a7c2-tag-input');this.#bindTagVirtualFocus();r.rendered=true;this.bindFocusTarget(r.control.getInputElement());return r.control.getRootElement();}
     [fieldHooks.fieldOptionsUpdated](next,previous,patch){const r=recordFor(this);if(!r.control)return;const update=this.#controlOptions(false);delete update.container;if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(copyValue(next.value),{silent:true,source:'options',reason:'options-value'});const value=r.valueState.value;this.setFieldValue(value,{silent:true,force:true});update.tags=value;}if(own(patch,'inputValue')){r.inputValue=next.inputValue==null?'':String(next.inputValue);update.inputValue=r.inputValue;}r.control.updateOptions(update);}

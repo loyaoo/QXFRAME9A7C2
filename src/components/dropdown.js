@@ -1,7 +1,7 @@
 import { PopupComponent } from './popup.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
@@ -99,7 +99,7 @@ function initializeDropdown(instance, options) {
     disabledOf:function(item){return !item || item.disabled===true || item.type==='divider' || item.type==='title' || item.type==='group';},
     isLeaf:function(item,_index,children){return !!item && item.value!==undefined && children.length===0 && item.type!=='divider' && item.type!=='title' && item.type!=='group';}
   });
-  function isLocked() { return InteractionPolicy.mutationLocked(opts); }
+  function isLocked() { return CapabilityController.mutationLocked(opts); }
   function shouldCloseOnSelect() { return opts.closeOnSelect !== undefined ? opts.closeOnSelect !== false : opts.multiple !== true; }
   function rawValue(value) { return value === undefined || value === null ? '' : String(value); }
   function hasSelectedDescendant(item) { return hierarchy.stateFor(item, selection.values).selectedCount > 0; }

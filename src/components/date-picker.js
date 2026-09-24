@@ -10,7 +10,8 @@ import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { FocusController } from '../core/focusController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
 import { DateUnit } from '../utils/dateUnit.js';
 import { DOM } from '../core/dom.js';
@@ -147,6 +148,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
   var timeHost = null;
   var presetsHost = null;
   var presetCleanups = [];
+  var presetFocusController = null;
+  var presetDomain = null;
+  var presetButtons = [];
+  var presetActions = [];
+  var activePresetIndex = 0;
   var panelCleanups = [];
   var api = instance;
   var activeRangePart = 0;
@@ -770,7 +776,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     return pickerSession.cancel(meta);
   }
   function clear(meta) {
-    if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+    if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value, selection);
     draft.setValue(emptyValue(selection), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
@@ -846,7 +852,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
 
   function removeMultipleTag(tag, detail) {
-    if (selection !== 'multiple' || InteractionPolicy.mutationLocked(opts)) return false;
+    if (selection !== 'multiple' || CapabilityController.mutationLocked(opts)) return false;
     var target = tag && tag.key !== undefined ? String(tag.key) : '';
     var source = cloneValue(field && field.getState().open ? draft.draftValue : draft.value, selection);
     var next = source.filter(function (entry) { return String(entry.getTime()) !== target; });
@@ -934,7 +940,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         domainName:'date-picker-tags',
         owner:function(){ var control=field&&field.getControl?field.getControl():null; return control&&control.getTags?control.getTags():null; },
         getInputElement:function(){ return field&&field.getInputElement?field.getInputElement():null; },
-        isLocked:function(){ return destroyed || InteractionPolicy.mutationLocked(opts); },
+        isLocked:function(){ return destroyed || CapabilityController.mutationLocked(opts); },
         canEnter:function(){ return !field || !field.getState().open; }
       });
     }
@@ -949,7 +955,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
   function handleFieldKeydown(event) {
     if (!event || opts.disabled === true) return false;
-    var mutationLocked = InteractionPolicy.mutationLocked(opts);
+    var mutationLocked = CapabilityController.mutationLocked(opts);
     if (selection === 'multiple' && tagNavigation && tagNavigation.handleKeydown(event)) return true;
     if (event.key === 'F6' && withTime && timePanel && field && field.getState().open) {
       return setKeyboardRegion(keyboardRegion === 'selection' ? 'time' : 'selection', event.shiftKey ? 'Shift+F6' : 'F6');
@@ -1250,17 +1256,20 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
   function rebuildPresets() {
     presetCleanups.splice(0).forEach(function (cleanup) { cleanup(); });
+    if (presetFocusController) { presetFocusController.destroy(); presetFocusController = null; presetDomain = null; }
     if (!presetsHost) return;
     presetsHost.textContent = '';
+    presetButtons = [];
+    presetActions = [];
     var presets = Array.isArray(opts.presets) ? opts.presets : [];
     presets.forEach(function (preset, index) {
       if (!preset || typeof preset !== 'object' || !own(preset, 'value')) throw new TypeError('[QXFRAME9A7C2] DatePicker presets require objects with label and value.');
       var button = doc.createElement('button');
       button.type = 'button';
-      button.tabIndex = 0;
+      button.tabIndex = -1;
       button.className = 'qxframe9a7c2-date-picker-preset';
       button.textContent = preset.label === undefined || preset.label === null ? ('预设 ' + String(index + 1)) : String(preset.label);
-      button.disabled = InteractionPolicy.mutationLocked(opts) || preset.disabled === true;
+      button.disabled = CapabilityController.mutationLocked(opts) || preset.disabled === true;
       var handler = function (event) {
         if (button.disabled) return;
         var source = DOM.activationSource(event);
@@ -1282,9 +1291,53 @@ function setupDatePickerRuntime(instance, fieldInit) {
       };
       presetCleanups.push(DOM.listen(button, 'click', handler));
       presetsHost.appendChild(button);
+      presetButtons.push(button);
+      presetActions.push(handler);
     });
-    if (presets.length) { if (presetsHost.parentNode !== panelShell || presetsHost.nextSibling !== selectionHost) panelShell.insertBefore(presetsHost, selectionHost); }
-    else if (presetsHost.parentNode) presetsHost.parentNode.removeChild(presetsHost);
+    if (presets.length) {
+      if (presetsHost.parentNode !== panelShell || presetsHost.nextSibling !== selectionHost) panelShell.insertBefore(presetsHost, selectionHost);
+      function enabledIndex(start, step) {
+        var index = start;
+        while (index >= 0 && index < presetButtons.length) {
+          if (!presetButtons[index].disabled) return index;
+          index += step;
+        }
+        return -1;
+      }
+      function activatePreset(index, reason) {
+        var next = enabledIndex(index, index < activePresetIndex ? -1 : 1);
+        if (next < 0) return false;
+        activePresetIndex = next;
+        return !!(presetDomain && presetDomain.activate(String(next), { source:'keyboard', reason:reason || 'preset-navigation', ensureVisible:true }));
+      }
+      function movePreset(step) {
+        var next = enabledIndex(activePresetIndex + step, step);
+        return next < 0 ? true : activatePreset(next, 'preset-arrow');
+      }
+      activePresetIndex = enabledIndex(Math.min(activePresetIndex, presetButtons.length - 1), 1);
+      if (activePresetIndex < 0) activePresetIndex = enabledIndex(0, 1);
+      presetFocusController = FocusController.create({
+        root:presetsHost, activeRegion:'presets', disabled:activePresetIndex < 0,
+        navigation:{ handlers:FocusController.forwardHandlers(['ArrowDown','ArrowUp','ArrowRight','ArrowLeft','Home','End','Enter',' '], function (event) {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowRight') return movePreset(1);
+          if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') return movePreset(-1);
+          if (event.key === 'Home') return activatePreset(enabledIndex(0, 1), 'preset-home');
+          if (event.key === 'End') return activatePreset(enabledIndex(presetButtons.length - 1, -1), 'preset-end');
+          if ((event.key === 'Enter' || event.key === ' ') && activePresetIndex >= 0) { presetActions[activePresetIndex](event); return true; }
+          return false;
+        }) },
+        onEnter:function () { if (activePresetIndex >= 0) activatePreset(activePresetIndex, 'preset-region-enter'); }
+      });
+      var binding = presetFocusController.bindVirtualFocus({
+        domain:{ name:'date-picker-presets', getElement:function (key) { return presetButtons[Number(key)] || null; },
+          reconcile:function (key) { var index = Number(key); return Number.isInteger(index) && presetButtons[index] && !presetButtons[index].disabled ? String(index) : activePresetIndex >= 0 ? String(activePresetIndex) : null; } }
+      });
+      presetDomain = binding && binding.domain || null;
+      if (doc.activeElement === presetsHost && activePresetIndex >= 0) activatePreset(activePresetIndex, 'preset-rebuild');
+    } else {
+      presetsHost.tabIndex = -1;
+      if (presetsHost.parentNode) presetsHost.parentNode.removeChild(presetsHost);
+    }
   }
 
   function rebuildFooter() {
@@ -1420,6 +1473,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     destroyed = true;
     presetCleanups.splice(0).forEach(function (cleanup) { cleanup(); });
+    if (presetFocusController) { presetFocusController.destroy(); presetFocusController = null; presetDomain = null; }
     panelCleanups.splice(0).forEach(function (cleanup) { cleanup(); });
     var destroyReason = reason || 'date-picker-destroy';
     // Finish the outer popup/control lifecycle while composed state owners are

@@ -11,7 +11,7 @@ import { ItemSchema } from '../core/itemSchema.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { FieldHost } from '../core/fieldHost.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { DOMTemplate } from '../core/domTemplate.js';
@@ -337,7 +337,7 @@ var selectionRangeScheduler = null;
         }
     
         function clear(meta) {
-          if (destroyed || InteractionPolicy.mutationLocked(opts)) return false;
+          if (destroyed || CapabilityController.mutationLocked(opts)) return false;
           var previousValue = draftValue();
           var cfg = { source: meta && meta.source || 'instance', reason: meta && meta.reason || 'clear', originalEvent: meta && meta.originalEvent || null };
           var changed = writeValue('', cfg, true); clearBackfill();
@@ -445,7 +445,7 @@ var selectionRangeScheduler = null;
         function close(reason, originalEvent) { return destroyed ? false : triggerSession.close(reason || 'instance', originalEvent || null); }
     
         function handleInput(next, event) {
-          if (InteractionPolicy.mutationLocked(opts)) return;
+          if (CapabilityController.mutationLocked(opts)) return;
           var previousValue = draftValue();
           var changed = writeValue(String(next || ''), { source: 'input', reason: 'input', originalEvent: event }, true); clearBackfill(); optionList.clear({ silent: true, source: 'input', reason: 'autocomplete-free-text' }); syncControl({ source: 'input', reason: 'input' });
           var info = deriveQuery('input', event);

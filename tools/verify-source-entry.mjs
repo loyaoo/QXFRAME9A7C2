@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { QXFRAME9A7C2 } from '../src/index.js';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -15,9 +15,9 @@ const normalizeManifest=list=>list.map(record=>({name:record.name,modules:(recor
 assert.deepEqual(JSON.parse(JSON.stringify(normalizeManifest(QXFRAME9A7C2.ModuleManifest.list()))),JSON.parse(JSON.stringify(normalizeManifest(baseline.modules||[]))),'Static ModuleManifest drifted from frozen public metadata baseline.');
 for(const key of ['CoreRegistry','HeadlessRegistry','DOMHeadlessRegistry','ComponentRegistry','BuildingBlockRegistry','defineModule','load','use']) assert.ok(!(key in QXFRAME9A7C2),`Legacy runtime key still exists: ${key}`);
 
-const probe=spawnSync(process.execPath,['--input-type=module','-e',`delete globalThis.QXFRAME9A7C2; await import(${JSON.stringify(path.join(root,'src/index.js'))}); if ('QXFRAME9A7C2' in globalThis) throw new Error('source entry leaked global'); console.log('ok');`],{encoding:'utf8'});
+const probe=spawnSync(process.execPath,['--input-type=module','-e',`delete globalThis.QXFRAME9A7C2; await import(${JSON.stringify(pathToFileURL(path.join(root,'src/index.js')).href)}); if ('QXFRAME9A7C2' in globalThis) throw new Error('source entry leaked global'); console.log('ok');`],{encoding:'utf8'});
 assert.equal(probe.status,0,`src/index.js must be global-side-effect free:\n${probe.stderr}`);
-const child=spawnSync(process.execPath,['--input-type=module','-e',`import ${JSON.stringify(path.join(root,'src/index.umd.js'))}; const q=globalThis.QXFRAME9A7C2; if(!q) throw new Error('global missing'); const forbidden=['CoreRegistry','HeadlessRegistry','DOMHeadlessRegistry','ComponentRegistry','BuildingBlockRegistry','defineModule','load','use']; for(const k of forbidden) if(k in q) throw new Error('legacy key '+k); console.log(JSON.stringify({components:Object.keys(q.Components).length,modules:q.ModuleManifest.list().length}));`],{encoding:'utf8'});
+const child=spawnSync(process.execPath,['--input-type=module','-e',`import ${JSON.stringify(pathToFileURL(path.join(root,'src/index.umd.js')).href)}; const q=globalThis.QXFRAME9A7C2; if(!q) throw new Error('global missing'); const forbidden=['CoreRegistry','HeadlessRegistry','DOMHeadlessRegistry','ComponentRegistry','BuildingBlockRegistry','defineModule','load','use']; for(const k of forbidden) if(k in q) throw new Error('legacy key '+k); console.log(JSON.stringify({components:Object.keys(q.Components).length,modules:q.ModuleManifest.list().length}));`],{encoding:'utf8'});
 assert.equal(child.status,0,`src/index.umd.js global entry failed:\n${child.stderr}`);
 const childResult=JSON.parse(child.stdout.trim().split(/\r?\n/).pop());
 assert.equal(childResult.components,40);assert.equal(childResult.modules,72);

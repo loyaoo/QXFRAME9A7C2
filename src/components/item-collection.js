@@ -12,7 +12,7 @@ import { Collection } from '../core/collection.js';
 import { SelectionController } from '../core/selectionController.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { AsyncTask } from '../core/asyncTask.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { SearchState } from '../core/searchState.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { InteractionModality } from '../core/interactionModality.js';
@@ -227,7 +227,7 @@ function create(options) {
     focusSyncScheduler.request(0, 'focusout');
   }
     
-  function interactionPolicy() { return InteractionPolicy.resolve({ disabled: opts.disabled === true, readOnly: opts.readOnly === true }); }
+  function interactionPolicy() { return CapabilityController.resolve({ disabled: opts.disabled === true, readOnly: opts.readOnly === true }); }
   function isComponentDisabled() { return interactionPolicy().disabled; }
   function isReadOnly() { return interactionPolicy().readOnly; }
   function syncInteractionLock() {

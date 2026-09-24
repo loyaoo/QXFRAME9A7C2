@@ -1,5 +1,5 @@
 // Canonical ESM Transfer implementation with direct Pagination/Table dependencies.
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Utils } from '../utils/utils.js';
@@ -191,7 +191,7 @@ function setupTransfer(instance) {
   function targetItems() {
     return targetValues.map(function (value) { return records[value] && records[value].item; }).filter(Boolean);
   }
-  function mutationLocked() { return destroyed || InteractionPolicy.mutationLocked(opts); }
+  function mutationLocked() { return destroyed || CapabilityController.mutationLocked(opts); }
   function selectedValues(list) { return list ? list.getState().values.slice() : []; }
   function ensureOptionalSurfaces() {
     function ensureSelectAll(side) {

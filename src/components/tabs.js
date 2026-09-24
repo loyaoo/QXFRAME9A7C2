@@ -7,7 +7,7 @@ import { IdManager } from '../utils/id.js';
 import { Utils } from '../utils/utils.js';
 import { Collection } from '../core/collection.js';
 import { ActiveItem } from '../core/activeItem.js';
-import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Renderer } from '../core/renderer.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
@@ -255,7 +255,7 @@ function setupTabs(instance) {
     return sourceName !== 'api' && opts.disabled === true;
   }
   function editLocked(meta) {
-    return !(meta && meta.force === true) && (InteractionPolicy.mutationLocked(opts));
+    return !(meta && meta.force === true) && (CapabilityController.mutationLocked(opts));
   }
   function itemIndex(key) { return collection.indexOf(String(key)); }
   function tabId(key) { return root.id + '-tab-' + encodeURIComponent(String(key)).replace(/%/g, '_'); }
@@ -911,7 +911,7 @@ function setupTabs(instance) {
     closeOverflow();
   }));
   scope.add(DOM.listen(addButton, 'click', function (event) {
-    if (InteractionPolicy.mutationLocked(opts)) return;
+    if (CapabilityController.mutationLocked(opts)) return;
     var detail = { action: 'add', items: items.slice(), source: DOM.activationSource(event), reason: 'add-button', originalEvent: event, instance: api };
     if (typeof opts.onBeforeEdit === 'function') {
       var allowed = opts.onBeforeEdit(detail);
