@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `a7b6d55ba1fe755adb9409d045e67f12f211ac54` (PR #65 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-e-popup-facades-20260924`
+- Open PRs at this checkpoint: pending PHASE-E-002 popup facade PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-E-002 — Trigger/Popup facade propagation + overlay naming closeout
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 80%
 
 Why this is current:
 - PHASE-E-001 foundation is merged and green through PR #65 / CI #374 and main CI + Pages #375.
@@ -51,12 +51,24 @@ Scope:
 - do not migrate Modal/Drawer/Image/Loading/Upload direct OverlayRuntime ownership in the same base-API PR unless the change is mechanical and independently gated.
 - preserve all Phase C focus/interaction and Phase D selection behavior.
 
+Implemented in current PHASE-E-002 popup facade pack:
+- PopupComponent forwards `getOverlayController()` and `getMotionController()` through `this.getTrigger()`, so subclasses with custom Trigger adapters still expose the physical controller identities without a second store.
+- PopupFieldComponent forwards the same controller identities through its canonical Trigger.
+- Popover, Tooltip, Dropdown and Select therefore expose the same OverlayController/MotionController objects as their owned Trigger sessions; no logical-open/value authority moved.
+- OverlayComponent now names its existing Modal/Drawer logical family adapter explicitly as `getOverlayFamilyController()` / `adoptOverlayFamilyController()`.
+- legacy `getOverlayController()` / `adoptOverlayController()` remain compatibility aliases for the family adapter; they are not redefined as physical resource ownership.
+- `getOverlayResourceController()` is a distinct accessor reserved for the real Phase E physical OverlayController. It intentionally returns null for Modal/Drawer until their direct OverlayRuntime migration pack lands.
+- Modal/Drawer internals stop calling the ambiguous legacy accessor and use the explicit family-controller names; their open/close behavior and direct OverlayRuntime ownership are otherwise unchanged.
+- `getOverlayRuntime()` remains compatible and will prefer a migrated resource controller's underlying runtime once available.
+- new required `verify:phase-e-popup-facades` covers structural naming plus Chromium identity checks for Popover/Tooltip/Dropdown/Select and Modal/Drawer compatibility.
+- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, popup family, popup-field family, overlay family, platform, modern architecture (181 source files / 40 components / 0 legacy violations), component-base and 40 component contracts.
+
 Next exact step:
-1. audit PopupComponent, PopupFieldComponent and OverlayComponent accessor names plus public usage/tests;
-2. define compatibility-safe logical-controller vs resource-controller getters without changing open/value truth;
-3. implement the smallest base propagation pack and dedicated regression gate;
-4. merge exact-head green and verify main + Pages;
-5. migrate Modal/Drawer direct OverlayRuntime + multi-Transition orchestration in the next Phase E pack.
+1. open/run the PHASE-E-002 popup facade PR from the audited branch;
+2. fix only exact-head Completion/release/browser failures without changing Modal/Drawer direct OverlayRuntime ownership in this PR;
+3. merge only green and verify main release + Pages;
+4. checkpoint PHASE-E-002 as DONE;
+5. migrate Modal/Drawer physical OverlayRuntime plus their multi-Transition orchestration behind OverlayController/MotionController in PHASE-E-003.
 
 ## Current authority snapshot — after Phase A
 
