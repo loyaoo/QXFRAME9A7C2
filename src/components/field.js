@@ -33,6 +33,7 @@ export class FieldComponent extends Component {
 
     canMutate(capabilities = {}) { return !CapabilityController.mutationLocked(this.options, capabilities); }
     canActivate(capabilities = {}) { return !CapabilityController.activationLocked(this.options, capabilities); }
+    canOpen(capabilities = {}) { return CapabilityController.allows('open', CapabilityController.stateFromOptions(this.options), capabilities); }
 
     focus(options) {
         if (this.destroyed || !this.interactionPolicy({ preserveFocusWhileLoading: true }).focusable) return false;
