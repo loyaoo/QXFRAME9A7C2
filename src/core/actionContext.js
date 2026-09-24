@@ -1,5 +1,6 @@
 import { IdManager } from '../utils/id.js';
 import { InteractionDetails } from './interactionDetails.js';
+import { Utils } from '../utils/utils.js';
 
 const SOURCES = Object.freeze(['keyboard', 'pointer', 'touch', 'native', 'programmatic', 'external']);
 const MODALITIES = Object.freeze(['keyboard', 'pointer', 'touch', 'programmatic']);
@@ -44,7 +45,7 @@ function create(reason, options) {
 
 function derive(parent, reason, patch) {
   if (!isContext(parent)) throw new TypeError('[QXFRAME9A7C2] ActionContext.derive requires a parent ActionContext.');
-  var opts = Object.assign({}, patch || {});
+  var opts = Utils.assignOwn({}, patch || {});
   opts.parentActionId = parent.actionId;
   if (opts.scopeId === undefined && parent.scopeId !== undefined) opts.scopeId = parent.scopeId;
   if (opts.ownerId === undefined && parent.ownerId !== undefined) opts.ownerId = parent.ownerId;

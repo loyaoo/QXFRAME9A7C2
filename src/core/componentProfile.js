@@ -1,3 +1,5 @@
+import { Utils } from '../utils/utils.js';
+
 const CAPABILITIES = Object.freeze(['value', 'focus', 'interaction', 'capability', 'motion', 'selection', 'overlay', 'feedback', 'theme', 'tokens', 'form']);
 const CONTROLLERS = Object.freeze(['ValueController', 'FocusController', 'InteractionController', 'CapabilityController', 'MotionController', 'SelectionController', 'OverlayController', 'FeedbackController', 'ThemeController', 'TokenController', 'FormController']);
 const TOP_LEVEL = Object.freeze(['name'].concat(CAPABILITIES, ['ownership', 'dependencies', 'adapter', 'metadata']));
@@ -12,7 +14,7 @@ function freezeValue(value) {
   if (Array.isArray(value)) return Object.freeze(value.map(freezeValue));
   if (!isPlainObject(value)) return value;
   var output = {};
-  Object.keys(value).forEach(function (key) { output[key] = freezeValue(value[key]); });
+  Object.keys(value).forEach(function (key) { if (Utils.safeOwnKey(key)) output[key] = freezeValue(value[key]); });
   return Object.freeze(output);
 }
 

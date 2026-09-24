@@ -1,6 +1,7 @@
 import { Scheduler } from './scheduler.js';
 import { ActionContext } from './actionContext.js';
 import { OperationResult } from './operationResult.js';
+import { Utils } from '../utils/utils.js';
 
 function ensureContext(context, reason) {
   return ActionContext.isContext(context) ? context : ActionContext.create(reason, context || { source: 'programmatic' });
@@ -10,7 +11,7 @@ function normalizeSnapshot(snapshot) {
   if (!snapshot || typeof snapshot !== 'object') throw new TypeError('[QXFRAME9A7C2] ProjectionSnapshot must be an object.');
   var revision = Number(snapshot.revision);
   if (!Number.isInteger(revision) || revision < 0) throw new TypeError('[QXFRAME9A7C2] ProjectionSnapshot revision must be a non-negative integer.');
-  return Object.freeze(Object.assign({}, snapshot, { revision: revision }));
+  return Object.freeze(Utils.assignOwn({}, snapshot, { revision: revision }));
 }
 
 function create(options) {
