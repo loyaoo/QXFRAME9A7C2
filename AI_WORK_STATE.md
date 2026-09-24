@@ -2,124 +2,74 @@
 
 > Persistent engineering checkpoint for timeout recovery, context compression, model changes and new conversations.
 > Read `AGENTS.md` first. This file records execution state only; architecture belongs in the master handbook.
-> Git / PR / CI facts override stale text here. Reconcile this file before continuing if they differ.
+> Git / PR / CI facts override stale text here. If they differ, reconcile this file before continuing.
+> This file must contain current truth only. Superseded findings belong in DONE evidence, not in CURRENT.
 
 ## Repository checkpoint
 
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
-- Phase A kickoff main: `b54e8be325498b680df7059ee53929d40caf13b0`
+- Current repository HEAD: `f8f5047d76f8d9978284d3cb62508e9188c20051`
 - Last code-affecting main commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2` (PR #48 merge)
 - Current branch: `main`
-- Bootstrap PR: #46 merged
+- Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green PR CI: run #315 / `35953604691` (PR #48)
-- Latest green main CI + Pages: run #316 / `35953925660`, attempt 2, for merge `01875c583fe99c47ee249a4e9eeb6e86304f23f2`
-- Controller migration implementation progress: 18% (PHASE-A-002 authority integration merged and fully green; next protocol adoption batch ready; no component files changed)
+- Latest green Controller PR CI: #315 / `35953604691` (PR #48)
+- Latest green main CI + Pages: #316 / `35953925660`, attempt 2
+- Controller migration implementation progress: 18%
+- Current Phase: Phase A
+- Current Task: `PHASE-A-003`
 
 ## CURRENT
 
-### PHASE-A-001 — Baseline inventory and Shared Protocol foundation
-Status: DONE
+### PHASE-A-003 — EnvironmentPort / Diagnostics / ComponentProfile authority adoption
+Status: READY
+Task progress: 0%
 
-Merge / CI evidence:
-- PR #47 merged to `main`;
-- merge commit: `51b7f317037fc538beaadc6f710da077a8429d0f`;
-- PR CI #312 / `35952642035`: success (Completion audit, Full release verification, npm pack, standalone docs demo, artifact upload);
-- earlier PR CI #309/#310 exposed 3 source-side prototype-safety violations; the audit gate was not weakened and the source was corrected;
-- main CI + Pages #313 / `35952965100`: success, including release artifact build/upload and Pages deployment.
+Why this is current:
+- `PHASE-A-001` baseline inventory + Shared Protocol foundation is complete.
+- `PHASE-A-002` Shared Protocol authority integration is complete and green on PR + main.
+- Shared Protocol primitives now exist; the next work is adoption into existing authorities, not recreating those primitives and not starting direct picker-family migration yet.
 
-Prerequisites:
-- OPS-001 repository cleanup merged green in PR #46;
-- master handbook is present and complete;
-- AGENTS resume protocol is active;
-- obsolete migration/stage/audit documents are removed from the active tree;
-- legacy HOTFIX6 evidence still required by release gates lives only under `tools/fixtures/legacy-hotfix6/**`.
-
-First work package:
-1. read `AGENTS.md`, this checkpoint, and the master handbook;
-2. re-query current main HEAD / open PRs / latest CI and reconcile this file if newer work exists;
-3. execute handbook Phase A baseline inventory against current source;
-4. map existing authorities before creating any new Controller;
-5. freeze the initial owner/action/value/focus/overlay/form/token inventory;
-6. only then begin Shared Protocol Layer implementation.
-
-Primary first-wave components:
-- DatePicker
-- TimePicker / TimePanel
-- ColorPicker
-- Select
-- TreeSelect
-- Cascader
-- Collapse (autosize Motion)
-
-Frozen Phase A authority inventory:
-- Action/event metadata: `InteractionDetails`, `OpenStateBridge`, logical events. Preserve them; add ActionContext/action IDs and structured OperationResult above them.
-- Value ownership: `StateController -> ValueDraft` is the existing value authority used by the first-wave components. Preserve it; ControllableStateCore must evolve controlled/external ownership rather than duplicate committed value.
-- Logical ownership: `LogicalOwnership` already owns parent/child logical nodes and bubbling. Preserve node authority; add a shared tree/registry facade for event/root resolution and descendant queries.
-- Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardNavigation`, `RovingProjection`, `ActiveItem` are existing authorities. Future FocusController must compose these, not replace them.
-- Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer`, `PopupSurface` are existing authorities. OverlayController must not own public open state.
-- Form: `FormBridge` is the native field/FormData/reset carrier authority. FormController will consume it; no second hidden-carrier implementation.
-- Theme/token: `Config` owns root/scoped theme and token projection today. Theme/Token Controllers must evolve it; catalog enforcement is still missing.
-- Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem`, `TableModel` own current selection/collection behavior. `Collection.mutationVersion` is local stale protection, but there is no shared DataRevision protocol yet.
-- Projection/scheduling: `Scheduler` and `DOMProjection` are mature primitives, but there is no revision-aware ProjectionSnapshot/ProjectionScheduler stale gate yet.
-- Motion: `MotionCore`, `Transition`, `TransitionGroup` remain the low-level motion authority; no second generation counter may be introduced.
-- Environment: core/components still resolve `globalThis.document/window` ad hoc; no shared EnvironmentPort exists.
-- Diagnostics: `PerformanceDiagnostics` covers resource balance only; semantic duplicate-owner/stale-action diagnostics are not yet implemented.
-- Component capability declaration: `ComponentContracts` validates public options, but no `ComponentProfile` capability/ownership schema exists.
-
-Completed in current code batch:
-- added `ActionContext` + causal action IDs/source/reason/modality snapshots;
-- added structured `OperationResult` statuses;
-- added metadata-only `ControllableStateCore` ownership/revision/request lifecycle without duplicating committed value;
-- added `DataRevision` stable-key revision refs;
-- added `EnvironmentPort` with observer adapter validation;
-- added revision-aware `ProjectionScheduler` over existing `Scheduler`;
-- added stable-code semantic `Diagnostics`;
-- added `ComponentProfile` schema;
-- added `LogicalOwnerTree` facade over existing `LogicalOwnership`;
-- evolved existing `InteractionModality` authority to expose touch/programmatic modalities and `InputModality` alias;
-- added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
-
-Completed in current authority-integration batch:
-- `Collection` now uses `DataRevision` as its stale-transaction revision authority; the private `mutationVersion` mirror is removed. Additive collection refs expose stable key + data revision without changing item/value behavior.
-- `ValueDraft` no longer owns a separate `controlled` boolean; `ControllableStateCore` owns controlled/external-vs-internal and pending request metadata. `ValueDraft` remains the only committed/draft value owner.
-- `StateController.createValueBinding` exposes the delegated ownership snapshot without adding value state.
-- `verify:shared-protocol` now covers Collection stale refs/reentrancy plus controlled proposal/external-sync/uncontrolled transition behavior through ValueDraft and StateController.
-- ProjectionScheduler integration was evaluated against current `DOMProjection` / `RovingProjection` / keyboard visual projection. Those authorities are synchronous and do not currently own a competing async revision counter; inserting ProjectionScheduler now would create parallel scheduling rather than replace an owner. Deferred until a Controller projection snapshot actually replaces an async/stale-prone path.
-
-PR / CI evidence:
-- PR #48 merged;
-- merge commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2`;
-- PR CI #315 / `35953604691`: success;
-- main CI + Pages #316 / `35953925660`: success on attempt 2, including release + Pages.
-- attempt 1 failed only `tabs-indicator-measured` with empty inline width while the same code passed PR #315; retry of the identical main commit passed all browser checks. Recorded as a browser timing flake; no framework/test gate was changed.
+Scope:
+- adopt `EnvironmentPort` into existing environment/document/window/observer authority paths where it replaces ad-hoc access without changing public behavior;
+- adopt `Diagnostics` into existing duplicate-owner/stale-action/authority-conflict observation paths where a real owner already exists;
+- adopt `ComponentProfile` into existing component/family capability declarations without creating a second option/schema truth;
+- preserve current `ValueDraft`, `LogicalOwnership`, focus/navigation, overlay, form, theme/token, selection/data and Motion authorities;
+- do not add component-name dispatch;
+- do not introduce direct DatePicker/TimePicker/ColorPicker behavior changes in this task unless an authority adoption requires a minimal compatibility fix.
 
 Next exact step:
-- start PHASE-A-003 on a fresh branch from current main: adopt EnvironmentPort, Diagnostics, and ComponentProfile through existing core/runtime authorities before direct component migration. First inspect ObserverHub, Component/ComponentRuntime, and semantic diagnostics insertion points; replace existing environment/metadata paths where possible instead of adding parallel owners.
+1. re-query current main / open PRs / CI;
+2. create a fresh implementation branch from current main;
+3. inspect actual consumers of `EnvironmentPort`, `Diagnostics` and `ComponentProfile`;
+4. select the smallest authority-adoption slice that removes an ad-hoc path instead of adding a parallel path;
+5. checkpoint this file before modifying the selected authorities.
 
-### PHASE-A-002 — Shared Protocol authority integration
-Status: DONE
+## Current authority snapshot — after PHASE-A-002
 
-Merge / CI evidence:
-- PR #48 merged;
-- merge commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2`;
-- PR CI #315 / `35953604691`: success;
-- main CI + Pages #316 / `35953925660`: success on attempt 2; attempt 1 was the isolated Tabs indicator timing flake noted above.
+This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
-Scope guard:
-- completed branch: `refactor/phase-a-authority-integration-20260924`
-- code batch commit: `f5b013cb5e8dc9f39e75d9ba91895b3a6feaf3d2`
-- no direct picker/component migration yet;
-- no second committed/controlled truth;
-- do not change public controlled/uncontrolled semantics;
-- prefer replacing private revision/ownership metadata with Shared Protocol authority rather than mirroring it;
-- if ProjectionScheduler cannot replace an existing private projection revision safely in this batch, record it as deferred instead of adding parallel scheduling.
+- Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
+- Value ownership: `StateController -> ValueDraft` remains the committed/draft value authority. `ControllableStateCore` owns controlled/external-vs-internal and pending-request metadata within that path; there is no second committed value.
+- Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
+- Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardNavigation`, `RovingProjection` and `ActiveItem` remain the existing authorities. FocusController migration has not started.
+- Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
+- Form: `FormBridge` remains native field/FormData/reset carrier authority.
+- Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
+- Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem` and `TableModel` remain selection/collection authorities. `Collection` now uses shared `DataRevision` for stale-transaction revision ownership.
+- Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
+- Motion: `MotionCore`, `Transition` and `TransitionGroup` remain the low-level motion authority; no parallel generation counter may be introduced.
+- Environment: shared `EnvironmentPort` exists and validates observer adapters. Adoption into remaining ad-hoc `globalThis.document/window` consumers is pending.
+- Diagnostics: semantic `Diagnostics` with stable codes exists. Broader adoption into existing authority conflict/stale-owner paths is pending.
+- Component capability declaration: `ComponentProfile` schema exists. Adoption into existing component/family capability declarations is pending.
+- Input modality: existing `InteractionModality` remains the authority and now exposes touch/programmatic modalities plus the `InputModality` alias.
+- Shared Protocol verification: `verify:shared-protocol` covers the foundation plus Collection/ValueDraft/StateController integration.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
-These are real current QA targets for the Controller migration and must not be mistaken for already-completed work:
+These are current QA targets for later Controller/family migration. They are not PHASE-A-003 scope unless an authority adoption directly touches them.
 
 - Picker-family control/draft/preview display timing is inconsistent across DatePicker, TimePicker, ColorPicker and related popup fields.
 - Escape must cancel uncommitted Picker draft; Enter/explicit Confirm must own confirmation where the profile defines it.
@@ -131,19 +81,45 @@ These are real current QA targets for the Controller migration and must not be m
 
 ## DONE / VERIFIED EXISTING
 
+### PHASE-A-002 — Shared Protocol authority integration
+Status: DONE
+Evidence:
+- PR #48 merged
+- merge commit `01875c583fe99c47ee249a4e9eeb6e86304f23f2`
+- PR CI #315 / `35953604691`: success
+- main CI + Pages #316 / `35953925660`: success on attempt 2
+- attempt 1 failed only `tabs-indicator-measured` with an empty inline width while the identical code passed PR #315; retry of the identical main commit passed. Treat this as a recorded browser timing flake, not a framework semantic failure.
+Outcome:
+- `Collection` now uses `DataRevision` as stale-transaction revision authority.
+- `ValueDraft` delegates controlled/external ownership and pending-request metadata to `ControllableStateCore`.
+- `StateController.createValueBinding` exposes delegated ownership state without adding a second value truth.
+- `verify:shared-protocol` covers Collection stale refs/reentrancy plus controlled proposal/external sync/uncontrolled transition behavior.
+- ProjectionScheduler adoption was explicitly deferred because current DOM/Roving projection paths are synchronous and no competing async revision owner exists to replace.
+
+### PHASE-A-001 — Baseline inventory + Shared Protocol foundation
+Status: DONE
+Evidence:
+- PR #47 merged
+- merge commit `51b7f317037fc538beaadc6f710da077a8429d0f`
+- PR CI #312 / `35952642035`: success
+- main CI + Pages #313 / `35952965100`: success
+Outcome:
+- existing authorities were mapped before adding Controller abstractions;
+- added `ActionContext`, `OperationResult`, `ControllableStateCore`, `DataRevision`, `EnvironmentPort`, `ProjectionScheduler`, `Diagnostics`, `ComponentProfile`, `LogicalOwnerTree`, `InputModality` alias and Shared Protocol exports;
+- no direct component migration was performed.
+
 ### OPS-001 — AI persistent state + repository documentation cleanup
 Status: DONE
 Evidence:
 - PR #46 merged
 - merge commit `a459e28f2486ce89615322c6e49094fddd8464a4`
-- PR CI run #307 succeeded
-- main CI + GitHub Pages run #308 succeeded
-- added `AGENTS.md`, `AI_WORK_STATE.md`, and the complete 2244-line master handbook
-- removed 47 obsolete historical migration/stage/audit files
-- retained four still-required HOTFIX6 compatibility artifacts only as test fixtures under `tools/fixtures/legacy-hotfix6/**`
-- canonical docs navigation no longer links to numbered Stage pages
-
-These items were completed before the Controller program. Do not repeat their original full audit just to rediscover them; only check migration impact when the new architecture touches them.
+- PR CI #307: success
+- main CI + Pages #308: success
+Outcome:
+- added `AGENTS.md`, `AI_WORK_STATE.md`, and the complete master handbook;
+- removed obsolete historical migration/stage/audit files;
+- retained required HOTFIX6 compatibility artifacts only as `tools/fixtures/legacy-hotfix6/**`;
+- removed numbered Stage navigation from canonical docs.
 
 ### CTRL-LEGACY-001 — Cascader controlled value
 Status: DONE
@@ -163,7 +139,9 @@ Status: DONE
 Evidence:
 - PR #41 merged
 - merge commit `20327c0d717a3a56a45e098d756e40eb9ae8c743`
-Note: controlled ownership is done; rapid autosize animation reversal remains an active Motion issue.
+Note:
+- controlled ownership is done;
+- rapid autosize animation reversal remains an active Motion issue.
 
 ### CTRL-LEGACY-004 — Dropdown controlled value
 Status: DONE
@@ -176,22 +154,16 @@ Status: DONE
 Evidence:
 - PR #45 merged
 - merge commit `a7702a2a66a2f201d1152c23c5d20ff1b1e9607e`
-- upload lifecycle remains the runtime status/progress authority
+- UploadLifecycle remains runtime status/progress authority.
 
 ### FOCUS-LEGACY-001 — prior DatePicker/TimePanel focus cleanup
 Status: VERIFIED_EXISTING, NOT SUFFICIENT FOR CURRENT QA
 Evidence:
 - PR #27 merged
 - merge commit `6558fc5d1d008725a43a40fa869a0f9ba69cd367`
-Important:
-- do not repeat the old investigation from scratch;
-- current QA reports remaining extra/invisible TimePanel focus stops, so reopen only the specific remaining FocusController/region ownership defect.
-
-### RELEASE-LEGACY-001 — Pages/release baseline
-Status: VERIFIED_EXISTING
-Evidence:
-- main CI + Pages run #308 (`35949774749`) succeeded for cleanup merge `a459e28f2486ce89615322c6e49094fddd8464a4`.
-- On resume, always query current GitHub Actions rather than assuming this run remains the latest.
+Rule:
+- do not repeat the old investigation from zero;
+- current QA reports remaining TimePanel focus defects, so reopen only the specific remaining FocusController/region ownership issue.
 
 ## DO NOT REDO
 
@@ -200,9 +172,12 @@ Unless a current regression or architecture migration invalidates the evidence:
 - Do not redo the original 17-component controlled/defaultValue survey from zero.
 - Do not recreate the completed ESM/src-to-dist migration as a new migration project.
 - Do not restore `src/modules`, runtime Registry dependency lookup or old monolithic source architecture.
+- Do not recreate Shared Protocol primitives already landed in PHASE-A-001.
+- Do not re-run PHASE-A-002 authority ownership analysis from zero; only inspect impact when PHASE-A-003 touches those authorities.
 - Do not reintroduce numbered Stage documentation as a second canonical docs tree.
 - Do not re-open completed controlled semantics merely because a new Controller is being introduced; migrate the existing contract and test it.
 - Do not treat deleted historical audit/log files as active requirements. Git history is the archive.
+- Do not convert the recorded #316 attempt-1 Tabs timing flake into a framework change unless it reproduces with evidence.
 
 ## PAUSED
 
@@ -227,18 +202,10 @@ None.
 
 ## Checkpoint maintenance rule
 
-Keep this file compact:
-- CURRENT may be detailed enough to resume without re-investigation.
-- DONE retains Task ID + outcome + PR/commit/test evidence, not full historical prose.
-- Move superseded investigation details to Git/PR history rather than growing this file indefinitely.
-
-
-### PHASE-A-003 — Environment / Diagnostics / Profile authority adoption
-Status: READY
-
-Scope guard:
-- no direct picker/component migration yet;
-- EnvironmentPort should replace ad hoc environment constructor/global resolution inside an existing core authority, not create a second observer/scheduler owner;
-- Diagnostics adoption must use stable codes and remain observational; it must not mutate business state;
-- ComponentProfile adoption must attach capability metadata to existing Component/ComponentRuntime paths without runtime component-name dispatch;
-- preserve static ESM and all existing public component behavior.
+Keep this file compact and non-contradictory:
+- `CURRENT` contains exactly one active/ready Task ID plus one exact next step.
+- Current authority facts belong only in `Current authority snapshot`.
+- When a gap is resolved, replace its old current-state wording; do not leave both “does not exist” and “added” statements in active sections.
+- `DONE` retains Task ID + outcome + PR/commit/test/CI evidence, not the full historical investigation.
+- Historical findings that are no longer current truth move to DONE evidence or Git/PR history.
+- Never append a second CURRENT task at the bottom of the file.
