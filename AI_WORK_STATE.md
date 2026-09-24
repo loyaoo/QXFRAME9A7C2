@@ -10,15 +10,15 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `599076ed92b88b2464e45b3a926acbb9324ce757` (PR #56 merge; PR #57 Selection/Transfer merge is `fb4e5fb5ee8ba8644916431d431de5e18e1edd5a`)
-- Current branch: `refactor/phase-c-interaction-capability-composite-20260924`
-- Open PRs at this checkpoint: pending PHASE-C-004 composite PR
+- Last code-affecting main commit: `75d07e96d6648ee2f7a695b05a722b1252817383` (PR #58 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` only; 67 stale/superseded non-main branches are no longer present
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #344 / `35972507182` (PR #57); PR #56 CI #343 / `35972148887` also green
-- Latest green main CI + Pages: #346 / `35973772633`
-- Controller migration implementation progress: 90%
+- Latest green Controller PR CI: #358 / `35976568725` (PR #58)
+- Latest green main CI + Pages: #359 / `35977068529`
+- Controller migration implementation progress: 93%
 - Current Phase: Phase C acceptance closeout (Phase D first two packs already landed)
 - Current Task: `PHASE-C-004`
 
@@ -26,7 +26,7 @@
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
 Status: IN_PROGRESS
-Task progress: 65%
+Task progress: 75%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -50,24 +50,22 @@ Scope:
 - preserve existing ValueController, SelectionController, OpenStateBridge/overlay and FocusController authorities;
 - turn `FOUR_UNIFICATIONS_ACCEPTANCE.md` C-partial rows into signed-off evidence only after source ownership + browser regressions + exact-head CI exist.
 
-Implemented in current PHASE-C-004 first composite pack:
-- WheelPanel creates one InteractionController scope and one CapabilityController snapshot owner; existing FocusController/KeyboardNavigation remains the sole DOM keydown listener.
-- WheelPanel routes arrow/Home/End/Page semantics through InteractionController and uses CapabilityController for navigate/select decisions, preserving readOnly virtual navigation without value mutation.
-- TimePanel owns a CapabilityController for mutation sinks and delegates semantic keyboard ownership to its canonical WheelPanel interaction scope instead of creating a parallel key listener.
-- Calendar and PeriodPanel create InteractionController + CapabilityController owners; grid/title semantic actions flow through the interaction scope while select mutation sinks use one capability snapshot.
-- readOnly keeps navigation/title drill available while blocking value selection; disabled blocks navigation; loading remains focus-preserving/non-selecting according to InteractionPolicy semantics.
-- public `handleKeydown()` paths also pass through InteractionController, so hosted DatePicker/TimePicker delegation receives repeat suppression and IME handling without another DOM listener.
-- new required `verify:phase-c-composite` performs structural ownership checks plus Chromium behavior checks for readOnly navigation/no mutation, loading/busy navigation-without-mutation, disabled blocking, IME pass-through, and repeat-Enter suppression.
-- sandbox gates pass: `verify:focus-controller`, `verify:modern-architecture`, `verify:picker-family`, `verify-source-esm-browser`, and `verify:phase-c-composite`.
+Completed PHASE-C-004 first composite pack (PR #58):
+- WheelPanel owns one InteractionController scope and one CapabilityController snapshot; FocusController/KeyboardNavigation remains the sole DOM keydown listener.
+- TimePanel owns CapabilityController mutation authority and delegates semantic keyboard ownership to WheelPanel instead of adding another key listener.
+- Calendar and PeriodPanel own InteractionController + CapabilityController and route grid/title semantics through semantic actions.
+- InteractionController owns semantic-action-to-key back-projection through `keyboardKeyForAction()`; component-local duplicate key projection is forbidden by the required gate.
+- DatePicker/TimePicker propagate disabled/readOnly/loading/busy into their inner Calendar/PeriodPanel/TimePanel/WheelPanel capability state.
+- readOnly and loading/busy retain safe navigation/browsing without selection mutation; disabled blocks navigation; IME and repeat activation rules are covered.
+- required `verify:phase-c-composite` passed in PR #58 CI #358 / `35976568725`.
+- merge commit `75d07e96d6648ee2f7a695b05a722b1252817383`; main release + Pages #359 / `35977068529` succeeded.
 
 Next exact step:
-1. open the PHASE-C-004 first composite PR from the current nine-file audited diff;
-2. run full Completion audit + release/browser/package CI and fix only real failures without weakening Focus/Interaction/Capability ownership gates;
-3. merge only the exact green head and verify main CI + Pages;
-4. then continue PHASE-C-004 with popup-hosted Select/TreeSelect/Cascader and standalone Tags/Table capability+interaction ownership;
-5. update `FOUR_UNIFICATIONS_ACCEPTANCE.md` only after exact-head CI evidence exists; resume Phase D only after Phase C is fully signed off.
-
-## Current authority snapshot — after Phase A
+1. start the PHASE-C-004 second pack with Select as the reference popup-hosted composite;
+2. replace Select's component-local physical-key business map with one InteractionController scope while keeping FocusController/KeyboardNavigation as the only DOM keydown owner;
+3. make PopupField open/expand permission use the semantic `open` capability so readOnly/loading can browse without mutation, while disabled still blocks;
+4. add required Chromium regression coverage for readOnly/loading/disabled, IME, repeat activation, native caret preservation and controlled proposal semantics;
+5. after Select is exact-head green, apply the verified pattern to TreeSelect/Cascader, then close Tags/Table in a higher-risk final Phase C pack.
 
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
@@ -97,6 +95,20 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-C-004A — Date/Time composite Interaction + Capability owners
+Status: DONE
+Evidence:
+- PR #58 merged
+- merge commit `75d07e96d6648ee2f7a695b05a722b1252817383`
+- PR CI #358 / `35976568725`: success
+- main CI + Pages #359 / `35977068529`: success
+Outcome:
+- WheelPanel / Calendar / PeriodPanel have explicit InteractionController + CapabilityController ownership without a second DOM keyboard listener.
+- TimePanel has local CapabilityController authority and delegates interaction to its canonical WheelPanel scope.
+- DatePicker / TimePicker propagate busy/loading capability state into inner composite panels.
+- readOnly/loading browsing, mutation blocking, disabled blocking, IME pass-through and repeat activation suppression are browser-gated.
+- semantic action-to-key projection is centralized in InteractionController.
 
 ### PHASE-C-FOUNDATION — InteractionController + CapabilityController
 Status: DONE
