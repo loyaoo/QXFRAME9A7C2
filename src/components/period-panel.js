@@ -3,7 +3,7 @@ import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { TemporalGrid } from '../core/temporalGrid.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
-import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { FocusController } from '../core/focusController.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { DOMBinding } from '../core/domBinding.js';
@@ -327,12 +327,12 @@ function create(options) {
       select(entry.date, { source: DOM.activationSource(payload.event), reason: 'cell', originalEvent: payload.event });
       if (!hostedVirtualFocus) DOM.focusElement(root);
     });
-    keyboardRegion = KeyboardRegion.create({
+    keyboardRegion = FocusController.create({
       root: root,
       hosted: false,
       disabled: opts.disabled === true,
       navigation: {
-        handlers: KeyboardRegion.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' '], onKeydown)
+        handlers: FocusController.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' '], onKeydown)
       },
       onEnter: function (detail) {
         var key = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
@@ -357,7 +357,7 @@ function create(options) {
   }
   function bindVirtualFocus(controller, hosted) {
     var currentKey = activeValue ? DateUnit.key(activeValue, unit, 0) : null;
-    var binding = KeyboardRegion.bindVirtualFocus({
+    var binding = FocusController.bindVirtualFocus({
       controller: controller,
       previousDomain: virtualFocusDomain,
       keyboard: keyboard,
@@ -429,7 +429,7 @@ function create(options) {
     focus: function () { return hostedVirtualFocus ? false : !!(root && DOM.focusElement(root)); },
     handleKeydown: onKeydown,
     bindVirtualFocus: bindVirtualFocus,
-    getKeyboardRegion: function () { return keyboardRegion; },
+    getKeyboardRegion: function () { return keyboardRegion && keyboardRegion.getKeyboardRegion ? keyboardRegion.getKeyboardRegion() : keyboardRegion; },
     getVirtualFocusDomain: function () { return virtualFocusDomain; },
     updateOptions: updateOptions,
     getState: function () { var hoverValue = hoveredKey ? items.filter(function (entry) { return entry.key === hoveredKey; }).map(function (entry) { return clone(entry.date); })[0] || null : null; return Object.freeze({ unit: unit, value: clone(value), viewValue: clone(viewValue), activeValue: clone(activeValue), hoverValue: hoverValue, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed }); },
