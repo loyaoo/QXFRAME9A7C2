@@ -201,6 +201,7 @@ function create(options) {
       root: root,
       hosted: false,
       disabled: opts.disabled === true,
+      activeRegion: 'calendar',
       navigation: {
         handlers: FocusController.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' '], onKeydown)
       },
@@ -411,12 +412,9 @@ function create(options) {
     return null;
   }
   function bindVirtualFocus(controller, hosted) {
-    var binding = FocusController.bindVirtualFocus({
+    var binding = keyboardRegion.bindVirtualFocus({
       controller: controller,
       previousDomain: virtualFocusDomain,
-      keyboard: keyboard,
-      region: keyboardRegion,
-      root: root,
       hosted: hosted,
       activeKey: activeItem.activeKey,
       activation: { reason:'calendar-bind', ensureVisible:false },
