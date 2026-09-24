@@ -7,8 +7,7 @@ import { TreeModel } from '../core/treeModel.js';
 import { SearchState } from '../core/searchState.js';
 import { ItemSchema } from '../core/itemSchema.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
-import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
-import { Selection } from '../core/selection.js';
+import { SelectionController } from '../core/selectionController.js';
 import { Disclosure } from '../core/disclosure.js';
 import { AsyncTaskGroup } from '../core/asyncTaskGroup.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
@@ -136,7 +135,13 @@ function setupTreeRuntime(instance) {
           getItems: itemsOf,
           getParentKey: opts.getParentKey
         });
-        var checkHierarchy = HierarchicalSelection.create({
+        var selectionController = SelectionController.create({
+          channels: {
+            selected: { multiple: opts.multiple === true, value: opts.value !== undefined ? opts.value : opts.defaultValue },
+            checked: { multiple: true, value: Array.isArray(opts.checkedKeys) ? opts.checkedKeys.map(String) : [] }
+          }
+        });
+        var checkHierarchy = selectionController.createHierarchy({
           childrenOf: function (record) { return record && model ? model.getChildren(record.key) : []; },
           keyOf: function (record) { return record && record.key; },
           disabledOf: function (record) { return !record || !checkableOf(record.item, record.index); }
@@ -160,7 +165,7 @@ function setupTreeRuntime(instance) {
         }
     
         var disclosure = Disclosure.create({ value: initialExpandedKeys() });
-        var checkedSelection = Selection.create({ multiple: true, value: Array.isArray(opts.checkedKeys) ? opts.checkedKeys.map(String) : [] });
+        var checkedSelection = selectionController.getChannel('checked');
     
         function expandedKeys() { return disclosure.getState().value; }
         function expandedSet() { return new Set(expandedKeys()); }
@@ -769,6 +774,8 @@ function setupTreeRuntime(instance) {
     
         list = ItemCollection.create({
           ownerPrefix: 'tree',
+          selectionController: selectionController,
+          selectionChannel: 'selected',
           container: opts.container,
           elements: opts.elements,
           items: rows(),
@@ -948,7 +955,9 @@ function setupTreeRuntime(instance) {
           if (model) model.destroy();
           model = null;
           disclosure.destroy();
-          checkedSelection.destroy();
+          selectionController.destroy();
+          checkedSelection = null;
+          selectionController = null;
           loadedChildren.clear(); loadingKeys.clear(); loadedKeys.clear(); indeterminateKeys.clear();
           dragSession = null; root = null;
           return true;
@@ -967,7 +976,7 @@ function setupTreeRuntime(instance) {
           focusFirst:function(){return destroyed?false:list.focusFirst();}, focusLast:function(){return destroyed?false:list.focusLast();}, focusSelected:function(){return destroyed?false:list.focusSelected();}, focusWrap:function(){return destroyed?false:list.focusWrap();},
           scrollTo:scrollTo, prepareOpen:prepareOpen, handleKeydown:function(event){return destroyed?false:(handleTreeKeydown(event)||list.handleKeydown(event));}, handleExpandCollapseKeydown:function(event){return destroyed?false:handleExpandCollapseKeydown(event);},
           bindVirtualFocus:function(controller){return destroyed||!list||!list.bindVirtualFocus?false:list.bindVirtualFocus(controller);}, getVirtualFocusDomain:function(){return destroyed||!list||!list.getVirtualFocusDomain?null:list.getVirtualFocusDomain();},
-          applyOptions:applyOptions, getState:getState, getModel:function(){return model;}, getDisclosure:function(){return disclosure;}, getCheckedSelection:function(){return checkedSelection;}, getList:function(){return list;}, getRootElement:function(){return root;},
+          applyOptions:applyOptions, getState:getState, getModel:function(){return model;}, getDisclosure:function(){return disclosure;}, getCheckedSelection:function(){return checkedSelection;}, getSelectionController:function(){return selectionController;}, getList:function(){return list;}, getRootElement:function(){return root;},
           getItem:function(key){return model?model.getItem(key):null;}, getRecord:function(key){return model?model.getRecord(key):null;}, getVisibleItems:function(){return model?visibleRecords().map(function(record){return record.item;}):[];},
           getCheckedKeys:function(leafOnly){return checkedSelection.values.map(String).filter(function(key){var record=model&&model.getRecord(key);return !!record&&(!leafOnly||!model.hasChildren(key));});},
           getCheckedItems:function(leafOnly){return this.getCheckedKeys(leafOnly).map(function(key){return model.getItem(key);}).filter(Boolean);}, getLoadedKeys:function(){return Array.from(loadedKeys);}, dispose:disposeRuntime
@@ -979,6 +988,11 @@ const runtimeState = new WeakMap();
 function runtimeFor(instance) { const runtime = runtimeState.get(instance); if (!runtime) throw new Error('[QXFRAME9A7C2] Tree is not rendered.'); return runtime; }
 
 export class Tree extends Component {
+  static profile = Object.freeze({
+    name:'Tree',
+    selection:Object.freeze({ channels:Object.freeze(['selected','checked']), hierarchical:true }),
+    ownership:Object.freeze({ selection:'SelectionController' })
+  });
   static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, size:'md' });
   static immutableOptions = Object.freeze(['container']);
   static createDefaultDOM = ItemCollection.createDefaultDOM;
@@ -1020,6 +1034,7 @@ export class Tree extends Component {
   getModel(){return runtimeFor(this).getModel();}
   getDisclosure(){return runtimeFor(this).getDisclosure();}
   getCheckedSelection(){return runtimeFor(this).getCheckedSelection();}
+  getSelectionController(){return runtimeFor(this).getSelectionController();}
   getList(){return runtimeFor(this).getList();}
   getRootElement(){return runtimeFor(this).getRootElement();}
   getItem(key){return runtimeFor(this).getItem(key);}

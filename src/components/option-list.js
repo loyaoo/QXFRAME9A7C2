@@ -145,6 +145,8 @@ function create(options) {
       });
     },
     getList: function () { return list; },
+    getSelection: function () { return list && list.getSelection ? list.getSelection() : null; },
+    getSelectionController: function () { return list && list.getSelectionController ? list.getSelectionController() : null; },
     getItemElement: function (key) { return list ? list.getItemElement(key) : null; },
     getRootElement: function () { return list ? list.getRootElement() : null; },
     getRefs: function () { return list && list.getRefs ? list.getRefs() : null; },
