@@ -26,7 +26,7 @@
 
 ### PHASE-F-004 — state cascade / specificity ownership closeout
 Status: IN_PROGRESS
-Task progress: 20%
+Task progress: 65%
 
 Why this is current:
 - PHASE-F-003 is merged through PR #72; exact-head CI #397 / `36012650779` and main release + Pages #398 / `36013188043` are green.
@@ -41,12 +41,19 @@ Frozen impact map:
 - preserve the existing keyboard focus-visible/modality contract; this pack does not redesign focus visuals.
 - no `@layer`, `:is()`, `:where()`, new theme runtime, new token family or visual redesign.
 
+Implemented in current PHASE-F-004 pack:
+- Picker footer width and TimePicker footer-action composition now live in their canonical Picker/TimePicker sections.
+- Table filter popup/options/search/action CSS moved unchanged into the Table owner section before Transfer.
+- InputGroup item stacking now consumes the existing private `--_qxframe9a7c2-group-stack` channel; the duplicate late hover/focus z-index patch is removed.
+- Card keeps `overflow:visible` only on its canonical root; direct-child cover corner correction now lives beside Card cover rules.
+- the generic late `unlayered overrides` patch bucket is removed while the existing unified keyboard focus/modality contract is preserved.
+- required `verify:phase-f-state-cascade` guards owner placement, duplicate reopening and forbidden late-patch recovery.
+
 Next exact step:
-1. relocate the classified late cascade patches to their component owners without changing declarations;
-2. add `verify:phase-f-state-cascade` to prevent a new tail patch bucket and enforce owner ordering;
-3. open PHASE-F-004 PR and require exact-head full release/browser/package CI;
-4. merge only exact-head green and verify main + Pages;
-5. continue Phase F with remaining selector duplication/specificity normalization.
+1. open PHASE-F-004 PR and run exact-head full release/browser/package CI;
+2. fix only real state-cascade/regression failures without restoring a late override bucket;
+3. merge only exact-head green and verify main + Pages;
+4. continue Phase F with repeated-selector specificity normalization.
 
 ## Current authority snapshot — after Phase A
 
