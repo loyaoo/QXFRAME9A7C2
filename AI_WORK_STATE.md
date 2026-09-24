@@ -10,13 +10,13 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Phase A kickoff main: `b54e8be325498b680df7059ee53929d40caf13b0`
 - Last code-affecting main commit: `51b7f317037fc538beaadc6f710da077a8429d0f` (PR #47 merge)
-- Current branch: `main`
+- Current branch: `refactor/phase-a-authority-integration-20260924`
 - Bootstrap PR: #46 merged
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #312 / `35952642035` (PR #47)
 - Latest green main CI + Pages: run #313 / `35952965100` for merge `51b7f317037fc538beaadc6f710da077a8429d0f`
-- Controller migration implementation progress: 10% (Phase A authority inventory + first Shared Protocol infrastructure batch merged and fully green; second authority-integration batch next; no component business behavior changed)
+- Controller migration implementation progress: 11% (PHASE-A-002 authority integration started from green main; no component business behavior change planned)
 
 ## CURRENT
 
@@ -83,10 +83,10 @@ Completed in current code batch:
 - added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
 
 Next exact step:
-- start PHASE-A-002 on a fresh branch from current main: integrate the Shared Protocol into existing authorities rather than components. First targets: make DataRevision the stale-transaction revision authority for Collection, make ControllableStateCore the ownership/request metadata authority behind StateController/ValueDraft without adding a second value truth, and connect ProjectionScheduler only where an existing projection authority can adopt revision gating without behavior changes. Add focused protocol regressions and keep full release gates green.
+- on `refactor/phase-a-authority-integration-20260924`, integrate DataRevision into Collection first and add focused regression coverage; then inspect StateController/ValueDraft ownership internals and replace—not mirror—the private controlled/request metadata with ControllableStateCore if the existing callback/event ordering can be preserved exactly. Evaluate ProjectionScheduler against current projection owners; defer rather than parallelize if no safe replacement exists.
 
 ### PHASE-A-002 — Shared Protocol authority integration
-Status: READY
+Status: IN_PROGRESS
 
 Scope guard:
 - no direct picker/component migration yet;
