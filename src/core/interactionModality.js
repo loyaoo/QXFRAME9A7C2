@@ -4,6 +4,11 @@ import { DOM } from './dom.js';
 const global = globalThis;
 
 var states = typeof WeakMap === 'function' ? new WeakMap() : null;
+var MODALITIES = Object.freeze(['keyboard', 'pointer', 'touch', 'programmatic']);
+function normalizeModality(value) {
+  var normalized = String(value || 'pointer').toLowerCase();
+  return MODALITIES.indexOf(normalized) >= 0 ? normalized : 'pointer';
+}
 
   function setup(doc) {
     doc = doc || global.document;
@@ -15,7 +20,7 @@ var states = typeof WeakMap === 'function' ? new WeakMap() : null;
     var modality = root && root.classList && root.classList.contains('qxframe9a7c2-keyboard-modality') ? 'keyboard' : 'pointer';
     function project() { if (root && root.classList) root.classList.toggle('qxframe9a7c2-keyboard-modality', modality === 'keyboard'); }
     function set(next, event) {
-      var value = next === 'keyboard' ? 'keyboard' : 'pointer';
+      var value = normalizeModality(next);
       if (modality === value) { project(); return false; }
       modality = value; project();
       listeners.slice().forEach(function (handler) { handler(modality, event || null); });
@@ -23,9 +28,9 @@ var states = typeof WeakMap === 'function' ? new WeakMap() : null;
     }
     var cleanups = [
       DOM.listen(doc, 'keydown', function (event) { if (!event.metaKey && !event.ctrlKey && !event.altKey) set('keyboard', event); }, true),
-      DOM.listen(doc, 'pointerdown', function (event) { set('pointer', event); }, true),
+      DOM.listen(doc, 'pointerdown', function (event) { set(event && event.pointerType === 'touch' ? 'touch' : 'pointer', event); }, true),
       DOM.listen(doc, 'mousedown', function (event) { set('pointer', event); }, true),
-      DOM.listen(doc, 'touchstart', function (event) { set('pointer', event); }, true)
+      DOM.listen(doc, 'touchstart', function (event) { set('touch', event); }, true)
     ];
     var state = {
       get: function () { return modality; },
@@ -49,5 +54,6 @@ var states = typeof WeakMap === 'function' ? new WeakMap() : null;
 
   function bootstrapInteractionModality(doc) { return current(doc || global.document); }
 
-export const InteractionModality = Object.freeze({ current, isKeyboard, onChange, set });
+export const InteractionModality = Object.freeze({ current, isKeyboard, onChange, set, modalities: MODALITIES });
+export const InputModality = InteractionModality;
 export { current, isKeyboard, onChange, set, bootstrapInteractionModality };

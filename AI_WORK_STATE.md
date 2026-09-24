@@ -8,19 +8,27 @@
 
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
+- Current main HEAD at Phase A kickoff: `b54e8be325498b680df7059ee53929d40caf13b0`
 - Last code-affecting main commit: `a459e28f2486ce89615322c6e49094fddd8464a4`
-- Current branch: `main`
+- Current branch: `refactor/phase-a-shared-protocol-20260924`
 - Bootstrap PR: #46 merged
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #307 / `35949535252`
 - Latest green main CI + Pages: run #308 / `35949774749`
-- Controller migration implementation progress: 0% (bootstrap hygiene complete; Phase A ready to start)
+- Controller migration implementation progress: 7% (Phase A authority inventory frozen; first Shared Protocol infrastructure batch implemented; CI pending; no component business behavior changed)
 
 ## CURRENT
 
 ### PHASE-A-001 — Baseline inventory and Controller migration kickoff
-Status: READY
+Status: IN_PROGRESS
+
+Branch evidence:
+- branch: `refactor/phase-a-shared-protocol-20260924`
+- current branch HEAD: `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`
+- branch is 16 commits ahead / 0 behind kickoff main `b54e8be325498b680df7059ee53929d40caf13b0`
+- PR: #47 open
+- CI: runs #309 / `35952426342` and #310 / `35952462790` failed at `audit:completion` because the new Shared Protocol code violated the existing prototype-merge safety gate (2 `Object.assign` uses + 1 unguarded dynamic write); gate unchanged, source fixed in `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`; replacement CI pending
 
 Prerequisites:
 - OPS-001 repository cleanup merged green in PR #46;
@@ -46,8 +54,36 @@ Primary first-wave components:
 - Cascader
 - Collapse (autosize Motion)
 
+Frozen Phase A authority inventory:
+- Action/event metadata: `InteractionDetails`, `OpenStateBridge`, logical events. Preserve them; add ActionContext/action IDs and structured OperationResult above them.
+- Value ownership: `StateController -> ValueDraft` is the existing value authority used by the first-wave components. Preserve it; ControllableStateCore must evolve controlled/external ownership rather than duplicate committed value.
+- Logical ownership: `LogicalOwnership` already owns parent/child logical nodes and bubbling. Preserve node authority; add a shared tree/registry facade for event/root resolution and descendant queries.
+- Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardNavigation`, `RovingProjection`, `ActiveItem` are existing authorities. Future FocusController must compose these, not replace them.
+- Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer`, `PopupSurface` are existing authorities. OverlayController must not own public open state.
+- Form: `FormBridge` is the native field/FormData/reset carrier authority. FormController will consume it; no second hidden-carrier implementation.
+- Theme/token: `Config` owns root/scoped theme and token projection today. Theme/Token Controllers must evolve it; catalog enforcement is still missing.
+- Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem`, `TableModel` own current selection/collection behavior. `Collection.mutationVersion` is local stale protection, but there is no shared DataRevision protocol yet.
+- Projection/scheduling: `Scheduler` and `DOMProjection` are mature primitives, but there is no revision-aware ProjectionSnapshot/ProjectionScheduler stale gate yet.
+- Motion: `MotionCore`, `Transition`, `TransitionGroup` remain the low-level motion authority; no second generation counter may be introduced.
+- Environment: core/components still resolve `globalThis.document/window` ad hoc; no shared EnvironmentPort exists.
+- Diagnostics: `PerformanceDiagnostics` covers resource balance only; semantic duplicate-owner/stale-action diagnostics are not yet implemented.
+- Component capability declaration: `ComponentContracts` validates public options, but no `ComponentProfile` capability/ownership schema exists.
+
+Completed in current code batch:
+- added `ActionContext` + causal action IDs/source/reason/modality snapshots;
+- added structured `OperationResult` statuses;
+- added metadata-only `ControllableStateCore` ownership/revision/request lifecycle without duplicating committed value;
+- added `DataRevision` stable-key revision refs;
+- added `EnvironmentPort` with observer adapter validation;
+- added revision-aware `ProjectionScheduler` over existing `Scheduler`;
+- added stable-code semantic `Diagnostics`;
+- added `ComponentProfile` schema;
+- added `LogicalOwnerTree` facade over existing `LogicalOwnership`;
+- evolved existing `InteractionModality` authority to expose touch/programmatic modalities and `InputModality` alias;
+- added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
+
 Next exact step:
-- perform Phase A authority inventory on current main; do not start by creating 11 empty Controller files.
+- wait for replacement PR CI after `85e7b49a16f06c18e5bb595af46dfe06667cdb2b`; if it fails, fix the implementation without changing safety/release gates. When green, merge PR #47, verify main CI + Pages, then start the second Phase A batch wiring protocol metadata/revision/projection into the existing authorities.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
