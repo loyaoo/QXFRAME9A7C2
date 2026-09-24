@@ -10,47 +10,46 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `a7eb78ca9db866acd0bc60f470b241bfe7858bce` (PR #83 merge)
-- Current branch: `refactor/phase-h-form-field-base-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-004 field/form-base PR
-- Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
+- Last code-affecting main commit: `fccf929b03170b9e6eff1331274b7a81b5dfebfb` (PR #84 merge)
+- Current branch: `refactor/phase-h-trigger-controller-family-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-005 Trigger controller-family PR
+- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-005 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #430 / `36071355296` (PR #83)
-- Latest green main CI + Pages: #431 / `36071805997`
+- Latest green Phase H PR CI: #432 / `36072251524` (PR #84)
+- Latest green main CI + Pages: #433 / `36072642871`
 - Overall handbook implementation progress: 96%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-004`
+- Current Task: `PHASE-H-005`
 
 ## CURRENT
 
-### PHASE-H-004 — FieldComponent → FormController shared binding
+### PHASE-H-005 — Trigger F/I/C/M/O controller-family migration
 Status: IN_PROGRESS
 Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-003 is DONE through PR #83, exact-head CI #430 / `36071355296`, merge `a7eb78ca9db866acd0bc60f470b241bfe7858bce`, main release + Pages #431 / `36071805997`.
-- Progress, Result and Loading are H accepted; public H-accepted count is now 5/40.
+- PHASE-H-004 is DONE through PR #84, exact-head CI #432 / `36072251524`, merge `fccf929b03170b9e6eff1331274b7a81b5dfebfb`, main release + Pages #433 / `36072642871`.
+- FieldComponent internal Form path is H-migrated. Autocomplete, Cascader, ColorPicker, DatePicker, Select, TreeSelect, TimePicker, WheelPicker, Tags and Transfer now inherit the canonical FormController binding path without a second value/native-carrier owner.
 
 Implemented in current pack:
-- added canonical `FormController.bindField()` entry over the existing unique-field registry; no second form registry or value owner was introduced.
-- FieldComponent can now bind/unbind a FormController and exposes registration/touched/validate/reset-ack helpers.
-- the shared adapter reads the canonical FieldComponent value and current FormBridge serialized value; FormBridge remains the native form carrier.
-- FieldComponent value changes notify the bound FormController revision/dirty state; external/options/form sources can remain clean.
-- implicit component `name` changes re-register the same fieldId so FormController's name index stays current.
-- component destroy automatically unregisters its FormController field.
-- Autocomplete, Cascader, ColorPicker, DatePicker, Select, TreeSelect, TimePicker, WheelPicker, Tags and Transfer now declare FormController ownership through this inherited FieldComponent path; Transfer also declares its form capability.
-- dedicated Node gate covers same-name fields, value notification, touched, validation, rename re-indexing, serialization and destroy cleanup.
-- strict source-ESM Chromium coverage uses a real Rate FieldComponent consumer to prove bind → dirty/serialize → destroy unregister.
-
-Scope note:
-- this pack migrates the shared Form path and Form ownership declaration only. It does not mark those ten public components H accepted until their remaining target controllers/duplicate paths are also signed off.
+- Trigger now declares the exact handbook Focus/Interaction/Capability/Motion/Overlay profile and canonical ownership.
+- Trigger owns one shared CapabilityController for open/activation policy and one shared InteractionController for semantic keyboard actions.
+- TriggerInteraction forwards those shared controllers into PressInteraction instead of allowing PressInteraction to build a parallel semantic/capability authority.
+- PressInteraction keyboard Enter/Space semantics now register/dispatch through InteractionController; pointer/visual execution remains PressInteraction authority.
+- OverlayRuntime creates/normalizes focus manager/scope resources through FocusController instead of importing FocusManager/FocusScope directly.
+- existing Trigger presence remains Transition→MotionController and popup resources remain OverlayController→OverlayRuntime; logical open remains OpenStateBridge.
+- removed an unused OverlayController singleton facade that had no consumer in this pack.
+- `verify:phase-h-trigger-controller-family` freezes the five-controller profile, shared-controller routing and no-direct-focus-import constraints.
+- strict source-ESM Chromium verifies controller access, Enter activation through InteractionController and disabled open blocking through CapabilityController.
+- Phase H profile regression floor rises to 18.
 
 Next exact step:
-1. run PHASE-H-004 exact-head full release/browser/package CI.
-2. fix only real shared-form regressions; do not duplicate FormBridge, ValueController or FormController state.
-3. merge only exact-head green and verify main + Pages.
-4. mark FieldComponent internal Form path H-migrated, then use this base to accelerate remaining R-capable public families.
+1. perform final diff/self-audit and open PHASE-H-005 PR.
+2. require exact-head full release/browser/package CI.
+3. merge only green and verify main + Pages.
+4. mark Trigger H accepted.
+5. immediately batch the next shared popup/overlay family that reuses Trigger instead of one-component PRs.
 
 ## Current authority snapshot — after Phase A
 
@@ -80,6 +79,22 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-004 — FieldComponent → FormController shared binding
+Status: DONE
+Evidence:
+- PR #84 merged
+- merge commit `fccf929b03170b9e6eff1331274b7a81b5dfebfb`
+- exact-head CI #432 / `36072251524`: success
+- main CI + Pages #433 / `36072642871`: success
+Outcome:
+- FieldComponent owns the shared FormController registration/notification bridge while FormBridge remains native carrier and ValueController remains value/reset-baseline owner.
+- duplicate-name registration, rename re-indexing, validation, touched, serialization and destroy cleanup are gated.
+- real Chromium Rate consumer verifies bind → dirty/serialize → destroy unregister.
+- ten R-capable public components declare FormController ownership through the inherited FieldComponent path; their remaining Phase H controllers still require final component signoff.
+- FieldComponent internal Form path is H-migrated.
+
+
 
 ### PHASE-H-003 — Progress + Result + Loading feedback presenters
 Status: DONE
