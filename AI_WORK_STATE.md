@@ -10,58 +10,48 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `7f3a475565fec5548871e7c6c52a7ed8c0e945bc` (PR #51 merge)
-- Current branch: `refactor/phase-c-focus-time-date-20260924`
-- Open PRs at this checkpoint: pending PHASE-C-001 PR
+- Last code-affecting main commit: `a1f19b25ceb2de4ef238e5bbc7d3c4c250c366b0` (PR #52 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #326 / `35958353342` (PR #51)
-- Latest green main CI + Pages: #327 / `35958853046`
-- Controller migration implementation progress: 56%
+- Latest green Controller PR CI: #333 / `35960898199`, attempt 2 (PR #52)
+- Latest green main CI + Pages: #334 / `35961330135`
+- Controller migration implementation progress: 60%
 - Current Phase: Phase C
-- Current Task: `PHASE-C-001`
+- Current Task: `PHASE-C-002`
 
 ## CURRENT
 
-### PHASE-C-001 — FocusController foundation + Time/Date composite regions
-Status: IN_PROGRESS
-Task progress: 70%
+### PHASE-C-002 — Popup-hosted + standalone composite focus/interaction migration
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- Phase B Value + Picker Family is complete and green through PR #51 and main #327.
-- The handbook Phase C order starts with TimePanel and Date Calendar/PeriodPanel before Select / TreeSelect / Cascader / Menu / Tags.
-- Existing focus behavior already converges on KeyboardRegion + KeyboardNavigation.virtualFocus + FocusScope; Phase C must elevate/reuse those authorities instead of replacing them.
-- Current QA still includes TimePanel invisible/extra focus reports and DatePicker stale cursor/region handoff defects.
+- PHASE-C-001 FocusController foundation is merged and green through PR #52 and main #334.
+- The handbook Phase C order next targets Select / TreeSelect / Cascader / Menu / Tags.
+- A targeted read-only audit is already complete; do not repeat a full focus audit.
+
+Frozen impact map:
+- Select / TreeSelect / Cascader are editable real-focus hosts with popup-hosted virtual domains. Their existing OptionList/Tree/Cascader list selection owners remain unchanged.
+- Menu / Tags are standalone composite roots that still create KeyboardRegion directly and need explicit FocusController profiles/ownership.
+- TagNavigation is already the canonical tag virtual-navigation helper and remains the tag-domain behavior owner; do not duplicate it inside FocusController.
+- Existing browser smoke already covers Select Enter/Home/End, TreeSelect Enter/Space, Cascader Enter, Menu cross-level arrows/disclosure, Tags visible focus/add-editor/duplicate-input flows. Add only ownership/profile/lease/hosted-domain regressions that are missing.
 
 Scope:
-- add FocusController as an aggregate facade over existing FocusManager / FocusScope / KeyboardRegion / KeyboardNavigation virtual focus; do not add a second DOM-focus or active-item engine;
-- make canonical real-focus host, active region, hosted virtual domain, focus return target and edit lease explicit;
-- first migration pack: WheelPanel/TimePanel plus Calendar/PeriodPanel direct focus adapters;
-- preserve one Tab stop for TimePanel; hour/minute/second columns/items remain virtual and non-tabbable;
-- preserve DatePicker hosted real focus on the picker editor while Calendar/PeriodPanel project exactly one active-item ring;
-- preserve native/hybrid editor key priority and IME guards;
-- add focused structural/browser regressions for real-focus ownership, hosted domains, region switching, Home/End/Page, readonly/disabled behavior and no duplicate rings.
-
-Audit already completed before implementation:
-- WheelPanel column Scroll instances already use `keyboard:false` + `focusable:false`; the wheel root KeyboardRegion is the current canonical real-focus owner.
-- TimePanel delegates focus/key handling/virtual focus to WheelPanel rather than owning another keyboard engine.
-- Calendar and PeriodPanel already use KeyboardRegion.bindVirtualFocus and ActiveItem; DatePicker can host those domains on its editor.
-- Existing browser smoke already covers TimePanel inner nodes non-tabbable, PeriodPanel single keyboard ring, DatePicker dual-panel seam and title/drill handoff. New tests should extend these contracts, not duplicate them.
-
-Implemented in current PHASE-C-001 branch:
-- added `FocusController` as an aggregate facade over FocusManager / FocusScope / KeyboardRegion / KeyboardNavigation virtual focus; it does not implement another DOM listener or virtual-domain engine;
-- exported FocusController through the core entry and added `verify:focus-controller` to the required verify chain;
-- WheelPanel / Calendar / PeriodPanel now enter composite focus through FocusController and delegate virtual-domain lifecycle through its canonical binding;
-- TimePanel root is now the single real-focus/Tab owner; its inner WheelPanel is hosted and non-tabbable while the active wheel item owns the visible keyboard ring;
-- standalone Wheel/Time composite roots explicitly suppress their own focus-visible outline so root + item cannot draw two rings;
-- DatePicker-hosted Calendar remains `tabIndex=-1` with real focus on the picker editor and exactly one hosted calendar item ring;
-- browser regressions cover TimePanel canonical root ownership, single virtual ring, readonly navigation without mutation, disabled non-focusability, Date hosted focus ownership, and DatePicker+TimePanel root ownership.
+- migrate Select / TreeSelect / Cascader real host + hosted virtual-domain orchestration into FocusController without changing ValueController, Selection, SearchState, Tree or popup-open ownership;
+- migrate Menu / Tags KeyboardRegion entry points into FocusController and author explicit ComponentProfile focus/interaction metadata;
+- preserve editable text priority, IME guards, Home/End behavior and context-specific Enter/Space semantics;
+- for Tags edit mode, use FocusController edit lease semantics rather than introducing another focus flag;
+- eliminate direct component imports of KeyboardRegion where FocusController can replace the entry point;
+- do not start InteractionController/CapabilityController as separate engines unless a concrete duplicated authority must be replaced in this pack.
 
 Next exact step:
-1. create the PHASE-C-001 pull request from this branch;
-2. run Completion audit + full release/browser CI and fix real implementation failures without weakening gates;
-3. merge only a green PR head and verify main CI + Pages;
-4. then continue Phase C with Select / TreeSelect / Cascader / Menu / Tags focus+interaction migration.
+1. create a fresh PHASE-C-002 branch from current main after this checkpoint;
+2. migrate Select / TreeSelect / Cascader outer keyboard hosts first, using FocusController while keeping existing hosted domains;
+3. migrate Menu / Tags standalone roots and Tags edit lease;
+4. add structural ownership gates plus only the missing browser regressions;
+5. run full PR release CI, merge only green, then verify main CI + Pages.
 
 ## Current authority snapshot — after Phase A
 
@@ -70,7 +60,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
 - Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
-- Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardRegion`, `KeyboardNavigation` virtual focus, `RovingProjection` and `ActiveItem` are the existing execution authorities. PHASE-C-001 will add FocusController only as their aggregate facade and migrate the first composite regions; it must not duplicate DOM focus or active-item truth.
+- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel enter through it; underlying ActiveItem/RovingProjection/domain state remains the execution truth. PHASE-C-002 migrates the remaining first-wave popup/standalone composites without adding a second focus truth.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
@@ -87,12 +77,28 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 
 These are current QA targets for later Controller/family migration. They are not PHASE-A-003 scope unless an authority adoption directly touches them.
 
-- TimePanel canonical real-focus ownership is implemented on the current PHASE-C-001 branch and remains pending PR/main verification; internal columns/items are non-tabbable.
 - DatePicker dual-panel/month-year navigation can retain stale cursor state and jump on the first arrow after returning to the date region.
 - DatePicker/TimePicker preset selection must respect `needConfirm`; preset regions need one Tab stop plus virtual arrow navigation.
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-C-001 — FocusController foundation + Time/Date composite regions
+Status: DONE
+Evidence:
+- PR #52 merged
+- merge commit `a1f19b25ceb2de4ef238e5bbc7d3c4c250c366b0`
+- PR CI #333 / `35960898199`: success on attempt 2
+- main CI + Pages #334 / `35961330135`: success
+- #333 attempt 1 failed only the unrelated high-risk NoticeClock explicit-realm timing check; identical HEAD passed on retry, so runtime was not changed.
+Outcome:
+- added FocusController as facade over existing focus authorities with no second DOM-focus/domain engine.
+- TimePanel root is the sole real-focus/Tab owner; inner WheelPanel is hosted/non-tabbable and the active wheel item owns the visible ring.
+- Calendar / PeriodPanel / WheelPanel use the FocusController entry path and canonical virtual-domain binding.
+- DatePicker-hosted Calendar keeps real focus on the editor with one virtual cell ring.
+- canonical root outline duplication was removed.
+- frozen HOTFIX6 artifact remains unchanged; a Phase-C derived compatibility smoke differs in exactly the two superseded TimePanel focus-owner checks, enforced by release-preflight.
+
 
 ### PHASE-B-002 — ValueController + picker-like popup second migration pack
 Status: DONE
