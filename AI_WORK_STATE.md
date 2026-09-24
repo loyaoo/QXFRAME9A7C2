@@ -10,58 +10,52 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `2933f1feae0b6bf6891f4db5fe578984aca8aa54` (PR #55 merge)
-- Current branch: `refactor/phase-d-transfer-selection-20260924`
-- Open PRs at this checkpoint: pending PHASE-D-002 PR
+- Last code-affecting main commit: `599076ed92b88b2464e45b3a926acbb9324ce757` (PR #56 merge; PR #57 Selection/Transfer merge is `fb4e5fb5ee8ba8644916431d431de5e18e1edd5a`)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #341 / `35970615817` (PR #55)
-- Latest green main CI + Pages: #342 / `35970931277`
-- Controller migration implementation progress: 89%
-- Current Phase: Phase D
-- Current Task: `PHASE-D-002`
+- Latest green Controller PR CI: #344 / `35972507182` (PR #57); PR #56 CI #343 / `35972148887` also green
+- Latest green main CI + Pages: #346 / `35973772633`
+- Controller migration implementation progress: 90%
+- Current Phase: Phase C acceptance closeout (Phase D first two packs already landed)
+- Current Task: `PHASE-C-004`
 
 ## CURRENT
 
-### PHASE-D-002 — Transfer multi-channel selection + per-channel DataRevision
-Status: IN_PROGRESS
-Task progress: 80%
+### PHASE-C-004 — InteractionController + CapabilityController owner-by-owner acceptance closeout
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-D-001 is merged and green through PR #55 / PR CI #341 and main CI + Pages #342.
-- Transfer is the next handbook consumer after the ItemCollection/List/OptionList/Tree first pack.
-- Transfer composes two ItemCollections plus a separate final target-value authority; it must not be migrated by letting one list overwrite the other list's dataset revision source.
+- The master handbook defines Phase C as **Focus + Interaction + Capability**, not Focus alone.
+- PR #52–#54 completed the first-wave FocusController migration, but the previous checkpoint incorrectly treated that as all of Phase C.
+- PR #56 is now merged and green on current main. It adds canonical InteractionController / CapabilityController foundations, routes component capability checks through CapabilityController, routes KeyboardNavigation key resolution through InteractionController, scopes Menu interaction, and adds DatePicker preset/dual-panel regressions.
+- `FOUR_UNIFICATIONS_ACCEPTANCE.md` correctly records Phase C as **C partial** until prioritized owners pass source adoption, duplicate writable-path removal, browser tests, exact-head CI and canonical demo evidence.
+- Phase D Selection first pack (PR #55) and Transfer pack (PR #57) are already merged and remain valid; do not redo them while closing Phase C acceptance.
 
 Frozen impact map:
-- source list checked state and target list checked state are separate channels.
-- final transferred target membership/order is a separate semantic channel from either side's checked state.
-- source and target ItemCollections have independent datasets and therefore require per-channel revision binding for anchors/range semantics.
-- existing targetOrder Collection remains the order authority until SelectionController can represent target membership without duplicating Transfer value truth.
-- Table remote allMatching/excludedKeys, Tags, Cascader, Menu/Dropdown and popup consumers remain later Phase D packs.
+- Phase C priority owners from the handbook: TimePanel, Date Calendar/PeriodPanel, Select, TreeSelect, Cascader, Menu, Tags, Table Hybrid Edit.
+- FocusController authority is already landed for those families where required.
+- CapabilityController is now the component entry point over InteractionPolicy; `verify:capability-controller` forbids component-level direct InteractionPolicy imports.
+- InteractionController owns semantic action resolution/scope routing; KeyboardNavigation consumes its canonical key resolver and Menu owns an explicit logical interaction scope.
+- Remaining work is acceptance-driven: prove or migrate only missing owner/scope paths for child-vs-parent routing, native editor/IME priority, multiple checkbox Space, Home/End/Page, and loading/readOnly/disabled gates.
+- DatePicker presets now form one virtual-focus region; dual-panel month/year drill first-arrow behavior has browser coverage.
+- Repository branch cleanup is complete: only `main` remains. Do not recreate historical staging/fix branches.
 
 Scope:
-- evolve SelectionController to allow channel-scoped revision sources without creating parallel key stores;
-- migrate Transfer source/target checked channels through one SelectionController facade;
-- preserve Transfer final target value/order authority and FormBridge behavior;
-- preserve search, pagination, table projection, disabled/readOnly/loading and move/reorder behavior;
-- add structural/browser regressions proving source/target checked independence, per-channel stale-anchor invalidation and no duplicate selected-key truth.
-
-Implemented in current PHASE-D-002 sandbox/branch:
-- SelectionController now owns revision source/local revision state per channel while retaining the one-argument global `setRevisionSource(source)` compatibility path.
-- new `revisionSources` creation option plus `setRevisionSource(channel, source)`, `getRevisionSource(channel)`, `getDataRevision(channel)` and `dataRevisions` expose channel-scoped revision authority without adding a second key store.
-- ItemCollection binds its own Collection revision source to its explicit selection channel; its state reports that channel revision instead of a controller-global revision.
-- Transfer owns one SelectionController facade with independent `sourceChecked` and `targetChecked` Selection channels; both ItemCollections share that facade and expose the same raw channel stores.
-- Transfer final `targetValues` + `targetOrder` remain the sole transferred-value/order authority and FormBridge source; they were not mirrored into SelectionController.
-- Transfer ComponentProfile declares SelectionController ownership and exposes `getSelectionController()` for authority inspection/compatibility.
-- structural verification covers no duplicate Selection store, per-channel source binding, Transfer single-facade ownership and independent source/target revision invalidation.
-- source-ESM Chromium regression passes shared-controller identity, checked-channel independence, one-sided stale-anchor invalidation and target-value independence.
-- local sandbox gates pass: `verify:selection-controller`, `verify:shared-protocol`, `verify:collection-family`, `verify:component-base`, `verify:component-contracts`, `verify:high-risk-authorities`, `verify:registry-removal-readiness`, `verify:architecture`, `verify-source-esm-browser`.
+- audit only the Phase C priority owner paths against the handbook gates; do not re-run a whole-repository architecture survey;
+- remove/replace any remaining component-local semantic keyboard owner only when it duplicates InteractionController / KeyboardNavigation authority;
+- preserve existing ValueController, SelectionController, FocusController, popup/open, edit transaction and native editor authorities;
+- add focused browser/structural evidence for any missing Phase C gate;
+- update `FOUR_UNIFICATIONS_ACCEPTANCE.md` only when an owner has actual source + test + exact-head CI evidence.
 
 Next exact step:
-1. create/push the PHASE-D-002 branch from current main with only the seven audited changed files;
-2. run full PR Completion audit + release/browser/package CI and fix only real failures without weakening per-channel revision or single-store gates;
-3. merge only the green PR head and verify main CI + Pages;
-4. checkpoint PHASE-D-002 as DONE, then continue Phase D with Table remote selection semantics before Tags/Cascader consumers.
+1. inspect the eight Phase C priority owners for remaining direct semantic key routing / policy ownership gaps after PR #56;
+2. classify each as already conformant vs requiring a narrow migration;
+3. implement the smallest missing owner pack and add required browser gates;
+4. run a fresh PR Completion audit + full release CI, merge only green, then update the acceptance ledger;
+5. once all Phase C priority owners satisfy the handbook gates, resume Phase D at Table remote selection semantics.
 
 ## Current authority snapshot — after Phase A
 
@@ -70,7 +64,8 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
 - Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
-- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Phase C is complete.
+- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Focus migration is complete; full Phase C acceptance is still pending Interaction/Capability owner signoff.
+- Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Menu owns an explicit interaction scope. Phase C owner-by-owner conformance remains in progress.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
@@ -92,6 +87,48 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-D-002 — Transfer multi-channel selection + per-channel DataRevision
+Status: DONE
+Evidence:
+- PR #57 merged
+- merge commit `fb4e5fb5ee8ba8644916431d431de5e18e1edd5a`
+- PR CI #344 / `35972507182`: success
+- main CI + Pages #345 / `35972849325`: success
+Outcome:
+- SelectionController supports channel-scoped revision sources without a second selected-key store.
+- ItemCollection binds Collection revision to its explicit selection channel.
+- Transfer uses one SelectionController with independent `sourceChecked` / `targetChecked` channels.
+- source/target dataset revisions invalidate only their own anchors.
+- final target value/order remains Transfer + targetOrder authority and FormBridge source.
+- structural and Chromium/browser regressions cover single-facade identity, checked-channel independence and per-channel stale-anchor invalidation.
+
+### PHASE-C foundation supplement — InteractionController + CapabilityController
+Status: FOUNDATION DONE / ACCEPTANCE PARTIAL
+Evidence:
+- PR #56 merged
+- merge commit `599076ed92b88b2464e45b3a926acbb9324ce757`
+- PR CI #343 / `35972148887`: success
+- merged main CI + Pages #346 / `35973772633`: success
+Outcome:
+- added CapabilityController as component-facing entry over InteractionPolicy and required structural gate.
+- added InteractionController semantic action/scope routing and canonical keyboard resolver.
+- KeyboardNavigation uses canonical InteractionController key resolution and blocks activation repeat by default.
+- Menu uses an explicit logical InteractionController scope; held Space no longer repeats multiple selection.
+- DatePicker presets use one virtual-focus region and dual-panel drill first-arrow regressions are covered.
+- acceptance remains partial until all handbook Phase C priority owners receive owner-by-owner source/test/CI signoff.
+
+### Repository branch cleanup
+Status: DONE
+Evidence:
+- audited 68 branches against current main and all PR associations.
+- PR #56 was the only remaining useful independent line and was merged before cleanup.
+- closed/merged/superseded historical fix/staging branches were removed by a one-shot temporary Actions branch.
+- cleanup run #3 / `35974049408`: success.
+Outcome:
+- repository branch count reduced from 68 to 1.
+- only `main` remains.
+- the temporary cleanup branch deleted itself and no cleanup workflow was merged into main.
 
 ### PHASE-D-001 — SelectionController foundation + ItemCollection/List/OptionList/Tree first pack
 Status: DONE
