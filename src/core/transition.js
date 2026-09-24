@@ -1,5 +1,5 @@
 
-import { MotionCore } from './motion.js';
+import { MotionController } from './motionController.js';
 import { MotionPresets } from './motionPresets.js';
 
 var LEGACY_OPTIONS = Object.freeze(['motion', 'target', 'el']);
@@ -20,7 +20,7 @@ function create(options) {
     throw new TypeError('[QXFRAME9A7C2] Transition.create(options) requires transition.');
   }
 
-  var core = MotionCore.create({
+  var controller = MotionController.create({
     element: settings.element || null,
     mount: settings.mount,
     unmount: settings.unmount,
@@ -47,13 +47,18 @@ function create(options) {
   });
 
   return Object.freeze({
-    setVisible: function (visible, meta) { return core.setVisible(visible === true, meta); },
-    getState: core.getState,
-    whenSettled: core.whenSettled,
-    destroy: core.destroy
+    setVisible: function (visible, meta) { return controller.setVisible(visible === true, meta); },
+    show: controller.show,
+    hide: controller.hide,
+    reverse: controller.reverse,
+    cancel: controller.cancel,
+    getState: controller.getState,
+    whenSettled: controller.whenSettled,
+    getMotionController: function () { return controller; },
+    destroy: controller.destroy
   });
 }
 
 
-export const Transition = Object.freeze({ create, normalizeTransition: MotionCore.normalizeMotion, detectTransition: MotionCore.detectMotion, waitTransitionEnd: MotionCore.waitMotionEnd, presets: MotionPresets, presetNames: MotionPresets.names(), STATUS: MotionCore.STATUS, STEPS: MotionCore.STEPS });
+export const Transition = Object.freeze({ create, normalizeTransition: MotionController.normalizeMotion, detectTransition: MotionController.detectMotion, waitTransitionEnd: MotionController.waitMotionEnd, presets: MotionPresets, presetNames: MotionPresets.names(), STATUS: MotionController.STATUS, STEPS: MotionController.STEPS });
 export { create };
