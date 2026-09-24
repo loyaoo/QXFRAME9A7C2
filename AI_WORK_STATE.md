@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `a1f19b25ceb2de4ef238e5bbc7d3c4c250c366b0` (PR #52 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-c-popup-standalone-focus-20260924`
+- Open PRs at this checkpoint: pending PHASE-C-002 PR
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #333 / `35960898199`, attempt 2 (PR #52)
 - Latest green main CI + Pages: #334 / `35961330135`
-- Controller migration implementation progress: 60%
+- Controller migration implementation progress: 67%
 - Current Phase: Phase C
 - Current Task: `PHASE-C-002`
 
 ## CURRENT
 
 ### PHASE-C-002 — Popup-hosted + standalone composite focus/interaction migration
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 75%
 
 Why this is current:
 - PHASE-C-001 FocusController foundation is merged and green through PR #52 and main #334.
@@ -46,12 +46,21 @@ Scope:
 - eliminate direct component imports of KeyboardRegion where FocusController can replace the entry point;
 - do not start InteractionController/CapabilityController as separate engines unless a concrete duplicated authority must be replaced in this pack.
 
+Implemented in current PHASE-C-002 branch:
+- Select / TreeSelect / Cascader outer editable keyboard hosts now enter through FocusController while retaining existing OptionList/Tree/Cascader virtual domains and keymaps.
+- those editable hosts set `manageTabIndex:false`, preserving Control/Field as the real tabindex authority; FocusController owns keyboard/virtual orchestration only.
+- Menu standalone root now enters through FocusController and uses canonical virtual-domain binding instead of a component-local `registerDomain()` lifecycle.
+- Tags standalone root now enters through FocusController while TagNavigation remains the tag-domain behavior owner.
+- Tags add editor acquires a FocusController edit lease on the input; all existing add-exit paths release it through the common render/root-state projection.
+- Menu and Tags now author explicit ComponentProfile focus/interaction metadata; this pack does not claim SelectionController ownership.
+- browser regressions add only missing ownership checks: popup real-focus retention + one popup ring, Menu root ownership, Tags edit-lease acquire/release.
+- structural FocusController gate forbids popup direct KeyboardNavigation owners, standalone direct KeyboardRegion owners, Menu direct registerDomain, and requires editable-host tabindex preservation.
+
 Next exact step:
-1. create a fresh PHASE-C-002 branch from current main after this checkpoint;
-2. migrate Select / TreeSelect / Cascader outer keyboard hosts first, using FocusController while keeping existing hosted domains;
-3. migrate Menu / Tags standalone roots and Tags edit lease;
-4. add structural ownership gates plus only the missing browser regressions;
-5. run full PR release CI, merge only green, then verify main CI + Pages.
+1. create the PHASE-C-002 pull request from this branch;
+2. run Completion audit + full release/browser CI and fix source behavior only; do not weaken existing key/focus gates;
+3. merge only a green PR head and verify main CI + Pages;
+4. then follow the handbook to the next Phase C / Interaction+Capability step from the updated CURRENT state.
 
 ## Current authority snapshot — after Phase A
 

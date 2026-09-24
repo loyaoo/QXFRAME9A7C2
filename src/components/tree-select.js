@@ -15,6 +15,7 @@ import { SearchState } from '../core/searchState.js';
 import { FieldHost } from '../core/fieldHost.js';
 import { Renderer } from '../core/renderer.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { DOM } from '../core/dom.js';
@@ -120,6 +121,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         var tree = null;
         var triggerSession = null;
         var keyboard = null;
+        var focusController = null;
         var fieldControl = null;
         var tagNavigation = null;
         var searchState = SearchState.create({ query:'' });
@@ -594,51 +596,63 @@ function setupTreeSelectRuntime(instance,fieldInit) {
     
     
         var keyboardTarget = headlessMode ? triggerTarget : (fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root));
-        keyboard = keyboardTarget ? KeyboardNavigation.create({
+        focusController = keyboardTarget ? FocusController.create({
           root: keyboardTarget,
-          focusRoot: function () { return headlessMode ? triggerTarget : (fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : keyboardTarget); },
-          editableKeys: ['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter',' ','Escape','Home','End','PageUp','PageDown'],
-          allowEditableKey: function (key, detail) {
-            var event = detail && detail.originalEvent;
-            if (!event) return false;
-            if (key === ' ') {
-              if (!triggerSession.getState().open || !hierarchicalCheckMode()) return false;
-              // A searchable editor owns spaces once the user has started typing. With an
-              // empty query Space remains a useful checkbox shortcut for the active tree row.
-              return opts.searchable !== true || String(searchState.query || '').length === 0;
-            }
-            if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Home' || key === 'End') return !KeyboardNavigation.shouldPreserveNativeTextEditing(event, event.target);
-            return true;
-          },
-          handlers: {
-            Escape: function (detail) { return triggerSession.getState().open ? close('escape', detail.originalEvent) : handleHostedTagKeydown(detail.originalEvent); },
-            ArrowDown: function (detail) { if (!triggerSession.getState().open) return open('keyboard-down', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
-            ArrowUp: function (detail) { if (!triggerSession.getState().open) return open('keyboard-up', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
-            ArrowLeft: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
-            ArrowRight: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
-            Backspace: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-            Delete: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-            Enter: function (detail) {
-              if (!triggerSession.getState().open) return open('keyboard-enter', detail.originalEvent);
-              if (hierarchicalCheckMode()) {
-                var active = tree.getState().activeKey;
-                return active ? tree.check(active, undefined, { source:'keyboard', reason:'enter-check', originalEvent:detail.originalEvent }) : false;
+          document: doc,
+          disabled: opts.disabled === true,
+          manageTabIndex: false,
+          activeRegion: 'tree',
+          navigation: {
+            focusRoot: function () { return headlessMode ? triggerTarget : (fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : keyboardTarget); },
+            editableKeys: ['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter',' ','Escape','Home','End','PageUp','PageDown'],
+            allowEditableKey: function (key, detail) {
+              var event = detail && detail.originalEvent;
+              if (!event) return false;
+              if (key === ' ') {
+                if (!triggerSession.getState().open || !hierarchicalCheckMode()) return false;
+                // A searchable editor owns spaces once the user has started typing. With an
+                // empty query Space remains a useful checkbox shortcut for the active tree row.
+                return opts.searchable !== true || String(searchState.query || '').length === 0;
               }
-              return tree.handleKeydown(detail.originalEvent);
+              if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Home' || key === 'End') return !KeyboardNavigation.shouldPreserveNativeTextEditing(event, event.target);
+              return true;
             },
-            ' ': function (detail) {
-              if (!triggerSession.getState().open || !hierarchicalCheckMode()) return false;
-              return tree.handleKeydown(detail.originalEvent);
-            },
-            Home: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
-            End: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
-            PageUp: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
-            PageDown: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; }
+            handlers: {
+              Escape: function (detail) { return triggerSession.getState().open ? close('escape', detail.originalEvent) : handleHostedTagKeydown(detail.originalEvent); },
+              ArrowDown: function (detail) { if (!triggerSession.getState().open) return open('keyboard-down', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
+              ArrowUp: function (detail) { if (!triggerSession.getState().open) return open('keyboard-up', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
+              ArrowLeft: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
+              ArrowRight: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
+              Backspace: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
+              Delete: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
+              Enter: function (detail) {
+                if (!triggerSession.getState().open) return open('keyboard-enter', detail.originalEvent);
+                if (hierarchicalCheckMode()) {
+                  var active = tree.getState().activeKey;
+                  return active ? tree.check(active, undefined, { source:'keyboard', reason:'enter-check', originalEvent:detail.originalEvent }) : false;
+                }
+                return tree.handleKeydown(detail.originalEvent);
+              },
+              ' ': function (detail) {
+                if (!triggerSession.getState().open || !hierarchicalCheckMode()) return false;
+                return tree.handleKeydown(detail.originalEvent);
+              },
+              Home: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
+              End: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
+              PageUp: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
+              PageDown: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; }
+            }
           }
         }) : null;
+        keyboard = focusController ? focusController.keyboard : null;
         if (keyboard) {
           bindCompositeVirtualFocus();
-          scope.add(function () { if (tagNavigation) { tagNavigation.destroy(); tagNavigation = null; } keyboard.destroy(); });
+          scope.add(function () {
+            if (tagNavigation) { tagNavigation.destroy(); tagNavigation = null; }
+            if (focusController) focusController.destroy();
+            focusController = null;
+            keyboard = null;
+          });
         }
     
         function setItems(items) {
@@ -665,6 +679,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (candidate.popupRender !== null && candidate.popupRender !== undefined && !Utils.isFunction(candidate.popupRender)) throw new TypeError('[QXFRAME9A7C2] TreeSelect popupRender must be a function or null.');
           if (hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getLabel') || hasOwn(next, 'getValue')) validateItems(candidate.items, candidate);
           Utils.copyOwn(opts, next);
+          if (focusController) focusController.setDisabled(opts.disabled === true);
           var checkMode = hierarchicalCheckMode();
           var treeOptions = {
             multiple: false, selectable: !checkMode,
@@ -741,7 +756,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           setExpandedKeys:function(keys,meta){if(!destroyed)tree.setExpandedKeys(keys,meta);return instance;},
           expand:function(key,meta){return destroyed?false:tree.expand(key,meta);}, collapse:function(key,meta){return destroyed?false:tree.collapse(key,meta);},
           focus:function(){if(fieldControl)return fieldControl.focus();return DOM.focusElement(triggerTarget||root,{preventScroll:true});},
-          getState:getState,getTree:function(){return tree;},getControl:function(){return fieldControl;},
+          getState:getState,getTree:function(){return tree;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},
           getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},
           applyOptions:applyOptions,dispose:disposeRuntime
         });
@@ -756,7 +771,7 @@ export class TreeSelect extends PopupFieldComponent {
     interaction:Object.freeze({keymap:'tree-select'}),
     overlay:Object.freeze({mode:'popup'}),
     form:Object.freeze({serialize:true}),
-    ownership:Object.freeze({value:'ValueController'})
+    ownership:Object.freeze({value:'ValueController',focus:'FocusController'})
   });
   static contract=getContract('TreeSelect');
   static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
@@ -779,6 +794,7 @@ export class TreeSelect extends PopupFieldComponent {
   getState(){const r=runtimeState.get(this).runtime;return r?r.getState():Object.freeze({open:false,destroyed:this.destroyed});}
   getTree(){const r=runtimeState.get(this).runtime;return r?r.getTree():null;}
   getControl(){const r=runtimeState.get(this).runtime;return r?r.getControl():null;}
+  getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
   getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
   getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
   getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}

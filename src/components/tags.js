@@ -7,7 +7,7 @@ import { DOM } from '../core/dom.js';
 import { URLPolicy } from '../utils/url.js';
 import { Utils } from '../utils/utils.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
-import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { FocusController } from '../core/focusController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { ResponsiveOverflow } from '../core/responsiveOverflow.js';
@@ -188,7 +188,7 @@ function setupTags(instance) {
   var composing=false;
   var formBridge=null;
   var keyboard=null;
-  var keyboardRegion=null;
+  var focusController=null;
   var standaloneTagDomain=null;
   var standaloneTagNavigation=null;
   var editorProjectionMutation=false;
@@ -400,8 +400,11 @@ function setupTags(instance) {
   }
   function applyRootState() {
     root.classList.toggle('is-hosted',opts.hosted===true);
-    if (keyboardRegion) { keyboardRegion.setDisabled(opts.disabled === true); keyboardRegion.setHosted(opts.hosted === true || adding === true); }
-    else root.tabIndex = opts.hosted === true || opts.disabled === true || adding === true ? -1 : 0;
+    if (focusController) {
+      focusController.setDisabled(opts.disabled === true);
+      focusController.setHosted(opts.hosted === true || adding === true);
+      if (adding !== true && focusController.getState().editLeaseActive) focusController.endEdit({ restore:false, reason:'tags-edit-release' });
+    } else root.tabIndex = opts.hosted === true || opts.disabled === true || adding === true ? -1 : 0;
     input.tabIndex = opts.hosted === true || adding === true ? 0 : -1;
     // Standalone Tags uses one real focus owner (root). + Add participates only in
     // the virtual tag cursor and must never add another Tab stop.
@@ -1270,7 +1273,7 @@ function setupTags(instance) {
     values.forEach(function (value) { if (add(value, meta)) changed = true; });
     return changed;
   }
-  function beginAdd() { if (destroyed || opts.editable !== true || InteractionPolicy.mutationLocked(opts)) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
+  function beginAdd() { if (destroyed || opts.editable !== true || InteractionPolicy.mutationLocked(opts)) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(focusController&&input)focusController.beginEdit(input,{source:'tags',reason:'begin-add'}); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
   function cancelAdd() { if (destroyed || opts.hosted === true) return false; adding=false; tokenInput.setInputValue('',{silent:true,reason:'cancel-add',source:'tags'}); opts.inputValue=''; render('cancel-add'); return true; }
   function canonicalFormValue() { return opts.checkable === true ? selection.values.slice() : coreTags().map(function(tag){return tag.value;}); }
   function syncFormBridge(meta) {
@@ -1452,8 +1455,10 @@ function setupTags(instance) {
     return false;
   }
   if (opts.hosted !== true) {
-    keyboardRegion = KeyboardRegion.create({
+    focusController = FocusController.create({
       root: root,
+      document: doc,
+      activeRegion: 'tags',
       disabled: opts.disabled === true,
       hosted: adding === true,
       navigation: {
@@ -1478,7 +1483,7 @@ function setupTags(instance) {
         if (key) activateStandaloneTag(key, 'tags-region-enter', detail.originalEvent);
       }
     });
-    keyboard = keyboardRegion.keyboard;
+    keyboard = focusController.keyboard;
     standaloneTagNavigation = TagNavigation.create({
       keyboard:keyboard,
       domainName:'tags',
@@ -1493,7 +1498,7 @@ function setupTags(instance) {
       exitRight:false
     });
     standaloneTagDomain = standaloneTagNavigation.domain;
-    scope.add(function () { if (standaloneTagNavigation) standaloneTagNavigation.destroy(); standaloneTagNavigation=null; standaloneTagDomain=null; if (keyboardRegion) keyboardRegion.destroy(); keyboardRegion=null; keyboard=null; });
+    scope.add(function () { if (standaloneTagNavigation) standaloneTagNavigation.destroy(); standaloneTagNavigation=null; standaloneTagDomain=null; if (focusController) focusController.destroy(); focusController=null; keyboard=null; });
   }
     
   function destroyRuntime() {
@@ -1512,7 +1517,9 @@ function setupTags(instance) {
     
   function focusRuntime() {
     if (opts.hosted === true) { if (opts.editable) focusWithoutScroll(input); return api; }
-    focusWithoutScroll(adding === true ? input : root);
+    if (adding === true) focusWithoutScroll(input);
+    else if (focusController) focusController.focus();
+    else focusWithoutScroll(root);
     return api;
   }
   function blurRuntime() {
@@ -1534,7 +1541,7 @@ function setupTags(instance) {
     getAddTriggerElement:function(){return opts.editable&&opts.hosted!==true&&!adding?addTrigger:null;},
     getOverflowElement:function(){return summary;}, getFormField:function(){return formBridge?formBridge.getFormField():null;},
     getTokenInput:function(){return tokenInput;}, getSelection:function(){return selection;},
-    getKeyboardNavigation:function(){return keyboard;}, getKeyboardRegion:function(){return keyboardRegion;},
+    getKeyboardNavigation:function(){return keyboard;}, getKeyboardRegion:function(){return focusController&&focusController.getKeyboardRegion?focusController.getKeyboardRegion():null;}, getFocusController:function(){return focusController;},
     getVirtualTagElement:getVirtualTagElement, moveVirtualTag:moveVirtualTag,
     reconcileVirtualTagKey:reconcileVirtualTagKey, ensureVirtualTagVisible:ensureVirtualTagVisible,
     removeVirtualTag:removeVirtualTag, getScroll:function(){return containerScroll;},
@@ -1668,6 +1675,13 @@ function recordForTags(instance) {
 }
 
 export class Tags extends FieldComponent {
+  static profile = Object.freeze({
+    name:'Tags',
+    focus:Object.freeze({ mode:'virtual-navigation', editLease:'input' }),
+    interaction:Object.freeze({ keymap:'tags' }),
+    form:Object.freeze({ serialize:true }),
+    ownership:Object.freeze({ focus:'FocusController' })
+  });
   static options = TAGS_DEFAULTS;
   static contract = ComponentContracts.get('Tags');
   static immutableOptions = Object.freeze(['container','document','formField','hosted']);
@@ -1746,6 +1760,7 @@ export class Tags extends FieldComponent {
   getSelection(){return recordForTags(this).getSelection();}
   getKeyboardNavigation(){return recordForTags(this).getKeyboardNavigation();}
   getKeyboardRegion(){return recordForTags(this).getKeyboardRegion();}
+  getFocusController(){return recordForTags(this).getFocusController();}
   getVirtualTagElement(key){return recordForTags(this).getVirtualTagElement(key);}
   moveVirtualTag(key,step){return recordForTags(this).moveVirtualTag(key,step);}
   reconcileVirtualTagKey(key){return recordForTags(this).reconcileVirtualTagKey(key);}
