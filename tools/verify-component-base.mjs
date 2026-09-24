@@ -6,6 +6,7 @@ import { Component } from '../src/core/component.js';
 import { componentHooks } from '../src/core/componentHooks.js';
 import { InstanceRegistry } from '../src/core/instanceRegistry.js';
 import { ComponentContracts } from '../src/core/componentContracts.js';
+import { ComponentProfile } from '../src/core/componentProfile.js';
 import { Table } from '../src/components/table.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -49,6 +50,13 @@ class TestComponent extends Component {
 class ChildComponent extends TestComponent {
     static options = Object.freeze({ size: 'lg', child: true });
     static optionNormalizers = Object.freeze({ custom: value => Number(value) });
+    static profile = Object.freeze({
+        name:'ChildComponent',
+        value:Object.freeze({ mode:'controlled-or-default' }),
+        focus:Object.freeze({ mode:'virtual-navigation' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController' }),
+        dependencies:Object.freeze({ interaction:Object.freeze(['focus']) })
+    });
 }
 
 assert.ok(ComponentContracts.names.length >= 40, 'canonical ComponentContracts catalog must be available without ComponentRuntime.');
@@ -61,6 +69,9 @@ assert.ok(instance.id.startsWith('qxframe9a7c2-childcomponent-'), 'generated ins
 assert.deepEqual(instance.options, { size: 'lg', enabled: false, child: true, custom: 7 }, 'static options and option normalizers must merge through the inheritance chain.');
 assert.ok(Object.isFrozen(instance.options), 'resolved options must be immutable.');
 assert.equal(instance.contract, TestComponent.contract, 'contract getter must inherit the nearest static contract.');
+assert.equal(instance.profile.name, 'ChildComponent', 'Component must expose its validated static ComponentProfile.');
+assert.equal(ComponentProfile.validate(instance.profile), true);
+assert.ok(Object.isFrozen(instance.profile), 'Component profile metadata must be immutable.');
 assert.equal(instance.destroyed, false);
 assert.equal(instance.rendered, false);
 assert.equal(instance.mounted, false);
@@ -182,6 +193,7 @@ console.log(JSON.stringify({
     optionInheritance: true,
     optionTransaction: true,
     contractValidation: true,
+    componentProfile: true,
     eventLifecycle: true,
     resourceOwnership: true,
     listenerCleanup: true,

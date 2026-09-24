@@ -26,6 +26,7 @@ function create(options) {
   var media = opts.matchMedia || bindFunction(win || global, (win || global).matchMedia);
   var resizeFactory = opts.createResizeObserver || null;
   var mutationFactory = opts.createMutationObserver || null;
+  var intersectionFactory = opts.createIntersectionObserver || null;
 
   function raf(callback) {
     if (typeof requestFrame !== 'function') throw new Error('[QXFRAME9A7C2] EnvironmentPort requestAnimationFrame is unavailable.');
@@ -44,6 +45,11 @@ function create(options) {
     if (typeof mutationFactory === 'function') return validateObserver(mutationFactory(callback), 'MutationObserver');
     var Ctor = opts.MutationObserver || (win && win.MutationObserver) || global.MutationObserver;
     return typeof Ctor === 'function' ? validateObserver(new Ctor(callback), 'MutationObserver') : null;
+  }
+  function createIntersectionObserver(callback, observerOptions) {
+    if (typeof intersectionFactory === 'function') return validateObserver(intersectionFactory(callback, observerOptions), 'IntersectionObserver');
+    var Ctor = opts.IntersectionObserver || (win && win.IntersectionObserver) || global.IntersectionObserver;
+    return typeof Ctor === 'function' ? validateObserver(new Ctor(callback, observerOptions), 'IntersectionObserver') : null;
   }
   function getComputedStyle(element) {
     if (typeof computedStyle !== 'function') throw new Error('[QXFRAME9A7C2] EnvironmentPort getComputedStyle is unavailable.');
@@ -65,6 +71,7 @@ function create(options) {
     cancelRaf,
     createResizeObserver,
     createMutationObserver,
+    createIntersectionObserver,
     getComputedStyle,
     matchMedia,
     now

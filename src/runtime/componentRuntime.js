@@ -1,4 +1,5 @@
 import { ComponentContracts } from '../core/componentContracts.js';
+import { ComponentProfile } from '../core/componentProfile.js';
 import { DOM } from '../core/dom.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { InstanceRegistry } from '../core/instanceRegistry.js';
@@ -58,20 +59,29 @@ function trackInstance(instance, name, bindingElement) {
     if (bindingElement && bindingElement !== root) rememberBinding(instance, bindingElement, name);
     return instance;
 }
+function normalizedProfile(name, profile) {
+    if (!profile) return null;
+    const defined = ComponentProfile.define(profile);
+    if (defined.name !== name) throw new TypeError('[QXFRAME9A7C2] ComponentProfile name must match runtime component name "' + name + '".');
+    return defined;
+}
 function definitionFrom(name, api) {
     const contract = ComponentContracts.get(name) || {};
     const explicit = api && api.definition && typeof api.definition === 'object' ? api.definition : {};
+    const profile = normalizedProfile(name, explicit.profile || (api && api.profile));
     return Object.freeze({
         defaults: Object.freeze(Utils.mergeOwn(explicit.defaults || api && api.defaults || {})),
         schema: contract.schema || Object.freeze({}),
         immutable: Object.freeze((explicit.immutable || api && api.immutableOptions || []).slice ? (explicit.immutable || api && api.immutableOptions || []).slice() : []),
         legacy: contract.legacy || Object.freeze([]),
         optionImpact: Object.freeze(Utils.mergeOwn(explicit.optionImpact || api && api.optionImpact || {})),
+        profile: profile,
         initializer: Object.prototype.hasOwnProperty.call(explicit, 'initializer') ? explicit.initializer : (api && Object.prototype.hasOwnProperty.call(api, 'initializer') ? api.initializer : null),
         allowUnknown: contract.allowUnknown !== false
     });
 }
 function describe(name) { return definitions[normalize(name)] || null; }
+function profileFor(name) { const definition = describe(name); return definition ? definition.profile : null; }
 function validateOptions(name, options = {}) {
     const key = normalize(name);
     const contract = ComponentContracts.get(key);
@@ -176,6 +186,7 @@ function validatePublicCallArgs(name, method, argsLike) {
 export function publishComponentApi(name, api) {
     const key = normalize(name), source = api || {}, published = Object.create(null);
     Utils.copyOwn(published, source);
+    if (source.profile) published.profile = normalizedProfile(key, source.profile);
     if (typeof source.create === 'function') published.create = function () { const raw = arguments, args = validatePublicCallArgs(key, 'create', raw); return trackInstance(source.create.apply(source, args), key, resolveElement(raw[0])); };
     if (typeof source.enhance === 'function') published.enhance = function () { const raw = arguments, args = validatePublicCallArgs(key, 'enhance', raw); return trackInstance(source.enhance.apply(source, args), key, resolveElement(raw[0])); };
     published.getInstance ??= target => getInstance(key, target);
@@ -188,7 +199,7 @@ export function publishComponentApi(name, api) {
 }
 
 export const ComponentRuntime = Object.freeze({
-    describe, validateOptions, mergeOptions, impactFor, setDefaults, getDefaults, getInstance, getOrCreateInstance, destroyInstance,
+    describe, profileFor, validateOptions, mergeOptions, impactFor, setDefaults, getDefaults, getInstance, getOrCreateInstance, destroyInstance,
     updateInstance:(name,target,patch)=>applyUpdate(name,getInstance(name,target),patch),
     updateData:(name,target,data)=>{ const instance=getInstance(name,target); return instance&&typeof instance.updateData==='function'?instance.updateData(data):applyUpdate(name,instance,{data}); },
     refresh:(name,target,meta)=>{ const instance=getInstance(name,target); return !!(instance&&typeof instance.refresh==='function'&&instance.refresh(meta)); },

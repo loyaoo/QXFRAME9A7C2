@@ -3,6 +3,7 @@ import { Utils } from '../utils/utils.js';
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
 import { DataRevision } from './dataRevision.js';
+import { Diagnostics } from './diagnostics.js';
 
 function defaultKey(item, index) {
     if (item && typeof item === 'object') {
@@ -39,6 +40,7 @@ function defaultKey(item, index) {
     var emitter = Events.createEmitter();
     var destroyed = false;
     var dataRevision = DataRevision.create();
+    var diagnostics = Diagnostics.isDiagnostics(opts.diagnostics) ? opts.diagnostics : null;
     var api = null;
 
     function currentItems() {
@@ -93,6 +95,21 @@ function defaultKey(item, index) {
       return currentItems().map(function (_, index) { return entryAt(index); });
     }
 
+    function diagnoseStableKeys() {
+      if (!diagnostics || destroyed) return 0;
+      var source = currentItems();
+      var seen = new Map();
+      var duplicates = 0;
+      for (var index = 0; index < source.length; index += 1) {
+        var key = keyOf(source[index], index);
+        if (seen.has(key)) {
+          diagnostics.report(Diagnostics.codes.DUPLICATE_STABLE_KEY, { key: key, firstIndex: seen.get(key), index: index, dataRevision: dataRevision.current() });
+          duplicates += 1;
+        } else seen.set(key, index);
+      }
+      return duplicates;
+    }
+
     function indexOf(key) {
       var normalized = String(key);
       var source = currentItems();
@@ -140,6 +157,7 @@ function defaultKey(item, index) {
         if (Utils.isFunction(opts.onItemsChange)) opts.onItemsChange(payload.items.slice(), payload);
         emitter.emit('items-change', payload);
       }
+      diagnoseStableKeys();
       return payload;
     }
 
@@ -213,6 +231,7 @@ function defaultKey(item, index) {
         localItems = Array.isArray(next.items) ? next.items.slice() : [];
         dataRevision.advance();
       }
+      diagnoseStableKeys();
       return api;
     }
 
@@ -245,6 +264,8 @@ function defaultKey(item, index) {
       setItems: commitItems,
       createRef: function (key) { return dataRevision.capture(String(key)); },
       isCurrentRef: function (ref) { return dataRevision.isCurrent(ref); },
+      getDiagnostics: function () { return diagnostics; },
+      diagnoseStableKeys: diagnoseStableKeys,
       move: move,
       moveBy: function (key, delta, meta) {
         var index = indexOf(key);
@@ -271,6 +292,7 @@ function defaultKey(item, index) {
       destroyed: { enumerable: true, get: function () { return destroyed; } }
     });
 
+    diagnoseStableKeys();
     return api;
   }
 
