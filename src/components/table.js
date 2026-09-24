@@ -293,7 +293,8 @@ function setupTable(instance) {
   var remoteProcessing = false;
   var remoteError = null;
   var remoteSummary = null;
-  var remoteSelection = { allMatching: false, excludedKeys: new Set(), queryFingerprint: null };
+  var selectionController = null;
+  var remoteSelectionChannel = null;
   var columnResizeSessions = [];
   var activeColumnResize = null;
   var columnReorderInteraction = null;
@@ -388,6 +389,8 @@ function setupTable(instance) {
     };
   }
   var model = TableModel.create(modelOptions());
+  selectionController = model.selectionController;
+  remoteSelectionChannel = selectionController.getRemoteChannel('allMatching');
 
   function isRemote() { return typeof opts.load === 'function'; }
   function isRemoteQueryReason(reason) { return isRemote() && ['sort','filter','filters','page','page-size','search','options'].indexOf(String(reason || '')) >= 0; }
@@ -407,35 +410,34 @@ function setupTable(instance) {
     return global.JSON.stringify({ search: query.search || '', sorters: query.sorters || [], filters: orderedFilters });
   }
   function querySelectionActive() {
-    return isRemote() && opts.remoteSelectionScope === 'query' && remoteSelection.allMatching === true && remoteSelection.queryFingerprint === remoteQueryFingerprint();
+    return isRemote() && opts.remoteSelectionScope === 'query' && !!remoteSelectionChannel && remoteSelectionChannel.allMatching === true && remoteSelectionChannel.queryKey === remoteQueryFingerprint();
   }
   function resetRemoteSelection() {
-    remoteSelection.allMatching = false;
-    remoteSelection.excludedKeys.clear();
-    remoteSelection.queryFingerprint = null;
+    return remoteSelectionChannel ? remoteSelectionChannel.clear({ silent:true, source:'table', reason:'remote-selection-reset' }) : false;
   }
   function syncRemoteSelectionQuery() {
-    if (!remoteSelection.allMatching) return false;
-    var fingerprint = remoteQueryFingerprint();
-    if (remoteSelection.queryFingerprint === fingerprint) return false;
-    resetRemoteSelection();
-    return true;
+    if (!remoteSelectionChannel || !remoteSelectionChannel.allMatching) return false;
+    return remoteSelectionChannel.reconcileQuery(remoteQueryFingerprint(), { silent:true, source:'table', reason:'query-revision' });
   }
   function isKeySelected(key, state) {
     var normalized = String(key);
-    if (querySelectionActive()) return !remoteSelection.excludedKeys.has(normalized);
+    if (querySelectionActive()) return remoteSelectionChannel.isSelected(normalized);
     return (state || currentState()).selectedKeys.indexOf(normalized) >= 0;
   }
   function selectionStateSnapshot() {
     var state = currentState();
     var queryMode = querySelectionActive();
+    var remoteState = remoteSelectionChannel ? remoteSelectionChannel.snapshot() : null;
     return Object.freeze({
       scope: isRemote() ? opts.remoteSelectionScope : 'page',
       mode: queryMode ? 'all-matching' : 'explicit',
       allMatching: queryMode,
       selectedKeys: Object.freeze(state.selectedKeys.slice()),
-      excludedKeys: Object.freeze(queryMode ? Array.from(remoteSelection.excludedKeys) : []),
-      queryFingerprint: queryMode ? remoteSelection.queryFingerprint : null
+      excludedKeys: Object.freeze(queryMode && remoteState ? remoteState.excludedKeys.slice() : []),
+      queryFingerprint: queryMode && remoteState ? remoteState.queryKey : null,
+      knownCount: queryMode && remoteState ? remoteState.knownCount : null,
+      queryRevision: queryMode && remoteState ? remoteState.revision : null,
+      dataRevision: selectionController ? selectionController.getDataRevision('selected') : 0
     });
   }
   function emitSelectionChange(meta) {
@@ -445,22 +447,23 @@ function setupTable(instance) {
     opts.onSelectionChange(values, Utils.assignOwn({ instance: api, selection: selectionStateSnapshot() }, meta || {}));
   }
   function setQuerySelectionAll(selected, meta) {
-    if (!isRemote() || opts.remoteSelectionScope !== 'query') return false;
+    if (!isRemote() || opts.remoteSelectionScope !== 'query' || !remoteSelectionChannel) return false;
+    var detail = Utils.assignOwn({ source:'table', reason:'selection', selectionReason:'query-all' }, meta || {});
     if (selected !== false) {
-      remoteSelection.allMatching = true;
-      remoteSelection.queryFingerprint = remoteQueryFingerprint();
-      remoteSelection.excludedKeys.clear();
-    } else resetRemoteSelection();
-    renderSelectionProjection(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-all' }, meta || {}));
-    emitSelectionChange(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-all' }, meta || {}));
+      remoteSelectionChannel.setAllMatching(remoteQueryFingerprint(), true, Utils.assignOwn({ silent:true }, detail));
+      remoteSelectionChannel.setKnownCount(currentState().filteredTotal, { silent:true, source:'table', reason:'query-count' });
+    } else remoteSelectionChannel.clear(Utils.assignOwn({ silent:true }, detail));
+    renderSelectionProjection(detail);
+    emitSelectionChange(detail);
     return true;
   }
   function toggleQuerySelection(key, selected, meta) {
-    if (!querySelectionActive()) return false;
+    if (!querySelectionActive() || !remoteSelectionChannel) return false;
     var normalized = String(key);
-    if (selected === false) remoteSelection.excludedKeys.add(normalized); else remoteSelection.excludedKeys.delete(normalized);
-    renderSelectionProjection(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-exclusion', key: normalized }, meta || {}));
-    emitSelectionChange(Utils.assignOwn({ reason: 'selection', selectionReason: 'query-exclusion', key: normalized }, meta || {}));
+    var detail = Utils.assignOwn({ source:'table', reason:'selection', selectionReason:'query-exclusion', key: normalized }, meta || {});
+    if (!remoteSelectionChannel.toggle(normalized, selected, Utils.assignOwn({ silent:true }, detail))) return false;
+    renderSelectionProjection(detail);
+    emitSelectionChange(detail);
     return true;
   }
   function normalizeRemoteResult(result) {
@@ -499,6 +502,7 @@ function setupTable(instance) {
       var normalized = result;
       opts.items = normalized.items; opts.total = normalized.total; opts.filteredTotal = normalized.filteredTotal; remoteSummary = normalized.summary;
       model.setRemoteData(normalized.items, { total: normalized.total, filteredTotal: normalized.filteredTotal }, { source: 'remote', reason: 'remote-result', origin: reason || 'remote-load' });
+      if (querySelectionActive() && remoteSelectionChannel) remoteSelectionChannel.setKnownCount(normalized.filteredTotal, { silent:true, source:'remote', reason:'query-count' });
       if (typeof opts.onLoad === 'function') opts.onLoad(normalized, Object.freeze({ query: query, instance: api }));
       return normalized;
     }).catch(function (error) {
@@ -2507,7 +2511,7 @@ function setupTable(instance) {
     getState:function(){var state=currentState(),focusState=keyboard?keyboard.virtualFocus.getState():null,decoded=focusState&&cellDomain&&focusState.domain===cellDomain.name?decodeNavigationCellKey(focusState.key):null;return Object.freeze(Utils.mergeOwn(state,{virtual:!!virtualizer&&virtualizer.enabled,keyboardNavigation:opts.keyboardNavigation===true,activeCell:decoded?Object.freeze({rowKey:decoded.rowKey,kind:decoded.kind,columnKey:decoded.kind==='data'?decoded.columnKey:null}):null,editingCell:editStateSnapshot(),forceRenderExpanded:opts.forceRenderExpanded===true,disabled:opts.disabled===true,readOnly:opts.readOnly===true,loading:opts.loading===true||remoteProcessing,processing:remoteProcessing,remoteStatus:remoteStatus(),loadError:remoteError,remoteSummary:remoteSummary,remote:isRemote(),query:isRemote()?remoteQuery():null,requestEpoch:remoteEpoch,selection:selectionStateSnapshot(),destroyed:destroyed}));},
     getDiagnostics:function(){return Object.freeze(Utils.mergeOwn(model.getDiagnostics?model.getDiagnostics():{},tableDiagnostics));},
     getModel:function(){return model;}, getRootElement:function(){return root;}, getTableElement:function(){return table;},
-    getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFocusController:function(){return focusController;}, getInteractionController:function(){return interactionController;}, getCapabilityController:function(){return capabilityController;}, getFilterPopup:function(){return filterPopup;},
+    getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFocusController:function(){return focusController;}, getInteractionController:function(){return interactionController;}, getCapabilityController:function(){return capabilityController;}, getSelectionController:function(){return selectionController;}, getFilterPopup:function(){return filterPopup;},
     openFilter:function(key){var column=currentColumns().filter(function(entry){return entry.key===String(key);})[0];if(!column)return false;var reference=DOM.findPrivate(thead,'tableFilter',column.key);if(!reference)return false;if(filterOpenControlled(column)&&column.filterDropdownOpen!==true){emitFilterOpenRequest(column,true,'api-open',null);return false;}return openFilterPopup(reference,column,null);},
     closeFilter:function(){if(!filterTrigger||!filterColumnKey)return false;var column=currentColumns().filter(function(entry){return entry.key===filterColumnKey;})[0];if(column&&filterOpenControlled(column)&&column.filterDropdownOpen===true){emitFilterOpenRequest(column,false,'api-close',null);return false;}return filterTrigger.close('api-close');}
   };
@@ -2531,7 +2535,8 @@ export class Table extends Component {
     name:'Table',
     focus:Object.freeze({ mode:'virtual-navigation', editLease:'cell-editor', regions:Object.freeze(['cells','header']) }),
     interaction:Object.freeze({ keymap:'table' }),
-    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController' })
+    selection:Object.freeze({ channels:Object.freeze(['selected','allMatching']), remote:'query-allMatching' }),
+    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController' })
   });
   static contract = ComponentContracts.get('Table');
   static immutableOptions = Object.freeze(['container','document']);
@@ -2610,6 +2615,7 @@ export class Table extends Component {
   getFocusController(){return recordForTable(this).getFocusController();}
   getInteractionController(){return recordForTable(this).getInteractionController();}
   getCapabilityController(){return recordForTable(this).getCapabilityController();}
+  getSelectionController(){return recordForTable(this).getSelectionController();}
   getFilterPopup(){return recordForTable(this).getFilterPopup();}
   openFilter(key){return recordForTable(this).openFilter(key);}
   closeFilter(){return recordForTable(this).closeFilter();}
