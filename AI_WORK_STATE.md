@@ -12,7 +12,7 @@
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `37a506d3c6dc2bfdfe3e00a059e7f0fb9970bd49` (PR #54 merge)
 - Current branch: `refactor/phase-d-selection-foundation-20260924`
-- Open PRs at this checkpoint: pending PHASE-D-001 PR
+- Open PRs at this checkpoint: PR #55 (`refactor/phase-d-selection-foundation-20260924`)
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #337 / `35965963724` (PR #54)
@@ -24,8 +24,8 @@
 ## CURRENT
 
 ### PHASE-D-001 — SelectionController foundation + ItemCollection/List/OptionList/Tree first pack
-Status: IN_PROGRESS
-Task progress: 70%
+Status: READY_TO_MERGE
+Task progress: 95%
 
 Why this is current:
 - PHASE-C-003 is merged and green through PR #54 and main #338, so Phase C is complete.
@@ -61,12 +61,14 @@ Implemented in current PHASE-D-001 branch:
 - Tree ComponentProfile declares SelectionController ownership; no SelectionController ownership is claimed yet for Transfer/Table/Tags/Cascader.
 - required verify:selection-controller gate checks no duplicate Set store, DataRevision reentrancy, selected/checked channel separation, revision-bound anchor invalidation, and first-pack source ownership.
 - browser smoke covers List/OptionList single-store identity, stale-anchor invalidation, and Tree selected/checked channel identity + independence.
+- local sandbox targeted gates pass: `verify:selection-controller`, `verify:shared-protocol`, `verify:collection-family`, `verify:architecture`.
+- PR #55 head `7fa576cf6864bd897544e52cf7b107b739e0a7f2` is green in QXFRAME CI #340 / run `35968014373` (`release`: success).
 
 Next exact step:
-1. create/run the PHASE-D-001 PR against current main;
-2. fix only real Completion audit/browser/release failures without weakening stable-key/channel/revision gates;
-3. merge only a green PR head and verify main CI + Pages;
-4. then continue Phase D with Transfer and the later Table/Tags/Cascader selection semantics.
+1. merge green PR #55;
+2. verify merged main CI + Pages;
+3. checkpoint PHASE-D-001 as DONE;
+4. start the next Phase D task by extending SelectionController for Transfer's `sourceChecked` / `targetChecked` / `target` channels with per-channel dataset revision ownership before migrating Transfer.
 
 ## Current authority snapshot — after Phase A
 
