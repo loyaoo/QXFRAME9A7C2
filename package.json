@@ -86,7 +86,8 @@
     "verify:phase-e-motion-closeout": "node tools/verify-phase-e-motion-closeout.mjs",
     "verify:phase-f-css-authority": "node tools/verify-phase-f-css-authority.mjs",
     "verify:phase-f-token-graph": "node tools/verify-phase-f-token-graph.mjs",
-    "verify:phase-f-color-channels": "node tools/verify-phase-f-color-channels.mjs",\n    "verify:phase-f-state-cascade": "node tools/verify-phase-f-state-cascade.mjs"
+    "verify:phase-f-color-channels": "node tools/verify-phase-f-color-channels.mjs",
+    "verify:phase-f-state-cascade": "node tools/verify-phase-f-state-cascade.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",
