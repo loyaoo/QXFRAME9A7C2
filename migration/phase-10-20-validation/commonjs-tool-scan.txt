@@ -1,3 +1,0 @@
-CommonJS-era tool files:
-
-require/module.exports residue in Node tools:

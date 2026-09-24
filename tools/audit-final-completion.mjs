@@ -25,7 +25,7 @@ const secretScanFiles=[
   ...walk(path.join(root,'tools'),f=>/\.(?:js|mjs|json|ya?ml|md)$/.test(f)),
   ...walk(path.join(root,'.github/workflows'),f=>/\.ya?ml$/.test(f)),
   ...walk(path.join(root,'docs'),f=>/\.(?:js|json|html|md)$/.test(f)),
-  ...['package.json','package-lock.json','README.md','HARDENING-v2.19.81.md','MIGRATION-src-dist-unified.md'].map(name=>path.join(root,name)).filter(fs.existsSync)
+  ...['package.json','package-lock.json','README.md','AGENTS.md','AI_WORK_STATE.md','QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md'].map(name=>path.join(root,name)).filter(fs.existsSync)
 ];
 const secretFilePaths=secretScanFiles.map(f=>posix(path.relative(root,f))).filter(rel=>/(^|\/)(?:\.env(?:\.|$)|[^/]+\.(?:pem|key|p12|pfx)|id_rsa|credentials|secrets?\.json)$/i.test(rel));
 const secretPatterns=[
@@ -227,15 +227,15 @@ for(const rel of activeMetadataFiles){
     if(/src\/manifests\//.test(line)||(/src\/modules\//.test(line)&&!/no `src\/modules/.test(line))||/Runtime consumers remain on the legacy registry until Rollup cutover/i.test(line)) staleMetadata.push({file:rel,line:i+1,text:line.trim()});
   });
 }
-const baselineApi=JSON.parse(fs.readFileSync(path.join(root,'migration/baseline-hotfix6-2026-09-22/qxframe9a7c2-api.json'),'utf8'));
-const baselineModules=JSON.parse(fs.readFileSync(path.join(root,'migration/baseline-hotfix6-2026-09-22/qxframe9a7c2-module-manifest.json'),'utf8'));
+const baselineApi=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/qxframe9a7c2-api.json'),'utf8'));
+const baselineModules=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/qxframe9a7c2-module-manifest.json'),'utf8'));
 const currentApi=generateComponentApi({root});
 const currentModules=generateModuleManifest({root});
 const json=v=>JSON.stringify(v);
 const apiParity=json(baselineApi)===json(currentApi);
 const moduleParity=json(baselineModules)===json(currentModules);
 
-const oldBrowser=fs.readFileSync(path.join(root,'migration/baseline-hotfix6-2026-09-22/verify-browser.log'),'utf8');
+const oldBrowser=fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/verify-browser.log'),'utf8');
 const currentBrowser=fs.readFileSync(path.join(root,'tools/verify-browser-smoke.html'),'utf8');
 const oldChecks=new Set([...oldBrowser.matchAll(/"name":"([^"]+)"/g)].map(m=>m[1]));
 const currentChecks=new Set([...currentBrowser.matchAll(/(?:assert|record)\(\s*['"]([^'"]+)['"]/g)].map(m=>m[1]));

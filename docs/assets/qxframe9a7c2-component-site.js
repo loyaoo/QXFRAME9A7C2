@@ -158,9 +158,8 @@
       '<div class="qxframe9a7c2-docs-sidebar-footer"><strong>视觉 / 验证</strong>' +
         '<a href="../tokens.html">Tokens & Theme Reference</a>' +
         '<a href="../theme-playground.html">Theme Playground</a>' +
-        '<a href="../stage-08.html">Stage 08 Runtime Lab</a>' +
-        '<a href="../stage-09.html">Stage 09 Performance Lab</a>' +
-        '<a href="../../tests/stage-08.html">Stage 08 Tests</a>' +
+        '<a href="../all-components-static.html">All Components Static</a>' +
+        '<a href="../admin-dashboard-static.html">Admin Static Demos</a>' +
       '</div>' +
     '</aside>';
   }
@@ -188,10 +187,10 @@
     app.innerHTML = '<div class="qxframe9a7c2-layout qxframe9a7c2-docs-app-layout">' + topbar(true) +
       '<main class="qxframe9a7c2-docs-home qxframe9a7c2-layout-content">' +
         '<section class="qxframe9a7c2-docs-home-hero"><div><div class="qxframe9a7c2-docs-eyebrow">COMPONENTS · LIVE DEMOS</div><h1>组件演示中心</h1><p class="qxframe9a7c2-docs-home-lead">按 Design System → Component → Runtime 分层浏览。每个组件保留独立 live demo、完整 Options / Methods / Events、实时 state 与 event log；Token Reference 直接展示当前 canonical theme owner 链，避免文档与生产 token 再次漂移。</p></div><div class="qxframe9a7c2-docs-home-stat"><strong>' + catalog.length + '</strong><span>独立组件 / Building Block 演示页</span></div></section>' +
-        '<section class="qxframe9a7c2-docs-home-reference"><a class="qxframe9a7c2-docs-home-reference-card is-primary" href="tokens.html"><span class="qxframe9a7c2-docs-eyebrow">DESIGN SYSTEM</span><strong>Tokens & Theme Reference</strong><p>Primary 1–13、MIX Auxiliary 1–13、Neutral 1–13、13 套 physical palettes、semantic、spacing / type / radius / motion / z-index 与 Runtime Config。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="theme-playground.html"><span class="qxframe9a7c2-docs-eyebrow">LIVE CANVAS</span><strong>Theme Playground</strong><p>实时切换 seed、Neutral policy、字体、圆角与 Light / Dark，观察全部组件继承同一套 public theme contract。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="stage-08.html"><span class="qxframe9a7c2-docs-eyebrow">RUNTIME</span><strong>Stage 08 Lab</strong><p>查看 lifecycle、overlay、virtualization、transition 与跨组件运行时行为。</p></a></section>' +
+        '<section class="qxframe9a7c2-docs-home-reference"><a class="qxframe9a7c2-docs-home-reference-card is-primary" href="tokens.html"><span class="qxframe9a7c2-docs-eyebrow">DESIGN SYSTEM</span><strong>Tokens & Theme Reference</strong><p>Primary 1–13、MIX Auxiliary 1–13、Neutral 1–13、13 套 physical palettes、semantic、spacing / type / radius / motion / z-index 与 Runtime Config。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="theme-playground.html"><span class="qxframe9a7c2-docs-eyebrow">LIVE CANVAS</span><strong>Theme Playground</strong><p>实时切换 seed、Neutral policy、字体、圆角与 Light / Dark，观察全部组件继承同一套 public theme contract。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="all-components-static.html"><span class="qxframe9a7c2-docs-eyebrow">STATIC</span><strong>All Components Static</strong><p>查看完整组件 DOM 场景中的 Light / Dark、状态、组合与视觉一致性。</p></a></section>' +
         '<div class="qxframe9a7c2-docs-home-search"><span class="qxframe9a7c2-docs-search-icon" data-qxframe9a7c2-docs-search-icon></span><input type="search" data-qxframe9a7c2-docs-home-search placeholder="搜索组件名称、中文名称或功能（如 popup、range、keyboard）"></div>' +
         '<div data-qxframe9a7c2-docs-home-groups></div>' +
-        '<div class="qxframe9a7c2-docs-home-tools"><a href="tokens.html">Tokens & Theme Reference</a><a href="theme-playground.html">Theme Playground</a><a href="stage-08.html">Stage 08 Runtime Lab</a><a href="stage-09.html">Stage 09 Performance Lab</a><a href="../tests/stage-08.html">Stage 08 Tests</a><a href="../README.md">README</a></div>' +
+        '<div class="qxframe9a7c2-docs-home-tools"><a href="tokens.html">Tokens & Theme Reference</a><a href="theme-playground.html">Theme Playground</a><a href="all-components-static.html">All Components Static</a><a href="admin-dashboard-static.html">Admin Static Demos</a><a href="../README.md">README</a></div>' +
       '</main></div>';
 
     mountTopbarShell();
