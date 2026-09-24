@@ -10,66 +10,53 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `eef0048a5f2c88f1a0e9fcf1de23eb8a064d7c4a` (PR #64 merge)
-- Current branch: `refactor/phase-e-overlay-motion-foundation-20260924`
-- Open PRs at this checkpoint: pending PHASE-E-001 foundation PR
+- Last code-affecting main commit: `a7b6d55ba1fe755adb9409d045e67f12f211ac54` (PR #65 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #371 / `35986798091` (PR #64)
-- Latest green main CI + Pages: #372 / `35990367837`
+- Latest green Controller PR CI: #374 / `35992315155` (PR #65)
+- Latest green main CI + Pages: #375 / `35992675173`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase E — Overlay + Motion
-- Current Task: `PHASE-E-001`
+- Current Task: `PHASE-E-002`
 
 ## CURRENT
 
-### PHASE-E-001 — OverlayController + MotionController foundations
-Status: IN_PROGRESS
-Task progress: 80%
+### PHASE-E-002 — Trigger/Popup facade propagation + overlay naming closeout
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- handbook Phase D selection scope is fully accepted through PR #55 / #57 / #62 / #63 / #64.
-- PR #64 exact-head CI #371 / `35986798091` succeeded and merged main release + Pages #372 / `35990367837` succeeded.
-- Phase E is the next handbook phase and must evolve existing OverlayRuntime / LayerManager / DismissableLayer / PopupSurface and MotionCore / Transition authorities rather than duplicate them.
-- neither `src/core/overlayController.js` nor `src/core/motionController.js` exists on current main, so the first Phase E pack is a foundation/adapter pack before broad component migration.
+- PHASE-E-001 foundation is merged and green through PR #65 / CI #374 and main CI + Pages #375.
+- Trigger now enters physical overlay resources through the canonical OverlayController and motion through MotionController-backed Transition.
+- PopupComponent / PopupFieldComponent and Trigger-derived families already reuse Trigger, but they do not yet expose the new resource/motion controller facades consistently.
+- historical `OverlayComponent.getOverlayController()` predates the new controller and currently returns the Modal/Drawer family-local logical open/close adapter; blindly reusing that name for the new resource controller would create an API/ownership ambiguity.
+- direct OverlayRuntime consumers still exist in Modal, Drawer, Image preview, Loading and Upload preview and must migrate in later coherent packs after the base naming boundary is frozen.
 
 Frozen impact map:
-- OverlayController owns overlay resource intent/lease only: layer, portal, position, logical parent, outside/dismiss registration, isolation, scroll lock and overlay lifecycle. It must not own logical `open`.
-- MotionController owns motion intent, visual presence, generation and animation-resource lifecycle by composing existing MotionCore/Transition. It must not own business `open` or value.
-- OpenStateBridge remains logical open authority. Overlay active/mounted state and Motion presence state remain separate.
-- LayerManager remains z-index/layer-stack authority; DismissableLayer remains outside/Escape delivery authority; OverlayRuntime remains the mature resource execution layer until the controller facade replaces direct component entry points.
-- MotionCore remains low-level generation/timing/style authority; no second generation counter may be introduced in MotionController.
-- close reasons must converge on handbook semantics without turning close into commit.
-- closing motion must not release modal isolation/scroll lock before the blocking surface is actually safe to release.
-- parent teardown must suppress descendant focus-restore cascades.
-- Phase C Interaction/Focus and Phase D Selection authorities remain unchanged.
+- logical open remains OpenStateBridge / family-local open adapter authority.
+- `OverlayController` means physical overlay-resource facade only; it must never be aliased to a family object that owns `open`.
+- PopupComponent and PopupFieldComponent may safely forward their owned Trigger's OverlayController/MotionController identity without adding stores.
+- OverlayComponent must separate its legacy/family controller accessor from the new resource-controller accessor before Modal/Drawer migration.
+- no component should import OverlayRuntime directly after its Phase E migration pack.
+- Transition remains the public compatibility facade over MotionController; components do not need to bypass Transition solely to claim motion ownership.
+- direct native/physical subdomains (Tooltip singleton Trigger, nested Dropdown submenu Trigger, native editor focus) remain delegated to their existing Trigger sessions.
 
 Scope:
-- audit existing OverlayRuntime/Trigger/PopupSurface and MotionCore/Transition contracts before adding facades.
-- add minimal OverlayController and MotionController facades that delegate to existing authorities and expose structured state/results without duplicate truth.
-- wire only the smallest representative foundation consumer(s) needed to prove the boundary; do not migrate Modal/Drawer/all pickers in the foundation PR.
-- add architecture/source tests proving controllers do not own open/value or duplicate layer/generation state.
-- add browser regressions for nested overlay routing, blocked inner Escape propagation, focus restore/resource lease lifetime, motion reverse/stale completion where the foundation touches them.
-
-Implemented in current PHASE-E-001 foundation pack:
-- new `MotionController` is a facade over existing MotionCore; it does not create another generation counter or business-open state.
-- MotionCore exposes its existing canonical generation in `getState()` and a bounded `cancel(meta)` that settles the current generation through the existing completion path.
-- Transition is now the compatibility facade over MotionController, preserving existing Transition API while exposing show/hide/reverse/cancel and the canonical controller identity.
-- new `OverlayController` is a facade over existing OverlayRuntime; it delegates layer/portal/position/dismiss/focus/isolation/scroll-lock execution and never imports or owns OpenStateBridge.
-- OverlayController defines normalized handbook close reasons without changing the underlying logical-open authority.
-- Trigger enters overlay resources through OverlayController and motion through controller-backed Transition; logical open remains Trigger/OpenStateBridge authority.
-- Trigger exposes `getOverlayController()` / `getMotionController()` for conformance and ownership inspection.
-- new required `verify:phase-e-foundation` structurally forbids duplicate Motion generation/open truth and verifies borrowed-resource facade ownership with Node contracts.
-- sandbox source Chromium regression passed rapid Motion reverse/cancel plus Trigger Open/Overlay/Motion three-state separation: logical close deactivates interaction immediately while overlay resources stay active through leave motion, then release after settle.
-- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, platform, modern architecture (40 components / 0 legacy violations), component-base and 40 component contracts.
+- freeze a non-ambiguous base-class API for logical overlay family adapters versus physical OverlayController resources.
+- propagate Trigger controller facades through PopupComponent / PopupFieldComponent without changing their open/close semantics.
+- add source/browser conformance proving Popover/Tooltip/Dropdown/picker-style popup bases expose the same Trigger controller identities.
+- do not migrate Modal/Drawer/Image/Loading/Upload direct OverlayRuntime ownership in the same base-API PR unless the change is mechanical and independently gated.
+- preserve all Phase C focus/interaction and Phase D selection behavior.
 
 Next exact step:
-1. open/run the PHASE-E-001 foundation PR from the audited branch;
-2. fix only exact-head Completion/release/browser failures without moving logical open into OverlayController or adding a second Motion generation;
-3. merge only green and verify main release + Pages;
-4. checkpoint PHASE-E-001 as DONE;
-5. continue Phase E with Trigger/Popup base family adoption before Modal/Drawer/picker overlays and Collapse/Tabs/Dropdown motion.
+1. audit PopupComponent, PopupFieldComponent and OverlayComponent accessor names plus public usage/tests;
+2. define compatibility-safe logical-controller vs resource-controller getters without changing open/value truth;
+3. implement the smallest base propagation pack and dedicated regression gate;
+4. merge exact-head green and verify main + Pages;
+5. migrate Modal/Drawer direct OverlayRuntime + multi-Transition orchestration in the next Phase E pack.
 
 ## Current authority snapshot — after Phase A
 
@@ -80,12 +67,12 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
 - Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
 - Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
-- Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
+- Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
 - Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
-- Motion: `MotionCore`, `Transition` and `TransitionGroup` remain the low-level motion authority; no parallel generation counter may be introduced.
+- Motion: `MotionController` is now the intent facade over canonical `MotionCore`; `Transition` delegates through it and MotionCore remains generation/timing/style authority. `TransitionGroup` remains on MotionCore until its owning Phase E pack. No parallel generation counter is permitted.
 - Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
 - Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
 - Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
@@ -100,6 +87,22 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-E-001 — OverlayController + MotionController foundations
+Status: DONE
+Evidence:
+- PR #65 merged
+- merge commit `a7b6d55ba1fe755adb9409d045e67f12f211ac54`
+- PR CI #374 / `35992315155`: success
+- main CI + Pages #375 / `35992675173`: success
+Outcome:
+- OverlayController delegates to OverlayRuntime and owns no logical-open truth.
+- MotionController delegates to MotionCore and creates no second generation authority.
+- MotionCore exposes canonical generation plus bounded cancel through its existing completion path.
+- Transition is the compatibility facade over MotionController.
+- Trigger enters overlay resources through OverlayController while logical open remains OpenStateBridge-owned.
+- sandbox Chromium verified rapid reverse/cancel and Open/Overlay/Motion three-state resource lifetime.
+- required `verify:phase-e-foundation` plus full release gates passed.
 
 ### PHASE-D-005 — Select/TreeSelect/Cascader selection closeout
 Status: DONE
