@@ -25,6 +25,11 @@ assert.equal(controller.projection({open:true,previewControl:true}).channel,'raw
 assert.equal(controller.projection({open:true,previewControl:true}).value,'12:34');
 controller.setRawInput('12:34',{silent:true,active:false});
 assert.equal(controller.projection({open:true,previewControl:true}).channel,'preview');
+controller.setRawInput('typed',{silent:true,active:true,source:'input'});
+const revisionBeforeLeaseRelease=controller.revision;
+controller.setDraft(controller.draftValue,{silent:true,source:'keyboard',reason:'same-selection'});
+assert.equal(controller.rawInputActive,false,'a non-input selection must release the raw-input display lease even when draft value is unchanged.');
+assert.ok(controller.revision>revisionBeforeLeaseRelease,'channel ownership changes must advance revision.');
 controller.clearPreview({silent:true});
 assert.equal(controller.projection({open:true}).channel,'draft');
 assert.equal(controller.commit({source:'keyboard',reason:'confirm'}),true);
