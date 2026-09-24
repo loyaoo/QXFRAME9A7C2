@@ -9,14 +9,14 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Phase A kickoff main: `b54e8be325498b680df7059ee53929d40caf13b0`
-- Last code-affecting main commit: `51b7f317037fc538beaadc6f710da077a8429d0f` (PR #47 merge)
-- Current branch: `refactor/phase-a-authority-integration-20260924`
+- Last code-affecting main commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2` (PR #48 merge)
+- Current branch: `main`
 - Bootstrap PR: #46 merged
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green PR CI: run #312 / `35952642035` (PR #47)
-- Latest green main CI + Pages: run #313 / `35952965100` for merge `51b7f317037fc538beaadc6f710da077a8429d0f`
-- Controller migration implementation progress: 14% (PHASE-A-002 first authority-integration batch implemented; PR/CI pending; no component files changed)
+- Latest green PR CI: run #315 / `35953604691` (PR #48)
+- Latest green main CI + Pages: run #313 / `35952965100`; replacement main run #316 / `35953925660` is in progress for PR #48 merge
+- Controller migration implementation progress: 16% (PHASE-A-002 first authority-integration batch merged; main CI/Pages verification in progress; no component files changed)
 
 ## CURRENT
 
@@ -90,12 +90,13 @@ Completed in current authority-integration batch:
 - ProjectionScheduler integration was evaluated against current `DOMProjection` / `RovingProjection` / keyboard visual projection. Those authorities are synchronous and do not currently own a competing async revision counter; inserting ProjectionScheduler now would create parallel scheduling rather than replace an owner. Deferred until a Controller projection snapshot actually replaces an async/stale-prone path.
 
 PR / CI evidence:
-- PR #48 open from `refactor/phase-a-authority-integration-20260924` to `main`;
-- PR head before this checkpoint: `98e7da17674381a4448071bf2e62a4d7c4e3c53d`;
-- CI: pending.
+- PR #48 merged;
+- merge commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2`;
+- PR CI #315 / `35953604691`: success;
+- main CI + Pages #316 / `35953925660`: in progress.
 
 Next exact step:
-- run full PR #48 release CI, fix implementation failures without weakening gates, then merge and verify main CI + Pages. After green merge, proceed to the next Shared Protocol authority integration (EnvironmentPort/Diagnostics/ComponentProfile adoption) before direct component migration.
+- verify main CI + Pages #316 for merge `01875c583fe99c47ee249a4e9eeb6e86304f23f2`. If green, close this PHASE-A-002 batch and continue with a fresh branch for EnvironmentPort/Diagnostics/ComponentProfile adoption into existing authorities before direct component migration.
 
 ### PHASE-A-002 — Shared Protocol authority integration
 Status: IN_PROGRESS
