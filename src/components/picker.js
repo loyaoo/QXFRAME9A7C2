@@ -94,6 +94,14 @@ export class PickerComponent extends PopupFieldComponent {
         return session ? session.cancel(Utils.assignOwn({ source: 'api', reason: 'cancel' }, meta)) : false;
     }
 
+    confirmFromKeyboard(event) {
+        if (!event || event.key !== 'Enter' || this.options.needConfirm !== true || event.isComposing === true || !this.canMutate()) return false;
+        if (event.preventDefault) event.preventDefault();
+        const committed = this.commit({ source: 'keyboard', reason: 'enter-confirm', originalEvent: event });
+        if (committed !== false) this.close('confirm', event);
+        return true;
+    }
+
     clear(meta = {}) {
         if (this.destroyed || !this.canMutate()) return false;
         const hook = this[pickerHooks.clear];
