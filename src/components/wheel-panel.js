@@ -729,6 +729,7 @@ function create(options) {
     document: doc,
     disabled: opts.disabled === true,
     hosted: false,
+    activeRegion: 'column',
     navigation: {
       editableKeys: true,
       handlers: {
