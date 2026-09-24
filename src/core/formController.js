@@ -269,7 +269,7 @@ function create(options){
     if(destroyed)return OperationResult.disposed(contextFor('form-reset-disposed',meta),{reason:'form-controller-destroyed'});
     var source=meta&&typeof meta==='object'?meta:{},context=contextFor('form-reset',source),event=source.originalEvent||null;
     if(event&&event.defaultPrevented)return OperationResult.blocked(context,{reason:'native-reset-cancelled'});
-    submitGeneration+=1;if(submitTask.pending)submitTask.cancel('form-reset');
+    submitGeneration+=1;if(submitTask.pending)submitTask.cancel('form-reset');submitPending=false;
     revision+=1;invalidateValidations('form-reset');
     var requested=false,changed=false;
     for(const field of fields.values()){
