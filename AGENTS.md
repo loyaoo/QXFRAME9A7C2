@@ -6,7 +6,7 @@ This repository is maintained as a long-running AI-assisted framework project.
 
 1. The checked-out Git repository, current branch, PR and CI are the factual state.
 2. `AI_WORK_STATE.md` is the persistent cross-session checkpoint and progress ledger.
-3. `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` is the sole target architecture and migration specification for the Controller/Shared-Protocol program.
+3. `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` is the sole target architecture and migration specification for the 9-Runtime-Controller + pure-CSS Theme/Token + Shared-Protocol program. The filename is retained for historical link stability; the document body is authoritative.
 4. Current source, manifests, tests and canonical docs define already-shipped behavior unless the master handbook explicitly changes it.
 5. Chat history is never a substitute for the repository checkpoint.
 
