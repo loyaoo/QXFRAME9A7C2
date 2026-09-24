@@ -22,7 +22,7 @@ const cssOrder=JSON.parse(read('tools/manifests/css-order.json'));
 assert.equal(fs.existsSync(path.join(root,'src/css')),false,'src/css split mirror must be removed; src/qxframe9a7c2.css is the sole CSS source.');
 assert.equal(cssOrder.files.length,1,'CSS order manifest must expose one physical source.');
 assert.equal(cssOrder.files[0].file,'src/qxframe9a7c2.css','CSS order manifest must point at canonical CSS.');
-assert.match(postbuild,/src['"],\s*['"]qxframe9a7c2\.css/,'release build must copy the canonical CSS source.');
+assert.match(postbuild,/path\.join\(root,\s*['"]src\/qxframe9a7c2\.css['"]\)/,'release build must copy the canonical CSS source.');
 assert.doesNotMatch(postbuild,/src\/css|00-foundation|10-compatibility/,'release build must not consume split CSS mirrors.');
 
 for(const pattern of [
