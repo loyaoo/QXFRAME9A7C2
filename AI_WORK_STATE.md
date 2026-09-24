@@ -10,49 +10,50 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `be2263e5c9cd388efe42142cfa28657fe0c8f5b4` (PR #50 merge)
-- Current branch: `refactor/phase-b-picker-like-value-20260924`
+- Last code-affecting main commit: `7f3a475565fec5548871e7c6c52a7ed8c0e945bc` (PR #51 merge)
+- Current branch: `main`
 - Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #324 / `35957442947` (PR #50)
-- Latest green main CI + Pages: #325 / `35957755294`
-- Controller migration implementation progress: 47%
-- Current Phase: Phase B
-- Current Task: `PHASE-B-002`
+- Latest green Controller PR CI: #326 / `35958353342` (PR #51)
+- Latest green main CI + Pages: #327 / `35958853046`
+- Controller migration implementation progress: 50%
+- Current Phase: Phase C
+- Current Task: `PHASE-C-001`
 
 ## CURRENT
 
-### PHASE-B-002 — ValueController + picker-like popup second migration pack
-Status: IN_PROGRESS
-Task progress: 70%
+### PHASE-C-001 — FocusController foundation + Time/Date composite regions
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-B-001 first Picker pack is merged and green on PR + main.
-- Select / TreeSelect / Cascader already use `StateController.createOptionValueBinding()`, which now delegates to ValueController; Autocomplete uses `StateController.create()`, which also delegates.
-- The remaining work is to make ValueController the explicit public/internal authority for this picker-like family, preserve existing controlled/defaultValue semantics, and declare capability profiles without creating a second value engine.
+- Phase B Value + Picker Family is complete and green through PR #51 and main #327.
+- The handbook Phase C order starts with TimePanel and Date Calendar/PeriodPanel before Select / TreeSelect / Cascader / Menu / Tags.
+- Existing focus behavior already converges on KeyboardRegion + KeyboardNavigation.virtualFocus + FocusScope; Phase C must elevate/reuse those authorities instead of replacing them.
+- Current QA still includes TimePanel invisible/extra focus reports and DatePicker stale cursor/region handoff defects.
 
 Scope:
-- move reusable `createValueBinding` / `createOptionValueBinding` helpers onto ValueController while keeping StateController as compatibility facade only;
-- migrate Select / TreeSelect / Cascader / Autocomplete imports/calls to ValueController;
-- add ComponentProfile declarations for their actual value/focus/interaction/overlay/form capabilities;
-- preserve their existing controlled proposal/external-sync behavior and current selection/search authorities;
-- do not fold FocusController/SelectionController work into this task beyond value-session correctness;
-- add structural + browser regressions proving controlled/uncontrolled parity and no duplicate value owner.
+- add FocusController as an aggregate facade over existing FocusManager / FocusScope / KeyboardRegion / KeyboardNavigation virtual focus; do not add a second DOM-focus or active-item engine;
+- make canonical real-focus host, active region, hosted virtual domain, focus return target and edit lease explicit;
+- first migration pack: WheelPanel/TimePanel plus Calendar/PeriodPanel direct focus adapters;
+- preserve one Tab stop for TimePanel; hour/minute/second columns/items remain virtual and non-tabbable;
+- preserve DatePicker hosted real focus on the picker editor while Calendar/PeriodPanel project exactly one active-item ring;
+- preserve native/hybrid editor key priority and IME guards;
+- add focused structural/browser regressions for real-focus ownership, hosted domains, region switching, Home/End/Page, readonly/disabled behavior and no duplicate rings.
 
-Implemented in current PHASE-B-002 branch:
-- `ValueController.createValueBinding()` and `createOptionValueBinding()` are now canonical; StateController forwards them only for compatibility.
-- Select / TreeSelect / Cascader call ValueController.createOptionValueBinding directly.
-- Autocomplete calls ValueController.create directly and declares committed+draft value channels.
-- all four components declare explicit ValueController ComponentProfile ownership without moving Search/Selection/Focus authorities.
-- `verify:value-family` prevents these components from regressing to StateController and verifies authored value vs defaultValue ownership.
-- browser smoke adds missing TreeSelect and Autocomplete controlled proposal/external-sync/defaultValue coverage; existing source browser coverage already protects Select and Cascader.
+Audit already completed before implementation:
+- WheelPanel column Scroll instances already use `keyboard:false` + `focusable:false`; the wheel root KeyboardRegion is the current canonical real-focus owner.
+- TimePanel delegates focus/key handling/virtual focus to WheelPanel rather than owning another keyboard engine.
+- Calendar and PeriodPanel already use KeyboardRegion.bindVirtualFocus and ActiveItem; DatePicker can host those domains on its editor.
+- Existing browser smoke already covers TimePanel inner nodes non-tabbable, PeriodPanel single keyboard ring, DatePicker dual-panel seam and title/drill handoff. New tests should extend these contracts, not duplicate them.
 
 Next exact step:
-1. create the PHASE-B-002 pull request;
-2. run Completion audit + full release/browser CI and fix implementation failures without weakening gates;
-3. merge only the green PR head and verify main CI + Pages;
-4. then close Phase B value-family migration or move only remaining value-owner consumers required by the handbook.
+1. create a fresh PHASE-C-001 branch from current main after this checkpoint;
+2. implement the FocusController facade by composing existing focus authorities;
+3. migrate WheelPanel/TimePanel and Calendar/PeriodPanel adapters without changing value/selection ownership;
+4. add focused Phase C verification and missing browser regressions;
+5. run full PR release CI, merge only green, then verify main CI + Pages.
 
 ## Current authority snapshot — after Phase A
 
@@ -61,7 +62,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
 - Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
-- Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardNavigation`, `RovingProjection` and `ActiveItem` remain the existing authorities. FocusController migration has not started.
+- Focus/navigation: `FocusManager`, `FocusScope`, `KeyboardRegion`, `KeyboardNavigation` virtual focus, `RovingProjection` and `ActiveItem` are the existing execution authorities. PHASE-C-001 will add FocusController only as their aggregate facade and migrate the first composite regions; it must not duplicate DOM focus or active-item truth.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
@@ -84,6 +85,21 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-B-002 — ValueController + picker-like popup second migration pack
+Status: DONE
+Evidence:
+- PR #51 merged
+- merge commit `7f3a475565fec5548871e7c6c52a7ed8c0e945bc`
+- PR CI #326 / `35958353342`: success
+- main CI + Pages #327 / `35958853046`: success
+Outcome:
+- `ValueController.createValueBinding()` and `createOptionValueBinding()` are canonical; StateController is compatibility forwarding for these helpers.
+- Select / TreeSelect / Cascader use ValueController directly for controlled/defaultValue binding.
+- Autocomplete uses ValueController directly for committed/draft value.
+- all four declare explicit ValueController ComponentProfile ownership while retaining existing Search/Selection/Tree/OptionList focus authorities.
+- structural and browser gates preserve controlled proposal/external-sync and uncontrolled defaultValue semantics.
+
 
 ### PHASE-B-001 — ValueController + Picker Family first migration pack
 Status: DONE
