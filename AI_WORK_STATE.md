@@ -10,61 +10,55 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `30034b15d1d19acff0c3ff5cef44981568074ffd` (PR #68 merge)
-- Current branch: `refactor/phase-e-motion-closeout-20260924`
-- Open PRs at this checkpoint: PR #69
+- Last code-affecting main commit: `b4b1f506d4f14db8f1bd521c9ca4611515a19e5b` (PR #69 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
-- Master architecture spec: `QXFRAME-9-Runtime-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #380 / `35996521940` (PR #68)
-- Latest green main CI + Pages: #381 / `35997097751`
+- Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
+- Latest green Controller PR CI: #385 / `36005279398` (PR #69)
+- Latest green main CI + Pages: #386 / `36005795095`
 - Controller migration implementation progress: 99%
-- Current Phase: Phase E — Overlay + Motion
-- Current Task: `PHASE-E-005`
+- Current Phase: Phase F — CSS Theme / Token System Unification
+- Current Task: `PHASE-F-001`
 
 ## CURRENT
 
-### PHASE-E-005 — Motion closeout: rapid reversal + TransitionGroup adoption
-Status: IN_PROGRESS
-Task progress: 95%
+### PHASE-F-001 — CSS authority + JS Theme/Token decoupling
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-E-004 remaining OverlayRuntime consumer migration is merged and green through PR #68 / CI #380 and main CI + Pages #381.
-- direct component OverlayRuntime bypasses are now closed for Image Preview, Loading and Upload document preview.
-- the active user-visible blocker is Collapse rapid open/close reversal: mid-animation reversal currently jumps through 0/full height instead of continuing from the live rendered height.
-- verified root cause is Collapse DOM projection order: it started/reversed Transition and then re-appended the same section node, resetting the browser-native transition to an endpoint. MotionCore reversal itself remains continuous.
-- TransitionGroup still consumes MotionCore directly and must enter MotionController before Phase E motion ownership can be signed off.
+- handbook Phase E Overlay + Motion scope is fully accepted through PR #65–#69.
+- PR #69 exact-head CI #385 / `36005279398` succeeded and merged main release + Pages #386 / `36005795095` succeeded.
+- Phase F architecture is corrected: Theme/Token are pure CSS Design System concerns, not Runtime Controllers.
+- current main still contains historical JS Theme/Token authority in `Core.Config`, OverlayRuntime portal theme copying, Menu Config theme scopes and ColorPicker CSS-token reads.
+- release build copies only `src/qxframe9a7c2.css`; `src/css/00-foundation.css ... 10-compatibility.css` are stale duplicate CSS sources and have already drifted from the canonical file.
 
 Frozen impact map:
-- MotionCore remains canonical generation/timing/style execution authority; MotionController remains intent facade.
-- rapid reversal must preserve the live rendered height by keeping physical DOM order stable before Transition.setVisible() starts/reverses motion.
-- autosize height transitions must reverse from the current non-zero rendered height, not from collapsed 0 or measured full height.
-- stale generation completion must never settle or clean styles for the newer generation.
-- TransitionGroup must use MotionController without introducing a second group-level generation truth.
-- Collapse component code should not gain timer patches or duplicate motion state.
-- Phase C interaction/focus, Phase D selection and Phase E overlay resource ownership remain unchanged.
+- `src/qxframe9a7c2.css` is the sole production CSS source; Phase F must not create another generated/runtime CSS truth.
+- Config keeps legitimate runtime settings (size, variant, focusOutline, motion, trigger delays) but must stop owning theme/tokens or projecting theme/token CSS.
+- OverlayRuntime must stop copying theme attributes/CSS variables from reference ancestry into portal hosts; scoped theme inheritance is solved by DOM ancestry / caller-provided scoped portalContainer.
+- Menu must stop using Config.createScope to project light/dark theme. Runtime geometry CSS vars (indent, depth, measured motion height) are not Theme/Token authority and remain allowed.
+- ColorPicker must not read CSS palette variables through getComputedStyle to generate behavioral preset values; default preset data must be self-contained JS data or explicit user options.
+- docs Theme Inspector / token reference may read or write CSS variables as demo tooling only, but docs must no longer advertise Core.Config theme/tokens as production API.
+- static CSS and docs must still work without QXFRAME runtime JS.
 
 Scope:
-- keep MotionCore canonical reversal logic unchanged unless a shared regression proves otherwise; close the actual Collapse projection bug and TransitionGroup direct MotionCore construction.
-- fix live-style handoff at the shared MotionCore level.
-- migrate TransitionGroup through MotionController.
-- add dedicated Chromium regression for repeated Collapse reversal, live-height continuity, dynamic content retarget and final settled state.
-- verify Tabs/Dropdown/Notice/Sort TransitionGroup consumers through existing browser/release suites.
-
-Implemented in current PHASE-E-005 motion closeout pack:
-- Collapse projects section DOM order before syncRecord()/Transition.setVisible() and only moves a section when physical order differs, preventing rapid close/reopen from resetting the native height transition to 0/full endpoints.
-- no Collapse-local timeout, duplicate motion state or second generation authority is introduced.
-- TransitionGroup no longer imports/creates MotionCore directly; child motion and move completion enter through MotionController while MotionCore remains canonical execution authority.
-- required `verify:phase-e-motion-closeout` runs Chromium live-height continuity, repeated rapid-toggle, final-settle, stable-order and TransitionGroup enter/leave checks.
-- previous E-004 overlay-consumer verifier was corrected to require an overlay lease only while leave motion is actually unsettled, eliminating reduced/zero-duration CI timing flakiness without changing Image/Loading business code.
-- PR #69 exact-head CI #383 passed before the Phase F documentation correction; this branch has now been replayed on the corrected pure-CSS Phase F main and requires one final exact-head CI.
+- remove Config theme/tokens/getToken/captureContext/projectContext JS truth while preserving non-visual runtime config.
+- remove OverlayRuntime theme-context observer/projection.
+- remove Menu JS theme-scope ownership and update docs shell that passed Menu.theme.
+- remove ColorPicker CSS-token read dependency for default presets.
+- delete stale unbuilt `src/css/00...10.css` duplicate sources after verifying build only consumes `src/qxframe9a7c2.css`.
+- update canonical-system manifest/docs references and add a required Phase F CSS-authority gate.
+- do not yet perform broad token renaming/hard-coded-color cleanup across the 85万字节 canonical CSS; that follows after authority is singular.
 
 Next exact step:
-1. run PR #69 exact-head Completion/release/browser/package CI on the replayed current-main head;
-2. fix only real failures without expanding Phase E scope;
-3. merge only green and verify main release + Pages;
-4. sign off Phase E in AI_WORK_STATE.md and FOUR_UNIFICATIONS_ACCEPTANCE.md;
-5. begin corrected Phase F — CSS Theme / Token System Unification as a pure CSS audit/unification phase with no ThemeController/TokenController/runtime.
+1. create PHASE-F-001 branch from green main #386;
+2. migrate Config/OverlayRuntime/Menu/ColorPicker away from JS Theme/Token authority and update affected docs/manifests/contracts;
+3. delete stale split CSS duplicate source files and lock the single-source rule in CI;
+4. run source/browser/contracts/release gates, merge only exact-head green and verify main + Pages;
+5. continue Phase F with canonical token graph / light-dark / visual-state CSS audit once authority is singular.
 
 ## Current authority snapshot — after Phase A
 
@@ -80,7 +74,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Theme/token: CSS is the sole visual authority. Phase F is `CSS Theme / Token System Unification`; there is no ThemeController/TokenController/ThemeRuntime/TokenRuntime target. Existing Config or JS theme/token projection paths are legacy audit targets to remove or isolate from component runtime. Core JS must not read, calculate, copy or project theme/token state.
 - Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
-- Motion: `MotionController` is now the intent facade over canonical `MotionCore`; `Transition` delegates through it and MotionCore remains generation/timing/style authority. `TransitionGroup` remains on MotionCore until its owning Phase E pack. No parallel generation counter is permitted.
+- Motion: `MotionController` is the accepted intent facade over canonical `MotionCore`; `Transition` and `TransitionGroup` enter through it while MotionCore remains generation/timing/style authority. Collapse rapid reversal is fixed by stable DOM projection before motion, with no parallel generation or component timer.
 - Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
 - Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
 - Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
@@ -92,9 +86,34 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 These are current QA targets for later Controller/family migration. They are not PHASE-A-003 scope unless an authority adoption directly touches them.
 
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
-- Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-E-005 — Motion closeout
+Status: DONE
+Evidence:
+- PR #69 merged
+- merge commit `b4b1f506d4f14db8f1bd521c9ca4611515a19e5b`
+- PR CI #385 / `36005279398`: success
+- main CI + Pages #386 / `36005795095`: success
+Outcome:
+- Collapse rapid close/reopen no longer resets native autosize transition by re-appending the live section after motion starts.
+- TransitionGroup enters child/move motion through MotionController; MotionCore remains canonical generation/timing authority.
+- Chromium gate verifies live intermediate height, repeated rapid toggles, stable DOM order and final settle.
+- no component-local timer or duplicate motion truth was added.
+
+### PHASE-E — Overlay + Motion scope
+Status: DONE
+Evidence:
+- PR #65 / #66 / #67 / #68 / #69 merged
+- exact-head CI #374 / #376 / #378 / #380 / #385: success
+- merged main CI + Pages #375 / #377 / #379 / #381 / #386: success
+Outcome:
+- OverlayController is the physical resource facade while OpenStateBridge/family adapters retain logical open.
+- Trigger/Popup bases, Modal/Drawer, Image Preview, Loading and Upload preview use the canonical overlay resource path.
+- MotionController fronts MotionCore through Transition and TransitionGroup without a second generation truth.
+- nested/reopen/leave lease, rapid reverse and autosize Collapse regressions are covered.
+- Phase E is accepted; current work advances to pure-CSS Phase F.
 
 ### PHASE-E-004 — Remaining direct OverlayRuntime consumers
 Status: DONE
