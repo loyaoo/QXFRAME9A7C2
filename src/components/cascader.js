@@ -14,6 +14,7 @@ import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { SearchState } from '../core/searchState.js';
 import { ValueController } from '../core/valueController.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
@@ -89,7 +90,8 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-flush'; panel.hidden = true; panel.tabIndex = -1;
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
-        var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, focusController = null, tagNavigation = null;
+        var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, focusController = null, interactionController = null, tagNavigation = null;
+        var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if(destroyed)return; if(triggerSession&&triggerSession.getState().open)renderColumns(); syncControl(); var payload={searchValue:value,reason:meta.reason||'search',originalEvent:meta.originalEvent||null,cascader:instance}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(!destroyed&&meta.silent!==true)emitter.emit('search',payload); } });
         var loadedChildren = new Map(), loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String)), loadingKeys = new Set();
         var loadTasks = AsyncTaskGroup.create({
@@ -119,6 +121,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var selection = Selection.create({ multiple: opts.multiple === true, value: opts.value !== undefined ? opts.value : opts.defaultValue });
         var valueState = null;
         scope.add(function () { selection.destroy(); });
+        scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
         var columnRecords = [];
         var activePathKeys = [];
         var activeColumnIndex = 0;
@@ -149,7 +152,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           childrenOf:childrenOf, keyOf:function(item){return String(item && item.value);}, disabledOf:function(item){return !item || item.disabled===true;},
           isLeaf:function(item,_index,children){return !!item && item.disabled!==true && children.length===0 && !isLazyExpandable(item);}
         });
-        function isLocked() { return CapabilityController.mutationLocked(opts); }
+        function isLocked() { return !capabilityController || !capabilityController.can('select'); }
         function shouldCloseOnSelect() { return opts.closeOnSelect !== undefined ? opts.closeOnSelect !== false : opts.multiple !== true; }
         function loadChildrenFor(item, meta) {
           if (!isLazyExpandable(item) || loadingKeys.has(String(item.key))) return Promise.resolve(childrenOf(item));
@@ -537,48 +540,6 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           return changed;
         }
     
-        function handlePanelKeydown(event) {
-          if (!event || !triggerSession || !triggerSession.getState().open) return false;
-          if (event.key === 'Escape') {
-            triggerSession.close('escape', event);
-            if (event.preventDefault) event.preventDefault();
-            return true;
-          }
-          var record = columnRecords[activeColumnIndex] || columnRecords[0];
-          if (!record || !record.list) return false;
-          if (event.key === 'ArrowRight') {
-            var item = recordActiveItem(record);
-            if (item && hasChildren(item)) {
-              enterChildColumn(record.index, item, { source: 'keyboard', reason: 'arrow-right', originalEvent: event });
-              if (event.preventDefault) event.preventDefault();
-              return true;
-            }
-            return false;
-          }
-          if (event.key === 'ArrowLeft') {
-            if (activeColumnIndex > 0) {
-              var leavingIndex = activeColumnIndex;
-              activeColumnIndex -= 1;
-              var previous = columnRecords[activeColumnIndex];
-              var pathItem = pathByKeys(activePathKeys)[activeColumnIndex];
-              if (columnRecords[leavingIndex] && columnRecords[leavingIndex].list) columnRecords[leavingIndex].list.resetActive({ source: 'keyboard', reason: 'arrow-left-leave', silent: true });
-              keyboardCursorKey = pathItem ? String(pathItem.key) : '';
-              if (previous && pathItem) previous.list.setActiveKey(keyboardCursorKey, { source: 'keyboard', reason: 'arrow-left', silent: true });
-              refreshSelectionSurfaces();
-              activateRecordVirtualFocus(previous, 'arrow-left', event);
-              if (event.preventDefault) event.preventDefault();
-              return true;
-            }
-            return false;
-          }
-          if (['ArrowDown','ArrowUp','Home','End','PageDown','PageUp','Enter',' '].indexOf(event.key) >= 0) {
-            var handled = record.list.handleKeydown(event);
-            if (handled !== false) activateRecordVirtualFocus(record, 'cascader-' + String(event.key || '').toLowerCase(), event);
-            return handled !== false;
-          }
-          return false;
-        }
-    
         function activateSearchResult(result, detail) {
           if (!result || !result.item) return false;
           activePathKeys = result.path.map(function (entry) { return String(entry.key); });
@@ -717,7 +678,6 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           document:doc, reference:root, valueTarget:valueTarget, inputTarget:input, formTarget:opts.formTarget, formField:opts.formField, name:opts.name, committedValue:opts.multiple === true ? selection.values.slice() : selection.value,
           mode:opts.multiple === true ? 'tags':(opts.searchable===true?'input':'value'), tags:opts.multiple === true ? selectionTags.tags():[], editable:opts.searchable === true, disabled:opts.disabled === true, readOnly:opts.readOnly === true, required:opts.required === true, placeholder:opts.placeholder,
           onInput:function(value,event){ if (opts.searchable === true && !isLocked()) { setSearch(value,{source:'input',reason:'input',originalEvent:event}); if (!destroyed && triggerSession && !triggerSession.getState().open) triggerSession.open('input',event); } },
-          onKeydown:function(event){ return handleControlKeydown(event); }
         }) : Control.create({
           elements: { root: root, valueHost: valuesNode, input: input, clear: clearButton, toggle: arrow, prefix: prefix, suffix: suffix }, document: doc, formField: opts.formField, committedValue: opts.multiple === true ? selection.values.slice() : selection.value,
           mode: opts.multiple === true ? 'tags' : (opts.searchable === true ? 'input' : 'value'), tags: opts.multiple === true ? selectionTags.tags() : [], creatableTags:false,tagsControlled:true,
@@ -742,7 +702,6 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             emitter.emit('change', payload);
           },
           onInput: function (value, event) { if (opts.searchable === true && !isLocked()) { setSearch(value, { source: 'input', reason: 'input', originalEvent: event }); if (!destroyed && triggerSession && !triggerSession.getState().open) triggerSession.open('input', event); } },
-          onKeydown: function (event) { return handleControlKeydown(event); },
           onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
         });
     
@@ -786,7 +745,81 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
     
     
+        function resolveInteractionAction(event) {
+          var opened = !!(triggerSession && triggerSession.getState().open);
+          var keymap = { Escape:'DISMISS', Backspace:'REMOVE', Delete:'REMOVE' };
+          if (!opened) {
+            keymap.ArrowDown = 'OPEN'; keymap.ArrowUp = 'OPEN'; keymap.Enter = 'OPEN';
+          } else {
+            keymap.Enter = 'ACTIVATE';
+            if (opts.multiple === true) { keymap[' '] = 'SELECT'; keymap.Spacebar = 'SELECT'; }
+          }
+          return InteractionController.resolveKeyboardAction(event, { keymap:keymap });
+        }
+        function dispatchInteraction(event) {
+          if (!interactionController || !event) return false;
+          return interactionController.dispatch(event, { ownerId:'cascader' }) !== 'pass';
+        }
+        function activeColumnRecord() { return columnRecords[activeColumnIndex] || columnRecords[0] || null; }
+        function handleInteractionAction(action, context) {
+          var event = context && context.originalEvent || null;
+          if (!event) return 'pass';
+          if (action === 'DISMISS') {
+            if (triggerSession.getState().open) return triggerSession.close('escape', event) ? 'handled' : 'pass';
+            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+          }
+          if (action === 'REMOVE') {
+            if (!capabilityController.can('remove')) return 'blocked';
+            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            return handleHorizontalKey(event) ? 'handled' : 'pass';
+          }
+          if (action === 'OPEN') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            var reason = event.key === 'ArrowDown' ? 'keyboard-down' : (event.key === 'ArrowUp' ? 'keyboard-up' : 'keyboard-enter');
+            return triggerSession.open(reason, event) === true ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_DOWN' || action === 'MOVE_UP') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            if (!triggerSession.getState().open) return 'pass';
+            var record = activeColumnRecord();
+            if (!record || !record.list) return 'pass';
+            if (!recordActiveItem(record)) {
+              var seeded = seedColumnActive(record, null, { source:'keyboard', reason:action === 'MOVE_DOWN' ? 'arrow-down' : 'arrow-up', strategy:action === 'MOVE_UP' ? 'last' : 'first' });
+              if (seeded) { activateRecordVirtualFocus(record, action === 'MOVE_DOWN' ? 'arrow-down' : 'arrow-up', event); return 'handled'; }
+            }
+            return record.list.handleKeydown(event) !== false ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_FIRST' || action === 'MOVE_LAST' || action === 'PAGE_PREVIOUS' || action === 'PAGE_NEXT') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            var record = triggerSession.getState().open ? activeColumnRecord() : null;
+            return record && record.list && record.list.handleKeydown(event) !== false ? 'handled' : 'pass';
+          }
+          if (action === 'ACTIVATE') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            var record = triggerSession.getState().open ? activeColumnRecord() : null;
+            var item = recordActiveItem(record);
+            if (!record || !item) return 'pass';
+            if (hasChildren(item)) return enterChildColumn(record.index, item, { source:'keyboard', reason:'enter-child', originalEvent:event }) ? 'handled' : 'pass';
+            if (!capabilityController.can('select')) return 'blocked';
+            return activateAt(record.index, item, { source:'keyboard', reason:'enter', originalEvent:event }) ? 'handled' : 'pass';
+          }
+          if (action === 'SELECT') {
+            if (!capabilityController.can('select')) return 'blocked';
+            if (!triggerSession.getState().open || opts.multiple !== true) return 'pass';
+            var record = activeColumnRecord(), item = recordActiveItem(record);
+            return record && item && activateAt(record.index, item, { source:'keyboard', reason:'space', originalEvent:event }) ? 'handled' : 'pass';
+          }
+          return 'pass';
+        }
         var keyboardTarget = headlessMode ? triggerTarget : controlFocusElement();
+        if (keyboardTarget) {
+          interactionController = InteractionController.create();
+          interactionController.registerScope({ id:'cascader', root:keyboardTarget, document:doc, profile:{ allowEditableKeys:true }, resolveAction:resolveInteractionAction, onAction:handleInteractionAction });
+          scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; });
+        }
         focusController = keyboardTarget ? FocusController.create({
           root: keyboardTarget,
           document: doc,
@@ -794,6 +827,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           manageTabIndex: false,
           activeRegion: 'column',
           navigation: {
+            shouldHandle:function(detail){return !(detail.originalEvent&&detail.originalEvent.defaultPrevented);},
             focusRoot: controlFocusElement,
             editableKeys:['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter','Escape','Home','End','PageUp','PageDown',' '],
             allowEditableKey:function(key, detail){
@@ -802,28 +836,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
               if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Home' || key === 'End') return !KeyboardNavigation.shouldPreserveNativeTextEditing(event, event.target);
               return true;
             },
-            handlers:{
-              Escape:function(detail){ return triggerSession.getState().open ? triggerSession.close('escape', detail.originalEvent) : handleHostedTagKeydown(detail.originalEvent); },
-              ArrowDown:function(detail){ if (!triggerSession.getState().open) return triggerSession.open('keyboard-down', detail.originalEvent) === true; var record=columnRecords[activeColumnIndex]||columnRecords[0]; if (!record || !record.list) return false; if (!recordActiveItem(record)) { var seeded=seedColumnActive(record,null,{source:'keyboard',reason:'arrow-down',strategy:'first'}); if (seeded) { activateRecordVirtualFocus(record,'arrow-down',detail.originalEvent); if (detail.originalEvent&&detail.originalEvent.preventDefault) detail.originalEvent.preventDefault(); return true; } } return record.list.handleKeydown(detail.originalEvent)!==false; },
-              ArrowUp:function(detail){ if (!triggerSession.getState().open) return triggerSession.open('keyboard-up', detail.originalEvent) === true; var record=columnRecords[activeColumnIndex]||columnRecords[0]; if (!record || !record.list) return false; if (!recordActiveItem(record)) { var seeded=seedColumnActive(record,null,{source:'keyboard',reason:'arrow-up',strategy:'last'}); if (seeded) { activateRecordVirtualFocus(record,'arrow-up',detail.originalEvent); if (detail.originalEvent&&detail.originalEvent.preventDefault) detail.originalEvent.preventDefault(); return true; } } return record.list.handleKeydown(detail.originalEvent)!==false; },
-              ArrowLeft:function(detail){ return handleHorizontalKey(detail.originalEvent); },
-              ArrowRight:function(detail){ return handleHorizontalKey(detail.originalEvent); },
-              Backspace:function(detail){ return handleHostedTagKeydown(detail.originalEvent); },
-              Delete:function(detail){ return handleHostedTagKeydown(detail.originalEvent); },
-              Home:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-              End:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-              PageUp:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-              PageDown:function(detail){ var record=triggerSession.getState().open&&(columnRecords[activeColumnIndex]||columnRecords[0]); return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false; },
-              Enter:function(detail){
-                if (!triggerSession.getState().open) return triggerSession.open('keyboard-enter', detail.originalEvent) === true;
-                var record=columnRecords[activeColumnIndex]||columnRecords[0]; return record && record.list ? record.list.handleKeydown(detail.originalEvent) : false;
-              },
-              ' ':function(detail){
-                if (!triggerSession.getState().open || opts.multiple !== true) return false;
-                var record=columnRecords[activeColumnIndex]||columnRecords[0], item=recordActiveItem(record);
-                return record && item ? activateAt(record.index, item, { source:'keyboard', reason:'space', originalEvent:detail.originalEvent }) : false;
-              }
-            }
+            handlers:FocusController.forwardHandlers(['Escape','ArrowLeft','ArrowRight','Backspace','Delete','ArrowDown','ArrowUp','Enter','Home','End','PageUp','PageDown',' '], dispatchInteraction)
           }
         }) : null;
         keyboard = focusController ? focusController.keyboard : null;
@@ -912,6 +925,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var proposedVisibleTags = own(next, 'maxVisibleTags') ? next.maxVisibleTags : opts.maxVisibleTags; if (proposedVisibleTags !== 'responsive' && proposedVisibleTags !== undefined && proposedVisibleTags !== null && (!Number.isFinite(Number(proposedVisibleTags)) || Number(proposedVisibleTags) < 0)) throw new TypeError('[QXFRAME9A7C2] Cascader maxVisibleTags must be a non-negative number or \"responsive\".');
           var proposedPopupRender = own(next, 'popupRender') ? next.popupRender : opts.popupRender; if (proposedPopupRender !== null && proposedPopupRender !== undefined && !Utils.isFunction(proposedPopupRender)) throw new TypeError('[QXFRAME9A7C2] Cascader popupRender must be a function or null.');
           Object.keys(next).forEach(function (name) { if (name !== 'items' && Utils.safeOwnKey(name)) opts[name] = next[name]; });
+          if (capabilityController) capabilityController.updateOptions({});
           if (focusController) focusController.setDisabled(opts.disabled === true);
           if (own(next, 'loadChildren') && !own(next, 'items')) { loadTasks.invalidate('cascader-loader'); loadingKeys.clear(); }
           if (own(next, 'items')) replaceItems(next.items, { loadedKeys: own(next, 'loadedKeys') ? next.loadedKeys : [] });
@@ -948,7 +962,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           root:root,input:input,panel:panel,columnsHost:columnsHost,triggerTarget:triggerTarget,
           setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,getState:getState,
           loadChildren:function(key,meta){var path=pathByKeys([key]);var item=path[0]||null;if(!item){var found=findPathByValue(key);item=found.length?found[found.length-1]:null;}return item?loadChildrenFor(item,meta):Promise.resolve([]);},
-          getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
+          getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
           applyOptions:applyOptions,dispose:disposeRuntime
         });
       
@@ -963,7 +977,7 @@ export class Cascader extends PopupFieldComponent{
   interaction:Object.freeze({keymap:'cascader'}),
   overlay:Object.freeze({mode:'popup'}),
   form:Object.freeze({serialize:true}),
-  ownership:Object.freeze({value:'ValueController',focus:'FocusController'})
+  ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController'})
  });
  static contract=getContract('Cascader');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless','portalContainer','multiple']);
@@ -981,6 +995,8 @@ export class Cascader extends PopupFieldComponent{
  getState(){const r=runtimeState.get(this).runtime;return r?r.getState():Object.freeze({open:false,destroyed:this.destroyed});}
  getControl(){const r=runtimeState.get(this).runtime;return r?r.getControl():null;}
  getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
+ getInteractionController(){const r=runtimeState.get(this).runtime;return r?r.getInteractionController():null;}
+ getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
  getColumns(){const r=runtimeState.get(this).runtime;return r?r.getColumns():[];}
  getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
  getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}

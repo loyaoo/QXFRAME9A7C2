@@ -6,6 +6,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { ValueController } from '../core/valueController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SelectionTags } from '../core/selectionTags.js';
@@ -122,10 +123,13 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         var triggerSession = null;
         var keyboard = null;
         var focusController = null;
+        var interactionController = null;
+        var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
         var fieldControl = null;
         var tagNavigation = null;
         var searchState = SearchState.create({ query:'' });
         var valueState = null;
+        scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
     
         function multipleMode() { return opts.multiple === true || opts.checkable === true; }
         function hierarchicalCheckMode(config) {
@@ -229,7 +233,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           }
           return asValues(apiValue(), multipleMode());
         }
-        function mutationLocked() { return CapabilityController.mutationLocked(opts); }
+        function mutationLocked() { return !capabilityController || !capabilityController.can('select'); }
         var selectionTags = SelectionTags.create({
           getValues:selectedValues,
           keyOf:function(value){return String(value);}, valueOf:function(value){return String(value);},
@@ -554,7 +558,6 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         fieldControl = headlessMode ? null : projectionMode ? Control.createProjection({
           document:doc, reference:root, valueTarget:valueTarget, inputTarget:input, formTarget:opts.formTarget, formField:opts.formField, name:opts.name, committedValue:multipleMode() ? selectedValues():selectedValues()[0], mode:multipleMode() ? 'tags':(opts.searchable===true?'input':'value'), tags:multipleMode() ? selectionTags.tags():[], editable:opts.searchable === true, disabled:opts.disabled === true, readOnly:opts.readOnly === true, required:opts.required === true, placeholder:opts.placeholder,
           onInput:function(value,event){ if (!mutationLocked() && opts.searchable === true) { setSearch(value,{source:'input',reason:'input',originalEvent:event}); if (!triggerSession.getState().open) open('input',event); } },
-          onKeydown:function(event){ return handleControlKeydown(event); }
         }) : Control.create({
           elements: { root: root, valueHost: valuesNode, input: input, clear: clearButton, toggle: arrow, prefix: prefix, suffix: suffix },
           document: doc, formField: opts.formField, committedValue: multipleMode() ? selectedValues() : selectedValues()[0],
@@ -590,12 +593,68 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             if (Utils.isFunction(opts.onRemove)) opts.onRemove(tag.value, { value: tag.value, values: values.slice(), originalEvent: detail.originalEvent || null, treeSelect: api });
           },
           onInput: function (value, event) { if (!mutationLocked() && opts.searchable === true) { setSearch(value, { source: 'input', reason: 'input', originalEvent: event }); if (!destroyed && triggerSession && !triggerSession.getState().open) open('input', event); } },
-          onKeydown: function (event) { return handleControlKeydown(event); },
           onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
         });
     
     
+        function resolveInteractionAction(event) {
+          var opened = !!(triggerSession && triggerSession.getState().open);
+          var keymap = { Escape:'DISMISS', Backspace:'REMOVE', Delete:'REMOVE' };
+          if (!opened) {
+            keymap.ArrowDown = 'OPEN'; keymap.ArrowUp = 'OPEN'; keymap.Enter = 'OPEN';
+          } else {
+            keymap.Enter = 'SELECT';
+            if (hierarchicalCheckMode()) { keymap[' '] = 'SELECT'; keymap.Spacebar = 'SELECT'; }
+          }
+          return InteractionController.resolveKeyboardAction(event, { keymap:keymap });
+        }
+        function dispatchInteraction(event) {
+          if (!interactionController || !event) return false;
+          return interactionController.dispatch(event, { ownerId:'tree-select' }) !== 'pass';
+        }
+        function handleInteractionAction(action, context) {
+          var event = context && context.originalEvent || null;
+          if (!event) return 'pass';
+          if (action === 'DISMISS') {
+            if (triggerSession.getState().open) return close('escape', event) ? 'handled' : 'pass';
+            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+          }
+          if (action === 'REMOVE') {
+            if (!capabilityController.can('remove')) return 'blocked';
+            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            return handleCompositeHorizontal(event) ? 'handled' : 'pass';
+          }
+          if (action === 'OPEN') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            var reason = event.key === 'ArrowDown' ? 'keyboard-down' : (event.key === 'ArrowUp' ? 'keyboard-up' : 'keyboard-enter');
+            return open(reason, event) === true ? 'handled' : 'pass';
+          }
+          if (action === 'MOVE_DOWN' || action === 'MOVE_UP' || action === 'MOVE_FIRST' || action === 'MOVE_LAST' || action === 'PAGE_PREVIOUS' || action === 'PAGE_NEXT') {
+            if (!capabilityController.can('navigate')) return 'blocked';
+            return triggerSession.getState().open && tree.handleKeydown(event) !== false ? 'handled' : 'pass';
+          }
+          if (action === 'SELECT') {
+            if (!capabilityController.can('select')) return 'blocked';
+            if (!triggerSession.getState().open) return 'pass';
+            if (hierarchicalCheckMode()) {
+              var active = tree.getState().activeKey;
+              if (!active) return 'pass';
+              if (event.key === ' ' || event.key === 'Spacebar') return tree.handleKeydown(event) !== false ? 'handled' : 'pass';
+              return tree.check(active, undefined, { source:'keyboard', reason:'enter-check', originalEvent:event }) ? 'handled' : 'pass';
+            }
+            return tree.handleKeydown(event) !== false ? 'handled' : 'pass';
+          }
+          return 'pass';
+        }
         var keyboardTarget = headlessMode ? triggerTarget : (fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root));
+        if (keyboardTarget) {
+          interactionController = InteractionController.create();
+          interactionController.registerScope({ id:'tree-select', root:keyboardTarget, document:doc, profile:{ allowEditableKeys:true }, resolveAction:resolveInteractionAction, onAction:handleInteractionAction });
+          scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; });
+        }
         focusController = keyboardTarget ? FocusController.create({
           root: keyboardTarget,
           document: doc,
@@ -603,6 +662,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           manageTabIndex: false,
           activeRegion: 'tree',
           navigation: {
+            shouldHandle: function (detail) { return !(detail.originalEvent && detail.originalEvent.defaultPrevented); },
             focusRoot: function () { return headlessMode ? triggerTarget : (fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : keyboardTarget); },
             editableKeys: ['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter',' ','Escape','Home','End','PageUp','PageDown'],
             allowEditableKey: function (key, detail) {
@@ -617,31 +677,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
               if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Home' || key === 'End') return !KeyboardNavigation.shouldPreserveNativeTextEditing(event, event.target);
               return true;
             },
-            handlers: {
-              Escape: function (detail) { return triggerSession.getState().open ? close('escape', detail.originalEvent) : handleHostedTagKeydown(detail.originalEvent); },
-              ArrowDown: function (detail) { if (!triggerSession.getState().open) return open('keyboard-down', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
-              ArrowUp: function (detail) { if (!triggerSession.getState().open) return open('keyboard-up', detail.originalEvent) === true; return tree.handleKeydown(detail.originalEvent); },
-              ArrowLeft: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
-              ArrowRight: function (detail) { return handleCompositeHorizontal(detail.originalEvent); },
-              Backspace: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-              Delete: function (detail) { return handleHostedTagKeydown(detail.originalEvent); },
-              Enter: function (detail) {
-                if (!triggerSession.getState().open) return open('keyboard-enter', detail.originalEvent);
-                if (hierarchicalCheckMode()) {
-                  var active = tree.getState().activeKey;
-                  return active ? tree.check(active, undefined, { source:'keyboard', reason:'enter-check', originalEvent:detail.originalEvent }) : false;
-                }
-                return tree.handleKeydown(detail.originalEvent);
-              },
-              ' ': function (detail) {
-                if (!triggerSession.getState().open || !hierarchicalCheckMode()) return false;
-                return tree.handleKeydown(detail.originalEvent);
-              },
-              Home: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
-              End: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
-              PageUp: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; },
-              PageDown: function (detail) { return triggerSession.getState().open ? tree.handleKeydown(detail.originalEvent) : false; }
-            }
+            handlers: FocusController.forwardHandlers(['Escape','ArrowLeft','ArrowRight','Backspace','Delete','ArrowDown','ArrowUp','Enter','Home','End','PageUp','PageDown',' '], dispatchInteraction)
           }
         }) : null;
         keyboard = focusController ? focusController.keyboard : null;
@@ -679,6 +715,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (candidate.popupRender !== null && candidate.popupRender !== undefined && !Utils.isFunction(candidate.popupRender)) throw new TypeError('[QXFRAME9A7C2] TreeSelect popupRender must be a function or null.');
           if (hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getLabel') || hasOwn(next, 'getValue')) validateItems(candidate.items, candidate);
           Utils.copyOwn(opts, next);
+          if (capabilityController) capabilityController.updateOptions({});
           if (focusController) focusController.setDisabled(opts.disabled === true);
           var checkMode = hierarchicalCheckMode();
           var treeOptions = {
@@ -756,7 +793,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           setExpandedKeys:function(keys,meta){if(!destroyed)tree.setExpandedKeys(keys,meta);return instance;},
           expand:function(key,meta){return destroyed?false:tree.expand(key,meta);}, collapse:function(key,meta){return destroyed?false:tree.collapse(key,meta);},
           focus:function(){if(fieldControl)return fieldControl.focus();return DOM.focusElement(triggerTarget||root,{preventScroll:true});},
-          getState:getState,getTree:function(){return tree;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},
+          getState:getState,getTree:function(){return tree;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},
           getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},
           applyOptions:applyOptions,dispose:disposeRuntime
         });
@@ -771,7 +808,7 @@ export class TreeSelect extends PopupFieldComponent {
     interaction:Object.freeze({keymap:'tree-select'}),
     overlay:Object.freeze({mode:'popup'}),
     form:Object.freeze({serialize:true}),
-    ownership:Object.freeze({value:'ValueController',focus:'FocusController'})
+    ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController'})
   });
   static contract=getContract('TreeSelect');
   static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
@@ -795,6 +832,8 @@ export class TreeSelect extends PopupFieldComponent {
   getTree(){const r=runtimeState.get(this).runtime;return r?r.getTree():null;}
   getControl(){const r=runtimeState.get(this).runtime;return r?r.getControl():null;}
   getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
+  getInteractionController(){const r=runtimeState.get(this).runtime;return r?r.getInteractionController():null;}
+  getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
   getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
   getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
   getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}
