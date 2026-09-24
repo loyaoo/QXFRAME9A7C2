@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `885b5202e69a8b43fe6d82bdbac8839c28aff957` (PR #74 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-f-duplicate-owner-cleanup-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-006 duplicate-owner PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-F-006 — duplicate CSS owner / dead-rule cleanup
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 65%
 
 Why this is current:
 - PHASE-F-005 is merged through PR #74; exact-head CI #401 / `36016034020` and main release + Pages #402 / `36016716760` are green.
@@ -43,12 +43,19 @@ Frozen impact map:
 - remove the second Image Preview `[hidden]` rule; the canonical first hidden rule already owns `display:none!important`, making the later pointer-events patch unreachable while hidden.
 - preserve intentional staged duplicate selectors and document/gate the classified cleanup; no broad mechanical deduplication.
 
+Implemented in current PHASE-F-006 pack:
+- retired the earlier duplicate Control Contract secondary/danger accent owners; the later shared Color Variant contract remains canonical.
+- removed the dead Notice passive-scrollbar block; the later hidden-scrollbar Notice viewport is now the sole owner.
+- folded ItemCollection/List item gaps and SelectGroup image-label width into their canonical owner rules.
+- removed the unreachable second Image Preview hidden-state pointer-events patch.
+- preserved intentional staged duplicates for Button paint-z priority, Image Preview presence motion and JSON code-reader refinement.
+- required `verify:phase-f-duplicate-owners` guards both retired-owner cleanup and preservation of classified staged owners.
+
 Next exact step:
-1. create `refactor/phase-f-duplicate-owner-cleanup-20260924` from this checkpoint;
-2. apply only the frozen duplicate/dead-rule cleanup with no visual redesign;
-3. add `verify:phase-f-duplicate-owners` to prevent these retired owners from returning;
-4. open PR, require exact-head full CI, merge only green, verify main + Pages;
-5. run Phase F final completeness/static-fixture closeout audit.
+1. open PHASE-F-006 PR and run exact-head full release/browser/package CI;
+2. merge only exact-head green and verify main + Pages;
+3. run Phase F final completeness/static-fixture closeout audit;
+4. sign off Phase F only if all handbook gates are evidenced.
 
 ## Current authority snapshot — after Phase A
 
