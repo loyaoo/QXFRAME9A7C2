@@ -152,14 +152,18 @@ return Object.freeze({ channel:channel, value:channel === 'rawInput' ? value : c
 
 function setDraft(next, meta) {
 if (destroyed) return false;
-var normalized = normalize(next, meta);
+var cfg = meta || {};
+if (rawInputActive && cfg.source !== 'input' && cfg.preserveRawInput !== true) {
+  setRawInput(rawInput, { silent:true, active:false, source:cfg.source || 'draft', reason:'draft-channel' });
+}
+var normalized = normalize(next, cfg);
 if (equals(draftValue, normalized)) return true;
 var previousDraft = draftValue;
 var detail = payload({
   nextDraftValue: normalized,
   previousDraftValue: previousDraft,
   reason: 'draft-change'
-}, meta);
+}, cfg);
 var versionBefore = revision;
 if (Utils.isFunction(opts.beforeDraftChange) && opts.beforeDraftChange(detail) === false) return false;
 if (revision !== versionBefore) return false;
@@ -210,6 +214,8 @@ return true;
 function begin(meta) {
 if (destroyed) return false;
 var cfg = meta || {};
+clearPreview({ silent:true, source:cfg.source || 'session', reason:'begin-preview-clear' });
+setRawInput(rawInput, { silent:true, active:false, source:cfg.source || 'session', reason:'begin-raw-input-release' });
 setSessionActive(true, mergeOptions({ silent:cfg.silent === true, source:cfg.source || 'session', reason:'begin' }, cfg));
 var previousDraft = draftValue;
 var nextDraft = Object.prototype.hasOwnProperty.call(cfg, 'draftSeed') ? normalize(cfg.draftSeed, cfg) : committedValue;
@@ -248,8 +254,13 @@ detail.dirty = false;
 detail.changed = valueChanged;
 detail.valueChanged = valueChanged;
 detail.draftChanged = false;
-detail.revision = revision;
 clearPreview({ silent:true, source:detail.source || 'commit', reason:'commit-preview-clear' });
+setRawInput(rawInput, { silent:true, active:false, source:detail.source || 'commit', reason:'commit-raw-input-release' });
+detail.previewValue = undefined;
+detail.hasPreview = false;
+detail.rawInput = rawInput;
+detail.rawInputActive = false;
+detail.revision = revision;
 if (valueChanged && Utils.isFunction(opts.onValueChange)) opts.onValueChange(committedValue, detail);
 if (detail.silent !== true) {
   if (Utils.isFunction(opts.onCommit)) opts.onCommit(committedValue, detail);
@@ -270,9 +281,13 @@ var detail = payload({
   reason: 'cancel'
 }, meta);
 detail.draftChanged = draftChanged;
-detail.revision = revision;
 clearPreview({ silent:true, source:detail.source || 'cancel', reason:'cancel-preview-clear' });
 setRawInput(rawInput, { silent:true, active:false, source:detail.source || 'cancel', reason:'cancel-raw-input' });
+detail.previewValue = undefined;
+detail.hasPreview = false;
+detail.rawInput = rawInput;
+detail.rawInputActive = false;
+detail.revision = revision;
 if (draftChanged && Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(draftValue, detail);
 if (detail.silent !== true) {
   if (Utils.isFunction(opts.onCancel)) opts.onCancel(detail);
@@ -301,9 +316,13 @@ if (valueChanged || draftChanged) revision += 1;
 detail.changed = valueChanged;
 detail.valueChanged = valueChanged;
 detail.draftChanged = draftChanged;
-detail.revision = revision;
 clearPreview({ silent:true, source:detail.source || 'reset', reason:'reset-preview-clear' });
 setRawInput('', { silent:true, active:false, source:detail.source || 'reset', reason:'reset-raw-input' });
+detail.previewValue = undefined;
+detail.hasPreview = false;
+detail.rawInput = rawInput;
+detail.rawInputActive = false;
+detail.revision = revision;
 if (valueChanged && Utils.isFunction(opts.onValueChange)) opts.onValueChange(committedValue, detail);
 if (draftChanged && Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(draftValue, detail);
 if (detail.silent !== true) {
