@@ -25,6 +25,21 @@ function requireState(instance) { const record = state.get(instance); if (!recor
 
 export class Popover extends PopupComponent {
     static contract = ComponentContracts.get('Popover');
+    static profile = Object.freeze({
+        name: 'Popover',
+        focus: Object.freeze({ mode: 'trigger-overlay-scope' }),
+        interaction: Object.freeze({ keymap: 'trigger-activation' }),
+        capability: Object.freeze({ open: true, activate: true }),
+        motion: Object.freeze({ mode: 'presence' }),
+        overlay: Object.freeze({ mode: 'popup' }),
+        ownership: Object.freeze({
+            focus: 'FocusController',
+            interaction: 'InteractionController',
+            capability: 'CapabilityController',
+            motion: 'MotionController',
+            overlay: 'OverlayController'
+        })
+    });
     static options = Object.freeze({
         trigger: 'click', placement: 'bottom', showArrow: false, arrowPadding: 8, open: false, disabled: false,
         closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true, focusScope: 'auto'
