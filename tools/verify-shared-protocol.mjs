@@ -111,6 +111,12 @@ const profile=ComponentProfile.define({
 });
 assert.equal(profile.name,'ProtocolProbe');
 assert.throws(()=>ComponentProfile.define({name:'Bad',unknown:true}),/Unknown ComponentProfile field/);
+assert.equal(ComponentProfile.capabilities.includes('theme'),false);
+assert.equal(ComponentProfile.capabilities.includes('tokens'),false);
+assert.equal(ComponentProfile.controllers.length,9);
+assert.throws(()=>ComponentProfile.define({name:'BadThemeProfile',theme:{}}),/Unknown ComponentProfile field: theme/);
+assert.throws(()=>ComponentProfile.define({name:'BadTokenProfile',tokens:{}}),/Unknown ComponentProfile field: tokens/);
+assert.throws(()=>ComponentProfile.define({name:'BadThemeDependency',dependencies:{feedback:['theme']}}),/Unknown ComponentProfile dependency: theme/);
 const publishedProbe=publishComponentApi('ProtocolProbe',{profile:profile,create(){return {};}});
 assert.equal(publishedProbe.profile.name,'ProtocolProbe');
 assert.deepEqual(publishedProbe.profile.ownership,profile.ownership);
