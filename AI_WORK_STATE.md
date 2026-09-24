@@ -10,60 +10,56 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2` (PR #48 merge)
-- Current branch: `refactor/phase-a-env-diagnostics-profile-20260924`
-- Open PRs at this checkpoint: #49
+- Last code-affecting main commit: `b2ecdb4e33bea642932092693d0ad5a8a47fd4e3` (PR #49 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #315 / `35953604691` (PR #48)
-- Latest green main CI + Pages: #316 / `35953925660`, attempt 2
-- Controller migration implementation progress: 22%
-- Current Phase: Phase A
-- Current Task: `PHASE-A-003`
+- Latest green Controller PR CI: #320 / `35955216461` (PR #49)
+- Latest green main CI + Pages: #321 / `35955524890`
+- Controller migration implementation progress: 25%
+- Current Phase: Phase B
+- Current Task: `PHASE-B-001`
 
 ## CURRENT
 
-### PHASE-A-003 — EnvironmentPort / Diagnostics / ComponentProfile authority adoption
-Status: IN_PROGRESS
-Task progress: 75%
+### PHASE-B-001 — ValueController + Picker Family first migration pack
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- `PHASE-A-001` baseline inventory + Shared Protocol foundation is complete.
-- `PHASE-A-002` Shared Protocol authority integration is complete and green on PR + main.
-- Shared Protocol primitives now exist; the next work is adoption into existing authorities, not recreating those primitives and not starting direct picker-family migration yet.
+- Phase A Shared Protocol foundation and authority adoption are complete and green on PR + main.
+- Handbook Phase B is next: Value + Picker Family.
+- Current real QA issues are concentrated in DatePicker / TimePicker / ColorPicker draft-control projection, confirm/cancel semantics, Enter behavior and preset consistency.
 
 Scope:
-- adopt `EnvironmentPort` into existing environment/document/window/observer authority paths where it replaces ad-hoc access without changing public behavior;
-- adopt `Diagnostics` into existing duplicate-owner/stale-action/authority-conflict observation paths where a real owner already exists;
-- adopt `ComponentProfile` into existing component/family capability declarations without creating a second option/schema truth;
-- preserve current `ValueDraft`, `LogicalOwnership`, focus/navigation, overlay, form, theme/token, selection/data and Motion authorities;
-- do not add component-name dispatch;
-- do not introduce direct DatePicker/TimePicker/ColorPicker behavior changes in this task unless an authority adoption requires a minimal compatibility fix.
+- evolve the existing `ValueDraft / StateController` authority into the handbook `ValueController` contract; do not create a second committed/draft truth;
+- make preview/rawInput/edit-session/revision channels explicit at the value authority layer where required by Picker family behavior;
+- reduce `PickerSession` to close/confirm policy over ValueController instead of owning a parallel edit session;
+- migrate the first picker pack together: `PickerComponent`, `PickerSession`, DatePicker, TimePicker, ColorPicker, WheelPicker and their direct value/session adapters;
+- preserve `PickerField` as field/open/focus projection authority; do not move FocusController work into Phase B unless required for value correctness;
+- after the first picker pack is green, continue Select / TreeSelect / Cascader / Autocomplete as the second Phase B pack.
 
-Implemented slice:
-- `ObserverHub` delegates Resize/Mutation/Intersection observer construction and media-query resolution to `EnvironmentPort`, while retaining scheduler/statistics ownership.
-- `EnvironmentPort` now validates IntersectionObserver adapters alongside Resize/Mutation.
-- `Diagnostics` gained protocol identity; `Collection` reports duplicate stable keys only to an explicitly injected Diagnostics sink, so diagnostics remain observational.
-- `Component` stores immutable validated `ComponentProfile` metadata; `ComponentRuntime` publishes/describes the normalized profile and rejects runtime-name mismatches.
-- class adapters only forward explicitly authored profiles; no component-name capability inference was added.
-- focused regressions cover environment delegation, duplicate stable-key diagnostics, Component profile metadata, and runtime profile publication.
-- no first-wave component file or business behavior was changed.
-
-PR / branch evidence:
-- branch: `refactor/phase-a-env-diagnostics-profile-20260924`
-- PR #49 open
-- latest branch HEAD before this checkpoint: `4887a567e1f6e17eb04c824f9457efcc23dcb4cc`
-- current main advanced only by `AI_WORK_STATE.md` cleanup commits; this checkpoint reconciles the branch onto the latest state-file format.
-- CI: pending/latest PR run to be queried after this checkpoint.
+Frozen Picker family contract for this task:
+- closed control projects committed;
+- open raw editor projects rawInput;
+- open preview projects preview only when profile enables previewControl;
+- otherwise open dirty session projects draft;
+- `needConfirm=false`: completed selection commits immediately; close does not perform a hidden late commit;
+- `needConfirm=true`: selection changes draft only; Confirm/explicit confirm action commits;
+- Esc / outside / tab-exit roll back uncommitted draft by default;
+- presets obey the same needConfirm rule as ordinary selection;
+- control showing draft is projection only; FormData/getValue stay committed until commit.
 
 Next exact step:
-1. run PR #49 complete release CI;
-2. fix source implementation only if a gate fails; do not weaken audit/browser/release checks;
-3. merge only on green PR head;
-4. verify main release + Pages;
-5. then advance to the handbook's next Phase A / first Controller implementation step without redoing PHASE-A-001/002/003 audits.
+1. create a fresh Phase B branch from current main;
+2. inspect the exact ValueDraft/PickerSession direct-consumer set only, not the whole repository;
+3. implement ValueController by evolving/wrapping the existing single value authority, with no duplicate state;
+4. migrate PickerSession/PickerComponent plus DatePicker/TimePicker/ColorPicker/WheelPicker in the same migration pack;
+5. add browser regressions for draft display, immediate commit, confirm rollback, Enter, presets and FormData;
+6. run complete PR release CI, then main CI + Pages before advancing.
 
-## Current authority snapshot — after PHASE-A-002
+## Current authority snapshot — after Phase A
 
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
@@ -77,9 +73,9 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Selection/data: `Selection`, `HierarchicalSelection`, `Collection`, `ActiveItem` and `TableModel` remain selection/collection authorities. `Collection` now uses shared `DataRevision` for stale-transaction revision ownership.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
 - Motion: `MotionCore`, `Transition` and `TransitionGroup` remain the low-level motion authority; no parallel generation counter may be introduced.
-- Environment: shared `EnvironmentPort` exists and validates observer adapters. Adoption into remaining ad-hoc `globalThis.document/window` consumers is pending.
-- Diagnostics: semantic `Diagnostics` with stable codes exists. Broader adoption into existing authority conflict/stale-owner paths is pending.
-- Component capability declaration: `ComponentProfile` schema exists. Adoption into existing component/family capability declarations is pending.
+- Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
+- Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
+- Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
 - Input modality: existing `InteractionModality` remains the authority and now exposes touch/programmatic modalities plus the `InputModality` alias.
 - Shared Protocol verification: `verify:shared-protocol` covers the foundation plus Collection/ValueDraft/StateController integration.
 
@@ -96,6 +92,22 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-A-003 — EnvironmentPort / Diagnostics / ComponentProfile authority adoption
+Status: DONE
+Evidence:
+- PR #49 merged
+- merge commit `b2ecdb4e33bea642932092693d0ad5a8a47fd4e3`
+- PR CI #320 / `35955216461`: success
+- main CI + Pages #321 / `35955524890`: success
+- PR CI #317 initially failed only the existing platform fail-closed source contract; implementation was corrected so observer constructors remain in the resolved document/window realm and `ObserverHub` retains an explicit fail-closed guard.
+Outcome:
+- `ObserverHub` delegates observer/media environment resolution to `EnvironmentPort` while retaining scheduling/statistics ownership.
+- `EnvironmentPort` covers validated IntersectionObserver construction and no longer leaks observer constructors across resolved realms.
+- `Diagnostics` is injectable and `Collection` can report duplicate stable keys without mutating data state.
+- `Component` / `ComponentRuntime` carry normalized `ComponentProfile` metadata; adapters forward only explicitly authored profiles.
+- no first-wave Picker business behavior was changed in Phase A.
+
 
 ### PHASE-A-002 — Shared Protocol authority integration
 Status: DONE
