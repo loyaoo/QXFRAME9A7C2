@@ -4,7 +4,7 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { StateController } from '../core/stateController.js';
 import { TemporalGrid } from '../core/temporalGrid.js';
-import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { FocusController } from '../core/focusController.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { DOMBinding } from '../core/domBinding.js';
@@ -197,12 +197,12 @@ function create(options) {
       selectDate(date, { source: DOM.activationSource(payload.event), reason: 'cell', originalEvent: payload.event });
       focusKeyboardHost();
     });
-    keyboardRegion = KeyboardRegion.create({
+    keyboardRegion = FocusController.create({
       root: root,
       hosted: false,
       disabled: opts.disabled === true,
       navigation: {
-        handlers: KeyboardRegion.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' '], onKeydown)
+        handlers: FocusController.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Enter',' '], onKeydown)
       },
       onEnter: function (detail) {
         var key = activeItem && activeItem.activeKey ? activeItem.activeKey : null;
@@ -411,7 +411,7 @@ function create(options) {
     return null;
   }
   function bindVirtualFocus(controller, hosted) {
-    var binding = KeyboardRegion.bindVirtualFocus({
+    var binding = FocusController.bindVirtualFocus({
       controller: controller,
       previousDomain: virtualFocusDomain,
       keyboard: keyboard,
@@ -469,7 +469,7 @@ function create(options) {
     getCells: function () { return cells.map(function (entry) { return { key: entry.key, date: cloneDate(entry.date), disabled: entry.disabled, outside: entry.outside }; }); },
     getEventDelegation: function () { return delegation; },
     getKeyboardNavigation: function () { return keyboard; },
-    getKeyboardRegion: function () { return keyboardRegion; },
+    getKeyboardRegion: function () { return keyboardRegion && keyboardRegion.getKeyboardRegion ? keyboardRegion.getKeyboardRegion() : keyboardRegion; },
     on: emitter.on,
     once: emitter.once,
     destroy: destroy
