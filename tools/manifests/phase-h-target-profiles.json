@@ -1,0 +1,355 @@
+{
+  "version": 1,
+  "minimumProfiled": 12,
+  "controllerByCapability": {
+    "value": "ValueController",
+    "focus": "FocusController",
+    "interaction": "InteractionController",
+    "capability": "CapabilityController",
+    "motion": "MotionController",
+    "selection": "SelectionController",
+    "overlay": "OverlayController",
+    "feedback": "FeedbackController",
+    "form": "FormController"
+  },
+  "components": {
+    "Autocomplete": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "Carousel": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion"
+    ],
+    "Cascader": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "Collapse": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion"
+    ],
+    "ColorPicker": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "DatePicker": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "Drawer": [
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "overlay",
+      "feedback"
+    ],
+    "Dropdown": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "selection",
+      "overlay"
+    ],
+    "Image": [
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "overlay",
+      "feedback"
+    ],
+    "InputNumber": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "feedback",
+      "form"
+    ],
+    "InputOTP": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "feedback",
+      "form"
+    ],
+    "JSON": [
+      "focus",
+      "interaction",
+      "capability",
+      "feedback"
+    ],
+    "Loading": [
+      "capability",
+      "motion",
+      "overlay",
+      "feedback"
+    ],
+    "Menu": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay"
+    ],
+    "Message": [
+      "motion",
+      "overlay",
+      "feedback"
+    ],
+    "Modal": [
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "overlay",
+      "feedback"
+    ],
+    "Notification": [
+      "motion",
+      "overlay",
+      "feedback"
+    ],
+    "Pagination": [
+      "value",
+      "focus",
+      "interaction",
+      "capability"
+    ],
+    "Popconfirm": [
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "overlay",
+      "feedback"
+    ],
+    "Popover": [
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "overlay"
+    ],
+    "Progress": [
+      "feedback"
+    ],
+    "Rate": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "feedback",
+      "form"
+    ],
+    "Result": [
+      "feedback"
+    ],
+    "Ripple": [
+      "interaction",
+      "capability",
+      "motion"
+    ],
+    "Scroll": [
+      "focus",
+      "interaction",
+      "capability",
+      "motion"
+    ],
+    "Select": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "Slider": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "feedback",
+      "form"
+    ],
+    "Sort": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "selection",
+      "overlay"
+    ],
+    "Steps": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "feedback"
+    ],
+    "Table": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "Tabs": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "selection",
+      "overlay"
+    ],
+    "TagInput": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "feedback",
+      "form"
+    ],
+    "Tags": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "TimePicker": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "Tooltip": [
+      "motion",
+      "overlay"
+    ],
+    "Transfer": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "feedback",
+      "form"
+    ],
+    "TreeSelect": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "Trigger": [
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "overlay"
+    ],
+    "Upload": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ],
+    "WheelPicker": [
+      "value",
+      "focus",
+      "interaction",
+      "capability",
+      "motion",
+      "selection",
+      "overlay",
+      "feedback",
+      "form"
+    ]
+  },
+  "internalTargets": [
+    "Component",
+    "FieldComponent",
+    "PopupFieldComponent",
+    "PickerComponent",
+    "OverlayComponent",
+    "Control",
+    "PickerField",
+    "TimePanel",
+    "WheelPanel",
+    "Calendar",
+    "PeriodPanel",
+    "ColorPanel",
+    "ItemCollection",
+    "List",
+    "OptionList",
+    "Tree",
+    "VirtualList",
+    "OverlayRuntime",
+    "MotionCore",
+    "NoticeService",
+    "FormBridge",
+    "Config"
+  ]
+}

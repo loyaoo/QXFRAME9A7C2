@@ -10,60 +10,41 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `e7903d9ff08ecde8bdb000da64b6a77ceea837f1` (PR #78 merge)
-- Current branch: `refactor/phase-g-feedback-form-foundation-20260924`
-- Open PRs at this checkpoint: pending PHASE-G-001 foundation PR
+- Last code-affecting main commit: `e99cf3aa376277cf4d040c69f51b8c6916869ebe` (PR #80 merge)
+- Current branch: `refactor/phase-h-matrix-feedback-family-20260924`
+- Open PRs at this checkpoint: pending PHASE-H-001 target-matrix PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase F PR CI: #408 / `36021985007` (PR #78)
-- Latest green main CI + Pages: #409 / `36022470128`
-- Overall handbook implementation progress: 90%
-- Current Phase: Phase G — Feedback + Form
-- Current Task: `PHASE-G-001`
+- Latest green Phase G PR CI: #421 / `36025556499` (PR #80)
+- Latest green main CI + Pages: #422 / `36026105260`
+- Overall handbook implementation progress: 94%
+- Current Phase: Phase H — full component migration + old-path removal
+- Current Task: `PHASE-H-001`
 
 ## CURRENT
 
-### PHASE-G-001 — FeedbackController + FormController foundations
+### PHASE-H-001 — executable 40-component target matrix
 Status: IN_PROGRESS
-Task progress: 65%
+Task progress: 70%
 
 Why this is current:
-- Phase F is accepted through PR #70–#76 and #78; the attempted signoff PR #77 was closed unmerged after correctly exposing the final runtime-profile residue.
-- final Phase F exact-head CI #408 / `36021985007` and main release + Pages #409 / `36022470128` are green.
-- `FeedbackController` and `FormController` do not yet exist; Phase G must evolve existing authorities rather than duplicate them.
-- `NoticeService` + `NoticeClock` remain the global notice/timing execution authorities.
-- `FormBridge` remains the native field/FormData/reset carrier authority; field values remain ValueController-owned.
-- `AsyncTask` / `AsyncTaskGroup` already provide request identity, cancellation and stale-result primitives suitable for validator coordination.
-- handbook Phase G gates are same-name fields, native submit/reset, async validator stale protection, external controlled reset, and local/global feedback de-dup.
+- Phase G is accepted: PR #80 merged at `e99cf3aa376277cf4d040c69f51b8c6916869ebe`; exact-head CI #421 / `36025556499` and main release + Pages #422 / `36026105260` are green.
+- Phase G gates are covered by required Node + strict source-ESM browser verification: same-name fields/FormData, native submit/reset + reset cancellation, async validator stale protection, external controlled reset acknowledgement, feedback identity de-dup, submit cancellation and stale completion.
+- Phase H now owns the remaining 40 public component declarations/adoptions, internal panel/base migration, canonical docs/native controls and duplicate-authority deletion.
+- a repository-wide scan shows current ComponentProfile coverage is partial; many components already use converged lower-level authorities but have not frozen the full 9-controller target combination.
 
-Frozen first-pack impact map:
-- add `FeedbackController` as an operation/task feedback facade; it may coordinate local/global projection but must not own task/value state, NoticeClock timing, or create another global notice stack.
-- add `FormController` as field registry + dirty/touched/pending/valid + validation/submit/reset transaction authority; native carrier/FormData work stays in FormBridge.
-- use `fieldId` as unique identity; duplicate `name` values are valid and must never overwrite sibling fields.
-- async validation must capture field/form revision plus validator generation; stale failures/results cannot overwrite newer state.
-- reset must respect native reset cancellation, cancel pending validation/submit work, delegate value reset to field adapters/ValueController, clear feedback/touched, then project through FormBridge.
-- external controlled reset must remain requested until owner acknowledgement; FormData must not pretend a controlled field has reset.
-- global feedback must de-duplicate against local field/form feedback by owner + operation + actionId/requestId, not by message text.
-- foundation pack proves controller contracts first; direct consumers migrate in coherent follow-up packs.
-- no component-name dispatch, no second committed value, no duplicate native carrier, no new notice timer/stack.
-
-Implemented in current PHASE-G-001 pack:
-- added `FeedbackController` as feedback projection/de-dup facade without owning task/value state or notice timing.
-- feedback identity is owner + operation + action/request identity; generation rejects stale feedback and retargeting local↔global keeps one canonical record.
-- added `FormController` as field registry + dirty/touched/pending/valid + validate/submit/reset transaction authority.
-- duplicate field `name` values are preserved through unique `fieldId`; serialized entries retain both.
-- async validation uses AsyncTaskGroup plus captured form/field revisions so stale failures cannot overwrite newer values.
-- controlled reset remains `requested` until owner acknowledgement; touched/validation feedback clear immediately while dirty/serialized value remain owner-confirmed.
-- native reset cancellation is respected; native successful reset refreshes baseline after browser default action.
-- controllers are exported through `src/core/index.js`.
-- required `verify:phase-g-foundation` covers Node contracts; strict source-ESM Chromium verification now covers same-name FormData, native submit, cancelled reset, and native reset baseline semantics.
+Implemented in this pack:
+- added `tools/manifests/phase-h-target-profiles.json` containing the handbook-exact Runtime Controller combination for all 40 public components plus the internal/base target ledger.
+- added `verify:phase-h-target-matrix` to the required verify chain.
+- the gate requires exact parity with the 40-component runtime namespace, validates all target capabilities/controllers, rejects current profiles that declare capabilities/owners outside the handbook target, and prevents profile coverage from regressing below the frozen baseline.
+- the gate intentionally reports missing capability/ownership coverage without pretending Phase H is already complete.
 
 Next exact step:
-1. open PHASE-G-001 PR and run exact-head full release/browser/package CI;
-2. fix only real foundation contract regressions without duplicating FormBridge/ValueController/NoticeService authorities;
-3. merge only exact-head green and verify main + Pages;
-4. continue Phase G direct-consumer migration and local/global feedback integration.
+1. run PHASE-H-001 exact-head full CI and merge only green; verify main + Pages.
+2. use the executable matrix output to batch remaining components by shared authority/family rather than one component per PR.
+3. first implementation batch: Feedback/presentation + simple state families, then form/value families, then composite/overlay families.
+4. only after source adoption + duplicate writable-path removal + browser evidence update the acceptance rows to H accepted.
 
 ## Current authority snapshot — after Phase A
 
@@ -93,6 +74,33 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-G-001 — FeedbackController + FormController foundations
+Status: DONE
+Evidence:
+- PR #80 merged
+- merge commit `e99cf3aa376277cf4d040c69f51b8c6916869ebe`
+- exact-head CI #421 / `36025556499`: success
+- main CI + Pages #422 / `36026105260`: success
+Outcome:
+- FeedbackController is the operation/task visible-feedback facade; NoticeService/NoticeClock remain global notice/timing execution authorities.
+- feedback identity de-dup is owner + operation + actionId/requestId, with stale generation rejection and identity-preserving updates.
+- FormController owns field registry + dirty/touched/pending/valid + validation/submit/reset coordination without copying the ValueController reset baseline or FormBridge native carrier.
+- fieldId is unique identity and duplicate names serialize independently.
+- async validator and submit completions are stale-safe; reset cancels pending submit/validation work.
+- external controlled reset remains requested until owner acknowledgement.
+- native submit/reset/FormData/reset-cancellation behavior is verified in Chromium.
+
+### Phase G — Feedback + Form
+Status: ACCEPTED
+Evidence:
+- PR #80 / exact-head #421 / main + Pages #422
+- `verify:phase-g-foundation` + strict source-ESM browser gates
+Outcome:
+- all handbook Phase G gates are covered.
+- Phase G acceptance does not claim Phase H/I completion.
+
+
 
 ### PHASE-F-008 — runtime profile Theme/Token residue closeout
 Status: DONE
