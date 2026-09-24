@@ -2,7 +2,7 @@ import { DOM } from '../core/dom.js';
 import { Events } from '../core/events.js';
 import { Config } from '../core/config.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
-import { OverlayRuntime } from '../core/overlayRuntime.js';
+import { OverlayController } from '../core/overlayController.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { TriggerInteraction } from '../core/triggerInteraction.js';
 import { Transition } from '../core/transition.js';
@@ -257,7 +257,7 @@ function create(options) {
     };
   }
     
-  runtime = OverlayRuntime.create(runtimeOptions());
+  runtime = OverlayController.create(runtimeOptions());
   transition = Transition.create({
     element: transitionElement,
     transition: opts.transition || IMMEDIATE_TRANSITION,
@@ -645,6 +645,8 @@ function create(options) {
     getReferenceElement: function () { return reference; },
     getTriggerElement: function () { return triggerTarget; },
     getPopupElement: function () { return floating; },
+    getOverlayController: function () { return runtime; },
+    getMotionController: function () { return transition && transition.getMotionController ? transition.getMotionController() : null; },
     on: emitter.on,
     once: emitter.once,
     destroy: destroy
