@@ -1,9 +1,11 @@
-# QXFRAME9A7C2：11 Controller + Shared Protocol Layer 全组件迁移开发手册 v3
+# QXFRAME9A7C2：9 Runtime Controllers + CSS Theme/Token Design System + Shared Protocol Layer 全组件迁移开发手册 v3
 
 > **文档性质**：架构冻结稿 + 实施手册 + 全组件迁移与验收标准。  
 > **仓库**：`loyaoo/QXFRAME9A7C2`  
 > **基准**：`main@156453275a9c6073a0962bff74ba20d3283b922b`，包版本 `2.19.81`。  
-> **状态**：本文定义目标架构与实施门槛，不代表 11 Controller 已经完成源码迁移。  
+> **状态**：本文定义目标架构与实施门槛，不代表 9 个 Runtime Controller 与后续 Phase F–I 已全部完成。  
+> **Phase F 架构修正**：Theme / Token 不属于 JS Controller。CSS 是唯一视觉真值；核心 JS 不读取、解析、计算、同步或复制 theme/token 状态。  
+> **文件名说明**：仓库文件名沿用早期 `11-Controller` 历史名称以避免旧链接失效；正文架构以 **9 Runtime Controllers** 为准。  
 > **取代范围**：取代此前分散的 Controller 架构稿、接口取舍稿、跨控制器事务稿、全组件接入矩阵中重复或冲突的描述；后续实现以本文为唯一开发依据。
 
 ---
@@ -12,7 +14,7 @@
 
 QXFRAME9A7C2 的目标不是“组件数量多”，而是成为一套**视觉一致、操作一致、反馈一致、使用一致、状态归属一致**的前端 UI Framework。
 
-本次架构升级固定 11 个正式 Controller：
+本次架构升级固定 **9 个 Runtime Controller**：
 
 1. `ValueController`
 2. `FocusController`
@@ -22,11 +24,11 @@ QXFRAME9A7C2 的目标不是“组件数量多”，而是成为一套**视觉�
 6. `SelectionController`
 7. `OverlayController`
 8. `FeedbackController`
-9. `ThemeController`
-10. `TokenController`
-11. `FormController`
+9. `FormController`
 
-但 11 Controller 之下还必须存在一层**Shared Protocol Layer**。它不是第 12 个 Controller，不拥有任何组件业务真值，而是提供所有 Controller 共用的：
+**Theme / Token 不进入 Runtime Controller 列表。** 它们属于纯 CSS Design System，由一个最终 CSS 文件中的分层 CSS Custom Properties、主题 selector、组件 selector 与状态 selector 完成视觉分发；JS 组件不持有 theme/token truth。
+
+9 个 Runtime Controller 之下还必须存在一层**Shared Protocol Layer**。它不是第 10 个 Controller，不拥有任何组件业务真值，而是提供所有 Runtime Controller 共用的：
 
 - Action / Mutation 事务协议
 - Logical Owner Tree
@@ -37,7 +39,7 @@ QXFRAME9A7C2 的目标不是“组件数量多”，而是成为一套**视觉�
 - Environment Port / Resource Lease
 - Diagnostics / Architecture Lint
 
-最终目标：以后新增组件不再重新设计 value、focus、keyboard、popup、loading、form、theme、motion 等基础行为，只需声明能力 profile、实现领域 adapter、通过统一 contract suite。
+最终目标：以后新增组件不再重新设计 value、focus、keyboard、popup、loading、form、motion 等运行时基础行为，只需声明能力 profile、实现领域 adapter、通过统一 contract suite；视觉部分只消费 CSS Theme/Token Design System，不新增 JS theme/token runtime。
 
 ---
 
@@ -57,7 +59,7 @@ QXFRAME9A7C2 的目标不是“组件数量多”，而是成为一套**视觉�
 - `Selection / HierarchicalSelection / ActiveItem / TableModel`
 - `NoticeService / NoticeClock`
 
-11 Controller 必须从这些能力**演进、封装、统一协议**，不得复制出第二套 owner。
+9 个 Runtime Controller 必须从这些能力**演进、封装、统一协议**，不得复制出第二套 owner。
 
 例如：
 
@@ -149,6 +151,8 @@ Native editor
 - 全局 service locator / DI container
 - 运行时组件名 dispatch
 - 与现有 ESM 静态导入冲突的动态 registry
+- `ThemeController` / `TokenController` / ThemeRuntime / TokenRuntime
+- 核心 JS 中用于 theme/token 解析、CSS variable 投影、computed-style theme 复制的运行时层
 
 原生元素已有行为保持 native-first；本次不以扩大语义辅助层为目标。
 
@@ -156,7 +160,7 @@ Native editor
 
 # 2. Shared Protocol Layer
 
-Shared Protocol Layer 是本次架构能否长期稳定的关键。11 Controller 共享这一层，但它本身不持有 Date、Color、Tree、Form 等业务状态。
+Shared Protocol Layer 是本次架构能否长期稳定的关键。9 个 Runtime Controller 共享这一层，但它本身不持有 Date、Color、Tree、Form 等业务状态。
 
 ## 2.1 ActionContext
 
@@ -488,14 +492,11 @@ Diagnostics 必须有稳定 code，不以中文提示文案作为程序分支。
 
 ---
 
-# 3. 11 Controller 的依赖边界
+# 3. 9 Runtime Controller 的依赖边界
 
 推荐 DAG：
 
 ```text
-Token ───────────────→ Theme
-                         │
-                         ↓
                        Overlay ← Motion
                          ↑
                          │
@@ -517,7 +518,9 @@ Focus ←────────── Interaction ─────────�
 - Overlay 不拥有 open
 - Motion 不拥有业务 open/value
 - Form 不拥有 field value
-- Theme 不拥有 token catalog
+- **CSS Theme/Token Design System 完全位于 Runtime Controller DAG 之外**
+- Runtime Controller 不读取 CSS token 作为业务状态，不写 CSS variable 作为状态同步协议
+- CSS 可以依赖 DOM ancestry / selector / custom-property inheritance；JS 不负责复制 theme context
 
 ---
 
@@ -1142,65 +1145,138 @@ owner + operation + actionId/requestId
 
 ---
 
-# 13. ThemeController
+# 13. CSS Theme System（纯 CSS，非 Controller）
 
-## 13.1 Owns
+## 13.1 唯一 authority
 
-- theme mode
-- managed scope
-- context revision
-- context inheritance
-- portal theme context
+Theme 的唯一视觉 authority 是 CSS selector + CSS Custom Properties。
 
-当前保证范围：light / dark；品牌变化走 Token preset，不随意增加无 CSS 支持的主题名。
+核心规则：
 
-## 13.2 Portal
+- 不存在 `ThemeController`
+- 不存在 ThemeRuntime / ThemeStore / ThemeContext JS truth
+- 核心组件 JS 不读取当前 light/dark/theme 名称
+- 核心组件 JS 不调用 `getComputedStyle()` 来解析 theme/token
+- 核心组件 JS 不通过 `style.setProperty()`、dataset、classList 去同步框架主题
+- 组件静态样式与主题切换在 **没有任何 QXFRAME JS** 时也必须成立
 
-Theme context 至少包含：
+最终发布仍是完整的一份：
 
 ```text
-ownerDocument
-scope chain
-theme
-token overrides
-size/variant/motion 等正式上下文字段
+dist/qxframe9a7c2.css
 ```
 
-不复制整个 computedStyle。
+源码内部可以按维护需要拆分，但 build 后必须形成一个自足 CSS 文件。
 
-主题变化不能：
+## 13.2 Theme selector 分层
 
-- 重置 draft
-- 重置 activeKey
-- 清 selection
-- 重新触发不必要 enter animation
+至少固定：
+
+```text
+:root / default
+→ light baseline
+→ dark baseline
+→ scoped theme override
+→ component/state consumption
+```
+
+默认主题必须提供正常、干净的白色明亮基线；暗色主题提供正常黑色/深色基线。其他品牌/混色方案只能通过覆盖 CSS variables 实现，不增加 JS theme 状态机。
+
+示意：
+
+```css
+:root {
+  --qxframe9a7c2-bg-page: #fff;
+  --qxframe9a7c2-bg-container: #fff;
+  --qxframe9a7c2-text-primary: #000;
+}
+
+[data-theme="dark"],
+.qxframe9a7c2-theme-dark {
+  --qxframe9a7c2-bg-page: #000;
+  --qxframe9a7c2-bg-container: #141414;
+  --qxframe9a7c2-text-primary: #fff;
+}
+```
+
+主题切换只是外部应用改变 DOM attribute/class 后触发 CSS 重算。框架核心 JS 不参与。
+
+## 13.3 Scoped theme 与 portal
+
+Scoped theme 依赖标准 CSS inheritance / selector ancestry。
+
+如果 popup/portal 需要继承局部主题：
+
+- portal container 必须物理位于对应 theme scope 内；或
+- 使用调用方明确提供的 scoped portal container；或
+- 使用全局 root theme
+
+禁止核心 JS：
+
+- 把 theme class 从 trigger 复制到 portal
+- 遍历 computedStyle 后复制 CSS variables
+- 维护 portal theme revision/context
+- 为 scoped theme 建立第二份 JS truth
+
+这意味着 **DOM/portal 结构负责 CSS scope，JS 不负责 theme propagation**。
+
+## 13.4 Docs Theme Inspector
+
+`docs/all-components-static.html` 的 Theme Inspector 属于 docs/demo 工具，不属于框架运行时依赖。
+
+它可以为了演示：
+
+- 修改页面根节点的 theme attribute/class
+- 在 demo 页临时覆盖 CSS variables
+- 调整 Primary Seed、辅助色、字体、圆角、Focus Ring、混色比例
+- 导出 CSS variable/preset 结果
+
+但这些能力不能让组件 JS 依赖 Theme Inspector，也不能形成生产运行时 Theme API。
 
 ---
 
-# 14. TokenController
+# 14. CSS Token System（纯 CSS，非 Controller）
 
-## 14.1 Owns
+## 14.1 唯一 truth 与层级
 
-- token catalog
-- token kind
-- dependency / alias
-- scope override
-- CSS variable projection
+不存在 `TokenController`。
 
-组织：
+Token 的唯一 truth 是 CSS Custom Properties，按固定层级分发：
 
 ```text
-primitive seed
+primitive
 → semantic
 → family
-→ component/state（仅确实需要时）
+→ component
+→ state
 ```
+
+组件 CSS 只能消费最终语义/family/component/state token，不通过 JS getter/resolver 获取颜色、字体、圆角、间距、阴影或状态色。
+
+建议结构：
+
+```css
+:root {
+  /* primitive */
+  --qxframe9a7c2-blue-6: ...;
+
+  /* semantic */
+  --qxframe9a7c2-color-primary: var(--qxframe9a7c2-blue-6);
+  --qxframe9a7c2-border-default: ...;
+
+  /* family */
+  --qxframe9a7c2-control-bg: var(--qxframe9a7c2-bg-container);
+
+  /* component */
+  --qxframe9a7c2-button-primary-bg: var(--qxframe9a7c2-color-primary);
+}
+```
+
+Token catalog 可以作为**静态审计清单/构建期 lint 结果**存在，但不能成为 JS runtime catalog。
 
 ## 14.2 Visual State Channels
 
-Token / CSS 必须定义状态通道，不允许靠 selector specificity 碰运气。
-
-建议：
+CSS 必须定义明确状态通道，不依赖 selector specificity 碰运气：
 
 ```text
 interaction: hover / active
@@ -1210,31 +1286,64 @@ availability: disabled / readonly / loading
 surface/elevation: popup / floating / pressed
 ```
 
-组合示例：
+组合规则：
 
 ```text
 error + keyboard-focus
-border  = error token
-outline = keyboard focus token
-background = interaction token
+border     = error token
+outline    = keyboard focus token
+background = interaction/state token
 ```
 
-这保证：
+固定约束：
 
-- selected 不抢 focus outline
+- keyboard `focus-visible` 使用统一 2px outline；明亮主题黑色、暗色主题白色
+- mouse hover/focus/selected/error/success/warning 使用 border/background/box-shadow 辅助，不与 keyboard outline 混为同一通道
+- selected 不抢 keyboard focus outline
 - error 不吞 keyboard focus
-- loading 不靠一种颜色表达所有状态
+- loading/disabled 不靠一种颜色表达所有状态
+- generic component root 不因主题状态改变结构尺寸
 
-## 14.3 Catalog Gate
+## 14.3 CSS selector 与优先级规则
 
-CI 检查：
+Phase F 必须继续遵守项目 CSS 技术约束：
 
-- 未登记 CSS var
+- 不使用 `@layer`
+- 不使用 `:is()`
+- 不使用 `:where()`
+- 不用无意义超长共用 selector 堆优先级
+- theme override、state override、component override 必须有可解释的固定顺序
+- 不用 `box-shadow` 模拟加粗边框；shadow 只表达 elevation / glow / separation
+- component 外边框 token 与内部 divider token 分离
+
+## 14.4 Catalog / Static Gate
+
+CI / 审计检查：
+
+- 未登记/孤立 CSS variable
+- 同义 token 多套命名
 - token 循环引用
-- 无 fallback 的断链
+- 无 fallback 或断链引用
 - 非主题化硬编码颜色
-- 非法 z-index 越权
+- 不受控绝对 z-index
 - light/dark/state token 缺失
+- component CSS 绕过 semantic/family token 直接依赖 primitive（除明确允许项）
+- JS 新增 theme/token runtime、ThemeController、TokenController 或运行时 CSS-variable projection
+- docs/static 页面在无框架 JS 时主题/状态样式不完整
+
+## 14.5 单一最终 CSS
+
+Phase F 的完成结果不是新增 JS 模块，而是：
+
+```text
+一个权威 CSS Theme/Token graph
++
+一个最终 dist/qxframe9a7c2.css
++
+静态 lint / docs matrix
+```
+
+允许源码按 foundation/semantic/family/component 等层次组织，但生产输出必须完整、自足；任何组件 JS 删除后，CSS 文件本身仍能正确表达静态组件、主题与视觉状态。
 
 ---
 
@@ -1587,7 +1696,7 @@ readonly         readonly projection
 
 # 23. ComponentProfile
 
-每个组件声明需要哪些能力，而不是强制实例化 11 Controller。
+每个组件声明需要哪些能力，而不是强制实例化 9 Runtime Controller。
 
 示例：
 
@@ -1603,7 +1712,6 @@ const profile = {
   motion: null,
   feedback: { localStatus: true },
   form: { serialize: selectedRowsToFormValue },
-  tokens: ['semantic-accent', 'family-control', 'component-tree-grid'],
   ownership: {
     value: 'ValueController',
     selection: 'SelectionController',
@@ -1615,7 +1723,7 @@ const profile = {
 };
 ```
 
-Profile 只描述能力，不成为状态容器。
+Profile 只描述**运行时能力**，不成为状态容器。Theme/Token 不进入 ComponentProfile runtime dependency；组件视觉只通过 CSS selector / CSS variables 消费设计系统。
 
 ## 23.1 Adapter
 
@@ -1657,11 +1765,9 @@ composeControllers(profile, context)
 - S Selection
 - O Overlay
 - B Feedback
-- H Theme
-- T Token
 - R Form
 
-H/T 是所有组件 CSS/context 基线，不表示每个组件都要创建 Theme/Token 实例。
+Theme/Token 不使用运行时缩写，也不属于 Controller 组合矩阵。所有组件统一消费同一套纯 CSS Theme/Token Design System。
 
 | 组件 | 运行时组合与必须保留的差异 |
 |---|---|
@@ -1871,15 +1977,37 @@ VirtualList
 - focus restore
 - scroll lock / isolation lease
 
-## Phase F：Theme + Token + Visual State
+## Phase F：CSS Theme / Token System Unification（纯 CSS 审计与统一）
+
+目标：**不新增 ThemeController / TokenController / ThemeRuntime / TokenRuntime。**
+
+审计与统一：
+
+- 一个最终 `dist/qxframe9a7c2.css` 包含完整组件样式与全部正式主题
+- primitive → semantic → family → component → state token 层级统一
+- root/default/light/dark/scoped theme selector 统一
+- 正常白色明亮主题与正常黑色/深色暗色主题作为保底基线
+- Primary / 辅助色 / 字体 / 圆角 / Focus Ring / 混色比例通过 CSS variables 分层覆盖
+- hover / active / focus-visible / selected / error / warning / success / disabled / readonly / loading 状态通道统一
+- 组件外边框、内部 divider、surface/elevation token 分离
+- 清理旧变量、同义变量、多套命名、硬编码颜色和无意义 selector 重复
+- scoped theme 通过 DOM ancestry / scoped portal container 继承，不使用 JS 复制 theme/class/computed CSS variables
+- Theme Inspector 仅属于 docs/demo，不成为框架 JS 依赖
+- 不使用 `@layer`、`:is()`、`:where()`
 
 门槛：
 
-- root/light/dark/scope/portal
-- state channels
-- token catalog
-- unmanaged var lint
-- theme switch 不清业务状态
+- 无 ThemeController / TokenController 或其他 JS theme/token truth
+- 核心 JS 不读取/解析/计算/投影 theme/token
+- CSS 在无 QXFRAME JS 时仍能完整表达静态组件、主题和状态
+- token catalog/static inventory 可审计，但仅作为构建期/CI 信息
+- unmanaged CSS var lint
+- token alias/cycle/broken-reference lint
+- hard-coded theme color audit
+- light/dark/component/state token completeness
+- scoped theme/portal static fixture
+- `docs/all-components-static.html` 无 JS 状态矩阵可验证
+- theme selector/class 改变只触发 CSS 视觉变化，不触碰 value/draft/selection/focus/open 等业务状态
 
 ## Phase G：Feedback + Form
 
@@ -2102,6 +2230,8 @@ CI 默认拒绝新增以下模式，除非明确 allowlist：
 组件 keydown 大量 if(event.key===...)
 组件直接写绝对 z-index
 组件 CSS 新增未登记主题色
+核心 JS 新增 ThemeController / TokenController / ThemeRuntime / TokenRuntime
+核心 JS 为 theme/token 做 CSS variable projection / computed-style copy / portal theme replication
 ```
 
 Lint 不要求禁止所有 `keydown`：原生 editor adapter 等特殊场景允许，但必须登记 owner/reason。
@@ -2118,7 +2248,7 @@ Lint 不要求禁止所有 `keydown`：原生 editor adapter 等特殊场景允�
 4. action→capability map
 5. Focus Region Graph（如适用）
 6. Form serialize/reset（如适用）
-7. Theme/Token consumption
+7. CSS Theme/Token consumption（仅 CSS selector / CSS variables；不得新增 JS Theme/Token runtime）
 8. Controller Contract Tests
 9. Browser combination test
 10. destroy/resource proof
@@ -2156,7 +2286,7 @@ Lint 不要求禁止所有 `keydown`：原生 editor adapter 等特殊场景允�
 
 整个方案只有同时满足以下条件才算完成：
 
-1. 11 Controller 各自只有一个 authority，且没有第二份镜像 truth。
+1. 9 个 Runtime Controller 各自只有一个 authority，且没有第二份镜像 truth；Theme/Token 保持纯 CSS authority，不进入 JS Controller 体系。
 2. Shared Protocol Layer 全部落地：Action、OwnerTree、Controllable、Modality、DataRevision、Projection、Environment、Diagnostics。
 3. 40 个公开组件逐项签收。
 4. 内部 Panel / Base / VirtualList / native controls 逐项签收。
@@ -2165,7 +2295,7 @@ Lint 不要求禁止所有 `keydown`：原生 editor adapter 等特殊场景允�
 7. Multiple checkbox Space/Enter/Arrow/Home/End 等行为按 profile 统一。
 8. Collapse 等 autosize motion 快速反转无闪烁、撕裂、旧 completion 干扰。
 9. Value/Selection/Focus/Overlay/Form 的旧异步结果全部有 stale 防护。
-10. CSS visual state channel 与 Token catalog 一致。
+10. CSS Theme/Token graph 只有一套权威层级，visual state channel 与静态 token catalog/lint 一致，且无 JS theme/token runtime。
 11. native submit/reset/FormData、portal、IME、pointer、touch、multi-document 有真实浏览器回归。
 12. ESM graph 无循环、types/contracts/manifests/build/release 全部通过。
 13. Architecture Lint 无未授权双 owner / global listener / direct focus / duplicate keymap。
@@ -2212,14 +2342,16 @@ FocusController + InteractionController + CapabilityController
 
 # 36. 最终架构判断
 
-本方案不再追求增加更多 Controller。
+本方案不再追求增加更多 Runtime Controller。
 
 真正的框架内核是：
 
 ```text
-11 Controllers
+9 Runtime Controllers
 +
 Shared Protocol Layer
++
+CSS Theme / Token Design System
 +
 Family Contracts
 +
@@ -2227,18 +2359,20 @@ Component Profiles / Adapters
 +
 Conformance Test Kit
 +
-Architecture Lint
+Architecture / CSS Lint
 ```
 
-11 Controller 解决“谁负责什么”；Shared Protocol 解决“它们如何共同工作”；Family Contract 解决“同类组件如何保持人机交互一致”；Conformance + Lint 解决“以后不会重新烂回组件各写一套”。
+9 个 Runtime Controller 解决“运行时谁负责什么”；Shared Protocol 解决“运行时能力如何共同工作”；**CSS Theme/Token Design System 独立解决视觉分层与主题，不进入 JS 状态图**；Family Contract 解决“同类组件如何保持人机交互一致”；Conformance + Lint 解决“以后不会重新烂回组件各写一套”。
 
 后续实施阶段发现的新问题，应优先判断是：
 
 ```text
-协议缺口？
+运行时协议缺口？
+CSS Theme/Token 规范缺口？
 家族规范缺口？
 领域 adapter 问题？
 具体组件 bug？
 ```
 
-只有确实无法落入上述层次时，才考虑新增框架概念。禁止因为一个组件特殊就继续扩张 Controller 数量。
+只有确实无法落入上述层次时，才考虑新增框架概念。禁止因为一个组件特殊就继续扩张 Runtime Controller 数量；禁止把纯视觉 Theme/Token 问题重新包装成 JS Controller。
+
