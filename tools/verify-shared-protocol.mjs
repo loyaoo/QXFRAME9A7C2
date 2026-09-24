@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol, Collection, ValueDraft, StateController } from '../src/core/index.js';
+import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol, Collection, ValueDraft, StateController, ObserverHub } from '../src/core/index.js';
+import { ComponentRuntime, configureComponents, publishComponentApi } from '../src/runtime/componentRuntime.js';
 
 const keyEvent={type:'keydown',isTrusted:true};
 const parent=ActionContext.create('activate',{originalEvent:keyEvent,scopeId:'scope-a',ownerId:'owner-a'});
@@ -45,8 +46,32 @@ const env=EnvironmentPort.create({
 });
 const observer=env.createResizeObserver(()=>{});
 assert.equal(typeof observer.observe,'function');
+assert.equal(EnvironmentPort.create({window:{}}).createResizeObserver(()=>{}),null);
 observer.disconnect();
 assert.equal(observerDisconnected,true);
+
+let resizeObserved=false, mutationObserved=false, intersectionObserved=false, mediaListened=false;
+const observerEnvironment=EnvironmentPort.create({
+  createResizeObserver:()=>({observe(){resizeObserved=true;},disconnect(){}}),
+  createMutationObserver:()=>({observe(){mutationObserved=true;},disconnect(){}}),
+  createIntersectionObserver:()=>({observe(){intersectionObserved=true;},disconnect(){}}),
+  matchMedia:()=>({
+    matches:true,
+    addEventListener(type){if(type==='change')mediaListened=true;},
+    removeEventListener(){}
+  })
+});
+const probeTarget={};
+const stopResize=ObserverHub.resize(probeTarget,()=>{}, {environment:observerEnvironment,schedule:'sync'});
+const stopMutation=ObserverHub.mutation(probeTarget,()=>{}, {environment:observerEnvironment,schedule:'sync'});
+const stopIntersection=ObserverHub.intersection(probeTarget,()=>{}, {environment:observerEnvironment,schedule:'sync'});
+const stopMedia=ObserverHub.media('(prefers-reduced-motion: reduce)',()=>{}, {environment:observerEnvironment,schedule:'sync'});
+assert.equal(resizeObserved,true);
+assert.equal(mutationObserved,true);
+assert.equal(intersectionObserved,true);
+assert.equal(mediaListened,true);
+stopResize();stopMutation();stopIntersection();stopMedia();
+assert.equal(ObserverHub.getStats().activeObservers,0);
 
 const projected=[];
 const projection=ProjectionScheduler.create({schedule:'sync',project:snapshot=>projected.push(snapshot.revision)});
@@ -67,6 +92,15 @@ const diagnostics=Diagnostics.create({now:()=>1});
 const record=diagnostics.report(Diagnostics.codes.DUPLICATE_STABLE_KEY,{key:'x'});
 assert.equal(record.code,'duplicate-stable-key');
 assert.equal(diagnostics.getReports().length,1);
+assert.equal(Diagnostics.isDiagnostics(diagnostics),true);
+
+const collectionDiagnostics=Diagnostics.create({now:()=>2});
+const duplicateCollection=Collection.create({
+  items:[{key:'dup',value:1},{key:'dup',value:2}],
+  diagnostics:collectionDiagnostics
+});
+assert.equal(collectionDiagnostics.getReports(Diagnostics.codes.DUPLICATE_STABLE_KEY).length,1);
+assert.equal(duplicateCollection.getDiagnostics(),collectionDiagnostics);
 
 const profile=ComponentProfile.define({
   name:'ProtocolProbe',
@@ -77,6 +111,12 @@ const profile=ComponentProfile.define({
 });
 assert.equal(profile.name,'ProtocolProbe');
 assert.throws(()=>ComponentProfile.define({name:'Bad',unknown:true}),/Unknown ComponentProfile field/);
+const publishedProbe=publishComponentApi('ProtocolProbe',{profile:profile,create(){return {};}});
+assert.equal(publishedProbe.profile.name,'ProtocolProbe');
+assert.deepEqual(publishedProbe.profile.ownership,profile.ownership);
+configureComponents({ProtocolProbe:publishedProbe});
+assert.equal(ComponentRuntime.profileFor('ProtocolProbe').name,'ProtocolProbe');
+assert.equal(ComponentRuntime.describe('ProtocolProbe').profile.name,'ProtocolProbe');
 
 assert.ok(InputModality);
 assert.equal(SharedProtocol.ActionContext,ActionContext);
@@ -125,6 +165,8 @@ assert.equal(binding.value,'Y');
 projection.destroy();
 tree.destroy();
 diagnostics.destroy();
+collectionDiagnostics.destroy();
+duplicateCollection.destroy();
 internal.destroy();
 external.destroy();
 collection.destroy();
@@ -132,4 +174,4 @@ reentrantCollection.destroy();
 controlledDraft.destroy();
 binding.destroy();
 
-console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,collectionDataRevision:true,valueDraftOwnership:true,stateControllerOwnership:true,environmentPort:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,componentProfile:true,inputModality:true}));
+console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,collectionDataRevision:true,valueDraftOwnership:true,stateControllerOwnership:true,environmentPort:true,observerHubEnvironment:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,collectionDiagnostics:true,componentProfile:true,componentRuntimeProfile:true,inputModality:true}));

@@ -26,6 +26,7 @@ function create(options) {
   var media = opts.matchMedia || bindFunction(win || global, (win || global).matchMedia);
   var resizeFactory = opts.createResizeObserver || null;
   var mutationFactory = opts.createMutationObserver || null;
+  var intersectionFactory = opts.createIntersectionObserver || null;
 
   function raf(callback) {
     if (typeof requestFrame !== 'function') throw new Error('[QXFRAME9A7C2] EnvironmentPort requestAnimationFrame is unavailable.');
@@ -35,15 +36,24 @@ function create(options) {
     if (typeof cancelFrame !== 'function') throw new Error('[QXFRAME9A7C2] EnvironmentPort cancelAnimationFrame is unavailable.');
     return cancelFrame(id);
   }
+  function observerCtor(name) {
+    if (Object.prototype.hasOwnProperty.call(opts, name)) return opts[name];
+    return win ? win[name] : global[name];
+  }
   function createResizeObserver(callback) {
     if (typeof resizeFactory === 'function') return validateObserver(resizeFactory(callback), 'ResizeObserver');
-    var Ctor = opts.ResizeObserver || (win && win.ResizeObserver) || global.ResizeObserver;
+    var Ctor = observerCtor('ResizeObserver');
     return typeof Ctor === 'function' ? validateObserver(new Ctor(callback), 'ResizeObserver') : null;
   }
   function createMutationObserver(callback) {
     if (typeof mutationFactory === 'function') return validateObserver(mutationFactory(callback), 'MutationObserver');
-    var Ctor = opts.MutationObserver || (win && win.MutationObserver) || global.MutationObserver;
+    var Ctor = observerCtor('MutationObserver');
     return typeof Ctor === 'function' ? validateObserver(new Ctor(callback), 'MutationObserver') : null;
+  }
+  function createIntersectionObserver(callback, observerOptions) {
+    if (typeof intersectionFactory === 'function') return validateObserver(intersectionFactory(callback, observerOptions), 'IntersectionObserver');
+    var Ctor = observerCtor('IntersectionObserver');
+    return typeof Ctor === 'function' ? validateObserver(new Ctor(callback, observerOptions), 'IntersectionObserver') : null;
   }
   function getComputedStyle(element) {
     if (typeof computedStyle !== 'function') throw new Error('[QXFRAME9A7C2] EnvironmentPort getComputedStyle is unavailable.');
@@ -65,6 +75,7 @@ function create(options) {
     cancelRaf,
     createResizeObserver,
     createMutationObserver,
+    createIntersectionObserver,
     getComputedStyle,
     matchMedia,
     now

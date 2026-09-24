@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `01875c583fe99c47ee249a4e9eeb6e86304f23f2` (PR #48 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-a-env-diagnostics-profile-20260924`
+- Open PRs at this checkpoint: #49
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #315 / `35953604691` (PR #48)
 - Latest green main CI + Pages: #316 / `35953925660`, attempt 2
-- Controller migration implementation progress: 18%
+- Controller migration implementation progress: 22%
 - Current Phase: Phase A
 - Current Task: `PHASE-A-003`
 
 ## CURRENT
 
 ### PHASE-A-003 — EnvironmentPort / Diagnostics / ComponentProfile authority adoption
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 75%
 
 Why this is current:
 - `PHASE-A-001` baseline inventory + Shared Protocol foundation is complete.
@@ -40,12 +40,28 @@ Scope:
 - do not add component-name dispatch;
 - do not introduce direct DatePicker/TimePicker/ColorPicker behavior changes in this task unless an authority adoption requires a minimal compatibility fix.
 
+Implemented slice:
+- `ObserverHub` delegates Resize/Mutation/Intersection observer construction and media-query resolution to `EnvironmentPort`, while retaining scheduler/statistics ownership.
+- `EnvironmentPort` now validates IntersectionObserver adapters alongside Resize/Mutation.
+- `Diagnostics` gained protocol identity; `Collection` reports duplicate stable keys only to an explicitly injected Diagnostics sink, so diagnostics remain observational.
+- `Component` stores immutable validated `ComponentProfile` metadata; `ComponentRuntime` publishes/describes the normalized profile and rejects runtime-name mismatches.
+- class adapters only forward explicitly authored profiles; no component-name capability inference was added.
+- focused regressions cover environment delegation, duplicate stable-key diagnostics, Component profile metadata, and runtime profile publication.
+- no first-wave component file or business behavior was changed.
+
+PR / branch evidence:
+- branch: `refactor/phase-a-env-diagnostics-profile-20260924`
+- PR #49 open
+- latest branch HEAD before this checkpoint: `4887a567e1f6e17eb04c824f9457efcc23dcb4cc`
+- current main advanced only by `AI_WORK_STATE.md` cleanup commits; this checkpoint reconciles the branch onto the latest state-file format.
+- CI: pending/latest PR run to be queried after this checkpoint.
+
 Next exact step:
-1. re-query current main / open PRs / CI;
-2. create a fresh implementation branch from current main;
-3. inspect actual consumers of `EnvironmentPort`, `Diagnostics` and `ComponentProfile`;
-4. select the smallest authority-adoption slice that removes an ad-hoc path instead of adding a parallel path;
-5. checkpoint this file before modifying the selected authorities.
+1. run PR #49 complete release CI;
+2. fix source implementation only if a gate fails; do not weaken audit/browser/release checks;
+3. merge only on green PR head;
+4. verify main release + Pages;
+5. then advance to the handbook's next Phase A / first Controller implementation step without redoing PHASE-A-001/002/003 audits.
 
 ## Current authority snapshot — after PHASE-A-002
 

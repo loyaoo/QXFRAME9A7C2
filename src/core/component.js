@@ -4,6 +4,7 @@ import { InstanceRegistry } from './instanceRegistry.js';
 import { componentHooks } from './componentHooks.js';
 import { OptionTransaction } from './optionTransaction.js';
 import { validateContractOptions } from './componentContracts.js';
+import { ComponentProfile } from './componentProfile.js';
 import { IdManager } from '../utils/id.js';
 import { Utils } from '../utils/utils.js';
 import { DOM } from './dom.js';
@@ -104,6 +105,7 @@ export class Component {
     static optionNormalizers = Object.freeze({});
     static immutableOptions = Object.freeze([]);
     static contract = null;
+    static profile = null;
 
     static create(options = {}) {
         const instance = new this(options);
@@ -117,6 +119,7 @@ export class Component {
     constructor(options = {}) {
         const name = componentName(this);
         const contract = this.constructor.contract || null;
+        const profile = this.constructor.profile ? ComponentProfile.define(this.constructor.profile) : null;
         const input = validateContractOptions(contract, assertOptions(options, name + ' options'), name);
         const defaults = collectDefaults(this.constructor);
         const normalizers = collectStaticObject(this.constructor, 'optionNormalizers');
@@ -130,6 +133,7 @@ export class Component {
             options: resolved,
             transaction,
             immutableOptions,
+            profile,
             emitter,
             scope,
             root: null,
@@ -293,6 +297,7 @@ export class Component {
     get root() { return requireState(this).root; }
     get options() { return requireState(this).options; }
     get contract() { return this.constructor.contract || null; }
+    get profile() { return requireState(this).profile; }
     get destroyed() { return requireState(this).destroyed; }
     get rendered() { return requireState(this).rendered; }
     get mounted() { return requireState(this).mounted; }

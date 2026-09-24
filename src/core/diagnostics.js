@@ -58,6 +58,7 @@ function create(options) {
   }
 
   return Object.freeze({
+    __qxframe9a7c2Diagnostics: true,
     report,
     getReports,
     clear,
@@ -67,5 +68,9 @@ function create(options) {
   });
 }
 
-export const Diagnostics = Object.freeze({ create, codes: CODES });
-export { create };
+function isDiagnostics(value) {
+  return !!(value && value.__qxframe9a7c2Diagnostics === true && typeof value.report === 'function' && typeof value.getReports === 'function');
+}
+
+export const Diagnostics = Object.freeze({ create, isDiagnostics, codes: CODES });
+export { create, isDiagnostics };

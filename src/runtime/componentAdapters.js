@@ -48,7 +48,9 @@ const referenceInitializer = Object.freeze({ initializer:Object.freeze({ mode:'c
 const noInitializer = Object.freeze({ initializer:false });
 
 function classApi(Type, extras = {}) {
-    return Object.freeze(Utils.assignOwn({ definition:createInitializer, create:function(){ return Type.create.apply(Type, arguments); } }, extras));
+    const base = { definition:createInitializer, create:function(){ return Type.create.apply(Type, arguments); } };
+    if (Type.profile) base.profile = Type.profile;
+    return Object.freeze(Utils.assignOwn(base, extras));
 }
 const raw = Object.create(null);
 raw.Cascader = classApi(Cascader, { definition:enhanceInitializer, enhance:function(){return Cascader.enhance.apply(Cascader,arguments);}, createDefaultDOM:Cascader.createDefaultDOM });
