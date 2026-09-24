@@ -10,41 +10,42 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `e99cf3aa376277cf4d040c69f51b8c6916869ebe` (PR #80 merge)
-- Current branch: `refactor/phase-h-matrix-feedback-family-20260924`
-- Open PRs at this checkpoint: pending PHASE-H-001 target-matrix PR
+- Last code-affecting main commit: `4c901ed23be08b71e8c938d346f2730060b6d766` (PR #81 merge)
+- Current branch: `refactor/phase-h-notice-feedback-20260924`
+- Open PRs at this checkpoint: pending PHASE-H-002 notice/feedback PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase G PR CI: #421 / `36025556499` (PR #80)
-- Latest green main CI + Pages: #422 / `36026105260`
-- Overall handbook implementation progress: 94%
+- Latest green Phase H PR CI: #423 / `36028486399` (PR #81)
+- Latest green main CI + Pages: #424 / `36028914790`
+- Overall handbook implementation progress: 95%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-001`
+- Current Task: `PHASE-H-002`
 
 ## CURRENT
 
-### PHASE-H-001 — executable 40-component target matrix
+### PHASE-H-002 — NoticeService + Message/Notification M/O/B migration
 Status: IN_PROGRESS
-Task progress: 70%
+Task progress: 75%
 
-Why this is current:
-- Phase G is accepted: PR #80 merged at `e99cf3aa376277cf4d040c69f51b8c6916869ebe`; exact-head CI #421 / `36025556499` and main release + Pages #422 / `36026105260` are green.
-- Phase G gates are covered by required Node + strict source-ESM browser verification: same-name fields/FormData, native submit/reset + reset cancellation, async validator stale protection, external controlled reset acknowledgement, feedback identity de-dup, submit cancellation and stale completion.
-- Phase H now owns the remaining 40 public component declarations/adoptions, internal panel/base migration, canonical docs/native controls and duplicate-authority deletion.
-- a repository-wide scan shows current ComponentProfile coverage is partial; many components already use converged lower-level authorities but have not frozen the full 9-controller target combination.
+Completed prerequisite:
+- PHASE-H-001 executable target matrix is DONE through PR #81, exact-head CI #423 / `36028486399`, merge `4c901ed23be08b71e8c938d346f2730060b6d766`, main release + Pages #424 / `36028914790`.
+- the target matrix now makes all 40 public target combinations and internal/base migration targets executable CI input.
 
-Implemented in this pack:
-- added `tools/manifests/phase-h-target-profiles.json` containing the handbook-exact Runtime Controller combination for all 40 public components plus the internal/base target ledger.
-- added `verify:phase-h-target-matrix` to the required verify chain.
-- the gate requires exact parity with the 40-component runtime namespace, validates all target capabilities/controllers, rejects current profiles that declare capabilities/owners outside the handbook target, and prevents profile coverage from regressing below the frozen baseline.
-- the gate intentionally reports missing capability/ownership coverage without pretending Phase H is already complete.
+Implemented in current pack:
+- added `OverlayController.createLayerLease()` as the high-level layer-resource facade over canonical LayerManager; it owns no logical open state and adds no second layer stack.
+- migrated NoticeService away from direct LayerManager access; notice frame layer registration/update/z-index/release now enters through OverlayController.
+- existing NoticeService lifecycle/timing remains NoticeService + NoticeClock authority; presence remains TransitionGroup → MotionController.
+- Message and Notification now declare exact handbook M/O/B ComponentProfiles and canonical ownership: MotionController, OverlayController, FeedbackController.
+- Message/Notification expose `createFeedbackController()` for operation/task-linked global feedback while preserving their existing raw notice APIs.
+- dedicated structural/contract gate proves no NoticeService LayerManager bypass and identity-preserving FeedbackController notice updates.
+- strict source-ESM Chromium coverage exercises Message/Notification pending→success update under one request identity.
 
 Next exact step:
-1. run PHASE-H-001 exact-head full CI and merge only green; verify main + Pages.
-2. use the executable matrix output to batch remaining components by shared authority/family rather than one component per PR.
-3. first implementation batch: Feedback/presentation + simple state families, then form/value families, then composite/overlay families.
-4. only after source adoption + duplicate writable-path removal + browser evidence update the acceptance rows to H accepted.
+1. open PHASE-H-002 PR and run exact-head full release/browser/package CI.
+2. merge only exact-head green; verify main + Pages.
+3. mark Message + Notification H accepted and NoticeService internal overlay path migrated.
+4. immediately batch the next simple presentation/state families from the Phase H matrix.
 
 ## Current authority snapshot — after Phase A
 
@@ -74,6 +75,21 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-001 — executable 40-component target matrix
+Status: DONE
+Evidence:
+- PR #81 merged
+- merge commit `4c901ed23be08b71e8c938d346f2730060b6d766`
+- exact-head CI #423 / `36028486399`: success
+- main CI + Pages #424 / `36028914790`: success
+Outcome:
+- handbook target Runtime Controller combinations for all 40 public components are machine-readable.
+- the matrix exactly matches the public Components namespace and rejects out-of-target capabilities/controller owners.
+- internal/base migration targets are explicitly ledgered.
+- current missing profile/ownership coverage is reportable without falsely claiming Phase H completion.
+
+
 
 ### PHASE-G-001 — FeedbackController + FormController foundations
 Status: DONE

@@ -1,5 +1,6 @@
 import { DOM } from '../core/dom.js';
 import { NoticeService } from '../core/noticeService.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { NoticePreset } from '../core/noticePreset.js';
 const U = NoticeService.utils;
 
@@ -108,10 +109,20 @@ var channel = NoticeService.createChannel({ name: 'Notification', slug: 'notific
     
 function configure(next) { return preset.configure(DEFAULTS, next, normalize); }
     
+var createFeedbackController = FeedbackController.bindNoticeChannel(channel);
+
 function createTyped(type, options) { return preset.createTyped(type, options, channel); }
 
 export const Notification = Object.freeze({
     definition: Object.freeze({ initializer: false }),
+    profile: Object.freeze({
+      name: 'Notification',
+      motion: Object.freeze({ mode: 'notice-presence' }),
+      overlay: Object.freeze({ mode: 'notice-layer' }),
+      feedback: Object.freeze({ global: true }),
+      ownership: Object.freeze({ motion: 'MotionController', overlay: 'OverlayController', feedback: 'FeedbackController' })
+    }),
+    createFeedbackController: createFeedbackController,
     create: channel.create,
     info: function (input) { return createTyped('info', input); },
     success: function (input) { return createTyped('success', input); },

@@ -201,5 +201,15 @@ function createNoticeProjector(channel,options){
   });
 }
 
-export const FeedbackController=Object.freeze({create,createNoticeProjector,STATUSES,TARGETS});
-export {create,createNoticeProjector,STATUSES,TARGETS};
+
+function bindNoticeChannel(channel,projectorOptions){
+  var projector=createNoticeProjector(channel,projectorOptions);
+  return function(options){
+    var source=Utils.mergeOwn(options||{});
+    if(!source.globalProjector)source.globalProjector=projector;
+    return create(source);
+  };
+}
+
+export const FeedbackController=Object.freeze({create,createNoticeProjector,bindNoticeChannel,STATUSES,TARGETS});
+export {create,createNoticeProjector,bindNoticeChannel,STATUSES,TARGETS};
