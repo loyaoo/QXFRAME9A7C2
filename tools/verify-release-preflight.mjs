@@ -48,10 +48,10 @@ for (const script of ['verify-browser-smoke.mjs','verify-source-esm-browser.mjs'
 assert.match(browserSuite, /Release browser verification requires Chromium\/Chrome/, 'Strict browser suite must fail closed when Chromium is unavailable.');
 assert.equal(
     pkg.scripts['verify:legacy-browser'],
-    'node tools/verify-browser-smoke.mjs --required --skip-docs --smoke=migration/baseline-hotfix6-2026-09-22/verify-browser-smoke.html',
+    'node tools/verify-browser-smoke.mjs --required --skip-docs --smoke=tools/fixtures/legacy-hotfix6/verify-browser-smoke.html',
     'Frozen HOTFIX6 browser compatibility gate must remain explicit and strict.'
 );
-const frozenBrowserSmoke = path.join(root, 'migration', 'baseline-hotfix6-2026-09-22', 'verify-browser-smoke.html');
+const frozenBrowserSmoke = path.join(root, 'tools', 'fixtures', 'legacy-hotfix6', 'verify-browser-smoke.html');
 assert.ok(fs.existsSync(frozenBrowserSmoke), 'Frozen HOTFIX6 browser smoke source must remain available.');
 assert.match(fs.readFileSync(frozenBrowserSmoke, 'utf8'), /QX_BROWSER_SMOKE:/, 'Frozen HOTFIX6 browser smoke must contain the original result marker.');
 assert.equal(
