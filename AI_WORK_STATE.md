@@ -10,13 +10,13 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Phase A kickoff main: `b54e8be325498b680df7059ee53929d40caf13b0`
 - Last code-affecting main commit: `51b7f317037fc538beaadc6f710da077a8429d0f` (PR #47 merge)
-- Current branch: `main`
+- Current branch: `refactor/phase-a-authority-integration-20260924`
 - Bootstrap PR: #46 merged
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green PR CI: run #312 / `35952642035` (PR #47)
 - Latest green main CI + Pages: run #313 / `35952965100` for merge `51b7f317037fc538beaadc6f710da077a8429d0f`
-- Controller migration implementation progress: 10% (Phase A authority inventory + first Shared Protocol infrastructure batch merged and fully green; second authority-integration batch next; no component business behavior changed)
+- Controller migration implementation progress: 14% (PHASE-A-002 first authority-integration batch implemented; PR/CI pending; no component files changed)
 
 ## CURRENT
 
@@ -82,13 +82,27 @@ Completed in current code batch:
 - evolved existing `InteractionModality` authority to expose touch/programmatic modalities and `InputModality` alias;
 - added `SharedProtocol` aggregate exports and `verify:shared-protocol` gate.
 
+Completed in current authority-integration batch:
+- `Collection` now uses `DataRevision` as its stale-transaction revision authority; the private `mutationVersion` mirror is removed. Additive collection refs expose stable key + data revision without changing item/value behavior.
+- `ValueDraft` no longer owns a separate `controlled` boolean; `ControllableStateCore` owns controlled/external-vs-internal and pending request metadata. `ValueDraft` remains the only committed/draft value owner.
+- `StateController.createValueBinding` exposes the delegated ownership snapshot without adding value state.
+- `verify:shared-protocol` now covers Collection stale refs/reentrancy plus controlled proposal/external-sync/uncontrolled transition behavior through ValueDraft and StateController.
+- ProjectionScheduler integration was evaluated against current `DOMProjection` / `RovingProjection` / keyboard visual projection. Those authorities are synchronous and do not currently own a competing async revision counter; inserting ProjectionScheduler now would create parallel scheduling rather than replace an owner. Deferred until a Controller projection snapshot actually replaces an async/stale-prone path.
+
+PR / CI evidence:
+- PR #48 open from `refactor/phase-a-authority-integration-20260924` to `main`;
+- PR head before this checkpoint: `98e7da17674381a4448071bf2e62a4d7c4e3c53d`;
+- CI: pending.
+
 Next exact step:
-- start PHASE-A-002 on a fresh branch from current main: integrate the Shared Protocol into existing authorities rather than components. First targets: make DataRevision the stale-transaction revision authority for Collection, make ControllableStateCore the ownership/request metadata authority behind StateController/ValueDraft without adding a second value truth, and connect ProjectionScheduler only where an existing projection authority can adopt revision gating without behavior changes. Add focused protocol regressions and keep full release gates green.
+- run full PR #48 release CI, fix implementation failures without weakening gates, then merge and verify main CI + Pages. After green merge, proceed to the next Shared Protocol authority integration (EnvironmentPort/Diagnostics/ComponentProfile adoption) before direct component migration.
 
 ### PHASE-A-002 — Shared Protocol authority integration
-Status: READY
+Status: IN_PROGRESS
 
 Scope guard:
+- branch: `refactor/phase-a-authority-integration-20260924`
+- code batch HEAD: `f5b013cb5e8dc9f39e75d9ba91895b3a6feaf3d2`
 - no direct picker/component migration yet;
 - no second committed/controlled truth;
 - do not change public controlled/uncontrolled semantics;
