@@ -793,7 +793,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           setExpandedKeys:function(keys,meta){if(!destroyed)tree.setExpandedKeys(keys,meta);return instance;},
           expand:function(key,meta){return destroyed?false:tree.expand(key,meta);}, collapse:function(key,meta){return destroyed?false:tree.collapse(key,meta);},
           focus:function(){if(fieldControl)return fieldControl.focus();return DOM.focusElement(triggerTarget||root,{preventScroll:true});},
-          getState:getState,getTree:function(){return tree;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},
+          getState:getState,getTree:function(){return tree;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getSelectionController:function(){return tree&&tree.getSelectionController?tree.getSelectionController():null;},
           getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},
           applyOptions:applyOptions,dispose:disposeRuntime
         });
@@ -808,7 +808,8 @@ export class TreeSelect extends PopupFieldComponent {
     interaction:Object.freeze({keymap:'tree-select'}),
     overlay:Object.freeze({mode:'popup'}),
     form:Object.freeze({serialize:true}),
-    ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController'})
+    selection:Object.freeze({channels:Object.freeze(['selected','checked']),valueOwner:'ValueController'}),
+     ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController'})
   });
   static contract=getContract('TreeSelect');
   static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
@@ -834,6 +835,7 @@ export class TreeSelect extends PopupFieldComponent {
   getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
   getInteractionController(){const r=runtimeState.get(this).runtime;return r?r.getInteractionController():null;}
   getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
+  getSelectionController(){const r=runtimeState.get(this).runtime;return r?r.getSelectionController():null;}
   getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
   getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
   getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}
