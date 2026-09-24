@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `bf3823248a7a5725b20a9711dfc12736bf7ff60e` (PR #63 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-d-popup-selection-closeout-20260924`
+- Open PRs at this checkpoint: pending final PHASE-D-005 selection PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-D-005 — Select / TreeSelect / Cascader selection closeout
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 80%
 
 Why this is current:
 - PHASE-D-004 Tags selection is merged and green through PR #63 / CI #368 and main CI + Pages #369.
@@ -50,12 +50,22 @@ Scope:
 - add dedicated source + Chromium regression gates for controller identity, selected/checked channels, Cascader dataset revision and stale-anchor invalidation;
 - run full release acceptance, then sign off Phase D.
 
+Implemented in current PHASE-D-005 final selection pack:
+- Select explicitly exposes and declares the existing OptionList SelectionController; no second selected store is created.
+- TreeSelect explicitly exposes and declares the existing Tree SelectionController with selected/checked channels; no duplicate checked store is created.
+- Cascader removes direct Selection and HierarchicalSelection imports and creates one SelectionController selected channel; hierarchy delegates through `selectionController.createHierarchy()`.
+- Cascader removes component-local `selectionAnchorValue`; the selection anchor is owned by SelectionController and read through the revision-bound anchor API.
+- Cascader item replacement and lazy child loads advance selected-channel dataset revision so stale anchors cannot survive changed hierarchy data.
+- Cascader public value remains ValueController-owned; active path/column/cursor remain Cascader navigation state and are not moved into SelectionController.
+- new required `verify:phase-d-popup-selection` passes sandbox Chromium for Select/OptionList controller identity, TreeSelect/Tree selected+checked identity and Cascader dataset-revision anchor invalidation.
+- adjacent sandbox gates pass: `verify:selection-controller`, `verify:phase-c-popup-composites`, `verify-source-esm-browser`, `verify:high-risk-browser`, `verify:architecture`, `verify:contracts`.
+
 Next exact step:
-1. create the PHASE-D-005 final selection branch from green main #369;
-2. apply the sandbox-verified Select/TreeSelect facades and Cascader migration;
-3. add required `verify:phase-d-popup-selection` to release verification;
-4. merge only exact-head green and verify main + Pages;
-5. update Phase D acceptance and advance to Phase E — Overlay + Motion.
+1. open/run the final PHASE-D-005 selection PR from the audited branch;
+2. fix only exact-head release/browser failures without adding duplicate selection/value/active-key stores;
+3. merge only green and verify main release + Pages;
+4. mark Phase D Selection as DONE and update the acceptance ledger;
+5. advance CURRENT to Phase E — Overlay + Motion.
 
 ## Current authority snapshot — after Phase A
 
