@@ -793,6 +793,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var next = applyPanelSelection(value);
     if (next === null) return;
     draft.setDraft(next, { source: detail.source, reason: unit + '-select' });
+    if (field && field.getState().open) syncField(true);
     var payload = { selectedValue: cloneDate(value), value: cloneValue(draft.draftValue, selection), source: detail.source, reason: detail.reason, originalEvent: detail.originalEvent || null, datePicker: api };
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(cloneDate(value), payload);
     emitter.emit('select', payload);
@@ -1396,7 +1397,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       value: cloneValue(draft.value, selection),
       draftValue: cloneValue(draft.draftValue, selection),
       dirty: draft.dirty,
-      text: formatSelection(field.getState().open && opts.needConfirm === true ? draft.draftValue : draft.value),
+      text: field.getState().displayValue,
       activeRangePart: selection === 'range' ? activeRangePart : null,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
