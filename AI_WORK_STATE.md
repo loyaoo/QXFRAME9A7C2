@@ -27,8 +27,8 @@ Branch evidence:
 - branch: `refactor/phase-a-shared-protocol-20260924`
 - current branch HEAD: `e83ff0ce5d3047d2df4bb828662da7b6a780e2d2`
 - branch is 16 commits ahead / 0 behind kickoff main `b54e8be325498b680df7059ee53929d40caf13b0`
-- PR: not created yet
-- CI: pending PR creation
+- PR: #47 open
+- CI: run #309 / `35952426342` queued on PR creation
 
 Prerequisites:
 - OPS-001 repository cleanup merged green in PR #46;
