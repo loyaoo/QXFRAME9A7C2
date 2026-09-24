@@ -33,6 +33,20 @@ for(const file of ['select.js','tree-select.js','cascader.js']){
   assert.ok(/focus:\s*'FocusController'/.test(source),file+' ComponentProfile must declare FocusController ownership.');
   assert.ok(/focusController\s*=\s*null/.test(source),file+' must declare its FocusController runtime owner.');
 }
+for(const file of ['menu.js','tags.js']){
+  const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
+  assert.ok(/focusController\.js/.test(source),file+' must enter standalone composite focus through FocusController.');
+  assert.ok(/FocusController\.create\s*\(/.test(source),file+' must create its canonical composite focus owner through FocusController.');
+  assert.ok(!/keyboardRegion\.js/.test(source),file+' must not import KeyboardRegion directly after Phase C migration.');
+  assert.ok(/focus:\s*'FocusController'/.test(source),file+' ComponentProfile must declare FocusController ownership.');
+}
+const menuSource=fs.readFileSync(path.join(root,'src/components/menu.js'),'utf8');
+assert.ok(!/\.registerDomain\s*\(/.test(menuSource),'Menu must use FocusController canonical virtual-domain binding instead of registering its domain directly.');
+assert.ok(/activeRegion:\s*'menu'/.test(menuSource),'Menu must declare the menu focus region.');
+const tagsSource=fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8');
+assert.ok(/activeRegion:\s*'tags'/.test(tagsSource),'Tags must declare the tags focus region.');
+assert.ok(/focusController\.beginEdit\(input/.test(tagsSource),'Tags standalone add editor must acquire a FocusController edit lease.');
+assert.ok(/editLeaseActive/.test(tagsSource),'Tags render state must release the FocusController edit lease when add editing ends.');
 const timeSource=fs.readFileSync(path.join(root,'src/components/time-panel.js'),'utf8');
 assert.ok(/FocusController\.create\s*\(/.test(timeSource),'TimePanel must own its canonical real-focus host through FocusController.');
 assert.ok(/var focusController\s*=\s*null/.test(timeSource),'TimePanel must declare its FocusController runtime owner before mount.');
@@ -47,5 +61,6 @@ console.log(JSON.stringify({
   delegates:['FocusManager','FocusScope','KeyboardRegion','KeyboardNavigation.virtualFocus'],
   firstPack:['WheelPanel','TimePanel','Calendar','PeriodPanel'],
   popupHostedPack:['Select','TreeSelect','Cascader'],
+  standalonePack:['Menu','Tags'],
   timePanelRealFocusOwner:'TimePanel.root'
 }));
