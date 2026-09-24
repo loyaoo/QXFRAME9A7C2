@@ -1098,7 +1098,7 @@ var controlHost = FieldHost.resolvePickerControl({
           root:root,input:input,panel:panel,optionHost:optionHost,triggerTarget:triggerTarget,
           getState:getState,setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,
           refreshTagOverflow:function(){return !destroyed&&fieldControl&&fieldControl.refreshTagOverflow?fieldControl.refreshTagOverflow():false;},
-          getOptionList:function(){return optionList;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},
+          getOptionList:function(){return optionList;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getSelectionController:function(){return optionList&&optionList.getSelectionController?optionList.getSelectionController():null;},
           getTagOverflowPopover:function(){var tags=fieldControl&&fieldControl.getTags?fieldControl.getTags():null;return tags&&tags.getOverflowPopover?tags.getOverflowPopover():null;},
           getTagOverflowScroll:function(){var tags=fieldControl&&fieldControl.getTags?fieldControl.getTags():null;return tags&&tags.getOverflowScroll?tags.getOverflowScroll():null;},
           getTagOverflowReference:function(){var tags=fieldControl&&fieldControl.getTags?fieldControl.getTags():null;return tags&&tags.getOverflowElement?tags.getOverflowElement():null;},
@@ -1116,7 +1116,8 @@ export class Select extends PopupFieldComponent {
   interaction:Object.freeze({keymap:'select'}),
   overlay:Object.freeze({mode:'popup'}),
   form:Object.freeze({serialize:true}),
-  ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController'})
+  selection:Object.freeze({channels:Object.freeze(['selected']),valueOwner:'ValueController'}),
+   ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController'})
  });
  static contract=getContract('Select');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
@@ -1137,6 +1138,7 @@ export class Select extends PopupFieldComponent {
  getFocusController(){const r=runtimeState.get(this).runtime;return r?r.getFocusController():null;}
  getInteractionController(){const r=runtimeState.get(this).runtime;return r?r.getInteractionController():null;}
  getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
+ getSelectionController(){const r=runtimeState.get(this).runtime;return r?r.getSelectionController():null;}
  getTagOverflowPopover(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowPopover():null;}
  getTagOverflowScroll(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowScroll():null;}
  getTagOverflowReference(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowReference():null;}
