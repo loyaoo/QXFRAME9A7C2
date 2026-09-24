@@ -381,11 +381,6 @@ function create(options) {
     return true;
   }
     
-  function keyForInteractionAction(action) {
-    return action === 'MOVE_LEFT' ? 'ArrowLeft' : action === 'MOVE_RIGHT' ? 'ArrowRight' : action === 'MOVE_UP' ? 'ArrowUp' :
-      action === 'MOVE_DOWN' ? 'ArrowDown' : action === 'MOVE_FIRST' ? 'Home' : action === 'MOVE_LAST' ? 'End' :
-      action === 'PAGE_PREVIOUS' ? 'PageUp' : action === 'PAGE_NEXT' ? 'PageDown' : action === 'ACTIVATE' ? 'Enter' : '';
-  }
   function handleInteractionAction(actionName, event) {
     if (!event || !canNavigate()) return false;
     var target = event.target || null;
@@ -410,7 +405,7 @@ function create(options) {
       }
       return false;
     }
-    var key = keyForInteractionAction(actionName);
+    var key = InteractionController.keyboardKeyForAction(actionName);
     if (!key) return false;
     var activeDate = parseDate(activeItem.activeKey);
     var committedInView = valueState.value && sameMonth(valueState.value, viewValue) ? valueState.value : null;
