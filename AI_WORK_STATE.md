@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `eef0048a5f2c88f1a0e9fcf1de23eb8a064d7c4a` (PR #64 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-e-overlay-motion-foundation-20260924`
+- Open PRs at this checkpoint: pending PHASE-E-001 foundation PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PHASE-E-001 — OverlayController + MotionController foundations
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 80%
 
 Why this is current:
 - handbook Phase D selection scope is fully accepted through PR #55 / #57 / #62 / #63 / #64.
@@ -52,12 +52,24 @@ Scope:
 - add architecture/source tests proving controllers do not own open/value or duplicate layer/generation state.
 - add browser regressions for nested overlay routing, blocked inner Escape propagation, focus restore/resource lease lifetime, motion reverse/stale completion where the foundation touches them.
 
+Implemented in current PHASE-E-001 foundation pack:
+- new `MotionController` is a facade over existing MotionCore; it does not create another generation counter or business-open state.
+- MotionCore exposes its existing canonical generation in `getState()` and a bounded `cancel(meta)` that settles the current generation through the existing completion path.
+- Transition is now the compatibility facade over MotionController, preserving existing Transition API while exposing show/hide/reverse/cancel and the canonical controller identity.
+- new `OverlayController` is a facade over existing OverlayRuntime; it delegates layer/portal/position/dismiss/focus/isolation/scroll-lock execution and never imports or owns OpenStateBridge.
+- OverlayController defines normalized handbook close reasons without changing the underlying logical-open authority.
+- Trigger enters overlay resources through OverlayController and motion through controller-backed Transition; logical open remains Trigger/OpenStateBridge authority.
+- Trigger exposes `getOverlayController()` / `getMotionController()` for conformance and ownership inspection.
+- new required `verify:phase-e-foundation` structurally forbids duplicate Motion generation/open truth and verifies borrowed-resource facade ownership with Node contracts.
+- sandbox source Chromium regression passed rapid Motion reverse/cancel plus Trigger Open/Overlay/Motion three-state separation: logical close deactivates interaction immediately while overlay resources stay active through leave motion, then release after settle.
+- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, platform, modern architecture (40 components / 0 legacy violations), component-base and 40 component contracts.
+
 Next exact step:
-1. map OverlayRuntime + Trigger + PopupSurface resource/open boundaries and MotionCore + Transition generation/presence boundaries on current main;
-2. define the minimal OverlayController/MotionController adapter APIs directly from handbook contracts;
-3. implement the foundation without moving OpenStateBridge state or MotionCore generation into a second store;
-4. add dedicated source/Node/browser conformance gates and run the existing release suite;
-5. merge only exact-head green, verify main + Pages, then migrate Trigger/Popup base before Modal/Drawer/pickers and Collapse motion.
+1. open/run the PHASE-E-001 foundation PR from the audited branch;
+2. fix only exact-head Completion/release/browser failures without moving logical open into OverlayController or adding a second Motion generation;
+3. merge only green and verify main release + Pages;
+4. checkpoint PHASE-E-001 as DONE;
+5. continue Phase E with Trigger/Popup base family adoption before Modal/Drawer/picker overlays and Collapse/Tabs/Dropdown motion.
 
 ## Current authority snapshot — after Phase A
 
