@@ -25,6 +25,14 @@ for(const file of ['wheel-panel.js','calendar.js','period-panel.js']){
   assert.ok(!/keyboardRegion\.js/.test(source),file+' must not import KeyboardRegion directly after Phase C migration.');
   assert.ok(!/\.registerDomain\s*\(/.test(source),file+' must delegate virtual-domain binding through FocusController instead of recreating the binding lifecycle.');
 }
+for(const file of ['select.js','tree-select.js','cascader.js']){
+  const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
+  assert.ok(/focusController\.js/.test(source),file+' must enter editable host focus through FocusController.');
+  assert.ok(/FocusController\.create\s*\(/.test(source),file+' must create its canonical editable focus host through FocusController.');
+  assert.ok(!/KeyboardNavigation\.create\s*\(/.test(source),file+' must not keep a parallel outer KeyboardNavigation owner.');
+  assert.ok(/focus:\s*'FocusController'/.test(source),file+' ComponentProfile must declare FocusController ownership.');
+  assert.ok(/focusController\s*=\s*null/.test(source),file+' must declare its FocusController runtime owner.');
+}
 const timeSource=fs.readFileSync(path.join(root,'src/components/time-panel.js'),'utf8');
 assert.ok(/FocusController\.create\s*\(/.test(timeSource),'TimePanel must own its canonical real-focus host through FocusController.');
 assert.ok(/var focusController\s*=\s*null/.test(timeSource),'TimePanel must declare its FocusController runtime owner before mount.');
@@ -38,5 +46,6 @@ console.log(JSON.stringify({
   owner:'FocusController',
   delegates:['FocusManager','FocusScope','KeyboardRegion','KeyboardNavigation.virtualFocus'],
   firstPack:['WheelPanel','TimePanel','Calendar','PeriodPanel'],
+  popupHostedPack:['Select','TreeSelect','Cascader'],
   timePanelRealFocusOwner:'TimePanel.root'
 }));
