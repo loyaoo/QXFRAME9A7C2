@@ -9,7 +9,7 @@ import { OptionTransaction } from '../core/optionTransaction.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { SearchState } from '../core/searchState.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { SelectionTags } from '../core/selectionTags.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { FieldHost } from '../core/fieldHost.js';
@@ -113,7 +113,7 @@ var emitter = Object.freeze({ emit:function(type,payload){return instance.emit(t
           var values = asValues(value, opts.multiple === true);
           return opts.multiple === true ? values : values[0];
         }
-        valueState = StateController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
+        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function restoreOptionListFromApiValue(reason) {
@@ -1058,6 +1058,15 @@ var controlHost = FieldHost.resolvePickerControl({
 
 
 export class Select extends PopupFieldComponent {
+ static profile=Object.freeze({
+  name:'Select',
+  value:Object.freeze({mode:'controlled-or-default',channels:Object.freeze(['committed'])}),
+  focus:Object.freeze({mode:'virtual-navigation'}),
+  interaction:Object.freeze({keymap:'select'}),
+  overlay:Object.freeze({mode:'popup'}),
+  form:Object.freeze({serialize:true}),
+  ownership:Object.freeze({value:'ValueController'})
+ });
  static contract=getContract('Select');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
  static create(source,overrides){return new this(source,overrides).render();}
