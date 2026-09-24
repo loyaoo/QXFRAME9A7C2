@@ -1,4 +1,5 @@
 import { OverlayRuntime } from './overlayRuntime.js';
+import { Utils } from '../utils/utils.js';
 
 function own(object, key) { return Object.prototype.hasOwnProperty.call(Object(object), key); }
 
@@ -22,7 +23,9 @@ function create(options) {
     }
   } else {
     var runtimeOptions = {};
-    Object.keys(settings).forEach(function (key) { if (key !== 'runtime' && key !== 'ownsRuntime') runtimeOptions[key] = settings[key]; });
+    Utils.copyOwn(runtimeOptions, settings);
+    delete runtimeOptions.runtime;
+    delete runtimeOptions.ownsRuntime;
     runtime = OverlayRuntime.create(runtimeOptions);
   }
   var ownsRuntime = own(settings, 'ownsRuntime') ? settings.ownsRuntime !== false : !settings.runtime;
