@@ -202,14 +202,17 @@ function createNoticeProjector(channel,options){
 }
 
 
+function createForProjector(projector,options,target){
+  var name=String(target||'local');
+  if(TARGETS.indexOf(name)<0)throw new TypeError('[QXFRAME9A7C2] FeedbackController projector target must be local, form, or global.');
+  var source=Utils.mergeOwn(options||{}),key=name+'Projector';
+  if(!source[key])source[key]=projector;
+  return create(source);
+}
 function bindNoticeChannel(channel,projectorOptions){
   var projector=createNoticeProjector(channel,projectorOptions);
-  return function(options){
-    var source=Utils.mergeOwn(options||{});
-    if(!source.globalProjector)source.globalProjector=projector;
-    return create(source);
-  };
+  return function(options){return createForProjector(projector,options,'global');};
 }
 
-export const FeedbackController=Object.freeze({create,createNoticeProjector,bindNoticeChannel,STATUSES,TARGETS});
-export {create,createNoticeProjector,bindNoticeChannel,STATUSES,TARGETS};
+export const FeedbackController=Object.freeze({create,createForProjector,createNoticeProjector,bindNoticeChannel,STATUSES,TARGETS});
+export {create,createForProjector,createNoticeProjector,bindNoticeChannel,STATUSES,TARGETS};
