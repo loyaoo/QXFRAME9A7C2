@@ -10,57 +10,50 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `a1f19b25ceb2de4ef238e5bbc7d3c4c250c366b0` (PR #52 merge)
-- Current branch: `refactor/phase-c-popup-standalone-focus-20260924`
-- Open PRs at this checkpoint: pending PHASE-C-002 PR
+- Last code-affecting main commit: `6bb926b93c4f0f16dae042cc41f8426bf77d4733` (PR #53 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #333 / `35960898199`, attempt 2 (PR #52)
-- Latest green main CI + Pages: #334 / `35961330135`
-- Controller migration implementation progress: 67%
+- Latest green Controller PR CI: #335 / `35962474270` (PR #53)
+- Latest green main CI + Pages: #336 / `35962763162`
+- Controller migration implementation progress: 70%
 - Current Phase: Phase C
-- Current Task: `PHASE-C-002`
+- Current Task: `PHASE-C-003`
 
 ## CURRENT
 
-### PHASE-C-002 — Popup-hosted + standalone composite focus/interaction migration
-Status: IN_PROGRESS
-Task progress: 75%
+### PHASE-C-003 — Table Hybrid Edit focus lease
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-C-001 FocusController foundation is merged and green through PR #52 and main #334.
-- The handbook Phase C order next targets Select / TreeSelect / Cascader / Menu / Tags.
-- A targeted read-only audit is already complete; do not repeat a full focus audit.
+- PHASE-C-002 is merged and green through PR #53 and main #336.
+- The handbook Phase C list has one remaining first-wave target: Table Hybrid Edit.
+- A targeted Table audit is already complete; do not repeat whole-Table architecture analysis.
 
 Frozen impact map:
-- Select / TreeSelect / Cascader are editable real-focus hosts with popup-hosted virtual domains. Their existing OptionList/Tree/Cascader list selection owners remain unchanged.
-- Menu / Tags are standalone composite roots that still create KeyboardRegion directly and need explicit FocusController profiles/ownership.
-- TagNavigation is already the canonical tag virtual-navigation helper and remains the tag-domain behavior owner; do not duplicate it inside FocusController.
-- Existing browser smoke already covers Select Enter/Home/End, TreeSelect Enter/Space, Cascader Enter, Menu cross-level arrows/disclosure, Tags visible focus/add-editor/duplicate-input flows. Add only ownership/profile/lease/hosted-domain regressions that are missing.
+- TableModel remains data/projection/sort/filter/page/selection authority.
+- existing Table edit transaction remains validation/save/cancel/draft authority; do not replace it with ValueController.
+- Table currently owns keyboard navigation directly through KeyboardNavigation plus two virtual domains (cells/header).
+- Hybrid Edit currently moves real focus directly from Table root to an authored descendant editor (required tabIndex=-1), then directly restores root focus.
+- existing browser smoke already covers virtual editable cells and scroll/edit transaction survival; extend it with lease/native-edit/rollback ownership checks instead of replacing it.
 
 Scope:
-- migrate Select / TreeSelect / Cascader real host + hosted virtual-domain orchestration into FocusController without changing ValueController, Selection, SearchState, Tree or popup-open ownership;
-- migrate Menu / Tags KeyboardRegion entry points into FocusController and author explicit ComponentProfile focus/interaction metadata;
-- preserve editable text priority, IME guards, Home/End behavior and context-specific Enter/Space semantics;
-- for Tags edit mode, use FocusController edit lease semantics rather than introducing another focus flag;
-- eliminate direct component imports of KeyboardRegion where FocusController can replace the entry point;
-- do not start InteractionController/CapabilityController as separate engines unless a concrete duplicated authority must be replaced in this pack.
-
-Implemented in current PHASE-C-002 branch:
-- Select / TreeSelect / Cascader outer editable keyboard hosts now enter through FocusController while retaining existing OptionList/Tree/Cascader virtual domains and keymaps.
-- those editable hosts set `manageTabIndex:false`, preserving Control/Field as the real tabindex authority; FocusController owns keyboard/virtual orchestration only.
-- Menu standalone root now enters through FocusController and uses canonical virtual-domain binding instead of a component-local `registerDomain()` lifecycle.
-- Tags standalone root now enters through FocusController while TagNavigation remains the tag-domain behavior owner.
-- Tags add editor acquires a FocusController edit lease on the input; all existing add-exit paths release it through the common render/root-state projection.
-- Menu and Tags now author explicit ComponentProfile focus/interaction metadata; this pack does not claim SelectionController ownership.
-- browser regressions add only missing ownership checks: popup real-focus retention + one popup ring, Menu root ownership, Tags edit-lease acquire/release.
-- structural FocusController gate forbids popup direct KeyboardNavigation owners, standalone direct KeyboardRegion owners, Menu direct registerDomain, and requires editable-host tabindex preservation.
+- route Table keyboard root through FocusController while preserving existing two virtual domains and F6/Home/End/Page behavior;
+- bind cell/header domains through FocusController canonical binding rather than direct registerDomain calls;
+- use FocusController edit lease for root -> cell editor -> root handoff;
+- keep native textarea/contenteditable Enter ownership and IME/native editing priority;
+- preserve disabled/readOnly/loading mutation gates;
+- author explicit Table ComponentProfile focus/interaction ownership;
+- do not migrate Table selection into SelectionController yet; that belongs to Phase D.
 
 Next exact step:
-1. create the PHASE-C-002 pull request from this branch;
-2. run Completion audit + full release/browser CI and fix source behavior only; do not weaken existing key/focus gates;
-3. merge only a green PR head and verify main CI + Pages;
-4. then follow the handbook to the next Phase C / Interaction+Capability step from the updated CURRENT state.
+1. create a fresh PHASE-C-003 branch from current main;
+2. migrate Table keyboard owner/domains into FocusController;
+3. connect enter/finalize/cancel edit paths to FocusController edit lease without changing edit transaction semantics;
+4. add structural + browser lease/native-edit/readonly-disabled regressions;
+5. run full PR release CI, merge only green, then verify main CI + Pages and close Phase C.
 
 ## Current authority snapshot — after Phase A
 
@@ -69,7 +62,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
 - Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
-- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel enter through it; underlying ActiveItem/RovingProjection/domain state remains the execution truth. PHASE-C-002 migrates the remaining first-wave popup/standalone composites without adding a second focus truth.
+- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. PHASE-C-003 finishes Phase C with Table Hybrid Edit.
 - Overlay/open: `OpenStateBridge`, `OverlayRuntime`, `LayerManager`, `DismissableLayer` and `PopupSurface` remain the existing authorities. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
 - Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
@@ -91,6 +84,21 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-C-002 — Popup-hosted + standalone composite focus migration
+Status: DONE
+Evidence:
+- PR #53 merged
+- merge commit `6bb926b93c4f0f16dae042cc41f8426bf77d4733`
+- PR CI #335 / `35962474270`: success
+- main CI + Pages #336 / `35962763162`: success
+Outcome:
+- Select / TreeSelect / Cascader editable hosts enter through FocusController with `manageTabIndex:false`, preserving Control/Field tabindex ownership.
+- Menu root uses FocusController and canonical domain binding while retaining existing menu keymap/typeahead/disclosure behavior.
+- Tags standalone root uses FocusController; TagNavigation remains canonical tag-domain behavior owner.
+- Tags +Add editor uses FocusController edit lease and releases it on all existing add-exit paths.
+- browser coverage verifies popup real-focus retention + one ring, Menu root ownership and Tags lease acquire/release.
+
 
 ### PHASE-C-001 — FocusController foundation + Time/Date composite regions
 Status: DONE
