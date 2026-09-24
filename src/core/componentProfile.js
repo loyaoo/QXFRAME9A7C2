@@ -1,7 +1,7 @@
 import { Utils } from '../utils/utils.js';
 
-const CAPABILITIES = Object.freeze(['value', 'focus', 'interaction', 'capability', 'motion', 'selection', 'overlay', 'feedback', 'theme', 'tokens', 'form']);
-const CONTROLLERS = Object.freeze(['ValueController', 'FocusController', 'InteractionController', 'CapabilityController', 'MotionController', 'SelectionController', 'OverlayController', 'FeedbackController', 'ThemeController', 'TokenController', 'FormController']);
+const CAPABILITIES = Object.freeze(['value', 'focus', 'interaction', 'capability', 'motion', 'selection', 'overlay', 'feedback', 'form']);
+const CONTROLLERS = Object.freeze(['ValueController', 'FocusController', 'InteractionController', 'CapabilityController', 'MotionController', 'SelectionController', 'OverlayController', 'FeedbackController', 'FormController']);
 const TOP_LEVEL = Object.freeze(['name'].concat(CAPABILITIES, ['ownership', 'dependencies', 'adapter', 'metadata']));
 
 function isPlainObject(value) {

@@ -10,51 +10,50 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `108fa1d67d6a129c13f7f9397e11968867a05adb` (PR #75 merge)
-- Current branch: `refactor/phase-f-static-closeout-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-007 static-closeout PR
+- Last code-affecting main commit: `b764a1a378cf8fc2dde8edc83dc6c0bc4155b3d8` (PR #76 merge)
+- Current branch: `refactor/phase-f-runtime-profile-closeout-20260924`
+- Open PRs at this checkpoint: pending PHASE-F-008 runtime-profile closeout PR
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase F PR CI: #403 / `36017571445` (PR #75)
-- Latest green main CI + Pages: #404 / `36018227817`
+- Latest green Phase F PR CI: #405 / `36019147203` (PR #76)
+- Latest green main CI + Pages: #406 / `36019711807`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-007`
+- Current Task: `PHASE-F-008`
 
 ## CURRENT
 
-### PHASE-F-007 — static CSS / scoped-theme closeout
+### PHASE-F-008 — runtime profile Theme/Token residue closeout
 Status: IN_PROGRESS
 Task progress: 65%
 
 Why this is current:
-- PHASE-F-006 is merged through PR #75; exact-head CI #403 / `36017571445` and main release + Pages #404 / `36018227817` are green.
-- the remaining Phase F handbook gates are closeout evidence rather than a new visual redesign.
-- `docs/all-components-static.html` is a 1.8 MB static state matrix with 1500+ authored state markers and loads no framework runtime JS; it loads only docs theme/Inspector helpers.
-- existing CSS-only browser coverage proves root/scoped Light/Dark resolution, but the final gate must explicitly cover a scoped portal container and prove theme changes do not mutate value/selection/open/focus state.
-- the static page / docs-tool boundary is not yet a required Phase F verifier.
+- PHASE-F-007 merged through PR #76; exact-head CI #405 / `36019147203` and main release + Pages #406 / `36019711807` are green.
+- the attempted Phase F signoff PR #77 was intentionally closed unmerged after the Phase G entry audit found a contradictory runtime-profile residue.
+- `src/core/componentProfile.js` still admitted `theme` / `tokens` as runtime capabilities and `ThemeController` / `TokenController` as legal controllers even though the handbook freezes exactly 9 Runtime Controllers and pure-CSS Theme/Token authority.
+- existing Phase F CSS-authority verification audited known Config/Overlay/Menu/ColorPicker paths but did not gate ComponentProfile or scan runtime source for the prohibited Theme/Token runtime names.
 
 Frozen impact map:
-- add `verify:phase-f-static-closeout` for the all-components static page: canonical dist CSS only, no framework JS bundle, representative authored hover/focus/active/disabled/loading/selected/error/warning/success/keyboard-focus states, and docs-only helper scripts.
-- extend the existing CSS-authority browser fixture with a popup-surface inside a scoped theme container (portal-host simulation) and business-state/focus snapshots across theme changes.
-- do not add ThemeController/TokenController/runtime theme state or CSS-variable projection.
-- do not change component visual tokens unless a closeout gate finds a reproducible defect.
-- no `@layer`, `:is()`, `:where()`.
+- remove `theme` and `tokens` from ComponentProfile runtime capabilities.
+- remove `ThemeController` and `TokenController` from ComponentProfile legal controllers; the runtime controller list must be exactly 9.
+- strengthen `verify:phase-f-css-authority` to recursively gate all `src/**/*.js` against ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical theme selector.
+- freeze ComponentProfile rejection of top-level theme/tokens and theme runtime dependencies in both the Phase F authority verifier and Shared Protocol verifier.
+- do not change CSS, component visuals, runtime theme behavior, or add replacement Theme/Token JS abstractions.
 
-Implemented in current PHASE-F-007 pack:
-- added required `verify:phase-f-static-closeout` for `docs/all-components-static.html`: final dist CSS, no framework runtime bundle, docs-only helpers and direct authored visual-state matrix.
-- the static gate verifies representative hover/focus/active/disabled/loading/selected/error/warning/success/keyboard-focus states exist in HTML and docs helpers do not synthesize component states.
-- extended `verify:phase-f-css-authority` with a real `.qxframe9a7c2-popup-surface` under a scoped theme container to model a scoped portal host.
-- the CSS-only browser fixture now snapshots value/class/open/selected-key/real-focus before and after theme changes and requires them to remain identical.
-- no production component CSS or runtime JS changed in this pack.
+Implemented in current PHASE-F-008 pack:
+- ComponentProfile now exposes only the 9 runtime capabilities/controllers defined by the handbook; Theme/Token are absent from runtime composition.
+- Phase F CSS authority now walks runtime JS and rejects the four prohibited Theme/Token runtime names plus JS use of the canonical CSS theme selector contract.
+- ComponentProfile contract tests require theme/tokens fields and theme dependency wiring to fail.
+- Shared Protocol verification freezes the controller count at 9.
+- no CSS or component implementation changed.
 
 Next exact step:
-1. open PHASE-F-007 PR and run exact-head full release/browser/package CI;
-2. merge only exact-head green and verify main + Pages;
-3. sign off Phase F in `AI_WORK_STATE.md` and `FOUR_UNIFICATIONS_ACCEPTANCE.md`;
-4. prune merged Phase F task branches;
-5. advance immediately to Phase G — Feedback + Form.
+1. perform exact-head diff/self-audit of the four-file F-008 pack;
+2. open PHASE-F-008 PR and run full release/browser/package CI;
+3. merge only exact-head green and verify main + Pages;
+4. only then recreate the Phase F acceptance checkpoint and advance to Phase G;
+5. prune superseded/merged Phase F branches after acceptance.
 
 ## Current authority snapshot — after Phase A
 
@@ -84,6 +83,20 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-007 — static CSS / scoped-theme closeout
+Status: DONE
+Evidence:
+- PR #76 merged
+- merge commit `b764a1a378cf8fc2dde8edc83dc6c0bc4155b3d8`
+- exact-head CI #405 / `36019147203`: success
+- main CI + Pages #406 / `36019711807`: success
+Outcome:
+- `verify:phase-f-static-closeout` requires final dist CSS with no framework runtime JS on the all-components static state matrix.
+- representative visual states remain authored directly in static HTML; docs helpers do not synthesize component state.
+- CSS-only browser coverage proves scoped popup/portal theme inheritance.
+- value/class/open/selected-key/real-focus remain invariant across theme changes.
+- no production component CSS or runtime JS changed in the closeout pack.
 
 ### PHASE-F-006 — duplicate CSS owner / dead-rule cleanup
 Status: DONE
