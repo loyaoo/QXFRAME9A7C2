@@ -74,6 +74,7 @@ export class OverlayComponent extends Component {
         const c = this.getOverlayFamilyController();
         return c && c.getOverlayRuntime ? c.getOverlayRuntime() : null;
     }
+    getMotionControllers() { const c = this.getOverlayFamilyController(); return c && typeof c.getMotionControllers === 'function' ? c.getMotionControllers() : Object.freeze({}); }
     getScroll() { const c = requireState(this).controller; return c && c.getScroll ? c.getScroll() : null; }
 
     [componentHooks.render]() {

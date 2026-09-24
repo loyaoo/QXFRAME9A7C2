@@ -11,8 +11,8 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `a3a8bb87c538741568266d38ee68a540edab99a2` (PR #66 merge)
-- Current branch: `main`
-- Open PRs at this checkpoint: none
+- Current branch: `refactor/phase-e-modal-drawer-20260924`
+- Open PRs at this checkpoint: pending PHASE-E-003 Modal/Drawer PR
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
@@ -26,7 +26,7 @@
 
 ### PHASE-E-003 — Modal/Drawer physical Overlay + multi-motion migration
 Status: IN_PROGRESS
-Task progress: 80%
+Task progress: 90%
 
 Why this is current:
 - PHASE-E-002 popup facade propagation is merged and green through PR #66 / CI #376 and main CI + Pages #377.
@@ -55,10 +55,10 @@ Implemented in sandbox:
 - adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, overlay family, platform, modern architecture (181 source files / 40 components / 0 legacy violations), component-base and 40 component contracts.
 
 Next exact step:
-1. create PHASE-E-003 branch from this green main checkpoint;
-2. sync Modal/Drawer/OverlayComponent + updated E-002 verifier + new E-003 verifier and required package gate;
-3. run exact-head Completion/release/browser/package CI and fix only real failures;
-4. merge only green and verify main + Pages;
+1. open/run the PHASE-E-003 Modal/Drawer PR from the audited seven-file branch;
+2. fix only exact-head Completion/release/browser failures without moving logical open into OverlayController or collapsing mask + surface motion into one generation;
+3. merge only green and verify main release + Pages;
+4. checkpoint PHASE-E-003 as DONE;
 5. continue Phase E with remaining direct OverlayRuntime consumers (Image/Loading/Upload/runtime adapter), then Collapse/Tabs/Dropdown motion closeout.
 
 ## Current authority snapshot — after Phase A
