@@ -239,11 +239,6 @@ function create(options) {
     if (!next || guard >= 240) return false;
     return setActiveValue(next, meta);
   }
-  function keyForInteractionAction(action) {
-    return action === 'MOVE_LEFT' ? 'ArrowLeft' : action === 'MOVE_RIGHT' ? 'ArrowRight' : action === 'MOVE_UP' ? 'ArrowUp' :
-      action === 'MOVE_DOWN' ? 'ArrowDown' : action === 'MOVE_FIRST' ? 'Home' : action === 'MOVE_LAST' ? 'End' :
-      action === 'PAGE_PREVIOUS' ? 'PageUp' : action === 'PAGE_NEXT' ? 'PageDown' : action === 'ACTIVATE' ? 'Enter' : '';
-  }
   function handleInteractionAction(actionName, event) {
     if (!event || !capabilityController.can('navigate')) return false;
     var eventTarget = event.target || null;
@@ -261,7 +256,7 @@ function create(options) {
       if (actionName === 'MOVE_RIGHT' || actionName === 'MOVE_DOWN') return changeView(addPage(viewValue, unit, 1), { source:'keyboard', reason:'title-page-next', originalEvent:event });
       return false;
     }
-    var key = keyForInteractionAction(actionName);
+    var key = InteractionController.keyboardKeyForAction(actionName);
     if (!key) return false;
     var gridAction = TemporalGrid.keyAction(key, { columns:4 });
     if (!gridAction) return false;
