@@ -32,8 +32,6 @@ export class PickerComponent extends PopupFieldComponent {
             controller: options.controller,
             needConfirm: () => this.options.needConfirm === true,
             rollbackDirtyOnClose: options.rollbackDirtyOnClose,
-            commitDirtyOnClose: options.commitDirtyOnClose,
-            cancelDirtyOnCommitReject: options.cancelDirtyOnCommitReject,
             beforeCommit: typeof options.beforeCommit === 'function' ? (_controller, detail) => options.beforeCommit(detail) : null,
             canCommit: (controller, detail) => !this.destroyed && (typeof options.canCommit !== 'function' || options.canCommit(controller, detail) !== false),
             onOpenDraft: options.onOpenDraft,
