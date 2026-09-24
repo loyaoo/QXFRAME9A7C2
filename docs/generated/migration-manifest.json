@@ -3889,22 +3889,22 @@
     {
       "kind": "class",
       "name": "qxframe9a7c2-theme-light",
-      "status": "adapter",
+      "status": "rejected",
       "since": "pre-fix11",
       "deprecatedSince": "2.19.81",
       "removedIn": "3.0.0",
       "replacement": "[data-qxframe9a7c2-theme=\"light\"]",
-      "migrationNote": "Config reads the legacy class once, projects the canonical data attribute, then removes the class."
+      "migrationNote": "Theme selection is CSS-only. Set the canonical data attribute/class in authored DOM or docs tooling; Core.Config no longer reads or projects theme state."
     },
     {
       "kind": "class",
       "name": "qxframe9a7c2-theme-dark",
-      "status": "adapter",
+      "status": "rejected",
       "since": "pre-fix11",
       "deprecatedSince": "2.19.81",
       "removedIn": "3.0.0",
       "replacement": "[data-qxframe9a7c2-theme=\"dark\"]",
-      "migrationNote": "Config reads the legacy class once, projects the canonical data attribute, then removes the class."
+      "migrationNote": "Theme selection is CSS-only. Set the canonical data attribute/class in authored DOM or docs tooling; Core.Config no longer reads or projects theme state."
     },
     {
       "kind": "bridge",
@@ -3945,6 +3945,18 @@
       "removedIn": "fix11",
       "replacement": "component semantic state projection",
       "migrationNote": "The global mutation/event scanner was removed after rel-* consumers reached zero."
+    },
+    {
+      "kind": "option",
+      "component": "Menu",
+      "name": "theme",
+      "status": "rejected",
+      "since": "2.19.x",
+      "deprecatedSince": "2.19.81",
+      "removedIn": "2.19.81-phase-f",
+      "replacement": "Use CSS theme scope: [data-qxframe9a7c2-theme] and a scoped portalContainer when popup content must inherit a local theme.",
+      "migrationNote": "Phase F removes Menu runtime theme ownership so CSS remains the sole Theme/Token authority. Menu no longer reads or projects theme state.",
+      "apiParityAction": "remove"
     }
   ]
 }
