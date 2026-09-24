@@ -15727,7 +15727,6 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-wheel-picker-popup{min-width:240px}
 .qxframe9a7c2-wheel-panel{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .qxframe9a7c2-wheel-panel:focus-visible{outline:none}
-.qxframe9a7c2-wheel-panel:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-wheel-panel-columns{display:flex;align-items:stretch;min-width:0;gap:0}
 .qxframe9a7c2-wheel-panel-column{position:relative;display:flex;flex:1 1 0;min-width:0;flex-direction:column}
 .qxframe9a7c2-wheel-panel-column-title{flex:0 0 auto;padding:calc(var(--_qxframe9a7c2-control-gap) * .75) var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);font-weight:600;color:var(--_qxframe9a7c2-semantic-text-secondary);text-align:center}
