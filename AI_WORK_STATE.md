@@ -15,7 +15,7 @@
 - Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
-- Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
+- Master architecture spec: `QXFRAME-9-Runtime-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #380 / `35996521940` (PR #68)
 - Latest green main CI + Pages: #381 / `35997097751`
 - Controller migration implementation progress: 99%
@@ -69,7 +69,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
 - Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
 - Form: `FormBridge` remains native field/FormData/reset carrier authority.
-- Theme/token: `Config` remains root/scoped theme and token projection authority; Theme/Token Controller adoption is pending.
+- Theme/token: CSS is the sole visual authority. Phase F is `CSS Theme / Token System Unification`; there is no ThemeController/TokenController/ThemeRuntime/TokenRuntime target. Existing Config or JS theme/token projection paths are legacy audit targets to remove or isolate from component runtime. Core JS must not read, calculate, copy or project theme/token state.
 - Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
 - Motion: `MotionController` is now the intent facade over canonical `MotionCore`; `Transition` delegates through it and MotionCore remains generation/timing/style authority. `TransitionGroup` remains on MotionCore until its owning Phase E pack. No parallel generation counter is permitted.
@@ -228,7 +228,7 @@ Outcome:
 - handbook Phase C priority set (TimePanel, Date Calendar/PeriodPanel, Select, TreeSelect, Cascader, Menu, Tags, Table Hybrid Edit) is accepted.
 - canonical real-focus ownership, scoped semantic interaction, native/IME priority, repeat suppression, Home/End/Page behavior and loading/readOnly/disabled operation gates are covered by required browser/source gates.
 - `FOUR_UNIFICATIONS_ACCEPTANCE.md` records C accepted only for the Phase C priority public components; non-priority rows remain Base/C partial until their owning later phase or final H/I signoff.
-- Phase C acceptance does not imply overall 11-Controller completion; current work resumes at Phase D.
+- Phase C acceptance does not imply overall 9-Runtime-Controller completion; current work resumes at Phase D.
 
 ### PHASE-C-004C — TreeSelect/Cascader Interaction + Capability owners
 Status: DONE
@@ -548,7 +548,7 @@ None.
 ## Frozen decisions
 
 - One owner / one truth; projection is not a second writable truth.
-- The 11 Controllers reuse/evolve existing mature authorities rather than duplicating them.
+- The 9 Runtime Controllers reuse/evolve existing mature authorities rather than duplicating them.
 - Shared Protocol Layer is infrastructure, not a 12th business Controller.
 - Controller code must not branch on component names.
 - Interaction routing is scoped/logical-owner based, not one global keydown handler.
