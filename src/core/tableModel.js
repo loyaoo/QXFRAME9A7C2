@@ -2,7 +2,8 @@
 import { Utils } from '../utils/utils.js';
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
-import { Selection } from './selection.js';
+import { SelectionController } from './selectionController.js';
+import { DataRevision } from './dataRevision.js';
 import { PaginationModel } from './paginationModel.js';
 
 var LEGACY_OPTIONS = Object.freeze(['target','el','mount','dataSource','rowKey','rowSelection','expandable','onChangePage']);
@@ -91,6 +92,13 @@ function create(options) {
   var cachedVisibleEntries = null;
   var cachedProjection = null;
   var projectionDiagnostics = { projectionBuilds: 0, filterRuns: 0, sortRuns: 0, pageRuns: 0, dataVersion: 0, filterVersion: 0, sortVersion: 0, pageVersion: 0, selectionVersion: 0 };
+  var dataRevision = DataRevision.create();
+  var dataRevisionPort = Object.freeze({
+    createRef: function (key) { return dataRevision.capture(String(key)); },
+    isCurrentRef: function (ref) { return dataRevision.isCurrent(ref); },
+    current: function () { return dataRevision.current(); },
+    get dataRevision() { return dataRevision.current(); }
+  });
   var collator = typeof Intl !== 'undefined' && Intl.Collator ? new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' }) : null;
 
   function invalidateProjection(stage) {
@@ -223,22 +231,29 @@ function create(options) {
     if (!paginationEnabled()) pagination.setPage(1, { silent: true, source: 'table-model' });
   }
 
-  var selection = Selection.create({
-    multiple: selectionMode === 'multiple',
-    values: Array.isArray(opts.selectedKeys) ? opts.selectedKeys : [],
-    isDisabled: function (key) {
-      var entry = itemEntryByKey(key);
-      return !entry || isDisabled(entry.item, entry.sourceIndex);
+  var selectionController = SelectionController.create({
+    channels: {
+      selected: {
+        multiple: selectionMode === 'multiple',
+        values: Array.isArray(opts.selectedKeys) ? opts.selectedKeys : [],
+        isDisabled: function (key) {
+          var entry = itemEntryByKey(key);
+          return !entry || isDisabled(entry.item, entry.sourceIndex);
+        },
+        onChange: function (values, detail) {
+          if (destroyed || detail.silent === true) return;
+          projectionDiagnostics.selectionVersion += 1;
+          invalidateProjection('state');
+          var nextProjection = projection('selection');
+          if (Utils.isFunction(opts.onSelectionChange)) opts.onSelectionChange(values.slice(), mergeOptions(detail, { state: nextProjection.state, projection: nextProjection, controller: api }));
+          notify('selection', null, { source: detail.source || 'selection', selectionReason: detail.reason }, nextProjection);
+        }
+      }
     },
-    onChange: function (values, detail) {
-      if (destroyed || detail.silent === true) return;
-      projectionDiagnostics.selectionVersion += 1;
-      invalidateProjection('state');
-      var nextProjection = projection('selection');
-      if (Utils.isFunction(opts.onSelectionChange)) opts.onSelectionChange(values.slice(), mergeOptions(detail, { state: nextProjection.state, projection: nextProjection, controller: api }));
-      notify('selection', null, { source: detail.source || 'selection', selectionReason: detail.reason }, nextProjection);
-    }
+    revisionSources: { selected:dataRevisionPort },
+    remoteChannels: { allMatching:{} }
   });
+  var selection = selectionController.selected;
 
   function itemEntryByKey(key) {
     var normalized = String(key == null ? '' : key);
@@ -355,6 +370,7 @@ function create(options) {
     var previous = snapshot();
     var info = totals && typeof totals === 'object' ? totals : {};
     items = normalized;
+    dataRevision.advance();
     remoteTotal = info.total == null ? remoteTotal : Math.max(0, Math.floor(Number(info.total) || 0));
     remoteFilteredTotal = info.filteredTotal == null ? (info.total == null ? remoteFilteredTotal : remoteTotal) : Math.max(0, Math.floor(Number(info.filteredTotal) || 0));
     rebuildIndexes();
@@ -371,6 +387,7 @@ function create(options) {
     assertUniqueKeys(normalized);
     var previous = snapshot();
     items = normalized;
+    dataRevision.advance();
     rebuildIndexes();
     invalidateProjection();
     var keys = new Set(items.map(function (item, index) { return keyOf(item, index); }));
@@ -391,6 +408,7 @@ function create(options) {
     var nextKey = keyOf(nextItem, index);
     if (nextKey !== normalized) throw new TypeError('[QXFRAME9A7C2] TableModel updateRow cannot change the stable row key. Use removeRows/insertRows instead.');
     items = items.slice(); items[index] = nextItem;
+    dataRevision.advance();
     rebuildIndexes(); invalidateProjection();
     return notify('row-update', previous, mergeOptions({ key: normalized, index: index }, meta));
   }
@@ -403,7 +421,7 @@ function create(options) {
     var nextItems = items.slice();
     nextItems.splice.apply(nextItems, [at, 0].concat(additions));
     assertUniqueKeys(nextItems);
-    items = nextItems; rebuildIndexes(); invalidateProjection();
+    items = nextItems; dataRevision.advance(); rebuildIndexes(); invalidateProjection();
     return notify('row-insert', previous, mergeOptions({ index: at, count: additions.length }, meta));
   }
   function removeRows(keys, meta) {
@@ -413,7 +431,7 @@ function create(options) {
     var previous = snapshot();
     var nextItems = items.filter(function (item, index) { return !removals.has(keyOf(item, index)); });
     if (nextItems.length === items.length) return false;
-    items = nextItems; rebuildIndexes(); invalidateProjection();
+    items = nextItems; dataRevision.advance(); rebuildIndexes(); invalidateProjection();
     if (opts.preserveSelectedKeys !== true) selection.set(selection.values.filter(function (key) { return !removals.has(String(key)); }), { silent: true, source: 'rows', reason: 'prune' });
     removals.forEach(function (key) { expanded.delete(String(key)); });
     return notify('row-remove', previous, mergeOptions({ keys: Array.from(removals) }, meta));
@@ -482,6 +500,7 @@ function create(options) {
     var candidateRemote = own(next, 'remote') ? next.remote === true : remote;
     var candidateRemoteTotal = own(next, 'total') ? Math.max(0, Math.floor(Number(next.total) || 0)) : remoteTotal;
     var candidateRemoteFilteredTotal = own(next, 'filteredTotal') ? Math.max(0, Math.floor(Number(next.filteredTotal) || 0)) : (own(next, 'total') ? candidateRemoteTotal : remoteFilteredTotal);
+    var dataContractChanged = own(next, 'items') || own(next, 'getKey') || own(next, 'isItemDisabled');
     var candidateColumnKeys = Object.create(null);
     candidateColumns.forEach(function (column) { candidateColumnKeys[column.key] = true; });
     if (candidateSortKey && !candidateColumnKeys[candidateSortKey]) throw new TypeError('[QXFRAME9A7C2] TableModel sort key is not a current column: ' + candidateSortKey + '.');
@@ -507,6 +526,7 @@ function create(options) {
     remote = candidateRemote;
     remoteTotal = candidateRemoteTotal;
     remoteFilteredTotal = candidateRemoteFilteredTotal;
+    if (dataContractChanged) dataRevision.advance();
     rebuildIndexes();
     invalidateProjection();
     if (own(next, 'expandedKeys')) expanded = new Set((Array.isArray(next.expandedKeys) ? next.expandedKeys : []).map(String));
@@ -529,7 +549,8 @@ function create(options) {
   function destroy() {
     if (destroyed) return false;
     destroyed = true;
-    selection.destroy();
+    selectionController.destroy();
+    dataRevision.destroy();
     pagination.destroy();
     expanded.clear();
     keyIndex.clear(); columnIndex.clear(); cachedFilteredEntries = null; cachedOrderedEntries = null; cachedVisibleEntries = null; cachedProjection = null;
@@ -584,6 +605,8 @@ function create(options) {
     items: { enumerable: true, get: function () { return items.slice(); } },
     columns: { enumerable: true, get: function () { return columns.slice(); } },
     selection: { enumerable: true, get: function () { return selection; } },
+    selectionController: { enumerable:true, get:function () { return selectionController; } },
+    dataRevision: { enumerable:true, get:function () { return dataRevision.current(); } },
     pagination: { enumerable: true, get: function () { return pagination; } },
     destroyed: { enumerable: true, get: function () { return destroyed; } }
   });
