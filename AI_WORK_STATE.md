@@ -18,7 +18,7 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #360 / `35977872248` (PR #59)
 - Latest green main CI + Pages: #361 / `35978193325`
-- Controller migration implementation progress: 95%
+- Controller migration implementation progress: 94%
 - Current Phase: Phase C acceptance closeout (Phase D first two packs already landed)
 - Current Task: `PHASE-C-004`
 
@@ -26,7 +26,7 @@
 
 ### PHASE-C-004 — InteractionController + CapabilityController completion
 Status: IN_PROGRESS
-Task progress: 90%
+Task progress: 85%
 
 Why this is current:
 - the handbook defines Phase C as Focus + Interaction + Capability, not Focus alone.
@@ -70,13 +70,11 @@ Completed PHASE-C-004 Select reference pack (PR #59):
 - merge commit `460895256268187c5a795aa9c7e2348e558239f3`; main release + Pages #361 / `35978193325` succeeded.
 
 Next exact step:
-1. start the PHASE-C-004 popup tree pack with TreeSelect + Cascader from current main;
-2. give both explicit InteractionController + CapabilityController ownership without adding a second DOM keydown listener;
-3. use operation-level permissions: edit/search, remove tags, clear, select/check, open/navigate; propagate busy into inner tree/list mutation gates while preserving safe browsing;
-4. add required browser regressions for readOnly/loading/disabled, IME, repeat Space/Enter, native caret and controlled proposal/external-sync;
-5. after exact-head green merge, finish Tags/Table as the final high-risk Phase C pack and then resume Phase D Table selection.
-
-## Current authority snapshot — after Phase A
+1. create the PHASE-C-004 popup-composites branch from green main #361;
+2. migrate TreeSelect and Cascader to explicit InteractionController + CapabilityController ownership without adding another DOM keydown listener;
+3. remove Cascader's unused legacy panel-keydown path and keep readOnly/busy child-column browsing distinct from leaf selection mutation;
+4. require Chromium regression coverage for readOnly/busy/disabled, TreeSelect Enter/Space checks, controlled proposals, Cascader child navigation and repeat suppression;
+5. merge only exact-head green, verify main + Pages, then close Tags/Table in the final higher-risk Phase C pack.
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
@@ -105,6 +103,19 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-C-004B — Select Interaction + Capability reference
+Status: DONE
+Evidence:
+- PR #59 merged
+- merge commit `460895256268187c5a795aa9c7e2348e558239f3`
+- PR CI #360 / `35977872248`: success
+- main CI + Pages #361 / `35978193325`: success
+Outcome:
+- PopupField open lifecycle uses semantic open capability.
+- Select has explicit InteractionController + CapabilityController ownership with one DOM keyboard owner.
+- readOnly/busy browsing remains possible while value mutation is blocked; disabled cannot open.
+- IME, repeat activation, native caret and controlled proposal behavior are required browser gates.
 
 ### PHASE-C-004B — Select popup-hosted Interaction + Capability reference
 Status: DONE
