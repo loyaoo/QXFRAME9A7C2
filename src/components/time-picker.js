@@ -269,6 +269,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       }
     }
     draft.setDraft(next, { source: detail.source, reason: 'time-select' });
+    if (field && field.getState().open) syncField(true);
     var payload = { selectedValue: TimeUnit.clone(value), value: cloneValue(draft.draftValue), activeRangePart: selectedPart, unit: detail.unit, source: detail.source, reason: detail.reason, timePicker: api };
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(TimeUnit.clone(value), payload);
     emitter.emit('select', payload);
@@ -357,7 +358,16 @@ function setupTimePickerRuntime(instance, fieldInit) {
     },
     onClose: function (detail) { pickerSession.close(detail); },
     onOpenChange: emitOpen, onInput: handleInput, onBlur: handleBlur,
-    onKeydown: function (event) { return field && field.getState().open && panel ? panel.handleKeydown(event) : false; },
+    onKeydown: function (event) {
+      if (!field || !field.getState().open || !panel) return false;
+      if (event && event.key === 'Enter' && opts.needConfirm === true && event.isComposing !== true && !InteractionPolicy.mutationLocked(opts)) {
+        if (event.preventDefault) event.preventDefault();
+        var committed = instance.commit({ source:'keyboard', reason:'enter-confirm', originalEvent:event });
+        if (committed !== false) field.close('confirm', event);
+        return true;
+      }
+      return panel.handleKeydown(event);
+    },
     onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
   });
   instance.adoptPickerField(field);
