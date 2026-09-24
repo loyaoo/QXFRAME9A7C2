@@ -4,6 +4,8 @@ import { ComponentContracts } from '../core/componentContracts.js';
 import { Scheduler } from '../core/scheduler.js';
 import { DOMProjection } from '../core/domProjection.js';
 import { OverlayController } from '../core/overlayController.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { Transition } from '../core/transition.js';
 import { MotionPresets } from '../core/motionPresets.js';
@@ -73,7 +75,30 @@ function contextualOptions(options) {
     return Utils.mergeOwn( input, { target, fullscreen });
 }
 
+function applyFeedback(instance, record) {
+    if (record.message) instance.setText(record.message);
+    if (record.progress !== null) instance.setProgress(record.progress);
+    if (record.status === 'pending' || record.status === 'progress') instance.open('feedback-' + record.status);
+    else instance.close('feedback-' + record.status);
+    return instance;
+}
+function feedbackProjector(instance) {
+    return Object.freeze({
+        show: record => applyFeedback(instance, record),
+        update: (_handle, record) => applyFeedback(instance, record),
+        close: () => { instance.close('feedback-clear'); return true; }
+    });
+}
+
 export class Loading extends Component {
+    static profile = Object.freeze({
+        name: 'Loading',
+        capability: Object.freeze({ mode: 'blocking-scope' }),
+        motion: Object.freeze({ mode: 'presence' }),
+        overlay: Object.freeze({ mode: 'blocking-layer' }),
+        feedback: Object.freeze({ mode: 'loading-projection' }),
+        ownership: Object.freeze({ capability: 'CapabilityController', motion: 'MotionController', overlay: 'OverlayController', feedback: 'FeedbackController' })
+    });
     static options = Object.freeze({
         text: '加载中...', indicator: null, size: 'md', progress: null, delay: 0,
         showMask: true, blocking: true, className: '', maskColor: '', maskBlur: '', open: true
@@ -142,7 +167,7 @@ export class Loading extends Component {
         const record = {
             root, mask, box, indicatorHost, spinner, content, text, progressHost,
             target, doc, view, isGlobal, fullscreen, portalContainer, scrollLockTarget,
-            overlay: null, surface: null, presence: null, progress: null, delayScheduler: null,
+            overlay: null, surface: null, presence: null, progress: null, delayScheduler: null, capability: null,
             opened: false, pendingCloseReason: null, appliedMaskStyle: null, appliedBoxStyle: null,
             targetPositionProjection: null, methodPatch: null, setOptions: next => { opts = next; }
         };
@@ -229,6 +254,10 @@ export class Loading extends Component {
         const syncOverlayOptions = () => record.overlay.updateOptions({ lockScroll: effectiveLockScroll(), scrollLockTarget, compensateScrollbar: isGlobal });
         const setVisibleState = visible => root.classList.toggle('is-present', visible === true);
 
+        record.capability = CapabilityController.create({
+            getState: () => ({ disabled: false, readOnly: false, loading: false }),
+            capabilities: Object.freeze({ activateWhenReadOnly: true })
+        });
         record.surface = PopupSurface.create({ element: root, setVisible: setVisibleState });
         record.surface.hide({ reason: 'initial' });
         record.overlay = OverlayController.create({
@@ -250,7 +279,7 @@ export class Loading extends Component {
         record.presence = Transition.create({ element: root, transition: MotionPresets.fade, visible: false, appear: true, onAfterLeave: finalizeClose });
 
         const commitOpen = reasonInput => {
-            if (this.destroyed || isOpen()) return this;
+            if (this.destroyed || isOpen() || !record.capability.can('open')) return this;
             const reason = reasonInput || 'api';
             record.opened = true;
             record.pendingCloseReason = null;
@@ -278,6 +307,7 @@ export class Loading extends Component {
         record.releaseTarget = releaseTarget;
         record.commitOpen = commitOpen;
 
+        this.own(record.capability);
         this.own(record.surface);
         this.own(record.overlay);
         this.own(record.presence);
@@ -375,6 +405,7 @@ export class Loading extends Component {
     setOpen(value, reason) { return bool(value, false, 'open') ? this.open(reason || 'set-open') : this.close(reason || 'set-open'); }
     setVisible(value, reason) { return bool(value, false, 'visible') ? this.open(reason || 'set-visible') : this.close(reason || 'set-visible'); }
     setMask(value) { return this.updateOptions({ showMask: bool(value, false, 'showMask') }); }
+    createFeedbackController(options = {}) { return FeedbackController.createForProjector(feedbackProjector(this), Utils.mergeOwn({ ownerId: this.id }, options), 'local'); }
     getState() {
         const record = recordFor(this);
         const overlayState = record.overlay.getState();
@@ -403,6 +434,7 @@ export class Loading extends Component {
     getTextElement() { const record = state.get(this); return record ? record.text : null; }
     getProgress() { const record = state.get(this); return record ? record.progress : null; }
     getDelayScheduler() { const record = state.get(this); return record ? record.delayScheduler : null; }
+    getCapabilityController() { const record = state.get(this); return record ? record.capability : null; }
     getOverlayController() { const record = state.get(this); return record ? record.overlay : null; }
     getOverlayRuntime() { const controller = this.getOverlayController(); return controller && controller.getRuntime ? controller.getRuntime() : null; }
     getMotionController() { const record = state.get(this); return record && record.presence && record.presence.getMotionController ? record.presence.getMotionController() : null; }
