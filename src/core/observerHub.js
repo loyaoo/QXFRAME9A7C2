@@ -18,10 +18,12 @@ function environmentOf(target, settings, observerName) {
   var doc = local.document || (target && target.ownerDocument) || global.document || null;
   var win = local.window || (doc && doc.defaultView) || global.window || global;
   var envOptions = { document: doc, window: win };
-  var injected = own(local, observerName) ? local[observerName] : (own(local, 'constructor') ? local.constructor : null);
-  if (observerName === 'ResizeObserver' && injected) envOptions.ResizeObserver = injected;
-  else if (observerName === 'MutationObserver' && injected) envOptions.MutationObserver = injected;
-  else if (observerName === 'IntersectionObserver' && injected) envOptions.IntersectionObserver = injected;
+  if (observerName) {
+    var injected = own(local, observerName) ? local[observerName] : (own(local, 'constructor') ? local.constructor : undefined);
+    var Ctor = injected !== undefined ? injected : (win ? win[observerName] : global[observerName]);
+    if (typeof Ctor !== 'function') Ctor = null;
+    envOptions[observerName] = Ctor;
+  }
   if (own(local, 'matchMedia')) envOptions.matchMedia = local.matchMedia;
   return EnvironmentPort.create(envOptions);
 }
