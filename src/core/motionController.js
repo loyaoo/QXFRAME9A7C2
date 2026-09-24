@@ -1,4 +1,5 @@
 import { MotionCore } from './motion.js';
+import { Utils } from '../utils/utils.js';
 
 function own(object, key) { return Object.prototype.hasOwnProperty.call(Object(object), key); }
 
@@ -12,7 +13,9 @@ function create(options) {
     }
   } else {
     var coreOptions = {};
-    Object.keys(settings).forEach(function (key) { if (key !== 'core' && key !== 'ownsCore') coreOptions[key] = settings[key]; });
+    Utils.copyOwn(coreOptions, settings);
+    delete coreOptions.core;
+    delete coreOptions.ownsCore;
     core = MotionCore.create(coreOptions);
   }
   var ownsCore = own(settings, 'ownsCore') ? settings.ownsCore !== false : !settings.core;
