@@ -10,50 +10,51 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `b764a1a378cf8fc2dde8edc83dc6c0bc4155b3d8` (PR #76 merge)
-- Current branch: `refactor/phase-f-runtime-profile-closeout-20260924`
-- Open PRs at this checkpoint: pending PHASE-F-008 runtime-profile closeout PR
+- Last code-affecting main commit: `e7903d9ff08ecde8bdb000da64b6a77ceea837f1` (PR #78 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + merged Phase F task branches; prune merged task branches after Phase F signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase F PR CI: #405 / `36019147203` (PR #76)
-- Latest green main CI + Pages: #406 / `36019711807`
+- Latest green Phase F PR CI: #408 / `36021985007` (PR #78)
+- Latest green main CI + Pages: #409 / `36022470128`
 - Controller migration implementation progress: 99%
-- Current Phase: Phase F — CSS Theme / Token System Unification
-- Current Task: `PHASE-F-008`
+- Current Phase: Phase G — Feedback + Form
+- Current Task: `PHASE-G-001`
 
 ## CURRENT
 
-### PHASE-F-008 — runtime profile Theme/Token residue closeout
-Status: IN_PROGRESS
-Task progress: 65%
+### PHASE-G-001 — FeedbackController + FormController foundations
+Status: READY
+Task progress: 0%
 
 Why this is current:
-- PHASE-F-007 merged through PR #76; exact-head CI #405 / `36019147203` and main release + Pages #406 / `36019711807` are green.
-- the attempted Phase F signoff PR #77 was intentionally closed unmerged after the Phase G entry audit found a contradictory runtime-profile residue.
-- `src/core/componentProfile.js` still admitted `theme` / `tokens` as runtime capabilities and `ThemeController` / `TokenController` as legal controllers even though the handbook freezes exactly 9 Runtime Controllers and pure-CSS Theme/Token authority.
-- existing Phase F CSS-authority verification audited known Config/Overlay/Menu/ColorPicker paths but did not gate ComponentProfile or scan runtime source for the prohibited Theme/Token runtime names.
+- Phase F is accepted through PR #70–#76 and #78; the attempted signoff PR #77 was closed unmerged after correctly exposing the final runtime-profile residue.
+- final Phase F exact-head CI #408 / `36021985007` and main release + Pages #409 / `36022470128` are green.
+- `FeedbackController` and `FormController` do not yet exist; Phase G must evolve existing authorities rather than duplicate them.
+- `NoticeService` + `NoticeClock` remain the global notice/timing execution authorities.
+- `FormBridge` remains the native field/FormData/reset carrier authority; field values remain ValueController-owned.
+- `AsyncTask` / `AsyncTaskGroup` already provide request identity, cancellation and stale-result primitives suitable for validator coordination.
+- handbook Phase G gates are same-name fields, native submit/reset, async validator stale protection, external controlled reset, and local/global feedback de-dup.
 
-Frozen impact map:
-- remove `theme` and `tokens` from ComponentProfile runtime capabilities.
-- remove `ThemeController` and `TokenController` from ComponentProfile legal controllers; the runtime controller list must be exactly 9.
-- strengthen `verify:phase-f-css-authority` to recursively gate all `src/**/*.js` against ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical theme selector.
-- freeze ComponentProfile rejection of top-level theme/tokens and theme runtime dependencies in both the Phase F authority verifier and Shared Protocol verifier.
-- do not change CSS, component visuals, runtime theme behavior, or add replacement Theme/Token JS abstractions.
-
-Implemented in current PHASE-F-008 pack:
-- ComponentProfile now exposes only the 9 runtime capabilities/controllers defined by the handbook; Theme/Token are absent from runtime composition.
-- Phase F CSS authority now walks runtime JS and rejects the four prohibited Theme/Token runtime names plus JS use of the canonical CSS theme selector contract.
-- ComponentProfile contract tests require theme/tokens fields and theme dependency wiring to fail.
-- Shared Protocol verification freezes the controller count at 9.
-- no CSS or component implementation changed.
+Frozen first-pack impact map:
+- add `FeedbackController` as an operation/task feedback facade; it may coordinate local/global projection but must not own task/value state, NoticeClock timing, or create another global notice stack.
+- add `FormController` as field registry + dirty/touched/pending/valid + validation/submit/reset transaction authority; native carrier/FormData work stays in FormBridge.
+- use `fieldId` as unique identity; duplicate `name` values are valid and must never overwrite sibling fields.
+- async validation must capture field/form revision plus validator generation; stale failures/results cannot overwrite newer state.
+- reset must respect native reset cancellation, cancel pending validation/submit work, delegate value reset to field adapters/ValueController, clear feedback/touched, then project through FormBridge.
+- external controlled reset must remain requested until owner acknowledgement; FormData must not pretend a controlled field has reset.
+- global feedback must de-duplicate against local field/form feedback by owner + operation + actionId/requestId, not by message text.
+- foundation pack proves controller contracts first; direct consumers migrate in coherent follow-up packs.
+- no component-name dispatch, no second committed value, no duplicate native carrier, no new notice timer/stack.
 
 Next exact step:
-1. perform exact-head diff/self-audit of the four-file F-008 pack;
-2. open PHASE-F-008 PR and run full release/browser/package CI;
-3. merge only exact-head green and verify main + Pages;
-4. only then recreate the Phase F acceptance checkpoint and advance to Phase G;
-5. prune superseded/merged Phase F branches after acceptance.
+1. create `refactor/phase-g-feedback-form-foundation-20260924` from this checkpoint;
+2. implement FeedbackController and FormController facades around existing authorities;
+3. add focused Node/browser contract gates for same-name fields, native reset/submit, stale async validation, external reset and feedback de-dup;
+4. export through core/index and freeze ComponentProfile ownership compatibility;
+5. open exact-head PR, merge only green, verify main + Pages;
+6. continue Phase G direct-consumer migration.
 
 ## Current authority snapshot — after Phase A
 
@@ -65,8 +66,8 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
 - Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
 - Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
-- Form: `FormBridge` remains native field/FormData/reset carrier authority.
-- Theme/token: CSS is the sole visual authority. Phase F is `CSS Theme / Token System Unification`; there is no ThemeController/TokenController/ThemeRuntime/TokenRuntime target. Existing Config or JS theme/token projection paths are legacy audit targets to remove or isolate from component runtime. Core JS must not read, calculate, copy or project theme/token state.
+- Form: `FormBridge` remains native field/FormData/reset carrier authority. Phase G will add FormController above it without duplicating carrier/value ownership.
+- Theme/token: Phase F is accepted. CSS is the sole visual authority; ComponentProfile exposes exactly 9 Runtime Controllers and no theme/tokens runtime capabilities. CI recursively rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical CSS theme selector.
 - Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
 - Motion: `MotionController` is the accepted intent facade over canonical `MotionCore`; `Transition` and `TransitionGroup` enter through it while MotionCore remains generation/timing/style authority. Collapse rapid reversal is fixed by stable DOM projection before motion, with no parallel generation or component timer.
@@ -83,6 +84,34 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-F-008 — runtime profile Theme/Token residue closeout
+Status: DONE
+Evidence:
+- PR #78 merged
+- merge commit `e7903d9ff08ecde8bdb000da64b6a77ceea837f1`
+- exact-head CI #408 / `36021985007`: success
+- main CI + Pages #409 / `36022470128`: success
+Outcome:
+- removed `theme` / `tokens` from ComponentProfile runtime capabilities.
+- removed ThemeController / TokenController from ComponentProfile legal controllers; the runtime controller list is exactly 9.
+- `verify:phase-f-css-authority` now recursively scans all `src/**/*.js` and rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime plus JS use of canonical CSS theme selectors.
+- Shared Protocol gates reject theme/tokens profile fields and theme runtime dependencies.
+- no CSS or component visual implementation changed.
+
+### PHASE-F — CSS Theme / Token System Unification
+Status: ACCEPTED
+Evidence:
+- implementation/closeout PRs #70–#76 and #78; #77 was intentionally closed unmerged after discovering F-008.
+- exact-head CI #392 / #395 / #397 / #399 / #401 / #403 / #405 / #408: success
+- corresponding main release + Pages #393 / #396 / #398 / #400 / #402 / #404 / #406 / #409: success
+Outcome:
+- one canonical CSS Theme/Token authority and one final self-contained `dist/qxframe9a7c2.css`.
+- no ThemeController / TokenController / ThemeRuntime / TokenRuntime and no ComponentProfile theme/token runtime capability.
+- primitive → semantic → family → component → state graph, Light/Dark/scoped theme, semantic overlay/shadow channels and state cascade are required gates.
+- token graph/cycle/reference/color-channel/specificity/duplicate-owner audits are required CI.
+- static no-framework-JS state matrix, scoped portal inheritance, and theme/business-state separation are required CI.
+- Phase F acceptance does not claim Phase G–I completion.
 
 ### PHASE-F-007 — static CSS / scoped-theme closeout
 Status: DONE
