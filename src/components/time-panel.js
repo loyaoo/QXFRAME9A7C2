@@ -4,6 +4,7 @@ import { Events } from '../core/events.js';
 import { Scheduler } from '../core/scheduler.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { InteractionPolicy } from '../core/interactionPolicy.js';
+import { FocusController } from '../core/focusController.js';
 import { Utils } from '../utils/utils.js';
 import { TimeUnit } from '../utils/timeUnit.js';
 import { WheelMetrics } from '../utils/wheelMetrics.js';
@@ -159,6 +160,23 @@ function create(options) {
     columnsHost = domBinding.refs.columns;
     root.classList.add('qxframe9a7c2-time-panel-root');
     columnsHost.classList.add('qxframe9a7c2-time-panel-wrapper');
+    focusController = FocusController.create({
+      root: root,
+      document: doc,
+      disabled: opts.disabled === true,
+      activeRegion: 'time',
+      navigation: {
+        editableKeys: true,
+        handlers: FocusController.forwardHandlers(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'], function (event) {
+          return wheel ? wheel.handleKeydown(event) : false;
+        })
+      },
+      onEnter: function (detail) {
+        if (!wheel) return;
+        var wheelState = wheel.getState();
+        wheel.setActiveColumn(wheelState.activeColumnIndex || 0, { source:'keyboard', reason:'time-panel-region-enter', originalEvent:detail.originalEvent || null });
+      }
+    });
     wheel = WheelPanel.create({
       container: columnsHost,
       document: doc,
@@ -196,6 +214,7 @@ function create(options) {
         if (structuralDependency) structuralRefreshScheduler.request(120, 'time-panel-dependent-columns');
       }
     });
+    wheel.bindVirtualFocus(focusController.virtualFocus, true);
     wheel.on('scrollSettle', function (detail) {
       if (destroyed || opts.changeOnScroll !== true) return;
       emitter.emit('scrollSettle', {
@@ -259,6 +278,7 @@ function create(options) {
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) value = TimeUnit.normalizeClamped(next.value);
     structuralRefreshScheduler.cancel();
     refreshWheel('time-panel-options');
+    if (focusController) focusController.setDisabled(opts.disabled === true);
     if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     return api;
   }
@@ -267,6 +287,7 @@ function create(options) {
     destroyed = true;
     structuralRefreshScheduler.dispose();
     if (wheel) wheel.destroy(); wheel = null;
+    if (focusController) focusController.destroy(); focusController = null;
     emitter.dispose();
     if (domBinding) domBinding.release();
     domBinding = null; columnsHost = root = null;
@@ -280,15 +301,22 @@ function create(options) {
     setSecond: function (next) { return changeUnit('second', next, { source: 'api', reason: 'set-second' }); },
     refresh: function (reason) { return refreshWheel(reason || 'time-panel-refresh'); },
     updateOptions: updateOptions,
-    getState: function () { return Object.freeze({ value: TimeUnit.clone(value), text: TimeUnit.format24(value, opts.showSecond !== false), activeKeys: wheel ? wheel.getState().value.slice() : [], hideDisabledOptions: opts.hideDisabledOptions === true, changeOnScroll: opts.changeOnScroll === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed }); },
+    getState: function () { return Object.freeze({ value: TimeUnit.clone(value), text: TimeUnit.format24(value, opts.showSecond !== false), activeKeys: wheel ? wheel.getState().value.slice() : [], focus: focusController ? focusController.getState() : null, hideDisabledOptions: opts.hideDisabledOptions === true, changeOnScroll: opts.changeOnScroll === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed }); },
     getRootElement: function () { return root; },
     getRefs: function () { return domBinding ? domBinding.refs : null; },
     getDOMSource: function () { return domBinding ? domBinding.source : null; },
     getWheelPanel: function () { return wheel; },
+    getFocusController: function () { return focusController; },
     setActiveColumn: function (index, meta) { if (wheel) wheel.setActiveColumn(index, meta); return api; },
     handleKeydown: function (event) { return wheel ? wheel.handleKeydown(event) : false; },
-    focus: function () { return wheel && wheel.focus ? wheel.focus() : false; },
-    bindVirtualFocus: function (controller, hosted) { return wheel ? wheel.bindVirtualFocus(controller, hosted) : null; },
+    focus: function () { return focusController ? focusController.focus() : false; },
+    bindVirtualFocus: function (controller, hosted) {
+      if (!wheel || !focusController) return null;
+      var targetController = controller || focusController.virtualFocus;
+      var externalHost = targetController !== focusController.virtualFocus;
+      focusController.setHosted(hosted === true || externalHost);
+      return wheel.bindVirtualFocus(targetController, true);
+    },
     getVirtualFocusDomain: function () { return wheel ? wheel.getVirtualFocusDomain() : null; },
     getColumnItems: function (name) { var index = columnIndex[String(name)]; return index === undefined || !wheel ? [] : wheel.getColumnItems(index); },
     getColumnScroll: function (name) { var index = columnIndex[String(name)]; return index === undefined || !wheel ? null : wheel.getColumnScroll(index); },
