@@ -15,6 +15,33 @@ function normalizeReason(reason) {
 }
 
 
+
+function resolveLayerManager(options, element) {
+  var settings = options || {};
+  var documentRef = settings.document || (element && element.ownerDocument) || globalThis.document;
+  var manager = settings.layerManager || (documentRef ? LayerManager.getShared(documentRef) : null);
+  if (!manager) throw new TypeError('[QXFRAME9A7C2] OverlayController requires a LayerManager-compatible owner.');
+  return manager;
+}
+
+function findParentLayerId(target, options) {
+  if (!target) return null;
+  var manager = resolveLayerManager(options || {}, target);
+  return manager && manager.findParentId ? manager.findParentId(target) : null;
+}
+
+function acquireSingleton(options) {
+  var settings = options || {};
+  if (!settings || typeof settings !== 'object' || Array.isArray(settings)) throw new TypeError('[QXFRAME9A7C2] OverlayController.acquireSingleton(options) requires an object.');
+  var manager = resolveLayerManager(settings, settings.target || null);
+  if (!manager || typeof manager.acquireSingleton !== 'function') throw new TypeError('[QXFRAME9A7C2] OverlayController singleton requires LayerManager singleton support.');
+  var local = {};
+  ['type','componentType','group','parentId','create','value','onLastRelease'].forEach(function (key) {
+    if (own(settings,key)) local[key]=settings[key];
+  });
+  return manager.acquireSingleton(local);
+}
+
 function createLayerLease(options) {
   var settings = options || {};
   if (!settings || typeof settings !== 'object' || Array.isArray(settings)) throw new TypeError('[QXFRAME9A7C2] OverlayController.createLayerLease(options) requires an object.');
@@ -90,5 +117,5 @@ function create(options) {
   return api;
 }
 
-export const OverlayController = Object.freeze({ create:create, createLayerLease:createLayerLease, normalizeReason:normalizeReason, CLOSE_REASONS:CLOSE_REASONS });
-export { create, createLayerLease, normalizeReason, CLOSE_REASONS };
+export const OverlayController = Object.freeze({ create:create, createLayerLease:createLayerLease, acquireSingleton:acquireSingleton, findParentLayerId:findParentLayerId, normalizeReason:normalizeReason, CLOSE_REASONS:CLOSE_REASONS });
+export { create, createLayerLease, acquireSingleton, findParentLayerId, normalizeReason, CLOSE_REASONS };
