@@ -188,7 +188,6 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (Utils.isFunction(opts.onPreviewChange)) opts.onPreviewChange(previewValue, payload);
     emitter.emit('previewChange', payload);
   }
-  function panelCapabilityOptions() { return { disabled:opts.disabled === true, readOnly:opts.readOnly === true, loading:opts.loading === true || opts.busy === true }; }
   function resolvedPanelOptions(value) {
     var resolved = {
       showSecond: opts.showSecond !== false,
@@ -219,7 +218,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function syncPanel(reason) {
     if (!panel) return;
     var value = panelSeed();
-    panel.updateOptions(Utils.mergeOwn( resolvedPanelOptions(value), panelCapabilityOptions(), { value: value }));
+    panel.updateOptions(Utils.mergeOwn( resolvedPanelOptions(value), { value: value }));
     if (panel.refresh) panel.refresh(reason || 'time-picker-sync');
   }
   var pickerSession = instance.setupPickerSession({
@@ -369,7 +368,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   });
   instance.adoptPickerField(field);
 
-  panel = TimePanel.create(Utils.mergeOwn( resolvedPanelOptions(panelSeed()), panelCapabilityOptions(), {
+  panel = TimePanel.create(Utils.mergeOwn( resolvedPanelOptions(panelSeed()), {
     container: field.getPanelHost(),
     value: panelSeed(),
     onSelect: function (value, detail) { applyPanelValue(value, Utils.assignOwn({ panelOrigin: true }, detail || {})); }
