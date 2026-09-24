@@ -1,63 +1,26 @@
 {
   "framework": "QXFRAME9A7C2",
   "frameworkVersion": "2.19.81",
-  "version": 1,
-  "policy": "Physical source order is the CSS cascade contract. Later stages may consume/override earlier public contracts; compatibility is last and may only adapt legacy inputs to canonical output.",
+  "version": 2,
+  "policy": "src/qxframe9a7c2.css is the sole production CSS source. Foundation/theme/semantic/family/component/state/composite/utility/compatibility are conceptual sections inside this one physical file; no split CSS mirror may become a second authority.",
   "files": [
     {
-      "stage": "00",
-      "name": "foundation",
-      "file": "00-foundation.css"
-    },
-    {
-      "stage": "01",
-      "name": "theme-seed-mode",
-      "file": "01-theme.css"
-    },
-    {
-      "stage": "02",
-      "name": "semantic",
-      "file": "02-semantic.css"
-    },
-    {
-      "stage": "03",
-      "name": "family",
-      "file": "03-family.css"
-    },
-    {
-      "stage": "04",
-      "name": "shared-roles",
-      "file": "04-shared-roles.css"
-    },
-    {
-      "stage": "05",
-      "name": "component-base",
-      "file": "05-components.css"
-    },
-    {
-      "stage": "06",
-      "name": "component-variant",
-      "file": "06-component-variants.css"
-    },
-    {
-      "stage": "07",
-      "name": "component-state",
-      "file": "07-state.css"
-    },
-    {
-      "stage": "08",
-      "name": "composite-relation",
-      "file": "08-composites.css"
-    },
-    {
-      "stage": "09",
-      "name": "utilities",
-      "file": "09-utilities.css"
-    },
-    {
-      "stage": "10",
-      "name": "compatibility",
-      "file": "10-compatibility.css"
+      "stage": "canonical",
+      "name": "single-source",
+      "file": "src/qxframe9a7c2.css"
     }
+  ],
+  "conceptualOrder": [
+    "foundation",
+    "theme",
+    "semantic",
+    "family",
+    "shared-roles",
+    "component-base",
+    "component-variant",
+    "component-state",
+    "composite-relation",
+    "utilities",
+    "compatibility"
   ]
 }
