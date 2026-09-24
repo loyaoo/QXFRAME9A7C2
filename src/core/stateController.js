@@ -1,12 +1,12 @@
 
 import { ValueEquality } from '../utils/valueEquality.js';
 import { mergeOptions } from './options.js';
-import { ValueDraft } from './valueDraft.js';
+import { ValueController } from './valueController.js';
 
 function create(options) {
     const opts = mergeOptions({}, options);
     if (!Object.prototype.hasOwnProperty.call(opts, 'controlled')) opts.controlled = Object.prototype.hasOwnProperty.call(opts, 'value');
-    return ValueDraft.create(opts);
+    return ValueController.create(opts);
 }
 
 function createValueBinding(options) {
