@@ -273,7 +273,10 @@ function create(options){
       }
       if(OperationResult.isOperationResult(outcome)){
         if(outcome.status==='requested'){
-          field.pendingResetRequestId=outcome.requestId||null;requested=true;continue;
+          field.pendingResetRequestId=outcome.requestId||null;
+          resetVisualState(field);
+          refreshDirty(field);
+          requested=true;continue;
         }
         if(outcome.status!=='applied'&&outcome.status!=='unchanged')continue;
       }else if(outcome===false){
