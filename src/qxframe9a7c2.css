@@ -8,8 +8,8 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 /* primitive */
 
 /* QXFRAME9A7C2 Foundation Token Contract.
- * Physical palette data is retained as the read-only source; canonical semantic/theme
- * resolvers own runtime color meaning. Legacy public color aliases are output-only.
+ * This file is the sole production CSS authority. Physical palette data is the read-only
+ * source; CSS theme/semantic/family/component/state layers resolve all visual meaning. Legacy public color aliases are output-only.
  */
 
 :root {
@@ -14128,7 +14128,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   [class^="qxframe9a7c2-"],[class*=" qxframe9a7c2-"]{animation:none!important;transition-duration:0ms!important;scroll-behavior:auto!important}
 }
 
-/* Canonical Config motion override. Scoped and document-level motion use the same resolver. */
+/* Canonical runtime motion override. Theme/token resolution remains CSS-only. */
 .qxframe9a7c2-motion-disabled{--qxframe9a7c2-motion-duration-fast:0ms;--qxframe9a7c2-motion-duration-mid:0ms;--qxframe9a7c2-motion-duration-slow:0ms}
 .qxframe9a7c2-motion-disabled[class^="qxframe9a7c2-"],.qxframe9a7c2-motion-disabled[class*=" qxframe9a7c2-"],.qxframe9a7c2-motion-disabled [class^="qxframe9a7c2-"],.qxframe9a7c2-motion-disabled [class*=" qxframe9a7c2-"]{animation:none!important;transition-duration:0ms!important;scroll-behavior:auto!important}
 
