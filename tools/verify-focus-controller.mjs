@@ -27,6 +27,7 @@ for(const file of ['wheel-panel.js','calendar.js','period-panel.js']){
 }
 const timeSource=fs.readFileSync(path.join(root,'src/components/time-panel.js'),'utf8');
 assert.ok(/FocusController\.create\s*\(/.test(timeSource),'TimePanel must own its canonical real-focus host through FocusController.');
+assert.ok(/var focusController\s*=\s*null/.test(timeSource),'TimePanel must declare its FocusController runtime owner before mount.');
 assert.ok(/activeRegion:\s*'column'/.test(timeSource),'TimePanel FocusController must declare the canonical column focus region.');
 assert.ok(/wheel\.bindVirtualFocus\(focusController\.virtualFocus, true\)/.test(timeSource),'TimePanel must host WheelPanel virtual focus on the TimePanel real-focus owner.');
 assert.ok(/focus: function \(\) \{ return focusController \? focusController\.focus\(\) : false; \}/.test(timeSource),'TimePanel public focus must target its canonical root.');
