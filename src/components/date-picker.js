@@ -1424,7 +1424,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var destroyReason = reason || 'date-picker-destroy';
     // Finish the outer popup/control lifecycle while composed state owners are
     // still readable by beforeClose/onOpenChange callbacks. Child panels and
-    // StateController is released only after PickerField has completed teardown.
+    // ValueController is released only after PickerField has completed teardown.
     if (tagNavigation) { tagNavigation.destroy(); tagNavigation = null; }
     if (field) field.destroy(destroyReason);
     if (timePanel) timePanel.destroy(destroyReason);
