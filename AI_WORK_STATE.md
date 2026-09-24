@@ -11,21 +11,21 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `6bb926b93c4f0f16dae042cc41f8426bf77d4733` (PR #53 merge)
-- Current branch: `main`
+- Current branch: `refactor/phase-c-table-hybrid-edit-20260924`
 - Open PRs at this checkpoint: none
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
 - Latest green Controller PR CI: #335 / `35962474270` (PR #53)
 - Latest green main CI + Pages: #336 / `35962763162`
-- Controller migration implementation progress: 70%
+- Controller migration implementation progress: 71%
 - Current Phase: Phase C
 - Current Task: `PHASE-C-003`
 
 ## CURRENT
 
 ### PHASE-C-003 — Table Hybrid Edit focus lease
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 5%
 
 Why this is current:
 - PHASE-C-002 is merged and green through PR #53 and main #336.
@@ -48,10 +48,12 @@ Scope:
 - author explicit Table ComponentProfile focus/interaction ownership;
 - do not migrate Table selection into SelectionController yet; that belongs to Phase D.
 
+Current branch: `refactor/phase-c-table-hybrid-edit-20260924`
+
 Next exact step:
-1. create a fresh PHASE-C-003 branch from current main;
-2. migrate Table keyboard owner/domains into FocusController;
-3. connect enter/finalize/cancel edit paths to FocusController edit lease without changing edit transaction semantics;
+1. migrate Table root keyboard owner into FocusController and preserve the existing keymap;
+2. bind cells/header virtual domains through FocusController canonical binding;
+3. connect Hybrid Edit begin/finalize/cancel to FocusController edit lease without changing editTransaction semantics;
 4. add structural + browser lease/native-edit/readonly-disabled regressions;
 5. run full PR release CI, merge only green, then verify main CI + Pages and close Phase C.
 
