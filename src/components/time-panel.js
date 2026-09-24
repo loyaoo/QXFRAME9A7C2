@@ -198,6 +198,7 @@ function create(options) {
       onItemHover: handleItemHover,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true,
       onChange: function (next, detail) {
         if (destroyed || !capabilityController.can('select')) return;
         var previous = TimeUnit.clone(value);
@@ -244,7 +245,8 @@ function create(options) {
       renderItem: renderWheelItem,
       onItemHover: handleItemHover,
       disabled: opts.disabled === true,
-      readOnly: opts.readOnly === true
+      readOnly: opts.readOnly === true,
+      loading: opts.loading === true || opts.busy === true
     });
     wheel.refreshVisible(reason || 'time-panel-refresh');
     syncClass();
