@@ -16,7 +16,7 @@ import { Renderer } from '../core/renderer.js';
 import { TokenInput } from '../core/tokenInput.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { InteractionController } from '../core/interactionController.js';
-import { Selection } from '../core/selection.js';
+import { SelectionController } from '../core/selectionController.js';
 import { StateController } from '../core/stateController.js';
 import { FieldComponent } from './field.js';
 import { Scroll } from './scroll.js';
@@ -278,15 +278,20 @@ function setupTags(instance) {
     return true;
   }
     
-  var selection = Selection.create({
-    multiple: opts.multiple !== false,
-    values: selectionValue(),
-    onChange: function (values, detail) {
-      if (!syncingItems) render('selection');
-      emitSelection(values, detail);
+  var selectionController = SelectionController.create({
+    channels: {
+      selected: {
+        multiple: opts.multiple !== false,
+        values: selectionValue(),
+        onChange: function (values, detail) {
+          if (!syncingItems) render('selection');
+          emitSelection(values, detail);
+        }
+      }
     }
   });
-  scope.add(function () { selection.destroy(); });
+  var selection = selectionController.selected;
+  scope.add(function () { if (selectionController) selectionController.destroy(); selectionController = null; selection = null; });
     
   function pruneSelection(meta) {
     var allowed = Object.create(null);
@@ -331,6 +336,7 @@ function setupTags(instance) {
       if (Utils.isFunction(opts.onClose)) opts.onClose(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
     },
     onTagsChange: function (_tags, detail) {
+      if (selectionController) selectionController.advanceDataRevision('selected');
       syncingItems = true;
       pruneSelection({ silent: detail && detail.silent, reason: 'items-prune', source: detail && detail.source || 'items' });
       syncingItems = false;
@@ -1287,6 +1293,7 @@ function setupTags(instance) {
   }
   function syncSilentTokenMutation(meta, reason) {
     if (!(meta && meta.silent === true)) return false;
+    if (selectionController) selectionController.advanceDataRevision('selected');
     var live = Object.create(null);
     tokenInput.getState().tags.forEach(function (tag) {
       live[tag.key] = true;
@@ -1376,6 +1383,7 @@ function setupTags(instance) {
       creatable: opts.creatable !== false
     });
     if (own(next, 'items')) {
+      if (selectionController) selectionController.advanceDataRevision('selected');
       rebuildMetadata(itemList);
       syncingItems = true;
       tokenInput.setTags(itemList.map(itemCore), { silent:true, reason:'options-items', source:'options' });
@@ -1586,7 +1594,7 @@ function setupTags(instance) {
     getInputElement:function(){return opts.editable&&(opts.hosted===true||adding)?input:null;},
     getAddTriggerElement:function(){return opts.editable&&opts.hosted!==true&&!adding?addTrigger:null;},
     getOverflowElement:function(){return summary;}, getFormField:function(){return formBridge?formBridge.getFormField():null;},
-    getTokenInput:function(){return tokenInput;}, getSelection:function(){return selection;},
+    getTokenInput:function(){return tokenInput;}, getSelection:function(){return selection;}, getSelectionController:function(){return selectionController;},
     getKeyboardNavigation:function(){return keyboard;}, getKeyboardRegion:function(){return focusController&&focusController.getKeyboardRegion?focusController.getKeyboardRegion():null;}, getFocusController:function(){return focusController;}, getInteractionController:function(){return interactionController;}, getCapabilityController:function(){return capabilityController;},
     getVirtualTagElement:getVirtualTagElement, moveVirtualTag:moveVirtualTag,
     reconcileVirtualTagKey:reconcileVirtualTagKey, ensureVirtualTagVisible:ensureVirtualTagVisible,
@@ -1715,7 +1723,8 @@ export class Tags extends FieldComponent {
     focus:Object.freeze({ mode:'virtual-navigation', editLease:'input' }),
     interaction:Object.freeze({ keymap:'tags' }),
     form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController' })
+    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController/StateController binding' }),
+    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController' })
   });
   static options = TAGS_DEFAULTS;
   static contract = ComponentContracts.get('Tags');
@@ -1798,6 +1807,7 @@ export class Tags extends FieldComponent {
   getFocusController(){return recordForTags(this).getFocusController();}
   getInteractionController(){return recordForTags(this).getInteractionController();}
   getCapabilityController(){return recordForTags(this).getCapabilityController();}
+  getSelectionController(){return recordForTags(this).getSelectionController();}
   getVirtualTagElement(key){return recordForTags(this).getVirtualTagElement(key);}
   moveVirtualTag(key,step){return recordForTags(this).moveVirtualTag(key,step);}
   reconcileVirtualTagKey(key){return recordForTags(this).reconcileVirtualTagKey(key);}
