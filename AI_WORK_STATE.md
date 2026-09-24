@@ -10,56 +10,52 @@
 - Last checkpoint date: 2026-09-24
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `a3a8bb87c538741568266d38ee68a540edab99a2` (PR #66 merge)
-- Current branch: `refactor/phase-e-modal-drawer-20260924`
-- Open PRs at this checkpoint: pending PHASE-E-003 Modal/Drawer PR
+- Last code-affecting main commit: `7a03e956ed227170418906614294d27964286a33` (PR #67 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + current task branch; stale/superseded historical branches remain removed
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`
-- Latest green Controller PR CI: #376 / `35994260669` (PR #66)
-- Latest green main CI + Pages: #377 / `35994605514`
+- Latest green Controller PR CI: #378 / `35995208862` (PR #67)
+- Latest green main CI + Pages: #379 / `35995590673`
 - Controller migration implementation progress: 99%
 - Current Phase: Phase E — Overlay + Motion
-- Current Task: `PHASE-E-003`
+- Current Task: `PHASE-E-004`
 
 ## CURRENT
 
-### PHASE-E-003 — Modal/Drawer physical Overlay + multi-motion migration
+### PHASE-E-004 — Remaining component OverlayController consumers
 Status: IN_PROGRESS
-Task progress: 90%
+Task progress: 80%
 
 Why this is current:
-- PHASE-E-002 popup facade propagation is merged and green through PR #66 / CI #376 and main CI + Pages #377.
-- Popup/PopupField Trigger families now expose canonical OverlayController/MotionController identities without moving logical open/value truth.
-- OverlayComponent now separates the legacy Modal/Drawer family logical adapter from the physical resource-controller accessor.
-- Modal and Drawer are the next direct OverlayRuntime consumers and each own two Transition surfaces (mask + dialog/panel), so they are the first real multi-motion overlay family migration.
-- the implementation is already sandbox-verified; remaining work is exact-head GitHub CI and main acceptance.
+- PHASE-E-003 Modal/Drawer physical Overlay + multi-motion migration is merged and green through PR #67 / CI #378 and main CI + Pages #379.
+- after Modal/Drawer, the remaining public components that still directly import/create OverlayRuntime are Image preview, Loading and Upload document preview.
+- Image and Loading already use Transition and therefore already have MotionController-backed presence channels; Upload media preview delegates to Image while document preview intentionally has no transition.
+- low-level OverlayRuntime remains valid inside OverlayController and runtime capability exposure; this pack removes direct component bypasses, not the canonical runtime itself.
 
 Frozen impact map:
-- Modal/Drawer logical `opened` state and family open/close transaction remain in their existing family controller; OverlayController owns only physical overlay resources.
-- callback payload field `overlayRuntime` remains the raw OverlayRuntime object for compatibility even after internal creation moves through OverlayController.
-- `getOverlayResourceController()` returns the real OverlayController; `getOverlayRuntime()` returns its underlying runtime.
-- mask and dialog/panel Transition instances remain distinct visual channels but each exposes its MotionController; no aggregate second generation is introduced.
-- close keeps overlay resource active through both leave motions and deactivates only after both settle.
-- rapid close → reopen must invalidate stale leave completion so the reopened layer/isolation/scroll-lock lease cannot be released.
-- Phase C focus/interaction and Phase D selection are unchanged.
+- Image preview creates OverlayController instead of OverlayRuntime, preserves raw `getPreviewOverlayRuntime()`, and adds `getPreviewOverlayController()` plus dual `getPreviewMotionControllers()` for mask/content.
+- Image.createPreview facade forwards the same controller identities.
+- Loading creates OverlayController, preserves raw `getOverlayRuntime()`, and exposes `getOverlayController()` plus its Transition-backed MotionController.
+- Upload document/PDF fallback creates OverlayController; media preview continues delegating to Image preview.
+- Upload preserves raw `getPreviewOverlayRuntime()`, adds `getPreviewOverlayController()`, and forwards Image motion controllers only for media preview; document preview must not invent a synthetic MotionController.
+- close/destroy semantics stay unchanged: presence-owning components release overlay resources only after leave; Upload document fallback remains immediate because it has no motion.
+- Open/value/file lifecycle ownership is unchanged.
 
 Implemented in sandbox:
-- Modal/Drawer import and create OverlayController instead of OverlayRuntime directly.
-- OverlayComponent forwards `getMotionControllers()` from the family adapter.
-- Modal family adapter exposes resource controller + raw runtime compatibility + mask/dialog MotionControllers.
-- Drawer family adapter exposes resource controller + raw runtime compatibility + mask/panel MotionControllers.
-- callback payloads preserve the old raw `overlayRuntime` identity.
-- dedicated Chromium gate verifies resource/controller identity, logical-open/resource separation, leave lease lifetime, rapid reopen stale-completion safety and final resource release.
-- updated PHASE-E-002 verifier accepts the now-migrated Modal/Drawer resource controller identities.
-- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, overlay family, platform, modern architecture (181 source files / 40 components / 0 legacy violations), component-base and 40 component contracts.
+- all three component imports/creates are migrated from OverlayRuntime to OverlayController.
+- compatibility raw-runtime getters return `controller.getRuntime()`.
+- controller/motion getters are propagated through Image.createPreview and Upload media preview.
+- dedicated Chromium gate verifies Image dual motion + delayed resource release, Loading motion + delayed resource release, and Upload document resource identity/cleanup.
+- adjacent sandbox gates pass: source-ESM browser (180 modules), high-risk browser, platform, component-base and 40 component contracts.
 
 Next exact step:
-1. open/run the PHASE-E-003 Modal/Drawer PR from the audited seven-file branch;
-2. fix only exact-head Completion/release/browser failures without moving logical open into OverlayController or collapsing mask + surface motion into one generation;
-3. merge only green and verify main release + Pages;
-4. checkpoint PHASE-E-003 as DONE;
-5. continue Phase E with remaining direct OverlayRuntime consumers (Image/Loading/Upload/runtime adapter), then Collapse/Tabs/Dropdown motion closeout.
+1. create PHASE-E-004 branch from green main #379;
+2. sync Image/Loading/Upload + dedicated verifier + package gate + checkpoint;
+3. run exact-head Completion/release/browser/package CI and fix only real failures;
+4. merge only green and verify main + Pages;
+5. audit remaining direct OverlayRuntime imports to ensure only OverlayController/runtime low-level bindings remain, then continue PHASE-E-005 Motion closeout.
 
 ## Current authority snapshot — after Phase A
 
@@ -90,6 +86,21 @@ These are current QA targets for later Controller/family migration. They are not
 - Collapse rapid open/close reversal still needs autosize Motion-level verification/fix rather than a component-local timer patch.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-E-003 — Modal/Drawer physical Overlay + multi-motion migration
+Status: DONE
+Evidence:
+- PR #67 merged
+- merge commit `7a03e956ed227170418906614294d27964286a33`
+- PR CI #378 / `35995208862`: success
+- main CI + Pages #379 / `35995590673`: success
+Outcome:
+- Modal/Drawer no longer import or create OverlayRuntime directly; physical resources enter through OverlayController.
+- logical family open/close state remains separate from physical overlay state.
+- raw OverlayRuntime callback/getter compatibility is preserved through the controller facade.
+- mask + dialog/panel transitions remain distinct MotionController-backed visual channels.
+- Chromium verifies leave resource lifetime, rapid close→reopen stale-completion safety and final lease release.
+- required `verify:phase-e-modal-drawer` passed.
 
 ### PHASE-E-002 — Popup facade propagation + overlay naming closeout
 Status: DONE
