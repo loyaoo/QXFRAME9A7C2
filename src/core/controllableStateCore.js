@@ -44,8 +44,7 @@ function create(options) {
     var requestId = options && options.requestId !== undefined ? String(options.requestId) : '';
     revision += 1;
     if (requestId) pending.delete(requestId);
-    Array.from(pending.keys()).forEach(function (id) {
-      var record = pending.get(id);
+    pending.forEach(function (record, id) {
       if (record && record.baseRevision < revision) pending.delete(id);
     });
     return OperationResult.applied(action, { requestId: requestId || undefined, revision: revision });
@@ -83,6 +82,10 @@ function create(options) {
     return OperationResult.applied(action, { reason: 'ownership-transition', revision: revision });
   }
 
+  function isControlled() { return ownership === 'external'; }
+  function getOwnership() { return ownership; }
+  function getRevision() { return revision; }
+
   function getState() {
     return Object.freeze({
       ownership: ownership,
@@ -108,6 +111,9 @@ function create(options) {
     acknowledge,
     reject,
     transitionOwnership,
+    isControlled,
+    getOwnership,
+    getRevision,
     getState,
     destroy
   });
