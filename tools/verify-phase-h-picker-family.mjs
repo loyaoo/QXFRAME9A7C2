@@ -32,6 +32,11 @@ for(const Type of [DatePicker,TimePicker,ColorPicker,WheelPicker]){
 const pickerSource=read('src/components/picker.js');
 const popupFieldSource=read('src/components/popup-field.js');
 const pickerFieldSource=read('src/components/picker-field.js');
+assert.match(pickerFieldSource,/var triggerSession = null, control = null, focusController = null, keyboard = null/,'PickerField must declare one shared FocusController variable before assigning it.');
+assert.equal((pickerFieldSource.match(/FocusController\.create\s*\(/g)||[]).length,1,'PickerField must create exactly one shared FocusController.');
+assert.match(pickerFieldSource,/keyboard = focusController\.keyboard/,'PickerField keyboard navigation must come from the shared FocusController.');
+assert.match(pickerFieldSource,/getFocusController:\s*function \(\) \{ return focusController; \}/,'PickerField must expose the same shared FocusController.');
+
 assert.match(pickerSource,/SelectionController\.create\s*\(/,'PickerComponent must create the shared semantic SelectionController.');
 assert.match(pickerSource,/syncPickerSelection\s*\(/,'PickerComponent must expose one semantic selection projection path.');
 assert.match(pickerSource,/bindFeedbackControl\s*\(/,'PickerComponent must bind local feedback once through FieldComponent.');
