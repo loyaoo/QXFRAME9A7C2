@@ -359,9 +359,8 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
       if (hasOwn(next, 'controlled')) valueState.setControlled(opts.controlled === true);
       if (hasOwn(next, 'value')) {
         valueState.syncExternal(nextCanonical, { silent: true, reason: 'options-value', source: 'options' });
-      } else if (currentValue() !== null) {
-        if (valueState.controlled) valueState.requestChange(nextCanonical, { silent: true, reason: 'options-renormalize', source: 'options' });
-        else valueState.setValue(nextCanonical, { silent: true, reason: 'options-renormalize', source: 'options' });
+      } else if (currentValue() !== null && !valueState.controlled) {
+        valueState.setValue(nextCanonical, { silent: true, reason: 'options-renormalize', source: 'options' });
       }
       inputValue = formatValue(currentValue(), false);
       return api;
