@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "minimumProfiled": 27,
+  "minimumProfiled": 29,
   "controllerByCapability": {
     "value": "ValueController",
     "focus": "FocusController",
@@ -352,5 +352,5 @@
     "FormBridge",
     "Config"
   ],
-  "minimumComplete": 22
+  "minimumComplete": 24
 }
