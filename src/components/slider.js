@@ -1,4 +1,4 @@
-import { FieldComponent, fieldHooks } from './field.js';
+import { FieldComponent, fieldHooks, createSimpleFieldProfile } from './field.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts, validateContractOptions } from '../core/componentContracts.js';
@@ -129,7 +129,7 @@ function createRuntime(instance, prepared) {
         return String(value);
     }
     function tooltipPlacement() { if (opts.tooltip && opts.tooltip.placement) return String(opts.tooltip.placement); if (opts.vertical) return opts.reverse ? 'right' : 'left'; return 'top'; }
-    const interactive = index => !destroyed && opts.disabled !== true && opts.readOnly !== true && (index === undefined || !handleDisabled(index));
+    const interactive = index => { const capability=instance.getCapabilityController();return !destroyed && (!capability || capability.can('edit')) && (index === undefined || !handleDisabled(index)); };
     const sameValues = (a,b) => a.length === b.length && a.every((value,index) => value === b[index]);
     function emit(name, reason, event, sourceValues) {
         if (typeof opts[name] !== 'function') return;
@@ -166,7 +166,7 @@ function createRuntime(instance, prepared) {
         root.appendChild(rail);if(opts.included!==false)root.appendChild(track);root.appendChild(stepsHolder);root.appendChild(marksHolder);
         if(opts.dots===true&&opts.step!==null){const dotCount=Math.floor((opts.max-opts.min)/opts.step);if(dotCount<=500)for(let dotIndex=0;dotIndex<=dotCount;dotIndex+=1){const dotValue=Number((opts.min+dotIndex*opts.step).toFixed(precision()));if(dotValue>opts.max)break;const dot=doc.createElement('span');dot.className='qxframe9a7c2-slider-dot';dot.setAttribute('data-slider-dot',String(dotValue));const dotPoint=visualPercent(dotValue);if(opts.vertical)dot.style.bottom=dotPoint+'%';else dot.style.left=dotPoint+'%';stepsHolder.appendChild(dot);}}
         markEntries().forEach(entry=>{const mark=doc.createElement('button');mark.type='button';mark.tabIndex=-1;mark.className='qxframe9a7c2-slider-mark';mark.setAttribute('data-slider-mark',String(entry.value));const point=visualPercent(entry.value);if(opts.vertical)mark.style.bottom=point+'%';else mark.style.left=point+'%';if(entry.content&&typeof entry.content==='object'&&!entry.content.nodeType&&entry.content.style)Object.keys(entry.content.style).forEach(name=>{if(Utils.safeOwnKey(name))mark.style[name]=entry.content.style[name];});renderMarkContent(mark,entry.content,entry.value);projectionScope.add(DOM.listen(mark,'click',event=>{if(!interactive())return;if(event.preventDefault)event.preventDefault();setNearestValue(entry.value,{user:true,reason:'mark',originalEvent:event,final:true});}));marksHolder.appendChild(mark);});
-        const handleCount=rangeMode()?values.length:1;for(let index=0;index<handleCount;index+=1){const handle=doc.createElement('button');handle.type='button';handle.className='qxframe9a7c2-slider-handle';handle.setAttribute('data-slider-handle',String(index));const initialTip=tooltipText(values[index],index);if(initialTip!==''){const tip=doc.createElement('span');tip.className='qxframe9a7c2-slider-tooltip is-'+tooltipPlacement();tip.textContent=initialTip;if(opts.tooltip&&opts.tooltip.open===true)tip.classList.add('is-always-open');handle.appendChild(tip);}projectionScope.add(DOM.listen(handle,'focus',()=>{activeHandle=index;updateProjection();}));projectionScope.add(DOM.listen(handle,'keydown',event=>handleKeydown(index,event)));projectionScope.add(DOM.listen(handle,'keyup',event=>handleKeyup(index,event)));projectionScope.add(DOM.listen(handle,'blur',event=>{if(keyboardSession&&keyboardSession.index===index)finalizeKeyboardSession(event,'keyboard-blur');}));handles.push(handle);root.appendChild(handle);}
+        const handleCount=rangeMode()?values.length:1;for(let index=0;index<handleCount;index+=1){const handle=doc.createElement('button');handle.type='button';handle.className='qxframe9a7c2-slider-handle';handle.setAttribute('data-slider-handle',String(index));const initialTip=tooltipText(values[index],index);if(initialTip!==''){const tip=doc.createElement('span');tip.className='qxframe9a7c2-slider-tooltip is-'+tooltipPlacement();tip.textContent=initialTip;if(opts.tooltip&&opts.tooltip.open===true)tip.classList.add('is-always-open');handle.appendChild(tip);}projectionScope.add(DOM.listen(handle,'focus',()=>{activeHandle=index;updateProjection();}));projectionScope.add(DOM.listen(handle,'keyup',event=>handleKeyup(index,event)));projectionScope.add(DOM.listen(handle,'blur',event=>{if(keyboardSession&&keyboardSession.index===index)finalizeKeyboardSession(event,'keyboard-blur');}));handles.push(handle);root.appendChild(handle);}
         projectionScope.add(DOM.listen(rail,'dblclick',event=>{if(!interactive()||!editableRange())return;if(event.preventDefault)event.preventDefault();addHandle(valueFromPointer(event),{user:true,reason:'editable-add',originalEvent:event,final:true});})); updateProjection();
     }
     function setValues(next, config) {
@@ -196,6 +196,28 @@ function createRuntime(instance, prepared) {
     values=valueState.value;instance.setFieldValue(externalValue(),{force:true,silent:true,sync:true,source:'init',reason:'slider-init'});
     const initialValue=externalValue();
     formBridge=Control.createFormFieldBridge({root,target:opts.container,formField:opts.formField,document:doc,moveIntoRoot:false,projectLayout:Control.projectFormFieldLayout,name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,value:externalValue(),serializeValue:opts.serializeValue,getValue:externalValue,onReset:()=>setValues(initialValue,{silent:true,source:'form',reason:'reset'})});
+    const capability=instance.bindCapabilityController({getCapabilities:()=>({focusable:true,tabbable:true,activatable:true,editable:true,draggable:true})});
+    instance.bindFocusController(root,{manageTabIndex:false,navigation:{handlers:{}}});
+    instance.bindInteractionController(root,{
+        id:instance.id+'-slider-interaction',capabilityController:capability,
+        resolveAction:event=>{
+            if(opts.keyboard===false)return null;
+            const handle=event.target&&event.target.closest?event.target.closest('.qxframe9a7c2-slider-handle'):null;
+            if(!handle||!root.contains(handle))return null;
+            if(event.key==='Escape'&&keyboardSession)return 'SLIDER_KEY';
+            if(editableRange()&&(event.key==='Delete'||event.key==='Backspace'))return 'SLIDER_KEY';
+            if(directionalKey(event.key))return 'SLIDER_KEY';
+            return null;
+        },
+        operationOf:()=> 'edit',
+        onAction:(_action,context)=>{
+            const event=context.originalEvent,handle=event&&event.target&&event.target.closest?event.target.closest('.qxframe9a7c2-slider-handle'):null;
+            const index=handle?Number(handle.getAttribute('data-slider-handle')):-1;
+            if(!Number.isInteger(index)||index<0||index>=handles.length)return 'pass';
+            handleKeydown(index,event);return 'handled';
+        }
+    });
+    instance.bindFeedbackControl({updateOptions:patch=>{root.classList.toggle('is-busy',patch.busy===true);root.classList.toggle('is-error',patch.status==='error');root.classList.toggle('is-warning',patch.status==='warning');}});
 
     pointerSession=PointerSession.create({target:root,document:doc,threshold:0,getState:()=>({disabled:opts.disabled===true,readOnly:opts.readOnly===true}),canStart:detail=>{const event=detail.originalEvent;if(!event||!interactive())return false;const target=event.target,handle=target&&target.closest?target.closest('.qxframe9a7c2-slider-handle'):null;if(handle&&root.contains(handle)){const handleIndex=Number(handle.getAttribute('data-slider-handle'));if(!interactive(handleIndex))return false;if(event.preventDefault)event.preventDefault();activeHandle=handleIndex;beginDrag(event,'handle');return true;}if(track&&(target===track||track.contains(target))){if(event.preventDefault)event.preventDefault();if(draggableTrack()&&rangeMode()&&values.every((_,index)=>interactive(index)))beginDrag(event,'track');else{const trackValue=valueFromPointer(event),trackNearest=nearestHandleIndex(trackValue);if(trackNearest<0)return false;activeHandle=trackNearest;beginDrag(event,'handle');setNearestValue(trackValue,{user:true,reason:'track',originalEvent:event});}return true;}if(rail&&(target===rail||rail.contains(target))){if(event.preventDefault)event.preventDefault();const railValue=valueFromPointer(event),railNearest=nearestHandleIndex(railValue);if(railNearest<0)return false;activeHandle=railNearest;beginDrag(event,'handle');setNearestValue(railValue,{user:true,reason:'rail',originalEvent:event});return true;}return false;},onMove:detail=>{if(!dragging)return;const event=detail.originalEvent;if(dragMode==='track'&&rangeMode())moveRangeTrack(event);else setNearestValue(valueFromPointer(event),{user:true,reason:'drag',originalEvent:event});},onEnd:detail=>endDrag(detail.originalEvent),onCancel:detail=>endDrag(detail.originalEvent)});
 
@@ -214,6 +236,7 @@ function createRuntime(instance, prepared) {
 }
 
 export class Slider extends FieldComponent {
+    static profile = createSimpleFieldProfile('Slider');
     static options = Object.freeze({ min:0,max:100,step:1,range:false,included:true,vertical:false,reverse:false,keyboard:true,disabled:false,readOnly:false,allowCross:true,dots:false,marks:null,tooltip:{},size:'md',required:false });
     static immutableOptions = Object.freeze(['target','container','formField']);
     static optionNormalizers = Object.freeze({
