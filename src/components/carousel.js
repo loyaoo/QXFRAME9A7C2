@@ -181,6 +181,7 @@ export class Carousel extends Component {
             })
         });
         focusController = FocusController.create({ root, document:doc, manageTabIndex:false, activeRegion:'carousel' });
+        focusController.setDisabled(opts.disabled === true || opts.keyboard === false);
         interactionController = InteractionController.create();
         scope.add(() => valueBinding.destroy());
         scope.add(() => capabilityController.destroy());
@@ -340,8 +341,7 @@ export class Carousel extends Component {
             return true;
         }
         function updatePosition(animate, meta) {
-            if (!count()) current = 0;
-            else current = normalizeIndex(current);
+            syncCurrent(count() ? normalizeIndex(current) : 0, { source:'carousel', reason:'position-normalize' }, false);
             const duration = animate === false || !motionEnabled() ? 0 : Math.max(0, Number(opts.duration || 0));
             track.style.transitionDuration = duration + 'ms';
             track.style.transitionTimingFunction = String(opts.easing || 'ease');
