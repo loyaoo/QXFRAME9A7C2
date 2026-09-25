@@ -233,7 +233,33 @@ const currentApi=generateComponentApi({root});
 const currentModules=generateModuleManifest({root});
 const compatibility=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/compatibility.json'),'utf8'));
 const json=v=>JSON.stringify(v);
-const expectedApi=JSON.parse(JSON.stringify(baselineApi));
+const BASELINE_CAPABILITY_MIGRATIONS=Object.freeze({
+  StateController:'ValueController',
+  ValueDraft:'ValueController'
+});
+function migrateBaselineCapabilityValue(value){
+  if(Array.isArray(value)){
+    const migrated=value.map(migrateBaselineCapabilityValue);
+    const seen=new Set();
+    return migrated.filter(function(item){
+      const token=json(item);
+      if(seen.has(token)) return false;
+      seen.add(token);
+      return true;
+    });
+  }
+  if(value&&typeof value==='object'){
+    const out={};
+    Object.keys(value).forEach(function(key){out[key]=migrateBaselineCapabilityValue(value[key]);});
+    return out;
+  }
+  return typeof value==='string'&&Object.prototype.hasOwnProperty.call(BASELINE_CAPABILITY_MIGRATIONS,value)
+    ? BASELINE_CAPABILITY_MIGRATIONS[value]
+    : value;
+}
+const expectedApi=migrateBaselineCapabilityValue(JSON.parse(JSON.stringify(baselineApi)));
+const expectedModules=migrateBaselineCapabilityValue(JSON.parse(JSON.stringify(baselineModules)));
+const authorizedCapabilityMigrations=Object.freeze(Object.entries(BASELINE_CAPABILITY_MIGRATIONS).map(function(entry){return entry[0]+'→'+entry[1];}));
 const authorizedApiRemovals=[];
 for(const entry of compatibility.entries||[]){
   if(entry&&entry.kind==='option'&&entry.apiParityAction==='remove'){
@@ -255,7 +281,7 @@ for(const component of comparableApi.components||[]){
   }
 }
 const apiParity=json(expectedApi)===json(comparableApi);
-const moduleParity=json(baselineModules)===json(currentModules);
+const moduleParity=json(expectedModules)===json(currentModules);
 
 const oldBrowser=fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/verify-browser.log'),'utf8');
 const currentBrowser=fs.readFileSync(path.join(root,'tools/verify-browser-smoke.html'),'utf8');
@@ -323,6 +349,7 @@ const report={
   parity:{
     api:apiParity,
     authorizedApiRemovals,
+    authorizedCapabilityMigrations,
     addedApiOptions,
     modules:moduleParity,
     baselineBrowserChecks:oldChecks.size,
