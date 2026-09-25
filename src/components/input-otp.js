@@ -160,7 +160,7 @@ export class InputOTP extends FieldComponent {
         if (control.onFormReset) control.onFormReset(() => {
             if (!valueState.controlled) valueState.setValue(initialValue, { silent:true, source:'form', reason:'reset' });
             const canonical = valueState.value;
-            control.updateOptions({ value:canonical, committedValue:canonical });
+            control.updateOptions(valueState.controlled ? { value:canonical, committedValue:canonical } : { value:canonical });
             this.setFieldValue(canonical, { silent:true, force:true, sync:true, source:'form', reason:'reset' });
             this.#syncFocusPolicy();
         });
