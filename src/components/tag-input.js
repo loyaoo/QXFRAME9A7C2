@@ -47,7 +47,7 @@ export class TagInput extends FieldComponent {
         if(!this.options.container&&!this.options.formField)throw new TypeError('[QXFRAME9A7C2] TagInput requires target/container or formField.');
         const valueState=this.own(StateController.createValueBinding({value:copyValue(this.options.value),controlled:valueControlled,normalizeValue:copyValue,copyValue:copyValue,equals:StateController.deepEquals}));
         const record={fieldInit,valueState,control:null,keyboard:null,tagNavigation:null,focusController:null,interactionController:null,capabilityController:null,inputValue:this.options.inputValue==null?'':String(this.options.inputValue),rendered:false};state.set(this,record);
-        this.bindValueController(valueState,{owned:false,syncExternal:false});
+        this.bindValueController(valueState.getValueController(),{owned:false,syncExternal:false});
     }
 
     #controlOptions(includeValue){
