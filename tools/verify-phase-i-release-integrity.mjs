@@ -39,8 +39,8 @@ const notHAccepted=rows.filter(line=>!/\| H accepted; I (?:pending|accepted) \|$
 assert.deepEqual(notHAccepted,[],'Every public component must remain H accepted while Phase I acceptance advances from pending to accepted.');
 assert.match(acceptance,/40\/40/,'Acceptance ledger must state the 40/40 Phase H public-component result.');
 
-assert.match(workState,/- Current Phase: Phase I — /,'AI_WORK_STATE must remain in the Phase I release/audit lifecycle until final acceptance is recorded.');
-assert.match(workState,/- Current Task: `[^`]+`/,'AI_WORK_STATE must declare the current Phase I task without freezing a historical checkpoint id.');
+assert.match(workState,/- Current Phase: [^\\r\\n]+/,'AI_WORK_STATE must declare the current lifecycle phase.');\nassert.match(workState,/### PHASE-I-001[^\\n]*[\\s\\S]*?Status: DONE/,'AI_WORK_STATE must preserve evidence that Phase I release-integrity completed before the lifecycle advances.');
+assert.match(workState,/- Current Task: `[^`]+`/,'AI_WORK_STATE must declare the current task without freezing a historical checkpoint id.');
 const current=workState.split('## CURRENT')[1]?.split('## Current authority snapshot')[0]||'';
 assert.doesNotMatch(current,/### PHASE-H-027|Table is the last|pending PHASE-H-027/,'CURRENT checkpoint must not retain stale final-Table Phase H state.');
 assert.doesNotMatch(workState,/DatePicker\/TimePicker preset selection must respect `needConfirm`/,'Superseded needConfirm issue must not remain active after picker-family browser acceptance.');
@@ -62,6 +62,6 @@ console.log(JSON.stringify({
   ok:true,
   phaseHAccepted:40,
   componentProfiles:40,
-  phaseI:'release-integrity-handoff',
-  broadAstraAudit:'pending'
+  phaseI:'release-integrity-complete',
+  broadAstraAudit:'state-driven'
 },null,2));
