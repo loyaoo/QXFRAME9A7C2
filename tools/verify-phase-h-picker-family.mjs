@@ -48,6 +48,8 @@ assert.match(popupFieldSource,/getMotionController\s*\(/,'PopupFieldComponent mu
 assert.match(pickerFieldSource,/FocusController\.create\s*\(/,'PickerField keyboard ownership must enter FocusController.');
 assert.doesNotMatch(pickerFieldSource,/keyboard\s*=\s*KeyboardNavigation\.create\s*\(/,'PickerField must not retain a direct parallel KeyboardNavigation owner.');
 assert.match(pickerFieldSource,/getFocusController:\s*function/,'PickerField must expose its canonical FocusController.');
+assert.match(pickerFieldSource,/if \(String\(opts\.controlMode \|\| 'input'\) === 'tags'\) return false;/,'PickerField tag-mode drafts must project through tags instead of aggregate text in the token editor.');
+assert.match(pickerFieldSource,/if \(control\.setInputValue\) control\.setInputValue\(text\);/,'PickerField open-session draft text must update Control state instead of only mutating the raw input DOM.');
 assert.match(pickerSource,/bindFormController\s*\(controller,\s*options/,'PickerComponent must adapt FormController through its canonical Control serializer.');
 assert.match(pickerSource,/getSerializedValue/,'PickerComponent FormController binding must reuse Control.getSerializedValue().');
 const fieldSource=read('src/components/field.js');
@@ -62,6 +64,7 @@ const cases=[
 ];
 for(const [name,file,hasSelection,keyPattern] of cases){
   const source=read(file);
+  assert.doesNotMatch(source,/hasDraftValueTarget/,(name+' control display must not suppress the active picker-session draft merely because a separate draft target exists.'));
   assert.equal((source.match(/bindValueController\(draft\)/g)||[]).length,1,name+' must bind exactly one picker-session ValueController into FieldComponent.');
   assert.match(source,/setFieldValue\([^\n]*sync:\s*true/,name+' committed changes must project through FieldComponent without a second Value write.');
   if(hasSelection){

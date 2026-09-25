@@ -51,7 +51,7 @@ var draft = ValueController.create({
   normalizeValue: function (value) { return assertValue(value || [], 'value'); },
   equals: equalValue,
   onValueChange: function (value, detail) { instance.setFieldValue(value, { sync:true, silent:true, source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncSelectionController(value, { source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncField(false, { panelSynced: panelSelectionDepth > 0, commitMeta: { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' } }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), wheelPicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), reason: detail.reason, source: detail.source, wheelPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
-  onDraftChange: function (value, detail) { syncSelectionController(value, { source:detail && detail.source || 'value-draft', reason:detail && detail.reason || 'draft-change' }); syncField(field && field.getState().open && opts.needConfirm === true, { panelSynced: panelSelectionDepth > 0 }); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), wheelPicker: api })); }
+  onDraftChange: function (value, detail) { syncSelectionController(value, { source:detail && detail.source || 'value-draft', reason:detail && detail.reason || 'draft-change' }); syncField(field && field.getState().open, { panelSynced: panelSelectionDepth > 0 }); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), wheelPicker: api })); }
 });
 instance.bindValueController(draft);
 instance.setupPickerSelection({ multiple: true });
@@ -86,11 +86,9 @@ function syncField(useDraft, config) {
   if (!(config && config.panelSynced === true)) {
     panel.setValue((open ? draft.draftValue : draft.value) || [], { silent: true, source: 'field-sync', reason: 'field-sync' });
   }
-  var hasDraftTarget = field.getState().hasDraftValueTarget;
-  var displayValue = hasDraftTarget && projection.channel === 'draft' ? draft.value : value;
-  field.setDisplayValue(displayValue && displayValue.length ? formatDisplay(!hasDraftTarget && projection.channel === 'draft') : '');
+  field.setDisplayValue(value && value.length ? formatDisplay(projection.channel === 'draft') : '');
   field.setDraftDisplayValue(open && draft.dirty && draft.draftValue && draft.draftValue.length ? formatDisplay(true) : '');
-  field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
+  field.setDraftVisual(open && draft.dirty);
   field.setClearVisible(opts.clearable === true && !!(draft.value && draft.value.length));
   field.setCommittedValue(draft.value, config && config.commitMeta || { silent: true, source: 'value-controller', reason: 'projection' });
 }
@@ -115,7 +113,7 @@ var pickerSession = instance.setupPickerSession({
     controller.clearRawInput({ silent:true, source:'popup', reason:'open-raw-input-clear' });
     panel.setValue(controller.draftValue || [], { silent: true, source: 'open', reason: 'open-sync' });
     controller.setDraft(panel.getState().value, { silent: true, source: 'open', reason: 'open-normalize' });
-    syncField(opts.needConfirm === true);
+    syncField(true);
   },
   beforeCommit: function () {
     if (panel && field && field.getState().open) {
@@ -287,7 +285,7 @@ function applyOptions(nextOptions) {
     panel.setValue(normalizedDraft, { silent: true, source: 'options', reason: 'columns-normalize-final' });
   }
   rebuildFooter();
-  syncField(field.getState().open && opts.needConfirm === true);
+  syncField(field.getState().open);
   if (own(next, 'open')) field.setOpen(next.open === true, 'update-options');
   return instance;
 }

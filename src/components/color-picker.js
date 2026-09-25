@@ -206,12 +206,9 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var projection = draft.projection({ open:open, previewControl:true, draftControl:true });
        var value = projection.value;
        var display = fieldDisplay(value);
-       var committedDisplay = fieldDisplay(draft.value);
-       var hasDraftTarget = field.getState().hasDraftValueTarget;
-       var controlDisplay = hasDraftTarget && projection.channel !== 'preview' ? committedDisplay : display;
-       field.setDisplayValue(opts.swatchOnly === true && opts.renderControl !== false && opts.headless !== true ? '' : controlDisplay);
+       field.setDisplayValue(opts.swatchOnly === true && opts.renderControl !== false && opts.headless !== true ? '' : display);
        field.setDraftDisplayValue(open && draft.dirty ? fieldDisplay(draft.draftValue) : '');
-       field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
+       field.setDraftVisual(open && draft.dirty);
        field.setClearVisible(!!draft.value);
        field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
        swatch.style.background = display || 'transparent';
@@ -422,7 +419,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        } else next = color;
        draft.setDraft(next, Utils.assignOwn({ source: 'api', reason: 'alpha' }, meta || {}));
        if (opts.needConfirm !== true) instance.commit(Utils.assignOwn({ source: 'api', reason: 'alpha-commit' }, meta || {}));
-       syncField(opts.needConfirm === true && field.getState().open); return true;
+       syncField(field.getState().open); return true;
      }
      function canonicalizeModelForFormat(value) {
        if (!value) return null;
@@ -441,7 +438,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        draft.setValue(committedAfter, { source: 'format', reason: 'format-value' });
        draft.setDraft(draftAfter, { silent: true, source: 'format', reason: 'format-draft' });
        syncPanelFromModel(draftAfter || committedAfter || seedValue(), 'format-panel');
-       syncField(field.getState().open && opts.needConfirm === true); return api;
+       syncField(field.getState().open); return api;
      }
      function setMode(value, meta) {
        var nextMode = normalizeMode(value);
@@ -457,7 +454,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        syncPanelFromModel(converted, 'mode-sync'); syncField(false); return api;
      }
      function currentGradient(preferDraft) {
-       var value = visualValue(preferDraft === true || (field && field.getState().open && opts.needConfirm === true));
+       var value = visualValue(preferDraft === true || (field && field.getState().open));
        return isGradient(value) ? cloneGradient(value) : seedGradient(value || seedSolid());
      }
      function applyGradient(next, meta) {
@@ -571,7 +568,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
            if (gradientDragSnapshot) {
              draft.setDraft(gradientDragSnapshot, { silent: true, source: 'pointer', reason: 'gradient-stop-drag-cancel' });
              syncPanelFromModel(gradientDragSnapshot, 'gradient-drag-cancel');
-             syncField(opts.needConfirm === true && field.getState().open);
+             syncField(field.getState().open);
              renderGradientEditor(gradientDragSnapshot);
              emitInteractionComplete(draft.draftValue, { source: 'pointer', reason: 'gradient-stop-drag-cancel', originalEvent: detail.originalEvent || null, cancelled: true, rolledBack: true });
            }
@@ -673,7 +670,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (nextMode !== mode) setMode(nextMode, { silent: true, source: 'options' });
        if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled', preserveMode: own(next, 'mode') });
        if (own(next, 'format')) setFormat(opts.format);
-       rebuildFooter(); syncField(field.getState().open && opts.needConfirm === true); renderGradientEditor(visualValue(field.getState().open && opts.needConfirm === true));
+       rebuildFooter(); syncField(field.getState().open); renderGradientEditor(visualValue(field.getState().open));
        if (own(next, 'open')) field.setOpen(next.open === true, 'update-options');
        return api;
      }

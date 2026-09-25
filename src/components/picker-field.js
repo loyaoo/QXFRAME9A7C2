@@ -154,10 +154,17 @@ function create(options) {
   }
   function projectNavigationVisual(value) {
     if (!navigationActive || projectionMode || !control) return false;
+    // Token/tag controls project candidate values through their tag collection. Writing a
+    // formatted aggregate value into the token editor creates a second, incorrect visual
+    // projection (draft tags + summary text) and can overwrite an in-progress editor buffer.
+    if (String(opts.controlMode || 'input') === 'tags') return false;
     var editor = editorElement();
     if (!editor || editor.value === undefined) return false;
     var text = value == null ? '' : String(value);
-    if (String(editor.value || '') !== text) editor.value = text;
+    // Keep Control's internal input projection in sync with the visible navigation draft.
+    // A raw DOM write is transient and can be overwritten by the next Control projection.
+    if (control.setInputValue) control.setInputValue(text);
+    else if (String(editor.value || '') !== text) editor.value = text;
     return true;
   }
   function beginNavigationInteraction() {
