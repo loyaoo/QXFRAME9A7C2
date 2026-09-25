@@ -127,13 +127,14 @@ var selectionRangeScheduler = null;
           controlled: hasOwn(fieldInit.options, 'value'),
           normalizeValue: function (next) { return next === undefined || next === null ? '' : String(next); }
         });
+        instance.bindValueController(valueState);
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function committedValue() { return valueState ? valueState.value : ''; }
         function draftValue() { return valueState ? valueState.draftValue : ''; }
         function writeValue(next, meta, request) {
           if (!valueState) return false;
           var normalized = next === undefined || next === null ? '' : String(next);
-          var previous = draftValue();
+          var previous = draftValue(), previousCommitted = committedValue();
           if (previous === normalized) return false;
           var cfg = Utils.assignOwn({ silent: true, source: 'instance', reason: request ? 'request-change' : 'set-value' }, meta || {});
           if (request === true) {
@@ -141,6 +142,7 @@ var selectionRangeScheduler = null;
             if (valueState.controlled) valueState.requestChange(normalized, cfg);
             else valueState.setValue(normalized, cfg);
           } else valueState.setValue(normalized, cfg);
+          if (committedValue() !== previousCommitted) instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:cfg.source, reason:cfg.reason });
           return true;
         }
         var currentItems = Array.isArray(opts.items) ? opts.items.slice() : [];
@@ -519,7 +521,7 @@ var selectionRangeScheduler = null;
           var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }
           optionList.updateOptions(listOptions);
-          if (hasOwn(next, 'value')) { valueState.setControlled(true); valueState.syncExternal(opts.value, { silent: true, source: 'options', reason: 'options-value', preserveDraft: true }); clearBackfill(); }
+          if (hasOwn(next, 'value')) { valueState.setControlled(true); valueState.syncExternal(opts.value, { silent: true, source: 'options', reason: 'options-value', preserveDraft: true }); instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:'options', reason:'options-value' }); clearBackfill(); }
           else if (triggerSession.getState().open) refreshSuggestions('options'); else applyQuery('options');
           if (opts.disabled === true && triggerSession.getState().open) close('disabled'); syncControl(); if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
           return instance;
@@ -545,7 +547,7 @@ var selectionRangeScheduler = null;
         if (control && control.onFormReset) control.onFormReset(function () { setValue(initialValue, { silent: true, source: 'form', reason: 'reset' }); });
         syncControl();
         instance.bindFocusTarget(input || triggerTarget || root);
-        instance.setFieldValue(committedValue(), { silent:true, force:true });
+        instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:'init', reason:'autocomplete-init' });
         if (opts.open === true) open('initial');
         return Object.freeze({
           root: root,
