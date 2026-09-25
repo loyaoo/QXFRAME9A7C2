@@ -1375,7 +1375,21 @@ function setupMenu(instance) {
     getSubmenuElement: function (key) { return panelByKey.get(String(key)) || panelLevelByKey.get(String(key)) || null; },
     getTrigger: function (key) { return triggerByKey.get(String(key)) || null; },
     getOverflowElement: function () { return overflowButton; }, getOverflowTrigger: function () { return overflowTrigger; },
-    getFocusController: function () { return focusController; }
+    getValueController: function () { return valueController; },
+    getFocusController: function () { return focusController; },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
+    getSelectionController: function () { return selectionController; },
+    getOverlayControllers: function () {
+      var output = [];
+      triggerByKey.forEach(function (trigger) {
+        var controller = trigger && trigger.getOverlayController && trigger.getOverlayController();
+        if (controller && output.indexOf(controller) < 0) output.push(controller);
+      });
+      var overflowController = overflowTrigger && overflowTrigger.getOverlayController && overflowTrigger.getOverlayController();
+      if (overflowController && output.indexOf(overflowController) < 0) output.push(overflowController);
+      return output;
+    }
   };
   menuState.set(instance, record);
   instance.own(destroyRuntime);
@@ -1417,10 +1431,20 @@ function normalizeMenuPatch(instance, nextOptions) {
 export class Menu extends Component {
   static profile = Object.freeze({
     name:'Menu',
+    value:Object.freeze({ mode:'selected-key-set' }),
     focus:Object.freeze({ mode:'virtual-navigation', host:'composite-root' }),
     interaction:Object.freeze({ keymap:'menu' }),
+    capability:Object.freeze({ mode:'menu-activation-policy' }),
     selection:Object.freeze({ mode:'menu-selection' }),
-    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController' })
+    overlay:Object.freeze({ mode:'submenu-trigger-tree' }),
+    ownership:Object.freeze({
+      value:'ValueController',
+      focus:'FocusController',
+      interaction:'InteractionController',
+      capability:'CapabilityController',
+      selection:'SelectionController',
+      overlay:'OverlayController'
+    })
   });
   static options = MENU_DEFAULTS;
   static immutableOptions = Object.freeze(['container','portalContainer']);
@@ -1477,7 +1501,12 @@ export class Menu extends Component {
   getTrigger(key) { return recordForMenu(this).getTrigger(key); }
   getOverflowElement() { return recordForMenu(this).getOverflowElement(); }
   getOverflowTrigger() { return recordForMenu(this).getOverflowTrigger(); }
+  getValueController() { return recordForMenu(this).getValueController(); }
   getFocusController() { return recordForMenu(this).getFocusController(); }
+  getInteractionController() { return recordForMenu(this).getInteractionController(); }
+  getCapabilityController() { return recordForMenu(this).getCapabilityController(); }
+  getSelectionController() { return recordForMenu(this).getSelectionController(); }
+  getOverlayControllers() { return recordForMenu(this).getOverlayControllers(); }
 }
 
 export { createDefaultDOM };
