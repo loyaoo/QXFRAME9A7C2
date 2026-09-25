@@ -75,11 +75,11 @@ export function createPopupFieldTriggerSettings(options = {}, context = {}, over
         flipOnOverflow: opts.flipOnOverflow !== false,
         matchReferenceWidth: opts.matchReferenceWidth === true,
         autoUpdate: opts.autoUpdate !== false,
-        closeOnOutsidePress: true,
-        closeOnFocusOutside: true,
-        closeOnTabExit: false,
-        closeOnEscape: true,
-        focusScope: 'contain',
+        closeOnOutsidePress: opts.closeOnOutsidePress !== false,
+        closeOnFocusOutside: opts.closeOnFocusOutside !== false,
+        closeOnTabExit: opts.closeOnTabExit === true,
+        closeOnEscape: opts.closeOnEscape !== false,
+        focusScope: opts.focusScope || 'contain',
         restoreFocusTarget: function (detail) {
             const target = typeof focusReturnTarget === 'function' ? focusReturnTarget(detail) : focusReturnTarget;
             return target || ctx.triggerTarget || ctx.reference || null;
