@@ -4,14 +4,14 @@ import assert from 'node:assert/strict';
 const root=new URL('../',import.meta.url);
 const cases=[
   ['Autocomplete','src/components/autocomplete.js',/ValueController\.create\s*\(/,/instance\.bindValueController\(valueState\)/],
-  ['InputOTP','src/components/input-otp.js',/StateController\.create\s*\(/,/this\.bindValueController\(valueState(?:\s*,|\))/],
-  ['Rate','src/components/rate.js',/StateController\.create\s*\(/,/this\.bindValueController\(valueState(?:\s*,|\))/],
-  ['Slider','src/components/slider.js',/StateController\.create\s*\(/,/instance\.bindValueController\(valueState\s*,/]
+  ['InputOTP','src/components/input-otp.js',/ValueController\.create\s*\(/,/this\.bindValueController\(valueState(?:\s*,|\))/],
+  ['Rate','src/components/rate.js',/ValueController\.create\s*\(/,/this\.bindValueController\(valueState(?:\s*,|\))/],
+  ['Slider','src/components/slider.js',/ValueController\.create\s*\(/,/instance\.bindValueController\(valueState\s*,/]
 ];
 
 for(const [name,file,createPattern,bindPattern] of cases){
   const source=fs.readFileSync(new URL(file,root),'utf8');
-  assert.match(source,createPattern,name+' must retain its specialized canonical ValueController/StateController.');
+  assert.match(source,createPattern,name+' must retain its specialized canonical ValueController.');
   assert.match(source,bindPattern,name+' must bind that controller into FieldComponent.');
   const bindCount=(source.match(/bindValueController\(valueState(?:\s*,|\))/g)||[]).length;
   assert.equal(bindCount,1,name+' must bind exactly one specialized ValueController into FieldComponent.');
