@@ -357,8 +357,8 @@ function create(source, overrides) {
     resetEvent = null;
     var detail = Object.freeze({ source: 'form', reason: 'reset', originalEvent: event || null, control: api });
     if (!resetListeners.length) restoreOwnDisplayState();
-    resetListeners.slice().forEach(function (listener) { listener(detail); });
     applyCommittedValue(initialCommittedValue, { silent: true, source: 'form', reason: 'reset' }, true);
+    resetListeners.slice().forEach(function (listener) { listener(detail); });
     dirty = false; touched = false; refreshValidityState(); syncView();
   });
   scope.add(function () { resetDelay.dispose(); });

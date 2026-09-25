@@ -82,6 +82,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
     var records = asArray(own(supplied, 'value') ? supplied.value : supplied.defaultValue).map(function (item) { return normalizeRecord(item); });
     var tasks = Object.create(null);
     var mutationGeneration = 0;
+    var valueRevision = 0;
     var api = null;
 
     function invalidatePendingMutations() {
@@ -162,7 +163,18 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
         if (!current.file) current.file = live.file;
         return current;
       });
+      valueRevision += 1;
       emit('set-value', null, meta);
+      return api;
+    }
+    function requestValue(next, meta) {
+      if (destroyed) return api;
+      if (!controlled) return setValue(next, meta);
+      var proposed = asArray(next).map(function (item) { return normalizeRecord(item); });
+      var detail = proposalMeta(meta, proposed);
+      detail.requested = true;
+      detail.silent = false;
+      emit('request-value', null, detail);
       return api;
     }
     function requestFor(record) {
@@ -221,16 +233,25 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
         throw error;
       });
     }
-    function prepareFile(file, meta, sourceGeneration, workingRecords) {
+    function prepareFile(file, meta, sourceGeneration, workingState) {
       if (!file) return Promise.resolve(null);
       if (!acceptFile(file, opts.accept)) { reject(file, 'accept', { accept: opts.accept }); return Promise.resolve(null); }
       if (Number(opts.maxSize || 0) > 0 && Number(file.size || 0) > Number(opts.maxSize)) { reject(file, 'maxSize', { maxSize: Number(opts.maxSize) }); return Promise.resolve(null); }
       var initial = normalizeRecord(file);
       var generation = sourceGeneration === undefined ? mutationGeneration : sourceGeneration;
-      var targetRecords = workingRecords || records;
+      if (controlled && workingState && workingState.valueRevision !== valueRevision) {
+        workingState.records = records.slice();
+        workingState.valueRevision = valueRevision;
+      }
+      var targetRecords = workingState && workingState.records ? workingState.records : records;
       var before = Utils.isFunction(opts.beforeUpload) ? Promise.resolve().then(function () { return opts.beforeUpload(file, snapshotList(targetRecords)); }) : Promise.resolve(undefined);
       return before.then(function (result) {
         if (destroyed || generation !== mutationGeneration) return null;
+        if (controlled && workingState && workingState.valueRevision !== valueRevision) {
+          workingState.records = records.slice();
+          workingState.valueRevision = valueRevision;
+          targetRecords = workingState.records;
+        }
         if (result === LIST_IGNORE) return null;
         if (result === false) initial.skipAutoUpload = true;
         else if (result && ((typeof global.File === 'function' && result instanceof global.File) || (typeof global.Blob === 'function' && result instanceof global.Blob))) {
@@ -266,12 +287,12 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       var list = Array.prototype.slice.call(files || []);
       var accepted = [];
       var generation = mutationGeneration;
-      var workingRecords = controlled ? records.slice() : records;
+      var workingState = controlled ? { records:records.slice(), valueRevision:valueRevision } : { records:records, valueRevision:valueRevision };
       var chain = Promise.resolve();
       list.forEach(function (file) {
         chain = chain.then(function () {
           if (opts.multiple !== true && accepted.length) return null;
-          return prepareFile(file, meta, generation, workingRecords).then(function (record) { if (record) accepted.push(record); });
+          return prepareFile(file, meta, generation, workingState).then(function (record) { if (record) accepted.push(record); });
         });
       });
       return chain.then(function () { return accepted.slice(); });
@@ -283,7 +304,6 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       if (controlled) {
         var proposed = records.slice();
         proposed.splice(index, 1);
-        invalidatePendingMutations();
         emit('remove', record, proposalMeta(meta, proposed));
         return true;
       }
@@ -325,7 +345,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       opts = mergeOptions(opts, next);
       if (own(next, 'controlled')) controlled = opts.controlled === true;
       if (own(next, 'value')) {
-        setValue(next.value, { source: 'options', silent: true });
+        setValue(next.value, { source: 'options', silent: true, preservePending: controlled === true });
         if (opts.autoUpload !== false && Utils.isFunction(opts.request)) {
           records.forEach(function (record) {
             if (previousUids[record.uid] || !record.file || record.skipAutoUpload || record.status === 'uploading' || record.status === 'success') return;
@@ -347,9 +367,9 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
 
     api = {
       addFiles: addFiles, upload: upload, retry: upload, abort: abort, remove: remove, move: move,
-      setValue: setValue, getValue: snapshots, find: function (target) { var record = findRecord(target); return record ? snapshotRecord(record) : null; },
+      setValue: setValue, requestValue: requestValue, getValue: snapshots, find: function (target) { var record = findRecord(target); return record ? snapshotRecord(record) : null; },
       updateOptions: updateOptions, on: emitter.on, once: emitter.once, destroy: destroy,
-      getState: function () { return Object.freeze({ value: snapshots(), controlled: controlled, uploading: Object.keys(tasks).length, disabled: opts.disabled === true, mutationGeneration: mutationGeneration, destroyed: destroyed }); }
+      getState: function () { return Object.freeze({ value: snapshots(), controlled: controlled, uploading: Object.keys(tasks).length, disabled: opts.disabled === true, mutationGeneration: mutationGeneration, valueRevision:valueRevision, destroyed: destroyed }); }
     };
     return api;
   }

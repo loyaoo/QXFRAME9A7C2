@@ -299,12 +299,16 @@ return true;
 
 function reset(meta) {
 if (destroyed) return false;
-var target = opts.resetValue !== undefined ? opts.resetValue : initial;
-var normalized = normalize(target, meta);
 var previousValue = committedValue;
 var previousDraft = draftValue;
-committedValue = copy(normalized);
-draftValue = copy(normalized);
+if (isControlled()) {
+  draftValue = copy(committedValue);
+} else {
+  var target = opts.resetValue !== undefined ? opts.resetValue : initial;
+  var normalized = normalize(target, meta);
+  committedValue = copy(normalized);
+  draftValue = copy(normalized);
+}
 var detail = payload({
   previousValue: previousValue,
   previousDraftValue: previousDraft,
@@ -339,8 +343,10 @@ return true;
     var next = nextOptions || {};
     if (Object.keys(Object(next)).length) revision += 1;
     opts = mergeOptions(opts, next);
+    if (Object.prototype.hasOwnProperty.call(Object(next), 'controlled')) setControlled(next.controlled === true);
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) {
-      setValue(next.value, { silent: true, reason: 'options', source: 'options' });
+      if (isControlled()) syncExternal(next.value, { silent: true, reason: 'options', source: 'options' });
+      else setValue(next.value, { silent: true, reason: 'options', source: 'options' });
     }
     if (Object.prototype.hasOwnProperty.call(Object(next), 'draftValue')) {
       setDraft(next.draftValue, { silent: true, reason: 'options-draft', source: 'options' });
@@ -492,7 +498,7 @@ function createValueBinding(options) {
     const cfg = mergeOptions({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta);
     const normalized = normalizeValue(next, cfg);
     if (equals(controller.value, normalized)) return false;
-    if (request === true && controller.controlled) return controller.requestChange(normalized, cfg);
+    if (request === true) return controller.requestChange(normalized, cfg);
     return controller.setValue(normalized, cfg);
   }
 

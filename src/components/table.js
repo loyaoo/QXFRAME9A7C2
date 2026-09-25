@@ -400,8 +400,11 @@ function setupTable(instance) {
   function resetCommittedSelection(meta) {
     var context=meta&&meta.context||null;
     if(valueBinding.controlled){
-      model.setSelectedKeys(initialSelectedValue.slice(),{ source:'form', reason:'reset-request', requestId:meta&&meta.requestId });
-      return OperationResult.requested(context||{actionId:String(meta&&meta.requestId||instance.id+'-table-reset')},{ reason:'controlled-reset-requested', requestId:meta&&meta.requestId, targetValue:initialSelectedValue.slice() });
+      var current=valueBinding.value.slice();
+      opts.selectedKeys=current.slice(); opts.value=current.slice();
+      model.setSelectedKeys(current,{ silent:true, source:'controlled', reason:'reset-preserve', requestId:meta&&meta.requestId });
+      syncFormBridge(meta);
+      return OperationResult.unchanged(context||{actionId:String(meta&&meta.requestId||instance.id+'-table-reset')},{ reason:'controlled-reset-preserved', requestId:meta&&meta.requestId });
     }
     formResetting=true;
     try{

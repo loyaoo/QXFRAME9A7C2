@@ -10,9 +10,9 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `929c920808fefc9bb1d241df560b054f2ce6b3f7` (PR #110 squash merge)
+- Last code-affecting main commit: always query Git on resume; PR #111 is the latest accepted historical-regression remediation.
 - Current branch: `main`
-- Open PRs at this checkpoint: none
+- Open PRs at this checkpoint: none after PR #111 merge; if Git differs, trust Git
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
@@ -24,39 +24,28 @@
 
 ## CURRENT
 
-### FINAL-AUDIT-REMEDIATION-001 — interaction + release-integrity remediation
-Status: DONE_VERIFIED_ON_MAIN
-Implementation progress: 100% for confirmed remediation findings
-Final broad audit acceptance: PENDING only further Astra High sign-off / newly confirmed findings; this remediation itself is accepted
+### HISTORICAL-REGRESSION-REMEDIATION-002 — v31/current shared state + focus defects
+Status: DONE_MERGED
+Implementation progress: 100% for the confirmed shared defects in this pass
+Evidence:
+- PR #111
+- exact merge SHA: query Git on resume; do not cache a self-invalidating HEAD here
 
-Confirmed fixes in this remediation:
-- restore mutable `value` semantics across ValueController-based components; controlled ownership is explicit `controlled:true`, not inferred from the presence of `value`.
-- cover reported InputOTP / TagInput / Select failures and audit the same ownership pattern across Cascader / TreeSelect / Autocomplete / Rate / Slider / InputNumber / Dropdown / Collapse / Table / Upload / Tags.
-- restore Ripple lifecycle parity: inside enter runs on press and persists until release, inside leave fades on release, outside starts on release, concurrent waves are retained; MotionController can wait for named pseudo-element animations.
-- restore DatePicker dual-panel year/month drill to one canonical primary date keyboard anchor; remove physical-panel drill-owner switching.
-- project DatePicker preset keyboard focus to the active preset item and suppress the real-focus owner outline.
-- fix Popover `getReferenceElement()` inheritance and `hasTitle` / `hasAction` state semantics.
-- remove CI Markdown blind spot and make Phase-I verifier validate stable invariants instead of one frozen checkpoint sentence.
-- replace stale state/canonical ownership metadata with ComponentProfile-aligned ValueController / SelectionController / OverlayController truth and add a cross-check gate.
-- synchronize Runtime Schema/API metadata for explicit `controlled` options.
-
-Local evidence:
-- `verify-final-audit-regressions.mjs`: Chromium green, including reported mutable-value/Ripple/Button-Ripple/DatePicker-preset regressions.
-- `verify-source-esm-browser.mjs`: green.
-- `verify-source-umd-browser.mjs`: green.
-- `verify-high-risk-browser.mjs`: green.
-- architecture-manifest, contracts, types, Value/Selection/Phase H targeted gates: green.
-- full local `npm run verify` reaches Rollup/package stage; this uploaded source workspace has no Rollup provider installed, so final build/pack/release evidence must come from GitHub CI where dependencies are installed.
-
-GitHub evidence:
-- PR #110 exact-head `78923e8d29dc8924a17cf2dbb55f7c704d6712c6`: QXFRAME CI #522 / `36123086284` success.
-- PR #110 squash merge: `929c920808fefc9bb1d241df560b054f2ce6b3f7`.
-- main QXFRAME CI #523 / `36123503345`: release success + deploy-pages success.
+Current truth established by this remediation:
+- controlled ownership is explicit and canonical: form reset and constraint/options renormalization do not mutate a controlled committed value and do not emit an unsolicited reset proposal.
+- genuine user/native value changes still use proposal semantics; external owner acknowledgement/value updates use `syncExternal`.
+- `ValueController.reset()` preserves controlled committed value while clearing draft/preview/raw-input transient state; `updateOptions({controlled,value})` transitions ownership then treats value as external sync.
+- Select / TreeSelect / Cascader / Autocomplete popup keyboard focus uses contained popup scope; Tab does not close by escaping the popup domain.
+- DatePicker dual-panel drill keeps the physical panel owner separately from range edit ownership. Returning from year/month drill uses range start as the keyboard anchor when start is visible in the current pair; otherwise it continues from the drilled month without pulling the view back.
+- Upload controlled multi-file `beforeUpload` batches survive owner acknowledgement and rebase both before and after async `beforeUpload` on the latest external canonical list.
+- Tags overflow summary remains intentionally non-focusable and hover-only. Do not add it to the Tags virtual-focus sequence unless a future explicit redesign also specifies popup-domain navigation, deletion reconciliation, scroll restoration and cross-domain focus transfer.
+- checkable Tags form reset resets selection only; it does not roll back the current choices/items list.
+- Control applies its native reset baseline before component reset listeners, so the component owner has the final projection write; Autocomplete / InputOTP / TagInput explicitly reproject their ValueController canonical state after reset.
 
 Next exact step:
-1. continue Astra High final acceptance only from current main; do not restart Phase A-I or redo accepted Controller migration work.
-2. reproduce any new finding against current main before changing code.
-3. keep remaining adapter-duplication / explicit legacy-shim review as non-blocking cleanup unless a concrete runtime or architecture-owner conflict is demonstrated.
+1. continue Astra High acceptance only from current main and newly reproducible findings.
+2. do not restart Phase A-I or repeat the v31/current ownership audit from zero.
+3. preserve the Tags overflow non-focusable decision unless the user explicitly changes it.
 
 ## Current authority snapshot — after Phase A
 
@@ -111,9 +100,9 @@ Evidence:
 Outcome:
 - Table declares/consumes exact Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form ownership and intentionally has no Motion owner.
 - explicit selected keys are the canonical ValueController value; SelectionController remains local/remote/allMatching execution/projection authority.
-- controlled selection and controlled reset remain proposals until external acknowledgement/sync and do not mutate committed V/S prematurely.
+- controlled selection changes remain proposals until external acknowledgement/sync; form reset preserves the current controlled committed V/S and only resets uncontrolled values/transient form state.
 - filter popup reuses Trigger→OverlayController; remote pending/error enters FeedbackController; FormBridge remains native carrier and FormController owns registration/serialization.
-- high-risk Chromium covers uncontrolled/controlled V/S, silent projection rollback, Feedback, Overlay, repeated-entry Form serialization and controlled reset.
+- prior high-risk Chromium coverage includes uncontrolled/controlled V/S, silent projection rollback, Feedback, Overlay and repeated-entry Form serialization; PR #111 supersedes the old controlled-reset proposal semantics.
 - Table is H accepted; public Phase H component floor is 40/40.
 
 ### Phase H — full public component migration
@@ -604,7 +593,7 @@ Outcome:
 - FormController owns field registry + dirty/touched/pending/valid + validation/submit/reset coordination without copying the ValueController reset baseline or FormBridge native carrier.
 - fieldId is unique identity and duplicate names serialize independently.
 - async validator and submit completions are stale-safe; reset cancels pending submit/validation work.
-- external controlled reset remains requested until owner acknowledgement.
+- FormController can represent an explicit adapter-level requested reset, but public controlled value owners do not use reset as an implicit value proposal; their committed value remains owner-controlled.
 - native submit/reset/FormData/reset-cancellation behavior is verified in Chromium.
 
 ### Phase G — Feedback + Form
@@ -1235,6 +1224,7 @@ None.
 - Enter and Space are context/profile dependent; they are not globally equivalent.
 - Multiple checkbox primary toggle uses Space within its composite keymap; navigation/activation semantics remain profile-scoped.
 - Picker close is not an implicit commit. Escape/cancel rolls back uncommitted draft.
+- Tags overflow summary is intentionally non-focusable/hover-only; do not place it in the main Tags virtual-focus sequence without an explicit full popup-focus redesign.
 - Complex composite regions use one canonical real-focus host plus virtual focus unless a native/hybrid-edit profile explicitly leases real focus.
 - Current Git source/tests/manifests are preserved while migrating; do not roll back later fixes to match an old document snapshot.
 

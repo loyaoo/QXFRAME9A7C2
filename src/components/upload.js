@@ -643,7 +643,7 @@ function setupUpload(instance) {
     if (!destroyed && gate!==false) commitRemove(record.uid,meta); return api;
   }
   function clear() {
-    if (typeof opts.beforeRemove !== 'function') { lifecycle.setValue([],{source:'clear'}); return api; }
+    if (typeof opts.beforeRemove !== 'function') { lifecycle.requestValue([],{source:'clear',reason:'clear'}); return api; }
     var ids=lifecycle.getValue().map(function (record) { return record.uid; });
     return ids.reduce(function (promise,uid) { return promise.then(function () { return remove(uid,{source:'clear'}); }); },Promise.resolve()).then(function () { return api; });
   }
@@ -676,7 +676,7 @@ function setupUpload(instance) {
 
   var initialValue = lifecycle.getValue();
   formBridge = api.bindFormBridge({ root: root, target: opts.container, formField: opts.formField, document: doc, name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, value: lifecycle.getValue(), serializeValue: serializeFormValue, getValue: function () { return api.value || []; }, onReset: function () {
-    lifecycle.setValue(initialValue, { silent: true, source: 'form', reason: 'reset' });
+    if (!lifecycle.getState().controlled) lifecycle.setValue(initialValue, { silent: true, source: 'form', reason: 'reset' });
     var resetValue = lifecycle.getValue();
     api.setFieldValue(resetValue, { silent: true, force: true, source:'form', reason:'reset' });
     reconcileObjectUrls(resetValue);

@@ -716,7 +716,8 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           document: doc,
           portalContainer: portalContainer
         }, {
-          focusScope: 'exit',
+          focusScope: 'contain',
+          closeOnTabExit: false,
           tabExitTarget: controlFocusElement,
           restoreFocus: false,
           disabled: opts.disabled === true,
@@ -867,7 +868,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (destroyed) return instance;
           var cfg = meta || {};
           var previous = apiValue();
-          var changed = valueState.write(next, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'cascader-set-value', originalEvent:cfg.originalEvent || null }, false);
+          var changed = valueState.write(next, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'cascader-set-value', originalEvent:cfg.originalEvent || null }, cfg.request === true);
           syncSelectionFromApiValue('set-value'); normalizeSelection();
           var canonical = apiValue();
           var values = selection.values; selectionController.setAnchor('selected', values.length ? values[values.length - 1] : null);
@@ -957,7 +958,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
     
         var initialFormValue = opts.multiple === true ? selection.values.slice() : selection.value;
         if (fieldControl && fieldControl.onFormReset) fieldControl.onFormReset(function () {
-          setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset' });
+          if(valueState.controlled){syncSelectionFromApiValue('form-reset-preserve');normalizeSelection();syncControl({silent:true,source:'form',reason:'reset-preserve'});}else setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset' });
         });
     
     

@@ -1243,7 +1243,14 @@ function setupTags(instance) {
       if (!allowed[entry]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
     });
     var detail = Utils.assignOwn({ reason: 'set-value', source: 'api' }, meta || {});
-    selectionValueState.write(values, { silent:true, source:detail.source, reason:detail.reason, originalEvent:detail.originalEvent || null }, false);
+    var requested = selectionValueState.write(values, { silent:true, source:detail.source, reason:detail.reason, originalEvent:detail.originalEvent || null }, detail.request === true);
+    if (selectionValueState.controlled && detail.request === true) {
+      if (!requested) return false;
+      syncSelectionProjection('controlled-set-value');
+      render('selection');
+      emitSelection(values, Utils.assignOwn(detail, { valueControlled:true, proposedValue:values.slice() }));
+      return true;
+    }
     var changed = selection.set(selectionValue(), detail);
     if (changed !== false) syncFormBridge(meta);
     return changed;
@@ -1380,8 +1387,7 @@ function setupTags(instance) {
     selection.updateOptions({ multiple: opts.multiple !== false });
     if (own(next, 'multiple')) {
       var modeValue = normalizeSelectionValue(selectionValue());
-      if (selectionValueState.controlled) selectionValueState.syncExternal(modeValue, { silent:true, source:'options', reason:'options-mode' });
-      else selectionValueState.write(modeValue, { silent:true, source:'options', reason:'options-mode' }, false);
+      if (!selectionValueState.controlled) selectionValueState.write(modeValue, { silent:true, source:'options', reason:'options-mode' }, false);
       syncSelectionProjection('options-mode');
     }
     tokenInput.updateOptions({
@@ -1677,7 +1683,7 @@ function setupTags(instance) {
   scope.add(DOM.listen(input, 'focus', function (event) { if (Utils.isFunction(opts.onFocus)) opts.onFocus(event, api); }));
     
   var initialItemsSnapshot=publicItems(),initialSelectionSnapshot=selection.values.slice();
-  if(opts.hosted!==true&&(formField||opts.name)){formBridge=FormBridge.create({document:doc,root:root,target:container,formField:formField,name:opts.name,value:canonicalFormValue(),disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,moveIntoRoot:false,onNativeChange:function(value){var values=Array.isArray(value)?value.slice():(value===''?[]:[value]);if(opts.checkable===true)setValue(values,{silent:true,source:'form-field',reason:'native-change'});else setItems(values.map(function(entry){var label=String(entry);if(formField&&String(formField.tagName||'').toLowerCase()==='select'){var option=Array.prototype.find.call(formField.options||[],function(o){return String(o.value)===String(entry);});if(option)label=String(option.textContent||option.label||option.value);}return {key:String(entry),value:String(entry),label:label};}),{silent:true,source:'form-field',reason:'native-change'});},onReset:function(){setItems(initialItemsSnapshot,{silent:true,source:'form',reason:'reset'});if(opts.checkable===true)setValue(initialSelectionSnapshot,{silent:true,source:'form',reason:'reset'});}});}
+  if(opts.hosted!==true&&(formField||opts.name)){formBridge=FormBridge.create({document:doc,root:root,target:container,formField:formField,name:opts.name,value:canonicalFormValue(),disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,moveIntoRoot:false,onNativeChange:function(value){var values=Array.isArray(value)?value.slice():(value===''?[]:[value]);if(opts.checkable===true)setValue(values,{source:'form-field',reason:'native-change',request:true});else setItems(values.map(function(entry){var label=String(entry);if(formField&&String(formField.tagName||'').toLowerCase()==='select'){var option=Array.prototype.find.call(formField.options||[],function(o){return String(o.value)===String(entry);});if(option)label=String(option.textContent||option.label||option.value);}return {key:String(entry),value:String(entry),label:label};}),{silent:true,source:'form-field',reason:'native-change'});},onReset:function(){if(opts.checkable===true){if(selectionValueState.controlled){syncSelectionProjection('form-reset-preserve');render('selection');syncFormBridge({silent:true,source:'form',reason:'reset-preserve'});}else setValue(initialSelectionSnapshot,{silent:true,source:'form',reason:'reset'});}else setItems(initialItemsSnapshot,{silent:true,source:'form',reason:'reset'});}});}
   api.bindFeedbackProjector(Object.freeze({
     show:function(snapshot){ return applyFeedbackSnapshot(snapshot); },
     update:function(_handle,snapshot){ return applyFeedbackSnapshot(snapshot); },
