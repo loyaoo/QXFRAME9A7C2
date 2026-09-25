@@ -10,52 +10,47 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `b984c6589fbc45f17c90628f474aa6eea173a19a` (PR #104 merge)
-- Current branch: `refactor/phase-h-upload-closeout-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-024 Upload PR
-- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-022 branch; prune merged task branches after Phase H signoff
+- Last code-affecting main commit: `fe44fc60d78384b78374cd9d23bd19db8d69ee47` (PR #105 merge)
+- Current branch: `refactor/phase-h-sort-tabs-closeout-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-025 Sort + Tabs PR
+- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-025 branch; prune after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #496 / `36099779410` (PR #104)
-- Latest green main CI + Pages: #497 / `36100069067`
+- Latest green Phase H PR CI: #501 / `36102589108` (PR #105)
+- Latest green main CI + Pages: #502 / `36102876651`
 - Overall handbook implementation progress: 98%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-024`
+- Current Task: `PHASE-H-025`
 
 ## CURRENT
 
-### PHASE-H-024 — Upload V/F/I/C/S/O/B/R closeout
+### PHASE-H-025 — Sort + Tabs shared navigation/value closeout
 Status: IN_PROGRESS
-Task progress: 90%
+Task progress: 75%
 
 Completed prerequisite:
-- PHASE-H-023 Image is DONE through PR #104, exact-head CI #496 / `36099779410`, merge `b984c6589fbc45f17c90628f474aa6eea173a19a`, main release + Pages #497 / `36100069067`.
-- Image is the 34th H-accepted public component; remaining public components before this pack are Carousel, Sort, Scroll, Tabs, Upload and Table.
+- PHASE-H-024 Upload is DONE through PR #105, final exact-head CI #501 / `36102589108`, merge `fe44fc60d78384b78374cd9d23bd19db8d69ee47`, main release + Pages #502 / `36102876651`.
+- Upload is the 35th H-accepted public component. Remaining public components are Sort, Tabs, Carousel, Scroll and Table.
 
 Implemented in current pack:
-- Upload declares the exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form profile.
-- public committed file-list reads now come from the inherited FieldComponent ValueController; UploadLifecycle remains file/task execution data and no longer acts as the public committed-value getter.
-- controlled add/remove/move proposals keep the committed ValueController unchanged until external `value` sync; upload progress/status stays lifecycle execution state instead of silently replacing controlled committed value.
-- trigger Enter/Space semantics enter the inherited InteractionController; open/add/drop/paste/remove gates enter the bound CapabilityController.
-- current preview UID is projected through one SelectionController single-selection channel; media preview still delegates H-accepted Image and document preview still uses OverlayController.
-- upload pending/progress/success/error visible state enters FeedbackController without moving request/task generation out of UploadLifecycle/AsyncTask.
-- native form carrier now enters the shared FieldComponent `bindFormBridge()` path; the old direct `Control.createFormFieldBridge()` path is removed.
-- `verify:phase-h-upload` freezes exact ownership, controlled value separation, no direct FormBridge bypass and real shared-controller binding.
-- strict source-ESM Chromium covers V/F/I/C/S/B access, FormController registration, preview selection/overlay, keyboard open, disabled blocking, upload progress feedback and controlled proposal semantics.
-- target profile floor rises to 36.
-
-Latest exact-head:
-- PR #105 head `45a8607807b036f76b65381e141719366338ac88`
-- CI #500 / `36102498925`
-- previous #498 failure was the legacy high-risk `Upload clear` assertion: lifecycle `set-value` under controlled mode was incorrectly treated as a proposal and did not synchronize the committed FieldComponent ValueController.
-- fix: controlled add/remove/move remain proposals, while lifecycle `set-value` is an explicit committed replacement and now synchronizes the canonical ValueController owner.
-- `verify:phase-h-upload` freezes this distinction so the regression cannot return.
+- Sort declares the exact handbook Value/Focus/Interaction/Capability/Motion/Selection/Overlay target.
+- Sort order is committed through ValueController while Collection remains item/reorder execution data; silent moves still synchronize the committed owner.
+- Sort keyboard navigation/reorder dispatches through one InteractionController scope; CapabilityController gates navigation/edit while `draggable:false` continues to mean pointer-drag disabled rather than API reorder disabled.
+- Sort focused/dragged row projects through SelectionController; row focus enters FocusController.
+- ReorderInteraction drag ghost now acquires its layer through OverlayController instead of owning an untracked body overlay; its reorder algorithm is unchanged.
+- Sort FLIP presence remains TransitionGroup → MotionController.
+- Tabs declares the exact handbook Value/Focus/Interaction/Capability/Motion/Selection/Overlay target.
+- Tabs activeKey writes enter ValueController and selected active tab projects through SelectionController; external activeKey options use ValueController external sync.
+- Tabs removes its direct KeyboardNavigation owner. One InteractionController scope owns arrows/Home/End/activate/remove semantics, CapabilityController gates them, and FocusController owns the tab focus region.
+- Tabs panel motion remains Transition → MotionController and overflow remains Popover → Trigger → OverlayController.
+- `verify:phase-h-sort-tabs` freezes the two target profiles and no-bypass rules; strict source-ESM browser coverage verifies order/activeKey owner identity, keyboard routing, disabled gates and delegated Motion/Overlay access.
+- Phase H profile regression floor rises from 36 to 38.
 
 Next exact step:
-1. wait for PR #105 exact-head CI #500 full release/browser/package result.
-2. if green, merge #105 and verify main + Pages.
-3. mark Upload H accepted; accepted public-component floor becomes 35/40.
-4. batch Carousel + Sort + Scroll + Tabs as the shared navigation/motion closeout pack.
+1. final diff/self-audit and open PHASE-H-025 PR.
+2. require exact-head Completion audit + full release/browser + npm/standalone green.
+3. merge only green and verify main + Pages; accepted floor becomes 37/40.
+4. migrate Carousel + Scroll together as the remaining shared pointer/navigation/motion family.
 5. close Table last, then enter Phase I; broad final audit remains reserved for GPT-6 Astra High.
 
 ## Current authority snapshot — after Phase A
@@ -86,6 +81,22 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-024 — Upload V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #105 merged
+- merge commit `fe44fc60d78384b78374cd9d23bd19db8d69ee47`
+- final exact-head CI #501 / `36102589108`: success
+- main CI + Pages #502 / `36102876651`: success
+Outcome:
+- Upload declares and consumes the exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form owners.
+- public committed file-list truth is inherited FieldComponent ValueController; UploadLifecycle remains upload/task execution authority.
+- controlled add/remove/move stay proposals, while explicit lifecycle `set-value` (including clear/public setValue) synchronizes the committed ValueController owner.
+- preview selection, document/media overlay, feedback projection, keyboard open/capability gates and FormController registration are browser-gated.
+- Upload is H accepted.
+
+
 
 ### PHASE-H-023 — Image F/I/C/M/O/B closeout
 Status: DONE

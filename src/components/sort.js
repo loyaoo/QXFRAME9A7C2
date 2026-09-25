@@ -4,6 +4,10 @@ import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Collection } from '../core/collection.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { ValueController } from '../core/valueController.js';
+import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
+import { SelectionController } from '../core/selectionController.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { TransitionGroup } from '../core/transitionGroup.js';
@@ -58,6 +62,20 @@ function applyNativeOrder(incoming, fieldInit) {
 }
 
 export class Sort extends Component {
+    static profile = Object.freeze({
+        name:'Sort',
+        value:Object.freeze({ mode:'order-keys' }),
+        focus:Object.freeze({ mode:'row-focus' }),
+        interaction:Object.freeze({ keymap:'sort-reorder' }),
+        capability:Object.freeze({ operations:Object.freeze(['navigate','edit','drag','select']) }),
+        motion:Object.freeze({ mode:'reorder-flip' }),
+        selection:Object.freeze({ channels:Object.freeze(['selected']), mode:'active-row' }),
+        overlay:Object.freeze({ mode:'drag-ghost' }),
+        ownership:Object.freeze({
+            value:'ValueController', focus:'FocusController', interaction:'InteractionController',
+            capability:'CapabilityController', motion:'MotionController', selection:'SelectionController', overlay:'OverlayController'
+        })
+    });
     static options = Object.freeze({
         items: [], disabled: false, readOnly: false, required: false, draggable: true,
         showHandle: true, handleOnly: true, showActions: true, orientation: 'vertical', keyboard: true
@@ -77,7 +95,9 @@ export class Sort extends Component {
         super(Utils.mergeOwn( incoming, { document: doc }));
         state.set(this, {
             fieldInit, doc, root: null, rowByKey: new Map(), collection: null, transitionGroup: null,
-            delegation: null, reorderInteraction: null, formBridge: null, initialItems: []
+            delegation: null, reorderInteraction: null, formBridge: null, initialItems: [],
+            valueController: null, focusController: null, interactionController: null, interactionLease: null,
+            capabilityController: null, selectionController: null
         });
     }
 
@@ -98,6 +118,63 @@ export class Sort extends Component {
             isDisabled: item => item.disabled === true,
             beforeMove: detail => typeof this.options.beforeMove !== 'function' || this.options.beforeMove(Utils.mergeOwn( detail, { instance: this })) !== false
         }));
+        const order = () => r.collection.items.map(item => item.key);
+        r.valueController = this.own(ValueController.create({
+            value: order(),
+            normalizeValue: value => Array.isArray(value) ? value.map(String) : [],
+            copyValue: value => Array.isArray(value) ? value.slice() : []
+        }));
+        r.selectionController = this.own(SelectionController.create({ channels:{ selected:{ values:[], multiple:false } } }));
+        r.capabilityController = this.own(CapabilityController.create({
+            getState: () => this.options,
+            getCapabilities: () => ({ focusable:true, navigable:true, editable:true, draggable:this.options.draggable !== false, selectable:true })
+        }));
+        r.focusController = this.own(FocusController.create({ root, activeRegion:'rows' }));
+        r.interactionController = this.own(InteractionController.create());
+        r.interactionLease = r.interactionController.registerScope({
+            id:this.id + '-sort',
+            root,
+            document:r.doc,
+            owner:this,
+            capability:r.capabilityController,
+            resolveAction:event => {
+                if (this.options.keyboard === false) return null;
+                const key = String(event && event.key || '');
+                const backward = key === 'ArrowUp' || key === 'ArrowLeft';
+                const forward = key === 'ArrowDown' || key === 'ArrowRight';
+                const modified = !!(event && (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey));
+                if (modified && (backward || forward || key === 'Home' || key === 'End')) {
+                    if (key === 'Home') return 'REORDER_FIRST';
+                    if (key === 'End') return 'REORDER_LAST';
+                    return backward ? 'REORDER_PREVIOUS' : 'REORDER_NEXT';
+                }
+                if (key === 'Home') return 'MOVE_FIRST';
+                if (key === 'End') return 'MOVE_LAST';
+                if (backward) return 'MOVE_PREVIOUS';
+                if (forward) return 'MOVE_NEXT';
+                return null;
+            },
+            operationOf:action => String(action).startsWith('REORDER_') ? 'edit' : 'navigate',
+            onAction:(action, context) => {
+                const event = context.originalEvent;
+                const row = event && event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-sort-item') : null;
+                if (!row || !root.contains(row)) return 'pass';
+                const key = DOM.getPrivate(row, 'sortKey');
+                if (!key) return 'pass';
+                if (String(action).startsWith('REORDER_')) {
+                    if (this.options.readOnly === true) return 'blocked';
+                    if (action === 'REORDER_FIRST') this.move(key, 0, { source:'keyboard', reason:'keyboard-home', originalEvent:event });
+                    else if (action === 'REORDER_LAST') this.move(key, Math.max(0, r.collection.size - 1), { source:'keyboard', reason:'keyboard-end', originalEvent:event });
+                    else this.#moveByKey(key, action === 'REORDER_PREVIOUS' ? -1 : 1, { source:'keyboard', reason:'keyboard', originalEvent:event });
+                    return 'handled';
+                }
+                if (action === 'MOVE_FIRST') this.#focusBoundary(false);
+                else if (action === 'MOVE_LAST') this.#focusBoundary(true);
+                else this.#focusRelative(key, action === 'MOVE_PREVIOUS' ? -1 : 1);
+                return 'handled';
+            }
+        });
+        this.own(() => { if (r.interactionLease) r.interactionLease.release(); r.interactionLease = null; });
 
         r.transitionGroup = this.own(TransitionGroup.create({
             container: root,
@@ -124,24 +201,7 @@ export class Sort extends Component {
             this.#moveByKey(DOM.getPrivate(row, 'sortKey'), delta, { source: DOM.activationSource(detail.event), reason: delta < 0 ? 'action-up' : 'action-down', originalEvent: detail.event });
         }));
         this.own(r.delegation.on('keydown', '.qxframe9a7c2-sort-item', detail => {
-            const optsNow = this.options;
-            if (optsNow.keyboard === false || optsNow.disabled === true) return;
-            const event = detail.event, row = detail.target, keyValue = DOM.getPrivate(row, 'sortKey'), key = String(event.key || '');
-            const backward = key === 'ArrowUp' || key === 'ArrowLeft', forward = key === 'ArrowDown' || key === 'ArrowRight';
-            const modified = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
-            if (modified && !optsNow.readOnly && (backward || forward || key === 'Home' || key === 'End')) {
-                event.preventDefault();
-                if (key === 'Home') this.move(keyValue, 0, { source: 'keyboard', reason: 'keyboard-home', originalEvent: event });
-                else if (key === 'End') this.move(keyValue, Math.max(0, r.collection.size - 1), { source: 'keyboard', reason: 'keyboard-end', originalEvent: event });
-                else this.#moveByKey(keyValue, backward ? -1 : 1, { source: 'keyboard', reason: 'keyboard', originalEvent: event });
-                return;
-            }
-            if (backward || forward || key === 'Home' || key === 'End') {
-                event.preventDefault();
-                if (key === 'Home') this.#focusBoundary(false);
-                else if (key === 'End') this.#focusBoundary(true);
-                else this.#focusRelative(keyValue, backward ? -1 : 1);
-            }
+            r.interactionController.dispatch(detail.event, { ownerId:this.id + '-sort', source:'keyboard' });
         }));
 
         r.reorderInteraction = this.own(ReorderInteraction.create({
@@ -157,8 +217,12 @@ export class Sort extends Component {
             getRowElement: key => this.getRowElement(key),
             getKeyFromRow: row => DOM.getPrivate(row, 'sortKey'),
             getInstance: () => this,
+            componentType: 'sort',
             onMove: detail => this.move(detail.fromIndex, detail.toIndex, { source: detail.source, reason: detail.reason, originalEvent: detail.originalEvent }),
-            onDragStart: detail => { if (typeof this.options.onDragStart === 'function') this.options.onDragStart(detail); },
+            onDragStart: detail => {
+                r.selectionController.selected.replace([String(detail.key)], { silent:true, source:'pointer', reason:'drag-start' });
+                if (typeof this.options.onDragStart === 'function') this.options.onDragStart(detail);
+            },
             onDragMove: detail => { if (typeof this.options.onDragMove === 'function') this.options.onDragMove(detail); },
             onDragEnd: detail => { if (typeof this.options.onDragEnd === 'function') this.options.onDragEnd(detail); },
             onDragCancel: detail => { if (typeof this.options.onDragCancel === 'function') this.options.onDragCancel(detail); }
@@ -187,7 +251,9 @@ export class Sort extends Component {
         if (own(patch, 'items')) {
             const normalized = normalizeItems(next.items);
             r.collection.setItems(normalized, { silent: true, source: 'api', reason: 'options-items' });
+            r.valueController.syncExternal(r.collection.items.map(item => item.key), { silent:true, source:'options', reason:'items' });
         }
+        if (r.focusController && own(patch, 'disabled')) r.focusController.setDisabled(next.disabled === true);
         this.#renderRows();
         if (r.formBridge) r.formBridge.updateOptions({ name: next.name, disabled: next.disabled === true, readOnly: next.readOnly === true, required: next.required === true, serializeValue: next.serializeValue });
     }
@@ -199,13 +265,13 @@ export class Sort extends Component {
         r.root = r.collection = r.transitionGroup = r.delegation = r.reorderInteraction = r.formBridge = null;
     }
 
-    #locked() { return this.destroyed || CapabilityController.mutationLocked(this.options); }
+    #locked() { const r = recordFor(this); return this.destroyed || !r.capabilityController || !r.capabilityController.can('edit'); }
     #effectiveHandleOnly() { return this.options.handleOnly !== false && this.options.showHandle !== false; }
     #items() { return recordFor(this).collection.items; }
     #renderOutput(host, value, item) { const output = typeof value === 'function' ? value(item, this) : value; Renderer.replace(host, output == null ? '' : output, recordFor(this).doc); }
     #focusRelative(key, delta) { const keys = recordFor(this).collection.enabledEntries().map(entry => entry.key); if (!keys.length) return false; let index = keys.indexOf(String(key)); if (index < 0) index = delta < 0 ? keys.length : -1; index = Math.max(0, Math.min(keys.length - 1, index + delta)); return this.#focusRow(keys[index]); }
     #focusBoundary(last) { const keys = recordFor(this).collection.enabledEntries().map(entry => entry.key); return keys.length ? this.#focusRow(keys[last ? keys.length - 1 : 0]) : false; }
-    #focusRow(key) { const r = recordFor(this), row = this.getRowElement(key); if (!row || !row.focus) return false; DOM.focusElement(row); return r.doc.activeElement === row; }
+    #focusRow(key) { const r = recordFor(this), row = this.getRowElement(key); if (!row || !row.focus || !r.capabilityController.can('navigate')) return false; r.selectionController.selected.replace([String(key)], { silent:true, source:'focus', reason:'row-focus' }); r.focusController.setActiveRegion('rows', { source:'keyboard', reason:'row-focus' }); DOM.focusElement(row); return r.doc.activeElement === row; }
     #createHandle() { const { doc } = recordFor(this); const handle = doc.createElement('span'), glyph = doc.createElement('span'); handle.className = 'qxframe9a7c2-sort-handle'; glyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-drag-vertical is-line is-round is-stroke-3 is-sm'; handle.appendChild(glyph); return handle; }
     #createActions() {
         const { doc } = recordFor(this), actions = doc.createElement('span'), up = doc.createElement('button'), down = doc.createElement('button');
@@ -237,8 +303,9 @@ export class Sort extends Component {
         return this;
     }
     #emitChange(previousItems, detail = {}) {
-        const r = recordFor(this), next = this.#items();
-        if (r.formBridge) r.formBridge.setValue(next.map(item => item.key), { forceEvent: true, source: detail.source || 'api', reason: detail.reason || 'change' });
+        const r = recordFor(this), next = this.#items(), order = next.map(item => item.key);
+        r.valueController.setValue(order, { silent:true, source:detail.source || 'api', reason:detail.reason || 'change' });
+        if (r.formBridge) r.formBridge.setValue(order, { forceEvent: true, source: detail.source || 'api', reason: detail.reason || 'change' });
         if (typeof this.options.onChange === 'function') this.options.onChange(next.slice(), Utils.assignOwn({ items: next.slice(), order: next.map(item => item.key), previousItems: previousItems.slice(), instance: this }, detail));
     }
     #moveByKey(key, delta, meta) { const index = recordFor(this).collection.indexOf(String(key)); return index < 0 ? false : this.move(index, index + delta, meta); }
@@ -248,6 +315,7 @@ export class Sort extends Component {
         const r = recordFor(this), previous = this.#items();
         const result = r.collection.move(from, to, { silent: true, source: meta.source || 'api', reason: meta.reason || 'move', originalEvent: meta.originalEvent || null });
         if (!result.changed) return false;
+        r.valueController.setValue(this.#items().map(item => item.key), { silent:true, source:meta.source || 'api', reason:result.reason || meta.reason || 'move' });
         this.#renderRows(); this.#focusRow(result.key);
         if (meta.silent !== true) this.#emitChange(previous, { reason: result.reason || meta.reason || 'move', source: meta.source || 'api', originalEvent: meta.originalEvent || null, moved: Object.freeze({ key: result.key, fromIndex: result.fromIndex, toIndex: result.toIndex }) });
         return true;
@@ -259,6 +327,7 @@ export class Sort extends Component {
         const r = recordFor(this); if (r.reorderInteraction && r.reorderInteraction.getState().dragging) r.reorderInteraction.cancelDrag('set-items');
         const previous = this.#items(), result = r.collection.setItems(normalizeItems(next), { silent: true, source: meta.source || 'api', reason: meta.reason || 'set-items' });
         if (!result.changed) return false;
+        if (meta.silent === true) r.valueController.setValue(this.#items().map(item => item.key), { silent:true, source:meta.source || 'api', reason:meta.reason || 'set-items' });
         this.#renderRows(); if (meta.silent !== true) this.#emitChange(previous, { source: meta.source || 'api', reason: meta.reason || 'set-items', moved: null }); return true;
     }
     setDisabled(value) { this.updateOptions({ disabled: value === true }); return this; }
@@ -269,6 +338,13 @@ export class Sort extends Component {
     getFormField() { const r = recordFor(this); return r.formBridge ? r.formBridge.getFormField() : null; }
     getFormBridge() { return recordFor(this).formBridge; }
     getCollection() { return recordFor(this).collection; }
+    getValueController() { return recordFor(this).valueController; }
+    getFocusController() { return recordFor(this).focusController; }
+    getInteractionController() { return recordFor(this).interactionController; }
+    getCapabilityController() { return recordFor(this).capabilityController; }
+    getSelectionController() { return recordFor(this).selectionController; }
+    getTransitionGroup() { return recordFor(this).transitionGroup; }
+    getReorderInteraction() { return recordFor(this).reorderInteraction; }
     getRowElement(key) { return recordFor(this).rowByKey.get(String(key)) || null; }
     getState() { const r = recordFor(this), opts = this.options, items = this.#items(); return Object.freeze({ items, order: items.map(item => item.key), disabled: opts.disabled === true, readOnly: opts.readOnly === true, draggable: opts.draggable !== false, showHandle: opts.showHandle !== false, handleOnly: this.#effectiveHandleOnly(), showActions: opts.showActions !== false, orientation: opts.orientation, dragging: r.reorderInteraction ? r.reorderInteraction.getState().dragging : false, dragOverlay: r.reorderInteraction ? r.reorderInteraction.getState().dragOverlay : false, movingKeys: r.transitionGroup ? r.transitionGroup.getState().movingKeys.slice() : [], destroyed: this.destroyed }); }
 }
