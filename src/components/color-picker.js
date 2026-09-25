@@ -1,4 +1,4 @@
-import { PickerComponent, pickerHooks } from './picker.js';
+import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { ColorPanel } from './color-panel.js';
 import { Control } from './control.js';
@@ -723,19 +723,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
 
 export class ColorPicker extends PickerComponent {
   static contract = getContract('ColorPicker');
-  static profile = Object.freeze({
-    name:'ColorPicker',
-    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview']) }),
-    focus:Object.freeze({ mode:'virtual-navigation' }),
-    interaction:Object.freeze({ keymap:'picker' }),
-    capability:Object.freeze({ mode:'field-policy' }),
-    motion:Object.freeze({ mode:'popup-presence' }),
-    overlay:Object.freeze({ mode:'popup' }),
-    feedback:Object.freeze({ mode:'field-local' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
-  });
-  static options = COLOR_PICKER_DEFAULTS;
+  static profile = createPickerProfile('ColorPicker', { channels:["committed","draft","preview"] });
+    static options = COLOR_PICKER_DEFAULTS;
   static immutableOptions = COLOR_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }
   static enhance(input, options) { return this.create(input, options || {}); }
