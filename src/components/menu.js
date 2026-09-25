@@ -7,7 +7,9 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
 import { Utils } from '../utils/utils.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
-import { Selection } from '../core/selection.js';
+import { SelectionController } from '../core/selectionController.js';
+import { ValueController } from '../core/valueController.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { ItemSchema } from '../core/itemSchema.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { DOMBinding } from '../core/domBinding.js';
@@ -175,12 +177,24 @@ function setupMenu(instance) {
   var keyboard = null;
   var focusController = null;
   var interactionController = null;
+  var capabilityController = null;
+  var valueController = null;
+  var selectionController = null;
   var virtualFocusDomain = null;
   var binding = DOMBinding.resolve({ options: opts, target: host, component: api, requiredRefs: ['root', 'level'], defaultFactory: DOMFactory.createDefaultDOM });
   var root = binding.refs.root;
   var rootLevel = binding.refs.level;
-  var selection = Selection.create({ values: initialSelected(), multiple: opts.multiple === true });
-  scope.add(function () { if (selection) selection.destroy(); selection = null; });
+  var initialSelection = initialSelected();
+  valueController = ValueController.create({ value: initialSelection, normalizeValue: normalizeKeys, copyValue: normalizeKeys });
+  selectionController = SelectionController.create({ channels: { selected: { values: initialSelection, multiple: opts.multiple === true } } });
+  var selection = selectionController.selected;
+  capabilityController = CapabilityController.create({ getState: function () { return { disabled: opts.disabled === true, readOnly:false, loading:false }; } });
+  scope.add(function () {
+    if (selectionController) selectionController.destroy();
+    if (valueController) valueController.destroy();
+    if (capabilityController) capabilityController.destroy();
+    selectionController = null; selection = null; valueController = null; capabilityController = null;
+  });
   var activeKey = '';
   var activeOverflow = false;
   var hoverKey = '';
@@ -219,7 +233,7 @@ function setupMenu(instance) {
     getChildren:childrenOf,
     isDisabled:function(item){return !item || item.disabled===true;}
   });
-  function isDisabledItem(item) { return opts.disabled === true || !!(item && item.disabled === true); }
+  function isDisabledItem(item) { return !capabilityController || !capabilityController.can('activate') || !!(item && item.disabled === true); }
   function hasChildren(item) { return itemType(item) === 'item' && childrenOf(item).length > 0; }
   function sizeName() { return Utils.normalizeSize(opts.size, 'md'); }
   function inlineCollapsed() { return opts.mode === 'inline' && opts.collapsed === true; }
@@ -236,9 +250,17 @@ function setupMenu(instance) {
     else inlineExpandedOpenKeys = cloneKeySet(openKeys);
     openKeys = cloneKeySet(inlineCollapsed() ? inlineCollapsedOpenKeys : inlineExpandedOpenKeys);
   }
-  function selectedArray() { return selection ? selection.values.slice() : []; }
+  function selectedArray() { return valueController ? normalizeKeys(valueController.value) : []; }
   function selectedKeyValue() { var values = selectedArray(); return values.length ? values[0] : ''; }
   function isSelected(key) { return !!selection && selection.has(String(key)); }
+  function syncSelectionOwners(keys, meta) {
+    if (!valueController || !selection) return false;
+    var next = normalizeKeys(keys);
+    var cfg = meta || {};
+    valueController.setValue(next, { silent:true, source:cfg.source || 'menu', reason:cfg.reason || 'selection-sync', originalEvent:cfg.originalEvent || null });
+    selection.set(valueController.value, { silent:true, source:cfg.source || 'menu', reason:cfg.reason || 'selection-sync', originalEvent:cfg.originalEvent || null });
+    return true;
+  }
   function allPanels() {
     var panels = Array.from(panelByKey.values());
     if (overflowPanel) panels.push(overflowPanel);
@@ -271,7 +293,7 @@ function setupMenu(instance) {
     },{accessors:itemAccessors});
     var retainedSelection = selectedArray().filter(function (key) { return itemByKey.has(key); });
     if (!opts.multiple && retainedSelection.length > 1) retainedSelection = retainedSelection.slice(0, 1);
-    selection.set(retainedSelection, { silent: true, source: 'menu', reason: 'items-prune' });
+    syncSelectionOwners(retainedSelection, { source:'menu', reason:'items-prune' });
     function pruneOpenSet(set) {
       Array.from(set).forEach(function (key) { if (!itemByKey.has(key) || !hasChildren(itemByKey.get(key))) set.delete(key); });
     }
@@ -918,7 +940,7 @@ function setupMenu(instance) {
     next.forEach(function (key) { if (!itemByKey.has(key)) throw new RangeError('[QXFRAME9A7C2] Menu selectedKeys must reference item keys.'); });
     var previous = selectedArray();
     if (sameKeys(previous, next)) return api;
-    selection.set(next, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'selection-change' });
+    syncSelectionOwners(next, { source: meta && meta.source || 'api', reason: meta && meta.reason || 'selection-change', originalEvent: meta && meta.originalEvent || null });
     if (meta && meta.source === 'keyboard' && next.length) { activeKey = next[next.length - 1]; activeOverflow = false; }
     syncClasses();
     if (!(meta && meta.silent)) {
@@ -1140,7 +1162,8 @@ function setupMenu(instance) {
 
   interactionController = InteractionController.create();
   interactionController.registerScope({
-    id:'menu', root:root,
+    id:'menu', root:root, capability:capabilityController,
+    operationOf:function (action) { return action === 'DISMISS' ? 'close' : (action === 'TYPEAHEAD' ? 'navigate' : 'activate'); },
     resolveAction:function (event) {
       var action = InteractionController.resolveKeyboardAction(event, { keymap:{ ' ':'TOGGLE', Escape:'DISMISS' } });
       if (action) return action;
@@ -1296,12 +1319,13 @@ function setupMenu(instance) {
     var popupAfter = popupMode();
     var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
     if (structural) {
-      selection.updateOptions({ multiple: opts.multiple === true, values: nextSelected });
+      if (selectedUpdate) syncSelectionOwners(nextSelected, { source:'options', reason:'update-options' });
+      selection.updateOptions({ multiple: opts.multiple === true, values: selectedArray() });
       if (openUpdate) { openKeys = explicitNextOpen; rememberInlineOpenKeys(); }
       rebuild();
     } else {
       if (['disabled','submenuTrigger','placement','submenuOffset','strategy','middleware','flipOnOverflow','autoUpdate','destroyOnClose','submenuOpenDelay','submenuLeaveDelay'].some(function (name) { return own(next, name); })) syncPopupTriggerRuntime();
-      if (selectedUpdate) commitSelectedKeys(nextSelected, { silent: true, reason: 'update-options' });
+      if (selectedUpdate) commitSelectedKeys(nextSelected, { silent: true, reason: 'update-options', source:'options' });
       if (openUpdate) setOpenKeys(Array.from(explicitNextOpen), { silent: true, reason: 'update-options' });
       syncClasses();
       if (own(next, 'inlineIndent') || own(next, 'collapsedWidth')) applyRootUserStyle();
@@ -1351,7 +1375,21 @@ function setupMenu(instance) {
     getSubmenuElement: function (key) { return panelByKey.get(String(key)) || panelLevelByKey.get(String(key)) || null; },
     getTrigger: function (key) { return triggerByKey.get(String(key)) || null; },
     getOverflowElement: function () { return overflowButton; }, getOverflowTrigger: function () { return overflowTrigger; },
-    getFocusController: function () { return focusController; }
+    getValueController: function () { return valueController; },
+    getFocusController: function () { return focusController; },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
+    getSelectionController: function () { return selectionController; },
+    getOverlayControllers: function () {
+      var output = [];
+      triggerByKey.forEach(function (trigger) {
+        var controller = trigger && trigger.getOverlayController && trigger.getOverlayController();
+        if (controller && output.indexOf(controller) < 0) output.push(controller);
+      });
+      var overflowController = overflowTrigger && overflowTrigger.getOverlayController && overflowTrigger.getOverlayController();
+      if (overflowController && output.indexOf(overflowController) < 0) output.push(overflowController);
+      return output;
+    }
   };
   menuState.set(instance, record);
   instance.own(destroyRuntime);
@@ -1393,10 +1431,20 @@ function normalizeMenuPatch(instance, nextOptions) {
 export class Menu extends Component {
   static profile = Object.freeze({
     name:'Menu',
+    value:Object.freeze({ mode:'selected-key-set' }),
     focus:Object.freeze({ mode:'virtual-navigation', host:'composite-root' }),
     interaction:Object.freeze({ keymap:'menu' }),
+    capability:Object.freeze({ mode:'menu-activation-policy' }),
     selection:Object.freeze({ mode:'menu-selection' }),
-    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController' })
+    overlay:Object.freeze({ mode:'submenu-trigger-tree' }),
+    ownership:Object.freeze({
+      value:'ValueController',
+      focus:'FocusController',
+      interaction:'InteractionController',
+      capability:'CapabilityController',
+      selection:'SelectionController',
+      overlay:'OverlayController'
+    })
   });
   static options = MENU_DEFAULTS;
   static immutableOptions = Object.freeze(['container','portalContainer']);
@@ -1453,7 +1501,12 @@ export class Menu extends Component {
   getTrigger(key) { return recordForMenu(this).getTrigger(key); }
   getOverflowElement() { return recordForMenu(this).getOverflowElement(); }
   getOverflowTrigger() { return recordForMenu(this).getOverflowTrigger(); }
+  getValueController() { return recordForMenu(this).getValueController(); }
   getFocusController() { return recordForMenu(this).getFocusController(); }
+  getInteractionController() { return recordForMenu(this).getInteractionController(); }
+  getCapabilityController() { return recordForMenu(this).getCapabilityController(); }
+  getSelectionController() { return recordForMenu(this).getSelectionController(); }
+  getOverlayControllers() { return recordForMenu(this).getOverlayControllers(); }
 }
 
 export { createDefaultDOM };

@@ -10,45 +10,46 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `709e5dc2c6ce3447e138f1a90f548c038b5983f4` (PR #100 merge)
-- Current branch: `refactor/phase-h-dropdown-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-020 Dropdown PR
+- Last code-affecting main commit: `5ebdc44be5e2481483ff500291af226b4ed1882b` (PR #101 merge)
+- Current branch: `refactor/phase-h-menu-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-021 Menu PR
 - Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-020 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #485 / `36093452646` (PR #100)
-- Latest green main CI + Pages: #486 / `36093996030`
+- Latest green Phase H PR CI: #487 / `36094628225` attempt 2 (PR #101)
+- Latest green main CI + Pages: #488 / `36095210276`
 - Overall handbook implementation progress: 98%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-020`
+- Current Task: `PHASE-H-021`
 
 ## CURRENT
 
-### PHASE-H-020 — Dropdown V/F/I/C/M/S/O closeout
+### PHASE-H-021 — Menu V/F/I/C/S/O closeout
 Status: IN_PROGRESS
 Task progress: 80%
 
-Completed prerequisites:
-- PHASE-H-018 JSON is DONE through PR #99, exact-head CI #483 / `36092472277`, merge `f4a7f37d31e3685ead3ff911274f87f8a2ed0d4f`, main release + Pages #484 / `36092917404`.
-- PHASE-H-019 Ripple is DONE through PR #100, exact-head CI #485 / `36093452646`, merge `709e5dc2c6ce3447e138f1a90f548c038b5983f4`, main release + Pages #486 / `36093996030`.
-- current green main target matrix floor is 33 profiled / 30 complete / 10 remaining public components.
+Completed prerequisite:
+- PHASE-H-020 Dropdown is DONE through PR #101, exact-head CI #487 / `36094628225` attempt 2, merge `5ebdc44be5e2481483ff500291af226b4ed1882b`, main release + Pages #488 / `36095210276`.
+- #487 attempt 1 failed only on unrelated legacy `tabs-indicator-measured` width timing; same exact head attempt 2 passed the full release/browser/package suite, so no H-020 code change was made for that flake.
+- current accepted public-component floor is 31/40 = 77.5%.
 
-Implemented in current H-020 pack:
-- Dropdown now declares the exact handbook Value/Focus/Interaction/Capability/Motion/Selection/Overlay profile and canonical ownership.
-- committed public value remains the existing StateController→ValueController option binding; Dropdown exposes the canonical ValueController behind the binding rather than creating another value store.
-- direct `Selection.create()` ownership is removed. Dropdown creates one SelectionController selected channel and routes hierarchy semantics through the same SelectionController facade.
-- direct `KeyboardNavigation.create()` ownership is removed. Reference keyboard routing enters FocusController; existing key semantics and ItemCollection virtual-focus domains are preserved.
-- Interaction/Capability/Motion/Overlay continue through PopupComponent→Trigger and are not recreated by Dropdown.
-- strict Chromium verifies V/F/I/C/M/S/O access, ValueController/SelectionController projection, ArrowDown open through FocusController and disabled keyboard blocking.
-- `verify:phase-h-dropdown` permanently rejects direct Selection/HierarchicalSelection/KeyboardNavigation ownership.
-- target-matrix floors rise to 34 profiled / 31 complete.
+Implemented in current H-021 pack:
+- Menu now declares the exact handbook Value/Focus/Interaction/Capability/Selection/Overlay profile and canonical owners.
+- selectedKey(s) canonical state is held by one ValueController; SelectionController.selected is a synchronized selection projection rather than a second public value owner.
+- direct `Selection.create()` ownership is removed.
+- existing FocusController and InteractionController remain the semantic keyboard path; the InteractionController scope now shares Menu CapabilityController so disabled activation/navigation is centrally blocked.
+- submenu/overflow popup ownership remains existing Trigger→OverlayController; Menu exposes the active overlay-controller identities without creating another overlay runtime.
+- existing inline submenu Transition remains an internal presence detail; Menu's handbook target does not add a separate component-level Motion owner.
+- `verify:phase-h-menu` freezes exact ownership and rejects direct Selection/InteractionPolicy bypass.
+- strict source-ESM Chromium verifies shared V/F/I/C/S identities, ValueController↔SelectionController projection and disabled activation blocking.
+- target-matrix floors remain 34 profiled / rise to 32 complete.
 
 Next exact step:
-1. perform final diff/self-audit and open PHASE-H-020 PR.
+1. final diff/self-audit and open PHASE-H-021 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Dropdown H accepted.
-5. continue remaining 9 components by smallest authority gap; broad final audit remains reserved for GPT-6 Astra High.
+4. mark Menu H accepted.
+5. continue the remaining 8 public components by smallest authority gap; broad final audit remains reserved for GPT-6 Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -78,6 +79,22 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-020 — Dropdown V/F/I/C/M/S/O closeout
+Status: DONE
+Evidence:
+- PR #101 merged
+- merge commit `5ebdc44be5e2481483ff500291af226b4ed1882b`
+- exact-head CI #487 / `36094628225` attempt 2: success
+- main CI + Pages #488 / `36095210276`: success
+Outcome:
+- Dropdown declares exact Value/Focus/Interaction/Capability/Motion/Selection/Overlay ownership.
+- committed value remains StateController→ValueController; SelectionController owns selected/hierarchy projection and FocusController owns the reference keyboard region.
+- direct Selection/HierarchicalSelection/KeyboardNavigation ownership is removed.
+- PopupComponent→Trigger remains the shared Interaction/Capability/Motion/Overlay path.
+- Dropdown is H accepted.
+
+
 
 ### PHASE-H-019 — Ripple I/C/M closeout
 Status: DONE
