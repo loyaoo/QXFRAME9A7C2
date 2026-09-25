@@ -91,6 +91,24 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (!left && !right) return '';
     return left + String(opts.rangeSeparator) + right;
   }
+  function timeSelectionKey(value, index) {
+    if (!value) return '';
+    var key = TimeUnit.format24(value, true);
+    return selection === 'range' ? String(index) + ':' + key : key;
+  }
+  function selectionKeys(value) {
+    if (selection === 'single') {
+      var one = timeSelectionKey(value, 0);
+      return one ? [one] : [];
+    }
+    var output = [];
+    if (value && value[0]) output.push(timeSelectionKey(value[0], 0));
+    if (value && value[1]) output.push(timeSelectionKey(value[1], 1));
+    return output;
+  }
+  function syncSelectionController(value, detail) {
+    return instance.syncPickerSelection(selectionKeys(value), Utils.assignOwn({ silent:true, source:'picker', reason:'time-selection-sync' }, detail || {}));
+  }
   function splitValidatedRange(sourceText) {
     var source = String(sourceText || '').trim();
     var sep = String(opts.rangeSeparator);
@@ -139,9 +157,12 @@ function setupTimePickerRuntime(instance, fieldInit) {
     normalizeValue: normalizeValue,
     copyValue: cloneValue,
     equals: sameValue,
-    onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), timePicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), reason: detail.reason, source: detail.source || 'api', timePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
-    onDraftChange: function (value, detail) { if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open); if (field && field.getState().open) rebuildFooter(); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), timePicker: api })); }
+    onValueChange: function (value, detail) { instance.setFieldValue(value, { sync:true, silent:true, source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncSelectionController(value, { source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), timePicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), reason: detail.reason, source: detail.source || 'api', timePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
+    onDraftChange: function (value, detail) { syncSelectionController(value, { source:detail && detail.source || 'value-draft', reason:detail && detail.reason || 'draft-change' }); if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open); if (field && field.getState().open) rebuildFooter(); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), timePicker: api })); }
   });
+  instance.bindValueController(draft);
+  instance.setupPickerSelection({ multiple: selection === 'range' });
+  syncSelectionController(draft.value, { source:'init', reason:'time-selection-init' });
 
   function syncField(preferDraft, meta) {
     if (!field) return;
@@ -227,6 +248,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     canCommit: function (controller) { return !destroyed && complete(controller.draftValue); },
     onOpenDraft: function (controller) {
       controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
+      syncSelectionController(controller.draftValue, { source:'popup', reason:'open-selection-sync' });
       controller.clearRawInput({ silent:true, source:'popup', reason:'open-raw-input-clear' });
       if (selection === 'range') activeRangePart = controller.draftValue && !controller.draftValue[0] ? 0 : (controller.draftValue && !controller.draftValue[1] ? 1 : 0);
       syncPanel('time-picker-open-sync');
@@ -497,9 +519,13 @@ export class TimePicker extends PickerComponent {
     value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview','rawInput']) }),
     focus:Object.freeze({ mode:'virtual-navigation' }),
     interaction:Object.freeze({ keymap:'picker' }),
+    capability:Object.freeze({ mode:'field-policy' }),
+    motion:Object.freeze({ mode:'popup-presence' }),
+    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController', semantics:'draft-selected-keys' }),
     overlay:Object.freeze({ mode:'popup' }),
+    feedback:Object.freeze({ mode:'field-local' }),
     form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
+    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
   });
   static options = TIME_PICKER_DEFAULTS;
   static immutableOptions = TIME_PICKER_IMMUTABLE;
@@ -527,7 +553,7 @@ export class TimePicker extends PickerComponent {
     const runtime = setupTimePickerRuntime(this, record.fieldInit);
     record.runtime = runtime;
     this.own(() => runtime.dispose('time-picker-destroy'));
-    this.setFieldValue(runtime.getState().value, { silent:true, force:true });
+    this.setFieldValue(runtime.getState().value, { silent:true, force:true, sync:true, source:'init', reason:'time-picker-init' });
     return runtime.root;
   }
 
