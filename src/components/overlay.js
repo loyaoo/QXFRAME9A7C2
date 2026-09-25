@@ -75,6 +75,9 @@ export class OverlayComponent extends Component {
         return c && c.getOverlayRuntime ? c.getOverlayRuntime() : null;
     }
     getMotionControllers() { const c = this.getOverlayFamilyController(); return c && typeof c.getMotionControllers === 'function' ? c.getMotionControllers() : Object.freeze({}); }
+    getInteractionController() { const c = this.getOverlayFamilyController(); return c && typeof c.getInteractionController === 'function' ? c.getInteractionController() : null; }
+    getCapabilityControllers() { const c = this.getOverlayFamilyController(); return c && typeof c.getCapabilityControllers === 'function' ? c.getCapabilityControllers() : Object.freeze([]); }
+    getFeedbackControllers() { const c = this.getOverlayFamilyController(); return c && typeof c.getFeedbackControllers === 'function' ? c.getFeedbackControllers() : Object.freeze([]); }
     getScroll() { const c = requireState(this).controller; return c && c.getScroll ? c.getScroll() : null; }
 
     [componentHooks.render]() {
