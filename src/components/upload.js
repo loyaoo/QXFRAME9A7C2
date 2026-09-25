@@ -232,6 +232,7 @@ function setupUpload(instance) {
         if (formBridge) formBridge.setValue(canonical, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(canonical);
         renderList();
+        projectUploadFeedback();
         var enriched = Utils.mergeOwn(detail, { instance: api });
         if (detail.operation === 'move' && typeof opts.onSort === 'function') opts.onSort(value.slice(), enriched);
         if (destroyed) return;
@@ -265,6 +266,17 @@ function setupUpload(instance) {
     show:function () { return projectUploadFeedback(); },
     update:function () { return projectUploadFeedback(); },
     close:function () { return projectUploadFeedback(); }
+  }));
+  scope.add(lifecycle.on('upload-start', function (detail) {
+    if (detail && detail.file) publishUploadFeedback('pending', detail.file, 0, detail.file.name);
+  }));
+  scope.add(lifecycle.on('abort', function (detail) {
+    if (detail && detail.file) feedbackController.clear({ operation:'upload', requestId:String(detail.file.uid), target:'local' });
+    projectUploadFeedback();
+  }));
+  scope.add(lifecycle.on('remove', function (detail) {
+    if (detail && detail.file) feedbackController.clear({ operation:'upload', requestId:String(detail.file.uid), target:'local' });
+    projectUploadFeedback();
   }));
   reorderInteraction = ReorderInteraction.create({
     root: list,
@@ -442,13 +454,13 @@ function setupUpload(instance) {
   function open() { if (!destroyed && capabilityController && capabilityController.can('open') && opts.openFileDialogOnClick !== false) input.click(); return api; }
   function handleTrigger(event) { if (!capabilityController || !capabilityController.can('open') || opts.openFileDialogOnClick === false) return; if (event.preventDefault) event.preventDefault(); open(); }
   function handleDrag(event) {
-    if (!opts.drag) return;
+    if (!opts.drag || !capabilityController || !capabilityController.can('select')) return;
     if (event.preventDefault) event.preventDefault();
     if (event.type === 'dragenter' || event.type === 'dragover') root.classList.add('is-dragover'); else root.classList.remove('is-dragover');
     if (event.type === 'drop' && event.dataTransfer) { if (typeof opts.onDrop === 'function') opts.onDrop(event, api); if (!destroyed) addFiles(event.dataTransfer.files, { source: 'drop', event: event }); }
   }
   function handlePaste(event) {
-    if (!opts.pastable || opts.disabled || !event.clipboardData) return;
+    if (!opts.pastable || !capabilityController || !capabilityController.can('select') || !event.clipboardData) return;
     var files = Array.prototype.slice.call(event.clipboardData.files || []); if (!files.length) return;
     if (event.preventDefault) event.preventDefault(); if (typeof opts.onPaste === 'function') opts.onPaste(files, event, api); if (!destroyed) addFiles(files, { source: 'paste', event: event });
   }
@@ -544,7 +556,7 @@ function setupUpload(instance) {
   }
   function preview(target, event) {
     var record = lifecycle.find(target);
-    if (!record || opts.previewable === false || opts.disabled === true) return Promise.resolve(api);
+    if (!record || opts.previewable === false || !capabilityController || !capabilityController.can('open')) return Promise.resolve(api);
     var previewGeneration = lifecycle.getState().mutationGeneration;
     var resolved = null;
     if (typeof opts.previewFile === 'function' && record.file) {
@@ -615,7 +627,7 @@ function setupUpload(instance) {
   }
   function commitRemove(target, meta) { lifecycle.remove(target,meta||{source:'api'}); return api; }
   function remove(target, meta) {
-    var record=lifecycle.find(target); if (!record || opts.disabled) return api;
+    var record=lifecycle.find(target); if (!record || !capabilityController || !capabilityController.can('remove')) return api;
     if (typeof opts.beforeRemove !== 'function') return commitRemove(record.uid,meta);
     var removeGeneration = lifecycle.getState().mutationGeneration;
     var gate;
@@ -695,7 +707,7 @@ function setupUpload(instance) {
     preview: preview, closePreview: closePreview, download: download, clear: clear,
     setValue: function (value) { lifecycle.setValue(value,{source:'api'}); api.setFieldValue(lifecycle.getValue(), { silent:true, force:true, source:'api', reason:'set-value' }); return api; },
     getValue: function () { return api.value || []; }, applyOptions: applyOptions,
-    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: current.value, controlled:current.controlled===true, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
+    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: api.value || [], controlled:current.controlled===true, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewUid: selectionController && selectionController.selected ? selectionController.selected.value : null, previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
     getLifecycle: function () { return lifecycle; },
     getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
     getFormBridge: function () { return formBridge; },
