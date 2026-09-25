@@ -501,6 +501,7 @@ function createValueBinding(options) {
     get controlled() { return controller.controlled; },
     get ownership() { return controller.getOwnershipState().ownership; },
     getOwnershipState() { return controller.getOwnershipState(); },
+    getValueController() { return controller; },
     copy(value) { return copyValue(value); },
     write,
     syncExternal(next, meta) { return controller.syncExternal(next, meta); },
