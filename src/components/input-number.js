@@ -5,7 +5,6 @@ import { getContract } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Scheduler } from '../core/scheduler.js';
 import { NumericInput } from '../core/numericInput.js';
-import { CapabilityController } from '../core/capabilityController.js';
 import { Utils } from '../utils/utils.js';
 
 const state = new WeakMap();
