@@ -225,6 +225,22 @@ function setupDatePickerRuntime(instance, fieldInit) {
     }
     return (value || []).map(formatOne).join(String(opts.multipleSeparator));
   }
+  function selectionKeys(value) {
+    if (selection === 'single') {
+      var single = value ? DateUnit.key(value, unit, opts.weekStartsOn) : '';
+      return single ? [single] : [];
+    }
+    if (selection === 'range') {
+      var output = [];
+      if (value && value[0]) output.push('0:' + DateUnit.key(value[0], unit, opts.weekStartsOn));
+      if (value && value[1]) output.push('1:' + DateUnit.key(value[1], unit, opts.weekStartsOn));
+      return output;
+    }
+    return (value || []).map(function (entry) { return DateUnit.key(entry, unit, opts.weekStartsOn); }).filter(Boolean);
+  }
+  function syncSelectionController(value, detail) {
+    return instance.syncPickerSelection(selectionKeys(value), Utils.assignOwn({ silent:true, source:'picker', reason:'date-selection-sync' }, detail || {}));
+  }
   function splitValidatedPair(source, separator) {
     var sep = String(separator);
     if (!sep) return null;
@@ -452,6 +468,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
     copyValue: function (value) { return cloneValue(value, selection); },
     equals: function (left, right) { return valueEquals(left, right, selection, unit, opts.weekStartsOn, withTime); },
     onValueChange: function (value, detail) {
+      instance.setFieldValue(value, { sync:true, silent:true, source:detail.source || 'value-draft', reason:detail.reason || 'value-change' });
+      syncSelectionController(value, { source:detail.source || 'value-draft', reason:detail.reason || 'value-change' });
       syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' });
       syncSelectionPanel(false);
       syncTimePanel();
@@ -459,11 +477,15 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (detail.silent !== true) { var payload = { value: cloneValue(value, selection), previousValue: cloneValue(detail.previousValue, selection), reason: detail.reason, source: detail.source || 'api', datePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value, selection), payload); emitter.emit('change', payload); }
     },
     onDraftChange: function (value, detail) {
+      syncSelectionController(value, { source:detail && detail.source || 'value-draft', reason:detail && detail.reason || 'draft-change' });
       if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open);
       if (field && field.getState().open) { syncSelectionPanel(false); syncTimePanel(); rebuildFooter(); }
       if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value, selection), Utils.mergeOwn( detail, { value: cloneValue(draft.value, selection), draftValue: cloneValue(value, selection), datePicker: api }));
     }
   });
+  instance.bindValueController(draft);
+  instance.setupPickerSelection({ multiple: selection !== 'single' });
+  syncSelectionController(draft.value, { source:'init', reason:'date-selection-init' });
   var pickerSession = instance.setupPickerSession({
     controller: draft,
     needConfirm: function () { return opts.needConfirm === true; },
@@ -475,11 +497,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
       controller.setRawInput(openText, { silent:true, active:selection === 'multiple' && openText.trim() !== '', source:'popup', reason:'open-raw-input' });
       if (selection === 'range') activeRangePart = controller.draftValue && !controller.draftValue[0] ? 0 : (controller.draftValue && !controller.draftValue[1] ? 1 : 0);
       else activeRangePart = 0;
+      syncSelectionController(controller.draftValue, { source:'popup', reason:'open-selection-sync' });
       syncSelectionPanel(true);
       syncTimePanel();
       syncField(true);
     },
     onCancel: function () {
+      syncSelectionController(draft.value, { source:'popup', reason:'cancel-selection-restore' });
       syncSelectionPanel(true);
       syncTimePanel();
       syncField(false);
@@ -1519,9 +1543,13 @@ export class DatePicker extends PickerComponent {
     value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview','rawInput']) }),
     focus:Object.freeze({ mode:'virtual-navigation' }),
     interaction:Object.freeze({ keymap:'picker' }),
+    capability:Object.freeze({ mode:'field-policy' }),
+    motion:Object.freeze({ mode:'popup-presence' }),
+    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController', semantics:'draft-selected-keys' }),
     overlay:Object.freeze({ mode:'popup' }),
+    feedback:Object.freeze({ mode:'field-local' }),
     form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
+    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
   });
   static options = DATE_PICKER_DEFAULTS;
   static immutableOptions = DATE_PICKER_IMMUTABLE;
@@ -1562,7 +1590,7 @@ export class DatePicker extends PickerComponent {
     const runtime=setupDatePickerRuntime(this,record.fieldInit);
     record.runtime=runtime;
     this.own(()=>runtime.dispose('date-picker-destroy'));
-    this.setFieldValue(runtime.getState().value,{silent:true,force:true});
+    this.setFieldValue(runtime.getState().value,{silent:true,force:true,sync:true,source:'init',reason:'date-picker-init'});
     return runtime.root;
   }
 
