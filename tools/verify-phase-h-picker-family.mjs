@@ -43,6 +43,11 @@ assert.match(popupFieldSource,/getMotionController\s*\(/,'PopupFieldComponent mu
 assert.match(pickerFieldSource,/FocusController\.create\s*\(/,'PickerField keyboard ownership must enter FocusController.');
 assert.doesNotMatch(pickerFieldSource,/keyboard\s*=\s*KeyboardNavigation\.create\s*\(/,'PickerField must not retain a direct parallel KeyboardNavigation owner.');
 assert.match(pickerFieldSource,/getFocusController:\s*function/,'PickerField must expose its canonical FocusController.');
+assert.match(pickerSource,/bindFormController\s*\(controller,\s*options/,'PickerComponent must adapt FormController through its canonical Control serializer.');
+assert.match(pickerSource,/getSerializedValue/,'PickerComponent FormController binding must reuse Control.getSerializedValue().');
+const fieldSource=read('src/components/field.js');
+assert.match(fieldSource,/typeof config\.getSerializedValue === 'function'/,'FieldComponent form adapter must accept canonical component serializers without creating another FormBridge.');
+
 
 const cases=[
   ['DatePicker','src/components/date-picker.js',true,/DateUnit\.key\s*\(/],
