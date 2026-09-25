@@ -14,6 +14,9 @@ import { DOMTemplate } from '../core/domTemplate.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { PointerSession } from '../core/pointerSession.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
+import { MotionController } from '../core/motionController.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 
 var DOMFactory;
@@ -218,6 +221,12 @@ function setupScroll(instance) {
   var snapStepGesture = null;
   var snapStepMotion = null;
   var motion = null;
+  var capabilityController = null;
+  var focusController = null;
+  var interactionController = null;
+  var interactionLease = null;
+  var motionController = null;
+  var motionWaiters = [];
   var api = instance;
     
   domBinding = DOMBinding.resolve({
@@ -249,7 +258,56 @@ function setupScroll(instance) {
     
   scope = Lifecycle.createScope();
   if (!root.hasAttribute('tabindex')) root.tabIndex = 0;
-    
+
+  capabilityController = CapabilityController.create({
+    getState:function(){ return { disabled:destroyed || opts.disabled === true, readOnly:opts.readOnly === true }; },
+    getCapabilities:function(){ return { focusable:opts.focusable !== false, navigable:opts.keyboard !== false, editable:true, draggable:opts.scrollbarInteractive !== false }; }
+  });
+  focusController = FocusController.create({ root:root, document:doc, manageTabIndex:false, activeRegion:'scroll' });
+  focusController.setDisabled(opts.disabled === true || opts.focusable === false);
+  interactionController = InteractionController.create();
+  scope.add(function(){ capabilityController.destroy(); });
+  scope.add(function(){ focusController.destroy(); });
+  scope.add(function(){ interactionController.destroy(); });
+
+  function motionSnapshot() {
+    var active = !!(motion || snapStepMotion);
+    return Object.freeze({ visible:active, present:active, status:active ? 'enter' : 'none', step:active ? 'active' : 'idle', phase:active ? 'shown' : 'hidden', settled:!active, destroyed:destroyed });
+  }
+  function settleMotionWaiters() {
+    if (motion || snapStepMotion || !motionWaiters.length) return;
+    var snapshot = motionSnapshot(), waiters = motionWaiters.slice();
+    motionWaiters.length = 0;
+    waiters.forEach(function(resolve){ resolve(snapshot); });
+  }
+  var motionCoreAdapter = {
+    setVisible:function(visible){
+      if (visible !== true) {
+        var changed = cancelMotion();
+        if (snapStepMotion || snapStepGesture) { cancelSnapStepSequence(); changed = true; }
+        settleMotionWaiters();
+        return changed;
+      }
+      if (motion && motionFrame) motionFrame.request('motion-controller');
+      if (snapStepMotion && snapStepFrame) snapStepFrame.request('motion-controller-snap');
+      return !!(motion || snapStepMotion);
+    },
+    getState:motionSnapshot,
+    whenSettled:function(){
+      if (!motion && !snapStepMotion) return Promise.resolve(motionSnapshot());
+      return new Promise(function(resolve){ motionWaiters.push(resolve); });
+    },
+    cancel:function(){
+      var changed = cancelMotion();
+      if (snapStepMotion || snapStepGesture) { cancelSnapStepSequence(); changed = true; }
+      settleMotionWaiters();
+      return changed;
+    },
+    destroy:function(){ this.cancel(); return true; }
+  };
+  motionController = MotionController.create({ core:motionCoreAdapter, ownsCore:false });
+  scope.add(function(){ motionController.cancel({ source:'destroy', reason:'scroll-destroy' }); motionWaiters.length = 0; });
+
   var scrollbarHideDelay = Scheduler.createDelayScheduler(function () { setInteractionClass(false); });
   var scrollIdleDelay = Scheduler.createDelayScheduler(function (_, reason) {
     if (destroyed || snapSettling || motion) return;
@@ -533,6 +591,7 @@ function setupScroll(instance) {
     requestProjection('motion-end');
     if (completed.snapIndex !== null && completed.snapIndex !== undefined) emitSnapSettle(completed.snapIndex, completed.reason || 'snap-motion');
     emitScrollEnd(completed.reason || 'motion-end');
+    settleMotionWaiters();
   });
   scope.add(function () { motionFrame.dispose(); });
     
@@ -557,6 +616,7 @@ function setupScroll(instance) {
     snapStepMotion = null;
     snapStepFrame.cancel();
     snapSettling = false;
+    settleMotionWaiters();
   }
     
   function snapPointAt(index, axis) {
@@ -619,7 +679,8 @@ function setupScroll(instance) {
       snapStepMotion.finalizing = false;
     }
     var settled = advanceSnapStepMotion(snapStepMotion, 16);
-    if (!settled) snapStepFrame.request('wheel-step-follow');
+    if (!settled) motionController.show({ source:'scroll', reason:'wheel-step-follow' });
+    else settleMotionWaiters();
   }
     
   function completeSnapStepMotion() {
@@ -634,6 +695,7 @@ function setupScroll(instance) {
     updateProjection('wheel-step-settle', false);
     emitSnapSettle(completed.targetIndex, 'wheel-step');
     emitScrollEnd('wheel-step');
+    settleMotionWaiters();
   }
     
   function finishSnapStepGesture() {
@@ -654,7 +716,7 @@ function setupScroll(instance) {
     }
     var settled = advanceSnapStepMotion(snapStepMotion, 16);
     if (settled) completeSnapStepMotion();
-    else snapStepFrame.request('wheel-step-finalize');
+    else motionController.show({ source:'scroll', reason:'wheel-step-finalize' });
   }
     
   function scheduleSnapStepGestureEnd() {
@@ -668,6 +730,7 @@ function setupScroll(instance) {
     motion = null;
     snapSettling = false;
     motionFrame.cancel();
+    settleMotionWaiters();
     return true;
   }
     
@@ -693,7 +756,7 @@ function setupScroll(instance) {
         reason: reason || 'programmatic',
         snapIndex: snapIndex === undefined ? null : snapIndex
       };
-      motionFrame.request('motion');
+      motionController.show({ source:'scroll', reason:reason || 'programmatic' });
       return true;
     }
     writeScrollX(nextLeft);
@@ -887,32 +950,38 @@ function setupScroll(instance) {
     scrollIdleDelay.request(delay, reason || 'scroll-idle');
   }
     
-  function onKeyDown(event) {
-    if (destroyed || opts.keyboard === false || userInteractionBlocked()) return;
+  function resolveKeyboardAction(event) {
+    if (opts.keyboard === false) return null;
     var target = event.target;
-    if (target && target !== root && target.closest && target.closest('input,textarea,select,button,[contenteditable="true"]')) return;
-    var metrics = getMetrics();
-    var x = metrics.x;
-    var y = metrics.y;
-    var handled = true;
+    if (target && target !== root && target.closest && target.closest('input,textarea,select,button,[contenteditable="true"]')) return null;
+    var key = String(event && event.key || '');
+    if (key === 'ArrowDown' && axisEnabled('y', opts.axis)) return 'LINE_DOWN';
+    if (key === 'ArrowUp' && axisEnabled('y', opts.axis)) return 'LINE_UP';
+    if (key === 'ArrowRight' && axisEnabled('x', opts.axis)) return 'LINE_RIGHT';
+    if (key === 'ArrowLeft' && axisEnabled('x', opts.axis)) return 'LINE_LEFT';
+    if (key === 'PageDown' && axisEnabled('y', opts.axis)) return 'PAGE_DOWN';
+    if (key === 'PageUp' && axisEnabled('y', opts.axis)) return 'PAGE_UP';
+    if (key === 'Home') return 'HOME';
+    if (key === 'End') return 'END';
+    if (key === ' ' && axisEnabled('y', opts.axis)) return event.shiftKey ? 'PAGE_UP' : 'PAGE_DOWN';
+    return null;
+  }
+  function handleKeyboardAction(action) {
+    var metrics = getMetrics(), x = metrics.x, y = metrics.y;
     var pageY = Math.max(1, Number(viewport.clientHeight) || 1) * 0.9;
     var pageX = Math.max(1, Number(viewport.clientWidth) || 1) * 0.9;
-    switch (event.key) {
-      case 'ArrowDown': if (!axisEnabled('y', opts.axis)) handled = false; else y += 40; break;
-      case 'ArrowUp': if (!axisEnabled('y', opts.axis)) handled = false; else y -= 40; break;
-      case 'ArrowRight': if (!axisEnabled('x', opts.axis)) handled = false; else x += 40; break;
-      case 'ArrowLeft': if (!axisEnabled('x', opts.axis)) handled = false; else x -= 40; break;
-      case 'PageDown': if (!axisEnabled('y', opts.axis)) handled = false; else y += pageY; break;
-      case 'PageUp': if (!axisEnabled('y', opts.axis)) handled = false; else y -= pageY; break;
-      case 'Home': if (opts.axis === 'x') x = 0; else y = 0; break;
-      case 'End': if (opts.axis === 'x') x = metrics.maxX; else y = metrics.maxY; break;
-      case ' ': if (!axisEnabled('y', opts.axis)) handled = false; else y += event.shiftKey ? -pageY : pageY; break;
-      default: handled = false;
-    }
-    if (!handled) return;
-    event.preventDefault();
+    if (action === 'LINE_DOWN') y += 40;
+    else if (action === 'LINE_UP') y -= 40;
+    else if (action === 'LINE_RIGHT') x += 40;
+    else if (action === 'LINE_LEFT') x -= 40;
+    else if (action === 'PAGE_DOWN') y += pageY;
+    else if (action === 'PAGE_UP') y -= pageY;
+    else if (action === 'HOME') { if (opts.axis === 'x') x = 0; else y = 0; }
+    else if (action === 'END') { if (opts.axis === 'x') x = metrics.maxX; else y = metrics.maxY; }
+    else return false;
     activateScrollbar();
     setScrollPosition(x, y, 'auto', 'keyboard');
+    return true;
   }
     
   function createThumbDragSession(axis, thumb) {
@@ -1004,6 +1073,7 @@ function setupScroll(instance) {
     var hadPendingScrollbarHide = scrollbarHideDelay.pending;
     opts = candidate;
     lastScrollState = null;
+    focusController.setDisabled(opts.disabled === true || opts.focusable === false);
     applyRootOptions();
     if (opts.scrollbarVisibility !== 'auto' || manualScrollbarVisibility !== null) clearHideTimer();
     else if (hideDelayChanged && hadPendingScrollbarHide) scheduleScrollbarHide();
@@ -1049,6 +1119,7 @@ function setupScroll(instance) {
   function destroyRuntime() {
     if (destroyed) return false;
     destroyed = true;
+    motionController.cancel({ source:'destroy', reason:'scroll-destroy' });
     clearHideTimer();
     clearScrollIdleTimer();
     cancelSnapStepSequence();
@@ -1071,8 +1142,12 @@ function setupScroll(instance) {
     goToSnap: goToSnap, nextSnap: nextSnap, prevSnap: prevSnap, getCurrentSnap: getCurrentSnap, settleSnap: settleSnap,
     showScrollbar: showScrollbar, hideScrollbar: hideScrollbar, resetScrollbarVisibility: resetScrollbarVisibility,
     refresh: refresh, applyOptions: applyOptions,
-    focus: function () { if (!destroyed && opts.disabled !== true && opts.focusable !== false && root) DOM.focusElement(root); return api; },
+    focus: function () { if (!destroyed && capabilityController.can('focus')) focusController.focus({ preventScroll:true }); return api; },
     getState: getState,
+    getFocusController:function(){ return focusController; },
+    getInteractionController:function(){ return interactionController; },
+    getCapabilityController:function(){ return capabilityController; },
+    getMotionController:function(){ return motionController; },
     getRootElement: function () { return root; },
     getViewportElement: function () { return viewport; },
     getContentElement: function () { return content; },
@@ -1090,8 +1165,19 @@ function setupScroll(instance) {
       scheduleScrollIdle('scroll-idle');
     }
   }, { passive: true }));
+  interactionLease = interactionController.registerScope({
+    id:instance.id + '-scroll',
+    root:root,
+    document:doc,
+    owner:instance,
+    capability:capabilityController,
+    resolveAction:resolveKeyboardAction,
+    operationOf:function(){ return 'navigate'; },
+    onAction:function(action){ return handleKeyboardAction(action) ? 'handled' : 'pass'; }
+  });
+  scope.add(function(){ if (interactionLease) interactionLease.release(); interactionLease = null; });
   scope.add(DOM.listen(root, 'wheel', onWheel, { passive: false }));
-  scope.add(DOM.listen(root, 'keydown', onKeyDown));
+  scope.add(DOM.listen(root, 'keydown', function(event){ interactionController.dispatch(event, { ownerId:instance.id + '-scroll', source:'keyboard' }); }));
   scope.add(DOM.listen(root, 'pointerleave', function () { scheduleScrollbarHide(); }));
   scope.add(DOM.listen(root, 'focusout', function (event) {
     if (!root.contains(event.relatedTarget)) scheduleScrollbarHide();
@@ -1132,6 +1218,14 @@ function recordForScroll(instance) {
 }
 
 export class Scroll extends Component {
+  static profile = Object.freeze({
+    name:'Scroll',
+    focus:Object.freeze({ mode:'scroll-region' }),
+    interaction:Object.freeze({ keymap:'scroll-navigation' }),
+    capability:Object.freeze({ operations:Object.freeze(['focus','navigate','edit','drag']) }),
+    motion:Object.freeze({ mode:'imperative-scroll-motion' }),
+    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController' })
+  });
   static options = SCROLL_DEFAULTS;
   static optionNormalizers = Object.freeze({
     axis: value => normalizeEnum(value, AXES, 'y', 'axis'),
@@ -1184,6 +1278,10 @@ export class Scroll extends Component {
   setFocusable(value) { return this.updateOptions({ focusable:value !== false }); }
   focus() { return recordForScroll(this).focus(); }
   getState() { return recordForScroll(this).getState(); }
+  getFocusController() { return recordForScroll(this).getFocusController(); }
+  getInteractionController() { return recordForScroll(this).getInteractionController(); }
+  getCapabilityController() { return recordForScroll(this).getCapabilityController(); }
+  getMotionController() { return recordForScroll(this).getMotionController(); }
   getRootElement() { return recordForScroll(this).getRootElement(); }
   getViewportElement() { return recordForScroll(this).getViewportElement(); }
   getContentElement() { return recordForScroll(this).getContentElement(); }
