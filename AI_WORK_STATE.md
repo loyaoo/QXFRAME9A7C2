@@ -24,54 +24,25 @@
 
 ## CURRENT
 
-### CORE-HOTPATH-BEHAVIOR-EQUIVALENCE — pre-production performance/structure pass
-Status: DONE_MERGED_VERIFIED
+### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
+Status: IN_PROGRESS
+Task progress: 20%
 Scope:
-- preserve all current UI interaction semantics; no focus/selection/popup policy rewrite.
-- Selection membership diffs are linear while authored selection order is preserved.
-- TreeModel internal traversal no longer copies child arrays; public getChildren() remains defensive-copy.
-- Virtualizer maintains key→index lookup for keyed scroll-anchor preservation.
-- ResponsiveOverflow keeps the same candidate scan order and tail callback semantics, but prefix sizing is O(1) per candidate after one prefix pass.
-- Table search hoists normalized query/searchable columns per projection; default sort values are decorated once per row; custom comparator behavior remains unchanged.
-- Table render uses transaction-local selected/expanded Sets; fixed geometry reads are cached within one measure pass; column resize caches cells only for the active drag session.
-- TreeSelect value lookup is cached by TreeModel revision; Cascader uses TreeQuery.index for stable value→path lookup and invalidates on dataset/lazy-child changes.
-- HierarchicalSelection reuses one leaf traversal inside toggle only; cascade policy is unchanged.
-- ControllableStateCore exposes lightweight ownership reads; ValueController no longer allocates a full ownership snapshot for each controlled check.
-- ValueEquality.deep correctly distinguishes Map/Set/RegExp and no longer sorts plain-object keys.
-- StateController / ValueDraft compatibility aliases are removed; ValueController is the only value authority.
-- Collection snapshot semantics, full hierarchy rewrite, CSS mechanical dedupe and Tags overflow focus behavior are intentionally unchanged in this pass.
-
-Validation:
-- PR #113 merged by squash as `fde8fe7eb9f6121da838c5a80006d6fd1f792ae3`.
-- targeted verifier: `tools/verify-core-hotpaths.mjs`.
-- PR exact-head CI #559 / `36149575692` on `b38a20014cff63f4568966e4770674b9228ec5bf`: success.
-- main CI #560 / `36150117894` on `fde8fe7eb9f6121da838c5a80006d6fd1f792ae3`: release success, npm/dist/demo artifacts success, GitHub Pages artifact success, deploy-pages success.
-- CI during development exposed and removed all remaining `StateController` / `ValueDraft` runtime imports and stale controlled-reset browser expectations; final cleanroom reports zero legacy runtime markers.
-- Tags overflow summary remains intentionally non-focusable.
-
-### HISTORICAL-REGRESSION-REMEDIATION-002 — v31/current shared state + focus defects
-Status: DONE_MERGED
-Implementation progress: 100% for the confirmed shared defects in this pass
-Evidence:
-- PR #111
-- exact merge SHA: query Git on resume; do not cache a self-invalidating HEAD here
-
-Current truth established by this remediation:
-- controlled ownership is explicit and canonical: form reset and constraint/options renormalization do not mutate a controlled committed value and do not emit an unsolicited reset proposal.
-- genuine user/native value changes still use proposal semantics; external owner acknowledgement/value updates use `syncExternal`.
-- `ValueController.reset()` preserves controlled committed value while clearing draft/preview/raw-input transient state; `updateOptions({controlled,value})` transitions ownership then treats value as external sync.
-- Select / TreeSelect / Cascader / Autocomplete popup keyboard focus uses contained popup scope; Tab does not close by escaping the popup domain.
-- DatePicker dual-panel drill keeps the physical panel owner separately from range edit ownership. Returning from year/month drill uses range start as the keyboard anchor when start is visible in the current pair; otherwise it continues from the drilled month without pulling the view back.
-- Upload controlled multi-file `beforeUpload` batches survive owner acknowledgement and rebase both before and after async `beforeUpload` on the latest external canonical list.
-- Tags overflow summary remains intentionally non-focusable and hover-only. Do not add it to the Tags virtual-focus sequence unless a future explicit redesign also specifies popup-domain navigation, deletion reconciliation, scroll restoration and cross-domain focus transfer.
-- checkable Tags form reset resets selection only; it does not roll back the current choices/items list.
-- Control applies its native reset baseline before component reset listeners, so the component owner has the final projection write; Autocomplete / InputOTP / TagInput explicitly reproject their ValueController canonical state after reset.
-
+- DatePicker multiple control projection must reflect the current open-session draft while committed/FormData remain unchanged until commit.
+- DatePicker needConfirm=false presets must commit immediately and close after a successful complete preset selection.
+- DatePicker needConfirm=true presets update draft and keep the popup open until explicit confirm.
+- TimePicker / ColorPicker / WheelPicker controls must display draft/preview while the popup is open, independent of whether a separate draftValueTarget exists.
+- Escape/cancel/outside-close rollback semantics remain unchanged; close itself never implies commit.
+- Preserve ValueController as the only committed/draft/preview authority and keep external draftValueTarget as an additional projection only, not a reason to suppress control draft display.
+Baseline:
+- branch: `fix/picker-draft-projection-20260925`
+- base: current `main` after PR #113 and its checkpoint update
+- open PR: none yet
+- latest verified code main CI before this task: #560 / `36150117894` green
 Next exact step:
-1. continue Astra High acceptance only from current main and newly reproducible findings.
-2. do not restart Phase A-I, repeat PR #111 ownership work, or repeat PR #113 hotpath work from zero.
-3. preserve the Tags overflow non-focusable decision unless the user explicitly changes it.
-4. performance items intentionally deferred from PR #113 remain deferred unless new evidence justifies them: Collection snapshot/revision semantics, full Hierarchy architecture rewrite, global Table cell registry, and CSS mechanical dedupe.
+1. patch DatePicker / TimePicker / ColorPicker / WheelPicker projection paths to follow handbook §19 display rules.
+2. add browser-visible regression coverage for external draftValueTarget + control draft projection, DatePicker multiple, and preset immediate/confirm behavior.
+3. run targeted/static verification, open PR, wait for exact-head GitHub Actions, then merge only if green.
 
 ## Current authority snapshot — after Phase A
 
