@@ -239,6 +239,10 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       if (Number(opts.maxSize || 0) > 0 && Number(file.size || 0) > Number(opts.maxSize)) { reject(file, 'maxSize', { maxSize: Number(opts.maxSize) }); return Promise.resolve(null); }
       var initial = normalizeRecord(file);
       var generation = sourceGeneration === undefined ? mutationGeneration : sourceGeneration;
+      if (controlled && workingState && workingState.valueRevision !== valueRevision) {
+        workingState.records = records.slice();
+        workingState.valueRevision = valueRevision;
+      }
       var targetRecords = workingState && workingState.records ? workingState.records : records;
       var before = Utils.isFunction(opts.beforeUpload) ? Promise.resolve().then(function () { return opts.beforeUpload(file, snapshotList(targetRecords)); }) : Promise.resolve(undefined);
       return before.then(function (result) {
