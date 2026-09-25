@@ -3,7 +3,9 @@ import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
-import { KeyboardRegion } from '../core/keyboardRegion.js';
+import { FocusController } from '../core/focusController.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { Utils } from '../utils/utils.js';
 import { Tree } from './tree.js';
 
@@ -94,7 +96,9 @@ function setupJSON(instance) {
   var tree = null;
   var scope = Lifecycle.createScope();
   var keyboard = null;
-  var regionController = null;
+  var focusController = null;
+  var capabilityController = null;
+  var feedbackController = null;
   var toolbarDomain = null;
   var keyboardZone = 'tree';
   var editSession = null;
@@ -108,6 +112,24 @@ function setupJSON(instance) {
   root.className = 'qxframe9a7c2-json-root';
   root.tabIndex = 0;
   root.classList.toggle('is-editable', opts.editable === true && opts.readOnly !== true);
+  capabilityController = CapabilityController.create({
+    getState:function(){return { disabled:destroyed, readOnly:opts.readOnly === true };},
+    getCapabilities:function(){return { focusable:true, navigable:true, activatable:true, editable:opts.editable === true, expandable:true };}
+  });
+  scope.add(function(){ if(capabilityController) capabilityController.destroy(); capabilityController=null; });
+  var feedbackStatus = 'idle';
+  function syncFeedbackClasses(){
+    root.classList.toggle('is-loading', feedbackStatus === 'pending' || feedbackStatus === 'progress');
+    root.classList.toggle('is-error', feedbackStatus === 'error');
+    root.classList.toggle('is-warning', feedbackStatus === 'warning');
+    root.classList.toggle('is-success', feedbackStatus === 'success');
+  }
+  feedbackController = FeedbackController.createForProjector(Object.freeze({
+    show:function(snapshot){feedbackStatus=snapshot.status;syncFeedbackClasses();return root;},
+    update:function(_handle,snapshot){feedbackStatus=snapshot.status;syncFeedbackClasses();return root;},
+    close:function(){feedbackStatus='idle';syncFeedbackClasses();return true;}
+  }),{ownerId:instance.id},'local');
+  scope.add(function(){ if(feedbackController) feedbackController.destroy(); feedbackController=null; });
   toolbar.className = 'qxframe9a7c2-json-toolbar';
   treeHost.className = 'qxframe9a7c2-json-tree';
   root.appendChild(treeHost); opts.container.appendChild(root);
@@ -201,7 +223,7 @@ function setupJSON(instance) {
   function makeToolbarButton(key, text, action, extraClass) {
     var button = doc.createElement('button'); button.type = 'button'; button.tabIndex = -1; button.className = 'qxframe9a7c2-json-action qxframe9a7c2-button is-default is-outlined is-sm' + (extraClass ? ' ' + extraClass : ''); button.textContent = text; button.setAttribute('data-json-action', key);
     scope.add(DOM.listen(button, 'pointerdown', function (event) { if (event.preventDefault) event.preventDefault(); DOM.focusElement(root, { preventScroll:true }); keyboardZone = 'toolbar'; if (toolbarDomain) toolbarDomain.activate(key, { source:'pointer', reason:'json-toolbar-pointer', originalEvent:event, ensureVisible:false }); }));
-    scope.add(DOM.listen(button, 'click', action)); return button;
+    scope.add(DOM.listen(button, 'click', function(event){ if(capabilityController && capabilityController.can('activate')) return action(event); return false; })); return button;
   }
   function renderToolbar() {
     toolbar.replaceChildren();
@@ -255,6 +277,7 @@ function setupJSON(instance) {
     return true;
   }
   function beginEdit(key, reason, event, knownEditor, source) {
+    if (!capabilityController || !capabilityController.can('edit')) return false;
     key = String(key || '');
     var item = editableItem(key);
     if (!item) return false;
@@ -292,7 +315,7 @@ function setupJSON(instance) {
     if (typeof opts.onChange === 'function') opts.onChange(nextData, Object.freeze(Utils.assignOwn({ data: nextData, json: api }, detail || {})));
   }
   function commitEdit(reason, event, restoreFocus) {
-    if (!editSession) return false;
+    if (!editSession || !capabilityController || !capabilityController.can('edit')) return false;
     var session = editSession, item = editableItem(session.key), editor = session.editor;
     if (!item || !editor) { editSession = null; return false; }
     var nextValue;
@@ -385,8 +408,9 @@ function setupJSON(instance) {
     if(keyboardZone==='tree'){ return moveToolbar(backward?-1:1, backward?'last':'first'); }
     return activateTreeCursor('json-region-tree',event);
   }
-  regionController = KeyboardRegion.create({
+  focusController = FocusController.create({
     root:root,
+    document:doc,
     navigation:{
       focusRoot:root,
       allowEditableKey:function(){return false;},
@@ -408,21 +432,21 @@ function setupJSON(instance) {
     },
     onEnter:function(detail){ activateTreeCursor('json-region-enter', detail.originalEvent); }
   });
-  keyboard = regionController.keyboard;
+  keyboard = focusController.keyboard;
   toolbarDomain = keyboard.virtualFocus.registerDomain({name:'json-toolbar',getElement:toolbarElement,reconcile:toolbarReconcile,ensureVisible:function(){return true;}});
-  scope.add(function(){ if(toolbarDomain) toolbarDomain.destroy(); toolbarDomain=null; if(regionController) regionController.destroy(); regionController=null; keyboard=null; });
+  scope.add(function(){ if(toolbarDomain) toolbarDomain.destroy(); toolbarDomain=null; if(focusController) focusController.destroy(); focusController=null; keyboard=null; });
     
   function render(reason) {
     if (destroyed) return false;
     root.classList.toggle('is-editable', opts.editable === true && opts.readOnly !== true);
-    syncTree(reason); renderToolbar(); completePendingEdit(); return api;
+    syncTree(reason); renderToolbar(); completePendingEdit(); syncFeedbackClasses(); return api;
   }
   function serialize() {
     try { var output = global.JSON.stringify(opts.data, null, opts.indent); return output === undefined ? String(opts.data) : output; }
     catch (_) { return String(opts.data); }
   }
   function setData(data) { if (destroyed) return false; api.updateOptions({ data: data }); return api; }
-  function copy() { if (destroyed) return Promise.resolve(false); var target = clipboard(); if (!target) return Promise.resolve(api); return target.writeText(serialize()).then(function () { return api; }); }
+  function copy() { if (destroyed || !capabilityController || !capabilityController.can('copy')) return Promise.resolve(false); var target = clipboard(); if (!target) return Promise.resolve(api); return target.writeText(serialize()).then(function () { return api; }); }
   function applyOptions(nextOptions, patch) {
     if (destroyed) return false;
     var changed = patch || {};
@@ -444,7 +468,7 @@ function setupJSON(instance) {
   }
   function destroyRuntime() {
     if (destroyed) return false;
-    destroyed = true; pendingEditKey = null; pendingEditReason = null; editSession = null; if(treeRenderDispose)treeRenderDispose();treeRenderDispose=null;if(treeVirtualRenderDispose)treeVirtualRenderDispose();treeVirtualRenderDispose=null;scope.dispose();toolbarDomain=null;regionController=null;keyboard=null;if (tree) tree.destroy('json-destroy'); tree = null; DOM.removeNode(root); root = toolbar = treeHost = null; return true;
+    destroyed = true; pendingEditKey = null; pendingEditReason = null; editSession = null; if(treeRenderDispose)treeRenderDispose();treeRenderDispose=null;if(treeVirtualRenderDispose)treeVirtualRenderDispose();treeVirtualRenderDispose=null;scope.dispose();toolbarDomain=null;focusController=null;capabilityController=null;feedbackController=null;keyboard=null;if (tree) tree.destroy('json-destroy'); tree = null; DOM.removeNode(root); root = toolbar = treeHost = null; return true;
   }
     
   var record = {
@@ -462,7 +486,10 @@ function setupJSON(instance) {
     getState: getState,
     getTree: function () { return tree; },
     getKeyboardNavigation: function () { return keyboard; },
-    getKeyboardRegion: function () { return regionController; },
+    getKeyboardRegion: function () { return focusController ? focusController.getKeyboardRegion() : null; },
+    getFocusController: function () { return focusController; },
+    getCapabilityController: function () { return capabilityController; },
+    getFeedbackController: function () { return feedbackController; },
     getRootElement: function () { return root; },
     getTreeElement: function () { return tree ? tree.getRootElement() : null; },
     getToolbarElement: function () { return toolbar; }
@@ -484,6 +511,14 @@ function normalizeOnChange(value) {
 }
 
 export class JSONComponent extends Component {
+  static profile = Object.freeze({
+    name:'JSON',
+    focus:Object.freeze({mode:'tree-toolbar-region'}),
+    interaction:Object.freeze({mode:'keyboard-region'}),
+    capability:Object.freeze({mode:'inspect-edit-copy-policy'}),
+    feedback:Object.freeze({mode:'root-state-projection'}),
+    ownership:Object.freeze({focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',feedback:'FeedbackController'})
+  });
   static options = JSON_DEFAULTS;
   static optionNormalizers = Object.freeze({
     collapsed: value => value === true,
@@ -527,6 +562,9 @@ export class JSONComponent extends Component {
   getTree() { return recordFor(this).getTree(); }
   getKeyboardNavigation() { return recordFor(this).getKeyboardNavigation(); }
   getKeyboardRegion() { return recordFor(this).getKeyboardRegion(); }
+  getFocusController() { return recordFor(this).getFocusController(); }
+  getCapabilityController() { return recordFor(this).getCapabilityController(); }
+  getFeedbackController() { return recordFor(this).getFeedbackController(); }
   getRootElement() { return recordFor(this).getRootElement(); }
   getTreeElement() { return recordFor(this).getTreeElement(); }
   getToolbarElement() { return recordFor(this).getToolbarElement(); }
