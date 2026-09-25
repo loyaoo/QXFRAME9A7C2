@@ -231,9 +231,12 @@ export class FieldComponent extends Component {
         const controller = state.valueController;
         const previous = cloneValue(controller.value);
         const next = cloneValue(value);
-        if (ValueEquality.deep(previous, next) && detail.forceEvent !== true) return false;
-        if (detail.source === 'external' || detail.source === 'options') controller.syncExternal(next, { silent:true, source:detail.source, reason:detail.reason || 'field-value' });
-        else controller.setValue(next, { silent:true, source:detail.source || 'component', reason:detail.reason || 'field-value' });
+        const same = ValueEquality.deep(previous, next);
+        if (same && detail.forceEvent !== true && detail.sync !== true) return false;
+        if (!same) {
+            if (detail.source === 'external' || detail.source === 'options') controller.syncExternal(next, { silent:true, source:detail.source, reason:detail.reason || 'field-value' });
+            else controller.setValue(next, { silent:true, source:detail.source || 'component', reason:detail.reason || 'field-value' });
+        }
         const committed = cloneValue(controller.value);
         if (state.bridge) state.bridge.setValue(committed, { silent: detail.silent === true, forceEvent: detail.forceEvent === true });
         if (state.formRegistration && detail.notifyForm !== false) {
