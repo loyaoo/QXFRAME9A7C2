@@ -2,6 +2,7 @@ import { Utils } from '../utils/utils.js';
 import { PopupFieldComponent, popupFieldHooks } from './popup-field.js';
 import { PickerSession } from '../core/pickerSession.js';
 import { DOM } from '../core/dom.js';
+import { SelectionController } from '../core/selectionController.js';
 
 const state = new WeakMap();
 
@@ -20,7 +21,25 @@ function requireState(instance) {
 export class PickerComponent extends PopupFieldComponent {
     constructor(options = {}) {
         super(options);
-        state.set(this, { field: null, controller: null, session: null });
+        state.set(this, { field: null, controller: null, session: null, selectionController: null });
+    }
+
+    setupPickerSelection(options = {}) {
+        const record = requireState(this);
+        if (record.selectionController) throw new Error('[QXFRAME9A7C2] Picker selection controller is already initialized.');
+        const multiple = options.multiple === true;
+        const controller = SelectionController.create({
+            channels: { selected: { multiple: multiple, values: Array.isArray(options.values) ? options.values : [] } }
+        });
+        record.selectionController = this.own(controller);
+        return controller;
+    }
+
+    syncPickerSelection(keys, meta = {}) {
+        const controller = requireState(this).selectionController;
+        if (!controller) return false;
+        const selected = controller.getChannel('selected');
+        return selected.set(Array.isArray(keys) ? keys : (keys == null || keys === '' ? [] : [keys]), Utils.assignOwn({ silent:true, source:'picker', reason:'picker-selection-sync' }, meta));
     }
 
     setupPickerSession(options = {}) {
@@ -59,6 +78,8 @@ export class PickerComponent extends PopupFieldComponent {
             });
         }
         if (field.getInputElement) this.bindFocusTarget(field.getInputElement() || field.getRootElement());
+        const control = field.getControl && field.getControl();
+        if (control && !this.getFeedbackController()) this.bindFeedbackControl(control);
         return field;
     }
 
@@ -141,8 +162,10 @@ export class PickerComponent extends PopupFieldComponent {
 
     getPickerField() { return requireState(this).field; }
     getPickerSession() { return requireState(this).session; }
+    getSelectionController() { return requireState(this).selectionController; }
     getDraftController() { return requireState(this).controller; }
     getControl() { const field = requireState(this).field; return field ? field.getControl() : null; }
+    getFocusController() { const field = requireState(this).field; return field && field.getFocusController ? field.getFocusController() : null; }
     getRootElement() { const field = requireState(this).field; return field ? field.getRootElement() : this.root; }
     getInputElement() { const field = requireState(this).field; return field && field.getInputElement ? field.getInputElement() : null; }
     getPopupElement() { const field = requireState(this).field; return field ? field.getPanelElement() : super.getPopupElement(); }
