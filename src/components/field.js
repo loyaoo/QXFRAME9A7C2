@@ -137,7 +137,7 @@ export class FieldComponent extends Component {
         if (record.ownsValueController && previous && typeof previous.destroy === 'function') previous.destroy();
         record.valueController = controller;
         record.ownsValueController = settings.owned === true;
-        if (settings.sync !== false && !ValueEquality.deep(controller.value, previousValue)) controller.setValue(previousValue, { silent:true, source:'field', reason:'bind-value-controller' });
+        if (settings.syncFromField === true && !ValueEquality.deep(controller.value, previousValue)) controller.setValue(previousValue, { silent:true, source:'field', reason:'bind-value-controller' });
         if (record.bridge) record.bridge.setValue(controller.value, { silent:true });
         return controller;
     }
