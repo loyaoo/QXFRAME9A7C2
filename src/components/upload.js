@@ -8,8 +8,9 @@ import { UploadLifecycle } from '../core/uploadLifecycle.js';
 import { Renderer } from '../core/renderer.js';
 import { OverlayController } from '../core/overlayController.js';
 import { ReorderInteraction } from '../core/reorderInteraction.js';
+import { SelectionController } from '../core/selectionController.js';
 import { Utils } from '../utils/utils.js';
-import { FieldComponent } from './field.js';
+import { FieldComponent, createSimpleFieldProfile } from './field.js';
 import { Image } from './image.js';
 import { Control } from './control.js';
 import { Item } from './item.js';
@@ -25,6 +26,7 @@ const UPLOAD_DEFAULTS = Object.freeze({
   progressView: Object.freeze({ thickness: 6, showLabel: true }), actionVisibility: null
 });
 const uploadState = new WeakMap();
+const UPLOAD_FIELD_PROFILE = createSimpleFieldProfile('Upload');
 
 function validateViewOptions(options) {
   if (options.progressView != null && (typeof options.progressView !== 'object' || Array.isArray(options.progressView))) throw new TypeError('[QXFRAME9A7C2] Upload progressView must be an object.');
@@ -90,6 +92,10 @@ function setupUpload(instance) {
   var previewUid = '';
   var reorderInteraction = null;
   var formBridge = null;
+  var selectionController = null;
+  var capabilityController = null;
+  var interactionController = null;
+  var feedbackController = null;
   var doc = fieldInit.document || opts.document || (opts.container && opts.container.ownerDocument) || (opts.formField && opts.formField.ownerDocument) || global.document;
     
   var root = doc.createElement('div');
@@ -185,21 +191,49 @@ function setupUpload(instance) {
     });
   }
   function serializeFormValue(value) { return typeof opts.serializeValue === 'function' ? opts.serializeValue(value, api) : defaultFormValue(value); }
+  function syncPreviewSelection(uid, reason) {
+    if (!selectionController) return false;
+    return uid
+      ? selectionController.selected.replace([String(uid)], { silent:true, source:'upload', reason:reason || 'preview' })
+      : selectionController.selected.clear({ silent:true, source:'upload', reason:reason || 'preview-clear' });
+  }
+  function projectUploadFeedback() {
+    if (!root || !lifecycle) return root;
+    var value = lifecycle.getValue();
+    var lifecycleState = lifecycle.getState();
+    var hasError = value.some(function (record) { return record && record.status === 'error'; });
+    root.classList.toggle('is-loading', Number(lifecycleState.uploading || 0) > 0);
+    root.classList.toggle('is-error', hasError);
+    return root;
+  }
+  function publishUploadFeedback(status, record, percent, message) {
+    if (!feedbackController || !record) return false;
+    return feedbackController.publish({
+      operation:'upload',
+      requestId:String(record.uid),
+      status:status,
+      progress:Number.isFinite(Number(percent)) ? Number(percent) : undefined,
+      message:message || record.name || '',
+      target:'local'
+    });
+  }
   function lifecycleOptions(includeValue) {
     var next = {
       multiple: opts.multiple === true, disabled: opts.disabled === true, autoUpload: opts.autoUpload !== false,
       accept: opts.accept, maxCount: opts.maxCount, maxSize: opts.maxSize, beforeUpload: opts.beforeUpload,
       transformFile: opts.transformFile, request: opts.request,
-      onProgress: function (percent, record) { if (typeof opts.onProgress === 'function') opts.onProgress(percent, record, api); },
+      onProgress: function (percent, record) { publishUploadFeedback('progress', record, percent, record && record.name); if (typeof opts.onProgress === 'function') opts.onProgress(percent, record, api); },
       onReject: function (file, detail) { if (typeof opts.onReject === 'function') opts.onReject(file, Utils.mergeOwn( detail, { instance: api })); },
-      onSuccess: function (response, record) { if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
-      onError: function (error, record) { if (typeof opts.onError === 'function') opts.onError(error, record, api); },
+      onSuccess: function (response, record) { publishUploadFeedback('success', record, 100, record && record.name); if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
+      onError: function (error, record) { publishUploadFeedback('error', record, record && record.percent, error && error.message || record && record.name); if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
-        var canonical = detail && detail.controlled === true ? lifecycle.getValue() : value;
-        api.setFieldValue(canonical, { silent: true, force: true });
+        var controlledProposal = detail && detail.controlled === true && detail.operation !== 'set-value';
+        var canonical = controlledProposal ? (api.value || []) : value;
+        api.setFieldValue(canonical, { silent: true, force: true, source:detail && detail.controlled === true ? 'controlled-lifecycle' : 'component', reason:detail && detail.reason || 'upload-change' });
         if (formBridge) formBridge.setValue(canonical, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(canonical);
         renderList();
+        projectUploadFeedback();
         var enriched = Utils.mergeOwn(detail, { instance: api });
         if (detail.operation === 'move' && typeof opts.onSort === 'function') opts.onSort(value.slice(), enriched);
         if (destroyed) return;
@@ -215,6 +249,36 @@ function setupUpload(instance) {
     return next;
   }
   var lifecycle = UploadLifecycle.create(lifecycleOptions(true));
+  selectionController = api.own(SelectionController.create({ channels:{ selected:{ values:[], multiple:false } } }));
+  capabilityController = api.bindCapabilityController({ capabilities:{ focusable:true, tabbable:true, activatable:true, selectable:true, removable:true, openWhenReadOnly:true } });
+  api.bindFocusController(trigger, { manageTabIndex:false, navigation:{ handlers:{} } });
+  interactionController = api.bindInteractionController(trigger, {
+    capabilityController: capabilityController,
+    profile:{ keymap:{ Enter:'ACTIVATE', ' ':'ACTIVATE', Spacebar:'ACTIVATE' } },
+    operationOf:function () { return 'open'; },
+    onAction:function (action) {
+      if (action !== 'ACTIVATE') return 'pass';
+      if (!capabilityController.can('open') || opts.openFileDialogOnClick === false) return 'blocked';
+      open();
+      return 'handled';
+    }
+  });
+  feedbackController = api.bindFeedbackProjector(Object.freeze({
+    show:function () { return projectUploadFeedback(); },
+    update:function () { return projectUploadFeedback(); },
+    close:function () { return projectUploadFeedback(); }
+  }));
+  scope.add(lifecycle.on('upload-start', function (detail) {
+    if (detail && detail.file) publishUploadFeedback('pending', detail.file, 0, detail.file.name);
+  }));
+  scope.add(lifecycle.on('abort', function (detail) {
+    if (detail && detail.file) feedbackController.clear({ operation:'upload', requestId:String(detail.file.uid), target:'local' });
+    projectUploadFeedback();
+  }));
+  scope.add(lifecycle.on('remove', function (detail) {
+    if (detail && detail.file) feedbackController.clear({ operation:'upload', requestId:String(detail.file.uid), target:'local' });
+    projectUploadFeedback();
+  }));
   reorderInteraction = ReorderInteraction.create({
     root: list,
     document: doc,
@@ -384,17 +448,20 @@ function setupUpload(instance) {
     });
     syncStructure();
   }
-  function addFiles(files, meta) { return lifecycle.addFiles(files, meta).then(function (result) { input.value=''; return result; }); }
-  function open() { if (!destroyed && !opts.disabled && opts.openFileDialogOnClick !== false) input.click(); return api; }
-  function handleTrigger(event) { if (opts.disabled || opts.openFileDialogOnClick === false) return; if (event.preventDefault) event.preventDefault(); open(); }
+  function addFiles(files, meta) {
+    if (!capabilityController || !capabilityController.can('select')) return Promise.resolve([]);
+    return lifecycle.addFiles(files, meta).then(function (result) { input.value=''; return result; });
+  }
+  function open() { if (!destroyed && capabilityController && capabilityController.can('open') && opts.openFileDialogOnClick !== false) input.click(); return api; }
+  function handleTrigger(event) { if (!capabilityController || !capabilityController.can('open') || opts.openFileDialogOnClick === false) return; if (event.preventDefault) event.preventDefault(); open(); }
   function handleDrag(event) {
-    if (!opts.drag) return;
+    if (!opts.drag || !capabilityController || !capabilityController.can('select')) return;
     if (event.preventDefault) event.preventDefault();
     if (event.type === 'dragenter' || event.type === 'dragover') root.classList.add('is-dragover'); else root.classList.remove('is-dragover');
     if (event.type === 'drop' && event.dataTransfer) { if (typeof opts.onDrop === 'function') opts.onDrop(event, api); if (!destroyed) addFiles(event.dataTransfer.files, { source: 'drop', event: event }); }
   }
   function handlePaste(event) {
-    if (!opts.pastable || opts.disabled || !event.clipboardData) return;
+    if (!opts.pastable || !capabilityController || !capabilityController.can('select') || !event.clipboardData) return;
     var files = Array.prototype.slice.call(event.clipboardData.files || []); if (!files.length) return;
     if (event.preventDefault) event.preventDefault(); if (typeof opts.onPaste === 'function') opts.onPaste(files, event, api); if (!destroyed) addFiles(files, { source: 'paste', event: event });
   }
@@ -411,6 +478,7 @@ function setupUpload(instance) {
     previewPanel = null;
     previewOverlay = null;
     previewUid = '';
+    syncPreviewSelection('', 'document-preview-close');
     clearPreviewListeners();
     if (overlayController) {
       if (overlayController.getState().active) overlayController.deactivate({ reason: reason || 'close', originalEvent: event || null });
@@ -447,6 +515,7 @@ function setupUpload(instance) {
     if (previewMediaController) destroyMediaPreview('replace', event, mediaPreviewPresent());
 
     previewUid = record.uid;
+    syncPreviewSelection(previewUid, 'media-preview-open');
     previewMediaController = Image.createPreview({
       document: doc,
       items: items,
@@ -459,6 +528,7 @@ function setupUpload(instance) {
       onChange: function (index, detail) {
         var active = mediaRecords[index] || null;
         previewUid = active ? active.uid : '';
+        syncPreviewSelection(previewUid, 'media-preview-change');
         if (typeof opts.onPreviewChange === 'function') opts.onPreviewChange(index, Utils.mergeOwn( detail, { file: active, instance: api, previewInstance: detail && detail.instance }));
       },
       onDownload: function (item, detail) {
@@ -471,6 +541,7 @@ function setupUpload(instance) {
         var active = mediaRecords[index] || null;
         if (!visible) previewUid = '';
         else if (active) previewUid = active.uid;
+        syncPreviewSelection(previewUid, visible ? 'media-preview-visible' : 'media-preview-close');
         if (typeof opts.onPreviewVisibleChange === 'function') {
           opts.onPreviewVisibleChange(visible, Utils.mergeOwn( detail || {}, {
             file: active,
@@ -486,7 +557,7 @@ function setupUpload(instance) {
   }
   function preview(target, event) {
     var record = lifecycle.find(target);
-    if (!record || opts.previewable === false || opts.disabled === true) return Promise.resolve(api);
+    if (!record || opts.previewable === false || !capabilityController || !capabilityController.can('open')) return Promise.resolve(api);
     var previewGeneration = lifecycle.getState().mutationGeneration;
     var resolved = null;
     if (typeof opts.previewFile === 'function' && record.file) {
@@ -505,6 +576,7 @@ function setupUpload(instance) {
       if (previewMediaController) destroyMediaPreview('replace', event, mediaPreviewPresent());
       closePreview('replace');
       previewUid = record.uid;
+      syncPreviewSelection(previewUid, 'document-preview-open');
       previewModal = doc.createElement('div'); previewModal.className='qxframe9a7c2-upload-preview-root';
       previewMask=doc.createElement('div'); previewPanel=doc.createElement('div');
       var panel=previewPanel, head=doc.createElement('div'), title=doc.createElement('div'), close=doc.createElement('button'), body=doc.createElement('div');
@@ -556,7 +628,7 @@ function setupUpload(instance) {
   }
   function commitRemove(target, meta) { lifecycle.remove(target,meta||{source:'api'}); return api; }
   function remove(target, meta) {
-    var record=lifecycle.find(target); if (!record || opts.disabled) return api;
+    var record=lifecycle.find(target); if (!record || !capabilityController || !capabilityController.can('remove')) return api;
     if (typeof opts.beforeRemove !== 'function') return commitRemove(record.uid,meta);
     var removeGeneration = lifecycle.getState().mutationGeneration;
     var gate;
@@ -603,10 +675,10 @@ function setupUpload(instance) {
   }
 
   var initialValue = lifecycle.getValue();
-  formBridge = Control.createFormFieldBridge({ root: root, target: opts.container, formField: opts.formField, document: doc, name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, value: lifecycle.getValue(), serializeValue: serializeFormValue, getValue: lifecycle.getValue, onReset: function () {
+  formBridge = api.bindFormBridge({ root: root, target: opts.container, formField: opts.formField, document: doc, name: opts.name, disabled: opts.disabled === true, readOnly: false, required: opts.required === true, value: lifecycle.getValue(), serializeValue: serializeFormValue, getValue: function () { return api.value || []; }, onReset: function () {
     lifecycle.setValue(initialValue, { silent: true, source: 'form', reason: 'reset' });
     var resetValue = lifecycle.getValue();
-    api.setFieldValue(resetValue, { silent: true, force: true });
+    api.setFieldValue(resetValue, { silent: true, force: true, source:'form', reason:'reset' });
     reconcileObjectUrls(resetValue);
     renderList();
     if (formBridge) formBridge.setValue(resetValue, { silent: true });
@@ -616,13 +688,12 @@ function setupUpload(instance) {
     if (destroyed) return false;
     destroyed = true;
     if (previewModal) closePreview('destroy');
-    if (previewMediaController) { previewMediaController.destroy(); previewMediaController=null; previewUid=''; }
+    if (previewMediaController) { previewMediaController.destroy(); previewMediaController=null; previewUid=''; syncPreviewSelection('', 'destroy'); }
     Object.keys(objectUrls).forEach(revokeObjectUrl);
     if (reorderInteraction) reorderInteraction.destroy();
     reorderInteraction=null;
     lifecycle.destroy();
     scope.dispose();
-    if (formBridge) formBridge.destroy();
     formBridge=null;
     root.remove();
     return true;
@@ -635,13 +706,17 @@ function setupUpload(instance) {
     remove: remove,
     move: function (from,to) { lifecycle.move(from,to,{source:'api'}); return api; },
     preview: preview, closePreview: closePreview, download: download, clear: clear,
-    setValue: function (value) { lifecycle.setValue(value,{source:'api'}); return api; },
-    getValue: lifecycle.getValue, applyOptions: applyOptions,
-    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: current.value, controlled:current.controlled===true, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
+    setValue: function (value) { lifecycle.setValue(value,{source:'api'}); api.setFieldValue(lifecycle.getValue(), { silent:true, force:true, source:'api', reason:'set-value' }); return api; },
+    getValue: function () { return api.value || []; }, applyOptions: applyOptions,
+    getState: function () { var current=lifecycle.getState(); return Object.freeze({ value: api.value || [], controlled:current.controlled===true, uploading: current.uploading, disabled: opts.disabled===true, dragging: root.classList.contains('is-dragover'), listType: opts.listType, previewOpen: !!previewModal || mediaPreviewOpen(), previewUid: selectionController && selectionController.selected ? selectionController.selected.value : null, previewType: previewMediaController && mediaPreviewOpen() ? (mediaPreviewState().previewType || 'media') : (previewModal ? 'document' : ''), destroyed: destroyed }); },
     getLifecycle: function () { return lifecycle; },
     getFormField: function () { return formBridge ? formBridge.getFormField() : null; },
     getFormBridge: function () { return formBridge; },
     getReorderInteraction: function () { return reorderInteraction; },
+    getSelectionController: function () { return selectionController; },
+    getCapabilityController: function () { return capabilityController; },
+    getInteractionController: function () { return interactionController; },
+    getFeedbackController: function () { return feedbackController; },
     getRootElement: function () { return root; },
     getInputElement: function () { return input; },
     getTriggerElement: function () { return trigger; },
@@ -657,9 +732,9 @@ function setupUpload(instance) {
   state.runtime = record;
   api.own(destroyRuntime);
   api.bindFocusTarget(trigger);
-  api.setFieldValue(lifecycle.getValue(), { silent: true, force: true });
+  api.setFieldValue(lifecycle.getValue(), { silent: true, force: true, source:own(opts,'value') ? 'external' : 'component', reason:'upload-init' });
 
-  syncStructure(); renderList();
+  syncStructure(); renderList(); projectUploadFeedback();
   return root;
 }
 
@@ -678,6 +753,12 @@ function recordForUpload(instance) {
 }
 
 export class Upload extends FieldComponent {
+  static profile = Object.freeze({
+    ...UPLOAD_FIELD_PROFILE,
+    selection:Object.freeze({ channels:Object.freeze(['selected']), mode:'preview-file' }),
+    overlay:Object.freeze({ mode:'preview' }),
+    ownership:Object.freeze({ ...UPLOAD_FIELD_PROFILE.ownership, selection:'SelectionController', overlay:'OverlayController' })
+  });
   static contract = ComponentContracts.get('Upload');
   static immutableOptions = Object.freeze(['target','container','formField']);
   static optionNormalizers = Object.freeze({ listType:listType });
@@ -722,6 +803,7 @@ export class Upload extends FieldComponent {
   getFormField() { return recordForUpload(this).getFormField(); }
   getFormBridge() { return recordForUpload(this).getFormBridge(); }
   getReorderInteraction() { return recordForUpload(this).getReorderInteraction(); }
+  getSelectionController() { return recordForUpload(this).getSelectionController(); }
   getRootElement() { return recordForUpload(this).getRootElement(); }
   getInputElement() { return recordForUpload(this).getInputElement(); }
   getTriggerElement() { return recordForUpload(this).getTriggerElement(); }
