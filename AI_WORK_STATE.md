@@ -10,47 +10,43 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `157cf96d119ce50c4dd8a38c02c3782adc99e578` (PR #107 merge)
-- Current branch: `refactor/phase-h-table-final-r2-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-027 final Table PR
-- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-025 branch; prune after Phase H signoff
+- Last code-affecting main commit: `a331356fcc418f200b58950153beb346aab2e3b9` (PR #108 merge)
+- Current branch: `release/phase-i-integrity-handoff-20260925`
+- Open PRs at this checkpoint: pending PHASE-I-001 release-integrity/handoff PR
+- Branch inventory at this checkpoint: `main` + merged/superseded migration branches + current Phase I branch; branch pruning is post-handoff housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #510 / `36107647790` (PR #107)
-- Latest green main CI + Pages: #511 / `36108104799` (rerun failed jobs: success)
-- Overall handbook implementation progress: 99%
-- Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-027`
+- Latest green Phase H PR CI: #515 / `36109887374` (PR #108)
+- Latest green main CI + Pages: #516 / `36111306682`
+- Overall handbook implementation progress: 99% (implementation complete through Phase H; Phase I release-integrity/handoff in progress; final broad audit acceptance reserved for GPT-6 Astra High)
+- Current Phase: Phase I — release-integrity + Astra High handoff
+- Current Task: `PHASE-I-001`
 
 ## CURRENT
 
-### PHASE-H-027 — Table final V/F/I/C/S/O/B/R closeout
+### PHASE-I-001 — release-integrity + Astra High handoff
 Status: IN_PROGRESS
-Task progress: 80%
+Task progress: 75%
 
-Completed prerequisites:
-- PHASE-H-025 Sort + Tabs is DONE through PR #106, exact-head CI #503 / `36104289572`, merge `26d116b38dac03761a4841c1a5db1806aa11610d`, main release + Pages #504 / `36104608435`.
-- PHASE-H-026 Carousel + Scroll is DONE through PR #107, exact-head CI #510 / `36107647790`, merge `157cf96d119ce50c4dd8a38c02c3782adc99e578`, main #511 / `36108104799` failed once on the pre-existing Phase E intermediate-frame timing probe and passed on failed-job rerun including release + Pages.
-- Phase H public-component acceptance floor is now 39/40; Table is the last public component.
+Completed prerequisite:
+- PHASE-H-027 Table final closeout is DONE through PR #108, exact-head CI #515 / `36109887374`, merge `a331356fcc418f200b58950153beb346aab2e3b9`, main release + Pages #516 / `36111306682`.
+- all 40 public components are now H accepted against the handbook target matrix.
+- Phase H target matrix is fully profiled 40/40; this Phase I pack raises completed-profile regression floor to 40/40.
 
-Implemented/replayed in current pack:
-- replayed the existing Table final draft cleanly onto latest green main without bringing the stale branch history forward.
-- Table declares exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form ownership; Table does not invent a Motion owner.
-- explicit selected keys are the canonical Table ValueController value; SelectionController remains selection execution/projection and remote `allMatching` remains a separate semantic SelectionController channel.
-- filter overlay delegates to the existing Trigger OverlayController; Table does not create a second overlay owner.
-- remote pending/error visuals enter FeedbackController while AsyncTask remains remote task execution authority.
-- FormBridge remains native carrier and FormController owns field transaction registration/serialization.
-- controlled selection now uses the ValueController request/proposal path; user proposals do not mutate committed selection.
-- controlled form reset proposes the setup-time initial committed selection and does not mutate current committed V/S before the external owner acknowledges/syncs.
-- high-risk Chromium coverage preserves the already-merged Carousel/Scroll checks and adds Table uncontrolled/controlled V/S, Feedback, Overlay, Form serialization and controlled reset evidence.
-- dedicated `verify:phase-h-table-final` freezes no-bypass and owner-identity rules.
+Implemented in current pack:
+- `tools/manifests/phase-h-target-profiles.json` now freezes both `minimumProfiled` and `minimumComplete` at 40.
+- added `verify:phase-i-release-integrity` to the required verify chain.
+- the Phase I gate requires exact 40-component runtime/matrix parity, exact target capability/owner match for every public component, 40 H-accepted acceptance rows, clean Phase I checkpoint state, canonical release-chain coverage, and the completion-audit entry.
+- Table acceptance is updated with PR #108 / CI #515 / main #516 evidence.
+- stale H-027/current 39/40 state and the superseded DatePicker/TimePicker needConfirm issue are removed from the active checkpoint.
+- broad architecture/internal-target audit is deliberately not repeated here; it is handed to GPT-6 Astra High as requested.
 
 Next exact step:
-1. final diff/self-audit against latest main; confirm only Table/package/verifier/checkpoint/acceptance files.
-2. open PHASE-H-027 PR and require exact-head Completion audit + full release/browser + npm/standalone green.
-3. merge only green and verify main + Pages.
-4. mark Table H accepted and Phase H 40/40 accepted.
-5. enter Phase I release-integrity/handoff. Broad final architecture audit/acceptance is intentionally reserved for GPT-6 Astra High as requested.
+1. create the Astra High audit handoff document with authoritative files, CI evidence, audit scope and explicit non-goals.
+2. final diff/self-audit; open PHASE-I-001 PR.
+3. require exact-head Completion audit + full release/browser + npm/standalone green.
+4. merge only green and verify main + Pages.
+5. update final checkpoint to implementation 100% / Phase I release-integrity DONE, while keeping Astra High broad audit acceptance explicitly pending.
 
 ## Current authority snapshot — after Phase A
 
@@ -62,7 +58,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
 - Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
 - Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
-- Form: `FormBridge` remains native field/FormData/reset carrier authority. `FormController` is now the accepted Phase G field/form transaction coordinator above it; Phase H direct field consumers still need migration without duplicating carrier/value ownership.
+- Form: `FormBridge` remains native field/FormData/reset carrier authority. `FormController` is the accepted Phase G field/form transaction coordinator above it; Phase H public field/form consumers are migrated and H accepted without duplicating carrier/value ownership.
 - Theme/token: Phase F is accepted. CSS is the sole visual authority; ComponentProfile exposes exactly 9 Runtime Controllers and no theme/tokens runtime capabilities. CI recursively rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical CSS theme selector.
 - Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
 - Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
@@ -75,11 +71,35 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
-These are current QA targets for later Controller/family migration. They are not PHASE-A-003 scope unless an authority adoption directly touches them.
-
-- DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
+No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-027 — Table final V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #108 merged
+- merge commit `a331356fcc418f200b58950153beb346aab2e3b9`
+- exact-head CI #515 / `36109887374`: success
+- main CI + Pages #516 / `36111306682`: success
+Outcome:
+- Table declares/consumes exact Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form ownership and intentionally has no Motion owner.
+- explicit selected keys are the canonical ValueController value; SelectionController remains local/remote/allMatching execution/projection authority.
+- controlled selection and controlled reset remain proposals until external acknowledgement/sync and do not mutate committed V/S prematurely.
+- filter popup reuses Trigger→OverlayController; remote pending/error enters FeedbackController; FormBridge remains native carrier and FormController owns registration/serialization.
+- high-risk Chromium covers uncontrolled/controlled V/S, silent projection rollback, Feedback, Overlay, repeated-entry Form serialization and controlled reset.
+- Table is H accepted; public Phase H component floor is 40/40.
+
+### Phase H — full public component migration
+Status: PUBLIC SURFACE ACCEPTED 40/40
+Evidence:
+- final component PR #108 / exact-head #515 / main + Pages #516
+- `verify:phase-h-target-matrix` + family-specific Phase H gates + browser regressions
+Outcome:
+- all 40 maintained public components match their handbook Runtime Controller target combinations.
+- remaining broad internal-target/final architecture acceptance is delegated to Phase I/Astra High audit and is not silently inferred from the 40/40 public result.
+
+
 
 ### PHASE-H-026 — Carousel + Scroll closeout
 Status: DONE
