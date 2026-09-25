@@ -13,7 +13,7 @@
 - Last code-affecting main commit: `f00455ecd2d1e8274673806fad5d5629fb08803d` (PR #109 merge)
 - Current branch: `main`
 - Open PRs at this checkpoint: none
-- Branch inventory at this checkpoint: `main` + merged/superseded migration branches + current Phase I branch; branch pruning is post-handoff housekeeping
+- Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
 - Latest green Phase I PR CI: #517 / `36112109009` (PR #109)
