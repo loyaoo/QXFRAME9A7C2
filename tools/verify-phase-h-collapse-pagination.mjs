@@ -22,7 +22,7 @@ function assertProfile(type,name,owners){
 assertProfile(Collapse,'Collapse',['value','focus','interaction','capability','motion']);
 assertProfile(Pagination,'Pagination',['value','focus','interaction','capability']);
 
-assert.match(collapseSource,/StateController\.create\s*\(/,'Collapse value must enter StateController→ValueController.');
+assert.match(collapseSource,/StateController\.create(?:Option)?ValueBinding\s*\(/,'Collapse value must enter StateController→ValueController.');
 assert.match(collapseSource,/FocusController\.create\s*\(/,'Collapse navigation focus must enter FocusController.');
 assert.match(collapseSource,/CapabilityController\.create\s*\(/,'Collapse activation policy must enter CapabilityController.');
 assert.match(collapseSource,/Transition\.create\s*\(/,'Collapse panel motion must stay Transition→MotionController.');
