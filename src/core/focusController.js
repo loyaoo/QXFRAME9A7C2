@@ -2,6 +2,7 @@ import { DOM } from './dom.js';
 import { FocusManager } from './focusManager.js';
 import { FocusScope } from './focusScope.js';
 import { KeyboardRegion } from './keyboardRegion.js';
+import { KeyboardNavigation } from './keyboardNavigation.js';
 import { Utils } from '../utils/utils.js';
 
 function resolveElement(value) {
@@ -161,6 +162,7 @@ export const FocusController = Object.freeze({
   create,
   bindVirtualFocus: KeyboardRegion.bindVirtualFocus,
   forwardHandlers: KeyboardRegion.forwardHandlers,
+  shouldPreserveNativeTextEditing: KeyboardNavigation.shouldPreserveNativeTextEditing,
   createManager: FocusManager.create,
   createScope: FocusScope.create,
   normalizeScopeMode: FocusScope.normalizeMode
