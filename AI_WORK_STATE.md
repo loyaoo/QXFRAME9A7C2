@@ -10,43 +10,45 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `f97417350a24397d95d27e41426d108f12143214` (PR #97 merge)
-- Current branch: `refactor/phase-h-steps-r2-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-017 Steps PR
-- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-016 branch; prune merged task branches after Phase H signoff
+- Last code-affecting main commit: `71687b9057fc25f432d78885821aaf6287734f5f` (PR #98 merge)
+- Current branch: `refactor/phase-h-json-r2-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-018 JSON PR
+- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-018 replay branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #479 / `36090821302` (PR #97)
-- Latest green main CI + Pages: #480 / `36091284678`
-- Overall handbook implementation progress: 97%
+- Latest green Phase H PR CI: #481 / `36091760761` (PR #98)
+- Latest green main CI + Pages: #482 / `36092055152`
+- Overall handbook implementation progress: 98%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-017`
+- Current Task: `PHASE-H-018`
 
 ## CURRENT
 
-### PHASE-H-017 — Steps V/F/I/C/B closeout
+### PHASE-H-018 — JSON F/I/C/B closeout
 Status: IN_PROGRESS
-Task progress: 80%
+Task progress: 85%
 
-Completed prerequisite:
-- PHASE-H-016 is DONE through PR #97, exact-head CI #479 / `36090821302`, merge `f97417350a24397d95d27e41426d108f12143214`, main release + Pages #480 / `36091284678`.
-- Autocomplete is H accepted. Phase H target matrix is now 30 profiled / 27 complete / 13 remaining public components.
+Completed prerequisites:
+- PHASE-H-016 Autocomplete is DONE through PR #97, exact-head CI #479 / `36090821302`, merge `f97417350a24397d95d27e41426d108f12143214`, main release + Pages #480 / `36091284678`.
+- PHASE-H-017 Steps is DONE through PR #98, exact-head CI #481 / `36091760761`, merge `71687b9057fc25f432d78885821aaf6287734f5f`, main release + Pages #482 / `36092055152`.
+- current green main has 31 profiled / 28 complete / 12 remaining public components. H-018 raises the replay branch to at least 32 profiled / 29 complete / 11 remaining.
 
-Implemented in current H-017 pack:
-- Steps current index is projected through StateController→ValueController and the canonical controller is publicly exposed; the existing `current` option remains the API surface.
-- direct KeyboardNavigation construction is removed; step navigation now enters FocusController→KeyboardRegion while preserving ActiveItem/RovingProjection execution state.
-- one CapabilityController gates user navigation and click activation without blocking programmatic setCurrent().
-- one FeedbackController projects pending/progress/error/warning/success visual state onto the Steps root without mutating current/status business state.
-- exact handbook V/F/I/C/B profile/ownership is declared.
-- `verify:phase-h-steps` rejects direct KeyboardNavigation and freezes Value/Focus/Capability/Feedback ownership.
-- strict source-ESM Chromium verifies ValueController current synchronization, FocusController arrow navigation, FeedbackController projection and disabled CapabilityController blocking.
-- target-matrix `minimumComplete` rises from 27 to 28; `minimumProfiled` remains 30.
+Implemented in current H-018 pack:
+- JSON declares the exact handbook Focus/Interaction/Capability/Feedback profile and canonical owners; no Value/Selection/Overlay authority is invented.
+- direct `KeyboardRegion.create()` ownership is removed. The root/tree/toolbar region now enters `FocusController.create()`; the compatibility `getKeyboardRegion()` accessor forwards the FocusController-owned region.
+- keyboard semantics remain the existing KeyboardNavigation path, which resolves semantic actions through InteractionController; no second keydown semantic store is introduced.
+- one CapabilityController gates edit start/commit, toolbar activation and copy while preserving readOnly and loading semantics.
+- one FeedbackController projects pending/progress/error/warning/success root classes only; it does not mutate JSON data/edit business state.
+- strict source-ESM Chromium verifies FocusController region identity, local feedback projection, readOnly edit blocking and editable re-entry.
+- `verify:phase-h-json` rejects direct KeyboardRegion construction and freezes F/I/C/B ownership.
+- target matrix floor is tightened to `minimumProfiled=32`, `minimumComplete=29`.
 
 Next exact step:
-1. open PHASE-H-017 PR and require exact-head full release/browser/package CI.
-2. merge only green and verify main + Pages.
-3. mark Steps H accepted.
-4. continue the remaining 12 components; broad final audit remains reserved for Astra High.
+1. perform final replay diff/self-audit and open PHASE-H-018 PR from latest green main.
+2. require exact-head full release/browser/package CI.
+3. merge only green and verify main + Pages.
+4. mark JSON H accepted.
+5. continue the remaining 11 components by smallest authority gap; broad final audit remains reserved for Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -76,6 +78,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-017 — Steps V/F/I/C/B closeout
+Status: DONE
+Evidence:
+- PR #98 merged
+- merge commit `71687b9057fc25f432d78885821aaf6287734f5f`
+- exact-head CI #481 / `36091760761`: success
+- main CI + Pages #482 / `36092055152`: success
+Outcome:
+- current index remains the public API but canonical state is projected through StateController→ValueController.
+- direct KeyboardNavigation construction is removed; step navigation enters FocusController→KeyboardRegion with shared InteractionController semantics.
+- CapabilityController gates user navigation/click activation while programmatic `setCurrent()` remains available.
+- FeedbackController projects loading/error/warning/success root state without becoming a second business-state owner.
+- exact V/F/I/C/B profile is permanently gated and strict Chromium verifies current sync, arrow navigation, feedback and disabled blocking.
+- Steps is H accepted.
+
+
 
 ### PHASE-H-016 — Autocomplete V/F/I/C/S/O/B/R closeout
 Status: DONE
