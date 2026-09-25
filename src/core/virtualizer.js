@@ -55,15 +55,21 @@ function clamp(value, min, max) {
         return normalized;
       });
     }
+    function indexItemKeys(keys) {
+      if (!keys) return null;
+      var index = new Map();
+      keys.forEach(function (key, position) { index.set(key, position); });
+      return index;
+    }
     var itemKeys = normalizeItemKeys(settings.itemKeys, count);
+    var itemKeyIndex = indexItemKeys(itemKeys);
     function keyFor(index) { return itemKeys ? itemKeys[index] : index; }
     function pruneMeasurements() {
       if (!itemKeys) {
         sizes.forEach(function (_, key) { if (typeof key === 'number' && key >= count) sizes.delete(key); });
         return;
       }
-      var valid = new Set(itemKeys);
-      sizes.forEach(function (_, key) { if (!valid.has(String(key))) sizes.delete(key); });
+      sizes.forEach(function (_, key) { if (!itemKeyIndex.has(String(key))) sizes.delete(key); });
     }
     var prefix = null;
     var dirtyFrom = 0;
@@ -205,7 +211,7 @@ function clamp(value, min, max) {
       var normalized = normalizeCount(nextCount);
       if (normalized === count) return false;
       count = normalized;
-      if (itemKeys && itemKeys.length !== count) { itemKeys = null; sizes.clear(); }
+      if (itemKeys && itemKeys.length !== count) { itemKeys = null; itemKeyIndex = null; sizes.clear(); }
       else pruneMeasurements();
       prefix = null;
       dirtyFrom = 0;
@@ -247,6 +253,7 @@ function clamp(value, min, max) {
 
       count = nextCount;
       itemKeys = nextItemKeys;
+      itemKeyIndex = indexItemKeys(itemKeys);
       if (fixedModeChanged) sizes.clear();
       else pruneMeasurements();
       fixedSize = nextFixedSize;
@@ -259,9 +266,9 @@ function clamp(value, min, max) {
 
       if (geometryChanged && count && settings.preserveScrollAnchor !== false) {
         var nextAnchor = clamp(anchor, 0, count - 1);
-        if (oldAnchorKey !== null && itemKeys) {
-          var keyedAnchor = itemKeys.indexOf(String(oldAnchorKey));
-          if (keyedAnchor >= 0) nextAnchor = keyedAnchor;
+        if (oldAnchorKey !== null && itemKeyIndex) {
+          var keyedAnchor = itemKeyIndex.get(String(oldAnchorKey));
+          if (keyedAnchor !== undefined) nextAnchor = keyedAnchor;
         }
         var newAnchorOffset = getItemOffset(nextAnchor);
         writeScroll(Math.max(0, newAnchorOffset + oldAnchorInnerOffset));
@@ -375,6 +382,7 @@ function clamp(value, min, max) {
       scope.dispose();
       frame.dispose();
       sizes.clear();
+      itemKeyIndex = null;
       prefix = null;
       destroyed = true;
       return true;

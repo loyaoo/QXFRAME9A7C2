@@ -1,7 +1,7 @@
 
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
-import { StateController } from './stateController.js';
+import { ValueController } from './valueController.js';
 
 function positiveInt(value, fallback) {
   var number = Math.floor(Number(value));
@@ -53,7 +53,7 @@ function create(options) {
     return Math.max(1, Math.min(count, positiveInt(value, 1)));
   }
 
-  pageState = StateController.create({ value: clampPage(opts.page), normalizeValue: clampPage, controlled: false });
+  pageState = ValueController.create({ value: clampPage(opts.page), normalizeValue: clampPage, controlled: false });
   function currentPage() { return pageState.value; }
 
   function snapshot() {

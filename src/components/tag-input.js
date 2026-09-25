@@ -4,7 +4,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { InteractionController } from '../core/interactionController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { Utils } from '../utils/utils.js';
 
 const state = new WeakMap();
@@ -45,7 +45,7 @@ export class TagInput extends FieldComponent {
         if(!own(incoming,'value')&&own(incoming,'defaultValue'))incoming.value=copyValue(incoming.defaultValue);
         super(incoming);
         if(!this.options.container&&!this.options.formField)throw new TypeError('[QXFRAME9A7C2] TagInput requires target/container or formField.');
-        const valueState=this.own(StateController.createValueBinding({value:copyValue(this.options.value),controlled:this.options.controlled===true,normalizeValue:copyValue,copyValue:copyValue,equals:StateController.deepEquals}));
+        const valueState=this.own(ValueController.createValueBinding({value:copyValue(this.options.value),controlled:this.options.controlled===true,normalizeValue:copyValue,copyValue:copyValue,equals:ValueController.deepEquals}));
         const initialInputValue=this.options.inputValue==null?'':String(this.options.inputValue);const record={fieldInit,valueState,initialValue:copyValue(valueState.value),initialInputValue,control:null,keyboard:null,tagNavigation:null,focusController:null,interactionController:null,capabilityController:null,inputValue:initialInputValue,rendered:false};state.set(this,record);
         this.bindValueController(valueState.getValueController(),{owned:false,syncExternal:false});
     }

@@ -120,6 +120,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         panel.appendChild(popupContentHost);
     
         var tree = null;
+        var valueRecordIndex = new Map();
+        var valueRecordIndexRevision = -1;
         var triggerSession = null;
         var keyboard = null;
         var focusController = null;
@@ -160,22 +162,28 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         function itemsOf(item, index) { return itemAccessors.children(item,index); }
         function labelOf(item, index) { return itemAccessors.label(item,index); }
         function valueOf(item, index) { return itemAccessors.value(item,index); }
-        function itemByValue(value) {
+        function valueRecord(value) {
           var needle=String(value);
           if (tree && tree.getModel) {
-            var records=tree.getModel().records||[];
-            for (var r=0;r<records.length;r+=1) if (String(valueOf(records[r].item,records[r].index))===needle) return records[r].item;
+            var model=tree.getModel(), revision=Number(model.revision)||0;
+            if (valueRecordIndexRevision !== revision) {
+              valueRecordIndex = new Map();
+              (model.records||[]).forEach(function(record){
+                var token=String(valueOf(record.item,record.index));
+                if (!valueRecordIndex.has(token)) valueRecordIndex.set(token,record);
+              });
+              valueRecordIndexRevision = revision;
+            }
+            return valueRecordIndex.get(needle)||null;
           }
-          var record=TreeQuery.findByValue(opts.items,value,{accessors:itemAccessors});
+          return TreeQuery.findByValue(opts.items,value,{accessors:itemAccessors});
+        }
+        function itemByValue(value) {
+          var record=valueRecord(value);
           return record ? record.item : null;
         }
         function keyByValue(value) {
-          var needle=String(value);
-          if (tree && tree.getModel) {
-            var records=tree.getModel().records||[];
-            for (var r=0;r<records.length;r+=1) if (String(valueOf(records[r].item,records[r].index))===needle) return records[r].key;
-          }
-          var record=TreeQuery.findByValue(opts.items,value,{accessors:itemAccessors});
+          var record=valueRecord(value);
           return record ? record.key : null;
         }
         function checkedKeysForValues(value) {
@@ -404,7 +412,10 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           renderIcon: opts.renderIcon,
           showLine: opts.showLine,
           indent: opts.indent,
-          onLoad: opts.onLoad,
+          onLoad: function(items, detail) {
+            valueRecordIndexRevision = -1;
+            return Utils.isFunction(opts.onLoad) ? opts.onLoad(items, detail) : undefined;
+          },
           onLoadError: opts.onLoadError,
           onSelect: function (detail) {
             var payload = Utils.mergeOwn( detail, { treeSelect: api });
@@ -699,6 +710,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           validateItems(items, opts);
           opts.items = Array.isArray(items) ? items.slice() : [];
           tree.setItems(opts.items);
+          valueRecordIndexRevision = -1;
           syncView();
           if (triggerSession.getState().open) triggerSession.reposition('items');
           return api;
@@ -747,6 +759,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           }
           if (hasOwn(next, 'expandedKeys')) treeOptions.expandedKeys = opts.expandedKeys;
           tree.updateOptions(treeOptions);
+          valueRecordIndexRevision = -1;
           if (checkMode && !valueState.controlled) valueState.write(checkedValues(), { silent:true, source:'options', reason:'options-check-normalize' }, false);
           else restoreTreeFromApiValue('options-controlled');
           if (opts.disabled === true && triggerSession.getState().open) close('disabled');

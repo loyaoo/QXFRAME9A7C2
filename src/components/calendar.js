@@ -2,7 +2,7 @@ import { Events } from '../core/events.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { ActiveItem } from '../core/activeItem.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { TemporalGrid } from '../core/temporalGrid.js';
 import { FocusController } from '../core/focusController.js';
 import { InteractionController } from '../core/interactionController.js';
@@ -66,7 +66,7 @@ function create(options) {
   scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
   var cells = [];
   var initialCommitted = parseDate(opts.value !== undefined ? opts.value : opts.defaultValue);
-  var valueState = StateController.create({
+  var valueState = ValueController.create({
     value: initialCommitted,
     controlled: opts.controlled === true,
     normalizeValue: function (next) { return next == null || next === '' ? null : parseDate(next); },

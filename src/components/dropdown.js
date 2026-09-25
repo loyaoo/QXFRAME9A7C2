@@ -7,7 +7,7 @@ import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Utils } from '../utils/utils.js';
 import { SelectionController } from '../core/selectionController.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { ItemSchema } from '../core/itemSchema.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
@@ -60,7 +60,7 @@ function initializeDropdown(instance, options) {
     });
     return opts.multiple === true ? values : (values[0] === undefined ? null : values[0]);
   }
-  var valueState = StateController.createOptionValueBinding(opts, options || {}, normalizeApiValue, { controlled:opts.controlled === true });
+  var valueState = ValueController.createOptionValueBinding(opts, options || {}, normalizeApiValue, { controlled:opts.controlled === true });
   var selectionController = SelectionController.create({
     channels: { selected: { multiple: opts.multiple === true, value: valueState.value } }
   });

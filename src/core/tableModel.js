@@ -164,11 +164,12 @@ function create(options) {
     return collator ? collator.compare(String(left), String(right)) : String(left).localeCompare(String(right));
   }
   function searchableColumns() { return columns.filter(function (column) { return column.searchable !== false; }); }
-  function matchesSearch(entry) {
+  function matchesSearch(entry, normalizedQuery, columnsForSearch) {
     if (!searchValue) return true;
     if (Utils.isFunction(opts.searchMatcher)) return opts.searchMatcher(searchValue, entry.item, entry.sourceIndex, api) !== false;
-    var query = searchValue.toLocaleLowerCase ? searchValue.toLocaleLowerCase() : searchValue.toLowerCase();
-    return searchableColumns().some(function (column) {
+    var query = normalizedQuery === undefined ? (searchValue.toLocaleLowerCase ? searchValue.toLocaleLowerCase() : searchValue.toLowerCase()) : normalizedQuery;
+    var searchColumns = columnsForSearch || searchableColumns();
+    return searchColumns.some(function (column) {
       var value = orthogonalValue('search', entry.item, column, entry.sourceIndex);
       var text = value == null ? '' : String(value);
       text = text.toLocaleLowerCase ? text.toLocaleLowerCase() : text.toLowerCase();
@@ -182,8 +183,10 @@ function create(options) {
     if (remote) { cachedFilteredEntries = base; return cachedFilteredEntries; }
     var activeKeys = Object.keys(filters);
     if (!activeKeys.length && !searchValue) { cachedFilteredEntries = base; return cachedFilteredEntries; }
+    var normalizedQuery = searchValue ? (searchValue.toLocaleLowerCase ? searchValue.toLocaleLowerCase() : searchValue.toLowerCase()) : '';
+    var columnsForSearch = searchValue && !Utils.isFunction(opts.searchMatcher) ? searchableColumns() : null;
     cachedFilteredEntries = base.filter(function (entry) {
-      if (!matchesSearch(entry)) return false;
+      if (!matchesSearch(entry, normalizedQuery, columnsForSearch)) return false;
       return activeKeys.every(function (key) {
         var column = columnByKey(key);
         if (!column) return true;
@@ -204,10 +207,13 @@ function create(options) {
     var column = columnByKey(sortKey);
     if (!column || column.sortable === false) { cachedOrderedEntries = projected.slice(); return cachedOrderedEntries; }
     var direction = sortOrder === 'descend' ? -1 : 1;
-    cachedOrderedEntries = projected.map(function (entry, index) { return { entry: entry, stableIndex: index }; }).sort(function (a, b) {
+    var customComparator = Utils.isFunction(column.sortable);
+    cachedOrderedEntries = projected.map(function (entry, index) {
+      return { entry: entry, stableIndex: index, sortValue: customComparator ? undefined : orthogonalValue('sort', entry.item, column, entry.sourceIndex) };
+    }).sort(function (a, b) {
       var result;
-      if (Utils.isFunction(column.sortable)) result = column.sortable(a.entry.item, b.entry.item, api);
-      else result = defaultCompare(orthogonalValue('sort', a.entry.item, column, a.entry.sourceIndex), orthogonalValue('sort', b.entry.item, column, b.entry.sourceIndex));
+      if (customComparator) result = column.sortable(a.entry.item, b.entry.item, api);
+      else result = defaultCompare(a.sortValue, b.sortValue);
       result = Number(result) || 0;
       return result ? result * direction : a.stableIndex - b.stableIndex;
     }).map(function (wrapped) { return wrapped.entry; });
@@ -468,11 +474,13 @@ function create(options) {
     var visible = projectedEntries().filter(function (entry) { return !isDisabled(entry.item, entry.sourceIndex); });
     var keys = visible.map(function (entry) { return entry.key; });
     var current = selection.values.slice();
-    var allSelected = keys.length > 0 && keys.every(function (key) { return current.indexOf(key) >= 0; });
+    var currentSet = new Set(current);
+    var visibleSet = new Set(keys);
+    var allSelected = keys.length > 0 && keys.every(function (key) { return currentSet.has(key); });
     var shouldSelect = desired === undefined ? !allSelected : desired !== false;
     var next = shouldSelect
-      ? current.concat(keys.filter(function (key) { return current.indexOf(key) < 0; }))
-      : current.filter(function (key) { return keys.indexOf(key) < 0; });
+      ? current.concat(keys.filter(function (key) { return !currentSet.has(key); }))
+      : current.filter(function (key) { return !visibleSet.has(key); });
     return selection.set(next, mergeOptions({ source: 'api', reason: 'visible-selection' }, meta));
   }
   function setExpandedKeys(keys, meta) {

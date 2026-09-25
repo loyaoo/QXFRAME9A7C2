@@ -61,12 +61,13 @@ function create(options) {
     if (destroyed) return false;
     var normalized = normalize(next);
     var previous = values();
+    var nextSet = new Set(normalized);
     var maxCount = Math.max(0, Number(opts.maxCount || 0));
     var payload = mergeOptions({
       previousValues: previous.slice(),
       values: normalized.slice(),
       addedValues: normalized.filter(function (key) { return !store.has(key); }),
-      removedValues: previous.filter(function (key) { return normalized.indexOf(key) < 0; }),
+      removedValues: previous.filter(function (key) { return !nextSet.has(key); }),
       reason: 'set',
       source: 'api',
       controller: api
@@ -161,9 +162,10 @@ function create(options) {
     createRef: function (key) { return dataRevision.capture(String(key)); },
     isCurrentRef: function (ref) { return dataRevision.isCurrent(ref); },
     snapshot: function () {
+      var current = values();
       return Object.freeze({
-        values: values(),
-        value: opts.multiple === true ? values() : (values()[0] === undefined ? null : values()[0]),
+        values: current,
+        value: opts.multiple === true ? current.slice() : (current[0] === undefined ? null : current[0]),
         size: store.size,
         multiple: opts.multiple === true,
         dataRevision: dataRevision.current(),

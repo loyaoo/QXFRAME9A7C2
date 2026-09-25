@@ -17,7 +17,7 @@ import { TokenInput } from '../core/tokenInput.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { InteractionController } from '../core/interactionController.js';
 import { SelectionController } from '../core/selectionController.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { FieldComponent } from './field.js';
 import { Scroll } from './scroll.js';
 import { Popover } from './popover.js';
@@ -269,7 +269,7 @@ function setupTags(instance) {
     var values = normalizeStringArray(value, 'value');
     return opts.multiple === false ? values.slice(0, 1) : values;
   }
-  var selectionValueState = StateController.createOptionValueBinding(opts, source, normalizeSelectionValue, { controlled:opts.controlled === true });
+  var selectionValueState = ValueController.createOptionValueBinding(opts, source, normalizeSelectionValue, { controlled:opts.controlled === true });
   scope.add(function () { if (selectionValueState) selectionValueState.destroy(); selectionValueState = null; });
   function selectionValue() { return selectionValueState ? selectionValueState.value : normalizeSelectionValue([]); }
   function syncSelectionProjection(reason) {
@@ -1760,7 +1760,7 @@ export class Tags extends FieldComponent {
     focus:Object.freeze({ mode:'virtual-navigation', editLease:'input' }),
     interaction:Object.freeze({ keymap:'tags' }),
     capability:Object.freeze({ mode:'tag-mutation-policy' }),
-    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController/StateController binding' }),
+    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController' }),
     overlay:Object.freeze({ mode:'overflow-popover-via-Popover' }),
     feedback:Object.freeze({ mode:'local-status-projection' }),
     form:Object.freeze({ serialize:true }),

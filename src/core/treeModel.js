@@ -22,6 +22,7 @@ function create(options) {
   var api = null;
 
   var records = [];
+  var revision = 0;
   var recordMap = new Map();
   var childrenMap = new Map();
   var diagnostics = {
@@ -212,6 +213,7 @@ function create(options) {
     records = nextRecords;
     recordMap = nextMap;
     childrenMap = nextChildren;
+    revision += 1;
 
     var detail = mergeOptions({
       reason: 'rebuild',
@@ -227,9 +229,13 @@ function create(options) {
     return api;
   }
 
-  function childRecords(key) {
+  var EMPTY_CHILDREN = Object.freeze([]);
+  function childRecordsInternal(key) {
     var normalized = key === undefined || key === null ? rootKey : String(key);
-    return (childrenMap.get(normalized) || []).slice();
+    return childrenMap.get(normalized) || EMPTY_CHILDREN;
+  }
+  function childRecords(key) {
+    return childRecordsInternal(key).slice();
   }
 
   function getAncestors(key) {
@@ -251,7 +257,9 @@ function create(options) {
     var self = recordMap.get(normalized);
     if (settings.includeSelf && self && (!Utils.isFunction(settings.filter) || settings.filter(self) !== false)) output.push(self);
 
-    var stack = childRecords(normalized).reverse();
+    var initialChildren = childRecordsInternal(normalized);
+    var stack = [];
+    for (var initialIndex = initialChildren.length - 1; initialIndex >= 0; initialIndex -= 1) stack.push(initialChildren[initialIndex]);
     var guard = new Set();
     while (stack.length) {
       var record = stack.pop();
@@ -259,7 +267,7 @@ function create(options) {
       guard.add(record.key);
       if (Utils.isFunction(settings.stopAt) && settings.stopAt(record) === true) continue;
       if (!Utils.isFunction(settings.filter) || settings.filter(record) !== false) output.push(record);
-      var items = childRecords(record.key);
+      var items = childRecordsInternal(record.key);
       for (var index = items.length - 1; index >= 0; index -= 1) stack.push(items[index]);
     }
     return output;
@@ -275,7 +283,9 @@ function create(options) {
     var expanded = normalizeKeySet(expandedKeys);
     var settings = config || {};
     var output = [];
-    var stack = childRecords(rootKey).reverse();
+    var rootChildren = childRecordsInternal(rootKey);
+    var stack = [];
+    for (var rootIndex = rootChildren.length - 1; rootIndex >= 0; rootIndex -= 1) stack.push(rootChildren[rootIndex]);
     var guard = new Set();
     while (stack.length) {
       var record = stack.pop();
@@ -283,7 +293,7 @@ function create(options) {
       guard.add(record.key);
       if (!Utils.isFunction(settings.filter) || settings.filter(record) !== false) output.push(record);
       if (expanded.has(record.key)) {
-        var items = childRecords(record.key);
+        var items = childRecordsInternal(record.key);
         for (var index = items.length - 1; index >= 0; index -= 1) stack.push(items[index]);
       }
     }
@@ -301,6 +311,7 @@ function create(options) {
   function destroy() {
     if (destroyed) return false;
     destroyed = true;
+    revision += 1;
     records = [];
     recordMap.clear();
     childrenMap.clear();
@@ -322,7 +333,7 @@ function create(options) {
     getAncestors: getAncestors,
     getDescendants: getDescendants,
     flattenVisible: flattenVisible,
-    hasChildren: function (key) { return childRecords(key).length > 0; },
+    hasChildren: function (key) { return childRecordsInternal(key).length > 0; },
     on: emitter.on,
     once: emitter.once,
     destroy: destroy
@@ -333,6 +344,7 @@ function create(options) {
     records: { enumerable: true, get: function () { return records.slice(); } },
     keys: { enumerable: true, get: function () { return records.map(function (record) { return record.key; }); } },
     size: { enumerable: true, get: function () { return records.length; } },
+    revision: { enumerable: true, get: function () { return revision; } },
     diagnostics: {
       enumerable: true,
       get: function () {

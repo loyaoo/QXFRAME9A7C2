@@ -25,8 +25,8 @@ assert.match(source,/selectedKeys:\s*valueBinding\.value/,'TableModel must initi
 assert.match(source,/syncCommittedSelection\s*\(/,'Table selection projection must synchronize through the canonical ValueController.');
 assert.match(modelSource,/if\s*\(result\s*&&\s*detail\.silent\s*===\s*true\)\s*\{[\s\S]{0,220}invalidateProjection\(['"]state['"]\)/,'TableModel silent selection reconcile must invalidate cached projection so controlled rollback cannot expose stale selected keys.');
 assert.match(source,/valueBinding\.write\(normalized,[\s\S]{0,180},controlled\)/,'Controlled Table selection must use the ValueController proposal path instead of mutating committed value.');
-assert.match(source,/model\.setSelectedKeys\(initialSelectedValue\.slice\(\),\{ source:'form', reason:'reset-request'/,'Controlled Table reset must propose the initial committed selection through the normal selection path.');
-assert.doesNotMatch(source,/valueBinding\.write\(initialSelectedValue/,'Controlled Table reset must not write the committed ValueController directly.');
+assert.match(source,/controlled-reset-preserved/,'Controlled Table reset must preserve the external owner committed selection.');
+assert.doesNotMatch(source,/reset-request/,'Controlled Table reset must not synthesize a value proposal.');
 assert.match(source,/SelectionController/,'Table must retain SelectionController as selection execution/projection authority.');
 assert.match(source,/getRemoteChannel\(['"]allMatching['"]\)/,'Table remote allMatching must remain a separate SelectionController channel.');
 assert.doesNotMatch(source,/valueBinding[^\n]{0,120}allMatching|allMatching[^\n]{0,120}valueBinding/,'Remote allMatching must never become committed Table value.');
@@ -41,8 +41,8 @@ assert.match(source,/remoteError\s*=\s*state\.state\s*===\s*['"]error['"]/,'Remo
 assert.match(source,/FormBridge\.create\s*\(/,'Table native form carrier must remain FormBridge.');
 assert.match(source,/FormController\.bindField\s*\(/,'Table form transaction registration must enter FormController.');
 assert.match(source,/getSerializedValue:function\(\)\{return formBridge\?formBridge\.getSerializedValue\(\):valueBinding\.value\.slice\(\);\}/,'Table form serialization must read the same committed ValueController value.');
-assert.match(source,/OperationResult\.requested\s*\(/,'Controlled Table reset must remain a proposal until external owner acknowledgement.');
-assert.match(source,/targetValue:initialSelectedValue\.slice\(\)/,'Controlled reset result must expose the initial committed reset target.');
+assert.match(source,/OperationResult\.unchanged\s*\(/,'Controlled Table reset must report an unchanged canonical value.');
+assert.doesNotMatch(source,/targetValue:initialSelectedValue\.slice\(\)/,'Controlled reset must not expose an obsolete reset proposal target.');
 
 assert.equal(typeof Table.prototype.getValueController,'function');
 assert.equal(typeof Table.prototype.getSelectionController,'function');

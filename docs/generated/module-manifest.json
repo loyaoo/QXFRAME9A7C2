@@ -31,7 +31,7 @@
         ],
         "headless": [
           "AsyncTask",
-          "StateController",
+          "ValueController",
           "ItemSchema",
           "OpenStateBridge",
           "ItemAccessors",
@@ -93,7 +93,7 @@
         ],
         "headless": [
           "ActiveItem",
-          "StateController",
+          "ValueController",
           "DateUnit",
           "TemporalGrid"
         ],
@@ -260,7 +260,7 @@
           "Utils"
         ],
         "headless": [
-          "StateController",
+          "ValueController",
           "OpenStateBridge",
           "PickerSession",
           "OptionTransaction",
@@ -332,7 +332,7 @@
           "Utils"
         ],
         "headless": [
-          "StateController",
+          "ValueController",
           "DateUnit",
           "OpenStateBridge",
           "PickerSession",
@@ -1001,7 +1001,7 @@
         ],
         "headless": [
           "InteractionPolicy",
-          "StateController",
+          "ValueController",
           "OptionTransaction"
         ],
         "domHeadless": [
@@ -1138,7 +1138,7 @@
           "Utils"
         ],
         "headless": [
-          "StateController",
+          "ValueController",
           "OptionTransaction"
         ],
         "domHeadless": [
@@ -1429,7 +1429,7 @@
           "Scheduler"
         ],
         "headless": [
-          "StateController",
+          "ValueController",
           "OpenStateBridge",
           "PickerSession",
           "OptionTransaction",
@@ -1568,7 +1568,7 @@
           "Utils"
         ],
         "headless": [
-          "StateController",
+          "ValueController",
           "ItemSchema",
           "OpenStateBridge",
           "InteractionPolicy",
@@ -1718,7 +1718,7 @@
           "Utils"
         ],
         "headless": [
-          "StateController",
+          "ValueController",
           "OpenStateBridge",
           "PickerSession",
           "ValueEquality",

@@ -275,6 +275,8 @@ function setupTable(instance) {
   var destroyed = false;
   var api = instance;
   var renderProjection = null;
+  var renderSelectedKeys = null;
+  var renderExpandedKeys = null;
   var virtualizerSyncing = false;
   var keyboard = null;
   var focusController = null;
@@ -546,7 +548,15 @@ function setupTable(instance) {
   function isKeySelected(key, state) {
     var normalized = String(key);
     if (querySelectionActive()) return remoteSelectionChannel.isSelected(normalized);
-    return (state || currentState()).selectedKeys.indexOf(normalized) >= 0;
+    var targetState = state || currentState();
+    if (renderProjection && targetState === renderProjection.state && renderSelectedKeys) return renderSelectedKeys.has(normalized);
+    return targetState.selectedKeys.indexOf(normalized) >= 0;
+  }
+  function isKeyExpanded(key, state) {
+    var normalized = String(key);
+    var targetState = state || currentState();
+    if (renderProjection && targetState === renderProjection.state && renderExpandedKeys) return renderExpandedKeys.has(normalized);
+    return targetState.expandedKeys.indexOf(normalized) >= 0;
   }
   function selectionStateSnapshot() {
     var state = currentState();
@@ -637,9 +647,19 @@ function setupTable(instance) {
     
   function withProjection(callback, suppliedProjection) {
     var previous = renderProjection;
-    if (!renderProjection) renderProjection = suppliedProjection || model.getProjection();
+    var previousSelectedKeys = renderSelectedKeys;
+    var previousExpandedKeys = renderExpandedKeys;
+    if (!renderProjection) {
+      renderProjection = suppliedProjection || model.getProjection();
+      renderSelectedKeys = new Set((renderProjection.state.selectedKeys || []).map(String));
+      renderExpandedKeys = new Set((renderProjection.state.expandedKeys || []).map(String));
+    }
     try { return callback(renderProjection); }
-    finally { renderProjection = previous; }
+    finally {
+      renderProjection = previous;
+      renderSelectedKeys = previousSelectedKeys;
+      renderExpandedKeys = previousExpandedKeys;
+    }
   }
   function currentState() { return renderProjection ? renderProjection.state : model.getState(); }
   function viewBlocked() { return destroyed || !capabilityController || !capabilityController.can('navigate'); }
@@ -673,7 +693,7 @@ function setupTable(instance) {
       meta: Object.freeze({
         sourceIndex: entry.sourceIndex,
         selected: isKeySelected(entry.key, state),
-        expanded: state.expandedKeys.indexOf(entry.key) >= 0,
+        expanded: isKeyExpanded(entry.key, state),
         disabled: isEntryDisabled(entry)
       }),
       view: Object.freeze({
@@ -1119,6 +1139,10 @@ function setupTable(instance) {
       var width = typeof column.width === 'number' ? column.width + 'px' : String(column.width);
       cell.style.width = width; cell.style.minWidth = width;
     }
+    if (activeColumnResize && String(activeColumnResize.key) === String(column.key) && Number.isFinite(activeColumnResize.previewWidth)) {
+      var preview = activeColumnResize.previewWidth + 'px';
+      cell.style.width = preview; cell.style.minWidth = preview; cell.style.maxWidth = preview;
+    }
     if (column.align) cell.classList.add('qxframe9a7c2-table-cell-align-' + column.align);
     if (column.responsive && opts.responsiveMode === 'hide') cell.classList.add('qxframe9a7c2-table-col-hide-' + column.responsive);
     if (column.fixed) {
@@ -1253,25 +1277,34 @@ function setupTable(instance) {
       if (key != null && !headers[String(key)]) headers[String(key)] = cell;
     });
     var view = doc.defaultView || global;
+    var renderedByKey = Object.create(null);
+    var measuredWidthByKey = Object.create(null);
     function columnIsRendered(column) {
-      var cell = headers[column.key];
-      if (!cell) return true;
-      if (view && typeof view.getComputedStyle === 'function') {
+      if (own(renderedByKey, column.key)) return renderedByKey[column.key];
+      var cell = headers[column.key], rendered = true;
+      if (cell && view && typeof view.getComputedStyle === 'function') {
         var style = view.getComputedStyle(cell);
-        if (style && (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse')) return false;
+        rendered = !(style && (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse'));
       }
-      return true;
+      renderedByKey[column.key] = rendered;
+      return rendered;
     }
     var rootRect = root.getBoundingClientRect ? root.getBoundingClientRect() : null;
     var availableWidth = Math.max(0, Number(root.clientWidth) || (rootRect && rootRect.width) || 0);
     var layoutColumns = columns.filter(columnIsRendered);
     var widthSolution = solveManagedColumnWidths(layoutColumns, availableWidth);
     function visibleWidth(column) {
-      var cell = headers[column.key];
-      if (!cell || !columnIsRendered(column)) return 0;
-      if (widthSolution && own(widthSolution.widths, column.key)) return widthSolution.widths[column.key];
-      var rect = cell.getBoundingClientRect ? cell.getBoundingClientRect() : null;
-      return rect && rect.width > 0 ? rect.width : configuredPixelWidth(column);
+      if (own(measuredWidthByKey, column.key)) return measuredWidthByKey[column.key];
+      var cell = headers[column.key], width = 0;
+      if (cell && columnIsRendered(column)) {
+        if (widthSolution && own(widthSolution.widths, column.key)) width = widthSolution.widths[column.key];
+        else {
+          var rect = cell.getBoundingClientRect ? cell.getBoundingClientRect() : null;
+          width = rect && rect.width > 0 ? rect.width : configuredPixelWidth(column);
+        }
+      }
+      measuredWidthByKey[column.key] = width;
+      return width;
     }
     var offsets = Object.create(null), start = 0, end = 0;
     var visibleStart = [], visibleEnd = [];
@@ -1353,9 +1386,15 @@ function setupTable(instance) {
   }
   function clampColumnWidth(column, width) { var bounds = columnWidthBounds(column); return Math.max(bounds.min, Math.min(bounds.max, Number(width) || bounds.min)); }
   function previewColumnWidth(columnKey, width) {
-    var value = Math.max(0, Number(width) || 0) + 'px';
-    DOM.findAllPrivate(table, 'tableColumn').forEach(function (cell) {
-      if (String(DOM.getPrivate(cell, 'tableColumn')) !== String(columnKey)) return;
+    var key = String(columnKey);
+    var numericWidth = Math.max(0, Number(width) || 0);
+    var value = numericWidth + 'px';
+    var cells = activeColumnResize && String(activeColumnResize.key) === key && Array.isArray(activeColumnResize.cells)
+      ? activeColumnResize.cells
+      : DOM.findAllPrivate(table, 'tableColumn');
+    if (activeColumnResize && String(activeColumnResize.key) === key) activeColumnResize.previewWidth = numericWidth;
+    cells.forEach(function (cell) {
+      if (!cell || !cell.isConnected || String(DOM.getPrivate(cell, 'tableColumn')) !== key) return;
       cell.style.width = value; cell.style.minWidth = value; cell.style.maxWidth = value;
     });
     requestFixedGeometry('column-resize');
@@ -1389,7 +1428,13 @@ function setupTable(instance) {
         var rect = th.getBoundingClientRect ? th.getBoundingClientRect() : null;
         startWidth = rect && rect.width > 0 ? rect.width : configuredPixelWidth(column);
         previewWidth = clampColumnWidth(column, startWidth);
-        activeColumnResize = { key: column.key, session: session, startWidth: previewWidth };
+        activeColumnResize = {
+          key: column.key,
+          session: session,
+          startWidth: previewWidth,
+          previewWidth: previewWidth,
+          cells: DOM.findAllPrivate(table, 'tableColumn').filter(function (cell) { return String(DOM.getPrivate(cell, 'tableColumn')) === String(column.key); })
+        };
         root.classList.add('is-column-resizing');
         return true;
       },
@@ -1869,7 +1914,7 @@ function setupTable(instance) {
     if (select) { select.checked = isKeySelected(entry.key, state); select.disabled = mutationLocked() || disabled; }
     var expand = DOM.findPrivate(row, 'tableExpand', entry.key);
     if (expand) {
-      var expanded = state.expandedKeys.indexOf(entry.key) >= 0;
+      var expanded = isKeyExpanded(entry.key, state);
       expand.disabled = viewBlocked() || disabled;
       var glyph = expand.firstElementChild;
       if (glyph) glyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-' + (expanded ? 'minus' : 'plus') + ' is-line is-round is-stroke-3';
@@ -1923,7 +1968,7 @@ function setupTable(instance) {
       DOM.setPrivate(expandCell, 'tableNavigationCell', navigationCellKey(entry.key, { kind: 'expand', key: '' }));
       if (canExpand) {
         var expand = doc.createElement('button');
-        var expanded = state.expandedKeys.indexOf(entry.key) >= 0;
+        var expanded = isKeyExpanded(entry.key, state);
         expand.type = 'button';
         expand.className = 'qxframe9a7c2-table-expand-trigger';
         DOM.setPrivate(expand, 'tableExpand', entry.key);
@@ -1961,7 +2006,7 @@ function setupTable(instance) {
   }
   function renderExpandedRow(entry, rowIndex, visibleIndex, columnCount) {
     var state = currentState();
-    var expanded = state.expandedKeys.indexOf(entry.key) >= 0;
+    var expanded = isKeyExpanded(entry.key, state);
     if (typeof opts.renderExpanded !== 'function' || (!expanded && opts.forceRenderExpanded !== true)) return null;
     var row = doc.createElement('tr');
     var cell = doc.createElement('td');
@@ -2031,13 +2076,13 @@ function setupTable(instance) {
       syncExistingRowState(dataRow, entry);
       desiredNodes.push(dataRow);
 
-      var needsExpanded = typeof opts.renderExpanded === 'function' && (state.expandedKeys.indexOf(entry.key) >= 0 || opts.forceRenderExpanded === true);
+      var needsExpanded = typeof opts.renderExpanded === 'function' && (isKeyExpanded(entry.key, state) || opts.forceRenderExpanded === true);
       var expandedRow = record && record.expandedRow;
       if (needsExpanded) {
         var freshExpanded = (forceContent || itemChanged || !expandedRow) ? renderExpandedRow(entry, i, i - start, totalColumns) : null;
         if (!expandedRow) expandedRow = freshExpanded;
         else if (freshExpanded && activeEditRow !== entry.key) syncRowShell(expandedRow, freshExpanded);
-        if (expandedRow) { expandedRow.hidden = state.expandedKeys.indexOf(entry.key) < 0; DOM.setPrivate(expandedRow, 'tableExpandedRow', entry.key); desiredNodes.push(expandedRow); }
+        if (expandedRow) { expandedRow.hidden = !isKeyExpanded(entry.key, state); DOM.setPrivate(expandedRow, 'tableExpandedRow', entry.key); desiredNodes.push(expandedRow); }
       } else expandedRow = null;
       bodyRowRecords.set(entry.key, { row: dataRow, expandedRow: expandedRow, item: entry.item, sourceIndex: entry.sourceIndex, visibleIndex: i - start });
       if (variableVirtual) measureRows.push({ index: i, row: dataRow, expandedRow: expandedRow });

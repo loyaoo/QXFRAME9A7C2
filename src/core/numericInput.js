@@ -1,6 +1,6 @@
 
 import { Events } from './events.js';
-import { StateController } from './stateController.js';
+import { ValueController } from './valueController.js';
 import { mergeOptions } from './options.js';
 import { Utils } from '../utils/utils.js';
 
@@ -372,7 +372,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
       var parsedInitial = parseDisplay(initial);
       initialValue = isCompleteDecimal(parsedInitial) ? normalizeCommitted(parsedInitial) : null;
     }
-    valueState = StateController.create({ value: initialValue, controlled: options && options.controlled === true });
+    valueState = ValueController.create({ value: initialValue, controlled: options && options.controlled === true });
     inputValue = formatValue(currentValue(), false);
 
     api = Object.freeze({

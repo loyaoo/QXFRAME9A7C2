@@ -173,7 +173,7 @@
     "Controlled State": {
       "status": "converged",
       "canonicalOwner": [
-        "Headless.StateController",
+        "Headless.ValueController",
         "State Ownership Manifest"
       ],
       "legacyOwners": [

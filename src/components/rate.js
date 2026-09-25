@@ -6,7 +6,7 @@ import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Renderer } from '../core/renderer.js';
 import { CapabilityController } from '../core/capabilityController.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { Utils } from '../utils/utils.js';
 
 export const RATE_SIZES = Object.freeze(['xs','sm','md','lg','xl']);
@@ -56,7 +56,7 @@ export class Rate extends FieldComponent {
         const opts = this.options;
         const doc = fieldInit.document || opts.document || (opts.container && opts.container.ownerDocument) || (opts.formField && opts.formField.ownerDocument) || globalThis.document;
         const initial = own(opts, 'value') ? opts.value : (own(opts, 'defaultValue') ? opts.defaultValue : 0);
-        const valueState = StateController.create({ value:quantize(initial, opts.count, opts.half === true), controlled:incoming.controlled===true, normalizeValue:next => quantize(next, this.options.count, this.options.half === true) });
+        const valueState = ValueController.create({ value:quantize(initial, opts.count, opts.half === true), controlled:incoming.controlled===true, normalizeValue:next => quantize(next, this.options.count, this.options.half === true) });
         const record = { fieldInit, doc, root:null, items:[], hoverValue:0, valueState, formBridge:null, itemScope:Lifecycle.createScope(), rendered:false, initialValue:valueState.value };
         state.set(this, record);
         this.own(valueState);
