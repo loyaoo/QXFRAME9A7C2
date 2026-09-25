@@ -227,8 +227,8 @@ function setupUpload(instance) {
       onSuccess: function (response, record) { publishUploadFeedback('success', record, 100, record && record.name); if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
       onError: function (error, record) { publishUploadFeedback('error', record, record && record.percent, error && error.message || record && record.name); if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
-        var canonical = detail && detail.controlled === true ? lifecycle.getValue() : value;
-        api.setFieldValue(canonical, { silent: true, force: true });
+        var canonical = detail && detail.controlled === true ? (api.value || []) : value;
+        api.setFieldValue(canonical, { silent: true, force: true, source:detail && detail.controlled === true ? 'controlled-lifecycle' : 'component', reason:detail && detail.reason || 'upload-change' });
         if (formBridge) formBridge.setValue(canonical, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(canonical);
         renderList();
@@ -731,9 +731,9 @@ function setupUpload(instance) {
   state.runtime = record;
   api.own(destroyRuntime);
   api.bindFocusTarget(trigger);
-  api.setFieldValue(lifecycle.getValue(), { silent: true, force: true });
+  api.setFieldValue(lifecycle.getValue(), { silent: true, force: true, source:own(opts,'value') ? 'external' : 'component', reason:'upload-init' });
 
-  syncStructure(); renderList();
+  syncStructure(); renderList(); projectUploadFeedback();
   return root;
 }
 
