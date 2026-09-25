@@ -22,6 +22,7 @@ function create(options) {
   var api = null;
 
   var records = [];
+  var revision = 0;
   var recordMap = new Map();
   var childrenMap = new Map();
   var diagnostics = {
@@ -212,6 +213,7 @@ function create(options) {
     records = nextRecords;
     recordMap = nextMap;
     childrenMap = nextChildren;
+    revision += 1;
 
     var detail = mergeOptions({
       reason: 'rebuild',
@@ -309,6 +311,7 @@ function create(options) {
   function destroy() {
     if (destroyed) return false;
     destroyed = true;
+    revision += 1;
     records = [];
     recordMap.clear();
     childrenMap.clear();
@@ -341,6 +344,7 @@ function create(options) {
     records: { enumerable: true, get: function () { return records.slice(); } },
     keys: { enumerable: true, get: function () { return records.map(function (record) { return record.key; }); } },
     size: { enumerable: true, get: function () { return records.length; } },
+    revision: { enumerable: true, get: function () { return revision; } },
     diagnostics: {
       enumerable: true,
       get: function () {
