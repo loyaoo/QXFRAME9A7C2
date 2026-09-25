@@ -5,7 +5,7 @@ import { DOM } from '../core/dom.js';
 import { Collection } from '../core/collection.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { Renderer } from '../core/renderer.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { FocusController } from '../core/focusController.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { FeedbackController } from '../core/feedbackController.js';
@@ -113,7 +113,7 @@ export class Steps extends Component {
             doc, root, valueState: null, collection: null, activeItem: null, rovingProjection: null,
             keyboard: null, focusController: null, capabilityController: null, feedbackController: null, feedbackStatus: 'idle'
         };
-        record.valueState = this.own(StateController.create({
+        record.valueState = this.own(ValueController.create({
             value: initialCurrent,
             controlled: false,
             normalizeValue: value => Math.min(Math.max(0, Math.max(0, this.options.items.length - 1)), Math.max(0, Math.floor(finiteNumber(value, 0, 'current'))))
