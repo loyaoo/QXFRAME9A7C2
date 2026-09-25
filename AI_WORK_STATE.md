@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
-Status: IMPLEMENTED_AWAITING_PR_CI
-Task progress: 75%
+Status: PR_OPEN_AWAITING_CI
+Task progress: 80%
 Scope:
 - DatePicker multiple control projection must reflect the current open-session draft while committed/FormData remain unchanged until commit.
 - DatePicker needConfirm=false presets must commit immediately and close after a successful complete preset selection.
@@ -37,7 +37,7 @@ Scope:
 Baseline:
 - branch: `fix/picker-draft-projection-20260925`
 - base: current `main` after PR #113 and its checkpoint update
-- open PR: none yet
+- PR: #114 (`fix/picker-draft-projection-20260925` -> `main`)
 - latest verified code main CI before this task: #560 / `36150117894` green
 Implementation evidence:
 - DatePicker multiple uses draft tags while the token editor remains an editor, not an aggregate-value mirror.
@@ -47,9 +47,9 @@ Implementation evidence:
 - production Chromium smoke coverage now checks Date multiple draft/cancel, immediate range preset close, and Time/Color/Wheel open control draft state.
 - static Phase-H Picker gate rejects reintroducing draft-target suppression or raw-DOM-only draft projection.
 Next exact step:
-1. open PR from `fix/picker-draft-projection-20260925` to `main`.
-2. wait for exact-head GitHub Actions full release + Chromium verification.
-3. if green, merge; then verify main CI + Pages and close this task checkpoint.
+1. wait for PR #114 exact-head GitHub Actions full release + Chromium verification.
+2. if green, merge PR #114 without additional behavior changes.
+3. verify main CI + Pages, then mark this task DONE_MERGED_VERIFIED.
 
 ## Current authority snapshot — after Phase A
 
