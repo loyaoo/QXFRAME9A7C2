@@ -6,6 +6,17 @@ import { DOM } from './dom.js';
 const global = globalThis;
 
 function finiteLength(value) { var number=Number(value); return Number.isFinite(number)&&number>0?number:0; }
+  function prefixSums(lengths) {
+    var source=Array.isArray(lengths)?lengths:[], prefix=new Array(source.length+1);prefix[0]=0;
+    for(var i=0;i<source.length;i+=1)prefix[i+1]=prefix[i]+finiteLength(source[i]);
+    return prefix;
+  }
+  function requiredFromPrefix(prefix,count,gap,tailWidths) {
+    var limit=Math.max(0,Math.min(prefix.length-1,Number.isFinite(Number(count))?Math.floor(Number(count)):prefix.length-1));
+    var tails=Array.isArray(tailWidths)?tailWidths:[], total=prefix[limit]||0, elements=limit, spacing=Math.max(0,Number(gap)||0);
+    tails.forEach(function(value){total+=finiteLength(value);elements+=1;});
+    return total+Math.max(0,elements-1)*spacing;
+  }
   function requiredSize(lengths,count,gap,tailWidths) {
     var source=Array.isArray(lengths)?lengths:[], limit=Math.max(0,Math.min(source.length,Number.isFinite(Number(count))?Math.floor(Number(count)):source.length));
     var tails=Array.isArray(tailWidths)?tailWidths:[], total=0, elements=0, spacing=Math.max(0,Number(gap)||0);
@@ -16,10 +27,11 @@ function finiteLength(value) { var number=Number(value); return Number.isFinite(
   function fitPrefix(options) {
     var opts=options||{}, lengths=Array.isArray(opts.lengths)?opts.lengths:[], available=Number(opts.available), gap=Math.max(0,Number(opts.gap)||0), tolerance=Math.max(0,Number(opts.tolerance)||0);
     if(!(available>0))return lengths.length;
+    var prefix=prefixSums(lengths);
     var start=opts.maxCount===undefined?lengths.length:Math.max(0,Math.min(lengths.length,Math.floor(Number(opts.maxCount)||0)));
     for(var candidate=start;candidate>=0;candidate-=1){
       var tails=typeof opts.tailWidths==='function'?opts.tailWidths(candidate):opts.tailWidths;
-      if(requiredSize(lengths,candidate,gap,Array.isArray(tails)?tails:[])<=available+tolerance)return candidate;
+      if(requiredFromPrefix(prefix,candidate,gap,Array.isArray(tails)?tails:[])<=available+tolerance)return candidate;
     }
     return 0;
   }
