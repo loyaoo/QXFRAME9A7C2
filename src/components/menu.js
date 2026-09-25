@@ -1162,7 +1162,8 @@ function setupMenu(instance) {
 
   interactionController = InteractionController.create();
   interactionController.registerScope({
-    id:'menu', root:root,
+    id:'menu', root:root, capability:capabilityController,
+    operationOf:function (action) { return action === 'DISMISS' ? 'close' : (action === 'TYPEAHEAD' ? 'navigate' : 'activate'); },
     resolveAction:function (event) {
       var action = InteractionController.resolveKeyboardAction(event, { keymap:{ ' ':'TOGGLE', Escape:'DISMISS' } });
       if (action) return action;
@@ -1318,12 +1319,13 @@ function setupMenu(instance) {
     var popupAfter = popupMode();
     var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
     if (structural) {
-      selection.updateOptions({ multiple: opts.multiple === true, values: nextSelected });
+      if (selectedUpdate) syncSelectionOwners(nextSelected, { source:'options', reason:'update-options' });
+      selection.updateOptions({ multiple: opts.multiple === true, values: selectedArray() });
       if (openUpdate) { openKeys = explicitNextOpen; rememberInlineOpenKeys(); }
       rebuild();
     } else {
       if (['disabled','submenuTrigger','placement','submenuOffset','strategy','middleware','flipOnOverflow','autoUpdate','destroyOnClose','submenuOpenDelay','submenuLeaveDelay'].some(function (name) { return own(next, name); })) syncPopupTriggerRuntime();
-      if (selectedUpdate) commitSelectedKeys(nextSelected, { silent: true, reason: 'update-options' });
+      if (selectedUpdate) commitSelectedKeys(nextSelected, { silent: true, reason: 'update-options', source:'options' });
       if (openUpdate) setOpenKeys(Array.from(explicitNextOpen), { silent: true, reason: 'update-options' });
       syncClasses();
       if (own(next, 'inlineIndent') || own(next, 'collapsedWidth')) applyRootUserStyle();
