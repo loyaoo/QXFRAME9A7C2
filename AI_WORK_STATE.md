@@ -10,44 +10,44 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `4ac4187990cf299013d1845eed2926fda412bc67` (PR #89 merge)
-- Current branch: `refactor/phase-h-field-value-owner-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-010 FieldComponent ValueController authority PR
-- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-009 branch; prune merged task branches after Phase H signoff
+- Last code-affecting main commit: `c43f6290bf464420f00d9e6739f75a43a4a68b20` (PR #90 merge)
+- Current branch: `refactor/phase-h-simple-field-value-binding-r2-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-011 shared Field ValueController binding PR
+- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-011 replay branch; prune merged/superseded task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #442 / `36079189990` (PR #89)
-- Latest green main CI + Pages: #443 / `36079511984`
+- Latest green Phase H PR CI: #445 / `36080900679` (PR #90)
+- Latest green main CI + Pages: #446 / `36081202515`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-010`
+- Current Task: `PHASE-H-011`
 
 ## CURRENT
 
-### PHASE-H-010 — FieldComponent ValueController authority
+### PHASE-H-011 — shared ValueController binding for simple Field consumers
 Status: IN_PROGRESS
 Task progress: 75%
 
 Completed prerequisite:
-- PHASE-H-009 is DONE through PR #89, exact-head CI #442 / `36079189990`, merge `4ac4187990cf299013d1845eed2926fda412bc67`, main release + Pages #443 / `36079511984`.
-- Select, TreeSelect and Cascader are H accepted for exact handbook V/F/I/C/S/O/B/R ownership through shared PopupFieldComponent/FieldComponent controller paths.
-- completed public target-profile floor is 14.
+- PHASE-H-010 is DONE through PR #90, exact-head CI #445 / `36080900679`, merge `c43f6290bf464420f00d9e6739f75a43a4a68b20`, main release + Pages #446 / `36081202515`.
+- FieldComponent no longer stores a second plain committed value; ValueController is the sole shared committed-value authority.
 
 Implemented in current pack:
-- removed FieldComponent's plain `record.value` committed-value mirror.
-- FieldComponent now creates a canonical ValueController by default and its public `value` getter reads that controller.
-- `setFieldValue()` and external options sync enter ValueController; FormBridge and FormController adapters project the ValueController-owned committed value.
-- added `getValueController()` and `bindValueController()` so components that already own a specialized ValueController can share that exact authority instead of keeping a second FieldComponent value store.
-- when an external controller is bound, the bound controller wins; FieldComponent does not overwrite or destroy it unless explicitly marked owned.
-- dedicated Node verifier rejects any return of `record.value/state.value` in FieldComponent and proves FormBridge projection.
-- strict source-ESM Chromium verifies default controller ownership, writes, external-controller adoption and lifecycle behavior.
+- FieldComponent adds projection-only `detail.sync` semantics so a consumer that already updated the shared ValueController can update FormBridge/FormController/hooks without rewriting the controller.
+- Autocomplete binds its existing ValueController directly into FieldComponent; controlled draft/proposal changes do not masquerade as committed form changes, while external committed value sync is projected with source=options.
+- InputOTP binds its existing StateController→ValueController into FieldComponent and preserves init/options/API/control source metadata.
+- Rate binds its existing StateController→ValueController into FieldComponent and only notifies the Field/Form path when the committed value actually changes; controlled user proposals remain proposals.
+- Slider binds its existing StateController→ValueController into FieldComponent; controlled proposals do not create a duplicate committed Field value or dirty form state.
+- dedicated H-011 source gate requires exactly one shared ValueController binding in each of the four components and rejects a restored FieldComponent committed-value mirror.
+- strict source-ESM Chromium verifies FieldComponent and component runtime state expose the same canonical ValueController value.
+- TagInput is intentionally excluded from this pack because it uses the narrower createValueBinding adapter; InputNumber uses a different Control-owned value path and is handled separately.
 
 Next exact step:
-1. final diff/self-audit and open PHASE-H-010 PR.
+1. final diff/self-audit and open PHASE-H-011 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark FieldComponent internal Value path H-migrated.
-5. immediately bind the existing specialized ValueControllers of the simple Field family (InputNumber/InputOTP/Rate/Slider/TagInput/Autocomplete) into this shared path and continue batch profile completion.
+4. keep these four components pending H acceptance until their remaining Focus/Interaction/Capability/Feedback/Selection/Overlay target ownership is complete.
+5. continue with the picker/shared-field family using the same no-duplicate-authority rule.
 
 ## Current authority snapshot — after Phase A
 
@@ -77,6 +77,22 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-010 — FieldComponent ValueController authority
+Status: DONE
+Evidence:
+- PR #90 merged
+- merge commit `c43f6290bf464420f00d9e6739f75a43a4a68b20`
+- exact-head CI #445 / `36080900679`: success
+- main CI + Pages #446 / `36081202515`: success
+Outcome:
+- FieldComponent's plain committed-value mirror is removed.
+- default FieldComponent value is owned by ValueController.
+- setFieldValue/options sync enter ValueController and FormBridge/FormController project that canonical committed value.
+- components with specialized ValueControllers can bind the same controller into FieldComponent; the external controller remains authoritative and lifecycle ownership is explicit.
+- FieldComponent internal Value path is H-migrated.
+
+
 
 ### PHASE-H-009 — Select / TreeSelect / Cascader O/B closeout
 Status: DONE
