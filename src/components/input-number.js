@@ -59,7 +59,7 @@ export class InputNumber extends FieldComponent {
             formatter:source.formatter,parser:source.parser,decimalSeparator:source.decimalSeparator,
             disabled:source.disabled===true,readOnly:source.readOnly===true,
             onInput:(display,detail)=>{if(typeof this.options.onInput==='function')this.options.onInput(display,{...detail,instance:this});},
-            onChange:(value,detail)=>{this.setFieldValue(value,{silent:true,force:true});if(typeof this.options.onChange==='function')this.options.onChange(value,{...detail,instance:this});},
+            onChange:(value,detail)=>{this.setFieldValue(value,{silent:true,force:true,sync:true,source:detail&&detail.source||'numeric',reason:detail&&detail.reason||'numeric-change'});if(typeof this.options.onChange==='function')this.options.onChange(value,{...detail,instance:this});},
             onStep:(value,detail)=>{if(typeof this.options.onStep==='function')this.options.onStep(value,{...detail,instance:this});}
         };
         if (includeInitial) {
