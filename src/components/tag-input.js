@@ -2,9 +2,9 @@ import { FieldComponent, fieldHooks } from './field.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
-import { CapabilityController } from '../core/capabilityController.js';
 import { StateController } from '../core/stateController.js';
 import { Utils } from '../utils/utils.js';
 
@@ -22,6 +22,17 @@ function copyValue(value) {
 function recordFor(instance){const record=state.get(instance);if(!record)throw new TypeError('[QXFRAME9A7C2] Invalid TagInput instance.');return record;}
 
 export class TagInput extends FieldComponent {
+    static profile = Object.freeze({
+        name:'TagInput',
+        value:Object.freeze({ mode:'tag-values' }),
+        focus:Object.freeze({ mode:'input-tag-virtual-focus' }),
+        interaction:Object.freeze({ mode:'tag-navigation-actions' }),
+        capability:Object.freeze({ mode:'field-policy' }),
+        selection:Object.freeze({ channels:Object.freeze(['selected']), shared:'hosted-Tags' }),
+        feedback:Object.freeze({ mode:'control-status-projection' }),
+        form:Object.freeze({ mode:'field-registration' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController', feedback:'FeedbackController', form:'FormController' })
+    });
     static contract = getContract('TagInput');
     static options = Object.freeze({ inputValue:'', creatable:true, clearable:false, value:[] });
     static immutableOptions = Object.freeze(['target','container','formField']);
@@ -36,8 +47,8 @@ export class TagInput extends FieldComponent {
         super(incoming);
         if(!this.options.container&&!this.options.formField)throw new TypeError('[QXFRAME9A7C2] TagInput requires target/container or formField.');
         const valueState=this.own(StateController.createValueBinding({value:copyValue(this.options.value),controlled:valueControlled,normalizeValue:copyValue,copyValue:copyValue,equals:StateController.deepEquals}));
-        const record={fieldInit,valueState,control:null,keyboard:null,tagNavigation:null,inputValue:this.options.inputValue==null?'':String(this.options.inputValue),rendered:false};state.set(this,record);
-        this.setFieldValue(valueState.value,{silent:true,force:true});
+        const record={fieldInit,valueState,control:null,keyboard:null,tagNavigation:null,focusController:null,interactionController:null,capabilityController:null,inputValue:this.options.inputValue==null?'':String(this.options.inputValue),rendered:false};state.set(this,record);
+        this.bindValueController(valueState,{owned:false,syncExternal:false});
     }
 
     #controlOptions(includeValue){
@@ -52,26 +63,42 @@ export class TagInput extends FieldComponent {
                 const proposed=copyValue(tags),meta={silent:true,source:detail?.source||'tags',reason:detail?.reason||'tags-change',originalEvent:detail?.originalEvent||null};
                 r.valueState.write(proposed,meta,true);
                 const canonical=r.valueState.value;
-                this.setFieldValue(canonical,{silent:true,force:true});
+                const registration=this.getFormRegistration();
+                if(registration&&registration.notifyValue)registration.notifyValue({source:meta.source,reason:meta.reason,originalEvent:meta.originalEvent});
                 if(r.valueState.controlled)r.control?.setTags(canonical);
                 if(typeof this.options.onChange==='function')this.options.onChange(proposed,{...detail,controlled:r.valueState.controlled,proposedValue:proposed,instance:this});
             },
             onTagInvalid:detail=>{if(typeof this.options.onInvalid==='function')this.options.onInvalid({...detail,instance:this});},
             onFocus:event=>{if(typeof this.options.onFocus==='function')this.options.onFocus(event,this);},onBlur:event=>{if(typeof this.options.onBlur==='function')this.options.onBlur(event,this);},
-            onKeydown:(event,controlApi,detail)=>{if(typeof this.options.onKeydown==='function'&&this.options.onKeydown(event,controlApi,detail)===true)return true;if(event&&event.defaultPrevented)return true;return this.#handleTagInputKeydown(event);}
+            onKeydown:(event,controlApi,detail)=>{if(typeof this.options.onKeydown==='function'&&this.options.onKeydown(event,controlApi,detail)===true)return true;if(event&&event.defaultPrevented)return true;return this.#dispatchTagInteraction(event);}
         };
         Object.keys(next).forEach(key=>{if(next[key]===undefined)delete next[key];});if(!includeValue)delete next.tags;return next;
     }
-    #handleTagInputKeydown(event){const r=recordFor(this);return r.tagNavigation?r.tagNavigation.handleKeydown(event):false;}
-    #bindTagVirtualFocus(){
-        const r=recordFor(this),input=r.control?.getInputElement?.();if(!input||!r.control?.getTags?.())return false;
-        r.keyboard=this.own(KeyboardNavigation.create({root:input,focusRoot:()=>input,editableKeys:true,handlers:{}}));
-        r.tagNavigation=this.own(TagNavigation.create({keyboard:r.keyboard,domainName:'tag-input-tags',owner:()=>r.control?.getTags?.()||null,getInputElement:()=>r.control?.getInputElement?.()||null,isLocked:()=>this.destroyed||CapabilityController.mutationLocked(this.options)}));return true;
+    #dispatchTagInteraction(event){const r=recordFor(this);return !!(r.interactionController&&r.interactionController.dispatch(event,{ownerId:this.id+'-tag-input',source:'keyboard'})!=='pass');}
+    #bindTagControllers(){
+        const r=recordFor(this),input=r.control?.getInputElement?.(),tags=r.control?.getTags?.();if(!input||!tags)return false;
+        r.capabilityController=this.bindCapabilityController();
+        r.interactionController=this.bindInteractionController(input,{
+            id:this.id+'-tag-input',
+            listen:false,
+            capabilityController:r.capabilityController,
+            profile:{allowEditableKeys:true},
+            resolveAction:event=>InteractionController.resolveKeyboardAction(event,{keymap:{Backspace:'REMOVE',Delete:'REMOVE',Escape:'DISMISS'}}),
+            operationOf:action=>action==='REMOVE'?'remove':(action==='DISMISS'?'close':'navigate'),
+            onAction:(action,context)=>{
+                if(!r.tagNavigation)return 'pass';
+                return r.tagNavigation.handleKeydown(context.originalEvent)?'handled':'pass';
+            }
+        });
+        r.focusController=this.bindFocusController(input,{manageTabIndex:false,navigation:{editableKeys:true,handlers:{}}});
+        r.keyboard=r.focusController.keyboard;
+        r.tagNavigation=this.own(TagNavigation.create({keyboard:r.keyboard,domainName:'tag-input-tags',owner:()=>r.control?.getTags?.()||null,getInputElement:()=>r.control?.getInputElement?.()||null,isLocked:()=>this.destroyed}));
+        return true;
     }
-    [componentHooks.render](){const r=recordFor(this);if(r.rendered)return r.control.getRootElement();r.control=this.own(Control.create(this.#controlOptions(true)));r.control.getRootElement().classList.add('qxframe9a7c2-tag-input');this.#bindTagVirtualFocus();r.rendered=true;this.bindFocusTarget(r.control.getInputElement());return r.control.getRootElement();}
-    [fieldHooks.fieldOptionsUpdated](next,previous,patch){const r=recordFor(this);if(!r.control)return;const update=this.#controlOptions(false);delete update.container;if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(copyValue(next.value),{silent:true,source:'options',reason:'options-value'});const value=r.valueState.value;this.setFieldValue(value,{silent:true,force:true});update.tags=value;}if(own(patch,'inputValue')){r.inputValue=next.inputValue==null?'':String(next.inputValue);update.inputValue=r.inputValue;}r.control.updateOptions(update);}
+    [componentHooks.render](){const r=recordFor(this);if(r.rendered)return r.control.getRootElement();r.control=this.own(Control.create(this.#controlOptions(true)));r.control.getRootElement().classList.add('qxframe9a7c2-tag-input');this.bindFeedbackControl(r.control);this.#bindTagControllers();r.rendered=true;this.bindFocusTarget(r.control.getInputElement());return r.control.getRootElement();}
+    [fieldHooks.fieldOptionsUpdated](next,previous,patch){const r=recordFor(this);if(!r.control)return;const update=this.#controlOptions(false);delete update.container;if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(copyValue(next.value),{silent:true,source:'options',reason:'options-value'});const value=r.valueState.value;update.tags=value;}if(own(patch,'inputValue')){r.inputValue=next.inputValue==null?'':String(next.inputValue);update.inputValue=r.inputValue;}r.control.updateOptions(update);}
 
-    setValue(value){if(this.destroyed)return false;const r=recordFor(this);r.valueState.write(copyValue(value),{silent:true,source:'api',reason:'set-value'},false);const next=r.valueState.value;this.setFieldValue(next,{silent:true,force:true});r.control?.setTags(next);return this;}
+    setValue(value){if(this.destroyed)return false;const r=recordFor(this);r.valueState.write(copyValue(value),{silent:true,source:'api',reason:'set-value'},false);const next=r.valueState.value;const registration=this.getFormRegistration();if(registration&&registration.notifyValue)registration.notifyValue({source:'api',reason:'set-value'});r.control?.setTags(next);return this;}
     setInputValue(value){if(this.destroyed)return false;const r=recordFor(this);r.inputValue=value==null?'':String(value);r.control?.setInputValue(r.inputValue);return this;}
     #tagsOwner(){const r=recordFor(this);return r.control?.getTags?.()||null;}
     add(text,meta){return this.destroyed?false:(this.#tagsOwner()?.add(text,meta)??false);}
@@ -82,6 +109,7 @@ export class TagInput extends FieldComponent {
     blur(){const c=recordFor(this).control;return this.destroyed||!c?false:c.blur();}
     getState(){const r=recordFor(this),c=r.control?r.control.getState():null;return Object.freeze({value:r.valueState.value,controlled:r.valueState.controlled,inputValue:c?c.inputValue:r.inputValue,disabled:c?c.disabled:this.disabled,readOnly:c?c.readOnly:this.readOnly,focused:c?c.focused:false,destroyed:this.destroyed});}
     getControl(){return recordFor(this).control;}
+    getSelectionController(){const tags=recordFor(this).control?.getTags?.();return tags&&tags.getSelectionController?tags.getSelectionController():null;}
     getRootElement(){return recordFor(this).control?.getRootElement?.()||this.root;}
     getInputElement(){return recordFor(this).control?.getInputElement?.()||null;}
 }
