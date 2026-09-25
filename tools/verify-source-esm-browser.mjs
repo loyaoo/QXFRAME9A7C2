@@ -30,6 +30,19 @@ a(fieldFormController.getField('rating').dirty===true&&String(fieldFormControlle
 formRate.destroy();
 a(fieldFormController.snapshot().fieldCount===0,'phase-h FieldComponent destroy unregister');
 fieldFormController.destroy();
+const {ValueController}=await import('qx:/src/core/valueController.js');
+class BrowserProbeField extends FieldComponent{}
+const valueProbe=new BrowserProbeField({defaultValue:'seed'});
+const valueProbeOwned=valueProbe.getValueController();
+a(!!valueProbeOwned&&valueProbe.value==='seed'&&valueProbeOwned.value==='seed','phase-h FieldComponent ValueController default authority');
+valueProbe.setFieldValue('next',{source:'user',reason:'browser-value'});
+a(valueProbe.value==='next'&&valueProbeOwned.value==='next','phase-h FieldComponent writes enter ValueController');
+const externalValueController=ValueController.create({value:'external'});
+valueProbe.bindValueController(externalValueController);
+a(valueProbe.getValueController()===externalValueController&&valueProbe.value==='external','phase-h FieldComponent adopts external ValueController authority');
+valueProbe.setFieldValue('shared',{source:'user',reason:'browser-shared-value'});
+a(externalValueController.value==='shared','phase-h FieldComponent shared ValueController write');
+valueProbe.destroy();a(externalValueController.destroyed===false,'phase-h FieldComponent does not destroy external ValueController');externalValueController.destroy();
 const fgForm=document.createElement('form'),fgLeft=document.createElement('input'),fgRight=document.createElement('input');
 fgLeft.name=fgRight.name='choice';fgLeft.defaultValue='A0';fgRight.defaultValue='B0';fgForm.append(fgLeft,fgRight);document.body.appendChild(fgForm);
 const fgLeftBridge=FormBridge.create({formField:fgLeft,name:'choice',value:'A'});
