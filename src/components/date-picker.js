@@ -1083,7 +1083,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     else draft.setRawInput(draft.rawInput, { silent:true, active:false, source:'input', reason:'blur-draft-projection' });
     syncSelectionPanel(true);
     syncTimePanel();
-    syncField(opts.needConfirm === true && field.getState().open);
+    syncField(field.getState().open);
   }
 
   field = PickerField.create({
@@ -1470,7 +1470,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
       throw error;
     }
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
-    if (own(next, 'closeOnSelect')) closeOnSelectExplicit = true;
     field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
     if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
