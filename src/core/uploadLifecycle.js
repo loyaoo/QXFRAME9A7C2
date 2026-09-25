@@ -165,6 +165,16 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       emit('set-value', null, meta);
       return api;
     }
+    function requestValue(next, meta) {
+      if (destroyed) return api;
+      if (!controlled) return setValue(next, meta);
+      var proposed = asArray(next).map(function (item) { return normalizeRecord(item); });
+      var detail = proposalMeta(meta, proposed);
+      detail.requested = true;
+      detail.silent = false;
+      emit('request-value', null, detail);
+      return api;
+    }
     function requestFor(record) {
       if (!Utils.isFunction(opts.request)) return null;
       var task = AsyncTask.create({ task: function (_, context) {
@@ -283,7 +293,6 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       if (controlled) {
         var proposed = records.slice();
         proposed.splice(index, 1);
-        invalidatePendingMutations();
         emit('remove', record, proposalMeta(meta, proposed));
         return true;
       }
@@ -325,7 +334,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       opts = mergeOptions(opts, next);
       if (own(next, 'controlled')) controlled = opts.controlled === true;
       if (own(next, 'value')) {
-        setValue(next.value, { source: 'options', silent: true });
+        setValue(next.value, { source: 'options', silent: true, preservePending: controlled === true });
         if (opts.autoUpload !== false && Utils.isFunction(opts.request)) {
           records.forEach(function (record) {
             if (previousUids[record.uid] || !record.file || record.skipAutoUpload || record.status === 'uploading' || record.status === 'success') return;
@@ -347,7 +356,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
 
     api = {
       addFiles: addFiles, upload: upload, retry: upload, abort: abort, remove: remove, move: move,
-      setValue: setValue, getValue: snapshots, find: function (target) { var record = findRecord(target); return record ? snapshotRecord(record) : null; },
+      setValue: setValue, requestValue: requestValue, getValue: snapshots, find: function (target) { var record = findRecord(target); return record ? snapshotRecord(record) : null; },
       updateOptions: updateOptions, on: emitter.on, once: emitter.once, destroy: destroy,
       getState: function () { return Object.freeze({ value: snapshots(), controlled: controlled, uploading: Object.keys(tasks).length, disabled: opts.disabled === true, mutationGeneration: mutationGeneration, destroyed: destroyed }); }
     };
