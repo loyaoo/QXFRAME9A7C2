@@ -10,45 +10,44 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `71687b9057fc25f432d78885821aaf6287734f5f` (PR #98 merge)
-- Current branch: `refactor/phase-h-json-r2-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-018 JSON PR
-- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-018 replay branch; prune merged task branches after Phase H signoff
+- Last code-affecting main commit: `f4a7f37d31e3685ead3ff911274f87f8a2ed0d4f` (PR #99 merge)
+- Current branch: `refactor/phase-h-ripple-r2-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-019 Ripple PR
+- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-019 replay branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #481 / `36091760761` (PR #98)
-- Latest green main CI + Pages: #482 / `36092055152`
+- Latest green Phase H PR CI: #483 / `36092472277` attempt 2 (PR #99)
+- Latest green main CI + Pages: #484 / `36092917404`
 - Overall handbook implementation progress: 98%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-018`
+- Current Task: `PHASE-H-019`
 
 ## CURRENT
 
-### PHASE-H-018 — JSON F/I/C/B closeout
+### PHASE-H-019 — Ripple I/C/M closeout
 Status: IN_PROGRESS
 Task progress: 85%
 
-Completed prerequisites:
-- PHASE-H-016 Autocomplete is DONE through PR #97, exact-head CI #479 / `36090821302`, merge `f97417350a24397d95d27e41426d108f12143214`, main release + Pages #480 / `36091284678`.
-- PHASE-H-017 Steps is DONE through PR #98, exact-head CI #481 / `36091760761`, merge `71687b9057fc25f432d78885821aaf6287734f5f`, main release + Pages #482 / `36092055152`.
-- current green main has 31 profiled / 28 complete / 12 remaining public components. H-018 raises the replay branch to at least 32 profiled / 29 complete / 11 remaining.
+Completed prerequisite:
+- PHASE-H-018 JSON is DONE through PR #99, exact-head CI #483 / `36092472277` attempt 2, merge `f4a7f37d31e3685ead3ff911274f87f8a2ed0d4f`, main release + Pages #484 / `36092917404`.
+- the first #483 attempt failed only an existing Phase E motion browser mid-frame timing assertion; rerunning the same exact head passed without code changes, so no Motion gate was weakened.
+- JSON is H accepted. Phase H is now 32 profiled / 29 complete / 11 remaining public components.
 
-Implemented in current H-018 pack:
-- JSON declares the exact handbook Focus/Interaction/Capability/Feedback profile and canonical owners; no Value/Selection/Overlay authority is invented.
-- direct `KeyboardRegion.create()` ownership is removed. The root/tree/toolbar region now enters `FocusController.create()`; the compatibility `getKeyboardRegion()` accessor forwards the FocusController-owned region.
-- keyboard semantics remain the existing KeyboardNavigation path, which resolves semantic actions through InteractionController; no second keydown semantic store is introduced.
-- one CapabilityController gates edit start/commit, toolbar activation and copy while preserving readOnly and loading semantics.
-- one FeedbackController projects pending/progress/error/warning/success root classes only; it does not mutate JSON data/edit business state.
-- strict source-ESM Chromium verifies FocusController region identity, local feedback projection, readOnly edit blocking and editable re-entry.
-- `verify:phase-h-json` rejects direct KeyboardRegion construction and freezes F/I/C/B ownership.
-- target matrix floor is tightened to `minimumProfiled=32`, `minimumComplete=29`.
+Implemented in current H-019 pack:
+- Ripple declares the exact handbook Interaction/Capability/Motion profile and canonical ownership.
+- InteractionController and CapabilityController remain the single instances already owned by PressInteraction; Ripple exposes those exact instances and does not create duplicate controllers.
+- raw per-wave `animationend` listener ownership is removed. CSS animation waiting/cleanup enters `MotionController.waitMotionEnd()` while Ripple remains the sole owner of wave geometry/DOM/keyframe classes.
+- no MotionCore visibility store is added; Ripple does not gain a second logical visible/open state.
+- `verify:phase-h-ripple` freezes I/C/M ownership and rejects direct raw animationend wait paths.
+- strict Chromium verifies shared I/C/M access, pointer wave creation and loading-state activation blocking.
+- target matrix floor rises to `minimumProfiled=33`, `minimumComplete=30`.
 
 Next exact step:
-1. perform final replay diff/self-audit and open PHASE-H-018 PR from latest green main.
+1. final diff/self-audit and open PHASE-H-019 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark JSON H accepted.
-5. continue the remaining 11 components by smallest authority gap; broad final audit remains reserved for Astra High.
+4. mark Ripple H accepted.
+5. continue the remaining 10 components by smallest authority gap; broad final audit remains reserved for Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -78,6 +77,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-018 — JSON F/I/C/B closeout
+Status: DONE
+Evidence:
+- PR #99 merged
+- merge commit `f4a7f37d31e3685ead3ff911274f87f8a2ed0d4f`
+- exact-head CI #483 / `36092472277` attempt 2: success
+- main CI + Pages #484 / `36092917404`: success
+Outcome:
+- direct KeyboardRegion ownership is removed; root/tree/toolbar focus enters FocusController.
+- keyboard semantics remain the existing KeyboardNavigation→InteractionController path.
+- CapabilityController gates edit/commit, toolbar activation and copy.
+- FeedbackController projects root loading/error/warning/success only and does not own JSON business data.
+- exact F/I/C/B profile is gated and strict Chromium verifies focus-region identity, feedback and readOnly/edit behavior.
+- JSON is H accepted.
+
+
 
 ### PHASE-H-017 — Steps V/F/I/C/B closeout
 Status: DONE
