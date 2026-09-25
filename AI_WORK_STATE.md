@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
-Status: IN_PROGRESS
-Task progress: 20%
+Status: IMPLEMENTED_AWAITING_PR_CI
+Task progress: 75%
 Scope:
 - DatePicker multiple control projection must reflect the current open-session draft while committed/FormData remain unchanged until commit.
 - DatePicker needConfirm=false presets must commit immediately and close after a successful complete preset selection.
@@ -39,10 +39,17 @@ Baseline:
 - base: current `main` after PR #113 and its checkpoint update
 - open PR: none yet
 - latest verified code main CI before this task: #560 / `36150117894` green
+Implementation evidence:
+- DatePicker multiple uses draft tags while the token editor remains an editor, not an aggregate-value mirror.
+- DatePicker needConfirm=false preset activation commits then closes independently from ordinary panel closeOnSelect policy.
+- PickerField projects open-session draft text through Control.setInputValue(), so Control state and DOM cannot diverge; tag mode projects through tags instead.
+- TimePicker / ColorPicker / WheelPicker no longer gate open-session draft projection on needConfirm or a separate draft target.
+- production Chromium smoke coverage now checks Date multiple draft/cancel, immediate range preset close, and Time/Color/Wheel open control draft state.
+- static Phase-H Picker gate rejects reintroducing draft-target suppression or raw-DOM-only draft projection.
 Next exact step:
-1. patch DatePicker / TimePicker / ColorPicker / WheelPicker projection paths to follow handbook §19 display rules.
-2. add browser-visible regression coverage for external draftValueTarget + control draft projection, DatePicker multiple, and preset immediate/confirm behavior.
-3. run targeted/static verification, open PR, wait for exact-head GitHub Actions, then merge only if green.
+1. open PR from `fix/picker-draft-projection-20260925` to `main`.
+2. wait for exact-head GitHub Actions full release + Chromium verification.
+3. if green, merge; then verify main CI + Pages and close this task checkpoint.
 
 ## Current authority snapshot — after Phase A
 
