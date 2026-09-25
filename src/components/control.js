@@ -714,11 +714,11 @@ function create(source, overrides) {
         }
       }));
       modeCleanups.push(DOM.listen(segmentInput, 'keydown', function (event) {
+        if (typeof opts.onKeydown === 'function' && opts.onKeydown(event, api, { segmentIndex:index, segment:segment, input:segmentInput }) === true) return;
         if (event.key === 'Backspace' && segmentInput.value === '' && index > 0) {
           if (segmentedInput.erasePrevious(index, { originalEvent: event })) { if (event.preventDefault) event.preventDefault(); syncSegmentsFromState(); DOM.focusElement(segmentInputs[index - 1]); }
         } else if (event.key === 'ArrowLeft' && segmentInput.selectionStart === 0 && index > 0) { if (event.preventDefault) event.preventDefault(); DOM.focusElement(segmentInputs[index - 1]); }
         else if (event.key === 'ArrowRight' && segmentInput.selectionStart === segmentInput.value.length && index < segmentInputs.length - 1) { if (event.preventDefault) event.preventDefault(); DOM.focusElement(segmentInputs[index + 1]); }
-        if (typeof opts.onKeydown === 'function') opts.onKeydown(event, api);
       }));
       modeCleanups.push(DOM.listen(segmentInput, 'paste', function (event) {
         var text = event.clipboardData && event.clipboardData.getData ? event.clipboardData.getData('text') : '';
