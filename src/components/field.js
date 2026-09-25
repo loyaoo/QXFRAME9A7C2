@@ -132,7 +132,7 @@ export class FieldComponent extends Component {
         const capabilities = options.capabilities || {};
         const capability = CapabilityController.create({
             getState: () => ({ disabled:this.disabled, readOnly:this.readOnly, loading:this.busy }),
-            getCapabilities: () => capabilities
+            getCapabilities: () => typeof options.getCapabilities === 'function' ? (options.getCapabilities(this) || {}) : capabilities
         });
         const focus = FocusController.create({ root, document:root.ownerDocument, disabled:capability.can('focus') === false });
         const interaction = InteractionController.create();
