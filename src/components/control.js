@@ -714,6 +714,10 @@ function create(source, overrides) {
         }
       }));
       modeCleanups.push(DOM.listen(segmentInput, 'keydown', function (event) {
+        if (typeof opts.onSegmentKeydown === 'function') {
+          opts.onSegmentKeydown({ index:index, key:segment.key, originalEvent:event, input:segmentInput, control:api });
+          if (event.defaultPrevented === true) return;
+        }
         if (event.key === 'Backspace' && segmentInput.value === '' && index > 0) {
           if (segmentedInput.erasePrevious(index, { originalEvent: event })) { if (event.preventDefault) event.preventDefault(); syncSegmentsFromState(); DOM.focusElement(segmentInputs[index - 1]); }
         } else if (event.key === 'ArrowLeft' && segmentInput.selectionStart === 0 && index > 0) { if (event.preventDefault) event.preventDefault(); DOM.focusElement(segmentInputs[index - 1]); }
