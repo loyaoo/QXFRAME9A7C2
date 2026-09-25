@@ -3,6 +3,7 @@ import { Utils } from '../utils/utils.js';
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
 import { EventDelegation } from './eventDelegation.js';
+import { OverlayController } from './overlayController.js';
 
 const global = globalThis;
 
@@ -176,8 +177,15 @@ function createOverlay(row, event) {
   overlay.style.width = Math.max(0, Number(rect.width) || row.offsetWidth || 0) + 'px';
   overlay.style.height = Math.max(0, Number(rect.height) || row.offsetHeight || 0) + 'px';
   doc.body.appendChild(overlay);
+  var layerLease = OverlayController.createLayerLease({
+    element: overlay,
+    document: doc,
+    kind: 'drag',
+    componentType: String(source.componentType || 'sort'),
+    zIndexOffset: Number(option('zIndexOffset', 0)) || 0
+  });
   positionOverlay(overlay, event);
-  return overlay;
+  return { element:overlay, layerLease:layerLease };
 }
 function positionOverlay(overlay, event) {
   if (!overlay || !event) return;
@@ -187,7 +195,12 @@ function positionOverlay(overlay, event) {
   overlay.style.top = (y + 12) + 'px';
 }
 function removeOverlay(active) {
-  if (active && active.overlay) {
+  if (!active) return;
+  if (active.overlayLease) {
+    active.overlayLease.destroy();
+    active.overlayLease = null;
+  }
+  if (active.overlay) {
     DOM.removeNode(active.overlay);
     active.overlay = null;
   }
@@ -213,7 +226,8 @@ function beginDrag(event, row) {
     var handle = event.target && event.target.closest ? event.target.closest(requiredHandle) : null;
     if (!handle || !row.contains(handle)) { if (event.preventDefault) event.preventDefault(); return false; }
   }
-  session = { key: key, fromIndex: index, targetIndex: index, before: true, hasPointerSlot: false, dropAllowed: true, dataVersion: dataVersion(), scrollContainers: scrollableAncestors(), overlay: createOverlay(row, event) };
+  var ghost = createOverlay(row, event);
+  session = { key: key, fromIndex: index, targetIndex: index, before: true, hasPointerSlot: false, dropAllowed: true, dataVersion: dataVersion(), scrollContainers: scrollableAncestors(), overlay: ghost && ghost.element || null, overlayLease: ghost && ghost.layerLease || null };
   row.classList.add('is-dragging');
   if (event.dataTransfer) {
     event.dataTransfer.effectAllowed = 'move';
