@@ -22,7 +22,10 @@ GitHub/main + `AI_WORK_STATE.md` checkpoint facts override stale prose elsewhere
 - Table exact-head verification: workflow #515 / `36109887374`.
 - Table merged main commit: `a331356fcc418f200b58950153beb346aab2e3b9`.
 - Main release + Pages verification after Table: workflow #516 / `36111306682`.
-- Phase I release-integrity adds a hard 40/40 profile-completion floor and a release-integrity verifier.
+- Phase I release-integrity is merged through PR #109 at `f00455ecd2d1e8274673806fad5d5629fb08803d`.
+- Phase I exact-head verification: workflow #517 / `36112109009`.
+- Phase I main release + Pages verification: workflow #518 / `36112480912`.
+- Phase I release-integrity freezes the hard 40/40 profile-completion floor and requires the release-integrity verifier.
 
 ## What Astra High should audit
 

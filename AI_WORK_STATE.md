@@ -10,43 +10,39 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `a331356fcc418f200b58950153beb346aab2e3b9` (PR #108 merge)
-- Current branch: `release/phase-i-integrity-handoff-20260925`
-- Open PRs at this checkpoint: pending PHASE-I-001 release-integrity/handoff PR
+- Last code-affecting main commit: `f00455ecd2d1e8274673806fad5d5629fb08803d` (PR #109 merge)
+- Current branch: `main`
+- Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches + current Phase I branch; branch pruning is post-handoff housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #515 / `36109887374` (PR #108)
-- Latest green main CI + Pages: #516 / `36111306682`
-- Overall handbook implementation progress: 99% (implementation complete through Phase H; Phase I release-integrity/handoff in progress; final broad audit acceptance reserved for GPT-6 Astra High)
-- Current Phase: Phase I — release-integrity + Astra High handoff
-- Current Task: `PHASE-I-001`
+- Latest green Phase I PR CI: #517 / `36112109009` (PR #109)
+- Latest green main CI + Pages: #518 / `36112480912`
+- Overall handbook implementation progress: 100% implementation complete; final broad audit/acceptance pending GPT-6 Astra High
+- Current Phase: Phase I — release-integrity complete; Astra High final audit pending
+- Current Task: `ASTRA-HIGH-FINAL-AUDIT`
 
 ## CURRENT
 
-### PHASE-I-001 — release-integrity + Astra High handoff
-Status: IN_PROGRESS
-Task progress: 75%
+### ASTRA-HIGH-FINAL-AUDIT — broad final audit / acceptance
+Status: READY_FOR_AUDIT
+Implementation progress: 100%
+Final broad audit acceptance: PENDING
 
-Completed prerequisite:
-- PHASE-H-027 Table final closeout is DONE through PR #108, exact-head CI #515 / `36109887374`, merge `a331356fcc418f200b58950153beb346aab2e3b9`, main release + Pages #516 / `36111306682`.
-- all 40 public components are now H accepted against the handbook target matrix.
-- Phase H target matrix is fully profiled 40/40; this Phase I pack raises completed-profile regression floor to 40/40.
-
-Implemented in current pack:
-- `tools/manifests/phase-h-target-profiles.json` now freezes both `minimumProfiled` and `minimumComplete` at 40.
-- added `verify:phase-i-release-integrity` to the required verify chain.
-- the Phase I gate requires exact 40-component runtime/matrix parity, exact target capability/owner match for every public component, 40 H-accepted acceptance rows, clean Phase I checkpoint state, canonical release-chain coverage, and the completion-audit entry.
-- Table acceptance is updated with PR #108 / CI #515 / main #516 evidence.
-- stale H-027/current 39/40 state and the superseded DatePicker/TimePicker needConfirm issue are removed from the active checkpoint.
-- broad architecture/internal-target audit is deliberately not repeated here; it is handed to GPT-6 Astra High as requested.
+Release-integrity evidence:
+- PHASE-I-001 merged through PR #109 at `f00455ecd2d1e8274673806fad5d5629fb08803d`.
+- exact-head CI #517 / `36112109009`: Completion audit + full release/browser + npm pack + standalone dist/docs all green.
+- main CI + Pages #518 / `36112480912`: release and deploy-pages green.
+- Phase H public surface is 40/40 H accepted.
+- Phase H target matrix freezes `minimumProfiled=40` and `minimumComplete=40`.
+- `verify:phase-i-release-integrity` is required by the normal verify/release path.
+- Astra handoff: `PHASE_I_ASTRA_AUDIT_HANDOFF.md`.
 
 Next exact step:
-1. create the Astra High audit handoff document with authoritative files, CI evidence, audit scope and explicit non-goals.
-2. final diff/self-audit; open PHASE-I-001 PR.
-3. require exact-head Completion audit + full release/browser + npm/standalone green.
-4. merge only green and verify main + Pages.
-5. update final checkpoint to implementation 100% / Phase I release-integrity DONE, while keeping Astra High broad audit acceptance explicitly pending.
+1. run GPT-6 Astra High broad audit from current main using the handoff document.
+2. if blocking findings exist, fix them in small coherent PRs with exact-head CI and main + Pages.
+3. if no blocking findings remain, record final Phase I / overall acceptance in `AI_WORK_STATE.md` and `FOUR_UNIFICATIONS_ACCEPTANCE.md`.
+4. branch pruning is housekeeping after final audit; do not merge stale task branches merely to delete them.
 
 ## Current authority snapshot — after Phase A
 
@@ -74,6 +70,22 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-I-001 — release-integrity + Astra High handoff
+Status: DONE
+Evidence:
+- PR #109 merged
+- merge commit `f00455ecd2d1e8274673806fad5d5629fb08803d`
+- exact-head CI #517 / `36112109009`: success
+- main CI + Pages #518 / `36112480912`: success
+Outcome:
+- Phase H profiled/completed target floors are frozen at 40/40.
+- `verify:phase-i-release-integrity` is part of the required verify chain and proves 40-component target/owner parity, 40 H-accepted rows, clean Phase I checkpoint state and canonical release-chain coverage.
+- Table/Phase H acceptance evidence is current and stale H-027/needConfirm checkpoint state is removed.
+- `PHASE_I_ASTRA_AUDIT_HANDOFF.md` contains the requested broad final audit scope and non-goals.
+- migration/release-integrity implementation is complete; broad final audit acceptance remains intentionally pending GPT-6 Astra High.
+
+
 
 ### PHASE-H-027 — Table final V/F/I/C/S/O/B/R closeout
 Status: DONE
