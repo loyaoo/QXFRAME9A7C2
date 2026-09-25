@@ -161,6 +161,20 @@ export class PickerComponent extends PopupFieldComponent {
     }
 
     getPickerField() { return requireState(this).field; }
+    bindFormController(controller, options = {}) {
+        const record = requireState(this);
+        const field = record.field;
+        const control = field && field.getControl ? field.getControl() : null;
+        const settings = Utils.mergeOwn(options || {});
+        if (typeof settings.getValue !== 'function') settings.getValue = instance => instance.value;
+        if (typeof settings.getSerializedValue !== 'function') settings.getSerializedValue = instance => {
+            const currentField = requireState(instance).field;
+            const currentControl = currentField && currentField.getControl ? currentField.getControl() : null;
+            return currentControl && currentControl.getSerializedValue ? currentControl.getSerializedValue() : instance.value;
+        };
+        return super.bindFormController(controller, settings);
+    }
+
     getPickerSession() { return requireState(this).session; }
     getSelectionController() { return requireState(this).selectionController; }
     getDraftController() { return requireState(this).controller; }
