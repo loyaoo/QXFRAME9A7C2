@@ -40,6 +40,7 @@ Current truth established by this remediation:
 - Upload controlled multi-file `beforeUpload` batches survive owner acknowledgement and rebase both before and after async `beforeUpload` on the latest external canonical list.
 - Tags overflow summary remains intentionally non-focusable and hover-only. Do not add it to the Tags virtual-focus sequence unless a future explicit redesign also specifies popup-domain navigation, deletion reconciliation, scroll restoration and cross-domain focus transfer.
 - checkable Tags form reset resets selection only; it does not roll back the current choices/items list.
+- Control applies its native reset baseline before component reset listeners, so the component owner has the final projection write; Autocomplete / InputOTP / TagInput explicitly reproject their ValueController canonical state after reset.
 
 Next exact step:
 1. continue Astra High acceptance only from current main and newly reproducible findings.
