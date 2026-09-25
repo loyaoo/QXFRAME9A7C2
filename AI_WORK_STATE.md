@@ -11,7 +11,7 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: always query Git on resume; PR #111 is the latest accepted historical-regression remediation.
-- Current branch: `main`
+- Current branch: `perf/core-safe-hotpaths-20260925`
 - Open PRs at this checkpoint: none after PR #111 merge; if Git differs, trust Git
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
@@ -19,10 +19,32 @@
 - Latest green remediation PR CI: #522 / `36123086284` (PR #110 exact-head `78923e8d29dc8924a17cf2dbb55f7c704d6712c6`)
 - Latest green main CI + Pages: #523 / `36123503345` (`main@929c920808fefc9bb1d241df560b054f2ce6b3f7`)
 - Overall handbook implementation progress: 100% implementation complete; confirmed final-audit remediation is merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
-- Current Phase: post-remediation Astra final acceptance
-- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
+- Current Phase: pre-production core hotpath optimization
+- Current Task: `CORE-HOTPATH-BEHAVIOR-EQUIVALENCE`
 
 ## CURRENT
+
+### CORE-HOTPATH-BEHAVIOR-EQUIVALENCE — pre-production performance/structure pass
+Status: IMPLEMENTED_PENDING_PR_VALIDATION
+Scope:
+- preserve all current UI interaction semantics; no focus/selection/popup policy rewrite.
+- Selection membership diffs are linear while authored selection order is preserved.
+- TreeModel internal traversal no longer copies child arrays; public getChildren() remains defensive-copy.
+- Virtualizer maintains key→index lookup for keyed scroll-anchor preservation.
+- ResponsiveOverflow keeps the same candidate scan order and tail callback semantics, but prefix sizing is O(1) per candidate after one prefix pass.
+- Table search hoists normalized query/searchable columns per projection; default sort values are decorated once per row; custom comparator behavior remains unchanged.
+- Table render uses transaction-local selected/expanded Sets; fixed geometry reads are cached within one measure pass; column resize caches cells only for the active drag session.
+- TreeSelect value lookup is cached by TreeModel revision; Cascader uses TreeQuery.index for stable value→path lookup and invalidates on dataset/lazy-child changes.
+- HierarchicalSelection reuses one leaf traversal inside toggle only; cascade policy is unchanged.
+- ControllableStateCore exposes lightweight ownership reads; ValueController no longer allocates a full ownership snapshot for each controlled check.
+- ValueEquality.deep correctly distinguishes Map/Set/RegExp and no longer sorts plain-object keys.
+- StateController / ValueDraft compatibility aliases are removed; ValueController is the only value authority.
+- Collection snapshot semantics, full hierarchy rewrite, CSS mechanical dedupe and Tags overflow focus behavior are intentionally unchanged in this pass.
+
+Validation:
+- targeted verifier: tools/verify-core-hotpaths.mjs
+- existing architecture/value/table/browser verification must pass on the PR exact head before merge.
+- Tags overflow summary remains intentionally non-focusable.
 
 ### HISTORICAL-REGRESSION-REMEDIATION-002 — v31/current shared state + focus defects
 Status: DONE_MERGED
@@ -52,7 +74,7 @@ Next exact step:
 This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
 
 - Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
-- Value ownership: `ValueController` is the canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` is a compatibility alias and `StateController.create()` delegates to it; `ControllableStateCore` still owns controlled/external-vs-internal and pending-request metadata. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
+- Value ownership: `ValueController` is the sole canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` and `StateController` compatibility aliases are removed; `ControllableStateCore` owns controlled/external-vs-internal and pending-request metadata only. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
 - Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
 - Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
 - Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
@@ -66,7 +88,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
 - Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
 - Input modality: existing `InteractionModality` remains the authority and now exposes touch/programmatic modalities plus the `InputModality` alias.
-- Shared Protocol verification: `verify:shared-protocol` covers the foundation plus Collection/ValueDraft/StateController integration.
+- Shared Protocol verification covers the canonical foundation and Collection/ValueController integration; removed ValueDraft/StateController aliases must not reappear.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
 
