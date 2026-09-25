@@ -227,7 +227,8 @@ function setupUpload(instance) {
       onSuccess: function (response, record) { publishUploadFeedback('success', record, 100, record && record.name); if (typeof opts.onSuccess === 'function') opts.onSuccess(response, record, api); },
       onError: function (error, record) { publishUploadFeedback('error', record, record && record.percent, error && error.message || record && record.name); if (typeof opts.onError === 'function') opts.onError(error, record, api); },
       onChange: function (value, detail) {
-        var canonical = detail && detail.controlled === true ? (api.value || []) : value;
+        var controlledProposal = detail && detail.controlled === true && detail.operation !== 'set-value';
+        var canonical = controlledProposal ? (api.value || []) : value;
         api.setFieldValue(canonical, { silent: true, force: true, source:detail && detail.controlled === true ? 'controlled-lifecycle' : 'component', reason:detail && detail.reason || 'upload-change' });
         if (formBridge) formBridge.setValue(canonical, { silent: detail && detail.silent === true, source: detail && detail.source || 'upload', reason: detail && detail.reason || 'change' });
         reconcileObjectUrls(canonical);
