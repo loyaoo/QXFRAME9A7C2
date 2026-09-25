@@ -127,7 +127,7 @@ export class Sort extends Component {
         r.selectionController = this.own(SelectionController.create({ channels:{ selected:{ values:[], multiple:false } } }));
         r.capabilityController = this.own(CapabilityController.create({
             getState: () => this.options,
-            getCapabilities: () => ({ focusable:true, navigable:this.options.keyboard !== false, editable:true, draggable:this.options.draggable !== false, selectable:true })
+            getCapabilities: () => ({ focusable:true, navigable:true, editable:true, draggable:this.options.draggable !== false, selectable:true })
         }));
         r.focusController = this.own(FocusController.create({ root, activeRegion:'rows' }));
         r.interactionController = this.own(InteractionController.create());
