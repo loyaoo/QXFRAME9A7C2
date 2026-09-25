@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ValueController } from '../src/core/valueController.js';
-import { StateController } from '../src/core/stateController.js';
 import { Select } from '../src/components/select.js';
 import { TreeSelect } from '../src/components/tree-select.js';
 import { Cascader } from '../src/components/cascader.js';
@@ -30,24 +29,17 @@ assert.equal(uncontrolled.controlled,false,'defaultValue must remain internally 
 assert.equal(uncontrolled.write('b',{source:'keyboard',reason:'interaction'},true),true);
 assert.equal(uncontrolled.value,'b','uncontrolled interaction must update canonical value.');
 
-const compat=StateController.createOptionValueBinding({defaultValue:'x'},{defaultValue:'x'},String);
-assert.equal(compat.controlled,false,'StateController compatibility facade must preserve ValueController binding semantics.');
-compat.write('y',{source:'programmatic',reason:'compat'},false);
-assert.equal(compat.value,'y');
-
 for(const Type of [Select,TreeSelect,Cascader,Autocomplete]){
   assert.equal(Type.profile?.ownership?.value,'ValueController',Type.name+' must declare ValueController ownership.');
   assert.equal(Type.profile?.overlay?.mode,'popup',Type.name+' must declare popup overlay capability.');
 }
 for(const file of ['select.js','tree-select.js','cascader.js','autocomplete.js']){
   const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
-  assert.ok(!/stateController\.js|StateController\./.test(source),file+' must not depend on the StateController compatibility facade.');
+  assert.ok(!/stateController\.js|StateController\./.test(source),file+' must not depend on a retired value-state alias.');
   assert.ok(/ValueController\./.test(source),file+' must use the canonical ValueController entry point.');
 }
 
 authored.destroy();
 controlled.destroy();
 uncontrolled.destroy();
-compat.destroy();
-
-console.log(JSON.stringify({ok:true,family:'picker-like-value',members:['Select','TreeSelect','Cascader','Autocomplete'],owner:'ValueController',stateController:'compatibility-facade'}));
+console.log(JSON.stringify({ok:true,family:'picker-like-value',members:['Select','TreeSelect','Cascader','Autocomplete'],owner:'ValueController',compatAliasesRemoved:true}));
