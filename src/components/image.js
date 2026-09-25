@@ -8,6 +8,9 @@ import { Config } from '../core/config.js';
 import { TransformModel } from '../core/transformModel.js';
 import { Renderer } from '../core/renderer.js';
 import { OverlayController } from '../core/overlayController.js';
+import { InteractionController } from '../core/interactionController.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { Transition } from '../core/transition.js';
 import { PointerSession } from '../core/pointerSession.js';
@@ -171,6 +174,10 @@ function setupImage(instance) {
   var api = instance;
   var previewActionByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
   var previewChromeNodes = [];
+  var interactionController = null;
+  var interactionScope = null;
+  var capabilityController = null;
+  var feedbackController = null;
     
   var root = doc.createElement('span');
   var image = doc.createElement('img');
@@ -190,6 +197,32 @@ function setupImage(instance) {
   root.appendChild(image);
   root.appendChild(errorLayer);
   opts.container.appendChild(root);
+
+  capabilityController = CapabilityController.create({
+    getState: function () { return { disabled: destroyed || opts.disabled === true, readOnly: false, loading: false }; },
+    capabilities: Object.freeze({ focusable:true, navigable:true, expandable:true, activatable:true, editable:true, draggable:true })
+  });
+  interactionController = InteractionController.create();
+  function projectFeedback(snapshot) {
+    var status = String(snapshot && snapshot.status || 'idle');
+    root.classList.toggle('is-loading', status === 'pending' || status === 'progress');
+    root.classList.toggle('is-error', status === 'error');
+    root.classList.toggle('is-warning', status === 'warning');
+    return root;
+  }
+  feedbackController = FeedbackController.createForProjector(Object.freeze({
+    show: function (snapshot) { return projectFeedback(snapshot); },
+    update: function (_handle, snapshot) { return projectFeedback(snapshot); },
+    close: function () { return projectFeedback({ status:'idle' }); }
+  }), { ownerId:String(instance.id || 'image') }, 'local');
+  scope.add(function () { if (feedbackController) feedbackController.destroy(); feedbackController = null; });
+  scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; interactionScope = null; });
+  scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
+  function syncFeedback(reason) {
+    if (!feedbackController) return;
+    var status = error ? 'error' : (loading ? 'pending' : 'idle');
+    feedbackController.publish({ operation:'image-load', status:status, requestId:'image-source', message:reason || '' });
+  }
     
   function previewConfig() { return opts.preview && typeof opts.preview === 'object' ? opts.preview : null; }
   function cfg(name, fallback) {
@@ -242,9 +275,7 @@ function setupImage(instance) {
   function syncRoot() {
     root.classList.toggle('is-rounded', opts.rounded === true);
     root.classList.toggle('is-circle', opts.circle === true);
-    root.classList.toggle('is-previewable', previewable() && opts.disabled !== true);
-    root.classList.toggle('is-loading', loading);
-    root.classList.toggle('is-error', error);
+    root.classList.toggle('is-previewable', previewable() && capabilityController && capabilityController.can('open'));
     root.classList.toggle('is-disabled', opts.disabled === true);
     root.style.setProperty('--qxframe9a7c2-image-fit', opts.fit);
     root.style.width = opts.width == null || opts.width === '' ? '' : (typeof opts.width === 'number' ? String(opts.width) + 'px' : String(opts.width));
@@ -267,12 +298,14 @@ function setupImage(instance) {
       error = true;
     }
     syncRoot();
+    syncFeedback('source');
     return api;
   }
   function onLoad(event) {
     loading = false;
     error = false;
     syncRoot();
+    syncFeedback('load');
     call(opts.onLoad, event, Object.freeze({ src: image.currentSrc || image.src || '', instance: api }));
   }
   function onError(event) {
@@ -286,6 +319,7 @@ function setupImage(instance) {
     loading = false;
     error = true;
     syncRoot();
+    syncFeedback('error');
     call(opts.onError, event, Object.freeze({ src: image.getAttribute('src') || '', instance: api }));
   }
     
@@ -612,7 +646,15 @@ function setupImage(instance) {
     presence.setVisible(false, { reason: pendingCloseDetail.reason, originalEvent: pendingCloseDetail.originalEvent, immediate: false });
     return api;
   }
+  function capabilityOperationForPreviewAction(action) {
+    if (action === 'close') return 'close';
+    if (action === 'prev' || action === 'next') return 'navigate';
+    if (action === 'download') return 'activate';
+    return 'edit';
+  }
   function handlePreviewAction(action, event) {
+    var operation = capabilityOperationForPreviewAction(action);
+    if (capabilityController && !capabilityController.can(operation)) return false;
     if (action === 'close') closePreview('close', event);
     else if (action === 'prev') prevPreview();
     else if (action === 'next') nextPreview();
@@ -624,6 +666,8 @@ function setupImage(instance) {
     else if (action === 'flip-y') flip('y');
     else if (action === 'reset') resetTransform('reset');
     else if (action === 'download') downloadPreview();
+    else return false;
+    return true;
   }
   function ensurePreview() {
     if (previewRoot) return;
@@ -665,18 +709,38 @@ function setupImage(instance) {
     scope.add(DOM.listen(previewMask, 'click', function (event) {
       if (cfg('maskClosable', opts.maskClosable) !== false) closePreview('mask', event);
     }));
+    interactionScope = interactionController.registerScope({
+      id: String(instance.id || 'image') + '-preview',
+      root: previewRoot,
+      document: doc,
+      owner: instance,
+      capability: capabilityController,
+      profile: Object.freeze({
+        keymap: Object.freeze({
+          ArrowLeft:'PREVIEW_PREVIOUS', ArrowRight:'PREVIEW_NEXT',
+          '+':'PREVIEW_ZOOM_IN', '=':'PREVIEW_ZOOM_IN', '-':'PREVIEW_ZOOM_OUT', '0':'PREVIEW_RESET'
+        }),
+        repeatActions: Object.freeze(['PREVIEW_PREVIOUS','PREVIEW_NEXT','PREVIEW_ZOOM_IN','PREVIEW_ZOOM_OUT'])
+      }),
+      operationOf: function (action) {
+        return action === 'PREVIEW_PREVIOUS' || action === 'PREVIEW_NEXT' ? 'navigate' : 'edit';
+      },
+      onAction: function (action, context) {
+        if (cfg('keyboard', opts.keyboard) === false || !previewOpen) return 'pass';
+        if (eventTargetIsPreviewMedia(context.originalEvent && context.originalEvent.target)) return 'pass';
+        var mapped = action === 'PREVIEW_PREVIOUS' ? 'prev'
+          : action === 'PREVIEW_NEXT' ? 'next'
+          : action === 'PREVIEW_ZOOM_IN' ? 'zoom-in'
+          : action === 'PREVIEW_ZOOM_OUT' ? 'zoom-out'
+          : action === 'PREVIEW_RESET' ? 'reset' : '';
+        if (!mapped || (!imagePreviewActive() && mapped !== 'prev' && mapped !== 'next')) return 'pass';
+        return handlePreviewAction(mapped, context.originalEvent || null) ? 'handled' : 'blocked';
+      }
+    });
+    function eventTargetIsPreviewMedia(target) { return target === previewVideo || target === previewAudio; }
     scope.add(DOM.listen(previewRoot, 'keydown', function (event) {
-      if (cfg('keyboard', opts.keyboard) === false || !previewOpen) return;
-      // Preserve native video/audio keyboard controls. Escape is owned by the overlay resource controller.
-      if (event.target === previewVideo || event.target === previewAudio) return;
-      var handled = true;
-      if (event.key === 'ArrowLeft') prevPreview();
-      else if (event.key === 'ArrowRight') nextPreview();
-      else if (imagePreviewActive() && (event.key === '+' || event.key === '=')) zoomBy(Number(cfg('scaleStep', opts.scaleStep)), 'keyboard');
-      else if (imagePreviewActive() && event.key === '-') zoomBy(-Number(cfg('scaleStep', opts.scaleStep)), 'keyboard');
-      else if (imagePreviewActive() && event.key === '0') resetTransform('keyboard');
-      else handled = false;
-      if (handled) event.preventDefault();
+      if (cfg('keyboard', opts.keyboard) === false || !previewOpen || eventTargetIsPreviewMedia(event.target)) return;
+      interactionController.dispatch(event, { ownerId:interactionScope.id, source:'keyboard' });
     }));
     scope.add(DOM.listen(previewStage, 'wheel', function (event) {
       if (cfg('wheelZoom', opts.wheelZoom) === false || !previewOpen || !imagePreviewActive()) return;
@@ -771,7 +835,7 @@ function setupImage(instance) {
     });
   }
   function openPreview(index, event) {
-    if (!previewable() || opts.disabled === true || destroyed || previewOpen) return api;
+    if (!previewable() || destroyed || previewOpen || !capabilityController || !capabilityController.can('open')) return api;
     var items = previewItems();
     if (!items.length || !items.some(function (item) { return !!item.src; })) return api;
     ensurePreview();
@@ -809,7 +873,7 @@ function setupImage(instance) {
   scope.add(DOM.listen(image, 'load', onLoad));
   scope.add(DOM.listen(image, 'error', onError));
   scope.add(DOM.listen(previewTrigger, 'click', function (event) {
-    if (!previewable() || opts.disabled === true) return;
+    if (!previewable() || !capabilityController || !capabilityController.can('open')) return;
     event.preventDefault();
     openPreview(undefined, event);
   }));
@@ -879,7 +943,10 @@ function setupImage(instance) {
     getPreviewMediaElement: function () { return previewMedia; },
     getPreviewOverlayController: function () { return overlay; },
     getPreviewOverlayRuntime: function () { return overlay && overlay.getRuntime ? overlay.getRuntime() : null; },
-    getPreviewMotionControllers: function () { return Object.freeze({ mask: maskPresence && maskPresence.getMotionController ? maskPresence.getMotionController() : null, content: presence && presence.getMotionController ? presence.getMotionController() : null }); }
+    getPreviewMotionControllers: function () { return Object.freeze({ mask: maskPresence && maskPresence.getMotionController ? maskPresence.getMotionController() : null, content: presence && presence.getMotionController ? presence.getMotionController() : null }); },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
+    getFeedbackController: function () { return feedbackController; }
   };
   imageState.set(instance, record);
   instance.own(destroyRuntime);
@@ -973,6 +1040,23 @@ function recordForImage(instance) {
 }
 
 export class Image extends Component {
+  static profile = Object.freeze({
+    name:'Image',
+    focus:Object.freeze({ mode:'preview-overlay-scope' }),
+    interaction:Object.freeze({ keymap:'image-preview' }),
+    capability:Object.freeze({ disabledBlocks:Object.freeze(['open','navigate','edit']) }),
+    motion:Object.freeze({ mode:'preview-presence' }),
+    overlay:Object.freeze({ mode:'preview-modal' }),
+    feedback:Object.freeze({ mode:'load-error-projection' }),
+    ownership:Object.freeze({
+      focus:'FocusController',
+      interaction:'InteractionController',
+      capability:'CapabilityController',
+      motion:'MotionController',
+      overlay:'OverlayController',
+      feedback:'FeedbackController'
+    })
+  });
   static options = Object.freeze({});
   static optionNormalizers = Object.freeze({
     fit: normalizeFit,
@@ -1025,6 +1109,9 @@ export class Image extends Component {
   getPreviewOverlayController() { return recordForImage(this).getPreviewOverlayController(); }
   getPreviewOverlayRuntime() { return recordForImage(this).getPreviewOverlayRuntime(); }
   getPreviewMotionControllers() { return recordForImage(this).getPreviewMotionControllers(); }
+  getInteractionController() { return recordForImage(this).getInteractionController(); }
+  getCapabilityController() { return recordForImage(this).getCapabilityController(); }
+  getFeedbackController() { return recordForImage(this).getFeedbackController(); }
 }
 export { createPreview };
 export default Image;
