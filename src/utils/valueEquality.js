@@ -16,8 +16,9 @@ function deep(left, right) {
     if (Object.is(a, b)) return true;
     if (!a || !b || typeof a !== 'object' || typeof b !== 'object') return false;
     var aTag = valueTag(a), bTag = valueTag(b);
-    if (aTag !== bTag) return false;
+    if (aTag !== bTag || Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) return false;
     if (aTag === '[object Date]') return Number(a.getTime()) === Number(b.getTime());
+    if (aTag === '[object RegExp]') return a.source === b.source && a.flags === b.flags;
     if (seen) {
       var mapped = seen.get(a);
       if (mapped) return mapped === b;
@@ -28,11 +29,25 @@ function deep(left, right) {
       for (var ai = 0; ai < a.length; ai += 1) if (!visit(a[ai], b[ai])) return false;
       return true;
     }
-    if (aTag !== '[object Object]' && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) return false;
+    if (aTag === '[object Map]') {
+      if (a.size !== b.size) return false;
+      for (var mapEntry of a) {
+        if (!b.has(mapEntry[0]) || !visit(mapEntry[1], b.get(mapEntry[0]))) return false;
+      }
+      return true;
+    }
+    if (aTag === '[object Set]') {
+      if (a.size !== b.size) return false;
+      for (var setValue of a) if (!b.has(setValue)) return false;
+      return true;
+    }
+    if (aTag !== '[object Object]') return false;
     var ak = Object.keys(a), bk = Object.keys(b);
     if (ak.length !== bk.length) return false;
-    ak.sort(); bk.sort();
-    for (var i = 0; i < ak.length; i += 1) if (ak[i] !== bk[i] || !visit(a[ak[i]], b[bk[i]])) return false;
+    for (var i = 0; i < ak.length; i += 1) {
+      var key = ak[i];
+      if (!Object.prototype.hasOwnProperty.call(b, key) || !visit(a[key], b[key])) return false;
+    }
     return true;
   }
   return visit(left, right);
