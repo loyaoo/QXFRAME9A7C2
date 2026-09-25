@@ -6,7 +6,6 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
 import { Utils } from '../utils/utils.js';
 import { PaginationModel } from '../core/paginationModel.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { FocusController } from '../core/focusController.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { EventDelegation } from '../core/eventDelegation.js';
