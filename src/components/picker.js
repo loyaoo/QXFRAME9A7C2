@@ -164,7 +164,6 @@ export class PickerComponent extends PopupFieldComponent {
     bindFormController(controller, options = {}) {
         const record = requireState(this);
         const field = record.field;
-        const control = field && field.getControl ? field.getControl() : null;
         const settings = Utils.mergeOwn(options || {});
         if (typeof settings.getValue !== 'function') settings.getValue = instance => instance.value;
         if (typeof settings.getSerializedValue !== 'function') settings.getSerializedValue = instance => {
