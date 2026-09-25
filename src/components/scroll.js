@@ -852,7 +852,7 @@ function setupScroll(instance) {
   }
     
   function userInteractionBlocked() {
-    return CapabilityController.mutationLocked(opts);
+    return !capabilityController.can('edit');
   }
     
   function wheelDelta(event) {
@@ -1100,9 +1100,10 @@ function setupScroll(instance) {
     if (snapStepMotion) {
       var settled = advanceSnapStepMotion(snapStepMotion, 16);
       if (settled && snapStepMotion && snapStepMotion.finalizing) completeSnapStepMotion();
-      else if (settled) snapStepFrame.cancel();
+      else if (settled) { snapStepFrame.cancel(); snapStepMotion = null; snapSettling = false; }
     }
     requestProjection('reduced-motion');
+    settleMotionWaiters();
   }
     
   function refresh(reason) {
