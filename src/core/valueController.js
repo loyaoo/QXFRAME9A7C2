@@ -370,7 +370,7 @@ return true;
     return true;
   }
 
-  function isControlled() { return ownershipCore.getState().controlled; }
+  function isControlled() { return ownershipCore.isControlled(); }
 
   function requestChange(next, meta) {
     if (destroyed) return false;
