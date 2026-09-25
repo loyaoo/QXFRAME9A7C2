@@ -209,6 +209,26 @@ export class FieldComponent extends Component {
         return controller;
     }
 
+    bindFeedbackClasses(root, options = {}) {
+        if (!root || !root.classList) throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback class root is required.');
+        const settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        const loadingClass = String(settings.loadingClass || 'is-loading');
+        const errorClass = String(settings.errorClass || 'is-error');
+        const warningClass = String(settings.warningClass || 'is-warning');
+        const apply = snapshot => {
+            const status = String(snapshot && snapshot.status || 'idle');
+            root.classList.toggle(loadingClass, status === 'pending' || status === 'progress');
+            root.classList.toggle(errorClass, status === 'error');
+            root.classList.toggle(warningClass, status === 'warning');
+            return root;
+        };
+        return this.bindFeedbackProjector(Object.freeze({
+            show: snapshot => apply(snapshot),
+            update: (_handle, snapshot) => apply(snapshot),
+            close: () => { root.classList.remove(loadingClass, errorClass, warningClass); return true; }
+        }), settings);
+    }
+
     bindFeedbackProjector(projector, options = {}) {
         if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FeedbackController to a destroyed FieldComponent.');
         if (!projector || typeof projector !== 'object') throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback projector must be an object.');
