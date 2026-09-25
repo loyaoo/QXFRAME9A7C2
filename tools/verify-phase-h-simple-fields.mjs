@@ -41,7 +41,7 @@ const cases=[
 ];
 for(const [file,name] of cases){
   const source=read(file);
-  assert.match(source,/createSimpleFieldProfile\(['"]/.source?new RegExp('createSimpleFieldProfile\\([\'"]'+name+'[\'"]\\)'):/$^/);
+  assert.match(source,new RegExp("createSimpleFieldProfile\\\\(['\\\"]"+name+"['\\\"]\\\\)"));
   for(const method of ['bindCapabilityController','bindFocusController','bindInteractionController','bindFeedbackControl']) assert.match(source,new RegExp(method+'\\s*\\('),name+' must bind '+method+'.');
   assert.match(source,/syncExternal:false/,name+' specialized ValueController must own options external sync.');
 }
