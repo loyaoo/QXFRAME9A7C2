@@ -3,6 +3,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { FormBridge } from '../core/formBridge.js';
 import { FormController } from '../core/formController.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { DOM } from '../core/dom.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { ValueEquality } from '../utils/valueEquality.js';
@@ -42,12 +43,14 @@ function releaseFormRegistration(record, meta) {
 export class FieldComponent extends Component {
     constructor(options = {}) {
         super(options);
-        const record = { value: currentValue(this.options), bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null };
+        const record = { value: currentValue(this.options), bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
         fieldState.set(this, record);
         this.own(() => {
             releaseFormRegistration(record, { source:'component', reason:'destroy' });
             record.formController = null;
             record.formBindingOptions = null;
+            record.feedbackController = null;
+            record.feedbackControl = null;
         });
     }
 
@@ -104,6 +107,44 @@ export class FieldComponent extends Component {
     }
 
     getFormBridge() { return fieldState.get(this).bridge; }
+
+    bindFeedbackControl(control, options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FeedbackController to a destroyed FieldComponent.');
+        if (!control || (typeof control.updateOptions !== 'function' && typeof control.setStatus !== 'function')) throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback control must expose updateOptions() or setStatus().');
+        const record = fieldState.get(this);
+        if (record.feedbackController) record.feedbackController.destroy();
+        record.feedbackController = null;
+        record.feedbackControl = control;
+        const instance = this;
+        const settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        const apply = snapshot => {
+            const status = String(snapshot && snapshot.status || 'idle');
+            const authoredStatus = instance.options.status || 'default';
+            const authoredBusy = instance.options.busy === true || instance.options.loading === true;
+            const patch = {
+                status: status === 'error' ? 'error' : (status === 'warning' ? 'warning' : authoredStatus),
+                busy: status === 'pending' || status === 'progress' ? true : authoredBusy
+            };
+            if (typeof control.updateOptions === 'function') control.updateOptions(patch);
+            else if (typeof control.setStatus === 'function') control.setStatus(patch.status);
+            return control;
+        };
+        const projector = Object.freeze({
+            show: snapshot => apply(snapshot),
+            update: (_handle, snapshot) => apply(snapshot),
+            close: () => {
+                const patch = { status: instance.options.status || 'default', busy: instance.options.busy === true || instance.options.loading === true };
+                if (typeof control.updateOptions === 'function') control.updateOptions(patch);
+                else if (typeof control.setStatus === 'function') control.setStatus(patch.status);
+                return true;
+            }
+        });
+        const controller = FeedbackController.createForProjector(projector, { ownerId: String(settings.ownerId || this.id) }, 'local');
+        record.feedbackController = this.own(controller);
+        return controller;
+    }
+
+    getFeedbackController() { return fieldState.get(this).feedbackController; }
 
     bindFormController(controller, options = {}) {
         if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FormController to a destroyed FieldComponent.');
@@ -181,6 +222,13 @@ export class FieldComponent extends Component {
         }
         if (own(patch, 'name') && state.formRegistration && state.formController && !(state.formBindingOptions && own(state.formBindingOptions, 'name'))) {
             this.bindFormController(state.formController, state.formBindingOptions || {});
+        }
+        if (state.feedbackControl && (own(patch, 'status') || own(patch, 'busy') || own(patch, 'loading'))) {
+            const feedbackState = state.feedbackController && state.feedbackController.snapshot ? state.feedbackController.snapshot() : null;
+            const active = feedbackState && Array.isArray(feedbackState.records) ? feedbackState.records.length > 0 : false;
+            if (!active && typeof state.feedbackControl.updateOptions === 'function') {
+                state.feedbackControl.updateOptions({ status: next.status || 'default', busy: next.busy === true || next.loading === true });
+            }
         }
         const hook = this[fieldHooks.fieldOptionsUpdated];
         if (typeof hook === 'function') hook.call(this, next, previous, patch);
