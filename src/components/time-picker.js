@@ -1,4 +1,4 @@
-import { PickerComponent, pickerHooks } from './picker.js';
+import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { TimePanel } from './time-panel.js';
 import { Control } from './control.js';
@@ -515,20 +515,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
 
 export class TimePicker extends PickerComponent {
   static contract = getContract('TimePicker');
-  static profile = Object.freeze({
-    name:'TimePicker',
-    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview','rawInput']) }),
-    focus:Object.freeze({ mode:'virtual-navigation' }),
-    interaction:Object.freeze({ keymap:'picker' }),
-    capability:Object.freeze({ mode:'field-policy' }),
-    motion:Object.freeze({ mode:'popup-presence' }),
-    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController', semantics:'draft-selected-keys' }),
-    overlay:Object.freeze({ mode:'popup' }),
-    feedback:Object.freeze({ mode:'field-local' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
-  });
-  static options = TIME_PICKER_DEFAULTS;
+  static profile = createPickerProfile('TimePicker', { channels:["committed","draft","preview","rawInput"], selection:'draft-selected-keys' });
+    static options = TIME_PICKER_DEFAULTS;
   static immutableOptions = TIME_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }
   static enhance(input, options) { return this.create(input, options || {}); }
