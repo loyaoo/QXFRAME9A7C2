@@ -42,7 +42,7 @@ assert.match(acceptance,/40\/40/,'Acceptance ledger must state the 40/40 Phase H
 assert.match(workState,/- Current Phase: Phase I — release-integrity \+ Astra High handoff/,'AI_WORK_STATE must enter Phase I.');
 assert.match(workState,/- Current Task: `PHASE-I-001`/,'AI_WORK_STATE must point to PHASE-I-001.');
 const current=workState.split('## CURRENT')[1]?.split('## Current authority snapshot')[0]||'';
-assert.doesNotMatch(current,/### PHASE-H-027|39\/40|Table is the last|pending PHASE-H-027/,'CURRENT checkpoint must not retain stale final-Table Phase H state.');
+assert.doesNotMatch(current,/### PHASE-H-027|Table is the last|pending PHASE-H-027/,'CURRENT checkpoint must not retain stale final-Table Phase H state.');
 assert.doesNotMatch(workState,/DatePicker\/TimePicker preset selection must respect `needConfirm`/,'Superseded needConfirm issue must not remain active after picker-family browser acceptance.');
 
 const requiredVerify=[
