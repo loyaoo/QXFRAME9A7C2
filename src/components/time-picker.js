@@ -255,6 +255,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       syncField(true);
     },
     onCancel: function (_controller, detail) {
+      syncSelectionController(draft.value, { source:'popup', reason:'cancel-selection-restore' });
       if (selection === 'range') activeRangePart = 0;
       syncPanel(detail && detail.source === 'popup' ? 'time-picker-close-restore' : 'time-picker-cancel-sync');
       syncField(false);
