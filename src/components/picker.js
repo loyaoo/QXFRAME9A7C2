@@ -18,6 +18,37 @@ function requireState(instance) {
     return record;
 }
 
+export function createPickerProfile(name, options = {}) {
+    const selection = options.selection || null;
+    const profile = {
+        name: String(name),
+        value: Object.freeze({ mode:'picker-session', channels:Object.freeze((options.channels || ['committed','draft']).slice()) }),
+        focus: Object.freeze({ mode:'virtual-navigation' }),
+        interaction: Object.freeze({ keymap:'picker' }),
+        capability: Object.freeze({ mode:'field-policy' }),
+        motion: Object.freeze({ mode:'popup-presence' }),
+        overlay: Object.freeze({ mode:'popup' }),
+        feedback: Object.freeze({ mode:'field-local' }),
+        form: Object.freeze({ serialize:true })
+    };
+    const ownership = {
+        value:'ValueController',
+        focus:'FocusController',
+        interaction:'InteractionController',
+        capability:'CapabilityController',
+        motion:'MotionController',
+        overlay:'OverlayController',
+        feedback:'FeedbackController',
+        form:'FormController'
+    };
+    if (selection) {
+        profile.selection = Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController', semantics:String(selection) });
+        ownership.selection = 'SelectionController';
+    }
+    profile.ownership = Object.freeze(ownership);
+    return Object.freeze(profile);
+}
+
 export class PickerComponent extends PopupFieldComponent {
     constructor(options = {}) {
         super(options);
