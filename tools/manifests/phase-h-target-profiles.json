@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "minimumProfiled": 35,
+  "minimumProfiled": 36,
   "controllerByCapability": {
     "value": "ValueController",
     "focus": "FocusController",
