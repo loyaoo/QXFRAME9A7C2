@@ -8,9 +8,12 @@ import { Utils } from '../utils/utils.js';
 import { Collection } from '../core/collection.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { ValueController } from '../core/valueController.js';
+import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
+import { SelectionController } from '../core/selectionController.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { Renderer } from '../core/renderer.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { RovingProjection } from '../core/rovingProjection.js';
 import { Transition } from '../core/transition.js';
 import { ObserverHub } from '../core/observerHub.js';
@@ -237,6 +240,41 @@ function setupTabs(instance) {
     return item && item.disabled !== true ? String(candidate) : firstEnabledKey();
   }
   activeKey = validActive(own(source, 'activeKey') ? source.activeKey : source.defaultActiveKey);
+  var valueController = ValueController.create({
+    value: activeKey,
+    normalizeValue: function (value) { return value == null ? '' : String(value); }
+  });
+  scope.add(function () { valueController.destroy(); });
+  var selectionController = SelectionController.create({ channels:{ selected:{ values:activeKey ? [activeKey] : [], multiple:false } } });
+  scope.add(function () { selectionController.destroy(); });
+  var capabilityController = CapabilityController.create({
+    getState: function () { return opts; },
+    getCapabilities: function () {
+      return {
+        focusable:true,
+        navigable:true,
+        activatable:true,
+        editable:(opts.editable === true || opts.closable === true) && opts.readOnly !== true
+      };
+    }
+  });
+  scope.add(function () { capabilityController.destroy(); });
+  var focusController = FocusController.create({ root:tabList, manageTabIndex:false, activeRegion:'tabs' });
+  scope.add(function () { focusController.destroy(); });
+  var interactionController = InteractionController.create();
+  scope.add(function () { interactionController.destroy(); });
+  var interactionLease = null;
+
+  function syncActiveOwners(next, meta, external) {
+    var normalized = validActive(next);
+    var detail = meta || {};
+    if (external === true) valueController.syncExternal(normalized, { silent:true, source:detail.source || 'options', reason:detail.reason || 'active-sync' });
+    else valueController.setValue(normalized, { silent:true, source:detail.source || 'tabs', reason:detail.reason || 'active-sync' });
+    activeKey = valueController.value == null ? '' : String(valueController.value);
+    selectionController.selected.replace(activeKey ? [activeKey] : [], { silent:true, source:detail.source || 'tabs', reason:detail.reason || 'active-sync' });
+    return activeKey;
+  }
+
   var activeItem = ActiveItem.create({
     getEntries: function () { return items; },
     getKey: function (item) { return item.key; },
@@ -690,8 +728,8 @@ function setupTabs(instance) {
       var allowed = opts.onBeforeChange(key, previous, detail);
       if (destroyed || allowed === false) return false;
     }
-    activeKey = key;
-    activeItem.set(key, { silent: true, source: detail.source, reason: 'active-sync', originalEvent: detail.originalEvent });
+    syncActiveOwners(key, detail, false);
+    activeItem.set(activeKey, { silent: true, source: detail.source, reason: 'active-sync', originalEvent: detail.originalEvent });
     syncTabRoving();
     scheduleIndicator('active');
     syncPanels(false);
@@ -719,37 +757,56 @@ function setupTabs(instance) {
     scheduleOverflow('focus-visible');
   }
   function installKeyboardNavigation() {
-    if (keyboardNavigation) keyboardNavigation.destroy();
-    keyboardNavigation = KeyboardNavigation.create({
+    if (keyboardNavigation) return keyboardNavigation;
+    interactionLease = interactionController.registerScope({
+      id: root.id + '-tabs',
       root: tabList,
-      activeItem: activeItem,
-      orientation: opts.orientation,
-      ensureVisible: function (key) { ensureKeyVisible(key); },
-      shouldHandle: function (context) {
-        if (opts.disabled === true) return false;
-        var target = context && context.target;
+      document: doc,
+      owner: api,
+      capability: capabilityController,
+      resolveAction: function (event) {
+        var target = event && event.target;
         var tab = target ? DOM.closestPrivate(target, tabList, 'tabsKey') : null;
-        return !!(tab && tabList.contains(tab) && tab.disabled !== true);
+        if (!tab || !tabList.contains(tab) || tab.disabled) return null;
+        var key = String(event.key || '');
+        if (key === 'Delete' || key === 'Backspace') return 'REMOVE';
+        return InteractionController.resolveKeyboardAction(event);
       },
-      onNavigate: function (context) {
+      operationOf: function (action) {
+        return action === 'REMOVE' ? 'remove' : (action === 'ACTIVATE' ? 'activate' : 'navigate');
+      },
+      onAction: function (action, context) {
+        var event = context.originalEvent;
+        var navigated = false;
+        if (action === 'MOVE_FIRST') { activeItem.first({ source:'keyboard', reason:'home', originalEvent:event }); navigated = true; }
+        else if (action === 'MOVE_LAST') { activeItem.last({ source:'keyboard', reason:'end', originalEvent:event }); navigated = true; }
+        else if (action === 'MOVE_LEFT' && opts.orientation === 'horizontal') { activeItem.previous({ source:'keyboard', reason:'arrow-left', originalEvent:event }); navigated = true; }
+        else if (action === 'MOVE_RIGHT' && opts.orientation === 'horizontal') { activeItem.next({ source:'keyboard', reason:'arrow-right', originalEvent:event }); navigated = true; }
+        else if (action === 'MOVE_UP' && opts.orientation === 'vertical') { activeItem.previous({ source:'keyboard', reason:'arrow-up', originalEvent:event }); navigated = true; }
+        else if (action === 'MOVE_DOWN' && opts.orientation === 'vertical') { activeItem.next({ source:'keyboard', reason:'arrow-down', originalEvent:event }); navigated = true; }
+        else if (action === 'ACTIVATE') return setActiveKey(activeItem.activeKey, { source:'keyboard', reason:'activate', originalEvent:event }) !== false ? 'handled' : 'blocked';
+        else if (action === 'REMOVE') {
+          if (!(opts.editable === true || opts.closable === true)) return 'blocked';
+          return remove(activeItem.activeKey, { source:'keyboard', reason:'remove', originalEvent:event }) ? 'handled' : 'blocked';
+        } else return 'pass';
+        if (!navigated) return 'pass';
         var key = activeItem.activeKey;
-        if (!key) return;
-        focusTab(key, { source: 'keyboard', reason: context && context.reason || 'navigate', originalEvent: context && context.originalEvent || null });
-        if (opts.activationMode === 'auto') {
-          setActiveKey(key, { source: 'keyboard', reason: context && context.reason || 'navigate', originalEvent: context && context.originalEvent || null });
-        }
-      },
-      handlers: {
-        Delete: function (context) {
-          if (!(opts.editable === true || opts.closable === true)) return false;
-          return remove(activeItem.activeKey, { source: 'keyboard', reason: 'remove', originalEvent: context && context.originalEvent || null });
-        },
-        Backspace: function (context) {
-          if (!(opts.editable === true || opts.closable === true)) return false;
-          return remove(activeItem.activeKey, { source: 'keyboard', reason: 'remove', originalEvent: context && context.originalEvent || null });
-        }
+        if (!key) return 'blocked';
+        ensureKeyVisible(key);
+        focusTab(key, { source:'keyboard', reason:'navigate', originalEvent:event });
+        if (opts.activationMode === 'auto') setActiveKey(key, { source:'keyboard', reason:'navigate', originalEvent:event });
+        return 'handled';
       }
     });
+    scope.add(function () { if (interactionLease) interactionLease.release(); interactionLease = null; });
+    var handle = function (event) { return interactionController.dispatch(event, { ownerId:root.id + '-tabs', source:'keyboard' }); };
+    scope.add(DOM.listen(tabList, 'keydown', handle));
+    keyboardNavigation = Object.freeze({
+      handle: handle,
+      virtualFocus: focusController.virtualFocus,
+      destroy: function () { return false; }
+    });
+    return keyboardNavigation;
   }
 
   function emitEdit(action, item, index, meta) {
@@ -797,7 +854,7 @@ function setupTabs(instance) {
     var next = items.slice();
     next.splice(index, 1);
     syncCollection(next);
-    if (!itemByKey(activeKey) || activeKey === normalized) activeKey = chooseFallback(index);
+    if (!itemByKey(activeKey) || activeKey === normalized) syncActiveOwners(chooseFallback(index), { source:'tabs', reason:'remove-fallback' }, false);
     activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'remove-fallback' });
     render(true);
     emitEdit('remove', item, index, meta);
@@ -817,7 +874,7 @@ function setupTabs(instance) {
   function setItems(nextItems, meta) {
     var previousActive = activeKey;
     syncCollection(normalizeItems(nextItems || []));
-    activeKey = validActive(activeKey);
+    syncActiveOwners(activeKey, { source:'tabs', reason:'items-fallback' }, false);
     if (!itemByKey(activeItem.activeKey) || itemByKey(activeItem.activeKey).disabled === true) activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'items-fallback' });
     render(true);
     if (previousActive !== activeKey && (!meta || meta.silent !== true)) emitChange(previousActive, Utils.mergeOwn( meta || {}, { reason: meta && meta.reason || 'set-items' }));
@@ -844,12 +901,13 @@ function setupTabs(instance) {
     opts = candidate;
     syncCollection(nextItems);
     if (own(next, 'activeKey')) {
-      activeKey = validActive(next.activeKey);
+      syncActiveOwners(next.activeKey, { source:'options', reason:'options-active' }, true);
       activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'options-active' });
     } else {
-      activeKey = validActive(activeKey);
+      syncActiveOwners(activeKey, { source:'tabs', reason:'options-fallback' }, false);
       if (!itemByKey(activeItem.activeKey) || itemByKey(activeItem.activeKey).disabled === true) activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'options-fallback' });
     }
+    if (own(next, 'disabled')) focusController.setDisabled(opts.disabled === true);
     render(own(next, 'items'));
     return api;
   }
@@ -958,6 +1016,7 @@ function setupTabs(instance) {
     scope.dispose();
     if (keyboardNavigation) keyboardNavigation.destroy();
     keyboardNavigation = null;
+    interactionLease = null;
     cancelIndicatorLayout();
     panelTransitionByKey.forEach(function (transition) { transition.destroy(); });
     panelTransitionByKey.clear();
@@ -993,6 +1052,13 @@ function setupTabs(instance) {
     getItems: function () { return items.slice(); },
     getActiveItem: function () { return activeItem; },
     getKeyboardNavigation: function () { return keyboardNavigation; },
+    getValueController: function () { return valueController; },
+    getFocusController: function () { return focusController; },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
+    getSelectionController: function () { return selectionController; },
+    getMotionController: function () { var transition=panelTransitionByKey.get(String(activeKey)); return transition && transition.getMotionController ? transition.getMotionController() : null; },
+    getOverlayController: function () { var trigger=overflowPopover && overflowPopover.getTrigger ? overflowPopover.getTrigger() : null; return trigger && trigger.getOverlayController ? trigger.getOverlayController() : null; },
     getScroll: function () { return scroll; },
     getOverflowScroll: function () { return overflowScroll; },
     getOverflowPopover: function () { return overflowPopover; },
@@ -1031,6 +1097,20 @@ function canonicalTabsOptions(source, previousItems) {
 }
 
 export class Tabs extends Component {
+  static profile = Object.freeze({
+    name:'Tabs',
+    value:Object.freeze({ mode:'active-key' }),
+    focus:Object.freeze({ mode:'tab-roving' }),
+    interaction:Object.freeze({ keymap:'tabs' }),
+    capability:Object.freeze({ operations:Object.freeze(['navigate','activate','remove']) }),
+    motion:Object.freeze({ mode:'panel-transition' }),
+    selection:Object.freeze({ channels:Object.freeze(['selected']), mode:'active-tab' }),
+    overlay:Object.freeze({ mode:'overflow-popover' }),
+    ownership:Object.freeze({
+      value:'ValueController', focus:'FocusController', interaction:'InteractionController',
+      capability:'CapabilityController', motion:'MotionController', selection:'SelectionController', overlay:'OverlayController'
+    })
+  });
   static options = TABS_DEFAULTS;
   static immutableOptions = IMMUTABLE_OPTIONS;
   static contract = ComponentContracts.get('Tabs');
@@ -1064,6 +1144,13 @@ export class Tabs extends Component {
   getItems() { return recordForTabs(this).getItems(); }
   getActiveItem() { return recordForTabs(this).getActiveItem(); }
   getKeyboardNavigation() { return recordForTabs(this).getKeyboardNavigation(); }
+  getValueController() { return recordForTabs(this).getValueController(); }
+  getFocusController() { return recordForTabs(this).getFocusController(); }
+  getInteractionController() { return recordForTabs(this).getInteractionController(); }
+  getCapabilityController() { return recordForTabs(this).getCapabilityController(); }
+  getSelectionController() { return recordForTabs(this).getSelectionController(); }
+  getMotionController() { return recordForTabs(this).getMotionController(); }
+  getOverlayController() { return recordForTabs(this).getOverlayController(); }
   getScroll() { return recordForTabs(this).getScroll(); }
   getOverflowScroll() { return recordForTabs(this).getOverflowScroll(); }
   getOverflowPopover() { return recordForTabs(this).getOverflowPopover(); }
