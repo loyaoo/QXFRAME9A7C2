@@ -67,7 +67,7 @@ export class Sort extends Component {
         value:Object.freeze({ mode:'order-keys' }),
         focus:Object.freeze({ mode:'row-focus' }),
         interaction:Object.freeze({ keymap:'sort-reorder' }),
-        capability:Object.freeze({ operations:Object.freeze(['navigate','drag','select']) }),
+        capability:Object.freeze({ operations:Object.freeze(['navigate','edit','drag','select']) }),
         motion:Object.freeze({ mode:'reorder-flip' }),
         selection:Object.freeze({ channels:Object.freeze(['selected']), mode:'active-row' }),
         overlay:Object.freeze({ mode:'drag-ghost' }),
@@ -127,7 +127,7 @@ export class Sort extends Component {
         r.selectionController = this.own(SelectionController.create({ channels:{ selected:{ values:[], multiple:false } } }));
         r.capabilityController = this.own(CapabilityController.create({
             getState: () => this.options,
-            getCapabilities: () => ({ focusable:true, navigable:this.options.keyboard !== false, draggable:this.options.draggable !== false, selectable:true })
+            getCapabilities: () => ({ focusable:true, navigable:this.options.keyboard !== false, editable:true, draggable:this.options.draggable !== false, selectable:true })
         }));
         r.focusController = this.own(FocusController.create({ root, activeRegion:'rows' }));
         r.interactionController = this.own(InteractionController.create());
@@ -154,7 +154,7 @@ export class Sort extends Component {
                 if (forward) return 'MOVE_NEXT';
                 return null;
             },
-            operationOf:action => String(action).startsWith('REORDER_') ? 'drag' : 'navigate',
+            operationOf:action => String(action).startsWith('REORDER_') ? 'edit' : 'navigate',
             onAction:(action, context) => {
                 const event = context.originalEvent;
                 const row = event && event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-sort-item') : null;
@@ -265,7 +265,7 @@ export class Sort extends Component {
         r.root = r.collection = r.transitionGroup = r.delegation = r.reorderInteraction = r.formBridge = null;
     }
 
-    #locked() { const r = recordFor(this); return this.destroyed || !r.capabilityController || !r.capabilityController.can('drag'); }
+    #locked() { const r = recordFor(this); return this.destroyed || !r.capabilityController || !r.capabilityController.can('edit'); }
     #effectiveHandleOnly() { return this.options.handleOnly !== false && this.options.showHandle !== false; }
     #items() { return recordFor(this).collection.items; }
     #renderOutput(host, value, item) { const output = typeof value === 'function' ? value(item, this) : value; Renderer.replace(host, output == null ? '' : output, recordFor(this).doc); }
