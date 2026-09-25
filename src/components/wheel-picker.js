@@ -1,4 +1,4 @@
-import { PickerComponent, pickerHooks } from './picker.js';
+import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { WheelPanel } from './wheel-panel.js';
 import { Control } from './control.js';
@@ -339,20 +339,8 @@ return Object.freeze({ root:field.getRootElement(), panel:field.getPanelElement(
 
 export class WheelPicker extends PickerComponent {
   static contract = getContract('WheelPicker');
-  static profile = Object.freeze({
-    name:'WheelPicker',
-    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft']) }),
-    focus:Object.freeze({ mode:'virtual-navigation' }),
-    interaction:Object.freeze({ keymap:'picker' }),
-    capability:Object.freeze({ mode:'field-policy' }),
-    motion:Object.freeze({ mode:'popup-presence' }),
-    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController', semantics:'column-selected-keys' }),
-    overlay:Object.freeze({ mode:'popup' }),
-    feedback:Object.freeze({ mode:'field-local' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
-  });
-  static options = WHEEL_PICKER_DEFAULTS;
+  static profile = createPickerProfile('WheelPicker', { channels:["committed","draft"], selection:'column-selected-keys' });
+    static options = WHEEL_PICKER_DEFAULTS;
   static immutableOptions = STRUCTURAL_OPTIONS;
   static create(source, overrides) { return new this(source, overrides).render(); }
   static enhance(input, options) { return this.create(input, options || {}); }
