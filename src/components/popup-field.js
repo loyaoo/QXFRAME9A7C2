@@ -77,8 +77,9 @@ export function createPopupFieldTriggerSettings(options = {}, context = {}, over
         autoUpdate: opts.autoUpdate !== false,
         closeOnOutsidePress: true,
         closeOnFocusOutside: true,
-        closeOnTabExit: true,
+        closeOnTabExit: false,
         closeOnEscape: true,
+        focusScope: 'contain',
         restoreFocusTarget: function (detail) {
             const target = typeof focusReturnTarget === 'function' ? focusReturnTarget(detail) : focusReturnTarget;
             return target || ctx.triggerTarget || ctx.reference || null;
