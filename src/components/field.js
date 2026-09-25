@@ -6,6 +6,8 @@ import { FormController } from '../core/formController.js';
 import { FeedbackController } from '../core/feedbackController.js';
 import { DOM } from '../core/dom.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { ValueController } from '../core/valueController.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 
@@ -55,7 +57,7 @@ export class FieldComponent extends Component {
             copyValue: cloneValue,
             equals: ValueEquality.deep
         });
-        const record = { valueController, ownsValueController: true, valueProjector: null, bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
+        const record = { valueController, ownsValueController: true, valueProjector: null, bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null, simpleControllers: null };
         fieldState.set(this, record);
         this.own(() => {
             releaseFormRegistration(record, { source:'component', reason:'destroy' });
@@ -67,6 +69,14 @@ export class FieldComponent extends Component {
             record.formBindingOptions = null;
             record.feedbackController = null;
             record.feedbackControl = null;
+            if (record.simpleControllers) {
+                const bundle = record.simpleControllers;
+                record.simpleControllers = null;
+                try { if (bundle.scope && bundle.scope.release) bundle.scope.release(); } catch {}
+                try { if (bundle.interaction) bundle.interaction.destroy(); } catch {}
+                try { if (bundle.focus) bundle.focus.destroy(); } catch {}
+                try { if (bundle.capability) bundle.capability.destroy(); } catch {}
+            }
         });
     }
 
@@ -89,6 +99,7 @@ export class FieldComponent extends Component {
     focus(options) {
         if (this.destroyed || !this.interactionPolicy({ preserveFocusWhileLoading: true }).focusable) return false;
         const state = fieldState.get(this);
+        if (state.simpleControllers && state.simpleControllers.focus) return state.simpleControllers.focus.focus(options);
         const hook = this[fieldHooks.focusElement];
         const target = typeof hook === 'function' ? hook.call(this) : (state.focusTarget || this.root);
         if (!target) return false;
@@ -110,6 +121,53 @@ export class FieldComponent extends Component {
         fieldState.get(this).focusTarget = target || null;
         return this;
     }
+
+    bindSimpleControllers(options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind controllers to a destroyed FieldComponent.');
+        if (!options || typeof options !== 'object' || Array.isArray(options)) throw new TypeError('[QXFRAME9A7C2] FieldComponent controller options must be an object.');
+        const record = fieldState.get(this);
+        if (record.simpleControllers) this.unbindSimpleControllers();
+        const root = options.root || record.focusTarget || this.root;
+        if (!root || root.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] FieldComponent controller root must be an Element.');
+        const capabilities = options.capabilities || {};
+        const capability = CapabilityController.create({
+            getState: () => ({ disabled:this.disabled, readOnly:this.readOnly, loading:this.busy }),
+            getCapabilities: () => capabilities
+        });
+        const focus = FocusController.create({ root, document:root.ownerDocument, disabled:capability.can('focus') === false });
+        const interaction = InteractionController.create();
+        let scope = null;
+        if (typeof options.onAction === 'function') {
+            const profile = { keymap:options.keymap || {}, repeatActions:options.repeatActions || [], allowEditableKeys:options.allowEditableKeys || false };
+            scope = interaction.registerScope({
+                id:String(options.scopeId || this.id + '-field'),
+                root,
+                owner:this,
+                capability,
+                profile,
+                operationOf:typeof options.operationOf === 'function' ? options.operationOf : undefined,
+                onAction:(action, context) => options.onAction(action, context, this)
+            });
+        }
+        record.simpleControllers = Object.freeze({ root, focus, interaction, capability, scope });
+        if (options.feedbackControl) this.bindFeedbackControl(options.feedbackControl, { ownerId:options.feedbackOwnerId || this.id });
+        return record.simpleControllers;
+    }
+
+    unbindSimpleControllers() {
+        const record = fieldState.get(this), bundle = record.simpleControllers;
+        if (!bundle) return false;
+        record.simpleControllers = null;
+        try { if (bundle.scope && bundle.scope.release) bundle.scope.release(); } catch {}
+        try { bundle.interaction.destroy(); } catch {}
+        try { bundle.focus.destroy(); } catch {}
+        try { bundle.capability.destroy(); } catch {}
+        return true;
+    }
+
+    getFocusController() { const record = fieldState.get(this); return record && record.simpleControllers ? record.simpleControllers.focus : null; }
+    getInteractionController() { const record = fieldState.get(this); return record && record.simpleControllers ? record.simpleControllers.interaction : null; }
+    getCapabilityController() { const record = fieldState.get(this); return record && record.simpleControllers ? record.simpleControllers.capability : null; }
 
     bindFormBridge(options = {}) {
         const state = fieldState.get(this);
@@ -272,6 +330,7 @@ export class FieldComponent extends Component {
         if (own(patch, 'name') && state.formRegistration && state.formController && !(state.formBindingOptions && own(state.formBindingOptions, 'name'))) {
             this.bindFormController(state.formController, state.formBindingOptions || {});
         }
+        if (state.simpleControllers && own(patch, 'disabled')) state.simpleControllers.focus.setDisabled(next.disabled === true);
         if (state.feedbackControl && (own(patch, 'status') || own(patch, 'busy') || own(patch, 'loading'))) {
             const feedbackState = state.feedbackController && state.feedbackController.snapshot ? state.feedbackController.snapshot() : null;
             const active = feedbackState && Array.isArray(feedbackState.records) ? feedbackState.records.length > 0 : false;
