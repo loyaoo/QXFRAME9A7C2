@@ -7,6 +7,8 @@ import { Scheduler } from '../core/scheduler.js';
 import { Utils } from '../utils/utils.js';
 import { PaginationModel } from '../core/paginationModel.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { DOMBinding } from '../core/domBinding.js';
@@ -136,6 +138,9 @@ function setupPagination(instance) {
   var domBinding = null;
   var delegation = null;
   var keyboard = null;
+  var focusController = null;
+  var capabilityController = CapabilityController.create({ getState:function(){ return { disabled:isDisabled() }; }, capabilities:{ focusable:true, navigable:true, activatable:true, editable:true } });
+  scope.add(function(){ capabilityController.destroy(); });
   var renderCount = 0;
   var limitSelect = null;
   var appliedClassNames = [];
@@ -518,7 +523,7 @@ function setupPagination(instance) {
   function handleJumperKey(detail) {
     var event = detail && detail.originalEvent;
     var target = detail && detail.target;
-    if (!event || !isJumperTarget(target) || isDisabled()) return false;
+    if (!event || !isJumperTarget(target) || !capabilityController.can('edit')) return false;
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       var delta = event.key === 'ArrowUp' ? -1 : 1;
       var base = positiveInt(jumperDraft, model.page);
@@ -533,16 +538,22 @@ function setupPagination(instance) {
   }
     
   function installKeyboard() {
-    keyboard = KeyboardNavigation.create({
+    focusController = FocusController.create({
       root: root,
-      editableKeys: ['ArrowUp', 'ArrowDown', 'Enter'],
-      handlers: {
-        ArrowUp: handleJumperKey,
-        ArrowDown: handleJumperKey,
-        Enter: handleJumperKey
+      document: doc,
+      manageTabIndex: false,
+      disabled: isDisabled(),
+      navigation: {
+        editableKeys: ['ArrowUp', 'ArrowDown', 'Enter'],
+        handlers: {
+          ArrowUp: handleJumperKey,
+          ArrowDown: handleJumperKey,
+          Enter: handleJumperKey
+        }
       }
     });
-    scope.add(function () { keyboard.destroy(); });
+    keyboard = focusController.keyboard;
+    scope.add(function () { focusController.destroy(); focusController = null; keyboard = null; });
   }
     
   function mount(target) {
@@ -586,6 +597,7 @@ function setupPagination(instance) {
     if (next.components && next.components.sizeChanger !== undefined && !Utils.isFunction(next.components.sizeChanger)) throw new TypeError('[QXFRAME9A7C2] Pagination components.sizeChanger must be a factory function.');
     normalizeLayout(next);
     opts = next;
+    if (focusController) focusController.setDisabled(isDisabled());
     var modelOptions = {};
     if (own(changed, 'current')) modelOptions.page = positiveInt(changed.current, model.page);
     if (own(changed, 'pageSize')) modelOptions.pageSize = positiveInt(changed.pageSize, model.pageSize);
@@ -609,6 +621,7 @@ function setupPagination(instance) {
     scope.dispose();
     delegation = null;
     keyboard = null;
+    focusController = null;
     model.destroy();
     if (domBinding) domBinding.release();
     domBinding = null;
@@ -639,6 +652,9 @@ function setupPagination(instance) {
     getItems: function () { return model.deriveItems(); },
     getEventDelegation: function () { return delegation; },
     getKeyboardNavigation: function () { return keyboard; },
+    getFocusController: function () { return focusController; },
+    getCapabilityController: function () { return capabilityController; },
+    getValueController: function () { return model.getValueController(); },
     getSizeChanger: function () { return limitSelect; },
     getRootElement: function () { return root; },
     getRefs: function () { return domBinding ? domBinding.refs : null; },
@@ -663,6 +679,14 @@ function recordFor(instance) {
 }
 
 export class Pagination extends Component {
+  static profile = Object.freeze({
+    name:'Pagination',
+    value:Object.freeze({ mode:'current-page' }),
+    focus:Object.freeze({ mode:'delegated-controls' }),
+    interaction:Object.freeze({ mode:'pagination-keyboard' }),
+    capability:Object.freeze({ mode:'pagination-policy' }),
+    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController' })
+  });
   static options = PAGINATION_DEFAULTS;
   static immutableOptions = Object.freeze(['container', 'elements']);
   static contract = ComponentContracts.get('Pagination');
@@ -693,6 +717,9 @@ export class Pagination extends Component {
   getItems() { return recordFor(this).getItems(); }
   getEventDelegation() { return recordFor(this).getEventDelegation(); }
   getKeyboardNavigation() { return recordFor(this).getKeyboardNavigation(); }
+  getFocusController() { return recordFor(this).getFocusController(); }
+  getCapabilityController() { return recordFor(this).getCapabilityController(); }
+  getValueController() { return recordFor(this).getValueController(); }
   getSizeChanger() { return recordFor(this).getSizeChanger(); }
   getRootElement() { return recordFor(this).getRootElement(); }
   getRefs() { return recordFor(this).getRefs(); }
