@@ -116,7 +116,7 @@ export class InputOTP extends FieldComponent {
         const initialValue = this.#sanitize(own(this.options, 'value') ? this.options.value : (own(this.options, 'defaultValue') ? this.options.defaultValue : ''));
         const valueState = this.own(StateController.create({ value: initialValue, controlled: own(this.options, 'value'), normalizeValue: value => this.#sanitize(value) }));
         record.valueState = valueState;
-        this.bindValueController(valueState);
+        this.bindValueController(valueState, { syncExternal:false });
         const adapter = { toValue: values => values.join(''), toSegments: value => this.#toSegments(value) };
         const formatSegment = (raw, index) => {
             const formatted = this.#applyFormatter(raw, { reason: 'segment', index });
