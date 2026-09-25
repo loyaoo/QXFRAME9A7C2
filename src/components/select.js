@@ -990,8 +990,7 @@ var controlHost = FieldHost.resolvePickerControl({
           if (hasOwn(next, 'value')) {
             valueState.syncExternal(opts.value, { silent:true, source:'options', reason:'options-value', preserveDraft:true });
           } else if (hasOwn(next, 'multiple')) {
-            if (valueState.controlled) valueState.requestChange(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
-            else valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
+            if (!valueState.controlled) valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
           }
           var listOptions = {
             multiple: opts.multiple === true,
@@ -1088,7 +1087,7 @@ var controlHost = FieldHost.resolvePickerControl({
     
         var initialFormValue = opts.multiple === true ? selectedValues().slice() : selectedValues()[0];
         if (fieldControl && fieldControl.onFormReset) fieldControl.onFormReset(function () {
-          searchState.clear({ silent:true, notify:false, source:'form', reason:'reset' }); draftActive = false; draftDirty = false; optionList.setSearch(''); setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset', request: true }); draftValue = committedSingleDisplay();
+          searchState.clear({ silent:true, notify:false, source:'form', reason:'reset' }); draftActive = false; draftDirty = false; optionList.setSearch(''); if(valueState.controlled){restoreOptionListFromApiValue('form-reset-preserve');renderValues({silent:true,source:'form',reason:'reset-preserve'});}else setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset' }); draftValue = committedSingleDisplay();
         });
     
     
