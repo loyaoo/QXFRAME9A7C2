@@ -2,6 +2,8 @@
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
 import { Utils } from '../utils/utils.js';
+import { ValueController } from './valueController.js';
+import { ValueEquality } from '../utils/valueEquality.js';
 
 var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-handled' });
 
@@ -33,7 +35,13 @@ var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-ha
     }, options);
     if (!Array.isArray(opts.tokenSeparators) && !Utils.isFunction(opts.tokenSeparators)) throw new TypeError('[QXFRAME9A7C2] TokenInput tokenSeparators must be an array or tokenizer function.');
     var emitter = Events.createEmitter();
-    var tags = normalizeTags(opts.tags);
+    var valueController = ValueController.create({ value:normalizeTags(opts.tags), controlled:false, normalizeValue:normalizeTags, copyValue:function(list){return list.slice();}, equals:ValueEquality.deep });
+    var tags = valueController.value;
+    function commitTags(next, meta) {
+      valueController.setValue(next, mergeOptions({ silent:true, source:'token-input', reason:'tags-value' }, meta || {}));
+      tags = valueController.value;
+      return tags;
+    }
     var inputValue = opts.inputValue === undefined || opts.inputValue === null ? '' : String(opts.inputValue);
     var destroyed = false;
     var api = null;
@@ -70,7 +78,7 @@ var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-ha
       if (destroyed) return false;
       var normalized = normalizeTags(next);
       var previous = tags;
-      tags = normalized;
+      commitTags(normalized, meta);
       if (!(meta && meta.silent)) emitTags(previous, meta);
       return true;
     }
@@ -130,7 +138,7 @@ var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-ha
         }
       }
       var previous = tags;
-      tags = tags.concat([tag]);
+      commitTags(tags.concat([tag]), meta);
       inputValue = '';
       payload = detail({ tag: tag, previousTags: previous }, meta);
       if (!(meta && meta.silent)) {
@@ -157,8 +165,9 @@ var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-ha
       var payload = detail({ tag: nextTag, previousTag: current, index: index, candidate: candidate }, meta);
       if (Utils.isFunction(opts.beforeTagEdit) && opts.beforeTagEdit(nextTag, payload) === false) return false;
       var previous = tags;
-      tags = tags.slice();
-      tags[index] = nextTag;
+      var nextTags = tags.slice();
+      nextTags[index] = nextTag;
+      commitTags(nextTags, meta);
       payload = detail({ tag: nextTag, previousTag: current, index: index, previousTags: previous }, meta);
       if (!(meta && meta.silent)) {
         if (Utils.isFunction(opts.onTagEdit)) opts.onTagEdit(nextTag, payload);
@@ -181,7 +190,7 @@ var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-ha
         if (beforeRemove === REQUEST_HANDLED) return true;
       }
       var previous = tags;
-      tags = tags.slice(0, index).concat(tags.slice(index + 1));
+      commitTags(tags.slice(0, index).concat(tags.slice(index + 1)), meta);
       payload = detail({ tag: tag, index: index, previousTags: previous }, meta);
       if (!(meta && meta.silent)) {
         if (Utils.isFunction(opts.onTagRemove)) opts.onTagRemove(tag, payload);
@@ -207,7 +216,7 @@ var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-ha
     function clear(meta) {
       if (destroyed || opts.disabled === true || opts.readOnly === true) return false;
       var previous = tags;
-      tags = [];
+      commitTags([], meta);
       inputValue = '';
       if (!(meta && meta.silent)) {
         emitTags(previous, meta);
@@ -296,9 +305,10 @@ var REQUEST_HANDLED = Object.freeze({ kind: 'qxframe9a7c2-token-input-request-ha
       setTags: setTags, setInputValue: setInputValue, add: add, editAt: editAt, removeAt: removeAt,
       removeByKey: removeByKey, removeLast: removeLast, clear: clear, commitInput: commitInput,
       handleInput: handleInput, handlePaste: handlePaste, handleKeydown: handleKeydown, updateOptions: updateOptions,
+      getValueController: function () { return valueController; },
       getState: function () { return Object.freeze({ tags: tags.slice(), values: tags.map(function (tag) { return tag.value; }), inputValue: inputValue, destroyed: destroyed }); },
       on: emitter.on, once: emitter.once,
-      destroy: function () { if (destroyed) return false; destroyed = true; tags = []; inputValue = ''; emitter.dispose(); return true; }
+      destroy: function () { if (destroyed) return false; destroyed = true; if(valueController)valueController.destroy(); valueController=null; tags=[]; inputValue = ''; emitter.dispose(); return true; }
     });
     return api;
   }
