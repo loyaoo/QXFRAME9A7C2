@@ -128,11 +128,7 @@ export class Rate extends FieldComponent {
                 return this.#setCommitted(next,{user:true,reason:'keyboard',source:'keyboard',originalEvent:context.originalEvent})?'handled':'blocked';
             }
         });
-        this.bindFeedbackProjector(Object.freeze({
-            show:snapshot=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
-            update:(_handle,snapshot)=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
-            close:()=>{root.classList.remove('is-loading','is-error','is-warning');return true;}
-        }));
+        this.bindFeedbackClasses(root);
         return root;
     }
 
