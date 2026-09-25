@@ -450,6 +450,9 @@ function createModalController(instance, options) {
     getOverlayResourceController: function () { return overlay; },
     getOverlayRuntime: function () { return overlay && overlay.getRuntime ? overlay.getRuntime() : null; },
     getMotionControllers: function () { return Object.freeze({ mask: maskTransition && maskTransition.getMotionController ? maskTransition.getMotionController() : null, dialog: dialogTransition && dialogTransition.getMotionController ? dialogTransition.getMotionController() : null }); },
+    getInteractionController: function () { return frameShell.getInteractionController(); },
+    getCapabilityControllers: function () { return frameShell.getCapabilityControllers(); },
+    getFeedbackControllers: function () { return frameShell.getFeedbackControllers(); },
     getScroll: function () { return scroll; },
     on: emitter.on, once: emitter.once,
     destroy: destroy
@@ -465,7 +468,6 @@ function createModalController(instance, options) {
     var point = eventPoint(event);
     if (point) recentPointer = { x: point.x, y: point.y, time: Date.now() };
   }, true));
-  scope.add(DOM.listen(closeButton, 'click', function (event) { if (!closeButton.disabled) close('x', event); }));
   scope.add(DOM.listen(mask, 'mousedown', function (event) { if (event.target === mask && opts.closeOnMask) close('mask', event); }));
   if (globalThis.addEventListener) scope.add(DOM.listen(globalThis, 'resize', function () { if (opened) scroll.refresh(); }));
     
@@ -477,6 +479,23 @@ function createModalController(instance, options) {
     
 
 export class Modal extends OverlayComponent {
+    static profile = Object.freeze({
+        name: 'Modal',
+        focus: Object.freeze({ mode: 'overlay-scope' }),
+        interaction: Object.freeze({ mode: 'frame-actions' }),
+        capability: Object.freeze({ mode: 'frame-actions' }),
+        motion: Object.freeze({ mode: 'dual-presence' }),
+        overlay: Object.freeze({ mode: 'modal-layer' }),
+        feedback: Object.freeze({ mode: 'action-feedback' }),
+        ownership: Object.freeze({
+            focus: 'FocusController',
+            interaction: 'InteractionController',
+            capability: 'CapabilityController',
+            motion: 'MotionController',
+            overlay: 'OverlayController',
+            feedback: 'FeedbackController'
+        })
+    });
     static options = Object.freeze({ title:'提示', content:'', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, placement:'center', animation:'zoom-origin', maskAnimation:'fade', fullscreen:false, center:false });
     static immutableOptions = Object.freeze(['id','document','portalContainer']);
     static contract = ComponentContracts.get('Modal');
