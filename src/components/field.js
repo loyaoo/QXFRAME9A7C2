@@ -71,7 +71,7 @@ export class FieldComponent extends Component {
             copyValue: cloneValue,
             equals: ValueEquality.deep
         });
-        const record = { valueController, ownsValueController: true, valueProjector: null, bridge: null, focusTarget: null, focusController: null, interactionBinding: null, capabilityController: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
+        const record = { valueController, ownsValueController: true, valueProjector: null, syncExternalValue: true, bridge: null, focusTarget: null, focusController: null, interactionBinding: null, capabilityController: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
         fieldState.set(this, record);
         this.own(() => {
             releaseFormRegistration(record, { source:'component', reason:'destroy' });
@@ -233,6 +233,7 @@ export class FieldComponent extends Component {
             record.ownsValueController = settings.owned === true;
         }
         record.valueProjector = typeof settings.projectValue === 'function' ? settings.projectValue : null;
+        record.syncExternalValue = settings.syncExternal !== false;
         if (settings.syncFromField === true && !ValueEquality.deep(readCommittedValue(record), previousValue)) controller.setValue(previousValue, { silent:true, source:'field', reason:'bind-value-controller' });
         if (record.bridge) record.bridge.setValue(readCommittedValue(record), { silent:true });
         return controller;
@@ -349,7 +350,7 @@ export class FieldComponent extends Component {
 
     [componentHooks.optionsUpdated](next, previous, patch) {
         const state = fieldState.get(this);
-        if (own(patch, 'value') && state.valueController) state.valueController.syncExternal(next.value, { silent:true, source:'options', reason:'options' });
+        if (own(patch, 'value') && state.valueController && state.syncExternalValue !== false) state.valueController.syncExternal(next.value, { silent:true, source:'options', reason:'options' });
         if (state.bridge) {
             const bridgePatch = {};
             for (const key of ['name', 'disabled', 'readOnly', 'required', 'serializeValue']) if (own(patch, key)) bridgePatch[key] = next[key];
