@@ -2,7 +2,6 @@ import { FieldComponent, fieldHooks } from './field.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
-import { FocusController } from '../core/focusController.js';
 import { InteractionController } from '../core/interactionController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
 import { StateController } from '../core/stateController.js';
