@@ -14,7 +14,7 @@ assert.equal(profile.ownership.interaction,'InteractionController');
 assert.equal(profile.ownership.capability,'CapabilityController');
 assert.equal(profile.ownership.feedback,'FeedbackController');
 
-assert.match(source,/StateController\.create\s*\(/,'Steps current must enter StateController→ValueController.');
+assert.match(source,/ValueController\.create\s*\(/,'Steps current must enter canonical ValueController.');
 assert.match(source,/getValueController\(\) \{ return recordFor\(this\)\.valueState; \}/,'Steps must expose the canonical ValueController.');
 assert.match(source,/FocusController\.create\s*\(/,'Steps navigation must enter FocusController.');
 assert.doesNotMatch(source,/import \{ KeyboardNavigation \}/,'Steps must not directly import KeyboardNavigation.');
