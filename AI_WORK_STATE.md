@@ -42,7 +42,7 @@ Implemented in current H-021 pack:
 - existing inline submenu Transition remains an internal presence detail; Menu's handbook target does not add a separate component-level Motion owner.
 - `verify:phase-h-menu` freezes exact ownership and rejects direct Selection/InteractionPolicy bypass.
 - strict source-ESM Chromium verifies shared V/F/I/C/S identities, ValueController↔SelectionController projection and disabled activation blocking.
-- target-matrix floors rise to 35 profiled / 32 complete.
+- target-matrix floors remain 34 profiled / rise to 32 complete.
 
 Next exact step:
 1. final diff/self-audit and open PHASE-H-021 PR.
