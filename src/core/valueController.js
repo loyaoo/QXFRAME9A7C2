@@ -492,7 +492,7 @@ function createValueBinding(options) {
     const cfg = mergeOptions({ silent:true, source:'api', reason:request === true ? 'request-change' : 'set-value' }, meta);
     const normalized = normalizeValue(next, cfg);
     if (equals(controller.value, normalized)) return false;
-    if (request === true && controller.controlled) return controller.requestChange(normalized, cfg);
+    if (request === true) return controller.requestChange(normalized, cfg);
     return controller.setValue(normalized, cfg);
   }
 
