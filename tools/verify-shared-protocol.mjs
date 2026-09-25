@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol, Collection, ValueDraft, ValueController, StateController, ObserverHub } from '../src/core/index.js';
+import { ActionContext, OperationResult, ControllableStateCore, DataRevision, EnvironmentPort, ProjectionScheduler, Diagnostics, ComponentProfile, LogicalOwnerTree, InputModality, SharedProtocol, Collection, ValueController, ObserverHub } from '../src/core/index.js';
 import { ComponentRuntime, configureComponents, publishComponentApi } from '../src/runtime/componentRuntime.js';
 
 const keyEvent={type:'keydown',isTrusted:true};
@@ -145,20 +145,20 @@ reentrantCollection=Collection.create({
 });
 assert.equal(reentrantCollection.setItems([{key:'y'}]).reason,'stale-transaction');
 
-const controlledDraft=ValueDraft.create({value:'A',controlled:true});
-assert.equal(controlledDraft.controlled,true);
-assert.equal(controlledDraft.getOwnershipState().ownership,'external');
-assert.equal(controlledDraft.requestChange('B',{source:'keyboard',reason:'probe-change'}),true);
-assert.equal(controlledDraft.value,'A');
-assert.equal(controlledDraft.getOwnershipState().pendingRequestIds.length,1);
-const pendingId=controlledDraft.getOwnershipState().pendingRequestIds[0];
-assert.equal(controlledDraft.syncExternal('B',{requestId:pendingId}),true);
-assert.equal(controlledDraft.value,'B');
-assert.equal(controlledDraft.getOwnershipState().pendingRequestIds.length,0);
-controlledDraft.setControlled(false);
-assert.equal(controlledDraft.getOwnershipState().ownership,'internal');
-assert.equal(controlledDraft.requestChange('C',{source:'programmatic',reason:'probe-uncontrolled'}),true);
-assert.equal(controlledDraft.value,'C');
+const controlledValue=ValueController.create({value:'A',controlled:true});
+assert.equal(controlledValue.controlled,true);
+assert.equal(controlledValue.getOwnershipState().ownership,'external');
+assert.equal(controlledValue.requestChange('B',{source:'keyboard',reason:'probe-change'}),true);
+assert.equal(controlledValue.value,'A');
+assert.equal(controlledValue.getOwnershipState().pendingRequestIds.length,1);
+const pendingId=controlledValue.getOwnershipState().pendingRequestIds[0];
+assert.equal(controlledValue.syncExternal('B',{requestId:pendingId}),true);
+assert.equal(controlledValue.value,'B');
+assert.equal(controlledValue.getOwnershipState().pendingRequestIds.length,0);
+controlledValue.setControlled(false);
+assert.equal(controlledValue.getOwnershipState().ownership,'internal');
+assert.equal(controlledValue.requestChange('C',{source:'programmatic',reason:'probe-uncontrolled'}),true);
+assert.equal(controlledValue.value,'C');
 
 const canonicalBinding=ValueController.createValueBinding({value:'X',controlled:true});
 assert.equal(canonicalBinding.controlled,true);
@@ -168,15 +168,7 @@ assert.equal(canonicalBinding.value,'X');
 canonicalBinding.syncExternal('Y',{requestId:canonicalBinding.getOwnershipState().pendingRequestIds[0]});
 assert.equal(canonicalBinding.value,'Y');
 
-const binding=StateController.createValueBinding({value:'X',controlled:true});
-assert.equal(binding.controlled,true);
-assert.equal(binding.ownership,'external');
-assert.equal(binding.write('Y',{reason:'binding-proposal'},true),true);
-assert.equal(binding.value,'X');
-binding.syncExternal('Y',{requestId:binding.getOwnershipState().pendingRequestIds[0]});
-assert.equal(binding.value,'Y');
-
-projection.destroy();
+ projection.destroy();
 tree.destroy();
 diagnostics.destroy();
 collectionDiagnostics.destroy();
@@ -185,8 +177,7 @@ internal.destroy();
 external.destroy();
 collection.destroy();
 reentrantCollection.destroy();
-controlledDraft.destroy();
+controlledValue.destroy();
 canonicalBinding.destroy();
-binding.destroy();
 
-console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,collectionDataRevision:true,valueDraftOwnership:true,valueControllerBinding:true,stateControllerOwnership:true,environmentPort:true,observerHubEnvironment:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,collectionDiagnostics:true,componentProfile:true,componentRuntimeProfile:true,inputModality:true}));
+console.log(JSON.stringify({ok:true,actionContext:true,operationResult:true,controllableState:true,dataRevision:true,collectionDataRevision:true,valueControllerOwnership:true,valueControllerBinding:true,compatValueAliasesRemoved:true,environmentPort:true,observerHubEnvironment:true,projectionScheduler:true,logicalOwnerTree:true,diagnostics:true,collectionDiagnostics:true,componentProfile:true,componentRuntimeProfile:true,inputModality:true}));
