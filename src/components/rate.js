@@ -60,7 +60,7 @@ export class Rate extends FieldComponent {
         const record = { fieldInit, doc, root:null, items:[], hoverValue:0, valueState, formBridge:null, itemScope:Lifecycle.createScope(), rendered:false, initialValue:valueState.value };
         state.set(this, record);
         this.own(valueState);
-        this.bindValueController(valueState);
+        this.bindValueController(valueState, { syncExternal:false });
         this.own(() => record.itemScope.dispose());
         this.own(() => { if (record.root) DOM.removeNode(record.root); record.items=[]; record.root=null; });
         this.setFieldValue(valueState.value, { silent:true, force:true, sync:true, source:'init', reason:'rate-init' });
