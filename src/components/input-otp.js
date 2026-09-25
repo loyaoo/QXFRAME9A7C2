@@ -3,7 +3,7 @@ import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { Scheduler } from '../core/scheduler.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { DOM } from '../core/dom.js';
 import { Utils } from '../utils/utils.js';
 
@@ -114,7 +114,7 @@ export class InputOTP extends FieldComponent {
         const record = state.get(this);
         if (record.rendered) return record.control && record.control.getRootElement();
         const initialValue = this.#sanitize(own(this.options, 'value') ? this.options.value : (own(this.options, 'defaultValue') ? this.options.defaultValue : ''));
-        const valueState = this.own(StateController.create({ value: initialValue, controlled: this.options.controlled === true, normalizeValue: value => this.#sanitize(value) }));
+        const valueState = this.own(ValueController.create({ value: initialValue, controlled: this.options.controlled === true, normalizeValue: value => this.#sanitize(value) }));
         record.valueState = valueState;
         this.bindValueController(valueState, { syncExternal:false });
         const adapter = { toValue: values => values.join(''), toSegments: value => this.#toSegments(value) };
