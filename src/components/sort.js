@@ -342,7 +342,7 @@ export class Sort extends Component {
     getInteractionController() { return recordFor(this).interactionController; }
     getCapabilityController() { return recordFor(this).capabilityController; }
     getSelectionController() { return recordFor(this).selectionController; }
-    getMotionController() { const group=recordFor(this).transitionGroup; return group && group.getMotionController ? group.getMotionController() : null; }
+    getTransitionGroup() { return recordFor(this).transitionGroup; }
     getReorderInteraction() { return recordFor(this).reorderInteraction; }
     getRowElement(key) { return recordFor(this).rowByKey.get(String(key)) || null; }
     getState() { const r = recordFor(this), opts = this.options, items = this.#items(); return Object.freeze({ items, order: items.map(item => item.key), disabled: opts.disabled === true, readOnly: opts.readOnly === true, draggable: opts.draggable !== false, showHandle: opts.showHandle !== false, handleOnly: this.#effectiveHandleOnly(), showActions: opts.showActions !== false, orientation: opts.orientation, dragging: r.reorderInteraction ? r.reorderInteraction.getState().dragging : false, dragOverlay: r.reorderInteraction ? r.reorderInteraction.getState().dragOverlay : false, movingKeys: r.transitionGroup ? r.transitionGroup.getState().movingKeys.slice() : [], destroyed: this.destroyed }); }
