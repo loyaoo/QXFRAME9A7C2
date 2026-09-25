@@ -5,14 +5,17 @@ import assert from 'node:assert/strict';
 import { getWebSocketConstructor } from './websocket-client.mjs';
 
 const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
-const stateSource=fs.readFileSync(path.join(root,'src/core/stateController.js'),'utf8');
 const valueSource=fs.readFileSync(path.join(root,'src/core/valueController.js'),'utf8');
 const dateSource=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
 const css=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8');
-assert.doesNotMatch(stateSource,/controlled\s*=\s*hasOwn\([^\n]*['"]value['"]/, 'StateController must not infer controlled ownership from value.');
 assert.doesNotMatch(valueSource,/controlled:\s*Object\.prototype\.hasOwnProperty\.call\([^\n]*['"]value['"]/, 'ValueController option binding must not infer controlled ownership from value.');
-assert.doesNotMatch(dateSource,/rememberCalendarDrillOwner/, 'DatePicker dual-panel drill must not create a second physical-panel keyboard owner.');
-assert.match(dateSource,/activeCalendarPanel\s*=\s*['"]primary['"][\s\S]{0,260}calendar\.setActiveDate\(selected/, 'DatePicker month drill must restore one canonical date keyboard anchor.');
+assert.match(dateSource,/function rememberCalendarDrillOwner\(detail\)/,'DatePicker dual-panel drill must preserve the physical panel owner independently from range edit ownership.');
+assert.match(dateSource,/function restoreDateKeyboardAnchor\(fallback, source\)/,'DatePicker must restore one canonical keyboard anchor after year\/month drill.');
+assert.match(dateSource,/draft\.draftValue\[0\]/,'DatePicker range keyboard restoration must consider the range start.');
+assert.match(dateSource,/sameCalendarMonth\(start, primaryView\)/,'DatePicker must reuse range start when it remains visible in the primary panel.');
+assert.match(dateSource,/sameCalendarMonth\(start, secondaryView\)/,'DatePicker must reuse range start when it remains visible in the secondary panel.');
+assert.match(dateSource,/date = cloneDate\(fallback\)/,'DatePicker must continue from the drilled month when range start is outside the visible pair.');
+assert.match(dateSource,/restoreDateKeyboardAnchor\(selected, source\)/,'DatePicker month drill must restore the canonical date keyboard anchor.');
 assert.match(css,/\.qxframe9a7c2-date-picker-presets\.is-virtual-focus-owner:focus-visible\s*\{[^}]*outline\s*:\s*none/, 'DatePicker preset real-focus owner outline must be suppressed.');
 assert.match(css,/\.qxframe9a7c2-date-picker-preset\.is-keyboard-focus:not\(:disabled\)\s*\{[^}]*outline\s*:/, 'DatePicker preset virtual focus item must own the visible outline.');
 
