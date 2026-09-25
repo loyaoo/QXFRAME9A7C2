@@ -45,6 +45,7 @@ Implementation evidence:
 - PickerField projects open-session draft text through Control.setInputValue(), so Control state and DOM cannot diverge; tag mode projects through tags instead.
 - TimePicker / ColorPicker / WheelPicker no longer gate open-session draft projection on needConfirm or a separate draft target.
 - production Chromium smoke coverage now checks Date multiple draft/cancel, immediate range preset close, and Time/Color/Wheel open control draft state.
+- browser assertions capture Time/Color/Wheel Control draft state before Enter commit; the earlier post-commit sampling mistake was corrected before acceptance.
 - static Phase-H Picker gate rejects reintroducing draft-target suppression or raw-DOM-only draft projection.
 Next exact step:
 1. wait for PR #114 exact-head GitHub Actions full release + Chromium verification.
