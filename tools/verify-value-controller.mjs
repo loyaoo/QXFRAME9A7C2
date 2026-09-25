@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { ValueController } from '../src/core/valueController.js';
-import { ValueDraft } from '../src/core/valueDraft.js';
-import { StateController } from '../src/core/stateController.js';
 import { PickerSession } from '../src/core/pickerSession.js';
 
-assert.equal(ValueDraft.create,ValueController.create,'ValueDraft compatibility alias must share the ValueController authority.');
+assert.equal(fs.existsSync(new URL('../src/core/valueDraft.js',import.meta.url)),false,'ValueDraft compatibility alias must be removed before production.');
+assert.equal(fs.existsSync(new URL('../src/core/stateController.js',import.meta.url)),false,'StateController compatibility alias must be removed before production.');
 
 const controller=ValueController.create({value:'A'});
 assert.equal(controller.value,'A');
@@ -58,11 +58,7 @@ confirmSession.close({source:'keyboard',reason:'escape'});
 assert.equal(confirmController.value,'X');
 assert.equal(confirmController.draftValue,'X');
 
-const state=StateController.create({value:1});
-assert.equal(typeof state.projection,'function');
-assert.equal(state.value,1);
-state.destroy();
 confirmController.destroy();
 controller.destroy();
 
-console.log(JSON.stringify({ok:true,valueController:true,valueDraftAlias:true,channels:['committed','draft','preview','rawInput'],sessionAuthority:true,noCloseCommit:true}));
+console.log(JSON.stringify({ok:true,valueController:true,compatAliasesRemoved:true,channels:['committed','draft','preview','rawInput'],sessionAuthority:true,noCloseCommit:true}));
