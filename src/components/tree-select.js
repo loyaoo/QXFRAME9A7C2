@@ -741,8 +741,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             if (checkMode) treeOptions.checkedKeys = checkedKeysForValues(apiValue());
             else treeOptions.value = asValues(apiValue(), false)[0];
           } else if (hasOwn(next, 'multiple') || hasOwn(next, 'checkable') || hasOwn(next, 'checkStrictly')) {
-            if (valueState.controlled) valueState.requestChange(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
-            else valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
+            if (!valueState.controlled) valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
             treeOptions.checkedKeys = checkMode ? checkedKeysForValues(apiValue()) : [];
             if (!checkMode) treeOptions.value = asValues(apiValue(), false)[0];
           }
@@ -781,7 +780,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
     
         var initialFormValue = multipleMode() ? selectedValues().slice() : selectedValues()[0];
         if (fieldControl && fieldControl.onFormReset) fieldControl.onFormReset(function () {
-          setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset', request: true });
+          if(valueState.controlled){restoreTreeFromApiValue('form-reset-preserve');syncView({silent:true,source:'form',reason:'reset-preserve'});}else setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset' });
         });
     
 
