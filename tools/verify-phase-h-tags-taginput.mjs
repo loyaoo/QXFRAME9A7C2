@@ -23,6 +23,7 @@ assertProfile(TagInput,'TagInput',['value','focus','interaction','capability','s
 
 assert.match(tokenSource,/ValueController\.create\s*\(/,'TokenInput tag list must be ValueController-owned.');
 assert.match(tokenSource,/getValueController:\s*function \(\) \{ return valueController; \}/,'TokenInput must expose its canonical ValueController.');
+assert.match(read('src/core/valueController.js'),/getValueController\(\) \{ return controller; \}/,'ValueController bindings must expose their canonical controller without becoming a second owner.');
 const token=TokenInput.create({tags:[{key:'a',value:'a',label:'A'}],creatable:true});
 const tokenValue=token.getValueController();
 assert.deepEqual(tokenValue.value.map(tag=>tag.value),['a']);
@@ -30,7 +31,7 @@ token.setTags([{key:'b',value:'b',label:'B'}],{silent:true,source:'verify'});
 assert.deepEqual(tokenValue.value.map(tag=>tag.value),['b'],'TokenInput mutations must update the same ValueController.');
 token.destroy();
 
-assert.match(tagsSource,/api\.bindValueController\(selectionValueState,/,'Checkable Tags must bind the selection ValueController.');
+assert.match(tagsSource,/selectionValueState\.getValueController\(\)/,'Checkable Tags must resolve the canonical selection ValueController.');
 assert.match(tagsSource,/tokenInput\.getValueController\(\)/,'Non-checkable Tags must bind TokenInput canonical ValueController.');
 assert.match(tagsSource,/projectValue:tokenValues/,'Tags must project token objects to public value[] without a second value store.');
 const syncBlock=(tagsSource.match(/function syncFormBridge\(meta\) \{[\s\S]*?\n  \}/)||[])[0]||'';
@@ -41,7 +42,7 @@ assert.doesNotMatch(tagsSource,/\bLayerManager\b|OverlayRuntime\.create\s*\(/,'T
 assert.match(tagsSource,/bindFeedbackProjector\s*\(/,'Tags visible status must enter FeedbackController through FieldComponent.');
 assert.match(tagsSource,/getOverlayController:function\(\)\{return overflowPopover&&overflowPopover\.getOverlayController/,'Tags must expose the existing Popover OverlayController.');
 
-assert.match(tagInputSource,/bindValueController\(valueState,/,'TagInput must bind its StateController ValueController into FieldComponent.');
+assert.match(tagInputSource,/bindValueController\(valueState\.getValueController\(\),/,'TagInput must bind its StateController canonical ValueController into FieldComponent.');
 assert.match(tagInputSource,/bindFocusController\s*\(/,'TagInput focus must enter FieldComponent→FocusController.');
 assert.match(tagInputSource,/bindInteractionController\s*\(/,'TagInput key semantics must enter FieldComponent→InteractionController.');
 assert.match(tagInputSource,/bindCapabilityController\s*\(/,'TagInput capability policy must enter FieldComponent→CapabilityController.');
