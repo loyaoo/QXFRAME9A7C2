@@ -943,7 +943,10 @@ function setupImage(instance) {
     getPreviewMediaElement: function () { return previewMedia; },
     getPreviewOverlayController: function () { return overlay; },
     getPreviewOverlayRuntime: function () { return overlay && overlay.getRuntime ? overlay.getRuntime() : null; },
-    getPreviewMotionControllers: function () { return Object.freeze({ mask: maskPresence && maskPresence.getMotionController ? maskPresence.getMotionController() : null, content: presence && presence.getMotionController ? presence.getMotionController() : null }); }
+    getPreviewMotionControllers: function () { return Object.freeze({ mask: maskPresence && maskPresence.getMotionController ? maskPresence.getMotionController() : null, content: presence && presence.getMotionController ? presence.getMotionController() : null }); },
+    getInteractionController: function () { return interactionController; },
+    getCapabilityController: function () { return capabilityController; },
+    getFeedbackController: function () { return feedbackController; }
   };
   imageState.set(instance, record);
   instance.own(destroyRuntime);
@@ -1037,6 +1040,23 @@ function recordForImage(instance) {
 }
 
 export class Image extends Component {
+  static profile = Object.freeze({
+    name:'Image',
+    focus:Object.freeze({ mode:'preview-overlay-scope' }),
+    interaction:Object.freeze({ keymap:'image-preview' }),
+    capability:Object.freeze({ disabledBlocks:Object.freeze(['open','navigate','edit']) }),
+    motion:Object.freeze({ mode:'preview-presence' }),
+    overlay:Object.freeze({ mode:'preview-modal' }),
+    feedback:Object.freeze({ mode:'load-error-projection' }),
+    ownership:Object.freeze({
+      focus:'FocusController',
+      interaction:'InteractionController',
+      capability:'CapabilityController',
+      motion:'MotionController',
+      overlay:'OverlayController',
+      feedback:'FeedbackController'
+    })
+  });
   static options = Object.freeze({});
   static optionNormalizers = Object.freeze({
     fit: normalizeFit,
@@ -1089,6 +1109,9 @@ export class Image extends Component {
   getPreviewOverlayController() { return recordForImage(this).getPreviewOverlayController(); }
   getPreviewOverlayRuntime() { return recordForImage(this).getPreviewOverlayRuntime(); }
   getPreviewMotionControllers() { return recordForImage(this).getPreviewMotionControllers(); }
+  getInteractionController() { return recordForImage(this).getInteractionController(); }
+  getCapabilityController() { return recordForImage(this).getCapabilityController(); }
+  getFeedbackController() { return recordForImage(this).getFeedbackController(); }
 }
 export { createPreview };
 export default Image;
