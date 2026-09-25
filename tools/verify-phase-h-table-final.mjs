@@ -4,6 +4,7 @@ import { ComponentProfile } from '../src/core/componentProfile.js';
 import { Table } from '../src/components/table.js';
 
 const source=fs.readFileSync(new URL('../src/components/table.js',import.meta.url),'utf8');
+const modelSource=fs.readFileSync(new URL('../src/core/tableModel.js',import.meta.url),'utf8');
 const profile=ComponentProfile.define(Table.profile);
 assert.equal(profile.name,'Table');
 assert.deepEqual(
@@ -22,6 +23,7 @@ assert.equal(profile.ownership.form,'FormController');
 assert.match(source,/ValueController\.createValueBinding\s*\(/,'Table committed explicit selection must enter ValueController.');
 assert.match(source,/selectedKeys:\s*valueBinding\.value/,'TableModel must initialize explicit selection from the canonical ValueController.');
 assert.match(source,/syncCommittedSelection\s*\(/,'Table selection projection must synchronize through the canonical ValueController.');
+assert.match(modelSource,/if\s*\(result\s*&&\s*detail\.silent\s*===\s*true\)\s*\{[\s\S]{0,220}invalidateProjection\(['"]state['"]\)/,'TableModel silent selection reconcile must invalidate cached projection so controlled rollback cannot expose stale selected keys.');
 assert.match(source,/valueBinding\.write\(normalized,[\s\S]{0,180},controlled\)/,'Controlled Table selection must use the ValueController proposal path instead of mutating committed value.');
 assert.match(source,/model\.setSelectedKeys\(initialSelectedValue\.slice\(\),\{ source:'form', reason:'reset-request'/,'Controlled Table reset must propose the initial committed selection through the normal selection path.');
 assert.doesNotMatch(source,/valueBinding\.write\(initialSelectedValue/,'Controlled Table reset must not write the committed ValueController directly.');
