@@ -858,10 +858,11 @@ var controlHost = FieldHost.resolvePickerControl({
           optionList.setValue(canonical, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
           renderValues({ silent:!!cfg.silent, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
           if (changed) {
-            var payload = { value:valueState.copy(canonical), previousValue:valueState.copy(previousValue), source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', silent:!!cfg.silent, controlled:!!valueState.controlled, select:instance };
-            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(canonical), payload);
+            var emittedValue = valueState.controlled && cfg.request === true ? nextValue : canonical;
+            var payload = { value:valueState.copy(emittedValue), previousValue:valueState.copy(previousValue), source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', silent:!!cfg.silent, controlled:!!valueState.controlled, select:instance };
+            if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(valueState.copy(emittedValue), payload);
             if (!cfg.silent) {
-              if (Utils.isFunction(opts.onChange)) opts.onChange(valueState.copy(canonical), payload);
+              if (Utils.isFunction(opts.onChange)) opts.onChange(valueState.copy(emittedValue), payload);
               if (!destroyed) emitter.emit('change', payload);
             }
           }
