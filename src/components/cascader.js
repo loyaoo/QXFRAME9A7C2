@@ -958,7 +958,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
     
         var initialFormValue = opts.multiple === true ? selection.values.slice() : selection.value;
         if (fieldControl && fieldControl.onFormReset) fieldControl.onFormReset(function () {
-          setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset', request: true });
+          if(valueState.controlled){syncSelectionFromApiValue('form-reset-preserve');normalizeSelection();syncControl({silent:true,source:'form',reason:'reset-preserve'});}else setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset' });
         });
     
     
