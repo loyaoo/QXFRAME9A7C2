@@ -129,7 +129,11 @@ function createRuntime(instance, prepared) {
         return String(value);
     }
     function tooltipPlacement() { if (opts.tooltip && opts.tooltip.placement) return String(opts.tooltip.placement); if (opts.vertical) return opts.reverse ? 'right' : 'left'; return 'top'; }
-    const interactive = index => !destroyed && opts.disabled !== true && opts.readOnly !== true && (index === undefined || !handleDisabled(index));
+    const interactive = index => {
+        if(destroyed||opts.disabled===true||opts.readOnly===true||(index!==undefined&&handleDisabled(index)))return false;
+        const capability=instance.getCapabilityController();
+        return !capability||capability.can('edit');
+    };
     const sameValues = (a,b) => a.length === b.length && a.every((value,index) => value === b[index]);
     function emit(name, reason, event, sourceValues) {
         if (typeof opts[name] !== 'function') return;
@@ -188,7 +192,34 @@ function createRuntime(instance, prepared) {
     function finalizeKeyboardSession(event,reason){if(!keyboardSession)return false;const session=keyboardSession;keyboardSession=null;if(session.changed)emit('onAfterChange',reason||'keyboard',event);return session.changed;}
     function cancelKeyboardSession(event,reason){if(!keyboardSession)return false;const session=keyboardSession;keyboardSession=null;if(!sameValues(values,session.startValues))setValues(session.startValues,{user:false,reason:reason||'keyboard-cancel',originalEvent:event});return true;}
     function handleKeyup(index,event){if(!keyboardSession||keyboardSession.index!==index||!directionalKey(event.key))return false;delete keyboardSession.keys[event.key];if(!Object.keys(keyboardSession.keys).length)finalizeKeyboardSession(event,'keyboard');return true;}
-    function handleKeydown(index,event){if(typeof opts.onKeyDown==='function')opts.onKeyDown(event,{index,value:externalValue(),instance:api});if(!interactive(index)||opts.keyboard===false)return;if(event.key==='Escape'&&keyboardSession){if(event.preventDefault)event.preventDefault();cancelKeyboardSession(event,'keyboard-escape');return;}if(editableRange()&&(event.key==='Delete'||event.key==='Backspace')){if(event.preventDefault)event.preventDefault();removeHandle(index,{user:true,reason:'keyboard-remove',originalEvent:event,final:true});return;}const unit=opts.step===null?1:opts.step,direction=opts.reverse===true?-1:1;let next=null;if(event.key==='ArrowRight'||event.key==='ArrowUp')next=values[index]+unit*direction;else if(event.key==='ArrowLeft'||event.key==='ArrowDown')next=values[index]-unit*direction;else if(event.key==='PageUp')next=values[index]+unit*10;else if(event.key==='PageDown')next=values[index]-unit*10;else if(event.key==='Home')next=opts.min;else if(event.key==='End')next=opts.max;else return;if(event.preventDefault)event.preventDefault();const keySession=beginKeyboardSession(index,event);activeHandle=index;const output=values.slice();output[index]=align(next);if(rangeMode()&&opts.allowCross===false){if(editableRange()){if(index>0)output[index]=Math.max(output[index],values[index-1]);if(index<values.length-1)output[index]=Math.min(output[index],values[index+1]);}else{if(index===0)output[0]=Math.min(output[0],output[1]);else output[1]=Math.max(output[1],output[0]);}}if(setValues(output,{user:true,reason:'keyboard',originalEvent:event}))keySession.changed=true;const handle=handles[index];if(handle)DOM.focusElement(handle);}
+    function handleControllerAction(action,context){
+        const event=context.originalEvent,target=event&&event.target,handle=target&&target.closest?target.closest('.qxframe9a7c2-slider-handle'):null;
+        const index=handle&&root.contains(handle)?Number(handle.getAttribute('data-slider-handle')):-1;
+        if(index<0||!Number.isInteger(index)||!interactive(index)||opts.keyboard===false)return 'blocked';
+        if(action==='CANCEL_EDIT'){
+            if(!keyboardSession)return 'pass';
+            cancelKeyboardSession(event,'keyboard-escape');
+            return 'handled';
+        }
+        if(action==='REMOVE'){
+            if(!editableRange())return 'pass';
+            return removeHandle(index,{user:true,reason:'keyboard-remove',originalEvent:event,final:true})?'handled':'blocked';
+        }
+        const unit=opts.step===null?1:opts.step,direction=opts.reverse===true?-1:1;let next=null;
+        if(action==='MOVE_RIGHT'||action==='MOVE_UP')next=values[index]+unit*direction;
+        else if(action==='MOVE_LEFT'||action==='MOVE_DOWN')next=values[index]-unit*direction;
+        else if(action==='PAGE_PREVIOUS')next=values[index]+unit*10;
+        else if(action==='PAGE_NEXT')next=values[index]-unit*10;
+        else if(action==='MOVE_FIRST')next=opts.min;
+        else if(action==='MOVE_LAST')next=opts.max;
+        else return 'pass';
+        const keySession=beginKeyboardSession(index,event);activeHandle=index;const output=values.slice();output[index]=align(next);
+        if(rangeMode()&&opts.allowCross===false){if(editableRange()){if(index>0)output[index]=Math.max(output[index],values[index-1]);if(index<values.length-1)output[index]=Math.min(output[index],values[index+1]);}else{if(index===0)output[0]=Math.min(output[0],output[1]);else output[1]=Math.max(output[1],output[0]);}}
+        if(setValues(output,{user:true,reason:'keyboard',originalEvent:event}))keySession.changed=true;
+        const currentHandle=handles[index];if(currentHandle)DOM.focusElement(currentHandle);
+        return 'handled';
+    }
+    function handleKeydown(index,event){if(typeof opts.onKeyDown==='function')opts.onKeyDown(event,{index,value:externalValue(),instance:api});const interaction=instance.getInteractionController();if(interaction)interaction.dispatch(event);}
 
     opts=normalizeSliderOptions(opts);let initial=rangeMode()?[opts.min,opts.max]:opts.min;if(hasOwn(opts,'defaultValue'))initial=opts.defaultValue;if(hasOwn(opts,'value'))initial=opts.value;
     valueState=StateController.create({value:normalize(initial),controlled:hasOwn(incoming,'value'),normalizeValue:normalize,equals:sameValues,copyValue:list=>list.slice()});
@@ -200,6 +231,20 @@ function createRuntime(instance, prepared) {
     pointerSession=PointerSession.create({target:root,document:doc,threshold:0,getState:()=>({disabled:opts.disabled===true,readOnly:opts.readOnly===true}),canStart:detail=>{const event=detail.originalEvent;if(!event||!interactive())return false;const target=event.target,handle=target&&target.closest?target.closest('.qxframe9a7c2-slider-handle'):null;if(handle&&root.contains(handle)){const handleIndex=Number(handle.getAttribute('data-slider-handle'));if(!interactive(handleIndex))return false;if(event.preventDefault)event.preventDefault();activeHandle=handleIndex;beginDrag(event,'handle');return true;}if(track&&(target===track||track.contains(target))){if(event.preventDefault)event.preventDefault();if(draggableTrack()&&rangeMode()&&values.every((_,index)=>interactive(index)))beginDrag(event,'track');else{const trackValue=valueFromPointer(event),trackNearest=nearestHandleIndex(trackValue);if(trackNearest<0)return false;activeHandle=trackNearest;beginDrag(event,'handle');setNearestValue(trackValue,{user:true,reason:'track',originalEvent:event});}return true;}if(rail&&(target===rail||rail.contains(target))){if(event.preventDefault)event.preventDefault();const railValue=valueFromPointer(event),railNearest=nearestHandleIndex(railValue);if(railNearest<0)return false;activeHandle=railNearest;beginDrag(event,'handle');setNearestValue(railValue,{user:true,reason:'rail',originalEvent:event});return true;}return false;},onMove:detail=>{if(!dragging)return;const event=detail.originalEvent;if(dragMode==='track'&&rangeMode())moveRangeTrack(event);else setNearestValue(valueFromPointer(event),{user:true,reason:'drag',originalEvent:event});},onEnd:detail=>endDrag(detail.originalEvent),onCancel:detail=>endDrag(detail.originalEvent)});
 
     buildProjection();
+    instance.bindFocusTarget(handles[0]||root);
+    instance.bindSimpleControllers({
+        root,
+        getCapabilities:()=>({ focusable:true, tabbable:true, activatable:true, editable:true, navigable:true, draggable:true }),
+        keymap:{ Delete:'REMOVE', Backspace:'REMOVE', Escape:'CANCEL_EDIT' },
+        repeatActions:['MOVE_UP','MOVE_DOWN','MOVE_LEFT','MOVE_RIGHT','PAGE_PREVIOUS','PAGE_NEXT'],
+        operationOf:action=>action==='CANCEL_EDIT'?'abort':(action==='REMOVE'?'remove':'edit'),
+        onAction:handleControllerAction
+    });
+    instance.bindFeedbackProjector(Object.freeze({
+        show:snapshot=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
+        update:(_handle,snapshot)=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
+        close:()=>{root.classList.remove('is-loading','is-error','is-warning');return true;}
+    }));
     return {
         get root(){return root;},
         setValue(next,config){setValues(next,Utils.mergeOwn(config||{},{reason:(config&&config.reason)||'set-value'}));return api;},
@@ -214,6 +259,16 @@ function createRuntime(instance, prepared) {
 }
 
 export class Slider extends FieldComponent {
+    static profile = Object.freeze({
+        name:'Slider',
+        value:Object.freeze({ mode:'handle-values' }),
+        focus:Object.freeze({ mode:'handle-focus' }),
+        interaction:Object.freeze({ mode:'slider-keyboard' }),
+        capability:Object.freeze({ mode:'interactive-field' }),
+        feedback:Object.freeze({ mode:'field-status' }),
+        form:Object.freeze({ mode:'field-registration' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', feedback:'FeedbackController', form:'FormController' })
+    });
     static options = Object.freeze({ min:0,max:100,step:1,range:false,included:true,vertical:false,reverse:false,keyboard:true,disabled:false,readOnly:false,allowCross:true,dots:false,marks:null,tooltip:{},size:'md',required:false });
     static immutableOptions = Object.freeze(['target','container','formField']);
     static optionNormalizers = Object.freeze({
