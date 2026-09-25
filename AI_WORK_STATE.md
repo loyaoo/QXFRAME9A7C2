@@ -10,45 +10,46 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `bc56d9cd1377ebd34d5a898413852a2b29a1c180` (PR #85 merge)
-- Current branch: `refactor/phase-h-popup-facades-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-006 Tooltip/Popover popup-facade PR
-- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-005 branch; prune merged task branches after Phase H signoff
+- Last code-affecting main commit: `7b49dd8d85e51de462b1aad854d94ee0bdfe0925` (PR #86 merge)
+- Current branch: `refactor/phase-h-popconfirm-feedback-replay-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-007 Popconfirm feedback PR
+- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-007 replay branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #434 / `36074443611` (PR #85)
-- Latest green main CI + Pages: #435 / `36074753673`
-- Overall handbook implementation progress: 96%
+- Latest green Phase H PR CI: #436 / `36075356993` (PR #86)
+- Latest green main CI + Pages: #437 / `36075810132`
+- Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-006`
+- Current Task: `PHASE-H-007`
 
 ## CURRENT
 
-### PHASE-H-006 — Tooltip + Popover popup-facade migration
+### PHASE-H-007 — Popconfirm F/I/C/M/O/B migration
 Status: IN_PROGRESS
 Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-005 is DONE through PR #85, exact-head CI #434 / `36074443611`, merge `bc56d9cd1377ebd34d5a898413852a2b29a1c180`, main release + Pages #435 / `36074753673`.
-- Trigger is H accepted for the exact handbook Focus/Interaction/Capability/Motion/Overlay target.
-- Popup/Trigger keyboard semantics, capability gating, FocusController scope resources, MotionController presence and OverlayController resources now share one controller path.
+- PHASE-H-006 is DONE through PR #86, exact-head CI #436 / `36075356993`, merge `7b49dd8d85e51de462b1aad854d94ee0bdfe0925`, main release + Pages #437 / `36075810132`.
+- Tooltip is H accepted for Motion/Overlay; direct LayerManager singleton/parent lookup is removed in favor of OverlayController.
+- Popover is H accepted for Focus/Interaction/Capability/Motion/Overlay through PopupComponent→Trigger.
 
 Implemented in current pack:
-- OverlayController gains consumed high-level `findParentLayerId()` and `acquireSingleton()` facades over canonical LayerManager; `createLayerLease()` reuses the same resolver.
-- Tooltip no longer imports/accesses LayerManager directly for singleton or parent-layer lookup.
-- Tooltip declares the exact handbook Motion/Overlay profile and reuses Trigger for physical overlay/motion.
-- PopupComponent exposes inherited Interaction/Capability/Overlay/Motion controller facades from its canonical Trigger.
-- Popover declares the exact handbook Focus/Interaction/Capability/Motion/Overlay profile and continues to enter those authorities only through PopupComponent→Trigger.
-- `verify:phase-h-popup-facades` rejects Tooltip LayerManager bypass and freezes both target profiles.
-- strict source-ESM Chromium verifies Popover inherited controller facade access while retaining existing Tooltip singleton-switch behavior.
-- Phase H profile regression floor rises to 20.
+- Popconfirm declares the exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback profile.
+- popup F/I/C/M/O continues to reuse Popover→PopupComponent→Trigger; no second popup/open authority is introduced.
+- AsyncAction remains the confirm task owner.
+- one action CapabilityController gates confirm/cancel availability, including async pending lock.
+- one local FeedbackController projector owns the visible confirm-button loading projection; Popconfirm view sync no longer duplicates pending→loading styling.
+- AsyncAction onStateChange publishes pending/success/error/idle feedback using request identity/generation into FeedbackController.
+- dedicated gate freezes F/I/C/M/O/B ownership and rejects duplicate visible-pending ownership.
+- strict source-ESM Chromium covers async confirm pending loading, blocked duplicate activation and terminal feedback cleanup.
+- Phase H profile regression floor rises to 21.
 
 Next exact step:
-1. perform final diff/self-audit and open PHASE-H-006 PR.
+1. final diff/self-audit and open PHASE-H-007 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Tooltip and Popover H accepted.
-5. continue to Popconfirm feedback + remaining Trigger-family components before moving to form/value families.
+4. mark Popconfirm H accepted.
+5. continue with remaining Trigger-family components, then batch form/value families.
 
 ## Current authority snapshot — after Phase A
 
@@ -78,6 +79,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-006 — Tooltip + Popover popup-facade migration
+Status: DONE
+Evidence:
+- PR #86 merged
+- merge commit `7b49dd8d85e51de462b1aad854d94ee0bdfe0925`
+- exact-head CI #436 / `36075356993`: success
+- main CI + Pages #437 / `36075810132`: success
+Outcome:
+- Tooltip no longer accesses LayerManager directly; parent-layer lookup and grouped singleton resource ownership enter OverlayController.
+- Tooltip declares the exact handbook Motion/Overlay profile and retains Trigger as the physical popup/motion authority.
+- PopupComponent exposes inherited Interaction/Capability/Overlay/Motion controller facades from its canonical Trigger.
+- Popover declares the exact handbook Focus/Interaction/Capability/Motion/Overlay profile and consumes those authorities through PopupComponent→Trigger.
+- strict Chromium preserves Tooltip singleton switching and verifies Popover inherited controller facade identity.
+- Tooltip and Popover are H accepted.
+
+
 
 ### PHASE-H-005 — Trigger F/I/C/M/O controller-family migration
 Status: DONE
