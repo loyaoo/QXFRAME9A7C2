@@ -209,6 +209,17 @@ export class FieldComponent extends Component {
         return controller;
     }
 
+    bindFeedbackProjector(projector, options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FeedbackController to a destroyed FieldComponent.');
+        if (!projector || typeof projector !== 'object') throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback projector must be an object.');
+        const record = fieldState.get(this);
+        if (record.feedbackController) record.feedbackController.destroy();
+        const settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        const target = settings.target || 'local';
+        record.feedbackController = this.own(FeedbackController.createForProjector(projector, { ownerId:String(settings.ownerId || this.id) }, target));
+        return record.feedbackController;
+    }
+
     bindFeedbackControl(control, options = {}) {
         if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FeedbackController to a destroyed FieldComponent.');
         if (!control || (typeof control.updateOptions !== 'function' && typeof control.setStatus !== 'function')) throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback control must expose updateOptions() or setStatus().');
