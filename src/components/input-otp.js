@@ -27,6 +27,16 @@ function matcher(accept) {
 }
 
 export class InputOTP extends FieldComponent {
+    static profile = Object.freeze({
+        name:'InputOTP',
+        value:Object.freeze({ mode:'segmented-string' }),
+        focus:Object.freeze({ mode:'segmented-native-editor' }),
+        interaction:Object.freeze({ mode:'segmented-edit' }),
+        capability:Object.freeze({ mode:'field-edit' }),
+        feedback:Object.freeze({ mode:'field-status' }),
+        form:Object.freeze({ mode:'field-registration' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', feedback:'FeedbackController', form:'FormController' })
+    });
     static contract = getContract('InputOTP');
     static immutableOptions = Object.freeze(['target', 'container', 'formField']);
 
@@ -127,6 +137,10 @@ export class InputOTP extends FieldComponent {
             valueAdapter: adapter, value: initialValue, ...(valueState.controlled ? { committedValue: valueState.value } : {}), segmentFocusIndex: this.#canonicalFocusIndex(initialValue), formatSegment,
             disabled: this.disabled, readOnly: this.readOnly, required: this.options.required === true,
             size: this.options.size, status: this.options.status, variant: this.options.variant, focusOutline: this.options.focusOutline, name: this.options.name,
+            onSegmentKeydown: detail => {
+                const interaction=this.getInteractionController();
+                if(interaction)interaction.dispatch(detail.originalEvent);
+            },
             onSegmentInput: (values, detail) => {
                 control.setSegmentFocusIndex(this.#canonicalFocusIndex(values));
                 if (typeof this.options.onInput === 'function') this.options.onInput(values.join(''), { ...detail, instance: this });
@@ -154,6 +168,29 @@ export class InputOTP extends FieldComponent {
         record.control = this.own(control);
         record.rendered = true;
         this.bindFocusTarget(control.getFocusElement ? control.getFocusElement() : null);
+        this.bindSimpleControllers({
+            root:control.getRootElement(),
+            capabilities:{ focusable:true, tabbable:true, activatable:true, editable:true, navigable:true },
+            keymap:{ Backspace:'ERASE_PREVIOUS', ArrowLeft:'MOVE_PREVIOUS', ArrowRight:'MOVE_NEXT' },
+            allowEditableKeys:['Backspace','ArrowLeft','ArrowRight'],
+            operationOf:action=>action==='ERASE_PREVIOUS'?'edit':'navigate',
+            onAction:(action,context)=>{
+                const event=context.originalEvent,inputs=control.getInputElements(),index=inputs.indexOf(event&&event.target);
+                if(index<0)return 'pass';
+                const segmented=control.getSegmentedInput();
+                if(action==='ERASE_PREVIOUS'){
+                    if(this.readOnly||this.disabled||inputs[index].value!==''||index<=0)return 'pass';
+                    if(!segmented.erasePrevious(index,{originalEvent:event,source:'keyboard',reason:'backspace'}))return 'pass';
+                    control.setSegmentValues(segmented.getState().values);
+                    DOM.focusElement(inputs[index-1]);
+                    return 'handled';
+                }
+                if(action==='MOVE_PREVIOUS'&&inputs[index].selectionStart===0&&index>0){DOM.focusElement(inputs[index-1]);return 'handled';}
+                if(action==='MOVE_NEXT'&&inputs[index].selectionStart===inputs[index].value.length&&index<inputs.length-1){DOM.focusElement(inputs[index+1]);return 'handled';}
+                return 'pass';
+            },
+            feedbackControl:control
+        });
         this.setFieldValue(initialValue, { silent: true, force: true, sync: true, source: 'init', reason: 'otp-init' });
         if (this.options.autoFocus === true) {
             record.autoFocusScheduler = this.own(Scheduler.createDelayScheduler(() => { if (!this.destroyed) this.focus(); }));
