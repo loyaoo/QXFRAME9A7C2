@@ -182,7 +182,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
               renderColumns();
               return [];
             }
-            loadedChildren.set(key, normalized); loadedKeys.add(key);
+            loadedChildren.set(key, normalized); loadedKeys.add(key); invalidatePathIndex();
             selectionController.advanceDataRevision('selected');
             var payload = { key: key, item: item, items: normalized.slice(), loadedKeys: Array.from(loadedKeys), reason: meta && meta.reason || 'load-children', originalEvent: meta && meta.originalEvent || null, cascader: instance };
             if (Utils.isFunction(opts.onLoad)) opts.onLoad(normalized.slice(), payload);
@@ -194,9 +194,16 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           });
         }
 
+        var pathIndex = null;
+        function invalidatePathIndex() { pathIndex = null; }
+        function currentPathIndex() {
+          if (!pathIndex) pathIndex = TreeQuery.index(opts.items, { accessors:itemAccessors });
+          return pathIndex;
+        }
         function findPathByValue(value) {
           if (value === undefined || value === null) return [];
-          return TreeQuery.findPath(opts.items, value, { accessors:itemAccessors, by:'value' });
+          var record = currentPathIndex().byValue.get(String(value));
+          return record ? record.path.slice() : [];
         }
         function selectableLeafValues(item) { return hierarchy.leafKeys(item); }
         function normalizeAssociatedValues(values) {
@@ -912,7 +919,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           loadTasks.invalidate('cascader-dataset');
           opts.items = Array.isArray(items) ? items.slice() : [];
           selectionController.advanceDataRevision('selected');
-          loadedChildren.clear();
+          loadedChildren.clear(); invalidatePathIndex();
           loadedKeys = new Set((meta && Array.isArray(meta.loadedKeys) ? meta.loadedKeys : []).map(String));
           loadingKeys.clear();
           activePathKeys = [];
