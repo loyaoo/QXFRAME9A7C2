@@ -1,4 +1,4 @@
-import { FieldComponent, fieldHooks } from './field.js';
+import { FieldComponent, fieldHooks, createSimpleFieldProfile } from './field.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
@@ -39,6 +39,7 @@ function recordFor(instance) {
 }
 
 export class Rate extends FieldComponent {
+    static profile = createSimpleFieldProfile('Rate');
     static contract = getContract('Rate');
     static options = Object.freeze({ count:5, half:false, clearable:true, character:null, tooltips:null, keyboard:true, size:'md', mode:'interactive', disabled:false, readOnly:false, required:false });
     static immutableOptions = Object.freeze(['target','container','formField']);
@@ -65,7 +66,7 @@ export class Rate extends FieldComponent {
         this.setFieldValue(valueState.value, { silent:true, force:true, sync:true, source:'init', reason:'rate-init' });
     }
 
-    #interactionPolicy() { const opts=this.options; return CapabilityController.resolve({ disabled:this.destroyed||opts.disabled===true, readOnly:opts.readOnly===true }, { focusable:opts.mode==='interactive', tabbable:opts.mode==='interactive', activatable:opts.mode==='interactive', editable:false, selectable:false }); }
+    #interactionPolicy() { const controller=this.getCapabilityController();if(controller)return controller.getState();const opts=this.options; return CapabilityController.resolve({ disabled:this.destroyed||opts.disabled===true, readOnly:opts.readOnly===true }, { focusable:opts.mode==='interactive', tabbable:opts.mode==='interactive', activatable:opts.mode==='interactive', editable:false, selectable:opts.mode==='interactive' }); }
     #interactive() { return this.#interactionPolicy().activatable; }
     #stepSize() { return this.options.half === true ? 0.5 : 1; }
     #context(index, layer) { const r=recordFor(this); return Object.freeze({ index, position:index+1, value:r.valueState.value, hoverValue:r.hoverValue, layer, instance:this }); }
@@ -98,7 +99,33 @@ export class Rate extends FieldComponent {
     [componentHooks.render]() {
         const r=recordFor(this);if(r.rendered)return r.root;const opts=this.options,doc=r.doc;const root=doc.createElement('div');root.className='qxframe9a7c2-rate';r.root=root;if(opts.container)opts.container.appendChild(root);else Control.placeFieldRoot(root,null,opts.formField);
         this.own(DOM.listen(root,'pointerleave',event=>{if(r.hoverValue>0)this.#emitHover(0,event,'leave');}));
-        this.own(DOM.listen(root,'keydown',event=>{if(!this.#interactive()||this.options.keyboard===false)return;const key=event.key,step=this.#stepSize();let next=null;if(key==='ArrowUp'||key==='Up'||key==='ArrowRight'||key==='Right')next=r.valueState.value+step;else if(key==='ArrowDown'||key==='Down'||key==='ArrowLeft'||key==='Left')next=r.valueState.value-step;else if(key==='Home')next=this.options.clearable===true?0:step;else if(key==='End')next=this.options.count;else if((key==='Delete'||key==='Backspace')&&this.options.clearable===true)next=0;if(next===null)return;event.preventDefault?.();this.#setCommitted(next,{user:true,reason:'keyboard',source:'keyboard',originalEvent:event});}));
+        const capability=this.bindCapabilityController({getCapabilities:()=>({focusable:this.options.mode==='interactive',tabbable:this.options.mode==='interactive',activatable:this.options.mode==='interactive',selectable:this.options.mode==='interactive'})});
+        this.bindFocusController(root,{manageTabIndex:false,navigation:{handlers:{}}});
+        this.bindInteractionController(root,{
+            id:this.id+'-rate-interaction',capabilityController:capability,
+            resolveAction:event=>{
+                if(this.options.keyboard===false)return null;
+                const key=event.key;
+                if(key==='ArrowUp'||key==='Up'||key==='ArrowRight'||key==='Right')return 'RATE_UP';
+                if(key==='ArrowDown'||key==='Down'||key==='ArrowLeft'||key==='Left')return 'RATE_DOWN';
+                if(key==='Home')return 'RATE_HOME';
+                if(key==='End')return 'RATE_END';
+                if((key==='Delete'||key==='Backspace')&&this.options.clearable===true)return 'RATE_CLEAR';
+                return null;
+            },
+            operationOf:()=> 'select',
+            onAction:(action,context)=>{
+                const step=this.#stepSize();let next=null;
+                if(action==='RATE_UP')next=r.valueState.value+step;
+                else if(action==='RATE_DOWN')next=r.valueState.value-step;
+                else if(action==='RATE_HOME')next=this.options.clearable===true?0:step;
+                else if(action==='RATE_END')next=this.options.count;
+                else if(action==='RATE_CLEAR')next=0;
+                if(next===null)return 'pass';
+                return this.#setCommitted(next,{user:true,reason:'keyboard',source:'keyboard',originalEvent:context.originalEvent})?'handled':'blocked';
+            }
+        });
+        this.bindFeedbackControl({updateOptions:patch=>{root.classList.toggle('is-busy',patch.busy===true);root.classList.toggle('is-error',patch.status==='error');root.classList.toggle('is-warning',patch.status==='warning');}});
         r.formBridge=this.own(Control.createFormFieldBridge({root,target:opts.container,formField:opts.formField,document:doc,moveIntoRoot:false,projectLayout:Control.projectFormFieldLayout,name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,value:r.valueState.value,serializeValue:opts.serializeValue,getValue:()=>r.valueState.value,onReset:()=>this.#setCommitted(r.initialValue,{silent:true,source:'form',reason:'reset'})}));
         this.#rebuild();r.rendered=true;this.bindFocusTarget(root);return root;
     }
@@ -111,7 +138,7 @@ export class Rate extends FieldComponent {
     setValue(next,config={}){this.#setCommitted(next,{...config,reason:config.reason||'set-value',source:config.source||'api'});return this;}
     getValue(){return recordFor(this).valueState.value;}
     clear(config={}){this.#setCommitted(0,{...config,reason:config.reason||'clear',source:config.source||'api'});return this;}
-    focus(focusOptions){const r=recordFor(this);if(this.destroyed||!r.root||r.root.tabIndex<0)return false;DOM.focusElement(r.root,focusOptions||{preventScroll:true});return r.doc.activeElement===r.root;}
+    focus(focusOptions){const r=recordFor(this),controller=this.getFocusController();if(this.destroyed||!r.root||r.root.tabIndex<0)return false;if(controller)return controller.focus(focusOptions);DOM.focusElement(r.root,focusOptions||{preventScroll:true});return r.doc.activeElement===r.root;}
     blur(){const r=recordFor(this);if(this.destroyed||!r.root)return false;r.root.blur();return r.doc.activeElement!==r.root;}
     getState(){const r=recordFor(this),opts=this.options;return Object.freeze({value:r.valueState.value,hoverValue:r.hoverValue,count:opts.count,half:opts.half===true,clearable:opts.clearable===true,keyboard:opts.keyboard!==false,size:opts.size,mode:opts.mode,disabled:opts.disabled===true,readOnly:opts.readOnly===true,destroyed:this.destroyed});}
     getRootElement(){return recordFor(this).root;}
