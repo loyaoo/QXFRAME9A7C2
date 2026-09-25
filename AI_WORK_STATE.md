@@ -10,47 +10,45 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `865db8e8e2e45d7bd7cd45c1fb54fac58bc59233` (PR #95 merge)
-- Current branch: `refactor/phase-h-tags-taginput-r2-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-015 Tags/TagInput PR
-- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-013 branch; prune merged/superseded task branches after Phase H signoff
+- Last code-affecting main commit: `0d8044846fc3e02977c73d950a5cf88ef3d4159f` (PR #96 merge)
+- Current branch: `refactor/phase-h-autocomplete-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-016 Autocomplete PR
+- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-016 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #471 / `36088695602` (PR #95)
-- Latest green main CI + Pages: #472 / `36088993467`
+- Latest green Phase H PR CI: #477 / `36089782080` (PR #96)
+- Latest green main CI + Pages: #478 / `36090124257`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-015`
+- Current Task: `PHASE-H-016`
 
 ## CURRENT
 
-### PHASE-H-015 — Tags + TagInput V/F/I/C/S/O/B/R closeout
+### PHASE-H-016 — Autocomplete V/F/I/C/S/O/B/R closeout
 Status: IN_PROGRESS
-Task progress: 85%
+Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-014 is DONE through PR #95, exact-head CI #471 / `36088695602`, merge `865db8e8e2e45d7bd7cd45c1fb54fac58bc59233`, main release + Pages #472 / `36088993467`.
-- Collapse and Pagination are H accepted; target-matrix floors are 29 profiled / 24 complete.
+- PHASE-H-015 is DONE through PR #96, exact-head CI #477 / `36089782080`, merge `0d8044846fc3e02977c73d950a5cf88ef3d4159f`, main release + Pages #478 / `36090124257`.
+- Tags and TagInput are H accepted. Phase H target matrix after H-015 reports 30 profiled / 26 complete / 14 remaining public components.
 
-Implemented in current H-015 pack:
-- TokenInput tag list is now ValueController-owned instead of a plain writable tags array.
-- Tags dynamically binds exactly one public ValueController: checkable mode reuses its selection ValueController; ordinary tags mode reuses TokenInput ValueController with a value[] projection.
-- Tags no longer writes projected form values back into the domain ValueController; FormController is notified through the existing field registration while FormBridge remains the native carrier.
-- Tags declares the exact V/F/I/C/S/O/B/R profile; overflow Overlay ownership remains Popover→Trigger, and local visual feedback enters FieldComponent→FeedbackController.
-- FieldComponent now exposes a shared `bindFeedbackProjector()` helper and supports InteractionController scopes whose key dispatch is hosted by an outer composite, preventing duplicate key listeners.
-- TagInput binds its StateController value into FieldComponent instead of mirroring committed value.
-- TagInput no longer directly creates KeyboardNavigation; FieldComponent FocusController supplies virtual focus and FieldComponent InteractionController owns tag navigation semantics.
-- TagInput reuses Control's hosted Tags SelectionController and Control feedback projector instead of creating parallel Selection/Feedback state.
-- `verify:phase-h-tags-taginput` freezes the authority chain and forbids restored direct KeyboardNavigation / second SelectionController.
-- strict source-ESM Chromium verifies TagInput controller identity/navigation/capability/feedback plus Tags dynamic Value owner, overflow Overlay and feedback behavior.
-- target-matrix floors rise to 30 profiled / 26 complete.
+Implemented in current H-016 pack:
+- Autocomplete keeps its canonical ValueController and binds the same controller into FieldComponent; no second committed value owner is added.
+- Autocomplete keyboard/virtual-focus ownership now enters FieldComponent→FocusController→KeyboardRegion instead of directly creating KeyboardNavigation.
+- FocusController exposes the existing native text-editing preservation predicate so Home/End behavior remains shared without restoring a direct KeyboardNavigation import.
+- Autocomplete reuses the PopupFieldComponent→Trigger CapabilityController and expands that same controller for edit/clear/select policy; input, clear and suggestion commit paths are capability-gated.
+- OptionList remains the sole suggestion SelectionController and Autocomplete exposes that same instance instead of creating a second selection store.
+- local visible feedback binds through FieldComponent→FeedbackController; popup resource ownership remains PopupFieldComponent→Trigger→OverlayController; FormController remains the inherited FieldComponent registration authority.
+- Autocomplete now declares the exact handbook V/F/I/C/S/O/B/R profile and canonical owners.
+- `verify:phase-h-autocomplete` permanently rejects direct KeyboardNavigation/duplicate Selection/Feedback owners.
+- strict source-ESM Chromium verifies shared controller access, OptionList selection identity, feedback projection, keyboard open through FocusController and disabled clear blocking.
+- target-matrix `minimumComplete` rises from 26 to 27; `minimumProfiled` remains 30 because Autocomplete was already profiled.
 
 Next exact step:
-1. run final diff/self-audit and open PHASE-H-015 PR.
-2. require exact-head full release/browser/package CI.
-3. merge only exact-head green and verify main + Pages.
-4. mark Tags and TagInput H accepted.
-5. continue the next high-completion family; final broad audit remains reserved for Astra High.
+1. open PHASE-H-016 PR and require exact-head full release/browser/package CI.
+2. merge only green and verify main + Pages.
+3. mark Autocomplete H accepted.
+4. continue the remaining 13 components by highest shared-authority completion; final broad audit remains reserved for Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -80,6 +78,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-015 — Tags + TagInput V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #96 merged
+- merge commit `0d8044846fc3e02977c73d950a5cf88ef3d4159f`
+- exact-head CI #477 / `36089782080`: success
+- main CI + Pages #478 / `36090124257`: success
+Outcome:
+- TokenInput tag list is ValueController-owned; Tags binds exactly one canonical public ValueController per mode.
+- Tags and TagInput share the FieldComponent Focus/Interaction/Capability/Feedback/Form facades and the existing SelectionController/Popover overlay authorities without duplicate projectors or writable value stores.
+- ValueController binding now exposes the read-only canonical controller accessor required to verify owner identity rather than treating the binding wrapper as the owner.
+- strict browser/structural gates verify owner identity, disabled interaction blocking, feedback projection, selection/overlay identity and Form serialization.
+- target-matrix floor reaches 30 profiled / 26 complete.
+- Tags and TagInput are H accepted.
+
+
 
 ### PHASE-H-014 — Collapse + Pagination V/F/I/C(+M) closeout
 Status: DONE

@@ -13,7 +13,7 @@ import { ItemAccessors } from '../core/itemAccessors.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { FieldHost } from '../core/fieldHost.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
@@ -146,7 +146,7 @@ var selectionRangeScheduler = null;
           return true;
         }
         var currentItems = Array.isArray(opts.items) ? opts.items.slice() : [];
-        var optionList = null, triggerSession = null, keyboard = null, control = null;
+        var optionList = null, triggerSession = null, focusController = null, keyboard = null, control = null, capabilityController = null;
         var loading = false, suggestionTask = null, lastQuery = '', lastQueryContext = null;
         var backfillValue = null, backfillKey = null;
     
@@ -339,7 +339,7 @@ var selectionRangeScheduler = null;
         }
     
         function clear(meta) {
-          if (destroyed || CapabilityController.mutationLocked(opts)) return false;
+          if (destroyed || (capabilityController ? !capabilityController.can('clear') : CapabilityController.mutationLocked(opts))) return false;
           var previousValue = draftValue();
           var cfg = { source: meta && meta.source || 'instance', reason: meta && meta.reason || 'clear', originalEvent: meta && meta.originalEvent || null };
           var changed = writeValue('', cfg, true); clearBackfill();
@@ -353,7 +353,7 @@ var selectionRangeScheduler = null;
         }
     
         function commitSuggestion(detail) {
-          if (!detail || detail.selected === false) return false;
+          if (!detail || detail.selected === false || (capabilityController && !capabilityController.can('select'))) return false;
           var item = detail.item;
           var baseValue = itemAccessors.value(item, detail.index || 0, opts);
           var info = deriveQuery('select', detail.originalEvent || null);
@@ -442,12 +442,16 @@ var selectionRangeScheduler = null;
           onClose: function (detail) { clearBackfill(); syncControl(); emitOpen(false, detail); }
         });
         triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
+        capabilityController = triggerSession.getCapabilityController();
+        capabilityController.updateOptions({
+          capabilities: { expandable:true, activatable:true, editable:true, clearable:true, selectable:true }
+        });
     
         function open(reason, originalEvent) { return destroyed || opts.disabled === true || !canOpen(reason, originalEvent) ? false : triggerSession.open(reason || 'instance', originalEvent || null); }
         function close(reason, originalEvent) { return destroyed ? false : triggerSession.close(reason || 'instance', originalEvent || null); }
     
         function handleInput(next, event) {
-          if (CapabilityController.mutationLocked(opts)) return;
+          if (capabilityController ? !capabilityController.can('edit') : CapabilityController.mutationLocked(opts)) return;
           var previousValue = draftValue();
           var changed = writeValue(String(next || ''), { source: 'input', reason: 'input', originalEvent: event }, true); clearBackfill(); optionList.clear({ silent: true, source: 'input', reason: 'autocomplete-free-text' }); syncControl({ source: 'input', reason: 'input' });
           var info = deriveQuery('input', event);
@@ -485,12 +489,17 @@ var selectionRangeScheduler = null;
           onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
         });
     
+        if (control) instance.bindFeedbackControl(control);
         var keyboardTarget = headlessMode ? triggerTarget : (control && control.getFocusElement ? control.getFocusElement() : (input || triggerTarget || root));
-        keyboard = keyboardTarget ? KeyboardNavigation.create({
+        focusController = keyboardTarget ? instance.bindFocusController(keyboardTarget, {
+          document: doc,
+          manageTabIndex: false,
+          focusRoot: function () { return control && control.getFocusElement ? control.getFocusElement() : (input || triggerTarget || root); },
+          navigation: {
           root: keyboardTarget,
           focusRoot: function () { return control && control.getFocusElement ? control.getFocusElement() : (input || triggerTarget || root); },
           editableKeys: ['ArrowDown','ArrowUp','Enter','Escape','Home','End','PageUp','PageDown'],
-          allowEditableKey:function(key, detail){ if ((key === 'Home' || key === 'End') && KeyboardNavigation.shouldPreserveNativeTextEditing(detail.originalEvent, detail.target)) return false; return true; },
+          allowEditableKey:function(key, detail){ if ((key === 'Home' || key === 'End') && FocusController.shouldPreserveNativeTextEditing(detail.originalEvent, detail.target)) return false; return true; },
           handlers: {
             Escape: function (detail) { return triggerSession.getState().open ? close('escape', detail.originalEvent) : false; },
             ArrowDown: function (detail) { if (!triggerSession.getState().open) { if (!open('keyboard-down', detail.originalEvent)) return false; return true; } return optionList.handleKeydown(detail.originalEvent); },
@@ -501,8 +510,10 @@ var selectionRangeScheduler = null;
             PageUp: function (detail) { return triggerSession.getState().open && !loading ? optionList.handleKeydown(detail.originalEvent) : false; },
             PageDown: function (detail) { return triggerSession.getState().open && !loading ? optionList.handleKeydown(detail.originalEvent) : false; }
           }
+        }
         }) : null;
-        if (keyboard) { optionList.bindVirtualFocus(keyboard.virtualFocus); scope.add(function () { keyboard.destroy(); }); }
+        keyboard = focusController ? focusController.keyboard : null;
+        if (focusController) optionList.bindVirtualFocus(focusController.virtualFocus);
     
         function applyOptions(nextOptions) {
           if (destroyed) return instance;
@@ -518,6 +529,7 @@ var selectionRangeScheduler = null;
           if (suggestionOwnerChanged && suggestionTask && suggestionTask.pending) suggestionTask.cancel('autocomplete-options-replaced');
           if (suggestionOwnerChanged) setLoading(false);
           Utils.copyOwn(opts, next);
+          if (focusController) focusController.setDisabled(opts.disabled === true);
           var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }
           optionList.updateOptions(listOptions);
@@ -535,7 +547,7 @@ var selectionRangeScheduler = null;
     
         function disposeRuntime(reason) {
           if (destroyed) return false; destroyed = true; if (suggestionTask) { suggestionTask.destroy(); suggestionTask = null; } scope.dispose();
-          triggerSession = null;
+          triggerSession = null; capabilityController = null; focusController = null; keyboard = null;
           if (optionList) optionList.destroy(reason || 'autocomplete-destroy'); optionList = null;
           if (control) control.destroy(reason || 'autocomplete-destroy'); control = null;
           DOM.removeNode(panel); if (binding) binding.release(); binding = null;
@@ -561,6 +573,7 @@ var selectionRangeScheduler = null;
           refreshSuggestions: refreshSuggestions,
           getControl: function () { return control; },
           getOptionList: function () { return optionList; },
+          getSelectionController: function () { return optionList && optionList.getSelectionController ? optionList.getSelectionController() : null; },
           applyOptions: applyOptions,
           dispose: disposeRuntime
         });
@@ -574,9 +587,12 @@ export class Autocomplete extends PopupFieldComponent {
     value:Object.freeze({mode:'controlled-or-default',channels:Object.freeze(['committed','draft'])}),
     focus:Object.freeze({mode:'virtual-navigation'}),
     interaction:Object.freeze({keymap:'autocomplete'}),
+    capability:Object.freeze({mode:'popup-field-policy'}),
+    selection:Object.freeze({mode:'suggestion-selection'}),
     overlay:Object.freeze({mode:'popup'}),
+    feedback:Object.freeze({mode:'field-local'}),
     form:Object.freeze({serialize:true}),
-    ownership:Object.freeze({value:'ValueController',form:'FormController'})
+    ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
   });
   static contract = getContract('Autocomplete');
   static immutableOptions = Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
@@ -612,6 +628,7 @@ export class Autocomplete extends PopupFieldComponent {
   getState() { const r = runtimeState.get(this).runtime; return r ? r.getState() : Object.freeze({ open:false, destroyed:this.destroyed }); }
   getControl() { const r = runtimeState.get(this).runtime; return r ? r.getControl() : null; }
   getOptionList() { const r = runtimeState.get(this).runtime; return r ? r.getOptionList() : null; }
+  getSelectionController() { const r = runtimeState.get(this).runtime; return r ? r.getSelectionController() : null; }
   getRootElement() { const r = runtimeState.get(this).runtime; return r ? r.root : this.root; }
   getInputElement() { const r = runtimeState.get(this).runtime; return r ? r.input : null; }
   getPopupElement() { const r = runtimeState.get(this).runtime; return r ? r.panel : super.getPopupElement(); }
