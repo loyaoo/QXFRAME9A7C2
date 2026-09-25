@@ -1,4 +1,4 @@
-import { PickerComponent, pickerHooks } from './picker.js';
+import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { Calendar } from './calendar.js';
 import { PeriodPanel } from './period-panel.js';
@@ -1538,20 +1538,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
 export class DatePicker extends PickerComponent {
   static contract = getContract('DatePicker');
-  static profile = Object.freeze({
-    name:'DatePicker',
-    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview','rawInput']) }),
-    focus:Object.freeze({ mode:'virtual-navigation' }),
-    interaction:Object.freeze({ keymap:'picker' }),
-    capability:Object.freeze({ mode:'field-policy' }),
-    motion:Object.freeze({ mode:'popup-presence' }),
-    selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController', semantics:'draft-selected-keys' }),
-    overlay:Object.freeze({ mode:'popup' }),
-    feedback:Object.freeze({ mode:'field-local' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
-  });
-  static options = DATE_PICKER_DEFAULTS;
+  static profile = createPickerProfile('DatePicker', { channels:["committed","draft","preview","rawInput"], selection:'draft-selected-keys' });
+    static options = DATE_PICKER_DEFAULTS;
   static immutableOptions = DATE_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }
   static enhance(input, options) { return this.create(input, options || {}); }
