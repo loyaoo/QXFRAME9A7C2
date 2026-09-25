@@ -25,30 +25,34 @@
 ## CURRENT
 
 ### PHASE-H-013 — InputNumber + InputOTP + Rate + Slider V/F/I/C/B/R closeout
-Status: READY
-Task progress: 0%
+Status: IN_PROGRESS
+Task progress: 80%
 
 Completed prerequisite:
 - PHASE-H-012 is DONE through PR #92, exact-head CI #462 / `36085025052`, merge `120f57d98be4f95da53f5564a6f96332d787c15b`, main release + Pages #463 / `36085329998`.
-- DatePicker, TimePicker, ColorPicker and WheelPicker now match the handbook target combinations exactly and are H accepted.
-- PickerField owns one declared shared FocusController; PickerComponent shares V/F/I/C/M/O/B/R, Date/Time/Wheel add stable semantic SelectionController keys, and Color correctly has no Selection target.
-- the Phase H profile regression floor remains `minimumProfiled=23`; H-012 completed four already-profiled components rather than increasing the count of components that merely have any profile.
+- DatePicker, TimePicker, ColorPicker and WheelPicker are H accepted.
+- PickerField owns one declared shared FocusController; PickerComponent shares V/F/I/C/M/O/B/R; Date/Time/Wheel add stable semantic SelectionController keys without duplicating business value.
 
-Frozen H-013 impact map:
-- InputNumber, InputOTP, Rate and Slider have the same handbook target: Value / Focus / Interaction / Capability / Feedback / Form.
-- H-011 already gives InputOTP, Rate and Slider one canonical ValueController binding; InputNumber must expose/bind its existing NumericInput→StateController→ValueController rather than create a second value store.
-- H-004 already supplies the shared FieldComponent FormController path.
-- Focus/Interaction/Capability must enter controller facades without replacing component-specific execution stores such as NumericInput, PointerSession or slider handle state.
-- Feedback uses the shared FieldComponent local FeedbackController projection where a canonical Control exists; custom presentation must not invent a second business/task state.
-- controlled proposals must remain proposals; no Field/Form dirty commit before the owning ValueController accepts a committed value.
-- do not create a new generic controller bundle if the four components cannot genuinely share the same execution path.
+Implemented in current H-013 pack:
+- added one shared `createSimpleFieldProfile()` for the exact Value/Focus/Interaction/Capability/Feedback/Form target instead of four repeated profile regions.
+- FieldComponent now provides on-demand FocusController, InteractionController and CapabilityController bindings alongside the already accepted Value/Feedback/Form paths; components opt in explicitly rather than receiving hidden controllers.
+- specialized ValueControllers can disable the generic Field `options.value` rewrite; InputNumber, InputOTP, Rate and Slider now keep external sync in their canonical domain controller only.
+- NumericInput exposes its existing StateController→ValueController and external-value projector; InputNumber binds that exact controller into FieldComponent instead of retaining a second Field value owner.
+- InputNumber keyboard Enter/ArrowUp/ArrowDown semantics enter InteractionController; step/mutation enters the shared CapabilityController; Control is the feedback projector and the native NumericInput remains numeric execution authority.
+- Control segmented mode gives an owning component InteractionController first refusal before the compatibility fallback; InputOTP uses this for segment ArrowLeft/ArrowRight/Backspace navigation/edit semantics.
+- Rate routes keyboard selection through InteractionController, capability gates pointer/keyboard mutation, FocusController owns the root focus region, and local feedback projects to status/busy classes without a second rating store.
+- Slider keeps PointerSession, handle array and keyboard-session execution state, but handle keydown semantics now enter one root InteractionController and pointer/edit mutation is gated by the shared CapabilityController.
+- all four components use the same simple-field profile factory and expose real F/I/C/B controller instances at runtime.
+- `verify:phase-h-simple-fields` is required by full verify and rejects restored parallel Rate/Slider keydown owners or duplicate specialized external-value sync.
+- strict source-ESM Chromium coverage now checks shared controller identity, NumericInput canonical ValueController identity, keyboard routing, disabled blocking, OTP segment navigation and feedback projection.
+- Phase H regression floors are raised to `minimumProfiled=27` and `minimumComplete=22`; H-012 contributed four newly complete existing profiles and H-013 contributes four newly profiled + complete components.
 
 Next exact step:
-1. audit the four components' current focus/keyboard/pointer/capability/feedback paths against the target matrix.
-2. migrate shared base paths only where ownership is real; keep NumericInput/PointerSession/domain state as execution authorities.
-3. add one family verifier plus strict source-ESM browser coverage for keyboard, pointer, disabled/readOnly/loading, feedback and controlled proposal behavior.
-4. run exact-head full CI, merge only green, verify main + Pages.
-5. mark all four H accepted only if every target controller has a real path, not just profile metadata.
+1. open PHASE-H-013 PR and run exact-head full release/browser/package CI.
+2. fix only concrete CI regressions; do not broaden the pack.
+3. merge only exact-head green and verify main + Pages.
+4. mark InputNumber, InputOTP, Rate and Slider H accepted.
+5. continue the next shared family; leave final broad audit for the later Astra High acceptance pass.
 
 ## Current authority snapshot — after Phase A
 
