@@ -115,6 +115,7 @@ export class InputOTP extends FieldComponent {
         const initialValue = this.#sanitize(own(this.options, 'value') ? this.options.value : (own(this.options, 'defaultValue') ? this.options.defaultValue : ''));
         const valueState = this.own(StateController.create({ value: initialValue, controlled: own(this.options, 'value'), normalizeValue: value => this.#sanitize(value) }));
         record.valueState = valueState;
+        this.bindValueController(valueState);
         const adapter = { toValue: values => values.join(''), toSegments: value => this.#toSegments(value) };
         const formatSegment = (raw, index) => {
             const formatted = this.#applyFormatter(raw, { reason: 'segment', index });
@@ -135,7 +136,7 @@ export class InputOTP extends FieldComponent {
                 const meta = { silent: true, source: detail && detail.source || 'control', reason: detail && detail.reason || 'change', originalEvent: detail && detail.originalEvent || null };
                 valueState.requestChange(proposed, meta);
                 if (valueState.controlled) control.updateOptions({ value: valueState.value, committedValue: valueState.value });
-                else this.setFieldValue(valueState.value, { silent: true, force: true, reason: meta.reason });
+                else this.setFieldValue(valueState.value, { silent: true, force: true, sync: true, source: meta.source, reason: meta.reason });
                 this.#syncFocusPolicy();
                 const payload = { ...detail, controlled: valueState.controlled, proposedValue: proposed, instance: this };
                 if (typeof this.options.onChange === 'function') this.options.onChange(proposed, payload);
@@ -153,7 +154,7 @@ export class InputOTP extends FieldComponent {
         record.control = this.own(control);
         record.rendered = true;
         this.bindFocusTarget(control.getFocusElement ? control.getFocusElement() : null);
-        this.setFieldValue(initialValue, { silent: true, force: true });
+        this.setFieldValue(initialValue, { silent: true, force: true, sync: true, source: 'init', reason: 'otp-init' });
         if (this.options.autoFocus === true) {
             record.autoFocusScheduler = this.own(Scheduler.createDelayScheduler(() => { if (!this.destroyed) this.focus(); }));
             record.autoFocusScheduler.request(0, 'auto-focus');
@@ -175,7 +176,7 @@ export class InputOTP extends FieldComponent {
             const external = this.#sanitize(next.value);
             record.valueState.setControlled(true);
             record.valueState.syncExternal(external, { silent: true, source: 'options', reason: 'external-sync' });
-            this.setFieldValue(record.valueState.value, { silent: true, force: true, reason: 'external-sync' });
+            this.setFieldValue(record.valueState.value, { silent: true, force: true, sync: true, source: 'options', reason: 'external-sync' });
             update.value = record.valueState.value;
             update.committedValue = record.valueState.value;
         }
@@ -187,7 +188,7 @@ export class InputOTP extends FieldComponent {
         if (this.destroyed) return false;
         const record = state.get(this), next = this.#sanitize(value);
         record.valueState.setValue(next, { silent: true, source: 'api', reason: 'set-value' });
-        this.setFieldValue(record.valueState.value, { silent: true, force: true, reason: 'set-value' });
+        this.setFieldValue(record.valueState.value, { silent: true, force: true, sync: true, source: 'api', reason: 'set-value' });
         record.control.updateOptions(record.valueState.controlled ? { value: record.valueState.value, committedValue: record.valueState.value } : { value: record.valueState.value });
         this.#syncFocusPolicy();
         return this;
