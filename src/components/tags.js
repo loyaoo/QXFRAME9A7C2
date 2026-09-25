@@ -269,7 +269,7 @@ function setupTags(instance) {
     var values = normalizeStringArray(value, 'value');
     return opts.multiple === false ? values.slice(0, 1) : values;
   }
-  var selectionValueState = StateController.createOptionValueBinding(opts, source, normalizeSelectionValue);
+  var selectionValueState = StateController.createOptionValueBinding(opts, source, normalizeSelectionValue, { controlled:opts.controlled === true });
   scope.add(function () { if (selectionValueState) selectionValueState.destroy(); selectionValueState = null; });
   function selectionValue() { return selectionValueState ? selectionValueState.value : normalizeSelectionValue([]); }
   function syncSelectionProjection(reason) {
@@ -1407,8 +1407,8 @@ function setupTags(instance) {
       pruneSelection({ silent:true, reason:'items-prune', source:'options' });
       syncingItems = false;
     }
+    if (own(next, 'controlled')) selectionValueState.setControlled(opts.controlled === true);
     if (own(next, 'value')) {
-      selectionValueState.setControlled(true);
       selectionValueState.syncExternal(values, { silent:true, source:'options', reason:'options-value' });
       syncSelectionProjection('options-value');
     }

@@ -68,7 +68,7 @@ function create(options) {
   var initialCommitted = parseDate(opts.value !== undefined ? opts.value : opts.defaultValue);
   var valueState = StateController.create({
     value: initialCommitted,
-    controlled: Object.prototype.hasOwnProperty.call(Object(opts), 'value'),
+    controlled: opts.controlled === true,
     normalizeValue: function (next) { return next == null || next === '' ? null : parseDate(next); },
     equals: sameNullableDay,
     copyValue: cloneDate
@@ -455,7 +455,8 @@ function create(options) {
     if (destroyed) return api;
     var next = nextOptions || {}; opts = mergeOptions(opts, next);
     capabilityController.updateOptions({});
-    if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) { valueState.setControlled(true); setValue(next.value, { source: 'options', reason: 'controlled', silent: true }); }
+    if (Object.prototype.hasOwnProperty.call(Object(next), 'controlled')) valueState.setControlled(opts.controlled === true);
+    if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) { setValue(next.value, { source: 'options', reason: 'options-value', silent: true }); }
     if (Object.prototype.hasOwnProperty.call(Object(next), 'viewValue')) changeView(next.viewValue, { source: 'options', reason: 'controlled-view', silent: true });
     if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true);
     render(); if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);

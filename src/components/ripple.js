@@ -52,8 +52,10 @@ function enhance(element, options) {
   function isDisabled() {
     return destroyed || element.classList.contains('is-disabled') || element.classList.contains('is-loading') || element.hasAttribute('disabled');
   }
-  function addWaveWait(wave, done) {
-    var cancel = MotionController.waitMotionEnd(wave, 'animation', {}, done), list = waveCleanups.get(wave) || [];
+  function addWaveWait(wave, type, phase, done) {
+    var settings = { animationName:'qxframe9a7c2-ripple-' + type + '-' + phase };
+    if (type === 'inside') settings.pseudoElement = '::after';
+    var cancel = MotionController.waitMotionEnd(wave, 'animation', settings, done), list = waveCleanups.get(wave) || [];
     list.push(cancel); waveCleanups.set(wave, list); return cancel;
   }
   function disposeWave(wave) {
@@ -84,7 +86,7 @@ function enhance(element, options) {
     }
     if (state.color) wave.style.setProperty('--qxframe9a7c2-ripple-color', state.color);
     element.appendChild(wave); void wave.clientLeft;
-    addWaveWait(wave, function () {
+    addWaveWait(wave, type, 'enter', function () {
       if (!wave.isConnected) return;
       DOM.setPrivate(wave, 'filled', true);
       if (type === 'outside') disposeWave(wave);
@@ -100,11 +102,11 @@ function enhance(element, options) {
       function leave() {
         if (!wave.isConnected) return;
         wave.classList.add('is-leave');
-        addWaveWait(wave, function () { disposeWave(wave); });
+        addWaveWait(wave, 'inside', 'leave', function () { disposeWave(wave); });
       }
       if (DOM.getPrivate(wave, 'filled') === true) leave();
       else {
-        addWaveWait(wave, function () {
+        addWaveWait(wave, 'inside', 'enter', function () {
           if (!wave.isConnected) return;
           DOM.setPrivate(wave, 'filled', true);
           leave();

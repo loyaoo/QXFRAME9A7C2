@@ -160,8 +160,7 @@ export class Popover extends PopupComponent {
     setAction(value) { if (!this.destroyed) { this.updateOptions({ action: value }); if (this.getTrigger().getState().open) this.reposition('action'); } return this; }
     getState() {
         const record = requireState(this), popup = this.getPopupRuntimeState(), opts = this.options;
-        return Object.freeze({ open: popup.open, disabled: opts.disabled === true, trigger: popup.trigger.join(' '), placement: popup.placement, hasTitle: !record.title.hidden, hasAction: !record.action.hidden, destroyed: this.destroyed });
+        return Object.freeze({ open: popup.open, disabled: opts.disabled === true, trigger: popup.trigger.join(' '), placement: popup.placement, hasTitle: record.title.parentNode === record.container, hasAction: record.action.parentNode === record.container, destroyed: this.destroyed });
     }
-    // Frozen legacy Popover currently returns undefined here; preserve that API during structural migration.
-    getReferenceElement() { return undefined; }
+    getReferenceElement() { return super.getReferenceElement(); }
 }

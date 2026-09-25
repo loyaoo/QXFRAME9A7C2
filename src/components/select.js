@@ -119,7 +119,7 @@ var emitter = Object.freeze({ emit:function(type,payload){return instance.emit(t
           var values = asValues(value, opts.multiple === true);
           return opts.multiple === true ? values : values[0];
         }
-        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
+        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue, { controlled:opts.controlled === true });
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function restoreOptionListFromApiValue(reason) {
@@ -985,8 +985,8 @@ var controlHost = FieldHost.resolvePickerControl({
           Utils.copyOwn(opts, next);
           if (capabilityController) capabilityController.updateOptions({});
           if (focusController) focusController.setDisabled(opts.disabled === true);
+          if (hasOwn(next, 'controlled')) valueState.setControlled(opts.controlled === true);
           if (hasOwn(next, 'value')) {
-            valueState.setControlled(true);
             valueState.syncExternal(opts.value, { silent:true, source:'options', reason:'options-value', preserveDraft:true });
           } else if (hasOwn(next, 'multiple')) {
             valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });

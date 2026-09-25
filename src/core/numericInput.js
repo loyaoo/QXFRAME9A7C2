@@ -356,8 +356,8 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
         opts = previousOptions;
         throw error;
       }
+      if (hasOwn(next, 'controlled')) valueState.setControlled(opts.controlled === true);
       if (hasOwn(next, 'value')) {
-        valueState.setControlled(true);
         valueState.syncExternal(nextCanonical, { silent: true, reason: 'options-value', source: 'options' });
       } else if (currentValue() !== null) valueState.setValue(nextCanonical, { silent: true, reason: 'options-renormalize', source: 'options' });
       inputValue = nextDisplay;
@@ -370,7 +370,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
       var parsedInitial = parseDisplay(initial);
       initialValue = isCompleteDecimal(parsedInitial) ? normalizeCommitted(parsedInitial) : null;
     }
-    valueState = StateController.create({ value: initialValue, controlled: hasOwn(options || {}, 'value') });
+    valueState = StateController.create({ value: initialValue, controlled: options && options.controlled === true });
     inputValue = formatValue(currentValue(), false);
 
     api = Object.freeze({

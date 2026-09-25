@@ -1,305 +1,763 @@
 {
-  "version": 1,
+  "version": 2,
+  "generatedFrom": "ComponentRuntime.profileFor(name).ownership",
   "ownerKinds": [
-    "state-controller",
-    "selection",
-    "model",
-    "overlay",
-    "delegated",
-    "local-ephemeral",
-    "presentation"
+    "ValueController",
+    "FocusController",
+    "InteractionController",
+    "CapabilityController",
+    "MotionController",
+    "SelectionController",
+    "OverlayController",
+    "FeedbackController",
+    "FormController"
   ],
   "components": {
     "Autocomplete": {
-      "kind": "state-controller",
-      "primary": "StateController",
+      "primary": "ValueController",
       "secondary": [
-        "ItemCollection",
-        "AsyncTask"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "committed value; draft input is StateController draft/presentation"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Autocomplete\").ownership"
     },
     "Carousel": {
-      "kind": "local-ephemeral",
-      "primary": "CarouselSession",
-      "secondary": [],
-      "canonical": "current slide index/session; no value/defaultValue contract"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Carousel\").ownership"
     },
     "Cascader": {
-      "kind": "selection",
-      "primary": "Selection",
+      "primary": "ValueController",
       "secondary": [
-        "Collection",
-        "AsyncTask"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "selected values; path/search are presentation/session state"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Cascader\").ownership"
     },
     "Collapse": {
-      "kind": "model",
-      "primary": "Disclosure",
-      "secondary": [],
-      "canonical": "expanded keys"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Collapse\").ownership"
     },
     "ColorPicker": {
-      "kind": "state-controller",
-      "primary": "StateController",
+      "primary": "ValueController",
       "secondary": [
-        "ColorPanel",
-        "PickerField"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "committed/draft color value"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"ColorPicker\").ownership"
     },
     "DatePicker": {
-      "kind": "state-controller",
-      "primary": "StateController",
+      "primary": "ValueController",
       "secondary": [
-        "PickerField"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController",
+        "SelectionController"
       ],
-      "canonical": "picker draft/commit value; calendar/time selection remains specialized presentation"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController",
+        "selection": "SelectionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"DatePicker\").ownership"
     },
     "Drawer": {
-      "kind": "overlay",
-      "primary": "OverlayRuntime",
+      "primary": "OverlayController",
       "secondary": [
-        "Trigger"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "FeedbackController"
       ],
-      "canonical": "logical open lifecycle"
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Drawer\").ownership"
     },
     "Dropdown": {
-      "kind": "selection",
-      "primary": "Selection",
+      "primary": "ValueController",
       "secondary": [
-        "Tree",
-        "Trigger"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "SelectionController",
+        "OverlayController"
       ],
-      "canonical": "menu/dropdown selection"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Dropdown\").ownership"
     },
     "Image": {
-      "kind": "local-ephemeral",
-      "primary": "ImageSession",
-      "secondary": [],
-      "canonical": "load/preview session; no value/defaultValue contract"
+      "primary": "OverlayController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "FeedbackController"
+      ],
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Image\").ownership"
     },
     "InputNumber": {
-      "kind": "delegated",
-      "primary": "NumericInput",
+      "primary": "ValueController",
       "secondary": [
-        "StateController"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "NumericInput owns canonical numeric value and delegates value semantics to StateController"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"InputNumber\").ownership"
     },
     "InputOTP": {
-      "kind": "delegated",
-      "primary": "Control",
+      "primary": "ValueController",
       "secondary": [
-        "SegmentedInput"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "segmented input model owns canonical segment values"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"InputOTP\").ownership"
     },
     "JSON": {
-      "kind": "model",
-      "primary": "Tree",
+      "primary": "FeedbackController",
       "secondary": [
-        "Collection"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController"
       ],
-      "canonical": "JSON tree model/active navigation; no generic value owner"
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"JSON\").ownership"
     },
     "Loading": {
-      "kind": "presentation",
-      "primary": "LoadingSession",
-      "secondary": [],
-      "canonical": "visual busy projection; no business value"
+      "primary": "OverlayController",
+      "secondary": [
+        "CapabilityController",
+        "MotionController",
+        "FeedbackController"
+      ],
+      "ownership": {
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Loading\").ownership"
     },
     "Menu": {
-      "kind": "selection",
-      "primary": "Selection",
+      "primary": "ValueController",
       "secondary": [
-        "Tree"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "OverlayController"
       ],
-      "canonical": "selected menu keys; disclosure remains Tree/Disclosure-owned"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Menu\").ownership"
     },
     "Message": {
-      "kind": "delegated",
-      "primary": "NoticeService",
-      "secondary": [],
-      "canonical": "notice lifecycle owned by NoticeService"
+      "primary": "OverlayController",
+      "secondary": [
+        "MotionController",
+        "FeedbackController"
+      ],
+      "ownership": {
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Message\").ownership"
     },
     "Modal": {
-      "kind": "overlay",
-      "primary": "OverlayRuntime",
+      "primary": "OverlayController",
       "secondary": [
-        "Trigger"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "FeedbackController"
       ],
-      "canonical": "logical open/close lifecycle"
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Modal\").ownership"
     },
     "Notification": {
-      "kind": "delegated",
-      "primary": "NoticeService",
-      "secondary": [],
-      "canonical": "notice lifecycle owned by NoticeService"
+      "primary": "OverlayController",
+      "secondary": [
+        "MotionController",
+        "FeedbackController"
+      ],
+      "ownership": {
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Notification\").ownership"
     },
     "Pagination": {
-      "kind": "model",
-      "primary": "PaginationModel",
-      "secondary": [],
-      "canonical": "page/pageSize/count projection"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Pagination\").ownership"
     },
     "Popconfirm": {
-      "kind": "overlay",
-      "primary": "Popover",
+      "primary": "OverlayController",
       "secondary": [
-        "AsyncTask"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "FeedbackController"
       ],
-      "canonical": "logical open plus confirm async action"
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Popconfirm\").ownership"
     },
     "Popover": {
-      "kind": "overlay",
-      "primary": "Trigger",
-      "secondary": [],
-      "canonical": "logical open/close lifecycle"
+      "primary": "OverlayController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController"
+      ],
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Popover\").ownership"
     },
     "Progress": {
-      "kind": "presentation",
-      "primary": "ProgressProjection",
+      "primary": "FeedbackController",
       "secondary": [],
-      "canonical": "pure value-to-visual projection; caller owns value"
+      "ownership": {
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Progress\").ownership"
     },
     "Rate": {
-      "kind": "state-controller",
-      "primary": "StateController",
-      "secondary": [],
-      "canonical": "rating value/defaultValue and controlled requests"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "FeedbackController",
+        "FormController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Rate\").ownership"
     },
     "Result": {
-      "kind": "presentation",
-      "primary": "ResultProjection",
+      "primary": "FeedbackController",
       "secondary": [],
-      "canonical": "pure result presentation; no mutable business value"
+      "ownership": {
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Result\").ownership"
     },
     "Ripple": {
-      "kind": "presentation",
-      "primary": "PressInteraction",
-      "secondary": [],
-      "canonical": "press visual only; activation ownership is external"
+      "primary": "InteractionController",
+      "secondary": [
+        "CapabilityController",
+        "MotionController"
+      ],
+      "ownership": {
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Ripple\").ownership"
     },
     "Scroll": {
-      "kind": "model",
-      "primary": "ObserverHub",
+      "primary": "FocusController",
       "secondary": [
-        "PointerSession"
+        "InteractionController",
+        "CapabilityController",
+        "MotionController"
       ],
-      "canonical": "scroll viewport/session state"
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Scroll\").ownership"
     },
     "Select": {
-      "kind": "selection",
-      "primary": "Selection",
+      "primary": "ValueController",
       "secondary": [
-        "OptionList"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "selected option values"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Select\").ownership"
     },
     "Slider": {
-      "kind": "state-controller",
-      "primary": "StateController",
-      "secondary": [],
-      "canonical": "slider value/range value and continuous interaction draft"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "FeedbackController",
+        "FormController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Slider\").ownership"
     },
     "Sort": {
-      "kind": "model",
-      "primary": "Collection",
+      "primary": "ValueController",
       "secondary": [
-        "ReorderInteraction"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "SelectionController",
+        "OverlayController"
       ],
-      "canonical": "sortable collection/order state"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Sort\").ownership"
     },
     "Steps": {
-      "kind": "model",
-      "primary": "Collection",
-      "secondary": [],
-      "canonical": "step collection and current cursor"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "FeedbackController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Steps\").ownership"
     },
     "Table": {
-      "kind": "model",
-      "primary": "TableModel",
+      "primary": "ValueController",
       "secondary": [
-        "Selection",
-        "AsyncTask",
-        "ReorderInteraction"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "query/columns/rows/view state in TableModel; aggregate selection remains Table selection contract"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Table\").ownership"
     },
     "Tabs": {
-      "kind": "model",
-      "primary": "Collection",
-      "secondary": [],
-      "canonical": "tab collection plus stable active key"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "SelectionController",
+        "OverlayController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Tabs\").ownership"
     },
     "TagInput": {
-      "kind": "delegated",
-      "primary": "Tags",
-      "secondary": [],
-      "canonical": "tag values owned by Tags composition"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "FeedbackController",
+        "FormController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"TagInput\").ownership"
     },
     "Tags": {
-      "kind": "selection",
-      "primary": "Selection",
-      "secondary": [],
-      "canonical": "tag selection/value collection"
+      "primary": "ValueController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController"
+      ],
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Tags\").ownership"
     },
     "TimePicker": {
-      "kind": "state-controller",
-      "primary": "StateController",
+      "primary": "ValueController",
       "secondary": [
-        "PickerField",
-        "TimePanel"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController",
+        "SelectionController"
       ],
-      "canonical": "committed/draft time value"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController",
+        "selection": "SelectionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"TimePicker\").ownership"
     },
     "Tooltip": {
-      "kind": "overlay",
-      "primary": "Trigger",
-      "secondary": [],
-      "canonical": "logical open/close lifecycle"
+      "primary": "OverlayController",
+      "secondary": [
+        "MotionController"
+      ],
+      "ownership": {
+        "motion": "MotionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Tooltip\").ownership"
     },
     "Transfer": {
-      "kind": "selection",
-      "primary": "Selection",
+      "primary": "ValueController",
       "secondary": [
-        "Collection"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "FeedbackController",
+        "FormController",
+        "SelectionController"
       ],
-      "canonical": "target/source transfer selection and target order"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController",
+        "form": "FormController",
+        "selection": "SelectionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Transfer\").ownership"
     },
     "TreeSelect": {
-      "kind": "state-controller",
-      "primary": "StateController",
+      "primary": "ValueController",
       "secondary": [
-        "Tree",
-        "Selection"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "SelectionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController"
       ],
-      "canonical": "API value/controlled contract; Tree owns presentation/check navigation state"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"TreeSelect\").ownership"
     },
     "Trigger": {
-      "kind": "overlay",
-      "primary": "OverlayRuntime",
-      "secondary": [],
-      "canonical": "logical open/close and overlay interaction lifecycle"
+      "primary": "OverlayController",
+      "secondary": [
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController"
+      ],
+      "ownership": {
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Trigger\").ownership"
     },
     "Upload": {
-      "kind": "delegated",
-      "primary": "UploadLifecycle",
+      "primary": "ValueController",
       "secondary": [
-        "ReorderInteraction"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "FeedbackController",
+        "FormController",
+        "SelectionController",
+        "OverlayController"
       ],
-      "canonical": "file list/upload lifecycle"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "feedback": "FeedbackController",
+        "form": "FormController",
+        "selection": "SelectionController",
+        "overlay": "OverlayController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"Upload\").ownership"
     },
     "WheelPicker": {
-      "kind": "state-controller",
-      "primary": "StateController",
+      "primary": "ValueController",
       "secondary": [
-        "PickerField",
-        "WheelPanel"
+        "FocusController",
+        "InteractionController",
+        "CapabilityController",
+        "MotionController",
+        "OverlayController",
+        "FeedbackController",
+        "FormController",
+        "SelectionController"
       ],
-      "canonical": "committed/draft wheel-picker value"
+      "ownership": {
+        "value": "ValueController",
+        "focus": "FocusController",
+        "interaction": "InteractionController",
+        "capability": "CapabilityController",
+        "motion": "MotionController",
+        "overlay": "OverlayController",
+        "feedback": "FeedbackController",
+        "form": "FormController",
+        "selection": "SelectionController"
+      },
+      "canonical": "ComponentRuntime.profileFor(\"WheelPicker\").ownership"
     }
   }
 }

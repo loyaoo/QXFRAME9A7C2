@@ -67,7 +67,7 @@ export class FieldComponent extends Component {
         super(options);
         const valueController = ValueController.create({
             value: currentValue(this.options),
-            controlled: own(this.options, 'value'),
+            controlled: this.options.controlled === true,
             copyValue: cloneValue,
             equals: ValueEquality.deep
         });

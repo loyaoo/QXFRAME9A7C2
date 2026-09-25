@@ -60,7 +60,7 @@ function initializeDropdown(instance, options) {
     });
     return opts.multiple === true ? values : (values[0] === undefined ? null : values[0]);
   }
-  var valueState = StateController.createOptionValueBinding(opts, options || {}, normalizeApiValue);
+  var valueState = StateController.createOptionValueBinding(opts, options || {}, normalizeApiValue, { controlled:opts.controlled === true });
   var selectionController = SelectionController.create({
     channels: { selected: { multiple: opts.multiple === true, value: valueState.value } }
   });
@@ -522,8 +522,9 @@ function initializeDropdown(instance, options) {
     if (own(next, 'multiple') && next.multiple !== opts.multiple) throw new Error('[QXFRAME9A7C2] Dropdown multiple is immutable; destroy and recreate to change selection shape.');
     var rebuild = ['items','searchable','selectable','readOnly','size','selectionAppearance'].some(function (name) { return own(next, name); });
     Utils.copyOwn(opts, next);
+    if (own(next, 'controlled')) valueState.setControlled(opts.controlled === true);
     if (own(next, 'value')) {
-      valueState.setControlled(true);
+      
       valueState.syncExternal(next.value, { silent:true, source:'options', reason:'options-value' });
       syncSelectionProjection('options-value');
     }

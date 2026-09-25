@@ -327,7 +327,7 @@ function setupTable(instance) {
   var initialSelectedValue = normalizeTableValue(own(instance.options,'value') ? instance.options.value : opts.selectedKeys);
   valueBinding = ValueController.createValueBinding({
     value:initialSelectedValue,
-    controlled:own(instance.options,'value'),
+    controlled:instance.options.controlled===true,
     normalizeValue:normalizeTableValue,
     copyValue:function(value){ return normalizeTableValue(value); }
   });
@@ -2556,6 +2556,7 @@ function setupTable(instance) {
     if(own(next,'value')) candidate.selectedKeys=normalizeTableValue(next.value);
     var remoteSelectionContractChanged = own(next, 'remoteSelectionScope') || own(next, 'selectedKeys') || own(next,'value') || (own(next, 'load') && typeof candidate.load !== 'function');
     opts = candidate;
+    if(own(next,'controlled')) valueBinding.setControlled(candidate.controlled===true);
     if(own(next,'value')||own(next,'selectedKeys')){
       valueBinding.syncExternal(own(next,'value')?next.value:next.selectedKeys,{ silent:true, source:'options', reason:'selection-options' });
       opts.selectedKeys=valueBinding.value.slice(); opts.value=valueBinding.value.slice();

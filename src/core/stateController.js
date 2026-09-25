@@ -4,7 +4,7 @@ import { ValueController } from './valueController.js';
 
 function create(options) {
   const opts = mergeOptions({}, options);
-  if (!Object.prototype.hasOwnProperty.call(opts, 'controlled')) opts.controlled = Object.prototype.hasOwnProperty.call(opts, 'value');
+  if (!Object.prototype.hasOwnProperty.call(opts, 'controlled')) opts.controlled = false;
   return ValueController.create(opts);
 }
 

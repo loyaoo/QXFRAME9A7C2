@@ -35,7 +35,7 @@ sc.setAnchor('selected','a');const rev=sc.getDataRevision('selected');
 tags.setItems([{key:'b',value:'b',label:'B'},{key:'c',value:'c',label:'C'}],{silent:true,source:'verify',reason:'replace'});
 a(sc.getDataRevision('selected')>rev,'Tags data revision advances on silent item replacement');a(sc.getAnchor('selected')===null,'Tags stale anchor invalidated');a(tags.getSelection().values.length===0,'Tags selection pruned to current items');tags.destroy();
 let proposal=null;
-const controlled=Tags.create({document,container:host(),items:[{key:'a',value:'a',label:'A'},{key:'b',value:'b',label:'B'}],checkable:true,value:['a'],onChange(v,d){proposal={value:v.slice(),controlled:d&&d.valueControlled===true,proposed:Array.isArray(d&&d.proposedValue)?d.proposedValue.slice():null};}});
+const controlled=Tags.create({document,container:host(),items:[{key:'a',value:'a',label:'A'},{key:'b',value:'b',label:'B'}],checkable:true,controlled:true,value:['a'],onChange(v,d){proposal={value:v.slice(),controlled:d&&d.valueControlled===true,proposed:Array.isArray(d&&d.proposedValue)?d.proposedValue.slice():null};}});
 const csc=controlled.getSelectionController();a(csc.selected===controlled.getSelection(),'controlled Tags channel identity');
 controlled.toggle('b',true,{user:true,source:'keyboard',reason:'verify'});
 a(controlled.getState().value.join(',')==='a','controlled Tags must not internally commit');

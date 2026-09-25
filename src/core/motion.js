@@ -214,10 +214,10 @@ function listValue(list, index, fallback) {
   if (!list.length) return fallback;
   return list[index % list.length];
 }
-function motionTiming(element, properties) {
+function motionTiming(element, properties, pseudoElement) {
   var propertyFilter = propertyList(properties);
   var motionView = viewOfElement(element);
-  var computed = motionView && motionView.getComputedStyle ? motionView.getComputedStyle(element) : null;
+  var computed = motionView && motionView.getComputedStyle ? motionView.getComputedStyle(element, pseudoElement || null) : null;
   if (!computed) return { transition: [], animation: [], maxTransition: 0, maxAnimation: 0 };
   var transitionProperties = splitList(computed.transitionProperty);
   var tDurations = splitList(computed.transitionDuration).map(function (value) { return parseTime(value, false); });
@@ -265,7 +265,11 @@ function waitsForKind(type, kind) {
 function waitMotionEnd(element, type, options, done) {
   var settings = options || {};
   type = normalizeType(type, 'auto');
-  var timing = motionTiming(element, settings.properties);
+  var timing = motionTiming(element, settings.properties, settings.pseudoElement);
+  if (settings.animationName) {
+    timing.animation = timing.animation.filter(function (item) { return item.name === settings.animationName; });
+    timing.maxAnimation = timing.animation.reduce(function (value, item) { return Math.max(value, item.total); }, 0);
+  }
   var explicitDuration = settings.duration == null || settings.duration === '' ? null : finiteNumber(settings.duration);
   if (explicitDuration !== null && explicitDuration < 0) throw new TypeError('[QXFRAME9A7C2] MotionCore wait duration must be a finite non-negative millisecond value.');
   if (settings.duration != null && settings.duration !== '' && explicitDuration === null) throw new TypeError('[QXFRAME9A7C2] MotionCore wait duration must be a finite non-negative millisecond value.');
@@ -303,6 +307,8 @@ function waitMotionEnd(element, type, options, done) {
   }
   function onAnimationEnd(event) {
     if (explicitDuration !== null || event.target !== element || !waitsForKind(type, 'animation')) return;
+    if (settings.pseudoElement && event.pseudoElement !== settings.pseudoElement) return;
+    if (settings.animationName && event.animationName !== settings.animationName) return;
     var total = eventTotal(timing.animation, event.animationName || '');
     if (total < timing.maxAnimation - tolerance || elapsed() < timing.maxAnimation - tolerance) return;
     animationDone = true;

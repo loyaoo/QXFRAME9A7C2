@@ -35,12 +35,12 @@ assert.deepEqual(missing,[],'Phase I requires all 40 public components to match 
 
 const rows=acceptance.split(/\r?\n/).filter(line=>line.startsWith('| ')&&!line.startsWith('| ---')&&!line.startsWith('| Public component'));
 assert.equal(rows.length,40,'Acceptance ledger must contain exactly 40 public component rows.');
-const notHAccepted=rows.filter(line=>!line.endsWith('| H accepted; I pending |'));
-assert.deepEqual(notHAccepted,[],'Every public component must be H accepted before Phase I release handoff.');
+const notHAccepted=rows.filter(line=>!/\| H accepted; I (?:pending|accepted) \|$/.test(line));
+assert.deepEqual(notHAccepted,[],'Every public component must remain H accepted while Phase I acceptance advances from pending to accepted.');
 assert.match(acceptance,/40\/40/,'Acceptance ledger must state the 40/40 Phase H public-component result.');
 
-assert.match(workState,/- Current Phase: Phase I — release-integrity \+ Astra High handoff/,'AI_WORK_STATE must enter Phase I.');
-assert.match(workState,/- Current Task: `PHASE-I-001`/,'AI_WORK_STATE must point to PHASE-I-001.');
+assert.match(workState,/- Current Phase: Phase I — /,'AI_WORK_STATE must remain in the Phase I release/audit lifecycle until final acceptance is recorded.');
+assert.match(workState,/- Current Task: `[^`]+`/,'AI_WORK_STATE must declare the current Phase I task without freezing a historical checkpoint id.');
 const current=workState.split('## CURRENT')[1]?.split('## Current authority snapshot')[0]||'';
 assert.doesNotMatch(current,/### PHASE-H-027|Table is the last|pending PHASE-H-027/,'CURRENT checkpoint must not retain stale final-Table Phase H state.');
 assert.doesNotMatch(workState,/DatePicker\/TimePicker preset selection must respect `needConfirm`/,'Superseded needConfirm issue must not remain active after picker-family browser acceptance.');
