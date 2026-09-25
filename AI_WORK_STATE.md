@@ -10,22 +10,22 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: always query Git on resume; PR #111 is the latest accepted historical-regression remediation.
-- Current branch: `perf/core-safe-hotpaths-20260925`
-- Open PRs at this checkpoint: none after PR #111 merge; if Git differs, trust Git
+- Last code-affecting main commit: `fde8fe7eb9f6121da838c5a80006d6fd1f792ae3` (PR #113 squash merge).
+- Current branch: `main`
+- Open PRs at this checkpoint: none after PR #113 merge; if Git differs, trust Git
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green remediation PR CI: #522 / `36123086284` (PR #110 exact-head `78923e8d29dc8924a17cf2dbb55f7c704d6712c6`)
-- Latest green main CI + Pages: #523 / `36123503345` (`main@929c920808fefc9bb1d241df560b054f2ce6b3f7`)
-- Overall handbook implementation progress: 100% implementation complete; confirmed final-audit remediation is merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
-- Current Phase: pre-production core hotpath optimization
-- Current Task: `CORE-HOTPATH-BEHAVIOR-EQUIVALENCE`
+- Latest green code PR CI: #559 / `36149575692` (PR #113 exact-head `b38a20014cff63f4568966e4770674b9228ec5bf`)
+- Latest green code main CI + Pages: #560 / `36150117894` (`main@fde8fe7eb9f6121da838c5a80006d6fd1f792ae3`)
+- Overall handbook implementation progress: 100% implementation complete; historical-regression remediation and the pre-production hotpath pass are merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
+- Current Phase: post-hotpath final acceptance / newly confirmed findings only
+- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
 
 ## CURRENT
 
 ### CORE-HOTPATH-BEHAVIOR-EQUIVALENCE — pre-production performance/structure pass
-Status: IMPLEMENTED_VALIDATING_PR_113
+Status: DONE_MERGED_VERIFIED
 Scope:
 - preserve all current UI interaction semantics; no focus/selection/popup policy rewrite.
 - Selection membership diffs are linear while authored selection order is preserved.
@@ -42,11 +42,11 @@ Scope:
 - Collection snapshot semantics, full hierarchy rewrite, CSS mechanical dedupe and Tags overflow focus behavior are intentionally unchanged in this pass.
 
 Validation:
-- PR: #113 (`perf/core-safe-hotpaths-20260925` → `main`).
-- targeted verifier: tools/verify-core-hotpaths.mjs
-- CI #539 exposed retired ValueDraft/StateController runtime binding imports; runtime capability/manifest authority was migrated to ValueController.
-- CI #541 exposed remaining Calendar/Rate/Slider StateController imports; those components now use ValueController directly.
-- existing architecture/value/table/browser verification must pass on the final PR exact head before merge.
+- PR #113 merged by squash as `fde8fe7eb9f6121da838c5a80006d6fd1f792ae3`.
+- targeted verifier: `tools/verify-core-hotpaths.mjs`.
+- PR exact-head CI #559 / `36149575692` on `b38a20014cff63f4568966e4770674b9228ec5bf`: success.
+- main CI #560 / `36150117894` on `fde8fe7eb9f6121da838c5a80006d6fd1f792ae3`: release success, npm/dist/demo artifacts success, GitHub Pages artifact success, deploy-pages success.
+- CI during development exposed and removed all remaining `StateController` / `ValueDraft` runtime imports and stale controlled-reset browser expectations; final cleanroom reports zero legacy runtime markers.
 - Tags overflow summary remains intentionally non-focusable.
 
 ### HISTORICAL-REGRESSION-REMEDIATION-002 — v31/current shared state + focus defects
@@ -69,8 +69,9 @@ Current truth established by this remediation:
 
 Next exact step:
 1. continue Astra High acceptance only from current main and newly reproducible findings.
-2. do not restart Phase A-I or repeat the v31/current ownership audit from zero.
+2. do not restart Phase A-I, repeat PR #111 ownership work, or repeat PR #113 hotpath work from zero.
 3. preserve the Tags overflow non-focusable decision unless the user explicitly changes it.
+4. performance items intentionally deferred from PR #113 remain deferred unless new evidence justifies them: Collection snapshot/revision semantics, full Hierarchy architecture rewrite, global Table cell registry, and CSS mechanical dedupe.
 
 ## Current authority snapshot — after Phase A
 
