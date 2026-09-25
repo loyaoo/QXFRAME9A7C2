@@ -4,12 +4,17 @@ import { DOM } from './dom.js';
 import { URLPolicy } from '../utils/url.js';
 import { Renderer } from './renderer.js';
 import { AsyncAction } from './asyncAction.js';
+import { PressInteraction } from './pressInteraction.js';
+import { InteractionController } from './interactionController.js';
+import { FeedbackController } from './feedbackController.js';
 
 function renderValue(host,value,context,doc){var output=typeof value==='function'?value(context):value;Renderer.replace(host,output==null?'':output,doc);}
 function applyStyle(element,style){if(!style||typeof style!=='object')return;Object.keys(style).forEach(function(key){if(Utils.safeOwnKey(key))element.style[key]=style[key]==null?'':String(style[key]);});}
 function create(config) {
   var cfg=config||{}, doc=cfg.document, root=cfg.root, wrap=cfg.wrap, surface=cfg.surface, header=cfg.header, title=cfg.title, body=cfg.body, footer=cfg.footer, closeButton=cfg.closeButton;
-  var actionCleanups=[], closeGuard=false;
+  var actionCleanups=[], actionCapabilities=[], actionFeedback=[], closeGuard=false;
+  var interactionController=InteractionController.create();
+  var closePress=null;
   function options(){return typeof cfg.getOptions==='function'?cfg.getOptions():(cfg.options||{});}
   function api(){return typeof cfg.getApi==='function'?cfg.getApi():cfg.api;}
   function buttons(){var value=typeof cfg.getButtons==='function'?cfg.getButtons():cfg.buttons;return Array.isArray(value)?value:[];}
@@ -42,7 +47,7 @@ function create(config) {
     return surface.querySelector('button:not([disabled]),a[href]:not([tabindex="-1"]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')||surface;
   }
   function overlayOptions(extra){var opts=options(), add=extra||{};return Utils.assignOwn({floating:root,document:doc,portalContainer:cfg.portalContainer,position:false,closeOnOutsidePress:false,closeOnEscape:opts.closeOnEscape,trapFocus:opts.focusTrap,lockScroll:opts.lockScroll,initialFocus:initialFocus,focusOnActivate:opts.autoFocus!==false,restoreFocus:opts.restoreFocus,destroyOnDeactivate:opts.destroyOnHidden===true,zIndex:opts.zIndex,layerKind:'modal',componentType:cfg.componentType||'Overlay'},add);}
-  function clearActions(){actionCleanups.splice(0).forEach(function(dispose){try{dispose();}catch(error){}});}
+  function clearActions(){actionCleanups.splice(0).forEach(function(dispose){try{dispose();}catch(error){}});actionCapabilities.length=0;actionFeedback.length=0;}
   function buttonDisabled(buttonConfig,data){return typeof buttonConfig.disabled==='function'?buttonConfig.disabled(data)!==false:buttonConfig.disabled===true;}
   function createActionButton(buttonConfig){
     var link=!!buttonConfig.href, element=doc.createElement(link?'a':'button');
@@ -52,18 +57,60 @@ function create(config) {
     else element.type=buttonConfig.buttonType||'button';
     if(buttonConfig.attrs&&typeof buttonConfig.attrs==='object')DOM.applySafeAttributes(element,buttonConfig.attrs,{blocked:['href','target','rel']});
     applyStyle(element,buttonConfig.style);
+    var action=null, feedback=null;
     var data={instance:api(),event:null,button:element,config:buttonConfig,buttonConfig:buttonConfig,close:function(reason){if(typeof cfg.close==='function')return cfg.close(reason||buttonConfig.role||'button',data.event);},setLoading:function(active){element.classList.toggle('is-loading',active===true);if(!link)element.disabled=active===true||buttonDisabled(buttonConfig,data);}};
     var disabled=buttonDisabled(buttonConfig,data);
     if(link){element.classList.toggle('is-disabled',disabled);if(disabled)element.tabIndex=-1;else element.removeAttribute('tabindex');}
     else element.disabled=disabled;
     renderValue(element,buttonConfig.content,data,doc);
-    var action=AsyncAction.create({
+    function projectFeedback(snapshot){
+      var pending=snapshot.status==='pending'||snapshot.status==='progress';
+      data.setLoading(pending);
+      return element;
+    }
+    if(buttonConfig.autoLoading){
+      feedback=FeedbackController.createForProjector(Object.freeze({
+        show:function(snapshot){return projectFeedback(snapshot);},
+        update:function(_handle,snapshot){return projectFeedback(snapshot);},
+        close:function(){data.setLoading(false);return true;}
+      }),{ownerId:String((api()&&api().id)||cfg.componentType||'overlay')+':button:'+String(buttonConfig.key)},'local');
+      actionFeedback.push(feedback);
+    }
+    function publishFeedback(state,detail){
+      if(!feedback)return;
+      var status=String(state&&state.state||'idle');
+      if(status==='cancelled'||status==='destroyed')status='idle';
+      feedback.publish({
+        operation:String(buttonConfig.role||buttonConfig.key||'button'),
+        status:status,
+        requestId:String(state&&state.requestId||0),
+        generation:Number(state&&state.requestId)||0,
+        message:String(buttonConfig.content==null?'':buttonConfig.content),
+        target:'local'
+      },{source:detail&&detail.source||'programmatic',reason:'overlay-action-'+status});
+    }
+    action=AsyncAction.create({
       action:function(input){data.event=input&&input.event||null;if(buttonDisabled(buttonConfig,data))return false;if(typeof buttonConfig.onClick==='function')return buttonConfig.onClick(data);if(typeof cfg.invokeCallback==='function'&&(buttonConfig.role==='confirm'||buttonConfig.role==='ok'||buttonConfig.role==='submit'))return cfg.invokeCallback('onConfirm',data);if(typeof cfg.invokeCallback==='function'&&(buttonConfig.role==='cancel'||buttonConfig.role==='close'))return cfg.invokeCallback('onCancel',data);return true;},
-      onStateChange:function(state){if(!(typeof cfg.isDestroyed==='function'&&cfg.isDestroyed())&&buttonConfig.autoLoading)data.setLoading(state.pending===true);},
+      onStateChange:function(state,detail){if(!(typeof cfg.isDestroyed==='function'&&cfg.isDestroyed()))publishFeedback(state,detail);},
       onError:function(error){if(typeof cfg.isDestroyed==='function'&&cfg.isDestroyed())return;var detail={error:error,role:buttonConfig.role||'button',key:buttonConfig.key,button:element,config:buttonConfig,instance:api()};if(typeof buttonConfig.onError==='function')buttonConfig.onError(error,detail);if(typeof cfg.emitActionError==='function')cfg.emitActionError(detail);}
     });
+    function runAction(event,source){
+      data.event=event||null;
+      if(buttonDisabled(buttonConfig,data)||action.snapshot().pending)return false;
+      action.run({event:event||null},{source:source||DOM.activationSource(event)}).then(function(resolved){if((typeof cfg.isDestroyed==='function'&&cfg.isDestroyed())||action.snapshot().destroyed)return;if(resolved!==false&&buttonConfig.closeOnClick&&typeof cfg.close==='function')cfg.close(buttonConfig.role||'button',event||null);},function(){});
+      return true;
+    }
+    var press=PressInteraction.create({
+      target:element,
+      interactionController:interactionController,
+      getState:function(){return {disabled:buttonDisabled(buttonConfig,data),loading:!!(action&&action.snapshot().pending)};},
+      capabilities:{activatable:true,preserveFocusWhileLoading:true,tabbableWhileLoading:true},
+      onPress:function(detail){return runAction(detail&&detail.originalEvent||null,detail&&detail.source||'programmatic');}
+    });
+    actionCapabilities.push(press.getCapabilityController());
+    actionCleanups.push(function(){press.destroy();});
     actionCleanups.push(function(){action.destroy();});
-    actionCleanups.push(DOM.listen(element,'click',function(event){data.event=event;if(buttonDisabled(buttonConfig,data)||action.snapshot().pending){event.preventDefault();return;}action.run({event:event},{source:DOM.activationSource(event)}).then(function(resolved){if((typeof cfg.isDestroyed==='function'&&cfg.isDestroyed())||action.snapshot().destroyed)return;if(resolved!==false&&buttonConfig.closeOnClick&&typeof cfg.close==='function')cfg.close(buttonConfig.role||'button',event);},function(){});}));
+    if(feedback)actionCleanups.push(function(){feedback.destroy();});
     return element;
   }
   function renderFooter(resolveButtons){
@@ -84,8 +131,17 @@ function create(config) {
       return true;
     }finally{closeGuard=false;}
   }
+  closePress=PressInteraction.create({
+    target:closeButton,
+    interactionController:interactionController,
+    getState:function(){return {disabled:closeButton.disabled===true||closeButton.hidden===true};},
+    capabilities:{activatable:true,preserveFocusWhileLoading:true,tabbableWhileLoading:true},
+    onPress:function(detail){if(typeof cfg.close==='function')cfg.close('x',detail&&detail.originalEvent||null);}
+  });
   function disposeFrame(reason){
     clearActions();
+    if(closePress){closePress.destroy();closePress=null;}
+    interactionController.destroy();
     var why=reason||'destroy', contentHost=typeof cfg.getContentHost==='function'?cfg.getContentHost():cfg.contentHost;
     Renderer.dispose(title);if(contentHost)Renderer.dispose(contentHost);Renderer.dispose(footer);Renderer.dispose(closeButton);
     var scope=typeof cfg.getScope==='function'?cfg.getScope():cfg.scope;if(scope&&typeof scope.dispose==='function')scope.dispose();
@@ -98,8 +154,8 @@ function create(config) {
     if(typeof cfg.afterDestroy==='function')cfg.afterDestroy(why);
     return true;
   }
-  function destroy(){clearActions();}
-  return Object.freeze({closeConfig:closeConfig,syncCloseButton:syncCloseButton,syncChrome:syncChrome,initialFocus:initialFocus,overlayOptions:overlayOptions,renderValue:function(host,value,context){renderValue(host,value,context,doc);},applyStyle:applyStyle,clearActions:clearActions,createActionButton:createActionButton,renderFooter:renderFooter,requestClose:requestClose,isClosing:function(){return closeGuard;},disposeFrame:disposeFrame,destroy:destroy});
+  function destroy(){clearActions();if(closePress){closePress.destroy();closePress=null;}interactionController.destroy();}
+  return Object.freeze({closeConfig:closeConfig,syncCloseButton:syncCloseButton,syncChrome:syncChrome,initialFocus:initialFocus,overlayOptions:overlayOptions,renderValue:function(host,value,context){renderValue(host,value,context,doc);},applyStyle:applyStyle,clearActions:clearActions,createActionButton:createActionButton,renderFooter:renderFooter,requestClose:requestClose,isClosing:function(){return closeGuard;},getInteractionController:function(){return interactionController;},getCapabilityControllers:function(){var result=[];if(closePress&&closePress.getCapabilityController)result.push(closePress.getCapabilityController());return Object.freeze(result.concat(actionCapabilities));},getFeedbackControllers:function(){return Object.freeze(actionFeedback.slice());},disposeFrame:disposeFrame,destroy:destroy});
 }
 
 export const OverlayFrameShell = Object.freeze({ create });
