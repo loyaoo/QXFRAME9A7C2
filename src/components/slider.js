@@ -240,11 +240,7 @@ function createRuntime(instance, prepared) {
         operationOf:action=>action==='CANCEL_EDIT'?'abort':(action==='REMOVE'?'remove':'edit'),
         onAction:handleControllerAction
     });
-    instance.bindFeedbackProjector(Object.freeze({
-        show:snapshot=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
-        update:(_handle,snapshot)=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
-        close:()=>{root.classList.remove('is-loading','is-error','is-warning');return true;}
-    }));
+    instance.bindFeedbackClasses(root);
     return {
         get root(){return root;},
         setValue(next,config){setValues(next,Utils.mergeOwn(config||{},{reason:(config&&config.reason)||'set-value'}));return api;},
