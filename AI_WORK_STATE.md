@@ -10,46 +10,47 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `5a77fd6a5e7e757ba2f20a552e4cc151305b6891` (PR #93 merge)
-- Current branch: `refactor/phase-h-collapse-pagination-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-014 Collapse/Pagination PR
+- Last code-affecting main commit: `865db8e8e2e45d7bd7cd45c1fb54fac58bc59233` (PR #95 merge)
+- Current branch: `refactor/phase-h-tags-taginput-r2-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-015 Tags/TagInput PR
 - Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-013 branch; prune merged/superseded task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #467 / `36086835393` (PR #93)
-- Latest green main CI + Pages: #468 / `36087140788`
+- Latest green Phase H PR CI: #471 / `36088695602` (PR #95)
+- Latest green main CI + Pages: #472 / `36088993467`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-014`
+- Current Task: `PHASE-H-015`
 
 ## CURRENT
 
-### PHASE-H-014 — Collapse + Pagination V/F/I/C(+M) closeout
+### PHASE-H-015 — Tags + TagInput V/F/I/C/S/O/B/R closeout
 Status: IN_PROGRESS
 Task progress: 85%
 
 Completed prerequisite:
-- PHASE-H-013 is DONE through PR #93, exact-head CI #467 / `36086835393`, merge `5a77fd6a5e7e757ba2f20a552e4cc151305b6891`, main release + Pages #468 / `36087140788`.
-- InputNumber, InputOTP, Rate and Slider are H accepted for the exact V/F/I/C/B/R target.
-- Phase H target matrix currently reports 27 profiled / 22 complete public components before this H-014 pack.
+- PHASE-H-014 is DONE through PR #95, exact-head CI #471 / `36088695602`, merge `865db8e8e2e45d7bd7cd45c1fb54fac58bc59233`, main release + Pages #472 / `36088993467`.
+- Collapse and Pagination are H accepted; target-matrix floors are 29 profiled / 24 complete.
 
-Implemented in current H-014 pack:
-- PaginationModel page state is now StateController→ValueController-owned instead of a plain page variable; Pagination exposes that canonical ValueController.
-- Pagination focus/keyboard region enters FocusController and jumper mutation is gated by CapabilityController; the direct KeyboardNavigation import is removed.
-- Collapse open-key state remains StateController→ValueController-owned; header navigation enters FocusController and activation policy enters CapabilityController.
-- Collapse panel presence remains Transition→MotionController, preserving the already accepted rapid-reversal fix and adding no timer/generation workaround.
-- both components declare exact handbook profiles: Pagination V/F/I/C and Collapse V/F/I/C/M.
-- Interaction ownership is the shared semantic path `FocusController → KeyboardRegion → KeyboardNavigation → InteractionController.resolveKeyboardAction()`; no second keydown listener/controller is added.
-- `verify:phase-h-collapse-pagination` freezes the authority chain and rejects restored direct KeyboardNavigation imports.
-- strict source-ESM Chromium verifies canonical ValueController updates, shared keyboard semantics and disabled capability blocking.
-- target-matrix floors rise from 27/22 to 29 profiled / 24 complete.
+Implemented in current H-015 pack:
+- TokenInput tag list is now ValueController-owned instead of a plain writable tags array.
+- Tags dynamically binds exactly one public ValueController: checkable mode reuses its selection ValueController; ordinary tags mode reuses TokenInput ValueController with a value[] projection.
+- Tags no longer writes projected form values back into the domain ValueController; FormController is notified through the existing field registration while FormBridge remains the native carrier.
+- Tags declares the exact V/F/I/C/S/O/B/R profile; overflow Overlay ownership remains Popover→Trigger, and local visual feedback enters FieldComponent→FeedbackController.
+- FieldComponent now exposes a shared `bindFeedbackProjector()` helper and supports InteractionController scopes whose key dispatch is hosted by an outer composite, preventing duplicate key listeners.
+- TagInput binds its StateController value into FieldComponent instead of mirroring committed value.
+- TagInput no longer directly creates KeyboardNavigation; FieldComponent FocusController supplies virtual focus and FieldComponent InteractionController owns tag navigation semantics.
+- TagInput reuses Control's hosted Tags SelectionController and Control feedback projector instead of creating parallel Selection/Feedback state.
+- `verify:phase-h-tags-taginput` freezes the authority chain and forbids restored direct KeyboardNavigation / second SelectionController.
+- strict source-ESM Chromium verifies TagInput controller identity/navigation/capability/feedback plus Tags dynamic Value owner, overflow Overlay and feedback behavior.
+- target-matrix floors rise to 30 profiled / 26 complete.
 
 Next exact step:
-1. run final diff/self-audit and open PHASE-H-014 PR.
+1. run final diff/self-audit and open PHASE-H-015 PR.
 2. require exact-head full release/browser/package CI.
-3. merge only green and verify main + Pages.
-4. mark Collapse and Pagination H accepted.
-5. continue the next high-completion shared family; final broad audit remains reserved for Astra High.
+3. merge only exact-head green and verify main + Pages.
+4. mark Tags and TagInput H accepted.
+5. continue the next high-completion family; final broad audit remains reserved for Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,6 +80,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-014 — Collapse + Pagination V/F/I/C(+M) closeout
+Status: DONE
+Evidence:
+- PR #95 merged
+- merge commit `865db8e8e2e45d7bd7cd45c1fb54fac58bc59233`
+- exact-head CI #471 / `36088695602`: success
+- main CI + Pages #472 / `36088993467`: success
+Outcome:
+- Collapse declares exact V/F/I/C/M ownership; open-key state remains StateController→ValueController, navigation enters FocusController and activation is capability-gated.
+- Collapse motion remains Transition→MotionController with the existing rapid-reversal fix unchanged.
+- Pagination declares exact V/F/I/C ownership; page state is StateController→ValueController, focus/keyboard region enters FocusController and jumper edit is capability-gated.
+- shared keyboard semantics continue through KeyboardNavigation→InteractionController resolver without a second keydown owner.
+- Collapse and Pagination are H accepted.
+- target-matrix floors are 29 profiled / 24 complete.
+
+
 
 ### PHASE-H-013 — InputNumber + InputOTP + Rate + Slider V/F/I/C/B/R closeout
 Status: DONE

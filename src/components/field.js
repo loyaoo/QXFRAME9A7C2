@@ -176,7 +176,7 @@ export class FieldComponent extends Component {
             capability: settings.capabilityController || record.capabilityController || null,
             onAction: settings.onAction
         });
-        const unlisten = DOM.listen(root, 'keydown', event => controller.dispatch(event, { ownerId:scopeId, source:'keyboard' }));
+        const unlisten = settings.listen === false ? (() => {}) : DOM.listen(root, 'keydown', event => controller.dispatch(event, { ownerId:scopeId, source:'keyboard' }));
         let destroyed = false;
         const binding = {
             controller,
@@ -239,13 +239,22 @@ export class FieldComponent extends Component {
         return controller;
     }
 
-    bindFeedbackControl(control, options = {}) {
+    bindFeedbackProjector(projector, options = {}) {
         if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FeedbackController to a destroyed FieldComponent.');
-        if (!control || (typeof control.updateOptions !== 'function' && typeof control.setStatus !== 'function')) throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback control must expose updateOptions() or setStatus().');
+        if (!projector || typeof projector.show !== 'function' || typeof projector.update !== 'function' || typeof projector.close !== 'function') throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback projector must expose show/update/close.');
         const record = fieldState.get(this);
         if (record.feedbackController) record.feedbackController.destroy();
         record.feedbackController = null;
-        record.feedbackControl = control;
+        const settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        record.feedbackControl = settings.control || null;
+        const controller = FeedbackController.createForProjector(projector, { ownerId: String(settings.ownerId || this.id) }, 'local');
+        record.feedbackController = this.own(controller);
+        return controller;
+    }
+
+    bindFeedbackControl(control, options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FeedbackController to a destroyed FieldComponent.');
+        if (!control || (typeof control.updateOptions !== 'function' && typeof control.setStatus !== 'function')) throw new TypeError('[QXFRAME9A7C2] FieldComponent feedback control must expose updateOptions() or setStatus().');
         const instance = this;
         const settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
         const apply = snapshot => {
@@ -270,9 +279,7 @@ export class FieldComponent extends Component {
                 return true;
             }
         });
-        const controller = FeedbackController.createForProjector(projector, { ownerId: String(settings.ownerId || this.id) }, 'local');
-        record.feedbackController = this.own(controller);
-        return controller;
+        return this.bindFeedbackProjector(projector, { ...settings, control });
     }
 
     getFeedbackController() { return fieldState.get(this).feedbackController; }
