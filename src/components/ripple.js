@@ -3,6 +3,7 @@ import { DOM } from '../core/dom.js';
 import { Config } from '../core/config.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { PressInteraction } from '../core/pressInteraction.js';
+import { MotionController } from '../core/motionController.js';
 
 var instances = new WeakMap();
 var waveCleanups = new WeakMap();
@@ -51,9 +52,9 @@ function enhance(element, options) {
   function isDisabled() {
     return destroyed || element.classList.contains('is-disabled') || element.classList.contains('is-loading') || element.hasAttribute('disabled');
   }
-  function addWaveListener(wave, eventName, handler) {
-    var remove = DOM.listen(wave, eventName, handler), list = waveCleanups.get(wave) || [];
-    list.push(remove); waveCleanups.set(wave, list); return remove;
+  function addWaveWait(wave, done) {
+    var cancel = MotionController.waitMotionEnd(wave, 'animation', {}, done), list = waveCleanups.get(wave) || [];
+    list.push(cancel); waveCleanups.set(wave, list); return cancel;
   }
   function disposeWave(wave) {
     var list = waveCleanups.get(wave) || [];
@@ -83,10 +84,10 @@ function enhance(element, options) {
     }
     if (state.color) wave.style.setProperty('--qxframe9a7c2-ripple-color', state.color);
     element.appendChild(wave); void wave.clientLeft;
-    var enterName = 'qxframe9a7c2-ripple-' + type + '-enter';
-    var removeEnter = addWaveListener(wave, 'animationend', function onEnter(eventObject) {
-      if (eventObject.animationName !== enterName) return;
-      DOM.setPrivate(wave, 'filled', true); removeEnter(); if (type === 'outside') disposeWave(wave);
+    addWaveWait(wave, function () {
+      if (!wave.isConnected) return;
+      DOM.setPrivate(wave, 'filled', true);
+      if (type === 'outside') disposeWave(wave);
     });
     return wave;
   }
@@ -99,16 +100,14 @@ function enhance(element, options) {
       function leave() {
         if (!wave.isConnected) return;
         wave.classList.add('is-leave');
-        var removeLeave = addWaveListener(wave, 'animationend', function (eventObject) {
-          if (eventObject.animationName !== 'qxframe9a7c2-ripple-inside-leave') return;
-          removeLeave(); disposeWave(wave);
-        });
+        addWaveWait(wave, function () { disposeWave(wave); });
       }
       if (DOM.getPrivate(wave, 'filled') === true) leave();
       else {
-        var removeWait = addWaveListener(wave, 'animationend', function (eventObject) {
-          if (eventObject.animationName !== 'qxframe9a7c2-ripple-inside-enter') return;
-          removeWait(); DOM.setPrivate(wave, 'filled', true); leave();
+        addWaveWait(wave, function () {
+          if (!wave.isConnected) return;
+          DOM.setPrivate(wave, 'filled', true);
+          leave();
         });
       }
     });
@@ -138,6 +137,9 @@ function enhance(element, options) {
     updateOptions: function (next) { if (destroyed) return false; state = normalize(next, state); return api.getState(); },
     getState: function () { return Object.freeze({ inside:state.inside, outside:state.outside, color:state.color, waveCount:destroyed?0:element.querySelectorAll('.qxframe9a7c2-ripple-wave').length, disabled:isDisabled(), motionEnabled:motionEnabled(), destroyed:destroyed }); },
     getRootElement: function () { return element; },
+    getInteractionController: function () { return pressInteraction ? pressInteraction.getInteractionController() : null; },
+    getCapabilityController: function () { return pressInteraction ? pressInteraction.getCapabilityController() : null; },
+    getMotionController: function () { return MotionController; },
     destroy: function () {
       if (destroyed) return false;
       clear(); destroyed = true; scope.dispose(); element.classList.remove('qxframe9a7c2-ripple-host'); instances.delete(element); return true;
@@ -223,6 +225,13 @@ function startAutoEnhance() {
 
 export const Ripple = Object.freeze({
     definition: Object.freeze({ initializer: Object.freeze({ mode: 'enhance' }) }),
+    profile: Object.freeze({
+      name:'Ripple',
+      interaction:Object.freeze({ mode:'press-semantics' }),
+      capability:Object.freeze({ mode:'activation-policy' }),
+      motion:Object.freeze({ mode:'css-animation-lifecycle' }),
+      ownership:Object.freeze({ interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController' })
+    }),
     defaults: DEFAULTS,
     enhance
 });
