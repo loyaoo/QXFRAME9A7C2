@@ -559,7 +559,7 @@ var selectionRangeScheduler = null;
     
     
     
-        if (control && control.onFormReset) control.onFormReset(function () { setValue(initialValue, { silent: true, source: 'form', reason: 'reset' }); });
+        if (control && control.onFormReset) control.onFormReset(function () { valueState.reset({ silent:true, source:'form', reason:'reset' }); clearBackfill(); syncControl(); instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:'form', reason:'reset' }); });
         syncControl();
         instance.bindFocusTarget(input || triggerTarget || root);
         instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:'init', reason:'autocomplete-init' });
