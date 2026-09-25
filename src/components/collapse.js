@@ -5,7 +5,8 @@ import { DOM } from '../core/dom.js';
 import { Disclosure } from '../core/disclosure.js';
 import { StateController } from '../core/stateController.js';
 import { ActiveItem } from '../core/activeItem.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
+import { CapabilityController } from '../core/capabilityController.js';
 import { RovingProjection } from '../core/rovingProjection.js';
 import { Renderer } from '../core/renderer.js';
 import { Transition } from '../core/transition.js';
@@ -55,6 +56,15 @@ function recordFor(instance) {
 }
 
 export class Collapse extends Component {
+    static profile = Object.freeze({
+        name:'Collapse',
+        value:Object.freeze({ mode:'open-keys' }),
+        focus:Object.freeze({ mode:'header-navigation' }),
+        interaction:Object.freeze({ mode:'keyboard-navigation' }),
+        capability:Object.freeze({ mode:'item-expand-policy' }),
+        motion:Object.freeze({ mode:'panel-transition' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', motion:'MotionController' })
+    });
     static options = Object.freeze({
         items: [],
         accordion: false,
@@ -97,6 +107,8 @@ export class Collapse extends Component {
             headers: Object.create(null),
             rovingProjection: null,
             keyboard: null,
+            focusController: null,
+            capabilityController: null,
             render: null,
             setValue: null,
             toggle: null,
@@ -155,12 +167,23 @@ export class Collapse extends Component {
             DOM.focusElement(node);
         };
 
-        record.keyboard = KeyboardNavigation.create({
-            root,
-            activeItem: record.active,
-            orientation: 'vertical',
-            onNavigate: () => focusActive()
+        record.capabilityController = CapabilityController.create({
+            getState: () => ({ disabled:false }),
+            capabilities: { focusable:true, navigable:true, activatable:true, expandable:true }
         });
+        this.own(record.capabilityController);
+        record.focusController = FocusController.create({
+            root,
+            document: doc,
+            manageTabIndex: false,
+            navigation: {
+                activeItem: record.active,
+                orientation: 'vertical',
+                onNavigate: () => focusActive()
+            }
+        });
+        record.keyboard = record.focusController.keyboard;
+        this.own(record.focusController);
 
         const renderPart = (host, value, item) => {
             host.textContent = '';
@@ -352,7 +375,7 @@ export class Collapse extends Component {
         record.toggle = (key, meta) => {
             if (this.destroyed) return false;
             const item = itemByKey(key);
-            if (!item || effectiveCollapsible(item) === 'disabled') return false;
+            if (!item || !record.capabilityController.can('activate') || !CapabilityController.allows('activate', { disabled:effectiveCollapsible(item) === 'disabled' }, { activatable:true })) return false;
             const previous = valueState.value;
             const open = previous.indexOf(item.key) < 0;
             const proposed = open ? (opts.accordion === true ? [item.key] : previous.concat([item.key])) : previous.filter(entry => entry !== item.key);
@@ -387,7 +410,6 @@ export class Collapse extends Component {
         this.own(record.disclosure);
         this.own(record.active);
         this.own(record.rovingProjection);
-        this.own(record.keyboard);
 
         pruneDisclosure('initial-items');
         record.render('initial');
@@ -422,6 +444,7 @@ export class Collapse extends Component {
     focus(key) {
         if (this.destroyed) return false;
         const record = recordFor(this);
+        if (!record.capabilityController.can('focus')) return false;
         const normalized = key ? String(key) : record.active.activeKey;
         if (normalized) record.active.set(normalized, { silent: true, reason: 'focus-api' });
         const node = record.headers[record.active.activeKey];
@@ -449,6 +472,10 @@ export class Collapse extends Component {
     }
     getDisclosure() { return recordFor(this).disclosure; }
     getActiveItem() { return recordFor(this).active; }
+    getValueController() { return recordFor(this).valueState; }
+    getFocusController() { return recordFor(this).focusController; }
+    getCapabilityController() { return recordFor(this).capabilityController; }
+    getKeyboardNavigation() { return recordFor(this).keyboard; }
     getRootElement() { return this.root; }
 }
 
