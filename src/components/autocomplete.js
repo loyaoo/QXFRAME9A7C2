@@ -423,6 +423,8 @@ var selectionRangeScheduler = null;
           document: doc,
           portalContainer: portalContainer
         }, {
+          focusScope: 'contain',
+          closeOnTabExit: false,
           tabExitTarget: function () { return input || triggerTarget || root; },
           beforeOpen: function (detail) {
             var reason = detail && detail.reason || 'open', event = detail && detail.originalEvent || null;
