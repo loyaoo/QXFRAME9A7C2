@@ -10,24 +10,24 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `f00455ecd2d1e8274673806fad5d5629fb08803d` (PR #109 merge)
+- Last code-affecting main commit: `929c920808fefc9bb1d241df560b054f2ce6b3f7` (PR #110 squash merge)
 - Current branch: `main`
 - Open PRs at this checkpoint: none
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase I PR CI: #517 / `36112109009` (PR #109)
-- Latest green main CI + Pages: #518 / `36112480912`
-- Overall handbook implementation progress: 100% implementation complete; Astra/Sol final-audit remediation is locally verified and awaiting exact-head GitHub CI
-- Current Phase: Phase I — final-audit remediation validation
-- Current Task: `FINAL-AUDIT-REMEDIATION-001`
+- Latest green remediation PR CI: #522 / `36123086284` (PR #110 exact-head `78923e8d29dc8924a17cf2dbb55f7c704d6712c6`)
+- Latest green main CI + Pages: #523 / `36123503345` (`main@929c920808fefc9bb1d241df560b054f2ce6b3f7`)
+- Overall handbook implementation progress: 100% implementation complete; confirmed final-audit remediation is merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
+- Current Phase: post-remediation Astra final acceptance
+- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
 
 ## CURRENT
 
 ### FINAL-AUDIT-REMEDIATION-001 — interaction + release-integrity remediation
-Status: LOCAL_VERIFIED_AWAITING_GITHUB_CI
+Status: DONE_VERIFIED_ON_MAIN
 Implementation progress: 100% for confirmed remediation findings
-Final broad audit acceptance: PENDING exact-head CI / Pages
+Final broad audit acceptance: PENDING only further Astra High sign-off / newly confirmed findings; this remediation itself is accepted
 
 Confirmed fixes in this remediation:
 - restore mutable `value` semantics across ValueController-based components; controlled ownership is explicit `controlled:true`, not inferred from the presence of `value`.
@@ -48,11 +48,15 @@ Local evidence:
 - architecture-manifest, contracts, types, Value/Selection/Phase H targeted gates: green.
 - full local `npm run verify` reaches Rollup/package stage; this uploaded source workspace has no Rollup provider installed, so final build/pack/release evidence must come from GitHub CI where dependencies are installed.
 
+GitHub evidence:
+- PR #110 exact-head `78923e8d29dc8924a17cf2dbb55f7c704d6712c6`: QXFRAME CI #522 / `36123086284` success.
+- PR #110 squash merge: `929c920808fefc9bb1d241df560b054f2ce6b3f7`.
+- main QXFRAME CI #523 / `36123503345`: release success + deploy-pages success.
+
 Next exact step:
-1. push one coherent remediation branch/PR from current main.
-2. require exact-head GitHub Actions release/browser/package checks to pass.
-3. merge only after exact-head CI is green, then verify main CI + Pages.
-4. update this checkpoint with PR/commit/run evidence; do not restart earlier migration phases.
+1. continue Astra High final acceptance only from current main; do not restart Phase A-I or redo accepted Controller migration work.
+2. reproduce any new finding against current main before changing code.
+3. keep remaining adapter-duplication / explicit legacy-shim review as non-blocking cleanup unless a concrete runtime or architecture-owner conflict is demonstrated.
 
 ## Current authority snapshot — after Phase A
 
