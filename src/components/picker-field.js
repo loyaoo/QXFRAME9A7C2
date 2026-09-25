@@ -70,7 +70,7 @@ function create(options) {
     if (!valueHost) { valueHost = doc.createElement('span'); valueHost.className = 'qxframe9a7c2-picker-field-value-host qxframe9a7c2-input-values'; root.insertBefore(valueHost, input); }
   }
   var panel = doc.createElement('div'), body = doc.createElement('div'), footer = doc.createElement('div');
-  var triggerSession = null, control = null, keyboard = null, destroyed = false, api = null;
+  var triggerSession = null, control = null, focusController = null, keyboard = null, destroyed = false, api = null;
   var displayValue = opts.displayValue == null ? '' : String(opts.displayValue);
   var draftDisplayValue = opts.draftDisplayValue == null ? '' : String(opts.draftDisplayValue);
   var displayPlaceholder = opts.placeholder == null ? '' : String(opts.placeholder);
