@@ -10,46 +10,47 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `5ebdc44be5e2481483ff500291af226b4ed1882b` (PR #101 merge)
-- Current branch: `refactor/phase-h-menu-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-021 Menu PR
-- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-020 branch; prune merged task branches after Phase H signoff
+- Last code-affecting main commit: `2f83d3464a396dd10250be1b3af5fdf0fd1e66ed` (PR #102 merge)
+- Current branch: `refactor/phase-h-transfer-closeout-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-022 Transfer PR
+- Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-022 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #487 / `36094628225` attempt 2 (PR #101)
-- Latest green main CI + Pages: #488 / `36095210276`
+- Latest green Phase H PR CI: #490 / `36096268302` (PR #102)
+- Latest green main CI + Pages: #491 / `36096555627`
 - Overall handbook implementation progress: 98%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-021`
+- Current Task: `PHASE-H-022`
 
 ## CURRENT
 
-### PHASE-H-021 — Menu V/F/I/C/S/O closeout
+### PHASE-H-022 — Transfer V/F/I/C/S/B/R closeout
 Status: IN_PROGRESS
-Task progress: 80%
+Task progress: 75%
 
 Completed prerequisite:
-- PHASE-H-020 Dropdown is DONE through PR #101, exact-head CI #487 / `36094628225` attempt 2, merge `5ebdc44be5e2481483ff500291af226b4ed1882b`, main release + Pages #488 / `36095210276`.
-- #487 attempt 1 failed only on unrelated legacy `tabs-indicator-measured` width timing; same exact head attempt 2 passed the full release/browser/package suite, so no H-020 code change was made for that flake.
-- current accepted public-component floor is 31/40 = 77.5%.
+- PHASE-H-021 Menu is DONE through PR #102, exact-head CI #490 / `36096268302`, merge `2f83d3464a396dd10250be1b3af5fdf0fd1e66ed`, main release + Pages #491 / `36096555627`.
+- Menu closes the 32nd public component; current accepted public-component floor is 32/40 = 80%.
 
-Implemented in current H-021 pack:
-- Menu now declares the exact handbook Value/Focus/Interaction/Capability/Selection/Overlay profile and canonical owners.
-- selectedKey(s) canonical state is held by one ValueController; SelectionController.selected is a synchronized selection projection rather than a second public value owner.
-- direct `Selection.create()` ownership is removed.
-- existing FocusController and InteractionController remain the semantic keyboard path; the InteractionController scope now shares Menu CapabilityController so disabled activation/navigation is centrally blocked.
-- submenu/overflow popup ownership remains existing Trigger→OverlayController; Menu exposes the active overlay-controller identities without creating another overlay runtime.
-- existing inline submenu Transition remains an internal presence detail; Menu's handbook target does not add a separate component-level Motion owner.
-- `verify:phase-h-menu` freezes exact ownership and rejects direct Selection/InteractionPolicy bypass.
-- strict source-ESM Chromium verifies shared V/F/I/C/S identities, ValueController↔SelectionController projection and disabled activation blocking.
-- target-matrix floors remain 34 profiled / rise to 32 complete.
+Implemented in current H-022 pack:
+- Transfer reuses the shared FieldComponent Value/Focus/Interaction/Capability/Feedback/Form profile and adds its existing SelectionController as the sole checked-selection owner.
+- public committed target value remains FieldComponent ValueController-owned; Transfer target order/list projection remains execution detail and is not promoted to a second committed store.
+- native form carrier now uses FieldComponent `bindFormBridge()` instead of direct `Control.createFormFieldBridge()`; FormController remains the external registry/transaction owner.
+- one bound CapabilityController gates mutation through `can('edit')`; the old static `CapabilityController.mutationLocked()` bypass is removed.
+- one FocusController owns the Transfer composite root scope.
+- Enter/Space on move-right/move-left/move-up/move-down operation buttons resolves through the shared InteractionController; native pointer clicks keep their existing route.
+- local busy/error/warning projection uses the shared FieldComponent FeedbackController and does not own target values.
+- source/target checked sets remain the existing multi-channel SelectionController; no second Selection store is introduced.
+- `verify:phase-h-transfer` freezes exact V/F/I/C/S/B/R ownership and rejects direct FormBridge/static capability bypasses.
+- strict source-ESM Chromium verifies controller access, canonical value identity, keyboard operation routing, disabled blocking, feedback projection, FormController serialization and unregister-on-destroy.
+- target-matrix profiled floor remains 34; complete floor rises 32 → 33.
 
 Next exact step:
-1. final diff/self-audit and open PHASE-H-021 PR.
+1. final diff/self-audit and open PHASE-H-022 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Menu H accepted.
-5. continue the remaining 8 public components by smallest authority gap; broad final audit remains reserved for GPT-6 Astra High.
+4. mark Transfer H accepted.
+5. continue remaining 7 public components; broad final audit remains reserved for GPT-6 Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,6 +80,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-021 — Menu V/F/I/C/S/O closeout
+Status: DONE
+Evidence:
+- PR #102 merged
+- merge commit `2f83d3464a396dd10250be1b3af5fdf0fd1e66ed`
+- exact-head CI #490 / `36096268302`: success
+- main CI + Pages #491 / `36096555627`: success
+Outcome:
+- Menu declares exact Value/Focus/Interaction/Capability/Selection/Overlay ownership.
+- selectedKey(s) canonical state is ValueController-owned; SelectionController selected state is a synchronized projection rather than a second public value owner.
+- direct Selection ownership is removed; FocusController/InteractionController remain the semantic keyboard path and share Menu CapabilityController.
+- submenu/overflow popup resources remain Trigger→OverlayController; Menu does not invent a Motion owner.
+- target-matrix floors are 34 profiled / 32 complete.
+- Menu is H accepted.
+
+
 
 ### PHASE-H-020 — Dropdown V/F/I/C/M/S/O closeout
 Status: DONE
