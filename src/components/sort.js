@@ -315,6 +315,7 @@ export class Sort extends Component {
         const r = recordFor(this), previous = this.#items();
         const result = r.collection.move(from, to, { silent: true, source: meta.source || 'api', reason: meta.reason || 'move', originalEvent: meta.originalEvent || null });
         if (!result.changed) return false;
+        r.valueController.setValue(this.#items().map(item => item.key), { silent:true, source:meta.source || 'api', reason:result.reason || meta.reason || 'move' });
         this.#renderRows(); this.#focusRow(result.key);
         if (meta.silent !== true) this.#emitChange(previous, { reason: result.reason || meta.reason || 'move', source: meta.source || 'api', originalEvent: meta.originalEvent || null, moved: Object.freeze({ key: result.key, fromIndex: result.fromIndex, toIndex: result.toIndex }) });
         return true;
