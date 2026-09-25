@@ -182,7 +182,6 @@
         "State Ownership Manifest"
       ],
       "legacyOwners": [
-        "StateController compatibility facade",
         "component-local canonical value owners",
         "apiValue shadow state"
       ],
@@ -193,9 +192,7 @@
       "migrationAction": "delete/redirect legacy consumers to canonical owner",
       "deleteCondition": "legacy consumer count must remain zero",
       "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify",
-      "delegates": [
-        "ValueDraft compatibility alias where retained"
-      ]
+      "delegates": []
     },
     "Selection": {
       "status": "converged",
