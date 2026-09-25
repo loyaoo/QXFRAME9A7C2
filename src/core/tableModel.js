@@ -451,7 +451,13 @@ function create(options) {
   function setSelectedKeys(keys, meta) {
     if (destroyed || selectionMode === 'none') return false;
     var valid = (Array.isArray(keys) ? keys : []).map(String).filter(function (key) { return opts.preserveSelectedKeys === true || !!itemEntryByKey(key); });
-    return selection.set(valid, mergeOptions({ source: 'api', reason: 'selection' }, meta));
+    var detail = mergeOptions({ source: 'api', reason: 'selection' }, meta);
+    var result = selection.set(valid, detail);
+    if (result && detail.silent === true) {
+      projectionDiagnostics.selectionVersion += 1;
+      invalidateProjection('state');
+    }
+    return result;
   }
   function toggleSelected(key, desired, meta) {
     if (destroyed || selectionMode === 'none') return false;

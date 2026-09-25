@@ -10,46 +10,47 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `26d116b38dac03761a4841c1a5db1806aa11610d` (PR #106 merge)
-- Current branch: `refactor/phase-h-carousel-scroll-closeout-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-026 Carousel + Scroll PR
+- Last code-affecting main commit: `157cf96d119ce50c4dd8a38c02c3782adc99e578` (PR #107 merge)
+- Current branch: `refactor/phase-h-table-final-r2-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-027 final Table PR
 - Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-025 branch; prune after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #503 / `36104289572` (PR #106)
-- Latest green main CI + Pages: #504 / `36104608435`
-- Overall handbook implementation progress: 98%
+- Latest green Phase H PR CI: #510 / `36107647790` (PR #107)
+- Latest green main CI + Pages: #511 / `36108104799` (rerun failed jobs: success)
+- Overall handbook implementation progress: 99%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-026`
+- Current Task: `PHASE-H-027`
 
 ## CURRENT
 
-### PHASE-H-026 — Carousel + Scroll V/F/I/C/M closeout
+### PHASE-H-027 — Table final V/F/I/C/S/O/B/R closeout
 Status: IN_PROGRESS
 Task progress: 80%
 
-Completed prerequisite:
+Completed prerequisites:
 - PHASE-H-025 Sort + Tabs is DONE through PR #106, exact-head CI #503 / `36104289572`, merge `26d116b38dac03761a4841c1a5db1806aa11610d`, main release + Pages #504 / `36104608435`.
-- Sort and Tabs are the 36th and 37th H-accepted public components. Current accepted floor is 37/40 = 92.5%; only Carousel, Scroll and Table remain.
+- PHASE-H-026 Carousel + Scroll is DONE through PR #107, exact-head CI #510 / `36107647790`, merge `157cf96d119ce50c4dd8a38c02c3782adc99e578`, main #511 / `36108104799` failed once on the pre-existing Phase E intermediate-frame timing probe and passed on failed-job rerun including release + Pages.
+- Phase H public-component acceptance floor is now 39/40; Table is the last public component.
 
-Implemented in current pack:
-- Carousel declares the exact handbook Value/Focus/Interaction/Capability/Motion target.
-- Carousel current index enters one ValueController binding; keyboard arrows/Home/End enter one InteractionController scope; disabled keyboard/pointer navigation is capability-gated; root focus is owned by FocusController.
-- Carousel keeps its existing CSS transform/effect algorithm but transition completion/timing wait enters MotionController instead of a component-owned delay/transitionend completion path.
-- Scroll declares the exact handbook Focus/Interaction/Capability/Motion target.
-- Scroll root focus enters FocusController and keyboard line/page/Home/End semantics enter one InteractionController scope.
-- Scroll mutation/readOnly/disabled blocking enters one CapabilityController instance rather than the static mutation fallback.
-- Scroll keeps native scroll, PointerSession, snap math and its mature imperative tween execution; start/cancel/settle lifecycle is wrapped by a MotionController-compatible core so MotionController is the component-facing motion owner without rewriting the scroll algorithm.
-- `verify:phase-h-carousel-scroll` freezes both exact profiles and rejects the retired direct keyboard/capability/transition-completion paths.
-- strict source-ESM Chromium covers Carousel canonical index owner + disabled keyboard gate and Scroll focus/keyboard/motion settle + disabled gate.
-- Phase H profiled floor rises to 40/40. If this pack is green, H-accepted public-component floor becomes 39/40; Table remains last.
+Implemented/replayed in current pack:
+- replayed the existing Table final draft cleanly onto latest green main without bringing the stale branch history forward.
+- Table declares exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form ownership; Table does not invent a Motion owner.
+- explicit selected keys are the canonical Table ValueController value; SelectionController remains selection execution/projection and remote `allMatching` remains a separate semantic SelectionController channel.
+- filter overlay delegates to the existing Trigger OverlayController; Table does not create a second overlay owner.
+- remote pending/error visuals enter FeedbackController while AsyncTask remains remote task execution authority.
+- FormBridge remains native carrier and FormController owns field transaction registration/serialization.
+- controlled selection now uses the ValueController request/proposal path; user proposals do not mutate committed selection.
+- controlled form reset proposes the setup-time initial committed selection and does not mutate current committed V/S before the external owner acknowledges/syncs.
+- high-risk Chromium coverage preserves the already-merged Carousel/Scroll checks and adds Table uncontrolled/controlled V/S, Feedback, Overlay, Form serialization and controlled reset evidence.
+- dedicated `verify:phase-h-table-final` freezes no-bypass and owner-identity rules.
 
 Next exact step:
-1. final diff/self-audit and open PHASE-H-026 PR.
-2. require exact-head Completion audit + full release/browser + npm/standalone green.
+1. final diff/self-audit against latest main; confirm only Table/package/verifier/checkpoint/acceptance files.
+2. open PHASE-H-027 PR and require exact-head Completion audit + full release/browser + npm/standalone green.
 3. merge only green and verify main + Pages.
-4. mark Carousel + Scroll H accepted.
-5. close Table as the final public component, then enter Phase I. Broad final audit/acceptance remains reserved for GPT-6 Astra High.
+4. mark Table H accepted and Phase H 40/40 accepted.
+5. enter Phase I release-integrity/handoff. Broad final architecture audit/acceptance is intentionally reserved for GPT-6 Astra High as requested.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,6 +80,35 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-026 — Carousel + Scroll closeout
+Status: DONE
+Evidence:
+- PR #107 merged
+- merge commit `157cf96d119ce50c4dd8a38c02c3782adc99e578`
+- final exact-head CI #510 / `36107647790`: success
+- main CI + Pages #511 / `36108104799`: first release attempt hit the pre-existing Phase E intermediate-frame timing probe; failed-job rerun succeeded including Pages
+Outcome:
+- Carousel declares/consumes exact Value/Focus/Interaction/Capability/Motion ownership.
+- Scroll declares/consumes exact Focus/Interaction/Capability/Motion ownership.
+- Scroll imperative smooth motion enters MotionController while native scroll state remains Scroll execution authority.
+- keyboard/focus/capability paths are browser-gated and no duplicate value/motion authority was introduced.
+- Carousel and Scroll are H accepted; public-component floor is 39/40.
+
+### PHASE-H-025 — Sort + Tabs shared navigation/value closeout
+Status: DONE
+Evidence:
+- PR #106 merged
+- merge commit `26d116b38dac03761a4841c1a5db1806aa11610d`
+- exact-head CI #503 / `36104289572`: success
+- main CI + Pages #504 / `36104608435`: success
+Outcome:
+- Sort and Tabs declare/consume their exact handbook controller targets with ValueController as committed value owner.
+- shared Focus/Interaction/Capability paths replace direct duplicate keyboard ownership; Selection remains projection/execution authority.
+- Sort drag overlay enters OverlayController and motion remains shared MotionController path.
+- Sort and Tabs are H accepted.
+
+
 
 ### PHASE-H-025 — Sort + Tabs shared navigation/value closeout
 Status: DONE

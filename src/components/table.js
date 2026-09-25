@@ -4,6 +4,11 @@ import { ComponentContracts } from '../core/componentContracts.js';
 import { Utils } from '../utils/utils.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { InteractionController } from '../core/interactionController.js';
+import { ValueController } from '../core/valueController.js';
+import { FeedbackController } from '../core/feedbackController.js';
+import { FormBridge } from '../core/formBridge.js';
+import { FormController } from '../core/formController.js';
+import { OperationResult } from '../core/operationResult.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
@@ -210,8 +215,14 @@ function normalizeTableInitial(source) {
   if (!next.container || next.container.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] Table container must be an Element.');
   return next;
 }
+function normalizeTableValue(value) {
+  if (value === undefined || value === null) return [];
+  var source = Array.isArray(value) ? value : [value];
+  return source.map(function (key) { return String(key); });
+}
 function normalizeTablePatch(patch, current) {
   var next = Utils.mergeOwn(patch || {});
+  if (own(next, 'value')) next.selectedKeys = normalizeTableValue(next.value);
   if (own(next, 'size')) next.size = normalizeSize(next.size);
   if (own(next, 'columns')) next.columns = normalizeColumns(next.columns);
   if (own(next, 'responsiveMode')) next.responsiveMode = normalizeResponsiveMode(next.responsiveMode);
@@ -295,6 +306,13 @@ function setupTable(instance) {
   var remoteSummary = null;
   var selectionController = null;
   var remoteSelectionChannel = null;
+  var valueBinding = null;
+  var feedbackController = null;
+  var formBridge = null;
+  var formController = null;
+  var formRegistration = null;
+  var formBindingConfig = null;
+  var formResetting = false;
   var columnResizeSessions = [];
   var activeColumnResize = null;
   var columnReorderInteraction = null;
@@ -303,9 +321,106 @@ function setupTable(instance) {
   var tableDiagnostics = { rowRenders: 0, cellRenders: 0 };
   capabilityController = CapabilityController.create({
     getState:function(){ return { disabled:opts.disabled===true, readOnly:opts.readOnly===true, loading:opts.loading===true||remoteProcessing===true }; },
-    getCapabilities:function(){ return { navigable:opts.loading!==true&&remoteProcessing!==true }; }
+    getCapabilities:function(){ return { navigable:opts.loading!==true&&remoteProcessing!==true, editable:true, selectable:true }; }
   });
   interactionController = InteractionController.create();
+  var initialSelectedValue = normalizeTableValue(own(instance.options,'value') ? instance.options.value : opts.selectedKeys);
+  valueBinding = ValueController.createValueBinding({
+    value:initialSelectedValue,
+    controlled:own(instance.options,'value'),
+    normalizeValue:normalizeTableValue,
+    copyValue:function(value){ return normalizeTableValue(value); }
+  });
+  opts.selectedKeys = valueBinding.value.slice();
+  opts.value = valueBinding.value.slice();
+
+  function applyFeedbackProjection(record){
+    root.classList.toggle('is-loading',record.status==='pending'||record.status==='progress');
+    root.classList.toggle('is-error',record.status==='error');
+    root.classList.toggle('is-warning',record.status==='warning');
+    root.classList.toggle('is-success',record.status==='success');
+    return root;
+  }
+  var feedbackProjector = Object.freeze({
+    show:applyFeedbackProjection,
+    update:function(_handle,record){ return applyFeedbackProjection(record); },
+    close:function(){
+      root.classList.remove('is-loading','is-error','is-warning','is-success');
+      return true;
+    }
+  });
+  feedbackController = FeedbackController.createForProjector(feedbackProjector,{ ownerId:instance.id },'local');
+
+  function syncFormBridge(meta) {
+    if (!formBridge) return false;
+    formBridge.setValue(valueBinding.value,{ silent:!(meta&&meta.emitNative===true) });
+    return true;
+  }
+  function notifyFormValue(meta) {
+    if (!formRegistration) return false;
+    return formRegistration.notifyValue(Utils.assignOwn({ source:'table', reason:'selection' },meta||{}));
+  }
+  function reconcileCommittedSelectionFromModel(meta) {
+    if (!model || valueBinding.controlled) return valueBinding.value.slice();
+    var next=normalizeTableValue(model.getState().selectedKeys);
+    valueBinding.write(next,Utils.assignOwn({ silent:true, source:'table-model', reason:'selection-reconcile' },meta||{}));
+    opts.selectedKeys=valueBinding.value.slice();
+    opts.value=valueBinding.value.slice();
+    syncFormBridge(meta);
+    if(!formResetting) notifyFormValue(meta);
+    return valueBinding.value.slice();
+  }
+  function syncCommittedSelection(keys,meta) {
+    var normalized=normalizeTableValue(keys), controlled=valueBinding.controlled;
+    valueBinding.write(normalized,Utils.assignOwn({ silent:true, source:'table', reason:'selection' },meta||{}),controlled);
+    opts.selectedKeys=valueBinding.value.slice();
+    opts.value=valueBinding.value.slice();
+    if(controlled)return valueBinding.value.slice();
+    syncFormBridge(meta);
+    if(!formResetting) notifyFormValue(meta);
+    return valueBinding.value.slice();
+  }
+  function createFormBridge() {
+    if (formBridge) formBridge.destroy();
+    formBridge = FormBridge.create({
+      root:root,
+      target:opts.formTarget||null,
+      formField:opts.formField||null,
+      document:doc,
+      name:opts.name||'',
+      disabled:opts.disabled===true,
+      readOnly:opts.readOnly===true,
+      required:opts.required===true,
+      value:valueBinding.value,
+      onNativeChange:function(value){ record.setSelectedKeys(normalizeTableValue(value),{ source:'form-field', reason:'native-change' }); },
+      onReset:function(){ resetCommittedSelection({ source:'form', reason:'native-reset' }); }
+    });
+    return formBridge;
+  }
+  function resetCommittedSelection(meta) {
+    var context=meta&&meta.context||null;
+    if(valueBinding.controlled){
+      model.setSelectedKeys(initialSelectedValue.slice(),{ source:'form', reason:'reset-request', requestId:meta&&meta.requestId });
+      return OperationResult.requested(context||{actionId:String(meta&&meta.requestId||instance.id+'-table-reset')},{ reason:'controlled-reset-requested', requestId:meta&&meta.requestId, targetValue:initialSelectedValue.slice() });
+    }
+    formResetting=true;
+    try{
+      valueBinding.getValueController().reset(Utils.assignOwn({ silent:true },meta||{}));
+      var next=valueBinding.value.slice();
+      opts.selectedKeys=next.slice(); opts.value=next.slice();
+      resetRemoteSelection();
+      model.setSelectedKeys(next,Utils.assignOwn({ silent:false },meta||{}));
+      syncFormBridge(meta);
+      return next;
+    } finally { formResetting=false; }
+  }
+  scope.add(function(){
+    if(formRegistration){ formRegistration.unregister({ source:'component', reason:'destroy' }); formRegistration=null; }
+    formController=null; formBindingConfig=null;
+    if(formBridge){ formBridge.destroy(); formBridge=null; }
+    if(feedbackController){ feedbackController.destroy(); feedbackController=null; }
+    if(valueBinding){ valueBinding.destroy(); valueBinding=null; }
+  });
   interactionController.registerScope({ id:'table', root:root, document:doc, profile:{ allowEditableKeys:['F6','Escape','Enter'] }, resolveAction:resolveTableInteractionAction, onAction:handleTableInteractionAction });
   interactionController.registerScope({ id:'table-resize', parentId:'table', root:doc, document:doc, resolveAction:function(event){ return event&&event.key==='Escape'?'CANCEL_RESIZE':null; }, onAction:function(action,context){ if(action!=='CANCEL_RESIZE'||!activeColumnResize)return 'pass'; activeColumnResize.session.cancel('escape'); return 'handled'; } });
     
@@ -347,7 +462,7 @@ function setupTable(instance) {
       getKey: opts.getKey,
       isItemDisabled: opts.isItemDisabled,
       selectionMode: opts.selectionMode,
-      selectedKeys: opts.selectedKeys,
+      selectedKeys: valueBinding.value,
       expandedKeys: opts.expandedKeys,
       preserveSelectedKeys: opts.preserveSelectedKeys === true,
       sortKey: opts.sortKey,
@@ -361,7 +476,12 @@ function setupTable(instance) {
       page: opts.page,
       pageSize: opts.pageSize,
       onSelectionChange: function (values, detail) {
-        if (typeof opts.onSelectionChange === 'function') opts.onSelectionChange(values.slice(), Utils.mergeOwn( detail, { instance: api, selection: selectionStateSnapshot() }));
+        var proposed=normalizeTableValue(values), committed=syncCommittedSelection(proposed,detail);
+        if(valueBinding.controlled){
+          model.setSelectedKeys(committed,{ silent:true, source:'external-owner', reason:'controlled-reconcile' });
+          renderSelectionProjection({ reason:'selection', source:'controlled-reconcile' });
+        }
+        if (typeof opts.onSelectionChange === 'function') opts.onSelectionChange(proposed.slice(), Utils.mergeOwn( detail, { instance: api, controlled:valueBinding.controlled, committedValue:committed.slice(), selection: selectionStateSnapshot() }));
       },
       onChange: function (state, detail) {
         if (destroyed) return;
@@ -391,6 +511,7 @@ function setupTable(instance) {
   var model = TableModel.create(modelOptions());
   selectionController = model.selectionController;
   remoteSelectionChannel = selectionController.getRemoteChannel('allMatching');
+  createFormBridge();
 
   function isRemote() { return typeof opts.load === 'function'; }
   function isRemoteQueryReason(reason) { return isRemote() && ['sort','filter','filters','page','page-size','search','options'].indexOf(String(reason || '')) >= 0; }
@@ -2015,10 +2136,11 @@ function setupTable(instance) {
     } finally { syncingPagination = false; }
   }
   function syncRoot() {
+    var feedbackClasses=['is-loading','is-error','is-warning','is-success'].filter(function(name){return root.classList.contains(name);}).map(function(name){return ' '+name;}).join('');
     root.className = 'qxframe9a7c2-table-wrap' +
       (opts.borderless ? ' is-borderless' : '') + (opts.shadow ? ' is-shadow' : '') +
       (opts.stickyHeader ? ' is-sticky-header' : '') + (opts.stickySummary ? ' is-sticky-summary' : '') +
-      ((opts.loading || remoteProcessing) ? ' is-loading' : '') + (remoteError ? ' is-error' : '') + (isRemote() ? ' is-remote-' + remoteStatus() : '') + (opts.disabled ? ' is-disabled' : '') + (opts.keyboardNavigation ? ' is-keyboard-navigation' : '') + (opts.className ? ' ' + opts.className : '');
+      feedbackClasses + (isRemote() ? ' is-remote-' + remoteStatus() : '') + (opts.disabled ? ' is-disabled' : '') + (opts.keyboardNavigation ? ' is-keyboard-navigation' : '') + (opts.className ? ' ' + opts.className : '');
     table.className = 'qxframe9a7c2-table is-' + opts.size + (opts.bordered ? ' is-bordered' : '') +
       (opts.striped ? ' is-striped' : '') + (opts.hover ? ' is-hover' : '') + (opts.fixedLayout ? ' is-fixed' : '');
     if (opts.keyboardNavigation) { if (focusController) focusController.setDisabled(opts.disabled === true); else root.tabIndex = opts.disabled === true ? -1 : 0; } else root.removeAttribute('tabindex');
@@ -2027,6 +2149,15 @@ function setupTable(instance) {
     if ((opts.virtual === true || opts.virtual === 'auto') && opts.height == null && opts.maxHeight == null) root.style.maxHeight = '320px';
     if (opts.minWidth != null) table.style.minWidth = typeof opts.minWidth === 'number' ? opts.minWidth + 'px' : String(opts.minWidth); else table.style.removeProperty('min-width');
     var busy = opts.loading === true || remoteProcessing;
+    if(feedbackController){
+      feedbackController.publish({
+        operation:'table-status',
+        requestId:'table-status',
+        status:busy?'pending':(remoteError?'error':'idle'),
+        message:remoteError?String(remoteError&&remoteError.message||remoteError):(busy?'Loading':''),
+        target:'local'
+      });
+    }
     setOptionalNode(loading, root, busy, null);
     if (busy) renderOutput(loading, typeof opts.loadingText === 'function' ? opts.loadingText(currentState(), api) : opts.loadingText, doc);
     setOptionalNode(errorPanel, root, !!remoteError && !busy, null);
@@ -2422,8 +2553,23 @@ function setupTable(instance) {
     candidate.scrollPolicy = normalizeScrollPolicy(candidate.scrollPolicy);
     assertStableRowIdentity(candidate.items, candidate);
     validateFeatureCombination(candidate);
-    var remoteSelectionContractChanged = own(next, 'remoteSelectionScope') || own(next, 'selectedKeys') || (own(next, 'load') && typeof candidate.load !== 'function');
+    if(own(next,'value')) candidate.selectedKeys=normalizeTableValue(next.value);
+    var remoteSelectionContractChanged = own(next, 'remoteSelectionScope') || own(next, 'selectedKeys') || own(next,'value') || (own(next, 'load') && typeof candidate.load !== 'function');
     opts = candidate;
+    if(own(next,'value')||own(next,'selectedKeys')){
+      valueBinding.syncExternal(own(next,'value')?next.value:next.selectedKeys,{ silent:true, source:'options', reason:'selection-options' });
+      opts.selectedKeys=valueBinding.value.slice(); opts.value=valueBinding.value.slice();
+      syncFormBridge({ source:'options', reason:'selection-options' });
+    }
+    if(formBridge && (own(next,'name')||own(next,'disabled')||own(next,'readOnly')||own(next,'required'))){
+      formBridge.updateOptions({ name:opts.name||'', disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true });
+    }
+    if(own(next,'formField')||own(next,'formTarget')) createFormBridge();
+    if(formRegistration&&formController&&own(next,'name')&&!(formBindingConfig&&own(formBindingConfig,'name'))){
+      var rebound=formController,config=Utils.mergeOwn(formBindingConfig||{});
+      record.unbindFormController({source:'options',reason:'name-change'});
+      record.bindFormController(rebound,config);
+    }
     if (capabilityController) capabilityController.updateOptions({});
     if (remoteSelectionContractChanged) resetRemoteSelection();
     if (loaderChanged || own(next, 'items')) invalidateRemoteRequest(loaderChanged ? 'load-options-replaced' : 'items-options-replaced');
@@ -2431,11 +2577,14 @@ function setupTable(instance) {
     syncReorderInteractions();
     var modelPatch = {};
     ['items','columns','getKey','isItemDisabled','selectionMode','selectedKeys','expandedKeys','preserveSelectedKeys','sortKey','sortOrder','filters','searchValue','searchMatcher','page','pageSize','total','filteredTotal'].forEach(function (name) {
-      if (own(next, name)) modelPatch[name] = opts[name];
+      if (own(next, name)) modelPatch[name] = name==='selectedKeys' ? valueBinding.value : opts[name];
     });
+    if (own(next, 'value')) modelPatch.selectedKeys = valueBinding.value;
     if (own(next, 'load')) modelPatch.remote = typeof opts.load === 'function';
-    if (Object.keys(modelPatch).length) model.updateOptions(modelPatch);
-    else render('options');
+    if (Object.keys(modelPatch).length) {
+      model.updateOptions(modelPatch);
+      if(own(next,'items')||own(next,'getKey')||own(next,'isItemDisabled')||own(next,'preserveSelectedKeys')) reconcileCommittedSelectionFromModel({source:'options',reason:'selection-reconcile'});
+    } else render('options');
     return api;
   }
   function destroyRuntime() {
@@ -2458,10 +2607,10 @@ function setupTable(instance) {
   }
     
   var record = {
-    setItems: function (items, meta) { invalidateRemoteRequest('table-items-replaced'); opts.items = items; return model.setItems(items, meta); },
+    setItems: function (items, meta) { invalidateRemoteRequest('table-items-replaced'); opts.items = items; var result=model.setItems(items, meta); reconcileCommittedSelectionFromModel(meta); return result; },
     updateRow: function (key, updater, meta) { return model.updateRow(key, updater, meta); },
-    insertRows: function (index, rows, meta) { return model.insertRows(index, rows, meta); },
-    removeRows: function (keys, meta) { return model.removeRows(keys, meta); },
+    insertRows: function (index, rows, meta) { var result=model.insertRows(index, rows, meta); reconcileCommittedSelectionFromModel(meta); return result; },
+    removeRows: function (keys, meta) { var result=model.removeRows(keys, meta); reconcileCommittedSelectionFromModel(meta); return result; },
     setColumns: function (columns, meta) { opts.columns = normalizeColumns(columns); return model.setColumns(opts.columns, meta); },
     setColumnWidth: function (key, width, meta) { return commitColumnWidth(key, width, Utils.assignOwn({ source:'api', reason:'column-resize' }, meta || {})); },
     setColumnVisible:setColumnVisible, setColumnOrder:setColumnOrder, applyColumnState:applyColumnState, resetColumnState:resetColumnState,
@@ -2472,7 +2621,41 @@ function setupTable(instance) {
     setFilter:function(){return model.setFilter.apply(model,arguments);},
     setFilters:function(){return model.setFilters.apply(model,arguments);},
     setSearchValue:function(value,meta){opts.searchValue=value==null?'':String(value);if(typeof opts.onSearchChange==='function')opts.onSearchChange(opts.searchValue,Utils.assignOwn({instance:api},meta||{}));if(destroyed)return false;return model.setSearchValue(opts.searchValue,meta);},
-    setSelectedKeys:function(keys,meta){resetRemoteSelection();return model.setSelectedKeys(keys,meta);},
+    setSelectedKeys:function(keys,meta){resetRemoteSelection();return model.setSelectedKeys(normalizeTableValue(keys),meta);},
+    getValue:function(){return valueBinding.value.slice();},
+    getValueController:function(){return valueBinding.getValueController();},
+    getFeedbackController:function(){return feedbackController;},
+    getOverlayController:function(){return filterTrigger&&filterTrigger.getOverlayController?filterTrigger.getOverlayController():null;},
+    getFormBridge:function(){return formBridge;},
+    bindFormController:function(controller,config){
+      if(formRegistration){formRegistration.unregister({source:'component',reason:'form-rebind'});formRegistration=null;}
+      formController=null;
+      if(!controller)return null;
+      var local=config&&typeof config==='object'?config:{};
+      formBindingConfig=Utils.mergeOwn(local);
+      var fieldId=String(local.fieldId||instance.id);
+      var name=own(local,'name')?String(local.name||''):String(opts.name||'');
+      formRegistration=FormController.bindField(controller,{
+        fieldId:fieldId,
+        name:name,
+        adapter:{
+          getValue:function(){return valueBinding.value.slice();},
+          getSerializedValue:function(){return formBridge?formBridge.getSerializedValue():valueBinding.value.slice();},
+          getOwnershipState:function(){return valueBinding.getOwnershipState();},
+          reset:function(context){
+            var result=resetCommittedSelection({source:'form',reason:'form-reset',requestId:context&&context.requestId,context:context});
+            return OperationResult.isOperationResult(result)?result:true;
+          },
+          focus:function(){return focusController?focusController.focus({preventScroll:true}):false;}
+        },
+        metadata:local.metadata||null
+      });
+      formController=controller;
+      return formRegistration;
+    },
+    unbindFormController:function(meta){if(!formRegistration)return false;var result=formRegistration.unregister(meta||{source:'component',reason:'form-unbind'});formRegistration=null;formController=null;formBindingConfig=null;return result;},
+    getFormController:function(){return formController;},
+    getFormRegistration:function(){return formRegistration;},
     toggleSelected:function(key,desired,meta){if(toggleQuerySelection(key,desired,meta))return true;return model.toggleSelected(key,desired,meta);},
     selectVisible:function(desired,meta){if(isRemote()&&opts.remoteSelectionScope==='query')return setQuerySelectionAll(desired,meta);return model.selectVisible(desired,meta);},
     getSelectionState:selectionStateSnapshot,
@@ -2508,7 +2691,7 @@ function setupTable(instance) {
     getViewState:viewStateSnapshot, applyViewState:applyViewState,
     resetViewState:function(meta){return applyViewState(initialViewState,Utils.assignOwn({source:'api',reason:'view-state-reset'},meta||{}));},
     getExportData:getExportData, getExportCSV:getExportCSV, reflow:reflow, resize:reflow, applyOptions:applyOptions,
-    getState:function(){var state=currentState(),focusState=keyboard?keyboard.virtualFocus.getState():null,decoded=focusState&&cellDomain&&focusState.domain===cellDomain.name?decodeNavigationCellKey(focusState.key):null;return Object.freeze(Utils.mergeOwn(state,{virtual:!!virtualizer&&virtualizer.enabled,keyboardNavigation:opts.keyboardNavigation===true,activeCell:decoded?Object.freeze({rowKey:decoded.rowKey,kind:decoded.kind,columnKey:decoded.kind==='data'?decoded.columnKey:null}):null,editingCell:editStateSnapshot(),forceRenderExpanded:opts.forceRenderExpanded===true,disabled:opts.disabled===true,readOnly:opts.readOnly===true,loading:opts.loading===true||remoteProcessing,processing:remoteProcessing,remoteStatus:remoteStatus(),loadError:remoteError,remoteSummary:remoteSummary,remote:isRemote(),query:isRemote()?remoteQuery():null,requestEpoch:remoteEpoch,selection:selectionStateSnapshot(),destroyed:destroyed}));},
+    getState:function(){var state=currentState(),focusState=keyboard?keyboard.virtualFocus.getState():null,decoded=focusState&&cellDomain&&focusState.domain===cellDomain.name?decodeNavigationCellKey(focusState.key):null;return Object.freeze(Utils.mergeOwn(state,{value:valueBinding.value.slice(),virtual:!!virtualizer&&virtualizer.enabled,keyboardNavigation:opts.keyboardNavigation===true,activeCell:decoded?Object.freeze({rowKey:decoded.rowKey,kind:decoded.kind,columnKey:decoded.kind==='data'?decoded.columnKey:null}):null,editingCell:editStateSnapshot(),forceRenderExpanded:opts.forceRenderExpanded===true,disabled:opts.disabled===true,readOnly:opts.readOnly===true,loading:opts.loading===true||remoteProcessing,processing:remoteProcessing,remoteStatus:remoteStatus(),loadError:remoteError,remoteSummary:remoteSummary,remote:isRemote(),query:isRemote()?remoteQuery():null,requestEpoch:remoteEpoch,selection:selectionStateSnapshot(),destroyed:destroyed}));},
     getDiagnostics:function(){return Object.freeze(Utils.mergeOwn(model.getDiagnostics?model.getDiagnostics():{},tableDiagnostics));},
     getModel:function(){return model;}, getRootElement:function(){return root;}, getTableElement:function(){return table;},
     getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFocusController:function(){return focusController;}, getInteractionController:function(){return interactionController;}, getCapabilityController:function(){return capabilityController;}, getSelectionController:function(){return selectionController;}, getFilterPopup:function(){return filterPopup;},
@@ -2533,10 +2716,15 @@ function recordForTable(instance) {
 export class Table extends Component {
   static profile = Object.freeze({
     name:'Table',
+    value:Object.freeze({ mode:'explicit-selected-keys' }),
     focus:Object.freeze({ mode:'virtual-navigation', editLease:'cell-editor', regions:Object.freeze(['cells','header']) }),
     interaction:Object.freeze({ keymap:'table' }),
+    capability:Object.freeze({ operations:Object.freeze(['navigate','edit','select']) }),
     selection:Object.freeze({ channels:Object.freeze(['selected','allMatching']), remote:'query-allMatching' }),
-    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController' })
+    overlay:Object.freeze({ mode:'filter-trigger' }),
+    feedback:Object.freeze({ mode:'remote-load-status' }),
+    form:Object.freeze({ mode:'selected-keys' }),
+    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
   });
   static contract = ComponentContracts.get('Table');
   static immutableOptions = Object.freeze(['container','document']);
@@ -2583,6 +2771,8 @@ export class Table extends Component {
   setFilter(){return recordForTable(this).setFilter.apply(null,arguments);}
   setFilters(){return recordForTable(this).setFilters.apply(null,arguments);}
   setSearchValue(value,meta){return recordForTable(this).setSearchValue(value,meta);}
+  setValue(keys,meta){return recordForTable(this).setSelectedKeys(keys,meta);}
+  getValue(){return recordForTable(this).getValue();}
   setSelectedKeys(keys,meta){return recordForTable(this).setSelectedKeys(keys,meta);}
   toggleSelected(key,desired,meta){return recordForTable(this).toggleSelected(key,desired,meta);}
   selectVisible(desired,meta){return recordForTable(this).selectVisible(desired,meta);}
@@ -2612,10 +2802,18 @@ export class Table extends Component {
   getTableElement(){return recordForTable(this).getTableElement();}
   getVirtualizer(){return recordForTable(this).getVirtualizer();}
   getKeyboardNavigation(){return recordForTable(this).getKeyboardNavigation();}
+  getValueController(){return recordForTable(this).getValueController();}
   getFocusController(){return recordForTable(this).getFocusController();}
   getInteractionController(){return recordForTable(this).getInteractionController();}
   getCapabilityController(){return recordForTable(this).getCapabilityController();}
   getSelectionController(){return recordForTable(this).getSelectionController();}
+  getOverlayController(){return recordForTable(this).getOverlayController();}
+  getFeedbackController(){return recordForTable(this).getFeedbackController();}
+  getFormBridge(){return recordForTable(this).getFormBridge();}
+  bindFormController(controller,config){return recordForTable(this).bindFormController(controller,config);}
+  unbindFormController(meta){return recordForTable(this).unbindFormController(meta);}
+  getFormController(){return recordForTable(this).getFormController();}
+  getFormRegistration(){return recordForTable(this).getFormRegistration();}
   getFilterPopup(){return recordForTable(this).getFilterPopup();}
   openFilter(key){return recordForTable(this).openFilter(key);}
   closeFilter(){return recordForTable(this).closeFilter();}
