@@ -192,7 +192,7 @@ function createRuntime(instance, prepared) {
 
     opts=normalizeSliderOptions(opts);let initial=rangeMode()?[opts.min,opts.max]:opts.min;if(hasOwn(opts,'defaultValue'))initial=opts.defaultValue;if(hasOwn(opts,'value'))initial=opts.value;
     valueState=StateController.create({value:normalize(initial),controlled:hasOwn(incoming,'value'),normalizeValue:normalize,equals:sameValues,copyValue:list=>list.slice()});
-    instance.bindValueController(valueState, { projectValue: list => cloneExternal(list, rangeMode()) });
+    instance.bindValueController(valueState, { projectValue: list => cloneExternal(list, rangeMode()), syncExternal:false });
     values=valueState.value;instance.setFieldValue(externalValue(),{force:true,silent:true,sync:true,source:'init',reason:'slider-init'});
     const initialValue=externalValue();
     formBridge=Control.createFormFieldBridge({root,target:opts.container,formField:opts.formField,document:doc,moveIntoRoot:false,projectLayout:Control.projectFormFieldLayout,name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,value:externalValue(),serializeValue:opts.serializeValue,getValue:externalValue,onReset:()=>setValues(initialValue,{silent:true,source:'form',reason:'reset'})});
