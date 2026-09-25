@@ -5,7 +5,10 @@ import { DOM } from '../core/dom.js';
 import { Collection } from '../core/collection.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { Renderer } from '../core/renderer.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { StateController } from '../core/stateController.js';
+import { FocusController } from '../core/focusController.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { RovingProjection } from '../core/rovingProjection.js';
 import { Utils } from '../utils/utils.js';
 import { Item } from './item.js';
@@ -54,6 +57,15 @@ function recordFor(instance) {
 }
 
 export class Steps extends Component {
+    static profile = Object.freeze({
+        name:'Steps',
+        value:Object.freeze({ mode:'current-index' }),
+        focus:Object.freeze({ mode:'step-navigation' }),
+        interaction:Object.freeze({ mode:'keyboard-navigation' }),
+        capability:Object.freeze({ mode:'step-activation-policy' }),
+        feedback:Object.freeze({ mode:'root-state-projection' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', feedback:'FeedbackController' })
+    });
     static options = Object.freeze({
         items: [], current: 0, initial: 0, direction: 'horizontal', status: 'process', type: 'default',
         labelPlacement: 'horizontal', progressDot: false, responsive: true, clickable: false,
@@ -96,10 +108,17 @@ export class Steps extends Component {
         const opts = this.options;
         const doc = opts.document;
         const root = doc.createElement('ol');
+        const initialCurrent = Math.min(Math.max(0, opts.items.length - 1), opts.current);
         const record = {
-            doc, root, current: Math.min(Math.max(0, opts.items.length - 1), opts.current),
-            collection: null, activeItem: null, rovingProjection: null, keyboard: null
+            doc, root, valueState: null, collection: null, activeItem: null, rovingProjection: null,
+            keyboard: null, focusController: null, capabilityController: null, feedbackController: null, feedbackStatus: 'idle'
         };
+        record.valueState = this.own(StateController.create({
+            value: initialCurrent,
+            controlled: false,
+            normalizeValue: value => Math.min(Math.max(0, Math.max(0, this.options.items.length - 1)), Math.max(0, Math.floor(finiteNumber(value, 0, 'current'))))
+        }));
+        Object.defineProperty(record, 'current', { enumerable:true, get:() => record.valueState.value });
         state.set(this, record);
         opts.container.appendChild(root);
         this.own(() => DOM.removeNode(root));
@@ -122,13 +141,33 @@ export class Steps extends Component {
             isDisabled: (_node, _index, element) => !element || element.disabled === true, ensureOne: false
         }));
 
+        record.capabilityController = this.own(CapabilityController.create({
+            getState: () => ({ disabled:this.destroyed || this.options.disabled === true }),
+            getCapabilities: () => {
+                const interactive = this.options.clickable === true || typeof this.options.onChange === 'function';
+                return { focusable:interactive, navigable:interactive, activatable:interactive };
+            }
+        }));
+        const syncFeedbackClasses = () => {
+            root.classList.toggle('is-loading', record.feedbackStatus === 'pending' || record.feedbackStatus === 'progress');
+            root.classList.toggle('is-error', record.feedbackStatus === 'error');
+            root.classList.toggle('is-warning', record.feedbackStatus === 'warning');
+            root.classList.toggle('is-success', record.feedbackStatus === 'success');
+        };
+        const feedbackProjector = Object.freeze({
+            show: snapshot => { record.feedbackStatus = snapshot.status; syncFeedbackClasses(); return root; },
+            update: (_handle, snapshot) => { record.feedbackStatus = snapshot.status; syncFeedbackClasses(); return root; },
+            close: () => { record.feedbackStatus = 'idle'; syncFeedbackClasses(); return true; }
+        });
+        record.feedbackController = this.own(FeedbackController.createForProjector(feedbackProjector, { ownerId:this.id }, 'local'));
+
         this.own(DOM.listen(root, 'click', event => {
             const node = event.target ? DOM.closestPrivate(event.target, root, 'stepAction') : null;
             if (!node || !root.contains(node)) return;
             event.preventDefault();
             const index = Number(DOM.getPrivate(node, 'stepAction'));
             const item = this.options.items[index];
-            if (!item || !this.#interactive(item)) return;
+            if (!item || !this.#interactive(item) || !record.capabilityController.can('activate')) return;
             if (index === record.current && this.options.allowCurrentClick !== true) return;
             const source = DOM.activationSource(event);
             record.activeItem.set(item.key, { silent: true, source, reason: 'click' });
@@ -140,28 +179,35 @@ export class Steps extends Component {
             record.activeItem.set(DOM.getPrivate(node, 'stepKey'), { silent: true, source: 'focus', reason: 'focusin' });
             this.#syncRoving();
         }));
-        record.keyboard = this.own(KeyboardNavigation.create({
+        record.focusController = this.own(FocusController.create({
             root,
-            activeItem: record.activeItem,
-            orientation: 'both',
-            shouldHandle: detail => {
-                const key = detail.eventKey, current = this.options;
-                if (current.disabled === true) return false;
-                if (key === 'Home' || key === 'End') return true;
-                if (current.direction === 'vertical') return key === 'ArrowUp' || key === 'ArrowDown';
-                return key === 'ArrowLeft' || key === 'ArrowRight';
-            },
-            onNavigate: () => { this.#syncRoving(); this.#focusActive(); }
+            document: doc,
+            manageTabIndex: false,
+            navigation: {
+                activeItem: record.activeItem,
+                orientation: 'both',
+                shouldHandle: detail => {
+                    const key = detail.eventKey, current = this.options;
+                    if (!record.capabilityController.can('navigate')) return false;
+                    if (key === 'Home' || key === 'End') return true;
+                    if (current.direction === 'vertical') return key === 'ArrowUp' || key === 'ArrowDown';
+                    return key === 'ArrowLeft' || key === 'ArrowRight';
+                },
+                onNavigate: () => { this.#syncRoving(); this.#focusActive(); }
+            }
         }));
+        record.keyboard = record.focusController.keyboard;
         this.#renderItems();
         return root;
     }
 
     [componentHooks.optionsUpdated](next, _previous, patch) {
         const record = recordFor(this);
-        if (own(patch, 'current')) record.current = Math.min(Math.max(0, next.items.length - 1), next.current);
-        else record.current = Math.min(Math.max(0, next.items.length - 1), record.current);
+        const maxCurrent = Math.max(0, next.items.length - 1);
+        const projectedCurrent = own(patch, 'current') ? Math.min(maxCurrent, next.current) : Math.min(maxCurrent, record.current);
+        record.valueState.syncExternal(projectedCurrent, { silent:true, source:'options', reason:own(patch, 'current') ? 'current' : 'items-clamp' });
         record.collection.updateOptions({ items: next.items, isDisabled: item => next.disabled === true || item.disabled === true });
+        record.focusController.setDisabled(next.disabled === true);
         record.activeItem.updateOptions({ isDisabled: item => next.disabled === true || item.disabled === true || !(next.clickable || typeof next.onChange === 'function') });
         this.#renderItems();
     }
@@ -240,7 +286,12 @@ export class Steps extends Component {
             }
             step.appendChild(main); if (index !== opts.items.length - 1) step.appendChild(connector); root.appendChild(step);
         });
-        this.#syncRoving(); return this;
+        this.#syncRoving();
+        root.classList.toggle('is-loading', r.feedbackStatus === 'pending' || r.feedbackStatus === 'progress');
+        root.classList.toggle('is-error', r.feedbackStatus === 'error');
+        root.classList.toggle('is-warning', r.feedbackStatus === 'warning');
+        root.classList.toggle('is-success', r.feedbackStatus === 'success');
+        return this;
     }
 
     setCurrent(next, config = {}) {
@@ -262,6 +313,10 @@ export class Steps extends Component {
     getItems() { return this.options.items.map(item => Utils.mergeOwn( item)); }
     getCollection() { return recordFor(this).collection; }
     getActiveItem() { return recordFor(this).activeItem; }
+    getValueController() { return recordFor(this).valueState; }
+    getFocusController() { return recordFor(this).focusController; }
+    getCapabilityController() { return recordFor(this).capabilityController; }
+    getFeedbackController() { return recordFor(this).feedbackController; }
     getKeyboardNavigation() { return recordFor(this).keyboard; }
 }
 
