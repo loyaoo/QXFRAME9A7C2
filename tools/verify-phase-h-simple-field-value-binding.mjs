@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 const root=new URL('../',import.meta.url);
 const cases=[
   ['Autocomplete','src/components/autocomplete.js',/ValueController\.create\s*\(/,/instance\.bindValueController\(valueState\)/],
-  ['InputOTP','src/components/input-otp.js',/StateController\.create\s*\(/,/this\.bindValueController\(valueState\)/],
-  ['Rate','src/components/rate.js',/StateController\.create\s*\(/,/this\.bindValueController\(valueState\)/],
+  ['InputOTP','src/components/input-otp.js',/StateController\.create\s*\(/,/this\.bindValueController\(valueState(?:\s*,|\))/],
+  ['Rate','src/components/rate.js',/StateController\.create\s*\(/,/this\.bindValueController\(valueState(?:\s*,|\))/],
   ['Slider','src/components/slider.js',/StateController\.create\s*\(/,/instance\.bindValueController\(valueState\s*,/]
 ];
 

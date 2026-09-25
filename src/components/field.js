@@ -6,12 +6,28 @@ import { FormController } from '../core/formController.js';
 import { FeedbackController } from '../core/feedbackController.js';
 import { DOM } from '../core/dom.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
 import { ValueController } from '../core/valueController.js';
 import { ValueEquality } from '../utils/valueEquality.js';
 
 const fieldState = new WeakMap();
 const own = (value, key) => Object.prototype.hasOwnProperty.call(Object(value), key);
 const cloneValue = value => Array.isArray(value) ? value.slice() : value;
+const SIMPLE_FIELD_OWNERSHIP = Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', feedback:'FeedbackController', form:'FormController' });
+export function createSimpleFieldProfile(name) {
+    return Object.freeze({
+        name: String(name || ''),
+        value: Object.freeze({ mode:'committed' }),
+        focus: Object.freeze({ mode:'field-surface' }),
+        interaction: Object.freeze({ mode:'semantic-actions' }),
+        capability: Object.freeze({ mode:'field-policy' }),
+        feedback: Object.freeze({ mode:'local-status-projection' }),
+        form: Object.freeze({ mode:'field-registration' }),
+        ownership: SIMPLE_FIELD_OWNERSHIP
+    });
+}
+
 const readCommittedValue = record => {
     if (!record || !record.valueController) return undefined;
     const value = record.valueController.value;
@@ -55,7 +71,7 @@ export class FieldComponent extends Component {
             copyValue: cloneValue,
             equals: ValueEquality.deep
         });
-        const record = { valueController, ownsValueController: true, valueProjector: null, bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
+        const record = { valueController, ownsValueController: true, valueProjector: null, syncExternalValue: true, bridge: null, focusTarget: null, focusController: null, interactionBinding: null, capabilityController: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
         fieldState.set(this, record);
         this.own(() => {
             releaseFormRegistration(record, { source:'component', reason:'destroy' });
@@ -63,6 +79,12 @@ export class FieldComponent extends Component {
             record.valueController = null;
             record.ownsValueController = false;
             record.valueProjector = null;
+            if (record.interactionBinding && typeof record.interactionBinding.destroy === 'function') record.interactionBinding.destroy();
+            if (record.focusController && typeof record.focusController.destroy === 'function') record.focusController.destroy();
+            if (record.capabilityController && typeof record.capabilityController.destroy === 'function') record.capabilityController.destroy();
+            record.interactionBinding = null;
+            record.focusController = null;
+            record.capabilityController = null;
             record.formController = null;
             record.formBindingOptions = null;
             record.feedbackController = null;
@@ -111,6 +133,71 @@ export class FieldComponent extends Component {
         return this;
     }
 
+    bindCapabilityController(options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind CapabilityController to a destroyed FieldComponent.');
+        const record = fieldState.get(this), settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        if (record.capabilityController) record.capabilityController.destroy();
+        const controller = CapabilityController.create({
+            getState: () => ({ disabled:this.destroyed || this.disabled, readOnly:this.readOnly, loading:this.busy }),
+            getCapabilities: typeof settings.getCapabilities === 'function' ? () => settings.getCapabilities(this) || {} : undefined,
+            capabilities: settings.capabilities || {}
+        });
+        record.capabilityController = this.own(controller);
+        return controller;
+    }
+
+    getCapabilityController() { return fieldState.get(this).capabilityController; }
+
+    bindFocusController(root, options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind FocusController to a destroyed FieldComponent.');
+        if (!root || root.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] FieldComponent FocusController root must be an Element.');
+        const record = fieldState.get(this), settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        if (record.focusController) record.focusController.destroy();
+        const controller = FocusController.create({ ...settings, root, manageTabIndex: settings.manageTabIndex === undefined ? false : settings.manageTabIndex });
+        controller.setDisabled(this.disabled);
+        record.focusController = this.own(controller);
+        return controller;
+    }
+
+    getFocusController() { return fieldState.get(this).focusController; }
+
+    bindInteractionController(root, options = {}) {
+        if (this.destroyed) throw new Error('[QXFRAME9A7C2] Cannot bind InteractionController to a destroyed FieldComponent.');
+        if (!root || root.nodeType !== 1) throw new TypeError('[QXFRAME9A7C2] FieldComponent InteractionController root must be an Element.');
+        const record = fieldState.get(this), settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        if (record.interactionBinding) record.interactionBinding.destroy();
+        const controller = InteractionController.create(settings.controllerOptions || {});
+        const scopeId = String(settings.id || (this.id + '-field-interaction'));
+        const lease = controller.registerScope({
+            id: scopeId, root, document: root.ownerDocument, owner: this,
+            profile: settings.profile || null,
+            resolveAction: settings.resolveAction,
+            operationOf: settings.operationOf,
+            capability: settings.capabilityController || record.capabilityController || null,
+            onAction: settings.onAction
+        });
+        const unlisten = DOM.listen(root, 'keydown', event => controller.dispatch(event, { ownerId:scopeId, source:'keyboard' }));
+        let destroyed = false;
+        const binding = {
+            controller,
+            destroy() {
+                if (destroyed) return false;
+                destroyed = true;
+                try { unlisten(); } catch (_) {}
+                try { lease.release(); } catch (_) {}
+                controller.destroy();
+                return true;
+            }
+        };
+        record.interactionBinding = this.own(binding);
+        return controller;
+    }
+
+    getInteractionController() {
+        const binding = fieldState.get(this).interactionBinding;
+        return binding ? binding.controller : null;
+    }
+
     bindFormBridge(options = {}) {
         const state = fieldState.get(this);
         if (state.bridge) state.bridge.destroy();
@@ -146,6 +233,7 @@ export class FieldComponent extends Component {
             record.ownsValueController = settings.owned === true;
         }
         record.valueProjector = typeof settings.projectValue === 'function' ? settings.projectValue : null;
+        record.syncExternalValue = settings.syncExternal !== false;
         if (settings.syncFromField === true && !ValueEquality.deep(readCommittedValue(record), previousValue)) controller.setValue(previousValue, { silent:true, source:'field', reason:'bind-value-controller' });
         if (record.bridge) record.bridge.setValue(readCommittedValue(record), { silent:true });
         return controller;
@@ -262,7 +350,7 @@ export class FieldComponent extends Component {
 
     [componentHooks.optionsUpdated](next, previous, patch) {
         const state = fieldState.get(this);
-        if (own(patch, 'value') && state.valueController) state.valueController.syncExternal(next.value, { silent:true, source:'options', reason:'options' });
+        if (own(patch, 'value') && state.valueController && state.syncExternalValue !== false) state.valueController.syncExternal(next.value, { silent:true, source:'options', reason:'options' });
         if (state.bridge) {
             const bridgePatch = {};
             for (const key of ['name', 'disabled', 'readOnly', 'required', 'serializeValue']) if (own(patch, key)) bridgePatch[key] = next[key];
@@ -272,6 +360,7 @@ export class FieldComponent extends Component {
         if (own(patch, 'name') && state.formRegistration && state.formController && !(state.formBindingOptions && own(state.formBindingOptions, 'name'))) {
             this.bindFormController(state.formController, state.formBindingOptions || {});
         }
+        if (state.focusController && own(patch, 'disabled')) state.focusController.setDisabled(next.disabled === true);
         if (state.feedbackControl && (own(patch, 'status') || own(patch, 'busy') || own(patch, 'loading'))) {
             const feedbackState = state.feedbackController && state.feedbackController.snapshot ? state.feedbackController.snapshot() : null;
             const active = feedbackState && Array.isArray(feedbackState.records) ? feedbackState.records.length > 0 : false;
