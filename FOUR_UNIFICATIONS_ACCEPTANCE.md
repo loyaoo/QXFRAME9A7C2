@@ -20,10 +20,10 @@ Evidence shared by all 40 rows: `verify:architecture` reports 40 components and 
 | Sort | Base; C partial (Capability) | Pending audit | Base | Base #338; C pending | Base | Pending |
 | Steps | Base | Pending audit | Base | Base #338 | Base | Pending |
 | Rate | Base; C partial (Capability) | Pending audit | Base | Base #338; C pending | Base | Pending |
-| Tooltip | Base; E accepted (Trigger Overlay/Motion) | Reuses Trigger controller identities; no duplicate logical open | Base; `verify:phase-e-popup-facades` | PR #66 CI #376; main #377 | Base | E accepted; F–I pending |
+| Tooltip | Base; H accepted (Motion/Overlay) | Reuses Trigger physical popup/motion; direct LayerManager singleton/parent lookup removed in H-006 | Base; `verify:phase-e-popup-facades`; `verify:phase-h-popup-facades`; source-ESM singleton/browser | PR #86 CI #436; main #437 | Base | H accepted; I pending |
 | TagInput | Base; C partial (Capability) | Pending audit | Base | Base #338; C pending | Base | Pending |
 | Popconfirm | Base; E accepted (Trigger Overlay/Motion) | Trigger/Popup base controller path; logical confirm/cancel remains component authority | Base; popup/high-risk browser | PR #65–#66; main #377 | Base | E accepted; F–I pending |
-| Popover | Base; E accepted (Trigger Overlay/Motion) | Reuses Trigger controller identities; no duplicate logical open | Base; `verify:phase-e-popup-facades` | PR #66 CI #376; main #377 | Base | E accepted; F–I pending |
+| Popover | Base; H accepted (Focus/Interaction/Capability/Motion/Overlay) | PopupComponent→Trigger is the sole popup/controller path; no duplicate logical open | Base; `verify:phase-e-popup-facades`; `verify:phase-h-popup-facades`; source-ESM controller-facade browser | PR #86 CI #436; main #437 | Base | H accepted; I pending |
 | Dropdown | Base; C partial; E accepted (Trigger/Motion) | Trigger overlay path retained; TransitionGroup motion enters MotionController | Base; popup/high-risk; `verify:phase-e-motion-closeout` | PR #66 / #69; main #386 | Base | E accepted; F–I pending |
 | Modal | Base; E accepted (Overlay/Motion) | Logical family controller separated from physical OverlayController; mask/dialog motion channels canonical | Base; `verify:phase-e-modal-drawer` | PR #67 CI #378; main #379 | Base | E accepted; F–I pending |
 | Drawer | Base; E accepted (Overlay/Motion) | Logical family controller separated from physical OverlayController; mask/panel motion channels canonical | Base; `verify:phase-e-modal-drawer` | PR #67 CI #378; main #379 | Base | E accepted; F–I pending |
