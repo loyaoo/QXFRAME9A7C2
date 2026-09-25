@@ -716,28 +716,19 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (!target && field.getRootElement) target = field.getRootElement();
     return DOM.focusElement(target, { preventScroll: true });
   }
-  function rememberCalendarDrillOwner(detail) {
-    if (!calendarSecondary || !detail || !detail.calendar) return activeCalendarPanel;
-    if (detail.calendar === calendarSecondary) activeCalendarPanel = 'secondary';
-    else if (detail.calendar === calendar) activeCalendarPanel = 'primary';
-    return activeCalendarPanel;
-  }
   function requestCalendarYear(viewValue, detail) {
-    rememberCalendarDrillOwner(detail);
     var changed = setCalendarPanelMode('year', viewValue);
     if (changed && detail && detail.source === 'keyboard') focusFieldHost();
     return changed;
   }
   function requestCalendarMonth(viewValue, detail) {
-    rememberCalendarDrillOwner(detail);
     var changed = setCalendarPanelMode('month', viewValue);
     if (changed && detail && detail.source === 'keyboard') focusFieldHost();
     return changed;
   }
   function handleYearDrillSelect(selected, detail) {
     if (!calendar || !selected) return;
-    var owner = calendarSecondary && activeCalendarPanel === 'secondary' ? calendarSecondary : calendar;
-    var current = cloneDate(owner.getState().viewValue) || new Date();
+    var current = cloneDate(calendar.getState().viewValue) || new Date();
     current.setFullYear(selected.getFullYear());
     current.setDate(1);
     setCalendarPanelMode('month', current);
@@ -746,19 +737,19 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function handleMonthDrillSelect(selected, detail) {
     if (!calendar || !selected) return;
     var source = detail && detail.source || 'api';
-    var secondaryOwner = !!(calendarSecondary && activeCalendarPanel === 'secondary');
-    var primaryAnchor = secondaryOwner ? addMonths(selected, -1) : selected;
-    var primaryView = dualCalendarEnabled() ? dualPrimaryView(primaryAnchor) : clampPanelValue(primaryAnchor);
-    calendar.setViewValue(primaryView, {
+    calendar.setViewValue(dualCalendarEnabled() ? dualPrimaryView(selected) : selected, {
       silent: false,
       source: source,
       reason: 'header-month-select',
       originalEvent: detail && detail.originalEvent || null
     });
-    if (calendarSecondary) syncCalendarPair(primaryView, { source: source, reason: 'header-month-secondary' });
-    setCalendarPanelMode('date', primaryView);
-    var owner = secondaryOwner ? calendarSecondary : calendar;
-    if (owner) owner.setActiveDate(selected, { silent: true, source: source, reason: 'month-drill-active' });
+    if (calendarSecondary) syncCalendarPair(selected, { source: source, reason: 'header-month-secondary' });
+    setCalendarPanelMode('date', selected);
+    activeCalendarPanel = 'primary';
+    // Returning from the year/month drill must also move the active date. Otherwise
+    // Calendar.handleKeydown starts from the stale pre-drill activeKey and the first
+    // arrow key jumps the view back to the previous year/month.
+    calendar.setActiveDate(selected, { silent: true, source: source, reason: 'month-drill-active' });
     if (source === 'keyboard') focusFieldHost();
     activateCurrentPanelVirtualFocus('month-drill-select');
   }

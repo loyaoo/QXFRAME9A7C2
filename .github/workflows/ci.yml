@@ -4,9 +4,6 @@ name: QXFRAME CI
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'migration-logs/**'
   pull_request:
     branches: [main]
   workflow_dispatch:

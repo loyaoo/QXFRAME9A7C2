@@ -18,31 +18,41 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
 - Latest green Phase I PR CI: #517 / `36112109009` (PR #109)
 - Latest green main CI + Pages: #518 / `36112480912`
-- Overall handbook implementation progress: 100% implementation complete; final broad audit/acceptance pending GPT-6 Astra High
-- Current Phase: Phase I — release-integrity complete; Astra High final audit pending
-- Current Task: `ASTRA-HIGH-FINAL-AUDIT`
+- Overall handbook implementation progress: 100% implementation complete; Astra/Sol final-audit remediation is locally verified and awaiting exact-head GitHub CI
+- Current Phase: Phase I — final-audit remediation validation
+- Current Task: `FINAL-AUDIT-REMEDIATION-001`
 
 ## CURRENT
 
-### ASTRA-HIGH-FINAL-AUDIT — broad final audit / acceptance
-Status: READY_FOR_AUDIT
-Implementation progress: 100%
-Final broad audit acceptance: PENDING
+### FINAL-AUDIT-REMEDIATION-001 — interaction + release-integrity remediation
+Status: LOCAL_VERIFIED_AWAITING_GITHUB_CI
+Implementation progress: 100% for confirmed remediation findings
+Final broad audit acceptance: PENDING exact-head CI / Pages
 
-Release-integrity evidence:
-- PHASE-I-001 merged through PR #109 at `f00455ecd2d1e8274673806fad5d5629fb08803d`.
-- exact-head CI #517 / `36112109009`: Completion audit + full release/browser + npm pack + standalone dist/docs all green.
-- main CI + Pages #518 / `36112480912`: release and deploy-pages green.
-- Phase H public surface is 40/40 H accepted.
-- Phase H target matrix freezes `minimumProfiled=40` and `minimumComplete=40`.
-- `verify:phase-i-release-integrity` is required by the normal verify/release path.
-- Astra handoff: `PHASE_I_ASTRA_AUDIT_HANDOFF.md`.
+Confirmed fixes in this remediation:
+- restore mutable `value` semantics across ValueController-based components; controlled ownership is explicit `controlled:true`, not inferred from the presence of `value`.
+- cover reported InputOTP / TagInput / Select failures and audit the same ownership pattern across Cascader / TreeSelect / Autocomplete / Rate / Slider / InputNumber / Dropdown / Collapse / Table / Upload / Tags.
+- restore Ripple lifecycle parity: inside enter runs on press and persists until release, inside leave fades on release, outside starts on release, concurrent waves are retained; MotionController can wait for named pseudo-element animations.
+- restore DatePicker dual-panel year/month drill to one canonical primary date keyboard anchor; remove physical-panel drill-owner switching.
+- project DatePicker preset keyboard focus to the active preset item and suppress the real-focus owner outline.
+- fix Popover `getReferenceElement()` inheritance and `hasTitle` / `hasAction` state semantics.
+- remove CI Markdown blind spot and make Phase-I verifier validate stable invariants instead of one frozen checkpoint sentence.
+- replace stale state/canonical ownership metadata with ComponentProfile-aligned ValueController / SelectionController / OverlayController truth and add a cross-check gate.
+- synchronize Runtime Schema/API metadata for explicit `controlled` options.
+
+Local evidence:
+- `verify-final-audit-regressions.mjs`: Chromium green, including reported mutable-value/Ripple/Button-Ripple/DatePicker-preset regressions.
+- `verify-source-esm-browser.mjs`: green.
+- `verify-source-umd-browser.mjs`: green.
+- `verify-high-risk-browser.mjs`: green.
+- architecture-manifest, contracts, types, Value/Selection/Phase H targeted gates: green.
+- full local `npm run verify` reaches Rollup/package stage; this uploaded source workspace has no Rollup provider installed, so final build/pack/release evidence must come from GitHub CI where dependencies are installed.
 
 Next exact step:
-1. run GPT-6 Astra High broad audit from current main using the handoff document.
-2. if blocking findings exist, fix them in small coherent PRs with exact-head CI and main + Pages.
-3. if no blocking findings remain, record final Phase I / overall acceptance in `AI_WORK_STATE.md` and `FOUR_UNIFICATIONS_ACCEPTANCE.md`.
-4. branch pruning is housekeeping after final audit; do not merge stale task branches merely to delete them.
+1. push one coherent remediation branch/PR from current main.
+2. require exact-head GitHub Actions release/browser/package checks to pass.
+3. merge only after exact-head CI is green, then verify main CI + Pages.
+4. update this checkpoint with PR/commit/run evidence; do not restart earlier migration phases.
 
 ## Current authority snapshot — after Phase A
 

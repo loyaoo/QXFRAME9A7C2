@@ -217,7 +217,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (!values.length) return undefined;
           return findPathByValue(values[0]).length ? values[0] : undefined;
         }
-        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
+        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue, { controlled:opts.controlled === true });
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function apiValues(value) { return normalizeValues(value === undefined ? apiValue() : value, opts.multiple === true); }
@@ -936,8 +936,9 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (own(next, 'loadChildren') && !own(next, 'items')) { loadTasks.invalidate('cascader-loader'); loadingKeys.clear(); }
           if (own(next, 'items')) replaceItems(next.items, { loadedKeys: own(next, 'loadedKeys') ? next.loadedKeys : [] });
           else if (own(next, 'loadedKeys')) loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String));
+          if (own(next, 'controlled')) valueState.setControlled(opts.controlled === true);
           if (own(next, 'value')) {
-            valueState.setControlled(true);
+            
             valueState.syncExternal(opts.value, { silent:true, source:'options', reason:'options-value', preserveDraft:true });
             syncSelectionFromApiValue('options-value');
           }

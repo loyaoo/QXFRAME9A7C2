@@ -219,7 +219,7 @@ function setupUpload(instance) {
   }
   function lifecycleOptions(includeValue) {
     var next = {
-      multiple: opts.multiple === true, disabled: opts.disabled === true, autoUpload: opts.autoUpload !== false,
+      multiple: opts.multiple === true, controlled: opts.controlled === true, disabled: opts.disabled === true, autoUpload: opts.autoUpload !== false,
       accept: opts.accept, maxCount: opts.maxCount, maxSize: opts.maxSize, beforeUpload: opts.beforeUpload,
       transformFile: opts.transformFile, request: opts.request,
       onProgress: function (percent, record) { publishUploadFeedback('progress', record, percent, record && record.name); if (typeof opts.onProgress === 'function') opts.onProgress(percent, record, api); },
@@ -732,7 +732,7 @@ function setupUpload(instance) {
   state.runtime = record;
   api.own(destroyRuntime);
   api.bindFocusTarget(trigger);
-  api.setFieldValue(lifecycle.getValue(), { silent: true, force: true, source:own(opts,'value') ? 'external' : 'component', reason:'upload-init' });
+  api.setFieldValue(lifecycle.getValue(), { silent: true, force: true, source:opts.controlled === true ? 'external' : 'component', reason:'upload-init' });
 
   syncStructure(); renderList(); projectUploadFeedback();
   return root;

@@ -128,7 +128,7 @@ export class Collapse extends Component {
             });
             return this.options.accordion === true ? output.slice(0, 1) : output;
         };
-        const valueState = StateController.createOptionValueBinding(opts, opts, normalizeValue);
+        const valueState = StateController.createOptionValueBinding(opts, opts, normalizeValue, { controlled:opts.controlled === true });
         record.valueState = valueState;
         this.own(valueState);
         record.disclosure = Disclosure.create({
@@ -392,8 +392,9 @@ export class Collapse extends Component {
         };
         record.applyOptions = (next, patch) => {
             const candidateItems = hasOwn(patch, 'items') ? next.items : record.items;
+            if (hasOwn(patch, 'controlled')) valueState.setControlled(next.controlled === true);
             if (hasOwn(patch, 'value')) {
-                valueState.setControlled(true);
+                
                 valueState.syncExternal(next.value, { silent: true, source: 'options', reason: 'options-value' });
             } else if (hasOwn(patch, 'accordion')) {
                 valueState.write(valueState.value, { silent: true, source: 'options', reason: 'options-accordion' }, false);

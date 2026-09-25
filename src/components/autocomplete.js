@@ -124,7 +124,7 @@ var selectionRangeScheduler = null;
         var initialValue = opts.value !== undefined ? opts.value : opts.defaultValue;
         var valueState = ValueController.create({
           value: initialValue === undefined || initialValue === null ? '' : String(initialValue),
-          controlled: hasOwn(fieldInit.options, 'value'),
+          controlled: fieldInit.options.controlled === true,
           normalizeValue: function (next) { return next === undefined || next === null ? '' : String(next); }
         });
         instance.bindValueController(valueState);
@@ -533,7 +533,8 @@ var selectionRangeScheduler = null;
           var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }
           optionList.updateOptions(listOptions);
-          if (hasOwn(next, 'value')) { valueState.setControlled(true); valueState.syncExternal(opts.value, { silent: true, source: 'options', reason: 'options-value', preserveDraft: true }); instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:'options', reason:'options-value' }); clearBackfill(); }
+          if (hasOwn(next, 'controlled')) valueState.setControlled(opts.controlled === true);
+          if (hasOwn(next, 'value')) {  valueState.syncExternal(opts.value, { silent: true, source: 'options', reason: 'options-value', preserveDraft: true }); instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:'options', reason:'options-value' }); clearBackfill(); }
           else if (triggerSession.getState().open) refreshSuggestions('options'); else applyQuery('options');
           if (opts.disabled === true && triggerSession.getState().open) close('disabled'); syncControl(); if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
           return instance;

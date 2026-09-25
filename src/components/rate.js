@@ -56,7 +56,7 @@ export class Rate extends FieldComponent {
         const opts = this.options;
         const doc = fieldInit.document || opts.document || (opts.container && opts.container.ownerDocument) || (opts.formField && opts.formField.ownerDocument) || globalThis.document;
         const initial = own(opts, 'value') ? opts.value : (own(opts, 'defaultValue') ? opts.defaultValue : 0);
-        const valueState = StateController.create({ value:quantize(initial, opts.count, opts.half === true), controlled:own(incoming, 'value'), normalizeValue:next => quantize(next, this.options.count, this.options.half === true) });
+        const valueState = StateController.create({ value:quantize(initial, opts.count, opts.half === true), controlled:incoming.controlled===true, normalizeValue:next => quantize(next, this.options.count, this.options.half === true) });
         const record = { fieldInit, doc, root:null, items:[], hoverValue:0, valueState, formBridge:null, itemScope:Lifecycle.createScope(), rendered:false, initialValue:valueState.value };
         state.set(this, record);
         this.own(valueState);
@@ -132,7 +132,7 @@ export class Rate extends FieldComponent {
 
     [componentHooks.beforeOptionsUpdate](patch) { if(own(patch,'direction'))throw new TypeError('[QXFRAME9A7C2] Rate does not support direction; layout is LTR-only.'); }
     [fieldHooks.fieldOptionsUpdated](next, previous, patch) {
-        const r=recordFor(this);r.valueState.updateOptions({normalizeValue:candidate=>quantize(candidate,next.count,next.half===true)});if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(next.value,{silent:true,source:'options',reason:'external-sync'});}else r.valueState.setValue(r.valueState.value,{silent:true,source:'options',reason:'requantize'});this.setFieldValue(r.valueState.value,{silent:true,force:true,sync:true,source:'options',reason:'rate-options'});r.hoverValue=0;if(!r.rendered)return;const rebuildNeeded=own(patch,'count')||own(patch,'half')||own(patch,'character')||own(patch,'tooltips');if(rebuildNeeded)this.#rebuild();else{this.#renderRoot();this.#renderValue();}if(r.formBridge){r.formBridge.updateOptions({name:next.name,disabled:next.disabled===true,readOnly:next.readOnly===true,required:next.required===true,serializeValue:next.serializeValue});r.formBridge.setValue(r.valueState.value,{silent:true});}
+        const r=recordFor(this);r.valueState.updateOptions({normalizeValue:candidate=>quantize(candidate,next.count,next.half===true)});if(own(patch,'controlled'))r.valueState.setControlled(next.controlled===true);if(own(patch,'value')){r.valueState.syncExternal(next.value,{silent:true,source:'options',reason:'options-value'});}else r.valueState.setValue(r.valueState.value,{silent:true,source:'options',reason:'requantize'});this.setFieldValue(r.valueState.value,{silent:true,force:true,sync:true,source:'options',reason:'rate-options'});r.hoverValue=0;if(!r.rendered)return;const rebuildNeeded=own(patch,'count')||own(patch,'half')||own(patch,'character')||own(patch,'tooltips');if(rebuildNeeded)this.#rebuild();else{this.#renderRoot();this.#renderValue();}if(r.formBridge){r.formBridge.updateOptions({name:next.name,disabled:next.disabled===true,readOnly:next.readOnly===true,required:next.required===true,serializeValue:next.serializeValue});r.formBridge.setValue(r.valueState.value,{silent:true});}
     }
 
     setValue(next,config={}){this.#setCommitted(next,{...config,reason:config.reason||'set-value',source:config.source||'api'});return this;}

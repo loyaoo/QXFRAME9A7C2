@@ -40,12 +40,12 @@ export class TagInput extends FieldComponent {
     static enhance(input, options){return this.create(input, options || {});}
 
     constructor(source={}, overrides){
-        const fieldInit=Control.resolveFieldOptions(source,overrides),incoming=fieldInit.options,valueControlled=own(incoming,'value');
+        const fieldInit=Control.resolveFieldOptions(source,overrides),incoming=fieldInit.options;
         if(fieldInit.formField&&!own(incoming,'value')&&!own(incoming,'defaultValue')&&fieldInit.nativeValue!=='')incoming.value=[{key:fieldInit.nativeValue,value:fieldInit.nativeValue,label:fieldInit.nativeValue}];
         if(!own(incoming,'value')&&own(incoming,'defaultValue'))incoming.value=copyValue(incoming.defaultValue);
         super(incoming);
         if(!this.options.container&&!this.options.formField)throw new TypeError('[QXFRAME9A7C2] TagInput requires target/container or formField.');
-        const valueState=this.own(StateController.createValueBinding({value:copyValue(this.options.value),controlled:valueControlled,normalizeValue:copyValue,copyValue:copyValue,equals:StateController.deepEquals}));
+        const valueState=this.own(StateController.createValueBinding({value:copyValue(this.options.value),controlled:this.options.controlled===true,normalizeValue:copyValue,copyValue:copyValue,equals:StateController.deepEquals}));
         const record={fieldInit,valueState,control:null,keyboard:null,tagNavigation:null,focusController:null,interactionController:null,capabilityController:null,inputValue:this.options.inputValue==null?'':String(this.options.inputValue),rendered:false};state.set(this,record);
         this.bindValueController(valueState.getValueController(),{owned:false,syncExternal:false});
     }
@@ -95,7 +95,7 @@ export class TagInput extends FieldComponent {
         return true;
     }
     [componentHooks.render](){const r=recordFor(this);if(r.rendered)return r.control.getRootElement();r.control=this.own(Control.create(this.#controlOptions(true)));r.control.getRootElement().classList.add('qxframe9a7c2-tag-input');this.bindFeedbackControl(r.control);this.#bindTagControllers();r.rendered=true;this.bindFocusTarget(r.control.getInputElement());return r.control.getRootElement();}
-    [fieldHooks.fieldOptionsUpdated](next,previous,patch){const r=recordFor(this);if(!r.control)return;const update=this.#controlOptions(false);delete update.container;if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(copyValue(next.value),{silent:true,source:'options',reason:'options-value'});const value=r.valueState.value;update.tags=value;}if(own(patch,'inputValue')){r.inputValue=next.inputValue==null?'':String(next.inputValue);update.inputValue=r.inputValue;}r.control.updateOptions(update);}
+    [fieldHooks.fieldOptionsUpdated](next,previous,patch){const r=recordFor(this);if(!r.control)return;const update=this.#controlOptions(false);delete update.container;if(own(patch,'controlled'))r.valueState.setControlled(next.controlled===true);if(own(patch,'value')){r.valueState.syncExternal(copyValue(next.value),{silent:true,source:'options',reason:'options-value'});const value=r.valueState.value;update.tags=value;}if(own(patch,'inputValue')){r.inputValue=next.inputValue==null?'':String(next.inputValue);update.inputValue=r.inputValue;}r.control.updateOptions(update);}
 
     setValue(value){if(this.destroyed)return false;const r=recordFor(this);r.valueState.write(copyValue(value),{silent:true,source:'api',reason:'set-value'},false);const next=r.valueState.value;const registration=this.getFormRegistration();if(registration&&registration.notifyValue)registration.notifyValue({source:'api',reason:'set-value'});r.control?.setTags(next);return this;}
     setInputValue(value){if(this.destroyed)return false;const r=recordFor(this);r.inputValue=value==null?'':String(value);r.control?.setInputValue(r.inputValue);return this;}

@@ -140,7 +140,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var values = asValues(value, hierarchicalCheckMode());
           return hierarchicalCheckMode() ? values : values[0];
         }
-        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue);
+        valueState = ValueController.createOptionValueBinding(opts, fieldInit.options, normalizeApiValue, { controlled:opts.controlled === true });
         scope.add(function () { if (valueState) valueState.destroy(); valueState = null; });
         function apiValue() { return valueState ? valueState.value : normalizeApiValue(undefined); }
         function restoreTreeFromApiValue(reason) {
@@ -733,8 +733,9 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           };
           if (hasOwn(next, 'items')) treeOptions.items = Array.isArray(opts.items) ? opts.items.slice() : [];
           if (hasOwn(next, 'loadedKeys')) treeOptions.loadedKeys = opts.loadedKeys;
+          if (hasOwn(next, 'controlled')) valueState.setControlled(opts.controlled === true);
           if (hasOwn(next, 'value')) {
-            valueState.setControlled(true);
+            
             valueState.syncExternal(opts.value, { silent:true, source:'options', reason:'options-value', preserveDraft:true });
             if (checkMode) treeOptions.checkedKeys = checkedKeysForValues(apiValue());
             else treeOptions.value = asValues(apiValue(), false)[0];

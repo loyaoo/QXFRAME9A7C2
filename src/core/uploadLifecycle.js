@@ -78,7 +78,7 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
     var opts = mergeOptions({ multiple: false, autoUpload: true, maxCount: 0, maxSize: 0 }, supplied);
     var emitter = Events.createEmitter();
     var destroyed = false;
-    var controlled = own(supplied, 'value');
+    var controlled = supplied.controlled === true;
     var records = asArray(own(supplied, 'value') ? supplied.value : supplied.defaultValue).map(function (item) { return normalizeRecord(item); });
     var tasks = Object.create(null);
     var mutationGeneration = 0;
@@ -323,9 +323,9 @@ var LIST_IGNORE = Object.freeze({ __qxframe9a7c2UploadListIgnore: true });
       var previousUids = Object.create(null);
       records.forEach(function (record) { previousUids[record.uid] = true; });
       opts = mergeOptions(opts, next);
+      if (own(next, 'controlled')) controlled = opts.controlled === true;
       if (own(next, 'value')) {
-        controlled = true;
-        setValue(next.value, { source: 'options', silent: true, preservePending: true });
+        setValue(next.value, { source: 'options', silent: true });
         if (opts.autoUpload !== false && Utils.isFunction(opts.request)) {
           records.forEach(function (record) {
             if (previousUids[record.uid] || !record.file || record.skipAutoUpload || record.status === 'uploading' || record.status === 'success') return;

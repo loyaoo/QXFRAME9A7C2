@@ -33,7 +33,7 @@ assert.doesNotMatch(source,/getValue:\s*lifecycle\.getValue/,'Upload public comm
 assert.match(source,/getValue:\s*function \(\) \{ return api\.value \|\| \[\]; \}/,'Upload public getValue must read FieldComponent committed value.');
 assert.match(source,/detail && detail\.controlled === true && detail\.operation !== 'set-value'/,'Controlled add\/remove\/move proposals must not overwrite committed ValueController state.');
 assert.match(source,/var canonical = controlledProposal \? \(api\.value \|\| \[\]\) : value/,'Upload set-value lifecycle events must synchronize the committed ValueController owner.');
-assert.match(source,/source:own\(opts,'value'\) \? 'external' : 'component'/,'Initial controlled value must enter ValueController as external truth.');
+assert.match(source,/source:opts\.controlled === true \? 'external' : 'component'/,'Only explicit controlled Upload value must enter ValueController as external truth.');
 assert.match(source,/capabilityController\.can\('open'\)/,'Upload open path must enter CapabilityController.');
 assert.match(source,/capabilityController\.can\('select'\)/,'Upload add/drop path must enter CapabilityController.');
 assert.match(source,/capabilityController\.can\('remove'\)/,'Upload remove path must enter CapabilityController.');

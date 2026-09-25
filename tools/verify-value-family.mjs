@@ -11,14 +11,19 @@ import { Autocomplete } from '../src/components/autocomplete.js';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 
-const controlled=ValueController.createOptionValueBinding({value:'a',defaultValue:'x'},{value:'a'},value=>String(value||''));
-assert.equal(controlled.controlled,true,'authored value must create external ownership.');
+const authored=ValueController.createOptionValueBinding({value:'a',defaultValue:'x'},{value:'a'},value=>String(value||''));
+assert.equal(authored.controlled,false,'authored value must remain internally owned unless controlled is explicit.');
+assert.equal(authored.write('b',{source:'keyboard',reason:'interaction'},true),true);
+assert.equal(authored.value,'b','authored value must remain user-mutable.');
+
+const controlled=ValueController.createOptionValueBinding({value:'a'},{value:'a'},value=>String(value||''),{controlled:true});
+assert.equal(controlled.controlled,true,'explicit controlled mode must retain external ownership.');
 assert.equal(controlled.write('b',{source:'keyboard',reason:'proposal'},true),true);
-assert.equal(controlled.value,'a','controlled proposal must not replace canonical value.');
+assert.equal(controlled.value,'a','explicit controlled proposal must not replace canonical value.');
 const pending=controlled.getOwnershipState().pendingRequestIds[0];
-assert.ok(pending,'controlled proposal must create a pending request.');
+assert.ok(pending,'explicit controlled proposal must create a pending request.');
 assert.equal(controlled.syncExternal('b',{requestId:pending}),true);
-assert.equal(controlled.value,'b','external sync must update canonical value.');
+assert.equal(controlled.value,'b','external sync must update explicit controlled canonical value.');
 
 const uncontrolled=ValueController.createOptionValueBinding({defaultValue:'a'},{defaultValue:'a'},value=>String(value||''));
 assert.equal(uncontrolled.controlled,false,'defaultValue must remain internally owned.');
@@ -40,6 +45,7 @@ for(const file of ['select.js','tree-select.js','cascader.js','autocomplete.js']
   assert.ok(/ValueController\./.test(source),file+' must use the canonical ValueController entry point.');
 }
 
+authored.destroy();
 controlled.destroy();
 uncontrolled.destroy();
 compat.destroy();

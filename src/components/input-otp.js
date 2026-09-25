@@ -114,7 +114,7 @@ export class InputOTP extends FieldComponent {
         const record = state.get(this);
         if (record.rendered) return record.control && record.control.getRootElement();
         const initialValue = this.#sanitize(own(this.options, 'value') ? this.options.value : (own(this.options, 'defaultValue') ? this.options.defaultValue : ''));
-        const valueState = this.own(StateController.create({ value: initialValue, controlled: own(this.options, 'value'), normalizeValue: value => this.#sanitize(value) }));
+        const valueState = this.own(StateController.create({ value: initialValue, controlled: this.options.controlled === true, normalizeValue: value => this.#sanitize(value) }));
         record.valueState = valueState;
         this.bindValueController(valueState, { syncExternal:false });
         const adapter = { toValue: values => values.join(''), toSegments: value => this.#toSegments(value) };
@@ -207,11 +207,11 @@ export class InputOTP extends FieldComponent {
         const record = state.get(this);
         if (!record.control) return;
         const update = { disabled: next.disabled === true, readOnly: next.readOnly === true, required: next.required === true, size: next.size, status: next.status, variant: next.variant, focusOutline: next.focusOutline, name: next.name };
+        if (own(patch, 'controlled')) record.valueState.setControlled(next.controlled === true);
         if (own(patch, 'value')) {
             const external = this.#sanitize(next.value);
-            record.valueState.setControlled(true);
-            record.valueState.syncExternal(external, { silent: true, source: 'options', reason: 'external-sync' });
-            this.setFieldValue(record.valueState.value, { silent: true, force: true, sync: true, source: 'options', reason: 'external-sync' });
+            record.valueState.syncExternal(external, { silent: true, source: 'options', reason: 'options-value' });
+            this.setFieldValue(record.valueState.value, { silent: true, force: true, sync: true, source: 'options', reason: 'options-value' });
             update.value = record.valueState.value;
             update.committedValue = record.valueState.value;
         }

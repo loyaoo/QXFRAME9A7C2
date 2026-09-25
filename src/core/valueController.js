@@ -512,13 +512,12 @@ function createValueBinding(options) {
 
 function createOptionValueBinding(options, authoredOptions, normalizeValue, config = {}) {
   const source = options || {};
-  const authored = authoredOptions || {};
   const normalize = typeof normalizeValue === 'function' ? normalizeValue : value => value;
   const initial = Object.prototype.hasOwnProperty.call(source, 'value') ? source.value : source.defaultValue;
   return createValueBinding({
     ...config,
     value: normalize(initial),
-    controlled: Object.prototype.hasOwnProperty.call(authored, 'value'),
+    controlled: config.controlled === true,
     normalizeValue: normalize
   });
 }

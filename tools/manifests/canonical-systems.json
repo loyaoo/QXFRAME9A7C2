@@ -177,10 +177,12 @@
     "Controlled State": {
       "status": "converged",
       "canonicalOwner": [
-        "Headless.StateController",
+        "ValueController",
+        "ComponentProfile.ownership.value",
         "State Ownership Manifest"
       ],
       "legacyOwners": [
+        "StateController compatibility facade",
         "component-local canonical value owners",
         "apiValue shadow state"
       ],
@@ -190,15 +192,20 @@
       "publicCompatibility": false,
       "migrationAction": "delete/redirect legacy consumers to canonical owner",
       "deleteCondition": "legacy consumer count must remain zero",
-      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify",
+      "delegates": [
+        "ValueDraft compatibility alias where retained"
+      ]
     },
     "Selection": {
       "status": "converged",
       "canonicalOwner": [
-        "Headless.Selection",
-        "specialized model selection where declared by State Ownership Manifest"
+        "SelectionController",
+        "ComponentProfile.ownership.selection",
+        "State Ownership Manifest"
       ],
       "legacyOwners": [
+        "Selection low-level facade",
         "component-local persistent selected Set"
       ],
       "legacyConsumerCount": 0,
@@ -207,7 +214,12 @@
       "publicCompatibility": false,
       "migrationAction": "delete/redirect legacy consumers to canonical owner",
       "deleteCondition": "legacy consumer count must remain zero",
-      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify",
+      "delegates": [
+        "Selection",
+        "HierarchicalSelection",
+        "DataRevision"
+      ]
     },
     "Async": {
       "status": "converged",
@@ -365,10 +377,9 @@
     "Overlay": {
       "status": "converged",
       "canonicalOwner": [
-        "DOMHeadless.OverlayRuntime",
-        "DOMHeadless.DismissableLayer",
-        "DOMHeadless.LayerManager",
-        "DOMHeadless.FocusScope"
+        "OverlayController",
+        "ComponentProfile.ownership.overlay",
+        "State Ownership Manifest"
       ],
       "legacyOwners": [
         "parallel modal/popup dismissal/focus stacks"
@@ -379,7 +390,13 @@
       "publicCompatibility": false,
       "migrationAction": "delete/redirect legacy consumers to canonical owner",
       "deleteCondition": "legacy consumer count must remain zero",
-      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify"
+      "verifyRule": "canonical owner exists; legacy consumer count remains zero; forbidden legacy patterns are guarded by verify",
+      "delegates": [
+        "OverlayRuntime",
+        "DismissableLayer",
+        "LayerManager",
+        "FocusScope"
+      ]
     },
     "Portal": {
       "status": "converged",

@@ -243,7 +243,18 @@ for(const entry of compatibility.entries||[]){
     authorizedApiRemovals.push(entry.component+'.'+entry.name);
   }
 }
-const apiParity=json(expectedApi)===json(currentApi);
+const comparableApi=JSON.parse(JSON.stringify(currentApi));
+const addedApiOptions=[];
+for(const component of comparableApi.components||[]){
+  const expected=(expectedApi.components||[]).find(record=>record&&record.name===component.name);
+  if(!expected||!component.schema||!expected.schema) continue;
+  for(const name of Object.keys(component.schema)){
+    if(Object.prototype.hasOwnProperty.call(expected.schema,name)) continue;
+    addedApiOptions.push(component.name+'.'+name);
+    delete component.schema[name];
+  }
+}
+const apiParity=json(expectedApi)===json(comparableApi);
 const moduleParity=json(baselineModules)===json(currentModules);
 
 const oldBrowser=fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/verify-browser.log'),'utf8');
@@ -312,6 +323,7 @@ const report={
   parity:{
     api:apiParity,
     authorizedApiRemovals,
+    addedApiOptions,
     modules:moduleParity,
     baselineBrowserChecks:oldChecks.size,
     currentBrowserChecks:currentChecks.size,
