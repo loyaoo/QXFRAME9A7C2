@@ -138,7 +138,7 @@ export class InputNumber extends FieldComponent {
         this.own(DOM.listen(field,'compositionstart',()=>{record.composing=true;}));this.own(DOM.listen(field,'compositionend',event=>{record.composing=false;numeric.collectInput(field.value,{reason:'compositionend',source:'input',originalEvent:event,composing:false});this.#syncProjection(true,{source:'input',reason:'compositionend'});}));
         this.own(DOM.listen(frame,'wheel',event=>{if(this.options.changeOnWheel!==true||CapabilityController.mutationLocked(this.options))return;event.preventDefault?.();event.stopPropagation?.();this.#step(event.deltaY<0,'wheel','wheel',event);},{passive:false}));
         if(control.onFormReset)control.onFormReset(()=>{numeric.setValue(initial.value,{silent:true,source:'form',reason:'reset'});this.#syncProjection(false);});
-        this.#renderActions();this.#syncProjection(false);record.rendered=true;this.bindFocusTarget(field);this.setFieldValue(initial.value,{silent:true,force:true});return root;
+        this.#renderActions();this.#syncProjection(false);record.rendered=true;this.bindFocusTarget(field);this.setFieldValue(initial.value,{silent:true,force:true,sync:true,source:'init',reason:'input-number-init'});return root;
     }
 
     [componentHooks.beforeOptionsUpdate](patch, previous) {
