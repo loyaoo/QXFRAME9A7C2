@@ -8,6 +8,9 @@ import { Config } from '../core/config.js';
 import { TransformModel } from '../core/transformModel.js';
 import { Renderer } from '../core/renderer.js';
 import { OverlayController } from '../core/overlayController.js';
+import { InteractionController } from '../core/interactionController.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { FeedbackController } from '../core/feedbackController.js';
 import { PopupSurface } from '../core/popupSurface.js';
 import { Transition } from '../core/transition.js';
 import { PointerSession } from '../core/pointerSession.js';
@@ -171,6 +174,10 @@ function setupImage(instance) {
   var api = instance;
   var previewActionByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
   var previewChromeNodes = [];
+  var interactionController = null;
+  var interactionScope = null;
+  var capabilityController = null;
+  var feedbackController = null;
     
   var root = doc.createElement('span');
   var image = doc.createElement('img');
@@ -190,6 +197,32 @@ function setupImage(instance) {
   root.appendChild(image);
   root.appendChild(errorLayer);
   opts.container.appendChild(root);
+
+  capabilityController = CapabilityController.create({
+    getState: function () { return { disabled: destroyed || opts.disabled === true, readOnly: false, loading: false }; },
+    capabilities: Object.freeze({ focusable:true, navigable:true, expandable:true, activatable:true, editable:true, draggable:true })
+  });
+  interactionController = InteractionController.create();
+  function projectFeedback(snapshot) {
+    var status = String(snapshot && snapshot.status || 'idle');
+    root.classList.toggle('is-loading', status === 'pending' || status === 'progress');
+    root.classList.toggle('is-error', status === 'error');
+    root.classList.toggle('is-warning', status === 'warning');
+    return root;
+  }
+  feedbackController = FeedbackController.createForProjector(Object.freeze({
+    show: function (snapshot) { return projectFeedback(snapshot); },
+    update: function (_handle, snapshot) { return projectFeedback(snapshot); },
+    close: function () { return projectFeedback({ status:'idle' }); }
+  }), { ownerId:String(instance.id || 'image') }, 'local');
+  scope.add(function () { if (feedbackController) feedbackController.destroy(); feedbackController = null; });
+  scope.add(function () { if (interactionController) interactionController.destroy(); interactionController = null; interactionScope = null; });
+  scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
+  function syncFeedback(reason) {
+    if (!feedbackController) return;
+    var status = error ? 'error' : (loading ? 'pending' : 'idle');
+    feedbackController.publish({ operation:'image-load', status:status, requestId:'image-source', message:reason || '' });
+  }
     
   function previewConfig() { return opts.preview && typeof opts.preview === 'object' ? opts.preview : null; }
   function cfg(name, fallback) {
@@ -242,9 +275,7 @@ function setupImage(instance) {
   function syncRoot() {
     root.classList.toggle('is-rounded', opts.rounded === true);
     root.classList.toggle('is-circle', opts.circle === true);
-    root.classList.toggle('is-previewable', previewable() && opts.disabled !== true);
-    root.classList.toggle('is-loading', loading);
-    root.classList.toggle('is-error', error);
+    root.classList.toggle('is-previewable', previewable() && capabilityController && capabilityController.can('open'));
     root.classList.toggle('is-disabled', opts.disabled === true);
     root.style.setProperty('--qxframe9a7c2-image-fit', opts.fit);
     root.style.width = opts.width == null || opts.width === '' ? '' : (typeof opts.width === 'number' ? String(opts.width) + 'px' : String(opts.width));
@@ -267,12 +298,14 @@ function setupImage(instance) {
       error = true;
     }
     syncRoot();
+    syncFeedback('source');
     return api;
   }
   function onLoad(event) {
     loading = false;
     error = false;
     syncRoot();
+    syncFeedback('load');
     call(opts.onLoad, event, Object.freeze({ src: image.currentSrc || image.src || '', instance: api }));
   }
   function onError(event) {
@@ -286,6 +319,7 @@ function setupImage(instance) {
     loading = false;
     error = true;
     syncRoot();
+    syncFeedback('error');
     call(opts.onError, event, Object.freeze({ src: image.getAttribute('src') || '', instance: api }));
   }
     
