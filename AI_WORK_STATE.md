@@ -10,49 +10,46 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `120f57d98be4f95da53f5564a6f96332d787c15b` (PR #92 merge)
-- Current branch: `refactor/phase-h-simple-fields-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-013 simple Field controls PR
+- Last code-affecting main commit: `5a77fd6a5e7e757ba2f20a552e4cc151305b6891` (PR #93 merge)
+- Current branch: `refactor/phase-h-collapse-pagination-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-014 Collapse/Pagination PR
 - Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-013 branch; prune merged/superseded task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #462 / `36085025052` (PR #92)
-- Latest green main CI + Pages: #463 / `36085329998`
+- Latest green Phase H PR CI: #467 / `36086835393` (PR #93)
+- Latest green main CI + Pages: #468 / `36087140788`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-013`
+- Current Task: `PHASE-H-014`
 
 ## CURRENT
 
-### PHASE-H-013 — InputNumber + InputOTP + Rate + Slider V/F/I/C/B/R closeout
+### PHASE-H-014 — Collapse + Pagination V/F/I/C(+M) closeout
 Status: IN_PROGRESS
-Task progress: 80%
+Task progress: 85%
 
 Completed prerequisite:
-- PHASE-H-012 is DONE through PR #92, exact-head CI #462 / `36085025052`, merge `120f57d98be4f95da53f5564a6f96332d787c15b`, main release + Pages #463 / `36085329998`.
-- DatePicker, TimePicker, ColorPicker and WheelPicker are H accepted.
-- PickerField owns one declared shared FocusController; PickerComponent shares V/F/I/C/M/O/B/R; Date/Time/Wheel add stable semantic SelectionController keys without duplicating business value.
+- PHASE-H-013 is DONE through PR #93, exact-head CI #467 / `36086835393`, merge `5a77fd6a5e7e757ba2f20a552e4cc151305b6891`, main release + Pages #468 / `36087140788`.
+- InputNumber, InputOTP, Rate and Slider are H accepted for the exact V/F/I/C/B/R target.
+- Phase H target matrix currently reports 27 profiled / 22 complete public components before this H-014 pack.
 
-Implemented in current H-013 pack:
-- added one shared `createSimpleFieldProfile()` for the exact Value/Focus/Interaction/Capability/Feedback/Form target instead of four repeated profile regions.
-- FieldComponent now provides on-demand FocusController, InteractionController and CapabilityController bindings alongside the already accepted Value/Feedback/Form paths; components opt in explicitly rather than receiving hidden controllers.
-- specialized ValueControllers can disable the generic Field `options.value` rewrite; InputNumber, InputOTP, Rate and Slider now keep external sync in their canonical domain controller only.
-- NumericInput exposes its existing StateController→ValueController and external-value projector; InputNumber binds that exact controller into FieldComponent instead of retaining a second Field value owner.
-- InputNumber keyboard Enter/ArrowUp/ArrowDown semantics enter InteractionController; step/mutation enters the shared CapabilityController; Control is the feedback projector and the native NumericInput remains numeric execution authority.
-- Control segmented mode gives an owning component InteractionController first refusal before the compatibility fallback; InputOTP uses this for segment ArrowLeft/ArrowRight/Backspace navigation/edit semantics.
-- Rate routes keyboard selection through InteractionController, capability gates pointer/keyboard mutation, FocusController owns the root focus region, and local feedback projects to status/busy classes without a second rating store.
-- Slider keeps PointerSession, handle array and keyboard-session execution state, but handle keydown semantics now enter one root InteractionController and pointer/edit mutation is gated by the shared CapabilityController.
-- all four components use the same simple-field profile factory and expose real F/I/C/B controller instances at runtime.
-- `verify:phase-h-simple-fields` is required by full verify and rejects restored parallel Rate/Slider keydown owners or duplicate specialized external-value sync.
-- strict source-ESM Chromium coverage now checks shared controller identity, NumericInput canonical ValueController identity, keyboard routing, disabled blocking, OTP segment navigation and feedback projection.
-- Phase H regression floors are raised to `minimumProfiled=27` and `minimumComplete=22`; H-012 contributed four newly complete existing profiles and H-013 contributes four newly profiled + complete components.
+Implemented in current H-014 pack:
+- PaginationModel page state is now StateController→ValueController-owned instead of a plain page variable; Pagination exposes that canonical ValueController.
+- Pagination focus/keyboard region enters FocusController and jumper mutation is gated by CapabilityController; the direct KeyboardNavigation import is removed.
+- Collapse open-key state remains StateController→ValueController-owned; header navigation enters FocusController and activation policy enters CapabilityController.
+- Collapse panel presence remains Transition→MotionController, preserving the already accepted rapid-reversal fix and adding no timer/generation workaround.
+- both components declare exact handbook profiles: Pagination V/F/I/C and Collapse V/F/I/C/M.
+- Interaction ownership is the shared semantic path `FocusController → KeyboardRegion → KeyboardNavigation → InteractionController.resolveKeyboardAction()`; no second keydown listener/controller is added.
+- `verify:phase-h-collapse-pagination` freezes the authority chain and rejects restored direct KeyboardNavigation imports.
+- strict source-ESM Chromium verifies canonical ValueController updates, shared keyboard semantics and disabled capability blocking.
+- target-matrix floors rise from 27/22 to 29 profiled / 24 complete.
 
 Next exact step:
-1. open PHASE-H-013 PR and run exact-head full release/browser/package CI.
-2. fix only concrete CI regressions; do not broaden the pack.
-3. merge only exact-head green and verify main + Pages.
-4. mark InputNumber, InputOTP, Rate and Slider H accepted.
-5. continue the next shared family; leave final broad audit for the later Astra High acceptance pass.
+1. run final diff/self-audit and open PHASE-H-014 PR.
+2. require exact-head full release/browser/package CI.
+3. merge only green and verify main + Pages.
+4. mark Collapse and Pagination H accepted.
+5. continue the next high-completion shared family; final broad audit remains reserved for Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -82,6 +79,25 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-013 — InputNumber + InputOTP + Rate + Slider V/F/I/C/B/R closeout
+Status: DONE
+Evidence:
+- PR #93 merged
+- merge commit `5a77fd6a5e7e757ba2f20a552e4cc151305b6891`
+- exact-head CI #467 / `36086835393`: success
+- main CI + Pages #468 / `36087140788`: success
+Outcome:
+- all four components declare the exact V/F/I/C/B/R target through one shared simple-field profile factory.
+- FieldComponent shared Focus/Interaction/Capability/Feedback/Form paths are reused instead of four component-local controller stacks.
+- InputNumber binds the existing NumericInput canonical ValueController and routes Enter/Arrow stepping through InteractionController + CapabilityController.
+- InputOTP routes segment navigation/edit semantics through InteractionController while retaining its canonical ValueController.
+- Rate and Slider retain existing numeric/value execution stores while focus, interaction, capability and feedback become shared controller facades.
+- no duplicate committed value owner or duplicated feedback projector remains.
+- target-matrix floors are 27 profiled / 22 complete after this pack.
+- InputNumber, InputOTP, Rate and Slider are H accepted.
+
+
 
 ### PHASE-H-012 — Picker family shared V/F/I/C/M/S/O/B/R closeout
 Status: DONE

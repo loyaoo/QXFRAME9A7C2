@@ -1,6 +1,7 @@
 
 import { Events } from './events.js';
 import { mergeOptions } from './options.js';
+import { StateController } from './stateController.js';
 
 function positiveInt(value, fallback) {
   var number = Math.floor(Number(value));
@@ -39,7 +40,7 @@ function create(options) {
   var last = opts.last !== false;
   var ellipsis = opts.ellipsis !== false;
   var ellipsisJump = opts.ellipsisJump;
-  var page = 1;
+  var pageState = null;
   var api = null;
 
   function pageCount() {
@@ -52,21 +53,22 @@ function create(options) {
     return Math.max(1, Math.min(count, positiveInt(value, 1)));
   }
 
-  page = clampPage(opts.page);
+  pageState = StateController.create({ value: clampPage(opts.page), normalizeValue: clampPage, controlled: false });
+  function currentPage() { return pageState.value; }
 
   function snapshot() {
     var count = pageCount();
-    var startIndex = count > 0 ? (page - 1) * pageSize : 0;
+    var startIndex = count > 0 ? (currentPage() - 1) * pageSize : 0;
     var endIndex = count > 0 ? Math.min(total, startIndex + pageSize) : 0;
     return Object.freeze({
-      page: page,
+      page: currentPage(),
       pageSize: pageSize,
       total: total,
       pageCount: count,
       startIndex: startIndex,
       endIndex: endIndex,
-      hasPrevious: count > 0 && page > 1,
-      hasNext: count > 0 && page < count,
+      hasPrevious: count > 0 && currentPage() > 1,
+      hasNext: count > 0 && currentPage() < count,
       pagerCount: pagerCount,
       first: first,
       last: last,
@@ -94,9 +96,9 @@ function create(options) {
   function setPage(next, meta) {
     if (destroyed) return false;
     var normalized = clampPage(next);
-    if (normalized === page) return true;
+    if (normalized === currentPage()) return true;
     var previous = snapshot();
-    page = normalized;
+    pageState.setValue(normalized, { silent:true, source:meta && meta.source || 'api', reason:meta && meta.reason || 'page' });
     return notify('page', previous, meta);
   }
 
@@ -105,10 +107,10 @@ function create(options) {
     var normalized = positiveInt(next, pageSize);
     if (normalized === pageSize) return true;
     var previous = snapshot();
-    var firstIndex = previous.pageCount > 0 ? (page - 1) * pageSize : 0;
+    var firstIndex = previous.pageCount > 0 ? (currentPage() - 1) * pageSize : 0;
     var recommendPage = Math.floor(firstIndex / normalized) + 1;
     pageSize = normalized;
-    page = clampPage(recommendPage);
+    pageState.setValue(clampPage(recommendPage), { silent:true, source:meta && meta.source || 'api', reason:'page-size' });
     return notify('page-size', previous, mergeOptions({ recommendPage: recommendPage }, meta));
   }
 
@@ -118,7 +120,7 @@ function create(options) {
     if (normalized === total) return true;
     var previous = snapshot();
     total = normalized;
-    page = clampPage(page);
+    pageState.setValue(clampPage(currentPage()), { silent:true, source:meta && meta.source || 'api', reason:'total' });
     return notify('total', previous, meta);
   }
 
@@ -126,7 +128,7 @@ function create(options) {
     return {
       type: 'page',
       page: pageNumber,
-      current: pageNumber === page,
+      current: pageNumber === currentPage(),
       role: role || 'window'
     };
   }
@@ -148,7 +150,7 @@ function create(options) {
       }
       if (!useEllipsis) return;
       var jump = normalizeJump(jumpSetting, count);
-      var rawTarget = page + (direction === 'right' ? jump : -jump);
+      var rawTarget = currentPage() + (direction === 'right' ? jump : -jump);
       var target = Math.max(hiddenStart, Math.min(hiddenEnd, rawTarget));
       tokens.push({
         type: 'ellipsis',
@@ -199,7 +201,7 @@ function create(options) {
     var count = pageCount();
     var pages = [];
     if (settings.first) pages.push(1);
-    pages.push(page);
+    pages.push(currentPage());
     if (settings.last && count > 1) pages.push(count);
     var seen = Object.create(null);
     return pages.filter(function (number) {
@@ -232,8 +234,8 @@ function create(options) {
       return all;
     }
 
-    var start = page;
-    var end = page;
+    var start = currentPage();
+    var end = currentPage();
     var currentTokens = buildTokens(start, end, settings);
     if (currentTokens.length > budget) return minimalTokens(settings).slice(0, budget);
 
@@ -254,8 +256,8 @@ function create(options) {
         if (pageDelta) return pageDelta;
         var slotDelta = b.tokens.length - a.tokens.length;
         if (slotDelta) return slotDelta;
-        var aBalance = Math.abs((page - a.start) - (a.end - page));
-        var bBalance = Math.abs((page - b.start) - (b.end - page));
+        var aBalance = Math.abs((currentPage() - a.start) - (a.end - currentPage()));
+        var bBalance = Math.abs((currentPage() - b.start) - (b.end - currentPage()));
         if (aBalance !== bBalance) return aBalance - bBalance;
         return a.side === 'left' ? -1 : 1;
       });
@@ -278,8 +280,8 @@ function create(options) {
     if (Object.prototype.hasOwnProperty.call(Object(next), 'ellipsisJump')) ellipsisJump = next.ellipsisJump;
     if (Object.prototype.hasOwnProperty.call(Object(next), 'pageSize')) pageSize = positiveInt(next.pageSize, pageSize);
     if (Object.prototype.hasOwnProperty.call(Object(next), 'total')) total = nonNegativeInt(next.total);
-    if (Object.prototype.hasOwnProperty.call(Object(next), 'page')) page = clampPage(next.page);
-    else page = clampPage(page);
+    if (Object.prototype.hasOwnProperty.call(Object(next), 'page')) pageState.setValue(clampPage(next.page), { silent:true, source:'options', reason:'page' });
+    else pageState.setValue(clampPage(currentPage()), { silent:true, source:'options', reason:'clamp' });
     opts = mergeOptions(opts, next);
     return api;
   }
@@ -288,6 +290,8 @@ function create(options) {
     if (destroyed) return false;
     destroyed = true;
     emitter.dispose();
+    if (pageState) pageState.destroy();
+    pageState = null;
     return true;
   }
 
@@ -295,19 +299,20 @@ function create(options) {
     setPage: setPage,
     setPageSize: setPageSize,
     setTotal: setTotal,
-    previous: function (meta) { return setPage(page - 1, mergeOptions({ reason: 'previous' }, meta)); },
-    next: function (meta) { return setPage(page + 1, mergeOptions({ reason: 'next' }, meta)); },
+    previous: function (meta) { return setPage(currentPage() - 1, mergeOptions({ reason: 'previous' }, meta)); },
+    next: function (meta) { return setPage(currentPage() + 1, mergeOptions({ reason: 'next' }, meta)); },
     first: function (meta) { return setPage(1, mergeOptions({ reason: 'first' }, meta)); },
     last: function (meta) { return setPage(pageCount(), mergeOptions({ reason: 'last' }, meta)); },
     deriveItems: deriveItems,
     snapshot: snapshot,
+    getValueController: function () { return pageState; },
     updateOptions: updateOptions,
     on: emitter.on,
     once: emitter.once,
     destroy: destroy
   };
   Object.defineProperties(api, {
-    page: { enumerable: true, get: function () { return page; } },
+    page: { enumerable: true, get: currentPage },
     pageSize: { enumerable: true, get: function () { return pageSize; } },
     total: { enumerable: true, get: function () { return total; } },
     pageCount: { enumerable: true, get: pageCount },
