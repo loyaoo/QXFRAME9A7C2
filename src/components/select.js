@@ -329,7 +329,8 @@ var controlHost = FieldHost.resolvePickerControl({
           document: doc,
           portalContainer: portalContainer
         }, {
-          focusScope: 'exit',
+          focusScope: 'contain',
+          closeOnTabExit: false,
           tabExitTarget: function () { return fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root); },
           onOpen: function (detail) {
             var plan = popupSelectionOpenPlan(detail, { hasSelection:selectedValues().length > 0, passiveFirst:opts.defaultActiveFirstOption === true });
@@ -699,7 +700,7 @@ var controlHost = FieldHost.resolvePickerControl({
     
         fieldControl = headlessMode ? null : projectionMode ? Control.createProjection({
           document: doc, reference: root, valueTarget: valueTarget, inputTarget: input, formTarget: opts.formTarget, formField: opts.formField, name: opts.name,
-          committedValue:opts.multiple===true?selectedValues():selectedValues()[0], onFormFieldChange:function(value){setValue(value,{source:'form-field',reason:'native-change'});}, mode:opts.multiple === true ? 'tags' : (opts.searchable === true ? 'input' : 'value'), tags:opts.multiple === true ? selectionTags.tags() : [], editable:opts.searchable === true, disabled:opts.disabled === true, readOnly:opts.readOnly === true, required:opts.required === true, busy:opts.busy === true || opts.loading === true, busyIndicator:opts.loadingIcon, placeholder:opts.placeholder,
+          committedValue:opts.multiple===true?selectedValues():selectedValues()[0], onFormFieldChange:function(value){setValue(value,{source:'form-field',reason:'native-change',request:true});}, mode:opts.multiple === true ? 'tags' : (opts.searchable === true ? 'input' : 'value'), tags:opts.multiple === true ? selectionTags.tags() : [], editable:opts.searchable === true, disabled:opts.disabled === true, readOnly:opts.readOnly === true, required:opts.required === true, busy:opts.busy === true || opts.loading === true, busyIndicator:opts.loadingIcon, placeholder:opts.placeholder,
           onInput: function (value, event) {
             if (opts.searchable !== true || userMutationLocked()) return;
             if (!triggerSession.getState().open && !open('input', event)) return;
@@ -711,7 +712,7 @@ var controlHost = FieldHost.resolvePickerControl({
           }
         }) : Control.create({
           elements: { root: root, valueHost: valuesNode, input: input, clear: clearButton, toggle: arrow, prefix: prefix, suffix: suffix },
-          document:doc,formField:opts.formField,committedValue:opts.multiple===true?selectedValues():selectedValues()[0],onFormFieldChange:function(value){setValue(value,{source:'form-field',reason:'native-change'});},
+          document:doc,formField:opts.formField,committedValue:opts.multiple===true?selectedValues():selectedValues()[0],onFormFieldChange:function(value){setValue(value,{source:'form-field',reason:'native-change',request:true});},
           mode: opts.multiple === true ? 'tags' : (opts.searchable === true ? 'input' : 'value'),
           tags: opts.multiple === true ? selectionTags.tags() : [],
           creatableTags: opts.multiple === true && opts.creatable === true,
@@ -852,7 +853,7 @@ var controlHost = FieldHost.resolvePickerControl({
           var cfg = meta || {};
           var previousValue = apiValue();
           var nextValue = normalizeApiValue(value);
-          var changed = valueState.write(nextValue, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', originalEvent:cfg.originalEvent || null }, false);
+          var changed = valueState.write(nextValue, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value', originalEvent:cfg.originalEvent || null }, cfg.request === true);
           var canonical = apiValue();
           optionList.setValue(canonical, { silent:true, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
           renderValues({ silent:!!cfg.silent, source:cfg.source || 'instance', reason:cfg.reason || 'select-set-value' });
@@ -989,7 +990,8 @@ var controlHost = FieldHost.resolvePickerControl({
           if (hasOwn(next, 'value')) {
             valueState.syncExternal(opts.value, { silent:true, source:'options', reason:'options-value', preserveDraft:true });
           } else if (hasOwn(next, 'multiple')) {
-            valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
+            if (valueState.controlled) valueState.requestChange(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
+            else valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
           }
           var listOptions = {
             multiple: opts.multiple === true,
@@ -1086,7 +1088,7 @@ var controlHost = FieldHost.resolvePickerControl({
     
         var initialFormValue = opts.multiple === true ? selectedValues().slice() : selectedValues()[0];
         if (fieldControl && fieldControl.onFormReset) fieldControl.onFormReset(function () {
-          searchState.clear({ silent:true, notify:false, source:'form', reason:'reset' }); draftActive = false; draftDirty = false; optionList.setSearch(''); setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset' }); draftValue = committedSingleDisplay();
+          searchState.clear({ silent:true, notify:false, source:'form', reason:'reset' }); draftActive = false; draftDirty = false; optionList.setSearch(''); setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset', request: true }); draftValue = committedSingleDisplay();
         });
     
     
