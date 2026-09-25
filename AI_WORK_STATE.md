@@ -10,45 +10,43 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `0d8044846fc3e02977c73d950a5cf88ef3d4159f` (PR #96 merge)
-- Current branch: `refactor/phase-h-autocomplete-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-016 Autocomplete PR
+- Last code-affecting main commit: `f97417350a24397d95d27e41426d108f12143214` (PR #97 merge)
+- Current branch: `refactor/phase-h-steps-r2-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-017 Steps PR
 - Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-016 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #477 / `36089782080` (PR #96)
-- Latest green main CI + Pages: #478 / `36090124257`
+- Latest green Phase H PR CI: #479 / `36090821302` (PR #97)
+- Latest green main CI + Pages: #480 / `36091284678`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-016`
+- Current Task: `PHASE-H-017`
 
 ## CURRENT
 
-### PHASE-H-016 — Autocomplete V/F/I/C/S/O/B/R closeout
+### PHASE-H-017 — Steps V/F/I/C/B closeout
 Status: IN_PROGRESS
 Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-015 is DONE through PR #96, exact-head CI #477 / `36089782080`, merge `0d8044846fc3e02977c73d950a5cf88ef3d4159f`, main release + Pages #478 / `36090124257`.
-- Tags and TagInput are H accepted. Phase H target matrix after H-015 reports 30 profiled / 26 complete / 14 remaining public components.
+- PHASE-H-016 is DONE through PR #97, exact-head CI #479 / `36090821302`, merge `f97417350a24397d95d27e41426d108f12143214`, main release + Pages #480 / `36091284678`.
+- Autocomplete is H accepted. Phase H target matrix is now 30 profiled / 27 complete / 13 remaining public components.
 
-Implemented in current H-016 pack:
-- Autocomplete keeps its canonical ValueController and binds the same controller into FieldComponent; no second committed value owner is added.
-- Autocomplete keyboard/virtual-focus ownership now enters FieldComponent→FocusController→KeyboardRegion instead of directly creating KeyboardNavigation.
-- FocusController exposes the existing native text-editing preservation predicate so Home/End behavior remains shared without restoring a direct KeyboardNavigation import.
-- Autocomplete reuses the PopupFieldComponent→Trigger CapabilityController and expands that same controller for edit/clear/select policy; input, clear and suggestion commit paths are capability-gated.
-- OptionList remains the sole suggestion SelectionController and Autocomplete exposes that same instance instead of creating a second selection store.
-- local visible feedback binds through FieldComponent→FeedbackController; popup resource ownership remains PopupFieldComponent→Trigger→OverlayController; FormController remains the inherited FieldComponent registration authority.
-- Autocomplete now declares the exact handbook V/F/I/C/S/O/B/R profile and canonical owners.
-- `verify:phase-h-autocomplete` permanently rejects direct KeyboardNavigation/duplicate Selection/Feedback owners.
-- strict source-ESM Chromium verifies shared controller access, OptionList selection identity, feedback projection, keyboard open through FocusController and disabled clear blocking.
-- target-matrix `minimumComplete` rises from 26 to 27; `minimumProfiled` remains 30 because Autocomplete was already profiled.
+Implemented in current H-017 pack:
+- Steps current index is projected through StateController→ValueController and the canonical controller is publicly exposed; the existing `current` option remains the API surface.
+- direct KeyboardNavigation construction is removed; step navigation now enters FocusController→KeyboardRegion while preserving ActiveItem/RovingProjection execution state.
+- one CapabilityController gates user navigation and click activation without blocking programmatic setCurrent().
+- one FeedbackController projects pending/progress/error/warning/success visual state onto the Steps root without mutating current/status business state.
+- exact handbook V/F/I/C/B profile/ownership is declared.
+- `verify:phase-h-steps` rejects direct KeyboardNavigation and freezes Value/Focus/Capability/Feedback ownership.
+- strict source-ESM Chromium verifies ValueController current synchronization, FocusController arrow navigation, FeedbackController projection and disabled CapabilityController blocking.
+- target-matrix `minimumComplete` rises from 27 to 28; `minimumProfiled` remains 30.
 
 Next exact step:
-1. open PHASE-H-016 PR and require exact-head full release/browser/package CI.
+1. open PHASE-H-017 PR and require exact-head full release/browser/package CI.
 2. merge only green and verify main + Pages.
-3. mark Autocomplete H accepted.
-4. continue the remaining 13 components by highest shared-authority completion; final broad audit remains reserved for Astra High.
+3. mark Steps H accepted.
+4. continue the remaining 12 components; broad final audit remains reserved for Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -78,6 +76,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-016 — Autocomplete V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #97 merged
+- merge commit `f97417350a24397d95d27e41426d108f12143214`
+- exact-head CI #479 / `36090821302`: success
+- main CI + Pages #480 / `36091284678`: success
+Outcome:
+- Autocomplete keeps one canonical ValueController and reuses inherited FieldComponent/FormController ownership.
+- keyboard/virtual focus enters FocusController; edit/clear/select reuse the PopupField Trigger CapabilityController.
+- OptionList remains the sole SelectionController, local feedback enters FieldComponent FeedbackController, and popup resources remain Trigger→OverlayController.
+- exact V/F/I/C/S/O/B/R profile is gated; direct KeyboardNavigation and duplicate Selection/Feedback owners are prohibited.
+- target-matrix floor reaches 30 profiled / 27 complete.
+- Autocomplete is H accepted.
+
+
 
 ### PHASE-H-015 — Tags + TagInput V/F/I/C/S/O/B/R closeout
 Status: DONE
