@@ -22,14 +22,14 @@ function assertProfile(type,name,owners){
 assertProfile(Collapse,'Collapse',['value','focus','interaction','capability','motion']);
 assertProfile(Pagination,'Pagination',['value','focus','interaction','capability']);
 
-assert.match(collapseSource,/StateController\.create(?:Option)?ValueBinding\s*\(/,'Collapse value must enter StateController→ValueController.');
+assert.match(collapseSource,/ValueController\.create(?:Option)?ValueBinding\s*\(/,'Collapse value must enter canonical ValueController.');
 assert.match(collapseSource,/FocusController\.create\s*\(/,'Collapse navigation focus must enter FocusController.');
 assert.match(collapseSource,/CapabilityController\.create\s*\(/,'Collapse activation policy must enter CapabilityController.');
 assert.match(collapseSource,/Transition\.create\s*\(/,'Collapse panel motion must stay Transition→MotionController.');
 assert.match(collapseSource,/capabilityController\.can\('activate'\)/,'Collapse toggle must be capability gated.');
 assert.doesNotMatch(collapseSource,/import \{ KeyboardNavigation \}/,'Collapse must not directly own KeyboardNavigation import.');
 
-assert.match(paginationModelSource,/StateController\.create\s*\(/,'Pagination page value must enter StateController→ValueController.');
+assert.match(paginationModelSource,/ValueController\.create\s*\(/,'Pagination page value must enter canonical ValueController.');
 assert.match(paginationModelSource,/getValueController:\s*function \(\) \{ return pageState; \}/,'PaginationModel must expose the canonical ValueController.');
 assert.match(paginationSource,/FocusController\.create\s*\(/,'Pagination focus/keyboard region must enter FocusController.');
 assert.match(paginationSource,/CapabilityController\.create\s*\(/,'Pagination mutation policy must enter CapabilityController.');
