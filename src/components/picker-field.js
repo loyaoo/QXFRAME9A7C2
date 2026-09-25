@@ -154,6 +154,10 @@ function create(options) {
   }
   function projectNavigationVisual(value) {
     if (!navigationActive || projectionMode || !control) return false;
+    // Token/tag controls project candidate values through their tag collection. Writing a
+    // formatted aggregate value into the token editor creates a second, incorrect visual
+    // projection (draft tags + summary text) and can overwrite an in-progress editor buffer.
+    if (String(opts.controlMode || 'input') === 'tags') return false;
     var editor = editorElement();
     if (!editor || editor.value === undefined) return false;
     var text = value == null ? '' : String(value);
