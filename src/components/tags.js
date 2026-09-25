@@ -357,6 +357,20 @@ function setupTags(instance) {
     }
   });
   scope.add(function () { tokenInput.destroy(); });
+
+  function tokenValues(tags) {
+    return (Array.isArray(tags) ? tags : []).map(function(tag){ return String(tag.value); });
+  }
+  function bindCanonicalValueController() {
+    if (opts.checkable === true) {
+      api.bindValueController(selectionValueState, { owned:false, syncExternal:false });
+      return selectionValueState;
+    }
+    var controller = tokenInput.getValueController();
+    api.bindValueController(controller, { owned:false, syncExternal:false, projectValue:tokenValues });
+    return controller;
+  }
+  bindCanonicalValueController();
     
   function destroyTagRecord(record) {
     if (!record) return;
@@ -1288,7 +1302,8 @@ function setupTags(instance) {
   function canonicalFormValue() { return opts.checkable === true ? selection.values.slice() : coreTags().map(function(tag){return tag.value;}); }
   function syncFormBridge(meta) {
     var value = canonicalFormValue();
-    api.setFieldValue(value, { silent:true, force:true });
+    var registration = api.getFormRegistration && api.getFormRegistration();
+    if (registration && registration.notifyValue) registration.notifyValue(Utils.assignOwn({source:'tags',reason:'sync'},meta||{}));
     if (formBridge) formBridge.setValue(value, Utils.assignOwn({silent:true,source:'tags',reason:'sync'},meta||{}));
   }
   function syncSilentTokenMutation(meta, reason) {
@@ -1360,6 +1375,7 @@ function setupTags(instance) {
     opts.variant = nextVariant;
     opts.overflowTrigger = 'hover';
     if (!own(next, 'inputValue')) opts.inputValue = runtimeInputValue;
+    if (own(next, 'checkable')) bindCanonicalValueController();
     selection.updateOptions({ multiple: opts.multiple !== false });
     if (own(next, 'multiple')) {
       var modeValue = normalizeSelectionValue(selectionValue());
@@ -1599,7 +1615,8 @@ function setupTags(instance) {
     getVirtualTagElement:getVirtualTagElement, moveVirtualTag:moveVirtualTag,
     reconcileVirtualTagKey:reconcileVirtualTagKey, ensureVirtualTagVisible:ensureVirtualTagVisible,
     removeVirtualTag:removeVirtualTag, getScroll:function(){return containerScroll;},
-    getOverflowPopover:function(){return overflowPopover;}, getOverflowScroll:function(){return overflowScroll;}
+    getOverflowPopover:function(){return overflowPopover;}, getOverflowScroll:function(){return overflowScroll;},
+    getOverlayController:function(){return overflowPopover&&overflowPopover.getOverlayController?overflowPopover.getOverlayController():null;}
   };
   state.runtime = record;
   api.own(destroyRuntime);
@@ -1660,6 +1677,18 @@ function setupTags(instance) {
     
   var initialItemsSnapshot=publicItems(),initialSelectionSnapshot=selection.values.slice();
   if(opts.hosted!==true&&(formField||opts.name)){formBridge=FormBridge.create({document:doc,root:root,target:container,formField:formField,name:opts.name,value:canonicalFormValue(),disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,moveIntoRoot:false,onNativeChange:function(value){var values=Array.isArray(value)?value.slice():(value===''?[]:[value]);if(opts.checkable===true)setValue(values,{silent:true,source:'form-field',reason:'native-change'});else setItems(values.map(function(entry){var label=String(entry);if(formField&&String(formField.tagName||'').toLowerCase()==='select'){var option=Array.prototype.find.call(formField.options||[],function(o){return String(o.value)===String(entry);});if(option)label=String(option.textContent||option.label||option.value);}return {key:String(entry),value:String(entry),label:label};}),{silent:true,source:'form-field',reason:'native-change'});},onReset:function(){setItems(initialItemsSnapshot,{silent:true,source:'form',reason:'reset'});if(opts.checkable===true)setValue(initialSelectionSnapshot,{silent:true,source:'form',reason:'reset'});}});}
+  api.bindFeedbackProjector(Object.freeze({
+    show:function(snapshot){ return applyFeedbackSnapshot(snapshot); },
+    update:function(_handle,snapshot){ return applyFeedbackSnapshot(snapshot); },
+    close:function(){ return applyFeedbackSnapshot({status:'idle'}); }
+  }));
+  function applyFeedbackSnapshot(snapshot) {
+    var status=String(snapshot&&snapshot.status||'idle');
+    root.classList.toggle('is-error',status==='error');
+    root.classList.toggle('is-warning',status==='warning');
+    root.classList.toggle('is-loading',status==='pending'||status==='progress');
+    return root;
+  }
   render('mount');syncFormBridge({silent:true});
   return root;
 }
@@ -1720,11 +1749,15 @@ function recordForTags(instance) {
 export class Tags extends FieldComponent {
   static profile = Object.freeze({
     name:'Tags',
+    value:Object.freeze({ mode:'tag-values-or-check-selection' }),
     focus:Object.freeze({ mode:'virtual-navigation', editLease:'input' }),
     interaction:Object.freeze({ keymap:'tags' }),
-    form:Object.freeze({ serialize:true }),
+    capability:Object.freeze({ mode:'tag-mutation-policy' }),
     selection:Object.freeze({ channels:Object.freeze(['selected']), valueOwner:'ValueController/StateController binding' }),
-    ownership:Object.freeze({ focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController', form:'FormController' })
+    overlay:Object.freeze({ mode:'overflow-popover-via-Popover' }),
+    feedback:Object.freeze({ mode:'local-status-projection' }),
+    form:Object.freeze({ serialize:true }),
+    ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
   });
   static options = TAGS_DEFAULTS;
   static contract = ComponentContracts.get('Tags');
@@ -1808,6 +1841,7 @@ export class Tags extends FieldComponent {
   getInteractionController(){return recordForTags(this).getInteractionController();}
   getCapabilityController(){return recordForTags(this).getCapabilityController();}
   getSelectionController(){return recordForTags(this).getSelectionController();}
+  getOverlayController(){return recordForTags(this).getOverlayController();}
   getVirtualTagElement(key){return recordForTags(this).getVirtualTagElement(key);}
   moveVirtualTag(key,step){return recordForTags(this).moveVirtualTag(key,step);}
   reconcileVirtualTagKey(key){return recordForTags(this).reconcileVirtualTagKey(key);}
