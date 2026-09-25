@@ -157,6 +157,13 @@ export class InputOTP extends FieldComponent {
         });
         control.getRootElement().classList.add('qxframe9a7c2-input-otp');
         record.control = this.own(control);
+        if (control.onFormReset) control.onFormReset(() => {
+            if (!valueState.controlled) valueState.setValue(initialValue, { silent:true, source:'form', reason:'reset' });
+            const canonical = valueState.value;
+            control.updateOptions({ value:canonical, committedValue:canonical });
+            this.setFieldValue(canonical, { silent:true, force:true, sync:true, source:'form', reason:'reset' });
+            this.#syncFocusPolicy();
+        });
         const capability = this.bindCapabilityController({ capabilities:{ preserveFocusWhileLoading:true, tabbableWhileLoading:true } });
         const inputs = control.getInputElements();
         this.bindFocusController((inputs[0] || control.getRootElement()), { manageTabIndex:false, navigation:{handlers:{}} });
