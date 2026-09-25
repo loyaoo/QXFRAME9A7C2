@@ -1,4 +1,4 @@
-import { FieldComponent, fieldHooks } from './field.js';
+import { FieldComponent, fieldHooks, createSimpleFieldProfile } from './field.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
@@ -27,6 +27,7 @@ function matcher(accept) {
 }
 
 export class InputOTP extends FieldComponent {
+    static profile = createSimpleFieldProfile('InputOTP');
     static contract = getContract('InputOTP');
     static immutableOptions = Object.freeze(['target', 'container', 'formField']);
 
@@ -148,10 +149,44 @@ export class InputOTP extends FieldComponent {
                 } else record.lastCompleteValue = '';
             },
             onFocus: event => { if (typeof this.options.onFocus === 'function') this.options.onFocus(event, this); },
-            onBlur: event => { if (typeof this.options.onBlur === 'function') this.options.onBlur(event, this); }
+            onBlur: event => { if (typeof this.options.onBlur === 'function') this.options.onBlur(event, this); },
+            onKeydown: event => {
+                const interaction = this.getInteractionController();
+                return interaction ? interaction.dispatch(event, { ownerId:this.id + '-otp-interaction', source:'keyboard' }) !== 'pass' : false;
+            }
         });
         control.getRootElement().classList.add('qxframe9a7c2-input-otp');
         record.control = this.own(control);
+        const capability = this.bindCapabilityController({ capabilities:{ preserveFocusWhileLoading:true, tabbableWhileLoading:true } });
+        const inputs = control.getInputElements();
+        this.bindFocusController((inputs[0] || control.getRootElement()), { manageTabIndex:false, navigation:{handlers:{}} });
+        this.bindInteractionController(control.getRootElement(), {
+            id:this.id + '-otp-interaction',
+            capabilityController:capability,
+            profile:{allowEditableKeys:['Backspace','ArrowLeft','ArrowRight']},
+            resolveAction:event=>{
+                const list=control.getInputElements(),index=list.indexOf(event.target),target=index>=0?list[index]:null;
+                if(!target)return null;
+                if(event.key==='Backspace'&&target.value===''&&index>0)return 'REMOVE';
+                if(event.key==='ArrowLeft'&&target.selectionStart===0&&index>0)return 'MOVE_LEFT';
+                if(event.key==='ArrowRight'&&target.selectionStart===target.value.length&&index<list.length-1)return 'MOVE_RIGHT';
+                return null;
+            },
+            operationOf:action=>action==='REMOVE'?'edit':'navigate',
+            onAction:(action,context)=>{
+                const list=control.getInputElements(),index=list.indexOf(context.originalEvent&&context.originalEvent.target);
+                if(index<0)return 'pass';
+                if(action==='REMOVE'){
+                    const segmented=control.getSegmentedInput();
+                    if(!segmented||!segmented.erasePrevious(index,{originalEvent:context.originalEvent}))return 'pass';
+                    DOM.focusElement(list[index-1],{preventScroll:true});return 'handled';
+                }
+                const next=action==='MOVE_LEFT'?index-1:index+1;
+                if(next<0||next>=list.length)return 'pass';
+                DOM.focusElement(list[next],{preventScroll:true});return 'handled';
+            }
+        });
+        this.bindFeedbackControl(control);
         record.rendered = true;
         this.bindFocusTarget(control.getFocusElement ? control.getFocusElement() : null);
         this.setFieldValue(initialValue, { silent: true, force: true, sync: true, source: 'init', reason: 'otp-init' });
@@ -195,7 +230,7 @@ export class InputOTP extends FieldComponent {
     }
     clear() { return this.setValue(''); }
     focus() {
-        if (this.destroyed || this.disabled) return false;
+        if (this.destroyed || this.disabled || (this.getCapabilityController() && !this.getCapabilityController().can('focus'))) return false;
         const record = state.get(this), inputs = record.control.getInputElements(), index = this.#syncFocusPolicy();
         if (!inputs[index]) return false;
         DOM.focusElement(inputs[index]);
