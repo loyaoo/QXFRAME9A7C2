@@ -10,23 +10,23 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `fde8fe7eb9f6121da838c5a80006d6fd1f792ae3` (PR #113 squash merge).
+- Last code-affecting main commit: `898be09e28d7c7ddcbb9b6af7dafc70385a54be5` (PR #114 squash merge).
 - Current branch: `main`
-- Open PRs at this checkpoint: none after PR #113 merge; if Git differs, trust Git
+- Open PRs at this checkpoint: none after PR #114 merge; if Git differs, trust Git
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green code PR CI: #559 / `36149575692` (PR #113 exact-head `b38a20014cff63f4568966e4770674b9228ec5bf`)
+- Latest green code PR CI: #565 / `36156818440` (PR #114 exact-head `0b51167239850bcf7df73c3ddbe3a968cf61c608`)
 - Latest green code main CI + Pages: #560 / `36150117894` (`main@fde8fe7eb9f6121da838c5a80006d6fd1f792ae3`)
 - Overall handbook implementation progress: 100% implementation complete; historical-regression remediation and the pre-production hotpath pass are merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
 - Current Phase: post-hotpath final acceptance / newly confirmed findings only
-- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
+- Current Task: `PICKER-DRAFT-PROJECTION-001`
 
 ## CURRENT
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
-Status: PR_OPEN_AWAITING_CI
-Task progress: 80%
+Status: MERGED_AWAITING_MAIN_CI
+Task progress: 95%
 Scope:
 - DatePicker multiple control projection must reflect the current open-session draft while committed/FormData remain unchanged until commit.
 - DatePicker needConfirm=false presets must commit immediately and close after a successful complete preset selection.
@@ -35,9 +35,9 @@ Scope:
 - Escape/cancel/outside-close rollback semantics remain unchanged; close itself never implies commit.
 - Preserve ValueController as the only committed/draft/preview authority and keep external draftValueTarget as an additional projection only, not a reason to suppress control draft display.
 Baseline:
-- branch: `fix/picker-draft-projection-20260925`
-- base: current `main` after PR #113 and its checkpoint update
-- PR: #114 (`fix/picker-draft-projection-20260925` -> `main`)
+- merged PR: #114
+- merge commit: `898be09e28d7c7ddcbb9b6af7dafc70385a54be5`
+- PR exact-head CI: #565 / `36156818440` on `0b51167239850bcf7df73c3ddbe3a968cf61c608` — green
 - latest verified code main CI before this task: #560 / `36150117894` green
 Implementation evidence:
 - DatePicker multiple uses draft tags while the token editor remains an editor, not an aggregate-value mirror.
@@ -48,9 +48,9 @@ Implementation evidence:
 - browser assertions capture Time/Color/Wheel Control draft state before Enter commit; the earlier post-commit sampling mistake was corrected before acceptance.
 - static Phase-H Picker gate rejects reintroducing draft-target suppression or raw-DOM-only draft projection.
 Next exact step:
-1. wait for PR #114 exact-head GitHub Actions full release + Chromium verification.
-2. if green, merge PR #114 without additional behavior changes.
-3. verify main CI + Pages, then mark this task DONE_MERGED_VERIFIED.
+1. verify GitHub Actions on `main` after PR #114 merge/checkpoint.
+2. verify GitHub Pages deployment from the same main lineage.
+3. mark this task DONE_MERGED_VERIFIED and return Current Task to `ASTRA-HIGH-FINAL-ACCEPTANCE`.
 
 ## Current authority snapshot — after Phase A
 
