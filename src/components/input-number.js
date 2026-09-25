@@ -103,7 +103,7 @@ export class InputNumber extends FieldComponent {
             onFocus:event=>{if(typeof this.options.onFocus==='function')this.options.onFocus(event,this);}
         }));
         record.numeric=numeric;record.control=control;record.frame=control.getControlElement();record.field=control.getInputElement();
-        this.bindValueController(numeric.getValueController(), { projectValue:numeric.projectValue });
+        this.bindValueController(numeric.getValueController(), { projectValue:numeric.projectValue, syncExternal:false });
         const capability=this.bindCapabilityController({ capabilities:{ preserveFocusWhileLoading:true, tabbableWhileLoading:true } });
         const root=control.getRootElement(), frame=record.frame, field=record.field, doc=record.doc;
         this.bindFocusController(field,{manageTabIndex:false,navigation:{handlers:{}}});
