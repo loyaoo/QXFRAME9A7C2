@@ -8,10 +8,10 @@ const read=rel=>fs.readFileSync(new URL('../'+rel,import.meta.url),'utf8');
 function exactProfile(type,name,owners){
   const profile=ComponentProfile.define(type.profile);
   assert.equal(profile.name,name);
-  assert.deepEqual(Object.keys(profile.ownership).sort(),owners.slice().sort());
-  owners.forEach(owner=>{
-    const capability=owner.replace('Controller','').replace(/^./,c=>c.toLowerCase());
-    assert.equal(profile.ownership[capability],owner,name+' '+capability+' owner mismatch');
+  const expected=Object.fromEntries(owners.map(owner=>[owner.replace('Controller','').replace(/^./,c=>c.toLowerCase()),owner]));
+  assert.deepEqual(Object.keys(profile.ownership).sort(),Object.keys(expected).sort());
+  Object.keys(expected).forEach(capability=>{
+    assert.equal(profile.ownership[capability],expected[capability],name+' '+capability+' owner mismatch');
   });
 }
 
