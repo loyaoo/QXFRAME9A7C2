@@ -3,7 +3,7 @@ import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
 import { Disclosure } from '../core/disclosure.js';
-import { StateController } from '../core/stateController.js';
+import { ValueController } from '../core/valueController.js';
 import { ActiveItem } from '../core/activeItem.js';
 import { FocusController } from '../core/focusController.js';
 import { CapabilityController } from '../core/capabilityController.js';
@@ -128,7 +128,7 @@ export class Collapse extends Component {
             });
             return this.options.accordion === true ? output.slice(0, 1) : output;
         };
-        const valueState = StateController.createOptionValueBinding(opts, opts, normalizeValue, { controlled:opts.controlled === true });
+        const valueState = ValueController.createOptionValueBinding(opts, opts, normalizeValue, { controlled:opts.controlled === true });
         record.valueState = valueState;
         this.own(valueState);
         record.disclosure = Disclosure.create({
