@@ -10,46 +10,44 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `c006b036652892ef00fb1d1cfaf3a7434e258971` (PR #88 merge)
-- Current branch: `refactor/phase-h-popup-field-facades-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-009 Select/TreeSelect/Cascader popup-field PR
+- Last code-affecting main commit: `4ac4187990cf299013d1845eed2926fda412bc67` (PR #89 merge)
+- Current branch: `refactor/phase-h-field-value-owner-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-010 FieldComponent ValueController authority PR
 - Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-009 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #440 / `36077958731` (PR #88)
-- Latest green main CI + Pages: #441 / `36078235274`
+- Latest green Phase H PR CI: #442 / `36079189990` (PR #89)
+- Latest green main CI + Pages: #443 / `36079511984`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-009`
+- Current Task: `PHASE-H-010`
 
 ## CURRENT
 
-### PHASE-H-009 — Select / TreeSelect / Cascader O/B closeout
+### PHASE-H-010 — FieldComponent ValueController authority
 Status: IN_PROGRESS
-Task progress: 80%
+Task progress: 75%
 
 Completed prerequisite:
-- PHASE-H-008 is DONE through PR #88, exact-head CI #440 / `36077958731`, merge `c006b036652892ef00fb1d1cfaf3a7434e258971`, main release + Pages #441 / `36078235274`.
-- Modal and Drawer are H accepted for Focus/Interaction/Capability/Motion/Overlay/Feedback.
-- OverlayFrameShell action path is H-migrated: shared InteractionController + PressInteraction/CapabilityController action gates + FeedbackController loading projection; AsyncAction remains task owner.
+- PHASE-H-009 is DONE through PR #89, exact-head CI #442 / `36079189990`, merge `4ac4187990cf299013d1845eed2926fda412bc67`, main release + Pages #443 / `36079511984`.
+- Select, TreeSelect and Cascader are H accepted for exact handbook V/F/I/C/S/O/B/R ownership through shared PopupFieldComponent/FieldComponent controller paths.
+- completed public target-profile floor is 14.
 
 Implemented in current pack:
-- FieldComponent adds one shared local FeedbackController projector bound to the canonical Control; it owns visible pending/error/warning projection only and does not own task/value/form state.
-- authored field status/busy state is restored when operation feedback clears.
-- Select, TreeSelect and Cascader bind their canonical Control through the shared FieldComponent feedback path; none creates a component-local FeedbackController.
-- their existing ValueController, FocusController, InteractionController, CapabilityController, SelectionController and FormController paths remain unchanged.
-- PopupFieldComponent→Trigger remains the sole popup OverlayController resource path.
-- Select, TreeSelect and Cascader profiles are completed to the exact handbook V/F/I/C/S/O/B/R target.
-- the global Phase H matrix now freezes both profile count and completed target-profile count; completed-profile floor rises to 14.
-- dedicated H-009 gate rejects parallel FeedbackController creation and missing O/B ownership.
-- strict source-ESM Chromium verifies local error/warning/pending feedback and clear behavior plus OverlayController facade access for all three components.
+- removed FieldComponent's plain `record.value` committed-value mirror.
+- FieldComponent now creates a canonical ValueController by default and its public `value` getter reads that controller.
+- `setFieldValue()` and external options sync enter ValueController; FormBridge and FormController adapters project the ValueController-owned committed value.
+- added `getValueController()` and `bindValueController()` so components that already own a specialized ValueController can share that exact authority instead of keeping a second FieldComponent value store.
+- when an external controller is bound, the bound controller wins; FieldComponent does not overwrite or destroy it unless explicitly marked owned.
+- dedicated Node verifier rejects any return of `record.value/state.value` in FieldComponent and proves FormBridge projection.
+- strict source-ESM Chromium verifies default controller ownership, writes, external-controller adoption and lifecycle behavior.
 
 Next exact step:
-1. final diff/self-audit and open PHASE-H-009 PR.
+1. final diff/self-audit and open PHASE-H-010 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Select, TreeSelect and Cascader H accepted.
-5. continue high-leverage shared field/picker family migration; do not re-open already accepted popup/overlay packs.
+4. mark FieldComponent internal Value path H-migrated.
+5. immediately bind the existing specialized ValueControllers of the simple Field family (InputNumber/InputOTP/Rate/Slider/TagInput/Autocomplete) into this shared path and continue batch profile completion.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,6 +77,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-009 — Select / TreeSelect / Cascader O/B closeout
+Status: DONE
+Evidence:
+- PR #89 merged
+- merge commit `4ac4187990cf299013d1845eed2926fda412bc67`
+- exact-head CI #442 / `36079189990`: success
+- main CI + Pages #443 / `36079511984`: success
+Outcome:
+- FieldComponent provides one shared local FeedbackController projection over canonical Control state.
+- Select, TreeSelect and Cascader bind visible pending/error/warning state through that shared path; authored state restores on clear.
+- PopupFieldComponent→Trigger remains the sole popup OverlayController resource path.
+- all three declare exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form profiles.
+- no component-local parallel FeedbackController is added.
+- Select, TreeSelect and Cascader are H accepted.
+
+
 
 ### PHASE-H-008 — OverlayFrameShell I/C/B + Modal/Drawer migration
 Status: DONE
