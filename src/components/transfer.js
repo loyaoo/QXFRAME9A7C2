@@ -1,5 +1,4 @@
 // Canonical ESM Transfer implementation with direct Pagination/Table dependencies.
-import { CapabilityController } from '../core/capabilityController.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Utils } from '../utils/utils.js';
@@ -13,7 +12,7 @@ import { ComponentContracts } from '../core/componentContracts.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { DOMTemplate } from '../core/domTemplate.js';
-import { FieldComponent } from './field.js';
+import { FieldComponent, createSimpleFieldProfile } from './field.js';
 import { ItemCollection } from './item-collection.js';
 import { Item } from './item.js';
 import { Control } from './control.js';
@@ -23,6 +22,7 @@ import { Table } from './table.js';
 const global=globalThis;
 
 const transferState = new WeakMap();
+const TRANSFER_FIELD_PROFILE = createSimpleFieldProfile('Transfer');
 const TRANSFER_DEFAULTS = Object.freeze({
   items: [], value: [], titles: ['Source', 'Target'], searchable: true, sortable: true,
   oneWay: false, disabled: false, readOnly: false, required: false, size: 'md',
@@ -191,7 +191,10 @@ function setupTransfer(instance) {
   function targetItems() {
     return targetValues.map(function (value) { return records[value] && records[value].item; }).filter(Boolean);
   }
-  function mutationLocked() { return destroyed || CapabilityController.mutationLocked(opts); }
+  function mutationLocked() {
+    var capability=api.getCapabilityController();
+    return destroyed || (capability ? !capability.can('edit') : false);
+  }
   function selectedValues(list) { return list ? list.getState().values.slice() : []; }
   function ensureOptionalSurfaces() {
     function ensureSelectAll(side) {
@@ -827,7 +830,7 @@ function setupTransfer(instance) {
   indexItems(items);
   targetValues = validateTargetValues(opts.value);
   var initialValue = targetValues.slice();
-  formBridge = Control.createFormFieldBridge({ root: root, target: host, formField: opts.formField, document: doc, moveIntoRoot: false, projectLayout: Control.projectFormFieldLayout, name: opts.name, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, value: targetValues, serializeValue: opts.serializeValue, getValue: function () { return targetValues.slice(); }, onReset: function () { setValue(initialValue, { silent: true, source: 'form', reason: 'reset' }); } });
+  formBridge = api.bindFormBridge({ root: root, target: host, formField: opts.formField, document: doc, moveIntoRoot: false, projectLayout: Control.projectFormFieldLayout, name: opts.name, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, value: targetValues, serializeValue: opts.serializeValue, getValue: function () { return targetValues.slice(); }, onReset: function () { setValue(initialValue, { silent: true, source: 'form', reason: 'reset' }); } });
   targetOrder = Collection.create({
     getItems: function () { return targetValues; },
     setItems: function (next) { targetValues = next.slice(); },
@@ -846,6 +849,35 @@ function setupTransfer(instance) {
   scope.add(sourceList.on('render', function () { syncPaginationCount('source'); syncTableProjection('source', 'list-render'); }));
   scope.add(targetList.on('render', function () { syncPaginationCount('target'); syncTableProjection('target', 'list-render'); }));
   syncPaginationControllers(false);
+
+  var capabilityController=api.bindCapabilityController({ getCapabilities:function(){return { focusable:true, tabbable:false, activatable:true, editable:true, selectable:true };} });
+  api.bindFocusController(root,{ manageTabIndex:false, navigation:{ handlers:{} } });
+  api.bindInteractionController(root,{
+    capabilityController:capabilityController,
+    resolveAction:function(event){
+      if(!event || (event.key!=='Enter' && event.key!==' '))return null;
+      if(event.target===refs.right)return 'move-right';
+      if(event.target===refs.left)return 'move-left';
+      if(event.target===refs.up)return 'move-up';
+      if(event.target===refs.down)return 'move-down';
+      return null;
+    },
+    operationOf:function(){return 'edit';},
+    onAction:function(action,context){
+      var event=context&&context.originalEvent||null,result=false;
+      if(action==='move-right')result=moveToRight(undefined,{source:'keyboard',reason:'move-right',originalEvent:event});
+      else if(action==='move-left')result=moveToLeft(undefined,{source:'keyboard',reason:'move-left',originalEvent:event});
+      else if(action==='move-up')result=moveSelected(-1,{source:'keyboard',reason:'move-up',originalEvent:event});
+      else if(action==='move-down')result=moveSelected(1,{source:'keyboard',reason:'move-down',originalEvent:event});
+      else return 'pass';
+      return result===false?'blocked':'handled';
+    }
+  });
+  api.bindFeedbackControl({ updateOptions:function(patch){
+    root.classList.toggle('is-busy',patch.busy===true);
+    root.classList.toggle('is-error',patch.status==='error');
+    root.classList.toggle('is-warning',patch.status==='warning');
+  } });
 
   scope.add(DOM.listen(refs.right, 'click', function (event) { moveToRight(undefined, { source: DOM.activationSource(event), reason: 'move-right', originalEvent: event }); }));
   scope.add(DOM.listen(refs.left, 'click', function (event) { moveToLeft(undefined, { source: DOM.activationSource(event), reason: 'move-left', originalEvent: event }); }));
@@ -905,10 +937,9 @@ function recordForTransfer(instance) {
 
 export class Transfer extends FieldComponent {
   static profile = Object.freeze({
-    name:'Transfer',
+    ...TRANSFER_FIELD_PROFILE,
     selection:Object.freeze({ channels:Object.freeze(['sourceChecked','targetChecked']), targetValueOwner:'Transfer/targetOrder' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ selection:'SelectionController', form:'FormController' })
+    ownership:Object.freeze({ ...TRANSFER_FIELD_PROFILE.ownership, selection:'SelectionController' })
   });
   static contract = ComponentContracts.get('Transfer');
   static immutableOptions = Object.freeze(['target','container','formField']);
