@@ -29,7 +29,7 @@ export const moduleManifestData = Object.freeze([
       ],
       "headless": [
         "AsyncTask",
-        "StateController",
+        "ValueController",
         "ItemSchema",
         "OpenStateBridge",
         "ItemAccessors",
@@ -91,7 +91,7 @@ export const moduleManifestData = Object.freeze([
       ],
       "headless": [
         "ActiveItem",
-        "StateController",
+        "ValueController",
         "DateUnit",
         "TemporalGrid"
       ],
@@ -258,7 +258,7 @@ export const moduleManifestData = Object.freeze([
         "Utils"
       ],
       "headless": [
-        "StateController",
+        "ValueController",
         "OpenStateBridge",
         "PickerSession",
         "OptionTransaction",
@@ -330,7 +330,7 @@ export const moduleManifestData = Object.freeze([
         "Utils"
       ],
       "headless": [
-        "StateController",
+        "ValueController",
         "DateUnit",
         "OpenStateBridge",
         "PickerSession",
@@ -999,7 +999,7 @@ export const moduleManifestData = Object.freeze([
       ],
       "headless": [
         "InteractionPolicy",
-        "StateController",
+        "ValueController",
         "OptionTransaction"
       ],
       "domHeadless": [
@@ -1136,7 +1136,7 @@ export const moduleManifestData = Object.freeze([
         "Utils"
       ],
       "headless": [
-        "StateController",
+        "ValueController",
         "OptionTransaction"
       ],
       "domHeadless": [
@@ -1427,7 +1427,7 @@ export const moduleManifestData = Object.freeze([
         "Scheduler"
       ],
       "headless": [
-        "StateController",
+        "ValueController",
         "OpenStateBridge",
         "PickerSession",
         "OptionTransaction",
@@ -1566,7 +1566,7 @@ export const moduleManifestData = Object.freeze([
         "Utils"
       ],
       "headless": [
-        "StateController",
+        "ValueController",
         "ItemSchema",
         "OpenStateBridge",
         "InteractionPolicy",
@@ -1716,7 +1716,7 @@ export const moduleManifestData = Object.freeze([
         "Utils"
       ],
       "headless": [
-        "StateController",
+        "ValueController",
         "OpenStateBridge",
         "PickerSession",
         "ValueEquality",
