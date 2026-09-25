@@ -233,7 +233,7 @@ function setupMenu(instance) {
     getChildren:childrenOf,
     isDisabled:function(item){return !item || item.disabled===true;}
   });
-  function isDisabledItem(item) { return opts.disabled === true || !!(item && item.disabled === true); }
+  function isDisabledItem(item) { return !capabilityController || !capabilityController.can('activate') || !!(item && item.disabled === true); }
   function hasChildren(item) { return itemType(item) === 'item' && childrenOf(item).length > 0; }
   function sizeName() { return Utils.normalizeSize(opts.size, 'md'); }
   function inlineCollapsed() { return opts.mode === 'inline' && opts.collapsed === true; }
@@ -250,9 +250,17 @@ function setupMenu(instance) {
     else inlineExpandedOpenKeys = cloneKeySet(openKeys);
     openKeys = cloneKeySet(inlineCollapsed() ? inlineCollapsedOpenKeys : inlineExpandedOpenKeys);
   }
-  function selectedArray() { return selection ? selection.values.slice() : []; }
+  function selectedArray() { return valueController ? normalizeKeys(valueController.value) : []; }
   function selectedKeyValue() { var values = selectedArray(); return values.length ? values[0] : ''; }
   function isSelected(key) { return !!selection && selection.has(String(key)); }
+  function syncSelectionOwners(keys, meta) {
+    if (!valueController || !selection) return false;
+    var next = normalizeKeys(keys);
+    var cfg = meta || {};
+    valueController.setValue(next, { silent:true, source:cfg.source || 'menu', reason:cfg.reason || 'selection-sync', originalEvent:cfg.originalEvent || null });
+    selection.set(valueController.value, { silent:true, source:cfg.source || 'menu', reason:cfg.reason || 'selection-sync', originalEvent:cfg.originalEvent || null });
+    return true;
+  }
   function allPanels() {
     var panels = Array.from(panelByKey.values());
     if (overflowPanel) panels.push(overflowPanel);
@@ -285,7 +293,7 @@ function setupMenu(instance) {
     },{accessors:itemAccessors});
     var retainedSelection = selectedArray().filter(function (key) { return itemByKey.has(key); });
     if (!opts.multiple && retainedSelection.length > 1) retainedSelection = retainedSelection.slice(0, 1);
-    selection.set(retainedSelection, { silent: true, source: 'menu', reason: 'items-prune' });
+    syncSelectionOwners(retainedSelection, { source:'menu', reason:'items-prune' });
     function pruneOpenSet(set) {
       Array.from(set).forEach(function (key) { if (!itemByKey.has(key) || !hasChildren(itemByKey.get(key))) set.delete(key); });
     }
@@ -932,7 +940,7 @@ function setupMenu(instance) {
     next.forEach(function (key) { if (!itemByKey.has(key)) throw new RangeError('[QXFRAME9A7C2] Menu selectedKeys must reference item keys.'); });
     var previous = selectedArray();
     if (sameKeys(previous, next)) return api;
-    selection.set(next, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'selection-change' });
+    syncSelectionOwners(next, { source: meta && meta.source || 'api', reason: meta && meta.reason || 'selection-change', originalEvent: meta && meta.originalEvent || null });
     if (meta && meta.source === 'keyboard' && next.length) { activeKey = next[next.length - 1]; activeOverflow = false; }
     syncClasses();
     if (!(meta && meta.silent)) {
