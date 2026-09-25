@@ -305,8 +305,6 @@ function create(options) {
     focusRoot: focusElement,
     manageTabIndex: false,
     navigation: {
-    root: focusElement(),
-    focusRoot: focusElement,
     editableKeys: ['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter','Escape','Home','End','PageUp','PageDown','F6'],
     allowEditableKey: function (key, detail) {
       var event = detail && detail.originalEvent;
