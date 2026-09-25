@@ -161,7 +161,10 @@ function create(options) {
     var editor = editorElement();
     if (!editor || editor.value === undefined) return false;
     var text = value == null ? '' : String(value);
-    if (String(editor.value || '') !== text) editor.value = text;
+    // Keep Control's internal input projection in sync with the visible navigation draft.
+    // A raw DOM write is transient and can be overwritten by the next Control projection.
+    if (control.setInputValue) control.setInputValue(text);
+    else if (String(editor.value || '') !== text) editor.value = text;
     return true;
   }
   function beginNavigationInteraction() {
