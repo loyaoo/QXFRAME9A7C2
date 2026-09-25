@@ -39,7 +39,9 @@ const notHAccepted=rows.filter(line=>!/\| H accepted; I (?:pending|accepted) \|$
 assert.deepEqual(notHAccepted,[],'Every public component must remain H accepted while Phase I acceptance advances from pending to accepted.');
 assert.match(acceptance,/40\/40/,'Acceptance ledger must state the 40/40 Phase H public-component result.');
 
-assert.match(workState,/- Current Phase: [^\\r\\n]+/,'AI_WORK_STATE must declare the current lifecycle phase.');\nassert.match(workState,/### PHASE-I-001[^\\n]*[\\s\\S]*?Status: DONE/,'AI_WORK_STATE must preserve evidence that Phase I release-integrity completed before the lifecycle advances.');
+assert.ok(workState.includes('- Current Phase: '),'AI_WORK_STATE must declare the current lifecycle phase.');
+const phaseISection=workState.split('### PHASE-I-001')[1]?.split('\n### ')[0]||'';
+assert.match(phaseISection,/Status: DONE/,'AI_WORK_STATE must preserve evidence that Phase I release-integrity completed before the lifecycle advances.');
 assert.match(workState,/- Current Task: `[^`]+`/,'AI_WORK_STATE must declare the current task without freezing a historical checkpoint id.');
 const current=workState.split('## CURRENT')[1]?.split('## Current authority snapshot')[0]||'';
 assert.doesNotMatch(current,/### PHASE-H-027|Table is the last|pending PHASE-H-027/,'CURRENT checkpoint must not retain stale final-Table Phase H state.');
