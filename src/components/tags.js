@@ -1243,7 +1243,14 @@ function setupTags(instance) {
       if (!allowed[entry]) throw new TypeError('[QXFRAME9A7C2] Tags value entries must match an existing item.value.');
     });
     var detail = Utils.assignOwn({ reason: 'set-value', source: 'api' }, meta || {});
-    selectionValueState.write(values, { silent:true, source:detail.source, reason:detail.reason, originalEvent:detail.originalEvent || null }, detail.request === true);
+    var requested = selectionValueState.write(values, { silent:true, source:detail.source, reason:detail.reason, originalEvent:detail.originalEvent || null }, detail.request === true);
+    if (selectionValueState.controlled && detail.request === true) {
+      if (!requested) return false;
+      syncSelectionProjection('controlled-set-value');
+      render('selection');
+      emitSelection(values, Utils.assignOwn(detail, { valueControlled:true, proposedValue:values.slice() }));
+      return true;
+    }
     var changed = selection.set(selectionValue(), detail);
     if (changed !== false) syncFormBridge(meta);
     return changed;
