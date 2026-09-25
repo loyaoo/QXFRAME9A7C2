@@ -22,7 +22,7 @@ assert.equal(profile.ownership.selection,'SelectionController');
 assert.equal(profile.ownership.overlay,'OverlayController');
 
 assert.ok(Dropdown.prototype instanceof PopupComponent,'Dropdown must continue to inherit PopupComponent/Trigger overlay authorities.');
-assert.match(source,/StateController\.createOptionValueBinding\s*\(/,'Dropdown value must enter StateController→ValueController binding.');
+assert.match(source,/ValueController\.createOptionValueBinding\s*\(/,'Dropdown value must enter canonical ValueController binding.');
 assert.match(source,/valueState\.getValueController\s*\(/,'Dropdown must expose the canonical ValueController behind its binding.');
 assert.match(source,/SelectionController\.create\s*\(/,'Dropdown selected values must enter SelectionController.');
 assert.match(source,/selectionController\.createHierarchy\s*\(/,'Dropdown hierarchy selection semantics must share SelectionController facade.');
