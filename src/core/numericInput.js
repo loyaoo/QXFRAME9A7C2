@@ -383,6 +383,8 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
       stepDown: function (meta) { return step(-1, meta); },
       updateOptions: updateOptions,
       getState: snapshot,
+      getValueController: function () { return valueState; },
+      projectValue: external,
       on: emitter.on,
       once: emitter.once,
       destroy: function () { if (destroyed) return false; destroyed = true; if (valueState) valueState.destroy(); valueState = null; inputValue = ''; emitter.dispose(); return true; }
