@@ -59,9 +59,10 @@ export class Rate extends FieldComponent {
         const record = { fieldInit, doc, root:null, items:[], hoverValue:0, valueState, formBridge:null, itemScope:Lifecycle.createScope(), rendered:false, initialValue:valueState.value };
         state.set(this, record);
         this.own(valueState);
+        this.bindValueController(valueState);
         this.own(() => record.itemScope.dispose());
         this.own(() => { if (record.root) DOM.removeNode(record.root); record.items=[]; record.root=null; });
-        this.setFieldValue(valueState.value, { silent:true, force:true });
+        this.setFieldValue(valueState.value, { silent:true, force:true, sync:true, source:'init', reason:'rate-init' });
     }
 
     #interactionPolicy() { const opts=this.options; return CapabilityController.resolve({ disabled:this.destroyed||opts.disabled===true, readOnly:opts.readOnly===true }, { focusable:opts.mode==='interactive', tabbable:opts.mode==='interactive', activatable:opts.mode==='interactive', editable:false, selectable:false }); }
@@ -80,7 +81,8 @@ export class Rate extends FieldComponent {
         const previous=r.valueState.value,changed=!Object.is(normalized,previous);if(!changed){r.hoverValue=0;this.#renderValue();return false;}
         if(config.user===true&&r.valueState.controlled)r.valueState.requestChange(normalized,{silent:true,reason:config.reason||'set-value',source:config.source||'api',originalEvent:config.originalEvent||null});
         else r.valueState.setValue(normalized,{silent:true,reason:config.reason||'set-value',source:config.source||'api',originalEvent:config.originalEvent||null});
-        r.hoverValue=0;this.setFieldValue(r.valueState.value,{silent:true,force:true});this.#renderValue();if(r.formBridge)r.formBridge.setValue(r.valueState.value,config);
+        const committedChanged=!Object.is(r.valueState.value,previous);
+        r.hoverValue=0;if(committedChanged)this.setFieldValue(r.valueState.value,{silent:true,force:true,sync:true,source:config.source||'api',reason:config.reason||'set-value'});this.#renderValue();if(r.formBridge)r.formBridge.setValue(r.valueState.value,config);
         if(config.silent!==true&&typeof opts.onChange==='function')opts.onChange(normalized,{reason:config.reason||'set-value',source:config.source||'api',originalEvent:config.originalEvent||null,previousValue:previous,controlled:r.valueState.controlled,instance:this});
         return true;
     }
@@ -103,7 +105,7 @@ export class Rate extends FieldComponent {
 
     [componentHooks.beforeOptionsUpdate](patch) { if(own(patch,'direction'))throw new TypeError('[QXFRAME9A7C2] Rate does not support direction; layout is LTR-only.'); }
     [fieldHooks.fieldOptionsUpdated](next, previous, patch) {
-        const r=recordFor(this);r.valueState.updateOptions({normalizeValue:candidate=>quantize(candidate,next.count,next.half===true)});if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(next.value,{silent:true,source:'options',reason:'external-sync'});}else r.valueState.setValue(r.valueState.value,{silent:true,source:'options',reason:'requantize'});this.setFieldValue(r.valueState.value,{silent:true,force:true});r.hoverValue=0;if(!r.rendered)return;const rebuildNeeded=own(patch,'count')||own(patch,'half')||own(patch,'character')||own(patch,'tooltips');if(rebuildNeeded)this.#rebuild();else{this.#renderRoot();this.#renderValue();}if(r.formBridge){r.formBridge.updateOptions({name:next.name,disabled:next.disabled===true,readOnly:next.readOnly===true,required:next.required===true,serializeValue:next.serializeValue});r.formBridge.setValue(r.valueState.value,{silent:true});}
+        const r=recordFor(this);r.valueState.updateOptions({normalizeValue:candidate=>quantize(candidate,next.count,next.half===true)});if(own(patch,'value')){r.valueState.setControlled(true);r.valueState.syncExternal(next.value,{silent:true,source:'options',reason:'external-sync'});}else r.valueState.setValue(r.valueState.value,{silent:true,source:'options',reason:'requantize'});this.setFieldValue(r.valueState.value,{silent:true,force:true,sync:true,source:'options',reason:'rate-options'});r.hoverValue=0;if(!r.rendered)return;const rebuildNeeded=own(patch,'count')||own(patch,'half')||own(patch,'character')||own(patch,'tooltips');if(rebuildNeeded)this.#rebuild();else{this.#renderRoot();this.#renderValue();}if(r.formBridge){r.formBridge.updateOptions({name:next.name,disabled:next.disabled===true,readOnly:next.readOnly===true,required:next.required===true,serializeValue:next.serializeValue});r.formBridge.setValue(r.valueState.value,{silent:true});}
     }
 
     setValue(next,config={}){this.#setCommitted(next,{...config,reason:config.reason||'set-value',source:config.source||'api'});return this;}
