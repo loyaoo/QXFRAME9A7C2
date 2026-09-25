@@ -12,6 +12,11 @@ import { ValueEquality } from '../utils/valueEquality.js';
 const fieldState = new WeakMap();
 const own = (value, key) => Object.prototype.hasOwnProperty.call(Object(value), key);
 const cloneValue = value => Array.isArray(value) ? value.slice() : value;
+const readCommittedValue = record => {
+    if (!record || !record.valueController) return undefined;
+    const value = record.valueController.value;
+    return cloneValue(typeof record.valueProjector === 'function' ? record.valueProjector(value) : value);
+};
 
 function currentValue(options) {
     if (own(options, 'value')) return cloneValue(options.value);
@@ -21,8 +26,8 @@ function currentValue(options) {
 
 function createFormAdapter(instance, record, config) {
     const adapter = {
-        getValue: () => cloneValue(record.valueController.value),
-        getSerializedValue: () => record.bridge ? record.bridge.getSerializedValue() : cloneValue(record.valueController.value),
+        getValue: () => readCommittedValue(record),
+        getSerializedValue: () => record.bridge ? record.bridge.getSerializedValue() : readCommittedValue(record),
         focus: () => instance.focus()
     };
     if (typeof config.reset === 'function') adapter.reset = context => config.reset(context, instance);
@@ -50,13 +55,14 @@ export class FieldComponent extends Component {
             copyValue: cloneValue,
             equals: ValueEquality.deep
         });
-        const record = { valueController, ownsValueController: true, bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
+        const record = { valueController, ownsValueController: true, valueProjector: null, bridge: null, focusTarget: null, formController: null, formRegistration: null, formBindingOptions: null, feedbackController: null, feedbackControl: null };
         fieldState.set(this, record);
         this.own(() => {
             releaseFormRegistration(record, { source:'component', reason:'destroy' });
             if (record.ownsValueController && record.valueController && typeof record.valueController.destroy === 'function') record.valueController.destroy();
             record.valueController = null;
             record.ownsValueController = false;
+            record.valueProjector = null;
             record.formController = null;
             record.formBindingOptions = null;
             record.feedbackController = null;
@@ -66,7 +72,7 @@ export class FieldComponent extends Component {
 
     get value() {
         const record = fieldState.get(this);
-        return record && record.valueController ? cloneValue(record.valueController.value) : undefined;
+        return readCommittedValue(record);
     }
     get disabled() { return this.options.disabled === true; }
     get readOnly() { return this.options.readOnly === true; }
@@ -110,7 +116,7 @@ export class FieldComponent extends Component {
         if (state.bridge) state.bridge.destroy();
         const bridge = FormBridge.create({
             ...options,
-            value: own(options, 'value') ? options.value : state.valueController.value,
+            value: own(options, 'value') ? options.value : readCommittedValue(state),
             disabled: own(options, 'disabled') ? options.disabled : this.disabled,
             readOnly: own(options, 'readOnly') ? options.readOnly : this.readOnly,
             required: own(options, 'required') ? options.required : this.options.required === true
@@ -131,14 +137,17 @@ export class FieldComponent extends Component {
         if (!controller || typeof controller.setValue !== 'function' || typeof controller.snapshot !== 'function') throw new TypeError('[QXFRAME9A7C2] FieldComponent value controller must be ValueController-compatible.');
         const record = fieldState.get(this);
         const settings = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+        if (settings.projectValue != null && typeof settings.projectValue !== 'function') throw new TypeError('[QXFRAME9A7C2] FieldComponent value projection must be a function.');
         const previous = record.valueController;
-        const previousValue = previous ? cloneValue(previous.value) : undefined;
-        if (previous === controller) return controller;
-        if (record.ownsValueController && previous && typeof previous.destroy === 'function') previous.destroy();
-        record.valueController = controller;
-        record.ownsValueController = settings.owned === true;
-        if (settings.syncFromField === true && !ValueEquality.deep(controller.value, previousValue)) controller.setValue(previousValue, { silent:true, source:'field', reason:'bind-value-controller' });
-        if (record.bridge) record.bridge.setValue(controller.value, { silent:true });
+        const previousValue = previous ? readCommittedValue(record) : undefined;
+        if (previous !== controller) {
+            if (record.ownsValueController && previous && typeof previous.destroy === 'function') previous.destroy();
+            record.valueController = controller;
+            record.ownsValueController = settings.owned === true;
+        }
+        record.valueProjector = typeof settings.projectValue === 'function' ? settings.projectValue : null;
+        if (settings.syncFromField === true && !ValueEquality.deep(readCommittedValue(record), previousValue)) controller.setValue(previousValue, { silent:true, source:'field', reason:'bind-value-controller' });
+        if (record.bridge) record.bridge.setValue(readCommittedValue(record), { silent:true });
         return controller;
     }
 
@@ -229,15 +238,15 @@ export class FieldComponent extends Component {
         if (detail.force !== true && !this.canMutate(detail.capabilities || {})) return false;
         const state = fieldState.get(this);
         const controller = state.valueController;
-        const previous = cloneValue(controller.value);
+        const previous = readCommittedValue(state);
         const next = cloneValue(value);
         const same = ValueEquality.deep(previous, next);
         if (same && detail.forceEvent !== true && detail.sync !== true) return false;
-        if (!same) {
+        if (!same && detail.sync !== true) {
             if (detail.source === 'external' || detail.source === 'options') controller.syncExternal(next, { silent:true, source:detail.source, reason:detail.reason || 'field-value' });
             else controller.setValue(next, { silent:true, source:detail.source || 'component', reason:detail.reason || 'field-value' });
         }
-        const committed = cloneValue(controller.value);
+        const committed = readCommittedValue(state);
         if (state.bridge) state.bridge.setValue(committed, { silent: detail.silent === true, forceEvent: detail.forceEvent === true });
         if (state.formRegistration && detail.notifyForm !== false) {
             const formMeta = { source:detail.source || 'component', reason:detail.reason || 'field-value' };
@@ -258,7 +267,7 @@ export class FieldComponent extends Component {
             const bridgePatch = {};
             for (const key of ['name', 'disabled', 'readOnly', 'required', 'serializeValue']) if (own(patch, key)) bridgePatch[key] = next[key];
             if (Object.keys(bridgePatch).length) state.bridge.updateOptions(bridgePatch);
-            if (own(patch, 'value')) state.bridge.setValue(state.valueController.value, { silent: true });
+            if (own(patch, 'value')) state.bridge.setValue(readCommittedValue(state), { silent: true });
         }
         if (own(patch, 'name') && state.formRegistration && state.formController && !(state.formBindingOptions && own(state.formBindingOptions, 'name'))) {
             this.bindFormController(state.formController, state.formBindingOptions || {});
