@@ -10,49 +10,47 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `3a0d62162a884ec6e9c4b66120f4e974b2665841` (PR #91 merge)
-- Current branch: `refactor/phase-h-picker-family-r2-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-012 Picker family PR
+- Last code-affecting main commit: `120f57d98be4f95da53f5564a6f96332d787c15b` (PR #92 merge)
+- Current branch: `refactor/phase-h-simple-interactive-fields-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-013 simple interactive fields PR
 - Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-012 clean replay branch; old stacked H-012 branch is superseded
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #451 / `36082593230` (PR #91)
-- Latest green main CI + Pages: #452 / `36082994382`
+- Latest green Phase H PR CI: #462 / `36085025052` (PR #92)
+- Latest green main CI + Pages: #463 / `36085329998`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-012`
+- Current Task: `PHASE-H-013`
 
 ## CURRENT
 
-### PHASE-H-012 — Picker family shared V/F/I/C/M/S/O/B/R closeout
+### PHASE-H-013 — InputNumber + InputOTP + Rate + Slider V/F/I/C/B/R closeout
 Status: IN_PROGRESS
 Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-011 is DONE through PR #91, exact-head CI #451 / `36082593230`, merge `3a0d62162a884ec6e9c4b66120f4e974b2665841`, main release + Pages #452 / `36082994382`.
-- Autocomplete, InputOTP, Rate and Slider now bind their existing canonical ValueController exactly once into FieldComponent.
-- Slider keeps its normalized handle-array canonical ValueController while Field/Form expose the public scalar/range projection; `detail.sync` never rewrites an already-updated canonical controller.
-- H-011 does not by itself mark those four public components H accepted because their remaining target controllers still close out in their owning families.
+- PHASE-H-012 is DONE through PR #92, exact-head CI #462 / `36085025052`, merge `120f57d98be4f95da53f5564a6f96332d787c15b`, main release + Pages #463 / `36085329998`.
+- DatePicker, TimePicker, ColorPicker and WheelPicker are H accepted on the shared PickerComponent → PopupFieldComponent → Trigger/FieldComponent controller path.
+- Picker family exact profiles are enforced by `verify:phase-h-picker-family`; Date/Time/Wheel SelectionController stores stable semantic keys only, while committed/draft business values remain ValueController-owned.
 
-Implemented in current H-012 pack:
-- clean replay from the latest green H-011 main; no #91 history is carried into this branch.
-- DatePicker, TimePicker, ColorPicker and WheelPicker bind their picker-session ValueController directly into FieldComponent; the default Field ValueController is retired for these instances.
-- PickerField keyboard ownership enters FocusController while preserving the existing KeyboardNavigation handlers/IME/native-editing rules.
-- PopupFieldComponent exposes the canonical Trigger Interaction/Capability/Overlay/Motion facades; PickerComponent exposes PickerField Focus and binds Field feedback once through the canonical Control.
-- PickerComponent FormController binding reuses Control.getSerializedValue(), so native/canonical Picker serialization remains FormBridge/Control-owned rather than serializing Date/gradient objects independently.
-- DatePicker, TimePicker and WheelPicker own one semantic SelectionController selected-key channel; it stores stable string keys only. committed/draft business values remain exclusively ValueController-owned.
-- Date/Time SelectionController follows picker draft semantics and restores committed keys on cancel. Wheel selection keys are column-scoped stable item keys.
-- ColorPicker correctly has no SelectionController target.
-- all four public Picker profiles now match the handbook target combinations exactly.
-- `verify:phase-h-picker-family` is required by full verify; the existing `minimumProfiled=23` regression floor is unchanged because these four Pickers already had partial profiles. Their exact target completeness is enforced by the new family gate.
-- strict source-ESM Chromium verifies shared V/F/I/C/M/O/B, stable S keys, DatePicker needConfirm V/S separation, Color feedback, canonical Picker FormController serialization and destroy unregister.
+Implemented in current H-013 pack:
+- added an opt-in simple-field controller bundle on FieldComponent; complex Picker/Select families are not auto-bound, preventing duplicate owners.
+- the bundle centralizes FocusController, InteractionController and CapabilityController setup plus shared FeedbackController projection helpers.
+- NumericInput exposes its existing canonical ValueController; InputNumber binds that controller instead of restoring a second Field value owner.
+- InputNumber keyboard Arrow/Enter semantics dispatch through InteractionController and step/edit operations are CapabilityController-gated.
+- Control exposes an opt-in segmented-key pre-hook; InputOTP uses it so Backspace/left/right segment semantics enter InteractionController while all other Control consumers keep existing behavior.
+- Rate keyboard semantics enter InteractionController, CapabilityController gates interaction, FocusController owns the simple root focus facade, and visible feedback reuses the shared Field feedback projector.
+- Slider retains PointerSession, keyboard-session lifecycle and canonical handle-array ValueController; key semantics enter InteractionController, capability gates edits, and visible feedback reuses the shared Field projector.
+- all four public profiles match the exact handbook V/F/I/C/B/R target.
+- `verify:phase-h-simple-interactive-fields` is required by full verify and Phase H profile coverage floor rises from 23 to 27.
+- strict source-ESM Chromium extends the existing four-component tests with controller access, keyboard default prevention, disabled blocking and OTP segmented Backspace behavior.
 
 Next exact step:
-1. final diff/self-audit H-012.
-2. open PHASE-H-012 PR and run exact-head full release/browser/package CI.
+1. open PHASE-H-013 PR and run exact-head full release/browser/package CI.
+2. fix only real regressions without reintroducing direct keyboard/value owners.
 3. merge only exact-head green and verify main + Pages.
-4. mark DatePicker / TimePicker / ColorPicker / WheelPicker H accepted and PickerField focus/value/form/feedback shared paths migrated.
-5. continue the remaining Phase H families from the executable matrix; do not reopen H-011.
+4. mark InputNumber / InputOTP / Rate / Slider H accepted.
+5. continue the next shared family; reserve final exhaustive audit/acceptance sweep for GPT-6 Astra High as requested.
 
 ## Current authority snapshot — after Phase A
 
@@ -82,6 +80,24 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-012 — Picker family shared V/F/I/C/M/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #92 merged
+- merge commit `120f57d98be4f95da53f5564a6f96332d787c15b`
+- exact-head CI #462 / `36085025052`: success
+- main CI + Pages #463 / `36085329998`: success
+Outcome:
+- DatePicker, TimePicker, ColorPicker and WheelPicker share the canonical PickerComponent/PopupFieldComponent/Trigger/FieldComponent controller facades.
+- picker-session ValueController is bound once into FieldComponent; no second committed value owner exists.
+- PickerField focus enters FocusController and popup Interaction/Capability/Overlay/Motion enter Trigger facades.
+- DatePicker, TimePicker and WheelPicker own semantic SelectionController key channels only; ColorPicker correctly has no SelectionController target.
+- Picker FormController serialization stays Control/FormBridge-owned.
+- all four exact handbook profiles are enforced and Chromium verifies draft/selection separation, feedback, form serialization and destroy cleanup.
+- DatePicker, TimePicker, ColorPicker and WheelPicker are H accepted.
+
+
 
 ### PHASE-H-011 — shared ValueController binding for simple Field consumers
 Status: DONE
