@@ -17,6 +17,16 @@ function modeName(value) {
 }
 
 export class InputNumber extends FieldComponent {
+    static profile = Object.freeze({
+        name:'InputNumber',
+        value:Object.freeze({ mode:'numeric' }),
+        focus:Object.freeze({ mode:'native-editor' }),
+        interaction:Object.freeze({ mode:'numeric-edit' }),
+        capability:Object.freeze({ mode:'field-edit' }),
+        feedback:Object.freeze({ mode:'field-status' }),
+        form:Object.freeze({ mode:'field-registration' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', feedback:'FeedbackController', form:'FormController' })
+    });
     static contract = getContract('InputNumber');
     static immutableOptions = Object.freeze(['target', 'container', 'formField']);
     static optionNormalizers = Object.freeze({ mode: modeName });
@@ -85,6 +95,7 @@ export class InputNumber extends FieldComponent {
     }
     #step(up, source='api', emitter=source, event=null) {
         const record=state.get(this); if(this.destroyed)return false;
+        const capability=this.getCapabilityController();if(capability&&!capability.can('edit'))return false;
         const did=up?record.numeric.stepUp({reason:'step',source,emitter,originalEvent:event,multiplier:event&&event.shiftKey?10:1}):record.numeric.stepDown({reason:'step',source,emitter,originalEvent:event,multiplier:event&&event.shiftKey?10:1});
         if(did){this.#syncProjection(false,{source,reason:'step'});record.control.focus();}return did;
     }
@@ -94,23 +105,47 @@ export class InputNumber extends FieldComponent {
     [componentHooks.render]() {
         const record=state.get(this); if(record.rendered)return record.control.getRootElement();
         const numeric=this.own(NumericInput.create(this.#numericOptions(true))), initial=numeric.getState();
+        this.bindValueController(numeric.getValueController());
         const control=this.own(Control.create({
             container:this.options.container,formField:this.options.formField,mode:'input',inputValue:initial.inputValue,committedValue:initial.stringValue,
             editable:true,clearable:false,disabled:this.disabled,readOnly:this.readOnly,required:this.options.required===true,size:this.options.size,status:this.options.status,variant:this.options.variant,focusOutline:this.options.focusOutline,classNames:this.options.classNames,styles:this.options.styles,placeholder:this.options.placeholder,prefix:this.options.prefix,suffix:this.options.suffix,name:this.options.name,
             onInput:(display,event)=>{numeric.collectInput(display,{reason:'input',source:'input',originalEvent:event,composing:record.composing});this.#syncProjection(true,{source:'input',reason:'input'});},
             onFocus:event=>{if(typeof this.options.onFocus==='function')this.options.onFocus(event,this);},
-            onKeydown:event=>{if(event.key==='Enter'){if(!record.composing){this.#syncNumericFromLiveEditor({reason:'enter-live-editor',source:'keyboard',originalEvent:event});numeric.flush({reason:'enter',source:'keyboard',originalEvent:event});this.#syncProjection(false,{source:'keyboard',reason:'enter'});}if(typeof this.options.onPressEnter==='function')this.options.onPressEnter(event,{value:numeric.getState().value,instance:this});return;}if(this.options.keyboard===false||record.composing)return;if(event.key==='ArrowUp'||event.key==='Up'){event.preventDefault();this.#step(true,'keyboard','keyboard',event);}else if(event.key==='ArrowDown'||event.key==='Down'){event.preventDefault();this.#step(false,'keyboard','keyboard',event);}}
+            onKeydown:event=>{const interaction=this.getInteractionController();if(interaction)interaction.dispatch(event);}
         }));
         record.numeric=numeric;record.control=control;record.frame=control.getControlElement();record.field=control.getInputElement();
-        const root=control.getRootElement(), frame=record.frame, field=record.field, doc=record.doc;root.classList.add('qxframe9a7c2-input-number');frame.classList.add('qxframe9a7c2-input-number-frame');field.classList.add('qxframe9a7c2-input-number-input');DOM.configureTextInput(field,{mode:'numeric',inputMode:this.options.inputMode||'decimal'});
+        const root=control.getRootElement(), frame=record.frame, field=record.field, doc=record.doc;
+        this.bindFocusTarget(field);
+        this.bindSimpleControllers({
+            root:field,
+            capabilities:{ focusable:true, tabbable:true, activatable:true, editable:true },
+            keymap:{ ArrowUp:'STEP_UP', Up:'STEP_UP', ArrowDown:'STEP_DOWN', Down:'STEP_DOWN', Enter:'COMMIT' },
+            allowEditableKeys:['ArrowUp','Up','ArrowDown','Down','Enter'],
+            operationOf:action=>action==='COMMIT'?'edit':'edit',
+            onAction:(action,context)=>{
+                if(this.options.keyboard===false||record.composing)return 'pass';
+                const event=context.originalEvent;
+                if(action==='STEP_UP')return this.#step(true,'keyboard','keyboard',event)?'handled':'blocked';
+                if(action==='STEP_DOWN')return this.#step(false,'keyboard','keyboard',event)?'handled':'blocked';
+                if(action==='COMMIT'){
+                    this.#syncNumericFromLiveEditor({reason:'enter-live-editor',source:'keyboard',originalEvent:event});
+                    numeric.flush({reason:'enter',source:'keyboard',originalEvent:event});
+                    this.#syncProjection(false,{source:'keyboard',reason:'enter'});
+                    if(typeof this.options.onPressEnter==='function')this.options.onPressEnter(event,{value:numeric.getState().value,instance:this});
+                    return 'handled';
+                }
+                return 'pass';
+            },
+            feedbackControl:control
+        });root.classList.add('qxframe9a7c2-input-number');frame.classList.add('qxframe9a7c2-input-number-frame');field.classList.add('qxframe9a7c2-input-number-input');DOM.configureTextInput(field,{mode:'numeric',inputMode:this.options.inputMode||'decimal'});
         const actions=doc.createElement('span'),up=doc.createElement('button'),down=doc.createElement('button');actions.className='qxframe9a7c2-input-number-actions';up.type=down.type='button';up.tabIndex=down.tabIndex=-1;up.className='qxframe9a7c2-input-number-action is-up';down.className='qxframe9a7c2-input-number-action is-down';actions.appendChild(up);actions.appendChild(down);frame.appendChild(actions);record.actions=actions;record.upButton=up;record.downButton=down;this.own(()=>actions.remove());
         const repeat=this.own(Scheduler.createDelayScheduler(()=>{if(!record.repeatState.active||this.destroyed)return;this.#step(record.repeatState.up,'pointer','handler',record.repeatState.event);if(record.repeatState.active&&!this.destroyed)repeat.request(200,'repeat');}));record.repeatScheduler=repeat;this.own(()=>this.#stopRepeat());
         this.own(DOM.listen(frame,'blur',event=>{const next=event.relatedTarget;if(next&&frame.contains(next))return;if(!record.composing)this.#syncNumericFromLiveEditor({reason:'blur-live-editor',source:'blur',originalEvent:event});if(this.options.changeOnBlur!==false)numeric.flush({reason:'blur',source:'blur',originalEvent:event});else numeric.restoreInput({reason:'blur-restore',source:'blur',originalEvent:event});this.#syncProjection(false,{source:'blur',reason:this.options.changeOnBlur!==false?'blur':'blur-restore'});if(typeof this.options.onBlur==='function')this.options.onBlur(event,this);},true));
         const bindAction=(button,isUp)=>{let pointerStepped=false;const suppress=this.own(Scheduler.createDelayScheduler(()=>{pointerStepped=false;}));this.own(DOM.listen(button,'pointerdown',event=>{event.preventDefault?.();pointerStepped=this.#startRepeat(isUp,event)===true;}));this.own(DOM.listen(button,'pointerup',()=>{this.#stopRepeat();suppress.request(0,'pointerup');}));this.own(DOM.listen(button,'pointercancel',()=>{pointerStepped=false;suppress.cancel();this.#stopRepeat();}));this.own(DOM.listen(button,'pointerleave',()=>{pointerStepped=false;suppress.cancel();this.#stopRepeat();}));this.own(DOM.listen(button,'click',event=>{event.preventDefault?.();event.stopPropagation?.();if(pointerStepped){pointerStepped=false;suppress.cancel();return;}this.#step(isUp,DOM.activationSource(event),'action',event);}));};bindAction(up,true);bindAction(down,false);
         this.own(DOM.listen(field,'compositionstart',()=>{record.composing=true;}));this.own(DOM.listen(field,'compositionend',event=>{record.composing=false;numeric.collectInput(field.value,{reason:'compositionend',source:'input',originalEvent:event,composing:false});this.#syncProjection(true,{source:'input',reason:'compositionend'});}));
-        this.own(DOM.listen(frame,'wheel',event=>{if(this.options.changeOnWheel!==true||CapabilityController.mutationLocked(this.options))return;event.preventDefault?.();event.stopPropagation?.();this.#step(event.deltaY<0,'wheel','wheel',event);},{passive:false}));
+        this.own(DOM.listen(frame,'wheel',event=>{const capability=this.getCapabilityController();if(this.options.changeOnWheel!==true||(capability&&!capability.can('edit')))return;event.preventDefault?.();event.stopPropagation?.();this.#step(event.deltaY<0,'wheel','wheel',event);},{passive:false}));
         if(control.onFormReset)control.onFormReset(()=>{numeric.setValue(initial.value,{silent:true,source:'form',reason:'reset'});this.#syncProjection(false);});
-        this.#renderActions();this.#syncProjection(false);record.rendered=true;this.bindFocusTarget(field);this.setFieldValue(initial.value,{silent:true,force:true});return root;
+        this.#renderActions();this.#syncProjection(false);record.rendered=true;this.setFieldValue(initial.value,{silent:true,force:true,sync:true});return root;
     }
 
     [componentHooks.beforeOptionsUpdate](patch, previous) {
