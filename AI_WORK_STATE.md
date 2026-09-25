@@ -10,47 +10,45 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `2f83d3464a396dd10250be1b3af5fdf0fd1e66ed` (PR #102 merge)
-- Current branch: `refactor/phase-h-transfer-closeout-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-022 Transfer PR
+- Last code-affecting main commit: `119ad00ef226b2a58d24d1d5e5641d518824b19c` (PR #103 merge)
+- Current branch: `refactor/phase-h-image-closeout-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-023 Image PR
 - Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-022 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #490 / `36096268302` (PR #102)
-- Latest green main CI + Pages: #491 / `36096555627`
+- Latest green Phase H PR CI: #494 / `36098771206` (PR #103)
+- Latest green main CI + Pages: #495 / `36099068281`
 - Overall handbook implementation progress: 98%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-022`
+- Current Task: `PHASE-H-023`
 
 ## CURRENT
 
-### PHASE-H-022 — Transfer V/F/I/C/S/B/R closeout
+### PHASE-H-023 — Image F/I/C/M/O/B closeout
 Status: IN_PROGRESS
 Task progress: 75%
 
 Completed prerequisite:
-- PHASE-H-021 Menu is DONE through PR #102, exact-head CI #490 / `36096268302`, merge `2f83d3464a396dd10250be1b3af5fdf0fd1e66ed`, main release + Pages #491 / `36096555627`.
-- Menu closes the 32nd public component; current accepted public-component floor is 32/40 = 80%.
+- PHASE-H-022 Transfer is DONE through PR #103, exact-head CI #494 / `36098771206`, merge `119ad00ef226b2a58d24d1d5e5641d518824b19c`, main release + Pages #495 / `36099068281`.
+- Transfer closes the 33rd public component; current accepted public-component floor is 33/40 = 82.5%.
 
-Implemented in current H-022 pack:
-- Transfer reuses the shared FieldComponent Value/Focus/Interaction/Capability/Feedback/Form profile and adds its existing SelectionController as the sole checked-selection owner.
-- public committed target value remains FieldComponent ValueController-owned; Transfer target order/list projection remains execution detail and is not promoted to a second committed store.
-- native form carrier now uses FieldComponent `bindFormBridge()` instead of direct `Control.createFormFieldBridge()`; FormController remains the external registry/transaction owner.
-- one bound CapabilityController gates mutation through `can('edit')`; the old static `CapabilityController.mutationLocked()` bypass is removed.
-- one FocusController owns the Transfer composite root scope.
-- Enter/Space on move-right/move-left/move-up/move-down operation buttons resolves through the shared InteractionController; native pointer clicks keep their existing route.
-- local busy/error/warning projection uses the shared FieldComponent FeedbackController and does not own target values.
-- source/target checked sets remain the existing multi-channel SelectionController; no second Selection store is introduced.
-- `verify:phase-h-transfer` freezes exact V/F/I/C/S/B/R ownership and rejects direct FormBridge/static capability bypasses.
-- strict source-ESM Chromium verifies controller access, canonical value identity, keyboard operation routing, disabled blocking, feedback projection, FormController serialization and unregister-on-destroy.
-- target-matrix profiled floor remains 34; complete floor rises 32 → 33.
+Implemented in current H-023 pack:
+- Image declares the exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback profile.
+- preview keyboard semantics (previous/next/zoom/reset) register and dispatch through one InteractionController scope; direct ArrowLeft/ArrowRight semantic branches are removed.
+- one CapabilityController gates preview open and preview navigation/edit actions; disabled no longer relies on parallel ad-hoc open checks.
+- image source pending/error visual classes are projected by one FeedbackController; root no longer owns a second direct loading/error class projector.
+- preview resource ownership remains OverlayController; focus trap remains OverlayController → OverlayRuntime → FocusController with no Image-owned FocusManager/FocusScope.
+- mask/content presence remains Transition → MotionController; Image does not create a second motion generation/timer.
+- `verify:phase-h-image` freezes exact F/I/C/M/O/B ownership and rejects direct keyboard/focus/feedback bypasses.
+- strict source-ESM Chromium covers I/C/B access, Feedback projection, Overlay/Focus scope, MotionController access, ArrowRight routing and disabled open blocking.
+- target-matrix floors rise to 35 profiled / 34 complete.
 
 Next exact step:
-1. final diff/self-audit and open PHASE-H-022 PR.
+1. final diff/self-audit and open PHASE-H-023 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Transfer H accepted.
-5. continue remaining 7 public components; broad final audit remains reserved for GPT-6 Astra High.
+4. mark Image H accepted.
+5. continue the remaining 6 public components; broad final audit remains reserved for GPT-6 Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -80,6 +78,24 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-022 — Transfer V/F/I/C/S/B/R closeout
+Status: DONE
+Evidence:
+- PR #103 merged
+- merge commit `119ad00ef226b2a58d24d1d5e5641d518824b19c`
+- exact-head CI #494 / `36098771206`: success
+- main CI + Pages #495 / `36099068281`: success
+Outcome:
+- Transfer reuses shared FieldComponent Value/Focus/Interaction/Capability/Feedback/Form ownership and one existing multi-channel SelectionController.
+- committed target value remains ValueController-owned; source/target checked channels remain SelectionController-owned projections.
+- native form carrier uses FieldComponent bindFormBridge; no parallel Control.createFormFieldBridge remains.
+- operation keyboard semantics enter InteractionController and disabled mutation blocking enters the bound CapabilityController.
+- local busy/error/warning projection enters FeedbackController.
+- FormController serialization/unregister and per-channel Selection revision behavior are Chromium-gated.
+- Transfer is H accepted; accepted public-component floor is 33/40.
+
+
 
 ### PHASE-H-021 — Menu V/F/I/C/S/O closeout
 Status: DONE
