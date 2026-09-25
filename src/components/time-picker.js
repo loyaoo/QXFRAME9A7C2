@@ -1,4 +1,4 @@
-import { PickerComponent, pickerHooks } from './picker.js';
+import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { TimePanel } from './time-panel.js';
 import { Control } from './control.js';
@@ -91,6 +91,24 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (!left && !right) return '';
     return left + String(opts.rangeSeparator) + right;
   }
+  function timeSelectionKey(value, index) {
+    if (!value) return '';
+    var key = TimeUnit.format24(value, true);
+    return selection === 'range' ? String(index) + ':' + key : key;
+  }
+  function selectionKeys(value) {
+    if (selection === 'single') {
+      var one = timeSelectionKey(value, 0);
+      return one ? [one] : [];
+    }
+    var output = [];
+    if (value && value[0]) output.push(timeSelectionKey(value[0], 0));
+    if (value && value[1]) output.push(timeSelectionKey(value[1], 1));
+    return output;
+  }
+  function syncSelectionController(value, detail) {
+    return instance.syncPickerSelection(selectionKeys(value), Utils.assignOwn({ silent:true, source:'picker', reason:'time-selection-sync' }, detail || {}));
+  }
   function splitValidatedRange(sourceText) {
     var source = String(sourceText || '').trim();
     var sep = String(opts.rangeSeparator);
@@ -139,9 +157,12 @@ function setupTimePickerRuntime(instance, fieldInit) {
     normalizeValue: normalizeValue,
     copyValue: cloneValue,
     equals: sameValue,
-    onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), timePicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), reason: detail.reason, source: detail.source || 'api', timePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
-    onDraftChange: function (value, detail) { if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open); if (field && field.getState().open) rebuildFooter(); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), timePicker: api })); }
+    onValueChange: function (value, detail) { instance.setFieldValue(value, { sync:true, silent:true, source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncSelectionController(value, { source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), timePicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), reason: detail.reason, source: detail.source || 'api', timePicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
+    onDraftChange: function (value, detail) { syncSelectionController(value, { source:detail && detail.source || 'value-draft', reason:detail && detail.reason || 'draft-change' }); if (!(detail && detail.source === 'input' && detail.reason === 'typing')) syncField(field && field.getState().open); if (field && field.getState().open) rebuildFooter(); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), timePicker: api })); }
   });
+  instance.bindValueController(draft);
+  instance.setupPickerSelection({ multiple: selection === 'range' });
+  syncSelectionController(draft.value, { source:'init', reason:'time-selection-init' });
 
   function syncField(preferDraft, meta) {
     if (!field) return;
@@ -227,12 +248,14 @@ function setupTimePickerRuntime(instance, fieldInit) {
     canCommit: function (controller) { return !destroyed && complete(controller.draftValue); },
     onOpenDraft: function (controller) {
       controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
+      syncSelectionController(controller.draftValue, { source:'popup', reason:'open-selection-sync' });
       controller.clearRawInput({ silent:true, source:'popup', reason:'open-raw-input-clear' });
       if (selection === 'range') activeRangePart = controller.draftValue && !controller.draftValue[0] ? 0 : (controller.draftValue && !controller.draftValue[1] ? 1 : 0);
       syncPanel('time-picker-open-sync');
       syncField(true);
     },
     onCancel: function (_controller, detail) {
+      syncSelectionController(draft.value, { source:'popup', reason:'cancel-selection-restore' });
       if (selection === 'range') activeRangePart = 0;
       syncPanel(detail && detail.source === 'popup' ? 'time-picker-close-restore' : 'time-picker-cancel-sync');
       syncField(false);
@@ -492,16 +515,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
 
 export class TimePicker extends PickerComponent {
   static contract = getContract('TimePicker');
-  static profile = Object.freeze({
-    name:'TimePicker',
-    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview','rawInput']) }),
-    focus:Object.freeze({ mode:'virtual-navigation' }),
-    interaction:Object.freeze({ keymap:'picker' }),
-    overlay:Object.freeze({ mode:'popup' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
-  });
-  static options = TIME_PICKER_DEFAULTS;
+  static profile = createPickerProfile('TimePicker', { channels:["committed","draft","preview","rawInput"], selection:'draft-selected-keys' });
+    static options = TIME_PICKER_DEFAULTS;
   static immutableOptions = TIME_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }
   static enhance(input, options) { return this.create(input, options || {}); }
@@ -527,7 +542,7 @@ export class TimePicker extends PickerComponent {
     const runtime = setupTimePickerRuntime(this, record.fieldInit);
     record.runtime = runtime;
     this.own(() => runtime.dispose('time-picker-destroy'));
-    this.setFieldValue(runtime.getState().value, { silent:true, force:true });
+    this.setFieldValue(runtime.getState().value, { silent:true, force:true, sync:true, source:'init', reason:'time-picker-init' });
     return runtime.root;
   }
 

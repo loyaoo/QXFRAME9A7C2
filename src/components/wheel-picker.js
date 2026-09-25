@@ -1,4 +1,4 @@
-import { PickerComponent, pickerHooks } from './picker.js';
+import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { WheelPanel } from './wheel-panel.js';
 import { Control } from './control.js';
@@ -50,9 +50,24 @@ var draft = ValueController.create({
   copyValue: cloneValue,
   normalizeValue: function (value) { return assertValue(value || [], 'value'); },
   equals: equalValue,
-  onValueChange: function (value, detail) { syncField(false, { panelSynced: panelSelectionDepth > 0, commitMeta: { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' } }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), wheelPicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), reason: detail.reason, source: detail.source, wheelPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
-  onDraftChange: function (value, detail) { syncField(field && field.getState().open && opts.needConfirm === true, { panelSynced: panelSelectionDepth > 0 }); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), wheelPicker: api })); }
+  onValueChange: function (value, detail) { instance.setFieldValue(value, { sync:true, silent:true, source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncSelectionController(value, { source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncField(false, { panelSynced: panelSelectionDepth > 0, commitMeta: { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' } }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(value), previousValue: cloneValue(detail.previousValue), wheelPicker: api })); if (detail.silent !== true) { var payload = { value: cloneValue(value), reason: detail.reason, source: detail.source, wheelPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneValue(value), payload); emitter.emit('change', payload); } },
+  onDraftChange: function (value, detail) { syncSelectionController(value, { source:detail && detail.source || 'value-draft', reason:detail && detail.reason || 'draft-change' }); syncField(field && field.getState().open && opts.needConfirm === true, { panelSynced: panelSelectionDepth > 0 }); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneValue(value), Utils.mergeOwn( detail, { value: cloneValue(draft.value), draftValue: cloneValue(value), wheelPicker: api })); }
 });
+instance.bindValueController(draft);
+instance.setupPickerSelection({ multiple: true });
+
+function selectionKeys(value) {
+  var list = Array.isArray(value) ? value : [];
+  var selected = panel && panel.getSelectedItemsForValue ? panel.getSelectedItemsForValue(list) : [];
+  return list.map(function (entry, index) {
+    var item = selected[index] || null;
+    var raw = item && item.key != null ? item.key : entry;
+    return String(index) + ':' + String(raw == null ? '' : raw);
+  }).filter(function (key) { return !/:$/.test(key); });
+}
+function syncSelectionController(value, detail) {
+  return instance.syncPickerSelection(selectionKeys(value), Utils.assignOwn({ silent:true, source:'picker', reason:'wheel-selection-sync' }, detail || {}));
+}
     
 function formatDisplay(useDraft) {
   if (!panel) return '';
@@ -186,6 +201,7 @@ field = PickerField.create({
   },
   onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
 });
+syncSelectionController(draft.value, { source:'init', reason:'wheel-selection-init' });
 instance.adoptPickerField(field);
     
 panel = WheelPanel.create({
@@ -323,16 +339,8 @@ return Object.freeze({ root:field.getRootElement(), panel:field.getPanelElement(
 
 export class WheelPicker extends PickerComponent {
   static contract = getContract('WheelPicker');
-  static profile = Object.freeze({
-    name:'WheelPicker',
-    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft']) }),
-    focus:Object.freeze({ mode:'virtual-navigation' }),
-    interaction:Object.freeze({ keymap:'picker' }),
-    overlay:Object.freeze({ mode:'popup' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
-  });
-  static options = WHEEL_PICKER_DEFAULTS;
+  static profile = createPickerProfile('WheelPicker', { channels:["committed","draft"], selection:'column-selected-keys' });
+    static options = WHEEL_PICKER_DEFAULTS;
   static immutableOptions = STRUCTURAL_OPTIONS;
   static create(source, overrides) { return new this(source, overrides).render(); }
   static enhance(input, options) { return this.create(input, options || {}); }
@@ -352,7 +360,7 @@ export class WheelPicker extends PickerComponent {
     const runtime = setupWheelPickerRuntime(this, record.fieldInit);
     record.runtime = runtime;
     this.own(() => runtime.dispose('wheel-picker-destroy'));
-    this.setFieldValue(runtime.getState().value, { silent:true, force:true });
+    this.setFieldValue(runtime.getState().value, { silent:true, force:true, sync:true, source:'init', reason:'wheel-picker-init' });
     return runtime.root;
   }
 

@@ -1,4 +1,4 @@
-import { PickerComponent, pickerHooks } from './picker.js';
+import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { ColorPanel } from './color-panel.js';
 import { Control } from './control.js';
@@ -357,9 +357,10 @@ function setupColorPickerRuntime(instance, fieldInit) {
        },
        copyValue: cloneModel,
        equals: modelEquals,
-       onValueChange: function (value, detail) { syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, colorPicker: api })); if (detail.silent !== true) { var payload = { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, reason: detail.reason, source: detail.source || 'api', colorPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneModel(value), payload); emitter.emit('change', payload); } },
+       onValueChange: function (value, detail) { instance.setFieldValue(value, { sync:true, silent:true, source:detail.source || 'value-draft', reason:detail.reason || 'value-change' }); syncField(false, { source: detail.source || 'value-draft', reason: detail.reason || 'value-change' }); if (Utils.isFunction(opts.onValueChange)) opts.onValueChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, colorPicker: api })); if (detail.silent !== true) { var payload = { value: cloneModel(value), previousValue: cloneModel(detail.previousValue), mode: mode, reason: detail.reason, source: detail.source || 'api', colorPicker: api }; if (Utils.isFunction(opts.onChange)) opts.onChange(cloneModel(value), payload); emitter.emit('change', payload); } },
        onDraftChange: function (value, detail) { if (!(detail && detail.valueChanged === true && opts.needConfirm !== true)) syncField(field && field.getState().open); if (Utils.isFunction(opts.onDraftChange)) opts.onDraftChange(cloneModel(value), Utils.mergeOwn( detail, { value: cloneModel(draft.value), draftValue: cloneModel(value), mode: mode, colorPicker: api })); }
      });
+     instance.bindValueController(draft);
 
      var pickerSession = instance.setupPickerSession({
        controller: draft,
@@ -722,16 +723,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
 
 export class ColorPicker extends PickerComponent {
   static contract = getContract('ColorPicker');
-  static profile = Object.freeze({
-    name:'ColorPicker',
-    value:Object.freeze({ mode:'picker-session', channels:Object.freeze(['committed','draft','preview']) }),
-    focus:Object.freeze({ mode:'virtual-navigation' }),
-    interaction:Object.freeze({ keymap:'picker' }),
-    overlay:Object.freeze({ mode:'popup' }),
-    form:Object.freeze({ serialize:true }),
-    ownership:Object.freeze({ value:'ValueController', form:'FormController' })
-  });
-  static options = COLOR_PICKER_DEFAULTS;
+  static profile = createPickerProfile('ColorPicker', { channels:["committed","draft","preview"] });
+    static options = COLOR_PICKER_DEFAULTS;
   static immutableOptions = COLOR_PICKER_IMMUTABLE;
   static create(source, overrides) { return new this(source, overrides).render(); }
   static enhance(input, options) { return this.create(input, options || {}); }
@@ -755,7 +748,7 @@ export class ColorPicker extends PickerComponent {
     const runtime = setupColorPickerRuntime(this, record.fieldInit);
     record.runtime = runtime;
     this.own(() => runtime.dispose('color-picker-destroy'));
-    this.setFieldValue(runtime.getState().value, { silent:true, force:true });
+    this.setFieldValue(runtime.getState().value, { silent:true, force:true, sync:true, source:'init', reason:'color-picker-init' });
     return runtime.root;
   }
 

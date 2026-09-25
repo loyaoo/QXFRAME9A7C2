@@ -6,6 +6,7 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { FieldHost } from '../core/fieldHost.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { FocusController } from '../core/focusController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { Utils } from '../utils/utils.js';
 import { Control } from './control.js';
@@ -69,7 +70,7 @@ function create(options) {
     if (!valueHost) { valueHost = doc.createElement('span'); valueHost.className = 'qxframe9a7c2-picker-field-value-host qxframe9a7c2-input-values'; root.insertBefore(valueHost, input); }
   }
   var panel = doc.createElement('div'), body = doc.createElement('div'), footer = doc.createElement('div');
-  var triggerSession = null, control = null, keyboard = null, destroyed = false, api = null;
+  var triggerSession = null, control = null, focusController = null, keyboard = null, destroyed = false, api = null;
   var displayValue = opts.displayValue == null ? '' : String(opts.displayValue);
   var draftDisplayValue = opts.draftDisplayValue == null ? '' : String(opts.draftDisplayValue);
   var displayPlaceholder = opts.placeholder == null ? '' : String(opts.placeholder);
@@ -299,9 +300,11 @@ function create(options) {
     return true;
   }
 
-  keyboard = KeyboardNavigation.create({
+  focusController = FocusController.create({
     root: focusElement(),
     focusRoot: focusElement,
+    manageTabIndex: false,
+    navigation: {
     editableKeys: ['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Backspace','Delete','Enter','Escape','Home','End','PageUp','PageDown','F6'],
     allowEditableKey: function (key, detail) {
       var event = detail && detail.originalEvent;
@@ -329,8 +332,10 @@ function create(options) {
       PageDown: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
       F6: function (detail) { return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; }
     }
+  }
   });
-  scope.add(function () { if (keyboard) keyboard.destroy(); keyboard = null; });
+  keyboard = focusController.keyboard;
+  scope.add(function () { if (focusController) focusController.destroy(); focusController = null; keyboard = null; });
 
   function syncControl() {
     if (!control) return;
@@ -471,7 +476,7 @@ function create(options) {
     getState: function () { return Object.freeze({ open: !!(triggerSession && triggerSession.getState().open), displayValue: displayValue, draftDisplayValue: draftDisplayValue, placeholder: displayPlaceholder, draftVisual: opts.draftVisual === true, hasDraftValueTarget: !!draftValueTarget, renderControl: !projectionMode && !headlessMode, projection: projectionMode, headless: headlessMode, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true, focusScope: opts.focusScope, interactionMode: navigationActive ? 'navigation' : 'text', keyboardOwner: navigationActive ? 'picker' : 'editor', editorSuspended: navigationActive, interactionGeneration: interactionGeneration, destroyed: destroyed }); },
     getRootElement: function () { return root; }, getControlElement: function () { return control ? control.getControlElement() : controlElement; }, getInputElement: function () { return control && control.getInputElement ? control.getInputElement() : input; }, getDraftValueElement: function () { return draftValueTarget; },
     getPanelElement: function () { return panel; }, getPanelHost: function () { return body; }, getFooterElement: function () { return footer; },
-    getControl: function () { return control; }, getKeyboardNavigation: function () { return keyboard; }, getFormField: function () { return control ? control.getFormField() : null; }, getCommittedValue: function () { return control ? control.getCommittedValue() : committedValue; }, getTrigger: function () { return triggerSession; },
+    getControl: function () { return control; }, getKeyboardNavigation: function () { return keyboard; }, getFocusController: function () { return focusController; }, getFormField: function () { return control ? control.getFormField() : null; }, getCommittedValue: function () { return control ? control.getCommittedValue() : committedValue; }, getTrigger: function () { return triggerSession; },
     destroy: function (reason) {
       if (destroyed) return false; scope.dispose(); footerCleanups.splice(0).forEach(function (cleanup) { cleanup(); });
       if (triggerSession) triggerSession.destroy(reason || 'picker-field-destroy'); triggerSession = null;
