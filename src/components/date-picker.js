@@ -97,7 +97,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
   if (withTime && selection === 'multiple') throw new TypeError('[QXFRAME9A7C2] DatePicker multiple selection does not compose time.');
 
   var derivedNeedConfirm = selection !== 'single' || withTime;
-  var closeOnSelectExplicit = own(sourceOptions, 'closeOnSelect');
   var opts = Utils.assignOwn({
     selection: selection,
     unit: unit,
@@ -523,21 +522,19 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var open = preferDraft === true && field.getState().open;
     var committedText = formatSelection(draft.value);
     var draftText = formatSelection(draft.draftValue);
-    var hasDraftTarget = field.getState().hasDraftValueTarget;
     if (selection === 'multiple') {
       var tagValue = open && draft.dirty ? draft.draftValue : draft.value;
       field.setTags(dateTags(tagValue));
-      field.setDisplayValue(hasDraftTarget ? committedText : (draft.rawInputActive ? draft.rawInput : ''));
+      field.setDisplayValue(draft.rawInputActive ? draft.rawInput : '');
       field.setPlaceholder(opts.placeholder);
     } else {
       var projection = draft.projection({ open:open, previewControl:selection === 'range' && opts.previewValue !== false, draftControl:true });
       var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatSelection(projection.value);
-      var displayText = hasDraftTarget && projection.channel !== 'rawInput' && projection.channel !== 'preview' ? committedText : projectedText;
-      field.setDisplayValue(displayText);
-      field.setPlaceholder(!hasDraftTarget && open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
+      field.setDisplayValue(projectedText);
+      field.setPlaceholder(open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
     }
     field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
-    field.setDraftVisual(open && draft.dirty && !hasDraftTarget);
+    field.setDraftVisual(open && draft.dirty);
     field.setClearVisible(hasValue(draft.value, selection));
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
@@ -1332,9 +1329,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
         syncSelectionPanel(true); syncTimePanel(); syncField(true);
         if (opts.needConfirm !== true && rangeCommitReady(normalized)) {
           var presetCommitted = instance.commit({ source: source, reason: 'preset-commit', originalEvent: event });
-          // A complete preset is an atomic immediate selection. Do not close if commit was
-          // vetoed, but otherwise presets close unless the caller explicitly opted out.
-          if (presetCommitted !== false && (!closeOnSelectExplicit || opts.closeOnSelect !== false)) field.close('preset', event);
+          // A complete preset is an atomic immediate selection in no-confirm mode.
+          // Picker-family preset semantics are commit -> close; closeOnSelect governs ordinary
+          // panel selection and must not turn an immediate preset into a lingering draft UI.
+          if (presetCommitted !== false) field.close('preset', event);
         }
         var payload = { value: cloneValue(normalized, selection), preset: preset, index: index, source: source, reason: 'preset-select', originalEvent: event, datePicker: api };
         if (Utils.isFunction(opts.onPreset)) opts.onPreset(cloneValue(normalized, selection), payload);
