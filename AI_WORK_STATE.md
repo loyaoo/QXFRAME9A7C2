@@ -17,16 +17,16 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
 - Latest green code PR CI: #565 / `36156818440` (PR #114 exact-head `0b51167239850bcf7df73c3ddbe3a968cf61c608`)
-- Latest green code main CI + Pages: #560 / `36150117894` (`main@fde8fe7eb9f6121da838c5a80006d6fd1f792ae3`)
+- Latest green main CI + Pages: #567 / `36157349913` (`main@8e34553795c17e7a38413d22c0a251dfff14b223`, includes PR #114 code lineage)
 - Overall handbook implementation progress: 100% implementation complete; historical-regression remediation and the pre-production hotpath pass are merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
 - Current Phase: post-hotpath final acceptance / newly confirmed findings only
-- Current Task: `PICKER-DRAFT-PROJECTION-001`
+- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
 
 ## CURRENT
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
-Status: MERGED_AWAITING_MAIN_CI
-Task progress: 95%
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
 Scope:
 - DatePicker multiple control projection must reflect the current open-session draft while committed/FormData remain unchanged until commit.
 - DatePicker needConfirm=false presets must commit immediately and close after a successful complete preset selection.
@@ -47,10 +47,13 @@ Implementation evidence:
 - production Chromium smoke coverage now checks Date multiple draft/cancel, immediate range preset close, and Time/Color/Wheel open control draft state.
 - browser assertions capture Time/Color/Wheel Control draft state before Enter commit; the earlier post-commit sampling mistake was corrected before acceptance.
 - static Phase-H Picker gate rejects reintroducing draft-target suppression or raw-DOM-only draft projection.
+Verification:
+- PR #114 exact-head CI #565 / `36156818440` on `0b51167239850bcf7df73c3ddbe3a968cf61c608` — success, including full release verification and strict Chromium browser regressions.
+- `main` CI + Pages #567 / `36157349913` on `8e34553795c17e7a38413d22c0a251dfff14b223` — release success and `deploy-pages` success.
+- Main code merge commit remains `898be09e28d7c7ddcbb9b6af7dafc70385a54be5`; this checkpoint update is documentation-only.
 Next exact step:
-1. verify GitHub Actions on `main` after PR #114 merge/checkpoint.
-2. verify GitHub Pages deployment from the same main lineage.
-3. mark this task DONE_MERGED_VERIFIED and return Current Task to `ASTRA-HIGH-FINAL-ACCEPTANCE`.
+1. Resume `ASTRA-HIGH-FINAL-ACCEPTANCE` only for newly confirmed findings.
+2. Do not reopen or reimplement `PICKER-DRAFT-PROJECTION-001` unless a new reproducible regression contradicts the verified browser coverage.
 
 ## Current authority snapshot — after Phase A
 
