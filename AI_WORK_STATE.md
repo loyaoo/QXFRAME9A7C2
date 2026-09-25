@@ -10,45 +10,46 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `119ad00ef226b2a58d24d1d5e5641d518824b19c` (PR #103 merge)
-- Current branch: `refactor/phase-h-image-closeout-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-023 Image PR
+- Last code-affecting main commit: `b984c6589fbc45f17c90628f474aa6eea173a19a` (PR #104 merge)
+- Current branch: `refactor/phase-h-upload-closeout-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-024 Upload PR
 - Branch inventory at this checkpoint: `main` + merged/superseded Phase H task branches + current H-022 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #494 / `36098771206` (PR #103)
-- Latest green main CI + Pages: #495 / `36099068281`
+- Latest green Phase H PR CI: #496 / `36099779410` (PR #104)
+- Latest green main CI + Pages: #497 / `36100069067`
 - Overall handbook implementation progress: 98%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-023`
+- Current Task: `PHASE-H-024`
 
 ## CURRENT
 
-### PHASE-H-023 — Image F/I/C/M/O/B closeout
+### PHASE-H-024 — Upload V/F/I/C/S/O/B/R closeout
 Status: IN_PROGRESS
-Task progress: 75%
+Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-022 Transfer is DONE through PR #103, exact-head CI #494 / `36098771206`, merge `119ad00ef226b2a58d24d1d5e5641d518824b19c`, main release + Pages #495 / `36099068281`.
-- Transfer closes the 33rd public component; current accepted public-component floor is 33/40 = 82.5%.
+- PHASE-H-023 Image is DONE through PR #104, exact-head CI #496 / `36099779410`, merge `b984c6589fbc45f17c90628f474aa6eea173a19a`, main release + Pages #497 / `36100069067`.
+- Image is the 34th H-accepted public component; remaining public components before this pack are Carousel, Sort, Scroll, Tabs, Upload and Table.
 
-Implemented in current H-023 pack:
-- Image declares the exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback profile.
-- preview keyboard semantics (previous/next/zoom/reset) register and dispatch through one InteractionController scope; direct ArrowLeft/ArrowRight semantic branches are removed.
-- one CapabilityController gates preview open and preview navigation/edit actions; disabled no longer relies on parallel ad-hoc open checks.
-- image source pending/error visual classes are projected by one FeedbackController; root no longer owns a second direct loading/error class projector.
-- preview resource ownership remains OverlayController; focus trap remains OverlayController → OverlayRuntime → FocusController with no Image-owned FocusManager/FocusScope.
-- mask/content presence remains Transition → MotionController; Image does not create a second motion generation/timer.
-- `verify:phase-h-image` freezes exact F/I/C/M/O/B ownership and rejects direct keyboard/focus/feedback bypasses.
-- strict source-ESM Chromium covers I/C/B access, Feedback projection, Overlay/Focus scope, MotionController access, ArrowRight routing and disabled open blocking.
-- target-matrix floors rise to 35 profiled / 34 complete.
+Implemented in current pack:
+- Upload declares the exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form profile.
+- public committed file-list reads now come from the inherited FieldComponent ValueController; UploadLifecycle remains file/task execution data and no longer acts as the public committed-value getter.
+- controlled add/remove/move proposals keep the committed ValueController unchanged until external `value` sync; upload progress/status stays lifecycle execution state instead of silently replacing controlled committed value.
+- trigger Enter/Space semantics enter the inherited InteractionController; open/add/drop/paste/remove gates enter the bound CapabilityController.
+- current preview UID is projected through one SelectionController single-selection channel; media preview still delegates H-accepted Image and document preview still uses OverlayController.
+- upload pending/progress/success/error visible state enters FeedbackController without moving request/task generation out of UploadLifecycle/AsyncTask.
+- native form carrier now enters the shared FieldComponent `bindFormBridge()` path; the old direct `Control.createFormFieldBridge()` path is removed.
+- `verify:phase-h-upload` freezes exact ownership, controlled value separation, no direct FormBridge bypass and real shared-controller binding.
+- strict source-ESM Chromium covers V/F/I/C/S/B access, FormController registration, preview selection/overlay, keyboard open, disabled blocking, upload progress feedback and controlled proposal semantics.
+- target profile floor rises to 36.
 
 Next exact step:
-1. final diff/self-audit and open PHASE-H-023 PR.
+1. final diff/self-audit and open PHASE-H-024 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Image H accepted.
-5. continue the remaining 6 public components; broad final audit remains reserved for GPT-6 Astra High.
+4. mark Upload H accepted; accepted public-component floor becomes 35/40.
+5. continue Table, then Carousel/Sort/Scroll/Tabs; broad final audit remains reserved for GPT-6 Astra High.
 
 ## Current authority snapshot — after Phase A
 
@@ -78,6 +79,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-023 — Image F/I/C/M/O/B closeout
+Status: DONE
+Evidence:
+- PR #104 merged
+- merge commit `b984c6589fbc45f17c90628f474aa6eea173a19a`
+- exact-head CI #496 / `36099779410`: success
+- main CI + Pages #497 / `36100069067`: success
+Outcome:
+- Image declares exact Focus/Interaction/Capability/Motion/Overlay/Feedback ownership.
+- preview keyboard semantics enter one InteractionController and disabled/navigation/edit gates enter one CapabilityController.
+- source pending/error visuals enter FeedbackController; preview resources remain OverlayController and focus scope remains OverlayRuntime→FocusController.
+- mask/content presence remains Transition→MotionController with no component-owned motion generation/timer.
+- source-ESM Chromium proves feedback, overlay/focus scope, motion access, ArrowRight routing and disabled open blocking.
+- Image is H accepted; accepted public-component floor is 34/40.
+
+
 
 ### PHASE-H-022 — Transfer V/F/I/C/S/B/R closeout
 Status: DONE
