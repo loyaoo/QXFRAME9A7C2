@@ -1528,7 +1528,11 @@ Esc：
 control 恢复 A
 ```
 
-组件如果确有独立 `draftValueTarget`，可以配置 control 保持 committed，但整个 family 必须统一声明，不允许每个 Picker 靠局部 render 偶然形成不同表现。
+显示规则与提交规则必须解耦：`needConfirm` 只决定何时把 draft 提交为 committed，不能用来决定 control 是否显示 draft。
+
+`draftValueTarget` 只是额外的草稿投影出口，不能改变主 control / `valueTarget` 的显示优先级。内建 Control 与 `renderControl:false` authored projection 必须遵守同一条 visual-value 规则。
+
+Multiple/tag Picker 打开时，tag 集合显示当前 draft；token editor 只显示 rawInput，不再额外塞入聚合格式化文本。
 
 ## 19.3 needConfirm=false
 
@@ -1910,7 +1914,7 @@ VirtualList
 
 门槛：
 
-- controlled/uncontrolled
+- 组件实际公开的 value ownership 模式与外部 value/updateOptions 同步
 - needConfirm true/false
 - Esc/outside/Tab
 - Enter confirm

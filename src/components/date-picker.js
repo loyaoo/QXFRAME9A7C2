@@ -517,25 +517,28 @@ function setupDatePickerRuntime(instance, fieldInit) {
     }
   });
 
-  function syncField(preferDraft, meta) {
+  function syncField(_projectionHint, meta) {
     if (!field) return;
-    var open = preferDraft === true && field.getState().open;
+    var projection = instance.getPickerProjection({ previewControl:selection === 'range' && opts.previewValue !== false });
+    var open = projection.open;
     var committedText = formatSelection(draft.value);
     var draftText = formatSelection(draft.draftValue);
+    var visualHasValue = false;
     if (selection === 'multiple') {
-      var tagValue = open && draft.dirty ? draft.draftValue : draft.value;
+      var tagValue = open ? draft.draftValue : draft.value;
       field.setTags(dateTags(tagValue));
       field.setDisplayValue(draft.rawInputActive ? draft.rawInput : '');
       field.setPlaceholder(opts.placeholder);
+      visualHasValue = !!(tagValue && tagValue.length) || (open && draft.rawInputActive && String(draft.rawInput || '').trim() !== '');
     } else {
-      var projection = draft.projection({ open:open, previewControl:selection === 'range' && opts.previewValue !== false, draftControl:true });
       var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatSelection(projection.value);
       field.setDisplayValue(projectedText);
       field.setPlaceholder(open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
+      visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value, selection);
     }
     field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
-    field.setDraftVisual(open && draft.dirty);
-    field.setClearVisible(hasValue(draft.value, selection));
+    field.setDraftVisual(open && (draft.rawInputActive || draft.hasPreview || draft.dirty));
+    field.setClearVisible(visualHasValue);
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
   function previewSelection(date) {
@@ -876,6 +879,15 @@ function setupDatePickerRuntime(instance, fieldInit) {
     draft.setDraft(current, { source: detail.source || 'time', reason: 'time-select' });
     if (opts.needConfirm !== true) instance.commit({ source: detail.source || 'time', reason: 'time-commit', originalEvent: detail.originalEvent || null });
   }
+  function updateMultipleValue(next, meta) {
+    var open = !!(field && field.getState().open);
+    var detail = Utils.assignOwn({ source:'control', reason:'multiple-change' }, meta || {});
+    var result = open ? draft.setDraft(next, detail) : draft.setValue(next, detail);
+    if (result !== false && open && opts.needConfirm !== true) {
+      result = instance.commit({ source:detail.source, reason:String(detail.reason || 'multiple-change') + '-commit', originalEvent:detail.originalEvent || null });
+    }
+    return result;
+  }
   function addMultipleInput(text, meta) {
     if (selection !== 'multiple') return false;
     var source = String(text || '').trim();
@@ -886,11 +898,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
     parsed.value.forEach(function (entry) {
       if (!base.some(function (current) { return DateUnit.same(current, entry, unit, opts.weekStartsOn); })) base.push(entry);
     });
-    draft.setValue(base, Utils.assignOwn({ source: 'input', reason: 'multiple-input' }, meta || {}));
+    var changed = updateMultipleValue(base, Utils.assignOwn({ source: 'input', reason: 'multiple-input' }, meta || {}));
     draft.clearRawInput({ silent:true, source:'input', reason:'multiple-input-clear' });
     if (field) field.setDisplayValue('');
+    syncField(field && field.getState().open);
     syncSelectionPanel(true);
-    return true;
+    return changed !== false;
   }
 
   function removeMultipleTag(tag, detail) {
@@ -899,11 +912,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var source = cloneValue(field && field.getState().open ? draft.draftValue : draft.value, selection);
     var next = source.filter(function (entry) { return String(entry.getTime()) !== target; });
     if (next.length === source.length) return false;
-    draft.setValue(next, { source: detail && detail.source || 'control', reason: detail && detail.reason || 'tag-remove', originalEvent: detail && detail.originalEvent || null });
+    var changed = updateMultipleValue(next, { source: detail && detail.source || 'control', reason: detail && detail.reason || 'tag-remove', originalEvent: detail && detail.originalEvent || null });
     draft.clearRawInput({ silent:true, source:detail && detail.source || 'control', reason:'tag-remove-input-clear' });
-    syncField(false);
+    syncField(field && field.getState().open);
     syncSelectionPanel(true);
-    return true;
+    return changed !== false;
   }
 
   function currentSelectionKeyboardPanel() {

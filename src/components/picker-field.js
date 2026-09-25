@@ -353,10 +353,10 @@ function create(options) {
   function writeExternalValue(target, value) { if (!target) return; var text = value == null ? '' : String(value); if (/^(input|textarea|select)$/i.test(String(target.tagName || ''))) target.value = text; else target.textContent = text; }
   function setDisplayValue(value) {
     displayValue = value == null ? '' : String(value);
-    // While the picker owns navigation, component draft projection must never rewrite
-    // the selector editor buffer/caret. The final committed/cancelled text is projected
-    // exactly once when the logical picker interaction ends.
-    if (!navigationActive) projectDisplayValue(displayValue);
+    // Built-in controls protect their editor caret through projectNavigationVisual().
+    // Authored projection controls have no framework-owned editor mirror, so their
+    // valueTarget/inputTarget must keep following the live picker visual projection.
+    if (!navigationActive || projectionMode) projectDisplayValue(displayValue);
     return api;
   }
   function setDraftDisplayValue(value) {

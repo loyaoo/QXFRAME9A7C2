@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
-Status: IN_PROGRESS
-Task progress: 20%
+Status: IMPLEMENTED_AWAITING_PR_CI
+Task progress: 70%
 Scope:
 - Do not treat the migration handbook as infallible; preserve correct shipped behavior and use a single coherent Picker-family rule based on interaction semantics.
 - Closed control/projected value shows committed value only.
@@ -45,10 +45,10 @@ Baseline:
 - latest main CI + Pages: #568 / `36158000520` success
 - open PRs at task start: none
 Next exact step:
-1. implement one visual projection rule across DatePicker / TimePicker / ColorPicker / WheelPicker / PickerField.
-2. fix DatePicker multiple session mutations and ColorPicker mode transaction semantics.
-3. add browser regressions for open-session add/remove/cancel, external projection, clear visibility, and Color mode rollback/commit.
-4. run PR CI, merge only after exact-head Chromium/release verification is green.
+1. create PR from the implementation batch.
+2. wait for exact-head release + strict Chromium verification.
+3. fix only reproducible CI/browser findings; do not broaden into controlled-mode API work.
+4. merge after green, then verify main CI + Pages.
 
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression

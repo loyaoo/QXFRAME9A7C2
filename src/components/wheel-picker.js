@@ -78,10 +78,10 @@ function formatDisplay(useDraft) {
   return selected.filter(Boolean).map(function (item) { return item.label; }).join(String(opts.separator == null ? ' / ' : opts.separator));
 }
     
-function syncField(useDraft, config) {
+function syncField(_projectionHint, config) {
   if (!field || !panel) return;
-  var open = useDraft === true && field.getState().open;
-  var projection = draft.projection({ open:open, previewControl:false, draftControl:true });
+  var projection = instance.getPickerProjection({ previewControl:false });
+  var open = projection.open;
   var value = projection.value;
   if (!(config && config.panelSynced === true)) {
     panel.setValue((open ? draft.draftValue : draft.value) || [], { silent: true, source: 'field-sync', reason: 'field-sync' });
@@ -89,7 +89,7 @@ function syncField(useDraft, config) {
   field.setDisplayValue(value && value.length ? formatDisplay(projection.channel === 'draft') : '');
   field.setDraftDisplayValue(open && draft.dirty && draft.draftValue && draft.draftValue.length ? formatDisplay(true) : '');
   field.setDraftVisual(open && draft.dirty);
-  field.setClearVisible(opts.clearable === true && !!(draft.value && draft.value.length));
+  field.setClearVisible(opts.clearable === true && !!(value && value.length));
   field.setCommittedValue(draft.value, config && config.commitMeta || { silent: true, source: 'value-controller', reason: 'projection' });
 }
     
