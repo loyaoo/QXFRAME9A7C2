@@ -7,6 +7,11 @@ import { Scheduler } from '../core/scheduler.js';
 import { Config } from '../core/config.js';
 import { Renderer } from '../core/renderer.js';
 import { PointerSession } from '../core/pointerSession.js';
+import { ValueController } from '../core/valueController.js';
+import { FocusController } from '../core/focusController.js';
+import { InteractionController } from '../core/interactionController.js';
+import { CapabilityController } from '../core/capabilityController.js';
+import { MotionController } from '../core/motionController.js';
 import { URLPolicy } from '../utils/url.js';
 import { Utils } from '../utils/utils.js';
 
@@ -53,6 +58,18 @@ function recordFor(instance) {
 }
 
 export class Carousel extends Component {
+    static profile = Object.freeze({
+        name:'Carousel',
+        value:Object.freeze({ mode:'current-index' }),
+        focus:Object.freeze({ mode:'carousel-region' }),
+        interaction:Object.freeze({ keymap:'carousel-navigation' }),
+        capability:Object.freeze({ operations:Object.freeze(['navigate']) }),
+        motion:Object.freeze({ mode:'slide-transition' }),
+        ownership:Object.freeze({
+            value:'ValueController', focus:'FocusController', interaction:'InteractionController',
+            capability:'CapabilityController', motion:'MotionController'
+        })
+    });
     static options = Object.freeze({
         items: [], initialIndex: 0, loop: true, autoplay: false, interval: 4000,
         pauseOnHover: true, pauseOnFocus: true, arrows: true, dots: true,
@@ -94,8 +111,13 @@ export class Carousel extends Component {
         let pausedByFocus = false;
         let pausedByVisibility = !!(doc && doc.hidden);
         let autoplayDelay = null;
-        let transitionDelay = null;
+        let cancelMotionWait = null;
         let animationMeta = null;
+        let valueBinding = null;
+        let focusController = null;
+        let interactionController = null;
+        let interactionLease = null;
+        let capabilityController = null;
 
         const root = doc.createElement('div');
         const viewport = doc.createElement('div');
@@ -145,6 +167,33 @@ export class Carousel extends Component {
             return Math.max(0, Math.min(Math.trunc(number), count() - 1));
         };
         current = initialIndex(opts.initialIndex);
+        valueBinding = ValueController.createValueBinding({
+            value: current,
+            normalizeValue: value => normalizeIndex(value)
+        });
+        capabilityController = CapabilityController.create({
+            getState: () => ({ disabled:instance.destroyed || opts.disabled === true }),
+            getCapabilities: () => ({
+                focusable:opts.keyboard !== false,
+                navigable:opts.keyboard !== false,
+                activatable:true,
+                draggable:(opts.swipe === true || opts.draggable === true)
+            })
+        });
+        focusController = FocusController.create({ root, document:doc, manageTabIndex:false, activeRegion:'carousel' });
+        focusController.setDisabled(opts.disabled === true || opts.keyboard === false);
+        interactionController = InteractionController.create();
+        scope.add(() => valueBinding.destroy());
+        scope.add(() => capabilityController.destroy());
+        scope.add(() => focusController.destroy());
+        scope.add(() => interactionController.destroy());
+        const syncCurrent = (next, meta, external) => {
+            const normalized = normalizeIndex(next);
+            if (external === true) valueBinding.syncExternal(normalized, Utils.mergeOwn({ silent:true, source:'options', reason:'carousel-sync' }, meta || {}));
+            else valueBinding.write(normalized, Utils.mergeOwn({ silent:true, source:'carousel', reason:'carousel-current' }, meta || {}));
+            current = valueBinding.value;
+            return current;
+        };
 
         const resolveItemOutput = (value, index, slot) => typeof value === 'function' ? value(Object.freeze({ index, item: items()[index], slot, instance: api })) : value;
         const defaultArrow = direction => {
@@ -253,14 +302,13 @@ export class Carousel extends Component {
         scope.add(() => measureFrame.dispose());
         scope.add(() => itemScope.dispose());
         const requestMeasure = reason => measureFrame.request(reason || 'carousel');
-        transitionDelay = Scheduler.createDelayScheduler(() => finishAnimation('timeout'));
         autoplayDelay = Scheduler.createDelayScheduler(() => {
             nextSlide({ reason: 'autoplay', source: 'autoplay', user: true });
             if (shouldAutoplay() && !autoplayDelay.pending) scheduleAutoplay();
         });
-        const clearTransitionTimer = () => transitionDelay && transitionDelay.cancel();
+        const clearMotionWait = () => { if (!cancelMotionWait) return false; const cancel = cancelMotionWait; cancelMotionWait = null; return cancel(); };
         const clearAutoplayTimer = () => autoplayDelay && autoplayDelay.cancel();
-        scope.add(() => { transitionDelay.dispose(); autoplayDelay.dispose(); });
+        scope.add(() => { clearMotionWait(); autoplayDelay.dispose(); });
 
         function shouldAutoplay() {
             return opts.autoplay === true && opts.disabled !== true && count() > 1
@@ -281,7 +329,7 @@ export class Carousel extends Component {
         function finishAnimation(reason) {
             if (!animating) return false;
             animating = false;
-            clearTransitionTimer();
+            clearMotionWait();
             const meta = animationMeta || {};
             animationMeta = null;
             if (typeof opts.afterChange === 'function') {
@@ -293,8 +341,7 @@ export class Carousel extends Component {
             return true;
         }
         function updatePosition(animate, meta) {
-            if (!count()) current = 0;
-            else current = normalizeIndex(current);
+            syncCurrent(count() ? normalizeIndex(current) : 0, { source:'carousel', reason:'position-normalize' }, false);
             const duration = animate === false || !motionEnabled() ? 0 : Math.max(0, Number(opts.duration || 0));
             track.style.transitionDuration = duration + 'ms';
             track.style.transitionTimingFunction = String(opts.easing || 'ease');
@@ -307,11 +354,14 @@ export class Carousel extends Component {
             markActive();
             syncControls();
             requestMeasure('position');
-            clearTransitionTimer();
+            clearMotionWait();
             if (animate !== false && duration > 0) {
                 animating = true;
                 animationMeta = meta || null;
-                transitionDelay.request(duration + 60, 'transition-timeout');
+                cancelMotionWait = MotionController.waitMotionEnd(track, 'transition', { duration }, () => {
+                    cancelMotionWait = null;
+                    finishAnimation('motion-end');
+                });
             } else {
                 animating = false;
                 animationMeta = null;
@@ -324,13 +374,13 @@ export class Carousel extends Component {
         function goTo(index, config) {
             if (instance.destroyed || !count()) return api;
             const meta = Utils.assignOwn({ reason: 'go-to', source: 'api', user: false, animate: true }, config || {});
-            if (meta.user === true && opts.disabled === true) return api;
+            if (meta.user === true && !capabilityController.can('navigate')) return api;
             const resolved = normalizeIndex(index);
             if (resolved === current) { restartAutoplay(); return api; }
             if (animating && opts.waitForAnimate !== false && meta.animate !== false) return api;
             const previous = current;
             if (typeof opts.beforeChange === 'function' && opts.beforeChange(previous, resolved, Object.freeze({ reason: meta.reason, source: meta.source, originalEvent: meta.originalEvent || null, instance: api })) === false) return api;
-            current = resolved;
+            syncCurrent(resolved, { source:meta.source, reason:meta.reason, originalEvent:meta.originalEvent }, false);
             updatePosition(meta.animate !== false, { previous, reason: meta.reason, source: meta.source, originalEvent: meta.originalEvent || null });
             emitChange(previous, meta);
             if (!animating && typeof opts.afterChange === 'function') {
@@ -347,7 +397,7 @@ export class Carousel extends Component {
             itemScope = Lifecycle.createScope();
             while (track.firstChild) track.removeChild(track.firstChild);
             while (dots.firstChild) dots.removeChild(dots.firstChild);
-            if (count()) current = normalizeIndex(current); else current = 0;
+            syncCurrent(count() ? normalizeIndex(current) : 0, { source:'render', reason:'items-clamp' }, true);
             syncRoot();
             items().forEach((item, index) => {
                 const slide = doc.createElement('div');
@@ -408,26 +458,38 @@ export class Carousel extends Component {
         scope.add(Config.onMotionChange(() => { if (!instance.destroyed && !motionEnabled() && animating) finishAnimation('motion-disabled'); }));
         scope.add(DOM.listen(prev, 'click', event => { if (event.preventDefault) event.preventDefault(); prevSlide({ reason: 'arrow', source: DOM.activationSource(event), user: true, originalEvent: event }); }));
         scope.add(DOM.listen(next, 'click', event => { if (event.preventDefault) event.preventDefault(); nextSlide({ reason: 'arrow', source: DOM.activationSource(event), user: true, originalEvent: event }); }));
-        scope.add(DOM.listen(root, 'transitionend', event => {
-            if (!animating) return;
-            const target = event.target;
-            const relevant = target === track || (target && target.classList && target.classList.contains('qxframe9a7c2-carousel-slide'));
-            if (relevant) finishAnimation('transitionend');
-        }));
-        scope.add(DOM.listen(root, 'keydown', event => {
-            if (opts.keyboard === false || !userUnlocked()) return;
-            const interactiveTarget = event.target && event.target !== root && event.target.closest
-                ? event.target.closest('button,a[href],input,select,textarea,[contenteditable="true"]')
-                : null;
-            if (interactiveTarget && root.contains(interactiveTarget)) return;
-            let handled = true;
-            if ((opts.direction === 'horizontal' && event.key === 'ArrowLeft') || (opts.direction === 'vertical' && event.key === 'ArrowUp')) prevSlide({ reason: 'keyboard', source: 'keyboard', user: true, originalEvent: event });
-            else if ((opts.direction === 'horizontal' && event.key === 'ArrowRight') || (opts.direction === 'vertical' && event.key === 'ArrowDown')) nextSlide({ reason: 'keyboard', source: 'keyboard', user: true, originalEvent: event });
-            else if (event.key === 'Home') goTo(0, { reason: 'keyboard', source: 'keyboard', user: true, originalEvent: event });
-            else if (event.key === 'End') goTo(Math.max(0, count() - 1), { reason: 'keyboard', source: 'keyboard', user: true, originalEvent: event });
-            else handled = false;
-            if (handled && event.preventDefault) event.preventDefault();
-        }));
+        interactionLease = interactionController.registerScope({
+            id:this.id + '-carousel',
+            root,
+            document:doc,
+            owner:this,
+            capability:capabilityController,
+            resolveAction:event => {
+                if (opts.keyboard === false) return null;
+                const interactiveTarget = event.target && event.target !== root && event.target.closest
+                    ? event.target.closest('button,a[href],input,select,textarea,[contenteditable="true"]')
+                    : null;
+                if (interactiveTarget && root.contains(interactiveTarget)) return null;
+                const key = String(event && event.key || '');
+                if ((opts.direction === 'horizontal' && key === 'ArrowLeft') || (opts.direction === 'vertical' && key === 'ArrowUp')) return 'PREVIOUS';
+                if ((opts.direction === 'horizontal' && key === 'ArrowRight') || (opts.direction === 'vertical' && key === 'ArrowDown')) return 'NEXT';
+                if (key === 'Home') return 'FIRST';
+                if (key === 'End') return 'LAST';
+                return null;
+            },
+            operationOf:() => 'navigate',
+            onAction:(action, context) => {
+                const event = context.originalEvent;
+                if (action === 'PREVIOUS') prevSlide({ reason:'keyboard', source:'keyboard', user:true, originalEvent:event });
+                else if (action === 'NEXT') nextSlide({ reason:'keyboard', source:'keyboard', user:true, originalEvent:event });
+                else if (action === 'FIRST') goTo(0, { reason:'keyboard', source:'keyboard', user:true, originalEvent:event });
+                else if (action === 'LAST') goTo(Math.max(0, count() - 1), { reason:'keyboard', source:'keyboard', user:true, originalEvent:event });
+                else return 'pass';
+                return 'handled';
+            }
+        });
+        scope.add(() => { if (interactionLease) interactionLease.release(); interactionLease = null; });
+        scope.add(DOM.listen(root, 'keydown', event => { interactionController.dispatch(event, { ownerId:this.id + '-carousel', source:'keyboard' }); }));
         scope.add(DOM.listen(root, 'mouseenter', () => { if (opts.pauseOnHover === false) return; pausedByHover = true; stop(); }));
         scope.add(DOM.listen(root, 'mouseleave', () => { if (opts.pauseOnHover === false) return; pausedByHover = false; scheduleAutoplay(); }));
         scope.add(DOM.listen(root, 'focusin', () => { if (opts.pauseOnFocus === false) return; pausedByFocus = true; stop(); }));
@@ -439,11 +501,12 @@ export class Carousel extends Component {
             const key = activeItemKey();
             const fallbackIndex = current;
             opts = nextOptions;
-            if (hasInitial) current = initialIndex(patch.initialIndex);
+            if (hasInitial) syncCurrent(initialIndex(patch.initialIndex), { source:'options', reason:'initial-index' }, true);
             else {
                 const keyedIndex = indexForKey(key);
-                current = count() ? (keyedIndex >= 0 ? keyedIndex : normalizeIndex(fallbackIndex)) : 0;
+                syncCurrent(count() ? (keyedIndex >= 0 ? keyedIndex : normalizeIndex(fallbackIndex)) : 0, { source:'options', reason:'items-reconcile' }, true);
             }
+            focusController.setDisabled(opts.disabled === true || opts.keyboard === false);
             if (opts.disabled === true) {
                 if (pointerSession) pointerSession.cancel('disabled');
                 clearPointerState();
@@ -467,7 +530,12 @@ export class Carousel extends Component {
                 index: current, count: count(), loop: opts.loop !== false, autoplay: !!(autoplayDelay && autoplayDelay.pending),
                 disabled: opts.disabled === true, effect: opts.effect, direction: opts.direction,
                 dotPlacement: opts.dotPlacement, animating, destroyed: instance.destroyed
-            })
+            }),
+            getValueController: () => valueBinding.getValueController(),
+            getFocusController: () => focusController,
+            getInteractionController: () => interactionController,
+            getCapabilityController: () => capabilityController,
+            getMotionController: () => MotionController
         };
         state.set(this, record);
         this.own(destroyRuntime);
@@ -488,6 +556,11 @@ export class Carousel extends Component {
     stop() { return recordFor(this).stop(); }
     setItems(nextItems) { return this.destroyed ? false : this.updateOptions({ items: nextItems }); }
     getState() { return recordFor(this).getState(); }
+    getValueController() { return recordFor(this).getValueController(); }
+    getFocusController() { return recordFor(this).getFocusController(); }
+    getInteractionController() { return recordFor(this).getInteractionController(); }
+    getCapabilityController() { return recordFor(this).getCapabilityController(); }
+    getMotionController() { return recordFor(this).getMotionController(); }
     getRootElement() { return this.root; }
 }
 
