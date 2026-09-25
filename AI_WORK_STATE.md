@@ -10,46 +10,47 @@
 - Last checkpoint date: 2026-09-25
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `7b49dd8d85e51de462b1aad854d94ee0bdfe0925` (PR #86 merge)
-- Current branch: `refactor/phase-h-popconfirm-feedback-replay-20260925`
-- Open PRs at this checkpoint: pending PHASE-H-007 Popconfirm feedback PR
-- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-007 replay branch; prune merged task branches after Phase H signoff
+- Last code-affecting main commit: `b6c6cb5404be86856c6897664648e5f7f0d66ff5` (PR #87 merge)
+- Current branch: `refactor/phase-h-overlay-frame-actions-20260925`
+- Open PRs at this checkpoint: pending PHASE-H-008 Modal/Drawer overlay-frame PR
+- Branch inventory at this checkpoint: `main` + merged Phase H task branches + current H-008 branch; prune merged task branches after Phase H signoff
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green Phase H PR CI: #436 / `36075356993` (PR #86)
-- Latest green main CI + Pages: #437 / `36075810132`
+- Latest green Phase H PR CI: #438 / `36076980019` (PR #87)
+- Latest green main CI + Pages: #439 / `36077293582`
 - Overall handbook implementation progress: 97%
 - Current Phase: Phase H — full component migration + old-path removal
-- Current Task: `PHASE-H-007`
+- Current Task: `PHASE-H-008`
 
 ## CURRENT
 
-### PHASE-H-007 — Popconfirm F/I/C/M/O/B migration
+### PHASE-H-008 — OverlayFrameShell I/C/B + Modal/Drawer migration
 Status: IN_PROGRESS
 Task progress: 80%
 
 Completed prerequisite:
-- PHASE-H-006 is DONE through PR #86, exact-head CI #436 / `36075356993`, merge `7b49dd8d85e51de462b1aad854d94ee0bdfe0925`, main release + Pages #437 / `36075810132`.
-- Tooltip is H accepted for Motion/Overlay; direct LayerManager singleton/parent lookup is removed in favor of OverlayController.
-- Popover is H accepted for Focus/Interaction/Capability/Motion/Overlay through PopupComponent→Trigger.
+- PHASE-H-007 is DONE through PR #87, exact-head CI #438 / `36076980019`, merge `b6c6cb5404be86856c6897664648e5f7f0d66ff5`, main release + Pages #439 / `36077293582`.
+- Popconfirm is H accepted for Focus/Interaction/Capability/Motion/Overlay/Feedback; AsyncAction remains its async confirm task owner.
 
 Implemented in current pack:
-- Popconfirm declares the exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback profile.
-- popup F/I/C/M/O continues to reuse Popover→PopupComponent→Trigger; no second popup/open authority is introduced.
-- AsyncAction remains the confirm task owner.
-- one action CapabilityController gates confirm/cancel availability, including async pending lock.
-- one local FeedbackController projector owns the visible confirm-button loading projection; Popconfirm view sync no longer duplicates pending→loading styling.
-- AsyncAction onStateChange publishes pending/success/error/idle feedback using request identity/generation into FeedbackController.
-- dedicated gate freezes F/I/C/M/O/B ownership and rejects duplicate visible-pending ownership.
-- strict source-ESM Chromium covers async confirm pending loading, blocked duplicate activation and terminal feedback cleanup.
-- Phase H profile regression floor rises to 21.
+- OverlayFrameShell now owns one shared InteractionController for close/footer actions.
+- close-button and footer-button activation enter PressInteraction instead of retaining direct DOM click semantic owners.
+- each action PressInteraction owns the action-specific CapabilityController and blocks duplicate activation while AsyncAction is pending.
+- AsyncAction remains the footer action/task owner; autoLoading visible state is projected through local FeedbackController instead of direct onStateChange→class mutation.
+- OverlayFrameShell exposes shared interaction plus action capability/feedback controller snapshots through OverlayComponent facades.
+- Modal and Drawer declare exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback profiles.
+- existing OverlayController resource ownership, FocusController scope path, and Transition→MotionController presence remain unchanged.
+- duplicate Modal/Drawer close-button DOM listeners are removed; OverlayFrameShell is the shared close action path.
+- dedicated Node gate freezes both profiles and rejects old direct click/pending-loading paths.
+- strict source-ESM Chromium verifies Modal async pending loading + duplicate-action blocking + terminal cleanup and Drawer close-button PressInteraction.
+- Phase H profile regression floor rises to 23.
 
 Next exact step:
-1. final diff/self-audit and open PHASE-H-007 PR.
+1. final diff/self-audit and open PHASE-H-008 PR.
 2. require exact-head full release/browser/package CI.
 3. merge only green and verify main + Pages.
-4. mark Popconfirm H accepted.
-5. continue with remaining Trigger-family components, then batch form/value families.
+4. mark Modal + Drawer and OverlayFrameShell action path H accepted.
+5. continue with remaining overlay/value families in shared batches.
 
 ## Current authority snapshot — after Phase A
 
@@ -79,6 +80,23 @@ These are current QA targets for later Controller/family migration. They are not
 - DatePicker/TimePicker preset selection must respect `needConfirm`; PR #56 adds the DatePicker preset single-Tab-stop/virtual-arrow focus region, while needConfirm/value-commit semantics and TimePicker parity still require Phase C verification.
 
 ## DONE / VERIFIED EXISTING
+
+### PHASE-H-007 — Popconfirm F/I/C/M/O/B migration
+Status: DONE
+Evidence:
+- PR #87 merged
+- merge commit `b6c6cb5404be86856c6897664648e5f7f0d66ff5`
+- exact-head CI #438 / `36076980019`: success
+- main CI + Pages #439 / `36077293582`: success
+Outcome:
+- Popconfirm declares exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback ownership.
+- Popover→PopupComponent→Trigger remains the sole popup F/I/C/M/O path.
+- AsyncAction remains async confirm task owner; CapabilityController gates confirm/cancel and pending lock.
+- FeedbackController is the sole internal visible pending/loading projector for confirm action state.
+- strict Chromium verifies pending loading, duplicate activation blocking and terminal feedback cleanup.
+- Popconfirm is H accepted.
+
+
 
 ### PHASE-H-006 — Tooltip + Popover popup-facade migration
 Status: DONE

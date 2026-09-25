@@ -397,6 +397,9 @@ function createDrawerController(instance, options) {
     getOverlayResourceController: function () { return overlay; },
     getOverlayRuntime: function () { return overlay && overlay.getRuntime ? overlay.getRuntime() : null; },
     getMotionControllers: function () { return Object.freeze({ mask: maskTransition && maskTransition.getMotionController ? maskTransition.getMotionController() : null, panel: panelTransition && panelTransition.getMotionController ? panelTransition.getMotionController() : null }); },
+    getInteractionController: function () { return frameShell.getInteractionController(); },
+    getCapabilityControllers: function () { return frameShell.getCapabilityControllers(); },
+    getFeedbackControllers: function () { return frameShell.getFeedbackControllers(); },
     getScroll: function () { return scroll; },
     on: emitter.on, once: emitter.once,
     destroy: destroy
@@ -408,7 +411,6 @@ function createDrawerController(instance, options) {
   applyVisualOptions(true);
   syncChrome();
   if (opts.destroyOnHidden && !opts.autoOpen) destroyHiddenContent();
-  scope.add(DOM.listen(closeButton, 'click', function (event) { if (!closeButton.disabled) close('x', event); }));
   scope.add(DOM.listen(mask, 'mousedown', function (event) { if (event.target === mask && opts.closeOnMask) close('mask', event); }));
   if (globalThis.addEventListener) scope.add(DOM.listen(globalThis, 'resize', function () { if (opened) scroll.refresh(); }));
     
@@ -421,6 +423,23 @@ function createDrawerController(instance, options) {
     
 
 export class Drawer extends OverlayComponent {
+    static profile = Object.freeze({
+        name: 'Drawer',
+        focus: Object.freeze({ mode: 'overlay-scope' }),
+        interaction: Object.freeze({ mode: 'frame-actions' }),
+        capability: Object.freeze({ mode: 'frame-actions' }),
+        motion: Object.freeze({ mode: 'dual-presence' }),
+        overlay: Object.freeze({ mode: 'drawer-layer' }),
+        feedback: Object.freeze({ mode: 'action-feedback' }),
+        ownership: Object.freeze({
+            focus: 'FocusController',
+            interaction: 'InteractionController',
+            capability: 'CapabilityController',
+            motion: 'MotionController',
+            overlay: 'OverlayController',
+            feedback: 'FeedbackController'
+        })
+    });
     static options = Object.freeze({ title:'', content:'', placement:'right', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, respectReducedMotion:true, animation:'slide' });
     static immutableOptions = Object.freeze(['id','document','portalContainer']);
     static contract = ComponentContracts.get('Drawer');
