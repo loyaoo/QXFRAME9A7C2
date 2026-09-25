@@ -363,8 +363,9 @@ function setupTags(instance) {
   }
   function bindCanonicalValueController() {
     if (opts.checkable === true) {
-      api.bindValueController(selectionValueState, { owned:false, syncExternal:false });
-      return selectionValueState;
+      var controller = selectionValueState.getValueController();
+      api.bindValueController(controller, { owned:false, syncExternal:false });
+      return controller;
     }
     var controller = tokenInput.getValueController();
     api.bindValueController(controller, { owned:false, syncExternal:false, projectValue:tokenValues });
