@@ -25,7 +25,7 @@
 ## CURRENT
 
 ### CORE-HOTPATH-BEHAVIOR-EQUIVALENCE — pre-production performance/structure pass
-Status: IMPLEMENTED_PENDING_PR_VALIDATION
+Status: IMPLEMENTED_VALIDATING_PR_113
 Scope:
 - preserve all current UI interaction semantics; no focus/selection/popup policy rewrite.
 - Selection membership diffs are linear while authored selection order is preserved.
@@ -42,8 +42,11 @@ Scope:
 - Collection snapshot semantics, full hierarchy rewrite, CSS mechanical dedupe and Tags overflow focus behavior are intentionally unchanged in this pass.
 
 Validation:
+- PR: #113 (`perf/core-safe-hotpaths-20260925` → `main`).
 - targeted verifier: tools/verify-core-hotpaths.mjs
-- existing architecture/value/table/browser verification must pass on the PR exact head before merge.
+- CI #539 exposed retired ValueDraft/StateController runtime binding imports; runtime capability/manifest authority was migrated to ValueController.
+- CI #541 exposed remaining Calendar/Rate/Slider StateController imports; those components now use ValueController directly.
+- existing architecture/value/table/browser verification must pass on the final PR exact head before merge.
 - Tags overflow summary remains intentionally non-focusable.
 
 ### HISTORICAL-REGRESSION-REMEDIATION-002 — v31/current shared state + focus defects
