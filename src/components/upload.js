@@ -8,8 +8,9 @@ import { UploadLifecycle } from '../core/uploadLifecycle.js';
 import { Renderer } from '../core/renderer.js';
 import { OverlayController } from '../core/overlayController.js';
 import { ReorderInteraction } from '../core/reorderInteraction.js';
+import { SelectionController } from '../core/selectionController.js';
 import { Utils } from '../utils/utils.js';
-import { FieldComponent } from './field.js';
+import { FieldComponent, createSimpleFieldProfile } from './field.js';
 import { Image } from './image.js';
 import { Control } from './control.js';
 import { Item } from './item.js';
@@ -25,6 +26,7 @@ const UPLOAD_DEFAULTS = Object.freeze({
   progressView: Object.freeze({ thickness: 6, showLabel: true }), actionVisibility: null
 });
 const uploadState = new WeakMap();
+const UPLOAD_FIELD_PROFILE = createSimpleFieldProfile('Upload');
 
 function validateViewOptions(options) {
   if (options.progressView != null && (typeof options.progressView !== 'object' || Array.isArray(options.progressView))) throw new TypeError('[QXFRAME9A7C2] Upload progressView must be an object.');
@@ -90,6 +92,10 @@ function setupUpload(instance) {
   var previewUid = '';
   var reorderInteraction = null;
   var formBridge = null;
+  var selectionController = null;
+  var capabilityController = null;
+  var interactionController = null;
+  var feedbackController = null;
   var doc = fieldInit.document || opts.document || (opts.container && opts.container.ownerDocument) || (opts.formField && opts.formField.ownerDocument) || global.document;
     
   var root = doc.createElement('div');
