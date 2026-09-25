@@ -56,7 +56,7 @@ import { SelectionTags } from '../core/selectionTags.js';
 import { TokenInput } from '../core/tokenInput.js';
 import { TransformModel } from '../core/transformModel.js';
 import { TreeModel } from '../core/treeModel.js';
-import { ValueDraft } from '../core/valueDraft.js';
+import { ValueController } from '../core/valueController.js';
 import { FieldHost } from '../core/fieldHost.js';
 import { FocusScope } from '../core/focusScope.js';
 import { InteractionIsolation } from '../core/interactionIsolation.js';
@@ -69,7 +69,6 @@ import { TriggerInteraction } from '../core/triggerInteraction.js';
 import { Virtualizer } from '../core/virtualizer.js';
 import { AsyncAction } from '../core/asyncAction.js';
 import { AsyncTaskGroup } from '../core/asyncTaskGroup.js';
-import { StateController } from '../core/stateController.js';
 import { TableModel } from '../core/tableModel.js';
 import { UploadLifecycle } from '../core/uploadLifecycle.js';
 import { FocusTrap } from '../core/focusTrap.js';
@@ -137,7 +136,7 @@ export const capabilityBindings = Object.freeze([
     Object.freeze({ name: 'TokenInput', namespace: 'headless', value: TokenInput, metadata: Object.freeze({"name":"TokenInput","coreDependencies":["Events","Utils"]}) }),
     Object.freeze({ name: 'TransformModel', namespace: 'headless', value: TransformModel, metadata: Object.freeze({"name":"TransformModel","coreDependencies":["Events"]}) }),
     Object.freeze({ name: 'TreeModel', namespace: 'headless', value: TreeModel, metadata: Object.freeze({"name":"TreeModel","coreDependencies":["Utils","Events"]}) }),
-    Object.freeze({ name: 'ValueDraft', namespace: 'headless', value: ValueDraft, metadata: Object.freeze({"name":"ValueDraft","coreDependencies":["Utils","Events","InteractionDetails"]}) }),
+    Object.freeze({ name: 'ValueController', namespace: 'headless', value: ValueController, metadata: Object.freeze({"name":"ValueController","coreDependencies":["Utils","Events","InteractionDetails"],"headlessDependencies":["ValueEquality"]}) }),
     Object.freeze({ name: 'FieldHost', namespace: 'domHeadless', value: FieldHost, metadata: Object.freeze({"name":"FieldHost","dependencies":["DOMBinding"],"coreDependencies":["DOM"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'FocusScope', namespace: 'domHeadless', value: FocusScope, metadata: Object.freeze({"name":"FocusScope","dependencies":["FocusManager"],"coreDependencies":["DOM","Lifecycle","InteractionDetails"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'InteractionIsolation', namespace: 'domHeadless', value: InteractionIsolation, metadata: Object.freeze({"name":"InteractionIsolation","dependencies":["ObserverHub"],"coreDependencies":[],"headlessDependencies":[]}) }),
@@ -150,7 +149,6 @@ export const capabilityBindings = Object.freeze([
     Object.freeze({ name: 'Virtualizer', namespace: 'domHeadless', value: Virtualizer, metadata: Object.freeze({"name":"Virtualizer","dependencies":["ObserverHub"],"coreDependencies":["DOM","Lifecycle","Scheduler","Utils"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'AsyncAction', namespace: 'headless', value: AsyncAction, metadata: Object.freeze({"name":"AsyncAction","coreDependencies":["Events","Utils"]}) }),
     Object.freeze({ name: 'AsyncTaskGroup', namespace: 'headless', value: AsyncTaskGroup, metadata: Object.freeze({"name":"AsyncTaskGroup","coreDependencies":["Utils"]}) }),
-    Object.freeze({ name: 'StateController', namespace: 'headless', value: StateController, metadata: Object.freeze({"name":"StateController","coreDependencies":[]}) }),
     Object.freeze({ name: 'TableModel', namespace: 'headless', value: TableModel, metadata: Object.freeze({"name":"TableModel","coreDependencies":["Utils","Events"]}) }),
     Object.freeze({ name: 'UploadLifecycle', namespace: 'headless', value: UploadLifecycle, metadata: Object.freeze({"name":"UploadLifecycle","coreDependencies":["Utils","Events"]}) }),
     Object.freeze({ name: 'FocusTrap', namespace: 'domHeadless', value: FocusTrap, metadata: Object.freeze({"name":"FocusTrap","dependencies":["FocusScope"],"coreDependencies":[],"headlessDependencies":[]}) }),
