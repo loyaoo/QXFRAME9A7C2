@@ -450,7 +450,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           document: doc,
           portalContainer: portalContainer
         }, {
-          focusScope: 'exit',
+          focusScope: 'contain',
+          closeOnTabExit: false,
           tabExitTarget: function () { return fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : (input || triggerTarget || root); },
           onOpen: function (detail) {
             var plan = popupSelectionOpenPlan(detail, { hasSelection:selectedValues().length > 0 });
@@ -480,7 +481,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (destroyed) return api;
           var cfg = meta || {};
           var desired = normalizeApiValue(value);
-          var changed = valueState.write(desired, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value', originalEvent:cfg.originalEvent || null }, false);
+          var changed = valueState.write(desired, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value', originalEvent:cfg.originalEvent || null }, cfg.request === true);
           var canonical = apiValue();
           if (hierarchicalCheckMode()) tree.setCheckedKeys(checkedKeysForValues(canonical), { silent: true, source: cfg.source || 'api', reason: cfg.reason || 'tree-select-set-value' });
           else tree.setValue(asValues(canonical, false)[0], { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value' });
@@ -740,7 +741,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             if (checkMode) treeOptions.checkedKeys = checkedKeysForValues(apiValue());
             else treeOptions.value = asValues(apiValue(), false)[0];
           } else if (hasOwn(next, 'multiple') || hasOwn(next, 'checkable') || hasOwn(next, 'checkStrictly')) {
-            valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
+            if (valueState.controlled) valueState.requestChange(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
+            else valueState.setValue(apiValue(), { silent:true, source:'options', reason:'options-mode-normalize' });
             treeOptions.checkedKeys = checkMode ? checkedKeysForValues(apiValue()) : [];
             if (!checkMode) treeOptions.value = asValues(apiValue(), false)[0];
           }
@@ -779,7 +781,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
     
         var initialFormValue = multipleMode() ? selectedValues().slice() : selectedValues()[0];
         if (fieldControl && fieldControl.onFormReset) fieldControl.onFormReset(function () {
-          setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset' });
+          setValue(initialFormValue, { silent: true, source: 'form', reason: 'reset', request: true });
         });
     
 
