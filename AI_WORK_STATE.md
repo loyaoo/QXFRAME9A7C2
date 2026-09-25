@@ -26,7 +26,7 @@
 
 ### PHASE-H-024 — Upload V/F/I/C/S/O/B/R closeout
 Status: IN_PROGRESS
-Task progress: 80%
+Task progress: 90%
 
 Completed prerequisite:
 - PHASE-H-023 Image is DONE through PR #104, exact-head CI #496 / `36099779410`, merge `b984c6589fbc45f17c90628f474aa6eea173a19a`, main release + Pages #497 / `36100069067`.
@@ -44,12 +44,19 @@ Implemented in current pack:
 - strict source-ESM Chromium covers V/F/I/C/S/B access, FormController registration, preview selection/overlay, keyboard open, disabled blocking, upload progress feedback and controlled proposal semantics.
 - target profile floor rises to 36.
 
+Latest exact-head:
+- PR #105 head `45a8607807b036f76b65381e141719366338ac88`
+- CI #500 / `36102498925`
+- previous #498 failure was the legacy high-risk `Upload clear` assertion: lifecycle `set-value` under controlled mode was incorrectly treated as a proposal and did not synchronize the committed FieldComponent ValueController.
+- fix: controlled add/remove/move remain proposals, while lifecycle `set-value` is an explicit committed replacement and now synchronizes the canonical ValueController owner.
+- `verify:phase-h-upload` freezes this distinction so the regression cannot return.
+
 Next exact step:
-1. final diff/self-audit and open PHASE-H-024 PR.
-2. require exact-head full release/browser/package CI.
-3. merge only green and verify main + Pages.
-4. mark Upload H accepted; accepted public-component floor becomes 35/40.
-5. continue Table, then Carousel/Sort/Scroll/Tabs; broad final audit remains reserved for GPT-6 Astra High.
+1. wait for PR #105 exact-head CI #500 full release/browser/package result.
+2. if green, merge #105 and verify main + Pages.
+3. mark Upload H accepted; accepted public-component floor becomes 35/40.
+4. batch Carousel + Sort + Scroll + Tabs as the shared navigation/motion closeout pack.
+5. close Table last, then enter Phase I; broad final audit remains reserved for GPT-6 Astra High.
 
 ## Current authority snapshot — after Phase A
 
