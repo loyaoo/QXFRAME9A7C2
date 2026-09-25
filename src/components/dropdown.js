@@ -6,13 +6,12 @@ import { OpenStateBridge } from '../core/openStateBridge.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Utils } from '../utils/utils.js';
-import { Selection } from '../core/selection.js';
+import { SelectionController } from '../core/selectionController.js';
 import { StateController } from '../core/stateController.js';
 import { ItemSchema } from '../core/itemSchema.js';
-import { HierarchicalSelection } from '../core/hierarchicalSelection.js';
 import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
-import { KeyboardNavigation } from '../core/keyboardNavigation.js';
+import { FocusController } from '../core/focusController.js';
 import { ItemCollection } from './item-collection.js';
 import { Trigger } from './trigger.js';
 import { Scroll } from './scroll.js';
@@ -62,8 +61,11 @@ function initializeDropdown(instance, options) {
     return opts.multiple === true ? values : (values[0] === undefined ? null : values[0]);
   }
   var valueState = StateController.createOptionValueBinding(opts, options || {}, normalizeApiValue);
-  var selection = Selection.create({ multiple: opts.multiple === true, value: valueState.value });
-  scope.add(function () { selection.destroy(); });
+  var selectionController = SelectionController.create({
+    channels: { selected: { multiple: opts.multiple === true, value: valueState.value } }
+  });
+  var selection = selectionController.selected;
+  scope.add(function () { selectionController.destroy(); selectionController = null; selection = null; });
   scope.add(function () { valueState.destroy(); });
   function syncSelectionProjection(reason) {
     selection.set(valueState.value, { silent:true, source:valueState.controlled ? 'controlled' : 'state', reason:reason || 'value-sync' });
@@ -84,6 +86,7 @@ function initializeDropdown(instance, options) {
   var destroyed = false;
   var api = instance;
   var keyboard = null;
+  var focusController = null;
       
   function childrenOf(item) { return item && Array.isArray(item.items) ? item.items : []; }
   var itemAccessors=ItemAccessors.create({
@@ -94,7 +97,7 @@ function initializeDropdown(instance, options) {
     isDisabled:function(item){return !item || item.disabled===true;}
   });
   function hasChildren(item) { return childrenOf(item).length > 0; }
-  var hierarchy = HierarchicalSelection.create({
+  var hierarchy = selectionController.createHierarchy({
     childrenOf:childrenOf, keyOf:function(item){return rawValue(item && item.value);},
     disabledOf:function(item){return !item || item.disabled===true || item.type==='divider' || item.type==='title' || item.type==='group';},
     isLeaf:function(item,_index,children){return !!item && item.value!==undefined && children.length===0 && item.type!=='divider' && item.type!=='title' && item.type!=='group';}
@@ -419,26 +422,32 @@ function initializeDropdown(instance, options) {
     return false;
   }
       
-  keyboard = KeyboardNavigation.create({
+  focusController = FocusController.create({
     root: reference,
-    focusRoot: reference,
-    editableKeys: true,
-    handlers: {
-      ArrowDown:function(detail){ return routeKeyboard(detail.originalEvent); },
-      ArrowUp:function(detail){ return routeKeyboard(detail.originalEvent); },
-      ArrowRight:function(detail){ return routeKeyboard(detail.originalEvent); },
-      ArrowLeft:function(detail){ return routeKeyboard(detail.originalEvent); },
-      Home:function(detail){ return routeKeyboard(detail.originalEvent); },
-      End:function(detail){ return routeKeyboard(detail.originalEvent); },
-      PageDown:function(detail){ return routeKeyboard(detail.originalEvent); },
-      PageUp:function(detail){ return routeKeyboard(detail.originalEvent); },
-      Enter:function(detail){ return routeKeyboard(detail.originalEvent); },
-      ' ':function(detail){ return routeKeyboard(detail.originalEvent); },
-      Escape:function(detail){ return routeKeyboard(detail.originalEvent); },
-      F6:function(detail){ return routeKeyboard(detail.originalEvent); }
+    document: doc,
+    manageTabIndex: false,
+    disabled: opts.disabled === true,
+    navigation: {
+      focusRoot: reference,
+      editableKeys: true,
+      handlers: {
+        ArrowDown:function(detail){ return routeKeyboard(detail.originalEvent); },
+        ArrowUp:function(detail){ return routeKeyboard(detail.originalEvent); },
+        ArrowRight:function(detail){ return routeKeyboard(detail.originalEvent); },
+        ArrowLeft:function(detail){ return routeKeyboard(detail.originalEvent); },
+        Home:function(detail){ return routeKeyboard(detail.originalEvent); },
+        End:function(detail){ return routeKeyboard(detail.originalEvent); },
+        PageDown:function(detail){ return routeKeyboard(detail.originalEvent); },
+        PageUp:function(detail){ return routeKeyboard(detail.originalEvent); },
+        Enter:function(detail){ return routeKeyboard(detail.originalEvent); },
+        ' ':function(detail){ return routeKeyboard(detail.originalEvent); },
+        Escape:function(detail){ return routeKeyboard(detail.originalEvent); },
+        F6:function(detail){ return routeKeyboard(detail.originalEvent); }
+      }
     }
   });
-  scope.add(function(){ if (keyboard) keyboard.destroy(); keyboard = null; });
+  keyboard = focusController.keyboard;
+  scope.add(function(){ if (focusController) focusController.destroy(); focusController = null; keyboard = null; });
       
   triggerSession = Trigger.create({
     reference: reference, floating: panel, document: doc, portalContainer: portalContainer, trigger: opts.trigger, placement: opts.placement, arrow: opts.showArrow === true, arrowElement: arrow, arrowPadding: opts.arrowPadding, offset: opts.offset, transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', middleware: opts.middleware,
@@ -484,6 +493,7 @@ function initializeDropdown(instance, options) {
       
   function syncReference() {
        reference.classList.toggle('is-disabled', opts.disabled === true);
+       if (focusController) focusController.setDisabled(opts.disabled === true);
   }
   function open(reason, originalEvent) { return instance.open(reason || 'api', originalEvent || null); }
   function close(reason, originalEvent) { return instance.close(reason || 'api', originalEvent || null); }
@@ -561,12 +571,34 @@ function initializeDropdown(instance, options) {
     panel: panel, reference: reference, trigger: ownedTrigger,
     setItems: setItems, setValue: setValue, clear: clear, setSearch: setSearch, focusFirst: focusFirst, focusLast: focusLast,
     getState: getState, getList: function () { return rootSurface ? rootSurface.list : null; },
+    getValueController: function () { return valueState && valueState.getValueController ? valueState.getValueController() : null; },
+    getFocusController: function () { return focusController; },
+    getSelectionController: function () { return selectionController; },
     applyOptions: applyOptions, destroyRuntime: destroyRuntime
   });
 }
 
 export class Dropdown extends PopupComponent {
   static contract = ComponentContracts.get('Dropdown');
+  static profile = Object.freeze({
+    name: 'Dropdown',
+    value: Object.freeze({ mode: 'option-value-binding' }),
+    focus: Object.freeze({ mode: 'reference-keyboard-region' }),
+    interaction: Object.freeze({ mode: 'trigger-and-keyboard-actions' }),
+    capability: Object.freeze({ mode: 'trigger-open-and-mutation-policy' }),
+    motion: Object.freeze({ mode: 'popup-presence' }),
+    selection: Object.freeze({ mode: 'selected-values-and-hierarchy' }),
+    overlay: Object.freeze({ mode: 'trigger-popup-tree' }),
+    ownership: Object.freeze({
+      value: 'ValueController',
+      focus: 'FocusController',
+      interaction: 'InteractionController',
+      capability: 'CapabilityController',
+      motion: 'MotionController',
+      selection: 'SelectionController',
+      overlay: 'OverlayController'
+    })
+  });
   static options = Object.freeze({
     trigger: 'click', placement: 'bottom-start', closeOnSelect: undefined, searchable: false, selectable: true, multiple: false, disabled: false, readOnly: false,
     size: 'md', selectionAppearance: 'check-start', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined, closeDelay: undefined,
@@ -601,5 +633,8 @@ export class Dropdown extends PopupComponent {
   focusLast() { return requireState(this).runtime.focusLast(); }
   getState() { return requireState(this).runtime.getState(); }
   getList() { return requireState(this).runtime.getList(); }
+  getValueController() { return requireState(this).runtime.getValueController(); }
+  getFocusController() { return requireState(this).runtime.getFocusController(); }
+  getSelectionController() { return requireState(this).runtime.getSelectionController(); }
   getTrigger() { const record = state.get(this); return record ? record.runtime.trigger : super.getTrigger(); }
 }
