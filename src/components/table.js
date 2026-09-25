@@ -372,14 +372,10 @@ function setupTable(instance) {
   }
   function syncCommittedSelection(keys,meta) {
     var normalized=normalizeTableValue(keys), controlled=valueBinding.controlled;
-    valueBinding.write(normalized,Utils.assignOwn({ silent:true, source:'table', reason:'selection' },meta||{}));
-    if(controlled){
-      opts.selectedKeys=valueBinding.value.slice();
-      opts.value=valueBinding.value.slice();
-      return valueBinding.value.slice();
-    }
+    valueBinding.write(normalized,Utils.assignOwn({ silent:true, source:'table', reason:'selection' },meta||{}),controlled);
     opts.selectedKeys=valueBinding.value.slice();
     opts.value=valueBinding.value.slice();
+    if(controlled)return valueBinding.value.slice();
     syncFormBridge(meta);
     if(!formResetting) notifyFormValue(meta);
     return valueBinding.value.slice();
@@ -404,8 +400,8 @@ function setupTable(instance) {
   function resetCommittedSelection(meta) {
     var context=meta&&meta.context||null;
     if(valueBinding.controlled){
-      valueBinding.write(initialSelectedValue,{ silent:false, source:'form', reason:'reset-request' });
-      return OperationResult.requested(context||{actionId:String(meta&&meta.requestId||instance.id+'-table-reset')},{ reason:'controlled-reset-requested', requestId:meta&&meta.requestId });
+      model.setSelectedKeys(initialSelectedValue.slice(),{ source:'form', reason:'reset-request', requestId:meta&&meta.requestId });
+      return OperationResult.requested(context||{actionId:String(meta&&meta.requestId||instance.id+'-table-reset')},{ reason:'controlled-reset-requested', requestId:meta&&meta.requestId, targetValue:initialSelectedValue.slice() });
     }
     formResetting=true;
     try{
