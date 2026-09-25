@@ -707,6 +707,8 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
         });
     
+        if (fieldControl) instance.bindFeedbackControl(fieldControl);
+
         var triggerSettings = createPopupFieldTriggerSettings(opts, {
           reference: root,
           triggerTarget: triggerTarget || root,
@@ -980,9 +982,11 @@ export class Cascader extends PopupFieldComponent{
   focus:Object.freeze({mode:'virtual-navigation'}),
   interaction:Object.freeze({keymap:'cascader'}),
   overlay:Object.freeze({mode:'popup'}),
+  capability:Object.freeze({mode:'field-policy'}),
+  feedback:Object.freeze({mode:'field-local'}),
   form:Object.freeze({serialize:true}),
   selection:Object.freeze({channels:Object.freeze(['selected']),hierarchical:true,valueOwner:'ValueController'}),
-   ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',form:'FormController'})
+   ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
  });
  static contract=getContract('Cascader');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless','portalContainer','multiple']);

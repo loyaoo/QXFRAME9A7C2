@@ -351,5 +351,6 @@
     "NoticeService",
     "FormBridge",
     "Config"
-  ]
+  ],
+  "minimumComplete": 14
 }

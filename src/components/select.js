@@ -793,6 +793,8 @@ var controlHost = FieldHost.resolvePickerControl({
           onClearRequest: function (event) { clear({ reason: 'clear-button', source: DOM.activationSource(event), originalEvent: event }); }
         });
     
+        if (fieldControl) instance.bindFeedbackControl(fieldControl);
+
         var callbackFocusRoot = headlessMode ? (triggerTarget || root) : root;
         if ((projectionMode || headlessMode) && callbackFocusRoot) {
           scope.add(DOM.listen(callbackFocusRoot, 'focus', function (event) {
@@ -1115,9 +1117,11 @@ export class Select extends PopupFieldComponent {
   focus:Object.freeze({mode:'virtual-navigation'}),
   interaction:Object.freeze({keymap:'select'}),
   overlay:Object.freeze({mode:'popup'}),
+  capability:Object.freeze({mode:'field-policy'}),
+  feedback:Object.freeze({mode:'field-local'}),
   form:Object.freeze({serialize:true}),
   selection:Object.freeze({channels:Object.freeze(['selected']),valueOwner:'ValueController'}),
-   ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',form:'FormController'})
+   ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
  });
  static contract=getContract('Select');
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);

@@ -597,6 +597,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         });
     
     
+        if (fieldControl) instance.bindFeedbackControl(fieldControl);
+
         function resolveInteractionAction(event) {
           var opened = !!(triggerSession && triggerSession.getState().open);
           var keymap = { Escape:'DISMISS', Backspace:'REMOVE', Delete:'REMOVE' };
@@ -807,9 +809,11 @@ export class TreeSelect extends PopupFieldComponent {
     focus:Object.freeze({mode:'virtual-navigation'}),
     interaction:Object.freeze({keymap:'tree-select'}),
     overlay:Object.freeze({mode:'popup'}),
+  capability:Object.freeze({mode:'field-policy'}),
+  feedback:Object.freeze({mode:'field-local'}),
     form:Object.freeze({serialize:true}),
     selection:Object.freeze({channels:Object.freeze(['selected','checked']),valueOwner:'ValueController'}),
-     ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',form:'FormController'})
+     ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
   });
   static contract=getContract('TreeSelect');
   static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);

@@ -52,6 +52,7 @@ for(const name of names){
   if(!missing.length&&!missingOwners.length)complete+=1;
 }
 assert.ok(profiled>=Number(target.minimumProfiled||0),'Phase H profile coverage regressed below the frozen baseline.');
+assert.ok(complete>=Number(target.minimumComplete||0),'Phase H completed target-profile coverage regressed below the frozen baseline.');
 assert.ok(Array.isArray(target.internalTargets)&&target.internalTargets.length>=20,'Phase H internal/base target ledger is incomplete.');
 
 console.log(JSON.stringify({
