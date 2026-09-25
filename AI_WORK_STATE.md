@@ -24,6 +24,33 @@
 
 ## CURRENT
 
+### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
+Status: IN_PROGRESS
+Task progress: 20%
+Scope:
+- Do not treat the migration handbook as infallible; preserve correct shipped behavior and use a single coherent Picker-family rule based on interaction semantics.
+- Closed control/projected value shows committed value only.
+- Open picker shows the current interaction value with priority rawInput -> preview -> draft -> committed; needConfirm affects commit timing, not whether draft is visible.
+- Multiple/tag controls project draft tags while open; the token editor remains raw-input only.
+- External renderControl:false projection follows the same visual-value rule instead of freezing committed value during navigation.
+- DatePicker multiple add/remove while open must participate in draft/confirm/rollback semantics.
+- ColorPicker mode changes must not bypass an open confirm session or lose the current draft.
+- Clear visibility/action must be reconciled with the currently displayed session value rather than stale committed-only state.
+Non-goals:
+- Do not add controlled mode to DatePicker/TimePicker/ColorPicker/WheelPicker merely because an older handbook checklist mentioned it; that is a separate API decision.
+- Do not redesign Tags overflow focus.
+Baseline:
+- branch: `fix/picker-value-display-unification-20260926`
+- base main: `37ae0b84f5de4b12e9552d789586192df77a4527`
+- latest main CI + Pages: #568 / `36158000520` success
+- open PRs at task start: none
+Next exact step:
+1. implement one visual projection rule across DatePicker / TimePicker / ColorPicker / WheelPicker / PickerField.
+2. fix DatePicker multiple session mutations and ColorPicker mode transaction semantics.
+3. add browser regressions for open-session add/remove/cancel, external projection, clear visibility, and Color mode rollback/commit.
+4. run PR CI, merge only after exact-head Chromium/release verification is green.
+
+
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
 Status: DONE_MERGED_VERIFIED
 Task progress: 100%
