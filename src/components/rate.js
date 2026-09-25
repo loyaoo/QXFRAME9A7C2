@@ -39,6 +39,16 @@ function recordFor(instance) {
 }
 
 export class Rate extends FieldComponent {
+    static profile = Object.freeze({
+        name:'Rate',
+        value:Object.freeze({ mode:'rating' }),
+        focus:Object.freeze({ mode:'single-root' }),
+        interaction:Object.freeze({ mode:'rating-keyboard' }),
+        capability:Object.freeze({ mode:'interactive-field' }),
+        feedback:Object.freeze({ mode:'field-status' }),
+        form:Object.freeze({ mode:'field-registration' }),
+        ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', feedback:'FeedbackController', form:'FormController' })
+    });
     static contract = getContract('Rate');
     static options = Object.freeze({ count:5, half:false, clearable:true, character:null, tooltips:null, keyboard:true, size:'md', mode:'interactive', disabled:false, readOnly:false, required:false });
     static immutableOptions = Object.freeze(['target','container','formField']);
@@ -65,7 +75,7 @@ export class Rate extends FieldComponent {
         this.setFieldValue(valueState.value, { silent:true, force:true, sync:true, source:'init', reason:'rate-init' });
     }
 
-    #interactionPolicy() { const opts=this.options; return CapabilityController.resolve({ disabled:this.destroyed||opts.disabled===true, readOnly:opts.readOnly===true }, { focusable:opts.mode==='interactive', tabbable:opts.mode==='interactive', activatable:opts.mode==='interactive', editable:false, selectable:false }); }
+    #interactionPolicy() { const controller=this.getCapabilityController();if(controller)return controller.getState();const opts=this.options; return CapabilityController.resolve({ disabled:this.destroyed||opts.disabled===true, readOnly:opts.readOnly===true }, { focusable:opts.mode==='interactive', tabbable:opts.mode==='interactive', activatable:opts.mode==='interactive', editable:false, selectable:false }); }
     #interactive() { return this.#interactionPolicy().activatable; }
     #stepSize() { return this.options.half === true ? 0.5 : 1; }
     #context(index, layer) { const r=recordFor(this); return Object.freeze({ index, position:index+1, value:r.valueState.value, hoverValue:r.hoverValue, layer, instance:this }); }
@@ -98,9 +108,32 @@ export class Rate extends FieldComponent {
     [componentHooks.render]() {
         const r=recordFor(this);if(r.rendered)return r.root;const opts=this.options,doc=r.doc;const root=doc.createElement('div');root.className='qxframe9a7c2-rate';r.root=root;if(opts.container)opts.container.appendChild(root);else Control.placeFieldRoot(root,null,opts.formField);
         this.own(DOM.listen(root,'pointerleave',event=>{if(r.hoverValue>0)this.#emitHover(0,event,'leave');}));
-        this.own(DOM.listen(root,'keydown',event=>{if(!this.#interactive()||this.options.keyboard===false)return;const key=event.key,step=this.#stepSize();let next=null;if(key==='ArrowUp'||key==='Up'||key==='ArrowRight'||key==='Right')next=r.valueState.value+step;else if(key==='ArrowDown'||key==='Down'||key==='ArrowLeft'||key==='Left')next=r.valueState.value-step;else if(key==='Home')next=this.options.clearable===true?0:step;else if(key==='End')next=this.options.count;else if((key==='Delete'||key==='Backspace')&&this.options.clearable===true)next=0;if(next===null)return;event.preventDefault?.();this.#setCommitted(next,{user:true,reason:'keyboard',source:'keyboard',originalEvent:event});}));
+        this.own(DOM.listen(root,'keydown',event=>{const interaction=this.getInteractionController();if(interaction)interaction.dispatch(event);}));
         r.formBridge=this.own(Control.createFormFieldBridge({root,target:opts.container,formField:opts.formField,document:doc,moveIntoRoot:false,projectLayout:Control.projectFormFieldLayout,name:opts.name,disabled:opts.disabled===true,readOnly:opts.readOnly===true,required:opts.required===true,value:r.valueState.value,serializeValue:opts.serializeValue,getValue:()=>r.valueState.value,onReset:()=>this.#setCommitted(r.initialValue,{silent:true,source:'form',reason:'reset'})}));
-        this.#rebuild();r.rendered=true;this.bindFocusTarget(root);return root;
+        this.#rebuild();r.rendered=true;this.bindFocusTarget(root);
+        this.bindSimpleControllers({
+            root,
+            getCapabilities:()=>({ focusable:this.options.mode==='interactive', tabbable:this.options.mode==='interactive', activatable:this.options.mode==='interactive', navigable:this.options.mode==='interactive' }),
+            keymap:{ ArrowUp:'INCREMENT', Up:'INCREMENT', ArrowRight:'INCREMENT', Right:'INCREMENT', ArrowDown:'DECREMENT', Down:'DECREMENT', ArrowLeft:'DECREMENT', Left:'DECREMENT', Home:'FIRST', End:'LAST', Delete:'CLEAR', Backspace:'CLEAR' },
+            operationOf:action=>action==='CLEAR'?'clear':'activate',
+            onAction:(action,context)=>{
+                if(this.options.keyboard===false||!this.#interactive())return 'blocked';
+                const step=this.#stepSize();let next=null;
+                if(action==='INCREMENT')next=r.valueState.value+step;
+                else if(action==='DECREMENT')next=r.valueState.value-step;
+                else if(action==='FIRST')next=this.options.clearable===true?0:step;
+                else if(action==='LAST')next=this.options.count;
+                else if(action==='CLEAR'&&this.options.clearable===true)next=0;
+                if(next===null)return 'pass';
+                return this.#setCommitted(next,{user:true,reason:'keyboard',source:'keyboard',originalEvent:context.originalEvent})?'handled':'blocked';
+            }
+        });
+        this.bindFeedbackProjector(Object.freeze({
+            show:snapshot=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
+            update:(_handle,snapshot)=>{root.classList.toggle('is-loading',snapshot.status==='pending'||snapshot.status==='progress');root.classList.toggle('is-error',snapshot.status==='error');root.classList.toggle('is-warning',snapshot.status==='warning');return root;},
+            close:()=>{root.classList.remove('is-loading','is-error','is-warning');return true;}
+        }));
+        return root;
     }
 
     [componentHooks.beforeOptionsUpdate](patch) { if(own(patch,'direction'))throw new TypeError('[QXFRAME9A7C2] Rate does not support direction; layout is LTR-only.'); }
@@ -111,7 +144,7 @@ export class Rate extends FieldComponent {
     setValue(next,config={}){this.#setCommitted(next,{...config,reason:config.reason||'set-value',source:config.source||'api'});return this;}
     getValue(){return recordFor(this).valueState.value;}
     clear(config={}){this.#setCommitted(0,{...config,reason:config.reason||'clear',source:config.source||'api'});return this;}
-    focus(focusOptions){const r=recordFor(this);if(this.destroyed||!r.root||r.root.tabIndex<0)return false;DOM.focusElement(r.root,focusOptions||{preventScroll:true});return r.doc.activeElement===r.root;}
+    focus(focusOptions){const r=recordFor(this),controller=this.getFocusController();if(this.destroyed||!r.root||r.root.tabIndex<0)return false;if(controller)return controller.focus(focusOptions||{preventScroll:true});DOM.focusElement(r.root,focusOptions||{preventScroll:true});return r.doc.activeElement===r.root;}
     blur(){const r=recordFor(this);if(this.destroyed||!r.root)return false;r.root.blur();return r.doc.activeElement!==r.root;}
     getState(){const r=recordFor(this),opts=this.options;return Object.freeze({value:r.valueState.value,hoverValue:r.hoverValue,count:opts.count,half:opts.half===true,clearable:opts.clearable===true,keyboard:opts.keyboard!==false,size:opts.size,mode:opts.mode,disabled:opts.disabled===true,readOnly:opts.readOnly===true,destroyed:this.destroyed});}
     getRootElement(){return recordFor(this).root;}
