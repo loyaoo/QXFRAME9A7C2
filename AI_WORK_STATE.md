@@ -44,7 +44,7 @@ Implemented in current H-012 pack:
 - Date/Time SelectionController follows picker draft semantics and restores committed keys on cancel. Wheel selection keys are column-scoped stable item keys.
 - ColorPicker correctly has no SelectionController target.
 - all four public Picker profiles now match the handbook target combinations exactly.
-- `verify:phase-h-picker-family` is required by full verify; Phase H profile regression floor rises from 23 to 27.
+- `verify:phase-h-picker-family` is required by full verify; the existing `minimumProfiled=23` regression floor is unchanged because these four Pickers already had partial profiles. Their exact target completeness is enforced by the new family gate.
 - strict source-ESM Chromium verifies shared V/F/I/C/M/O/B, stable S keys, DatePicker needConfirm V/S separation, Color feedback, canonical Picker FormController serialization and destroy unregister.
 
 Next exact step:
