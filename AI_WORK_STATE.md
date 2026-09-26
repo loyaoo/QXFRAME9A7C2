@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
-Status: IMPLEMENTED_AWAITING_PR_CI
-Task progress: 70%
+Status: FIXING_CONFIRMED_TRANSIENT_EDGE
+Task progress: 80%
 Scope:
 - Do not treat the migration handbook as infallible; preserve correct shipped behavior and use a single coherent Picker-family rule based on interaction semantics.
 - Closed control/projected value shows committed value only.
@@ -45,10 +45,10 @@ Baseline:
 - latest main CI + Pages: #568 / `36158000520` success
 - open PRs at task start: none
 Next exact step:
-1. create PR from the implementation batch.
-2. wait for exact-head release + strict Chromium verification.
-3. fix only reproducible CI/browser findings; do not broaden into controlled-mode API work.
-4. merge after green, then verify main CI + Pages.
+1. push the Picker-family final-value replacement helper and transient-channel regressions to PR #115.
+2. rerun exact-head release + strict Chromium verification.
+3. merge only after the new head is green.
+4. verify main CI + Pages, then mark this task DONE_MERGED_VERIFIED.
 
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression

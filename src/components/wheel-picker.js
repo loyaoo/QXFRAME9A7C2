@@ -137,7 +137,7 @@ function cancel(meta) { return instance.cancel(meta || {}); }
 function clear(meta) {
   if (destroyed || CapabilityController.mutationLocked(opts)) return false;
   var changed = !!(draft.value && draft.value.length);
-  draft.setValue([], Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+  instance.replacePickerCommittedValue([], Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
   panel.setValue([], { silent: true, source: 'api', reason: 'clear-sync' });
   syncField(false);
   var payload = { value: [], reason: meta && meta.reason || 'clear', wheelPicker: api };
@@ -251,7 +251,7 @@ function setValue(next, meta) {
   var normalized = assertValue(next || [], 'value');
   panel.setValue(normalized, { silent: true, source: 'api', reason: 'set-value-normalize' });
   normalized = panel.getState().value;
-  var result = draft.setValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+  var result = instance.replacePickerCommittedValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
   panel.setValue(draft.value || [], { silent: true, source: 'api', reason: 'set-value-sync' });
   syncField(false);
   return result;
@@ -273,7 +273,7 @@ function applyOptions(nextOptions) {
   panel.updateOptions({ columns: opts.columns, visibleItemCount: opts.visibleItemCount, itemHeight: opts.itemHeight, scrollbarVisibility: opts.scrollbarVisibility, wheelPropagation: opts.wheelPropagation, snapBehavior: opts.snapBehavior, snapDuration: opts.snapDuration, scrollIdleDelay: opts.scrollIdleDelay, loop: opts.loop === true, size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true, value: own(next, 'value') ? next.value : draft.draftValue });
   if (own(next, 'value')) {
     var normalized = panel.getState().value;
-    draft.setValue(normalized, { silent: true, source: 'options', reason: 'controlled' });
+    instance.replacePickerCommittedValue(normalized, { silent: true, source: 'options', reason: 'external-value' });
   } else if (own(next, 'columns')) {
     var previousDraft = cloneValue(draft.draftValue);
     panel.setValue(draft.value || [], { silent: true, source: 'options', reason: 'columns-normalize-value' });

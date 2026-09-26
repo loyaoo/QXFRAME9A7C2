@@ -268,7 +268,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function clear(meta) {
     if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value);
-    draft.setValue(emptyValue(), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+    instance.replacePickerCommittedValue(emptyValue(), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
     syncPanel('time-picker-clear-sync');
     syncField(false);
@@ -437,7 +437,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = normalizeValue(value); } catch (_) { return false; }
-    var result = draft.setValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+    var result = instance.replacePickerCommittedValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
     if (selection === 'range') activeRangePart = normalized && !normalized[0] ? 0 : (normalized && !normalized[1] ? 1 : 0);
     syncPanel('time-picker-set-value');
     syncField(false); return result;

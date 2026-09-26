@@ -39,6 +39,7 @@ assert.match(pickerFieldSource,/getFocusController:\s*function \(\) \{ return fo
 
 assert.match(pickerSource,/SelectionController\.create\s*\(/,'PickerComponent must create the shared semantic SelectionController.');
 assert.match(pickerSource,/getPickerProjection\s*\(config/,'PickerComponent must own one family visual-projection resolver based on the real popup state.');
+assert.match(pickerSource,/replacePickerCommittedValue\s*\(value, meta/,'PickerComponent must own one final-value replacement path for releasing transient rawInput/preview channels before committed replacement.');
 assert.match(pickerSource,/syncPickerSelection\s*\(/,'PickerComponent must expose one semantic selection projection path.');
 assert.match(pickerSource,/bindFeedbackControl\s*\(/,'PickerComponent must bind local feedback once through FieldComponent.');
 assert.match(pickerSource,/getFocusController\s*\(/,'PickerComponent must expose the PickerField FocusController.');

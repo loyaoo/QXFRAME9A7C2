@@ -393,7 +393,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      function clear(meta) {
        if (destroyed || CapabilityController.mutationLocked(opts)) return false;
        var changed = !!draft.value;
-       draft.setValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+       instance.replacePickerCommittedValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
        syncField(false);
        var payload = { value: null, reason: meta && meta.reason || 'clear', colorPicker: api };
        if (Utils.isFunction(opts.onClear)) opts.onClear(payload);
@@ -408,7 +408,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        opts.mode = mode;
        var canonical = normalizeModel(value);
        if (canonical === undefined) return false;
-       var result = draft.setValue(canonical, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+       var result = instance.replacePickerCommittedValue(canonical, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
        syncPanelFromModel(canonical || seedValue(), 'set-value-sync');
        syncField(false); return result;
      }
@@ -449,6 +449,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        panel.setFormat(nextFormat); opts.format = nextFormat;
        var committedAfter = canonicalizeModelForFormat(committedBefore);
        var draftAfter = canonicalizeModelForFormat(draftBefore);
+       draft.clearPreview({ silent:true, source:'format', reason:'format-preview-clear' });
+       draft.clearRawInput({ silent:true, source:'format', reason:'format-raw-input-clear' });
        draft.setValue(committedAfter, { source: 'format', reason: 'format-value' });
        draft.setDraft(draftAfter, { silent: true, source: 'format', reason: 'format-draft' });
        syncPanelFromModel(draftAfter || committedAfter || seedValue(), 'format-panel');
@@ -466,7 +468,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var detail = Utils.assignOwn({ source:'api', reason:'mode-change' }, meta || {});
        mode = nextMode; opts.mode = nextMode; activeStopIndex = 0;
        draft.clearPreview({ silent:true, source:detail.source, reason:'mode-preview-clear' });
-       var changed = open ? draft.setDraft(converted, detail) : draft.setValue(converted, detail);
+       draft.clearRawInput({ silent:true, source:detail.source, reason:'mode-raw-input-clear' });
+       var changed = open ? draft.setDraft(converted, detail) : instance.replacePickerCommittedValue(converted, detail);
        if (changed !== false && open && opts.needConfirm !== true) {
          instance.commit({ source:detail.source, reason:'mode-commit', originalEvent:detail.originalEvent || null });
        }

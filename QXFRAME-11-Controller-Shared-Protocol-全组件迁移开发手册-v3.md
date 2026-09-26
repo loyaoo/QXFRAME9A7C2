@@ -1534,6 +1534,8 @@ control 恢复 A
 
 Multiple/tag Picker 打开时，tag 集合显示当前 draft；token editor 只显示 rawInput，不再额外塞入聚合格式化文本。
 
+显式最终值替换（公开 `setValue`、外部 `value` 同步、Clear 等既有 immediate-commit 动作）必须先释放 `rawInput/preview`，再替换 committed+draft；否则打开状态下旧 transient channel 会凭优先级继续遮住新的最终值。这个规则属于 Picker family，不下沉修改通用 ValueController 的全局语义。
+
 ## 19.3 needConfirm=false
 
 完成一次有效选择：

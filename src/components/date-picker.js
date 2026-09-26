@@ -823,7 +823,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function clear(meta) {
     if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value, selection);
-    draft.setValue(emptyValue(selection), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+    instance.replacePickerCommittedValue(emptyValue(selection), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
     syncSelectionPanel(false);
     syncTimePanel();
@@ -1421,7 +1421,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = normalizeValue(value); } catch (_) { return false; }
-    var result = draft.setValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+    var result = instance.replacePickerCommittedValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
     activeRangePart = selection === 'range' && normalized[1] ? 1 : 0;
     syncSelectionPanel(true);
     syncTimePanel();
