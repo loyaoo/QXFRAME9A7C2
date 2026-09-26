@@ -24,6 +24,34 @@
 
 ## CURRENT
 
+### POST-AUDIT-CORE-INTEGRITY-PERF-003 — shared state integrity + hotpath cleanup
+Status: IN_PROGRESS
+Task progress: 10%
+Scope:
+- Fix confirmed ValueController integrity defects: duplicate normalization, copied reset baseline, public mutable-reference leakage, and stale callback reentrancy events.
+- Fix TimePanel/WheelPanel canonicalization so visual wheel selection and parent value cannot diverge.
+- Avoid WheelPanel full rebuild when value is semantically unchanged; remove redundant TimePanel refresh work without changing wheel/keyboard behavior.
+- Decouple Control visual projection from committed FormBridge synchronization and collapse duplicate FormBridge sync operations.
+- Remove Tree applyOptions duplicate rows/list refresh work.
+- Avoid ItemCollection O(N) row-state refresh on pointermove when hover row did not change.
+- Optimize Scroll snap geometry reads without changing snap semantics.
+Risk policy:
+- Preserve synchronous public API semantics; do not replace immediate projection with requestAnimationFrame/debounce.
+- Do not change commit/draft behavior from PR #115.
+- Do not merge an optimization that changes visible interaction unless it fixes a confirmed bug.
+- VirtualList keyed DOM reuse is not included unless regression design proves it safe; it may be split to a later task.
+Baseline:
+- base main: `02060d0385dc7f85598361b4b483f8862b2d950e`
+- last code-affecting main: `18a276417a2331b889d3994931f3effb82d9facd`
+- latest verified main CI + Pages: #574 / `36204351824` success
+- open PRs at task start: none
+Next exact step:
+1. implement shared ValueController integrity fixes with dedicated unit regressions.
+2. implement TimePanel/WheelPanel canonicalization and no-op rebuild guards with browser coverage.
+3. implement low-risk Control/FormBridge/Tree/ItemCollection/Scroll hotpath reductions.
+4. create PR, run exact-head full release + strict Chromium verification, merge only after green.
+
+
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
 Status: DONE_MERGED_VERIFIED
 Task progress: 100%
