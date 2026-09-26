@@ -71,7 +71,7 @@ function create(options) {
       controller: api
     }, base), meta);
     ['value','draftValue','previewValue','nextValue','nextDraftValue','previousValue','previousDraftValue','previousPreviewValue'].forEach(function (key) {
-      if (Object.prototype.hasOwnProperty.call(merged, key)) merged[key] = expose(merged[key]);
+      if (Object.prototype.hasOwnProperty.call(merged, key) && merged[key] !== undefined) merged[key] = expose(merged[key]);
     });
     return InteractionDetails.create(merged.reason || 'state-change', merged.originalEvent || null, merged);
   }

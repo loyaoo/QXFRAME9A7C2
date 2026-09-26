@@ -114,6 +114,16 @@ adapterExposed.value=9;
 assert.equal(adapterCopyController.value.value,1);
 adapterCopyController.destroy();
 
+const strictArrayCopy=ValueController.create({
+  value:[],
+  normalizeValue(value){return Array.isArray(value)?value:[];},
+  copyValue(value){return value.slice();},
+  equals:(a,b)=>JSON.stringify(a)===JSON.stringify(b)
+});
+strictArrayCopy.setValue([{key:'a'}],{source:'test',reason:'array-copy-optional-event-fields'});
+assert.deepEqual(strictArrayCopy.value,[{key:'a'}],'optional undefined event metadata must not be sent through a domain-only copy adapter.');
+strictArrayCopy.destroy();
+
 const reentrantEvents=[];
 let reentrantValue;
 reentrantValue=ValueController.create({
@@ -129,4 +139,4 @@ assert.equal(reentrantValue.value,'C');
 assert.deepEqual(reentrantEvents,['callback:B','callback:C','event:C'],'stale outer B event must not publish after inner C becomes canonical.');
 reentrantValue.destroy();
 
-console.log(JSON.stringify({ok:true,valueController:true,compatAliasesRemoved:true,channels:['committed','draft','preview','rawInput'],sessionAuthority:true,noCloseCommit:true,normalizeExactlyOnce:true,stableResetBaseline:true,publicCopyBoundary:true,singleCopyBoundary:true,reentrantGuard:true}));
+console.log(JSON.stringify({ok:true,valueController:true,compatAliasesRemoved:true,channels:['committed','draft','preview','rawInput'],sessionAuthority:true,noCloseCommit:true,normalizeExactlyOnce:true,stableResetBaseline:true,publicCopyBoundary:true,singleCopyBoundary:true,optionalMetadataCopyGuard:true,reentrantGuard:true}));

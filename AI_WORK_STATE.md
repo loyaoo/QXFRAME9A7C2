@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### POST-AUDIT-CORE-INTEGRITY-PERF-003 — shared state integrity + hotpath cleanup
-Status: IMPLEMENTED_AWAITING_PR_CI
-Task progress: 72%
+Status: CI_REGRESSION_FIX_IN_PROGRESS
+Task progress: 82%
 Scope:
 - Fix confirmed ValueController integrity defects: duplicate normalization, copied reset baseline, public mutable-reference leakage, and stale callback reentrancy events.
 - Fix TimePanel/WheelPanel canonicalization so visual wheel selection and parent value cannot diverge.
@@ -58,6 +58,10 @@ Verification added:
 - tools/verify-value-controller.mjs
 - tools/verify-core-hotpaths.mjs
 - tools/verify-browser-smoke.html
+CI evidence:
+- PR #116 run #575 / 36212460277 attempt 1 reached core checks but Chrome CDP startup timed out in existing phase-d Table browser harness (infrastructure failure).
+- attempt 2 started Chrome and passed phase-d Table, then exposed a real ValueController boundary regression in phase-d Tags: optional previousPreviewValue=undefined was incorrectly sent through TokenInput's array-only copyValue adapter.
+- fix: optional undefined event metadata bypasses the value copy adapter; domain values remain copied at public boundaries. Added a strict array-copy adapter regression.
 Next exact step:
 1. create code commit and PR.
 2. run exact-head full release + strict Chromium verification.
