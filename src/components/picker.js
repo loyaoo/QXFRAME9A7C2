@@ -114,6 +114,30 @@ export class PickerComponent extends PopupFieldComponent {
         return field;
     }
 
+    replacePickerCommittedValue(value, meta = {}) {
+        const record = requireState(this);
+        if (!record.controller) return false;
+        const detail = Utils.assignOwn({ source:'api', reason:'set-value' }, meta);
+        record.controller.clearPreview({ silent:true, source:detail.source || 'api', reason:String(detail.reason || 'set-value') + '-preview-clear' });
+        record.controller.clearRawInput({ silent:true, source:detail.source || 'api', reason:String(detail.reason || 'set-value') + '-raw-input-clear' });
+        return record.controller.setValue(value, detail);
+    }
+
+    getPickerProjection(config = {}) {
+        const record = requireState(this);
+        const open = !!(record.field && record.field.getState && record.field.getState().open);
+        if (!record.controller || typeof record.controller.projection !== 'function') {
+            return Object.freeze({ open, channel:'committed', value:undefined, revision:0 });
+        }
+        const projection = record.controller.projection({
+            open,
+            previewControl: config.previewControl === true,
+            draftControl: config.draftControl !== false,
+            rawInputActive: config.rawInputActive !== false
+        });
+        return Object.freeze({ open, channel:projection.channel, value:projection.value, revision:projection.revision });
+    }
+
     open(reason, originalEvent) {
         const field = requireState(this).field;
         return !this.destroyed && field ? field.open(reason || 'api', originalEvent || null) : false;

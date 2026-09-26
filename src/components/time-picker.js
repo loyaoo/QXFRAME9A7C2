@@ -164,18 +164,19 @@ function setupTimePickerRuntime(instance, fieldInit) {
   instance.setupPickerSelection({ multiple: selection === 'range' });
   syncSelectionController(draft.value, { source:'init', reason:'time-selection-init' });
 
-  function syncField(preferDraft, meta) {
+  function syncField(_projectionHint, meta) {
     if (!field) return;
-    var open = preferDraft === true && field.getState().open;
-    var projection = draft.projection({ open: open, previewControl: opts.previewValue !== false, draftControl: true });
+    var projection = instance.getPickerProjection({ previewControl: opts.previewValue !== false });
+    var open = projection.open;
     var committedText = formatValue(draft.value);
     var draftText = formatValue(draft.draftValue);
     var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatValue(projection.value);
+    var visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value);
     field.setDisplayValue(projectedText);
     field.setPlaceholder(open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
     field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
-    field.setDraftVisual(open && draft.dirty);
-    field.setClearVisible(hasValue(draft.value));
+    field.setDraftVisual(open && (draft.rawInputActive || draft.hasPreview || draft.dirty));
+    field.setClearVisible(visualHasValue);
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
   function emitOpen(opened, detail) {
@@ -266,8 +267,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function cancel(meta) { return instance.cancel(meta || {}); }
   function clear(meta) {
     if (destroyed || CapabilityController.mutationLocked(opts)) return false;
-    var changed = hasValue(draft.value);
-    draft.setValue(emptyValue(), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+    var changed = hasValue(draft.value) || hasValue(draft.draftValue) || draft.rawInputActive || draft.hasPreview;
+    instance.replacePickerCommittedValue(emptyValue(), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
     syncPanel('time-picker-clear-sync');
     syncField(false);
@@ -436,7 +437,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (destroyed) return false;
     var normalized;
     try { normalized = normalizeValue(value); } catch (_) { return false; }
-    var result = draft.setValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+    var result = instance.replacePickerCommittedValue(normalized, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
     if (selection === 'range') activeRangePart = normalized && !normalized[0] ? 0 : (normalized && !normalized[1] ? 1 : 0);
     syncPanel('time-picker-set-value');
     syncField(false); return result;

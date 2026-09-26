@@ -117,6 +117,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
      var draft = null;
      var api = instance;
      var activeStopIndex = 0;
+     var sessionModeSnapshot = null;
+     var sessionStopSnapshot = 0;
      var modeHost = null;
      var solidModeButton = null;
      var gradientModeButton = null;
@@ -200,16 +202,16 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (Utils.isFunction(opts.onChangeComplete)) opts.onChangeComplete(cloneModel(value), payload);
        emitter.emit('changeComplete', payload);
      }
-     function syncField(preferDraft, meta) {
+     function syncField(_projectionHint, meta) {
        if (!field || !draft) return;
-       var open = preferDraft === true && field.getState().open;
-       var projection = draft.projection({ open:open, previewControl:true, draftControl:true });
+       var projection = instance.getPickerProjection({ previewControl:true });
+       var open = projection.open;
        var value = projection.value;
        var display = fieldDisplay(value);
        field.setDisplayValue(opts.swatchOnly === true && opts.renderControl !== false && opts.headless !== true ? '' : display);
        field.setDraftDisplayValue(open && draft.dirty ? fieldDisplay(draft.draftValue) : '');
-       field.setDraftVisual(open && draft.dirty);
-       field.setClearVisible(!!draft.value);
+       field.setDraftVisual(open && (draft.hasPreview || draft.dirty));
+       field.setClearVisible(!!value);
        field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
        swatch.style.background = display || 'transparent';
        renderGradientEditor(value);
@@ -363,23 +365,36 @@ function setupColorPickerRuntime(instance, fieldInit) {
        controller: draft,
        canCommit: function () { return !destroyed; },
        onOpenDraft: function (controller) {
+         sessionModeSnapshot = mode;
+         sessionStopSnapshot = activeStopIndex;
          controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
          controller.clearRawInput({ silent:true, source:'popup', reason:'open-raw-input-clear' });
          syncPanelFromModel(controller.draftValue || seedValue(), 'open-sync');
          syncField(true);
        },
-       onCommit: function () { syncField(false); },
-       onCancel: function (_controller, detail) { syncPanelFromModel(draft.value || seedValue(), detail && detail.source === 'popup' ? 'close-restore' : 'cancel-sync'); syncField(false); },
+       onCommit: function () { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; syncField(false); },
+       onCancel: function (_controller, detail) {
+         if (sessionModeSnapshot) {
+           mode = sessionModeSnapshot;
+           opts.mode = mode;
+           activeStopIndex = sessionStopSnapshot;
+         }
+         syncPanelFromModel(draft.value || seedValue(), detail && detail.source === 'popup' ? 'close-restore' : 'cancel-sync');
+         syncField(false);
+       },
        onCloseDraft: function (_controller, detail) {
          if (!detail.rolledBack) syncField(false);
+         sessionModeSnapshot = null;
+         sessionStopSnapshot = 0;
        }
      });
      function commit(meta) { return instance.commit(meta || {}); }
      function cancel(meta) { return instance.cancel(meta || {}); }
      function clear(meta) {
        if (destroyed || CapabilityController.mutationLocked(opts)) return false;
-       var changed = !!draft.value;
-       draft.setValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+       var changed = !!draft.value || !!draft.draftValue || draft.rawInputActive || draft.hasPreview;
+       var cleared = instance.replacePickerCommittedValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+       if (cleared !== false && field && field.getState().open) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
        syncField(false);
        var payload = { value: null, reason: meta && meta.reason || 'clear', colorPicker: api };
        if (Utils.isFunction(opts.onClear)) opts.onClear(payload);
@@ -394,7 +409,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        opts.mode = mode;
        var canonical = normalizeModel(value);
        if (canonical === undefined) return false;
-       var result = draft.setValue(canonical, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+       var result = instance.replacePickerCommittedValue(canonical, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+       if (result !== false && field && field.getState().open) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
        syncPanelFromModel(canonical || seedValue(), 'set-value-sync');
        syncField(false); return result;
      }
@@ -435,6 +451,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        panel.setFormat(nextFormat); opts.format = nextFormat;
        var committedAfter = canonicalizeModelForFormat(committedBefore);
        var draftAfter = canonicalizeModelForFormat(draftBefore);
+       draft.clearPreview({ silent:true, source:'format', reason:'format-preview-clear' });
+       draft.clearRawInput({ silent:true, source:'format', reason:'format-raw-input-clear' });
        draft.setValue(committedAfter, { source: 'format', reason: 'format-value' });
        draft.setDraft(draftAfter, { silent: true, source: 'format', reason: 'format-draft' });
        syncPanelFromModel(draftAfter || committedAfter || seedValue(), 'format-panel');
@@ -444,14 +462,21 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var nextMode = normalizeMode(value);
        if (destroyed || nextMode === mode) return api;
        if (nextMode === 'gradient' && !gradientEnabled) throw new TypeError('[QXFRAME9A7C2] ColorPicker gradient support is disabled; pass gradient:true before switching to gradient mode.');
-       var current = cloneModel(draft.value || seedValue());
+       var open = !!(field && field.getState().open);
+       var current = cloneModel((open ? draft.draftValue : draft.value) || seedValue());
        var converted;
        if (nextMode === 'gradient') converted = isGradient(current) ? current : seedGradient(current || seedSolid());
        else converted = isGradient(current) ? (activeColor(current) || seedSolid()) : current;
+       var detail = Utils.assignOwn({ source:'api', reason:'mode-change' }, meta || {});
        mode = nextMode; opts.mode = nextMode; activeStopIndex = 0;
-       draft.setValue(converted, Utils.assignOwn({ silent: true, source: 'api', reason: 'mode-change' }, meta || {}));
-       draft.setDraft(converted, { silent: true, source: 'api', reason: 'mode-draft' });
-       syncPanelFromModel(converted, 'mode-sync'); syncField(false); return api;
+       draft.clearPreview({ silent:true, source:detail.source, reason:'mode-preview-clear' });
+       draft.clearRawInput({ silent:true, source:detail.source, reason:'mode-raw-input-clear' });
+       var changed = open ? draft.setDraft(converted, detail) : instance.replacePickerCommittedValue(converted, detail);
+       if (changed !== false && open && opts.needConfirm !== true) {
+         var modeCommitted = instance.commit({ source:detail.source, reason:'mode-commit', originalEvent:detail.originalEvent || null });
+         if (modeCommitted !== false) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
+       }
+       syncPanelFromModel(converted, 'mode-sync'); syncField(open); return api;
      }
      function currentGradient(preferDraft) {
        var value = visualValue(preferDraft === true || (field && field.getState().open));

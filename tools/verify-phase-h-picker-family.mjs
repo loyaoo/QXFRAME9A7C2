@@ -38,6 +38,8 @@ assert.match(pickerFieldSource,/keyboard = focusController\.keyboard/,'PickerFie
 assert.match(pickerFieldSource,/getFocusController:\s*function \(\) \{ return focusController; \}/,'PickerField must expose the same shared FocusController.');
 
 assert.match(pickerSource,/SelectionController\.create\s*\(/,'PickerComponent must create the shared semantic SelectionController.');
+assert.match(pickerSource,/getPickerProjection\s*\(config/,'PickerComponent must own one family visual-projection resolver based on the real popup state.');
+assert.match(pickerSource,/replacePickerCommittedValue\s*\(value, meta/,'PickerComponent must own one final-value replacement path for releasing transient rawInput/preview channels before committed replacement.');
 assert.match(pickerSource,/syncPickerSelection\s*\(/,'PickerComponent must expose one semantic selection projection path.');
 assert.match(pickerSource,/bindFeedbackControl\s*\(/,'PickerComponent must bind local feedback once through FieldComponent.');
 assert.match(pickerSource,/getFocusController\s*\(/,'PickerComponent must expose the PickerField FocusController.');
@@ -50,6 +52,7 @@ assert.doesNotMatch(pickerFieldSource,/keyboard\s*=\s*KeyboardNavigation\.create
 assert.match(pickerFieldSource,/getFocusController:\s*function/,'PickerField must expose its canonical FocusController.');
 assert.match(pickerFieldSource,/if \(String\(opts\.controlMode \|\| 'input'\) === 'tags'\) return false;/,'PickerField tag-mode drafts must project through tags instead of aggregate text in the token editor.');
 assert.match(pickerFieldSource,/if \(control\.setInputValue\) control\.setInputValue\(text\);/,'PickerField open-session draft text must update Control state instead of only mutating the raw input DOM.');
+assert.match(pickerFieldSource,/if \(!navigationActive \|\| projectionMode\) projectDisplayValue\(displayValue\);/,'PickerField authored projection must keep following the same live visual value while popup navigation is active.');
 assert.match(pickerSource,/bindFormController\s*\(controller,\s*options/,'PickerComponent must adapt FormController through its canonical Control serializer.');
 assert.match(pickerSource,/getSerializedValue/,'PickerComponent FormController binding must reuse Control.getSerializedValue().');
 const fieldSource=read('src/components/field.js');
@@ -66,6 +69,7 @@ for(const [name,file,hasSelection,keyPattern] of cases){
   const source=read(file);
   assert.doesNotMatch(source,/hasDraftValueTarget/,(name+' control display must not suppress the active picker-session draft merely because a separate draft target exists.'));
   assert.equal((source.match(/bindValueController\(draft\)/g)||[]).length,1,name+' must bind exactly one picker-session ValueController into FieldComponent.');
+  assert.match(source,/getPickerProjection\s*\(/,name+' must consume the shared PickerComponent visual projection instead of independently deciding when draft is visible.');
   assert.match(source,/setFieldValue\([^\n]*sync:\s*true/,name+' committed changes must project through FieldComponent without a second Value write.');
   if(hasSelection){
     assert.equal((source.match(/setupPickerSelection\s*\(/g)||[]).length,1,name+' must create exactly one semantic SelectionController.');
