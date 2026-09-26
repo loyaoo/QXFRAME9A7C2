@@ -61,4 +61,82 @@ assert.equal(confirmController.draftValue,'X');
 confirmController.destroy();
 controller.destroy();
 
-console.log(JSON.stringify({ok:true,valueController:true,compatAliasesRemoved:true,channels:['committed','draft','preview','rawInput'],sessionAuthority:true,noCloseCommit:true}));
+/* Core integrity regressions: exactly-once normalize, stable reset baseline, copied public values, reentrant callback stale guard. */
+let normalizeCalls=0;
+const binding=ValueController.createOptionValueBinding({defaultValue:1},{},function(value){normalizeCalls+=1;return Number(value)+1;});
+assert.equal(binding.value,2,'option binding initialization must normalize exactly once.');
+assert.equal(normalizeCalls,1);
+assert.equal(binding.write(2,{source:'test',reason:'normalize-once'}),true);
+assert.equal(binding.value,3);
+assert.equal(normalizeCalls,2,'binding write must normalize exactly once.');
+binding.destroy();
+
+let shift=1;
+const resetController=ValueController.create({
+  value:1,
+  normalizeValue(value){return Number(value)+shift;}
+});
+assert.equal(resetController.value,2);
+resetController.setValue(5,{silent:true});
+assert.equal(resetController.value,6);
+shift=100;
+resetController.updateOptions({normalizeValue(value){return Number(value)+shift;}});
+resetController.reset({silent:true});
+assert.equal(resetController.value,2,'reset must restore the captured normalized baseline without re-normalizing under current options.');
+resetController.destroy();
+
+const resetSource={nested:{value:1}};
+const copiedReset=ValueController.create({
+  value:resetSource,
+  equals:(a,b)=>JSON.stringify(a)===JSON.stringify(b)
+});
+resetSource.nested.value=9;
+copiedReset.setValue({nested:{value:2}},{silent:true});
+copiedReset.reset({silent:true});
+assert.equal(copiedReset.value.nested.value,1,'reset baseline must not retain the caller mutable object reference.');
+const leakedValue=copiedReset.value;leakedValue.nested.value=7;
+assert.equal(copiedReset.value.nested.value,1,'public value getter must not expose canonical mutable state.');
+const leakedSnapshot=copiedReset.snapshot();leakedSnapshot.value.nested.value=8;
+assert.equal(copiedReset.value.nested.value,1,'snapshot must not expose canonical mutable state.');
+copiedReset.destroy();
+
+let adapterCopies=0;
+const adapterCopyController=ValueController.create({
+  value:{value:1},
+  copyValue(value){adapterCopies+=1;return value&&typeof value==='object'?{...value}:value;},
+  equals:(a,b)=>a&&b&&a.value===b.value
+});
+const adapterCopiesBeforeRead=adapterCopies;
+const adapterExposed=adapterCopyController.value;
+assert.equal(adapterExposed.value,1);
+assert.equal(adapterCopies,adapterCopiesBeforeRead+1,'public getter must use the supplied copy adapter exactly once per boundary read.');
+adapterExposed.value=9;
+assert.equal(adapterCopyController.value.value,1);
+adapterCopyController.destroy();
+
+const strictArrayCopy=ValueController.create({
+  value:[],
+  normalizeValue(value){return Array.isArray(value)?value:[];},
+  copyValue(value){return value.slice();},
+  equals:(a,b)=>JSON.stringify(a)===JSON.stringify(b)
+});
+strictArrayCopy.setValue([{key:'a'}],{source:'test',reason:'array-copy-optional-event-fields'});
+assert.deepEqual(strictArrayCopy.value,[{key:'a'}],'optional undefined event metadata must not be sent through a domain-only copy adapter.');
+strictArrayCopy.destroy();
+
+const reentrantEvents=[];
+let reentrantValue;
+reentrantValue=ValueController.create({
+  value:'A',
+  onValueChange(value){
+    reentrantEvents.push('callback:'+value);
+    if(value==='B') reentrantValue.setValue('C',{source:'test',reason:'reentrant-inner'});
+  }
+});
+reentrantValue.on('value-change',detail=>reentrantEvents.push('event:'+detail.value));
+assert.equal(reentrantValue.setValue('B',{source:'test',reason:'reentrant-outer'}),false,'outer publication must report stale after callback reentrancy.');
+assert.equal(reentrantValue.value,'C');
+assert.deepEqual(reentrantEvents,['callback:B','callback:C','event:C'],'stale outer B event must not publish after inner C becomes canonical.');
+reentrantValue.destroy();
+
+console.log(JSON.stringify({ok:true,valueController:true,compatAliasesRemoved:true,channels:['committed','draft','preview','rawInput'],sessionAuthority:true,noCloseCommit:true,normalizeExactlyOnce:true,stableResetBaseline:true,publicCopyBoundary:true,singleCopyBoundary:true,optionalMetadataCopyGuard:true,reentrantGuard:true}));

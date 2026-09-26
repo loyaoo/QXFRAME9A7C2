@@ -184,11 +184,20 @@ function setupDatePickerRuntime(instance, fieldInit) {
     }
     return null;
   }
-  function normalizeValue(value) {
+  function normalizeSelectableDate(value, partIndex) {
+    if (!withTime || !value) return value;
+    var normalizedTime = TimePanel.normalizeAvailable(
+      timeFromDate(value, timeOptions && timeOptions.defaultValue),
+      resolvedTimeOptions(value, partIndex)
+    );
+    return dateTimeFrom(value, normalizedTime);
+  }
+  function normalizeValue(value, meta) {
+    var fromTimePanel = !!(meta && meta.timePanelOrigin === true);
     if (selection === 'single') {
       var one = normalizeOne(value);
       if (value !== null && value !== undefined && value !== '' && !one) throw new TypeError('[QXFRAME9A7C2] DatePicker value is invalid for the current unit/format.');
-      return one;
+      return one && !fromTimePanel ? normalizeSelectableDate(one, 0) : one;
     }
     if (selection === 'range') {
       if (value === null || value === undefined || value === '') return [null, null];
@@ -197,6 +206,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
       var end = normalizeOne(value[1]);
       if ((value[0] !== null && value[0] !== undefined && value[0] !== '' && !start) || (value[1] !== null && value[1] !== undefined && value[1] !== '' && !end)) {
         throw new TypeError('[QXFRAME9A7C2] DatePicker range contains an invalid value.');
+      }
+      if (!fromTimePanel) {
+        if (start) start = normalizeSelectableDate(start, 0);
+        if (end) end = normalizeSelectableDate(end, 1);
       }
       if (opts.order !== false && start && end && compareChronological(start, end) > 0) return [end, start];
       return [start, end];
@@ -783,11 +796,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
     activateCurrentPanelVirtualFocus('month-drill-select');
   }
   function panelCapabilityOptions() { return { disabled:opts.disabled === true, readOnly:opts.readOnly === true, loading:opts.loading === true || opts.busy === true }; }
-  function resolvedTimeOptions(anchor) {
+  function resolvedTimeOptions(anchor, partIndex) {
     var resolved = Utils.mergeOwn( timeOptions || {});
     resolved.size = opts.size;
     if (Utils.isFunction(opts.disabledTime)) {
-      var extra = opts.disabledTime(cloneDate(anchor), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? activeRangePart : null, unit: unit, datePicker: api })) || {};
+      var extra = opts.disabledTime(cloneDate(anchor), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? (partIndex === 0 || partIndex === 1 ? partIndex : activeRangePart) : null, unit: unit, datePicker: api })) || {};
       if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
         ['disabledHours','disabledMinutes','disabledSeconds','hideDisabledOptions'].forEach(function (key) {
           if (own(extra, key)) resolved[key] = extra[key];
@@ -799,9 +812,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function syncTimePanel() {
     if (!timePanel) return;
     var anchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value);
-    timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(anchor), panelCapabilityOptions()));
-    timePanel.setValue(timeFromDate(anchor, timeOptions && timeOptions.defaultValue), { silent: true, source: 'sync', reason: 'date-time-sync' });
-    if (timePanel && timePanel.refresh) timePanel.refresh('date-time-sync');
+    timePanel.updateOptions(Utils.mergeOwn(
+      resolvedTimeOptions(anchor, selection === 'range' ? activeRangePart : 0),
+      panelCapabilityOptions(),
+      { value:timeFromDate(anchor, timeOptions && timeOptions.defaultValue) }
+    ));
   }
   function emitOpen(opened, detail) {
     if (!opened) syncField(false);
@@ -876,7 +891,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       // to the other endpoint after a same-day time edit crosses the range boundary.
       activeRangePart = selectedPart;
     }
-    draft.setDraft(current, { source: detail.source || 'time', reason: 'time-select' });
+    draft.setDraft(current, { source: detail.source || 'time', reason: 'time-select', timePanelOrigin:true, activeRangePart: selection === 'range' ? activeRangePart : 0 });
     if (opts.needConfirm !== true) instance.commit({ source: detail.source || 'time', reason: 'time-commit', originalEvent: detail.originalEvent || null });
   }
   function updateMultipleValue(next, meta) {
@@ -1489,7 +1504,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
-    if (timePanel) { var timeAnchor = selectionAnchor(draft.draftValue) || selectionAnchor(draft.value); timePanel.updateOptions(Utils.mergeOwn( resolvedTimeOptions(timeAnchor), panelCapabilityOptions())); if (timePanel.refresh) timePanel.refresh('date-picker-options'); }
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     if (opts.previewValue === false) draft.clearPreview({ silent:true, source:'options', reason:'preview-disabled' });
     if (own(next, 'panelRender')) syncPanelProjection();

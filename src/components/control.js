@@ -182,6 +182,7 @@ function createProjection(options) {
   var valueSnapshot = valueTarget ? (isValueElement(valueTarget) ? { kind:'value', value:valueTarget.value } : { kind:'nodes', nodes:Array.prototype.map.call(valueTarget.childNodes || [], function (node) { return node.cloneNode(true); }) }) : null;
   var inputSnapshot = inputTarget ? { value: inputTarget.value, disabled: inputTarget.disabled === true, readOnly: inputTarget.readOnly === true, required: inputTarget.required === true, placeholder: inputTarget.getAttribute ? inputTarget.getAttribute('placeholder') : null } : null;
   var bridge = createFormFieldBridge({ document: doc, root: reference, target: formTarget || reference.parentNode || reference, formField: opts.formField || null, name: opts.name, value: committedValue, serializeValue: opts.serializeValue, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, moveIntoRoot:false, onNativeChange:function(value,detail){ if(typeof opts.onFormFieldChange==='function') opts.onFormFieldChange(value,detail,api); }, onReset: function (detail) { resetListeners.slice().forEach(function (listener) { listener(detail); }); } });
+  var bridgeOptionSnapshot = { name:opts.name, serializeValue:opts.serializeValue, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true };
   var api = null;
     
   function tagText(tag) {
@@ -214,12 +215,16 @@ function createProjection(options) {
       }
     }
     if (reference && reference.classList) reference.classList.toggle('is-draft-value', opts.draftVisual === true);
-    bridge.updateOptions({ name: opts.name, serializeValue: opts.serializeValue, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true });
+    var nextBridgeOptions = { name:opts.name, serializeValue:opts.serializeValue, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true };
+    if (!bridgeOptionSnapshot || bridgeOptionSnapshot.name !== nextBridgeOptions.name || bridgeOptionSnapshot.serializeValue !== nextBridgeOptions.serializeValue || bridgeOptionSnapshot.disabled !== nextBridgeOptions.disabled || bridgeOptionSnapshot.readOnly !== nextBridgeOptions.readOnly || bridgeOptionSnapshot.required !== nextBridgeOptions.required) {
+      bridge.updateOptions(nextBridgeOptions);
+      bridgeOptionSnapshot = nextBridgeOptions;
+    }
   }
   function setDisplayValue(value) { displayValue = stringValue(value); sync(); return api; }
   function setInputValue(value) { inputValue = stringValue(value); sync(); return api; }
   function setTags(value) { tags = Array.isArray(value) ? value.slice() : []; sync(); return api; }
-  function setCommittedValue(value, meta) { committedValue = cloneCommitted(value); bridge.setValue(committedValue, meta || { silent:true, source:'projection', reason:'projection' }); sync(); return api; }
+  function setCommittedValue(value, meta) { var previous=cloneCommitted(committedValue); committedValue = cloneCommitted(value); if(!sameCommitted(previous,committedValue)) bridge.setValue(committedValue, meta || { silent:true, source:'projection', reason:'projection' }); sync(); return api; }
   function updateOptions(nextOptions) {
     if (destroyed) return api;
     var next = nextOptions || {};
@@ -229,7 +234,7 @@ function createProjection(options) {
     if (hasOwn(next, 'displayValue')) displayValue = stringValue(next.displayValue);
     if (hasOwn(next, 'inputValue')) inputValue = stringValue(next.inputValue);
     if (hasOwn(next, 'tags')) tags = Array.isArray(next.tags) ? next.tags.slice() : [];
-    if (hasOwn(next, 'committedValue')) { committedValue = cloneCommitted(next.committedValue); bridge.setValue(committedValue, { silent:true, source:'options', reason:'projection-options' }); }
+    if (hasOwn(next, 'committedValue')) { var previousCommitted=cloneCommitted(committedValue); committedValue = cloneCommitted(next.committedValue); if(!sameCommitted(previousCommitted,committedValue)) bridge.setValue(committedValue, { silent:true, source:'options', reason:'projection-options' }); }
     sync(); return api;
   }
   function restore() {
@@ -327,6 +332,9 @@ function create(source, overrides) {
   var valueHostIsStructural = binding.source !== 'default-factory' && !!valueHost;
   var suffixAuthoredNodes = [];
   var formBridge = null;
+  var formSyncOptions = null;
+  var formSyncValue;
+  var formSyncReady = false;
   var scope = Lifecycle.createScope();
   var focused = false;
   var hovered = false;
@@ -492,8 +500,11 @@ function create(source, overrides) {
     slots: { root: root, input: input, valueHost: valueHost, prefix: prefix, suffix: suffix, clear: clearButton, toggle: toggle, loading: loading, count: countNode, segments: segmentsHost },
     classNames: opts.classNames, styles: opts.styles
   });
-  formBridge = createFormFieldBridge({ document:doc, root:root, target:host, formField:formField, name:opts.name, value:committedValue, serializeValue:opts.serializeValue, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true, projectLayout:projectFormFieldLayout, moveIntoRoot:true, onNativeChange:function(value,detail){ if(typeof opts.onFormFieldChange==='function') opts.onFormFieldChange(value,detail,api); else if(mode==='input'&&!externalCommitted){ inputValue=stringValue(Array.isArray(value)?value[0]:value); committedValue=cloneCommitted(value); syncView(); } }, onReset:handleFormReset });
+  formBridge = createFormFieldBridge({ document:doc, root:root, target:host, formField:formField, name:opts.name, value:committedValue, serializeValue:opts.serializeValue, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true, projectLayout:projectFormFieldLayout, moveIntoRoot:true, onNativeChange:function(value,detail){ if(typeof opts.onFormFieldChange==='function') opts.onFormFieldChange(value,detail,api); else if(mode==='input'&&!externalCommitted){ inputValue=stringValue(Array.isArray(value)?value[0]:value); committedValue=cloneCommitted(value); formSyncValue=cloneCommitted(committedValue); syncView(); } }, onReset:handleFormReset });
   formField = formBridge.getFormField();
+  formSyncOptions = { name:opts.name, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true, serializeValue:opts.serializeValue };
+  formSyncValue = cloneCommitted(committedValue);
+  formSyncReady = true;
     
   function clearModeListeners() { while (modeCleanups.length) { try { modeCleanups.pop()(); } catch (_) {} } }
   scope.add(clearModeListeners);
@@ -596,8 +607,17 @@ function create(source, overrides) {
   }
   function syncFormField() {
     if (!formBridge) return;
-    formBridge.updateOptions({ name:opts.name, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true, serializeValue:opts.serializeValue });
-    formBridge.setValue(committedValue, { silent:true, source:'control', reason:'sync-form-field' });
+    var nextOptions = { name:opts.name, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true, serializeValue:opts.serializeValue };
+    var optionsChanged = !formSyncOptions || formSyncOptions.name !== nextOptions.name || formSyncOptions.disabled !== nextOptions.disabled || formSyncOptions.readOnly !== nextOptions.readOnly || formSyncOptions.required !== nextOptions.required || formSyncOptions.serializeValue !== nextOptions.serializeValue;
+    if (optionsChanged) {
+      formBridge.updateOptions(nextOptions);
+      formSyncOptions = nextOptions;
+    }
+    if (!formSyncReady || !sameCommitted(formSyncValue, committedValue)) {
+      formBridge.setValue(committedValue, { silent:true, source:'control', reason:'sync-form-field' });
+      formSyncValue = cloneCommitted(committedValue);
+      formSyncReady = true;
+    }
     formField = formBridge.getFormField();
     var adapter = formBridge.getAdapter(); if (adapter) adapter.setCustomValidity(customValidityMessage);
   }
@@ -612,7 +632,11 @@ function create(source, overrides) {
     var previous = cloneCommitted(committedValue);
     if (external === true) externalCommitted = true;
     committedValue = next;
-    if (formBridge) formBridge.setValue(committedValue, meta || {});
+    if (formBridge && (!formSyncReady || !sameCommitted(formSyncValue, committedValue))) {
+      formBridge.setValue(committedValue, meta || {});
+      formSyncValue = cloneCommitted(committedValue);
+      formSyncReady = true;
+    }
     formField = formBridge ? formBridge.getFormField() : formField;
     if (baselineReady) dirty = !sameCommitted(initialCommittedValue, next);
     refreshValidityState();

@@ -24,6 +24,51 @@
 
 ## CURRENT
 
+### POST-AUDIT-CORE-INTEGRITY-PERF-003 — shared state integrity + hotpath cleanup
+Status: CI_REGRESSION_FIX_IN_PROGRESS
+Task progress: 82%
+Scope:
+- Fix confirmed ValueController integrity defects: duplicate normalization, copied reset baseline, public mutable-reference leakage, and stale callback reentrancy events.
+- Fix TimePanel/WheelPanel canonicalization so visual wheel selection and parent value cannot diverge.
+- Remove redundant TimePanel refresh/rebuild work and share pure selectable-time canonicalization across TimePanel/TimePicker/DatePicker without changing wheel/keyboard behavior.
+- Decouple Control visual projection from committed FormBridge synchronization and collapse duplicate FormBridge sync operations.
+- Remove Tree applyOptions duplicate rows/list refresh work.
+- Avoid ItemCollection O(N) row-state refresh on pointermove when hover row did not change.
+- Optimize Scroll snap geometry reads without changing snap semantics.
+Risk policy:
+- Preserve synchronous public API semantics; do not replace immediate projection with requestAnimationFrame/debounce.
+- Do not change commit/draft behavior from PR #115.
+- Do not merge an optimization that changes visible interaction unless it fixes a confirmed bug.
+- WheelPanel same-value hard no-op and VirtualList keyed DOM reuse are deliberately deferred: both alter refresh/DOM lifecycle contracts and need a separate invalidation/reconciliation design before implementation.
+Baseline:
+- base main: `02060d0385dc7f85598361b4b483f8862b2d950e`
+- last code-affecting main: `18a276417a2331b889d3994931f3effb82d9facd`
+- latest verified main CI + Pages: #574 / `36204351824` success
+- open PRs at task start: none
+Implementation evidence:
+- ValueController normalizes once per write, owns a copied normalized reset baseline, isolates public mutable reads, and rejects stale outer publication after callback reentrancy.
+- TimePanel exposes one pure normalizeAvailable rule; TimePicker and DatePicker(time) use the same rule so canonical value, visual wheel selection and FormData start aligned.
+- DatePicker/TimePanel duplicate refresh chains were removed.
+- WheelPicker form reset re-normalizes its baseline against current columns before re-publishing committed/FormData.
+- ColorPicker keeps mode/value invariant for draft writes and separates user-session mode from final external option rebases; reset baseline follows final mode/format configuration.
+- Control caches FormBridge option/value projection so visual-only syncView calls do not recreate hidden form fields.
+- Tree options, ItemCollection pointermove and Scroll snap geometry hotpaths remove confirmed duplicate/O(N) work without changing public timing semantics.
+- Deliberately not implemented: WheelPanel same-value unconditional no-op; VirtualList keyed reuse.
+Verification added:
+- tools/verify-value-controller.mjs
+- tools/verify-core-hotpaths.mjs
+- tools/verify-browser-smoke.html
+CI evidence:
+- PR #116 run #575 / 36212460277 attempt 1 reached core checks but Chrome CDP startup timed out in existing phase-d Table browser harness (infrastructure failure).
+- attempt 2 started Chrome and passed phase-d Table, then exposed a real ValueController boundary regression in phase-d Tags: optional previousPreviewValue=undefined was incorrectly sent through TokenInput's array-only copyValue adapter.
+- fix: optional undefined event metadata bypasses the value copy adapter; domain values remain copied at public boundaries. Added a strict array-copy adapter regression.
+Next exact step:
+1. create code commit and PR.
+2. run exact-head full release + strict Chromium verification.
+3. fix only reproduced regressions; do not weaken gates.
+4. merge only after green, then verify main CI + Pages and close task.
+
+
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
 Status: DONE_MERGED_VERIFIED
 Task progress: 100%

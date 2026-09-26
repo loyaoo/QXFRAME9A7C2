@@ -102,8 +102,8 @@ var AXES = Object.freeze(['x', 'y', 'both']);
     options.axis = normalizeAxis(options.axis);
     options.align = normalizeAlign(options.align);
 
-    var ownerRect = owner.getBoundingClientRect();
-    var targetRect = target.getBoundingClientRect();
+    var ownerRect = options.ownerRect && typeof options.ownerRect === 'object' ? options.ownerRect : owner.getBoundingClientRect();
+    var targetRect = options.targetRect && typeof options.targetRect === 'object' ? options.targetRect : target.getBoundingClientRect();
     var currentX = Number.isFinite(Number(options.currentX)) ? Number(options.currentX) : finite(owner.scrollLeft, 0);
     var currentY = Number.isFinite(Number(options.currentY)) ? Number(options.currentY) : finite(owner.scrollTop, 0);
     var x = currentX;
