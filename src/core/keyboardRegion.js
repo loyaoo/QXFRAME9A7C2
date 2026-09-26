@@ -2,7 +2,7 @@
 import { DOM } from './dom.js';
 import { Lifecycle } from './lifecycle.js';
 import { KeyboardNavigation } from './keyboardNavigation.js';
-import { InteractionModality } from './interactionModality.js';
+import { FocusOrigin } from './focusOrigin.js';
 import { Utils } from '../utils/utils.js';
 
 const global = globalThis;
@@ -42,6 +42,7 @@ function create(options) {
     if (!root) throw new TypeError('[QXFRAME9A7C2] KeyboardRegion root is required.');
     var documentRef = settings.document || root.ownerDocument || global.document;
     var scope = Lifecycle.createScope();
+    FocusOrigin.setup(documentRef);
     var hosted = settings.hosted === true;
     var disabled = settings.disabled === true;
     var destroyed = false;
@@ -58,7 +59,7 @@ function create(options) {
     }
 
     function onFocusIn(event) {
-      if (destroyed || disabled || hosted || event.target !== root || !InteractionModality.isKeyboard(documentRef)) return;
+      if (destroyed || disabled || hosted || event.target !== root || !FocusOrigin.isKeyboard(root)) return;
       keyboard.virtualFocus.keyboard();
       if (Utils.isFunction(settings.onEnter)) settings.onEnter({
         source: 'keyboard',
@@ -84,7 +85,14 @@ function create(options) {
 
     function focus(options) {
       if (destroyed || disabled || hosted) return false;
-      return DOM.focusElement(root, Utils.mergeOwn({ preventScroll: true }, options || {}));
+      var local = Utils.mergeOwn({ preventScroll:true }, options || {});
+      var origin = local.origin || (local.inheritOrigin === false ? 'programmatic' : FocusOrigin.inherited(documentRef));
+      var source = local.source || 'keyboard-region-focus';
+      delete local.origin; delete local.source; delete local.inheritOrigin;
+      FocusOrigin.prepare(root, origin, { source:source });
+      var focused = DOM.focusElement(root, local);
+      if (!focused) FocusOrigin.cancelPending(root);
+      return focused;
     }
 
     function destroy() {

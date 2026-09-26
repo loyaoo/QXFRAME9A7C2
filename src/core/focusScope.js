@@ -85,7 +85,7 @@ var MODES = ['none', 'exit', 'contain', 'trap'];
         if (mode === 'trap') {
           if (event.preventDefault) event.preventDefault();
           var outsideNodes = tabbables('scope');
-          manager.focus(event.shiftKey && outsideNodes.length ? outsideNodes[outsideNodes.length - 1] : (outsideNodes[0] || fallbackTarget()));
+          manager.focus(event.shiftKey && outsideNodes.length ? outsideNodes[outsideNodes.length - 1] : (outsideNodes[0] || fallbackTarget()), { origin:'keyboard', source:'focus-scope-tab' });
           return true;
         }
         return false;
@@ -103,7 +103,7 @@ var MODES = ['none', 'exit', 'contain', 'trap'];
         ? (index <= 0 ? nodes.length - 1 : index - 1)
         : (index < 0 || index >= nodes.length - 1 ? 0 : index + 1);
       if (event.preventDefault) event.preventDefault();
-      manager.focus(nodes[nextIndex]);
+      manager.focus(nodes[nextIndex], { origin:'keyboard', source:'focus-scope-tab' });
       return true;
     }
 

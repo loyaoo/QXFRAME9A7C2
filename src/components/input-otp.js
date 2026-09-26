@@ -5,9 +5,18 @@ import { getContract } from '../core/componentContracts.js';
 import { Scheduler } from '../core/scheduler.js';
 import { ValueController } from '../core/valueController.js';
 import { DOM } from '../core/dom.js';
+import { FocusOrigin } from '../core/focusOrigin.js';
 import { Utils } from '../utils/utils.js';
 
 const state = new WeakMap();
+function focusOtpInput(target, origin, source) {
+    if (!target || !target.focus) return false;
+    const doc = target.ownerDocument || globalThis.document;
+    FocusOrigin.prepare(target, origin || FocusOrigin.inherited(doc), { source: source || 'otp-focus' });
+    const focused = DOM.focusElement(target, { preventScroll:true });
+    if (!focused) FocusOrigin.cancelPending(target);
+    return focused;
+}
 const own = Utils.own;
 
 function normalizeMask(value) {
@@ -186,11 +195,11 @@ export class InputOTP extends FieldComponent {
                 if(action==='REMOVE'){
                     const segmented=control.getSegmentedInput();
                     if(!segmented||!segmented.erasePrevious(index,{originalEvent:context.originalEvent}))return 'pass';
-                    DOM.focusElement(list[index-1],{preventScroll:true});return 'handled';
+                    focusOtpInput(list[index-1],'keyboard','otp-remove-previous');return 'handled';
                 }
                 const next=action==='MOVE_LEFT'?index-1:index+1;
                 if(next<0||next>=list.length)return 'pass';
-                DOM.focusElement(list[next],{preventScroll:true});return 'handled';
+                focusOtpInput(list[next],'keyboard','otp-keyboard-move');return 'handled';
             }
         });
         this.bindFeedbackControl(control);
@@ -240,7 +249,7 @@ export class InputOTP extends FieldComponent {
         if (this.destroyed || this.disabled || (this.getCapabilityController() && !this.getCapabilityController().can('focus'))) return false;
         const record = state.get(this), inputs = record.control.getInputElements(), index = this.#syncFocusPolicy();
         if (!inputs[index]) return false;
-        DOM.focusElement(inputs[index]);
+        focusOtpInput(inputs[index], FocusOrigin.inherited(inputs[index].ownerDocument), 'otp-api-focus');
         if (inputs[index].select) inputs[index].select();
         return true;
     }

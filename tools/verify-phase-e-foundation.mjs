@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { MotionController } from '../src/core/motionController.js';
 import { OverlayController } from '../src/core/overlayController.js';
 
-const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
+const __filename=fileURLToPath(import.meta.url);
+const root=path.resolve(path.dirname(__filename),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const motionControllerSource=read('src/core/motionController.js');
 const overlayControllerSource=read('src/core/overlayController.js');

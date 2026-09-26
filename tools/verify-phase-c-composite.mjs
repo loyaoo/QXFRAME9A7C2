@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cp from 'node:child_process';
 import { getWebSocketConstructor } from './websocket-client.mjs';
-const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
+const __filename=fileURLToPath(import.meta.url);
+const root=path.resolve(path.dirname(__filename),'..');
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);
 const assert=(value,message)=>{if(!value)throw new Error(message);};
 for(const rel of ['src/components/wheel-panel.js','src/components/calendar.js','src/components/period-panel.js']){const text=fs.readFileSync(path.join(root,rel),'utf8');assert(/InteractionController\.create\s*\(/.test(text),rel+' must create InteractionController');assert(/CapabilityController\.create\s*\(/.test(text),rel+' must create CapabilityController');assert(!/DOM\.listen\([^\n]*['"]keydown/.test(text),rel+' must not add a second DOM keydown listener');assert(!/CapabilityController\.(?:mutationLocked|resolve)\s*\(/.test(text),rel+' must not use static capability compatibility as its local owner');assert(/getInteractionController/.test(text)&&/getCapabilityController/.test(text),rel+' must expose controller ownership');assert(!/function keyForInteractionAction/.test(text),rel+' must reuse InteractionController action-to-key projection');}

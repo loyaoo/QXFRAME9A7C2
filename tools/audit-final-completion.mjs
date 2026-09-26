@@ -280,8 +280,37 @@ for(const component of comparableApi.components||[]){
     delete component.schema[name];
   }
 }
+const AUTHORIZED_FOCUS_ORIGIN_MODULES=Object.freeze({
+  control:Object.freeze({remove:'FocusOrigin',restore:'InteractionModality'}),
+  'input-otp':Object.freeze({remove:'FocusOrigin'}),
+  'item-collection':Object.freeze({remove:'FocusOrigin'}),
+  table:Object.freeze({remove:'FocusOrigin'}),
+  tabs:Object.freeze({remove:'FocusOrigin'})
+});
+const AUTHORIZED_FOCUS_ORIGIN_API=Object.freeze(['InputOTP','Table','Tabs']);
+const authorizedSharedProtocolChanges=[];
+for(const component of comparableApi.components||[]){
+  if(!AUTHORIZED_FOCUS_ORIGIN_API.includes(component.name)) continue;
+  const deps=component.dependencies&&component.dependencies.domHeadless;
+  const index=Array.isArray(deps)?deps.indexOf('FocusOrigin'):-1;
+  if(index<0) throw new Error('Expected authorized FocusOrigin API dependency is missing: '+component.name);
+  deps.splice(index,1);
+  authorizedSharedProtocolChanges.push(component.name+'.domHeadless+FocusOrigin');
+}
+const comparableModules=JSON.parse(JSON.stringify(currentModules));
+for(const moduleRecord of comparableModules.modules||[]){
+  const rule=AUTHORIZED_FOCUS_ORIGIN_MODULES[moduleRecord.name];
+  if(!rule) continue;
+  const caps=moduleRecord.capabilities||(moduleRecord.capabilities={});
+  const deps=Array.isArray(caps.domHeadless)?caps.domHeadless:null;
+  if(!deps||!deps.includes(rule.remove)) throw new Error('Expected authorized FocusOrigin module dependency is missing: '+moduleRecord.name);
+  caps.domHeadless=deps.filter(name=>name!==rule.remove);
+  if(rule.restore&&!caps.domHeadless.includes(rule.restore)) caps.domHeadless.push(rule.restore);
+  if(caps.domHeadless.length===0) delete caps.domHeadless;
+  authorizedSharedProtocolChanges.push(moduleRecord.name+'.domHeadless+FocusOrigin'+(rule.restore?'/-'+rule.restore:''));
+}
 const apiParity=json(expectedApi)===json(comparableApi);
-const moduleParity=json(expectedModules)===json(currentModules);
+const moduleParity=json(expectedModules)===json(comparableModules);
 
 const oldBrowser=fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/verify-browser.log'),'utf8');
 const currentBrowser=fs.readFileSync(path.join(root,'tools/verify-browser-smoke.html'),'utf8');
@@ -350,6 +379,7 @@ const report={
     api:apiParity,
     authorizedApiRemovals,
     authorizedCapabilityMigrations,
+    authorizedSharedProtocolChanges,
     addedApiOptions,
     modules:moduleParity,
     baselineBrowserChecks:oldChecks.size,

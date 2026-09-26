@@ -11,18 +11,77 @@
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
 - Last code-affecting main commit: `0c40decacebcbd8c35e7c77a2b141a8161adbfd7` (PR #116 squash merge).
-- Current branch: `main`
-- Open PRs at this checkpoint: none after PR #116 merge; if Git differs, trust Git
+- Current branch: `fix/final-audit-focus-origin-20260926-final`
+- PR / CI: validate this branch through the final remediation PR; Git / Actions facts override this checkpoint
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
 - Latest green code PR CI: #576 / `36212774177` (PR #116 exact-head `2008ce5b8fb53e28f2498c0a4ecc4303c44b1b82`)
 - Latest green main CI + Pages: #577 / `36212979450` (`main@0c40decacebcbd8c35e7c77a2b141a8161adbfd7`, PR #116 code lineage; release + deploy-pages success)
-- Overall handbook implementation progress: 100% implementation complete; historical-regression remediation and the pre-production hotpath pass are merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
-- Current Phase: post-hotpath final acceptance / newly confirmed findings only
-- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
+- Overall handbook implementation progress: base 9-controller migration remains 100%; final-audit remediation implementation is complete in the branch and awaits PR CI / post-merge Pages verification.
+- Current Phase: final-audit remediation — PR / CI validation
+- Current Task: `FINAL-AUDIT-FOCUS-ORIGIN-001`
 
 ## CURRENT
+
+### FINAL-AUDIT-FOCUS-ORIGIN-001 — final audit remediation + Focus Origin unification
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 93%
+Base main: `c3dff3a8346e9e9eeb78ca5a5fdbde362671c5ff`
+Branch: `fix/final-audit-focus-origin-20260926-final`
+Scope:
+- Close A01/A02, B01/B03, A04-A11 and D01/D02 from the 2026-09-26 current-main audit manual.
+- Keep B02 as regression-only; PR #116 ValueController callback/revision guards remain the authority.
+- Introduce FocusOrigin as Shared Protocol infrastructure, not a 10th Runtime Controller.
+- Preserve KeyboardNavigation, VirtualFocus, FocusScope, FocusManager and FocusController ownership boundaries.
+- Preserve Picker draft/commit semantics, Tags overflow non-focusability, and the existing 2px / -1px keyboard outline visual.
+Implementation evidence:
+- Upload active HTML/XML/XHTML/SVG preview is download-only instead of same-origin document navigation.
+- FormBridge honors final native reset cancellation.
+- InputNumber controlled proposals no longer mutate committed/FormData until external acknowledgement.
+- FocusOrigin separates real focus origin from raw InteractionModality and virtual-navigation origin; managed Control/OTP/Tabs/Table/Tags/ItemCollection paths use it.
+- AsyncTask and FormController guard destroy/reentry, overlapping submit, stale async reset, disabled serialization and special field IDs.
+- initializeRuntime/Ripple/Switch/InteractionModality resources are document-scoped and releasable.
+- Nine verification scripts use fileURLToPath(import.meta.url), with an explicit Windows CI gate.
+- README and the master handbook describe ValueController/ControllableStateCore and FocusOrigin current authority.
+Sandbox verification:
+- `verify:final-focus-origin` — pass.
+- `verify:final-async-task` — pass.
+- `verify:final-form-lifecycle` — pass.
+- `verify:final-audit-closeout` — pass.
+- Local Chromium lifecycle harness reached the sandbox browser/CDP environment limit; the same strict browser gate is part of the PR release verification.
+Next exact step:
+1. Create one atomic commit/PR from the already-verified sandbox tree.
+2. Require Ubuntu full release + strict Chromium and Windows path jobs to pass.
+3. Merge only after exact-head PR CI is green, then require main release + Pages green.
+4. Do not reopen B02 or redo earlier controller phases unless a new regression contradicts verified evidence.
+
+## Current authority snapshot — after Phase A
+
+This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
+
+- Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
+- Value ownership: `ValueController` is the sole canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` and `StateController` compatibility aliases are removed; `ControllableStateCore` owns controlled/external-vs-internal and pending-request metadata only. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
+- Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
+- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
+- Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
+- Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
+- Form: `FormBridge` remains native field/FormData/reset carrier authority. `FormController` is the accepted Phase G field/form transaction coordinator above it; Phase H public field/form consumers are migrated and H accepted without duplicating carrier/value ownership.
+- Theme/token: Phase F is accepted. CSS is the sole visual authority; ComponentProfile exposes exactly 9 Runtime Controllers and no theme/tokens runtime capabilities. CI recursively rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical CSS theme selector.
+- Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
+- Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
+- Motion: `MotionController` is the accepted intent facade over canonical `MotionCore`; `Transition` and `TransitionGroup` enter through it while MotionCore remains generation/timing/style authority. Collapse rapid reversal is fixed by stable DOM projection before motion, with no parallel generation or component timer.
+- Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
+- Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
+- Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
+- Input modality: existing `InteractionModality` remains the authority and now exposes touch/programmatic modalities plus the `InputModality` alias.
+- Shared Protocol verification covers the canonical foundation and Collection/ValueController integration; removed ValueDraft/StateController aliases must not reappear.
+
+## ACTIVE KNOWN ISSUES — NOT DONE
+
+No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
+
+## DONE / VERIFIED EXISTING
 
 ### POST-AUDIT-CORE-INTEGRITY-PERF-003 — shared state integrity + hotpath cleanup
 Status: DONE_MERGED_VERIFIED
@@ -140,33 +199,6 @@ Verification:
 Next exact step:
 1. Resume `ASTRA-HIGH-FINAL-ACCEPTANCE` only for newly confirmed findings.
 2. Do not reopen or reimplement `PICKER-DRAFT-PROJECTION-001` unless a new reproducible regression contradicts the verified browser coverage.
-
-## Current authority snapshot — after Phase A
-
-This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
-
-- Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
-- Value ownership: `ValueController` is the sole canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` and `StateController` compatibility aliases are removed; `ControllableStateCore` owns controlled/external-vs-internal and pending-request metadata only. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
-- Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
-- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
-- Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
-- Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
-- Form: `FormBridge` remains native field/FormData/reset carrier authority. `FormController` is the accepted Phase G field/form transaction coordinator above it; Phase H public field/form consumers are migrated and H accepted without duplicating carrier/value ownership.
-- Theme/token: Phase F is accepted. CSS is the sole visual authority; ComponentProfile exposes exactly 9 Runtime Controllers and no theme/tokens runtime capabilities. CI recursively rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical CSS theme selector.
-- Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
-- Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
-- Motion: `MotionController` is the accepted intent facade over canonical `MotionCore`; `Transition` and `TransitionGroup` enter through it while MotionCore remains generation/timing/style authority. Collapse rapid reversal is fixed by stable DOM projection before motion, with no parallel generation or component timer.
-- Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
-- Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
-- Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
-- Input modality: existing `InteractionModality` remains the authority and now exposes touch/programmatic modalities plus the `InputModality` alias.
-- Shared Protocol verification covers the canonical foundation and Collection/ValueController integration; removed ValueDraft/StateController aliases must not reappear.
-
-## ACTIVE KNOWN ISSUES — NOT DONE
-
-No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
-
-## DONE / VERIFIED EXISTING
 
 ### PHASE-I-001 — release-integrity + Astra High handoff
 Status: DONE

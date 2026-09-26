@@ -63,10 +63,27 @@ const supersededFocusChecks = ['regression-time-panel-outer-focus-owner','regres
 function normalizeSupersededFocusChecks(source) {
     return source.split('\n').map((line) => supersededFocusChecks.some((name) => line.includes(name)) ? '__PHASE_C_SUPERSEDED_FOCUS_CHECK__' : line).join('\n');
 }
+const focusOriginCompatibilityReplacements = [
+    ["list.focusFirst();await delay(20);record('regression-list-single-focus-owner'", "list.focusFirst();key(list.getRootElement(),'ArrowDown');await delay(20);record('regression-list-single-focus-owner'"],
+    ["optionList.focusFirst();await delay(20);record('regression-option-list-single-focus-owner'", "optionList.focusFirst();key(optionList.getRootElement(),'ArrowDown');await delay(20);record('regression-option-list-single-focus-owner'"],
+    ["treeBlock.focusFirst();await delay(20);record('regression-tree-single-focus-owner'", "treeBlock.focusFirst();key(treeBlock.getRootElement(),'ArrowDown');await delay(20);record('regression-tree-single-focus-owner'"],
+    ["transferSource.focusFirst();await delay(20);var transferSourceOK=singleVirtualFocus(transferSource.getRootElement());transferTarget.focusFirst();await delay(20);var transferTargetOK=singleVirtualFocus(transferTarget.getRootElement());", "transferSource.focusFirst();key(transferSource.getRootElement(),'ArrowDown');await delay(20);var transferSourceOK=singleVirtualFocus(transferSource.getRootElement());transferTarget.focusFirst();key(transferTarget.getRootElement(),'ArrowDown');await delay(20);var transferTargetOK=singleVirtualFocus(transferTarget.getRootElement());"],
+    ["record('regression-tags-focus-contract',!!overflowNode&&overflowNode.tabIndex===-1&&!!addNode&&addNode.tabIndex===-1&&Array.prototype.every.call(closeNodes,function(n){return n.tabIndex===-1;})&&!!virtualTagElement&&virtualTagElement.classList.contains('qxframe9a7c2-tag-shell'),'overflow='+(overflowNode&&overflowNode.tabIndex)+',add='+(addNode&&addNode.tabIndex)+',domain='+virtualTag.domain+',class='+(virtualTagElement&&virtualTagElement.className));key(tagsFocusRoot,'ArrowRight');await delay(10);var addVirtual=tagsFocus.getKeyboardNavigation().virtualFocus.getState();", "record('regression-tags-focus-contract',!!overflowNode&&overflowNode.tabIndex===-1&&!!addNode&&addNode.tabIndex===-1&&Array.prototype.every.call(closeNodes,function(n){return n.tabIndex===-1;})&&!virtualTag.domain&&!virtualTagElement,'overflow='+(overflowNode&&overflowNode.tabIndex)+',add='+(addNode&&addNode.tabIndex)+',domain='+virtualTag.domain+',class='+(virtualTagElement&&virtualTagElement.className));key(tagsFocusRoot,'ArrowRight');await delay(10);var firstVirtual=tagsFocus.getKeyboardNavigation().virtualFocus.getState();record('regression-tags-first-key-enters-visible-tag',!!firstVirtual.element&&firstVirtual.element.classList.contains('qxframe9a7c2-tag-shell')&&document.activeElement===tagsFocusRoot,'domain='+firstVirtual.domain+',key='+firstVirtual.key);key(tagsFocusRoot,'ArrowRight');await delay(10);var addVirtual=tagsFocus.getKeyboardNavigation().virtualFocus.getState();"],
+    ["tagsType.focus();await delay(10);var tagsTypeRoot=tagsType.getRootElement();key(tagsTypeRoot,'ArrowRight');await delay(10);key(tagsTypeRoot,'x');", "tagsType.focus();await delay(10);var tagsTypeRoot=tagsType.getRootElement();key(tagsTypeRoot,'ArrowRight');await delay(10);key(tagsTypeRoot,'ArrowRight');await delay(10);key(tagsTypeRoot,'x');"],
+    ["tabAction.focus();await delay(10);record('regression-tabs-focus-outline-owner'", "document.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true}));tabAction.focus();await delay(10);record('regression-tabs-focus-outline-owner'"]
+];
+function applyFocusOriginCompatibility(source) {
+    let next = source;
+    for (const [before, after] of focusOriginCompatibilityReplacements) {
+        assert.ok(next.includes(before), 'Frozen HOTFIX6 focus-origin compatibility anchor must remain stable.');
+        next = next.replace(before, after);
+    }
+    return next;
+}
 assert.equal(
     normalizeSupersededFocusChecks(phaseCLegacyBrowserSmokeSource),
-    normalizeSupersededFocusChecks(frozenBrowserSmokeSource),
-    'Phase C legacy compatibility fixture may differ from frozen HOTFIX6 only in the two superseded TimePanel focus-owner checks.'
+    normalizeSupersededFocusChecks(applyFocusOriginCompatibility(frozenBrowserSmokeSource)),
+    'Phase C legacy compatibility fixture may differ from frozen HOTFIX6 only by the approved TimePanel and FocusOrigin compatibility migrations.'
 );
 for (const name of supersededFocusChecks) {
     assert.equal((frozenBrowserSmokeSource.match(new RegExp(name, 'g')) || []).length, 1, 'Frozen HOTFIX6 smoke must contain exactly one ' + name + ' check.');

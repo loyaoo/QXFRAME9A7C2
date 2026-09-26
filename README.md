@@ -92,9 +92,9 @@ The native-control contract covers text/search/email/password/url/tel/number/dat
 
 - Component-family shared behavior is governed by `tools/manifests/family-capabilities.json`. The audited 25 families must have one canonical owner; sibling components may adapt that owner but may not introduce a second state machine/rule implementation. `verify-core` enforces the critical consumer/delegation boundaries.
 - Component instances are tracked by `ComponentRuntime`; declarative `[data-qx-component]` initialization, option schema/default handling, update impact routing, duplicate-init protection, and auto-destroy share one runtime.
-- Controlled/uncontrolled value flows that need pending confirmation use `StateController` / `ValueDraft` rather than component-local draft state machines.
+- Controlled/uncontrolled value flows use `ValueController` as the public value authority, with `ControllableStateCore` limited to controlled/external-vs-internal request metadata; component-local duplicate value state machines are not allowed.
 - `InteractionPolicy` is the shared disabled/readonly/loading capability gate; `PressInteraction` and `PointerSession` centralize activation and pointer-session semantics.
-- `InteractionModality` owns keyboard/pointer modality. Keyboard `focus-visible` remains distinct from ordinary mouse focus.
+- `InteractionModality` records raw keyboard/pointer/touch/programmatic interaction context. `FocusOrigin` separately owns the origin of the current real DOM focus, while `KeyboardNavigation` owns virtual-navigation origin; managed keyboard focus visuals must not be inferred from global input modality alone.
 - `FocusScope` owns popup/modal Tab boundaries (`exit`, `contain`, `trap`); `KeyboardRegion` owns one logical Tab region plus arrow-driven `VirtualFocus`. The two layers do not replace each other.
 - `IdManager` is the canonical source for generated selector-safe identities.
 - `Core.DOM.query()/resolveElement()` is the canonical selector boundary for user-authored selector input; malformed selectors fail closed instead of leaking native `DOMException`.

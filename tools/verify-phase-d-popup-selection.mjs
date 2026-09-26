@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cp from 'node:child_process';
 import assert from 'node:assert/strict';
 import { getWebSocketConstructor } from './websocket-client.mjs';
 
-const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
+const __filename=fileURLToPath(import.meta.url);
+const root=path.resolve(path.dirname(__filename),'..');
 for(const rel of ['src/components/select.js','src/components/tree-select.js','src/components/cascader.js']){
   const source=fs.readFileSync(path.join(root,rel),'utf8');
   assert.match(source,/getSelectionController/,(rel+' must expose SelectionController'));

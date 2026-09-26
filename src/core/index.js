@@ -49,6 +49,7 @@ export { FormBridge } from './formBridge.js';
 export { FormController } from './formController.js';
 export { FeedbackController } from './feedbackController.js';
 export { FocusController } from './focusController.js';
+export { FocusOrigin } from './focusOrigin.js';
 export { FocusManager } from './focusManager.js';
 export { ScrollLock } from './scrollLock.js';
 export { PopupSurface } from './popupSurface.js';

@@ -114,6 +114,7 @@ function hasOwn(object, key) { return Object.prototype.hasOwnProperty.call(Objec
     function ensureResetScheduler() {
       if (!resetScheduler) resetScheduler = Scheduler.createDelayScheduler(function (_timestamp, event) {
         if (destroyed) return;
+        if (event && event.defaultPrevented === true) return;
         if (Utils.isFunction(opts.onReset)) opts.onReset({ source:'form', reason:'reset', originalEvent:event || null, bridge:api });
         sync();
       });

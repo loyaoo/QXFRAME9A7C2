@@ -306,10 +306,10 @@ export const moduleManifestData = Object.freeze([
         "ValueEquality"
       ],
       "domHeadless": [
+        "FocusOrigin",
         "Renderer",
         "DOMBinding",
-        "FormBridge",
-        "InteractionModality"
+        "FormBridge"
       ],
       "buildingBlocks": []
     }
@@ -540,6 +540,9 @@ export const moduleManifestData = Object.freeze([
       "headless": [
         "OptionTransaction"
       ],
+      "domHeadless": [
+        "FocusOrigin"
+      ],
       "buildingBlocks": [
         "Control"
       ]
@@ -586,6 +589,7 @@ export const moduleManifestData = Object.freeze([
         "SearchState"
       ],
       "domHeadless": [
+        "FocusOrigin",
         "KeyboardNavigation",
         "InteractionModality",
         "EventDelegation",
@@ -1250,6 +1254,7 @@ export const moduleManifestData = Object.freeze([
         "InteractionPolicy"
       ],
       "domHeadless": [
+        "FocusOrigin",
         "EventDelegation",
         "Renderer",
         "Virtualizer",
@@ -1291,6 +1296,7 @@ export const moduleManifestData = Object.freeze([
         "InteractionPolicy"
       ],
       "domHeadless": [
+        "FocusOrigin",
         "Renderer",
         "KeyboardNavigation",
         "Transition",

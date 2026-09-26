@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cp from 'node:child_process';
 import { getWebSocketConstructor } from './websocket-client.mjs';
-const root=path.resolve(path.dirname(new URL(import.meta.url).pathname),'..');
+const __filename=fileURLToPath(import.meta.url);
+const root=path.resolve(path.dirname(__filename),'..');
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);
 const assert=(value,message)=>{if(!value)throw new Error(message);};
 const source=fs.readFileSync(path.join(root,'src/components/select.js'),'utf8');

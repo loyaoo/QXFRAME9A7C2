@@ -44,6 +44,7 @@ function createFormAdapter(instance, record, config) {
     const adapter = {
         getValue: typeof config.getValue === 'function' ? () => config.getValue(instance) : () => readCommittedValue(record),
         getSerializedValue: typeof config.getSerializedValue === 'function' ? () => config.getSerializedValue(instance) : () => record.bridge ? record.bridge.getSerializedValue() : readCommittedValue(record),
+        isSubmittable: typeof config.isSubmittable === 'function' ? () => config.isSubmittable(instance) !== false : () => instance.disabled !== true,
         focus: () => instance.focus()
     };
     if (typeof config.reset === 'function') adapter.reset = context => config.reset(context, instance);

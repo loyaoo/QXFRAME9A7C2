@@ -255,6 +255,10 @@ async function main() {
         payload.browser = browser;
         payload.skipped = false;
         payload.transport = 'cdp-setDocumentContent+theme-playground';
+        if (!payload.ok) console.error('QX_BROWSER_SMOKE_FAILURE:' + JSON.stringify({
+            error: payload.error || null,
+            failedChecks: Array.isArray(payload.checks) ? payload.checks.filter(check => check && check.ok === false).map(check => ({ name:check.name, detail:check.detail || '' })) : []
+        }));
         console.log(JSON.stringify(payload));
         if (!payload.ok) process.exitCode = 1;
     } catch (error) {

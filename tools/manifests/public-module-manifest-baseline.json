@@ -308,10 +308,10 @@
           "ValueEquality"
         ],
         "domHeadless": [
+          "FocusOrigin",
           "Renderer",
           "DOMBinding",
-          "FormBridge",
-          "InteractionModality"
+          "FormBridge"
         ],
         "buildingBlocks": []
       }
@@ -542,6 +542,9 @@
         "headless": [
           "OptionTransaction"
         ],
+        "domHeadless": [
+          "FocusOrigin"
+        ],
         "buildingBlocks": [
           "Control"
         ]
@@ -588,6 +591,7 @@
           "SearchState"
         ],
         "domHeadless": [
+          "FocusOrigin",
           "KeyboardNavigation",
           "InteractionModality",
           "EventDelegation",
@@ -1252,6 +1256,7 @@
           "InteractionPolicy"
         ],
         "domHeadless": [
+          "FocusOrigin",
           "EventDelegation",
           "Renderer",
           "Virtualizer",
@@ -1293,6 +1298,7 @@
           "InteractionPolicy"
         ],
         "domHeadless": [
+          "FocusOrigin",
           "Renderer",
           "KeyboardNavigation",
           "Transition",

@@ -10,6 +10,7 @@ import { ActiveItem } from '../core/activeItem.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { ValueController } from '../core/valueController.js';
 import { FocusController } from '../core/focusController.js';
+import { FocusOrigin } from '../core/focusOrigin.js';
 import { InteractionController } from '../core/interactionController.js';
 import { SelectionController } from '../core/selectionController.js';
 import { ComponentContracts } from '../core/componentContracts.js';
@@ -748,7 +749,14 @@ function setupTabs(instance) {
     activeItem.set(normalized, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'focus' });
     syncTabRoving();
     if (tab.disabled) return false;
-    DOM.focusElement(tab);
+    var source = meta && meta.source || 'api';
+    var origin = source === 'keyboard' ? 'keyboard' : (source === 'pointer' ? 'pointer' : FocusOrigin.inherited(doc));
+    FocusOrigin.prepare(tab, origin, { source:'tabs-focus' });
+    var focused = DOM.focusElement(tab);
+    if (!focused) FocusOrigin.cancelPending(tab);
+    tabPartsByKey.forEach(function (parts) { if (parts && parts.surface) parts.surface.classList.remove('is-keyboard-focus'); });
+    var parts = tabPartsByKey.get(normalized);
+    if (parts && parts.surface && doc.activeElement === tab && FocusOrigin.isKeyboard(tab)) parts.surface.classList.add('is-keyboard-focus');
     return doc.activeElement === tab;
   }
   function ensureKeyVisible(key) {
@@ -912,6 +920,13 @@ function setupTabs(instance) {
     return api;
   }
 
+  scope.add(FocusOrigin.onChange(function () {
+    var active = doc && doc.activeElement;
+    if (!active || !tabList.contains(active)) return;
+    var tab = DOM.closestPrivate(active, tabList, 'tabsKey');
+    tabPartsByKey.forEach(function (parts) { if (parts && parts.surface) parts.surface.classList.remove('is-keyboard-focus'); });
+    if (tab && FocusOrigin.isKeyboard(tab)) { var parts = tabPartsByKey.get(String(DOM.getPrivate(tab, 'tabsKey'))); if (parts && parts.surface) parts.surface.classList.add('is-keyboard-focus'); }
+  }, doc));
   scope.add(DOM.listen(tabList, 'pointerdown', function (event) {
     var close = event.target ? DOM.closestPrivate(event.target, tabList, 'tabsClose') : null;
     if (close && tabList.contains(close) && event.preventDefault) event.preventDefault();
@@ -933,7 +948,7 @@ function setupTabs(instance) {
     if (!tab || !tabList.contains(tab) || tab.disabled) return;
     tabPartsByKey.forEach(function (parts) { if (parts && parts.surface) parts.surface.classList.remove('is-keyboard-focus'); });
     var parts = tabPartsByKey.get(String(DOM.getPrivate(tab, 'tabsKey')));
-    if (parts && parts.surface && tab.matches && tab.matches(':focus-visible')) parts.surface.classList.add('is-keyboard-focus');
+    if (parts && parts.surface && FocusOrigin.isKeyboard(tab)) parts.surface.classList.add('is-keyboard-focus');
     activeItem.set(DOM.getPrivate(tab, 'tabsKey'), { silent: true, source: 'dom', reason: 'focus' });
     syncTabRoving();
   }));
