@@ -37,6 +37,10 @@ assert.match(source,/source:opts\.controlled === true \? 'external' : 'component
 assert.match(source,/capabilityController\.can\('open'\)/,'Upload open path must enter CapabilityController.');
 assert.match(source,/capabilityController\.can\('select'\)/,'Upload add/drop path must enter CapabilityController.');
 assert.match(source,/capabilityController\.can\('remove'\)/,'Upload remove path must enter CapabilityController.');
+assert.match(source,/function isActiveDocument\(record\)/,'Upload must classify active document payloads before direct navigation.');
+assert.match(source,/function canOpenPreviewWindow\(record, kind\)/,'Upload previewTarget window must have an explicit safe-media policy.');
+assert.match(source,/downloadLink\.download = record\.name \|\| ''/,'Active or unknown window previews must fall back to download.');
+assert.doesNotMatch(source,/link\.target='_blank'/,'Default non-media document preview must not navigate active content in a new same-origin document.');
 
 console.log(JSON.stringify({
   ok:true,
