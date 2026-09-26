@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
-Status: IMPLEMENTED_AWAITING_EXACT_HEAD_CI
-Task progress: 85%
+Status: TEST_FIX_AWAITING_EXACT_HEAD_CI
+Task progress: 90%
 Scope:
 - Do not treat the migration handbook as infallible; preserve correct shipped behavior and use a single coherent Picker-family rule based on interaction semantics.
 - Closed control/projected value shows committed value only.
@@ -45,10 +45,10 @@ Baseline:
 - latest main CI + Pages: #568 / `36158000520` success
 - open PRs at task start: none
 Next exact step:
-1. run exact-head release + strict Chromium verification for the final PR #115 head.
-2. fix only reproducible failures from this exact head; do not broaden scope.
-3. merge after green.
-4. verify main CI + Pages, then mark this task DONE_MERGED_VERIFIED.
+1. rerun exact-head release + strict Chromium verification after correcting the regression test to inspect ValueController.snapshot() rather than non-public Picker getState fields.
+2. merge after green.
+3. verify main CI + Pages.
+4. mark this task DONE_MERGED_VERIFIED and return to newly confirmed findings only.
 
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
