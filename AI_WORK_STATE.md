@@ -26,8 +26,8 @@
 
 ### FINAL-AUDIT-FOCUS-ORIGIN-001 — 2026-09-26 final audit remediation + Focus Origin unification
 Status: IN_PROGRESS
-Task progress: 0%
-Current phase: Phase 0 — checkpoint / baseline reconciliation
+Task progress: 14%
+Current phase: Phase 2 — ownership / lifecycle
 Branch: `fix/final-audit-focus-origin-20260926`
 Base main: `c3dff3a8346e9e9eeb78ca5a5fdbde362671c5ff`
 Open PR: none yet
@@ -46,9 +46,9 @@ Frozen constraints:
 - Tags overflow summary remains non-focusable.
 - A10 changes only multi-document runtime/Ripple ownership; Ripple interaction semantics remain unchanged.
 Next exact step:
-1. Implement Phase 1 P1 fixes A01 Upload preview security + A02 cancelled native reset with regression gates.
-2. Checkpoint this file after the Phase 1 commit.
-3. Continue to lifecycle/ownership fixes only after the independent P1 batch is committed.
+1. Phase 1 P1 is implemented with high-risk Chromium coverage: A01 Upload active-document preview and A02 cancelled native reset.
+2. Implement Phase 2 B01/A05/A06/A07/A08/A09/A11 with focused lifecycle regressions.
+3. Keep B02 regression-only and do not reopen PR #116 ValueController ownership.
 
 
 ## Current authority snapshot — after Phase A
