@@ -29,9 +29,10 @@ function createRecord(doc) {
   const state = { element:doc && doc.activeElement && doc.activeElement.nodeType === 1 ? doc.activeElement : null, origin:'programmatic', pending:null, revision:0, listeners, cleanups };
   const pendingExpiry = Scheduler.createDelayScheduler(function (_timestamp, pending) { if (state.pending === pending) state.pending = null; }, { view:doc && doc.defaultView || global });
   cleanups.push(function () { pendingExpiry.dispose(); });
-  function publish(element, origin, source, event) {
+  function publish(element, origin, source, event, preservePending = false) {
     const next = normalize(origin), changed = state.element !== element || state.origin !== next;
-    state.element = element || null; state.origin = next; state.pending = null;
+    state.element = element || null; state.origin = next;
+    if (!preservePending) state.pending = null;
     if (!changed) return false;
     state.revision += 1;
     const snapshot = getState(doc);
@@ -48,7 +49,12 @@ function createRecord(doc) {
     setEventIntent(target, origin, event && event.type || origin);
     const active = doc && doc.activeElement;
     const documentShell = active && (active === doc.body || active === doc.documentElement);
-    if (active && active.nodeType === 1 && !documentShell && relatedOwner(active, target)) publish(active, origin, event && event.type, event);
+    if (active && active.nodeType === 1 && !documentShell && relatedOwner(active, target)) {
+      // Reclassify the current real-focus owner immediately. If the pointer target
+      // is a different related node, keep the intent until the browser's ensuing
+      // focusin so ancestor -> descendant focus handoff remains pointer-origin.
+      publish(active, origin, event && event.type, event, active !== target);
+    }
   }
   if (doc) {
     cleanups.push(DOM.listen(doc, 'pointerdown', event => point(event && event.pointerType === 'touch' ? 'touch' : 'pointer', event), true));
