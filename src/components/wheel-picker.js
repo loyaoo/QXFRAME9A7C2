@@ -136,7 +136,7 @@ function cancel(meta) { return instance.cancel(meta || {}); }
     
 function clear(meta) {
   if (destroyed || CapabilityController.mutationLocked(opts)) return false;
-  var changed = !!(draft.value && draft.value.length);
+  var changed = !!((draft.value && draft.value.length) || (draft.draftValue && draft.draftValue.length));
   instance.replacePickerCommittedValue([], Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
   panel.setValue([], { silent: true, source: 'api', reason: 'clear-sync' });
   syncField(false);

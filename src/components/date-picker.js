@@ -822,7 +822,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
   function clear(meta) {
     if (destroyed || CapabilityController.mutationLocked(opts)) return false;
-    var changed = hasValue(draft.value, selection);
+    var changed = hasValue(draft.value, selection) || hasValue(draft.draftValue, selection) || draft.rawInputActive || draft.hasPreview;
     instance.replacePickerCommittedValue(emptyValue(selection), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
     syncSelectionPanel(false);

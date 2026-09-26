@@ -372,7 +372,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
          syncPanelFromModel(controller.draftValue || seedValue(), 'open-sync');
          syncField(true);
        },
-       onCommit: function () { syncField(false); },
+       onCommit: function () { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; syncField(false); },
        onCancel: function (_controller, detail) {
          if (sessionModeSnapshot) {
            mode = sessionModeSnapshot;
@@ -392,8 +392,9 @@ function setupColorPickerRuntime(instance, fieldInit) {
      function cancel(meta) { return instance.cancel(meta || {}); }
      function clear(meta) {
        if (destroyed || CapabilityController.mutationLocked(opts)) return false;
-       var changed = !!draft.value;
-       instance.replacePickerCommittedValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+       var changed = !!draft.value || !!draft.draftValue || draft.rawInputActive || draft.hasPreview;
+       var cleared = instance.replacePickerCommittedValue(null, Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
+       if (cleared !== false && field && field.getState().open) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
        syncField(false);
        var payload = { value: null, reason: meta && meta.reason || 'clear', colorPicker: api };
        if (Utils.isFunction(opts.onClear)) opts.onClear(payload);
@@ -409,6 +410,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var canonical = normalizeModel(value);
        if (canonical === undefined) return false;
        var result = instance.replacePickerCommittedValue(canonical, Utils.assignOwn({ source: 'api', reason: 'set-value' }, meta || {}));
+       if (result !== false && field && field.getState().open) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
        syncPanelFromModel(canonical || seedValue(), 'set-value-sync');
        syncField(false); return result;
      }
@@ -471,7 +473,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        draft.clearRawInput({ silent:true, source:detail.source, reason:'mode-raw-input-clear' });
        var changed = open ? draft.setDraft(converted, detail) : instance.replacePickerCommittedValue(converted, detail);
        if (changed !== false && open && opts.needConfirm !== true) {
-         instance.commit({ source:detail.source, reason:'mode-commit', originalEvent:detail.originalEvent || null });
+         var modeCommitted = instance.commit({ source:detail.source, reason:'mode-commit', originalEvent:detail.originalEvent || null });
+         if (modeCommitted !== false) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
        }
        syncPanelFromModel(converted, 'mode-sync'); syncField(open); return api;
      }

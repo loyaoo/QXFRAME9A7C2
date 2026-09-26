@@ -267,7 +267,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function cancel(meta) { return instance.cancel(meta || {}); }
   function clear(meta) {
     if (destroyed || CapabilityController.mutationLocked(opts)) return false;
-    var changed = hasValue(draft.value);
+    var changed = hasValue(draft.value) || hasValue(draft.draftValue) || draft.rawInputActive || draft.hasPreview;
     instance.replacePickerCommittedValue(emptyValue(), Utils.assignOwn({ source: 'api', reason: 'clear' }, meta || {}));
     activeRangePart = 0;
     syncPanel('time-picker-clear-sync');

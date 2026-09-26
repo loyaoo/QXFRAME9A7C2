@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
-Status: FIXING_CONFIRMED_TRANSIENT_EDGE
-Task progress: 80%
+Status: IMPLEMENTED_AWAITING_EXACT_HEAD_CI
+Task progress: 85%
 Scope:
 - Do not treat the migration handbook as infallible; preserve correct shipped behavior and use a single coherent Picker-family rule based on interaction semantics.
 - Closed control/projected value shows committed value only.
@@ -45,9 +45,9 @@ Baseline:
 - latest main CI + Pages: #568 / `36158000520` success
 - open PRs at task start: none
 Next exact step:
-1. push the Picker-family final-value replacement helper and transient-channel regressions to PR #115.
-2. rerun exact-head release + strict Chromium verification.
-3. merge only after the new head is green.
+1. run exact-head release + strict Chromium verification for the final PR #115 head.
+2. fix only reproducible failures from this exact head; do not broaden scope.
+3. merge after green.
 4. verify main CI + Pages, then mark this task DONE_MERGED_VERIFIED.
 
 
