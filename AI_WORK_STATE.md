@@ -7,17 +7,17 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-25
+- Last checkpoint date: 2026-09-26
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `898be09e28d7c7ddcbb9b6af7dafc70385a54be5` (PR #114 squash merge).
+- Last code-affecting main commit: `18a276417a2331b889d3994931f3effb82d9facd` (PR #115 squash merge).
 - Current branch: `main`
-- Open PRs at this checkpoint: none after PR #114 merge; if Git differs, trust Git
+- Open PRs at this checkpoint: none after PR #115 merge; if Git differs, trust Git
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green code PR CI: #565 / `36156818440` (PR #114 exact-head `0b51167239850bcf7df73c3ddbe3a968cf61c608`)
-- Latest green main CI + Pages: #567 / `36157349913` (`main@8e34553795c17e7a38413d22c0a251dfff14b223`, includes PR #114 code lineage)
+- Latest green code PR CI: #572 / `36203814588` (PR #115 exact-head `21a942bfb64b4b9f1fd505626cacee659b699091`)
+- Latest green main CI + Pages: #573 / `36204025514` (`main@18a276417a2331b889d3994931f3effb82d9facd`, PR #115 code lineage; release + deploy-pages success)
 - Overall handbook implementation progress: 100% implementation complete; historical-regression remediation and the pre-production hotpath pass are merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
 - Current Phase: post-hotpath final acceptance / newly confirmed findings only
 - Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
-Status: TEST_FIX_AWAITING_EXACT_HEAD_CI
-Task progress: 90%
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
 Scope:
 - Do not treat the migration handbook as infallible; preserve correct shipped behavior and use a single coherent Picker-family rule based on interaction semantics.
 - Closed control/projected value shows committed value only.
@@ -44,11 +44,23 @@ Baseline:
 - base main: `37ae0b84f5de4b12e9552d789586192df77a4527`
 - latest main CI + Pages: #568 / `36158000520` success
 - open PRs at task start: none
+Implementation evidence:
+- PickerComponent now owns one visual projection rule: closed => committed; open => rawInput -> preview -> draft -> committed.
+- needConfirm controls commit timing only; it no longer decides whether the control/valueTarget shows the live draft.
+- built-in Control and renderControl:false authored projection now follow the same open-session visual value.
+- DatePicker multiple add/remove participates in the popup draft transaction and rolls back on Cancel/Escape when confirmation is required.
+- ColorPicker solid/gradient mode changes convert the current draft, do not bypass needConfirm, and restore/advance mode baselines correctly across cancel, commit, clear and external final setValue.
+- Picker-family final-value replacement releases rawInput/preview before replacing committed+draft, without changing global ValueController semantics.
+- clear visibility and clear() changed-result semantics follow the current visual/session value, including draft-only values.
+- the handbook was corrected where the old draftValueTarget/controlled checklist contradicted the accepted interaction model.
+Verification:
+- PR #115 first implementation head `d2797d60003603c08dd27eda75e26e460be99492`: CI #569 / `36202979518` success.
+- PR #115 final exact-head `21a942bfb64b4b9f1fd505626cacee659b699091`: CI #572 / `36203814588` success, including strict Chromium browser regressions, full release verification, npm artifact, and standalone dist/docs build.
+- PR #115 squash merged as `18a276417a2331b889d3994931f3effb82d9facd`.
+- main CI #573 / `36204025514`: release success and deploy-pages success on the merged code.
 Next exact step:
-1. rerun exact-head release + strict Chromium verification after correcting the regression test to inspect ValueController.snapshot() rather than non-public Picker getState fields.
-2. merge after green.
-3. verify main CI + Pages.
-4. mark this task DONE_MERGED_VERIFIED and return to newly confirmed findings only.
+1. Resume `ASTRA-HIGH-FINAL-ACCEPTANCE` only for newly confirmed findings.
+2. Do not reopen this task unless a new reproducible regression contradicts the verified browser coverage.
 
 
 ### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
