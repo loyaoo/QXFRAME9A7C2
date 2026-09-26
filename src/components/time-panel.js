@@ -18,6 +18,93 @@ DOMFactory = Object.freeze({createDefaultDOM:createDefaultDOM,blueprint:blueprin
 
 var own = Utils.own;
 
+function disabledSetFor(options, kind, current) {
+  var key = kind === 'hour' ? 'disabledHours' : (kind === 'minute' ? 'disabledMinutes' : 'disabledSeconds');
+  var source = options[key];
+  if (typeof source === 'function') source = source(TimeUnit.clone(current));
+  return Array.isArray(source) ? source.map(Number) : [];
+}
+function optionItemsFor(options, kind, max, step, current) {
+  var disabled = disabledSetFor(options, kind, current);
+  var output = [];
+  var normalizedStep = Math.max(1, Math.floor(Number(step) || 1));
+  for (var i = 0; i <= max; i += normalizedStep) {
+    var isDisabled = disabled.indexOf(i) >= 0;
+    if (options.hideDisabledOptions === true && isDisabled) continue;
+    output.push({ key: kind + ':' + i, value: String(i), label: TimeUnit.pad(i), disabled: isDisabled });
+  }
+  return output;
+}
+function hour12ItemsFor(options, current) {
+  var meridiem = TimeUnit.meridiem(current.hour);
+  var disabled = disabledSetFor(options, 'hour', current);
+  var output = [];
+  var step = Math.max(1, Math.floor(Number(options.hourStep) || 1));
+  for (var h = 1; h <= 12; h += step) {
+    var hour24 = TimeUnit.to24(h, meridiem);
+    var isDisabled = disabled.indexOf(hour24) >= 0;
+    if (options.hideDisabledOptions === true && isDisabled) continue;
+    output.push({ key: 'hour12:' + h, value: String(h), label: TimeUnit.pad(h), disabled: isDisabled });
+  }
+  return output;
+}
+function availableColumnsFor(options, current) {
+  var columns = [];
+  if (options.use12Hours === true) {
+    columns.push({ key:'hour', label:'Hour', items:hour12ItemsFor(options, current) });
+    columns.push({ key:'meridiem', label:'AM/PM', items:[
+      { key:'meridiem:AM', value:'AM', label:'AM' },
+      { key:'meridiem:PM', value:'PM', label:'PM' }
+    ] });
+  } else columns.push({ key:'hour', label:'Hour', items:optionItemsFor(options, 'hour', 23, options.hourStep, current) });
+  columns.push({ key:'minute', label:'Minute', items:optionItemsFor(options, 'minute', 59, options.minuteStep, current) });
+  if (options.showSecond !== false) columns.push({ key:'second', label:'Second', items:optionItemsFor(options, 'second', 59, options.secondStep, current) });
+  return columns;
+}
+function wheelValueFor(options, current) {
+  var output = [];
+  if (options.use12Hours === true) output.push(String(TimeUnit.displayHour(current.hour)), TimeUnit.meridiem(current.hour));
+  else output.push(String(current.hour));
+  output.push(String(current.minute));
+  if (options.showSecond !== false) output.push(String(current.second));
+  return output;
+}
+function valueFromWheelFor(options, next, current) {
+  var cursor = 0;
+  var result = TimeUnit.clone(current);
+  if (options.use12Hours === true) {
+    var hour12 = Number(next[cursor++]);
+    var meridiem = String(next[cursor++] || TimeUnit.meridiem(current.hour));
+    result.hour = TimeUnit.to24(hour12, meridiem);
+  } else result.hour = TimeUnit.clamp(Number(next[cursor++]), 0, 23);
+  result.minute = TimeUnit.clamp(Number(next[cursor++]), 0, 59);
+  if (options.showSecond !== false) result.second = TimeUnit.clamp(Number(next[cursor++]), 0, 59);
+  return result;
+}
+function firstEnabledValue(items, target) {
+  var wanted = target === undefined || target === null ? null : String(target);
+  var fallback = null;
+  for (var i = 0; i < items.length; i += 1) {
+    if (items[i].disabled === true) continue;
+    if (fallback === null) fallback = items[i].value;
+    if (wanted !== null && String(items[i].value) === wanted) return items[i].value;
+  }
+  return fallback;
+}
+function normalizeAvailableValue(next, options) {
+  var current = TimeUnit.normalizeClamped(next);
+  var opts = options || {};
+  for (var pass = 0; pass < 3; pass += 1) {
+    var columns = availableColumnsFor(opts, current);
+    var requested = wheelValueFor(opts, current);
+    var selected = columns.map(function (column, index) { return firstEnabledValue(column.items || [], requested[index]); });
+    var normalized = valueFromWheelFor(opts, selected, current);
+    if (TimeUnit.equal(normalized, current)) return current;
+    current = normalized;
+  }
+  return current;
+}
+
 function create(options) {
   var incoming = options || {};
   var itemHeightExplicit = own(incoming, 'itemHeight');
@@ -41,7 +128,7 @@ function create(options) {
   if (!itemHeightExplicit) opts.itemHeight = WheelMetrics.itemHeight(opts.size);
   var doc = opts.document || (opts.container && opts.container.ownerDocument) || globalThis.document;
   var emitter = Events.createEmitter();
-  var value = TimeUnit.normalizeClamped(opts.value !== undefined ? opts.value : opts.defaultValue);
+  var value = normalizeAvailableValue(opts.value !== undefined ? opts.value : opts.defaultValue, opts);
   var destroyed = false;
   var root = null;
   var columnsHost = null;
@@ -55,49 +142,10 @@ function create(options) {
     if (!destroyed) refreshWheel(reason || 'time-panel-structural-idle');
   });
 
-  function disabledSet(kind, current) {
-    var key = kind === 'hour' ? 'disabledHours' : (kind === 'minute' ? 'disabledMinutes' : 'disabledSeconds');
-    var source = opts[key];
-    if (typeof source === 'function') source = source(TimeUnit.clone(current));
-    return Array.isArray(source) ? source.map(Number) : [];
-  }
-  function items(kind, max, step, current) {
-    var disabled = disabledSet(kind, current);
-    var output = [];
-    var normalizedStep = Math.max(1, Math.floor(Number(step) || 1));
-    for (var i = 0; i <= max; i += normalizedStep) {
-      var isDisabled = disabled.indexOf(i) >= 0;
-      if (opts.hideDisabledOptions === true && isDisabled) continue;
-      output.push({ key: kind + ':' + i, value: String(i), label: TimeUnit.pad(i), disabled: isDisabled });
-    }
-    return output;
-  }
-  function hour12Items(current) {
-    var meridiem = TimeUnit.meridiem(current.hour);
-    var disabled = disabledSet('hour', current);
-    var output = [];
-    var step = Math.max(1, Math.floor(Number(opts.hourStep) || 1));
-    for (var h = 1; h <= 12; h += step) {
-      var hour24 = TimeUnit.to24(h, meridiem);
-      var isDisabled = disabled.indexOf(hour24) >= 0;
-      if (opts.hideDisabledOptions === true && isDisabled) continue;
-      output.push({ key: 'hour12:' + h, value: String(h), label: TimeUnit.pad(h), disabled: isDisabled });
-    }
-    return output;
-  }
-  function buildColumns() {
-    var columns = [];
+  function buildColumns(currentValue) {
+    var columns = availableColumnsFor(opts, currentValue || value);
     columnIndex = Object.create(null);
-    function push(column) { columnIndex[column.key] = columns.length; columns.push(column); }
-    if (opts.use12Hours === true) {
-      push({ key: 'hour', label: 'Hour', items: hour12Items(value) });
-      push({ key: 'meridiem', label: 'AM/PM', items: [
-        { key: 'meridiem:AM', value: 'AM', label: 'AM' },
-        { key: 'meridiem:PM', value: 'PM', label: 'PM' }
-      ] });
-    } else push({ key: 'hour', label: 'Hour', items: items('hour', 23, opts.hourStep, value) });
-    push({ key: 'minute', label: 'Minute', items: items('minute', 59, opts.minuteStep, value) });
-    if (opts.showSecond !== false) push({ key: 'second', label: 'Second', items: items('second', 59, opts.secondStep, value) });
+    columns.forEach(function (column, index) { columnIndex[column.key] = index; });
     return columns;
   }
   function renderWheelItem(item, context) {
@@ -109,27 +157,10 @@ function create(options) {
     var current = subType === 'meridiem' ? item.value : Number(item.value);
     return opts.cellRender(current, Object.freeze({ originNode: origin, subType: subType, timePanel: api }));
   }
-  function wheelValue() {
-    var output = [];
-    if (opts.use12Hours === true) {
-      output.push(String(TimeUnit.displayHour(value.hour)), TimeUnit.meridiem(value.hour));
-    } else output.push(String(value.hour));
-    output.push(String(value.minute));
-    if (opts.showSecond !== false) output.push(String(value.second));
-    return output;
-  }
-  function valueFromWheel(next) {
-    var cursor = 0;
-    var result = TimeUnit.clone(value);
-    if (opts.use12Hours === true) {
-      var hour12 = Number(next[cursor++]);
-      var meridiem = String(next[cursor++] || TimeUnit.meridiem(value.hour));
-      result.hour = TimeUnit.to24(hour12, meridiem);
-    } else result.hour = TimeUnit.clamp(Number(next[cursor++]), 0, 23);
-    result.minute = TimeUnit.clamp(Number(next[cursor++]), 0, 59);
-    if (opts.showSecond !== false) result.second = TimeUnit.clamp(Number(next[cursor++]), 0, 59);
-    return result;
-  }
+  function wheelValue(currentValue) { return wheelValueFor(opts, currentValue || value); }
+  function valueFromWheel(next, currentValue) { return valueFromWheelFor(opts, next, currentValue || value); }
+  function normalizeAvailable(next) { return normalizeAvailableValue(next, opts); }
+  function hasDependentColumns() { return opts.use12Hours === true || typeof opts.disabledHours === 'function' || typeof opts.disabledMinutes === 'function' || typeof opts.disabledSeconds === 'function'; }
   function unitFromColumn(key) { return key === 'meridiem' ? 'hour' : key; }
   function hoverValue(item, detail) {
     if (!item) return null;
@@ -203,6 +234,7 @@ function create(options) {
         if (destroyed || !capabilityController.can('select')) return;
         var previous = TimeUnit.clone(value);
         value = valueFromWheel(next);
+        if (hasDependentColumns()) value = normalizeAvailable(value);
         if (TimeUnit.equal(previous, value)) return;
         var unit = unitFromColumn(detail && detail.columnKey || 'hour');
         var payload = { value: TimeUnit.clone(value), previousValue: previous, unit: unit, source: detail && detail.source || 'user', reason: detail && detail.reason || 'select', originalEvent: detail && detail.originalEvent || null, timePanel: api };
@@ -213,8 +245,7 @@ function create(options) {
         // destroy itself inside the same keyboard/pointer callback. Coalesce structural
         // refresh until interaction idle; repeated Arrow/key-repeat therefore keeps the
         // active column DOM + VirtualFocus identity stable for the whole burst.
-        var structuralDependency = opts.use12Hours === true || typeof opts.disabledHours === 'function' || typeof opts.disabledMinutes === 'function' || typeof opts.disabledSeconds === 'function';
-        if (structuralDependency) structuralRefreshScheduler.request(120, 'time-panel-dependent-columns');
+        if (hasDependentColumns()) structuralRefreshScheduler.request(120, 'time-panel-dependent-columns');
       }
     });
     wheel.bindVirtualFocus(focusController.virtualFocus, true);
@@ -229,9 +260,10 @@ function create(options) {
   }
   function refreshWheel(reason) {
     if (!wheel) return false;
+    value = normalizeAvailable(value);
     wheel.updateOptions({
-      columns: buildColumns(),
-      value: wheelValue(),
+      columns: buildColumns(value),
+      value: wheelValue(value),
       visibleItemCount: opts.visibleItemCount,
       itemHeight: opts.itemHeight,
       size: opts.size,
@@ -248,7 +280,6 @@ function create(options) {
       readOnly: opts.readOnly === true,
       loading: opts.loading === true || opts.busy === true
     });
-    wheel.refreshVisible(reason || 'time-panel-refresh');
     syncClass();
     return true;
   }
@@ -256,6 +287,7 @@ function create(options) {
     if (destroyed || !capabilityController.can('select')) return false;
     var previous = TimeUnit.clone(value);
     value[unit] = TimeUnit.clamp(Number(next), 0, unit === 'hour' ? 23 : 59);
+    value = normalizeAvailable(value);
     if (TimeUnit.equal(previous, value)) return true;
     refreshWheel('time-panel-set-' + unit);
     var payload = { value: TimeUnit.clone(value), previousValue: previous, unit: unit, source: detail && detail.source || 'api', reason: detail && detail.reason || 'select', timePanel: api };
@@ -265,7 +297,7 @@ function create(options) {
   }
   function setValue(next, meta) {
     if (destroyed) return false;
-    var normalized = TimeUnit.normalizeClamped(next); var previous = TimeUnit.clone(value); value = normalized;
+    var normalized = normalizeAvailable(next); var previous = TimeUnit.clone(value); value = normalized;
     refreshWheel('time-panel-set-value');
     if (!(meta && meta.silent) && !TimeUnit.equal(previous, value)) {
       var payload = { value: TimeUnit.clone(value), previousValue: previous, source: meta && meta.source || 'api', reason: meta && meta.reason || 'set-value', timePanel: api };
@@ -280,7 +312,7 @@ function create(options) {
     opts = mergeOptions(opts, next);
     capabilityController.updateOptions({});
     if (!itemHeightExplicit && own(next, 'size')) opts.itemHeight = WheelMetrics.itemHeight(opts.size);
-    if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) value = TimeUnit.normalizeClamped(next.value);
+    value = normalizeAvailable(Object.prototype.hasOwnProperty.call(Object(next), 'value') ? next.value : value);
     structuralRefreshScheduler.cancel();
     refreshWheel('time-panel-options');
     if (focusController) focusController.setDisabled(opts.disabled === true);
@@ -334,4 +366,4 @@ function create(options) {
   return api;
 }
 
-export const TimePanel = Object.freeze({ create, normalize:TimeUnit.normalizeClamped, format:TimeUnit.format24, createDefaultDOM: DOMFactory.createDefaultDOM });
+export const TimePanel = Object.freeze({ create, normalize:TimeUnit.normalizeClamped, normalizeAvailable:normalizeAvailableValue, format:TimeUnit.format24, createDefaultDOM: DOMFactory.createDefaultDOM });

@@ -71,16 +71,25 @@ function setupTimePickerRuntime(instance, fieldInit) {
   function hasValue(value) { return selection === 'single' ? !!value : !!(value && (value[0] || value[1])); }
   function complete(value) { return selection === 'single' ? !!value : !!(value && value[0] && value[1]); }
   function sameValue(a, b) { return ValueEquality.deep(a, b); }
-  function normalizeValue(value) {
+  function normalizeSelectableTime(value, partIndex) {
+    if (!value) return null;
+    return TimePanel.normalizeAvailable(value, resolvedPanelOptions(value, partIndex));
+  }
+  function normalizeValue(value, meta) {
+    var fromPanel = !!(meta && meta.panelOrigin === true);
     if (selection === 'single') {
       var one = TimeUnit.normalizeStrict(value);
       if (value !== null && value !== undefined && value !== '' && !one) throw new TypeError('[QXFRAME9A7C2] TimePicker value is invalid.');
-      return one;
+      return one && !fromPanel ? normalizeSelectableTime(one, 0) : one;
     }
     if (value === null || value === undefined || value === '') return [null, null];
     if (!Array.isArray(value) || value.length !== 2) throw new TypeError('[QXFRAME9A7C2] TimePicker range value must be a two-item array.');
     var start = TimeUnit.normalizeStrict(value[0]), end = TimeUnit.normalizeStrict(value[1]);
     if ((value[0] !== null && value[0] !== undefined && value[0] !== '' && !start) || (value[1] !== null && value[1] !== undefined && value[1] !== '' && !end)) throw new TypeError('[QXFRAME9A7C2] TimePicker range contains an invalid value.');
+    if (!fromPanel) {
+      if (start) start = normalizeSelectableTime(start, 0);
+      if (end) end = normalizeSelectableTime(end, 1);
+    }
     if (opts.order !== false && start && end && TimeUnit.seconds(start) > TimeUnit.seconds(end)) return [end, start];
     return [start, end];
   }
@@ -208,7 +217,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (Utils.isFunction(opts.onPreviewChange)) opts.onPreviewChange(previewValue, payload);
     emitter.emit('previewChange', payload);
   }
-  function resolvedPanelOptions(value) {
+  function resolvedPanelOptions(value, partIndex) {
     var resolved = {
       showSecond: opts.showSecond !== false,
       use12Hours: opts.use12Hours === true,
@@ -228,7 +237,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       size: opts.size
     };
     if (Utils.isFunction(opts.disabledTime)) {
-      var extra = opts.disabledTime(TimeUnit.clone(value), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? activeRangePart : null, timePicker: api })) || {};
+      var extra = opts.disabledTime(TimeUnit.clone(value), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? (partIndex === 0 || partIndex === 1 ? partIndex : activeRangePart) : null, timePicker: api })) || {};
       if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
         ['disabledHours','disabledMinutes','disabledSeconds','hideDisabledOptions'].forEach(function (key) { if (own(extra, key)) resolved[key] = extra[key]; });
       }
@@ -291,7 +300,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
         selectedPart = activeRangePart === 0 ? 1 : 0;
       }
     }
-    draft.setDraft(next, { source: detail.source, reason: 'time-select' });
+    draft.setDraft(next, { source: detail.source, reason: 'time-select', panelOrigin: detail.panelOrigin === true, activeRangePart: selectedPart });
     if (field && field.getState().open) syncField(true);
     var payload = { selectedValue: TimeUnit.clone(value), value: cloneValue(draft.draftValue), activeRangePart: selectedPart, unit: detail.unit, source: detail.source, reason: detail.reason, timePicker: api };
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(TimeUnit.clone(value), payload);

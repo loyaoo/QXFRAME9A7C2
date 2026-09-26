@@ -1145,10 +1145,12 @@ function create(options) {
       var key = rowKey(detail.target);
       var row = rowByKey(key);
       var previousPointerKey = pointerKey;
+      var nextPointerKey = (!isComponentDisabled() && row && !isRowDisabled(row)) ? key : null;
       interactionSource = 'pointer';
-      pointerKey = (!isComponentDisabled() && row && !isRowDisabled(row)) ? key : null;
+      if (nextPointerKey === previousPointerKey) return;
+      pointerKey = nextPointerKey;
       syncRowStates();
-      if (pointerKey !== previousPointerKey) emitHover({ reason: 'pointermove', originalEvent: detail.event });
+      emitHover({ reason: 'pointermove', originalEvent: detail.event });
     });
     delegation.on('pointerdown', '.qxframe9a7c2-item-collection-item', function (detail) {
       if (isComponentDisabled() || (detail.event && detail.event.button !== undefined && detail.event.button !== 0)) return;

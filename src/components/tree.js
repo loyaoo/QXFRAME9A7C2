@@ -905,15 +905,17 @@ function setupTreeRuntime(instance) {
           if (hasOwn(next, 'checkedKeys')) checkedSelection.set(Array.isArray(opts.checkedKeys) ? opts.checkedKeys.map(String) : [], { silent: true, reason: 'options-checked' });
           if (hasOwn(next, 'loadedKeys')) loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String));
           pruneStateAfterModelChange();
+          var nextRows = rows();
           var listOptions = {
-            items: rows(), multiple: opts.multiple === true, selectable: opts.selectable !== false,
+            items: nextRows, multiple: opts.multiple === true, selectable: opts.selectable !== false,
             selectionAppearance: opts.selectionAppearance || 'highlight', size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true,
             virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, classes: opts.classes, styles: opts.styles,
             getItemState: function (row, context) { return { open: isExpanded(row.key), descendantSelected: selectableDescendant(row.record, context && context.values) }; }
           };
           if (hasOwn(next, 'value')) listOptions.value = opts.value;
           list.updateOptions(listOptions);
-          refresh('options');
+          if (root) root.classList.toggle('is-searching', !!searchState.query);
+          syncTreeRows();
           if (opts.expandSelectedAncestors === true && list.getState().values.length) restoreSelectedExpansion();
           return api;
         }

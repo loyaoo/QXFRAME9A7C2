@@ -117,6 +117,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
      var draft = null;
      var api = instance;
      var activeStopIndex = 0;
+     var resetMode = mode;
+     var resetModel = null;
      var sessionModeSnapshot = null;
      var sessionStopSnapshot = 0;
      var modeHost = null;
@@ -242,6 +244,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        initialCanonical = isGradient(initialRaw) ? normalizeGradient(initialRaw) : canonicalSolid(initialRaw);
        if (mode === 'gradient' && !isGradient(initialCanonical)) initialCanonical = seedGradient(initialCanonical);
      }
+     resetModel = cloneModel(initialCanonical);
 
      field = PickerField.create({
        container: opts.container, headless: opts.headless === true, renderControl: opts.renderControl !== false, reference: opts.reference, triggerTarget: opts.triggerTarget, valueTarget: opts.valueTarget, draftValueTarget: opts.draftValueTarget, inputTarget: opts.inputTarget, formTarget: opts.formTarget, formField: opts.formField, committedValue: initialCanonical, serializeValue: fieldDisplay, elements: opts.elements, createDOM: opts.createDOM,
@@ -417,6 +420,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      function setPickerValue(value, meta) {
        if (destroyed) return false;
        if (isGradient(value) && !gradientEnabled) throw new TypeError('[QXFRAME9A7C2] ColorPicker gradient support is disabled; enable it before setting a gradient value.');
+       if (isGradient(value) && mode !== 'gradient') { mode = 'gradient'; opts.mode = mode; activeStopIndex = 0; }
        var canonical = normalizeModel(value);
        if (canonical === undefined) return false;
        var result = draft.setDraft(canonical, Utils.assignOwn({ source: 'api', reason: 'set-picker-value' }, meta || {}));
@@ -451,10 +455,12 @@ function setupColorPickerRuntime(instance, fieldInit) {
        panel.setFormat(nextFormat); opts.format = nextFormat;
        var committedAfter = canonicalizeModelForFormat(committedBefore);
        var draftAfter = canonicalizeModelForFormat(draftBefore);
+       resetModel = canonicalizeModelForFormat(resetModel);
        draft.clearPreview({ silent:true, source:'format', reason:'format-preview-clear' });
        draft.clearRawInput({ silent:true, source:'format', reason:'format-raw-input-clear' });
        draft.setValue(committedAfter, { source: 'format', reason: 'format-value' });
        draft.setDraft(draftAfter, { silent: true, source: 'format', reason: 'format-draft' });
+       draft.updateOptions({ resetValue:cloneModel(resetModel) });
        syncPanelFromModel(draftAfter || committedAfter || seedValue(), 'format-panel');
        syncField(field.getState().open); return api;
      }
@@ -462,17 +468,19 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var nextMode = normalizeMode(value);
        if (destroyed || nextMode === mode) return api;
        if (nextMode === 'gradient' && !gradientEnabled) throw new TypeError('[QXFRAME9A7C2] ColorPicker gradient support is disabled; pass gradient:true before switching to gradient mode.');
+       var detail = Utils.assignOwn({ source:'api', reason:'mode-change' }, meta || {});
        var open = !!(field && field.getState().open);
-       var current = cloneModel((open ? draft.draftValue : draft.value) || seedValue());
+       var sessionDraft = open && detail.final !== true;
+       var current = cloneModel((sessionDraft ? draft.draftValue : draft.value) || seedValue());
        var converted;
        if (nextMode === 'gradient') converted = isGradient(current) ? current : seedGradient(current || seedSolid());
        else converted = isGradient(current) ? (activeColor(current) || seedSolid()) : current;
-       var detail = Utils.assignOwn({ source:'api', reason:'mode-change' }, meta || {});
        mode = nextMode; opts.mode = nextMode; activeStopIndex = 0;
        draft.clearPreview({ silent:true, source:detail.source, reason:'mode-preview-clear' });
        draft.clearRawInput({ silent:true, source:detail.source, reason:'mode-raw-input-clear' });
-       var changed = open ? draft.setDraft(converted, detail) : instance.replacePickerCommittedValue(converted, detail);
-       if (changed !== false && open && opts.needConfirm !== true) {
+       var changed = sessionDraft ? draft.setDraft(converted, detail) : instance.replacePickerCommittedValue(converted, detail);
+       if (changed !== false && open && !sessionDraft) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
+       if (changed !== false && sessionDraft && opts.needConfirm !== true) {
          var modeCommitted = instance.commit({ source:detail.source, reason:'mode-commit', originalEvent:detail.originalEvent || null });
          if (modeCommitted !== false) { sessionModeSnapshot = mode; sessionStopSnapshot = activeStopIndex; }
        }
@@ -692,7 +700,16 @@ function setupColorPickerRuntime(instance, fieldInit) {
        field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: fieldPrefixContent(), suffix: fieldSuffixContent(), required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
        if (opts.renderControl !== false && opts.headless !== true) { var fieldRoot = field.getRootElement(); fieldRoot.classList.toggle('is-swatch-only', opts.swatchOnly === true); fieldRoot.classList.toggle('is-swatch-start', String(opts.indicatorPlacement || 'start') === 'start'); fieldRoot.classList.toggle('is-swatch-end', String(opts.indicatorPlacement || 'start') === 'end'); }
        panel.updateOptions({ format: opts.format, showAlpha: opts.showAlpha !== false, presets: Array.isArray(opts.presets) ? opts.presets.slice() : [], disabled: opts.disabled === true, readOnly: opts.readOnly === true, keyboard: opts.keyboard !== false, eyeDropper: opts.eyeDropper !== false });
-       if (nextMode !== mode) setMode(nextMode, { silent: true, source: 'options' });
+       if (nextMode !== mode) {
+         setMode(nextMode, { silent: true, source: 'options', reason:'options-mode', final:true });
+         resetMode = mode;
+         if (resetModel) {
+           resetModel = mode === 'gradient'
+             ? (isGradient(resetModel) ? cloneGradient(resetModel) : seedGradient(resetModel))
+             : (isGradient(resetModel) ? ((resetModel.stops[0] && resetModel.stops[0].color) || seedSolid()) : resetModel);
+           draft.updateOptions({ resetValue:cloneModel(resetModel) });
+         }
+       }
        if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled', preserveMode: own(next, 'mode') });
        if (own(next, 'format')) setFormat(opts.format);
        rebuildFooter(); syncField(field.getState().open); renderGradientEditor(visualValue(field.getState().open));
@@ -734,6 +751,11 @@ function setupColorPickerRuntime(instance, fieldInit) {
    
      var formControl = field && field.getControl ? field.getControl() : null;
      if (formControl && formControl.onFormReset) formControl.onFormReset(function () {
+       mode = resetMode;
+       opts.mode = mode;
+       activeStopIndex = 0;
+       sessionModeSnapshot = field && field.getState().open ? mode : null;
+       sessionStopSnapshot = 0;
        draft.reset({ silent: true, source: 'form', reason: 'reset' });
        syncPanelFromModel(draft.value || seedValue(), 'form-reset');
        syncField(false);

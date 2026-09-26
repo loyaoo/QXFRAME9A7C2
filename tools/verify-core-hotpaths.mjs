@@ -93,4 +93,24 @@ assert.equal(ValueEquality.deep(/a/g,/a/i),false);
 assert.equal(fs.existsSync(new URL('../src/core/stateController.js',import.meta.url)),false);
 assert.equal(fs.existsSync(new URL('../src/core/valueDraft.js',import.meta.url)),false);
 
-console.log(JSON.stringify({ok:true,selection:'order-preserved-linear-diff',tree:'internal-no-copy',virtualizer:'key-index-anchor',responsiveOverflow:'candidate-equivalent',table:'resolver-once-and-selection-order',ownership:'lightweight-read',valueEquality:'map-set-regexp-correct',compatAliasesRemoved:true}));
+const timePanelSource=fs.readFileSync(new URL('../src/components/time-panel.js',import.meta.url),'utf8');
+assert.equal(timePanelSource.includes("wheel.refreshVisible(reason || 'time-panel-refresh')"),false,'TimePanel must not trigger a second visible refresh after WheelPanel.updateOptions already rebuilt/refreshed.');
+assert.ok(timePanelSource.includes('normalizeAvailable:normalizeAvailableValue'),'TimePanel must expose the same pure selectable-time normalizer used by picker parents.');
+
+const datePickerSource=fs.readFileSync(new URL('../src/components/date-picker.js',import.meta.url),'utf8');
+assert.equal(datePickerSource.includes("timePanel.refresh('date-time-sync')"),false,'DatePicker time sync must not stack updateOptions/setValue/refresh work.');
+assert.ok(datePickerSource.includes('TimePanel.normalizeAvailable('),'DatePicker time composition must share TimePanel canonicalization.');
+
+const treeSource=fs.readFileSync(new URL('../src/components/tree.js',import.meta.url),'utf8');
+assert.equal(treeSource.includes("list.updateOptions(listOptions);\n          refresh('options');"),false,'Tree applyOptions must not immediately rebuild the same rows twice.');
+
+const itemCollectionSource=fs.readFileSync(new URL('../src/components/item-collection.js',import.meta.url),'utf8');
+assert.ok(itemCollectionSource.includes('if (nextPointerKey === previousPointerKey) return;'),'ItemCollection pointermove must skip O(N) row-state projection while remaining on the same row.');
+
+const controlSource=fs.readFileSync(new URL('../src/components/control.js',import.meta.url),'utf8');
+assert.ok(controlSource.includes('formSyncReady'),'Control must cache committed FormBridge projection instead of rebuilding native fields on visual-only syncView calls.');
+
+const scrollSource=fs.readFileSync(new URL('../src/components/scroll.js',import.meta.url),'utf8');
+assert.ok(scrollSource.includes('ownerRect: ownerRect'),'Scroll snap projection must reuse one viewport rect per projection pass.');
+
+console.log(JSON.stringify({ok:true,selection:'order-preserved-linear-diff',tree:'internal-no-copy',virtualizer:'key-index-anchor',responsiveOverflow:'candidate-equivalent',table:'resolver-once-and-selection-order',ownership:'lightweight-read',valueEquality:'map-set-regexp-correct',compatAliasesRemoved:true,hotpaths:{timePanel:true,datePickerTime:true,treeOptions:true,itemPointer:true,controlFormBridge:true,scrollSnap:true}}));

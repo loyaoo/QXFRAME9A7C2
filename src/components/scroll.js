@@ -454,16 +454,18 @@ function setupScroll(instance) {
     }
   }
     
-  function targetScrollForElement(element, axis, align, extraOffset) {
+  function targetScrollForElement(element, axis, align, extraOffset, geometry) {
     assertScrollTarget(element);
     var point = ScrollVisibility.calculateElementScroll(viewport, element, {
       axis: axis,
       align: align,
       offset: extraOffset,
-      currentX: readScrollX(),
-      currentY: Number(viewport.scrollTop) || 0,
-      maxX: maxScrollX(),
-      maxY: Math.max(0, (Number(viewport.scrollHeight) || 0) - (Number(viewport.clientHeight) || 0))
+      currentX: geometry && geometry.currentX !== undefined ? geometry.currentX : readScrollX(),
+      currentY: geometry && geometry.currentY !== undefined ? geometry.currentY : Number(viewport.scrollTop) || 0,
+      maxX: geometry && geometry.maxX !== undefined ? geometry.maxX : maxScrollX(),
+      maxY: geometry && geometry.maxY !== undefined ? geometry.maxY : Math.max(0, (Number(viewport.scrollHeight) || 0) - (Number(viewport.clientHeight) || 0)),
+      ownerRect: geometry && geometry.ownerRect ? geometry.ownerRect : undefined,
+      targetRect: geometry && geometry.targetRect ? geometry.targetRect : undefined
     });
     return axis === 'x' ? point.x : point.y;
   }
@@ -481,8 +483,17 @@ function setupScroll(instance) {
     var current = axis === 'x' ? metrics.x : metrics.y;
     var best = -1;
     var bestDistance = Infinity;
+    var ownerRect = viewport.getBoundingClientRect ? viewport.getBoundingClientRect() : null;
     targets.forEach(function (element, index) {
-      var candidate = targetScrollForElement(element, axis, opts.snapAlign, 0);
+      var geometry = {
+        ownerRect: ownerRect,
+        currentX: metrics.x,
+        currentY: metrics.y,
+        maxX: metrics.maxX,
+        maxY: metrics.maxY,
+        targetRect: element.getBoundingClientRect ? element.getBoundingClientRect() : undefined
+      };
+      var candidate = targetScrollForElement(element, axis, opts.snapAlign, 0, geometry);
       var distance = Math.abs(candidate - current);
       if (distance < bestDistance) {
         bestDistance = distance;

@@ -327,7 +327,11 @@ syncField(false);
 var formControl = field && field.getControl ? field.getControl() : null;
 if (formControl && formControl.onFormReset) formControl.onFormReset(function () {
   draft.reset({ silent: true, source: 'form', reason: 'reset' });
-  panel.setValue(draft.value || [], { silent: true, source: 'form', reason: 'reset' }); syncField(false, { panelSynced: true });
+  panel.setValue(draft.value || [], { silent: true, source: 'form', reason: 'reset' });
+  var normalizedReset = panel.getState().value;
+  draft.setValue(normalizedReset, { silent:true, source:'form', reason:'reset-normalize' });
+  panel.setValue(normalizedReset, { silent:true, source:'form', reason:'reset-final' });
+  syncField(false, { panelSynced: true });
 });
 if (opts.open === true) field.open('initial');
 return Object.freeze({ root:field.getRootElement(), panel:field.getPanelElement(), field:field, wheelPanel:panel, setValue:setValue, clear:clear, applyOptions:applyOptions, getState:getState, dispose:disposeRuntime });
