@@ -22,6 +22,7 @@ import { EmptyProjection } from '../core/emptyProjection.js';
 import { Virtualizer } from '../core/virtualizer.js';
 import { FocusController } from '../core/focusController.js';
 import { InteractionModality } from '../core/interactionModality.js';
+import { FocusOrigin } from '../core/focusOrigin.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { PointerSession } from '../core/pointerSession.js';
 import { ReorderInteraction } from '../core/reorderInteraction.js';
@@ -924,10 +925,11 @@ function setupTable(instance) {
     var detail = resolveDataCellContext(key);
     if (!detail) return false;
     editTransaction = { key: String(key), status: 'begin', initialValue: editorValue(target), draftValue: editorValue(target), target: target, row: detail.entry.item, context: detail.context, column: detail.column, error: null, reason: reason || 'edit-begin', epoch: ++editTransactionEpoch };
+    var editSource = String(reason || '').indexOf('pointer') >= 0 ? 'pointer' : (event && /^key/.test(String(event.type || '')) ? 'keyboard' : (focusController && focusController.getState().virtualFocusOrigin === 'keyboard' ? 'keyboard' : 'programmatic'));
     if (focusController) {
-      focusController.setActiveRegion('cells', { source:'keyboard', reason:reason || 'edit-begin', originalEvent:event || null });
-      focusController.beginEdit(target, { source:'table', reason:reason || 'edit-begin' });
-    }
+      focusController.setActiveRegion('cells', { source:editSource, reason:reason || 'edit-begin', originalEvent:event || null });
+      focusController.beginEdit(target, { source:editSource, origin:editSource, reason:reason || 'edit-begin', originalEvent:event || null });
+    } else FocusOrigin.prepare(target, editSource, { source:'table-edit-begin' });
     if (!DOM.focusElement(target, { preventScroll: true }) || doc.activeElement !== target) { if (focusController) focusController.endEdit({ restore:false, reason:'table-edit-focus-failed' }); editTransaction = null; return false; }
     editTransaction.status = 'draft';
     if (detail.column && typeof detail.column.onEditBegin === 'function') { try { detail.column.onEditBegin(editTransaction.draftValue, detail.entry.item, Object.freeze({ reason: reason || 'edit-begin', originalEvent: event || null, context: detail.context, instance: api })); } catch (_) {} }
@@ -1689,6 +1691,11 @@ function setupTable(instance) {
     if (typeof column.onFilterDropdownOpenChange === 'function') column.onFilterDropdownOpenChange(opened, Object.freeze({ column: column, reason: reason || 'filter-open', originalEvent: event || null, instance: api }));
   }
   function sameFilterValue(left, right) { return String(left) === String(right); }
+  function syncFilterSearchFocusVisual() {
+    var node=filterPopup&&filterPopup.querySelector?filterPopup.querySelector('.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control'):null;
+    if(node&&node.classList)node.classList.toggle('is-keyboard-focus',doc.activeElement===node&&FocusOrigin.isKeyboard(node));
+  }
+  scope.add(FocusOrigin.onChange(syncFilterSearchFocusVisual,doc));
   function openFilterPopup(reference, column, event) {
     destroyFilterPopup('table-filter-popup-replace');
     filterColumnKey = column.key;
@@ -1704,7 +1711,7 @@ function setupTable(instance) {
           if(action!=='CYCLE_REGION'||!capabilityController||!capabilityController.can('navigate'))return action==='CYCLE_REGION'?'blocked':'pass';
           var filterEvent=context.originalEvent, backward=filterEvent&&filterEvent.shiftKey===true;
           if(filterTrigger)filterTrigger.close('table-filter-f6',filterEvent);
-          DOM.focusElement(root,{preventScroll:true});
+          if (focusController) focusController.focus({preventScroll:true,origin:'keyboard',source:'table-filter-f6'}); else { FocusOrigin.prepare(root,'keyboard',{source:'table-filter-f6'}); DOM.focusElement(root,{preventScroll:true}); }
           cycleNavigationRegion(backward,filterEvent);
           return 'handled';
         }
@@ -1737,8 +1744,8 @@ function setupTable(instance) {
       if (column.filterSearch) {
         var searchWrap = doc.createElement('div'); searchWrap.className = 'qxframe9a7c2-table-filter-search';
         var searchInput = doc.createElement('input'); searchInput.type = 'search'; searchInput.className = 'qxframe9a7c2-input-control'; DOM.configureTextInput(searchInput, 'search'); searchInput.value = filterSearchValue; searchInput.placeholder = column.filterSearchPlaceholder || 'Search filters';
-        scope.add(DOM.listen(searchInput, 'input', function () { filterSearchValue = searchInput.value; renderFilterContent(); var next = filterPopup.querySelector('.qxframe9a7c2-table-filter-search input'); if (next) { DOM.focusElement(next, { preventScroll: true }); next.setSelectionRange(filterSearchValue.length, filterSearchValue.length); } }));
-        searchWrap.appendChild(searchInput); filterPopup.appendChild(searchWrap);
+        scope.add(DOM.listen(searchInput, 'input', function () { var searchOrigin=FocusOrigin.originOf(searchInput)||FocusOrigin.inherited(doc); filterSearchValue = searchInput.value; renderFilterContent(); var next = filterPopup.querySelector('.qxframe9a7c2-table-filter-search input'); if (next) { FocusOrigin.prepare(next,searchOrigin,{source:'table-filter-search-rerender'}); DOM.focusElement(next, { preventScroll: true }); next.setSelectionRange(filterSearchValue.length, filterSearchValue.length); syncFilterSearchFocusVisual(); } }));
+        scope.add(DOM.listen(searchInput,'focus',syncFilterSearchFocusVisual)); scope.add(DOM.listen(searchInput,'blur',syncFilterSearchFocusVisual)); searchWrap.appendChild(searchInput); filterPopup.appendChild(searchWrap); syncFilterSearchFocusVisual();
       }
       var list = doc.createElement('div'); list.className = 'qxframe9a7c2-table-filter-options' + (column.filterMode === 'tree' ? ' is-tree' : '');
       var multiple = column.filterMultiple !== false;
@@ -2351,7 +2358,7 @@ function setupTable(instance) {
   scope.add(DOM.listen(root, 'focusin', function (event) {
     if (!keyboard) return;
     if (event.target === root) {
-      if (InteractionModality.isKeyboard(doc)) {
+      if (FocusOrigin.isKeyboard(root)) {
         var state = keyboard.virtualFocus.getState();
         if (!state.domain) cycleNavigationRegion(false, event);
         else keyboard.virtualFocus.refresh({ reason:'table-region-enter' });
@@ -2690,6 +2697,7 @@ function setupTable(instance) {
         adapter:{
           getValue:function(){return valueBinding.value.slice();},
           getSerializedValue:function(){return formBridge?formBridge.getSerializedValue():valueBinding.value.slice();},
+          isSubmittable:function(){return opts.disabled!==true;},
           getOwnershipState:function(){return valueBinding.getOwnershipState();},
           reset:function(context){
             var result=resetCommittedSelection({source:'form',reason:'form-reset',requestId:context&&context.requestId,context:context});

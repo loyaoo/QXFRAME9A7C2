@@ -31,6 +31,7 @@ import { DOMBinding } from '../core/domBinding.js';
 import { DismissableLayer } from '../core/dismissableLayer.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { FocusManager } from '../core/focusManager.js';
+import { FocusOrigin } from '../core/focusOrigin.js';
 import { FormBridge } from '../core/formBridge.js';
 import { InteractionModality } from '../core/interactionModality.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
@@ -110,8 +111,9 @@ export const capabilityBindings = Object.freeze([
     Object.freeze({ name: 'DOMBinding', namespace: 'domHeadless', value: DOMBinding, metadata: Object.freeze({"name":"DOMBinding","dependencies":[],"coreDependencies":["DOM"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'DismissableLayer', namespace: 'domHeadless', value: DismissableLayer, metadata: Object.freeze({"name":"DismissableLayer","dependencies":["LayerManager"],"coreDependencies":["DOM","Lifecycle","Utils","InteractionDetails"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'EventDelegation', namespace: 'domHeadless', value: EventDelegation, metadata: Object.freeze({"name":"EventDelegation","dependencies":[],"coreDependencies":["DOM","Utils","InteractionDetails"],"headlessDependencies":[]}) }),
-    Object.freeze({ name: 'FocusManager', namespace: 'domHeadless', value: FocusManager, metadata: Object.freeze({"name":"FocusManager","dependencies":[],"coreDependencies":["DOM"],"headlessDependencies":[]}) }),
+    Object.freeze({ name: 'FocusManager', namespace: 'domHeadless', value: FocusManager, metadata: Object.freeze({"name":"FocusManager","dependencies":["FocusOrigin"],"coreDependencies":["DOM"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'FormBridge', namespace: 'domHeadless', value: FormBridge, metadata: Object.freeze({"name":"FormBridge","dependencies":[],"coreDependencies":["DOM","Utils","IdManager"],"headlessDependencies":["ValueEquality"]}) }),
+    Object.freeze({ name: 'FocusOrigin', namespace: 'domHeadless', value: FocusOrigin, metadata: Object.freeze({"name":"FocusOrigin","dependencies":[],"coreDependencies":["DOM","Scheduler"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'InteractionModality', namespace: 'domHeadless', value: InteractionModality, metadata: Object.freeze({"name":"InteractionModality","dependencies":[],"coreDependencies":[],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'KeyboardNavigation', namespace: 'domHeadless', value: KeyboardNavigation, metadata: Object.freeze({"name":"KeyboardNavigation","dependencies":[],"coreDependencies":["DOM","Lifecycle","Utils"],"headlessDependencies":["ActiveItem"]}) }),
     Object.freeze({ name: 'ObserverHub', namespace: 'domHeadless', value: ObserverHub, metadata: Object.freeze({"name":"ObserverHub","dependencies":[],"coreDependencies":["Scheduler"],"headlessDependencies":[]}) }),
@@ -140,7 +142,7 @@ export const capabilityBindings = Object.freeze([
     Object.freeze({ name: 'FieldHost', namespace: 'domHeadless', value: FieldHost, metadata: Object.freeze({"name":"FieldHost","dependencies":["DOMBinding"],"coreDependencies":["DOM"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'FocusScope', namespace: 'domHeadless', value: FocusScope, metadata: Object.freeze({"name":"FocusScope","dependencies":["FocusManager"],"coreDependencies":["DOM","Lifecycle","InteractionDetails"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'InteractionIsolation', namespace: 'domHeadless', value: InteractionIsolation, metadata: Object.freeze({"name":"InteractionIsolation","dependencies":["ObserverHub"],"coreDependencies":[],"headlessDependencies":[]}) }),
-    Object.freeze({ name: 'KeyboardRegion', namespace: 'domHeadless', value: KeyboardRegion, metadata: Object.freeze({"name":"KeyboardRegion","dependencies":["KeyboardNavigation","InteractionModality"],"coreDependencies":["DOM","Lifecycle","Utils"],"headlessDependencies":[]}) }),
+    Object.freeze({ name: 'KeyboardRegion', namespace: 'domHeadless', value: KeyboardRegion, metadata: Object.freeze({"name":"KeyboardRegion","dependencies":["KeyboardNavigation","FocusOrigin"],"coreDependencies":["DOM","Lifecycle","Utils"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'MotionCore', namespace: 'domHeadless', value: MotionCore, metadata: Object.freeze({"name":"MotionCore","dependencies":[],"coreDependencies":["Scheduler","Config"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'ReorderInteraction', namespace: 'domHeadless', value: ReorderInteraction, metadata: Object.freeze({"name":"ReorderInteraction","dependencies":["EventDelegation"],"coreDependencies":["DOM","Lifecycle"],"headlessDependencies":[]}) }),
     Object.freeze({ name: 'ResponsiveOverflow', namespace: 'domHeadless', value: ResponsiveOverflow, metadata: Object.freeze({"name":"ResponsiveOverflow","dependencies":["ObserverHub"],"coreDependencies":["Scheduler","DOM"],"headlessDependencies":[]}) }),

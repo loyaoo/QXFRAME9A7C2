@@ -41,7 +41,7 @@ function normalizeModality(value) {
         listeners.push(handler); var active = true;
         return function () { if (!active) return false; active = false; var index = listeners.indexOf(handler); if (index >= 0) listeners.splice(index, 1); return index >= 0; };
       },
-      destroy: function () { cleanups.splice(0).forEach(function (cleanup) { cleanup(); }); listeners.length = 0; if (states) states.delete(doc); }
+      destroy: function () { cleanups.splice(0).forEach(function (cleanup) { cleanup(); }); listeners.length = 0; if (root && root.classList) root.classList.remove('qxframe9a7c2-keyboard-modality'); if (states) states.delete(doc); }
     };
     if (states) states.set(doc, state);
     project();
@@ -51,9 +51,10 @@ function normalizeModality(value) {
   function isKeyboard(doc) { var state = setup(doc); return !!(state && state.isKeyboard()); }
   function onChange(handler, doc) { var state = setup(doc); return state ? state.onChange(handler) : function () {}; }
   function set(value, doc, event) { var state = setup(doc); return state ? state.set(value, event) : false; }
+  function destroy(doc) { doc = doc || global.document; var state = states && doc ? states.get(doc) : null; if (!state) return false; state.destroy(); return true; }
 
   function bootstrapInteractionModality(doc) { return current(doc || global.document); }
 
-export const InteractionModality = Object.freeze({ current, isKeyboard, onChange, set, modalities: MODALITIES });
+export const InteractionModality = Object.freeze({ current, isKeyboard, onChange, set, destroy, modalities: MODALITIES });
 export const InputModality = InteractionModality;
-export { current, isKeyboard, onChange, set, bootstrapInteractionModality };
+export { current, isKeyboard, onChange, set, destroy, bootstrapInteractionModality };

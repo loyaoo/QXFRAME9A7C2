@@ -33,7 +33,7 @@ QXFRAME9A7C2 的目标不是“组件数量多”，而是成为一套**视觉�
 - Action / Mutation 事务协议
 - Logical Owner Tree
 - Controllable State 基础协议
-- Input Modality
+- Input Modality + Focus Origin
 - StableKey / DataRevision
 - Projection Snapshot / Scheduler
 - Environment Port / Resource Lease
@@ -49,7 +49,7 @@ QXFRAME9A7C2 的目标不是“组件数量多”，而是成为一套**视觉�
 
 当前仓库已经存在成熟或半成熟能力：
 
-- `ValueDraft / StateController`
+- `ValueController / ControllableStateCore`
 - `KeyboardNavigation / FocusScope / FocusManager / VirtualFocus`
 - `InteractionPolicy`
 - `MotionCore / Transition / TransitionGroup`
@@ -312,25 +312,51 @@ ControllableStateCore<T>
 
 禁止隐式模式切换。
 
-## 2.5 Input Modality
+## 2.5 Input Modality + Focus Origin
 
-必须正式追踪最近有效输入模态：
+必须明确区分三类上下文，禁止再用“最近一次键盘事件”直接决定当前真实焦点是否显示 keyboard ring：
 
 ```text
-keyboard
-pointer
- touch
-programmatic
+Interaction Modality
+= 最近有效输入设备：keyboard / pointer / touch / programmatic
+
+Real Focus Origin
+= 当前真实 DOM focus 的因果来源：keyboard / pointer / touch / programmatic
+
+Virtual Navigation Origin
+= 当前 composite active item 的导航来源，由 KeyboardNavigation / VirtualFocus 持有
 ```
 
-用途：
+`InteractionModality` 只记录原始输入设备上下文；`FocusOrigin` 是 Shared Protocol 能力，记录**当前真实焦点**的来源，并由 `FocusManager / FocusScope / FocusController / KeyboardRegion` 复用。它不是第 10 个 Runtime Controller，也不持有组件业务值。
 
-- keyboard focus outline 是否显示
-- pointer focus 不错误显示 2px keyboard ring
-- virtual active item 是否投影 keyboard focus 样式
-- interaction feedback 选择
+视觉投影规则固定：
 
-Input Modality 是 Interaction → Focus / Visual Projection 的只读上下文，不是 Value 状态。
+```text
+pointer/touch real focus
+→ focused state
+→ 不显示 keyboard outline
+
+keyboard real focus
+→ focused state
+→ 显示既有 2px / -1px keyboard outline
+
+pointer virtual active
+→ hover/active state
+→ 不显示 keyboard outline
+
+keyboard virtual active
+→ active state
+→ 显示既有 keyboard outline
+```
+
+必须同时满足：
+
+- 普通文字输入、Backspace、caret Arrow 等原生编辑键不能把 pointer 建立的编辑焦点重新分类为 keyboard origin。
+- Tab 或被框架真正消费的键盘导航/激活动作可以建立 keyboard origin。
+- 程序化 focus 默认继承其 causal origin；显式 API 可声明 `programmatic`。
+- popup / hybrid edit / focus restore 必须保留捕获时的 focus origin。
+- 真实 descendant focus 优先于 virtual projection；一个交互层级只允许一个主要 keyboard outline。
+- managed 控件不得通过全局 `InteractionModality.isKeyboard()` 或浏览器 `:focus-visible` 猜测真实 focus origin；原生未接管控件仍可保留 UA `:focus-visible` fallback。
 
 ## 2.6 StableKey + DataRevision
 

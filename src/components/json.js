@@ -288,7 +288,8 @@ function setupJSON(instance) {
     pendingEditKey = null; pendingEditReason = null;
     editSession = { key: key, editor: editor };
     editor.classList.add('is-editing'); editor.classList.remove('is-invalid');
-    if (doc.activeElement !== editor && !DOM.focusElement(editor, { preventScroll: true })) { editSession = null; return false; }
+    if (focusController) focusController.beginEdit(editor, { source:source || 'keyboard', origin:(source === 'pointer' ? 'pointer' : source === 'keyboard' ? 'keyboard' : undefined), reason:reason || 'json-edit-enter', originalEvent:event || null });
+    if (doc.activeElement !== editor && !DOM.focusElement(editor, { preventScroll: true })) { if (focusController) focusController.endEdit({ restore:false, reason:'json-edit-focus-failed' }); editSession = null; return false; }
     if ((source || 'keyboard') === 'keyboard' && typeof editor.select === 'function') editor.select();
     return true;
   }
@@ -331,7 +332,7 @@ function setupJSON(instance) {
     editSession = null; pendingEditKey = null; pendingEditReason = null;
     api.updateOptions({ data: nextData });
     if (destroyed) return false;
-    if (restoreFocus !== false) { DOM.focusElement(root, { preventScroll: true }); activateTreeKey(key, 'keyboard', reason || 'json-edit-commit', event, true); }
+    if (restoreFocus !== false) { if (focusController && focusController.getState().editLeaseActive) focusController.endEdit({ restore:true, source:'keyboard', reason:reason || 'json-edit-commit' }); else DOM.focusElement(root, { preventScroll:true }); activateTreeKey(key, 'keyboard', reason || 'json-edit-commit', event, true); }
     emitChange(nextData, { path: key, previousValue: previousValue, value: nextValue, source: 'edit', reason: reason || 'json-edit-commit', originalEvent: event || null });
     return true;
   }
@@ -340,7 +341,7 @@ function setupJSON(instance) {
     var session = editSession, item = editableItem(session.key), key = session.key, editor = session.editor;
     editSession = null; pendingEditKey = null; pendingEditReason = null;
     if (editor && item) { editor.value = primitive(item.raw); editor.classList.remove('is-invalid','is-editing'); }
-    if (restoreFocus !== false) { DOM.focusElement(root, { preventScroll: true }); activateTreeKey(key, 'keyboard', reason || 'json-edit-cancel', event, true); }
+    if (restoreFocus !== false) { if (focusController && focusController.getState().editLeaseActive) focusController.endEdit({ restore:true, source:'keyboard', reason:reason || 'json-edit-cancel' }); else DOM.focusElement(root, { preventScroll:true }); activateTreeKey(key, 'keyboard', reason || 'json-edit-cancel', event, true); }
     return true;
   }
   function activeTreeKey() { var state = tree ? tree.getState() : null; return state && state.activeKey ? String(state.activeKey) : ''; }

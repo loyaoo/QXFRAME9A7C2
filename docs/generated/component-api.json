@@ -1660,7 +1660,9 @@
         "headless": [
           "OptionTransaction"
         ],
-        "domHeadless": [],
+        "domHeadless": [
+          "FocusOrigin"
+        ],
         "buildingBlocks": [
           "Control"
         ],
@@ -3956,6 +3958,7 @@
           "InteractionPolicy"
         ],
         "domHeadless": [
+          "FocusOrigin",
           "EventDelegation",
           "Renderer",
           "Virtualizer",
@@ -4086,6 +4089,7 @@
           "InteractionPolicy"
         ],
         "domHeadless": [
+          "FocusOrigin",
           "Renderer",
           "KeyboardNavigation",
           "Transition",

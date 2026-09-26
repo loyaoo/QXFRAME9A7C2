@@ -16,6 +16,7 @@ import { CapabilityController } from '../core/capabilityController.js';
 import { SearchState } from '../core/searchState.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { InteractionModality } from '../core/interactionModality.js';
+import { FocusOrigin } from '../core/focusOrigin.js';
 import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { EmptyProjection } from '../core/emptyProjection.js';
@@ -1203,11 +1204,12 @@ function create(options) {
           if (opts.searchable !== true || !searchInput || searchInput.disabled) return false;
           var owner = keyboardFocusOwner();
           if (detail.target === searchInput) {
-            if (owner && owner !== searchInput) DOM.focusElement(owner, { preventScroll:true });
+            if (owner && owner !== searchInput) { FocusOrigin.prepare(owner, 'keyboard', { source:'item-collection-search-exit' }); DOM.focusElement(owner, { preventScroll:true }); }
             if (virtualFocusDomain && activeItem.activeKey) virtualFocusDomain.activate(activeItem.activeKey, { source:'keyboard', reason:'search-edit-exit', originalEvent:detail.originalEvent, ensureVisible:true });
             return true;
           }
           if (virtualFocusDomain) virtualFocusDomain.clear({ reason:'search-edit-enter' });
+          FocusOrigin.prepare(searchInput, 'keyboard', { source:'item-collection-search-enter' });
           DOM.focusElement(searchInput, { preventScroll:true });
           return true;
         }
@@ -1229,7 +1231,7 @@ function create(options) {
     });
     bindVirtualFocus(keyboard.virtualFocus);
     scope.add(DOM.listen(root, 'focusin', function (event) {
-      if (event.target !== root || isComponentDisabled() || !InteractionModality.isKeyboard(doc)) return;
+      if (event.target !== root || isComponentDisabled() || !FocusOrigin.isKeyboard(root)) return;
       interactionSource = 'keyboard';
       pointerKey = null;
       focusVisible = true;
@@ -1372,18 +1374,18 @@ function create(options) {
   function focusWrap() {
     var owner = keyboardFocusOwner();
     if (!owner || !Utils.isFunction(owner.focus) || isComponentDisabled()) return false;
-    DOM.focusElement(owner);
+    FocusOrigin.prepare(owner, FocusOrigin.inherited(owner.ownerDocument || doc), { source:'item-collection-focus-wrap' });
+    var focused = DOM.focusElement(owner, { preventScroll:true });
+    if (!focused) FocusOrigin.cancelPending(owner);
     syncRowStates();
     return ownsBrowserFocus();
   }
     
   function setActiveAndFocus(action, reason) {
     var changed = action({ source: 'api', reason: reason });
-    if (changed) {
-      ensureActiveVisible(activeItem.activeKey);
-      focusWrap();
-    }
-    return changed;
+    if (activeItem.activeKey) ensureActiveVisible(activeItem.activeKey);
+    var focused = focusWrap();
+    return changed || focused;
   }
     
   function selectedAnchorRow() {
@@ -1598,8 +1600,10 @@ function create(options) {
     focusSelected: focusSelected,
     focusSearch: function () {
       if (!searchInput || !searchWrap || searchWrap.parentNode !== root || !Utils.isFunction(searchInput.focus)) return false;
-      DOM.focusElement(searchInput);
-      return true;
+      FocusOrigin.prepare(searchInput, FocusOrigin.inherited(searchInput.ownerDocument || doc), { source:'item-collection-focus-search' });
+      var focused = DOM.focusElement(searchInput, { preventScroll:true });
+      if (!focused) FocusOrigin.cancelPending(searchInput);
+      return focused;
     },
     focusWrap: focusWrap,
     scrollTo: scrollTo,

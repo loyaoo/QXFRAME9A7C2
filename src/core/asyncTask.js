@@ -69,6 +69,8 @@ function create(options) {
     error = null;
     var detail = { requestId: id, input: input, source: meta && meta.source || 'api', controller: api };
     emit('pending', detail);
+    if (destroyed) return Promise.reject(new Error('[QXFRAME9A7C2] AsyncTask is destroyed.'));
+    if (!active || active.id !== id) return Promise.resolve(undefined);
 
     var context = {
       requestId: id,
@@ -84,7 +86,7 @@ function create(options) {
 
     return promise.then(function (result) {
       if (destroyed) return result;
-      if (opts.ignoreStale !== false && (!active || active.id !== id)) return result;
+      if (opts.ignoreStale !== false && (!active || active.id !== id)) return undefined;
       active = null;
       pendingTasks = Math.max(0, pendingTasks - 1);
       state = 'success';

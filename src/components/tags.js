@@ -1305,7 +1305,7 @@ function setupTags(instance) {
     values.forEach(function (value) { if (add(value, meta)) changed = true; });
     return changed;
   }
-  function beginAdd() { if (destroyed || opts.editable !== true || !capabilityController || !capabilityController.can('edit')) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(focusController&&input)focusController.beginEdit(input,{source:'tags',reason:'begin-add'}); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
+  function beginAdd(meta) { var detail=meta||{},origin=detail.origin||detail.source||null; if (destroyed || opts.editable !== true || !capabilityController || !capabilityController.can('edit')) return false; if(opts.hosted!==true){var rect=addTrigger.getBoundingClientRect?addTrigger.getBoundingClientRect():null;addEditorWidth=Math.max(0,Number(rect&&rect.width||addTrigger.offsetWidth||0));if(addEditorWidth>0)root.style.setProperty('--_qxframe9a7c2-tags-add-editor-width',addEditorWidth+'px');} adding=true; if (standaloneTagDomain) standaloneTagDomain.clear({ reason:'begin-edit' }); render('begin-add'); if(focusController&&input)focusController.beginEdit(input,{source:detail.source||'tags',origin:/^(keyboard|pointer|touch|programmatic)$/.test(String(origin))?origin:undefined,reason:detail.reason||'begin-add'}); if(input)DOM.focusElement(input,{preventScroll:true}); return true; }
   function cancelAdd() { if (destroyed || opts.hosted === true) return false; adding=false; tokenInput.setInputValue('',{silent:true,reason:'cancel-add',source:'tags'}); opts.inputValue=''; render('cancel-add'); return true; }
   function canonicalFormValue() { return opts.checkable === true ? selection.values.slice() : coreTags().map(function(tag){return tag.value;}); }
   function syncFormBridge(meta) {
@@ -1463,6 +1463,10 @@ function setupTags(instance) {
       return false;
     }
     if ((key === 'Backspace' || key === 'Delete') && !currentKey) return false;
+    if (!currentKey && (key === 'ArrowLeft' || key === 'ArrowRight')) {
+      var entryKey = key === 'ArrowLeft' ? moveVirtualTag(null, -1) : preferredVirtualTagKey();
+      return entryKey ? activateStandaloneTag(entryKey, key === 'ArrowLeft' ? 'tag-left-enter' : 'tag-right-enter', event) : false;
+    }
     if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Backspace' || key === 'Delete' || key === 'Escape') {
       var delegated = standaloneTagNavigation ? standaloneTagNavigation.handleKeydown(event) : false;
       if (delegated) {
@@ -1478,8 +1482,12 @@ function setupTags(instance) {
       var spatial = moveVirtualTagSpatial(currentKey, key === 'ArrowUp' ? -1 : 1);
       return spatial ? activateStandaloneTag(spatial, key === 'ArrowUp' ? 'tag-up' : 'tag-down', event) : false;
     }
+    if ((key === 'Enter' || key === ' ') && !currentKey) {
+      var activationKey = preferredVirtualTagKey();
+      if (activationKey && activateStandaloneTag(activationKey, 'tag-activate-enter', event)) currentKey = activationKey;
+    }
     if ((key === 'Enter' || key === ' ') && currentKey) {
-      if (currentKey === ADD_VIRTUAL_KEY) return key === 'Enter' ? beginAdd() : false;
+      if (currentKey === ADD_VIRTUAL_KEY) return key === 'Enter' ? beginAdd({source:'keyboard',origin:'keyboard',reason:'tag-add-enter',originalEvent:event}) : false;
       var record = tagRecordsByKey[currentKey];
       var item = record && record.item;
       if (!item || item.disabled === true) return false;
@@ -1487,7 +1495,7 @@ function setupTags(instance) {
       if (key === 'Enter' && item.href && record.link) { record.link.click(); return true; }
       return false;
     }
-    if (key === 'Enter' && opts.editable === true && !currentKey) return beginAdd();
+    if (key === 'Enter' && opts.editable === true && !currentKey) return beginAdd({source:'keyboard',origin:'keyboard',reason:'tag-add-enter',originalEvent:event});
     return false;
   }
   function resolveStandaloneInteractionAction(event) {
@@ -1508,7 +1516,7 @@ function setupTags(instance) {
       if (current !== ADD_VIRTUAL_KEY || event.target !== root) return 'pass';
       var key = String(event.key || '');
       if (key.length !== 1 || key === ' ') return 'pass';
-      if (!beginAdd()) return 'pass';
+      if (!beginAdd({source:'keyboard',origin:'keyboard',reason:'tag-add-printable',originalEvent:event})) return 'pass';
       tokenInput.handleInput(key, { user:true, source:'keyboard', reason:'add-printable-key', originalEvent:event });
       input.value = tokenInput.getState().inputValue;
       return 'handled';
@@ -1629,7 +1637,7 @@ function setupTags(instance) {
   api.own(destroyRuntime);
   api.bindFocusTarget(root);
 
-  scope.add(DOM.listen(addTrigger,'click',function(event){if(event.preventDefault)event.preventDefault();beginAdd();}));
+  scope.add(DOM.listen(addTrigger,'click',function(event){if(event.preventDefault)event.preventDefault();var source=DOM.activationSource(event);beginAdd({source:source,origin:source==='pointer'?'pointer':undefined,reason:'tag-add-click',originalEvent:event});}));
   scope.add(DOM.listen(input, 'compositionstart', function () { composing = true; }));
   scope.add(DOM.listen(input, 'compositionend', function (event) {
     composing = false;
@@ -1822,7 +1830,7 @@ export class Tags extends FieldComponent {
   has(value){return recordForTags(this).has(value);}
   getValue(){return recordForTags(this).getValue();}
   getItems(){return recordForTags(this).getItems();}
-  beginAdd(){return recordForTags(this).beginAdd();}
+  beginAdd(){return recordForTags(this).beginAdd({source:'api',origin:'programmatic',reason:'tag-add-api'});}
   cancelAdd(){return recordForTags(this).cancelAdd();}
   editAt(index,text,meta){return recordForTags(this).editAt(index,text,meta);}
   removeAt(index,meta){return recordForTags(this).removeAt(index,meta);}

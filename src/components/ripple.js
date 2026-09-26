@@ -8,6 +8,8 @@ import { MotionController } from '../core/motionController.js';
 var instances = new WeakMap();
 var waveCleanups = new WeakMap();
 var autoInstances = new WeakSet();
+var autoRuntimes = new WeakMap();
+var autoElementsByDocument = new WeakMap();
 var AUTO_SELECTOR = '.qxframe9a7c2-button.is-ripple';
 var AUTO_INSIDE_CLASS = 'is-ripple-inside';
 var AUTO_OUTSIDE_CLASS = 'is-ripple-outside';
@@ -171,8 +173,14 @@ function autoOptions(element) {
   if (!inside && !outside) inside = true;
   return { inside: inside, outside: outside };
 }
+function autoElements(doc) {
+  var set = autoElementsByDocument.get(doc);
+  if (!set) { set = new Set(); autoElementsByDocument.set(doc, set); }
+  return set;
+}
 function ensureAuto(element) {
   if (!matchesAuto(element)) return null;
+  var doc = element.ownerDocument || globalThis.document;
   var existing = instances.get(element);
   if (existing) {
     if (autoInstances.has(element)) existing.updateOptions(autoOptions(element));
@@ -180,12 +188,14 @@ function ensureAuto(element) {
   }
   var api = enhance(element, autoOptions(element));
   autoInstances.add(element);
+  if (doc) autoElements(doc).add(element);
   return api;
 }
 function releaseAuto(element) {
   if (!element || element.nodeType !== 1 || !autoInstances.has(element)) return false;
-  var api = instances.get(element);
+  var api = instances.get(element), doc = element.ownerDocument || null;
   autoInstances.delete(element);
+  var set = doc && autoElementsByDocument.get(doc); if (set) set.delete(element);
   if (api) api.destroy();
   return true;
 }
@@ -206,9 +216,12 @@ function releaseAutoTree(root) {
   if (!root.querySelectorAll) return;
   Array.prototype.forEach.call(root.querySelectorAll(AUTO_SELECTOR), releaseAuto);
 }
-function startAutoEnhance() {
-  var doc = globalThis.document;
-  if (!doc || !doc.documentElement) return;
+function startAutoEnhance(doc) {
+  doc = doc || globalThis.document;
+  if (!doc || !doc.documentElement) return null;
+  var existing = autoRuntimes.get(doc);
+  if (existing) return existing;
+  var scope = Lifecycle.createScope(), destroyed = false;
   scanAuto(doc);
   var observer = ObserverHub.mutation(doc.documentElement, function (mutations) {
     mutations.forEach(function (mutation) {
@@ -216,12 +229,29 @@ function startAutoEnhance() {
       Array.prototype.forEach.call(mutation.removedNodes || [], releaseAutoTree);
       Array.prototype.forEach.call(mutation.addedNodes || [], scanAuto);
     });
-  }, { schedule: 'mutate', observeOptions: { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] } });
-  if (!observer) {
-    if (doc.readyState === 'loading') DOM.listen(doc, 'DOMContentLoaded', function () { scanAuto(doc); });
-    return;
-  }
-  if (doc.readyState === 'loading') DOM.listen(doc, 'DOMContentLoaded', function () { scanAuto(doc); });
+  }, { schedule:'mutate', observeOptions:{ subtree:true, childList:true, attributes:true, attributeFilter:['class'] } });
+  if (observer) scope.add(observer);
+  if (doc.readyState === 'loading') scope.add(DOM.listen(doc, 'DOMContentLoaded', function () { if (!destroyed) scanAuto(doc); }));
+  var runtime = Object.freeze({
+    document: doc,
+    destroy: function () {
+      if (destroyed) return false;
+      destroyed = true;
+      scope.dispose();
+      var set = autoElementsByDocument.get(doc);
+      if (set) Array.from(set).forEach(releaseAuto);
+      autoElementsByDocument.delete(doc);
+      autoRuntimes.delete(doc);
+      return true;
+    }
+  });
+  autoRuntimes.set(doc, runtime);
+  return runtime;
+}
+function stopAutoEnhance(doc) {
+  doc = doc || globalThis.document;
+  var runtime = doc && autoRuntimes.get(doc);
+  return runtime ? runtime.destroy() : false;
 }
     
 
@@ -237,4 +267,4 @@ export const Ripple = Object.freeze({
     defaults: DEFAULTS,
     enhance
 });
-export { startAutoEnhance };
+export { startAutoEnhance, stopAutoEnhance };

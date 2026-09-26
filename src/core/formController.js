@@ -46,13 +46,14 @@ function normalizeAdapter(spec){
     validateAsync:Utils.isFunction(source.validateAsync)?source.validateAsync:(Utils.isFunction(source.validate)?source.validate:null),
     getOwnershipState:Utils.isFunction(source.getOwnershipState)?source.getOwnershipState:null,
     isDirty:Utils.isFunction(source.isDirty)?source.isDirty:null,
+    isSubmittable:Utils.isFunction(source.isSubmittable)?source.isSubmittable:null,
     focus:Utils.isFunction(source.focus)?source.focus:null,
     reveal:Utils.isFunction(source.reveal)?source.reveal:null,
     bridge:bridge
   });
 }
 function create(options){
-  var opts=options||{},fields=new Map(),names=new Map(),destroyed=false,revision=0,submitGeneration=0,submitPending=false;
+  var opts=options||{},fields=new Map(),names=new Map(),destroyed=false,revision=0,submitGeneration=0,resetGeneration=0,submitPending=false,submitPendingGeneration=0;
   var form=null,formCleanup=[],resetScheduler=null;
   var validationTasks=AsyncTaskGroup.create({
     task:function(input,taskContext){return input.run(taskContext);}
@@ -234,31 +235,44 @@ function create(options){
     var entries=[];
     fields.forEach(function(field){
       if(!field.name)return;
+      if(field.adapter.isSubmittable){try{if(field.adapter.isSubmittable()===false)return;}catch(_){return;}}
       var raw=readSerialized(field),values=Array.isArray(raw)?raw:[raw];
       if(!values.length)values=[''];
       values.forEach(function(value,index){entries.push(Object.freeze({fieldId:field.fieldId,name:field.name,value:value,index:index}));});
     });
     return Object.freeze(entries);
   }
+  function clearSubmitPending(generation, reason) {
+    if (submitPendingGeneration !== generation) return false;
+    submitPendingGeneration = 0;
+    if (!submitPending) return false;
+    submitPending = false;
+    if (!destroyed) emitState(reason || 'submit-complete');
+    return true;
+  }
   async function submit(meta){
     if(destroyed)return OperationResult.disposed(contextFor('form-submit-disposed',meta),{reason:'form-controller-destroyed'});
     var source=meta&&typeof meta==='object'?meta:{},context=contextFor('form-submit',source),capturedRevision=revision,generation=++submitGeneration;
+    if(submitTask.pending)submitTask.cancel('submit-replaced');
+    if(submitPending){submitPending=false;submitPendingGeneration=0;emitState('submit-replaced');}
     var validation=await validateAll(ActionContext.derive(context,'form-submit-validate'));
+    if(destroyed)return OperationResult.disposed(context,{reason:'form-controller-destroyed'});
+    if(generation!==submitGeneration||revision!==capturedRevision)return OperationResult.stale(context,{reason:'submit-revision-stale',revision:capturedRevision,generation:generation});
     if(validation.result.status==='disposed'||validation.result.status==='stale')return validation.result;
     if(!validation.valid)return OperationResult.invalid(context,{reason:'form-invalid',revision:capturedRevision,generation:generation});
-    if(revision!==capturedRevision||generation!==submitGeneration)return OperationResult.stale(context,{reason:'submit-revision-stale',revision:capturedRevision,generation:generation});
     var entries=serializeEntries();
     if(!Utils.isFunction(opts.onSubmit))return OperationResult.applied(context,{reason:'submit-ready',revision:capturedRevision,generation:generation});
-    submitPending=true;emitState('submit-pending');
+    submitPending=true;submitPendingGeneration=generation;emitState('submit-pending');
     try{
       await submitTask.run({entries:entries,context:context,submitter:source.submitter||null,revision:capturedRevision},{source:context.source});
     }catch(error){
-      submitPending=false;emitState('submit-error');
+      clearSubmitPending(generation,'submit-error');
       if(destroyed)return OperationResult.disposed(context,{reason:'form-controller-destroyed'});
       if(generation!==submitGeneration||revision!==capturedRevision)return OperationResult.stale(context,{reason:'submit-stale',revision:capturedRevision,generation:generation});
       return OperationResult.invalid(context,{reason:'submit-error',revision:capturedRevision,generation:generation});
     }
-    submitPending=false;emitState('submit-complete');
+    clearSubmitPending(generation,'submit-complete');
+    if(destroyed)return OperationResult.disposed(context,{reason:'form-controller-destroyed'});
     if(generation!==submitGeneration||revision!==capturedRevision)return OperationResult.stale(context,{reason:'submit-stale',revision:capturedRevision,generation:generation});
     return OperationResult.applied(context,{reason:'submit-complete',revision:capturedRevision,generation:generation});
   }
@@ -269,32 +283,34 @@ function create(options){
     if(destroyed)return OperationResult.disposed(contextFor('form-reset-disposed',meta),{reason:'form-controller-destroyed'});
     var source=meta&&typeof meta==='object'?meta:{},context=contextFor('form-reset',source),event=source.originalEvent||null;
     if(event&&event.defaultPrevented)return OperationResult.blocked(context,{reason:'native-reset-cancelled'});
-    submitGeneration+=1;if(submitTask.pending)submitTask.cancel('form-reset');submitPending=false;
+    var generation=++resetGeneration;
+    submitGeneration+=1;if(submitTask.pending)submitTask.cancel('form-reset');
+    if(submitPending){submitPending=false;submitPendingGeneration=0;emitState('submit-reset');}
     revision+=1;invalidateValidations('form-reset');
-    var requested=false,changed=false;
-    for(const field of fields.values()){
+    var resetStartRevision=revision,requested=false,changed=false,stale=false;
+    var resetFields=Array.from(fields.values());
+    for(const field of resetFields){
+      if(destroyed)return OperationResult.disposed(context,{reason:'form-controller-destroyed'});
+      if(generation!==resetGeneration){stale=true;break;}
+      if(fields.get(field.fieldId)!==field){stale=true;continue;}
       field.validationGeneration+=1;field.pending=false;
+      var capturedValueRevision=field.valueRevision;
       var outcome=true;
-      if(field.adapter.reset){
-        try{outcome=await field.adapter.reset(context);}catch(_){outcome=false;}
-      }else if(source.nativeApplied!==true){
-        outcome=false;
-      }
+      if(field.adapter.reset){try{outcome=await field.adapter.reset(context);}catch(_){outcome=false;}}
+      else if(source.nativeApplied!==true){outcome=false;}
+      if(destroyed)return OperationResult.disposed(context,{reason:'form-controller-destroyed'});
+      if(generation!==resetGeneration||fields.get(field.fieldId)!==field){stale=true;continue;}
+      if(field.valueRevision!==capturedValueRevision){stale=true;continue;}
       if(OperationResult.isOperationResult(outcome)){
-        if(outcome.status==='requested'){
-          field.pendingResetRequestId=outcome.requestId||null;
-          resetVisualState(field);
-          field.dirty=resolveDirty(field,field.dirty);
-          requested=true;continue;
-        }
+        if(outcome.status==='requested'){field.pendingResetRequestId=outcome.requestId||null;resetVisualState(field);field.dirty=resolveDirty(field,field.dirty);requested=true;continue;}
         if(outcome.status!=='applied'&&outcome.status!=='unchanged')continue;
-      }else if(outcome===false){
-        continue;
-      }
+      }else if(outcome===false){continue;}
       settleResetField(field);changed=true;
     }
-    emitState('form-reset');
-    if(Utils.isFunction(opts.onReset)){try{opts.onReset(snapshot(),{context:context,requested:requested,controller:api});}catch(_){}}
+    if(generation!==resetGeneration||destroyed)return destroyed?OperationResult.disposed(context,{reason:'form-controller-destroyed'}):OperationResult.stale(context,{reason:'reset-generation-stale',revision:resetStartRevision,generation:generation});
+    emitState(stale?'form-reset-stale':'form-reset');
+    if(Utils.isFunction(opts.onReset)){try{opts.onReset(snapshot(),{context:context,requested:requested,stale:stale,controller:api});}catch(_){}}
+    if(stale)return OperationResult.stale(context,{reason:'reset-field-stale',revision:revision,generation:generation});
     if(requested)return OperationResult.requested(context,{reason:'external-reset-pending',revision:revision});
     return changed?OperationResult.applied(context,{reason:'form-reset-complete',revision:revision}):OperationResult.unchanged(context,{reason:'form-reset-noop',revision:revision});
   }
@@ -310,8 +326,8 @@ function create(options){
   function getField(fieldId){var field=fields.get(text(fieldId));return field?fieldState(field):null;}
   function getFieldsByName(name){var set=names.get(text(name));return Object.freeze(set?Array.from(set):[]);}
   function snapshot(){
-    var fieldViews={};fields.forEach(function(field,id){fieldViews[id]=fieldState(field);});
-    var nameViews={};names.forEach(function(set,name){nameViews[name]=Object.freeze(Array.from(set));});
+    var fieldViews=Object.create(null);fields.forEach(function(field,id){fieldViews[id]=fieldState(field);});
+    var nameViews=Object.create(null);names.forEach(function(set,name){nameViews[name]=Object.freeze(Array.from(set));});
     return Object.freeze({
       revision:revision,destroyed:destroyed,submitPending:submitPending,
       fields:Object.freeze(fieldViews),names:Object.freeze(nameViews),fieldCount:fields.size
@@ -350,7 +366,8 @@ function create(options){
   }
   function destroy(){
     if(destroyed)return false;
-    unbindForm();validationTasks.destroy();submitTask.destroy();fields.clear();names.clear();destroyed=true;return true;
+    destroyed=true;submitGeneration+=1;resetGeneration+=1;submitPending=false;submitPendingGeneration=0;
+    unbindForm();validationTasks.destroy();submitTask.destroy();fields.clear();names.clear();return true;
   }
   api=Object.freeze({
     registerField:registerField,unregisterField:unregisterField,notifyValue:notifyValue,markTouched:markTouched,

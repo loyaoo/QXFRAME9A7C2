@@ -7,7 +7,7 @@ import { Renderer } from '../core/renderer.js';
 import { FormBridge } from '../core/formBridge.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { DOMTemplate } from '../core/domTemplate.js';
-import { InteractionModality } from '../core/interactionModality.js';
+import { FocusOrigin } from '../core/focusOrigin.js';
 import { CapabilityController } from '../core/capabilityController.js';
 import { ClearAction } from '../core/clearAction.js';
 import { SegmentedInput } from '../core/segmentedInput.js';
@@ -48,6 +48,18 @@ var CLEAR_VISIBILITY = ['always','interaction'];
 var MODES = ['input','value','tags','segments'];
 var EDITORS = ['input','textarea'];
 var hasOwn = Utils.own;
+function focusWithOrigin(target, focusOptions, source) {
+  if (!target || !target.focus) return false;
+  var local = Utils.mergeOwn({ preventScroll:true }, focusOptions || {});
+  var doc = target.ownerDocument || globalThis.document;
+  var origin = local.origin || (local.inheritOrigin === false ? 'programmatic' : FocusOrigin.inherited(doc));
+  var reason = local.source || source || 'control-focus';
+  delete local.origin; delete local.source; delete local.inheritOrigin;
+  FocusOrigin.prepare(target, origin, { source:reason });
+  var focused = DOM.focusElement(target, local);
+  if (!focused) FocusOrigin.cancelPending(target);
+  return focused;
+}
 function sizeName(value) { return Utils.normalizeSize(value, 'md'); }
 function statusName(value) { var status = String(value || 'default').toLowerCase(); return STATUSES.indexOf(status) >= 0 ? status : 'default'; }
 function variantName(value) { var variant = String(value || 'outlined').toLowerCase(); if (VDOMNTS.indexOf(variant) < 0) throw new TypeError('[QXFRAME9A7C2] Control variant must be outlined, filled, borderless, or underlined.'); return variant; }
@@ -731,23 +743,23 @@ function create(source, overrides) {
       modeCleanups.push(DOM.listen(segmentInput, 'input', function (event) {
         var raw = segmentInput.value;
         if (raw.length > 1 && segment.maxLength === 1) {
-          var last = segmentedInput.distribute(index, raw, { reason: 'distribute', source: 'input', originalEvent: event }); syncSegmentsFromState(); var target = segmentInputs[Math.min(last + 1, segmentInputs.length - 1)]; if (target) DOM.focusElement(target);
+          var last = segmentedInput.distribute(index, raw, { reason: 'distribute', source: 'input', originalEvent: event }); syncSegmentsFromState(); var target = segmentInputs[Math.min(last + 1, segmentInputs.length - 1)]; if (target) focusWithOrigin(target, null, 'segment-paste');
         } else {
           segmentedInput.patch(index, raw, { reason: 'input', source: 'input', originalEvent: event }); syncSegmentsFromState();
-          if (segment.maxLength && raw.length >= segment.maxLength && index < segmentInputs.length - 1) DOM.focusElement(segmentInputs[index + 1]);
+          if (segment.maxLength && raw.length >= segment.maxLength && index < segmentInputs.length - 1) focusWithOrigin(segmentInputs[index + 1], { origin:'keyboard' }, 'segment-keyboard');
         }
       }));
       modeCleanups.push(DOM.listen(segmentInput, 'keydown', function (event) {
         if (typeof opts.onKeydown === 'function' && opts.onKeydown(event, api, { segmentIndex:index, segment:segment, input:segmentInput }) === true) return;
         if (event.key === 'Backspace' && segmentInput.value === '' && index > 0) {
-          if (segmentedInput.erasePrevious(index, { originalEvent: event })) { if (event.preventDefault) event.preventDefault(); syncSegmentsFromState(); DOM.focusElement(segmentInputs[index - 1]); }
-        } else if (event.key === 'ArrowLeft' && segmentInput.selectionStart === 0 && index > 0) { if (event.preventDefault) event.preventDefault(); DOM.focusElement(segmentInputs[index - 1]); }
-        else if (event.key === 'ArrowRight' && segmentInput.selectionStart === segmentInput.value.length && index < segmentInputs.length - 1) { if (event.preventDefault) event.preventDefault(); DOM.focusElement(segmentInputs[index + 1]); }
+          if (segmentedInput.erasePrevious(index, { originalEvent: event })) { if (event.preventDefault) event.preventDefault(); syncSegmentsFromState(); focusWithOrigin(segmentInputs[index - 1], { origin:'keyboard' }, 'segment-keyboard'); }
+        } else if (event.key === 'ArrowLeft' && segmentInput.selectionStart === 0 && index > 0) { if (event.preventDefault) event.preventDefault(); focusWithOrigin(segmentInputs[index - 1], { origin:'keyboard' }, 'segment-keyboard'); }
+        else if (event.key === 'ArrowRight' && segmentInput.selectionStart === segmentInput.value.length && index < segmentInputs.length - 1) { if (event.preventDefault) event.preventDefault(); focusWithOrigin(segmentInputs[index + 1], { origin:'keyboard' }, 'segment-keyboard'); }
       }));
       modeCleanups.push(DOM.listen(segmentInput, 'paste', function (event) {
         var text = event.clipboardData && event.clipboardData.getData ? event.clipboardData.getData('text') : '';
         if (!text) return;
-        var last = segmentedInput.distribute(index, text, { reason: 'paste', source: 'paste', originalEvent: event }); if (event.preventDefault) event.preventDefault(); syncSegmentsFromState(); var target = segmentInputs[Math.min(last + 1, segmentInputs.length - 1)]; if (target) DOM.focusElement(target);
+        var last = segmentedInput.distribute(index, text, { reason: 'paste', source: 'paste', originalEvent: event }); if (event.preventDefault) event.preventDefault(); syncSegmentsFromState(); var target = segmentInputs[Math.min(last + 1, segmentInputs.length - 1)]; if (target) focusWithOrigin(target, null, 'segment-paste');
       }));
       modeCleanups.push(DOM.listen(segmentInput, 'pointerdown', function (event) { redirectSegmentFocus(index, event); }));
       modeCleanups.push(DOM.listen(segmentInput, 'focus', function (event) { syncSegmentsFromState(); if (typeof opts.onSegmentFocus === 'function') opts.onSegmentFocus({ index: index, key: segment.key, originalEvent: event, control: api }); }));
@@ -763,7 +775,7 @@ function create(source, overrides) {
       var value = state.values[index] || '', segment = state.segments[index], mask = segmentMasks[index], field = node.parentNode;
       if (node.value !== value) node.value = value;
       if (mask) mask.textContent = segment && segment.mask ? segment.mask.repeat(Array.from(value).length) : '';
-      if (field && field.classList) { field.classList.toggle('has-mask-value', !!(segment && segment.mask && value !== '')); field.classList.toggle('qxframe9a7c2-segment-keyboard-focus', InteractionModality.isKeyboard(doc) && node === doc.activeElement && node.matches && node.matches(':focus-visible')); }
+      if (field && field.classList) { field.classList.toggle('has-mask-value', !!(segment && segment.mask && value !== '')); field.classList.toggle('qxframe9a7c2-segment-keyboard-focus', FocusOrigin.isKeyboard(node) && node === doc.activeElement); }
     });
     syncSegmentFocusPolicy();
   }
@@ -779,7 +791,7 @@ function create(source, overrides) {
     // removed before the browser can dispatch a blur event for that detached node.
     var activeFocus = doc.activeElement;
     focused = !!(activeFocus && control.contains(activeFocus));
-    var keyboardFocused = !!(focused && InteractionModality.isKeyboard(doc) && activeFocus && activeFocus.matches && activeFocus.matches(':focus-visible'));
+    var keyboardFocused = !!(focused && activeFocus && FocusOrigin.isKeyboard(activeFocus));
     SIZES.forEach(function (name) { root.classList.remove('is-' + name); });
     STATUSES.forEach(function (name) { if (name !== 'default') root.classList.remove('is-' + name); });
     MODES.forEach(function (name) { root.classList.remove('is-' + name); });
@@ -824,7 +836,7 @@ function create(source, overrides) {
     if (destroyed || !interactionPolicy().focusable) return false;
     var target = primaryInput();
     if (!target || !target.focus) return false;
-    var didFocus = DOM.focusElement(target, focusOptions || { preventScroll: true });
+    var didFocus = focusWithOrigin(target, focusOptions, 'control-focus');
     var active = doc.activeElement;
     var ownsFocus = !!(didFocus && active && control.contains(active));
     // A native focus request can return without throwing for a non-focusable root. Focus
@@ -935,6 +947,7 @@ function create(source, overrides) {
   }, { count: opts.count === true, maxLength: opts.maxLength, minLength: opts.minLength, lengthMode: opts.lengthMode || 'native', limitMode: opts.limitMode || 'hard' });
   scope.add(function () { if (textBehavior) textBehavior.destroy(); });
     
+  scope.add(FocusOrigin.onChange(function () { if (destroyed) return; if (mode === 'segments') syncSegmentsFromState(); syncView(); }, doc));
   scope.add(DOM.listen(root, 'pointerenter', function () { hovered = true; syncView(); }));
   scope.add(DOM.listen(root, 'pointerleave', function () { hovered = false; syncView(); }));
   scope.add(DOM.listen(control, 'focus', function (event) { var wasFocused = focused; focused = true; syncView(); if (!wasFocused && typeof opts.onFocus === 'function') opts.onFocus(event, api); }, true));

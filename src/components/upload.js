@@ -64,6 +64,18 @@ function kindOf(record) {
   return 'file';
 }
 function canPreview(record) { return !!(record && (record.url || record.thumbUrl || record.file)); }
+function isActiveDocument(record) {
+  var file = record && record.file;
+  var type = String(record && (record.type || (file && file.type)) || '').toLowerCase().split(';')[0].trim();
+  var ext = extension(record && (record.name || record.url));
+  return type === 'text/html' || type === 'application/xhtml+xml' || type === 'image/svg+xml'
+    || type === 'text/xml' || type === 'application/xml'
+    || /^(html?|xhtml|svg|xml)$/.test(ext);
+}
+function canOpenPreviewWindow(record, kind) {
+  if (kind === 'video' || kind === 'audio') return true;
+  return kind === 'image' && !isActiveDocument(record);
+}
 function statusText(record) {
   if (record.status === 'uploading') return Math.round(record.percent || 0) + '%';
   if (record.status === 'success') return 'Uploaded';
@@ -570,7 +582,24 @@ function setupUpload(instance) {
       var payload = { file:record,url:url,source:DOM.activationSource(event),reason:'preview',originalEvent:event||null,instance:api };
       if (typeof opts.onPreview === 'function' && opts.onPreview(record,payload) === false) return api;
       if (destroyed || !url) return api;
-      if (opts.previewTarget === 'window') { var safeWindowUrl=URLPolicy.sanitize(url,kind==='image'?'image':(kind==='video'||kind==='audio'?'media':'download')); if (safeWindowUrl && typeof global.open === 'function') global.open(safeWindowUrl,'_blank','noopener'); return api; }
+      if (opts.previewTarget === 'window') {
+        if (canOpenPreviewWindow(record, kind)) {
+          var safeWindowUrl = URLPolicy.sanitize(url, kind === 'image' ? 'image' : 'media');
+          if (safeWindowUrl && typeof global.open === 'function') global.open(safeWindowUrl, '_blank', 'noopener,noreferrer');
+        } else {
+          var safeWindowDownload = URLPolicy.sanitize(url, 'download');
+          if (safeWindowDownload) {
+            var downloadLink = doc.createElement('a');
+            downloadLink.href = safeWindowDownload;
+            downloadLink.download = record.name || '';
+            downloadLink.style.display = 'none';
+            (doc.body || doc.documentElement).appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
+          }
+        }
+        return api;
+      }
       if (isMediaPreviewKind(kind)) return openMediaPreview(record, url, event);
 
       if (previewMediaController) destroyMediaPreview('replace', event, mediaPreviewPresent());
@@ -585,7 +614,7 @@ function setupUpload(instance) {
       head.appendChild(title); head.appendChild(close); panel.appendChild(head); panel.appendChild(body); previewModal.appendChild(previewMask); previewModal.appendChild(panel);
       var media;
       if (kind==='pdf') { media=doc.createElement('iframe'); media.src=URLPolicy.sanitize(url,'document'); media.title=record.name||'PDF'; media.setAttribute('sandbox','allow-same-origin allow-downloads'); body.appendChild(media); }
-      else { var link=doc.createElement('a'); link.href=URLPolicy.sanitize(url,'download'); link.target='_blank'; link.rel='noopener noreferrer'; link.textContent='Open '+record.name; body.appendChild(link); }
+      else { var link=doc.createElement('a'); link.href=URLPolicy.sanitize(url,'download'); link.download=record.name||''; link.rel='noreferrer'; link.textContent='Download '+record.name; body.appendChild(link); }
       previewOverlay = OverlayController.create({
         reference: root,
         floating: previewModal,

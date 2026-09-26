@@ -436,11 +436,11 @@ var KEYBOARD_FOCUS_CLASS = 'is-keyboard-focus';
         if (beforeResult === false) return false;
       }
 
-      virtualFocus.keyboard();
       handled = invokeCustom(event);
       if (!handled) handled = invokeDefault(event);
 
       if (handled) {
+        virtualFocus.keyboard();
         if (settings.preventDefault !== false && Utils.isFunction(event.preventDefault)) event.preventDefault();
         if (settings.stopPropagation === true && Utils.isFunction(event.stopPropagation)) event.stopPropagation();
         if (Utils.isFunction(settings.onHandled)) settings.onHandled(context(event, 'handled'));

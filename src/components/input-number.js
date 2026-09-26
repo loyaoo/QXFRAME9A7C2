@@ -49,9 +49,9 @@ export class InputNumber extends FieldComponent {
         const next = {
             step:source.step,min:source.min,max:source.max,precision:source.precision,stringMode:source.stringMode===true,
             formatter:source.formatter,parser:source.parser,decimalSeparator:source.decimalSeparator,
-            disabled:source.disabled===true,readOnly:source.readOnly===true,
+            disabled:source.disabled===true,readOnly:source.readOnly===true,controlled:source.controlled===true,
             onInput:(display,detail)=>{if(typeof this.options.onInput==='function')this.options.onInput(display,{...detail,instance:this});},
-            onChange:(value,detail)=>{this.setFieldValue(value,{silent:true,force:true,sync:true,source:detail&&detail.source||'numeric',reason:detail&&detail.reason||'change'});if(typeof this.options.onChange==='function')this.options.onChange(value,{...detail,instance:this});},
+            onChange:(value,detail)=>{if(!(detail&&detail.controlled===true))this.setFieldValue(value,{silent:true,force:true,sync:true,source:detail&&detail.source||'numeric',reason:detail&&detail.reason||'change'});if(typeof this.options.onChange==='function')this.options.onChange(value,{...detail,instance:this});},
             onStep:(value,detail)=>{if(typeof this.options.onStep==='function')this.options.onStep(value,{...detail,instance:this});}
         };
         if (includeInitial) {

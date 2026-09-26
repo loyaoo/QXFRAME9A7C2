@@ -1,15 +1,31 @@
-import { bootstrapInteractionModality } from './core/interactionModality.js';
+import { bootstrapInteractionModality, destroy as destroyInteractionModality } from './core/interactionModality.js';
+import { FocusOrigin } from './core/focusOrigin.js';
 import { startAutoEnhance as startRippleAutoEnhance } from './components/ripple.js';
-import { installSwitchLoadingGuard } from './core/switchLoadingGuard.js';
+import { installSwitchLoadingGuard, uninstallSwitchLoadingGuard } from './core/switchLoadingGuard.js';
 
-let initializedDocument = null;
+const initializedDocuments = new WeakMap();
+function resolveDocument(target) {
+    if (target && target.nodeType === 9) return target;
+    return target && target.document || null;
+}
 export function initializeRuntime(target = globalThis) {
-    const doc = target && target.document;
-    if (!doc || initializedDocument === doc) return false;
+    const doc = resolveDocument(target);
+    if (!doc || initializedDocuments.has(doc)) return false;
     bootstrapInteractionModality(doc);
+    FocusOrigin.setup(doc);
     installSwitchLoadingGuard(doc);
-    startRippleAutoEnhance();
-    initializedDocument = doc;
+    const rippleRuntime = startRippleAutoEnhance(doc);
+    initializedDocuments.set(doc, Object.freeze({ document:doc, rippleRuntime:rippleRuntime || null }));
+    return true;
+}
+export function destroyRuntime(target = globalThis) {
+    const doc = resolveDocument(target), record = doc && initializedDocuments.get(doc);
+    if (!doc || !record) return false;
+    initializedDocuments.delete(doc);
+    if (record.rippleRuntime && typeof record.rippleRuntime.destroy === 'function') record.rippleRuntime.destroy();
+    uninstallSwitchLoadingGuard(doc);
+    FocusOrigin.destroy(doc);
+    destroyInteractionModality(doc);
     return true;
 }
 export function initializeGlobal(api, target = globalThis) {
@@ -21,4 +37,4 @@ export function initializeGlobal(api, target = globalThis) {
     initializeRuntime(target);
     return runtime;
 }
-export function initializeInteractionModality(target = globalThis) { return bootstrapInteractionModality(target && target.document); }
+export function initializeInteractionModality(target = globalThis) { return bootstrapInteractionModality(resolveDocument(target)); }

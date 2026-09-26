@@ -1,7 +1,7 @@
 import { QXFRAME9A7C2, Components } from './runtime/runtime.js';
 export { QXFRAME9A7C2, Components } from './runtime/runtime.js';
 export { ComponentRuntime, ComponentInitializer } from './runtime/componentRuntime.js';
-export { initializeRuntime } from './initializer.js';
+export { initializeRuntime, destroyRuntime } from './initializer.js';
 export { Core, Headless, DOMHeadless, BuildingBlocks, ModuleManifest } from './runtime/runtime.js';
 export { Component } from './core/component.js';
 export { FieldComponent } from './components/field.js';

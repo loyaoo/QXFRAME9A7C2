@@ -33,7 +33,28 @@ for (const script of scripts) {
         const output = String(result.stdout || '') + '\n' + String(result.stderr || '');
         if (!/Chromium DevTools endpoint timed out|CDP endpoint timeout/.test(output)) break;
     }
-    assert.equal(result.status, 0, `${script} failed after ${attempt + 1} attempt(s):\n${result.stdout}\n${result.stderr}`);
+    if (result.status !== 0) {
+        const stdoutLines = String(result.stdout || '').trim().split(/\r?\n/).filter(Boolean);
+        const jsonLine = stdoutLines.slice().reverse().find(line => line.trim().startsWith('{') && line.includes('"ok"'));
+        let summary = null;
+        if (jsonLine) {
+            try {
+                const payload = JSON.parse(jsonLine);
+                summary = {
+                    error: payload && payload.error || null,
+                    failedChecks: Array.isArray(payload && payload.checks)
+                        ? payload.checks.filter(check => check && check.ok === false).map(check => ({ name:check.name, detail:check.detail || '' }))
+                        : []
+                };
+            } catch (_) {}
+        }
+        if (!summary) {
+            const stderr = String(result.stderr || '').trim();
+            summary = { error: stderr || 'browser verification child exited non-zero', failedChecks: [] };
+        }
+        console.error('QX_BROWSER_SUITE_FAILURE:' + JSON.stringify({ script, attempts:attempt + 1, ...summary }));
+    }
+    assert.equal(result.status, 0, `${script} failed after ${attempt + 1} attempt(s). See QX_BROWSER_SUITE_FAILURE above.`);
     const lines = result.stdout.trim().split(/\r?\n/).filter(Boolean);
     const last = lines.at(-1) || '';
     assert.ok(last, `${script} produced no verification result.`);
