@@ -1383,9 +1383,11 @@ function create(options) {
     
   function setActiveAndFocus(action, reason) {
     var changed = action({ source: 'api', reason: reason });
-    if (activeItem.activeKey) ensureActiveVisible(activeItem.activeKey);
-    var focused = focusWrap();
-    return changed || focused;
+    if (changed) {
+      ensureActiveVisible(activeItem.activeKey);
+      focusWrap();
+    }
+    return changed;
   }
     
   function selectedAnchorRow() {
