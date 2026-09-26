@@ -16770,30 +16770,30 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 /* SelectGroup already exposes one focus ring on the label; never draw a second ring on its indicator. */
 .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator{outline:none}
 /* Pointer focus must not accidentally inherit UA :focus-visible heuristics on text-editing controls. */
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-input:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-select:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-form-textarea:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="range"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input:not([type]):focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="text"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="search"]:focus-visible{
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="range"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input:not([type]):focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="text"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="search"]:focus-visible{
   outline:none
 }
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="email"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="password"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="url"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="tel"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="number"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="date"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="datetime-local"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="time"]:focus-visible{
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="email"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="password"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="url"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="tel"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="number"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="date"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="datetime-local"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="time"]:focus-visible{
   outline:none
 }
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="month"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form input[type="week"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form select:focus-visible,
-html:not(.qxframe9a7c2-keyboard-modality) .qxframe9a7c2-native-form textarea:focus-visible{
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="month"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="week"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form select:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form textarea:focus-visible{
   outline:none
 }
 
