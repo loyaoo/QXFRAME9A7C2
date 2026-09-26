@@ -10,14 +10,14 @@
 - Last checkpoint date: 2026-09-26
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `18a276417a2331b889d3994931f3effb82d9facd` (PR #115 squash merge).
+- Last code-affecting main commit: `0c40decacebcbd8c35e7c77a2b141a8161adbfd7` (PR #116 squash merge).
 - Current branch: `main`
-- Open PRs at this checkpoint: none after PR #115 merge; if Git differs, trust Git
+- Open PRs at this checkpoint: none after PR #116 merge; if Git differs, trust Git
 - Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green code PR CI: #572 / `36203814588` (PR #115 exact-head `21a942bfb64b4b9f1fd505626cacee659b699091`)
-- Latest green main CI + Pages: #573 / `36204025514` (`main@18a276417a2331b889d3994931f3effb82d9facd`, PR #115 code lineage; release + deploy-pages success)
+- Latest green code PR CI: #576 / `36212774177` (PR #116 exact-head `2008ce5b8fb53e28f2498c0a4ecc4303c44b1b82`)
+- Latest green main CI + Pages: #577 / `36212979450` (`main@0c40decacebcbd8c35e7c77a2b141a8161adbfd7`, PR #116 code lineage; release + deploy-pages success)
 - Overall handbook implementation progress: 100% implementation complete; historical-regression remediation and the pre-production hotpath pass are merged and verified on main; further Astra acceptance is limited to newly confirmed findings or non-blocking cleanup debt
 - Current Phase: post-hotpath final acceptance / newly confirmed findings only
 - Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE`
@@ -25,8 +25,8 @@
 ## CURRENT
 
 ### POST-AUDIT-CORE-INTEGRITY-PERF-003 — shared state integrity + hotpath cleanup
-Status: CI_REGRESSION_FIX_IN_PROGRESS
-Task progress: 82%
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
 Scope:
 - Fix confirmed ValueController integrity defects: duplicate normalization, copied reset baseline, public mutable-reference leakage, and stale callback reentrancy events.
 - Fix TimePanel/WheelPanel canonicalization so visual wheel selection and parent value cannot diverge.
@@ -59,14 +59,16 @@ Verification added:
 - tools/verify-core-hotpaths.mjs
 - tools/verify-browser-smoke.html
 CI evidence:
-- PR #116 run #575 / 36212460277 attempt 1 reached core checks but Chrome CDP startup timed out in existing phase-d Table browser harness (infrastructure failure).
-- attempt 2 started Chrome and passed phase-d Table, then exposed a real ValueController boundary regression in phase-d Tags: optional previousPreviewValue=undefined was incorrectly sent through TokenInput's array-only copyValue adapter.
-- fix: optional undefined event metadata bypasses the value copy adapter; domain values remain copied at public boundaries. Added a strict array-copy adapter regression.
+- PR #116 run #575 / `36212460277` attempt 1 reached core checks but Chrome CDP startup timed out in the existing phase-d Table browser harness (infrastructure failure).
+- PR #116 run #575 attempt 2 started Chrome and passed phase-d Table, then exposed a real ValueController boundary regression in phase-d Tags: optional `previousPreviewValue=undefined` was incorrectly sent through TokenInput's array-only copyValue adapter.
+- fix commit `2008ce5b8fb53e28f2498c0a4ecc4303c44b1b82`: optional undefined event metadata bypasses the value copy adapter; domain values remain copied at public boundaries. Added a strict array-copy adapter regression.
+- PR #116 final exact-head CI #576 / `36212774177`: success, including Full release verification, strict Chromium regressions, npm pack, standalone dist/docs, and artifacts.
+- PR #116 squash merged as `0c40decacebcbd8c35e7c77a2b141a8161adbfd7`.
+- main CI #577 / `36212979450`: release success and deploy-pages success on the merged code.
 Next exact step:
-1. create code commit and PR.
-2. run exact-head full release + strict Chromium verification.
-3. fix only reproduced regressions; do not weaken gates.
-4. merge only after green, then verify main CI + Pages and close task.
+1. Resume `ASTRA-HIGH-FINAL-ACCEPTANCE` only for newly confirmed findings.
+2. Do not reopen this task unless a new reproducible regression contradicts the verified coverage.
+3. Keep WheelPanel same-value hard no-op and VirtualList keyed reuse deferred until a dedicated invalidation/reconciliation contract makes their interaction risks explicit.
 
 
 ### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
