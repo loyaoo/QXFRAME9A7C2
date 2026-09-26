@@ -9,52 +9,30 @@
 
 - Last checkpoint date: 2026-09-26
 - Repository: `loyaoo/QXFRAME9A7C2`
-- Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file
-- Last code-affecting main commit: `0c40decacebcbd8c35e7c77a2b141a8161adbfd7` (PR #116 squash merge).
-- Current branch: `fix/final-audit-focus-origin-20260926-final`
-- PR / CI: validate this branch through the final remediation PR; Git / Actions facts override this checkpoint
-- Branch inventory at this checkpoint: `main` + merged/superseded migration branches; branch pruning is post-audit housekeeping
+- Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
+- Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
-- Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token)
-- Latest green code PR CI: #576 / `36212774177` (PR #116 exact-head `2008ce5b8fb53e28f2498c0a4ecc4303c44b1b82`)
-- Latest green main CI + Pages: #577 / `36212979450` (`main@0c40decacebcbd8c35e7c77a2b141a8161adbfd7`, PR #116 code lineage; release + deploy-pages success)
-- Overall handbook implementation progress: base 9-controller migration remains 100%; final-audit remediation implementation is complete in the branch and awaits PR CI / post-merge Pages verification.
-- Current Phase: final-audit remediation — PR / CI validation
-- Current Task: `FINAL-AUDIT-FOCUS-ORIGIN-001`
+- Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
+- Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation and the post-merge self-audit follow-up are merged and verified.
+- Current Phase: handoff-ready after final self-audit closeout.
+- Current Task: `HANDOFF-READY-001`
 
 ## CURRENT
 
-### FINAL-AUDIT-FOCUS-ORIGIN-001 — final audit remediation + Focus Origin unification
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 93%
-Base main: `c3dff3a8346e9e9eeb78ca5a5fdbde362671c5ff`
-Branch: `fix/final-audit-focus-origin-20260926-final`
-Scope:
-- Close A01/A02, B01/B03, A04-A11 and D01/D02 from the 2026-09-26 current-main audit manual.
-- Keep B02 as regression-only; PR #116 ValueController callback/revision guards remain the authority.
-- Introduce FocusOrigin as Shared Protocol infrastructure, not a 10th Runtime Controller.
-- Preserve KeyboardNavigation, VirtualFocus, FocusScope, FocusManager and FocusController ownership boundaries.
-- Preserve Picker draft/commit semantics, Tags overflow non-focusability, and the existing 2px / -1px keyboard outline visual.
-Implementation evidence:
-- Upload active HTML/XML/XHTML/SVG preview is download-only instead of same-origin document navigation.
-- FormBridge honors final native reset cancellation.
-- InputNumber controlled proposals no longer mutate committed/FormData until external acknowledgement.
-- FocusOrigin separates real focus origin from raw InteractionModality and virtual-navigation origin; managed Control/OTP/Tabs/Table/Tags/ItemCollection paths use it.
-- AsyncTask and FormController guard destroy/reentry, overlapping submit, stale async reset, disabled serialization and special field IDs.
-- initializeRuntime/Ripple/Switch/InteractionModality resources are document-scoped and releasable.
-- Nine verification scripts use fileURLToPath(import.meta.url), with an explicit Windows CI gate.
-- README and the master handbook describe ValueController/ControllableStateCore and FocusOrigin current authority.
-Sandbox verification:
-- `verify:final-focus-origin` — pass.
-- `verify:final-async-task` — pass.
-- `verify:final-form-lifecycle` — pass.
-- `verify:final-audit-closeout` — pass.
-- Local Chromium lifecycle harness reached the sandbox browser/CDP environment limit; the same strict browser gate is part of the PR release verification.
+### HANDOFF-READY-001 — verified handoff checkpoint
+Status: READY
+Task progress: 100%
+Verified closeout:
+- PR #118 (`fix: close final audit and unify focus origin`) merged; its exact-head PR CI passed and merged-main run #597 passed release, Windows tooling and Pages.
+- PR #119 (`fix: close focus origin and collection edge cases`) merged at `18830d387a60b53c76c97e54e2ac9cf6700c7baa`.
+- PR #119 exact-head `ce1446f40e73d7cb2b02f7c12dd5b5a564455201`: run #599 passed release + Windows tooling.
+- PR #119 merged-main run #600 passed release + Windows tooling + GitHub Pages.
+- FocusOrigin nested pointer handoff and empty ItemCollection focusFirst/focusLast behavior now have explicit regressions.
+- No known controller-migration implementation blocker remains on the maintained public surface.
 Next exact step:
-1. Create one atomic commit/PR from the already-verified sandbox tree.
-2. Require Ubuntu full release + strict Chromium and Windows path jobs to pass.
-3. Merge only after exact-head PR CI is green, then require main release + Pages green.
-4. Do not reopen B02 or redo earlier controller phases unless a new regression contradicts verified evidence.
+1. On resume, query current `main`, open PRs, Actions status and branch inventory before acting.
+2. Do not reopen PR #118/#119 findings or earlier controller phases unless a new reproducible regression contradicts their verification evidence.
+3. Execute only the next user-scoped task; treat this file as a checkpoint, not as permission to restart completed audits.
 
 ## Current authority snapshot — after Phase A
 
@@ -74,7 +52,7 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 - Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
 - Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
 - Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
-- Input modality: existing `InteractionModality` remains the authority and now exposes touch/programmatic modalities plus the `InputModality` alias.
+- Input modality / focus origin: `InteractionModality` remains the raw device-context authority and exposes touch/programmatic modalities plus the `InputModality` alias; `FocusOrigin` is the Shared Protocol authority for real DOM focus origin; `KeyboardNavigation` / VirtualFocus owns virtual-navigation modality.
 - Shared Protocol verification covers the canonical foundation and Collection/ValueController integration; removed ValueDraft/StateController aliases must not reappear.
 
 ## ACTIVE KNOWN ISSUES — NOT DONE
@@ -82,6 +60,31 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### SELF-AUDIT-FOLLOWUP-001 — FocusOrigin handoff + ItemCollection empty-focus edge
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Evidence:
+- PR #119 merged.
+- PR exact head `ce1446f40e73d7cb2b02f7c12dd5b5a564455201`; CI run #599: release success, Windows tooling success.
+- merged main `18830d387a60b53c76c97e54e2ac9cf6700c7baa`; CI run #600: release success, Windows tooling success, Pages success.
+Outcome:
+- related ancestor/descendant pointer focus handoff preserves pointer intent through the ensuing real-focus transition.
+- empty ItemCollection `focusFirst()` / `focusLast()` no longer steals focus or reports success.
+- same-active-item API refocus remains covered and working.
+
+### FINAL-AUDIT-FOCUS-ORIGIN-001 — final audit remediation + Focus Origin unification
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Evidence:
+- PR #118 merged.
+- merge commit `9ecc4dc658fe9319a9febb5e946a1219c525d110`.
+- merged-main run #597: release success, Windows tooling success, Pages success.
+Outcome:
+- A01/A02, B01/B03, A04-A11 and D01/D02 final-audit remediation landed.
+- FocusOrigin is Shared Protocol infrastructure rather than a 10th Runtime Controller.
+- managed focus, async/form lifecycle, runtime cleanup, Windows tool paths, release and legacy browser regressions are required gates.
+
 
 ### POST-AUDIT-CORE-INTEGRITY-PERF-003 — shared state integrity + hotpath cleanup
 Status: DONE_MERGED_VERIFIED

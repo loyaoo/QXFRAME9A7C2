@@ -100,7 +100,7 @@ jobs:
           (cd demo-package && zip -qr ../artifacts/qxframe9a7c2-dist-docs-demo.zip .)
 
       - name: Upload dist and npm package
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: qxframe9a7c2-${{ github.sha }}
           path: |
@@ -109,7 +109,7 @@ jobs:
           retention-days: 30
 
       - name: Upload standalone dist + docs demo
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: qxframe9a7c2-dist-docs-demo-${{ github.sha }}
           path: artifacts/qxframe9a7c2-dist-docs-demo.zip
@@ -117,7 +117,7 @@ jobs:
 
       - name: Upload GitHub Pages artifact
         if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: demo-package
 
@@ -158,4 +158,4 @@ jobs:
     steps:
       - name: Deploy GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
