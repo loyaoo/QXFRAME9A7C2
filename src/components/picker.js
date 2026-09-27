@@ -127,7 +127,7 @@ export class PickerComponent extends PopupFieldComponent {
         const record = requireState(this);
         const open = !!(record.field && record.field.getState && record.field.getState().open);
         if (!record.controller || typeof record.controller.projection !== 'function') {
-            return Object.freeze({ open, channel:'committed', value:undefined, revision:0 });
+            return Object.freeze({ open, channel:'committed', value:undefined, revision:0, draftVisual:false });
         }
         const projection = record.controller.projection({
             open,
