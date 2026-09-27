@@ -218,6 +218,12 @@ function setupTabs(instance) {
           if (destroyed || !overflowPopover.getState().open) return;
           focusOverflowKey(overflowKeys.indexOf(activeKey) >= 0 ? activeKey : overflowKeys[0], { source:overflowOpenSource, reason:'overflow-open' });
         });
+      } else if (overflowReturnFocusSource) {
+        var returnSource = overflowReturnFocusSource;
+        overflowReturnFocusSource = '';
+        Scheduler.mutate(function () {
+          if (!destroyed) focusOverflowTrigger(returnSource, 'tabs-overflow-close-return');
+        });
       }
     }
   });
@@ -233,6 +239,7 @@ function setupTabs(instance) {
   var overflowRowsByKey = new Map();
   var overflowFocusKey = '';
   var overflowOpenSource = 'api';
+  var overflowReturnFocusSource = '';
   var overflowLayout = null;
   var keyboardNavigation = null;
   var indicatorMeasureCancel = null;
@@ -1032,8 +1039,9 @@ function setupTabs(instance) {
     else if (event.key === 'Home') handled = moveOverflowFocus(0, 'first', event);
     else if (event.key === 'End') handled = moveOverflowFocus(0, 'last', event);
     else if (event.key === 'Escape') {
+      overflowReturnFocusSource = 'keyboard';
       handled = closeOverflow();
-      focusOverflowTrigger('keyboard', 'tabs-overflow-escape-return');
+      if (!handled) overflowReturnFocusSource = '';
     }
     if (handled) {
       if (event.preventDefault) event.preventDefault();
@@ -1055,8 +1063,8 @@ function setupTabs(instance) {
     var key = DOM.getPrivate(button, 'tabsOverflowKey');
     var source = DOM.activationSource(event);
     setActiveKey(key, { source: source, reason: 'overflow', originalEvent: event });
-    closeOverflow();
-    focusOverflowTrigger(source, 'tabs-overflow-select-return');
+    overflowReturnFocusSource = source;
+    if (!closeOverflow()) overflowReturnFocusSource = '';
   }));
   scope.add(DOM.listen(addButton, 'click', function (event) {
     if (CapabilityController.mutationLocked(opts)) return;
