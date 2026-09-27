@@ -1403,8 +1403,9 @@ Keep this file compact and non-contradictory:
 
 ## IMAGE-PREVIEW-MOTION-001 — Image preview trajectory continuity (2026-09-27)
 
-- Status: **IMPLEMENTED — PENDING PR CI**
+- Status: **VERIFIED — READY TO MERGE**
 - Baseline: `main@7c18b8a55792e3a86ba9fa0127c43ed9263f4b27`.
+- Verification: PR #125 implementation head `43ccfd17cd94415226be26e921a76fa0585679a1` passed QXFRAME CI #621 including full release verification, standalone dist/docs build, artifact packaging, and Windows tools. This status-only checkpoint is the only change after that verified implementation head.
 - User evidence: PixPin_2026-09-27_18-31-14.mp4 showed the preview copy changing size at the enter/leave boundary and a visible source/preview overlap on close.
 - Root cause: the trajectory phase locked `previewMotion` to viewport-derived pixel geometry, then `onAfterEnter` released that lock into `.qxframe9a7c2-image-preview-image { max-width:94%; max-height:92%; }`, whose percentages were relative to the auto-sized motion wrapper rather than the viewport. Closing locked the geometry again, producing another size jump. In addition, the authored source image was made visible at leave start while the preview copy was still travelling back to it.
 - Fix: settled Image preview sizing now uses `94vw / 92vh`, matching the trajectory viewport basis; trajectory content is transform-only while the mask owns fading; the authored source stays hidden until `finalizePreviewLeave()`; closing resets inner zoom/pan/rotate/flip while the outer copy returns to the source.
