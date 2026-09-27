@@ -557,7 +557,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       field.setTags(dateTags(tagValue));
       var tokenText=draft.rawInputActive?draft.rawInput:'';
       field.setDisplayValue(tokenText);
-      field.setDraftDisplayValue(open?tokenText:'');
+      field.setDraftDisplayValue(projection.draftVisual === true ? tokenText : '');
       field.setPlaceholder(opts.placeholder);
       visualHasValue = !!(tagValue && tagValue.length) || (open && draft.rawInputActive && String(draft.rawInput || '').trim() !== '');
     } else {
