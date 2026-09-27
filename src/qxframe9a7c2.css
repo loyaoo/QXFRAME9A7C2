@@ -1587,7 +1587,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 .qxframe9a7c2-carousel-dot:focus-visible,
 .qxframe9a7c2-image-preview-tool:focus-visible,
 .qxframe9a7c2-image-preview-nav:focus-visible,
-.qxframe9a7c2-input-segment-field:focus-within,
+.qxframe9a7c2-input-segment-field.qxframe9a7c2-segment-keyboard-focus,
 .qxframe9a7c2-switch-input:focus-visible + .qxframe9a7c2-switch-track{
       /* Environment native semantics override:  intentionally carries enough specificity
        * to survive later zero-specificity component rules without priority flags. */
