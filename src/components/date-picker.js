@@ -719,7 +719,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (controlledView) restoreControlledPanelValue();
   }
-  function setCalendarPanelMode(mode, anchorValue) {
+  function setCalendarPanelMode(mode, anchorValue, meta) {
     if (!calendar) return false;
     var nextMode = mode === 'year' || mode === 'month' ? mode : 'date';
     var previousMode = calendarPanelMode;
@@ -743,8 +743,14 @@ function setupDatePickerRuntime(instance, fieldInit) {
       monthPanel.setViewValue(view, { silent: true, source: 'date-picker', reason: 'header-month-view' });
       monthPanel.setValue(view, { silent: true, source: 'date-picker', reason: 'header-month-value', syncView: false });
     }
-    if (field && field.getState().open) activateCurrentPanelVirtualFocus('mode-change');
-    if (previousMode !== nextMode) emitPanelChange(view, { source: 'panel', reason: 'mode-change' }, nextMode);
+    var modeSource = meta && meta.source || 'api';
+    var modeEvent = meta && meta.originalEvent || null;
+    var modeNavigation = field && field.getKeyboardNavigation ? field.getKeyboardNavigation() : null;
+    if (field && field.getState().open && modeNavigation && modeNavigation.virtualFocus) {
+      if (modeSource === 'keyboard') activateCurrentPanelVirtualFocus('mode-change');
+      else if (modeSource === 'pointer' || modeSource === 'mouse' || modeSource === 'touch' || /^(pointer|mouse|click|touch)/.test(String(modeEvent && modeEvent.type || '').toLowerCase())) modeNavigation.virtualFocus.pointer();
+    }
+    if (previousMode !== nextMode) emitPanelChange(view, { source: modeSource, reason: 'mode-change', originalEvent: modeEvent }, nextMode);
     restoreControlledPanelValue();
     return true;
   }
@@ -766,13 +772,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
   function requestCalendarYear(viewValue, detail) {
     rememberCalendarDrillOwner(detail);
-    var changed = setCalendarPanelMode('year', viewValue);
+    var changed = setCalendarPanelMode('year', viewValue, detail);
     if (changed && detail && detail.source === 'keyboard') focusFieldHost();
     return changed;
   }
   function requestCalendarMonth(viewValue, detail) {
     rememberCalendarDrillOwner(detail);
-    var changed = setCalendarPanelMode('month', viewValue);
+    var changed = setCalendarPanelMode('month', viewValue, detail);
     if (changed && detail && detail.source === 'keyboard') focusFieldHost();
     return changed;
   }
@@ -782,7 +788,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var current = cloneDate(owner.getState().viewValue) || new Date();
     current.setFullYear(selected.getFullYear());
     current.setDate(1);
-    setCalendarPanelMode('month', current);
+    setCalendarPanelMode('month', current, detail);
     if (detail && detail.source === 'keyboard') { focusFieldHost(); activateCurrentPanelVirtualFocus('year-drill-select'); }
   }
   function restoreDateKeyboardAnchor(fallback, source) {
@@ -814,10 +820,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
       originalEvent: detail && detail.originalEvent || null
     });
     if (calendarSecondary) syncCalendarPair(primaryView, { source: source, reason: 'header-month-secondary' });
-    setCalendarPanelMode('date', primaryView);
+    setCalendarPanelMode('date', primaryView, detail);
     restoreDateKeyboardAnchor(selected, source);
-    if (source === 'keyboard') focusFieldHost();
-    activateCurrentPanelVirtualFocus('month-drill-select');
+    if (source === 'keyboard') { focusFieldHost(); activateCurrentPanelVirtualFocus('month-drill-select'); }
   }
   function panelCapabilityOptions() { return { disabled:opts.disabled === true, readOnly:opts.readOnly === true, loading:opts.loading === true || opts.busy === true }; }
   function resolvedTimeOptions(anchor, partIndex) {
@@ -1192,7 +1197,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       pickerSession.open(openDetail);
       keyboardRegion = 'selection';
       activeCalendarPanel = 'primary';
-      if (calendar) setCalendarPanelMode('date', calendar.getState().viewValue);
+      if (calendar) setCalendarPanelMode('date', calendar.getState().viewValue, detail);
       var openByKeyboard = !!(detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || ''))));
       var openEventType = String(detail && detail.originalEvent && detail.originalEvent.type || '').toLowerCase();
       var openByPointer = !openByKeyboard && !!(detail && (
@@ -1314,7 +1319,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       readOnly: opts.readOnly === true,
       loading: opts.loading === true || opts.busy === true,
       onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'month'); },
-      onTitleRequest: function (viewValue, detail) { var changed = setCalendarPanelMode('year', viewValue); if (changed && detail && detail.source === 'keyboard') focusFieldHost(); },
+      onTitleRequest: function (viewValue, detail) { var changed = setCalendarPanelMode('year', viewValue, detail); if (changed && detail && detail.source === 'keyboard') focusFieldHost(); },
       onSelect: handleMonthDrillSelect
     });
     monthPanel.getRootElement().classList.add('qxframe9a7c2-date-picker-drill-panel');

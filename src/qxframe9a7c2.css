@@ -1587,7 +1587,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 .qxframe9a7c2-carousel-dot:focus-visible,
 .qxframe9a7c2-image-preview-tool:focus-visible,
 .qxframe9a7c2-image-preview-nav:focus-visible,
-.qxframe9a7c2-input-segment-field:focus-within,
+.qxframe9a7c2-input-segment-field.qxframe9a7c2-segment-keyboard-focus,
 .qxframe9a7c2-switch-input:focus-visible + .qxframe9a7c2-switch-track{
       /* Environment native semantics override:  intentionally carries enough specificity
        * to survive later zero-specificity component rules without priority flags. */
@@ -16482,7 +16482,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-image-mask{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-overlay);display:grid;place-items:center;background:var(--_qxframe9a7c2-image-mask-bg);color:var(--_qxframe9a7c2-semantic-overlay-text);opacity:0;transition:opacity var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard);pointer-events:none}
 .qxframe9a7c2-image.is-previewable{cursor:zoom-in;outline:none}
 .qxframe9a7c2-image.is-previewable .qxframe9a7c2-image-preview-trigger:hover+.qxframe9a7c2-image-mask,.qxframe9a7c2-image.is-previewable .qxframe9a7c2-image-preview-trigger:focus-visible+.qxframe9a7c2-image-mask{opacity:1}
-.qxframe9a7c2-image.is-previewable:focus-within{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
+.qxframe9a7c2-image.is-previewable.is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-image.is-disabled{cursor:not-allowed;opacity:.62}
 
 .qxframe9a7c2-image-preview-root{--_qxframe9a7c2-image-preview-mask:var(--qxframe9a7c2-image-preview-mask-color,var(--_qxframe9a7c2-semantic-overlay-base));--_qxframe9a7c2-image-preview-control:var(--qxframe9a7c2-image-preview-control,var(--_qxframe9a7c2-semantic-overlay-control));--_qxframe9a7c2-image-preview-border:var(--qxframe9a7c2-image-preview-border,var(--_qxframe9a7c2-semantic-overlay-divider));position:fixed;inset:0;display:block;padding:0;overflow:hidden;color:var(--_qxframe9a7c2-semantic-overlay-text);pointer-events:none;overscroll-behavior:contain;touch-action:none;outline:none;isolation:isolate}

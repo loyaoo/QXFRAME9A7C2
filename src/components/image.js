@@ -2,6 +2,7 @@ import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
+import { FocusOrigin } from '../core/focusOrigin.js';
 import { URLPolicy } from '../utils/url.js';
 import { Lifecycle } from '../core/lifecycle.js';
 import { Config } from '../core/config.js';
@@ -272,6 +273,14 @@ function setupImage(instance) {
     render(mask, typeof output === 'function' ? output(api) : output, doc);
     if (mask.parentNode !== root) root.appendChild(mask);
   }
+  function syncFocusOrigin() {
+    var active = doc && doc.activeElement;
+    root.classList.toggle('is-keyboard-focus', !!(active && root.contains(active) && FocusOrigin.isKeyboard(active)));
+  }
+  scope.add(DOM.listen(root, 'focusin', syncFocusOrigin));
+  scope.add(DOM.listen(root, 'focusout', function () { Promise.resolve().then(function () { if (!destroyed) syncFocusOrigin(); }); }));
+  scope.add(FocusOrigin.onChange(function () { if (!destroyed) syncFocusOrigin(); }, doc));
+
   function syncRoot() {
     root.classList.toggle('is-rounded', opts.rounded === true);
     root.classList.toggle('is-circle', opts.circle === true);
