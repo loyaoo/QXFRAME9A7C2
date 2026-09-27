@@ -1399,3 +1399,12 @@ Keep this file compact and non-contradictory:
 
 - Implementation checkpoint: picker grey-state is now projection-channel driven (draft/preview only); DatePicker single/dual/segments range forms are browser-locked; Autocomplete input-first default is browser-locked; Notification stacked viewport is shadow-safe with a single edge-gutter owner; Table empty chrome/right gutter/corner seams are regression-locked; Image first activation is tested before load settles and after error, and the canonical demo no longer requires a break-src button.
 - Verification: PR #123 exact implementation head `0d3ccad11c44b7418a9498191e12af7cae315c34` passed QXFRAME CI run #617: dependency audit, completion audit, full release verification, npm pack, standalone dist/docs build, artifact upload, and Windows tools all succeeded. This status-only checkpoint is the sole change after that verified implementation head.
+
+
+## PICKER-ENTER-SUBMIT-001 — Immediate picker Enter policy (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@7c18b8a55792e3a86ba9fa0127c43ed9263f4b27`.
+- Rule: for `needConfirm:false`, Enter may finish the current keyboard selection and then submit/close the picker when its value is complete. Multiple/additive selection is explicitly excluded because Enter remains a selection action. Incomplete ranges stay open until both endpoints are complete. `needConfirm:true` retains the existing explicit-confirm Enter path.
+- Shared implementation: `PickerComponent.submitImmediateFromKeyboard()`; ColorPicker, DatePicker, TimePicker and WheelPicker route through it after their panel has processed Enter, so the newly selected value—not the previous draft—is committed.
+- Safety: the shared helper requires an actually open picker and therefore does not double-submit components whose existing select path already auto-closes.
