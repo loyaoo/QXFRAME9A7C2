@@ -190,7 +190,18 @@ var KEYBOARD_FOCUS_CLASS = 'is-keyboard-focus';
       var domain = findDomain(domainHandle);
       if (!domain) throw new TypeError('[QXFRAME9A7C2] VirtualFocus activate requires a registered domain.');
       var local = options || {};
-      var nextModality = local.modality || (local.source === 'pointer' || local.reason === 'pointer' ? 'pointer' : 'keyboard');
+      var explicitSource = String(local.source || '').toLowerCase();
+      var explicitReason = String(local.reason || '').toLowerCase();
+      var eventType = String(local.originalEvent && local.originalEvent.type || '').toLowerCase();
+      var nextModality = local.modality;
+      if (!nextModality) {
+        if (explicitSource === 'keyboard' || /^key/.test(eventType)) nextModality = 'keyboard';
+        else if (
+          explicitSource === 'pointer' || explicitSource === 'mouse' || explicitSource === 'touch' ||
+          explicitReason === 'pointer' || /^(pointer|mouse|click|touch)/.test(eventType)
+        ) nextModality = 'pointer';
+        else nextModality = modality;
+      }
       var context = {
         domain: domain,
         root: focusRoot(),
