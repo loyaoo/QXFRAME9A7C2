@@ -196,7 +196,10 @@ field = PickerField.create({
   onKeydown: function (event) {
     if (!field || !field.getState().open || !panel) return false;
       if (instance.confirmFromKeyboard(event)) return true;
-    return panel.handleKeydown(event);
+    var handled = panel.handleKeydown(event) === true;
+    var completeValue = draft.draftValue && draft.draftValue.length === opts.columns.length && draft.draftValue.every(function (entry) { return entry !== null; });
+    if (instance.submitImmediateFromKeyboard(event, { handled:handled, complete:completeValue })) return true;
+    return handled;
   },
   onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
 });
