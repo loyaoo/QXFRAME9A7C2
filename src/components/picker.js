@@ -179,6 +179,15 @@ export class PickerComponent extends PopupFieldComponent {
         return true;
     }
 
+    submitImmediateFromKeyboard(event, options = {}) {
+        if (!event || event.key !== 'Enter' || this.options.needConfirm === true || event.isComposing === true || !this.canMutate()) return false;
+        if (options.multiple === true || options.complete === false || options.handled === false) return false;
+        if (event.preventDefault) event.preventDefault();
+        const committed = this.commit({ source:'keyboard', reason:'enter-submit', originalEvent:event });
+        if (committed !== false) this.close('enter-submit', event);
+        return committed !== false;
+    }
+
     clear(meta = {}) {
         if (this.destroyed || !this.canMutate()) return false;
         const hook = this[pickerHooks.clear];
