@@ -533,6 +533,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
               if (branchChanged) notifySelectionCallbacks(item.value, branchValue, branchPayload);
               if (destroyed) return true;
             }
+            if (detail && detail.source === 'keyboard') return enterChildColumn(columnIndex, item, detail);
             activeColumnIndex = columnIndex;
             if (isLazyExpandable(item)) loadChildrenFor(item, detail); else renderColumns();
             return true;
@@ -814,9 +815,8 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             var record = triggerSession.getState().open ? activeColumnRecord() : null;
             var item = recordActiveItem(record);
             if (!record || !item) return 'pass';
-            if (hasChildren(item)) return enterChildColumn(record.index, item, { source:'keyboard', reason:'enter-child', originalEvent:event }) ? 'handled' : 'pass';
-            if (!capabilityController.can('select')) return 'blocked';
-            return activateAt(record.index, item, { source:'keyboard', reason:'enter', originalEvent:event }) ? 'handled' : 'pass';
+            if (!capabilityController.can('select') && !hasChildren(item)) return 'blocked';
+            return activateAt(record.index, item, { source:'keyboard', reason:hasChildren(item) ? 'enter-child' : 'enter', originalEvent:event }) ? 'handled' : 'pass';
           }
           if (action === 'SELECT') {
             if (!capabilityController.can('select')) return 'blocked';

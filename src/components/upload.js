@@ -324,7 +324,9 @@ function setupUpload(instance) {
     if (opts.accept) input.setAttribute('accept', opts.accept); else input.removeAttribute('accept');
     if (opts.capture) input.setAttribute('capture', opts.capture === true ? '' : String(opts.capture)); else input.removeAttribute('capture');
     if (opts.directory === true) { input.setAttribute('webkitdirectory',''); input.setAttribute('directory',''); } else { input.removeAttribute('webkitdirectory'); input.removeAttribute('directory'); }
-    var showTrigger = !(opts.hideTrigger === true || (opts.hideTriggerAtMax !== false && maxReached()));
+    var replaceableSingle = Number(opts.maxCount) === 1;
+    var hideAtMax = opts.hideTriggerAtMax !== false && maxReached() && !replaceableSingle;
+    var showTrigger = !(opts.hideTrigger === true || hideAtMax);
     if (showTrigger) root.insertBefore(trigger, list.parentNode === root ? list : null);
     else if (trigger.parentNode) trigger.parentNode.removeChild(trigger);
     trigger.disabled = opts.disabled === true;

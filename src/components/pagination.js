@@ -524,7 +524,7 @@ function setupPagination(instance) {
     var target = detail && detail.target;
     if (!event || !isJumperTarget(target) || !capabilityController.can('edit')) return false;
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      var delta = event.key === 'ArrowUp' ? -1 : 1;
+      var delta = event.key === 'ArrowUp' ? 1 : -1;
       var base = positiveInt(jumperDraft, model.page);
       setCurrent(base + delta, { source: 'keyboard', reason: 'jumper-' + event.key.toLowerCase(), originalEvent: event });
       return true;

@@ -212,7 +212,19 @@ function setupTabs(instance) {
     disabled: opts.disabled === true,
     onOpenChange: function (open) {
       moreButton.classList.toggle('is-active', open === true);
-      if (open === true) overflowScroll.refresh('tabs-overflow-open');
+      if (open === true) {
+        overflowScroll.refresh('tabs-overflow-open');
+        Scheduler.mutate(function () {
+          if (destroyed || !overflowPopover.getState().open) return;
+          focusOverflowKey(overflowKeys.indexOf(activeKey) >= 0 ? activeKey : overflowKeys[0], { source:overflowOpenSource, reason:'overflow-open' });
+        });
+      } else if (overflowReturnFocusSource && !overflowReturnFocusAfterLayout) {
+        var returnSource = overflowReturnFocusSource;
+        overflowReturnFocusSource = '';
+        Scheduler.mutate(function () {
+          if (!destroyed) focusOverflowTrigger(returnSource, 'tabs-overflow-close-return');
+        });
+      }
     }
   });
 
@@ -225,6 +237,10 @@ function setupTabs(instance) {
   var activeKey = '';
   var overflowKeys = [];
   var overflowRowsByKey = new Map();
+  var overflowFocusKey = '';
+  var overflowOpenSource = 'api';
+  var overflowReturnFocusSource = '';
+  var overflowReturnFocusAfterLayout = false;
   var overflowLayout = null;
   var keyboardNavigation = null;
   var indicatorMeasureCancel = null;
@@ -603,6 +619,7 @@ function setupTabs(instance) {
     var close = doc.createElement('button');
     row.className = 'qxframe9a7c2-tabs-overflow-item qxframe9a7c2-overflow-item';
     button.type = 'button';
+    button.tabIndex = -1;
     button.className = 'qxframe9a7c2-tabs-overflow-action qxframe9a7c2-overflow-action';
     label.className = 'qxframe9a7c2-tabs-overflow-label qxframe9a7c2-overflow-label';
     close.type = 'button';
@@ -657,6 +674,53 @@ function setupTabs(instance) {
     });
   }
 
+  function enabledOverflowKeys() {
+    return overflowKeys.filter(function (key) {
+      var record = overflowRowsByKey.get(key);
+      return !!(record && record.button && !record.button.disabled);
+    });
+  }
+
+  function focusOverflowKey(key, meta) {
+    var enabled = enabledOverflowKeys();
+    if (!enabled.length) return false;
+    var normalized = String(key == null ? '' : key);
+    if (enabled.indexOf(normalized) < 0) normalized = enabled[0];
+    overflowFocusKey = normalized;
+    overflowRowsByKey.forEach(function (record) { if (record && record.button) record.button.tabIndex = record.key === normalized ? 0 : -1; });
+    var record = overflowRowsByKey.get(normalized);
+    if (!record || !record.button) return false;
+    var source = meta && meta.source || 'api';
+    var origin = source === 'keyboard' ? 'keyboard' : (source === 'pointer' || source === 'mouse' || source === 'touch' ? 'pointer' : FocusOrigin.inherited(doc));
+    FocusOrigin.prepare(record.button, origin, { source:'tabs-overflow-focus' });
+    var focused = DOM.focusElement(record.button, { preventScroll:true });
+    if (!focused) FocusOrigin.cancelPending(record.button);
+    if (focused) overflowScroll.scrollToElement(record.row, { axis:'y', align:'nearest' });
+    return focused;
+  }
+
+  function moveOverflowFocus(step, edge, event) {
+    var enabled = enabledOverflowKeys();
+    if (!enabled.length) return false;
+    var index = enabled.indexOf(overflowFocusKey);
+    if (edge === 'first') index = 0;
+    else if (edge === 'last') index = enabled.length - 1;
+    else {
+      if (index < 0) index = 0;
+      else index = (index + step + enabled.length) % enabled.length;
+    }
+    return focusOverflowKey(enabled[index], { source:'keyboard', reason:'overflow-navigation', originalEvent:event || null });
+  }
+
+  function focusOverflowTrigger(source, reason) {
+    if (!moreButton || moreButton.parentNode !== nav) return false;
+    var origin = source === 'keyboard' ? 'keyboard' : (source === 'pointer' ? 'pointer' : FocusOrigin.inherited(doc));
+    FocusOrigin.prepare(moreButton, origin, { source:reason || 'tabs-overflow-return' });
+    var focused = DOM.focusElement(moreButton, { preventScroll:true });
+    if (!focused) FocusOrigin.cancelPending(moreButton);
+    return focused;
+  }
+
   function syncOverflowPanel() {
     reconcileOverflowRows();
     var maxHeight = Number(opts.overflowMaxHeight);
@@ -679,13 +743,24 @@ function setupTabs(instance) {
     scroll.refresh('tabs-overflow');
     syncOverflowPanel();
     if (!showMore) closeOverflow();
+    if (overflowReturnFocusSource && overflowReturnFocusAfterLayout) {
+      var returnSource = overflowReturnFocusSource;
+      overflowReturnFocusSource = '';
+      overflowReturnFocusAfterLayout = false;
+      Scheduler.mutate(function () {
+        if (destroyed) return;
+        if (moreButton.parentNode === nav) focusOverflowTrigger(returnSource, 'tabs-overflow-layout-return');
+        else focusTab(activeKey, { source:returnSource, reason:'tabs-overflow-layout-return' });
+      });
+    }
   }
   overflowLayout = ResponsiveOverflow.create({ element:[nav, scroll.getViewportElement()], enabled:true, onMeasure:refreshOverflow });
   scope.add(function(){ if(overflowLayout) overflowLayout.destroy(); overflowLayout=null; });
   function scheduleOverflow(reason) { if(overflowLayout) overflowLayout.request(reason || 'tabs-overflow'); return api; }
-  function openOverflow() {
+  function openOverflow(meta) {
     if (destroyed || moreButton.parentNode !== nav || opts.disabled === true) return false;
-    return overflowPopover.open('tabs-overflow');
+    overflowOpenSource = meta && meta.source || 'api';
+    return overflowPopover.open('tabs-overflow', meta && meta.originalEvent || null);
   }
   function closeOverflow() {
     if (destroyed) return false;
@@ -961,11 +1036,29 @@ function setupTabs(instance) {
   scope.add(DOM.listen(moreButton, 'click', function (event) {
     event.preventDefault();
     event.stopPropagation();
-    if (overflowPopover.getState().open) closeOverflow(); else openOverflow();
+    if (overflowPopover.getState().open) closeOverflow(); else openOverflow({ source:DOM.activationSource(event), originalEvent:event });
   }));
   scope.add(DOM.listen(overflowPanel, 'pointerdown', function (event) {
     var close = event.target ? DOM.closestPrivate(event.target, overflowPanel, 'tabsOverflowClose') : null;
     if (close && overflowPanel.contains(close) && event.preventDefault) event.preventDefault();
+  }));
+  scope.add(DOM.listen(overflowPanel, 'keydown', function (event) {
+    if (!overflowPopover.getState().open) return;
+    var handled = false;
+    if (event.key === 'ArrowDown') handled = moveOverflowFocus(1, null, event);
+    else if (event.key === 'ArrowUp') handled = moveOverflowFocus(-1, null, event);
+    else if (event.key === 'Home') handled = moveOverflowFocus(0, 'first', event);
+    else if (event.key === 'End') handled = moveOverflowFocus(0, 'last', event);
+    else if (event.key === 'Escape') {
+      overflowReturnFocusSource = 'keyboard';
+      overflowReturnFocusAfterLayout = false;
+      handled = closeOverflow();
+      if (!handled) overflowReturnFocusSource = '';
+    }
+    if (handled) {
+      if (event.preventDefault) event.preventDefault();
+      if (event.stopPropagation) event.stopPropagation();
+    }
   }));
   scope.add(DOM.listen(overflowPanel, 'click', function (event) {
     event.stopPropagation();
@@ -980,8 +1073,12 @@ function setupTabs(instance) {
     var button = event.target ? DOM.closestPrivate(event.target, overflowPanel, 'tabsOverflowKey') : null;
     if (!button || !overflowPanel.contains(button)) return;
     var key = DOM.getPrivate(button, 'tabsOverflowKey');
-    setActiveKey(key, { source: DOM.activationSource(event), reason: 'overflow', originalEvent: event, focus: true });
-    closeOverflow();
+    var source = DOM.activationSource(event);
+    setActiveKey(key, { source: source, reason: 'overflow', originalEvent: event });
+    overflowReturnFocusSource = source;
+    overflowReturnFocusAfterLayout = true;
+    if (!closeOverflow()) { overflowReturnFocusSource = ''; overflowReturnFocusAfterLayout = false; }
+    else scheduleOverflow('overflow-selection-return');
   }));
   scope.add(DOM.listen(addButton, 'click', function (event) {
     if (CapabilityController.mutationLocked(opts)) return;
