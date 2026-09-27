@@ -387,6 +387,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
       if (panel && detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || '')))) panel.setActiveColumn(0, { source:'keyboard', reason:'time-picker-open', originalEvent:detail.originalEvent || null });
     },
     onClose: function (detail) { pickerSession.close(detail); },
+    afterOpen: function () { if (panel && panel.refresh) panel.refresh('time-picker-after-open'); },
     onOpenChange: emitOpen, onInput: handleInput, onBlur: handleBlur,
     onKeydown: function (event) {
       if (!field || !field.getState().open || !panel) return false;

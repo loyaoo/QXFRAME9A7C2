@@ -1183,7 +1183,23 @@ function setupDatePickerRuntime(instance, fieldInit) {
         var parsedOpen = openText.trim() ? parseTextSelection(openText) : null;
         if (parsedOpen && parsedOpen.valid) openDetail = Utils.assignOwn({}, openDetail, { draftSeed: parsedOpen.value });
       }
-      pickerSession.open(openDetail); keyboardRegion = 'selection'; activeCalendarPanel = 'primary'; if (calendar) setCalendarPanelMode('date', calendar.getState().viewValue); bindPickerVirtualFocus(); if (detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || '')))) activateCurrentPanelVirtualFocus('date-picker-open'); },
+      pickerSession.open(openDetail);
+      keyboardRegion = 'selection';
+      activeCalendarPanel = 'primary';
+      if (calendar) setCalendarPanelMode('date', calendar.getState().viewValue);
+      var openByKeyboard = !!(detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || ''))));
+      var openEventType = String(detail && detail.originalEvent && detail.originalEvent.type || '').toLowerCase();
+      var openByPointer = !openByKeyboard && !!(detail && (
+        detail.source === 'pointer' || detail.source === 'mouse' || detail.source === 'touch' ||
+        /^(pointer|mouse|click|touch)/.test(openEventType)
+      ));
+      var openNavigation = field && field.getKeyboardNavigation ? field.getKeyboardNavigation() : null;
+      if (openNavigation && openNavigation.virtualFocus) {
+        if (openByKeyboard) openNavigation.virtualFocus.keyboard();
+        else if (openByPointer) openNavigation.virtualFocus.pointer();
+      }
+      bindPickerVirtualFocus();
+      if (openByKeyboard) activateCurrentPanelVirtualFocus('date-picker-open'); },
     onClose: function (detail) { pickerSession.close(detail); keyboardRegion = 'selection'; },
     afterOpen: function () { if (timePanel && timePanel.refresh) timePanel.refresh('date-picker-open'); var nav=field&&field.getKeyboardNavigation?field.getKeyboardNavigation():null; if(nav&&nav.virtualFocus&&nav.virtualFocus.getState().modality==='keyboard') activateCurrentPanelVirtualFocus('date-picker-after-open-refresh'); },
     onOpenChange: emitOpen,
@@ -1328,6 +1344,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
   if (selectionHost) {
     panelCleanups.push(DOM.listen(selectionHost, 'pointerdown', function (event) {
       keyboardRegion = 'selection';
+      var navigation = field && field.getKeyboardNavigation ? field.getKeyboardNavigation() : null;
+      if (navigation && navigation.virtualFocus) navigation.virtualFocus.pointer();
       if (calendarSecondary && calendarSecondary.getRootElement().contains(event.target)) activeCalendarPanel = 'secondary';
       else if (calendar && calendar.getRootElement().contains(event.target)) activeCalendarPanel = 'primary';
     }, true));
