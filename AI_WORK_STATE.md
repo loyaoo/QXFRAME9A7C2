@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — CI FIX IN PROGRESS
-Task progress: 82%
+Status: IMPLEMENTED — CI RETRY
+Task progress: 86%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -43,7 +43,8 @@ Regression coverage:
 CI evidence:
 - PR #131 run #641 reached the new browser regression and failed specifically at commit-time chronological normalization.
 - Root cause of the failed attempt: PickerComponent's family `beforeCommit` hook passes only `detail`; the first implementation incorrectly expected `(controller, detail)`, so the finalizer never saw the DatePicker ValueController.
-- Fix in progress: use the already-owned DatePicker `draft` closure inside the detail-only hook; no shared PickerSession contract change.
+- Run #642 then stopped at the structural source assertion because it still expected the obsolete `(controller, detail)` signature; the implementation itself was not the failing assertion target.
+- The structural assertion now matches the actual detail-only family hook. DatePicker implementation is unchanged from the callback-signature correction.
 Next exact step:
 1. Commit the callback-signature correction.
 2. Run exact-head QXFRAME CI again.

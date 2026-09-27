@@ -33,7 +33,7 @@ assert.match(dateSource,/function selectionVisualValue\(\)[\s\S]*draft\.draftVal
 assert.match(dateSource,/var previewRange = [\s\S]*draft\.hasPreview[\s\S]*draft\.previewValue/,'DatePicker range edit hover must expose one transient preview range.');
 assert.match(dateSource,/var endpointValue = previewRange \|\| selectedValue/,'DatePicker range edit preview must temporarily own the visible start\/end endpoints.');
 assert.match(dateSource,/preserveRangeSlots = !!\(meta && meta\.preserveRangeSlots === true\)/,'DatePicker must allow an open complete-range edit to preserve start\/end control slots until commit.');
-assert.match(dateSource,/function finalizeOrderedRangeDraft\(controller, detail\)/,'DatePicker order:true must canonicalize an edited complete range at the commit boundary.');
+assert.match(dateSource,/function finalizeOrderedRangeDraft\(detail\)/,'DatePicker order:true must canonicalize an edited complete range at the commit boundary.');
 assert.match(dateSource,/current\[activeRangePart === 1 \? 1 : 0\] = selected/,'DatePicker complete-range selection must replace only the active endpoint instead of clearing the other endpoint.');
 assert.match(calendarSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'Calendar must project canonical is-hover state.');
 assert.match(periodPanelSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'PeriodPanel must project the same canonical is-hover state.');
