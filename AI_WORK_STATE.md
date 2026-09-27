@@ -7,38 +7,38 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-27
+- Last checkpoint date: 2026-09-28
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready after DatePicker complete-range end-anchor closeout.
-- Current Task: `HANDOFF-READY-003`
+- Current Phase: handoff-ready after Ant interaction audit round 2 closeout.
+- Current Task: `HANDOFF-READY-004`
 
 ## CURRENT
 
-### HANDOFF-READY-003 — post DatePicker complete-range end-anchor closeout
+### HANDOFF-READY-004 — post Ant interaction audit round 2 closeout
 Status: VERIFIED
 Task progress: 100%
 Repository state:
-- PR #131 merged to `main` at `f586bb3e01a76e624219d3b3a61314164f90c70a`.
-- Implementation/test head `2d84463b949069bc0bcd8a86365d95d883f4e314` passed QXFRAME CI #652.
-- Final PR head `5b909d31f537ec7ad44330afa7dda98415f45ee5` passed QXFRAME CI #653.
-Current DatePicker complete-range rule:
-- Existing complete `order:true` range uses the current end date as the next selection anchor.
-- `clicked < currentEnd => [clicked, currentEnd]`.
-- `clicked >= currentEnd => [currentEnd, clicked]`.
-- A complete-range click never clears the opposite endpoint or enters a `[clicked, null]` state.
-- Mouse and keyboard regression gates use the same one-click rule.
-- `order:false` retains explicit slot semantics.
+- PR #132 merged to `main` at `7013c439a0e9fe1bc407420c852be21ffa58e4c2`.
+- Final PR head `06fb534675e105b890446feae8de2fa20ad6beaa` passed QXFRAME CI #662.
+Closed interaction findings:
+- DatePicker complete ordered range hover/click/keyboard now share one canonical range projection; focusing the end segment cannot change hover semantics away from the current-end anchor.
+- Cascader keyboard Enter routes parent activation through the same `activateAt` path as pointer activation, so `changeOnSelect:true` updates the parent value before entering the child column.
+- Tabs overflow has keyboard navigation and returns focus only after responsive overflow layout completes; it never focuses a hidden main-tab element.
+- Upload `maxCount:1` keeps the trigger available so selecting another file can replace the current file.
+- Pagination quick jumper uses conventional numeric direction: ArrowUp increments and ArrowDown decrements.
 Verification:
-- Current + legacy browser gates, release-preflight, Windows tooling, npm pack, standalone dist/docs build, artifact uploads and Pages artifact creation passed before merge.
+- New Chromium behavior regressions cover all five findings.
+- Existing source-ESM browser fixture was updated for the corrected Pagination direction.
+- Full release verification and Windows tooling passed on exact PR head before merge.
 Next exact step:
-1. On any new report, query current `main`, open PRs and latest CI first.
-2. Reproduce only the newly reported behavior; do not reopen this closed range-selection investigation unless evidence shows a regression.
-3. Keep this file current after each new fix.
+1. Query current `main`, open PRs and latest CI before any new task.
+2. Continue the Ant Design horizontal interaction audit from the remaining component families; do not reopen these five findings unless new evidence shows a regression.
+3. Keep this file current after each merged fix.
 
 ## Current authority snapshot — after Phase A
 
@@ -66,6 +66,20 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### ANT-INTERACTION-AUDIT-ROUND2-001 — five cross-component interaction fixes
+Status: DONE_MERGED_VERIFIED
+Evidence:
+- PR #132 merged at `7013c439a0e9fe1bc407420c852be21ffa58e4c2`.
+- Exact PR head `06fb534675e105b890446feae8de2fa20ad6beaa` passed QXFRAME CI #662.
+Outcome:
+- DatePicker preview/selection range projection unified.
+- Cascader `changeOnSelect` keyboard/pointer activation unified.
+- Tabs overflow keyboard navigation and post-layout focus return fixed.
+- Upload `maxCount:1` replacement trigger preserved.
+- Pagination jumper ArrowUp/ArrowDown direction corrected.
+- Chromium regression coverage added for all five behaviors.
+
 
 ### DATEPICKER-RANGE-REPLACE-001 — end-anchored complete-range replacement
 Status: DONE
