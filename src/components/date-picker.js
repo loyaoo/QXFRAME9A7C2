@@ -479,6 +479,24 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var anchor = selectionAnchor(draft ? draft.draftValue : null);
     return timeFromDate(anchor, timeOptions && timeOptions.defaultValue);
   }
+  function projectRangeSelection(current, selected) {
+    var projected = cloneValue(current, 'range');
+    if (projected[0] && projected[1]) {
+      if (opts.order === false) {
+        var explicitPart = activeRangePart === 1 ? 1 : 0;
+        projected[explicitPart] = selected;
+        return { value:projected, activePart:explicitPart };
+      }
+      var endAnchor = projected[1];
+      var selectedBeforeEnd = compareChronological(selected, endAnchor) < 0;
+      return { value:selectedBeforeEnd ? [selected, endAnchor] : [endAnchor, selected], activePart:selectedBeforeEnd ? 0 : 1 };
+    }
+    if (!projected[0]) return { value:[selected, null], activePart:1 };
+    var start = projected[0];
+    if (opts.order === false) return { value:[start, selected], activePart:1 };
+    var selectedBeforeStart = compareChronological(selected, start) < 0;
+    return { value:selectedBeforeStart ? [selected, start] : [start, selected], activePart:selectedBeforeStart ? 0 : 1 };
+  }
   function applyPanelSelection(date) {
     var selected = DateUnit.start(date, unit, opts.weekStartsOn, false);
     if (!selected) return null;
@@ -490,32 +508,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (index >= 0) current.splice(index, 1); else current.push(selected);
       return current;
     }
-    if (current[0] && current[1]) {
-      if (opts.order === false) {
-        current[activeRangePart === 1 ? 1 : 0] = selected;
-        return current;
-      }
-      var endAnchor = current[1];
-      var selectedBeforeEnd = compareChronological(selected, endAnchor) < 0;
-      activeRangePart = selectedBeforeEnd ? 0 : 1;
-      return selectedBeforeEnd ? [selected, endAnchor] : [endAnchor, selected];
-    }
-    if (!current[0]) {
-      activeRangePart = 1;
-      return [selected, null];
-    }
-    var start = current[0];
-    var selectedBeforeStart = compareChronological(selected, start) < 0;
-    if (opts.order === false) {
-      activeRangePart = 1;
-      return [start, selected];
-    }
-    var output = selectedBeforeStart ? [selected, start] : [start, selected];
-    // Keep subsequent time edits attached to the endpoint the user just selected.
-    // If chronological ordering swaps the pair, that endpoint becomes start (0);
-    // otherwise it remains end (1).
-    activeRangePart = selectedBeforeStart ? 0 : 1;
-    return output;
+    var projection = projectRangeSelection(current, selected);
+    activeRangePart = projection.activePart;
+    return projection.value;
   }
 
   if (fieldInit.formField && !own(sourceOptions, 'value') && !own(sourceOptions, 'defaultValue')) {
@@ -604,10 +599,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (withTime) selected = dateTimeFrom(selected, currentTime());
     if (selection === 'single') return selected;
     if (selection === 'multiple') return null;
-    var current = cloneValue(draft.draftValue, selection);
-    if (!current[0] || activeRangePart === 0) current[0] = selected; else current[1] = selected;
-    if (opts.order !== false && current[0] && current[1] && compareChronological(current[0], current[1]) > 0) current = [current[1], current[0]];
-    return current;
+    return projectRangeSelection(draft.draftValue, selected).value;
   }
   function handlePanelHover(value, detail) {
     var preview = opts.previewValue === false ? null : previewSelection(value);
