@@ -440,22 +440,28 @@ function setupDatePickerRuntime(instance, fieldInit) {
   validatePickerOptions();
   if (opts.previewValue !== false && opts.previewValue !== 'hover') throw new TypeError("[QXFRAME9A7C2] DatePicker previewValue must be false or 'hover'.");
   if (opts.panelRender !== null && opts.panelRender !== undefined && !Utils.isFunction(opts.panelRender)) throw new TypeError('[QXFRAME9A7C2] DatePicker panelRender must be a function or null.');
-  function visualValue() {
-    if (field && field.getState().open && opts.previewValue !== false && draft.hasPreview) return draft.previewValue;
-    if (field && field.getState().open) return draft.draftValue;
-    return draft.value;
+  function selectionVisualValue() {
+    return field && field.getState().open ? draft.draftValue : draft.value;
   }
   function stateForDate(date, info) {
     if (info && info.entry && info.entry.outside === true) return { selected: false, inRange: false, rangeStart: false, rangeEnd: false };
-    var value = visualValue();
-    if (selection === 'single') return { selected: DateUnit.same(date, value, unit, opts.weekStartsOn) };
-    if (selection === 'multiple') return { selected: (value || []).some(function (entry) { return DateUnit.same(date, entry, unit, opts.weekStartsOn); }) };
-    var start = value && value[0];
-    var end = value && value[1];
-    var rangeStart = !!start && DateUnit.same(date, start, unit, opts.weekStartsOn);
-    var rangeEnd = !!end && DateUnit.same(date, end, unit, opts.weekStartsOn);
-    var low = start, high = end;
-    if (start && end && DateUnit.compare(start, end, unit, opts.weekStartsOn) > 0) { low = end; high = start; }
+    var selectedValue = selectionVisualValue();
+    if (selection === 'single') return { selected: DateUnit.same(date, selectedValue, unit, opts.weekStartsOn) };
+    if (selection === 'multiple') return { selected: (selectedValue || []).some(function (entry) { return DateUnit.same(date, entry, unit, opts.weekStartsOn); }) };
+
+    // Selection ownership and hover preview ownership are intentionally separate.
+    // Real endpoints remain selected; preview only projects the provisional range band.
+    var selectedStart = selectedValue && selectedValue[0];
+    var selectedEnd = selectedValue && selectedValue[1];
+    var rangeStart = !!selectedStart && DateUnit.same(date, selectedStart, unit, opts.weekStartsOn);
+    var rangeEnd = !!selectedEnd && DateUnit.same(date, selectedEnd, unit, opts.weekStartsOn);
+
+    var rangeValue = field && field.getState().open && opts.previewValue !== false && draft.hasPreview
+      ? draft.previewValue
+      : selectedValue;
+    var low = rangeValue && rangeValue[0];
+    var high = rangeValue && rangeValue[1];
+    if (low && high && DateUnit.compare(low, high, unit, opts.weekStartsOn) > 0) { var swap = low; low = high; high = swap; }
     var inRange = !!(low && high && DateUnit.compare(date, low, unit, opts.weekStartsOn) >= 0 && DateUnit.compare(date, high, unit, opts.weekStartsOn) <= 0);
     return { selected: rangeStart || rangeEnd, inRange: inRange, rangeStart: rangeStart, rangeEnd: rangeEnd };
   }

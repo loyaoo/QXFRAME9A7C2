@@ -130,6 +130,7 @@ function create(options) {
     var nextKey = parsed ? keyOf(parsed) : null;
     if (nextKey === hoveredKey) return false;
     hoveredKey = nextKey;
+    syncCellStates();
     var detail = { value: cloneDate(parsed), source: meta && meta.source || 'pointer', reason: meta && meta.reason || (parsed ? 'hover' : 'hover-leave'), originalEvent: meta && meta.originalEvent || null, calendar: api };
     if (typeof opts.onHoverChange === 'function') opts.onHoverChange(cloneDate(parsed), detail);
     emitter.emit('hoverChange', detail);
@@ -318,7 +319,7 @@ function create(options) {
       nodes[i].classList.toggle('is-range-end', state.rangeEnd === true);
       var visualActiveOwner = !hostedVirtualFocus || (virtualFocusController && virtualFocusDomain && virtualFocusController.getState().domain === virtualFocusDomain.name);
       nodes[i].classList.toggle('is-active', visualActiveOwner && DOM.getPrivate(nodes[i], 'calendarDate') === activeItem.activeKey);
-      nodes[i].classList.toggle('is-hover', state.hover === true);
+      nodes[i].classList.toggle('is-hover', state.hover === true || DOM.getPrivate(nodes[i], 'calendarDate') === hoveredKey);
       nodes[i];
     }
   }
