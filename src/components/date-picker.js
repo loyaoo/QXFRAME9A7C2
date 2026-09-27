@@ -461,6 +461,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var endpointValue = previewRange || selectedValue;
     var visualStart = endpointValue && endpointValue[0];
     var visualEnd = endpointValue && endpointValue[1];
+    if (opts.order !== false && visualStart && visualEnd && compareChronological(visualStart, visualEnd) > 0) {
+      var visualSwap = visualStart; visualStart = visualEnd; visualEnd = visualSwap;
+    }
     var rangeStart = !!visualStart && DateUnit.same(date, visualStart, unit, opts.weekStartsOn);
     var rangeEnd = !!visualEnd && DateUnit.same(date, visualEnd, unit, opts.weekStartsOn);
 
@@ -487,7 +490,17 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (index >= 0) current.splice(index, 1); else current.push(selected);
       return current;
     }
-    if (!current[0] || current[1]) {
+    if (current[0] && current[1]) {
+      if (opts.order === false) {
+        current[activeRangePart === 1 ? 1 : 0] = selected;
+        return current;
+      }
+      var endAnchor = current[1];
+      var selectedBeforeEnd = compareChronological(selected, endAnchor) < 0;
+      activeRangePart = selectedBeforeEnd ? 0 : 1;
+      return selectedBeforeEnd ? [selected, endAnchor] : [endAnchor, selected];
+    }
+    if (!current[0]) {
       activeRangePart = 1;
       return [selected, null];
     }

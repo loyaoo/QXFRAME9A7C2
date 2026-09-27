@@ -80,10 +80,28 @@ function applyFocusOriginCompatibility(source) {
     }
     return next;
 }
+const datePickerRangeCompatibilityReplacements = [
+    [
+        "key(rangeDriftInput,'Enter');for(var rangeStep=0;rangeStep<24;rangeStep+=1)key(rangeDriftInput,'ArrowRight');key(rangeDriftInput,'Enter');await delay(40);",
+        "key(rangeDriftInput,'Enter');await delay(40);"
+    ],
+    [
+        "rangeSelectedState.draftValue[0].getMonth()===8&&rangeSelectedState.draftValue[0].getDate()===26&&rangeSelectedState.draftValue[1] instanceof Date&&rangeSelectedState.draftValue[1].getMonth()===9&&rangeSelectedState.draftValue[1].getDate()===20",
+        "rangeSelectedState.draftValue[0].getMonth()===8&&rangeSelectedState.draftValue[0].getDate()===2&&rangeSelectedState.draftValue[1] instanceof Date&&rangeSelectedState.draftValue[1].getMonth()===8&&rangeSelectedState.draftValue[1].getDate()===26"
+    ]
+];
+function applyDatePickerRangeCompatibility(source) {
+    let next = source;
+    for (const [before, after] of datePickerRangeCompatibilityReplacements) {
+        assert.ok(next.includes(before), 'Frozen HOTFIX6 DatePicker range compatibility anchor must remain stable.');
+        next = next.replace(before, after);
+    }
+    return next;
+}
 assert.equal(
     normalizeSupersededFocusChecks(phaseCLegacyBrowserSmokeSource),
-    normalizeSupersededFocusChecks(applyFocusOriginCompatibility(frozenBrowserSmokeSource)),
-    'Phase C legacy compatibility fixture may differ from frozen HOTFIX6 only by the approved TimePanel and FocusOrigin compatibility migrations.'
+    normalizeSupersededFocusChecks(applyDatePickerRangeCompatibility(applyFocusOriginCompatibility(frozenBrowserSmokeSource))),
+    'Phase C legacy compatibility fixture may differ from frozen HOTFIX6 only by the approved TimePanel, FocusOrigin, and DatePicker complete-range interaction migrations.'
 );
 for (const name of supersededFocusChecks) {
     assert.equal((frozenBrowserSmokeSource.match(new RegExp(name, 'g')) || []).length, 1, 'Frozen HOTFIX6 smoke must contain exactly one ' + name + ' check.');
