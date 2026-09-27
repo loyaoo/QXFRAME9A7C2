@@ -14,24 +14,36 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready after DatePicker range-edit regression closeout.
-- Current Task: `HANDOFF-READY-002`
+- Current Phase: DatePicker complete-range replacement regression closeout.
+- Current Task: `DATEPICKER-RANGE-REPLACE-001`
 
 ## CURRENT
 
-### HANDOFF-READY-002 — DatePicker range-edit regression merged
-Status: READY
-Task progress: 100%
-Verified closeout:
-- PR #130 (`fix: align ordered DatePicker range edit preview`) merged at `74559789ea0a9616f8a5909e7f0db9af9257356b`.
-- Implementation head `b3916785d98e91629bf84fb8f2d7907295dff1be` passed QXFRAME CI #637.
-- Final PR head `46e39f62e536837479f155f2339a9a7f65b0b3e9` passed QXFRAME CI #638.
-- For complete ordered ranges, hover preview now owns the transient visible start/end endpoints: the old active endpoint is released, the untouched endpoint remains selected, and crossing the anchor flips provisional start/end roles.
-- Single-date hover/selected separation, pointer-vs-keyboard focus origin, and outside-month muted text remain preserved.
+### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 75%
+Baseline:
+- `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
+- PR #130 hover endpoint projection is correct and must remain intact.
+User evidence:
+- Ant Design recording: editing one side of an existing complete range keeps the opposite date. While open, the edited control slot may temporarily be later/earlier than the opposite slot; accepted close then resolves chronological start/end for `order:true`.
+- QXFRAME recording: clicking the hovered replacement clears the opposite endpoint and forces a second range selection.
+Root cause:
+- `applyPanelSelection()` treated every complete range as the trigger to start a brand-new range and returned `[selected, null]`.
+- `normalizeValue()` also auto-sorted every draft write, so there was no way to preserve active control-slot identity during an open edit and defer chronological normalization to commit.
+Implementation:
+- A complete range now replaces only `activeRangePart`; the opposite endpoint is retained.
+- Open complete-range edits use a transient `preserveRangeSlots` normalization mode, so control slot identity is stable while editing.
+- Visual range caps remain chronological for `order:true` even when the transient draft slots are temporarily reversed.
+- PickerSession `beforeCommit` finalizes ordered range draft chronologically and updates `activeRangePart` before publishing the sorted draft, preserving time-panel ownership.
+- New-range first/second selection flow and `order:false` explicit slot semantics remain unchanged.
+Regression coverage:
+- Replacing start with a date after end preserves end, keeps committed value untouched before confirm, retains unsorted control-slot draft while open, then sorts on commit.
+- Replacing end with a date before start preserves start and sorts on commit.
 Next exact step:
-1. On resume, query current `main`, open PRs and Actions before acting.
-2. Do not reopen DATEPICKER-RANGE-EDIT-PREVIEW-001 unless a new reproducible regression contradicts PR #130 evidence.
-3. Execute only the next user-scoped task.
+1. Commit implementation + browser regression + checkpoint on `fix/datepicker-range-replace`.
+2. Open PR and run exact-head QXFRAME CI.
+3. If green, record verification, rerun final head if checkpoint changes, then merge.
 
 ## Current authority snapshot — after Phase A
 

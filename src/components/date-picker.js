@@ -200,6 +200,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
   function normalizeValue(value, meta) {
     var fromTimePanel = !!(meta && meta.timePanelOrigin === true);
+    var preserveRangeSlots = !!(meta && meta.preserveRangeSlots === true);
     if (selection === 'single') {
       var one = normalizeOne(value);
       if (value !== null && value !== undefined && value !== '' && !one) throw new TypeError('[QXFRAME9A7C2] DatePicker value is invalid for the current unit/format.');
@@ -217,7 +218,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         if (start) start = normalizeSelectableDate(start, 0);
         if (end) end = normalizeSelectableDate(end, 1);
       }
-      if (opts.order !== false && start && end && compareChronological(start, end) > 0) return [end, start];
+      if (!preserveRangeSlots && opts.order !== false && start && end && compareChronological(start, end) > 0) return [end, start];
       return [start, end];
     }
     if (value === null || value === undefined || value === '') return [];
@@ -461,6 +462,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var endpointValue = previewRange || selectedValue;
     var visualStart = endpointValue && endpointValue[0];
     var visualEnd = endpointValue && endpointValue[1];
+    if (opts.order !== false && visualStart && visualEnd && compareChronological(visualStart, visualEnd) > 0) {
+      var visualSwap = visualStart; visualStart = visualEnd; visualEnd = visualSwap;
+    }
     var rangeStart = !!visualStart && DateUnit.same(date, visualStart, unit, opts.weekStartsOn);
     var rangeEnd = !!visualEnd && DateUnit.same(date, visualEnd, unit, opts.weekStartsOn);
 
@@ -487,7 +491,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (index >= 0) current.splice(index, 1); else current.push(selected);
       return current;
     }
-    if (!current[0] || current[1]) {
+    if (current[0] && current[1]) {
+      current[activeRangePart === 1 ? 1 : 0] = selected;
+      return current;
+    }
+    if (!current[0]) {
       activeRangePart = 1;
       return [selected, null];
     }
@@ -533,9 +541,25 @@ function setupDatePickerRuntime(instance, fieldInit) {
   instance.bindValueController(draft);
   instance.setupPickerSelection({ multiple: selection !== 'single' });
   syncSelectionController(draft.value, { source:'init', reason:'date-selection-init' });
+  function finalizeOrderedRangeDraft(controller, detail) {
+    if (selection !== 'range' || opts.order === false) return true;
+    var current = controller && controller.draftValue;
+    if (!current || !current[0] || !current[1] || compareChronological(current[0], current[1]) <= 0) return true;
+    // A complete range edit keeps control slot ownership while the popup is open.
+    // Commit is the boundary where order:true turns those slots back into canonical
+    // chronological start/end. Move activeRangePart before publishing the sorted draft
+    // so any composed time panel keeps following the endpoint the user actually edited.
+    activeRangePart = activeRangePart === 1 ? 0 : 1;
+    return controller.setDraft(current, {
+      silent:true,
+      source:detail && detail.source || 'commit',
+      reason:'range-order-finalize'
+    }) !== false;
+  }
   var pickerSession = instance.setupPickerSession({
     controller: draft,
     needConfirm: function () { return opts.needConfirm === true; },
+    beforeCommit: finalizeOrderedRangeDraft,
     canCommit: function (controller) { return rangeCommitReady(controller.draftValue); },
     onOpenDraft: function (controller) {
       controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
@@ -891,9 +915,16 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (calendar && calendar.refreshStates) calendar.refreshStates();
       if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
     }
+    var replacingCompleteRange = selection === 'range' && !!(draft.draftValue && draft.draftValue[0] && draft.draftValue[1]);
+    var editedRangePart = activeRangePart;
     var next = applyPanelSelection(value);
     if (next === null) return;
-    draft.setDraft(next, { source: detail.source, reason: unit + '-select' });
+    draft.setDraft(next, {
+      source: detail.source,
+      reason: unit + '-select',
+      preserveRangeSlots: replacingCompleteRange && opts.order !== false,
+      activeRangePart: selection === 'range' ? editedRangePart : null
+    });
     if (field && field.getState().open) syncField(true);
     var payload = { selectedValue: cloneDate(value), value: cloneValue(draft.draftValue, selection), source: detail.source, reason: detail.reason, originalEvent: detail.originalEvent || null, datePicker: api };
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(cloneDate(value), payload);
