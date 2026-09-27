@@ -565,7 +565,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       field.setDisplayValue(projectedText);
       if(selection==='range'&&opts.rangeControl!=='single'&&field.setRangeDisplayValues)field.setRangeDisplayValues(formatRangeParts(projection.value));
       field.setPlaceholder(opts.placeholder);
-      field.setDraftDisplayValue(open ? projectedText : '');
+      field.setDraftDisplayValue(projection.draftVisual === true ? projectedText : '');
       visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value, selection);
     }
     field.setDraftVisual(projection.draftVisual === true);
