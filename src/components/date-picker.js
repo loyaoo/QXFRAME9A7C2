@@ -491,9 +491,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (index >= 0) current.splice(index, 1); else current.push(selected);
       return current;
     }
-    if (current[0] && current[1] && opts.rangeControl !== 'single') {
-      current[activeRangePart === 1 ? 1 : 0] = selected;
-      return current;
+    if (current[0] && current[1]) {
+      if (opts.rangeControl !== 'single') {
+        current[activeRangePart === 1 ? 1 : 0] = selected;
+        return current;
+      }
+      activeRangePart = 1;
+      return [selected, null];
     }
     if (!current[0]) {
       activeRangePart = 1;
