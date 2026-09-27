@@ -23,9 +23,9 @@ const DATE_PICKER_DEFAULTS = Object.freeze({
   selection:'single', unit:'date', time:false, clearable:true, needConfirm:false, showCancel:false, closeOnSelect:true,
   commitInputOnBlur:true, preserveInvalidOnBlur:false, disabled:false, readOnly:false, size:'md', placement:'bottom-start',
   trigger:'click', open:false, placeholder:'选择日期', rangeSeparator:' ~ ', multipleSeparator:', ', order:true, panelCount:1,
-  presets:[], previewValue:'hover', panelRender:null, weekStartsOn:1
+  presets:[], previewValue:'hover', panelRender:null, weekStartsOn:1, rangeControl:'single', rangePlaceholders:['开始日期','结束日期']
 });
-const DATE_PICKER_IMMUTABLE = Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','draftValueTarget','inputTarget','formTarget','renderControl','headless','selection','unit','panelCount']);
+const DATE_PICKER_IMMUTABLE = Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','draftValueTarget','inputTarget','formTarget','renderControl','headless','selection','unit','panelCount','rangeControl','rangePlaceholders']);
 
 var SELECTIONS = Object.freeze(['single', 'range', 'multiple']);
 var own = Utils.own;
@@ -95,6 +95,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
   var withTime = !!timeOptions;
   if (withTime && unit !== 'date') throw new TypeError('[QXFRAME9A7C2] DatePicker time composition is only valid when unit is date.');
   if (withTime && selection === 'multiple') throw new TypeError('[QXFRAME9A7C2] DatePicker multiple selection does not compose time.');
+  var rangeControl=String(sourceOptions.rangeControl||'single').toLowerCase();
+  if (['single','dual','segments'].indexOf(rangeControl)<0) throw new TypeError('[QXFRAME9A7C2] DatePicker rangeControl must be single, dual, or segments.');
+  if (selection !== 'range' && rangeControl !== 'single') throw new TypeError('[QXFRAME9A7C2] DatePicker rangeControl is only valid for range selection.');
+  if (rangeControl !== 'single' && (sourceOptions.headless === true || sourceOptions.renderControl === false)) throw new TypeError('[QXFRAME9A7C2] DatePicker dual/segments rangeControl requires the built-in control.');
 
   var derivedNeedConfirm = selection !== 'single' || withTime;
   var opts = Utils.assignOwn({
@@ -119,9 +123,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
     order: true,
     panelCount: selection === 'range' && (unit === 'date' || unit === 'week') ? 2 : 1,
     presets: [],
-    previewValue: 'hover',
-    panelRender: null,
-    weekStartsOn: 1
+    previewValue:'hover',
+    panelRender:null,
+    weekStartsOn:1,
+    rangeControl:rangeControl,
+    rangePlaceholders:['开始日期','结束日期']
   }, sourceOptions);
   if (!own(sourceOptions, 'needConfirm')) opts.needConfirm = derivedNeedConfirm;
   if (!own(sourceOptions, 'showCancel')) opts.showCancel = opts.needConfirm === true;
@@ -228,15 +234,24 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function formatOne(value) {
     return DateUnit.format(value, displayFormat(), { unit: unit, weekStartsOn: opts.weekStartsOn, withTime: withTime });
   }
+  function formatRangeParts(value) { return [formatOne(value&&value[0]),formatOne(value&&value[1])]; }
   function formatSelection(value) {
     if (selection === 'single') return formatOne(value);
     if (selection === 'range') {
-      var left = formatOne(value && value[0]);
-      var right = formatOne(value && value[1]);
+      var parts=formatRangeParts(value),left=parts[0],right=parts[1];
       if (!left && !right) return '';
       return left + String(opts.rangeSeparator) + right;
     }
     return (value || []).map(formatOne).join(String(opts.multipleSeparator));
+  }
+  function currentFieldText() {
+    if (!field) return '';
+    if (selection==='range' && opts.rangeControl!=='single' && field.getInputElements) {
+      var inputs=field.getInputElements();
+      if(inputs.length>=2)return String(inputs[0].value||'')+String(opts.rangeSeparator)+String(inputs[1].value||'');
+    }
+    var editor=field.getInputElement?field.getInputElement():null;
+    return editor&&editor.value!==undefined?String(editor.value||''):'';
   }
   function selectionKeys(value) {
     if (selection === 'single') {
@@ -409,6 +424,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (!Number.isInteger(panelCount) || (panelCount !== 1 && panelCount !== 2)) throw new TypeError('[QXFRAME9A7C2] DatePicker panelCount must be 1 or 2.');
     if (panelCount === 2 && !(selection === 'range' && (unit === 'date' || unit === 'week'))) throw new TypeError('[QXFRAME9A7C2] DatePicker panelCount:2 is only supported for range date/week selection.');
     if (selection === 'range' && String(opts.rangeSeparator || '') === '') throw new TypeError('[QXFRAME9A7C2] DatePicker rangeSeparator must not be empty in range selection.');
+    if (['single','dual','segments'].indexOf(String(opts.rangeControl||'single'))<0) throw new TypeError('[QXFRAME9A7C2] DatePicker rangeControl must be single, dual, or segments.');
+    if (selection!=='range' && String(opts.rangeControl||'single')!=='single') throw new TypeError('[QXFRAME9A7C2] DatePicker rangeControl is only valid for range selection.');
+    if (!Array.isArray(opts.rangePlaceholders) || opts.rangePlaceholders.length!==2) throw new TypeError('[QXFRAME9A7C2] DatePicker rangePlaceholders must be [start, end].');
     if (selection === 'multiple' && String(opts.multipleSeparator || '') === '') throw new TypeError('[QXFRAME9A7C2] DatePicker multipleSeparator must not be empty in multiple selection.');
     if (selection === 'range' && own(opts, 'allowEmpty')) {
       var allow = opts.allowEmpty;
@@ -423,7 +441,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   if (opts.previewValue !== false && opts.previewValue !== 'hover') throw new TypeError("[QXFRAME9A7C2] DatePicker previewValue must be false or 'hover'.");
   if (opts.panelRender !== null && opts.panelRender !== undefined && !Utils.isFunction(opts.panelRender)) throw new TypeError('[QXFRAME9A7C2] DatePicker panelRender must be a function or null.');
   function visualValue() {
-    if (field && field.getState().open && selection === 'range' && opts.previewValue !== false && draft.hasPreview) return draft.previewValue;
+    if (field && field.getState().open && opts.previewValue !== false && draft.hasPreview) return draft.previewValue;
     if (field && field.getState().open) return draft.draftValue;
     return draft.value;
   }
@@ -509,8 +527,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     canCommit: function (controller) { return rangeCommitReady(controller.draftValue); },
     onOpenDraft: function (controller) {
       controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
-      var openEditor = field && field.getInputElement ? field.getInputElement() : null;
-      var openText = openEditor && openEditor.value !== undefined ? String(openEditor.value || '') : controller.rawInput;
+      var openText = field ? currentFieldText() : controller.rawInput;
       controller.setRawInput(openText, { silent:true, active:selection === 'multiple' && openText.trim() !== '', source:'popup', reason:'open-raw-input' });
       if (selection === 'range') activeRangePart = controller.draftValue && !controller.draftValue[0] ? 0 : (controller.draftValue && !controller.draftValue[1] ? 1 : 0);
       else activeRangePart = 0;
@@ -532,25 +549,26 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
   function syncField(_projectionHint, meta) {
     if (!field) return;
-    var projection = instance.getPickerProjection({ previewControl:selection === 'range' && opts.previewValue !== false });
+    var projection = instance.getPickerProjection({ previewControl:opts.previewValue !== false });
     var open = projection.open;
-    var committedText = formatSelection(draft.value);
-    var draftText = formatSelection(draft.draftValue);
     var visualHasValue = false;
     if (selection === 'multiple') {
       var tagValue = open ? draft.draftValue : draft.value;
       field.setTags(dateTags(tagValue));
-      field.setDisplayValue(draft.rawInputActive ? draft.rawInput : '');
+      var tokenText=draft.rawInputActive?draft.rawInput:'';
+      field.setDisplayValue(tokenText);
+      field.setDraftDisplayValue(open?tokenText:'');
       field.setPlaceholder(opts.placeholder);
       visualHasValue = !!(tagValue && tagValue.length) || (open && draft.rawInputActive && String(draft.rawInput || '').trim() !== '');
     } else {
       var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatSelection(projection.value);
       field.setDisplayValue(projectedText);
-      field.setPlaceholder(open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
+      if(selection==='range'&&opts.rangeControl!=='single'&&field.setRangeDisplayValues)field.setRangeDisplayValues(formatRangeParts(projection.value));
+      field.setPlaceholder(opts.placeholder);
+      field.setDraftDisplayValue(open ? projectedText : '');
       visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value, selection);
     }
-    field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
-    field.setDraftVisual(open && (draft.rawInputActive || draft.hasPreview || draft.dirty));
+    field.setDraftVisual(open);
     field.setClearVisible(visualHasValue);
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
@@ -1056,6 +1074,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
 
   function handleInput(text, event) {
+    if(selection==='range'&&opts.rangeControl!=='single'&&field&&field.getInputElements){
+      var rangeInputs=field.getInputElements(),rangeIndex=rangeInputs.indexOf(event&&event.target);
+      if(rangeIndex>=0)activeRangePart=rangeIndex;
+    }
     draft.clearPreview({ silent:true, source:'input', reason:'typing-preview-clear' });
     var rawInput = String(text || '');
     draft.setRawInput(rawInput, { silent:true, active:true, source:'input', reason:'typing' });
@@ -1088,8 +1110,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var related = event && event.relatedTarget;
     var popup = field && field.getPanelElement ? field.getPanelElement() : null;
     if (related && popup && (related === popup || (popup.contains && popup.contains(related)))) return;
-    var currentInput = field && field.getInputElement ? field.getInputElement() : null;
-    if (currentInput && currentInput.value !== undefined) draft.setRawInput(String(currentInput.value || ''), { silent:true, active:true, source:'input', reason:'blur-read' });
+    var currentText=currentFieldText();
+    draft.setRawInput(currentText, { silent:true, active:true, source:'input', reason:'blur-read' });
     if (selection === 'multiple') {
       if (!draft.rawInput.trim()) { syncField(field.getState().open); return; }
       var validMultiple = opts.commitInputOnBlur === false ? true : addMultipleInput(draft.rawInput, { source: 'input', reason: 'multiple-blur', originalEvent: event });
@@ -1131,7 +1153,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
     status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
     disabled: opts.disabled,
     readOnly: opts.readOnly,
-    controlMode: selection === 'multiple' ? 'tags' : 'input',
+    controlMode:selection==='multiple'?'tags':(selection==='range'&&opts.rangeControl==='dual'?'dual':(selection==='range'&&opts.rangeControl==='segments'?'segments':'input')),
+    rangeSeparator:opts.rangeSeparator,rangePlaceholders:opts.rangePlaceholders,
+    rangeDisplayValues:selection==='range'?formatRangeParts(draft.value):null,
+    segments:selection==='range'&&opts.rangeControl==='segments'?[{key:'start',placeholder:String(opts.rangePlaceholders[0]||'开始日期')},{key:'end',placeholder:String(opts.rangePlaceholders[1]||'结束日期')}]:[],
+    segmentValues:selection==='range'&&opts.rangeControl==='segments'?formatRangeParts(draft.value):[],
+    segmentSeparator:selection==='range'&&opts.rangeControl==='segments'?opts.rangeSeparator:'',
+    onRangePartFocus:function(index){activeRangePart=index===1?1:0;},
     tags: selection === 'multiple' ? dateTags(draft.value) : [],
     creatableTags:false,tagsControlled:true,
     tagClassName: 'qxframe9a7c2-date-picker-tag',
@@ -1151,8 +1179,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     onOpen: function (detail) {
       var openDetail = detail || {};
       if (selection !== 'multiple') {
-        var openInput = field && field.getInputElement ? field.getInputElement() : null;
-        var openText = openInput && openInput.value !== undefined ? String(openInput.value || '') : draft.rawInput;
+        var openText=field?currentFieldText():draft.rawInput;
         var parsedOpen = openText.trim() ? parseTextSelection(openText) : null;
         if (parsedOpen && parsedOpen.valid) openDetail = Utils.assignOwn({}, openDetail, { draftSeed: parsedOpen.value });
       }
@@ -1473,6 +1500,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var next = nextOptions || {};
       OptionTransaction.rejectImmutable(next, ['target','container','formField','reference','triggerTarget','valueTarget','draftValueTarget','inputTarget','formTarget','renderControl','headless'], 'DatePicker field binding');
     if (own(next, 'panelCount') && Number(next.panelCount) !== Number(opts.panelCount)) throw new Error('[QXFRAME9A7C2] DatePicker panelCount is immutable; destroy and recreate to change panel structure.');
+    if (own(next,'rangeControl') && String(next.rangeControl)!==String(opts.rangeControl)) throw new Error('[QXFRAME9A7C2] DatePicker rangeControl is immutable; destroy and recreate to change control structure.');
+    if (own(next,'rangePlaceholders') && JSON.stringify(next.rangePlaceholders)!==JSON.stringify(opts.rangePlaceholders)) throw new Error('[QXFRAME9A7C2] DatePicker rangePlaceholders are immutable for dual/segments controls.');
     if (own(next, 'selection') && normalizeSelectionName(next.selection) !== selection) throw new Error('[QXFRAME9A7C2] DatePicker selection is immutable.');
     if (own(next, 'unit') && String(next.unit).toLowerCase() !== unit) throw new Error('[QXFRAME9A7C2] DatePicker unit is immutable.');
     var pendingTimeOptions = null;
@@ -1498,7 +1527,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       throw error;
     }
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
-    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
+    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, rangeSeparator:opts.rangeSeparator, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
     if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
@@ -1520,6 +1549,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       open: field.getState().open,
       headless: opts.headless === true,
       selection: selection,
+      rangeControl: selection==='range'?opts.rangeControl:null,
       unit: unit,
       time: withTime,
       value: cloneValue(draft.value, selection),
@@ -1610,6 +1640,8 @@ export class DatePicker extends PickerComponent {
     if (!own(incoming, 'showCancel')) incoming.showCancel = incoming.needConfirm === true;
     if (!own(incoming, 'closeOnSelect')) incoming.closeOnSelect = selection === 'single' && incoming.needConfirm !== true && !withTime;
     if (!own(incoming, 'placeholder')) incoming.placeholder = selection === 'range' ? '选择日期范围' : (selection === 'multiple' ? '选择多个日期' : '选择日期');
+    if (!own(incoming,'rangeControl')) incoming.rangeControl='single';
+    if (!own(incoming,'rangePlaceholders')) incoming.rangePlaceholders=['开始日期','结束日期'];
     if (!own(incoming, 'panelCount')) incoming.panelCount = selection === 'range' && (unit === 'date' || unit === 'week') ? 2 : 1;
     if (!own(incoming, 'format')) incoming.format = DateUnit.defaultFormat(unit, withTime);
     super(incoming);

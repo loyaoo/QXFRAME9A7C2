@@ -1639,7 +1639,11 @@ function setupTable(instance) {
     if (node.parentNode !== parent || (before && node.nextSibling !== before)) parent.insertBefore(node, before || null);
     return true;
   }
-  function hasRenderedOutput(node) { return node.childNodes.length > 0; }
+  function hasRenderedOutput(node) {
+    if (!node) return false;
+    if (node.children && node.children.length > 0) return true;
+    return String(node.textContent || '').trim() !== '';
+  }
   function resolveChromeValue(value) { return typeof value === 'function' ? value(currentState(), api) : value; }
   function syncChromeOrder() {
     if (title.parentNode === root) root.insertBefore(title, table);
@@ -1663,6 +1667,9 @@ function setupTable(instance) {
     setOptionalNode(toolbar, root, hasRenderedOutput(toolbarStart) || hasRenderedOutput(toolbarEnd), table);
     setOptionalNode(footer, root, hasRenderedOutput(footerStart) || hasRenderedOutput(footerEnd), null);
     setOptionalNode(caption, table, hasRenderedOutput(caption), thead);
+    root.classList.toggle('has-title', title.parentNode === root);
+    root.classList.toggle('has-toolbar', toolbar.parentNode === root);
+    root.classList.toggle('has-footer', footer.parentNode === root);
     syncChromeOrder();
   }
   function filterPortal() {

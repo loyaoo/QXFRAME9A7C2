@@ -13,7 +13,7 @@
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
-- Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation and the post-merge self-audit follow-up are merged and verified.
+- Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready after final self-audit closeout.
 - Current Task: `HANDOFF-READY-001`
 
@@ -60,6 +60,20 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### UX-CLOSEOUT-001 — Picker projection + range controls + component surface regressions
+Status: DONE
+Task progress: 100%
+Evidence:
+- PR #122 is the atomic implementation vehicle; GitHub PR / Actions facts remain authoritative for merge and CI state.
+Outcome:
+- Picker controls stay on one committed-seeded grey draft projection while open; hover preview replaces that projection in-place and falls back to the seeded draft on leave.
+- DatePicker range supports single-input, dual-Control and Segments dual-input control forms.
+- Autocomplete defaults to input-first suggestions with optional openOnFocus.
+- Notification has one shadow-gutter owner and a non-clipping outer stack.
+- Table removes empty title/toolbar/footer shells, the permanent right scrollbar gutter and inappropriate header corner seams.
+- Image preview remains operable after source-load failure, and the canonical demo no longer relies on a broken remote image.
+
 
 ### SELF-AUDIT-FOLLOWUP-001 — FocusOrigin handoff + ItemCollection empty-focus edge
 Status: DONE_MERGED_VERIFIED

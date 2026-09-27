@@ -17,6 +17,7 @@ var blueprint = DOMTemplate.staticHTML`
   <div class="qxframe9a7c2-picker-field qxframe9a7c2-picker-field-control qxframe9a7c2-input qxframe9a7c2-group-control" data-qxframe9a7c2-ref="root">
     <span class="qxframe9a7c2-picker-field-prefix qxframe9a7c2-input-prefix" data-qxframe9a7c2-ref="prefix"></span>
     <span class="qxframe9a7c2-picker-field-value-host qxframe9a7c2-input-values" data-qxframe9a7c2-ref="value-host"></span>
+    <span class="qxframe9a7c2-picker-field-segments qxframe9a7c2-input-segments" data-qxframe9a7c2-ref="segments"></span>
     <input class="qxframe9a7c2-picker-field-input qxframe9a7c2-input-control" type="text" autocomplete="off" data-qxframe9a7c2-ref="input">
     <span class="qxframe9a7c2-picker-field-suffix qxframe9a7c2-input-suffix" data-qxframe9a7c2-ref="suffix">
       <button class="qxframe9a7c2-picker-field-clear qxframe9a7c2-input-clear is-hidden" type="button" hidden data-qxframe9a7c2-ref="clear"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-close is-line is-round is-stroke-3"></span></button>
@@ -24,13 +25,24 @@ var blueprint = DOMTemplate.staticHTML`
     </span>
   </div>`;
 
+var dualBlueprint = DOMTemplate.staticHTML`
+  <div class="qxframe9a7c2-picker-field qxframe9a7c2-picker-range-dual" data-qxframe9a7c2-ref="root">
+    <span class="qxframe9a7c2-picker-range-control is-start" data-qxframe9a7c2-ref="range-start"></span>
+    <span class="qxframe9a7c2-picker-range-separator" data-qxframe9a7c2-ref="range-separator"></span>
+    <span class="qxframe9a7c2-picker-range-control is-end" data-qxframe9a7c2-ref="range-end"></span>
+  </div>`;
+
 function createDefaultDOM(context) {
   var instance = blueprint.instantiate(context.document);
   instance.refs.control = instance.root;
   return { root: instance.root, refs: instance.refs };
 }
+function createDualDOM(context) {
+  var instance = dualBlueprint.instantiate(context.document);
+  return { root:instance.root, refs:instance.refs };
+}
 
-DOMFactory = Object.freeze({ createDefaultDOM: createDefaultDOM, blueprint: blueprint });
+DOMFactory = Object.freeze({ createDefaultDOM:createDefaultDOM, createDualDOM:createDualDOM, blueprint:blueprint, dualBlueprint:dualBlueprint });
 
 function resolvePortal(value, doc) {
   if (value === undefined || value === null) return doc && doc.body ? doc.body : null;
@@ -51,23 +63,32 @@ function create(options) {
   var host = opts.container || null;
   var headlessMode = opts.headless === true;
   var projectionMode = !headlessMode && opts.renderControl === false;
+  var dualMode = !headlessMode && !projectionMode && String(opts.controlMode || 'input') === 'dual';
   var portal = resolvePortal(opts.portalContainer, doc);
   if (!portal || !portal.appendChild) throw new TypeError('[QXFRAME9A7C2] PickerField portalContainer must resolve to an Element.');
 
   var scope = Lifecycle.createScope();
-  var binding = null, root = null, controlElement = null, input = null, clearButton = null, toggleElement = null, prefix = null, suffix = null, valueHost = null, triggerTarget = null, draftValueTarget = null;
+  var binding = null, root = null, controlElement = null, input = null, clearButton = null, toggleElement = null, prefix = null, suffix = null, valueHost = null, segmentsHost = null, triggerTarget = null, draftValueTarget = null;
+  var rangeStartHost = null, rangeEndHost = null, rangeSeparatorHost = null;
   var fieldHost = FieldHost.resolve({
     owner:'PickerField', options:opts, document:doc, host:host,
-    bindingOptions:{ elements:opts.elements, createDOM:opts.createDOM }, requiredRefs:['root','input','clear','toggle'], defaultFactory:DOMFactory.createDefaultDOM,
+    bindingOptions:{ elements:opts.elements, createDOM:opts.createDOM },
+    requiredRefs:dualMode?['root','rangeStart','rangeEnd','rangeSeparator']:['root','input','clear','toggle'],
+    defaultFactory:dualMode?DOMFactory.createDualDOM:DOMFactory.createDefaultDOM,
     projectionRefs:[{ref:'valueHost',option:'valueTarget'},{ref:'draftValueTarget',option:'draftValueTarget'},{ref:'input',option:'inputTarget'}]
   });
   binding=fieldHost.binding; root=fieldHost.root; triggerTarget=fieldHost.triggerTarget;
   if (projectionMode) {
     valueHost=fieldHost.refs.valueHost||null; draftValueTarget=fieldHost.refs.draftValueTarget||null; input=fieldHost.refs.input||null;
   } else if (!headlessMode) {
-    controlElement=root; input=fieldHost.refs.input; clearButton=fieldHost.refs.clear; toggleElement=fieldHost.refs.toggle; prefix=fieldHost.refs.prefix||null; suffix=fieldHost.refs.suffix||null; valueHost=fieldHost.refs.valueHost||null;
-    if (!host && opts.formField && binding.source !== 'external') Control.placeFieldRoot(root, host, opts.formField);
-    if (!valueHost) { valueHost = doc.createElement('span'); valueHost.className = 'qxframe9a7c2-picker-field-value-host qxframe9a7c2-input-values'; root.insertBefore(valueHost, input); }
+    controlElement=root;
+    if (dualMode) {
+      rangeStartHost=fieldHost.refs.rangeStart; rangeEndHost=fieldHost.refs.rangeEnd; rangeSeparatorHost=fieldHost.refs.rangeSeparator;
+    } else {
+      input=fieldHost.refs.input; clearButton=fieldHost.refs.clear; toggleElement=fieldHost.refs.toggle; prefix=fieldHost.refs.prefix||null; suffix=fieldHost.refs.suffix||null; valueHost=fieldHost.refs.valueHost||null; segmentsHost=fieldHost.refs.segments||null;
+      if (!host && opts.formField && binding.source !== 'external') Control.placeFieldRoot(root, host, opts.formField);
+      if (!valueHost) { valueHost = doc.createElement('span'); valueHost.className = 'qxframe9a7c2-picker-field-value-host qxframe9a7c2-input-values'; root.insertBefore(valueHost, segmentsHost || input); }
+    }
   }
   var panel = doc.createElement('div'), body = doc.createElement('div'), footer = doc.createElement('div');
   var triggerSession = null, control = null, focusController = null, keyboard = null, destroyed = false, api = null;
@@ -77,28 +98,99 @@ function create(options) {
   var committedValue = opts.committedValue;
   var draftValueSnapshot = draftValueTarget ? (/^(input|textarea|select)$/i.test(String(draftValueTarget.tagName || '')) ? { kind: 'value', value: draftValueTarget.value } : { kind: 'text', value: draftValueTarget.textContent }) : null;
   var tags = Array.isArray(opts.tags) ? opts.tags.slice() : [];
+  var rangeDisplayValues = Array.isArray(opts.rangeDisplayValues) ? [String(opts.rangeDisplayValues[0] || ''),String(opts.rangeDisplayValues[1] || '')] : ['', ''];
   var clearVisible = opts.clearVisible === true;
   var footerCleanups = [], footerActionButtons = [];
   var interactionGeneration = 0, navigationActive = false, editorSnapshot = null, editorPointerPending = false, suppressOpenEvent = null;
 
-  if (!projectionMode && !headlessMode) { root.classList.add('qxframe9a7c2-picker-field'); if (opts.className) root.classList.add(String(opts.className)); }
+  if (!projectionMode && !headlessMode) { root.classList.add('qxframe9a7c2-picker-field'); if (dualMode) root.classList.add('is-dual-control'); if (opts.className) root.classList.add(String(opts.className)); }
   panel.className = 'qxframe9a7c2-picker-field-panel qxframe9a7c2-popup-surface is-' + sizeName(opts.size) + (opts.panelClass ? ' ' + String(opts.panelClass) : '');
   panel.hidden = true; body.className = 'qxframe9a7c2-picker-field-body'; footer.className = 'qxframe9a7c2-picker-field-footer';
   panel.appendChild(body);
+
+  function dualSeparator() { return String(opts.rangeSeparator != null ? opts.rangeSeparator : (opts.segmentSeparator != null ? opts.segmentSeparator : ' ~ ')); }
+  function dualPlaceholders() {
+    var values=Array.isArray(opts.rangePlaceholders)?opts.rangePlaceholders:[];
+    return [String(values[0] == null ? '开始日期' : values[0]),String(values[1] == null ? '结束日期' : values[1])];
+  }
+  function createDualControl() {
+    if (!rangeStartHost || !rangeEndHost) throw new TypeError('[QXFRAME9A7C2] PickerField dual control requires start/end hosts.');
+    var placeholders=dualPlaceholders();
+    if (rangeSeparatorHost) rangeSeparatorHost.textContent=dualSeparator().trim() || '–';
+    var startControl=null,endControl=null;
+    function common(index) {
+      return {
+        document:doc, size:opts.size, variant:opts.variant, focusOutline:opts.focusOutline, classNames:opts.classNames, styles:opts.styles, status:opts.status,
+        required:opts.required===true, busy:opts.busy===true, disabled:opts.disabled, readOnly:opts.readOnly, editable:opts.editable,
+        clearVisibility:'interaction', draftVisual:opts.draftVisual===true, placeholder:placeholders[index], inputValue:rangeDisplayValues[index] || '',
+        expanded:false
+      };
+    }
+    var startOptions=Utils.assignOwn(common(0),{
+      container:rangeStartHost, formField:opts.formField, committedValue:opts.committedValue, serializeValue:opts.serializeValue, name:opts.name,
+      prefix:opts.prefix, clearable:false, toggleVisible:false,
+      onInput:function(value,event){rangeDisplayValues[0]=String(value||'');displayValue=rangeDisplayValues.join(dualSeparator());if(typeof opts.onInput==='function')opts.onInput(displayValue,event,api);},
+      onFocus:function(event){if(typeof opts.onRangePartFocus==='function')opts.onRangePartFocus(0,event,api);if(typeof opts.onFocus==='function')opts.onFocus(event,api);},
+      onBlur:function(event){if(typeof opts.onBlur==='function')opts.onBlur(event,api);}
+    });
+    var endOptions=Utils.assignOwn(common(1),{
+      container:rangeEndHost, suffix:opts.suffix, clearable:opts.clearable, toggleVisible:true, toggle:opts.toggle,
+      onInput:function(value,event){rangeDisplayValues[1]=String(value||'');displayValue=rangeDisplayValues.join(dualSeparator());if(typeof opts.onInput==='function')opts.onInput(displayValue,event,api);},
+      onFocus:function(event){if(typeof opts.onRangePartFocus==='function')opts.onRangePartFocus(1,event,api);if(typeof opts.onFocus==='function')opts.onFocus(event,api);},
+      onBlur:function(event){if(typeof opts.onBlur==='function')opts.onBlur(event,api);},
+      onClearRequest:function(event){if(typeof opts.onClearRequest==='function')opts.onClearRequest(event,api);}
+    });
+    startControl=Control.create(startOptions); endControl=Control.create(endOptions);
+    function inputs(){return [startControl.getInputElement(),endControl.getInputElement()].filter(Boolean);}
+    function focusTarget(){var active=doc&&doc.activeElement;var list=inputs();return list.indexOf(active)>=0?active:(list[0]||null);}
+    function setRange(values){rangeDisplayValues=Array.isArray(values)?[String(values[0]||''),String(values[1]||'')]:['',''];startControl.setInputValue(rangeDisplayValues[0]);endControl.setInputValue(rangeDisplayValues[1]);return facade;}
+    function updateDual(next) {
+      var n=next||{}, ph=dualPlaceholders();
+      var commonNext={size:n.size,variant:n.variant,focusOutline:n.focusOutline,classNames:n.classNames,styles:n.styles,status:n.status,required:n.required,busy:n.busy,disabled:n.disabled,readOnly:n.readOnly,editable:n.editable,draftVisual:n.draftVisual,expanded:n.expanded};
+      Object.keys(commonNext).forEach(function(k){if(commonNext[k]===undefined)delete commonNext[k];});
+      startControl.updateOptions(Utils.assignOwn(commonNext,{prefix:opts.prefix,placeholder:ph[0],clearable:false,toggleVisible:false}));
+      endControl.updateOptions(Utils.assignOwn(commonNext,{suffix:opts.suffix,placeholder:ph[1],clearable:opts.clearable,hasValue:clearVisible,toggleVisible:true,toggle:opts.toggle}));
+      if(rangeSeparatorHost)rangeSeparatorHost.textContent=dualSeparator().trim()||'–';
+      return facade;
+    }
+    var facade={
+      focus:function(options){var target=focusTarget();return !!(target&&DOM.focusElement(target,options||{preventScroll:true}));},
+      blur:function(){var target=focusTarget();if(!target||!target.blur)return false;target.blur();return true;},
+      setDisplayValue:function(value){displayValue=value==null?'':String(value);return facade;},
+      setInputValue:function(value){displayValue=value==null?'':String(value);return facade;},
+      setRangeValues:setRange,setSegmentValues:setRange,setTags:function(){return facade;},
+      setCommittedValue:function(value,meta){startControl.setCommittedValue(value,meta);return facade;},
+      onValueChange:function(listener){return startControl.onValueChange(listener);},onFormReset:function(listener){return startControl.onFormReset(listener);},
+      setCustomValidity:function(message){startControl.setCustomValidity(message);return facade;},checkValidity:function(){return startControl.checkValidity();},reportValidity:function(){return startControl.reportValidity();},
+      setHasValue:function(value){clearVisible=value===true;startControl.setHasValue(false);endControl.setHasValue(clearVisible);return facade;},
+      setExpanded:function(value){startControl.setExpanded(value);endControl.setExpanded(value);return facade;},
+      setDraftDisplayValue:function(){return facade;},setDraftVisual:function(value){startControl.setDraftVisual(value);endControl.setDraftVisual(value);return facade;},
+      updateOptions:updateDual,getCommittedValue:function(){return startControl.getCommittedValue();},getSerializedValue:function(){return startControl.getSerializedValue();},getFormField:function(){return startControl.getFormField();},
+      getState:function(){return Object.freeze({mode:'dual',rangeValues:rangeDisplayValues.slice(),draftVisual:opts.draftVisual===true});},
+      getRootElement:function(){return root;},getControlElement:function(){return root;},getFocusElement:focusTarget,getInputElement:focusTarget,getInputElements:inputs,
+      getTags:function(){return null;},getDOMSource:function(){return 'picker-dual';},
+      destroy:function(reason){var a=startControl&&startControl.destroy(reason),b=endControl&&endControl.destroy(reason);startControl=endControl=null;return !!(a||b);}
+    };
+    return facade;
+  }
 
   control = headlessMode ? null : projectionMode ? Control.createProjection({
     document: doc, reference: root, valueTarget: valueHost, inputTarget: input, formTarget: opts.formTarget, formField: opts.formField, name: opts.name, committedValue: opts.committedValue, serializeValue: opts.serializeValue,
     mode: opts.controlMode || 'input', tags: tags, displayValue: displayValue, inputValue: displayValue, editable: opts.editable === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, required: opts.required === true, draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder,
     onInput: function (value, event) { displayValue = value; if (typeof opts.onInput === 'function') opts.onInput(value, event, api); },
     onBlur: function (event) { if (typeof opts.onBlur === 'function') opts.onBlur(event, api); },
-  }) : Control.create({
-    elements: { root: root, valueHost: valueHost, input: input, clear: clearButton, toggle: toggleElement, prefix: prefix, suffix: suffix },
+  }) : dualMode ? createDualControl() : Control.create({
+    elements: { root: root, valueHost: valueHost, segments:segmentsHost, input: input, clear: clearButton, toggle: toggleElement, prefix: prefix, suffix: suffix },
     document: doc, formField: opts.formField, committedValue: opts.committedValue, serializeValue: opts.serializeValue, mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true,
+    segments:opts.segments,segmentValues:opts.segmentValues,segmentSeparator:opts.segmentSeparator,valueAdapter:opts.valueAdapter,formatSegment:opts.formatSegment,
     tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName,
     size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable,
     clearable: opts.clearable, clearVisibility: 'interaction', hasValue: clearVisible, draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, inputValue: displayValue,
     placeholder: displayPlaceholder, expanded: false, toggleVisible: true, toggle: opts.toggle,
     onInput: function (value, event) { displayValue = value; if (typeof opts.onInput === 'function') opts.onInput(value, event, api); },
+    onSegmentInput:function(values,detail){rangeDisplayValues=values.slice();displayValue=rangeDisplayValues.join(String(opts.segmentSeparator==null?'':opts.segmentSeparator));if(typeof opts.onInput==='function')opts.onInput(displayValue,detail&&detail.originalEvent||null,api);if(typeof opts.onSegmentInput==='function')opts.onSegmentInput(values,detail,api);},
+    onSegmentFocus:function(detail){if(typeof opts.onRangePartFocus==='function')opts.onRangePartFocus(detail.index,detail.originalEvent,api);},
+    onFocus:function(event){if(typeof opts.onFocus==='function')opts.onFocus(event,api);},
     onBlur: function (event) { if (typeof opts.onBlur === 'function') opts.onBlur(event, api); },
     onTagRemove: function (tag, detail) { tags = detail && Array.isArray(detail.tags) ? detail.tags.slice() : tags; if (typeof opts.onTagRemove === 'function') opts.onTagRemove(tag, detail, api); },
     onClearRequest: function (event) { if (typeof opts.onClearRequest === 'function') opts.onClearRequest(event, api); }
@@ -119,13 +211,16 @@ function create(options) {
     if (control && control.getFocusElement) return control.getFocusElement();
     return triggerTarget || root || null;
   }
+  function editorElements() {
+    if (control && control.getInputElements) return control.getInputElements();
+    var editor=control&&control.getInputElement?control.getInputElement():input;
+    return editor?[editor]:[];
+  }
   function editorElement() {
-    return control && control.getInputElement ? control.getInputElement() : input;
+    var list=editorElements(),active=doc&&doc.activeElement;
+    return list.indexOf(active)>=0?active:(list[0]||null);
   }
-  function isSelectorEditor(target) {
-    var editor = editorElement();
-    return !!(editor && target === editor);
-  }
+  function isSelectorEditor(target) { return editorElements().indexOf(target)>=0; }
   function captureEditorSnapshot() {
     var editor = editorElement();
     if (!editor || editor.value === undefined) return null;
@@ -285,8 +380,7 @@ function create(options) {
     suppressOpenEvent = event;
     editorPointerPending = false;
   }, true));
-  var selectorEditor = editorElement();
-  if (selectorEditor) {
+  editorElements().forEach(function(selectorEditor){
     scope.add(DOM.listen(selectorEditor, 'pointerdown', function (event) {
       editorPointerPending = false;
       if (!navigationOwnsEvent(event) || !canEditSelector()) return;
@@ -300,7 +394,7 @@ function create(options) {
     scope.add(DOM.listen(selectorEditor, 'cut', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-intent', event); }));
     scope.add(DOM.listen(selectorEditor, 'contextmenu', function (event) { if (navigationOwnsEvent(event) && canEditSelector()) close('editor-context', event); }));
     scope.add(DOM.listen(selectorEditor, 'keydown', function (event) { if (editorIntentKeydown(event)) close('editor-intent', event); }));
-  }
+  });
 
   function routeOwnedNavigation(detail) {
     if (typeof opts.onKeydown === 'function') opts.onKeydown(detail.originalEvent, api);
@@ -308,7 +402,7 @@ function create(options) {
   }
 
   focusController = FocusController.create({
-    root: focusElement(),
+    root: dualMode ? root : focusElement(),
     focusRoot: focusElement,
     manageTabIndex: false,
     navigation: {
@@ -347,10 +441,18 @@ function create(options) {
   function syncControl() {
     if (!control) return;
     var editorValue = navigationActive && editorSnapshot ? editorSnapshot.value : displayValue;
-    control.updateOptions({ mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true, tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable, clearable: opts.clearable, clearVisibility: 'interaction', draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, placeholder: displayPlaceholder, inputValue: editorValue, hasValue: clearVisible, toggleVisible: true, toggle: opts.toggle, expanded: !!(triggerSession && triggerSession.getState().open) });
+    var controlOptions={ tags:tags,creatableTags:opts.creatableTags===true,tagsControlled:true,tokenSeparators:opts.tokenSeparators,tokenizeOnPaste:opts.tokenizeOnPaste!==false,addOnEnter:opts.addOnEnter!==false,addOnTab:opts.addOnTab===true,addOnBlur:opts.addOnBlur===true,tagClassName:opts.tagClassName,tagTextClassName:opts.tagTextClassName,tagRemoveClassName:opts.tagRemoveClassName,size:opts.size,variant:opts.variant,focusOutline:opts.focusOutline,classNames:opts.classNames,styles:opts.styles,status:opts.status,prefix:opts.prefix,suffix:opts.suffix,required:opts.required===true,name:opts.name,busy:opts.busy===true,disabled:opts.disabled,readOnly:opts.readOnly,editable:opts.editable,clearable:opts.clearable,clearVisibility:'interaction',draftDisplayValue:draftDisplayValue,draftVisual:opts.draftVisual===true,placeholder:displayPlaceholder,hasValue:clearVisible,toggleVisible:true,toggle:opts.toggle,expanded:!!(triggerSession&&triggerSession.getState().open)};
+    if(!dualMode){controlOptions.mode=opts.controlMode||'input';controlOptions.inputValue=editorValue;}
+    control.updateOptions(controlOptions);
     if (navigationActive) projectNavigationVisual(opts.draftVisual === true ? draftDisplayValue : displayValue);
   }
   function writeExternalValue(target, value) { if (!target) return; var text = value == null ? '' : String(value); if (/^(input|textarea|select)$/i.test(String(target.tagName || ''))) target.value = text; else target.textContent = text; }
+  function setRangeDisplayValues(values) {
+    rangeDisplayValues=Array.isArray(values)?[String(values[0]||''),String(values[1]||'')]:['',''];
+    if(control&&control.setRangeValues)control.setRangeValues(rangeDisplayValues);
+    else if(control&&control.setSegmentValues)control.setSegmentValues(rangeDisplayValues);
+    return api;
+  }
   function setDisplayValue(value) {
     displayValue = value == null ? '' : String(value);
     // Built-in controls protect their editor caret through projectNavigationVisual().
@@ -478,10 +580,10 @@ function create(options) {
 
   api = Object.freeze({
     open: open, close: close, toggle: function (reason,event) { return destroyed || !canActivatePicker() ? false : triggerSession.toggle(reason || 'api', event || null); }, setOpen: setOpen,
-    setDisplayValue: setDisplayValue, setDraftDisplayValue: setDraftDisplayValue, setPlaceholder: setPlaceholder, setCommittedValue: setCommittedValue, setTags: setTags, setClearVisible: setClearVisible, setDraftVisual: setDraftVisual, createFooter: createFooter, createConfirmFooter: createConfirmFooter,
+    setDisplayValue:setDisplayValue, setRangeDisplayValues:setRangeDisplayValues, setDraftDisplayValue:setDraftDisplayValue, setPlaceholder:setPlaceholder, setCommittedValue:setCommittedValue, setTags:setTags, setClearVisible:setClearVisible, setDraftVisual:setDraftVisual, createFooter:createFooter, createConfirmFooter:createConfirmFooter,
     reposition: function () { return destroyed ? false : triggerSession.reposition('api'); }, updateOptions: updateOptions, focus: function () { if (control) return control.focus(); return DOM.focusElement(triggerTarget || root, { preventScroll: true }); },
     getState: function () { return Object.freeze({ open: !!(triggerSession && triggerSession.getState().open), displayValue: displayValue, draftDisplayValue: draftDisplayValue, placeholder: displayPlaceholder, draftVisual: opts.draftVisual === true, hasDraftValueTarget: !!draftValueTarget, renderControl: !projectionMode && !headlessMode, projection: projectionMode, headless: headlessMode, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true, focusScope: opts.focusScope, interactionMode: navigationActive ? 'navigation' : 'text', keyboardOwner: navigationActive ? 'picker' : 'editor', editorSuspended: navigationActive, interactionGeneration: interactionGeneration, destroyed: destroyed }); },
-    getRootElement: function () { return root; }, getControlElement: function () { return control ? control.getControlElement() : controlElement; }, getInputElement: function () { return control && control.getInputElement ? control.getInputElement() : input; }, getDraftValueElement: function () { return draftValueTarget; },
+    getRootElement:function(){return root;}, getControlElement:function(){return control?control.getControlElement():controlElement;}, getInputElement:function(){return editorElement();}, getInputElements:function(){return editorElements();}, getDraftValueElement:function(){return draftValueTarget;},
     getPanelElement: function () { return panel; }, getPanelHost: function () { return body; }, getFooterElement: function () { return footer; },
     getControl: function () { return control; }, getKeyboardNavigation: function () { return keyboard; }, getFocusController: function () { return focusController; }, getFormField: function () { return control ? control.getFormField() : null; }, getCommittedValue: function () { return control ? control.getCommittedValue() : committedValue; }, getTrigger: function () { return triggerSession; },
     destroy: function (reason) {
@@ -491,7 +593,7 @@ function create(options) {
       if (control) control.destroy(reason || 'picker-field-destroy'); control = null; DOM.removeNode(panel); if (binding) binding.release(); binding = null;
       if (draftValueTarget && draftValueSnapshot) { if (draftValueSnapshot.kind === 'value') draftValueTarget.value = draftValueSnapshot.value; else draftValueTarget.textContent = draftValueSnapshot.value; }
       navigationActive = false; editorSnapshot = null; editorPointerPending = false; suppressOpenEvent = null;
-      root = controlElement = valueHost = input = clearButton = toggleElement = body = footer = panel = triggerTarget = draftValueTarget = null; draftValueSnapshot = null; return true;
+      root = controlElement = valueHost = segmentsHost = input = clearButton = toggleElement = body = footer = panel = triggerTarget = draftValueTarget = rangeStartHost = rangeEndHost = rangeSeparatorHost = null; draftValueSnapshot = null; return true;
     }
   });
 

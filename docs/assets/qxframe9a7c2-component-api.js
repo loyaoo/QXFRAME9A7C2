@@ -103,6 +103,7 @@ window.QXFRAME9A7C2_DOCS_API = Object.freeze({"Button":{"kind":"css","source":"s
   'use strict';
   if(!api)return;
   function setOption(component,name,type){var list=api[component]&&api[component].options||[];var record=list.find(function(row){return row.name===name;});if(record)record.type=type;}
+  function addOption(component,record){var list=api[component]&&api[component].options||[];if(!list.some(function(row){return row.name===record.name;}))list.push(record);}
   function setMethod(component,name,signature,returns){var list=api[component]&&api[component].methods||[];var record=list.find(function(row){return row.name===name;});if(record){record.signature=signature;if(returns)record.returns=returns;}}
   [
     ['InputNumber','parser','(text: string, context?) => number | string | null'],
@@ -158,6 +159,9 @@ window.QXFRAME9A7C2_DOCS_API = Object.freeze({"Button":{"kind":"css","source":"s
     ['Table','getKey','(row, context?) => row key'],
     ['Tags','normalizeTag','(value, context?) => tag value | null']
   ].forEach(function(entry){setOption(entry[0],entry[1],entry[2]);});
+  addOption('Autocomplete',{name:'openOnFocus',type:'boolean',default:'false',description:'默认 false：仅用户实际输入后打开建议；设为 true 时获得焦点即可打开。'});
+  addOption('DatePicker',{name:'rangeControl',type:"'single' | 'dual' | 'segments'",default:"'single'",description:'range 控制区形态：单 input、两个独立 Control、或单 Control Segments 双 input。'});
+  addOption('DatePicker',{name:'rangePlaceholders',type:'[string, string]',default:"['开始日期','结束日期']",description:'dual / segments rangeControl 的开始与结束占位文本。'});
   setMethod('Control','instance.getCommittedValue','getCommittedValue() → scalar | scalar[] | object | null','scalar | scalar[] | object | null');
   setMethod('Control','instance.getSerializedValue','getSerializedValue() → serializable value | serializable value[]','serializable value | serializable value[]');
   setMethod('JSON','instance.getData','getData() → JSON value','JSON value');
