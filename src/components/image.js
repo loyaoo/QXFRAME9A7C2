@@ -568,14 +568,23 @@ function setupImage(instance) {
     }
     return { width: nw, height: nh };
   }
-  function lockPreviewTrajectoryGeometry() {
+  function lockPreviewTrajectoryGeometry(mode) {
     if (!previewMotion || !previewImage || !imagePreviewActive() || cfg('trajectory', true) === false) return false;
-    var viewport = previewViewportSize(), natural = previewNaturalSize();
-    if (!(viewport.width > 0 && viewport.height > 0 && natural.width > 0 && natural.height > 0)) return false;
-    var maxWidth = Math.min(viewport.width * .94, 1800);
-    var maxHeight = viewport.height * .92;
-    var ratio = Math.min(1, maxWidth / natural.width, maxHeight / natural.height);
-    var width = Math.max(1, natural.width * ratio), height = Math.max(1, natural.height * ratio);
+    var width = 0, height = 0;
+    if (mode === 'current' && previewMotion.getBoundingClientRect) {
+      var painted = previewMotion.getBoundingClientRect();
+      width = Number(painted && painted.width || 0);
+      height = Number(painted && painted.height || 0);
+    }
+    if (!(width > 0 && height > 0)) {
+      var viewport = previewViewportSize(), natural = previewNaturalSize();
+      if (!(viewport.width > 0 && viewport.height > 0 && natural.width > 0 && natural.height > 0)) return false;
+      var maxWidth = Math.min(viewport.width * .94, 1800);
+      var maxHeight = viewport.height * .92;
+      var ratio = Math.min(1, maxWidth / natural.width, maxHeight / natural.height);
+      width = Math.max(1, natural.width * ratio);
+      height = Math.max(1, natural.height * ratio);
+    }
     previewMotion.style.width = width.toFixed(3) + 'px';
     previewMotion.style.height = height.toFixed(3) + 'px';
     previewMotion.classList.add('is-trajectory-active');
@@ -591,9 +600,9 @@ function setupImage(instance) {
     panMetrics = null;
     reconcilePreviewTransform(reason || 'motion-complete');
   }
-  function preparePreviewTrajectory() {
+  function preparePreviewTrajectory(mode) {
     if (!previewMotion || !root || !previewRoot || previewRoot.hidden || !imagePreviewActive() || cfg('trajectory', true) === false) return false;
-    lockPreviewTrajectoryGeometry();
+    lockPreviewTrajectoryGeometry(mode === 'leave' ? 'current' : 'canonical');
     var sourceRect = image && image.getBoundingClientRect ? image.getBoundingClientRect() : root.getBoundingClientRect();
     var targetRect = previewMotion.getBoundingClientRect();
     var valid = sourceRect && targetRect && sourceRect.width > 0 && sourceRect.height > 0 && targetRect.width > 0 && targetRect.height > 0;
@@ -618,10 +627,13 @@ function setupImage(instance) {
     previewStage.classList.remove('is-dragging');
     if (previewImage) previewImage.classList.remove('is-dragging');
     pausePreviewMedia();
-    releasePreviewTrajectoryGeometry('leave-complete');
+    // Hide the landed preview copy before releasing its locked trajectory geometry.
+    // Releasing width/height/transform while the surface is still paintable lets the
+    // copy snap back to its centered resting geometry for one frame at the end of leave.
     surface.hide(detail);
     root.classList.remove('is-previewing');
     root.classList.remove('is-preview-source-hidden');
+    releasePreviewTrajectoryGeometry('leave-complete');
     overlay.deactivate(detail);
     call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent, index: previewIndex, item: currentPreviewItem(), instance: api }));
     return true;
@@ -638,7 +650,7 @@ function setupImage(instance) {
     // alive would make the return copy miss the source bounds even when the trajectory itself
     // is correct.
     if (imagePreviewActive()) resetTransform('preview-close');
-    preparePreviewTrajectory();
+    preparePreviewTrajectory('leave');
     // Keep the authored source hidden for the entire leave trajectory. Ownership only returns
     // in finalizePreviewLeave(), after the physical preview copy has reached the source bounds;
     // showing it here creates the two-image ghost visible in the old close animation.
