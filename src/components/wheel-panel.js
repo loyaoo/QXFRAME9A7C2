@@ -774,6 +774,10 @@ function create(options) {
     }
   });
   bindVirtualFocus(keyboardRegion.virtualFocus, false);
+  // Initial render can happen before the final layout metrics are stable (especially when
+  // hosted inside a popup or a freshly expanded demo). Re-center the selected snap targets
+  // on the next two animation frames just like setValue/updateOptions already do.
+  refreshVisible('wheel-panel-init-visible');
   return api;
 }
 
