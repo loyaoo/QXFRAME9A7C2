@@ -847,6 +847,12 @@ function setupImage(instance) {
         call(cfg('onVisibleChange', opts.onPreviewVisibleChange), true, Object.freeze({ source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent, index: previewIndex, item: currentPreviewItem(), instance: api }));
       },
       onAfterLeave: function (context) {
+        // The trajectory has physically landed on the authored source. Motion cleanup
+        // clears the transform immediately after this hook; if the node remains paintable
+        // while the mask is still fading it snaps back to its centered resting geometry.
+        // Hide the landed copy first, then hand visual ownership back to the source.
+        if (previewMotion) previewMotion.style.visibility = 'hidden';
+        root.classList.remove('is-preview-source-hidden');
         leaveContentDone = true;
         finalizePreviewLeave(context);
       }
@@ -871,6 +877,7 @@ function setupImage(instance) {
     pendingOpenDetail = previewDetail('preview', event || null);
     overlay.mount();
     surface.show(pendingOpenDetail);
+    if (previewMotion) previewMotion.style.visibility = '';
     // Commit the newly mounted portal before starting presence motion. Without this
     // boundary Chromium can coalesce the mask/chrome `from` and `to` values into the first
     // painted frame, making the fade visually disappear even though Transition runs.
