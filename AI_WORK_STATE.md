@@ -7,32 +7,41 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-26
+- Last checkpoint date: 2026-09-27
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready after final self-audit closeout.
-- Current Task: `HANDOFF-READY-001`
+- Current Phase: DatePicker regression closeout.
+- Current Task: `DATEPICKER-RANGE-EDIT-PREVIEW-001`
 
 ## CURRENT
 
-### HANDOFF-READY-001 — verified handoff checkpoint
-Status: READY
-Task progress: 100%
-Verified closeout:
-- PR #118 (`fix: close final audit and unify focus origin`) merged; its exact-head PR CI passed and merged-main run #597 passed release, Windows tooling and Pages.
-- PR #119 (`fix: close focus origin and collection edge cases`) merged at `18830d387a60b53c76c97e54e2ac9cf6700c7baa`.
-- PR #119 exact-head `ce1446f40e73d7cb2b02f7c12dd5b5a564455201`: run #599 passed release + Windows tooling.
-- PR #119 merged-main run #600 passed release + Windows tooling + GitHub Pages.
-- FocusOrigin nested pointer handoff and empty ItemCollection focusFirst/focusLast behavior now have explicit regressions.
-- No known controller-migration implementation blocker remains on the maintained public surface.
+### DATEPICKER-RANGE-EDIT-PREVIEW-001 — order:true active endpoint preview (2026-09-27)
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 75%
+Baseline:
+- `main@fbb73c82aa192d1349bb3684e796a4bbadab227e` after PR #129.
+- Preserve PR #127 canonical hover/selected separation for ordinary single-date hover, PR #128 pointer/keyboard focus-origin behavior, and PR #129 outside-month muted text.
+User evidence:
+- `ant.mp4`: when editing one side of a complete ordered range, Ant Design releases the old active endpoint; the untouched endpoint stays selected; the hovered replacement becomes the provisional start/end endpoint and range cap.
+- `我们.mp4`: current QXFRAME keeps both old endpoints selected and only paints the hovered replacement as a soft range cell, producing three competing endpoint cues.
+Root cause:
+- `stateForDate()` always derived `selected/rangeStart/rangeEnd` from stable draft endpoints; `draft.previewValue` only owned `inRange`.
+- `previewSelection()` already computes the correct ordered transient pair, but the endpoint projection discarded that information.
+Implementation:
+- During an active range hover preview, `draft.previewValue` now owns visible `selected/rangeStart/rangeEnd` endpoint projection while stable draft/committed value remains the underlying value truth.
+- With `order:true`, crossing the untouched anchor automatically flips provisional start/end because `previewSelection()` sorts the pair before projection.
+- Single-date hover remains non-selected; no CSS token/state-owner change is required.
+Regression coverage:
+- Browser test edits start across the end anchor and end across the start anchor, asserting the old active endpoint loses selected state and the hovered replacement/fixed anchor become the only two selected range caps.
+- Existing order:true chronological commit and order:false explicit-slot tests remain intact.
 Next exact step:
-1. On resume, query current `main`, open PRs, Actions status and branch inventory before acting.
-2. Do not reopen PR #118/#119 findings or earlier controller phases unless a new reproducible regression contradicts their verification evidence.
-3. Execute only the next user-scoped task; treat this file as a checkpoint, not as permission to restart completed audits.
+1. Commit the source + regression + checkpoint on `fix/datepicker-range-edit-preview`.
+2. Open PR against current `main`.
+3. Verify exact-head GitHub Actions; if green, mark this checkpoint VERIFIED, rerun exact-head CI if the checkpoint changes, then merge.
 
 ## Current authority snapshot — after Phase A
 
