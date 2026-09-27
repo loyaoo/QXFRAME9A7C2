@@ -164,7 +164,7 @@ function create(options) {
       setCustomValidity:function(message){startControl.setCustomValidity(message);return facade;},checkValidity:function(){return startControl.checkValidity();},reportValidity:function(){return startControl.reportValidity();},
       setHasValue:function(value){clearVisible=value===true;startControl.setHasValue(false);endControl.setHasValue(clearVisible);return facade;},
       setExpanded:function(value){startControl.setExpanded(value);endControl.setExpanded(value);return facade;},
-      setDraftDisplayValue:function(){return facade;},setDraftVisual:function(value){startControl.setDraftVisual(value);endControl.setDraftVisual(value);return facade;},
+      setDraftDisplayValue:function(){return facade;},setDraftVisual:function(value){opts.draftVisual=value===true;startControl.setDraftVisual(opts.draftVisual);endControl.setDraftVisual(opts.draftVisual);return facade;},
       updateOptions:updateDual,getCommittedValue:function(){return startControl.getCommittedValue();},getSerializedValue:function(){return startControl.getSerializedValue();},getFormField:function(){return startControl.getFormField();},
       getState:function(){return Object.freeze({mode:'dual',rangeValues:rangeDisplayValues.slice(),draftVisual:opts.draftVisual===true});},
       getRootElement:function(){return root;},getControlElement:function(){return root;},getFocusElement:focusTarget,getInputElement:focusTarget,getInputElements:inputs,
