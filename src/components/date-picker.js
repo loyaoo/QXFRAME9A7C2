@@ -449,16 +449,22 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (selection === 'single') return { selected: DateUnit.same(date, selectedValue, unit, opts.weekStartsOn) };
     if (selection === 'multiple') return { selected: (selectedValue || []).some(function (entry) { return DateUnit.same(date, entry, unit, opts.weekStartsOn); }) };
 
-    // Selection ownership and hover preview ownership are intentionally separate.
-    // Real endpoints remain selected; preview only projects the provisional range band.
-    var selectedStart = selectedValue && selectedValue[0];
-    var selectedEnd = selectedValue && selectedValue[1];
-    var rangeStart = !!selectedStart && DateUnit.same(date, selectedStart, unit, opts.weekStartsOn);
-    var rangeEnd = !!selectedEnd && DateUnit.same(date, selectedEnd, unit, opts.weekStartsOn);
-
-    var rangeValue = field && field.getState().open && opts.previewValue !== false && draft.hasPreview
+    // The stable range comes from draft/committed value, but an active range edit owns
+    // the transient endpoint projection. This mirrors the control being edited: while
+    // hovering a replacement start/end, the old active endpoint stops looking selected,
+    // the untouched endpoint remains the anchor, and the hovered date becomes the
+    // provisional start/end. With order:true previewSelection() has already sorted the
+    // pair, so crossing the anchor swaps the visual start/end roles automatically.
+    var previewRange = field && field.getState().open && opts.previewValue !== false && draft.hasPreview
       ? draft.previewValue
-      : selectedValue;
+      : null;
+    var endpointValue = previewRange || selectedValue;
+    var visualStart = endpointValue && endpointValue[0];
+    var visualEnd = endpointValue && endpointValue[1];
+    var rangeStart = !!visualStart && DateUnit.same(date, visualStart, unit, opts.weekStartsOn);
+    var rangeEnd = !!visualEnd && DateUnit.same(date, visualEnd, unit, opts.weekStartsOn);
+
+    var rangeValue = previewRange || selectedValue;
     var low = rangeValue && rangeValue[0];
     var high = rangeValue && rangeValue[1];
     if (low && high && DateUnit.compare(low, high, unit, opts.weekStartsOn) > 0) { var swap = low; low = high; high = swap; }
