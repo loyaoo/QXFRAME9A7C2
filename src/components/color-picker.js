@@ -236,6 +236,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
       if (instance.confirmFromKeyboard(event)) return true;
        var handled = panel.handleKeydown(event) === true;
        if (handled) activateColorVirtualFocus(event.key || 'color-keyboard');
+       if (instance.submitImmediateFromKeyboard(event, { handled:handled })) return true;
        return handled;
      }
 
