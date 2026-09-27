@@ -533,6 +533,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
               if (branchChanged) notifySelectionCallbacks(item.value, branchValue, branchPayload);
               if (destroyed) return true;
             }
+            if (detail && detail.source === 'keyboard') return enterChildColumn(columnIndex, item, detail);
             activeColumnIndex = columnIndex;
             if (isLazyExpandable(item)) loadChildrenFor(item, detail); else renderColumns();
             return true;
