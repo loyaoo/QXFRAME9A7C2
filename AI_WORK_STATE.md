@@ -1384,7 +1384,7 @@ Keep this file compact and non-contradictory:
 
 ## UX-REGRESSION-002 — Picker projection / component surface regressions (2026-09-27)
 
-- Status: **IMPLEMENTED — PENDING PR CI**
+- Status: **VERIFIED — READY TO MERGE**
 - Baseline: `main@fc5fa38a9353bba92910f88cb94a87445c0a2b64` (post UX-CLOSEOUT-001)
 - Branch: `fix/ux-regression-002-picker-surfaces`
 - User evidence: current canonical demos plus uploaded picker/table recordings and table screenshots.
@@ -1398,3 +1398,4 @@ Keep this file compact and non-contradictory:
 - Guardrails: preserve ValueController as sole value owner, preserve existing focus/navigation semantics, add browser-visible regression coverage before merge, then verify exact-head PR CI before merge.
 
 - Implementation checkpoint: picker grey-state is now projection-channel driven (draft/preview only); DatePicker single/dual/segments range forms are browser-locked; Autocomplete input-first default is browser-locked; Notification stacked viewport is shadow-safe with a single edge-gutter owner; Table empty chrome/right gutter/corner seams are regression-locked; Image first activation is tested before load settles and after error, and the canonical demo no longer requires a break-src button.
+- Verification: PR #123 exact implementation head `0d3ccad11c44b7418a9498191e12af7cae315c34` passed QXFRAME CI run #617: dependency audit, completion audit, full release verification, npm pack, standalone dist/docs build, artifact upload, and Windows tools all succeeded. This status-only checkpoint is the sole change after that verified implementation head.
