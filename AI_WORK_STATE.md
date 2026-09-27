@@ -1422,3 +1422,14 @@ Keep this file compact and non-contradictory:
 - TimePanel root cause/fix: initial WheelPanel centering ran before final layout metrics and initial construction lacked the two-frame visible-layout correction already used by update paths. WheelPanel now schedules `refreshVisible()` after initial bind; TimePicker also refreshes its TimePanel after popup open.
 - DatePicker root cause/fix: a reused virtual-focus controller could retain keyboard modality when a later popup open was pointer-origin. Pointer/mouse/touch open explicitly demotes virtual focus to pointer before hosted calendar domains bind; pointerdown inside the selection panel also does so.
 - Regression coverage: exact current-rect lock on Image leave, TimePanel hour/minute/second snap centering, and pointer-open DatePicker with zero `.is-keyboard-focus` calendar cells.
+
+
+## UX-REGRESSION-004 — Image leave rebound + canonical date-cell states (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@49d8ba5e4e7ba5343a9a25b5e9f3da0e85c3042c`.
+- User evidence: `PixPin_2026-09-27_19-51-30.mp4` shows the Image preview correctly shrinking toward the source, then snapping back to the centered large resting geometry before finally disappearing.
+- Image root cause/fix: content leave completes before the mask lifecycle fully finishes. Motion cleanup clears the trajectory transform after the content transition callback, so the still-paintable preview copy returns to its centered resting geometry. The landed motion node is now hidden inside content `onAfterLeave` before cleanup can repaint it, and visual ownership is transferred to the authored source at that exact landing boundary. Opening explicitly restores motion visibility.
+- DatePicker architecture: DatePicker directly composes `Calendar` and `PeriodPanel`; both already render the shared `.qxframe9a7c2-date-panel-cell` primitive. DatePicker no longer treats hover `previewValue` as selected state. Selected endpoints come only from committed/draft selection; preview may project a provisional range band.
+- Canonical state styling: Calendar and PeriodPanel both project `.is-hover`; shared cell CSS now defines normal hover, in-range hover, selected, and selected-hover as distinct states using subtle-hover, accent-soft-hover, accent, and accent-hover tokens respectively.
+- Regression coverage: Image landed copy cannot repaint after leave cleanup; DatePicker hover target is not selected while the actual selection remains selected; Calendar and PeriodPanel expose the same canonical hover state.
