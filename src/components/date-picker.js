@@ -568,7 +568,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       field.setDraftDisplayValue(open ? projectedText : '');
       visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value, selection);
     }
-    field.setDraftVisual(open);
+    field.setDraftVisual(projection.draftVisual === true);
     field.setClearVisible(visualHasValue);
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
