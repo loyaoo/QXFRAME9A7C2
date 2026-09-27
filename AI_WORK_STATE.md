@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — CANONICAL RULE CI RETRY
-Task progress: 96%
+Status: IMPLEMENTED — LEGACY FIXTURE SYNC
+Task progress: 97%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -66,9 +66,11 @@ CI evidence:
 - Regression now uses two fresh complete-range pickers: one for click-after-end and one for click-before-end. DatePicker implementation is unchanged from `ab926414...`.
 - Run #649 passed those new mouse regressions, then failed the legacy browser smoke because that smoke still encoded the superseded two-Enter restart contract for a complete single range.
 - The keyboard smoke now follows the canonical rule too: existing `09-01 ~ 09-02` + active `09-26` + one Enter => immediate complete `09-02 ~ 09-26`. Mouse and keyboard no longer test conflicting value semantics.
+- Run #650 showed that release also executes `verify:legacy-browser`, explicitly sourced from `tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html`; that historical fixture still encoded the superseded two-Enter contract.
+- The legacy fixture's DatePicker range assertion is now synchronized with the current canonical interaction. This is an intentional behavior update, not backward-compat preservation.
 Next exact step:
-1. Run exact-head QXFRAME CI with the canonical keyboard smoke.
-2. Verify mouse before/after-end and keyboard complete-range replacement all agree.
+1. Run exact-head QXFRAME CI after synchronizing the release legacy fixture.
+2. Verify main browser suite + legacy browser suite both accept the end-anchored one-click range rule.
 3. If green, record verification, rerun final status-only head, merge PR #131, and confirm main/Pages.
 
 ## Current authority snapshot — after Phase A
