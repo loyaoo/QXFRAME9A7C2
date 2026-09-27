@@ -1070,6 +1070,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (!panel || !panel.handleKeydown) return false;
     var handled = panel.handleKeydown(event) === true;
     if (handled) activateCurrentPanelVirtualFocus(event.key || 'keyboard');
+    if (instance.submitImmediateFromKeyboard(event, { handled:handled, multiple:selection === 'multiple', complete:rangeCommitReady(draft.draftValue) })) return true;
     return handled;
   }
 
