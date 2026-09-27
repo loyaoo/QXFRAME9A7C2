@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — CI RETRY
-Task progress: 86%
+Status: IMPLEMENTED — BROWSER RETRY
+Task progress: 90%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -45,8 +45,10 @@ CI evidence:
 - Root cause of the failed attempt: PickerComponent's family `beforeCommit` hook passes only `detail`; the first implementation incorrectly expected `(controller, detail)`, so the finalizer never saw the DatePicker ValueController.
 - Run #642 then stopped at the structural source assertion because it still expected the obsolete `(controller, detail)` signature; the implementation itself was not the failing assertion target.
 - The structural assertion now matches the actual detail-only family hook. DatePicker implementation is unchanged from the callback-signature correction.
+- Run #643 passed the complete start-slot replacement, pre-confirm committed/draft separation, open-slot identity, visual endpoint projection, and first commit canonicalization. It failed only in the second hover assertion because that assertion reused the pre-commit cached 17-day cell after `syncSelectionPanel()` refreshed Calendar through `calendar.setValue(...)`.
+- The second phase now reacquires the untouched anchor from the current Calendar DOM after commit and explicitly asserts `activeRangePart===1` before hover; no DatePicker implementation change is required for this retry.
 Next exact step:
-1. Commit the callback-signature correction.
+1. Commit the current-DOM browser assertion correction.
 2. Run exact-head QXFRAME CI again.
 3. If green, record verification, rerun final head if checkpoint changes, then merge.
 
