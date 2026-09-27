@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — FINAL BEHAVIOR RETRY
-Task progress: 94%
+Status: VERIFIED — READY TO MERGE
+Task progress: 97%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -51,10 +51,13 @@ CI evidence:
 - Compatibility correction: Ant-style one-endpoint replacement/preserved slot order is limited to `dual`/`segments` range controls where endpoint ownership is explicit.
 - Run #645 exposed one remaining branch bug in that compatibility guard: a complete `single` range skipped explicit-endpoint replacement but then fell through into the existing "choose end" path, retaining the old start. The browser smoke sequence proves the required behavior: complete single range + first Enter must return `[selected, null]`, then the second Enter completes the new range.
 - The complete-range branch is now explicit: `single => restart [selected,null]`; `dual/segments => replace activeRangePart while preserving the opposite endpoint`.
+Verification:
+- PR #131 implementation head `6fda491acc595a7d2a138c79c5bb1dd77317d0e2` passed QXFRAME CI #646.
+- #646 passed dependency/completion audits, full release verification (including the new explicit-endpoint range regression and existing single-range keyboard smoke), Windows tooling, npm packaging, standalone dist/docs build and artifact upload.
 Next exact step:
-1. Commit the complete-range single-vs-explicit-endpoint branch correction.
-2. Run exact-head QXFRAME CI again, including final-audit regressions and the legacy/browser smoke suites.
-3. If green, record verification, rerun final head if checkpoint changes, then merge.
+1. Run QXFRAME CI on this status-only checkpoint head.
+2. If exact-head CI is green, merge PR #131.
+3. Confirm merged-main CI/Pages, then return to handoff-ready state.
 
 ## Current authority snapshot — after Phase A
 
