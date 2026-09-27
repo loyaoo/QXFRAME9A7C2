@@ -1445,3 +1445,16 @@ Keep this file compact and non-contradictory:
 - DatePicker fix: year/month/date drill transitions now carry the actual interaction metadata into `setCalendarPanelMode()`; pointer transitions explicitly retain pointer modality, and the return-to-date activation is keyboard-only when the source is keyboard.
 - CSS/component audit: all `src/components/*.js` are now CI-scanned for direct `is-keyboard-focus` ownership; only Control and Image may project it locally and both must derive it from `FocusOrigin.isKeyboard()`. CSS is CI-scanned so `:focus` / `:focus-within` cannot paint a nonzero outline. Image's old unconditional `:focus-within` outline and the forced-colors segmented-input `:focus-within` outline were converted to keyboard-origin classes.
 - Browser regression coverage: pointer-open DatePicker -> year panel -> month panel -> date panel must remain pointer modality with zero `.is-keyboard-focus` cells throughout; pointer-focused Image must have no keyboard outline.
+
+
+## DATEPICKER-OUTSIDE-MONTH-COLOR-001 — Outside-month text regression (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@32b4c06bf86cd6fc5fd34603156973f8208bd97a`.
+- User regression: DatePicker calendar cells from the previous/next month still receive `.is-outside`, but their text is no longer visually muted/light gray.
+- Root cause: the Calendar owner rule survived the shared Calendar/PeriodPanel cell unification with the retired private variable `--_qxframe9a7c2-calendar-cell-text`. The canonical shared cell now paints `color` from `--_qxframe9a7c2-date-panel-cell-text`, so the outside-month rule was writing a dead channel and had no visual effect.
+- Fix: `.qxframe9a7c2-calendar-cell.is-outside:not(.is-selected):not(.is-in-range)` now sets the canonical `--_qxframe9a7c2-date-panel-cell-text` to `--_qxframe9a7c2-semantic-text-disabled`, restoring the former light-gray treatment while preserving selected/range colors.
+- Audit: no other `--_qxframe9a7c2-calendar-cell-*` private state channels remain in the stylesheet.
+- Outside-month interaction parity: normal state keeps muted text; hover keeps the muted text while adding the canonical hover background; clicking the filler selects that exact date and navigates the panel so the selected cell is rendered in-view, matching Ant Design's current cell model.
+- Range ordering: DatePicker already exposes `order`; it remains `true` by default (chronological auto-order for range/multiple) and `order:false` preserves explicit start/end slot order. This matches Ant Design's current API default and avoids adding a second overlapping option.
+- Regression gates: Phase-F rejects the retired variable and requires the canonical outside-month rule; browser regression checks outside/current-month color, outside hover, outside click-selection/navigation, default auto-order, and explicit fixed-order range selection.
