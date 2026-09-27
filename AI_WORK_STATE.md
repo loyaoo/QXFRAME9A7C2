@@ -14,70 +14,31 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: DatePicker complete-range replacement regression closeout.
-- Current Task: `DATEPICKER-RANGE-REPLACE-001`
+- Current Phase: handoff-ready after DatePicker complete-range end-anchor closeout.
+- Current Task: `HANDOFF-READY-003`
 
 ## CURRENT
 
-### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: VERIFIED — READY TO MERGE
-Task progress: 99%
-Baseline:
-- `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
-- PR #130 hover endpoint projection is correct and must remain intact.
-User evidence:
-- Ant Design recording: editing one side of an existing complete range keeps the opposite date. While open, the edited control slot may temporarily be later/earlier than the opposite slot; accepted close then resolves chronological start/end for `order:true`.
-- QXFRAME recording: clicking the hovered replacement clears the opposite endpoint and forces a second range selection.
-Root cause:
-- Earlier attempts modeled a complete-range click as either "restart a new range" or "replace activeRangePart and sort later". Both are wrong for the requested interaction.
-- The requested rule is end-anchored and immediate: the existing end date remains the anchor for the next click; the click immediately yields a complete ordered range.
-Implementation:
-- For a complete `order:true` range, `endAnchor = current[1]`.
-- If clicked date is before `endAnchor`, draft becomes `[clicked, endAnchor]`.
-- If clicked date is after/equal to `endAnchor`, draft becomes `[endAnchor, clicked]`.
-- Both endpoints therefore remain present immediately after click; there is no `[clicked, null]` intermediate state.
-- Removed the transient `preserveRangeSlots` normalization path and commit-time range reordering hook introduced by the previous attempt; canonical range ordering is again single-path.
+### HANDOFF-READY-003 — post DatePicker complete-range end-anchor closeout
+Status: VERIFIED
+Task progress: 100%
+Repository state:
+- PR #131 merged to `main` at `f586bb3e01a76e624219d3b3a61314164f90c70a`.
+- Implementation/test head `2d84463b949069bc0bcd8a86365d95d883f4e314` passed QXFRAME CI #652.
+- Final PR head `5b909d31f537ec7ad44330afa7dda98415f45ee5` passed QXFRAME CI #653.
+Current DatePicker complete-range rule:
+- Existing complete `order:true` range uses the current end date as the next selection anchor.
+- `clicked < currentEnd => [clicked, currentEnd]`.
+- `clicked >= currentEnd => [currentEnd, clicked]`.
+- A complete-range click never clears the opposite endpoint or enters a `[clicked, null]` state.
+- Mouse and keyboard regression gates use the same one-click rule.
 - `order:false` retains explicit slot semantics.
-
-Regression coverage:
-- Replacing start wiRegression coverage:
-- Existing complete range + click before current end => clicked date becomes start, current end remains end.
-- Existing complete range + click after current end => current end becomes start, clicked date becomes end.
-- Both cases assert the draft remains complete immediately after click and committed value stays unchanged until confirm.
-- Existing single-range keyboard smoke remains part of full release verification.
-
-CI evidence:
-- PR #131 run #641 reached the new browser regression and failed specifically at commit-time chronological normalization.
-- Root cause of the failed attempt: PickerComponent's family `beforeCommit` hook passes only `detail`; the first implementation incorrectly expected `(controller, detail)`, so the finalizer never saw the DatePicker ValueController.
-- Run #642 then stopped at the structural source assertion because it still expected the obsolete `(controller, detail)` signature; the implementation itself was not the failing assertion target.
-- The structural assertion now matches the actual detail-only family hook. DatePicker implementation is unchanged from the callback-signature correction.
-- Run #643 passed the complete start-slot replacement, pre-confirm committed/draft separation, open-slot identity, visual endpoint projection, and first commit canonicalization. It failed only in the second hover assertion because that assertion reused the pre-commit cached 17-day cell after `syncSelectionPanel()` refreshed Calendar through `calendar.setValue(...)`.
-- The second phase now reacquires the untouched anchor from the current Calendar DOM after commit and explicitly asserts `activeRangePart===1` before hover.
-- Run #644 then passed the new complete-range replacement regression but failed the existing full browser suite at `regression-date-range-keyboard-selection-value`. The failing state identifies `rangeControl:'single'`: its combined input has no explicit start/end edit slot, and existing keyboard behavior intentionally begins a fresh two-step range on the first selection.
-- Compatibility correction: Ant-style one-endpoint replacement/preserved slot order is limited to `dual`/`segments` range controls where endpoint ownership is explicit.
-- Run #645 exposed one remaining branch bug in that compatibility guard: a complete `single` range skipped explicit-endpoint replacement but then fell through into the existing "choose end" path, retaining the old start. The browser smoke sequence proves the required behavior: complete single range + first Enter must return `[selected, null]`, then the second Enter completes the new range.
-- The complete-range branch is now explicit: `single => restart [selected,null]`; `dual/segments => replace activeRangePart while preserving the opposite endpoint`.
 Verification:
-- PR #131 implementation head `6fda491acc595a7d2a138c79c5bb1dd77317d0e2` passed QXFRAME CI #646.
-- #646 passed dependency/completion audits, full release verification (including the new explicit-endpoint range regression and existing single-range keyboard smoke), Windows tooling, npm packaging, standalone dist/docs build and artifact upload.
-CI evidence:
-- Run #648 reached the new user-rule browser regression. The after-end click case passed.
-- The failure was in the test's second hover phase because it reused the same open picker after a programmatic commit, leaving `activeRangePart=1`; that is not the reopen/edit scenario from the supplied recording.
-- Regression now uses two fresh complete-range pickers: one for click-after-end and one for click-before-end. DatePicker implementation is unchanged from `ab926414...`.
-- Run #649 passed those new mouse regressions, then failed the legacy browser smoke because that smoke still encoded the superseded two-Enter restart contract for a complete single range.
-- The keyboard smoke now follows the canonical rule too: existing `09-01 ~ 09-02` + active `09-26` + one Enter => immediate complete `09-02 ~ 09-26`. Mouse and keyboard no longer test conflicting value semantics.
-- Run #650 showed that release also executes `verify:legacy-browser`, explicitly sourced from `tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html`; that historical fixture still encoded the superseded two-Enter contract.
-- The legacy fixture's DatePicker range assertion is now synchronized with the current canonical interaction. This is an intentional behavior update, not backward-compat preservation.
-- Run #651 passed the browser behavior but release-preflight correctly rejected the modified Phase C fixture because its approved-difference transform only knew TimePanel/FocusOrigin migrations.
-- Preflight now keeps frozen HOTFIX6 immutable and explicitly transforms only the two DatePicker range deltas (one Enter instead of two-step selection, and immediate `09-02 ~ 09-26` expectation) before comparing against the Phase C fixture.
-Verification:
-- PR #131 implementation/test head `2d84463b949069bc0bcd8a86365d95d883f4e314` passed QXFRAME CI #652.
-- #652 passed full release verification, both current + legacy browser gates, release-preflight, Windows tooling, npm pack, standalone dist/docs build, artifact uploads, and Pages artifact creation.
-- Canonical complete-range rule is now: `clicked < currentEnd => [clicked,currentEnd]`; otherwise `[currentEnd,clicked]`. No endpoint is cleared after a complete-range click.
+- Current + legacy browser gates, release-preflight, Windows tooling, npm pack, standalone dist/docs build, artifact uploads and Pages artifact creation passed before merge.
 Next exact step:
-1. Run exact-head CI on this status-only checkpoint.
-2. If green, merge PR #131.
-3. Confirm merged-main CI/Pages and return to handoff-ready state.
+1. On any new report, query current `main`, open PRs and latest CI first.
+2. Reproduce only the newly reported behavior; do not reopen this closed range-selection investigation unless evidence shows a regression.
+3. Keep this file current after each new fix.
 
 ## Current authority snapshot — after Phase A
 
@@ -105,6 +66,19 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### DATEPICKER-RANGE-REPLACE-001 — end-anchored complete-range replacement
+Status: DONE
+Evidence:
+- PR #131 merged at `f586bb3e01a76e624219d3b3a61314164f90c70a`.
+- CI #652 passed on implementation/test head; CI #653 passed on final PR head.
+Outcome:
+- Complete ordered ranges now preserve two endpoints immediately after selection.
+- Clicking before the current end makes the clicked date the new start and preserves the current end.
+- Clicking on/after the current end promotes the previous end to start and makes the clicked date the new end.
+- The superseded transient unsorted-slot/commit-reorder path was removed; range normalization is single-path again.
+- Current and legacy browser regression fixtures, plus release-preflight approved-difference normalization, encode the same interaction.
+
 
 ### DATEPICKER-RANGE-EDIT-PREVIEW-001 — ordered active-endpoint hover preview
 Status: DONE
