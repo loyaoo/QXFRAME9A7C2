@@ -15062,8 +15062,9 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
   width:min(100vw,calc(var(--qxframe9a7c2-notice-rail-width) + var(--qxframe9a7c2-notice-shadow-gutter) + var(--qxframe9a7c2-notice-shadow-gutter)))
 }
 .qxframe9a7c2-notification-stack{
-  width:min(100vw,calc(var(--qxframe9a7c2-notice-rail-width) + var(--qxframe9a7c2-notice-shadow-gutter) + var(--qxframe9a7c2-notice-shadow-gutter)));
-  padding:0
+  --qxframe9a7c2-notification-edge-gutter:18px;
+  width:min(100vw,calc(var(--qxframe9a7c2-notice-rail-width) + var(--qxframe9a7c2-notification-edge-gutter) + var(--qxframe9a7c2-notification-edge-gutter)));
+  padding:0;overflow:visible
 }
 .qxframe9a7c2-notification-stack.is-top-right,
 .qxframe9a7c2-notification-stack.is-right-center,
@@ -15084,17 +15085,24 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
  * and gives popup shadows their own paint/scroll buffer on every side. No negative margin
  * is allowed here, otherwise the card returns to the screen edge and the shadow is clipped again.
  */
-.qxframe9a7c2-notification-viewport,
+.qxframe9a7c2-notification-viewport{
+  width:auto;height:100%;max-width:100%;max-height:100%;margin:0;
+  padding:var(--qxframe9a7c2-notification-edge-gutter);overflow:visible
+}
+.qxframe9a7c2-notification-stack:not(.is-stack-enabled) .qxframe9a7c2-notification-viewport,
+.qxframe9a7c2-notification-stack.is-expanded-stack .qxframe9a7c2-notification-viewport{
+  overflow-x:hidden;overflow-y:auto
+}
 .qxframe9a7c2-message-viewport{
   width:auto;height:100%;max-width:100%;max-height:100%;margin:0;
   padding:var(--qxframe9a7c2-notice-shadow-gutter)
 }
 .qxframe9a7c2-notification-stack .qxframe9a7c2-notice-slot,
 .qxframe9a7c2-notification-stack .qxframe9a7c2-notification-root{
-  max-width:calc(100vw - var(--qxframe9a7c2-notice-shadow-gutter) - var(--qxframe9a7c2-notice-shadow-gutter))
+  max-width:calc(100vw - var(--qxframe9a7c2-notification-edge-gutter) - var(--qxframe9a7c2-notification-edge-gutter))
 }
 .qxframe9a7c2-notification-stack .qxframe9a7c2-notification-root{
-  min-width:min(18rem,calc(100vw - var(--qxframe9a7c2-notice-shadow-gutter) - var(--qxframe9a7c2-notice-shadow-gutter)))
+  min-width:min(18rem,calc(100vw - var(--qxframe9a7c2-notification-edge-gutter) - var(--qxframe9a7c2-notification-edge-gutter)))
 }
 
 .qxframe9a7c2-message-stack .qxframe9a7c2-notice-slot,
@@ -15948,6 +15956,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
   box-sizing:border-box;
   width:100%;
   max-width:100%;
+  padding:0;
   overflow:auto;
   border:1px solid var(--_qxframe9a7c2-semantic-border-subtle);
   border-radius:var(--_qxframe9a7c2-table-radius);
@@ -16046,6 +16055,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-table tfoot td,.qxframe9a7c2-table .qxframe9a7c2-table-summary td{background:var(--_qxframe9a7c2-table-head-bg);font-weight:600}
 .qxframe9a7c2-table-caption{padding:.5625rem .75rem;color:var(--_qxframe9a7c2-semantic-text-secondary);text-align:start;caption-side:bottom}
 .qxframe9a7c2-table-title,.qxframe9a7c2-table-footer{padding:.6875rem .75rem;background:var(--_qxframe9a7c2-semantic-surface-raised)}
+.qxframe9a7c2-table-title:empty,.qxframe9a7c2-table-toolbar:empty,.qxframe9a7c2-table-footer:empty{display:none}
 .qxframe9a7c2-table-toolbar,.qxframe9a7c2-table-footer{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
 .qxframe9a7c2-table-toolbar{padding:.5625rem .75rem;border-bottom:1px solid var(--_qxframe9a7c2-semantic-border-subtle);background:var(--_qxframe9a7c2-semantic-surface-raised)}
 .qxframe9a7c2-table-toolbar-start,.qxframe9a7c2-table-toolbar-end,.qxframe9a7c2-table-footer-start,.qxframe9a7c2-table-footer-end{display:flex;min-width:0;align-items:center;gap:.5rem}
