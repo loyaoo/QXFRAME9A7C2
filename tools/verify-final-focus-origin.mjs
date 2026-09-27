@@ -105,8 +105,8 @@ for(const name of fs.readdirSync(componentDir).filter(name=>name.endsWith('.js')
 }
 assert.deepEqual(
   directKeyboardClassOwners.sort(),
-  ['control.js','image.js'],
-  'Component-local is-keyboard-focus projection must stay centralized; composite item rings belong to VirtualFocus.'
+  ['control.js','image.js','table.js','tabs.js'],
+  'Component-local is-keyboard-focus projection must stay limited to audited FocusOrigin-backed shell/bridge owners; composite item rings belong to VirtualFocus.'
 );
 for(const name of directKeyboardClassOwners){
   const source=fs.readFileSync(path.join(componentDir,name),'utf8');
