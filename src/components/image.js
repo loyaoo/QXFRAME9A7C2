@@ -35,15 +35,15 @@ var REMOVED_PREVIEW_ITEM_FIELDS = Object.freeze(['url', 'name']);
 var PREVIEW_TRANSITION = Object.freeze({
   enter: Object.freeze({
     type: 'transition',
-    from: Object.freeze({ style: Object.freeze({ opacity: '0', transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) }),
-    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'opacity, transform', transitionDuration: 'var(--qxframe9a7c2-motion-duration-mid)', transitionTimingFunction: 'var(--qxframe9a7c2-easing-standard)' }) }),
-    to: Object.freeze({ style: Object.freeze({ opacity: '1', transform: 'translate3d(0,0,0) scale(1,1)' }) })
+    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) }),
+    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform', transitionDuration: 'var(--qxframe9a7c2-motion-duration-mid)', transitionTimingFunction: 'var(--qxframe9a7c2-easing-standard)' }) }),
+    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) })
   }),
   leave: Object.freeze({
     type: 'transition',
-    from: Object.freeze({ style: Object.freeze({ opacity: '1', transform: 'translate3d(0,0,0) scale(1,1)' }) }),
-    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'opacity, transform', transitionDuration: 'var(--qxframe9a7c2-motion-duration-mid)', transitionTimingFunction: 'var(--qxframe9a7c2-easing-standard)' }) }),
-    to: Object.freeze({ style: Object.freeze({ opacity: '0', transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) })
+    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) }),
+    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform', transitionDuration: 'var(--qxframe9a7c2-motion-duration-mid)', transitionTimingFunction: 'var(--qxframe9a7c2-easing-standard)' }) }),
+    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) })
   })
 });
 var own = Utils.own;
@@ -633,9 +633,15 @@ function setupImage(instance) {
     pendingCloseDetail = previewDetail(reason || 'api', event || null);
     leaveMaskDone = false;
     leaveContentDone = false;
+    // Return any user zoom/pan/rotate/flip to the canonical preview geometry while
+    // the outer trajectory travels back to the authored source. Keeping those transforms
+    // alive would make the return copy miss the source bounds even when the trajectory itself
+    // is correct.
+    if (imagePreviewActive()) resetTransform('preview-close');
     preparePreviewTrajectory();
-    // Cross-fade ownership returns to the authored source at the same time preview leave starts.
-    root.classList.remove('is-preview-source-hidden');
+    // Keep the authored source hidden for the entire leave trajectory. Ownership only returns
+    // in finalizePreviewLeave(), after the physical preview copy has reached the source bounds;
+    // showing it here creates the two-image ghost visible in the old close animation.
     // Preview chrome leaves on the same lifecycle clock as mask/trajectory. The root remains
     // mounted until both presence owners complete, so title/toolbar/close never disappear early.
     if (previewRoot) previewRoot.classList.remove('is-chrome-visible');
