@@ -200,7 +200,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
   function normalizeValue(value, meta) {
     var fromTimePanel = !!(meta && meta.timePanelOrigin === true);
-    var preserveRangeSlots = !!(meta && meta.preserveRangeSlots === true);
     if (selection === 'single') {
       var one = normalizeOne(value);
       if (value !== null && value !== undefined && value !== '' && !one) throw new TypeError('[QXFRAME9A7C2] DatePicker value is invalid for the current unit/format.');
@@ -218,7 +217,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         if (start) start = normalizeSelectableDate(start, 0);
         if (end) end = normalizeSelectableDate(end, 1);
       }
-      if (!preserveRangeSlots && opts.order !== false && start && end && compareChronological(start, end) > 0) return [end, start];
+      if (opts.order !== false && start && end && compareChronological(start, end) > 0) return [end, start];
       return [start, end];
     }
     if (value === null || value === undefined || value === '') return [];
@@ -492,12 +491,14 @@ function setupDatePickerRuntime(instance, fieldInit) {
       return current;
     }
     if (current[0] && current[1]) {
-      if (opts.rangeControl !== 'single') {
+      if (opts.order === false) {
         current[activeRangePart === 1 ? 1 : 0] = selected;
         return current;
       }
-      activeRangePart = 1;
-      return [selected, null];
+      var endAnchor = current[1];
+      var selectedBeforeEnd = compareChronological(selected, endAnchor) < 0;
+      activeRangePart = selectedBeforeEnd ? 0 : 1;
+      return selectedBeforeEnd ? [selected, endAnchor] : [endAnchor, selected];
     }
     if (!current[0]) {
       activeRangePart = 1;
@@ -545,25 +546,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
   instance.bindValueController(draft);
   instance.setupPickerSelection({ multiple: selection !== 'single' });
   syncSelectionController(draft.value, { source:'init', reason:'date-selection-init' });
-  function finalizeOrderedRangeDraft(detail) {
-    if (selection !== 'range' || opts.order === false) return true;
-    var current = draft && draft.draftValue;
-    if (!current || !current[0] || !current[1] || compareChronological(current[0], current[1]) <= 0) return true;
-    // PickerComponent exposes beforeCommit as a detail-only family hook; DatePicker
-    // already owns the canonical ValueController in this closure, so finalize it here.
-    // Move activeRangePart before publishing the sorted draft so any composed time
-    // panel keeps following the endpoint the user actually edited after the swap.
-    activeRangePart = activeRangePart === 1 ? 0 : 1;
-    return draft.setDraft(current, {
-      silent:true,
-      source:detail && detail.source || 'commit',
-      reason:'range-order-finalize'
-    }) !== false;
-  }
   var pickerSession = instance.setupPickerSession({
     controller: draft,
     needConfirm: function () { return opts.needConfirm === true; },
-    beforeCommit: finalizeOrderedRangeDraft,
     canCommit: function (controller) { return rangeCommitReady(controller.draftValue); },
     onOpenDraft: function (controller) {
       controller.clearPreview({ silent:true, source:'popup', reason:'open-preview-clear' });
@@ -919,16 +904,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (calendar && calendar.refreshStates) calendar.refreshStates();
       if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
     }
-    var replacingCompleteRange = selection === 'range' && opts.rangeControl !== 'single' && !!(draft.draftValue && draft.draftValue[0] && draft.draftValue[1]);
-    var editedRangePart = activeRangePart;
     var next = applyPanelSelection(value);
     if (next === null) return;
-    draft.setDraft(next, {
-      source: detail.source,
-      reason: unit + '-select',
-      preserveRangeSlots: replacingCompleteRange && opts.order !== false,
-      activeRangePart: selection === 'range' ? editedRangePart : null
-    });
+    draft.setDraft(next, { source: detail.source, reason: unit + '-select' });
     if (field && field.getState().open) syncField(true);
     var payload = { selectedValue: cloneDate(value), value: cloneValue(draft.draftValue, selection), source: detail.source, reason: detail.reason, originalEvent: detail.originalEvent || null, datePicker: api };
     if (Utils.isFunction(opts.onSelect)) opts.onSelect(cloneDate(value), payload);

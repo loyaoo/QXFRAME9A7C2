@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: VERIFIED — READY TO MERGE
-Task progress: 97%
+Status: IMPLEMENTED — USER RULE RETRY
+Task progress: 94%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -29,17 +29,23 @@ User evidence:
 - Ant Design recording: editing one side of an existing complete range keeps the opposite date. While open, the edited control slot may temporarily be later/earlier than the opposite slot; accepted close then resolves chronological start/end for `order:true`.
 - QXFRAME recording: clicking the hovered replacement clears the opposite endpoint and forces a second range selection.
 Root cause:
-- `applyPanelSelection()` treated every complete range as the trigger to start a brand-new range and returned `[selected, null]`.
-- `normalizeValue()` also auto-sorted every draft write, so there was no way to preserve active control-slot identity during an open edit and defer chronological normalization to commit.
+- Earlier attempts modeled a complete-range click as either "restart a new range" or "replace activeRangePart and sort later". Both are wrong for the requested interaction.
+- The requested rule is end-anchored and immediate: the existing end date remains the anchor for the next click; the click immediately yields a complete ordered range.
 Implementation:
-- A complete range now replaces only `activeRangePart`; the opposite endpoint is retained.
-- Open complete-range edits use a transient `preserveRangeSlots` normalization mode, so control slot identity is stable while editing.
-- Visual range caps remain chronological for `order:true` even when the transient draft slots are temporarily reversed.
-- PickerSession `beforeCommit` finalizes ordered range draft chronologically and updates `activeRangePart` before publishing the sorted draft, preserving time-panel ownership.
-- New-range first/second selection flow and `order:false` explicit slot semantics remain unchanged.
+- For a complete `order:true` range, `endAnchor = current[1]`.
+- If clicked date is before `endAnchor`, draft becomes `[clicked, endAnchor]`.
+- If clicked date is after/equal to `endAnchor`, draft becomes `[endAnchor, clicked]`.
+- Both endpoints therefore remain present immediately after click; there is no `[clicked, null]` intermediate state.
+- Removed the transient `preserveRangeSlots` normalization path and commit-time range reordering hook introduced by the previous attempt; canonical range ordering is again single-path.
+- `order:false` retains explicit slot semantics.
+
 Regression coverage:
-- Replacing start with a date after end preserves end, keeps committed value untouched before confirm, retains unsorted control-slot draft while open, then sorts on commit.
-- Replacing end with a date before start preserves start and sorts on commit.
+- Replacing start wiRegression coverage:
+- Existing complete range + click before current end => clicked date becomes start, current end remains end.
+- Existing complete range + click after current end => current end becomes start, clicked date becomes end.
+- Both cases assert the draft remains complete immediately after click and committed value stays unchanged until confirm.
+- Existing single-range keyboard smoke remains part of full release verification.
+
 CI evidence:
 - PR #131 run #641 reached the new browser regression and failed specifically at commit-time chronological normalization.
 - Root cause of the failed attempt: PickerComponent's family `beforeCommit` hook passes only `detail`; the first implementation incorrectly expected `(controller, detail)`, so the finalizer never saw the DatePicker ValueController.
@@ -55,9 +61,9 @@ Verification:
 - PR #131 implementation head `6fda491acc595a7d2a138c79c5bb1dd77317d0e2` passed QXFRAME CI #646.
 - #646 passed dependency/completion audits, full release verification (including the new explicit-endpoint range regression and existing single-range keyboard smoke), Windows tooling, npm packaging, standalone dist/docs build and artifact upload.
 Next exact step:
-1. Run QXFRAME CI on this status-only checkpoint head.
-2. If exact-head CI is green, merge PR #131.
-3. Confirm merged-main CI/Pages, then return to handoff-ready state.
+1. Run exact-head QXFRAME CI for the end-anchored click rule.
+2. Verify both the new before/after-end regression and existing browser smoke suites.
+3. If green, record verification, rerun final status-only head, merge PR #131, and confirm main/Pages.
 
 ## Current authority snapshot — after Phase A
 
