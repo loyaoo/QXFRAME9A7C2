@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — USER RULE CI RETRY
-Task progress: 95%
+Status: IMPLEMENTED — CANONICAL RULE CI RETRY
+Task progress: 96%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -64,9 +64,11 @@ CI evidence:
 - Run #648 reached the new user-rule browser regression. The after-end click case passed.
 - The failure was in the test's second hover phase because it reused the same open picker after a programmatic commit, leaving `activeRangePart=1`; that is not the reopen/edit scenario from the supplied recording.
 - Regression now uses two fresh complete-range pickers: one for click-after-end and one for click-before-end. DatePicker implementation is unchanged from `ab926414...`.
+- Run #649 passed those new mouse regressions, then failed the legacy browser smoke because that smoke still encoded the superseded two-Enter restart contract for a complete single range.
+- The keyboard smoke now follows the canonical rule too: existing `09-01 ~ 09-02` + active `09-26` + one Enter => immediate complete `09-02 ~ 09-26`. Mouse and keyboard no longer test conflicting value semantics.
 Next exact step:
-1. Run exact-head QXFRAME CI with the corrected two-scenario regression.
-2. Verify both user-rule directions plus existing browser smoke.
+1. Run exact-head QXFRAME CI with the canonical keyboard smoke.
+2. Verify mouse before/after-end and keyboard complete-range replacement all agree.
 3. If green, record verification, rerun final status-only head, merge PR #131, and confirm main/Pages.
 
 ## Current authority snapshot — after Phase A
