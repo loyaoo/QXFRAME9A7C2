@@ -14,36 +14,24 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: DatePicker regression closeout.
-- Current Task: `DATEPICKER-RANGE-EDIT-PREVIEW-001`
+- Current Phase: handoff-ready after DatePicker range-edit regression closeout.
+- Current Task: `HANDOFF-READY-002`
 
 ## CURRENT
 
-### DATEPICKER-RANGE-EDIT-PREVIEW-001 — order:true active endpoint preview (2026-09-27)
-Status: VERIFIED — READY TO MERGE
-Task progress: 95%
-Baseline:
-- `main@fbb73c82aa192d1349bb3684e796a4bbadab227e` after PR #129.
-- Preserve PR #127 canonical hover/selected separation for ordinary single-date hover, PR #128 pointer/keyboard focus-origin behavior, and PR #129 outside-month muted text.
-User evidence:
-- `ant.mp4`: when editing one side of a complete ordered range, Ant Design releases the old active endpoint; the untouched endpoint stays selected; the hovered replacement becomes the provisional start/end endpoint and range cap.
-- `我们.mp4`: current QXFRAME keeps both old endpoints selected and only paints the hovered replacement as a soft range cell, producing three competing endpoint cues.
-Root cause:
-- `stateForDate()` always derived `selected/rangeStart/rangeEnd` from stable draft endpoints; `draft.previewValue` only owned `inRange`.
-- `previewSelection()` already computes the correct ordered transient pair, but the endpoint projection discarded that information.
-Implementation:
-- During an active range hover preview, `draft.previewValue` now owns visible `selected/rangeStart/rangeEnd` endpoint projection while stable draft/committed value remains the underlying value truth.
-- With `order:true`, crossing the untouched anchor automatically flips provisional start/end because `previewSelection()` sorts the pair before projection.
-- Single-date hover remains non-selected; no CSS token/state-owner change is required.
-Regression coverage:
-- Browser test edits start across the end anchor and end across the start anchor, asserting the old active endpoint loses selected state and the hovered replacement/fixed anchor become the only two selected range caps.
-- Existing order:true chronological commit and order:false explicit-slot tests remain intact.
-Verification:
-- PR #130 implementation head `b3916785d98e91629bf84fb8f2d7907295dff1be` passed QXFRAME CI #637, including dependency audit, completion audit, full release verification, Windows tooling, standalone dist/docs build and artifact packaging.
+### HANDOFF-READY-002 — DatePicker range-edit regression merged
+Status: READY
+Task progress: 100%
+Verified closeout:
+- PR #130 (`fix: align ordered DatePicker range edit preview`) merged at `74559789ea0a9616f8a5909e7f0db9af9257356b`.
+- Implementation head `b3916785d98e91629bf84fb8f2d7907295dff1be` passed QXFRAME CI #637.
+- Final PR head `46e39f62e536837479f155f2339a9a7f65b0b3e9` passed QXFRAME CI #638.
+- For complete ordered ranges, hover preview now owns the transient visible start/end endpoints: the old active endpoint is released, the untouched endpoint remains selected, and crossing the anchor flips provisional start/end roles.
+- Single-date hover/selected separation, pointer-vs-keyboard focus origin, and outside-month muted text remain preserved.
 Next exact step:
-1. Run QXFRAME CI on this status-only checkpoint head.
-2. If exact-head CI is green, merge PR #130.
-3. Confirm merged-main CI/Pages starts successfully and return to handoff-ready state.
+1. On resume, query current `main`, open PRs and Actions before acting.
+2. Do not reopen DATEPICKER-RANGE-EDIT-PREVIEW-001 unless a new reproducible regression contradicts PR #130 evidence.
+3. Execute only the next user-scoped task.
 
 ## Current authority snapshot — after Phase A
 
@@ -71,6 +59,16 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### DATEPICKER-RANGE-EDIT-PREVIEW-001 — ordered active-endpoint hover preview
+Status: DONE
+Evidence:
+- PR #130 merged at `74559789ea0a9616f8a5909e7f0db9af9257356b`.
+- QXFRAME CI #637 passed on implementation head; CI #638 passed on final PR head.
+Outcome:
+- active range hover preview now projects exactly two visual endpoints and follows `order:true` role swapping across the fixed anchor.
+- browser regression covers editing both start and end across the opposite endpoint.
+
 
 ### UX-CLOSEOUT-001 — Picker projection + range controls + component surface regressions
 Status: DONE
