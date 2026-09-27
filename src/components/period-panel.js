@@ -135,6 +135,7 @@ function create(options) {
       nodes[i].classList.toggle('is-range-start', state.rangeStart === true);
       nodes[i].classList.toggle('is-range-end', state.rangeEnd === true);
       nodes[i].classList.toggle('is-active', !!activeValue && DateUnit.same(entry.date, activeValue, unit, 0));
+      nodes[i].classList.toggle('is-hover', state.hover === true || key === hoveredKey);
     }
     if (virtualFocusDomain) virtualFocusDomain.refresh({ reconcile: true });
   }
@@ -278,6 +279,7 @@ function create(options) {
     var nextKey = normalized ? DateUnit.key(normalized, unit, 0) : null;
     if (nextKey === hoveredKey) return false;
     hoveredKey = nextKey;
+    syncStates();
     var detail = { value: clone(normalized), unit: unit, source: meta && meta.source || 'pointer', reason: meta && meta.reason || (normalized ? 'hover' : 'hover-leave'), originalEvent: meta && meta.originalEvent || null, periodPanel: api };
     if (typeof opts.onHoverChange === 'function') opts.onHoverChange(clone(normalized), detail);
     emitter.emit('hoverChange', detail);
