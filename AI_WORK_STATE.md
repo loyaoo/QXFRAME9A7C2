@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — LEGACY FIXTURE SYNC
-Task progress: 97%
+Status: IMPLEMENTED — PREFLIGHT APPROVAL SYNC
+Task progress: 98%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -68,9 +68,11 @@ CI evidence:
 - The keyboard smoke now follows the canonical rule too: existing `09-01 ~ 09-02` + active `09-26` + one Enter => immediate complete `09-02 ~ 09-26`. Mouse and keyboard no longer test conflicting value semantics.
 - Run #650 showed that release also executes `verify:legacy-browser`, explicitly sourced from `tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html`; that historical fixture still encoded the superseded two-Enter contract.
 - The legacy fixture's DatePicker range assertion is now synchronized with the current canonical interaction. This is an intentional behavior update, not backward-compat preservation.
+- Run #651 passed the browser behavior but release-preflight correctly rejected the modified Phase C fixture because its approved-difference transform only knew TimePanel/FocusOrigin migrations.
+- Preflight now keeps frozen HOTFIX6 immutable and explicitly transforms only the two DatePicker range deltas (one Enter instead of two-step selection, and immediate `09-02 ~ 09-26` expectation) before comparing against the Phase C fixture.
 Next exact step:
-1. Run exact-head QXFRAME CI after synchronizing the release legacy fixture.
-2. Verify main browser suite + legacy browser suite both accept the end-anchored one-click range rule.
+1. Run exact-head QXFRAME CI after approving the narrowly-scoped DatePicker fixture delta in release-preflight.
+2. Verify browser suites, preflight, packaging, and standalone dist/docs all pass.
 3. If green, record verification, rerun final status-only head, merge PR #131, and confirm main/Pages.
 
 ## Current authority snapshot — after Phase A
