@@ -1411,3 +1411,14 @@ Keep this file compact and non-contradictory:
 - Fix: settled Image preview sizing now uses `94vw / 92vh`, matching the trajectory viewport basis; trajectory content is transform-only while the mask owns fading; the authored source stays hidden until `finalizePreviewLeave()`; closing resets inner zoom/pan/rotate/flip while the outer copy returns to the source.
 - Non-goals: no Image public API, OverlayController, TransformModel, media preview, focus, keyboard, or toolbar behavior changes.
 - Regression coverage: verifies post-enter geometry does not jump, source visibility remains single-owner through leave, and zoom/rotate followed by close completes ownership handoff correctly.
+
+
+## UX-REGRESSION-003 — Image leave / TimePanel centering / DatePicker pointer focus (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@97ce558ab6199d266e8db0dff4f18c7dba9a829b`.
+- User evidence: uploaded videos `PixPin_2026-09-27_19-17-56.mp4`, `19-19-23.mp4`, and `19-20-30.mp4`.
+- Image root cause/fix: leave could recalculate/lock canonical geometry instead of the exact currently painted preview box, and `releasePreviewTrajectoryGeometry()` ran while the preview surface was still paintable, allowing a one-frame snap at the end. Leave now locks the current painted rect and hides the preview surface before releasing trajectory geometry/source ownership.
+- TimePanel root cause/fix: initial WheelPanel centering ran before final layout metrics and initial construction lacked the two-frame visible-layout correction already used by update paths. WheelPanel now schedules `refreshVisible()` after initial bind; TimePicker also refreshes its TimePanel after popup open.
+- DatePicker root cause/fix: a reused virtual-focus controller could retain keyboard modality when a later popup open was pointer-origin. Pointer/mouse/touch open explicitly demotes virtual focus to pointer before hosted calendar domains bind; pointerdown inside the selection panel also does so.
+- Regression coverage: exact current-rect lock on Image leave, TimePanel hour/minute/second snap centering, and pointer-open DatePicker with zero `.is-keyboard-focus` calendar cells.
