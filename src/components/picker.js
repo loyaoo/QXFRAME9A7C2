@@ -180,7 +180,9 @@ export class PickerComponent extends PopupFieldComponent {
     }
 
     submitImmediateFromKeyboard(event, options = {}) {
+        const field = requireState(this).field;
         if (!event || event.key !== 'Enter' || this.options.needConfirm === true || event.isComposing === true || !this.canMutate()) return false;
+        if (!field || !field.getState || field.getState().open !== true) return false;
         if (options.multiple === true || options.complete === false || options.handled === false) return false;
         if (event.preventDefault) event.preventDefault();
         const committed = this.commit({ source:'keyboard', reason:'enter-submit', originalEvent:event });
