@@ -135,7 +135,8 @@ export class PickerComponent extends PopupFieldComponent {
             draftControl: config.draftControl !== false,
             rawInputActive: config.rawInputActive !== false
         });
-        return Object.freeze({ open, channel:projection.channel, value:projection.value, revision:projection.revision });
+        const draftVisual = open && (projection.channel === 'draft' || projection.channel === 'preview');
+        return Object.freeze({ open, channel:projection.channel, value:projection.value, revision:projection.revision, draftVisual });
     }
 
     open(reason, originalEvent) {
