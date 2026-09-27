@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-EDIT-PREVIEW-001 — order:true active endpoint preview (2026-09-27)
-Status: IMPLEMENTED — PENDING PR CI
-Task progress: 75%
+Status: VERIFIED — READY TO MERGE
+Task progress: 95%
 Baseline:
 - `main@fbb73c82aa192d1349bb3684e796a4bbadab227e` after PR #129.
 - Preserve PR #127 canonical hover/selected separation for ordinary single-date hover, PR #128 pointer/keyboard focus-origin behavior, and PR #129 outside-month muted text.
@@ -38,10 +38,12 @@ Implementation:
 Regression coverage:
 - Browser test edits start across the end anchor and end across the start anchor, asserting the old active endpoint loses selected state and the hovered replacement/fixed anchor become the only two selected range caps.
 - Existing order:true chronological commit and order:false explicit-slot tests remain intact.
+Verification:
+- PR #130 implementation head `b3916785d98e91629bf84fb8f2d7907295dff1be` passed QXFRAME CI #637, including dependency audit, completion audit, full release verification, Windows tooling, standalone dist/docs build and artifact packaging.
 Next exact step:
-1. Commit the source + regression + checkpoint on `fix/datepicker-range-edit-preview`.
-2. Open PR against current `main`.
-3. Verify exact-head GitHub Actions; if green, mark this checkpoint VERIFIED, rerun exact-head CI if the checkpoint changes, then merge.
+1. Run QXFRAME CI on this status-only checkpoint head.
+2. If exact-head CI is green, merge PR #130.
+3. Confirm merged-main CI/Pages starts successfully and return to handoff-ready state.
 
 ## Current authority snapshot — after Phase A
 
