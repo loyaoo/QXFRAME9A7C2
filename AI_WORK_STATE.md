@@ -1380,3 +1380,19 @@ Keep this file compact and non-contradictory:
 - `DONE` retains Task ID + outcome + PR/commit/test/CI evidence, not the full historical investigation.
 - Historical findings that are no longer current truth move to DONE evidence or Git/PR history.
 - Never append a second CURRENT task at the bottom of the file.
+
+
+## UX-REGRESSION-002 — Picker projection / component surface regressions (2026-09-27)
+
+- Status: **IN PROGRESS**
+- Baseline: `main@fc5fa38a9353bba92910f88cb94a87445c0a2b64` (post UX-CLOSEOUT-001)
+- Branch: `fix/ux-regression-002-picker-surfaces`
+- User evidence: current canonical demos plus uploaded picker/table recordings and table screenshots.
+- Scope:
+  - Picker Control projection must derive visual mode from the active ValueController projection channel; opening alone must not turn an unchanged committed value into a grey draft, while real draft/hover preview must stay projected continuously in-Control.
+  - DatePicker range keeps three canonical built-in forms: single input, dual independent Controls, and one segmented Control with two inputs.
+  - Autocomplete remains input-first by default: focus/click/Tab do not open; actual user input may open; `openOnFocus:true` is explicit opt-in.
+  - Notification keeps one spacing/shadow-gutter owner and no clipping ancestor that cuts normal card elevation.
+  - Table optional title/toolbar/footer chrome must detach when empty; scrolling must not create a false right padding/gutter; table cell corner radii must flatten against adjacent chrome.
+  - Image preview must open on the first user/API activation independently of source load/error state; the normal canonical demo must not require a “break src” step.
+- Guardrails: preserve ValueController as sole value owner, preserve existing focus/navigation semantics, add browser-visible regression coverage before merge, then verify exact-head PR CI before merge.
