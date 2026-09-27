@@ -211,8 +211,8 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var value = projection.value;
        var display = fieldDisplay(value);
        field.setDisplayValue(opts.swatchOnly === true && opts.renderControl !== false && opts.headless !== true ? '' : display);
-       field.setDraftDisplayValue(open ? display : '');
-       field.setDraftVisual(open);
+       field.setDraftDisplayValue(projection.draftVisual === true ? display : '');
+       field.setDraftVisual(projection.draftVisual === true);
        field.setClearVisible(!!value);
        field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
        swatch.style.background = display || 'transparent';

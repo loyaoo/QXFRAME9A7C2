@@ -127,7 +127,7 @@ export class PickerComponent extends PopupFieldComponent {
         const record = requireState(this);
         const open = !!(record.field && record.field.getState && record.field.getState().open);
         if (!record.controller || typeof record.controller.projection !== 'function') {
-            return Object.freeze({ open, channel:'committed', value:undefined, revision:0 });
+            return Object.freeze({ open, channel:'committed', value:undefined, revision:0, draftVisual:false });
         }
         const projection = record.controller.projection({
             open,
@@ -135,7 +135,8 @@ export class PickerComponent extends PopupFieldComponent {
             draftControl: config.draftControl !== false,
             rawInputActive: config.rawInputActive !== false
         });
-        return Object.freeze({ open, channel:projection.channel, value:projection.value, revision:projection.revision });
+        const draftVisual = open && (projection.channel === 'draft' || projection.channel === 'preview');
+        return Object.freeze({ open, channel:projection.channel, value:projection.value, revision:projection.revision, draftVisual });
     }
 
     open(reason, originalEvent) {

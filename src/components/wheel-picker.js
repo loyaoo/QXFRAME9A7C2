@@ -88,8 +88,8 @@ function syncField(_projectionHint, config) {
   }
   var display=value&&value.length?formatDisplay(open):'';
   field.setDisplayValue(display);
-  field.setDraftDisplayValue(open?display:'');
-  field.setDraftVisual(open);
+  field.setDraftDisplayValue(projection.draftVisual === true ? display : '');
+  field.setDraftVisual(projection.draftVisual === true);
   field.setClearVisible(opts.clearable === true && !!(value && value.length));
   field.setCommittedValue(draft.value, config && config.commitMeta || { silent: true, source: 'value-controller', reason: 'projection' });
 }

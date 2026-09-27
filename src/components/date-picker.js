@@ -557,7 +557,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       field.setTags(dateTags(tagValue));
       var tokenText=draft.rawInputActive?draft.rawInput:'';
       field.setDisplayValue(tokenText);
-      field.setDraftDisplayValue(open?tokenText:'');
+      field.setDraftDisplayValue(projection.draftVisual === true ? tokenText : '');
       field.setPlaceholder(opts.placeholder);
       visualHasValue = !!(tagValue && tagValue.length) || (open && draft.rawInputActive && String(draft.rawInput || '').trim() !== '');
     } else {
@@ -565,10 +565,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
       field.setDisplayValue(projectedText);
       if(selection==='range'&&opts.rangeControl!=='single'&&field.setRangeDisplayValues)field.setRangeDisplayValues(formatRangeParts(projection.value));
       field.setPlaceholder(opts.placeholder);
-      field.setDraftDisplayValue(open ? projectedText : '');
+      field.setDraftDisplayValue(projection.draftVisual === true ? projectedText : '');
       visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value, selection);
     }
-    field.setDraftVisual(open);
+    field.setDraftVisual(projection.draftVisual === true);
     field.setClearVisible(visualHasValue);
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }

@@ -181,8 +181,8 @@ function setupTimePickerRuntime(instance, fieldInit) {
     var visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value);
     field.setDisplayValue(projectedText);
     field.setPlaceholder(opts.placeholder);
-    field.setDraftDisplayValue(open ? projectedText : '');
-    field.setDraftVisual(open);
+    field.setDraftDisplayValue(projection.draftVisual === true ? projectedText : '');
+    field.setDraftVisual(projection.draftVisual === true);
     field.setClearVisible(visualHasValue);
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
