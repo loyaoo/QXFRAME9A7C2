@@ -1384,7 +1384,7 @@ Keep this file compact and non-contradictory:
 
 ## UX-REGRESSION-002 — Picker projection / component surface regressions (2026-09-27)
 
-- Status: **IN PROGRESS**
+- Status: **IMPLEMENTED — PENDING PR CI**
 - Baseline: `main@fc5fa38a9353bba92910f88cb94a87445c0a2b64` (post UX-CLOSEOUT-001)
 - Branch: `fix/ux-regression-002-picker-surfaces`
 - User evidence: current canonical demos plus uploaded picker/table recordings and table screenshots.
@@ -1396,3 +1396,5 @@ Keep this file compact and non-contradictory:
   - Table optional title/toolbar/footer chrome must detach when empty; scrolling must not create a false right padding/gutter; table cell corner radii must flatten against adjacent chrome.
   - Image preview must open on the first user/API activation independently of source load/error state; the normal canonical demo must not require a “break src” step.
 - Guardrails: preserve ValueController as sole value owner, preserve existing focus/navigation semantics, add browser-visible regression coverage before merge, then verify exact-head PR CI before merge.
+
+- Implementation checkpoint: picker grey-state is now projection-channel driven (draft/preview only); DatePicker single/dual/segments range forms are browser-locked; Autocomplete input-first default is browser-locked; Notification stacked viewport is shadow-safe with a single edge-gutter owner; Table empty chrome/right gutter/corner seams are regression-locked; Image first activation is tested before load settles and after error, and the canonical demo no longer requires a break-src button.
