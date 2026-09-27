@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — USER RULE RETRY
-Task progress: 94%
+Status: IMPLEMENTED — USER RULE CI RETRY
+Task progress: 95%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -60,9 +60,13 @@ CI evidence:
 Verification:
 - PR #131 implementation head `6fda491acc595a7d2a138c79c5bb1dd77317d0e2` passed QXFRAME CI #646.
 - #646 passed dependency/completion audits, full release verification (including the new explicit-endpoint range regression and existing single-range keyboard smoke), Windows tooling, npm packaging, standalone dist/docs build and artifact upload.
+CI evidence:
+- Run #648 reached the new user-rule browser regression. The after-end click case passed.
+- The failure was in the test's second hover phase because it reused the same open picker after a programmatic commit, leaving `activeRangePart=1`; that is not the reopen/edit scenario from the supplied recording.
+- Regression now uses two fresh complete-range pickers: one for click-after-end and one for click-before-end. DatePicker implementation is unchanged from `ab926414...`.
 Next exact step:
-1. Run exact-head QXFRAME CI for the end-anchored click rule.
-2. Verify both the new before/after-end regression and existing browser smoke suites.
+1. Run exact-head QXFRAME CI with the corrected two-scenario regression.
+2. Verify both user-rule directions plus existing browser smoke.
 3. If green, record verification, rerun final status-only head, merge PR #131, and confirm main/Pages.
 
 ## Current authority snapshot — after Phase A
