@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — PENDING PR CI
-Task progress: 75%
+Status: IMPLEMENTED — CI FIX IN PROGRESS
+Task progress: 82%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -40,9 +40,13 @@ Implementation:
 Regression coverage:
 - Replacing start with a date after end preserves end, keeps committed value untouched before confirm, retains unsorted control-slot draft while open, then sorts on commit.
 - Replacing end with a date before start preserves start and sorts on commit.
+CI evidence:
+- PR #131 run #641 reached the new browser regression and failed specifically at commit-time chronological normalization.
+- Root cause of the failed attempt: PickerComponent's family `beforeCommit` hook passes only `detail`; the first implementation incorrectly expected `(controller, detail)`, so the finalizer never saw the DatePicker ValueController.
+- Fix in progress: use the already-owned DatePicker `draft` closure inside the detail-only hook; no shared PickerSession contract change.
 Next exact step:
-1. Commit implementation + browser regression + checkpoint on `fix/datepicker-range-replace`.
-2. Open PR and run exact-head QXFRAME CI.
+1. Commit the callback-signature correction.
+2. Run exact-head QXFRAME CI again.
 3. If green, record verification, rerun final head if checkpoint changes, then merge.
 
 ## Current authority snapshot — after Phase A

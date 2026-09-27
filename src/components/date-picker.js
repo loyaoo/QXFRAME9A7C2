@@ -541,16 +541,16 @@ function setupDatePickerRuntime(instance, fieldInit) {
   instance.bindValueController(draft);
   instance.setupPickerSelection({ multiple: selection !== 'single' });
   syncSelectionController(draft.value, { source:'init', reason:'date-selection-init' });
-  function finalizeOrderedRangeDraft(controller, detail) {
+  function finalizeOrderedRangeDraft(detail) {
     if (selection !== 'range' || opts.order === false) return true;
-    var current = controller && controller.draftValue;
+    var current = draft && draft.draftValue;
     if (!current || !current[0] || !current[1] || compareChronological(current[0], current[1]) <= 0) return true;
-    // A complete range edit keeps control slot ownership while the popup is open.
-    // Commit is the boundary where order:true turns those slots back into canonical
-    // chronological start/end. Move activeRangePart before publishing the sorted draft
-    // so any composed time panel keeps following the endpoint the user actually edited.
+    // PickerComponent exposes beforeCommit as a detail-only family hook; DatePicker
+    // already owns the canonical ValueController in this closure, so finalize it here.
+    // Move activeRangePart before publishing the sorted draft so any composed time
+    // panel keeps following the endpoint the user actually edited after the swap.
     activeRangePart = activeRangePart === 1 ? 0 : 1;
-    return controller.setDraft(current, {
+    return draft.setDraft(current, {
       silent:true,
       source:detail && detail.source || 'commit',
       reason:'range-order-finalize'
