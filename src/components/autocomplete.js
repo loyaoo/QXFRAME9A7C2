@@ -37,7 +37,7 @@ function createDefaultDOM(context) {
 }
 
 const AUTOCOMPLETE_DEFAULTS = Object.freeze({
-  items: [], clearable: false, disabled: false, readOnly: false, size: 'md', placement: 'bottom-start', trigger: 'focus', placeholder: '', open: false,
+  items: [], clearable: false, disabled: false, readOnly: false, size: 'md', placement: 'bottom-start', trigger: 'manual', openOnFocus:false, placeholder: '', open: false,
   highlightFirst: true, matchOnly: true, backfill: false, minChars: 0, matchReferenceWidth: true,
   loadSuggestions: null, getSuggestionQuery: null, applySuggestion: null, renderControl: true, headless: false
 });
@@ -416,7 +416,9 @@ var selectionRangeScheduler = null;
         });
         applyQuery('init');
     
-        var triggerSettings = createPopupFieldTriggerSettings(opts, {
+        function effectiveTrigger(){return opts.openOnFocus===true?'focus':String(opts.trigger||'manual');}
+        var triggerSource=Utils.mergeOwn({},opts,{trigger:effectiveTrigger()});
+        var triggerSettings = createPopupFieldTriggerSettings(triggerSource, {
           reference: root,
           triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)),
           floating: panel,
@@ -531,6 +533,7 @@ var selectionRangeScheduler = null;
           if (suggestionOwnerChanged && suggestionTask && suggestionTask.pending) suggestionTask.cancel('autocomplete-options-replaced');
           if (suggestionOwnerChanged) setLoading(false);
           Utils.copyOwn(opts, next);
+          if ((hasOwn(next,'trigger')||hasOwn(next,'openOnFocus')) && triggerSession && triggerSession.updateOptions) triggerSession.updateOptions({trigger:effectiveTrigger()});
           if (focusController) focusController.setDisabled(opts.disabled === true);
           var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }

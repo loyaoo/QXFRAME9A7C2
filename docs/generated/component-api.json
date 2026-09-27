@@ -152,14 +152,14 @@
         "valueTarget": "any",
         "variant": "string",
         "virtual": "any",
-        "virtualThreshold": "any"
+        "virtualThreshold": "any",
+        "openOnFocus": "boolean"
       },
       "defaults": {},
       "immutable": [],
       "legacy": [
         "options",
         "triggerOnFocus",
-        "openOnFocus",
         "defaultActiveFirstOption",
         "filterOption",
         "dataSource",
@@ -898,7 +898,9 @@
         "value": "any",
         "valueTarget": "any",
         "variant": "string",
-        "weekStartsOn": "number"
+        "weekStartsOn": "number",
+        "rangeControl": "string",
+        "rangePlaceholders": "array"
       },
       "defaults": {},
       "immutable": [],

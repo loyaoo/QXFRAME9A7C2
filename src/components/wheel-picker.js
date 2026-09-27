@@ -86,9 +86,10 @@ function syncField(_projectionHint, config) {
   if (!(config && config.panelSynced === true)) {
     panel.setValue((open ? draft.draftValue : draft.value) || [], { silent: true, source: 'field-sync', reason: 'field-sync' });
   }
-  field.setDisplayValue(value && value.length ? formatDisplay(projection.channel === 'draft') : '');
-  field.setDraftDisplayValue(open && draft.dirty && draft.draftValue && draft.draftValue.length ? formatDisplay(true) : '');
-  field.setDraftVisual(open && draft.dirty);
+  var display=value&&value.length?formatDisplay(open):'';
+  field.setDisplayValue(display);
+  field.setDraftDisplayValue(open?display:'');
+  field.setDraftVisual(open);
   field.setClearVisible(opts.clearable === true && !!(value && value.length));
   field.setCommittedValue(draft.value, config && config.commitMeta || { silent: true, source: 'value-controller', reason: 'projection' });
 }

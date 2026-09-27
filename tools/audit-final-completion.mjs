@@ -269,6 +269,18 @@ for(const entry of compatibility.entries||[]){
     authorizedApiRemovals.push(entry.component+'.'+entry.name);
   }
 }
+const AUTHORIZED_LEGACY_PROMOTIONS=Object.freeze(['Autocomplete.openOnFocus']);
+const authorizedLegacyPromotions=[];
+for(const token of AUTHORIZED_LEGACY_PROMOTIONS){
+  const split=token.indexOf('.');
+  const componentName=token.slice(0,split), optionName=token.slice(split+1);
+  const expected=(expectedApi.components||[]).find(record=>record&&record.name===componentName);
+  const current=(currentApi.components||[]).find(record=>record&&record.name===componentName);
+  if(!expected||!Array.isArray(expected.legacy)||expected.legacy.indexOf(optionName)<0) throw new Error('Authorized legacy promotion is absent from frozen baseline: '+token);
+  if(!current||!current.schema||!Object.prototype.hasOwnProperty.call(current.schema,optionName)) throw new Error('Authorized legacy promotion is absent from current schema: '+token);
+  expected.legacy=expected.legacy.filter(name=>name!==optionName);
+  authorizedLegacyPromotions.push(token);
+}
 const comparableApi=JSON.parse(JSON.stringify(currentApi));
 const addedApiOptions=[];
 for(const component of comparableApi.components||[]){
@@ -378,6 +390,7 @@ const report={
   parity:{
     api:apiParity,
     authorizedApiRemovals,
+    authorizedLegacyPromotions,
     authorizedCapabilityMigrations,
     authorizedSharedProtocolChanges,
     addedApiOptions,

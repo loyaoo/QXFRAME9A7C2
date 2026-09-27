@@ -177,14 +177,12 @@ function setupTimePickerRuntime(instance, fieldInit) {
     if (!field) return;
     var projection = instance.getPickerProjection({ previewControl: opts.previewValue !== false });
     var open = projection.open;
-    var committedText = formatValue(draft.value);
-    var draftText = formatValue(draft.draftValue);
     var projectedText = projection.channel === 'rawInput' ? String(projection.value || '') : formatValue(projection.value);
     var visualHasValue = projection.channel === 'rawInput' ? String(projection.value || '').trim() !== '' : hasValue(projection.value);
     field.setDisplayValue(projectedText);
-    field.setPlaceholder(open && projection.channel === 'draft' ? (committedText || String(opts.placeholder || '')) : opts.placeholder);
-    field.setDraftDisplayValue(open && draft.dirty ? draftText : '');
-    field.setDraftVisual(open && (draft.rawInputActive || draft.hasPreview || draft.dirty));
+    field.setPlaceholder(opts.placeholder);
+    field.setDraftDisplayValue(open ? projectedText : '');
+    field.setDraftVisual(open);
     field.setClearVisible(visualHasValue);
     field.setCommittedValue(draft.value, meta || { silent: true, source: 'value-controller', reason: 'projection' });
   }
