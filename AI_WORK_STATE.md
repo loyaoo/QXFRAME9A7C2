@@ -1433,3 +1433,15 @@ Keep this file compact and non-contradictory:
 - DatePicker architecture: DatePicker directly composes `Calendar` and `PeriodPanel`; both already render the shared `.qxframe9a7c2-date-panel-cell` primitive. DatePicker no longer treats hover `previewValue` as selected state. Selected endpoints come only from committed/draft selection; preview may project a provisional range band.
 - Canonical state styling: Calendar and PeriodPanel both project `.is-hover`; shared cell CSS now defines normal hover, in-range hover, selected, and selected-hover as distinct states using subtle-hover, accent-soft-hover, accent, and accent-hover tokens respectively.
 - Regression coverage: Image landed copy cannot repaint after leave cleanup; DatePicker hover target is not selected while the actual selection remains selected; Calendar and PeriodPanel expose the same canonical hover state.
+
+
+## FOCUS-ORIGIN-CLOSEOUT-002 — Pointer outline repository-wide audit (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@59a3636d1768ea1265568aae5d791f3724d12d79`.
+- User regression: DatePicker opened by mouse correctly stayed pointer-origin, but clicking the year/month headers called `setCalendarPanelMode()`, which unconditionally re-activated hosted virtual focus as keyboard and painted `.is-keyboard-focus` on the newly shown PeriodPanel.
+- Systemic root cause: `KeyboardNavigation.VirtualFocus.activate()` defaulted every activation that was not explicitly pointer to keyboard. Programmatic/sync/domain handoffs could therefore manufacture keyboard modality after a pointer action.
+- Shared fix: virtual-focus activation now changes modality only for explicit keyboard or pointer/mouse/touch evidence (including the original event type); otherwise it preserves the controller's current modality. This applies to every composite component using the shared VirtualFocus controller.
+- DatePicker fix: year/month/date drill transitions now carry the actual interaction metadata into `setCalendarPanelMode()`; pointer transitions explicitly retain pointer modality, and the return-to-date activation is keyboard-only when the source is keyboard.
+- CSS/component audit: all `src/components/*.js` are now CI-scanned for direct `is-keyboard-focus` ownership; only Control and Image may project it locally and both must derive it from `FocusOrigin.isKeyboard()`. CSS is CI-scanned so `:focus` / `:focus-within` cannot paint a nonzero outline. Image's old unconditional `:focus-within` outline and the forced-colors segmented-input `:focus-within` outline were converted to keyboard-origin classes.
+- Browser regression coverage: pointer-open DatePicker -> year panel -> month panel -> date panel must remain pointer modality with zero `.is-keyboard-focus` cells throughout; pointer-focused Image must have no keyboard outline.
