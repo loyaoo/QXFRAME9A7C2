@@ -491,7 +491,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (index >= 0) current.splice(index, 1); else current.push(selected);
       return current;
     }
-    if (current[0] && current[1]) {
+    if (current[0] && current[1] && opts.rangeControl !== 'single') {
       current[activeRangePart === 1 ? 1 : 0] = selected;
       return current;
     }
@@ -915,7 +915,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (calendar && calendar.refreshStates) calendar.refreshStates();
       if (calendarSecondary && calendarSecondary.refreshStates) calendarSecondary.refreshStates();
     }
-    var replacingCompleteRange = selection === 'range' && !!(draft.draftValue && draft.draftValue[0] && draft.draftValue[1]);
+    var replacingCompleteRange = selection === 'range' && opts.rangeControl !== 'single' && !!(draft.draftValue && draft.draftValue[0] && draft.draftValue[1]);
     var editedRangePart = activeRangePart;
     var next = applyPanelSelection(value);
     if (next === null) return;
