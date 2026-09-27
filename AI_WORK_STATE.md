@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DATEPICKER-RANGE-REPLACE-001 — preserve opposite endpoint while editing a complete ordered range
-Status: IMPLEMENTED — PREFLIGHT APPROVAL SYNC
-Task progress: 98%
+Status: VERIFIED — READY TO MERGE
+Task progress: 99%
 Baseline:
 - `main@5f4f99d48e49d195a445f1f670cb5cb3940e6e9f`.
 - PR #130 hover endpoint projection is correct and must remain intact.
@@ -70,10 +70,14 @@ CI evidence:
 - The legacy fixture's DatePicker range assertion is now synchronized with the current canonical interaction. This is an intentional behavior update, not backward-compat preservation.
 - Run #651 passed the browser behavior but release-preflight correctly rejected the modified Phase C fixture because its approved-difference transform only knew TimePanel/FocusOrigin migrations.
 - Preflight now keeps frozen HOTFIX6 immutable and explicitly transforms only the two DatePicker range deltas (one Enter instead of two-step selection, and immediate `09-02 ~ 09-26` expectation) before comparing against the Phase C fixture.
+Verification:
+- PR #131 implementation/test head `2d84463b949069bc0bcd8a86365d95d883f4e314` passed QXFRAME CI #652.
+- #652 passed full release verification, both current + legacy browser gates, release-preflight, Windows tooling, npm pack, standalone dist/docs build, artifact uploads, and Pages artifact creation.
+- Canonical complete-range rule is now: `clicked < currentEnd => [clicked,currentEnd]`; otherwise `[currentEnd,clicked]`. No endpoint is cleared after a complete-range click.
 Next exact step:
-1. Run exact-head QXFRAME CI after approving the narrowly-scoped DatePicker fixture delta in release-preflight.
-2. Verify browser suites, preflight, packaging, and standalone dist/docs all pass.
-3. If green, record verification, rerun final status-only head, merge PR #131, and confirm main/Pages.
+1. Run exact-head CI on this status-only checkpoint.
+2. If green, merge PR #131.
+3. Confirm merged-main CI/Pages and return to handoff-ready state.
 
 ## Current authority snapshot — after Phase A
 
