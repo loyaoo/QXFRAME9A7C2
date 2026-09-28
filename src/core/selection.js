@@ -29,7 +29,7 @@ function create(options) {
   function keyOf(value) {
     var getter = Utils.isFunction(opts.getKey) ? opts.getKey : defaultKey;
     var raw = getter(value);
-    return raw === undefined || raw === null ? '' : String(raw);
+    return raw === undefined || raw === null ? null : String(raw);
   }
 
   function normalize(next) {
@@ -37,7 +37,7 @@ function create(options) {
     var output = [];
     asArray(next, opts.allowEmptyKey === true).forEach(function (item) {
       var key = keyOf(item);
-      if ((key === '' && opts.allowEmptyKey !== true) || seen[key]) return;
+      if (key === null || (key === '' && opts.allowEmptyKey !== true) || seen[key]) return;
       seen[key] = true;
       output.push(key);
     });
@@ -101,7 +101,7 @@ function create(options) {
   function select(value, meta) {
     if (destroyed) return false;
     var key = keyOf(value);
-    if (key === '' && opts.allowEmptyKey !== true) return false;
+    if (key === null || (key === '' && opts.allowEmptyKey !== true)) return false;
     if (Utils.isFunction(opts.isDisabled) && opts.isDisabled(key, meta || {}) === true) return false;
     if (opts.multiple === true) {
       var next = values();
@@ -114,7 +114,7 @@ function create(options) {
   function deselect(value, meta) {
     if (destroyed) return false;
     var key = keyOf(value);
-    if (!store.has(key)) return true;
+    if (key === null || !store.has(key)) return true;
     return commit(
       values().filter(function (item) { return item !== key; }),
       mergeOptions({ reason: 'deselect', key: key }, meta)
@@ -147,13 +147,14 @@ function create(options) {
   }
 
   api = {
-    has: function (value) { return store.has(keyOf(value)); },
+    has: function (value) { var key = keyOf(value); return key !== null && store.has(key); },
     set: commit,
     replace: commit,
     select: select,
     deselect: deselect,
     toggle: function (value, desired, meta) {
       var key = keyOf(value);
+      if (key === null) return false;
       var next = desired === undefined ? !store.has(key) : desired !== false;
       return next ? select(key, meta) : deselect(key, meta);
     },
