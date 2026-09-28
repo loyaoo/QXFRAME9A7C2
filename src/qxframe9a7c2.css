@@ -16436,7 +16436,8 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-carousel.is-vertical .qxframe9a7c2-carousel-viewport{touch-action:pan-x}
 .qxframe9a7c2-carousel-track{display:flex;width:100%;transition-property:transform;transition-duration:var(--_qxframe9a7c2-carousel-duration);transition-timing-function:var(--_qxframe9a7c2-carousel-easing)}
 .qxframe9a7c2-carousel.is-vertical .qxframe9a7c2-carousel-track{flex-direction:column}
-.qxframe9a7c2-carousel-slide{position:relative;flex:0 0 100%;min-width:0;overflow:hidden}
+.qxframe9a7c2-carousel-slide{position:relative;flex:0 0 100%;min-width:0;overflow:hidden;outline:none}
+.qxframe9a7c2-carousel-slide:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:-2px}
 .qxframe9a7c2-carousel.is-vertical .qxframe9a7c2-carousel-slide{flex:0 0 auto;width:100%}
 .qxframe9a7c2-carousel-slide>img,.qxframe9a7c2-carousel-image{display:block;width:100%;height:auto;min-height:.0625rem;object-fit:cover;user-select:none}
 .qxframe9a7c2-carousel-content{min-width:0}
