@@ -15,82 +15,33 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `THEME-PLAYGROUND-REGRESSION-001`
+- Current Task: `THEME-PLAYGROUND-REGRESSION-002`
 
 ## CURRENT
 
-### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
-Status: VERIFIED
-Task progress: 100% for the reported batch
+### THEME-PLAYGROUND-REGRESSION-002 — ColorPicker preset Enter / Menu empty overflow / Collapse header focus owner
+Status: IMPLEMENTING
+Task progress: 25%
+Baseline: `main@2a4448ae3f53efdc98d4d93472f3eb9751c1cc7e`.
+Branch: `fix/theme-playground-regression-002`.
 User verification surface: `docs/theme-playground.html`.
-Current verified main after runtime fixes + browser regression coverage: `bc3e8818f60ea5bb86d526b9fefccdcb9953be4a`.
 
-Merged runtime fixes:
-- PR #152 — TreeSelect `maxCount` projects capacity into check-only disabled capability. At capacity, unchecked choices that would exceed the limit visibly disable their checkbox/check intent while already-selected choices remain removable; parent disclosure/navigation/search remain available. Pages Max count demo text documents the behavior.
-- PR #155 — InputOTP keyboard ArrowRight cannot bypass the canonical first-empty slot. Pointer and keyboard now share the same sequential-fill constraint while completed OTPs remain editable.
-- PR #157 — Picker keyboard/focus closeout:
-  - DatePicker default open region remains the day/date virtual region.
-  - DatePicker Tab cycle is presets → active year → active month → date virtual region → cancel → confirm, so Shift+Tab from the default date region reaches month then year.
-  - Dual-panel DatePicker horizontal navigation crosses the visual seam geometrically on the same rendered row in both directions instead of waiting for calendar month rollover.
-  - ColorPicker with `needConfirm:false` commits current dirty/preview value and closes on Enter; confirm mode remains explicit.
-  - Dropdown item and Picker/Wheel virtual-focus outlines stay 2px but move an extra pixel inward inside clipped scroll viewports so Chromium does not trim the outer edge.
-- PR #158 — Menu interaction closeout:
-  - horizontal root entries use stable intrinsic width so ResponsiveOverflow moves real items into the More submenu instead of flex-shrinking them while the More panel stays empty;
-  - collapsed inline root leaves use framework Tooltip for labels;
-  - collapsed items with children retain submenu Trigger ownership rather than receiving competing tooltip behavior/native title.
-- PR #159 — Carousel keyboard/focus ownership:
-  - root, arrows and dots are not Tab stops;
-  - the active slide outer is the Carousel-level Tab owner;
-  - focusable descendants are available only on the active slide;
-  - direction keys remain Carousel-owned from both the active slide outer and interactive descendants;
-  - keyboard slide changes transfer real focus to the new active slide;
-  - the active-slide focus ring is inset to avoid viewport clipping.
-- PR #160 — Image preview closeout:
-  - component-specific fade states make preview mask opacity visibly animate despite the steady mask-opacity rule;
-  - preview chrome remembers the focused action across media rerenders and restores focus to the equivalent replacement action, so ImageGroup Left/Right navigation continues after the first switch.
-- PR #156 — shared Theme Playground focus/keyboard closeout:
-  - Slider pointer-origin focus no longer shows the keyboard-only outline;
-  - List `hideSelected` reconciles canonical active item after the selected row disappears, allowing immediate repeated Enter selection;
-  - JSON first real focus synchronizes Tree activeKey + VirtualFocus so the first directional key works;
-  - Modal / Drawer body Scroll is not a Tab stop, removing the invisible focus stop after close;
-  - TimePanel/WheelPanel internal Scroll roots remain `tabIndex=-1`; TimePanel outer composite is the sole Tab owner;
-  - Tabs keyboard/Backspace removal prefers the previous enabled tab and restores real focus after the removed DOM disappears;
-  - Collapse supports Tree-style ArrowRight=open and ArrowLeft=close in addition to Enter/Space.
-  Exact integrated head `7d2de0d198556fdf5e2027f09799f4afc51177cf` passed QXFRAME CI #784. The prior head timed out with no failed browser assertions; the integrated rerun passed Full release verification without extending the global browser timeout.
-- PR #161 — real browser regression layer for PRs #158–#160:
-  - horizontal Menu must move real items into a non-empty More panel;
-  - collapsed Menu leaf Tooltip vs submenu ownership is exercised in Chromium;
-  - Carousel direction keys are exercised from both slide outer and inner button after motion completes;
-  - Image preview Right → Left repeated navigation must keep focus on rebuilt equivalent chrome action.
-  First CI #786 exposed a test-timing false positive because the second Carousel key was sent during `waitForAnimate:true`; the test now waits for the first motion. Exact final head `eb81676e9c3f7874916b22d7d892e757c16b39fb` passed QXFRAME CI #787.
+Confirmed current-main findings:
+- ColorPicker immediate-mode Enter closeout from PR #168 covers native range/text/number controls and saturation, but preset swatches are separate button controls. Preset keyboard activation can update ColorPanel without routing through the Picker-level Enter close owner.
+- Horizontal Menu always constructs the overflow Trigger/panel before ResponsiveOverflow decides whether any root item is hidden. The overflow wrapper/button rely on `hidden`, but Menu author CSS gives the wrapper/button explicit display and has no overflow-specific hidden rule, so an empty More control can remain paintable and open an empty submenu panel.
+- Collapse roving focus currently maps each item to `.qxframe9a7c2-collapse-main` (or the indicator in icon mode), while `.qxframe9a7c2-collapse-header` has its tabindex removed. This contradicts the required single header focus owner.
 
-Deployment evidence:
-- Runtime-complete main `6fe10afaa6f62b8438de71fd57a1cdf21467fca0` passed push QXFRAME CI #785.
-- CI #785 `deploy-pages` completed successfully, so GitHub Pages serves the runtime fixes from this batch.
-- PR #161 is test-only; it does not alter runtime/CSS/demo behavior.
-
-User-reported batch disposition:
-- TreeSelect Max count disabled projection: closed.
-- Slider pointer outline: closed.
-- InputOTP keyboard bypass of sequential-focus/fill limit: closed.
-- Dropdown / PickerList clipped keyboard outline: closed via inward focus-ring offset.
-- DatePicker Tab order and dual-panel same-row horizontal seam: closed.
-- ColorPicker immediate-mode Enter commit/close: closed.
-- Menu collapsed submenu/Tooltip behavior and Horizontal+Overflow empty panel: closed.
-- Tabs focus after keyboard deletion: closed.
-- List Search+Multiple+Groups second Enter after hideSelected active-row reconciliation: closed.
-- TimePanel internal column Tab stops: closed.
-- Modal / Drawer invisible Scroll Tab stop: closed.
-- Collapse Left/Right disclosure: closed.
-- Carousel focus model and directional navigation from active-slide content: closed.
-- Image preview mask fade and repeated ImageGroup keyboard navigation: closed.
-- JSON first-focus active-key mismatch: closed.
+Implementation guardrails:
+- Do not reopen PR #168's unrelated OTP / Scroll / tooltip work.
+- Keep ColorPicker committed/draft ownership in ValueController and close through the existing Picker session owner.
+- Menu overflow must have no activatable Trigger while there are zero real overflow entries; hiding must be CSS-robust.
+- Collapse must use one real focus host per item: the header. Child main/indicator controls remain outside sequential focus and must not become competing keyboard focus owners. Preserve header-vs-icon click semantics and Left/Right disclosure behavior.
+- Add browser-visible regressions for all three fixes; do not weaken existing gates.
 
 Next exact step:
-1. Query current `main`, open PRs and latest Actions before new code work.
-2. User should re-test the deployed `docs/theme-playground.html` interaction paths above.
-3. Reopen any item only with a new concrete reproduction against the current Pages build; do not repeat this batch from older screenshots or pre-merge state.
-4. After manual verification, resume the remaining Ant functional audit only for maintained QX capabilities not already closed above.
+1. Implement the three runtime/CSS fixes on this branch.
+2. Extend Chromium/browser smoke coverage to verify preset Enter commits+closes, empty horizontal Menu has no paintable More/empty popup, and Collapse real focus lands on header rather than main/indicator.
+3. Create PR, verify exact-head CI, merge only after green CI, then update this checkpoint with PR/CI/main evidence.
 
 ## PREVIOUS VERIFIED HANDOFF
 
