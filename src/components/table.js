@@ -273,6 +273,7 @@ function setupTable(instance) {
   var filterColumnKey = null;
   var filterDraftValues = [];
   var filterSearchValue = '';
+  var syncOpenFilterFromModel = null;
   var destroyed = false;
   var api = instance;
   var renderProjection = null;
@@ -1683,7 +1684,7 @@ function setupTable(instance) {
     if (filterTrigger) filterTrigger.destroy(reason || 'table-filter-popup-destroy');
     filterTrigger = null;
     if (filterPopup) { Renderer.dispose(filterPopup); DOM.removeNode(filterPopup); }
-    filterPopup = null; filterColumnKey = null; filterDraftValues = []; filterSearchValue = '';
+    filterPopup = null; filterColumnKey = null; filterDraftValues = []; filterSearchValue = ''; syncOpenFilterFromModel = null;
   }
   function filterOptionValue(option) { return option && typeof option === 'object' ? option.value : option; }
   function filterOptionLabel(option) { return option && typeof option === 'object' && option.label !== undefined ? option.label : (option && typeof option === 'object' && option.text !== undefined ? option.text : filterOptionValue(option)); }
@@ -1698,6 +1699,19 @@ function setupTable(instance) {
     if (typeof column.onFilterDropdownOpenChange === 'function') column.onFilterDropdownOpenChange(opened, Object.freeze({ column: column, reason: reason || 'filter-open', originalEvent: event || null, instance: api }));
   }
   function sameFilterValue(left, right) { return String(left) === String(right); }
+  function sameFilterValues(left, right) {
+    var a = Array.isArray(left) ? left : [], b = Array.isArray(right) ? right : [];
+    if (a.length !== b.length) return false;
+    var unmatched = b.slice();
+    return a.every(function (value) {
+      for (var index = 0; index < unmatched.length; index += 1) {
+        if (!sameFilterValue(value, unmatched[index])) continue;
+        unmatched.splice(index, 1);
+        return true;
+      }
+      return false;
+    });
+  }
   function syncFilterSearchFocusVisual() {
     var node=filterPopup&&filterPopup.querySelector?filterPopup.querySelector('.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control'):null;
     if(node&&node.classList)node.classList.toggle('is-keyboard-focus',doc.activeElement===node&&FocusOrigin.isKeyboard(node));
@@ -1798,6 +1812,34 @@ function setupTable(instance) {
         Renderer.append(filterPopup, output, doc);
       } else renderDefault();
     }
+    syncOpenFilterFromModel = function () {
+      if (!filterPopup || !filterTrigger || !filterTrigger.getState || !filterTrigger.getState().open) return false;
+      var canonical = filterValuesFor(column).slice();
+      if (sameFilterValues(canonical, filterDraftValues)) return false;
+      filterDraftValues = canonical;
+      if (!column.filterDropdown) {
+        Array.prototype.forEach.call(filterPopup.querySelectorAll('.qxframe9a7c2-table-filter-options input'), function (input) {
+          input.checked = filterDraftValues.some(function (current) { return sameFilterValue(current, input.value); });
+        });
+        return true;
+      }
+      var active = doc.activeElement;
+      var hadFocus = !!(active && filterPopup.contains(active));
+      var selector = 'input:not(:disabled),textarea:not(:disabled),select:not(:disabled),button:not(:disabled),[tabindex]:not([tabindex="-1"])';
+      var before = hadFocus ? Array.prototype.slice.call(filterPopup.querySelectorAll(selector)) : [];
+      var focusIndex = hadFocus ? before.indexOf(active) : -1;
+      var origin = hadFocus ? (FocusOrigin.originOf(active) || FocusOrigin.inherited(doc)) : null;
+      renderFilterContent();
+      if (hadFocus) {
+        var after = Array.prototype.slice.call(filterPopup.querySelectorAll(selector));
+        var target = after.length ? after[Math.max(0, Math.min(focusIndex < 0 ? 0 : focusIndex, after.length - 1))] : null;
+        if (target) {
+          FocusOrigin.prepare(target, origin, { source:'table-filter-model-sync' });
+          DOM.focusElement(target, { preventScroll:true });
+        }
+      }
+      return true;
+    };
     renderFilterContent();
     var portal = filterPortal();
     portal.appendChild(filterPopup);
@@ -2315,8 +2357,10 @@ function setupTable(instance) {
         selectAll.checked = enabledEntries.length > 0 && selectedCount === enabledEntries.length;
         selectAll.indeterminate = selectedCount > 0 && selectedCount < enabledEntries.length;
       }
+      var filterReason = String(detail && detail.reason || 'filter');
+      if ((filterReason === 'filter' || filterReason === 'filters') && syncOpenFilterFromModel) syncOpenFilterFromModel();
       if (filterTrigger && filterTrigger.reposition) filterTrigger.reposition('filter-model-update');
-      DOM.setPrivate(root, 'tableRenderReason', String(detail && detail.reason || 'filter'));
+      DOM.setPrivate(root, 'tableRenderReason', filterReason);
       return true;
     });
   }
