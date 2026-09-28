@@ -48,12 +48,12 @@ const tmax=TreeSelect.create({document,container:host(),items:treeItems,multiple
 let maxChecks=Array.from(tmax.getTree().getRootElement().querySelectorAll('.qxframe9a7c2-tree-check'));
 let maxRows=Array.from(tmax.getTree().getRootElement().querySelectorAll('.qxframe9a7c2-tree-item'));
 a(maxChecks.length===3&&!maxChecks[0].disabled&&!maxChecks[1].disabled&&maxChecks[2].disabled,'TreeSelect maxCount disables unchecked option when capacity is exhausted');
-a(maxRows.length===3&&!maxRows[0].classList.contains('is-disabled')&&!maxRows[1].classList.contains('is-disabled')&&maxRows[2].classList.contains('is-disabled'),'TreeSelect maxCount projects disabled row state');
+a(maxRows.length===3&&!maxRows[0].classList.contains('is-disabled')&&!maxRows[1].classList.contains('is-disabled')&&!maxRows[2].classList.contains('is-disabled')&&maxRows[2].classList.contains('is-check-disabled'),'TreeSelect maxCount projects transient check-disabled state without disabling the Tree row');
 a(tmax.check('c',true,{source:'test'})===false&&tmax.getState().values.length===2,'TreeSelect maxCount blocks disabled option activation');
 a(tmax.check('a',false,{source:'test'})===true,'TreeSelect selected option remains removable at maxCount');
 maxChecks=Array.from(tmax.getTree().getRootElement().querySelectorAll('.qxframe9a7c2-tree-check'));
 maxRows=Array.from(tmax.getTree().getRootElement().querySelectorAll('.qxframe9a7c2-tree-item'));
-a(!maxChecks[2].disabled&&!maxRows[2].classList.contains('is-disabled'),'TreeSelect maxCount releases disabled options after capacity returns');
+a(!maxChecks[2].disabled&&!maxRows[2].classList.contains('is-disabled')&&!maxRows[2].classList.contains('is-check-disabled'),'TreeSelect maxCount releases transient check-disabled state after capacity returns');
 a(tmax.check('c',true,{source:'test'})===true&&tmax.getState().values.indexOf('c')>=0,'TreeSelect option can be selected after capacity returns');
 tmax.destroy();
 const te=TreeSelect.create({document,container:host(),items:[{key:'empty',value:'',label:'Empty tree value'},{key:'a',value:'a',label:'Alpha'}],defaultValue:'',searchable:true});
