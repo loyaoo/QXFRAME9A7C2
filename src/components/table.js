@@ -636,7 +636,15 @@ function setupTable(instance) {
     if (!querySelectionActive() || !remoteSelectionChannel) return false;
     var normalized = String(key);
     var detail = Utils.assignOwn({ source:'table', reason:'selection', selectionReason:'query-exclusion', key: normalized }, meta || {});
-    if (!remoteSelectionChannel.toggle(normalized, selected, Utils.assignOwn({ silent:true }, detail))) return false;
+    // A business/API deselect of a key that is already auto-excluded by the current
+    // disabled-row projection transfers ownership of that exclusion to the caller.
+    // SelectionController may report "unchanged" because the key was already excluded,
+    // but the ownership transition is still meaningful: a later enabled row must not be
+    // silently re-selected by the framework.
+    var claimedAutoExclusion = selected === false && remoteDisabledExclusions.delete(normalized);
+    var changed = remoteSelectionChannel.toggle(normalized, selected, Utils.assignOwn({ silent:true }, detail));
+    if (!changed) return claimedAutoExclusion;
+    if (selected !== false) remoteDisabledExclusions.delete(normalized);
     renderSelectionProjection(detail);
     emitSelectionChange(detail);
     return true;
