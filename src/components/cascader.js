@@ -90,6 +90,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
         var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, focusController = null, interactionController = null, tagNavigation = null;
+        var pendingSearchResetAfterClose = false;
         var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if(destroyed)return; if(triggerSession&&triggerSession.getState().open)renderColumns(); syncControl(); var payload={searchValue:value,reason:meta.reason||'search',originalEvent:meta.originalEvent||null,cascader:instance}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(!destroyed&&meta.silent!==true)emitter.emit('search',payload); } });
         var loadedChildren = new Map(), loadedKeys = new Set((Array.isArray(opts.loadedKeys) ? opts.loadedKeys : []).map(String)), loadingKeys = new Set();
@@ -555,6 +556,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           activePathKeys = result.path.map(function (entry) { return String(entry.key); });
           activeColumnIndex = Math.max(0, activePathKeys.length - 1);
           var item = result.item;
+          var closed = false;
           if (opts.multiple === true) toggleAssociatedSelection(item, result.path, detail || { source: 'keyboard', reason: 'search-select' });
           else {
             var proposed = String(item.value);
@@ -562,10 +564,13 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             syncSelectionFromApiValue('search-select');
             var payload = { value: item.value, values: [proposed], item: item, pathItems: result.path.slice(), pathKeys: activePathKeys.slice(), pathLabels: result.path.map(function (entry) { return String(entry.label); }), reason: 'search-select', originalEvent: detail && detail.originalEvent || null, cascader: instance };
             if (changed) notifySelectionCallbacks(item.value, proposed, payload);
-            if (!destroyed && shouldCloseOnSelect()) triggerSession.close('select', payload.originalEvent);
+            if (!destroyed && shouldCloseOnSelect()) closed = triggerSession.close('select', payload.originalEvent) === true;
           }
           if (destroyed) return true;
-          searchState.set('', {silent:true,notify:false,source:'popup',reason:'close-search'}); syncControl({ source: detail && detail.source || 'instance', reason: 'search-select' }); return true;
+          if (closed) pendingSearchResetAfterClose = true;
+          else searchState.set('', {silent:true,notify:false,source:'popup',reason:'search-select-clear'});
+          syncControl({ source: detail && detail.source || 'instance', reason: 'search-select' });
+          return true;
         }
         function destroySearchList() { if (searchList) searchList.destroy('cascader-search-refresh'); searchList = null; }
         function renderSearchResults() {
@@ -730,6 +735,10 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           restoreFocus: false,
           disabled: opts.disabled === true,
           onOpen: function (detail) {
+            if (pendingSearchResetAfterClose) {
+              pendingSearchResetAfterClose = false;
+              searchState.set('', {silent:true,notify:false,source:'popup',reason:'reopen-reset-search'});
+            }
             var openContext = popupOpenContext(detail);
             var reason = openContext.reason;
             var keyboardOpen = openContext.keyboard;
@@ -753,7 +762,20 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             syncControl();
             emitOpen(true, detail);
           },
-          onClose: function (detail) { if (destroyed) return; searchState.set('', {silent:true,notify:false,source:'popup',reason:'close-search'}); if (keyboard && keyboard.virtualFocus) keyboard.virtualFocus.clear({ modality:keyboard.virtualFocus.getState().modality }); renderColumns(); emitOpen(false, detail); }
+          onClose: function (detail) {
+            if (destroyed) return;
+            pendingSearchResetAfterClose = pendingSearchResetAfterClose || searchState.query !== '';
+            if (keyboard && keyboard.virtualFocus) keyboard.virtualFocus.clear({ modality:keyboard.virtualFocus.getState().modality });
+            syncControl({ silent:true, source:'popup', reason:'logical-close' });
+            emitOpen(false, detail);
+          },
+          afterClose: function () {
+            if (destroyed || !pendingSearchResetAfterClose) return;
+            pendingSearchResetAfterClose = false;
+            searchState.set('', {silent:true,notify:false,source:'popup',reason:'after-close-search-reset'});
+            renderColumns();
+            syncControl({ silent:true, source:'popup', reason:'after-close-search-reset' });
+          }
         });
         triggerSession = instance.setupPopupFieldRuntime(triggerSettings);
     
