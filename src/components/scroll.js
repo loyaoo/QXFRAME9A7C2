@@ -158,7 +158,7 @@ function attachViewport(options) {
   input.document = doc;
   input.elements = { root:root, viewport:viewport, content:content, trackX:trackX, trackY:trackY, thumbX:thumbX, thumbY:thumbY, shadowTop:shadowTop, shadowBottom:shadowBottom, shadowLeft:shadowLeft, shadowRight:shadowRight };
   if (input.axis === undefined) input.axis = 'y';
-  if (input.focusable === undefined) input.focusable = false;
+  if (input.focusable === undefined) input.focusable = true;
   if (input.keyboard === undefined) input.keyboard = false;
   if (input.scrollbarVisibility === undefined) input.scrollbarVisibility = 'auto';
   var instance = new Scroll(input);
@@ -248,6 +248,7 @@ function setupScroll(instance) {
   shadowBottom = domBinding.refs.shadowBottom;
   shadowLeft = domBinding.refs.shadowLeft;
   shadowRight = domBinding.refs.shadowRight;
+  var originalViewportTabindex = viewport.getAttribute('tabindex');
     
   if (domBinding.source !== 'external' && mountContainer) {
     Array.prototype.slice.call(mountContainer.childNodes).forEach(function (node) {
@@ -377,7 +378,11 @@ function setupScroll(instance) {
     root.classList.toggle('has-edge-shadow', opts.edgeShadow === true);
     root.classList.toggle('is-disabled', opts.disabled === true);
     root.classList.toggle('is-readonly', opts.readOnly === true);
-    root.tabIndex = opts.disabled === true || opts.focusable === false ? -1 : 0;
+    var sequentialFocusEnabled = opts.disabled !== true && opts.focusable !== false;
+    root.tabIndex = sequentialFocusEnabled ? 0 : -1;
+    if (!sequentialFocusEnabled) viewport.tabIndex = -1;
+    else if (originalViewportTabindex === null) viewport.removeAttribute('tabindex');
+    else viewport.setAttribute('tabindex', originalViewportTabindex);
     var size = Math.max(0, Number(opts.edgeShadowSize) || 0) + 'px';
     shadowTop.style.height = size;
     shadowBottom.style.height = size;
@@ -1141,6 +1146,10 @@ function setupScroll(instance) {
       Array.prototype.slice.call(content.childNodes).forEach(function (node) {
         mountContainer.insertBefore(node, root);
       });
+    }
+    if (viewport) {
+      if (originalViewportTabindex === null) viewport.removeAttribute('tabindex');
+      else viewport.setAttribute('tabindex', originalViewportTabindex);
     }
     if (domBinding) domBinding.release();
     domBinding = null;

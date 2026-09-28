@@ -16798,6 +16798,10 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   --_qxframe9a7c2-state-outline:var(--_qxframe9a7c2-focus-visible-outline);
   outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
 }
+.qxframe9a7c2-input.qxframe9a7c2-input-otp.is-keyboard-focus:not(.is-disabled){
+  --_qxframe9a7c2-state-outline:none;
+  outline:none
+}
 .qxframe9a7c2-input.is-variant-underlined.is-keyboard-focus:not(.is-disabled):not(.is-focus-outline-disabled),
 .qxframe9a7c2-input.is-flush.is-keyboard-focus:not(.is-disabled):not(.is-focus-outline-disabled){
   --_qxframe9a7c2-state-outline:var(--_qxframe9a7c2-focus-visible-outline)

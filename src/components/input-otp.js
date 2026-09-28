@@ -12,9 +12,12 @@ const state = new WeakMap();
 function focusOtpInput(target, origin, source) {
     if (!target || !target.focus) return false;
     const doc = target.ownerDocument || globalThis.document;
-    FocusOrigin.prepare(target, origin || FocusOrigin.inherited(doc), { source: source || 'otp-focus' });
+    const resolvedOrigin = origin || FocusOrigin.inherited(doc);
+    const resolvedSource = source || 'otp-focus';
+    FocusOrigin.prepare(target, resolvedOrigin, { source: resolvedSource });
     const focused = DOM.focusElement(target, { preventScroll:true });
     if (!focused) FocusOrigin.cancelPending(target);
+    else if (doc && doc.activeElement === target) FocusOrigin.set(target, resolvedOrigin, { source: resolvedSource });
     return focused;
 }
 const own = Utils.own;
@@ -175,6 +178,14 @@ export class InputOTP extends FieldComponent {
         });
         const capability = this.bindCapabilityController({ capabilities:{ preserveFocusWhileLoading:true, tabbableWhileLoading:true } });
         const inputs = control.getInputElements();
+        inputs.forEach((node, index) => this.listen(node, 'focus', () => {
+            const canonical = this.#canonicalFocusIndex(control.getState().segmentValues);
+            control.setSegmentFocusIndex(canonical);
+            if (index === canonical || !inputs[canonical]) return;
+            const origin = FocusOrigin.originOf(node) || FocusOrigin.inherited(node.ownerDocument);
+            focusOtpInput(inputs[canonical], origin, 'otp-canonical-focus');
+            if (inputs[canonical].select) inputs[canonical].select();
+        }));
         this.bindFocusController((inputs[0] || control.getRootElement()), { manageTabIndex:false, navigation:{handlers:{}} });
         this.bindInteractionController(control.getRootElement(), {
             id:this.id + '-otp-interaction',
@@ -199,10 +210,8 @@ export class InputOTP extends FieldComponent {
                 }
                 const next=action==='MOVE_LEFT'?index-1:index+1;
                 if(next<0||next>=list.length)return 'pass';
-                if(action==='MOVE_RIGHT'){
-                    const canonical=this.#canonicalFocusIndex(control.getState().segmentValues);
-                    if(next>canonical)return 'blocked';
-                }
+                const canonical=this.#canonicalFocusIndex(control.getState().segmentValues);
+                if(next!==canonical)return 'handled';
                 focusOtpInput(list[next],'keyboard','otp-keyboard-move');return 'handled';
             }
         });

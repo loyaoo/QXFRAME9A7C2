@@ -651,6 +651,7 @@ function setupMenu(instance) {
       onOpenChange: function () { syncClasses(); }
     });
     overflowLi.hidden = true;
+    overflowButton.hidden = true;
   }
   function entryButton(node) { return node && node.querySelector ? node.querySelector(':scope > .qxframe9a7c2-menu-item') : null; }
   function setEntryLevel(node, level, inOverflow) {
@@ -686,6 +687,7 @@ function setupMenu(instance) {
     if (destroyed || opts.mode !== 'horizontal' || !overflowLi || !overflowLevel) return false;
     restoreOverflowEntries();
     overflowLi.hidden = false;
+    overflowButton.hidden = false;
     overflowLi.style.visibility = 'hidden';
     var available = elementWidth(rootLevel) || elementWidth(root);
     var widths = rootEntryNodes.map(elementWidth);
@@ -693,6 +695,7 @@ function setupMenu(instance) {
     var gap = horizontalGap();
     if (!(available > 0) || ResponsiveOverflow.requiredSize(widths, widths.length, gap, []) <= available) {
       overflowLi.hidden = true;
+      overflowButton.hidden = true;
       overflowLi.style.visibility = '';
       if (overflowTrigger) overflowTrigger.closeTree('overflow-clear');
       syncClasses();
@@ -704,7 +707,18 @@ function setupMenu(instance) {
       overflowLevel.appendChild(node);
       setEntryLevel(node, overflowLevel, true);
     });
+    if (!overflowedKeys.size || !overflowLevel.firstElementChild) {
+      restoreOverflowEntries();
+      overflowLi.hidden = true;
+      overflowButton.hidden = true;
+      overflowLi.style.visibility = '';
+      if (overflowTrigger) overflowTrigger.closeTree('overflow-empty');
+      syncClasses();
+      api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: [], visibleCount: rootEntryNodes.length, menu: api });
+      return true;
+    }
     overflowLi.hidden = false;
+    overflowButton.hidden = false;
     overflowLi.style.visibility = '';
     syncClasses();
     api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: Array.from(overflowedKeys), visibleCount: visibleCount, menu: api });
@@ -1193,9 +1207,16 @@ function setupMenu(instance) {
 
   function handlePointerOver(event) {
     var button = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-menu-item') : null;
-    if (!button || button === overflowButton) return;
-    var key = (buttonMeta.get(button) && buttonMeta.get(button).key) || '';
-    if (!buttonByKey.has(key)) return;
+    if (!button) return;
+    var key = button === overflowButton ? '' : ((buttonMeta.get(button) && buttonMeta.get(button).key) || '');
+    // A collapsed leaf can still own real keyboard focus while the pointer has already
+    // moved to another item. Close its tooltip on pointer transfer instead of letting
+    // the focus trigger pin stale hover content on screen.
+    tooltipByKey.forEach(function (tooltip, candidate) {
+      if (candidate === key || !tooltip || !tooltip.getState || !tooltip.getState().open) return;
+      tooltip.close('menu-pointer-transfer', event);
+    });
+    if (button === overflowButton || !buttonByKey.has(key)) return;
     hoverKey = key;
     syncClasses();
   }
