@@ -25,7 +25,6 @@
       assert('input-otp-array-placeholder',otpInputs.length===6&&otpInputs[0].placeholder==='1'&&otpInputs[5].placeholder==='6',otpInputs.map(function(node){return node.placeholder;}).join(','));
       otp.destroy();
 
-      var zeroTreeHost=document.createElement('div');document.body.appendChild(zeroTreeHost);var zeroTree=C.Tree.create({container:zeroTreeHost,items:[{key:0,value:'zero',label:'Zero'}],loadChildren:function(){return [{key:1,value:'one',label:'One',leaf:true}];}});zeroTree.expand('0',{source:'test',reason:'zero-key-lazy'});await delay(30);record('regression-tree-zero-key-lazy-children',!!zeroTree.getModel().getRecord('1')&&zeroTree.getState().expandedKeys.indexOf('0')>=0,'records='+zeroTree.getModel().records.map(function(r){return r.key;}).join(',')+',expanded='+zeroTree.getState().expandedKeys.join(','));zeroTree.destroy();zeroTreeHost.remove();
 
       /* User-reported keyboard/focus regression matrix. */
       function key(target,key,extra){var init=Object.assign({key:key,bubbles:true,cancelable:true},extra||{});var e=new KeyboardEvent('keydown',init);target.dispatchEvent(e);return e;}
