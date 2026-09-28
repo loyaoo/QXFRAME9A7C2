@@ -42,7 +42,7 @@ function validateCascaderOptions(opts){if(['click','hover'].indexOf(String(opts.
 function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;if(fieldInit.formField&&!Utils.own(incoming,'value')&&!Utils.own(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;rejectObsolete(incoming);return{fieldInit,opts:validateCascaderOptions(Utils.mergeOwn(CASCADER_DEFAULTS,incoming))};}
 
 function normalizeValues(value, multiple) {
-  if (value === undefined || value === null || value === '') return [];
+  if (value === undefined || value === null) return [];
   var values = (Array.isArray(value) ? value : [value]).map(String);
   return multiple ? values.filter(function (entry, index, list) { return list.indexOf(entry) === index; }) : values.slice(0, 1);
 }
