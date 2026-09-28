@@ -15652,6 +15652,9 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 
 .qxframe9a7c2-tree{min-width:0}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item{position:relative}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-check-disabled{--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-item-bg:transparent;--_qxframe9a7c2-item-cursor:default}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-check-disabled.is-hover:not(.is-selected),.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-check-disabled.is-indeterminate.is-hover:not(.is-selected),.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-check-disabled.is-descendant-selected.is-hover:not(.is-selected){--_qxframe9a7c2-item-bg:transparent;--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-text-disabled)}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-check-disabled .qxframe9a7c2-tree-icon{color:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-row-content{position:relative;display:flex;align-items:center;min-width:0;width:100%;box-sizing:border-box}
 
 /* Tree disclosure control: pointer/focus/loading/capability resolve through private channels. */

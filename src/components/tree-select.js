@@ -280,11 +280,11 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (record.item && record.item.checkable === false) return false;
           return true;
         }
-        function wouldExceedMaxCount(shouldCheck, detail) {
-          if (!shouldCheck || !maxCountApplies() || !tree || !detail) return false;
-          var model = tree.getModel(), record = model && model.getRecord(String(detail.key));
-          if (!record || !recordCheckable(record)) return false;
-          var candidate = new Set((detail.checkedKeys || []).map(String));
+        function maxCountWouldBlockRecord(record, checkedKeys) {
+          if (!maxCountApplies() || !tree || !record || !recordCheckable(record)) return false;
+          var model = tree.getModel();
+          var candidate = new Set((Array.isArray(checkedKeys) ? checkedKeys : tree.getCheckedKeys(false)).map(String));
+          if (candidate.has(record.key)) return false;
           if (opts.checkStrictly === true) candidate.add(record.key);
           else [record].concat(model.getDescendants(record.key)).forEach(function (entry) { if (recordCheckable(entry)) candidate.add(entry.key); });
           var strategy = String(opts.checkedStrategy || 'child');
@@ -292,30 +292,19 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var retainedDisabled = disabledSelectedValues(apiValue()).filter(function (value) { var key = keyByValue(value); return key === null || key === undefined || !candidate.has(String(key)); }).length;
           return count + retainedDisabled > maxCountLimit();
         }
+        function maxCountCheckDisabled(item, index) {
+          if (!maxCountApplies() || !tree) return false;
+          var key = keyOf(item, index), model = tree.getModel(), record = key === undefined || key === null || key === '' ? null : model.getRecord(String(key));
+          return !!record && maxCountWouldBlockRecord(record);
+        }
+        function wouldExceedMaxCount(shouldCheck, detail) {
+          if (!shouldCheck || !detail || !tree) return false;
+          var model = tree.getModel(), record = model && model.getRecord(String(detail.key));
+          return !!record && maxCountWouldBlockRecord(record, detail.checkedKeys);
+        }
         function beforeTreeCheck(shouldCheck, detail) {
           if (wouldExceedMaxCount(shouldCheck, detail)) return false;
           return !Utils.isFunction(opts.beforeCheck) || opts.beforeCheck(shouldCheck, detail) !== false;
-        }
-        function baseItemDisabled(item, index) {
-          if (Utils.isFunction(opts.isItemDisabled)) return opts.isItemDisabled(item, index) === true;
-          return !!(item && item.disabled === true);
-        }
-        function maxCountDisablesRecord(record) {
-          if (!record || !maxCountApplies() || !tree) return false;
-          var checked = tree.getCheckedKeys(false).map(String);
-          if (checked.indexOf(record.key) >= 0) return false;
-          return wouldExceedMaxCount(true, { key:record.key, checkedKeys:checked });
-        }
-        function treeItemDisabled(item, index) {
-          if (baseItemDisabled(item, index)) return true;
-          if (!tree) return false;
-          var record = tree.getRecord(String(keyOf(item, index)));
-          return maxCountDisablesRecord(record);
-        }
-        function refreshMaxCountDisabledState() {
-          if (!tree) return false;
-          tree.updateOptions({ isItemDisabled:treeItemDisabled });
-          return true;
         }
     
         function renderValues(commitMeta) {
@@ -406,6 +395,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           selectable: !hierarchicalCheckMode(),
           selectionAppearance: 'highlight',
           checkable: hierarchicalCheckMode(),
+          isItemCheckDisabled: maxCountCheckDisabled,
           checkStrictly: opts.checkStrictly === true,
           checkedKeys: hierarchicalCheckMode() ? checkedKeysForValues(apiValue()) : undefined,
           expandedKeys: opts.expandedKeys,
@@ -423,7 +413,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           getItems: opts.getItems,
           getLabel: opts.getLabel,
           getValue: opts.getValue,
-          isItemDisabled: treeItemDisabled,
+          isItemDisabled: opts.isItemDisabled,
           filterItem: opts.filterItem,
           loadChildren: opts.loadChildren,
           loadedKeys: opts.loadedKeys,
@@ -449,7 +439,6 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             var values = checkedValues();
             var changed = valueState.write(values, Utils.mergeOwn( detail, { reason:'check', source:detail && detail.source || 'tree' }), true);
             restoreTreeFromApiValue('controlled-check');
-            refreshMaxCountDisabledState();
             searchState.clear({ silent:true, notify:false, source:'tree', reason:'selection' });
             tree.setSearch('');
             syncView({ source: detail && detail.source || 'tree', reason: 'check' });
@@ -476,9 +465,11 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             emitter.emit('expand', payload);
           }
         });
+        // Tree.create() renders before the outer tree variable receives the returned
+        // instance. Re-run the checkability projection once so an initially full
+        // maxCount state is visible immediately, not only after the first mutation.
+        if (maxCountApplies()) tree.updateOptions({ isItemCheckDisabled:maxCountCheckDisabled });
     
-        refreshMaxCountDisabledState();
-
         var triggerSettings = createPopupFieldTriggerSettings(opts, {
           reference: root,
           triggerTarget: triggerTarget || root,
@@ -522,7 +513,6 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (hierarchicalCheckMode()) tree.setCheckedKeys(checkedKeysForValues(canonical), { silent: true, source: cfg.source || 'api', reason: cfg.reason || 'tree-select-set-value' });
           else tree.setValue(asValues(canonical, false)[0], { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value' });
           if (hierarchicalCheckMode() && !valueState.controlled) valueState.write(checkedValues(), { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'tree-select-set-value-normalize' }, false);
-          if (hierarchicalCheckMode()) refreshMaxCountDisabledState();
           searchState.clear({ silent:true, notify:false, source:cfg.source || 'api', reason:cfg.reason || 'set-value' });
           tree.setSearch('');
           syncView({ silent: !!cfg.silent, source: cfg.source || 'api', reason: cfg.reason || 'set-value' });
@@ -542,7 +532,6 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           else tree.clear({ silent:true, source:cfg.source || 'api', reason:'tree-select-clear', originalEvent:cfg.originalEvent || null });
           var changed = valueState.write(nextValue, { silent:true, source:cfg.source || 'api', reason:cfg.reason || 'clear', originalEvent:cfg.originalEvent || null }, true);
           restoreTreeFromApiValue('controlled-clear');
-          if (hierarchicalCheckMode()) refreshMaxCountDisabledState();
           searchState.clear({ silent:true, notify:false, source:cfg.source || 'api', reason:cfg.reason || 'set-value' });
           tree.setSearch('');
           syncView({ silent: !!cfg.silent, source: cfg.source || 'api', reason: cfg.reason || 'clear' });
@@ -763,10 +752,10 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var treeOptions = {
             multiple: false, selectable: !checkMode,
             selectionAppearance: 'highlight',
-            checkable: checkMode, checkStrictly: opts.checkStrictly === true,
+            checkable: checkMode, isItemCheckDisabled:maxCountCheckDisabled, checkStrictly: opts.checkStrictly === true,
             size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true,
             virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
-            getKey: opts.getKey, getItems: opts.getItems, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: treeItemDisabled,
+            getKey: opts.getKey, getItems: opts.getItems, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled,
             filterItem: opts.filterItem, loadChildren: opts.loadChildren, beforeCheck: beforeTreeCheck, beforeExpand: opts.beforeExpand,
             itemRender: opts.itemRender, styles: opts.itemStyles, renderIcon: opts.renderIcon, showLine: opts.showLine, indent: opts.indent,
             onLoad: opts.onLoad, onLoadError: opts.onLoadError
