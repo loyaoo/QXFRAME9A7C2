@@ -15,20 +15,24 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-INTERACTION-008`
+- Current Task: `ANT-INTERACTION-010`
 
 ## CURRENT
 
-### ANT-INTERACTION-008 — Popconfirm / Dropdown independent follow-up
-Status: VERIFIED
-Task progress: 100%
-Repository state: PR #139 merged to `main` at `84a1a5133a3b011aefc5adcbee69b49a0bdf319c`.
-Scope: current Ant Design live Popconfirm basic and Promise examples, Dropdown click menu, Escape and keyboard paths; QX source, contracts, handbook overlay/feedback rules, and existing browser regressions.
-Result: no new Popconfirm/Dropdown component interaction bug was confirmed. Ant's Promise example leaves Cancel available while loading, whereas QX deliberately disables both actions and blocks dismissal during its pending confirm action. This is an explicit QX pending-close policy, not a safe standalone parity fix. Ant's default Dropdown hover and nonselectable menu also differ from QX's documented click/selectable defaults; these are API profile choices.
-CI follow-up: PR #139 CI #687 exposed a browser test harness cleanup race: `verify-final-focus-lifecycle.mjs` passed its assertions then raised `ENOTEMPTY` while deleting Chromium's profile. CI #689 reproduced it after the primary Chromium process exited, indicating remaining profile writers. Cleanup now waits for primary exit, retries deletion, and reports a deferred cleanup warning only for `ENOTEMPTY`/`EBUSY` on the ephemeral CI profile. This changes verification tooling only.
-Tabs follow-up: CI #691 passed the focus-lifecycle browser assertions and then exposed intermittent Tabs overflow selection focus return in the strict final-audit browser regression. The prior fix armed the return before selection, but still waited solely for a responsive overflow measurement to return focus. Popover close now schedules the return immediately; the layout pass remains responsible for a later fallback if More disappears. The existing strict browser regression covers this path.
-Verification: live Ant Design 6.6.5 examples inspected on 2026-09-28; source and browser-smoke coverage reviewed against the previous `main` at `050fe79`. Exact PR head `561c7ed14fcde6189888406cb1d6951f246fa3ad` passed QXFRAME CI #693, including full release and Windows tooling; PR #139 merged.
-Next exact step: take a different component interaction path in a subsequent user-driven audit; require a reproducible QX defect before implementation.
+### ANT-INTERACTION-010 — Select-family empty-string value parity
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 80%
+Baseline: `main@9008d05ae1c74f1d8a1cf2551d771d519e432c5d`.
+Finding: current Ant Design explicitly supports Select options whose value is the empty string, while QX Select / TreeSelect / Cascader validators allow `value:''` but their shared Selection path historically collapsed `''` into the no-selection sentinel.
+Fix:
+- Selection adds opt-in `allowEmptyKey` semantics; default channels keep the historical empty-key rejection.
+- null/undefined remain absence and never alias the empty-string option value.
+- SelectionController anchors respect the same per-channel policy.
+- OptionList value channels opt in; TreeSelect and Cascader value channels opt in without changing Tree node keys, Table row keys, Transfer keys, or other default Selection consumers.
+- Select / TreeSelect / Cascader normalization now distinguishes `''` from clear; clear remains undefined/empty-array according to single/multiple mode.
+Regression coverage: shared Selection default-vs-opt-in contract plus browser tests for Select, TreeSelect and Cascader value echo/clear behavior.
+Previous finding closed in this continuation: ANT-INTERACTION-009 Pagination page-size current semantics merged via PR #141 at `9008d05ae1c74f1d8a1cf2551d771d519e432c5d`; exact head passed QXFRAME CI #698.
+Next exact step: open the implementation PR, require exact-head full CI success, merge only after green, then continue Ant component-family audit without reopening verified paths.
 
 ## PREVIOUS VERIFIED HANDOFF
 
