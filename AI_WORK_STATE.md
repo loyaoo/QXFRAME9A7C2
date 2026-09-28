@@ -24,7 +24,7 @@ Status: VERIFIED
 Task progress: 100%
 Scope: current Ant Design live Popconfirm basic and Promise examples, Dropdown click menu, Escape and keyboard paths; QX source, contracts, handbook overlay/feedback rules, and existing browser regressions.
 Result: no new confirmed QX interaction bug in this focused pass. Ant's Promise example leaves Cancel available while loading, whereas QX deliberately disables both actions and blocks dismissal during its pending confirm action. This is an explicit QX pending-close policy, not a safe standalone parity fix. Ant's default Dropdown hover and nonselectable menu also differ from QX's documented click/selectable defaults; these are API profile choices.
-Verification: live Ant Design 6.6.5 examples inspected on 2026-09-28; source and browser-smoke coverage reviewed on clean `main` at `050fe79`. No code or regression change was justified, so no build or CI run was started for this audit.
+Verification: live Ant Design 6.6.5 examples inspected on 2026-09-28; source and browser-smoke coverage reviewed on clean `main` at `050fe79`. No runtime code or regression change was justified. Checkpoint PR #139 carries this docs-only record through the repository CI gate.
 Next exact step: take a different component interaction path in a subsequent user-driven audit; require a reproducible QX defect before implementation.
 
 ## PREVIOUS VERIFIED HANDOFF
