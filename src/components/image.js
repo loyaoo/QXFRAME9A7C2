@@ -174,6 +174,7 @@ function setupImage(instance) {
   var panMetrics = null;
   var api = instance;
   var previewActionByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
+  var previewNodeByAction = new Map();
   var previewChromeNodes = [];
   var interactionController = null;
   var interactionScope = null;
@@ -419,6 +420,7 @@ function setupImage(instance) {
     button.type = 'button';
     button.className = 'qxframe9a7c2-image-preview-tool' + (extraClass ? ' ' + extraClass : '') + ' is-action-' + String(action);
     if (previewActionByNode) previewActionByNode.set(button, action);
+    previewNodeByAction.set(String(action), button);
     button.title = label;
     var glyph = doc.createElement('span');
     glyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-' + iconNameForAction(action) + ' is-line is-round is-stroke-3 is-md';
@@ -441,9 +443,14 @@ function setupImage(instance) {
     if (!previewRoot) return;
     previewChromeNodes.forEach(function (node) { DOM.removeNode(node); });
     previewChromeNodes = [];
+    previewNodeByAction.clear();
   }
   function renderChrome() {
     if (!previewRoot) return;
+    var active = doc.activeElement;
+    var focusedAction = active && previewActionByNode && previewActionByNode.has(active) ? String(previewActionByNode.get(active)) : '';
+    var chromeOwnedFocus = !!(active && previewChromeNodes.some(function (node) { return node === active || (node.contains && node.contains(active)); }));
+    var focusOrigin = active ? FocusOrigin.originOf(active) : null;
     clearChrome();
     var items = previewItems();
     var item = currentPreviewItem();
@@ -490,6 +497,12 @@ function setupImage(instance) {
         if (controlEnabled('download', false)) toolbar.appendChild(makeButton('download', 'Download media'));
       }
       if (toolbar.childNodes.length) previewRoot.appendChild(toolbar);
+    }
+    if (chromeOwnedFocus) {
+      var nextFocus = focusedAction ? previewNodeByAction.get(focusedAction) : null;
+      if (!nextFocus) nextFocus = previewRoot;
+      if (focusOrigin) FocusOrigin.prepare(nextFocus, focusOrigin, { source:'image-preview-chrome-rebuild' });
+      DOM.focusElement(nextFocus, { preventScroll:true });
     }
   }
   function pausePreviewMedia() {

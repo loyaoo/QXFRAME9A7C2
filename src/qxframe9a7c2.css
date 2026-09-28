@@ -16437,7 +16437,8 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-carousel.is-vertical .qxframe9a7c2-carousel-viewport{touch-action:pan-x}
 .qxframe9a7c2-carousel-track{display:flex;width:100%;transition-property:transform;transition-duration:var(--_qxframe9a7c2-carousel-duration);transition-timing-function:var(--_qxframe9a7c2-carousel-easing)}
 .qxframe9a7c2-carousel.is-vertical .qxframe9a7c2-carousel-track{flex-direction:column}
-.qxframe9a7c2-carousel-slide{position:relative;flex:0 0 100%;min-width:0;overflow:hidden}
+.qxframe9a7c2-carousel-slide{position:relative;flex:0 0 100%;min-width:0;overflow:hidden;outline:none}
+.qxframe9a7c2-carousel-slide:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:-2px}
 .qxframe9a7c2-carousel.is-vertical .qxframe9a7c2-carousel-slide{flex:0 0 auto;width:100%}
 .qxframe9a7c2-carousel-slide>img,.qxframe9a7c2-carousel-image{display:block;width:100%;height:auto;min-height:.0625rem;object-fit:cover;user-select:none}
 .qxframe9a7c2-carousel-content{min-width:0}
@@ -16499,6 +16500,12 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-image-preview-root{--_qxframe9a7c2-image-preview-mask:var(--qxframe9a7c2-image-preview-mask-color,var(--_qxframe9a7c2-semantic-overlay-base));--_qxframe9a7c2-image-preview-control:var(--qxframe9a7c2-image-preview-control,var(--_qxframe9a7c2-semantic-overlay-control));--_qxframe9a7c2-image-preview-border:var(--qxframe9a7c2-image-preview-border,var(--_qxframe9a7c2-semantic-overlay-divider));position:fixed;inset:0;display:block;padding:0;overflow:hidden;color:var(--_qxframe9a7c2-semantic-overlay-text);pointer-events:none;overscroll-behavior:contain;touch-action:none;outline:none;isolation:isolate}
 .qxframe9a7c2-image-preview-root[hidden]{display:none!important}
 .qxframe9a7c2-image-preview-mask{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-base);background:var(--_qxframe9a7c2-image-preview-mask);opacity:var(--qxframe9a7c2-image-preview-mask-opacity,82%);pointer-events:auto}
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-appear-from,
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-enter-from,
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-leave-to{opacity:0}
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-appear-to,
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-enter-to,
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-leave-from{opacity:var(--qxframe9a7c2-image-preview-mask-opacity,82%)}
 .qxframe9a7c2-image-preview-stage{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-raised);display:grid;width:100%;height:100%;place-items:center;overflow:visible;cursor:default;pointer-events:none}
 .qxframe9a7c2-image-preview-motion{position:relative;display:grid;place-items:center;max-width:none;max-height:none;transform-origin:center center;pointer-events:none}
 .qxframe9a7c2-image-preview-motion.is-trajectory-active{will-change:transform,opacity}

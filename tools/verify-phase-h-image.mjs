@@ -37,6 +37,10 @@ assert.match(source,/Transition\.create\s*\(/,'Image preview presence must remai
 assert.match(source,/classList\.toggle\('is-pannable',\s*state\.scale\s*>\s*1\.001\s*&&\s*cfg\('draggable',\s*opts\.draggable\)\s*!==\s*false\)/,'Image grab cursor capability must require both zoom and draggable permission.');
 const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
 assert.match(css,/\.qxframe9a7c2-image-preview-image\.is-pannable\{cursor:grab\}/,'Image preview grab cursor must follow pannable capability.');
+assert.match(source,/previewNodeByAction\.set\(String\(action\), button\)/,'Image preview chrome must retain action identity across media rerenders.');
+assert.match(source,/chromeOwnedFocus[\s\S]*FocusOrigin\.prepare\(nextFocus, focusOrigin[\s\S]*DOM\.focusElement\(nextFocus/,'Image preview media switching must restore focus when the active chrome node is rebuilt.');
+assert.match(css,/\.qxframe9a7c2-image-preview-mask\.qxframe9a7c2-motion-fade-enter-from,[\s\S]*qxframe9a7c2-motion-fade-leave-to\{opacity:0\}/,'Image preview mask fade-from/leave-to state must override its steady mask opacity.');
+assert.match(css,/\.qxframe9a7c2-image-preview-mask\.qxframe9a7c2-motion-fade-enter-to,[\s\S]*qxframe9a7c2-motion-fade-leave-from\{opacity:var\(--qxframe9a7c2-image-preview-mask-opacity,82%\)\}/,'Image preview mask fade-to state must restore configured opacity.');
 assert.doesNotMatch(css,/\.qxframe9a7c2-image-preview-image\.is-zoomed\{cursor:grab\}/,'Image zoom state alone must not advertise draggable cursor.');
 assert.doesNotMatch(source,/\bFocusManager\b|\bFocusScope\b/,'Image must not create parallel focus resources.');
 assert.match(overlayRuntime,/FocusController\.createManager\s*\(/,'Image overlay focus manager must enter FocusController through OverlayRuntime.');

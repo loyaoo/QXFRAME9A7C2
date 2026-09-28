@@ -118,6 +118,7 @@ export class Carousel extends Component {
         let interactionController = null;
         let interactionLease = null;
         let capabilityController = null;
+        const authoredTabIndex = typeof WeakMap === 'function' ? new WeakMap() : new Map();
 
         const root = doc.createElement('div');
         const viewport = doc.createElement('div');
@@ -260,6 +261,22 @@ export class Carousel extends Component {
             if (opts.loop !== false) return normalizeIndex(candidate);
             return candidate < 0 || candidate >= total ? -1 : candidate;
         };
+        const slideFocusableNodes = slide => Array.prototype.slice.call(slide.querySelectorAll('button,a[href],input,select,textarea,[tabindex],[contenteditable="true"]'));
+        const syncSlideFocusability = (slide, active) => {
+            slide.tabIndex = active && opts.keyboard !== false && opts.disabled !== true ? 0 : -1;
+            slideFocusableNodes(slide).forEach(node => {
+                if (!authoredTabIndex.has(node)) authoredTabIndex.set(node, node.hasAttribute('tabindex') ? node.getAttribute('tabindex') : null);
+                if (active) {
+                    const authored = authoredTabIndex.get(node);
+                    if (authored === null) node.removeAttribute('tabindex');
+                    else node.setAttribute('tabindex', authored);
+                } else node.tabIndex = -1;
+            });
+        };
+        const focusActiveSlide = reason => {
+            const slide = track.children[current];
+            return !!(slide && DOM.focusElement(slide, { preventScroll:true, reason:reason || 'carousel-keyboard' }));
+        };
         const markActive = () => {
             const previousCard = adjacent(current, -1);
             const nextCard = adjacent(current, 1);
@@ -267,6 +284,7 @@ export class Carousel extends Component {
                 slide.classList.toggle('is-active', index === current);
                 slide.classList.toggle('is-prev-card', index === previousCard && index !== current);
                 slide.classList.toggle('is-next-card', index === nextCard && index !== current);
+                syncSlideFocusability(slide, index === current);
             });
             Array.prototype.forEach.call(dots.children, (dot, index) => {
                 dot.classList.toggle('is-active', index === current);
@@ -285,7 +303,7 @@ export class Carousel extends Component {
             root.style.setProperty('--qxframe9a7c2-carousel-duration', Math.max(0, opts.duration) + 'ms');
             root.style.setProperty('--qxframe9a7c2-carousel-easing', String(opts.easing || 'ease'));
             root.style.setProperty('--qxframe9a7c2-carousel-autoplay-duration', Math.max(800, opts.interval) + 'ms');
-            root.tabIndex = opts.keyboard !== false && opts.disabled !== true ? 0 : -1;
+            root.tabIndex = -1;
             syncControls();
         };
 
@@ -403,6 +421,7 @@ export class Carousel extends Component {
             items().forEach((item, index) => {
                 const slide = doc.createElement('div');
                 slide.className = 'qxframe9a7c2-carousel-slide';
+                slide.tabIndex = -1;
                 DOM.setPrivate(slide, 'carouselIndex', String(index));
                 if (item && typeof item === 'object' && !Renderer.isNodeLike(item) && own(item, 'key')) DOM.setPrivate(slide, 'carouselKey', String(item.key));
                 renderSlideContent(slide, item, index);
@@ -414,12 +433,14 @@ export class Carousel extends Component {
                 const dot = doc.createElement('button');
                 const bar = doc.createElement('span');
                 dot.type = 'button';
+                dot.tabIndex = -1;
                 dot.className = 'qxframe9a7c2-carousel-dot';
                 dot.disabled = opts.disabled === true;
                 bar.className = 'qxframe9a7c2-carousel-dot-bar';
                 if (typeof opts.renderDot === 'function') renderOutput(dot, opts.renderDot(index, item, Object.freeze({ active: index === current, instance: api })), doc);
                 if (!dot.childNodes.length) dot.appendChild(bar);
                 const activate = event => goTo(index, { reason: 'dot', source: DOM.activationSource(event), user: true, originalEvent: event });
+                itemScope.add(DOM.listen(dot, 'pointerdown', event => { if (event.preventDefault) event.preventDefault(); }));
                 itemScope.add(DOM.listen(dot, 'click', activate));
                 if (opts.trigger === 'hover') itemScope.add(DOM.listen(dot, 'mouseenter', activate));
                 dots.appendChild(dot);
@@ -458,6 +479,10 @@ export class Carousel extends Component {
         });
         scope.add(() => { if (pointerSession) pointerSession.destroy(); pointerSession = null; clearPointerState(); });
         scope.add(Config.onMotionChange(() => { if (!instance.destroyed && !motionEnabled() && animating) finishAnimation('motion-disabled'); }));
+        prev.tabIndex = -1;
+        next.tabIndex = -1;
+        scope.add(DOM.listen(prev, 'pointerdown', event => { if (event.preventDefault) event.preventDefault(); }));
+        scope.add(DOM.listen(next, 'pointerdown', event => { if (event.preventDefault) event.preventDefault(); }));
         scope.add(DOM.listen(prev, 'click', event => { if (event.preventDefault) event.preventDefault(); prevSlide({ reason: 'arrow', source: DOM.activationSource(event), user: true, originalEvent: event }); }));
         scope.add(DOM.listen(next, 'click', event => { if (event.preventDefault) event.preventDefault(); nextSlide({ reason: 'arrow', source: DOM.activationSource(event), user: true, originalEvent: event }); }));
         interactionLease = interactionController.registerScope({
@@ -471,10 +496,10 @@ export class Carousel extends Component {
                 const interactiveTarget = event.target && event.target !== root && event.target.closest
                     ? event.target.closest('button,a[href],input,select,textarea,[contenteditable="true"]')
                     : null;
-                if (interactiveTarget && root.contains(interactiveTarget)) return null;
                 const key = String(event && event.key || '');
                 if ((opts.direction === 'horizontal' && key === 'ArrowLeft') || (opts.direction === 'vertical' && key === 'ArrowUp')) return 'PREVIOUS';
                 if ((opts.direction === 'horizontal' && key === 'ArrowRight') || (opts.direction === 'vertical' && key === 'ArrowDown')) return 'NEXT';
+                if (interactiveTarget && root.contains(interactiveTarget)) return null;
                 if (key === 'Home') return 'FIRST';
                 if (key === 'End') return 'LAST';
                 return null;
@@ -487,6 +512,7 @@ export class Carousel extends Component {
                 else if (action === 'FIRST') goTo(0, { reason:'keyboard', source:'keyboard', user:true, originalEvent:event });
                 else if (action === 'LAST') goTo(Math.max(0, count() - 1), { reason:'keyboard', source:'keyboard', user:true, originalEvent:event });
                 else return 'pass';
+                focusActiveSlide('carousel-keyboard-switch');
                 return 'handled';
             }
         });

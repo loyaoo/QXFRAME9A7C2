@@ -19,6 +19,7 @@ exactProfile(Carousel,'Carousel',['ValueController','FocusController','Interacti
 exactProfile(Scroll,'Scroll',['FocusController','InteractionController','CapabilityController','MotionController']);
 
 const carousel=read('src/components/carousel.js');
+const css=read('src/qxframe9a7c2.css');
 assert.match(carousel,/ValueController\.createValueBinding\s*\(/);
 assert.match(carousel,/FocusController\.create\s*\(/);
 assert.match(carousel,/InteractionController\.create\s*\(/);
@@ -26,6 +27,12 @@ assert.match(carousel,/CapabilityController\.create\s*\(/);
 assert.match(carousel,/MotionController\.waitMotionEnd\s*\(/);
 assert.match(carousel,/interactionController\.dispatch\s*\(/);
 assert.match(carousel,/capabilityController\.can\('navigate'\)/);
+assert.match(carousel,/root\.tabIndex = -1;/,'Carousel root must not compete with the active slide for Tab ownership.');
+assert.match(carousel,/slide\.tabIndex = active && opts\.keyboard !== false && opts\.disabled !== true \? 0 : -1;/,'Only the active Carousel slide outer may enter Tab order.');
+assert.match(carousel,/dot\.tabIndex = -1;/,'Carousel dots must stay out of Tab order.');
+assert.match(carousel,/prev\.tabIndex = -1;[\s\S]*next\.tabIndex = -1;/,'Carousel arrow controls must stay out of Tab order.');
+assert.match(carousel,/focusActiveSlide\('carousel-keyboard-switch'\)/,'Carousel keyboard switching must move real focus to the new active slide.');
+assert.match(css,/\.qxframe9a7c2-carousel-slide:focus-visible\{outline:var\(--_qxframe9a7c2-focus-visible-outline\);outline-offset:-2px\}/,'Carousel active-slide focus ring must remain visible inside the clipped viewport.');
 assert.doesNotMatch(carousel,/transitionDelay/,'Carousel must not retain a second transition-completion timer.');
 assert.doesNotMatch(carousel,/addEventListener\(['"]transitionend|DOM\.listen\([^\n]*['"]transitionend/,'Carousel transition completion must stay under MotionController.');
 assert.doesNotMatch(carousel,/current\s*=\s*resolved/,'Carousel runtime current writes must enter ValueController.');
