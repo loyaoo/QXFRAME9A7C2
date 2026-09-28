@@ -380,6 +380,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           container: treeHost,
           items: Array.isArray(opts.items) ? opts.items.slice() : [],
           value: hierarchicalCheckMode() ? undefined : apiValue(),
+          allowEmptyValue: true,
           multiple: false,
           selectable: !hierarchicalCheckMode(),
           selectionAppearance: 'highlight',
