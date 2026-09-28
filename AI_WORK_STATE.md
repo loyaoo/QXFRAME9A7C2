@@ -49,7 +49,11 @@ Residual Ant comparison disposition (do not reopen without new reproduction evid
 - Table: responsive-hidden columns remain in TableModel; filter state is independent of CSS visibility. Controlled/uncontrolled filter-open callbacks are mutually exclusive. There is no column-level custom `onKeyDown` API corresponding to Ant's sorter fix.
 - Tree: explicit `expandedKeys: undefined` clears to `[]`; numeric-zero-key concern was disproven after tracing ItemAccessors.
 - Image preview: OverlayController owns focus trap and restore through one close/presence lifecycle.
+- Upload async removal: pending `beforeRemove` is uid-bound and guarded by lifecycle mutation generation; adding another file does not advance that generation, so a late allow removes the original uid rather than a newly added file.
+- Table local select-all: `selectVisible()` operates only on the current projected page and filters disabled rows before selection; remote query-wide selection remains semantic `allMatching` rather than materialized unloaded keys.
+- DatePicker min/max navigation: boundary view changes clamp panel view state and return without close/commit; popup closing remains owned by selection/preset/explicit close paths.
 - Modal custom `buttons[].onClick` is the QX button action owner; unlike Ant `cancelButtonProps`, QX has no contract requiring a second global `onCancel/onConfirm` invocation, so no double-callback behavior was introduced.
+- Ant release baseline: official stable changelog still reports 6.6.5 (2026-09-20) as latest as of 2026-09-28; no 6.6.6+ stable release was available for this pass.
 
 Next exact step:
 1. Query current `main`, open PRs and latest CI before new code work.
