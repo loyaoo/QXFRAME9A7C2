@@ -310,6 +310,7 @@ function setupTable(instance) {
   var remoteSummary = null;
   var selectionController = null;
   var remoteSelectionChannel = null;
+  var remoteDisabledExclusions = new Set();
   var valueBinding = null;
   var feedbackController = null;
   var formBridge = null;
@@ -493,6 +494,7 @@ function setupTable(instance) {
       onChange: function (state, detail) {
         if (destroyed) return;
         if (detail && ['sort','filter','filters','search'].indexOf(String(detail.reason || '')) >= 0) syncRemoteSelectionQuery();
+        reconcileRemoteDisabledSelection(detail && detail.reason || 'model');
         withProjection(function () {
           if (detail && detail.reason === 'selection') renderSelectionProjection(detail);
           else renderTransaction(detail);
@@ -541,11 +543,43 @@ function setupTable(instance) {
     return isRemote() && opts.remoteSelectionScope === 'query' && !!remoteSelectionChannel && remoteSelectionChannel.allMatching === true && remoteSelectionChannel.queryKey === remoteQueryFingerprint();
   }
   function resetRemoteSelection() {
+    remoteDisabledExclusions.clear();
     return remoteSelectionChannel ? remoteSelectionChannel.clear({ silent:true, source:'table', reason:'remote-selection-reset' }) : false;
   }
   function syncRemoteSelectionQuery() {
-    if (!remoteSelectionChannel || !remoteSelectionChannel.allMatching) return false;
-    return remoteSelectionChannel.reconcileQuery(remoteQueryFingerprint(), { silent:true, source:'table', reason:'query-revision' });
+    if (!remoteSelectionChannel || !remoteSelectionChannel.allMatching) { remoteDisabledExclusions.clear(); return false; }
+    var changed = remoteSelectionChannel.reconcileQuery(remoteQueryFingerprint(), { silent:true, source:'table', reason:'query-revision' });
+    if (!remoteSelectionChannel.allMatching) remoteDisabledExclusions.clear();
+    return changed;
+  }
+  function rowSelectionDisabled(entry) {
+    return !!(entry && ((opts.isItemDisabled && opts.isItemDisabled(entry.item, entry.sourceIndex, api) === true) || (entry.item && entry.item.disabled === true)));
+  }
+  function reconcileRemoteDisabledSelection(reason) {
+    if (!remoteSelectionChannel || !querySelectionActive()) { remoteDisabledExclusions.clear(); return false; }
+    var snapshot = remoteSelectionChannel.snapshot();
+    var excluded = new Set((snapshot.excludedKeys || []).map(String));
+    var changed = false;
+    projectedEntries().forEach(function (entry) {
+      var key = String(entry.key);
+      if (rowSelectionDisabled(entry)) {
+        if (!excluded.has(key)) {
+          remoteSelectionChannel.toggle(key, false, { silent:true, source:'table', reason:reason || 'remote-disabled-exclude' });
+          excluded.add(key);
+          remoteDisabledExclusions.add(key);
+          changed = true;
+        }
+        return;
+      }
+      if (!remoteDisabledExclusions.has(key)) return;
+      if (excluded.has(key)) {
+        remoteSelectionChannel.toggle(key, true, { silent:true, source:'table', reason:reason || 'remote-disabled-restore' });
+        excluded.delete(key);
+        changed = true;
+      }
+      remoteDisabledExclusions.delete(key);
+    });
+    return changed;
   }
   function isKeySelected(key, state) {
     var normalized = String(key);
@@ -586,9 +620,14 @@ function setupTable(instance) {
     if (!isRemote() || opts.remoteSelectionScope !== 'query' || !remoteSelectionChannel) return false;
     var detail = Utils.assignOwn({ source:'table', reason:'selection', selectionReason:'query-all' }, meta || {});
     if (selected !== false) {
+      remoteDisabledExclusions.clear();
       remoteSelectionChannel.setAllMatching(remoteQueryFingerprint(), true, Utils.assignOwn({ silent:true }, detail));
       remoteSelectionChannel.setKnownCount(currentState().filteredTotal, { silent:true, source:'table', reason:'query-count' });
-    } else remoteSelectionChannel.clear(Utils.assignOwn({ silent:true }, detail));
+      reconcileRemoteDisabledSelection('query-all-disabled');
+    } else {
+      remoteDisabledExclusions.clear();
+      remoteSelectionChannel.clear(Utils.assignOwn({ silent:true }, detail));
+    }
     renderSelectionProjection(detail);
     emitSelectionChange(detail);
     return true;
@@ -2089,6 +2128,12 @@ function setupTable(instance) {
     var forceContent = contentRenderRequired(reason);
     if (!entries.length) {
       bodyRowRecords.clear();
+      var busyEmpty = opts.loading === true || remoteProcessing === true;
+      if (busyEmpty) {
+        Array.prototype.slice.call(tbody.children).forEach(function (node) { removeRenderedNode(node); });
+        requestFixedGeometry('table-loading-empty');
+        return;
+      }
       var emptyRow = DOM.findPrivate(tbody, 'tableEmpty', 'true');
       if (!emptyRow) {
         emptyRow = doc.createElement('tr');
