@@ -1082,7 +1082,15 @@ function setupTabs(instance) {
     overflowReturnFocusAfterLayout = true;
     setActiveKey(key, { source: source, reason: 'overflow', originalEvent: event });
     if (!closeOverflow()) { overflowReturnFocusSource = ''; overflowReturnFocusAfterLayout = false; }
-    else scheduleOverflow('overflow-selection-return');
+    else {
+      // Transfer focus synchronously once the popup is logically closed. Waiting for a
+      // mutate frame can race the popup leave/unmount and let the focused overflow row
+      // disappear first, which drops document.activeElement back to body. Keep the
+      // responsive-layout return armed so a later More visibility change is reconciled.
+      if (moreButton.parentNode === nav) focusOverflowTrigger(source, 'tabs-overflow-selection-return');
+      else focusTab(activeKey, { source:source, reason:'tabs-overflow-selection-return' });
+      scheduleOverflow('overflow-selection-return');
+    }
   }));
   scope.add(DOM.listen(addButton, 'click', function (event) {
     if (CapabilityController.mutationLocked(opts)) return;
