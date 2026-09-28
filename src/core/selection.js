@@ -4,8 +4,8 @@ import { Events } from './events.js';
 import { mergeOptions } from './options.js';
 import { DataRevision } from './dataRevision.js';
 
-function asArray(value) {
-  if (value === undefined || value === null || value === '') return [];
+function asArray(value, allowEmptyKey) {
+  if (value === undefined || value === null || (value === '' && allowEmptyKey !== true)) return [];
   return Array.isArray(value) ? value.slice() : [value];
 }
 
@@ -35,9 +35,9 @@ function create(options) {
   function normalize(next) {
     var seen = Object.create(null);
     var output = [];
-    asArray(next).forEach(function (item) {
+    asArray(next, opts.allowEmptyKey === true).forEach(function (item) {
       var key = keyOf(item);
-      if (!key || seen[key]) return;
+      if ((key === '' && opts.allowEmptyKey !== true) || seen[key]) return;
       seen[key] = true;
       output.push(key);
     });
@@ -101,7 +101,7 @@ function create(options) {
   function select(value, meta) {
     if (destroyed) return false;
     var key = keyOf(value);
-    if (!key) return false;
+    if (key === '' && opts.allowEmptyKey !== true) return false;
     if (Utils.isFunction(opts.isDisabled) && opts.isDisabled(key, meta || {}) === true) return false;
     if (opts.multiple === true) {
       var next = values();
@@ -188,6 +188,7 @@ function create(options) {
     },
     size: { enumerable: true, get: function () { return store.size; } },
     multiple: { enumerable: true, get: function () { return opts.multiple === true; } },
+    allowEmptyKey: { enumerable: true, get: function () { return opts.allowEmptyKey === true; } },
     dataRevision: { enumerable: true, get: function () { return dataRevision.current(); } },
     destroyed: { enumerable: true, get: function () { return destroyed; } }
   });
