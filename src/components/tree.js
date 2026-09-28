@@ -77,8 +77,9 @@ function setupTreeRuntime(instance) {
         });
         function keyOf(item, index) { return itemAccessors.key(item, index); }
         function itemsOf(item, index) {
-          var normalizedKey = keyOf(item, index);
-          if (normalizedKey && loadedChildren.has(normalizedKey)) return loadedChildren.get(normalizedKey).slice();
+          var rawKey = keyOf(item, index);
+          var normalizedKey = rawKey === undefined || rawKey === null ? null : String(rawKey);
+          if (normalizedKey !== null && loadedChildren.has(normalizedKey)) return loadedChildren.get(normalizedKey).slice();
           return itemAccessors.children(item, index);
         }
         function labelOf(item, index) { return itemAccessors.label(item, index); }
