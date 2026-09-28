@@ -53,6 +53,9 @@ for(const file of ['progress.js','result.js']){
   const source=fs.readFileSync(new URL('../src/components/'+file,import.meta.url),'utf8');
   assert.match(source,/FeedbackController\.createForProjector\s*\(/,file+' must bind through FeedbackController.');
 }
+const resultSource=fs.readFileSync(new URL('../src/components/result.js',import.meta.url),'utf8');
+assert.match(resultSource,/visible:\s*true,\s*title:\s*record\.message/,'Result feedback projection must always synchronize title so empty messages clear stale content.');
+assert.doesNotMatch(resultSource,/if\s*\(record\.message\)\s*patch\.title/,'Result feedback title must not use truthy gating.');
 
 console.log(JSON.stringify({
   ok:true,
