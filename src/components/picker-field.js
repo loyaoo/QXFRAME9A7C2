@@ -555,8 +555,8 @@ function create(options) {
     }
     var actionsHost = doc.createElement('div'); actionsHost.className = 'qxframe9a7c2-picker-field-footer-actions';
     if (config.actionStartContent !== undefined && config.actionStartContent !== null && config.actionStartContent !== false) appendFooterContent(actionsHost, config.actionStartContent);
-    if (config.cancel) { var cancel = doc.createElement('button'); cancel.type='button'; cancel.tabIndex=footerActionTabIndex(); footerActionButtons.push(cancel); cancel.className='qxframe9a7c2-button is-default is-outlined is-' + sizeName(opts.size); cancel.textContent=config.cancelLabel||'取消'; bindAction(cancel,function(event){config.cancel(event);}); actionsHost.appendChild(cancel); }
-    if (config.confirm) { var confirm = doc.createElement('button'); confirm.type='button'; confirm.tabIndex=footerActionTabIndex(); footerActionButtons.push(confirm); confirm.className='qxframe9a7c2-button is-primary is-solid is-' + sizeName(opts.size); confirm.textContent=config.confirmLabel||'确认'; confirm.disabled=config.confirmDisabled===true; bindAction(confirm,function(event){if (!confirm.disabled) config.confirm(event);}); actionsHost.appendChild(confirm); }
+    if (config.cancel) { var cancel = doc.createElement('button'); cancel.type='button'; cancel.tabIndex=footerActionTabIndex(); footerActionButtons.push(cancel); cancel.className='qxframe9a7c2-button is-default is-outlined is-' + sizeName(opts.size); cancel.textContent=config.cancelLabel===undefined?'取消':String(config.cancelLabel); bindAction(cancel,function(event){config.cancel(event);}); actionsHost.appendChild(cancel); }
+    if (config.confirm) { var confirm = doc.createElement('button'); confirm.type='button'; confirm.tabIndex=footerActionTabIndex(); footerActionButtons.push(confirm); confirm.className='qxframe9a7c2-button is-primary is-solid is-' + sizeName(opts.size); confirm.textContent=config.confirmLabel===undefined?'确认':String(config.confirmLabel); confirm.disabled=config.confirmDisabled===true; bindAction(confirm,function(event){if (!confirm.disabled) config.confirm(event);}); actionsHost.appendChild(confirm); }
     if (actionsHost.firstChild) footer.appendChild(actionsHost);
     if (config.endContent !== undefined && config.endContent !== null && config.endContent !== false) {
       var end = doc.createElement('div'); end.className = 'qxframe9a7c2-picker-field-footer-end'; appendFooterContent(end, config.endContent); footer.appendChild(end);
@@ -572,8 +572,8 @@ function create(options) {
       endContent: visible ? value.endContent : null,
       cancel: visible && (value.showCancel === true || needsConfirm) ? value.cancel : null,
       confirm: visible && needsConfirm ? value.confirm : null,
-      cancelLabel: value.cancelLabel || '取消',
-      confirmLabel: value.confirmLabel || '确认',
+      cancelLabel: value.cancelLabel === undefined ? '取消' : value.cancelLabel,
+      confirmLabel: value.confirmLabel === undefined ? '确认' : value.confirmLabel,
       confirmDisabled: value.confirmDisabled === true
     });
   }
