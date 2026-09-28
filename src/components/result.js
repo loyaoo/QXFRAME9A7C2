@@ -79,8 +79,7 @@ function feedbackName(status) {
     return 'info';
 }
 function applyFeedback(instance, record) {
-    const patch = { name: feedbackName(record.status), visible: true };
-    if (record.message) patch.title = record.message;
+    const patch = { name: feedbackName(record.status), visible: true, title: record.message };
     instance.updateOptions(patch);
     return instance;
 }
