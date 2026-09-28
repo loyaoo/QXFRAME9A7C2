@@ -1077,12 +1077,18 @@ function create(options) {
     
   function render(reason) {
     if (destroyed || !mounted) return false;
+    var previousActiveKey = activeItem.activeKey ? String(activeItem.activeKey) : '';
+    var previousActiveIndex = previousActiveKey ? activeIndex(previousActiveKey) : -1;
     currentRows = buildRows();
     rebuildRowIndexes();
     if (pendingVirtualEnsureKey && !rowByKey(pendingVirtualEnsureKey)) pendingVirtualEnsureKey = null;
     activeItem.updateOptions({ loop: opts.loop === true });
-    if (activeItem.activeKey && !rowByKey(activeItem.activeKey)) {
-      activeItem.clear({ source: 'render', reason: 'active-removed' });
+    if (previousActiveKey && !rowByKey(previousActiveKey)) {
+      var fallbackRows = interactiveRows().filter(function (row) { return !isRowDisabled(row); });
+      if (fallbackRows.length) {
+        var fallbackIndex = previousActiveIndex < 0 ? 0 : Math.min(previousActiveIndex, fallbackRows.length - 1);
+        activeItem.set(fallbackRows[fallbackIndex].key, { source:'render', reason:'active-removed-fallback' });
+      } else activeItem.clear({ source: 'render', reason: 'active-removed' });
     }
     var pointerRow = pointerKey === null ? null : rowByKey(pointerKey);
     if (!pointerRow || pointerRow.disabled || isComponentDisabled()) pointerKey = null;
