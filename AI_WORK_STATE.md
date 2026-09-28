@@ -15,62 +15,82 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-INTERACTION-013`
+- Current Task: `THEME-PLAYGROUND-REGRESSION-001`
 
 ## CURRENT
 
-### ANT-INTERACTION-013 — Ant functional audit + TreeSelect maxCount capability projection
-Status: VERIFIED — CONTINUING AUDIT
-Task progress: 100% for confirmed findings in this batch
-Baseline for this batch: `main@ab4f09d9f5f81f1c598add6d58ee80cba29e96c8`.
-Current verified main after runtime fixes: `491a07aaf4de038f9c7d279ec0325e286363d90b`.
+### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
+Status: VERIFIED
+Task progress: 100% for the reported batch
+User verification surface: `docs/theme-playground.html`.
+Current verified main after runtime fixes + browser regression coverage: `bc3e8818f60ea5bb86d526b9fefccdcb9953be4a`.
 
-Merged fixes:
-- PR #150 — Table filter canonical-state closeout:
-  1. Public ComponentContract incorrectly inferred `Table.filters` as an array although TableModel/runtime require a column-keyed object map. Canonical contract and generated component API now expose `filters: object`; completion parity authorizes only the frozen baseline correction `Table.filters: array→object`.
-  2. `Table.setFilter()/setFilters()` updated canonical model state while an already-open filter popup preserved stale `filterDraftValues` and controls. The active popup now reconciles canonical values in place for built-in filters; custom `filterDropdown` rerenders only when values actually changed and restores focus.
-  3. Built-in filter option `value:''` was rendered as a non-selectable presentation row even though TableModel accepts `filters:{column:['']}`. Empty string is now selectable; only null/undefined mean presentation-only rows.
-  Browser regression holds the same controlled-open single-select filter popup while values move `a → b → ''`, proving popup identity stays stable and checked state follows canonical filters including empty string. Exact PR head `fd4405541a66271cb2f7404456b48ac767a39527` passed QXFRAME CI #741.
-- PR #152 — TreeSelect `maxCount` now projects capacity into a transient checkbox capability instead of only rejecting the final check intent:
-  - Tree has a distinct internal `isItemCheckDisabled` channel separate from structural/business `isItemDisabled`.
-  - At capacity, only unchecked nodes whose check/cascade would exceed the limit receive disabled checkbox/check intent; already-checked nodes remain removable.
-  - Parent disclosure/navigation/search remain available even when that parent's checkbox is temporarily check-disabled.
-  - Releasing capacity immediately re-enables valid checks; filling the freed slot disables overflow checks again.
-  - External/canonical `setValue()` replacement is not blocked merely because the previous value already filled maxCount.
-  - Existing applicability rules are preserved: child strategy, or all strategy with strict checking; parent strategy and non-strict all do not apply maxCount.
-  - Pages Max count demo text now states the disabled behavior.
-  Exact integrated head `2337e4085c89bf06d14a9384d77a5b4aea054fd6` passed QXFRAME CI #756 including Windows tooling, Completion audit, Full release verification, npm pack and standalone dist/docs build.
-- PR #153 was an interim maxCount implementation that merged capacity into Tree `isItemDisabled`, visually disabling the whole row. It was superseded by PR #152 because maxCount is a transient check-capability constraint, not structural node disablement.
+Merged runtime fixes:
+- PR #152 — TreeSelect `maxCount` projects capacity into check-only disabled capability. At capacity, unchecked choices that would exceed the limit visibly disable their checkbox/check intent while already-selected choices remain removable; parent disclosure/navigation/search remain available. Pages Max count demo text documents the behavior.
+- PR #155 — InputOTP keyboard ArrowRight cannot bypass the canonical first-empty slot. Pointer and keyboard now share the same sequential-fill constraint while completed OTPs remain editable.
+- PR #157 — Picker keyboard/focus closeout:
+  - DatePicker default open region remains the day/date virtual region.
+  - DatePicker Tab cycle is presets → active year → active month → date virtual region → cancel → confirm, so Shift+Tab from the default date region reaches month then year.
+  - Dual-panel DatePicker horizontal navigation crosses the visual seam geometrically on the same rendered row in both directions instead of waiting for calendar month rollover.
+  - ColorPicker with `needConfirm:false` commits current dirty/preview value and closes on Enter; confirm mode remains explicit.
+  - Dropdown item and Picker/Wheel virtual-focus outlines stay 2px but move an extra pixel inward inside clipped scroll viewports so Chromium does not trim the outer edge.
+- PR #158 — Menu interaction closeout:
+  - horizontal root entries use stable intrinsic width so ResponsiveOverflow moves real items into the More submenu instead of flex-shrinking them while the More panel stays empty;
+  - collapsed inline root leaves use framework Tooltip for labels;
+  - collapsed items with children retain submenu Trigger ownership rather than receiving competing tooltip behavior/native title.
+- PR #159 — Carousel keyboard/focus ownership:
+  - root, arrows and dots are not Tab stops;
+  - the active slide outer is the Carousel-level Tab owner;
+  - focusable descendants are available only on the active slide;
+  - direction keys remain Carousel-owned from both the active slide outer and interactive descendants;
+  - keyboard slide changes transfer real focus to the new active slide;
+  - the active-slide focus ring is inset to avoid viewport clipping.
+- PR #160 — Image preview closeout:
+  - component-specific fade states make preview mask opacity visibly animate despite the steady mask-opacity rule;
+  - preview chrome remembers the focused action across media rerenders and restores focus to the equivalent replacement action, so ImageGroup Left/Right navigation continues after the first switch.
+- PR #156 — shared Theme Playground focus/keyboard closeout:
+  - Slider pointer-origin focus no longer shows the keyboard-only outline;
+  - List `hideSelected` reconciles canonical active item after the selected row disappears, allowing immediate repeated Enter selection;
+  - JSON first real focus synchronizes Tree activeKey + VirtualFocus so the first directional key works;
+  - Modal / Drawer body Scroll is not a Tab stop, removing the invisible focus stop after close;
+  - TimePanel/WheelPanel internal Scroll roots remain `tabIndex=-1`; TimePanel outer composite is the sole Tab owner;
+  - Tabs keyboard/Backspace removal prefers the previous enabled tab and restores real focus after the removed DOM disappears;
+  - Collapse supports Tree-style ArrowRight=open and ArrowLeft=close in addition to Enter/Space.
+  Exact integrated head `7d2de0d198556fdf5e2027f09799f4afc51177cf` passed QXFRAME CI #784. The prior head timed out with no failed browser assertions; the integrated rerun passed Full release verification without extending the global browser timeout.
+- PR #161 — real browser regression layer for PRs #158–#160:
+  - horizontal Menu must move real items into a non-empty More panel;
+  - collapsed Menu leaf Tooltip vs submenu ownership is exercised in Chromium;
+  - Carousel direction keys are exercised from both slide outer and inner button after motion completes;
+  - Image preview Right → Left repeated navigation must keep focus on rebuilt equivalent chrome action.
+  First CI #786 exposed a test-timing false positive because the second Carousel key was sent during `waitForAnimate:true`; the test now waits for the first motion. Exact final head `eb81676e9c3f7874916b22d7d892e757c16b39fb` passed QXFRAME CI #787.
 
-New Ant comparison dispositions closed in this batch:
-- TreeSelect controlled parent-projection with disabled descendants is explicitly protected: `checkedValues()` merges externally owned disabled selected values back into the mutable Tree checked projection.
-- Transfer repeated search-clear callback is prevented centrally by SearchState: setting the same query, including repeated `''`, does not emit onChange/onSearch.
-- Tags long-held Enter/Space does not repeatedly toggle: InteractionController rejects key repeat for non-repeatable ACTIVATE actions and KeyboardNavigation independently suppresses activation repeat.
-- Select disabled creatable-option duplication is blocked before tag creation: an existing disabled match emits `invalidReason:'disabled-option'` instead of creating a duplicate tag.
-- Select active-vs-selected visual priority is explicit: selected+active uses the hover-accent state while keyboard focus is a separate focus-visible outline.
-- Select searchable single rich committed content is hidden while draft editing via `.has-single-value:not(.is-searching)`; rich committed content does not overlay the search editor.
-- Select clear button is intentionally not a separate Tab stop under QX virtual-focus rules; keyboard remove actions are owned by the Select interaction scope rather than an inner focusable clear button.
-- Slider pointer drag prevents default on handle, rail and track at PointerSession start, avoiding browser text selection during drag.
-- Upload progress has one canonical `progressView.thickness` owner and renders only for uploading records; there is no alternate unconfigured thick-progress branch.
-- Drawer `closable.disabled` is validated by OverlayFramePolicy, projected to the native close button disabled state, and enforced by the shared close Press/Capability owner.
-- ColorPicker clear does not destroy or detach the saturation PointerSession; later drag starts from a fresh snapshot. Disabled/readOnly clear remains blocked by shared ClearAction/Capability.
-- Dropdown long-menu overflow remains owned by the inner ItemCollection scroll viewport with bounded max-height plus Trigger flip/autoUpdate; no inaccessible top-items overflow path.
-- List numeric key `0` is canonicalized by ItemAccessors to `"0"`; stable identity does not fall through a falsy-key path.
-- QX Descriptions is presentation-only rather than a stateful keyed JS component, so Ant's React key=0 state-reset defect has no equivalent runtime path.
-- Button loading layout bug is not mapped because QX has no independent JS Button loading component/contract; buttons are native/CSS primitives unless owned by another component.
-- TreeSelect maxCount visual disabling is no longer an open parity/design gap; PR #152 closes it through a check-only projection without altering hierarchical checked/half-checked semantics.
+Deployment evidence:
+- Runtime-complete main `6fe10afaa6f62b8438de71fd57a1cdf21467fca0` passed push QXFRAME CI #785.
+- CI #785 `deploy-pages` completed successfully, so GitHub Pages serves the runtime fixes from this batch.
+- PR #161 is test-only; it does not alter runtime/CSS/demo behavior.
 
-Audit boundary:
-- Continue older Ant functional fixes only when QX has a corresponding maintained public capability.
-- Do not add Ant-only React APIs or focusable internal buttons merely for superficial parity; preserve QX virtual-focus and Controller ownership rules.
-- Prefer value/commit/selection/focus/async correctness over cosmetic parity.
-- For capacity/disabled UX, distinguish structural item disablement from transient operation capability; never reuse `isItemDisabled` when only one action (such as checking) should be blocked.
+User-reported batch disposition:
+- TreeSelect Max count disabled projection: closed.
+- Slider pointer outline: closed.
+- InputOTP keyboard bypass of sequential-focus/fill limit: closed.
+- Dropdown / PickerList clipped keyboard outline: closed via inward focus-ring offset.
+- DatePicker Tab order and dual-panel same-row horizontal seam: closed.
+- ColorPicker immediate-mode Enter commit/close: closed.
+- Menu collapsed submenu/Tooltip behavior and Horizontal+Overflow empty panel: closed.
+- Tabs focus after keyboard deletion: closed.
+- List Search+Multiple+Groups second Enter after hideSelected active-row reconciliation: closed.
+- TimePanel internal column Tab stops: closed.
+- Modal / Drawer invisible Scroll Tab stop: closed.
+- Collapse Left/Right disclosure: closed.
+- Carousel focus model and directional navigation from active-slide content: closed.
+- Image preview mask fade and repeated ImageGroup keyboard navigation: closed.
+- JSON first-focus active-key mismatch: closed.
 
 Next exact step:
-1. Query current `main`, open PRs and latest CI before new code work.
-2. Continue Ant 6.4.x and older high-risk functional comparison, prioritizing Picker/Select/Tree/Table/Upload/Menu/Slider/overlay state owners.
-3. Open a runtime PR only for a reproducible QX defect; false positives must be closed rather than merged.
-4. Keep browser assertions strict and update this checkpoint after the next verified runtime fix batch.
+1. Query current `main`, open PRs and latest Actions before new code work.
+2. User should re-test the deployed `docs/theme-playground.html` interaction paths above.
+3. Reopen any item only with a new concrete reproduction against the current Pages build; do not repeat this batch from older screenshots or pre-merge state.
+4. After manual verification, resume the remaining Ant functional audit only for maintained QX capabilities not already closed above.
 
 ## PREVIOUS VERIFIED HANDOFF
 
