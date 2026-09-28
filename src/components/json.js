@@ -400,9 +400,8 @@ function setupJSON(instance) {
     keyboardZone='toolbar'; return toolbarDomain.activate(toolbarKey(buttons[index]),{source:'keyboard',reason:'json-toolbar-nav',ensureVisible:true});
   }
   function activateTreeCursor(reason,event) {
-    if(!tree)return false; keyboardZone='tree'; var state=tree.getState(); var key=state.activeKey || (state.visibleKeys&&state.visibleKeys[0]) || null;
-    var domain=tree.getVirtualFocusDomain&&tree.getVirtualFocusDomain(); if(key&&domain)domain.activate(key,{source:'keyboard',reason:reason||'json-tree-region',originalEvent:event||null,ensureVisible:true});
-    return !!key;
+    if(!tree)return false; var state=tree.getState(); var key=state.activeKey || (state.visibleKeys&&state.visibleKeys[0]) || null;
+    return key ? activateTreeKey(key,'keyboard',reason||'json-tree-region',event||null,true) : false;
   }
   function cycleKeyboardRegion(backward,event) {
     if(opts.toolbar===false||!toolbarButtons().length){return activateTreeCursor('json-region-tree',event);}
