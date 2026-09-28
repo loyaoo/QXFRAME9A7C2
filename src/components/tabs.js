@@ -749,11 +749,14 @@ function setupTabs(instance) {
       var returnSource = overflowReturnFocusSource;
       overflowReturnFocusSource = '';
       overflowReturnFocusAfterLayout = false;
-      Scheduler.mutate(function () {
-        if (destroyed) return;
+      // responsiveVisibleCount() temporarily removes More while measuring. If More
+      // owned focus, that DOM removal sends focus to body. Reconcile immediately
+      // after the final visibility decision/reinsert instead of waiting another
+      // animation frame, otherwise popup leave + measurement can win the race.
+      if (!destroyed) {
         if (moreButton.parentNode === nav) focusOverflowTrigger(returnSource, 'tabs-overflow-layout-return');
         else focusTab(activeKey, { source:returnSource, reason:'tabs-overflow-layout-return' });
-      });
+      }
     }
   }
   overflowLayout = ResponsiveOverflow.create({ element:[nav, scroll.getViewportElement()], enabled:true, onMeasure:refreshOverflow });
