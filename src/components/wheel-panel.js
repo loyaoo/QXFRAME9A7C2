@@ -579,7 +579,7 @@ function create(options) {
     }
     projectSelected(columnIndex);
     if (columnIndex + 1 < columns.length) {
-      for (var i = columnIndex + 1; i < columns.length; i += 1) { value[i] = null; selectedItems[i] = null; }
+      // Keep downstream selections when they remain available after dependent columns resolve.
       rebuildFrom(columnIndex + 1);
     }
     if (!(meta && meta.silent) && !equalArray(previous, value)) emitChange(previous, columnIndex, meta);
