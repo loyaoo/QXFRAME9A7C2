@@ -83,6 +83,7 @@ function create(options) {
     channelSpecs[selectionChannel] = {
       multiple: opts.multiple === true,
       maxCount: opts.maxCount,
+      allowEmptyKey: opts.allowEmptyValue === true,
       value: opts.value !== undefined ? opts.value : opts.defaultValue
     };
     selectionController = SelectionController.create({ channels:channelSpecs, revisionSources:{ [selectionChannel]:collection } });
