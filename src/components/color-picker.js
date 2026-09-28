@@ -373,8 +373,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var nativeValueControl = tag === 'input' && (type === 'range' || type === 'text' || type === 'number');
        var saturationControl = !!(target && target.classList && target.classList.contains('qxframe9a7c2-color-panel-saturation'));
        if (!nativeValueControl && !saturationControl) return;
-       if (instance.confirmFromKeyboard(event)) {
-         if (event.preventDefault) event.preventDefault();
+       if (completeImmediateColorFromKeyboard(event)) {
          if (event.stopPropagation) event.stopPropagation();
        }
      }));
@@ -658,8 +657,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      gradientListenerCleanups.push(DOM.listen(gradientAngleInput, 'keydown', function (event) {
        if (!event || event.key !== 'Enter' || event.isComposing === true || opts.needConfirm === true) return;
        setGradientAngle(Number(gradientAngleInput.value), { source:'keyboard', reason:'gradient-angle-enter', originalEvent:event, complete:true });
-       if (instance.confirmFromKeyboard(event)) {
-         if (event.preventDefault) event.preventDefault();
+       if (completeImmediateColorFromKeyboard(event)) {
          if (event.stopPropagation) event.stopPropagation();
        }
      }));
