@@ -51,6 +51,7 @@ assert.match(modalSource,/acceptedCloseConfig\.onClose/,'Modal must honor closab
 assert.match(carouselSource,/opts\.direction === 'vertical' \? \(direction === 'prev' \? 'up' : 'down'\)/,'Carousel default arrow glyphs must follow vertical orientation.');
 assert.match(carouselSource,/axis: null/,'Carousel PointerSession must retain both deltas so runtime direction updates cannot leave a stale drag axis.');
 assert.match(inputOtpSource,/type: this\.options\.mask === true \? 'password' : 'text', mask: typeof this\.options\.mask === 'string'/,'InputOTP string masks must use the canonical Control segment mask instead of native password masking.');
+assert.match(css,/\.qxframe9a7c2-input-segment-field\.has-mask\.has-mask-value>\.qxframe9a7c2-input-segment-input::selection\{[^}]*color:transparent;[^}]*-webkit-text-fill-color:transparent;/,'InputOTP string-mask selection must keep the real segment text visually masked.');
 assert.doesNotMatch(dateSource,/preserveRangeSlots/,'DatePicker must not keep a second transient unsorted range-slot normalization path.');
 assert.match(calendarSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'Calendar must project canonical is-hover state.');
 assert.match(periodPanelSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'PeriodPanel must project the same canonical is-hover state.');
