@@ -2089,6 +2089,12 @@ function setupTable(instance) {
     var forceContent = contentRenderRequired(reason);
     if (!entries.length) {
       bodyRowRecords.clear();
+      var busyEmpty = opts.loading === true || remoteProcessing === true;
+      if (busyEmpty) {
+        Array.prototype.slice.call(tbody.children).forEach(function (node) { removeRenderedNode(node); });
+        requestFixedGeometry('table-loading-empty');
+        return;
+      }
       var emptyRow = DOM.findPrivate(tbody, 'tableEmpty', 'true');
       if (!emptyRow) {
         emptyRow = doc.createElement('tr');
