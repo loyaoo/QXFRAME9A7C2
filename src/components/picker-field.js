@@ -401,6 +401,14 @@ function create(options) {
     return true;
   }
 
+  function clearFromKeyboard(detail) {
+    var event = detail && detail.originalEvent;
+    if (!event || opts.editable === true || opts.clearable !== true || clearVisible !== true) return false;
+    if (interactionPolicy().clearable !== true || typeof opts.onClearRequest !== 'function') return false;
+    opts.onClearRequest(event, api);
+    return true;
+  }
+
   focusController = FocusController.create({
     root: dualMode ? root : focusElement(),
     focusRoot: focusElement,
@@ -411,7 +419,7 @@ function create(options) {
       var event = detail && detail.originalEvent;
       if (!event) return false;
       if (navigationOwnsEvent(event)) {
-        if (key === 'Backspace' || key === 'Delete') return false;
+        if (key === 'Backspace' || key === 'Delete') return opts.editable !== true && opts.clearable === true && clearVisible === true && interactionPolicy().clearable === true;
         if ((event.ctrlKey || event.metaKey || event.altKey) && (key.indexOf('Arrow') === 0 || key === 'Home' || key === 'End')) return false;
         return true;
       }
@@ -424,8 +432,8 @@ function create(options) {
       Escape: function (detail) { if (triggerSession.getState().open && opts.closeOnEscape !== false) return close('escape', detail.originalEvent); return typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false; },
       ArrowLeft: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
       ArrowRight: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
-      Backspace: function (detail) { return false; },
-      Delete: function (detail) { return false; },
+      Backspace: function (detail) { return clearFromKeyboard(detail); },
+      Delete: function (detail) { return clearFromKeyboard(detail); },
       Enter: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
       Home: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
       End: function (detail) { return navigationOwnsEvent(detail.originalEvent) ? routeOwnedNavigation(detail) : (typeof opts.onKeydown === 'function' ? opts.onKeydown(detail.originalEvent, api) === true : false); },
