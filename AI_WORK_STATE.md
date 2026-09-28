@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-001 — Ant recent regressions → QX state-transition demos
-Status: IMPLEMENTING
-Task progress: 30%
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 70%
 Baseline: `main@c04d9a8c55c1b0cdc7cf80eff98f4b0f4b42ad72`.
 Branch: `audit/ant-edge-state-demos-001`.
 Primary user surface: `docs/theme-playground.html` via canonical component demos.
@@ -48,11 +48,21 @@ Planned new demo scenarios:
 2. Table: remote query Select All → page change with disabled row (disabled row stays unselected and appears in logical exclusions).
 3. Result: feedback message non-empty → empty → numeric 0, verifying stale title removal and zero rendering.
 
+Implemented on branch:
+- Table Loading/Empty projection is mutually exclusive: empty body rows are removed/suppressed while local or remote loading is active; EmptyProjection appears only after busy ends.
+- Result feedback projector always synchronizes the current normalized message into title, including empty string and numeric 0.
+- Table remote query allMatching now reconciles currently loaded intrinsically-disabled rows into SelectionController remote exclusions before projection. Framework-added disabled exclusions are tracked separately from user exclusions and are removed only when that same row later becomes enabled under the same active query.
+- Query/allMatching reset clears framework disabled-exclusion ownership; user explicit exclusions are not overwritten.
+- Canonical Result demo adds non-empty → empty → 0 feedback transition.
+- Canonical Table demos add Loading → Empty transition and remote query Select All → later disabled row → enabled refresh.
+- Chromium smoke covers all three state-transition bugs, including logical `excludedKeys` rather than only checkbox appearance.
+- Feedback presenter source gate forbids truthy-gated Result title projection.
+
 Next exact step:
-1. Integrate the two validated stale-PR fixes on current main.
-2. Implement remote allMatching disabled reconciliation at the SelectionController adapter boundary.
-3. Add the three transition demos and Chromium regressions.
-4. Run exact-head CI, merge if green, then close #165/#167 as superseded.
+1. Open a current-main PR and run exact-head QXFRAME CI.
+2. If browser regression exposes an implementation issue, fix owner logic rather than weakening the test.
+3. After green CI, merge and verify main Pages deployment.
+4. Close stale PRs #165/#167 as superseded by the integrated PR.
 
 ## PREVIOUS VERIFIED HANDOFF
 
