@@ -46,7 +46,7 @@ const td=TreeSelect.create({document,container:host(),items:treeItems,defaultVal
 const tm=TreeSelect.create({document,container:host(),items:treeItems,multiple:true,defaultValue:[],searchable:true});const tmi=tm.getInputElement();tmi.focus();key(tmi,'ArrowDown');tm.getTree().setActiveKey('a',{source:'test'});key(tmi,'Enter');a(tm.getState().value.includes('a'),'tree enter checks');tm.getTree().setActiveKey('b',{source:'test'});key(tmi,' ');a(tm.getState().value.includes('b'),'tree space checks');tm.destroy();
 const te=TreeSelect.create({document,container:host(),items:[{key:'empty',value:'',label:'Empty tree value'},{key:'a',value:'a',label:'Alpha'}],defaultValue:'',searchable:true});
 a(te.getState().value===''&&te.getState().values.length===1,'TreeSelect preserves empty string as a committed value');
-a(te.getRootElement().textContent.includes('Empty tree value'),'TreeSelect echoes empty-string value label');
+a(te.getInputElement().value==='Empty tree value','TreeSelect echoes empty-string value label through its searchable input projection');
 te.clear({source:'test'});
 a(te.getState().value===undefined&&te.getState().values.length===0,'TreeSelect clear stays distinct from empty-string value');
 te.destroy();
