@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-002 — Ant regression pressure demos / dynamic-update audit
-Status: IMPLEMENTING
-Task progress: 25%
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 65%
 Baseline: `main@be4a9e7282a413c6a416674d82849bcb52e6e470`.
 Branch: `audit/ant-edge-state-demos-002`.
 Primary manual surface: `docs/theme-playground.html` canonical component demos.
@@ -56,11 +56,20 @@ Implementation plan:
 - Do not change runtime code unless one of those regressions actually fails or a concrete owner-level flaw is proven.
 - Keep all fixes inside existing Controller/lifecycle ownership; no parallel state stores.
 
+Implemented on branch:
+- Added Upload async beforeRemove × concurrent add demo.
+- Added Transfer hot onSearch replacement + filtered all-disabled select-all demo.
+- Added ColorPicker frozen preset objects/array + disabled clear demo.
+- Added List numeric key/value 0 reorder demo.
+- Added Message and Notification numeric 0 demos and Modal title/content/footer numeric 0 demo.
+- Added strict Chromium checks for every pressure case above. The tests inspect real state/data and DOM truth; they do not weaken existing assertions.
+- No runtime code has been changed yet because code audit did not establish a concrete owner-level defect before execution.
+
 Next exact step:
-1. Add demo scenarios.
-2. Add Chromium regression cases.
-3. Run exact-head CI.
-4. Fix only reproduced runtime failures, then merge/deploy.
+1. Open PR and run exact-head QXFRAME CI.
+2. Treat any failed new browser assertion as reproduction evidence.
+3. Fix only reproduced runtime behavior; if all pass, merge the coverage/demo-only batch.
+4. Verify main CI + Pages deployment.
 
 ## PREVIOUS VERIFIED HANDOFF
 
