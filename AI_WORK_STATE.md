@@ -15,24 +15,50 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-INTERACTION-010`
+- Current Task: `ANT-INTERACTION-011`
 
 ## CURRENT
 
-### ANT-INTERACTION-010 — Select-family empty-string value parity
-Status: IMPLEMENTED — PENDING PR CI
-Task progress: 80%
-Baseline: `main@9008d05ae1c74f1d8a1cf2551d771d519e432c5d`.
-Finding: current Ant Design explicitly supports Select options whose value is the empty string, while QX Select / TreeSelect / Cascader validators allow `value:''` but their shared Selection path historically collapsed `''` into the no-selection sentinel.
-Fix:
-- Selection adds opt-in `allowEmptyKey` semantics; default channels keep the historical empty-key rejection.
-- null/undefined remain absence and never alias the empty-string option value.
-- SelectionController anchors respect the same per-channel policy.
-- OptionList value channels opt in; TreeSelect and Cascader value channels opt in without changing Tree node keys, Table row keys, Transfer keys, or other default Selection consumers.
-- Select / TreeSelect / Cascader normalization now distinguishes `''` from clear; clear remains undefined/empty-array according to single/multiple mode.
-Regression coverage: shared Selection default-vs-opt-in contract plus browser tests for Select, TreeSelect and Cascader value echo/clear behavior.
-Previous finding closed in this continuation: ANT-INTERACTION-009 Pagination page-size current semantics merged via PR #141 at `9008d05ae1c74f1d8a1cf2551d771d519e432c5d`; exact head passed QXFRAME CI #698.
-Next exact step: open the implementation PR, require exact-head full CI success, merge only after green, then continue Ant component-family audit without reopening verified paths.
+### ANT-INTERACTION-011 — Ant 6.6.5 / 6.6.4 residual interaction closeout
+Status: VERIFIED
+Task progress: 100%
+Baseline for this continuation: `main@9008d05ae1c74f1d8a1cf2551d771d519e432c5d`.
+Current verified main after this batch: `1ddcc9148229cabd6b33d0a54bc33521d2c1c41d`.
+
+Merged fixes:
+- PR #142 — Select / TreeSelect / Cascader preserve option `value:''` distinctly from clear. Shared Selection adds opt-in `allowEmptyKey`; default key channels retain empty-key rejection. Sentinel-based array comparison was also replaced with element-wise selection comparison. Exact integrated head passed QXFRAME CI #708.
+- PR #144 — Tabs overflow selection transfers focus away from the closing overflow row before popup unmount. Exact head passed QXFRAME CI #704.
+- PR #146 — Tabs responsive measurement can temporarily detach More; final focus reconciliation now runs immediately after the final More visibility/reinsert decision. Integrated head including #142 passed QXFRAME CI #713.
+- PR #143 — Picker confirm/cancel labels and TimePicker `nowText` preserve explicitly supplied falsy renderable values such as numeric `0`; defaults apply only to `undefined`. Integrated head passed QXFRAME CI #718.
+- PR #145 — Popconfirm preserves numeric `0` for confirm/cancel labels and the corresponding FeedbackController message projection. Title/content already preserved `0`. Integrated head passed QXFRAME CI #722.
+- PR #147 — InputOTP string-mask architecture remains the canonical Control `type=text + segment-mask overlay`; masked segment `::selection` now keeps the real foreground/WebKit text fill transparent so system selection painting cannot expose the underlying character. Final-audit and browser regressions cover the rule. Exact integrated head passed QXFRAME CI #730.
+
+Rejected / closed finding:
+- PR #148 — suspected Tree numeric-zero lazy-load bug was a false positive and was closed unmerged. `ItemAccessors.key()` already canonicalizes non-null keys with `String(value)`, so numeric `0` enters Tree internals as `"0"`; the proposed source change had no behavioral benefit.
+
+Residual Ant comparison disposition (do not reopen without new reproduction evidence):
+- Transfer: disabled-only filtered select-all, empty-filter recovery, footer side/direction, stale callback/range selection paths are either already correct or not part of the QX public interaction surface.
+- Select: single/multiple height shares the canonical Control height owner; no separate font/line-height height path.
+- Upload: Dragger has no competing public height owner that can overwrite authored style height; picture-card layout already uses multi-row grid.
+- Menu: TriggerInteraction already protects reference→popup hover transfer; inline submenu motion cleans temporary height state and menu icons have no lingering transform/width transition owner.
+- Tag/Tags: close actions prevent default and stop propagation, including href-backed tags.
+- Carousel: item updates reconcile the active slide by stable key rather than resetting to index zero.
+- Notification/Message: close/action buttons are `type=button`; notification reserves close-button inline space even without a title.
+- InputNumber: disabled actions cannot enter hover/focus styling.
+- Picker: popup close/blur/outside/Escape remains rollback/end-session; commit is a separate explicit transaction path.
+- Table: responsive-hidden columns remain in TableModel; filter state is independent of CSS visibility. Controlled/uncontrolled filter-open callbacks are mutually exclusive. There is no column-level custom `onKeyDown` API corresponding to Ant's sorter fix.
+- Tree: explicit `expandedKeys: undefined` clears to `[]`; numeric-zero-key concern was disproven after tracing ItemAccessors.
+- Image preview: OverlayController owns focus trap and restore through one close/presence lifecycle.
+- Upload async removal: pending `beforeRemove` is uid-bound and guarded by lifecycle mutation generation; adding another file does not advance that generation, so a late allow removes the original uid rather than a newly added file.
+- Table local select-all: `selectVisible()` operates only on the current projected page and filters disabled rows before selection; remote query-wide selection remains semantic `allMatching` rather than materialized unloaded keys.
+- DatePicker min/max navigation: boundary view changes clamp panel view state and return without close/commit; popup closing remains owned by selection/preset/explicit close paths.
+- Modal custom `buttons[].onClick` is the QX button action owner; unlike Ant `cancelButtonProps`, QX has no contract requiring a second global `onCancel/onConfirm` invocation, so no double-callback behavior was introduced.
+- Ant release baseline: official stable changelog still reports 6.6.5 (2026-09-20) as latest as of 2026-09-28; no 6.6.6+ stable release was available for this pass.
+
+Next exact step:
+1. Query current `main`, open PRs and latest CI before new code work.
+2. Continue only with a new reproducible QX behavior difference or a later independent audit; do not repeat the closed Ant 6.6.5 / 6.6.4 paths above.
+3. Keep strict browser regressions unchanged; component races must be fixed rather than hidden with longer sleeps or weakened assertions.
 
 ## PREVIOUS VERIFIED HANDOFF
 
