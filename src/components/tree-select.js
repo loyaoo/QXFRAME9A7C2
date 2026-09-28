@@ -466,6 +466,10 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             emitter.emit('expand', payload);
           }
         });
+        // Tree.create() renders before the outer tree variable receives the returned
+        // instance. Re-run the checkability projection once so an initially full
+        // maxCount state is visible immediately, not only after the first mutation.
+        if (maxCountApplies()) tree.applyOptions({ checkable:treeCheckable });
     
         var triggerSettings = createPopupFieldTriggerSettings(opts, {
           reference: root,
