@@ -27,11 +27,12 @@ const files=new Map();
 function normalize(file){return path.relative(root,file).split(path.sep).join('/');}
 function resolve(from,spec){if(!spec.startsWith('.'))return null;let file=path.resolve(path.dirname(from),spec);if(!path.extname(file))file+='.js';return file;}
 function collect(file){file=path.resolve(file);if(files.has(file))return;let source=fs.readFileSync(file,'utf8');const specs=[];for(const re of [depRe,dynamicRe]){re.lastIndex=0;let m;while((m=re.exec(source)))if(m[1].startsWith('.'))specs.push(m[1]);}files.set(file,source);for(const spec of specs)collect(resolve(file,spec));}
-for(const f of ['src/components/tree-select.js','src/components/cascader.js']) collect(path.join(root,f));
+for(const f of ['src/components/tree.js','src/components/tree-select.js','src/components/cascader.js']) collect(path.join(root,f));
 const imports={};
 for(const [file,raw] of files){let source=raw;for(const re of [depRe,dynamicRe])source=source.replace(re,(full,spec)=>{const resolved=resolve(file,spec);return resolved?full.replace(spec,'qx:/'+normalize(resolved)):full;});source+='\n//# sourceURL=qx:/'+normalize(file);imports['qx:/'+normalize(file)]='data:text/javascript;base64,'+Buffer.from(source).toString('base64');}
 const importMap=JSON.stringify({imports}).replace(/</g,'\\u003c');
-const test=`import {TreeSelect} from 'qx:/src/components/tree-select.js';
+const test=`import {Tree} from 'qx:/src/components/tree.js';
+import {TreeSelect} from 'qx:/src/components/tree-select.js';
 import {Cascader} from 'qx:/src/components/cascader.js';
 const out=document.getElementById('result');
 function a(v,m){if(!v)throw new Error(m)}
@@ -40,6 +41,7 @@ function host(){const h=document.createElement('div');document.body.appendChild(
 const treeItems=[{key:'a',value:'a',label:'Alpha'},{key:'b',value:'b',label:'Beta'},{key:'c',value:'c',label:'Gamma'}];
 const cascadeItems=[{key:'a',value:'a',label:'A',items:[{key:'a1',value:'a1',label:'A1'}]},{key:'b',value:'b',label:'B'}];
 try{
+const zeroTree=Tree.create({document,container:host(),items:[{key:0,value:'zero',label:'Zero'}],loadChildren:function(){return [{key:1,value:'one',label:'One',leaf:true}];}});zeroTree.expand('0',{source:'test',reason:'zero-key-lazy'});await new Promise(function(resolve){setTimeout(resolve,20);});a(!!zeroTree.getModel().getRecord('1')&&zeroTree.getState().expandedKeys.indexOf('0')>=0,'Tree numeric zero key must retain asynchronously loaded children');zeroTree.destroy();
 const tr=TreeSelect.create({document,container:host(),items:treeItems,defaultValue:'a',searchable:true,readOnly:true});const tri=tr.getInputElement();a(!!tr.getInteractionController()&&!!tr.getCapabilityController(),'tree controllers');a(tr.getCapabilityController().can('navigate')&&!tr.getCapabilityController().can('select'),'tree readonly capabilities');tri.focus();let e=key(tri,'ArrowDown');a(e.defaultPrevented&&tr.getState().open===true,'tree readonly opens');tr.getTree().setActiveKey('b',{source:'test'});const trv=tr.getState().value;e=key(tri,'Enter');a(e.defaultPrevented&&tr.getState().value===trv,'tree readonly selection blocked');tr.destroy();
 const tl=TreeSelect.create({document,container:host(),items:treeItems,defaultValue:'a',searchable:true,busy:true});const tli=tl.getInputElement();tli.focus();key(tli,'ArrowDown');tl.getTree().setActiveKey('b',{source:'test'});const tlv=tl.getState().value;e=key(tli,'Enter');a(e.defaultPrevented&&tl.getState().value===tlv,'tree busy selection blocked');tl.destroy();
 const td=TreeSelect.create({document,container:host(),items:treeItems,defaultValue:'a',disabled:true});const tdi=td.getInputElement();key(tdi,'ArrowDown');a(td.getState().open===false,'tree disabled cannot open');td.destroy();
