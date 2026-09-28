@@ -20,6 +20,12 @@ function walk(dir, test=()=>true){
 }
 const srcFiles=walk(path.join(root,'src'),f=>/\.(?:js|mjs)$/.test(f));
 const source=new Map(srcFiles.map(f=>[posix(path.relative(root,f)),fs.readFileSync(f,'utf8')]));
+const pickerFamilyFiles=['src/components/date-picker.js','src/components/time-picker.js','src/components/color-picker.js','src/components/wheel-picker.js'];
+const pickerCommitFacadeViolations=[];
+for(const file of pickerFamilyFiles){
+  const text=source.get(file)||'';
+  for(const hit of occurrences(text,/\bfunction\s+(?:commit|cancel)\s*\(|\bpickerSession\.(?:commit|cancel)\s*\(/g)) pickerCommitFacadeViolations.push({file,match:hit.match,index:hit.index});
+}
 const secretScanFiles=[
   ...srcFiles,
   ...walk(path.join(root,'tools'),f=>/\.(?:js|mjs|json|ya?ml|md)$/.test(f)),
@@ -389,6 +395,7 @@ const report={
   files:srcFiles.length,
   security:{htmlCodeSinks:security,dangerousProtocol,urlSinks,dynamicAttributeSinks,cssTextSinks,projectionSecurity,safeAttributeSecurity,prototypeSecurity,contractPrototypeSecurity,secretFilePaths,secretFindings},
   duplicateCapabilityCandidates:rawPrimitives,
+  pickerCommitFacadeViolations,
   prototypeMergeCandidates:classifiedPrototypeMergeCandidates,
   unexpectedPrototypeMergeCandidates:unexpectedPrototypeMergeCandidates,
   asyncPrimitiveCandidates,
@@ -413,6 +420,6 @@ const report={
   allowedDuplicateRegions:allowedDuplicateRegions,
   unexpectedDuplicateRegions:unexpectedDuplicateRegions
 };
-report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&contractPrototypeSecurity.failures.length===0&&contractPrototypeSecurity.utilitySafe===true&&contractPrototypeSecurity.rejected===contractPrototypeSecurity.components*3&&urlSinks.every(x=>x.urlPolicy)&&unexpectedPrototypeMergeCandidates.length===0&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&unexpectedDuplicateRegions.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
+report.ok=secretFilePaths.length===0&&secretFindings.length===0&&security.every(x=>x.approved)&&dangerousProtocol.length===0&&dynamicAttributeSinks.every(x=>x.approved)&&cssTextSinks.every(x=>x.approved)&&Object.values(projectionSecurity).every(Boolean)&&Object.values(safeAttributeSecurity).every(Boolean)&&Object.values(prototypeSecurity).every(Boolean)&&contractPrototypeSecurity.failures.length===0&&contractPrototypeSecurity.utilitySafe===true&&contractPrototypeSecurity.rejected===contractPrototypeSecurity.components*3&&urlSinks.every(x=>x.urlPolicy)&&unexpectedPrototypeMergeCandidates.length===0&&rawPrimitives.length===0&&asyncPrimitiveCandidates.length===0&&staleComments.length===0&&staleMetadata.length===0&&unexpectedDuplicateRegions.length===0&&pickerCommitFacadeViolations.length===0&&apiParity&&moduleParity&&missingBehavior.length===0;
 console.log(JSON.stringify(report,null,2));
 if(!report.ok) process.exitCode=2;
