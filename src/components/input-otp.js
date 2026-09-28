@@ -199,6 +199,10 @@ export class InputOTP extends FieldComponent {
                 }
                 const next=action==='MOVE_LEFT'?index-1:index+1;
                 if(next<0||next>=list.length)return 'pass';
+                if(action==='MOVE_RIGHT'){
+                    const canonical=this.#canonicalFocusIndex(control.getState().segmentValues);
+                    if(next>canonical)return 'blocked';
+                }
                 focusOtpInput(list[next],'keyboard','otp-keyboard-move');return 'handled';
             }
         });
