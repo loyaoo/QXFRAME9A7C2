@@ -499,7 +499,7 @@ function setupMenu(instance) {
       var collapsedTooltipText = titleText(item);
       if (collapsedTooltipText) {
         tooltipByKey.set(key, Tooltip.create({
-          reference:button, content:collapsedTooltipText, trigger:'hover focus',
+          reference:button, content:collapsedTooltipText, trigger:'hover',
           placement:'right', portalContainer:portalContainer, disabled:isDisabledItem(item)
         }));
       }
@@ -704,6 +704,15 @@ function setupMenu(instance) {
       overflowLevel.appendChild(node);
       setEntryLevel(node, overflowLevel, true);
     });
+    if (!overflowedKeys.size || !overflowLevel.firstElementChild) {
+      restoreOverflowEntries();
+      overflowLi.hidden = true;
+      overflowLi.style.visibility = '';
+      if (overflowTrigger) overflowTrigger.closeTree('overflow-empty');
+      syncClasses();
+      api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: [], visibleCount: rootEntryNodes.length, menu: api });
+      return true;
+    }
     overflowLi.hidden = false;
     overflowLi.style.visibility = '';
     syncClasses();
