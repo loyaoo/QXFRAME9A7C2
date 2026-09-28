@@ -410,6 +410,11 @@ function create(options) {
     if (!cancelAllMoves('leave-collapse', runGeneration) || destroyed || syncGeneration !== runGeneration || record.desired) return;
     if (record.element.parentNode === container) container.removeChild(record.element);
     restoreLeaveLayout(record);
+    // A child MotionCore is owned by this TransitionGroup. Once leave has physically
+    // removed the child, destroy that core before dropping the record reference.
+    // Otherwise an emptied group cannot reach it during group.destroy(), leaking one
+    // MotionCore for every normally completed leave.
+    if (record.core) record.core.destroy();
     delete records[record.id];
     physicalOrder = physicalOrder.filter(function (id) { return id !== record.id; });
     var after = measure();
