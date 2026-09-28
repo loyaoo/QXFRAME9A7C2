@@ -40,6 +40,9 @@ assert.doesNotMatch(carousel,/addEventListener\(['"]transitionend|DOM\.listen\([
 assert.doesNotMatch(carousel,/current\s*=\s*resolved/,'Carousel runtime current writes must enter ValueController.');
 
 assert.match(scroll,/FocusController\.create\s*\(/);
+assert.match(scroll,/if \(input\.focusable === undefined\) input\.focusable = true;/,'Scroll.attachViewport must inherit the public default focusable:true behavior.');
+assert.match(scroll,/if \(!sequentialFocusEnabled\) viewport\.tabIndex = -1;/,'Scroll focusable:false must explicitly remove the native overflow viewport from Tab order.');
+assert.match(scroll,/root\.tabIndex = sequentialFocusEnabled \? 0 : -1;/,'Scroll focusable must remain the single owner of root sequential-focus participation.');
 assert.match(scroll,/InteractionController\.create\s*\(/);
 assert.match(scroll,/CapabilityController\.create\s*\(/);
 assert.match(scroll,/MotionController\.create\(\{\s*core:motionCoreAdapter/);
