@@ -14567,6 +14567,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 .qxframe9a7c2-menu-level{box-sizing:border-box;display:flex;flex-direction:column;gap:2px;margin:0;padding:var(--qxframe9a7c2-space-1);list-style:none}
 .qxframe9a7c2-menu.is-horizontal>.qxframe9a7c2-menu-root-level{flex-direction:row;align-items:center;min-width:0;padding:0;border-bottom:1px solid var(--_qxframe9a7c2-semantic-border);overflow:hidden;white-space:nowrap}
 .qxframe9a7c2-menu-item-wrap{box-sizing:border-box;display:flex;min-width:0;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none}
+.qxframe9a7c2-menu.is-horizontal>.qxframe9a7c2-menu-root-level>.qxframe9a7c2-menu-item-wrap{flex:0 0 auto}
 /* Menu item state resolver: interaction/selection/danger/capability only write private visual channels. */
 .qxframe9a7c2-menu-item{
   --_qxframe9a7c2-menu-item-bg:var(--_qxframe9a7c2-item-bg,transparent);
