@@ -34,6 +34,10 @@ assert.doesNotMatch(source,/root\.classList\.toggle\('is-loading',\s*loading\)/,
 assert.doesNotMatch(source,/root\.classList\.toggle\('is-error',\s*error\)/,'Image must not keep a parallel direct error class projector.');
 assert.match(source,/OverlayController\.create\s*\(/,'Image preview resource must remain OverlayController-owned.');
 assert.match(source,/Transition\.create\s*\(/,'Image preview presence must remain Transition→MotionController-owned.');
+assert.match(source,/classList\.toggle\('is-pannable',\s*state\.scale\s*>\s*1\.001\s*&&\s*cfg\('draggable',\s*opts\.draggable\)\s*!==\s*false\)/,'Image grab cursor capability must require both zoom and draggable permission.');
+const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
+assert.match(css,/\.qxframe9a7c2-image-preview-image\.is-pannable\{cursor:grab\}/,'Image preview grab cursor must follow pannable capability.');
+assert.doesNotMatch(css,/\.qxframe9a7c2-image-preview-image\.is-zoomed\{cursor:grab\}/,'Image zoom state alone must not advertise draggable cursor.');
 assert.doesNotMatch(source,/\bFocusManager\b|\bFocusScope\b/,'Image must not create parallel focus resources.');
 assert.match(overlayRuntime,/FocusController\.createManager\s*\(/,'Image overlay focus manager must enter FocusController through OverlayRuntime.');
 assert.match(overlayRuntime,/FocusController\.createScope\s*\(/,'Image overlay focus scope must enter FocusController through OverlayRuntime.');
