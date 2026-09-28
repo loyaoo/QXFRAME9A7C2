@@ -117,7 +117,7 @@ function createModalController(instance, options) {
   wrap.appendChild(dialog);
   root.appendChild(mask);
   root.appendChild(wrap);
-  var scroll = Scroll.create({ container: body, axis: 'y', wheelPropagation: true, scrollbarVisibility: opts.scrollbarVisibility || 'auto', document: doc });
+  var scroll = Scroll.create({ container: body, axis: 'y', wheelPropagation: true, scrollbarVisibility: opts.scrollbarVisibility || 'auto', keyboard:false, focusable:false, document: doc });
   var contentHost = scroll.getContentElement();
   var destroyed = false;
   var opened = false;
