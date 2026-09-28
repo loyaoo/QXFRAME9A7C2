@@ -651,6 +651,7 @@ function setupMenu(instance) {
       onOpenChange: function () { syncClasses(); }
     });
     overflowLi.hidden = true;
+    overflowButton.hidden = true;
   }
   function entryButton(node) { return node && node.querySelector ? node.querySelector(':scope > .qxframe9a7c2-menu-item') : null; }
   function setEntryLevel(node, level, inOverflow) {
@@ -686,6 +687,7 @@ function setupMenu(instance) {
     if (destroyed || opts.mode !== 'horizontal' || !overflowLi || !overflowLevel) return false;
     restoreOverflowEntries();
     overflowLi.hidden = false;
+    overflowButton.hidden = false;
     overflowLi.style.visibility = 'hidden';
     var available = elementWidth(rootLevel) || elementWidth(root);
     var widths = rootEntryNodes.map(elementWidth);
@@ -693,6 +695,7 @@ function setupMenu(instance) {
     var gap = horizontalGap();
     if (!(available > 0) || ResponsiveOverflow.requiredSize(widths, widths.length, gap, []) <= available) {
       overflowLi.hidden = true;
+      overflowButton.hidden = true;
       overflowLi.style.visibility = '';
       if (overflowTrigger) overflowTrigger.closeTree('overflow-clear');
       syncClasses();
@@ -707,6 +710,7 @@ function setupMenu(instance) {
     if (!overflowedKeys.size || !overflowLevel.firstElementChild) {
       restoreOverflowEntries();
       overflowLi.hidden = true;
+      overflowButton.hidden = true;
       overflowLi.style.visibility = '';
       if (overflowTrigger) overflowTrigger.closeTree('overflow-empty');
       syncClasses();
@@ -714,6 +718,7 @@ function setupMenu(instance) {
       return true;
     }
     overflowLi.hidden = false;
+    overflowButton.hidden = false;
     overflowLi.style.visibility = '';
     syncClasses();
     api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: Array.from(overflowedKeys), visibleCount: visibleCount, menu: api });
