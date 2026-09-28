@@ -14643,6 +14643,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 
 /* Horizontal responsive overflow. Hidden root entries are moved into this real popup list, not cloned. */
 .qxframe9a7c2-menu-overflow-wrap{flex:0 0 auto}
+.qxframe9a7c2-menu-overflow-wrap[hidden],.qxframe9a7c2-menu-overflow[hidden]{display:none}
 .qxframe9a7c2-menu-overflow{min-width:var(--_qxframe9a7c2-menu-item-height);justify-content:center;padding-inline:var(--qxframe9a7c2-space-3);font-weight:700;letter-spacing:.08em}
 .qxframe9a7c2-menu-overflow-panel{min-width:12rem}
 .qxframe9a7c2-menu-overflow-level{padding:0}
@@ -16384,13 +16385,12 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 }
 .qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item{border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
 .qxframe9a7c2-collapse.is-borderless .qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item,.qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item{border-top-color:transparent}
-.qxframe9a7c2-collapse-header{display:flex;align-items:center;gap:var(--qxframe9a7c2-space-2);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);background:var(--_qxframe9a7c2-collapse-header-bg)}
+.qxframe9a7c2-collapse-header{display:flex;align-items:center;gap:var(--qxframe9a7c2-space-2);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);outline:0;background:var(--_qxframe9a7c2-collapse-header-bg)}
 .qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-item{--_qxframe9a7c2-collapse-header-bg:transparent}
 .qxframe9a7c2-collapse-main{display:flex;min-width:0;min-height:inherit;flex:1 1 auto;align-items:center;padding:0;border:0;outline:0;background:transparent;color:var(--_qxframe9a7c2-collapse-main-text);box-shadow:var(--_qxframe9a7c2-collapse-main-ring);font:inherit;text-align:start;cursor:var(--_qxframe9a7c2-collapse-main-cursor)}
 .qxframe9a7c2-collapse-indicator{display:inline-flex;width:max(20px,calc(var(--_qxframe9a7c2-control-height) - 4px));height:max(20px,calc(var(--_qxframe9a7c2-control-height) - 4px));flex:0 0 max(20px,calc(var(--_qxframe9a7c2-control-height) - 4px));align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--_qxframe9a7c2-collapse-action-radius);outline:0;background:var(--_qxframe9a7c2-collapse-indicator-bg);color:var(--_qxframe9a7c2-collapse-indicator-text);box-shadow:var(--_qxframe9a7c2-collapse-indicator-ring);font:inherit;cursor:var(--_qxframe9a7c2-collapse-indicator-cursor)}
 .qxframe9a7c2-collapse-indicator:hover:not(:disabled){--_qxframe9a7c2-collapse-indicator-bg:var(--_qxframe9a7c2-semantic-surface-hover);--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-accent)}
-.qxframe9a7c2-collapse-indicator:focus-visible{--_qxframe9a7c2-collapse-indicator-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
-.qxframe9a7c2-collapse-main:focus-visible{--_qxframe9a7c2-collapse-main-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
+.qxframe9a7c2-collapse-header:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 /* Disclosure state is visual-only here; Collapse JS remains the sole open/close owner. */
 .qxframe9a7c2-collapse-item.is-open{--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-accent)}
 .qxframe9a7c2-collapse-title{min-width:0;overflow:hidden;text-overflow:ellipsis}

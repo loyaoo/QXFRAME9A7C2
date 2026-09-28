@@ -372,7 +372,12 @@ function setupColorPickerRuntime(instance, fieldInit) {
        var target = event.target, tag = String(target && target.tagName || '').toLowerCase(), type = tag === 'input' ? String(target.type || 'text').toLowerCase() : '';
        var nativeValueControl = tag === 'input' && (type === 'range' || type === 'text' || type === 'number');
        var saturationControl = !!(target && target.classList && target.classList.contains('qxframe9a7c2-color-panel-saturation'));
-       if (!nativeValueControl && !saturationControl) return;
+       var presetControl = target && target.closest ? target.closest('.qxframe9a7c2-color-panel-preset') : null;
+       if (!nativeValueControl && !saturationControl && !presetControl) return;
+       if (presetControl) {
+         var presetValue = DOM.getPrivate(presetControl, 'colorPreset');
+         if (presetValue !== undefined && presetValue !== null) panel.setValue(presetValue, { source:'keyboard', reason:'preset-enter', originalEvent:event, complete:true });
+       }
        if (completeImmediateColorFromKeyboard(event)) {
          if (event.stopPropagation) event.stopPropagation();
        }

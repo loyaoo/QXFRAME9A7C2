@@ -191,6 +191,12 @@ export class Collapse extends Component {
                         return record.toggle(item.key, { source:'keyboard', reason:'collapse-right', originalEvent:detail.originalEvent || null }) !== false;
                     }
                 },
+                onActivate: detail => {
+                    const key = record.active.activeKey, item = itemByKey(key);
+                    if (!item || !record.toggle) return false;
+                    const event = detail.originalEvent || null;
+                    return record.toggle(item.key, { source:'keyboard', reason:event && event.key === ' ' ? 'collapse-space' : 'collapse-enter', originalEvent:event }) !== false;
+                },
                 onNavigate: () => focusActive()
             }
         });
@@ -265,8 +271,9 @@ export class Collapse extends Component {
                     itemRecord.panel.style.removeProperty('--qxframe9a7c2-collapse-motion-height');
                 }
             });
-            itemRecord.cleanups.push(DOM.listen(main, 'focus', () => { record.active.set(itemRecord.item.key, { silent: true, reason: 'focus', source: 'dom' }); syncRoving(); }));
-            itemRecord.cleanups.push(DOM.listen(indicator, 'focus', () => { record.active.set(itemRecord.item.key, { silent: true, reason: 'focus', source: 'dom' }); syncRoving(); }));
+            itemRecord.cleanups.push(DOM.listen(header, 'focus', () => { record.active.set(itemRecord.item.key, { silent: true, reason: 'focus', source: 'dom' }); syncRoving(); }));
+            itemRecord.cleanups.push(DOM.listen(main, 'focus', () => { if (record.headers[itemRecord.item.key] === header) DOM.focusElement(header); }));
+            itemRecord.cleanups.push(DOM.listen(indicator, 'focus', () => { if (record.headers[itemRecord.item.key] === header) DOM.focusElement(header); }));
             itemRecord.cleanups.push(DOM.listen(main, 'click', event => {
                 if (effectiveCollapsible(itemRecord.item) !== 'header') return;
                 record.toggle(itemRecord.item.key, { reason: 'click', source: DOM.activationSource(event), originalEvent: event });
@@ -292,7 +299,7 @@ export class Collapse extends Component {
             const mode = effectiveCollapsible(item);
             itemRecord.section.className = 'qxframe9a7c2-collapse-item' + (open ? ' is-open' : '') + (mode === 'disabled' ? ' is-disabled' : '') + (item.className ? ' ' + item.className : '');
             itemRecord.header.classList.toggle('is-icon-only', mode === 'icon');
-            itemRecord.header.removeAttribute('tabindex');
+            itemRecord.header.tabIndex = -1;
             itemRecord.main.disabled = mode !== 'header';
             itemRecord.main.tabIndex = -1;
             itemRecord.indicator.disabled = mode === 'disabled';
@@ -322,7 +329,7 @@ export class Collapse extends Component {
                 // close -> reopen reversals jump instead of retargeting from the live frame.
                 itemRecord.transition.setVisible(open, { reason: reason || 'collapse-toggle' });
             } else if (open) itemRecord.panel.hidden = false;
-            record.headers[item.key] = mode === 'icon' ? itemRecord.indicator : (mode === 'header' ? itemRecord.main : null);
+            record.headers[item.key] = mode === 'disabled' ? null : itemRecord.header;
         };
         record.render = reason => {
             const current = this.options;

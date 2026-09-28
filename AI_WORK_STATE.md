@@ -15,9 +15,47 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `THEME-PLAYGROUND-REGRESSION-001`
+- Current Task: `THEME-PLAYGROUND-REGRESSION-002`
 
 ## CURRENT
+
+### THEME-PLAYGROUND-REGRESSION-002 — ColorPicker preset Enter / Menu empty overflow / Collapse header focus owner
+Status: VERIFIED_PENDING_MERGE
+Task progress: 95%
+Baseline: `main@2a4448ae3f53efdc98d4d93472f3eb9751c1cc7e`.
+Branch: `fix/theme-playground-regression-002`.
+User verification surface: `docs/theme-playground.html`.
+
+Confirmed current-main findings:
+- ColorPicker immediate-mode Enter closeout from PR #168 covers native range/text/number controls and saturation, but preset swatches are separate button controls. Preset keyboard activation can update ColorPanel without routing through the Picker-level Enter close owner.
+- Horizontal Menu always constructs the overflow Trigger/panel before ResponsiveOverflow decides whether any root item is hidden. The overflow wrapper/button rely on `hidden`, but Menu author CSS gives the wrapper/button explicit display and has no overflow-specific hidden rule, so an empty More control can remain paintable and open an empty submenu panel.
+- Collapse roving focus currently maps each item to `.qxframe9a7c2-collapse-main` (or the indicator in icon mode), while `.qxframe9a7c2-collapse-header` has its tabindex removed. This contradicts the required single header focus owner.
+
+Implementation guardrails:
+- Do not reopen PR #168's unrelated OTP / Scroll / tooltip work.
+- Keep ColorPicker committed/draft ownership in ValueController and close through the existing Picker session owner.
+- Menu overflow must have no activatable Trigger while there are zero real overflow entries; hiding must be CSS-robust.
+- Collapse must use one real focus host per item: the header. Child main/indicator controls remain outside sequential focus and must not become competing keyboard focus owners. Preserve header-vs-icon click semantics and Left/Right disclosure behavior.
+- Add browser-visible regressions for all three fixes; do not weaken existing gates.
+
+Implemented on branch:
+- ColorPicker preset Enter now resolves the focused preset through ColorPanel, promotes/commits through the existing ValueController/Picker session path, prevents duplicate native button activation, and closes immediate-mode picker.
+- Menu empty horizontal overflow is now CSS-robust: overflow wrapper/button explicitly honor [hidden]; the overflow Trigger starts disabled and remains disabled whenever no real overflow entries exist.
+- Collapse roving focus owner is the .qxframe9a7c2-collapse-header for every enabled item; child main/indicator remain non-Tab stops and redirect programmatic focus to the header. FocusController onActivate preserves Enter/Space disclosure while ArrowLeft/ArrowRight behavior remains unchanged.
+- Browser smoke now covers preset Enter select+close, computed display/disabled popup behavior for empty Menu overflow, Collapse header-only real focus, Enter/Space, and Left/Right disclosure.
+
+Verification:
+- PR #169 implementation head `9d72d0262ea6f742dbeb476e0e9edeec87a4e99b` passed QXFRAME CI #820 (Actions run `36436350205`).
+- `windows-tools` passed.
+- Dependency security audit, Completion audit, Full release verification (including Chromium smoke), npm pack, standalone dist/docs build and artifact uploads passed on the exact implementation head.
+- Existing real-overflow Menu regression remains green alongside the new empty-overflow regression.
+
+Next exact step:
+1. Preserve this verified checkpoint as the PR's final status-only commit and run exact-head CI once more.
+2. Merge PR #169 only after the final head is green.
+3. Verify the resulting main push CI / Pages deployment and record the merged main SHA.
+
+## PREVIOUS VERIFIED HANDOFF
 
 ### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
 Status: VERIFIED
@@ -86,13 +124,6 @@ User-reported batch disposition:
 - Image preview mask fade and repeated ImageGroup keyboard navigation: closed.
 - JSON first-focus active-key mismatch: closed.
 
-Next exact step:
-1. Query current `main`, open PRs and latest Actions before new code work.
-2. User should re-test the deployed `docs/theme-playground.html` interaction paths above.
-3. Reopen any item only with a new concrete reproduction against the current Pages build; do not repeat this batch from older screenshots or pre-merge state.
-4. After manual verification, resume the remaining Ant functional audit only for maintained QX capabilities not already closed above.
-
-## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-007 — Ant interaction audit final closeout
 Status: VERIFIED
