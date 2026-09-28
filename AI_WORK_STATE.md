@@ -14,28 +14,30 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready after Ant interaction audit round 3 closeout.
-- Current Task: `HANDOFF-READY-006`
+- Current Phase: Ant interaction audit round 4.
+- Current Task: `ANT-SLIDER-DISCRETE-001`
 
 ## CURRENT
+
+### ANT-SLIDER-DISCRETE-001 — keyboard traversal of discrete marks
+Status: METADATA_CHECKPOINT_AWAITING_CI
+Task progress: 80%
+Branch: `fix/slider-discrete-keyboard` rebased onto `main` at `3448dbd` after PR #134 merged.
+Finding: live Ant Design Slider `step=null` moves from mark 37 to next valid point 100 on ArrowRight; QX Slider added 1 then snapped back to 37. QX also omitted min/max from snap candidates when marks existed.
+Changes: `src/components/slider.js` traverses sorted min/marks/max on discrete keyboard actions and includes endpoints in alignment; `src/core/componentContracts.js` permits the documented `step:null` option at the public boundary; `tools/verify-browser-smoke.html` covers forward/backward and endpoint traversal.
+Verification: CI #674 first attempt failed in an unrelated existing Tabs overflow focus assertion. Rerun reached the new browser test and exposed the public Slider contract rejection of `step:null`. CI #675 found frozen API parity mismatch after that correction; `tools/audit-final-completion.mjs` now explicitly checks and authorizes only the `Slider.step` numeric-to-nullable schema expansion, and its local audit passes. CI #676 advanced through browser verification but found `docs/generated/component-api.json` still recorded the old numeric schema; the exact Slider snapshot is updated and local generated API parity passes. Exact-head full CI remains pending.
+Integration: PR #134 for Modal/Carousel/InputOTP merged at `8a8fcfc`; the branch now includes it. PR #135 needs exact integrated-head CI before merge.
+Next exact step: static checks, push PR, exact-head CI browser/release gates, merge on green, checkpoint.
+
+## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-006 — Ant interaction audit round 3 closeout
 Status: VERIFIED
 Task progress: 100%
 Repository state: PR #134 merged to `main` at `8a8fcfcc54885a00823f811dc3fe74accfd3e7f0`.
-Closed interaction findings:
-- Modal now honors validated `closable.onClose` on accepted close paths instead of accepting the option and silently dropping the callback.
-- Carousel default arrow glyphs follow horizontal/vertical orientation, and runtime direction changes cannot leave PointerSession locked to the creation-time drag axis.
-- InputOTP custom string masks now project through the existing Control Segments mask layer instead of being collapsed into native password masking.
-Verification:
-- Exact integrated PR head `5ba97c45d37ff8b132b1f7e4fc3ea5f31e55414c` passed QXFRAME CI #673, including full release verification and Windows tooling.
-- PR #134 was rebased onto main after PR #133 WheelPanel downstream-selection preservation merged, so the green gate covered the integrated state.
-Audit disposition:
-- TreeSelect `maxCount` visual disabling remains a design/parity gap, not a safe standalone bug fix: naïve dynamic disabled projection can change hierarchical checked/half-checked normalization. Existing `beforeCheck` enforcement remains canonical until a projection-layer design preserves checkedStrategy/checkStrictly/disabled-node semantics.
-- Ant-only feature additions such as Steps maxCount, Table group headers, Drawer resizable and InputNumber modifier stepping are enhancements, not current QXFRAME interaction bugs.
-Next exact step: finish the remaining Ant Design interaction comparison; only open another fix when a reproducible QXFRAME behavior bug is confirmed.
-
-## PREVIOUS VERIFIED HANDOFF
+Closed interaction findings: Modal `closable.onClose` accepted paths; Carousel orientation arrows and runtime drag axis; InputOTP custom string mask projection.
+Verification: exact integrated PR head `5ba97c45d37ff8b132b1f7e4fc3ea5f31e55414c` passed QXFRAME CI #673, including release and Windows tooling.
+Audit disposition: TreeSelect `maxCount` visual disabling remains a design/parity gap pending checked/half-checked projection semantics. Ant-only Steps maxCount, Table group headers, Drawer resizable and InputNumber modifier stepping remain enhancements rather than established current QXFRAME bugs.
 
 ### HANDOFF-READY-005 — WheelPanel interaction fix merged
 Status: VERIFIED
@@ -45,6 +47,8 @@ Finding closed: WheelPanel `selectIndex` had cleared every downstream value on u
 Outcome: `src/components/wheel-panel.js` preserves downstream candidate values while `rebuildFrom` revalidates each column. Browser regressions in `tools/verify-browser-smoke.html` cover TimePanel pointer, TimePicker keyboard, independent WheelPicker columns, and dependent column retention/fallback.
 Verification: exact PR head `17fdee81c3ad12ebde57abf40376d2461dcc5bf0` passed QXFRAME CI #665, including full release verification and Windows tooling. Local syntax and diff checks passed; local build lacked a Rollup provider.
 Next exact step: continue the Ant Design interaction comparison across remaining component families, without reopening this fixed WheelPanel finding absent new regression evidence.
+
+## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-004 — post Ant interaction audit round 2 closeout
 Status: VERIFIED
