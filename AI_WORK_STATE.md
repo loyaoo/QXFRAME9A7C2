@@ -15,54 +15,52 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-001`
+- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-002`
 
 ## CURRENT
 
-### ANT-DIFFERENTIAL-EDGE-STATES-001 — Ant recent regressions → QX state-transition demos
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 70%
-Baseline: `main@c04d9a8c55c1b0cdc7cf80eff98f4b0f4b42ad72`.
-Branch: `audit/ant-edge-state-demos-001`.
-Primary user surface: `docs/theme-playground.html` via canonical component demos.
+### ANT-DIFFERENTIAL-EDGE-STATES-002 — Ant regression pressure demos / dynamic-update audit
+Status: IMPLEMENTING
+Task progress: 25%
+Baseline: `main@be4a9e7282a413c6a416674d82849bcb52e6e470`.
+Branch: `audit/ant-edge-state-demos-002`.
+Primary manual surface: `docs/theme-playground.html` canonical component demos.
 
-Confirmed findings against current main:
-- Table empty data + loading currently renders EmptyProjection and Loading simultaneously. Existing PR #165 contains a valid fix/browser regression but is based on stale main and is not merged.
-- Result FeedbackController projector truthy-gates `record.message`; updating the same feedback identity from a non-empty message to `''` leaves the previous Result title mounted. Existing PR #167 contains the valid owner-level fix but is based on stale main and is not merged.
-- Transfer filtered select-all/deselect-all already operates only on the current visible/filter/page projection and preserves hidden selections; no change.
-- Upload file name is a non-focusable span and Preview is a separate conditional action; the recent Ant Upload filename-focus bug does not apply.
-- Select value normalization does not truthy-gate empty-string values; no current-main reproduction established.
-- Table local/page select-all already excludes disabled rows through TableModel.
-- New audit candidate confirmed by code path: remote `remoteSelectionScope:'query'` allMatching marks every later-loaded key selected unless explicitly excluded. Disabled rows loaded on a later page are therefore logically selected and render disabled+checked. This violates the Table remote-selection contract; disabled keys must be reconciled into SelectionController's allMatching exclusions, not merely painted unchecked.
+Previous batch verification:
+- PR #171 merged to main at `be4a9e7282a413c6a416674d82849bcb52e6e470`.
+- main QXFRAME CI #830 passed Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build, Pages artifact upload, and deploy-pages.
+- Stale PRs #165 and #167 were closed as superseded by #171.
+- Table Loading/Empty exclusivity, remote query allMatching disabled-row ownership, and Result feedback non-empty → empty → 0 are therefore deployed and closed.
 
-Implementation guardrails:
-- SelectionController remains the sole remote selection truth; do not create a checkbox-only visual exception.
-- Auto-exclude disabled keys only while an allMatching query is active. Track framework-added exclusions separately so a later enabled row can rejoin allMatching without overwriting a user's explicit exclusion.
-- Reset auto-disabled exclusion ownership when allMatching/query ownership is cleared.
-- Feedback fix must always project the current message, including empty string, through FeedbackController -> Result; no parallel title state.
-- Add browser-visible regressions and new canonical demos that exercise transitions rather than duplicating existing static/basic demos.
-- Supersede stale PRs #165/#167 with this current-main integration instead of merging their stale heads.
+Ant Design 6.6.1–6.6.5 regression classes selected for QX pressure testing:
+1. numeric `0` renderable content must not be dropped by truthy checks;
+2. callbacks/configuration replaced by `updateOptions` must not leave stale closures;
+3. filtered Transfer with no enabled results must disable select-all;
+4. frozen ColorPicker preset input must remain read-only to the framework;
+5. disabled ColorPicker clear path must not mutate value;
+6. Upload async `beforeRemove` must remove only its target even if another file is added while the promise is pending;
+7. numeric key `0` must remain stable through List reorder/update.
 
-Planned new demo scenarios:
-1. Table: Loading → Empty transition (never show both states).
-2. Table: remote query Select All → page change with disabled row (disabled row stays unselected and appears in logical exclusions).
-3. Result: feedback message non-empty → empty → numeric 0, verifying stale title removal and zero rendering.
+Current code audit disposition before browser tests:
+- Notification/Message close buttons use `type="button"`; Ant form-submit regression does not apply.
+- Notice/Modal render pipelines accept numeric 0; browser pressure coverage is still missing.
+- List/ItemCollection canonicalizes numeric key 0 to string "0"; pressure coverage is missing.
+- Transfer select-all already derives from current visible enabled values and disables when none exist.
+- Transfer runtime callbacks generally dereference mutable current `opts`; pagination callback closures are recreated whenever the pagination option itself is updated.
+- ColorPanel reads preset entries without mutating them; ColorPicker passes a copied preset array.
+- Upload async remove uses target uid plus a mutation generation. Adding unrelated files does not advance mutationGeneration, so the intended target should still be removed while the newly added file survives. Browser regression will verify this concurrency contract.
 
-Implemented on branch:
-- Table Loading/Empty projection is mutually exclusive: empty body rows are removed/suppressed while local or remote loading is active; EmptyProjection appears only after busy ends.
-- Result feedback projector always synchronizes the current normalized message into title, including empty string and numeric 0.
-- Table remote query allMatching now reconciles currently loaded intrinsically-disabled rows into SelectionController remote exclusions before projection. Framework-added disabled exclusions are tracked separately from user exclusions and are removed only when that same row later becomes enabled under the same active query.
-- Query/allMatching reset clears framework disabled-exclusion ownership; user explicit exclusions are not overwritten.
-- Canonical Result demo adds non-empty → empty → 0 feedback transition.
-- Canonical Table demos add Loading → Empty transition and remote query Select All → later disabled row → enabled refresh.
-- Chromium smoke covers all three state-transition bugs, including logical `excludedKeys` rather than only checkbox appearance.
-- Feedback presenter source gate forbids truthy-gated Result title projection.
+Implementation plan:
+- Add canonical dynamic demos for the seven pressure cases above where they materially improve manual inspection.
+- Add strict Chromium regressions for state/data truth, not only visuals.
+- Do not change runtime code unless one of those regressions actually fails or a concrete owner-level flaw is proven.
+- Keep all fixes inside existing Controller/lifecycle ownership; no parallel state stores.
 
 Next exact step:
-1. Open a current-main PR and run exact-head QXFRAME CI.
-2. If browser regression exposes an implementation issue, fix owner logic rather than weakening the test.
-3. After green CI, merge and verify main Pages deployment.
-4. Close stale PRs #165/#167 as superseded by the integrated PR.
+1. Add demo scenarios.
+2. Add Chromium regression cases.
+3. Run exact-head CI.
+4. Fix only reproduced runtime failures, then merge/deploy.
 
 ## PREVIOUS VERIFIED HANDOFF
 
