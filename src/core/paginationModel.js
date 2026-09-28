@@ -109,9 +109,13 @@ function create(options) {
     var previous = snapshot();
     var firstIndex = previous.pageCount > 0 ? (currentPage() - 1) * pageSize : 0;
     var recommendPage = Math.floor(firstIndex / normalized) + 1;
+    var previousPage = currentPage();
     pageSize = normalized;
-    pageState.setValue(clampPage(recommendPage), { silent:true, source:meta && meta.source || 'api', reason:'page-size' });
-    return notify('page-size', previous, mergeOptions({ recommendPage: recommendPage }, meta));
+    // Keep the current page number when the new page size still leaves it valid.
+    // recommendPage is advisory metadata for consumers that want to preserve the
+    // first visible item; it must not silently change Pagination's current page.
+    pageState.setValue(clampPage(previousPage), { silent:true, source:meta && meta.source || 'api', reason:'page-size' });
+    return notify('page-size', previous, mergeOptions({ recommendPage: clampPage(recommendPage) }, meta));
   }
 
   function setTotal(next, meta) {
