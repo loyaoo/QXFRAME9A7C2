@@ -259,6 +259,13 @@ function migrateBaselineCapabilityValue(value){
 }
 const expectedApi=migrateBaselineCapabilityValue(JSON.parse(JSON.stringify(baselineApi)));
 const expectedModules=migrateBaselineCapabilityValue(JSON.parse(JSON.stringify(baselineModules)));
+const expectedSlider=expectedApi.components.find(component=>component.name==='Slider');
+const currentSlider=currentApi.components.find(component=>component.name==='Slider');
+const nullableDiscreteStep={types:['number'],nullable:true};
+if(!expectedSlider||expectedSlider.schema.step!=='number'||!currentSlider||json(currentSlider.schema.step)!==json(nullableDiscreteStep))
+  throw new Error('Slider.step discrete-mode contract must expand the frozen numeric baseline to number|null only.');
+expectedSlider.schema.step=nullableDiscreteStep;
+const authorizedApiSchemaExpansions=Object.freeze(['Slider.step: number→number|null']);
 const authorizedCapabilityMigrations=Object.freeze(Object.entries(BASELINE_CAPABILITY_MIGRATIONS).map(function(entry){return entry[0]+'→'+entry[1];}));
 const authorizedApiRemovals=[];
 for(const entry of compatibility.entries||[]){
@@ -389,6 +396,7 @@ const report={
   staleActiveMetadata:staleMetadata,
   parity:{
     api:apiParity,
+    authorizedApiSchemaExpansions,
     authorizedApiRemovals,
     authorizedLegacyPromotions,
     authorizedCapabilityMigrations,

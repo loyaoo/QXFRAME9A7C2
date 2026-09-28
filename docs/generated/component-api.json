@@ -3505,7 +3505,12 @@
         "silent": "any",
         "size": "string",
         "source": "any",
-        "step": "number",
+        "step": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
         "styles": {
           "type": "object",
           "nullable": true
