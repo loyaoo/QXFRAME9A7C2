@@ -15,52 +15,44 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `THEME-PLAYGROUND-REGRESSION-002`
+- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-001`
 
 ## CURRENT
 
-### THEME-PLAYGROUND-REGRESSION-002 — ColorPicker preset Enter / Menu empty overflow / Collapse header focus owner
-Status: VERIFIED
-Task progress: 100%
-Baseline: `main@2a4448ae3f53efdc98d4d93472f3eb9751c1cc7e`.
-Branch: `fix/theme-playground-regression-002`.
-User verification surface: `docs/theme-playground.html`.
+### ANT-DIFFERENTIAL-EDGE-STATES-001 — Ant recent regressions → QX state-transition demos
+Status: IMPLEMENTING
+Task progress: 30%
+Baseline: `main@c04d9a8c55c1b0cdc7cf80eff98f4b0f4b42ad72`.
+Branch: `audit/ant-edge-state-demos-001`.
+Primary user surface: `docs/theme-playground.html` via canonical component demos.
 
-Confirmed current-main findings:
-- ColorPicker immediate-mode Enter closeout from PR #168 covers native range/text/number controls and saturation, but preset swatches are separate button controls. Preset keyboard activation can update ColorPanel without routing through the Picker-level Enter close owner.
-- Horizontal Menu always constructs the overflow Trigger/panel before ResponsiveOverflow decides whether any root item is hidden. The overflow wrapper/button rely on `hidden`, but Menu author CSS gives the wrapper/button explicit display and has no overflow-specific hidden rule, so an empty More control can remain paintable and open an empty submenu panel.
-- Collapse roving focus currently maps each item to `.qxframe9a7c2-collapse-main` (or the indicator in icon mode), while `.qxframe9a7c2-collapse-header` has its tabindex removed. This contradicts the required single header focus owner.
+Confirmed findings against current main:
+- Table empty data + loading currently renders EmptyProjection and Loading simultaneously. Existing PR #165 contains a valid fix/browser regression but is based on stale main and is not merged.
+- Result FeedbackController projector truthy-gates `record.message`; updating the same feedback identity from a non-empty message to `''` leaves the previous Result title mounted. Existing PR #167 contains the valid owner-level fix but is based on stale main and is not merged.
+- Transfer filtered select-all/deselect-all already operates only on the current visible/filter/page projection and preserves hidden selections; no change.
+- Upload file name is a non-focusable span and Preview is a separate conditional action; the recent Ant Upload filename-focus bug does not apply.
+- Select value normalization does not truthy-gate empty-string values; no current-main reproduction established.
+- Table local/page select-all already excludes disabled rows through TableModel.
+- New audit candidate confirmed by code path: remote `remoteSelectionScope:'query'` allMatching marks every later-loaded key selected unless explicitly excluded. Disabled rows loaded on a later page are therefore logically selected and render disabled+checked. This violates the Table remote-selection contract; disabled keys must be reconciled into SelectionController's allMatching exclusions, not merely painted unchecked.
 
 Implementation guardrails:
-- Do not reopen PR #168's unrelated OTP / Scroll / tooltip work.
-- Keep ColorPicker committed/draft ownership in ValueController and close through the existing Picker session owner.
-- Menu overflow must have no activatable Trigger while there are zero real overflow entries; hiding must be CSS-robust.
-- Collapse must use one real focus host per item: the header. Child main/indicator controls remain outside sequential focus and must not become competing keyboard focus owners. Preserve header-vs-icon click semantics and Left/Right disclosure behavior.
-- Add browser-visible regressions for all three fixes; do not weaken existing gates.
+- SelectionController remains the sole remote selection truth; do not create a checkbox-only visual exception.
+- Auto-exclude disabled keys only while an allMatching query is active. Track framework-added exclusions separately so a later enabled row can rejoin allMatching without overwriting a user's explicit exclusion.
+- Reset auto-disabled exclusion ownership when allMatching/query ownership is cleared.
+- Feedback fix must always project the current message, including empty string, through FeedbackController -> Result; no parallel title state.
+- Add browser-visible regressions and new canonical demos that exercise transitions rather than duplicating existing static/basic demos.
+- Supersede stale PRs #165/#167 with this current-main integration instead of merging their stale heads.
 
-Implemented on branch:
-- ColorPicker preset Enter now resolves the focused preset through ColorPanel, promotes/commits through the existing ValueController/Picker session path, prevents duplicate native button activation, and closes immediate-mode picker.
-- Menu empty horizontal overflow is now CSS-robust: overflow wrapper/button explicitly honor [hidden]; the overflow Trigger starts disabled and remains disabled whenever no real overflow entries exist.
-- Collapse roving focus owner is the .qxframe9a7c2-collapse-header for every enabled item; child main/indicator remain non-Tab stops and redirect programmatic focus to the header. FocusController onActivate preserves Enter/Space disclosure while ArrowLeft/ArrowRight behavior remains unchanged.
-- Browser smoke now covers preset Enter select+close, computed display/disabled popup behavior for empty Menu overflow, Collapse header-only real focus, Enter/Space, and Left/Right disclosure.
-
-Verification:
-- PR #169 implementation head `9d72d0262ea6f742dbeb476e0e9edeec87a4e99b` passed QXFRAME CI #820 (Actions run `36436350205`).
-- `windows-tools` passed.
-- Dependency security audit, Completion audit, Full release verification (including Chromium smoke), npm pack, standalone dist/docs build and artifact uploads passed on the exact implementation head.
-- Existing real-overflow Menu regression remains green alongside the new empty-overflow regression.
-
-Final merge/deploy evidence:
-- PR #169 final head `f5b81e883b5c2cb57c85a3375fbb26164db26ed2` passed QXFRAME CI #821 (Actions run `36436856437`) and was merged.
-- Merged main SHA: `9fa07d47011c82a594fa7605eeba7809c48edd67`.
-- Main push QXFRAME CI #822 (Actions run `36437402759`) passed Windows tools, dependency audit, Completion audit, Full release verification, npm/dist/docs build and artifact upload.
-- CI #822 `deploy-pages` completed successfully, so the current Pages build contains this regression batch.
-- Reported batch is closed: ColorPicker preset Enter select+close; empty horizontal Menu overflow hidden/non-activatable; Collapse header owns real keyboard focus with Enter/Space/Left/Right preserved.
+Planned new demo scenarios:
+1. Table: Loading → Empty transition (never show both states).
+2. Table: remote query Select All → page change with disabled row (disabled row stays unselected and appears in logical exclusions).
+3. Result: feedback message non-empty → empty → numeric 0, verifying stale title removal and zero rendering.
 
 Next exact step:
-1. Re-test these three paths on the deployed `docs/theme-playground.html`.
-2. Reopen only with a concrete reproduction against main `9fa07d47011c82a594fa7605eeba7809c48edd67` or a newer main.
-3. Resume the remaining independent Ant interaction audit without repeating this closed batch.
+1. Integrate the two validated stale-PR fixes on current main.
+2. Implement remote allMatching disabled reconciliation at the SelectionController adapter boundary.
+3. Add the three transition demos and Chromium regressions.
+4. Run exact-head CI, merge if green, then close #165/#167 as superseded.
 
 ## PREVIOUS VERIFIED HANDOFF
 
