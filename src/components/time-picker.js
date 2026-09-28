@@ -270,8 +270,6 @@ function setupTimePickerRuntime(instance, fieldInit) {
       if (!detail.rolledBack) syncField(false);
     }
   });
-  function commit(meta) { return instance.commit(meta || {}); }
-  function cancel(meta) { return instance.cancel(meta || {}); }
   function clear(meta) {
     if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value) || hasValue(draft.draftValue) || draft.rawInputActive || draft.hasPreview;
