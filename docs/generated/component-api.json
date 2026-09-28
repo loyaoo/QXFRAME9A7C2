@@ -4924,7 +4924,6 @@
     {
       "name": "TreeSelect",
       "schema": {
-        "add": "any",
         "autoUpdate": "boolean",
         "beforeCheck": {
           "type": "function",
@@ -4982,7 +4981,6 @@
           "type": "function",
           "nullable": true
         },
-        "has": "any",
         "headless": "any",
         "height": "any",
         "indent": "number",
