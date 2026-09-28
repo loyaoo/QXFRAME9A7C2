@@ -15,31 +15,41 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-INTERACTION-012`
+- Current Task: `ANT-INTERACTION-013`
 
 ## CURRENT
 
-### ANT-INTERACTION-012 — Ant 6.6.3 → 6.4.x functional interaction audit
+### ANT-INTERACTION-013 — Ant functional audit + TreeSelect maxCount capability projection
 Status: VERIFIED — CONTINUING AUDIT
 Task progress: 100% for confirmed findings in this batch
 Baseline for this batch: `main@ab4f09d9f5f81f1c598add6d58ee80cba29e96c8`.
-Current verified main after runtime fixes: `094931e64f0c3a01661928838d525a66c5622d25`.
+Current verified main after runtime fixes: `491a07aaf4de038f9c7d279ec0325e286363d90b`.
 
-Merged fix:
-- PR #150 — Table filter canonical-state closeout. Three related defects were fixed together:
+Merged fixes:
+- PR #150 — Table filter canonical-state closeout:
   1. Public ComponentContract incorrectly inferred `Table.filters` as an array although TableModel/runtime require a column-keyed object map. Canonical contract and generated component API now expose `filters: object`; completion parity authorizes only the frozen baseline correction `Table.filters: array→object`.
-  2. `Table.setFilter()/setFilters()` updated canonical model state while an already-open filter popup preserved stale `filterDraftValues` and controls. The active popup now reconciles canonical values in place for built-in filters; custom filterDropdown rerenders only when values actually changed and restores focus.
-  3. Built-in filter option `value:''` was rendered as a non-selectable presentation row even though TableModel accepts `filters:{column:['']}`. Empty string is now a selectable filter value; only null/undefined mean presentation-only rows.
-- Browser regression holds the same controlled-open single-select filter popup while values move `a → b → ''`, proving popup identity stays stable and checked state follows canonical filters including empty string.
-- Exact PR head `fd4405541a66271cb2f7404456b48ac767a39527` passed QXFRAME CI #741, including Windows tooling, Completion audit, Full release verification, npm pack, standalone dist and docs build.
+  2. `Table.setFilter()/setFilters()` updated canonical model state while an already-open filter popup preserved stale `filterDraftValues` and controls. The active popup now reconciles canonical values in place for built-in filters; custom `filterDropdown` rerenders only when values actually changed and restores focus.
+  3. Built-in filter option `value:''` was rendered as a non-selectable presentation row even though TableModel accepts `filters:{column:['']}`. Empty string is now selectable; only null/undefined mean presentation-only rows.
+  Browser regression holds the same controlled-open single-select filter popup while values move `a → b → ''`, proving popup identity stays stable and checked state follows canonical filters including empty string. Exact PR head `fd4405541a66271cb2f7404456b48ac767a39527` passed QXFRAME CI #741.
+- PR #152 — TreeSelect `maxCount` now projects capacity into a transient checkbox capability instead of only rejecting the final check intent:
+  - Tree has a distinct internal `isItemCheckDisabled` channel separate from structural/business `isItemDisabled`.
+  - At capacity, only unchecked nodes whose check/cascade would exceed the limit receive disabled checkbox/check intent; already-checked nodes remain removable.
+  - Parent disclosure/navigation/search remain available even when that parent's checkbox is temporarily check-disabled.
+  - Releasing capacity immediately re-enables valid checks; filling the freed slot disables overflow checks again.
+  - External/canonical `setValue()` replacement is not blocked merely because the previous value already filled maxCount.
+  - Existing applicability rules are preserved: child strategy, or all strategy with strict checking; parent strategy and non-strict all do not apply maxCount.
+  - Pages Max count demo text now states the disabled behavior.
+  Exact integrated head `2337e4085c89bf06d14a9384d77a5b4aea054fd6` passed QXFRAME CI #756 including Windows tooling, Completion audit, Full release verification, npm pack and standalone dist/docs build.
+- PR #153 was an interim maxCount implementation that merged capacity into Tree `isItemDisabled`, visually disabling the whole row. It was superseded by PR #152 because maxCount is a transient check-capability constraint, not structural node disablement.
 
 New Ant comparison dispositions closed in this batch:
-- TreeSelect controlled parent-projection with disabled descendants is already explicitly protected: `checkedValues()` merges externally owned disabled selected values back into the mutable Tree checked projection.
+- TreeSelect controlled parent-projection with disabled descendants is explicitly protected: `checkedValues()` merges externally owned disabled selected values back into the mutable Tree checked projection.
 - Transfer repeated search-clear callback is prevented centrally by SearchState: setting the same query, including repeated `''`, does not emit onChange/onSearch.
 - Tags long-held Enter/Space does not repeatedly toggle: InteractionController rejects key repeat for non-repeatable ACTIVATE actions and KeyboardNavigation independently suppresses activation repeat.
 - Select disabled creatable-option duplication is blocked before tag creation: an existing disabled match emits `invalidReason:'disabled-option'` instead of creating a duplicate tag.
 - Select active-vs-selected visual priority is explicit: selected+active uses the hover-accent state while keyboard focus is a separate focus-visible outline.
 - Select searchable single rich committed content is hidden while draft editing via `.has-single-value:not(.is-searching)`; rich committed content does not overlay the search editor.
+- Select clear button is intentionally not a separate Tab stop under QX virtual-focus rules; keyboard remove actions are owned by the Select interaction scope rather than an inner focusable clear button.
 - Slider pointer drag prevents default on handle, rail and track at PointerSession start, avoiding browser text selection during drag.
 - Upload progress has one canonical `progressView.thickness` owner and renders only for uploading records; there is no alternate unconfigured thick-progress branch.
 - Drawer `closable.disabled` is validated by OverlayFramePolicy, projected to the native close button disabled state, and enforced by the shared close Press/Capability owner.
@@ -48,11 +58,13 @@ New Ant comparison dispositions closed in this batch:
 - List numeric key `0` is canonicalized by ItemAccessors to `"0"`; stable identity does not fall through a falsy-key path.
 - QX Descriptions is presentation-only rather than a stateful keyed JS component, so Ant's React key=0 state-reset defect has no equivalent runtime path.
 - Button loading layout bug is not mapped because QX has no independent JS Button loading component/contract; buttons are native/CSS primitives unless owned by another component.
+- TreeSelect maxCount visual disabling is no longer an open parity/design gap; PR #152 closes it through a check-only projection without altering hierarchical checked/half-checked semantics.
 
 Audit boundary:
 - Continue older Ant functional fixes only when QX has a corresponding maintained public capability.
 - Do not add Ant-only React APIs or focusable internal buttons merely for superficial parity; preserve QX virtual-focus and Controller ownership rules.
 - Prefer value/commit/selection/focus/async correctness over cosmetic parity.
+- For capacity/disabled UX, distinguish structural item disablement from transient operation capability; never reuse `isItemDisabled` when only one action (such as checking) should be blocked.
 
 Next exact step:
 1. Query current `main`, open PRs and latest CI before new code work.
