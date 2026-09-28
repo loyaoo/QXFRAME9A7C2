@@ -572,8 +572,8 @@ function create(options) {
       endContent: visible ? value.endContent : null,
       cancel: visible && (value.showCancel === true || needsConfirm) ? value.cancel : null,
       confirm: visible && needsConfirm ? value.confirm : null,
-      cancelLabel: value.cancelLabel || '取消',
-      confirmLabel: value.confirmLabel || '确认',
+      cancelLabel: value.cancelLabel === undefined ? '取消' : value.cancelLabel,
+      confirmLabel: value.confirmLabel === undefined ? '确认' : value.confirmLabel,
       confirmDisabled: value.confirmDisabled === true
     });
   }
