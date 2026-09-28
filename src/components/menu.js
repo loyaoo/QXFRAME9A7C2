@@ -499,7 +499,7 @@ function setupMenu(instance) {
       var collapsedTooltipText = titleText(item);
       if (collapsedTooltipText) {
         tooltipByKey.set(key, Tooltip.create({
-          reference:button, content:collapsedTooltipText, trigger:'hover',
+          reference:button, content:collapsedTooltipText, trigger:'hover focus',
           placement:'right', portalContainer:portalContainer, disabled:isDisabledItem(item)
         }));
       }
@@ -1207,9 +1207,16 @@ function setupMenu(instance) {
 
   function handlePointerOver(event) {
     var button = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-menu-item') : null;
-    if (!button || button === overflowButton) return;
-    var key = (buttonMeta.get(button) && buttonMeta.get(button).key) || '';
-    if (!buttonByKey.has(key)) return;
+    if (!button) return;
+    var key = button === overflowButton ? '' : ((buttonMeta.get(button) && buttonMeta.get(button).key) || '');
+    // A collapsed leaf can still own real keyboard focus while the pointer has already
+    // moved to another item. Close its tooltip on pointer transfer instead of letting
+    // the focus trigger pin stale hover content on screen.
+    tooltipByKey.forEach(function (tooltip, candidate) {
+      if (candidate === key || !tooltip || !tooltip.getState || !tooltip.getState().open) return;
+      tooltip.close('menu-pointer-transfer', event);
+    });
+    if (button === overflowButton || !buttonByKey.has(key)) return;
     hoverKey = key;
     syncClasses();
   }
