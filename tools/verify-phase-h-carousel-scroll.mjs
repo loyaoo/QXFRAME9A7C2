@@ -50,6 +50,7 @@ assert.match(scroll,/capabilityController\.can\('edit'\)/);
 assert.doesNotMatch(scroll,/function\s+onKeyDown\s*\(/,'Scroll must not keep a parallel direct keyboard semantic owner.');
 assert.doesNotMatch(scroll,/CapabilityController\.mutationLocked\s*\(/,'Scroll runtime mutation gate must use its canonical CapabilityController instance.');
 assert.doesNotMatch(scroll,/DOM\.focusElement\(root/,'Scroll root focus must enter FocusController.');
+assert.match(scroll,/focusable:\s*true,/,'Scroll must remain keyboard-focusable by default for existing callers.');
 assert.match(scroll,/var sequentialFocusEnabled = opts\.disabled !== true && opts\.focusable !== false;/,'Scroll focusable must own sequential-focus participation.');
 assert.match(scroll,/if \(!sequentialFocusEnabled\) viewport\.tabIndex = -1;/,'Scroll focusable=false must explicitly remove the native overflow viewport from Tab order.');
 assert.match(scroll,/else if \(originalViewportTabindex === null\) viewport\.removeAttribute\('tabindex'\);/,'Scroll focusable=true must restore default viewport Tab behavior instead of leaving an owned -1.');
