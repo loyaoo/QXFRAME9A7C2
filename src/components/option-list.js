@@ -52,6 +52,7 @@ function create(options) {
   function listOptions(extra) {
     var local = mergeOptions(opts, extra);
     local.items = visibleItems();
+    local.allowEmptyValue = true;
     local.ownerPrefix = opts.ownerPrefix || 'option-list';
     local.selectable = true;
     local.onChange = function (value, detail) {

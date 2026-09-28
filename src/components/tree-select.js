@@ -44,7 +44,7 @@ function createDefaultDOM(context) {
 
 var hasOwn = Utils.own;
 function asValues(value, multiple) {
-  if (value === undefined || value === null || value === '') return [];
+  if (value === undefined || value === null) return [];
   var values = Array.isArray(value) ? value.slice() : [value];
   values = values.map(String);
   return multiple ? values : values.slice(0, 1);
@@ -380,6 +380,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           container: treeHost,
           items: Array.isArray(opts.items) ? opts.items.slice() : [],
           value: hierarchicalCheckMode() ? undefined : apiValue(),
+          allowEmptyValue: true,
           multiple: false,
           selectable: !hierarchicalCheckMode(),
           selectionAppearance: 'highlight',
