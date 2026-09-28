@@ -436,7 +436,8 @@ export class Carousel extends Component {
         pointerSession = PointerSession.create({
             target: viewport,
             threshold: 0,
-            axis: opts.direction === 'vertical' ? 'y' : 'x',
+            // Keep both deltas: direction is mutable and the Carousel owns the final primary/cross-axis decision in onEnd.
+            axis: null,
             getState: () => ({ disabled: !userUnlocked() || (!opts.swipe && !opts.draggable) || count() <= 1 }),
             capabilities: { draggable: true },
             canStart: detail => {
