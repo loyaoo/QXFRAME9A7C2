@@ -54,6 +54,10 @@ for(const file of ['progress.js','result.js']){
   assert.match(source,/FeedbackController\.createForProjector\s*\(/,file+' must bind through FeedbackController.');
 }
 
+const resultSource=fs.readFileSync(new URL('../src/components/result.js',import.meta.url),'utf8');
+assert.match(resultSource,/title:\s*record\.message/,'Result feedback projection must synchronize empty and numeric messages instead of truthy-gating title updates.');
+assert.doesNotMatch(resultSource,/if\s*\(\s*record\.message\s*\)\s*patch\.title/,'Result feedback projection must not preserve stale title when message becomes empty.');
+
 console.log(JSON.stringify({
   ok:true,
   presenters:['Progress','Result','Loading'],
