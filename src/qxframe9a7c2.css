@@ -16793,7 +16793,13 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input:focus-visible{outline:none}
 /* SelectGroup already exposes one focus ring on the label; never draw a second ring on its indicator. */
 .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator{outline:none}
-/* Pointer focus must not accidentally inherit UA :focus-visible heuristics on text-editing controls. */
+/* Pointer focus must not accidentally inherit UA :focus-visible heuristics.
+ * Slider drag/rail interaction ends by restoring the canonical handle focus, so its
+ * native :focus-visible must also remain keyboard-origin only. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-slider-handle:focus-visible{
+  --_qxframe9a7c2-slider-handle-outline:none;
+  outline:none
+}
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus-visible,
