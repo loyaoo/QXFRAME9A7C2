@@ -867,14 +867,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
       onChange: function (value, payload) { if (Utils.isFunction(opts.onOpenChange)) opts.onOpenChange(value, payload); }
     });
   }
-  function commit(meta) {
-    if (destroyed) return false;
-    return pickerSession.commit(meta);
-  }
-  function cancel(meta) {
-    if (destroyed) return false;
-    return pickerSession.cancel(meta);
-  }
   function clear(meta) {
     if (destroyed || CapabilityController.mutationLocked(opts)) return false;
     var changed = hasValue(draft.value, selection) || hasValue(draft.draftValue, selection) || draft.rawInputActive || draft.hasPreview;
