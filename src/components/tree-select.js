@@ -651,7 +651,11 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           }
           if (action === 'REMOVE') {
             if (!capabilityController.can('remove')) return 'blocked';
-            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+            if (handleHostedTagKeydown(event)) return 'handled';
+            if (!multipleMode() && opts.clearable === true && selectedValues().length > 0) {
+              return clear({ source:'keyboard', reason:'keyboard-clear', originalEvent:event }) ? 'handled' : 'pass';
+            }
+            return 'pass';
           }
           if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT') {
             if (!capabilityController.can('navigate')) return 'blocked';

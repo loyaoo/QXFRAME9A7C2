@@ -783,7 +783,11 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           }
           if (action === 'REMOVE') {
             if (!capabilityController.can('remove')) return 'blocked';
-            return handleHostedTagKeydown(event) ? 'handled' : 'pass';
+            if (handleHostedTagKeydown(event)) return 'handled';
+            if (opts.multiple !== true && opts.clearable === true && selection.values.length > 0) {
+              return clear({ source:'keyboard', reason:'keyboard-clear', originalEvent:event }) ? 'handled' : 'pass';
+            }
+            return 'pass';
           }
           if (action === 'MOVE_LEFT' || action === 'MOVE_RIGHT') {
             if (!capabilityController.can('navigate')) return 'blocked';
