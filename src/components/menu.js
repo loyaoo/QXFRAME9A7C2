@@ -647,11 +647,22 @@ function setupMenu(instance) {
       trigger: opts.submenuTrigger, placement: 'bottom-end', transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', offset: opts.submenuOffset, middleware: opts.middleware,
       flipOnOverflow: opts.flipOnOverflow !== false, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true,
       destroyOnClose: opts.forceSubMenuRender === true ? false : opts.destroyOnClose !== false, forceRender: opts.forceSubMenuRender === true, restoreFocus: false,
-      openDelay: opts.submenuOpenDelay, closeDelay: opts.submenuLeaveDelay, disabled: opts.disabled === true,
+      openDelay: opts.submenuOpenDelay, closeDelay: opts.submenuLeaveDelay, disabled: true,
       onOpenChange: function () { syncClasses(); }
     });
     overflowLi.hidden = true;
     overflowButton.hidden = true;
+  }
+  function hasOverflowEntries() {
+    return !!(overflowedKeys.size && overflowLevel && overflowLevel.firstElementChild);
+  }
+  function syncOverflowTriggerAvailability(reason) {
+    var available = hasOverflowEntries();
+    if (overflowTrigger) {
+      overflowTrigger.setDisabled(opts.disabled === true || !available);
+      if (!available) overflowTrigger.closeTree(reason || 'overflow-empty');
+    }
+    return available;
   }
   function entryButton(node) { return node && node.querySelector ? node.querySelector(':scope > .qxframe9a7c2-menu-item') : null; }
   function setEntryLevel(node, level, inOverflow) {
@@ -697,7 +708,7 @@ function setupMenu(instance) {
       overflowLi.hidden = true;
       overflowButton.hidden = true;
       overflowLi.style.visibility = '';
-      if (overflowTrigger) overflowTrigger.closeTree('overflow-clear');
+      syncOverflowTriggerAvailability('overflow-clear');
       syncClasses();
       api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: [], visibleCount: rootEntryNodes.length, menu: api });
       return true;
@@ -712,11 +723,12 @@ function setupMenu(instance) {
       overflowLi.hidden = true;
       overflowButton.hidden = true;
       overflowLi.style.visibility = '';
-      if (overflowTrigger) overflowTrigger.closeTree('overflow-empty');
+      syncOverflowTriggerAvailability('overflow-empty');
       syncClasses();
       api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: [], visibleCount: rootEntryNodes.length, menu: api });
       return true;
     }
+    syncOverflowTriggerAvailability('overflow-ready');
     overflowLi.hidden = false;
     overflowButton.hidden = false;
     overflowLi.style.visibility = '';
@@ -736,7 +748,7 @@ function setupMenu(instance) {
       var item = itemByKey.get(key);
       trigger.setDisabled(opts.disabled === true || !!(item && item.disabled === true));
     });
-    if (overflowTrigger) overflowTrigger.setDisabled(opts.disabled === true);
+    if (overflowTrigger) overflowTrigger.setDisabled(opts.disabled === true || !hasOverflowEntries());
   }
   function syncPopupTriggerRuntime() {
     triggerByKey.forEach(function (trigger, key) {
@@ -768,7 +780,7 @@ function setupMenu(instance) {
       destroyOnClose: opts.forceSubMenuRender === true ? false : opts.destroyOnClose !== false,
       openDelay: opts.submenuOpenDelay,
       closeDelay: opts.submenuLeaveDelay,
-      disabled: opts.disabled === true
+      disabled: opts.disabled === true || !hasOverflowEntries()
     });
   }
   function syncOpenTriggers() {
