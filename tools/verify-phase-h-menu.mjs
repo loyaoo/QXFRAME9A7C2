@@ -4,6 +4,7 @@ import { Menu } from '../src/components/menu.js';
 import { ComponentProfile } from '../src/core/componentProfile.js';
 
 const source=fs.readFileSync(new URL('../src/components/menu.js',import.meta.url),'utf8');
+const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
 const profile=ComponentProfile.define(Menu.profile);
 
 assert.equal(profile.name,'Menu');
@@ -26,6 +27,9 @@ assert.match(source,/FocusController\.create\s*\(/,'Menu virtual focus must rema
 assert.match(source,/InteractionController\.create\s*\(/,'Menu semantic keyboard actions must remain InteractionController-owned.');
 assert.match(source,/capability:capabilityController/,'Menu InteractionController scope must share CapabilityController.');
 assert.match(source,/Trigger\.create\s*\(/,'Menu popup submenus must continue through Trigger→OverlayController.');
+assert.match(source,/Tooltip\.create\s*\(/,'Collapsed Menu leaf labels must use framework Tooltip rather than native title-only affordance.');
+assert.match(source,/inlineCollapsed\(\) && depth === 0 && !hasChildren\(item\)/,'Collapsed Menu submenu owners must stay popup-only while leaf items own tooltip projection.');
+assert.match(css,/\.qxframe9a7c2-menu\.is-horizontal>\.qxframe9a7c2-menu-root-level>\.qxframe9a7c2-menu-item-wrap\{flex:0 0 auto\}/,'Horizontal Menu root entries must preserve intrinsic width so ResponsiveOverflow can move real entries into More.');
 assert.match(source,/getValueController\(\)/,'Menu must expose canonical ValueController identity.');
 assert.match(source,/getSelectionController\(\)/,'Menu must expose SelectionController identity.');
 assert.match(source,/getCapabilityController\(\)/,'Menu must expose CapabilityController identity.');
