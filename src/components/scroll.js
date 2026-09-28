@@ -158,7 +158,7 @@ function attachViewport(options) {
   input.document = doc;
   input.elements = { root:root, viewport:viewport, content:content, trackX:trackX, trackY:trackY, thumbX:thumbX, thumbY:thumbY, shadowTop:shadowTop, shadowBottom:shadowBottom, shadowLeft:shadowLeft, shadowRight:shadowRight };
   if (input.axis === undefined) input.axis = 'y';
-  if (input.focusable === undefined) input.focusable = false;
+  if (input.focusable === undefined) input.focusable = true;
   if (input.keyboard === undefined) input.keyboard = false;
   if (input.scrollbarVisibility === undefined) input.scrollbarVisibility = 'auto';
   var instance = new Scroll(input);
