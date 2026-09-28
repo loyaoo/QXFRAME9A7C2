@@ -14,19 +14,19 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Ant interaction audit follow-up.
-- Current Task: `WHEEL-PANEL-DOWNSTREAM-PRESERVE-001`
+- Current Phase: handoff-ready after WheelPanel interaction fix.
+- Current Task: `HANDOFF-READY-005`
 
 ## CURRENT
 
-### WHEEL-PANEL-DOWNSTREAM-PRESERVE-001 — preserve valid downstream wheel selections
-Status: IMPLEMENTED_AWAITING_CI
-Task progress: 60%
-Branch: `fix/wheel-panel-preserve-downstream` from `main` at `43f648e`.
-Finding: WheelPanel `selectIndex` cleared every downstream value on an upstream selection; TimePanel and TimePicker therefore reset minutes and seconds when hours changed, and independent WheelPicker columns reset as well.
-Changes: `src/components/wheel-panel.js` keeps downstream candidate values while `rebuildFrom` revalidates each column against its current items; `tools/verify-browser-smoke.html` exercises pointer and keyboard flows plus dependent value retention/fallback.
-Verification: `git diff --check` passes. Local build is blocked by absent Rollup provider; GitHub Actions remains the release gate.
-Next exact step: commit/push branch, open PR, inspect CI browser and release gates, fix any failures, then merge and checkpoint.
+### HANDOFF-READY-005 — WheelPanel interaction fix merged
+Status: VERIFIED
+Task progress: 100%
+Repository state: PR #133 merged to `main` at `2ca016d08b72a6d2302f4a39a06bc8fe25f77d05`.
+Finding closed: WheelPanel `selectIndex` had cleared every downstream value on upstream selection. TimePanel/TimePicker lost minutes and seconds when hours changed; independent WheelPicker columns also reset.
+Outcome: `src/components/wheel-panel.js` preserves downstream candidate values while `rebuildFrom` revalidates each column. Browser regressions in `tools/verify-browser-smoke.html` cover TimePanel pointer, TimePicker keyboard, independent WheelPicker columns, and dependent column retention/fallback.
+Verification: exact PR head `17fdee81c3ad12ebde57abf40376d2461dcc5bf0` passed QXFRAME CI #665, including full release verification and Windows tooling. Local syntax and diff checks passed; local build lacked a Rollup provider.
+Next exact step: continue the Ant Design interaction comparison across remaining component families, without reopening this fixed WheelPanel finding absent new regression evidence.
 
 ## PREVIOUS VERIFIED HANDOFF
 
@@ -77,6 +77,10 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE / VERIFIED EXISTING
+
+### WHEEL-PANEL-DOWNSTREAM-PRESERVE-001 — valid downstream values retained
+Status: DONE_MERGED_VERIFIED
+Evidence: PR #133 merged at `2ca016d08b72a6d2302f4a39a06bc8fe25f77d05`; exact head passed QXFRAME CI #665.
 
 ### ANT-INTERACTION-AUDIT-ROUND2-001 — five cross-component interaction fixes
 Status: DONE_MERGED_VERIFIED
