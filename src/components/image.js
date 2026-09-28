@@ -378,6 +378,7 @@ function setupImage(instance) {
     previewImage.style.setProperty('--qxframe9a7c2-image-preview-y', String(state.y) + 'px');
     previewImage.style.transform = 'translate3d(' + state.x + 'px,' + state.y + 'px,0) rotate(' + state.rotate + 'deg) scale(' + (state.scale * state.flipX) + ',' + (state.scale * state.flipY) + ')';
     previewImage.classList.toggle('is-zoomed', state.scale > 1.001);
+    previewImage.classList.toggle('is-pannable', state.scale > 1.001 && cfg('draggable', opts.draggable) !== false);
     previewImage.classList.toggle('is-flipped-x', state.flipX < 0);
     previewImage.classList.toggle('is-flipped-y', state.flipY < 0);
     call(cfg('onTransform', opts.onTransform), Object.freeze(Utils.assignOwn({ reason: detail && detail.reason || 'api' }, transformValue())), Object.freeze({ index: previewIndex, item: currentPreviewItem(), instance: api }));
