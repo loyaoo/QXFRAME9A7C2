@@ -437,7 +437,12 @@ function create(options) {
       scrollIdleDelay: opts.scrollIdleDelay
     });
     var scrollRoot = scroll.getRootElement ? scroll.getRootElement() : null;
+    var scrollViewport = scroll.getViewportElement ? scroll.getViewportElement() : null;
     if (scrollRoot) scrollRoot.tabIndex = -1;
+    // Chromium makes scrollable overflow regions sequentially focusable even without
+    // an authored tabindex. WheelPanel is one composite focus owner, so both the Scroll
+    // shell and the actual overflow viewport must stay out of the Tab order.
+    if (scrollViewport) scrollViewport.tabIndex = -1;
 
     var guide = doc.createElement('div');
     guide.className = 'qxframe9a7c2-wheel-panel-center-guide';
