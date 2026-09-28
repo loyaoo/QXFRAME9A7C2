@@ -14,10 +14,29 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready after Ant interaction audit round 3 closeout.
-- Current Task: `HANDOFF-READY-006`
+- Current Phase: handoff-ready after Ant interaction audit final closeout.
+- Current Task: `HANDOFF-READY-007`
 
 ## CURRENT
+
+### HANDOFF-READY-007 — Ant interaction audit final closeout
+Status: VERIFIED
+Task progress: 100%
+Repository state: PR #137 merged to `main` at `0503df0be2f175a3d6039a1425cc899bd7d7a23e`.
+Closed interaction findings:
+- Slider `step:null` keyboard navigation traverses the ordered discrete points `min + marks + max` instead of adding 1 and snapping back to the same mark.
+- Slider public contract and frozen generated API now consistently allow `number|null` for `step`.
+- Tabs overflow selection arms focus restoration before active-key changes can schedule responsive overflow measurement, eliminating the race that intermittently left focus inside the closing overflow popup.
+Verification:
+- Exact PR head `078d79e24018ab6266665e2c7722029c08605cf9` passed QXFRAME CI #682, including Windows tooling, full release verification, Chromium regressions, npm packing, and standalone dist/docs build.
+- CI #679 on the prior integrated Slider head intentionally blocked merge by exposing the intermittent Tabs focus-return race; the test remained strict and the component ordering was fixed rather than extending sleeps.
+Audit disposition:
+- Current Ant Design interaction comparison is complete for the maintained QXFRAME component surface reviewed in this pass.
+- TreeSelect `maxCount` dynamic visual disabling remains a documented parity/design gap, not an unresolved selection correctness bug: QX enforces the limit through canonical `beforeCheck`, while a safe disabled projection must not alter hierarchical checked/half-checked semantics.
+- Ant-only additions such as Steps `maxCount`, Table grouped headers, Drawer resizable, and InputNumber modifier stepping remain optional enhancements.
+Next exact step: perform user-driven browser/manual verification or a later independent Astra audit; do not reopen the closed findings without new reproduction evidence.
+
+## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-006 — Ant interaction audit round 3 closeout
 Status: VERIFIED
@@ -34,8 +53,6 @@ Audit disposition:
 - TreeSelect `maxCount` visual disabling remains a design/parity gap, not a safe standalone bug fix: naïve dynamic disabled projection can change hierarchical checked/half-checked normalization. Existing `beforeCheck` enforcement remains canonical until a projection-layer design preserves checkedStrategy/checkStrictly/disabled-node semantics.
 - Ant-only feature additions such as Steps maxCount, Table group headers, Drawer resizable and InputNumber modifier stepping are enhancements, not current QXFRAME interaction bugs.
 Next exact step: finish the remaining Ant Design interaction comparison; only open another fix when a reproducible QXFRAME behavior bug is confirmed.
-
-## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-005 — WheelPanel interaction fix merged
 Status: VERIFIED
