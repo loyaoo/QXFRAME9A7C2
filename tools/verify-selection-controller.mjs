@@ -75,6 +75,8 @@ const optionValueSelection=Selection.create({multiple:false,allowEmptyKey:true,v
 assert.deepEqual(optionValueSelection.values,[''],'option-value Selection may preserve an empty string as a real value.');
 assert.equal(optionValueSelection.value,'');
 assert.equal(optionValueSelection.has(''),true);
+assert.equal(optionValueSelection.has(null),false,'null remains absence and must not alias the empty-string option value.');
+assert.equal(optionValueSelection.select(null,{silent:true}),false,'null cannot select the empty-string option value.');
 assert.equal(optionValueSelection.select('',{silent:true}),true);
 optionValueSelection.destroy();
 
