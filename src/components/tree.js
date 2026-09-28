@@ -417,6 +417,8 @@ function setupTreeRuntime(instance) {
             var position = siblings.findIndex(function (entry) { return entry.key === record.key; });
             var rowDisabled = disabledOf(record.item, record.index);
             var rowSelectable = selectableOf(record.item, record.index);
+            var checkDisabled = !rowDisabled && checkDisabledOf(record.item, record.index);
+            node.classList.toggle('is-check-disabled', checkDisabled);
             node.draggable = draggableOf(record.item, record.index);
             var checkbox = node.querySelector('.qxframe9a7c2-tree-check');
             if (checkbox) {
@@ -425,7 +427,7 @@ function setupTreeRuntime(instance) {
               var canCheck = checkableOf(record.item, record.index);
               checkbox.checked = isChecked;
               checkbox.indeterminate = isMixed;
-              checkbox.disabled = !canCheck || checkDisabledOf(record.item, record.index) || CapabilityController.mutationLocked(opts);
+              checkbox.disabled = !canCheck || checkDisabled || CapabilityController.mutationLocked(opts);
             }
           });
         }
