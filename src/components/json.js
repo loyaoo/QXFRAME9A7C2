@@ -408,6 +408,12 @@ function setupJSON(instance) {
     if(keyboardZone==='tree'){ return moveToolbar(backward?-1:1, backward?'last':'first'); }
     return activateTreeCursor('json-region-tree',event);
   }
+  function dispatchTreeKey(event, reason) {
+    if (!tree) return false;
+    var state = tree.getState();
+    if (!state.activeKey && !activateTreeCursor(reason || 'json-tree-key-entry', event)) return false;
+    return tree.handleKeydown(event);
+  }
   focusController = FocusController.create({
     root:root,
     document:doc,
@@ -416,14 +422,14 @@ function setupJSON(instance) {
       allowEditableKey:function(){return false;},
       handlers:{
         F6:function(ctx){return cycleKeyboardRegion(ctx.originalEvent&&ctx.originalEvent.shiftKey,ctx.originalEvent);},
-        ArrowLeft:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(-1);return tree?tree.handleKeydown(ctx.originalEvent):false;},
-        ArrowRight:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(1);return tree?tree.handleKeydown(ctx.originalEvent):false;},
-        ArrowUp:function(ctx){if(keyboardZone==='toolbar')return false;return tree?tree.handleKeydown(ctx.originalEvent):false;},
-        ArrowDown:function(ctx){if(keyboardZone==='toolbar')return false;return tree?tree.handleKeydown(ctx.originalEvent):false;},
-        Home:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(0,'first');return tree?tree.handleKeydown(ctx.originalEvent):false;},
-        End:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(0,'last');return tree?tree.handleKeydown(ctx.originalEvent):false;},
-        PageUp:function(ctx){return keyboardZone==='tree'&&tree?tree.handleKeydown(ctx.originalEvent):false;},
-        PageDown:function(ctx){return keyboardZone==='tree'&&tree?tree.handleKeydown(ctx.originalEvent):false;},
+        ArrowLeft:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(-1);return dispatchTreeKey(ctx.originalEvent,'json-arrow-left-entry');},
+        ArrowRight:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(1);return dispatchTreeKey(ctx.originalEvent,'json-arrow-right-entry');},
+        ArrowUp:function(ctx){if(keyboardZone==='toolbar')return false;return dispatchTreeKey(ctx.originalEvent,'json-arrow-up-entry');},
+        ArrowDown:function(ctx){if(keyboardZone==='toolbar')return false;return dispatchTreeKey(ctx.originalEvent,'json-arrow-down-entry');},
+        Home:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(0,'first');return dispatchTreeKey(ctx.originalEvent,'json-home-entry');},
+        End:function(ctx){if(keyboardZone==='toolbar')return moveToolbar(0,'last');return dispatchTreeKey(ctx.originalEvent,'json-end-entry');},
+        PageUp:function(ctx){return keyboardZone==='tree'?dispatchTreeKey(ctx.originalEvent,'json-page-up-entry'):false;},
+        PageDown:function(ctx){return keyboardZone==='tree'?dispatchTreeKey(ctx.originalEvent,'json-page-down-entry'):false;},
         Enter:function(ctx){if(keyboardZone==='toolbar'){var state=keyboard.virtualFocus.getState(),button=toolbarElement(state.key);if(button){button.click();return true;}return false;}var key=activeTreeKey();if(opts.editable===true&&key&&beginEdit(key,'json-edit-enter',ctx.originalEvent,null,'keyboard'))return true;return tree?tree.handleKeydown(ctx.originalEvent):false;},
         F2:function(ctx){if(keyboardZone!=='tree'||opts.editable!==true)return false;var key=activeTreeKey();return key?beginEdit(key,'json-edit-f2',ctx.originalEvent,null,'keyboard'):false;},
         ' ':function(ctx){if(keyboardZone==='toolbar'){var state=keyboard.virtualFocus.getState(),button=toolbarElement(state.key);if(button){button.click();return true;}return false;}return tree?tree.handleKeydown(ctx.originalEvent):false;},
