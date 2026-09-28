@@ -103,7 +103,7 @@ export class Popconfirm extends PopupComponent {
         const requestId=String(snapshot&&snapshot.requestId||0);
         record.feedback.publish({
             operation:'confirm', status, requestId, generation:Number(snapshot&&snapshot.requestId)||0,
-            message:String(this.options.confirmText||'确认'), target:'local'
+            message:String(this.options.confirmText===undefined?'确认':this.options.confirmText), target:'local'
         },{source:detail&&detail.source||'programmatic',reason:'confirm-'+status});
     }
 
@@ -132,7 +132,7 @@ export class Popconfirm extends PopupComponent {
         let before=null;if(hasContent){if(r.content.parentNode!==r.copy)r.copy.appendChild(r.content);before=r.content;}if(hasTitle&&(r.title.parentNode!==r.copy||r.title.nextSibling!==before))r.copy.insertBefore(r.title,before);
         if(opts.icon===undefined){while(r.warning.firstChild)r.warning.removeChild(r.warning.firstChild);const glyph=r.doc.createElement('span');glyph.className='qxframe9a7c2-icon qxframe9a7c2-icon-alert-triangle is-line is-round is-stroke-3';r.warning.appendChild(glyph);}else renderValue(r.warning,opts.icon,this);
         if(opts.showWarning!==false){if(r.warning.parentNode!==r.message)r.message.insertBefore(r.warning,r.copy);}else if(r.warning.parentNode)r.warning.parentNode.removeChild(r.warning);
-        r.cancelButton.textContent=String(opts.cancelText||'取消');r.confirmButton.textContent=String(opts.confirmText||'确认');r.confirmButton.classList.toggle('is-primary',opts.danger!==true);r.confirmButton.classList.toggle('is-error',opts.danger===true);r.confirmButton.classList.add('is-solid');
+        r.cancelButton.textContent=String(opts.cancelText===undefined?'取消':opts.cancelText);r.confirmButton.textContent=String(opts.confirmText===undefined?'确认':opts.confirmText);r.confirmButton.classList.toggle('is-primary',opts.danger!==true);r.confirmButton.classList.toggle('is-error',opts.danger===true);r.confirmButton.classList.add('is-solid');
         r.cancelButton.disabled=!this.#canCancel();r.confirmButton.disabled=!this.#canConfirm();
     }
 
