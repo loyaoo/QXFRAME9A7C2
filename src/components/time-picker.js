@@ -427,7 +427,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
     }
     nowButton.disabled = CapabilityController.mutationLocked(opts);
     nowButton.tabIndex = opts.showNow !== false && !nowButton.disabled ? 0 : -1;
-    nowButton.textContent = opts.nowText || '此刻';
+    nowButton.textContent = opts.nowText === undefined ? '此刻' : String(opts.nowText);
   }
   function rebuildFooter() {
     instance.createConfirmFooter({
