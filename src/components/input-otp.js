@@ -159,13 +159,6 @@ export class InputOTP extends FieldComponent {
             },
             onFocus: event => { if (typeof this.options.onFocus === 'function') this.options.onFocus(event, this); },
             onBlur: event => { if (typeof this.options.onBlur === 'function') this.options.onBlur(event, this); },
-            onSegmentFocus: detail => {
-                const list = control.getInputElements(), canonical = this.#canonicalFocusIndex(control.getState().segmentValues);
-                control.setSegmentFocusIndex(canonical);
-                if (!detail || detail.index === canonical || !list[canonical]) return;
-                focusOtpInput(list[canonical], FocusOrigin.inherited(list[canonical].ownerDocument), 'otp-canonical-focus');
-                if (list[canonical].select) list[canonical].select();
-            },
             onKeydown: event => {
                 const interaction = this.getInteractionController();
                 return interaction ? interaction.dispatch(event, { ownerId:this.id + '-otp-interaction', source:'keyboard' }) !== 'pass' : false;
@@ -182,6 +175,14 @@ export class InputOTP extends FieldComponent {
         });
         const capability = this.bindCapabilityController({ capabilities:{ preserveFocusWhileLoading:true, tabbableWhileLoading:true } });
         const inputs = control.getInputElements();
+        inputs.forEach((node, index) => this.listen(node, 'focus', () => {
+            const canonical = this.#canonicalFocusIndex(control.getState().segmentValues);
+            control.setSegmentFocusIndex(canonical);
+            if (index === canonical || !inputs[canonical]) return;
+            const origin = FocusOrigin.originOf(node) || FocusOrigin.inherited(node.ownerDocument);
+            focusOtpInput(inputs[canonical], origin, 'otp-canonical-focus');
+            if (inputs[canonical].select) inputs[canonical].select();
+        }));
         this.bindFocusController((inputs[0] || control.getRootElement()), { manageTabIndex:false, navigation:{handlers:{}} });
         this.bindInteractionController(control.getRootElement(), {
             id:this.id + '-otp-interaction',
