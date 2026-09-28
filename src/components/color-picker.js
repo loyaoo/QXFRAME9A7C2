@@ -366,6 +366,18 @@ function setupColorPickerRuntime(instance, fieldInit) {
      });
 
      bindColorVirtualFocus();
+     var colorPanelRoot = panel && panel.getRootElement ? panel.getRootElement() : null;
+     if (colorPanelRoot) gradientListenerCleanups.push(DOM.listen(colorPanelRoot, 'keydown', function (event) {
+       if (!event || event.key !== 'Enter' || event.isComposing === true || opts.needConfirm === true) return;
+       var target = event.target, tag = String(target && target.tagName || '').toLowerCase(), type = tag === 'input' ? String(target.type || 'text').toLowerCase() : '';
+       var nativeValueControl = tag === 'input' && (type === 'range' || type === 'text' || type === 'number');
+       var saturationControl = !!(target && target.classList && target.classList.contains('qxframe9a7c2-color-panel-saturation'));
+       if (!nativeValueControl && !saturationControl) return;
+       if (instance.confirmFromKeyboard(event)) {
+         if (event.preventDefault) event.preventDefault();
+         if (event.stopPropagation) event.stopPropagation();
+       }
+     }));
 
      draft = ValueController.create({
        value: initialCanonical,
@@ -643,6 +655,14 @@ function setupColorPickerRuntime(instance, fieldInit) {
      gradientListenerCleanups.push(DOM.listen(gradientHost, 'click', gradientClickHandler));
      gradientDragSession = createGradientDragSession();
      gradientListenerCleanups.push(DOM.listen(gradientHost, 'change', gradientInputHandler));
+     gradientListenerCleanups.push(DOM.listen(gradientAngleInput, 'keydown', function (event) {
+       if (!event || event.key !== 'Enter' || event.isComposing === true || opts.needConfirm === true) return;
+       setGradientAngle(Number(gradientAngleInput.value), { source:'keyboard', reason:'gradient-angle-enter', originalEvent:event, complete:true });
+       if (instance.confirmFromKeyboard(event)) {
+         if (event.preventDefault) event.preventDefault();
+         if (event.stopPropagation) event.stopPropagation();
+       }
+     }));
 
      function renderGradientEditor(value) {
        if (!gradientHost) return;
