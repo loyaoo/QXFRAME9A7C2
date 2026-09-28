@@ -567,8 +567,10 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             if (!destroyed && shouldCloseOnSelect()) closed = triggerSession.close('select', payload.originalEvent) === true;
           }
           if (destroyed) return true;
-          if (closed) pendingSearchResetAfterClose = true;
-          else searchState.set('', {silent:true,notify:false,source:'popup',reason:'search-select-clear'});
+          if (!closed) {
+            searchState.set('', {silent:true,notify:false,source:'popup',reason:'search-select-clear'});
+            renderColumns();
+          }
           syncControl({ source: detail && detail.source || 'instance', reason: 'search-select' });
           return true;
         }
