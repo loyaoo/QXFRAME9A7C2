@@ -132,9 +132,6 @@ var pickerSession = instance.setupPickerSession({
     if (!detail.rolledBack) syncField(false);
   }
 });
-function commit(meta) { return instance.commit(meta || {}); }
-function cancel(meta) { return instance.cancel(meta || {}); }
-    
 function clear(meta) {
   if (destroyed || CapabilityController.mutationLocked(opts)) return false;
   var changed = !!((draft.value && draft.value.length) || (draft.draftValue && draft.draftValue.length));
