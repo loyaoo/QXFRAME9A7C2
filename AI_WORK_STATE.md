@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-002 — Ant regression pressure demos / dynamic-update audit
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 65%
+Status: FIXED_PENDING_FINAL_HEAD_CI
+Task progress: 90%
 Baseline: `main@be4a9e7282a413c6a416674d82849bcb52e6e470`.
 Branch: `audit/ant-edge-state-demos-002`.
 Primary manual surface: `docs/theme-playground.html` canonical component demos.
@@ -63,13 +63,23 @@ Implemented on branch:
 - Added List numeric key/value 0 reorder demo.
 - Added Message and Notification numeric 0 demos and Modal title/content/footer numeric 0 demo.
 - Added strict Chromium checks for every pressure case above. The tests inspect real state/data and DOM truth; they do not weaken existing assertions.
-- No runtime code has been changed yet because code audit did not establish a concrete owner-level defect before execution.
+Runtime finding reproduced by the pressure matrix:
+- CI #831: every newly added semantic pressure assertion passed, but the final diagnostics balance failed with exactly `motion.liveMotions=2`.
+- The two new immediately-created/closed NoticeService instances (Message + Notification) exposed a lower-level TransitionGroup ownership leak.
+- Root cause: `TransitionGroup.removeRecord()` physically removed a child after completed leave and deleted its record before destroying the child-owned MotionCore. Once removed from `records`, a later `TransitionGroup.destroy()` could no longer reach that MotionCore. One normally completed child leave therefore leaked one MotionCore.
+- Owner-level fix: `TransitionGroup.removeRecord()` now destroys `record.core` immediately after physical removal/leave-layout restoration and before deleting the record reference. MotionCore explicitly supports re-entrant destroy from its unmount lifecycle edge, so the fix retires the child owner without adding a second motion authority.
+- CI #832 on runtime-fix head `33812286f1c874e197563a673e9d11ec5b31a9f8`: Windows success, Completion audit success, Full release verification success, clean pack success, standalone dist/docs build success, artifact upload success. Browser diagnostics returned balanced with the new pressure matrix.
+
+No-change confirmations from this Ant pass:
+- Transfer page restoration after an empty filter already clamps to page >= 1 in both PaginationModel and ItemCollection projection.
+- Transfer hot `onSearch`, filtered all-disabled select-all, frozen ColorPicker presets, disabled ColorPicker clear, numeric 0 renderables, List numeric key 0 reorder, and Upload async remove + concurrent add all passed Chromium without runtime changes.
+- Ant Transfer numeric-key/string-key stale-selection regression does not map directly: QX ItemCollection intentionally canonicalizes collection identity to strings.
 
 Next exact step:
-1. Open PR and run exact-head QXFRAME CI.
-2. Treat any failed new browser assertion as reproduction evidence.
-3. Fix only reproduced runtime behavior; if all pass, merge the coverage/demo-only batch.
-4. Verify main CI + Pages deployment.
+1. Run one final exact-head CI after this checkpoint-only commit.
+2. Merge PR #172 if green.
+3. Verify main push CI and Pages deployment.
+4. Start the next Ant differential batch from the resulting main without re-auditing these closed cases.
 
 ## PREVIOUS VERIFIED HANDOFF
 
