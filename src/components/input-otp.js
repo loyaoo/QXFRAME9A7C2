@@ -12,9 +12,12 @@ const state = new WeakMap();
 function focusOtpInput(target, origin, source) {
     if (!target || !target.focus) return false;
     const doc = target.ownerDocument || globalThis.document;
-    FocusOrigin.prepare(target, origin || FocusOrigin.inherited(doc), { source: source || 'otp-focus' });
+    const resolvedOrigin = origin || FocusOrigin.inherited(doc);
+    const resolvedSource = source || 'otp-focus';
+    FocusOrigin.prepare(target, resolvedOrigin, { source: resolvedSource });
     const focused = DOM.focusElement(target, { preventScroll:true });
     if (!focused) FocusOrigin.cancelPending(target);
+    else if (doc && doc.activeElement === target) FocusOrigin.set(target, resolvedOrigin, { source: resolvedSource });
     return focused;
 }
 const own = Utils.own;
