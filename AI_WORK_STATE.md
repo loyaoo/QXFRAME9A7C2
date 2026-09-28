@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-003 — motion reversal / stale identity pressure demos
-Status: IMPLEMENTING
-Task progress: 20%
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 55%
 Baseline: `main@460322c75ebde024da678cadde0f5c894ea961e1`.
 Branch: `audit/ant-edge-state-demos-003`.
 
@@ -46,10 +46,17 @@ Guardrails:
 - Do not add unsupported Ant APIs solely for parity.
 - If a failure is found, fix the canonical owner (MotionCore/OverlayController/SelectionController/PaginationModel/etc.) and retain the strict regression.
 
+Implemented on branch:
+- Modal demo + Chromium regression: open -> begin leave -> update title/content -> reopen; final logical open, overlay active, shown motion phase, and latest DOM content are all asserted.
+- Drawer demo + Chromium regression: same reversal across independent mask + panel motions; final dual presence and latest content are asserted.
+- List demo + Chromium regression: selected/active Beta is removed by an items replacement. SelectionController's Collection-backed revision anchor must invalidate, while active focus falls to the row at the prior visual index.
+- Transfer demo + Chromium regression: source page 3 -> filter to zero rows -> clear filter. Page must clamp to 1 and onSearch must fire exactly once per query transition.
+- No runtime code changed yet in this round; the pressure matrix will determine whether a canonical owner defect exists.
+
 Next exact step:
-1. Add Modal/Drawer motion-reversal demos and browser assertions.
-2. Add List data-replacement and Transfer filter/page-recovery assertions.
-3. Run exact-head CI and fix only reproduced owner-level defects.
+1. Open PR and run exact-head CI.
+2. If a new strict assertion fails, fix the responsible canonical owner without weakening the assertion.
+3. Merge if green and verify main CI + Pages.
 ## PREVIOUS VERIFIED HANDOFF
 
 ### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
