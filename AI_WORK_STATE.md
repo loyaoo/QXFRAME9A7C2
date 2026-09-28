@@ -22,11 +22,12 @@
 ### ANT-INTERACTION-008 — Popconfirm / Dropdown independent follow-up
 Status: VERIFIED
 Task progress: 100%
+Repository state: PR #139 merged to `main` at `84a1a5133a3b011aefc5adcbee69b49a0bdf319c`.
 Scope: current Ant Design live Popconfirm basic and Promise examples, Dropdown click menu, Escape and keyboard paths; QX source, contracts, handbook overlay/feedback rules, and existing browser regressions.
 Result: no new Popconfirm/Dropdown component interaction bug was confirmed. Ant's Promise example leaves Cancel available while loading, whereas QX deliberately disables both actions and blocks dismissal during its pending confirm action. This is an explicit QX pending-close policy, not a safe standalone parity fix. Ant's default Dropdown hover and nonselectable menu also differ from QX's documented click/selectable defaults; these are API profile choices.
 CI follow-up: PR #139 CI #687 exposed a browser test harness cleanup race: `verify-final-focus-lifecycle.mjs` passed its assertions then raised `ENOTEMPTY` while deleting Chromium's profile. CI #689 reproduced it after the primary Chromium process exited, indicating remaining profile writers. Cleanup now waits for primary exit, retries deletion, and reports a deferred cleanup warning only for `ENOTEMPTY`/`EBUSY` on the ephemeral CI profile. This changes verification tooling only.
 Tabs follow-up: CI #691 passed the focus-lifecycle browser assertions and then exposed intermittent Tabs overflow selection focus return in the strict final-audit browser regression. The prior fix armed the return before selection, but still waited solely for a responsive overflow measurement to return focus. Popover close now schedules the return immediately; the layout pass remains responsible for a later fallback if More disappears. The existing strict browser regression covers this path.
-Verification: live Ant Design 6.6.5 examples inspected on 2026-09-28; source and browser-smoke coverage reviewed on clean `main` at `050fe79`. Checkpoint, browser harness cleanup and Tabs focus fix are in PR #139; the new exact-head CI remains the merge gate.
+Verification: live Ant Design 6.6.5 examples inspected on 2026-09-28; source and browser-smoke coverage reviewed against the previous `main` at `050fe79`. Exact PR head `561c7ed14fcde6189888406cb1d6951f246fa3ad` passed QXFRAME CI #693, including full release and Windows tooling; PR #139 merged.
 Next exact step: take a different component interaction path in a subsequent user-driven audit; require a reproducible QX defect before implementation.
 
 ## PREVIOUS VERIFIED HANDOFF
