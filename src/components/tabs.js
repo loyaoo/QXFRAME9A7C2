@@ -1074,9 +1074,11 @@ function setupTabs(instance) {
     if (!button || !overflowPanel.contains(button)) return;
     var key = DOM.getPrivate(button, 'tabsOverflowKey');
     var source = DOM.activationSource(event);
-    setActiveKey(key, { source: source, reason: 'overflow', originalEvent: event });
+    // Arm focus return before selection: setActiveKey() itself schedules overflow work,
+    // so a fast ResponsiveOverflow pass must already see the pending return contract.
     overflowReturnFocusSource = source;
     overflowReturnFocusAfterLayout = true;
+    setActiveKey(key, { source: source, reason: 'overflow', originalEvent: event });
     if (!closeOverflow()) { overflowReturnFocusSource = ''; overflowReturnFocusAfterLayout = false; }
     else scheduleOverflow('overflow-selection-return');
   }));
