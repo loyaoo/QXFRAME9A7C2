@@ -14,10 +14,21 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready after Ant interaction audit round 2 closeout.
-- Current Task: `HANDOFF-READY-004`
+- Current Phase: Ant interaction audit follow-up.
+- Current Task: `WHEEL-PANEL-DOWNSTREAM-PRESERVE-001`
 
 ## CURRENT
+
+### WHEEL-PANEL-DOWNSTREAM-PRESERVE-001 — preserve valid downstream wheel selections
+Status: IMPLEMENTED_AWAITING_CI
+Task progress: 60%
+Branch: `fix/wheel-panel-preserve-downstream` from `main` at `43f648e`.
+Finding: WheelPanel `selectIndex` cleared every downstream value on an upstream selection; TimePanel and TimePicker therefore reset minutes and seconds when hours changed, and independent WheelPicker columns reset as well.
+Changes: `src/components/wheel-panel.js` keeps downstream candidate values while `rebuildFrom` revalidates each column against its current items; `tools/verify-browser-smoke.html` exercises pointer and keyboard flows plus dependent value retention/fallback.
+Verification: `git diff --check` passes. Local build is blocked by absent Rollup provider; GitHub Actions remains the release gate.
+Next exact step: commit/push branch, open PR, inspect CI browser and release gates, fix any failures, then merge and checkpoint.
+
+## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-004 — post Ant interaction audit round 2 closeout
 Status: VERIFIED
