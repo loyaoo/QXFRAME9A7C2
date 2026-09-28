@@ -99,12 +99,23 @@ function createRuntime(instance, prepared) {
     function align(rawValue) {
         const raw = clamp(finite(rawValue, 'value'), opts.min, opts.max), candidates = [];
         if (opts.step !== null) candidates.push(opts.min + Math.round((raw - opts.min) / opts.step) * opts.step);
+        else candidates.push(opts.min, opts.max);
         markEntries().forEach(entry => candidates.push(entry.value));
         if (!candidates.length) return Number(raw.toFixed(precision()));
         let best = null, bestDistance = Infinity;
         candidates.forEach(candidate => { if (candidate < opts.min || candidate > opts.max) return; const distance = Math.abs(candidate - raw); if (distance < bestDistance) { best = candidate; bestDistance = distance; } });
         if (best === null) best = raw;
         return Number(clamp(best, opts.min, opts.max).toFixed(precision()));
+    }
+    function adjacentDiscreteValue(current, direction, count=1) {
+        const points = [...new Set([opts.min, ...markEntries().map(entry => entry.value), opts.max])].sort((a,b) => a-b);
+        if (direction > 0) {
+            const next = points.findIndex(point => point > current);
+            return next < 0 ? points[points.length-1] : points[Math.min(points.length-1,next+count-1)];
+        }
+        let previous = points.length-1;
+        while (previous >= 0 && points[previous] >= current) previous -= 1;
+        return points[Math.max(0,previous-count+1)];
     }
     function normalize(next) {
         let sourceValues = Array.isArray(next) ? next.slice() : [next];
@@ -188,7 +199,7 @@ function createRuntime(instance, prepared) {
     function finalizeKeyboardSession(event,reason){if(!keyboardSession)return false;const session=keyboardSession;keyboardSession=null;if(session.changed)emit('onAfterChange',reason||'keyboard',event);return session.changed;}
     function cancelKeyboardSession(event,reason){if(!keyboardSession)return false;const session=keyboardSession;keyboardSession=null;if(!sameValues(values,session.startValues))setValues(session.startValues,{user:false,reason:reason||'keyboard-cancel',originalEvent:event});return true;}
     function handleKeyup(index,event){if(!keyboardSession||keyboardSession.index!==index||!directionalKey(event.key))return false;delete keyboardSession.keys[event.key];if(!Object.keys(keyboardSession.keys).length)finalizeKeyboardSession(event,'keyboard');return true;}
-    function handleKeydown(index,event){if(typeof opts.onKeyDown==='function')opts.onKeyDown(event,{index,value:externalValue(),instance:api});if(!interactive(index)||opts.keyboard===false)return;if(event.key==='Escape'&&keyboardSession){if(event.preventDefault)event.preventDefault();cancelKeyboardSession(event,'keyboard-escape');return;}if(editableRange()&&(event.key==='Delete'||event.key==='Backspace')){if(event.preventDefault)event.preventDefault();removeHandle(index,{user:true,reason:'keyboard-remove',originalEvent:event,final:true});return;}const unit=opts.step===null?1:opts.step,direction=opts.reverse===true?-1:1;let next=null;if(event.key==='ArrowRight'||event.key==='ArrowUp')next=values[index]+unit*direction;else if(event.key==='ArrowLeft'||event.key==='ArrowDown')next=values[index]-unit*direction;else if(event.key==='PageUp')next=values[index]+unit*10;else if(event.key==='PageDown')next=values[index]-unit*10;else if(event.key==='Home')next=opts.min;else if(event.key==='End')next=opts.max;else return;if(event.preventDefault)event.preventDefault();const keySession=beginKeyboardSession(index,event);activeHandle=index;const output=values.slice();output[index]=align(next);if(rangeMode()&&opts.allowCross===false){if(editableRange()){if(index>0)output[index]=Math.max(output[index],values[index-1]);if(index<values.length-1)output[index]=Math.min(output[index],values[index+1]);}else{if(index===0)output[0]=Math.min(output[0],output[1]);else output[1]=Math.max(output[1],output[0]);}}if(setValues(output,{user:true,reason:'keyboard',originalEvent:event}))keySession.changed=true;const handle=handles[index];if(handle)DOM.focusElement(handle);}
+    function handleKeydown(index,event){if(typeof opts.onKeyDown==='function')opts.onKeyDown(event,{index,value:externalValue(),instance:api});if(!interactive(index)||opts.keyboard===false)return;if(event.key==='Escape'&&keyboardSession){if(event.preventDefault)event.preventDefault();cancelKeyboardSession(event,'keyboard-escape');return;}if(editableRange()&&(event.key==='Delete'||event.key==='Backspace')){if(event.preventDefault)event.preventDefault();removeHandle(index,{user:true,reason:'keyboard-remove',originalEvent:event,final:true});return;}const unit=opts.step===null?1:opts.step,direction=opts.reverse===true?-1:1;let next=null;if(event.key==='ArrowRight'||event.key==='ArrowUp')next=values[index]+unit*direction;else if(event.key==='ArrowLeft'||event.key==='ArrowDown')next=values[index]-unit*direction;else if(event.key==='PageUp')next=values[index]+unit*10;else if(event.key==='PageDown')next=values[index]-unit*10;else if(event.key==='Home')next=opts.min;else if(event.key==='End')next=opts.max;else return;if(opts.step===null&&directionalKey(event.key)&&event.key!=='Home'&&event.key!=='End')next=adjacentDiscreteValue(values[index],Math.sign(next-values[index]),event.key==='PageUp'||event.key==='PageDown'?10:1);if(event.preventDefault)event.preventDefault();const keySession=beginKeyboardSession(index,event);activeHandle=index;const output=values.slice();output[index]=align(next);if(rangeMode()&&opts.allowCross===false){if(editableRange()){if(index>0)output[index]=Math.max(output[index],values[index-1]);if(index<values.length-1)output[index]=Math.min(output[index],values[index+1]);}else{if(index===0)output[0]=Math.min(output[0],output[1]);else output[1]=Math.max(output[1],output[0]);}}if(setValues(output,{user:true,reason:'keyboard',originalEvent:event}))keySession.changed=true;const handle=handles[index];if(handle)DOM.focusElement(handle);}
 
     opts=normalizeSliderOptions(opts);let initial=rangeMode()?[opts.min,opts.max]:opts.min;if(hasOwn(opts,'defaultValue'))initial=opts.defaultValue;if(hasOwn(opts,'value'))initial=opts.value;
     valueState=ValueController.create({value:normalize(initial),controlled:incoming.controlled===true,normalizeValue:normalize,equals:sameValues,copyValue:list=>list.slice()});
