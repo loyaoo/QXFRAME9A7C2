@@ -15,50 +15,62 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-INTERACTION-011`
+- Current Task: `ANT-INTERACTION-013`
 
 ## CURRENT
 
-### ANT-INTERACTION-011 — Ant 6.6.5 / 6.6.4 residual interaction closeout
-Status: VERIFIED
-Task progress: 100%
-Baseline for this continuation: `main@9008d05ae1c74f1d8a1cf2551d771d519e432c5d`.
-Current verified main after this batch: `1ddcc9148229cabd6b33d0a54bc33521d2c1c41d`.
+### ANT-INTERACTION-013 — Ant functional audit + TreeSelect maxCount capability projection
+Status: VERIFIED — CONTINUING AUDIT
+Task progress: 100% for confirmed findings in this batch
+Baseline for this batch: `main@ab4f09d9f5f81f1c598add6d58ee80cba29e96c8`.
+Current verified main after runtime fixes: `491a07aaf4de038f9c7d279ec0325e286363d90b`.
 
 Merged fixes:
-- PR #142 — Select / TreeSelect / Cascader preserve option `value:''` distinctly from clear. Shared Selection adds opt-in `allowEmptyKey`; default key channels retain empty-key rejection. Sentinel-based array comparison was also replaced with element-wise selection comparison. Exact integrated head passed QXFRAME CI #708.
-- PR #144 — Tabs overflow selection transfers focus away from the closing overflow row before popup unmount. Exact head passed QXFRAME CI #704.
-- PR #146 — Tabs responsive measurement can temporarily detach More; final focus reconciliation now runs immediately after the final More visibility/reinsert decision. Integrated head including #142 passed QXFRAME CI #713.
-- PR #143 — Picker confirm/cancel labels and TimePicker `nowText` preserve explicitly supplied falsy renderable values such as numeric `0`; defaults apply only to `undefined`. Integrated head passed QXFRAME CI #718.
-- PR #145 — Popconfirm preserves numeric `0` for confirm/cancel labels and the corresponding FeedbackController message projection. Title/content already preserved `0`. Integrated head passed QXFRAME CI #722.
-- PR #147 — InputOTP string-mask architecture remains the canonical Control `type=text + segment-mask overlay`; masked segment `::selection` now keeps the real foreground/WebKit text fill transparent so system selection painting cannot expose the underlying character. Final-audit and browser regressions cover the rule. Exact integrated head passed QXFRAME CI #730.
+- PR #150 — Table filter canonical-state closeout:
+  1. Public ComponentContract incorrectly inferred `Table.filters` as an array although TableModel/runtime require a column-keyed object map. Canonical contract and generated component API now expose `filters: object`; completion parity authorizes only the frozen baseline correction `Table.filters: array→object`.
+  2. `Table.setFilter()/setFilters()` updated canonical model state while an already-open filter popup preserved stale `filterDraftValues` and controls. The active popup now reconciles canonical values in place for built-in filters; custom `filterDropdown` rerenders only when values actually changed and restores focus.
+  3. Built-in filter option `value:''` was rendered as a non-selectable presentation row even though TableModel accepts `filters:{column:['']}`. Empty string is now selectable; only null/undefined mean presentation-only rows.
+  Browser regression holds the same controlled-open single-select filter popup while values move `a → b → ''`, proving popup identity stays stable and checked state follows canonical filters including empty string. Exact PR head `fd4405541a66271cb2f7404456b48ac767a39527` passed QXFRAME CI #741.
+- PR #152 — TreeSelect `maxCount` now projects capacity into a transient checkbox capability instead of only rejecting the final check intent:
+  - Tree has a distinct internal `isItemCheckDisabled` channel separate from structural/business `isItemDisabled`.
+  - At capacity, only unchecked nodes whose check/cascade would exceed the limit receive disabled checkbox/check intent; already-checked nodes remain removable.
+  - Parent disclosure/navigation/search remain available even when that parent's checkbox is temporarily check-disabled.
+  - Releasing capacity immediately re-enables valid checks; filling the freed slot disables overflow checks again.
+  - External/canonical `setValue()` replacement is not blocked merely because the previous value already filled maxCount.
+  - Existing applicability rules are preserved: child strategy, or all strategy with strict checking; parent strategy and non-strict all do not apply maxCount.
+  - Pages Max count demo text now states the disabled behavior.
+  Exact integrated head `2337e4085c89bf06d14a9384d77a5b4aea054fd6` passed QXFRAME CI #756 including Windows tooling, Completion audit, Full release verification, npm pack and standalone dist/docs build.
+- PR #153 was an interim maxCount implementation that merged capacity into Tree `isItemDisabled`, visually disabling the whole row. It was superseded by PR #152 because maxCount is a transient check-capability constraint, not structural node disablement.
 
-Rejected / closed finding:
-- PR #148 — suspected Tree numeric-zero lazy-load bug was a false positive and was closed unmerged. `ItemAccessors.key()` already canonicalizes non-null keys with `String(value)`, so numeric `0` enters Tree internals as `"0"`; the proposed source change had no behavioral benefit.
+New Ant comparison dispositions closed in this batch:
+- TreeSelect controlled parent-projection with disabled descendants is explicitly protected: `checkedValues()` merges externally owned disabled selected values back into the mutable Tree checked projection.
+- Transfer repeated search-clear callback is prevented centrally by SearchState: setting the same query, including repeated `''`, does not emit onChange/onSearch.
+- Tags long-held Enter/Space does not repeatedly toggle: InteractionController rejects key repeat for non-repeatable ACTIVATE actions and KeyboardNavigation independently suppresses activation repeat.
+- Select disabled creatable-option duplication is blocked before tag creation: an existing disabled match emits `invalidReason:'disabled-option'` instead of creating a duplicate tag.
+- Select active-vs-selected visual priority is explicit: selected+active uses the hover-accent state while keyboard focus is a separate focus-visible outline.
+- Select searchable single rich committed content is hidden while draft editing via `.has-single-value:not(.is-searching)`; rich committed content does not overlay the search editor.
+- Select clear button is intentionally not a separate Tab stop under QX virtual-focus rules; keyboard remove actions are owned by the Select interaction scope rather than an inner focusable clear button.
+- Slider pointer drag prevents default on handle, rail and track at PointerSession start, avoiding browser text selection during drag.
+- Upload progress has one canonical `progressView.thickness` owner and renders only for uploading records; there is no alternate unconfigured thick-progress branch.
+- Drawer `closable.disabled` is validated by OverlayFramePolicy, projected to the native close button disabled state, and enforced by the shared close Press/Capability owner.
+- ColorPicker clear does not destroy or detach the saturation PointerSession; later drag starts from a fresh snapshot. Disabled/readOnly clear remains blocked by shared ClearAction/Capability.
+- Dropdown long-menu overflow remains owned by the inner ItemCollection scroll viewport with bounded max-height plus Trigger flip/autoUpdate; no inaccessible top-items overflow path.
+- List numeric key `0` is canonicalized by ItemAccessors to `"0"`; stable identity does not fall through a falsy-key path.
+- QX Descriptions is presentation-only rather than a stateful keyed JS component, so Ant's React key=0 state-reset defect has no equivalent runtime path.
+- Button loading layout bug is not mapped because QX has no independent JS Button loading component/contract; buttons are native/CSS primitives unless owned by another component.
+- TreeSelect maxCount visual disabling is no longer an open parity/design gap; PR #152 closes it through a check-only projection without altering hierarchical checked/half-checked semantics.
 
-Residual Ant comparison disposition (do not reopen without new reproduction evidence):
-- Transfer: disabled-only filtered select-all, empty-filter recovery, footer side/direction, stale callback/range selection paths are either already correct or not part of the QX public interaction surface.
-- Select: single/multiple height shares the canonical Control height owner; no separate font/line-height height path.
-- Upload: Dragger has no competing public height owner that can overwrite authored style height; picture-card layout already uses multi-row grid.
-- Menu: TriggerInteraction already protects reference→popup hover transfer; inline submenu motion cleans temporary height state and menu icons have no lingering transform/width transition owner.
-- Tag/Tags: close actions prevent default and stop propagation, including href-backed tags.
-- Carousel: item updates reconcile the active slide by stable key rather than resetting to index zero.
-- Notification/Message: close/action buttons are `type=button`; notification reserves close-button inline space even without a title.
-- InputNumber: disabled actions cannot enter hover/focus styling.
-- Picker: popup close/blur/outside/Escape remains rollback/end-session; commit is a separate explicit transaction path.
-- Table: responsive-hidden columns remain in TableModel; filter state is independent of CSS visibility. Controlled/uncontrolled filter-open callbacks are mutually exclusive. There is no column-level custom `onKeyDown` API corresponding to Ant's sorter fix.
-- Tree: explicit `expandedKeys: undefined` clears to `[]`; numeric-zero-key concern was disproven after tracing ItemAccessors.
-- Image preview: OverlayController owns focus trap and restore through one close/presence lifecycle.
-- Upload async removal: pending `beforeRemove` is uid-bound and guarded by lifecycle mutation generation; adding another file does not advance that generation, so a late allow removes the original uid rather than a newly added file.
-- Table local select-all: `selectVisible()` operates only on the current projected page and filters disabled rows before selection; remote query-wide selection remains semantic `allMatching` rather than materialized unloaded keys.
-- DatePicker min/max navigation: boundary view changes clamp panel view state and return without close/commit; popup closing remains owned by selection/preset/explicit close paths.
-- Modal custom `buttons[].onClick` is the QX button action owner; unlike Ant `cancelButtonProps`, QX has no contract requiring a second global `onCancel/onConfirm` invocation, so no double-callback behavior was introduced.
-- Ant release baseline: official stable changelog still reports 6.6.5 (2026-09-20) as latest as of 2026-09-28; no 6.6.6+ stable release was available for this pass.
+Audit boundary:
+- Continue older Ant functional fixes only when QX has a corresponding maintained public capability.
+- Do not add Ant-only React APIs or focusable internal buttons merely for superficial parity; preserve QX virtual-focus and Controller ownership rules.
+- Prefer value/commit/selection/focus/async correctness over cosmetic parity.
+- For capacity/disabled UX, distinguish structural item disablement from transient operation capability; never reuse `isItemDisabled` when only one action (such as checking) should be blocked.
 
 Next exact step:
 1. Query current `main`, open PRs and latest CI before new code work.
-2. Continue only with a new reproducible QX behavior difference or a later independent audit; do not repeat the closed Ant 6.6.5 / 6.6.4 paths above.
-3. Keep strict browser regressions unchanged; component races must be fixed rather than hidden with longer sleeps or weakened assertions.
+2. Continue Ant 6.4.x and older high-risk functional comparison, prioritizing Picker/Select/Tree/Table/Upload/Menu/Slider/overlay state owners.
+3. Open a runtime PR only for a reproducible QX defect; false positives must be closed rather than merged.
+4. Keep browser assertions strict and update this checkpoint after the next verified runtime fix batch.
 
 ## PREVIOUS VERIFIED HANDOFF
 
