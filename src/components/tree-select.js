@@ -280,17 +280,29 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (record.item && record.item.checkable === false) return false;
           return true;
         }
-        function wouldExceedMaxCount(shouldCheck, detail) {
-          if (!shouldCheck || !maxCountApplies() || !tree || !detail) return false;
-          var model = tree.getModel(), record = model && model.getRecord(String(detail.key));
-          if (!record || !recordCheckable(record)) return false;
-          var candidate = new Set((detail.checkedKeys || []).map(String));
+        function maxCountWouldBlockRecord(record, checkedKeys) {
+          if (!maxCountApplies() || !tree || !record || !recordCheckable(record)) return false;
+          var model = tree.getModel();
+          var candidate = new Set((Array.isArray(checkedKeys) ? checkedKeys : tree.getCheckedKeys(false)).map(String));
+          if (candidate.has(record.key)) return false;
           if (opts.checkStrictly === true) candidate.add(record.key);
           else [record].concat(model.getDescendants(record.key)).forEach(function (entry) { if (recordCheckable(entry)) candidate.add(entry.key); });
           var strategy = String(opts.checkedStrategy || 'child');
           var count = Array.from(candidate).filter(function (key) { return strategy === 'all' || !model.hasChildren(key); }).length;
           var retainedDisabled = disabledSelectedValues(apiValue()).filter(function (value) { var key = keyByValue(value); return key === null || key === undefined || !candidate.has(String(key)); }).length;
           return count + retainedDisabled > maxCountLimit();
+        }
+        function treeCheckable(item, index) {
+          if (!hierarchicalCheckMode()) return false;
+          if (item && item.checkable === false) return false;
+          if (!maxCountApplies() || !tree) return true;
+          var key = keyOf(item, index), model = tree.getModel(), record = key === undefined || key === null || key === '' ? null : model.getRecord(String(key));
+          return !record || !maxCountWouldBlockRecord(record);
+        }
+        function wouldExceedMaxCount(shouldCheck, detail) {
+          if (!shouldCheck || !detail || !tree) return false;
+          var model = tree.getModel(), record = model && model.getRecord(String(detail.key));
+          return !!record && maxCountWouldBlockRecord(record, detail.checkedKeys);
         }
         function beforeTreeCheck(shouldCheck, detail) {
           if (wouldExceedMaxCount(shouldCheck, detail)) return false;
@@ -384,7 +396,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           multiple: false,
           selectable: !hierarchicalCheckMode(),
           selectionAppearance: 'highlight',
-          checkable: hierarchicalCheckMode(),
+          checkable: treeCheckable,
           checkStrictly: opts.checkStrictly === true,
           checkedKeys: hierarchicalCheckMode() ? checkedKeysForValues(apiValue()) : undefined,
           expandedKeys: opts.expandedKeys,
@@ -737,7 +749,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var treeOptions = {
             multiple: false, selectable: !checkMode,
             selectionAppearance: 'highlight',
-            checkable: checkMode, checkStrictly: opts.checkStrictly === true,
+            checkable: treeCheckable, checkStrictly: opts.checkStrictly === true,
             size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true,
             virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
             getKey: opts.getKey, getItems: opts.getItems, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled,
