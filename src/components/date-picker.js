@@ -775,6 +775,72 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (!target && field.getRootElement) target = field.getRootElement();
     return DOM.focusElement(target, { preventScroll: true });
   }
+  function activeCalendarForTabOrder() {
+    return calendarSecondary && activeCalendarPanel === 'secondary' ? calendarSecondary : calendar;
+  }
+  function syncCalendarHeaderTabStops() {
+    if (!calendar) return false;
+    [calendar, calendarSecondary].forEach(function (panel) {
+      if (!panel || !panel.getRefs) return;
+      var refs = panel.getRefs();
+      if (refs && refs.yearTitle) refs.yearTitle.tabIndex = -1;
+      if (refs && refs.monthTitle) refs.monthTitle.tabIndex = -1;
+    });
+    var activePanel = activeCalendarForTabOrder();
+    var activeRefs = activePanel && activePanel.getRefs ? activePanel.getRefs() : null;
+    if (calendarPanelMode === 'date' && activeRefs) {
+      if (activeRefs.yearTitle && !activeRefs.yearTitle.disabled) activeRefs.yearTitle.tabIndex = 0;
+      if (activeRefs.monthTitle && !activeRefs.monthTitle.disabled) activeRefs.monthTitle.tabIndex = 0;
+    }
+    return true;
+  }
+  function datePickerTabSequence() {
+    if (!field || !field.getState().open || !calendar || calendarPanelMode !== 'date') return [];
+    syncCalendarHeaderTabStops();
+    var sequence = [];
+    if (presetsHost && presetsHost.parentNode && presetButtons.some(function (button) { return button && button.disabled !== true; })) sequence.push({ kind:'presets', node:presetsHost });
+    var activePanel = activeCalendarForTabOrder();
+    var refs = activePanel && activePanel.getRefs ? activePanel.getRefs() : null;
+    if (refs && refs.yearTitle && !refs.yearTitle.disabled) sequence.push({ kind:'year', node:refs.yearTitle });
+    if (refs && refs.monthTitle && !refs.monthTitle.disabled) sequence.push({ kind:'month', node:refs.monthTitle });
+    var dayNode = field.getInputElement ? field.getInputElement() : null;
+    if (!dayNode && field.getControl) {
+      var control = field.getControl();
+      dayNode = control && control.getFocusElement ? control.getFocusElement() : null;
+    }
+    if (!dayNode && field.getRootElement) dayNode = field.getRootElement();
+    if (dayNode) sequence.push({ kind:'day', node:dayNode });
+    var footer = field.getFooterElement ? field.getFooterElement() : null;
+    if (footer) Array.prototype.forEach.call(footer.querySelectorAll('.qxframe9a7c2-picker-field-footer-actions button:not(:disabled)'), function (button) {
+      sequence.push({ kind:'footer', node:button });
+    });
+    return sequence;
+  }
+  function focusDateTabEntry(entry, event) {
+    if (!entry || !entry.node) return false;
+    if (entry.kind === 'day') {
+      keyboardRegion = 'selection';
+      var focused = focusFieldHost();
+      if (focused) activateCurrentPanelVirtualFocus('date-tab-day');
+      return focused;
+    }
+    return DOM.focusElement(entry.node, { preventScroll:true });
+  }
+  function handleDatePickerTabCapture(event) {
+    if (!event || event.key !== 'Tab' || event.defaultPrevented === true || !field || !field.getState().open) return false;
+    var sequence = datePickerTabSequence();
+    if (!sequence.length) return false;
+    var active = event.target || (doc && doc.activeElement);
+    var index = -1;
+    for (var i = 0; i < sequence.length; i += 1) {
+      var node = sequence[i].node;
+      if (active === node || (node && node.contains && node.contains(active))) { index = i; break; }
+    }
+    if (index < 0) return false;
+    var nextIndex = event.shiftKey ? (index - 1 + sequence.length) % sequence.length : (index + 1) % sequence.length;
+    if (event.preventDefault) event.preventDefault();
+    return focusDateTabEntry(sequence[nextIndex], event);
+  }
   function rememberCalendarDrillOwner(detail) {
     if (calendarSecondary && detail && detail.calendar === calendarSecondary) drillCalendarPanel = 'secondary';
     else if (detail && detail.calendar === calendar) drillCalendarPanel = 'primary';
@@ -984,8 +1050,35 @@ function setupDatePickerRuntime(instance, fieldInit) {
     next.setDate(next.getDate() + Number(amount || 0));
     return next;
   }
+  function geometricDualCalendarTarget(event) {
+    if (!calendarSecondary || calendarPanelMode !== 'date' || !event || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return null;
+    var toSecondary = activeCalendarPanel === 'primary' && event.key === 'ArrowRight';
+    var toPrimary = activeCalendarPanel === 'secondary' && event.key === 'ArrowLeft';
+    if (!toSecondary && !toPrimary) return null;
+    var source = toSecondary ? calendar : calendarSecondary;
+    var targetPanel = toSecondary ? calendarSecondary : calendar;
+    var sourceState = source && source.getState ? source.getState() : null;
+    var sourceCells = source && source.getCells ? source.getCells() : [];
+    var activeKey = sourceState && sourceState.activeKey ? String(sourceState.activeKey) : '';
+    var sourceIndex = -1;
+    for (var index = 0; index < sourceCells.length; index += 1) {
+      if (String(sourceCells[index].key) === activeKey) { sourceIndex = index; break; }
+    }
+    if (sourceIndex < 0) return null;
+    var sourceColumn = sourceIndex % 7;
+    if ((toSecondary && sourceColumn !== 6) || (toPrimary && sourceColumn !== 0)) return null;
+    var row = Math.floor(sourceIndex / 7);
+    var targetCells = targetPanel && targetPanel.getCells ? targetPanel.getCells() : [];
+    var targetIndex = row * 7 + (toSecondary ? 0 : 6);
+    var entry = targetCells[targetIndex] || null;
+    var targetView = targetPanel && targetPanel.getState ? targetPanel.getState().viewValue : null;
+    if (!entry || entry.disabled === true || !sameCalendarMonth(entry.date, targetView)) return null;
+    return { panel:targetPanel, name:toSecondary ? 'secondary' : 'primary', date:cloneDate(entry.date) };
+  }
   function dualCalendarArrowTarget(event) {
     if (!calendarSecondary || calendarPanelMode !== 'date' || !event) return null;
+    var geometric = geometricDualCalendarTarget(event);
+    if (geometric) return geometric;
     var delta = event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowRight' ? 1 : event.key === 'ArrowUp' ? -7 : event.key === 'ArrowDown' ? 7 : 0;
     if (!delta) return null;
     var panel = activeCalendarPanel === 'secondary' ? calendarSecondary : calendar;
@@ -1076,6 +1169,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       var seam = dualCalendarArrowTarget(event);
       if (seam && seam.panel.setActiveDate(seam.date, { silent:true, source:'keyboard', reason:'dual-panel-' + event.key })) {
         activeCalendarPanel = seam.name;
+        syncCalendarHeaderTabStops();
         activatePanelDomain(seam.panel, 'dual-panel-' + event.key);
         return true;
       }
@@ -1150,6 +1244,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     syncField(field.getState().open);
   }
 
+  panelCleanups.push(DOM.listen(opts.document || globalThis.document, 'keydown', handleDatePickerTabCapture, true));
   field = PickerField.create({
     container: opts.container,
     headless: opts.headless === true, renderControl: opts.renderControl !== false, reference: opts.reference, triggerTarget: opts.triggerTarget, valueTarget: opts.valueTarget, draftValueTarget: opts.draftValueTarget, inputTarget: opts.inputTarget, formTarget: opts.formTarget,
@@ -1201,6 +1296,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       keyboardRegion = 'selection';
       activeCalendarPanel = 'primary';
       if (calendar) setCalendarPanelMode('date', calendar.getState().viewValue, detail);
+      syncCalendarHeaderTabStops();
       var openByKeyboard = !!(detail && (detail.source === 'keyboard' || /keyboard/i.test(String(detail.reason || ''))));
       var openEventType = String(detail && detail.originalEvent && detail.originalEvent.type || '').toLowerCase();
       var openByPointer = !openByKeyboard && !!(detail && (
@@ -1355,6 +1451,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   }
 
   bindPickerVirtualFocus();
+  syncCalendarHeaderTabStops();
   if (selectionHost) {
     panelCleanups.push(DOM.listen(selectionHost, 'pointerdown', function (event) {
       keyboardRegion = 'selection';
@@ -1362,11 +1459,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (navigation && navigation.virtualFocus) navigation.virtualFocus.pointer();
       if (calendarSecondary && calendarSecondary.getRootElement().contains(event.target)) activeCalendarPanel = 'secondary';
       else if (calendar && calendar.getRootElement().contains(event.target)) activeCalendarPanel = 'primary';
+      syncCalendarHeaderTabStops();
     }, true));
     panelCleanups.push(DOM.listen(selectionHost, 'focusin', function (event) {
       keyboardRegion = 'selection';
       if (calendarSecondary && calendarSecondary.getRootElement().contains(event.target)) activeCalendarPanel = 'secondary';
       else if (calendar && calendar.getRootElement().contains(event.target)) activeCalendarPanel = 'primary';
+      syncCalendarHeaderTabStops();
     }, true));
   }
   if (timeHost) {
