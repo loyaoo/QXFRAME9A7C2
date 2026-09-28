@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### THEME-PLAYGROUND-REGRESSION-002 — ColorPicker preset Enter / Menu empty overflow / Collapse header focus owner
-Status: VERIFIED_PENDING_MERGE
-Task progress: 95%
+Status: VERIFIED
+Task progress: 100%
 Baseline: `main@2a4448ae3f53efdc98d4d93472f3eb9751c1cc7e`.
 Branch: `fix/theme-playground-regression-002`.
 User verification surface: `docs/theme-playground.html`.
@@ -50,10 +50,17 @@ Verification:
 - Dependency security audit, Completion audit, Full release verification (including Chromium smoke), npm pack, standalone dist/docs build and artifact uploads passed on the exact implementation head.
 - Existing real-overflow Menu regression remains green alongside the new empty-overflow regression.
 
+Final merge/deploy evidence:
+- PR #169 final head `f5b81e883b5c2cb57c85a3375fbb26164db26ed2` passed QXFRAME CI #821 (Actions run `36436856437`) and was merged.
+- Merged main SHA: `9fa07d47011c82a594fa7605eeba7809c48edd67`.
+- Main push QXFRAME CI #822 (Actions run `36437402759`) passed Windows tools, dependency audit, Completion audit, Full release verification, npm/dist/docs build and artifact upload.
+- CI #822 `deploy-pages` completed successfully, so the current Pages build contains this regression batch.
+- Reported batch is closed: ColorPicker preset Enter select+close; empty horizontal Menu overflow hidden/non-activatable; Collapse header owns real keyboard focus with Enter/Space/Left/Right preserved.
+
 Next exact step:
-1. Preserve this verified checkpoint as the PR's final status-only commit and run exact-head CI once more.
-2. Merge PR #169 only after the final head is green.
-3. Verify the resulting main push CI / Pages deployment and record the merged main SHA.
+1. Re-test these three paths on the deployed `docs/theme-playground.html`.
+2. Reopen only with a concrete reproduction against main `9fa07d47011c82a594fa7605eeba7809c48edd67` or a newer main.
+3. Resume the remaining independent Ant interaction audit without repeating this closed batch.
 
 ## PREVIOUS VERIFIED HANDOFF
 
