@@ -3800,7 +3800,7 @@
         "errorText": "any",
         "expandedKeys": "array",
         "filteredTotal": "any",
-        "filters": "array",
+        "filters": "object",
         "fixedLayout": "boolean",
         "footer": "any",
         "footerEnd": "any",

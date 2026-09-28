@@ -153,6 +153,7 @@ assertTypes('Result', 'size', ['string', 'number']);
   assert(apiSchemaRule(name, 'renderControl') === 'boolean', `${name}.renderControl must remain boolean.`);
 });
 assert(apiSchemaRule('Select', 'getKey').type === 'function', 'Select.getKey must remain a callback option.');
+assert(apiSchemaRule('Table', 'filters') === 'object', 'Table.filters must remain a column-keyed object map, not a generic array option.');
 
 // Custom validators must survive the generated JSON/TypeScript contract rather than disappearing via JSON.stringify(function).
 assert((api.components.find(item => item.name === 'Drawer') || {}).schema.autoFocus === 'custom', 'Drawer.autoFocus custom Runtime validator must remain visible in generated API metadata.');

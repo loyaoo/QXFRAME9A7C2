@@ -271,7 +271,12 @@ const nullableDiscreteStep={types:['number'],nullable:true};
 if(!expectedSlider||expectedSlider.schema.step!=='number'||!currentSlider||json(currentSlider.schema.step)!==json(nullableDiscreteStep))
   throw new Error('Slider.step discrete-mode contract must expand the frozen numeric baseline to number|null only.');
 expectedSlider.schema.step=nullableDiscreteStep;
-const authorizedApiSchemaExpansions=Object.freeze(['Slider.step: number→number|null']);
+const expectedTable=expectedApi.components.find(component=>component.name==='Table');
+const currentTable=currentApi.components.find(component=>component.name==='Table');
+if(!expectedTable||expectedTable.schema.filters!=='array'||!currentTable||currentTable.schema.filters!=='object')
+  throw new Error('Table.filters contract migration must correct the frozen generic array inference to the canonical object map.');
+expectedTable.schema.filters='object';
+const authorizedApiSchemaExpansions=Object.freeze(['Slider.step: number→number|null','Table.filters: array→object']);
 const authorizedCapabilityMigrations=Object.freeze(Object.entries(BASELINE_CAPABILITY_MIGRATIONS).map(function(entry){return entry[0]+'→'+entry[1];}));
 const authorizedApiRemovals=[];
 for(const entry of compatibility.entries||[]){
