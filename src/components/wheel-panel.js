@@ -436,6 +436,8 @@ function create(options) {
       snapLoop: columnLoop,
       scrollIdleDelay: opts.scrollIdleDelay
     });
+    var scrollRoot = scroll.getRootElement ? scroll.getRootElement() : null;
+    if (scrollRoot) scrollRoot.tabIndex = -1;
 
     var guide = doc.createElement('div');
     guide.className = 'qxframe9a7c2-wheel-panel-center-guide';

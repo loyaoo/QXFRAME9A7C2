@@ -179,6 +179,18 @@ export class Collapse extends Component {
             navigation: {
                 activeItem: record.active,
                 orientation: 'vertical',
+                handlers: {
+                    ArrowLeft: detail => {
+                        const key = record.active.activeKey, item = itemByKey(key);
+                        if (!item || valueState.value.indexOf(item.key) < 0 || !record.toggle) return false;
+                        return record.toggle(item.key, { source:'keyboard', reason:'collapse-left', originalEvent:detail.originalEvent || null }) !== false;
+                    },
+                    ArrowRight: detail => {
+                        const key = record.active.activeKey, item = itemByKey(key);
+                        if (!item || valueState.value.indexOf(item.key) >= 0 || !record.toggle) return false;
+                        return record.toggle(item.key, { source:'keyboard', reason:'collapse-right', originalEvent:detail.originalEvent || null }) !== false;
+                    }
+                },
                 onNavigate: () => focusActive()
             }
         });

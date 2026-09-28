@@ -925,9 +925,12 @@ function setupTabs(instance) {
   function chooseFallback(index) {
     var enabled = items.filter(function (item) { return item.disabled !== true; });
     if (!enabled.length) return '';
+    for (var leftIndex = Math.min(index - 1, items.length - 1); leftIndex >= 0; leftIndex -= 1) {
+      if (items[leftIndex] && items[leftIndex].disabled !== true) return items[leftIndex].key;
+    }
     var right = items[index] && items[index].disabled !== true ? items[index] : null;
     if (right) return right.key;
-    for (var i = Math.min(index, items.length - 1); i >= 0; i -= 1) if (items[i] && items[i].disabled !== true) return items[i].key;
+    for (var i = index + 1; i < items.length; i += 1) if (items[i] && items[i].disabled !== true) return items[i].key;
     return enabled[0].key;
   }
   function remove(key, meta) {
@@ -939,12 +942,22 @@ function setupTabs(instance) {
     if (item.disabled === true || item.closable === false || !(opts.editable === true || opts.closable === true)) return false;
     if (!beforeEdit('remove', item, index, meta)) return false;
     var previousActive = activeKey;
+    var previousFocusKey = activeItem.activeKey ? String(activeItem.activeKey) : '';
+    var removedParts = tabPartsByKey.get(normalized);
+    var removedShell = tabShellByKey.get(normalized);
+    var browserFocus = doc && doc.activeElement;
+    var removedOwnedFocus = !!(browserFocus && ((removedParts && removedParts.surface && removedParts.surface.contains(browserFocus)) || (removedShell && removedShell.contains(browserFocus))));
     var next = items.slice();
     next.splice(index, 1);
     syncCollection(next);
-    if (!itemByKey(activeKey) || activeKey === normalized) syncActiveOwners(chooseFallback(index), { source:'tabs', reason:'remove-fallback' }, false);
-    activeItem.set(activeKey, { silent: true, source: 'tabs', reason: 'remove-fallback' });
+    var fallbackKey = chooseFallback(index);
+    if (!itemByKey(activeKey) || activeKey === normalized) syncActiveOwners(fallbackKey, { source:'tabs', reason:'remove-fallback' }, false);
+    var nextFocusKey = previousFocusKey && previousFocusKey !== normalized && itemByKey(previousFocusKey) && itemByKey(previousFocusKey).disabled !== true ? previousFocusKey : (fallbackKey || activeKey);
+    activeItem.set(nextFocusKey || activeKey, { silent: true, source: 'tabs', reason: 'remove-fallback' });
     render(true);
+    if (nextFocusKey && ((meta && meta.source === 'keyboard') || removedOwnedFocus)) {
+      focusTab(nextFocusKey, { source:meta && meta.source || 'tabs', reason:'remove-focus-fallback', originalEvent:meta && meta.originalEvent || null });
+    }
     emitEdit('remove', item, index, meta);
     if (destroyed) return false;
     if (previousActive !== activeKey && (!meta || meta.silent !== true)) emitChange(previousActive, Utils.mergeOwn( meta || {}, { reason: 'remove' }));
