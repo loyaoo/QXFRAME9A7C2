@@ -15731,6 +15731,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-text:var(--_qxframe9a7c2-semantic-text);--_qxframe9a7c2-wheel-item-weight:400;--_qxframe9a7c2-wheel-item-cursor:pointer;--_qxframe9a7c2-wheel-item-opacity:1;display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:0;padding:0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:var(--_qxframe9a7c2-wheel-item-cursor);user-select:none;color:var(--_qxframe9a7c2-wheel-item-text);font-weight:var(--_qxframe9a7c2-wheel-item-weight);opacity:var(--_qxframe9a7c2-wheel-item-opacity)}
 .qxframe9a7c2-wheel-panel-item.is-selected{--_qxframe9a7c2-wheel-item-text:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-wheel-item-weight:600}
 .qxframe9a7c2-wheel-panel-item.is-keyboard-focus{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);position:relative;z-index:var(--qxframe9a7c2-z-local-raised)}
+.qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-item.is-keyboard-focus{outline-offset:-2px}
 .qxframe9a7c2-wheel-panel.is-readonly .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-cursor:default}
 .qxframe9a7c2-wheel-panel-item.is-disabled,.qxframe9a7c2-wheel-panel.is-disabled .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-wheel-item-weight:400;--_qxframe9a7c2-wheel-item-cursor:not-allowed;--_qxframe9a7c2-wheel-item-opacity:.5}
 .qxframe9a7c2-wheel-panel-pad{flex:0 0 auto;pointer-events:none}
@@ -15829,6 +15830,10 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-dropdown-panel[hidden],.qxframe9a7c2-dropdown-submenu-panel[hidden]{display:none}
 .qxframe9a7c2-dropdown-list-host{position:relative;z-index:var(--qxframe9a7c2-z-local-raised)}
 .qxframe9a7c2-dropdown-list-host>.qxframe9a7c2-item-collection{min-width:inherit;background:transparent}
+/* Scrollable popup viewports must clip content, so keep the 2px keyboard ring fully
+ * inside the focused row rather than letting Chromium trim its outer pixel. */
+.qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-surface.is-keyboard-focus,
+.qxframe9a7c2-dropdown-submenu-panel .qxframe9a7c2-item-surface.is-keyboard-focus{outline-offset:-2px}
 .qxframe9a7c2-dropdown-action-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
 .qxframe9a7c2-dropdown-action-label{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .qxframe9a7c2-dropdown-action-shortcut{flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em}
@@ -16793,9 +16798,7 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input:focus-visible{outline:none}
 /* SelectGroup already exposes one focus ring on the label; never draw a second ring on its indicator. */
 .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator{outline:none}
-/* Pointer focus must not accidentally inherit UA :focus-visible heuristics.
- * Slider drag/rail interaction ends by restoring the canonical handle focus, so its
- * native :focus-visible must also remain keyboard-origin only. */
+/* Pointer focus must not accidentally inherit UA :focus-visible heuristics on text-editing controls. */
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-slider-handle:focus-visible{
   --_qxframe9a7c2-slider-handle-outline:none;
   outline:none

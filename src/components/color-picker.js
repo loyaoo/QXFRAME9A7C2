@@ -231,9 +231,26 @@ function setupColorPickerRuntime(instance, fieldInit) {
        if (!domain) return false;
        return domain.activate('saturation', { source:'keyboard', reason:reason || 'color-picker', ensureVisible:true });
      }
+     function completeImmediateColorFromKeyboard(event) {
+       if (!event || event.key !== 'Enter' || event.isComposing === true || opts.needConfirm === true || CapabilityController.mutationLocked(opts)) return false;
+       if (event.preventDefault) event.preventDefault();
+       if (draft && draft.hasPreview) {
+         var completed = cloneModel(draft.previewValue);
+         draft.setDraft(completed, { source:'keyboard', reason:'enter-select', originalEvent:event });
+         draft.clearPreview({ silent:true, source:'keyboard', reason:'enter-select-preview-promote' });
+       }
+       var committed = !draft || !draft.dirty ? true : instance.commit({ source:'keyboard', reason:'enter-select', originalEvent:event });
+       if (committed !== false && field && field.getState().open) field.close('keyboard-select', event);
+       if (draft) {
+         syncField(false);
+         emitInteractionComplete(draft.value, { source:'keyboard', reason:'enter-select', originalEvent:event, complete:true });
+       }
+       return true;
+     }
      function handleColorKeydown(event) {
        if (!event || !field || !field.getState().open || !panel || !panel.handleKeydown) return false;
-      if (instance.confirmFromKeyboard(event)) return true;
+       if (instance.confirmFromKeyboard(event)) return true;
+       if (completeImmediateColorFromKeyboard(event)) return true;
        var handled = panel.handleKeydown(event) === true;
        if (handled) activateColorVirtualFocus(event.key || 'color-keyboard');
        return handled;
