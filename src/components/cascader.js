@@ -117,7 +117,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             });
           }
         });
-        var selectionController = SelectionController.create({ channels:{ selected:{ multiple:opts.multiple === true, value:opts.value !== undefined ? opts.value : opts.defaultValue } } });
+        var selectionController = SelectionController.create({ channels:{ selected:{ multiple:opts.multiple === true, allowEmptyKey:true, value:opts.value !== undefined ? opts.value : opts.defaultValue } } });
         var selection = selectionController.selected;
         var valueState = null;
         scope.add(function () { if (selectionController) selectionController.destroy(); selectionController = null; selection = null; });
