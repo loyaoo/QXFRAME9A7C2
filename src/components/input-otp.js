@@ -159,6 +159,13 @@ export class InputOTP extends FieldComponent {
             },
             onFocus: event => { if (typeof this.options.onFocus === 'function') this.options.onFocus(event, this); },
             onBlur: event => { if (typeof this.options.onBlur === 'function') this.options.onBlur(event, this); },
+            onSegmentFocus: detail => {
+                const list = control.getInputElements(), canonical = this.#canonicalFocusIndex(control.getState().segmentValues);
+                control.setSegmentFocusIndex(canonical);
+                if (!detail || detail.index === canonical || !list[canonical]) return;
+                focusOtpInput(list[canonical], FocusOrigin.inherited(list[canonical].ownerDocument), 'otp-canonical-focus');
+                if (list[canonical].select) list[canonical].select();
+            },
             onKeydown: event => {
                 const interaction = this.getInteractionController();
                 return interaction ? interaction.dispatch(event, { ownerId:this.id + '-otp-interaction', source:'keyboard' }) !== 'pass' : false;
@@ -199,10 +206,8 @@ export class InputOTP extends FieldComponent {
                 }
                 const next=action==='MOVE_LEFT'?index-1:index+1;
                 if(next<0||next>=list.length)return 'pass';
-                if(action==='MOVE_RIGHT'){
-                    const canonical=this.#canonicalFocusIndex(control.getState().segmentValues);
-                    if(next>canonical)return 'blocked';
-                }
+                const canonical=this.#canonicalFocusIndex(control.getState().segmentValues);
+                if(next!==canonical)return 'blocked';
                 focusOtpInput(list[next],'keyboard','otp-keyboard-move');return 'handled';
             }
         });
