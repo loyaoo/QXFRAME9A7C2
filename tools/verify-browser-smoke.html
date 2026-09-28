@@ -246,6 +246,8 @@
       var rejected=false;try{C.Table.create({container:document.createElement('div'),items:rows,getKey:function(r){return r.key;},responsiveMode:'details',columns:[{key:'a'}]});}catch(e){rejected=/responsiveMode="details"/.test(String(e));}
       assert('unsupported-responsive-details-rejected',rejected);
 
+      var falsyPopRef=document.createElement('button');falsyPopRef.type='button';falsyPopRef.textContent='falsy popconfirm';document.body.appendChild(falsyPopRef);var falsyPop=C.Popconfirm.create({reference:falsyPopRef,trigger:'manual',open:true,title:0,content:0,cancelText:0,confirmText:0,autoUpdate:false});await raf();await delay(30);var falsyPopRoot=falsyPop.getPopover().getPopupElement(),falsyPopButtons=Array.prototype.slice.call(falsyPopRoot.querySelectorAll('.qxframe9a7c2-popconfirm-actions button'));assert('popconfirm-falsy-content-and-labels-preserved',falsyPopRoot.querySelector('.qxframe9a7c2-popconfirm-title').textContent==='0'&&falsyPopRoot.querySelector('.qxframe9a7c2-popconfirm-content').textContent==='0'&&falsyPopButtons.length===2&&falsyPopButtons[0].textContent==='0'&&falsyPopButtons[1].textContent==='0','labels='+falsyPopButtons.map(function(button){return button.textContent;}).join('|'));falsyPop.destroy();falsyPopRef.remove();
+
       /* Cross-subsystem browser matrix begins after the long-lived baseline has settled. */
       await raf();await delay(120);await settleScheduler(Scheduler);var before=Diagnostics.snapshot('browser-combination-before');
       var modalContent=document.createElement('div');
