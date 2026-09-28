@@ -1779,7 +1779,7 @@ function setupTable(instance) {
           var value = filterOptionValue(option), label = filterOptionLabel(option);
           var row = doc.createElement('label'); row.className = 'qxframe9a7c2-table-filter-option'; row.style.setProperty('--qxframe9a7c2-table-filter-depth', String(depth));
           if (children.length) row.classList.add('has-children');
-          if (value !== undefined && value !== null && value !== '') {
+          if (value !== undefined && value !== null) {
             var input = doc.createElement('input'); input.type = multiple ? 'checkbox' : 'radio'; input.name = multiple ? '' : 'qxframe9a7c2-table-filter-' + tableId + '-' + column.key; input.value = String(value);
             input.checked = filterDraftValues.some(function (current) { return sameFilterValue(current, value); });
             input.disabled = option && typeof option === 'object' && option.disabled === true;
