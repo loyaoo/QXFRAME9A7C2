@@ -84,6 +84,7 @@ function setupTreeRuntime(instance) {
         function labelOf(item, index) { return itemAccessors.label(item, index); }
         function valueOf(item, index) { return itemAccessors.value(item, index); }
         function disabledOf(item, index) { return itemAccessors.disabled(item, index); }
+        function checkDisabledOf(item, index) { return Utils.isFunction(opts.isItemCheckDisabled) && opts.isItemCheckDisabled(item, index) === true; }
 
         function selectableOf(item, index) {
           if (disabledOf(item, index)) return false;
@@ -270,6 +271,7 @@ function setupTreeRuntime(instance) {
           if (!record || !checkableOf(record.item, record.index)) return false;
           var current = checkedSet();
           var shouldCheck = next === undefined ? !current.has(record.key) : next === true;
+          if (shouldCheck && checkDisabledOf(record.item, record.index)) return false;
           var beforePayload = { key: record.key, item: record.item, checked: shouldCheck, checkedKeys: Array.from(current), indeterminateKeys: Array.from(indeterminateKeys), source: meta && meta.source || 'api', reason: meta && meta.reason || 'check', originalEvent: meta && meta.originalEvent || null, tree: api };
           if (Utils.isFunction(opts.beforeCheck) && opts.beforeCheck(shouldCheck, beforePayload) === false) return false;
           var cascaded = checkHierarchy.toggleCascade(checkRoots(), record, current, shouldCheck, { strict:opts.checkStrictly === true });
@@ -348,7 +350,7 @@ function setupTreeRuntime(instance) {
             var checkbox = doc.createElement('input'); checkbox.type = 'checkbox'; checkbox.className = 'qxframe9a7c2-tree-check'; checkbox.tabIndex = -1;
             if (checkKeyByNode) checkKeyByNode.set(checkbox, row.key);
             checkbox.checked = checkedSelection.has(row.key); checkbox.indeterminate = indeterminateKeys.has(row.key);
-            checkbox.disabled = !checkableOf(row.item, row.record.index) || CapabilityController.mutationLocked(opts);
+            checkbox.disabled = !checkableOf(row.item, row.record.index) || checkDisabledOf(row.item, row.record.index) || CapabilityController.mutationLocked(opts);
             var indicator = doc.createElement('span'); indicator.className = 'qxframe9a7c2-tree-check-indicator';
             checkboxWrap.appendChild(checkbox); checkboxWrap.appendChild(indicator); return checkboxWrap;
           }
@@ -423,7 +425,7 @@ function setupTreeRuntime(instance) {
               var canCheck = checkableOf(record.item, record.index);
               checkbox.checked = isChecked;
               checkbox.indeterminate = isMixed;
-              checkbox.disabled = !canCheck || CapabilityController.mutationLocked(opts);
+              checkbox.disabled = !canCheck || checkDisabledOf(record.item, record.index) || CapabilityController.mutationLocked(opts);
             }
           });
         }
