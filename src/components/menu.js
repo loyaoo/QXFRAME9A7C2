@@ -21,6 +21,7 @@ import { Transition } from '../core/transition.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 import { Trigger } from './trigger.js';
+import { Tooltip } from './tooltip.js';
 import { Item } from './item.js';
 
 const global=globalThis;
@@ -214,6 +215,7 @@ function setupMenu(instance) {
   var selectionIndicatorByButton = typeof WeakMap === 'function' ? new WeakMap() : null;
   var scrollOwnerByLevel = new Map();
   var triggerByKey = new Map();
+  var tooltipByKey = new Map();
   var panelByKey = new Map();
   var panelLevelByKey = new Map();
   var inlineTransitionByKey = new Map();
@@ -395,10 +397,13 @@ function setupMenu(instance) {
       button.classList.toggle('is-danger', item.danger === true);
       button.disabled = isDisabledItem(item);
       if (inlineCollapsed() && (pathByKey.get(key) || []).length === 1) {
-        var nativeTitle = titleText(item);
-        if (nativeTitle) button.setAttribute('title', nativeTitle); else button.removeAttribute('title');
+        // Collapsed navigation uses framework Tooltip for leaf labels. Submenu owners
+        // must not also show a competing native tooltip while their popup is active.
+        button.removeAttribute('title');
       } else if (item.title !== undefined && typeof item.title === 'string') button.setAttribute('title', item.title);
       else button.removeAttribute('title');
+      var leafTooltip = tooltipByKey.get(key);
+      if (leafTooltip) leafTooltip.updateOptions({ disabled:isDisabledItem(item), content:titleText(item) });
       var selectionIndicator = selectionIndicatorByButton && selectionIndicatorByButton.get(button);
       if (selectionIndicator) Item.syncSelectionIndicator(selectionIndicator, { appearance: opts.selectionAppearance, checked: selected, disabled: isDisabledItem(item) });
       var arrow = button.querySelector('.qxframe9a7c2-menu-submenu-arrow');
@@ -489,6 +494,16 @@ function setupMenu(instance) {
     level.appendChild(li);
     buttonByKey.set(key, button);
     buttonMeta.set(button, { key: key, item: item, level: level, parentTrigger: parentTrigger, parentKey: parentKey || '', path: path.slice(), overflowParent: false });
+
+    if (inlineCollapsed() && depth === 0 && !hasChildren(item) && opts.tooltip !== false) {
+      var collapsedTooltipText = titleText(item);
+      if (collapsedTooltipText) {
+        tooltipByKey.set(key, Tooltip.create({
+          reference:button, content:collapsedTooltipText, trigger:'hover focus',
+          placement:'right', portalContainer:portalContainer, disabled:isDisabledItem(item)
+        }));
+      }
+    }
 
     if (hasChildren(item)) {
       if (!popupMode()) {
@@ -593,6 +608,8 @@ function setupMenu(instance) {
     destroyOverflow();
     triggerByKey.forEach(function (trigger) { trigger.destroy('menu-rebuild'); });
     triggerByKey.clear();
+    tooltipByKey.forEach(function (tooltip) { tooltip.destroy('menu-rebuild'); });
+    tooltipByKey.clear();
     inlineTransitionByKey.forEach(function (transition) { transition.destroy(); });
     inlineTransitionByKey.clear();
     panelByKey.forEach(function (panel) { DOM.removeNode(panel); });
@@ -1317,7 +1334,7 @@ function setupMenu(instance) {
     submenuModeAuto = (menuIntent.get(instance) || {}).submenuModeAuto === true;
     switchInlineOpenProjection(modeBefore, collapsedBefore);
     var popupAfter = popupMode();
-    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
+    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed','tooltip'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
     if (structural) {
       if (selectedUpdate) syncSelectionOwners(nextSelected, { source:'options', reason:'update-options' });
       selection.updateOptions({ multiple: opts.multiple === true, values: selectedArray() });
