@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { ComponentProfile } from '../src/core/componentProfile.js';
 import { Collapse } from '../src/components/collapse.js';
 import { Pagination } from '../src/components/pagination.js';
+import { PaginationModel } from '../src/core/paginationModel.js';
 
 const read=rel=>fs.readFileSync(new URL('../'+rel,import.meta.url),'utf8');
 const collapseSource=read('src/components/collapse.js');
@@ -35,6 +36,17 @@ assert.match(paginationSource,/FocusController\.create\s*\(/,'Pagination focus/k
 assert.match(paginationSource,/CapabilityController\.create\s*\(/,'Pagination mutation policy must enter CapabilityController.');
 assert.match(paginationSource,/capabilityController\.can\('edit'\)/,'Pagination jumper edit path must be capability gated.');
 assert.doesNotMatch(paginationSource,/import \{ KeyboardNavigation \}/,'Pagination must not directly own KeyboardNavigation import.');
+
+const paginationModel=PaginationModel.create({total:100,page:3,pageSize:10});
+let pageSizeDetail=null;
+paginationModel.on('change',detail=>{ if(detail.reason==='page-size') pageSizeDetail=detail; });
+paginationModel.setPageSize(20,{source:'test'});
+assert.equal(paginationModel.page,3,'Pagination page-size change keeps the current page number while it remains valid.');
+assert.equal(pageSizeDetail && pageSizeDetail.recommendPage,2,'Pagination exposes the first-item-preserving page only as recommendPage metadata.');
+paginationModel.setPage(5,{silent:true,source:'test'});
+paginationModel.setPageSize(50,{source:'test'});
+assert.equal(paginationModel.page,2,'Pagination page-size change clamps current only when it exceeds the new last page.');
+paginationModel.destroy();
 
 assert.match(keyboardSource,/InteractionController\.resolveKeyboardAction\s*\(/,'Shared KeyboardNavigation semantics must enter InteractionController resolver.');
 
