@@ -68,6 +68,24 @@ selection.set(['c'],{silent:true});
 assert.equal(selection.isCurrentRef(selectionRef),false,'Selection refs must become stale after mutation.');
 selection.destroy();
 
+const defaultEmptySelection=Selection.create({multiple:false,value:''});
+assert.deepEqual(defaultEmptySelection.values,[],'Selection keeps the historical empty-key rejection unless explicitly enabled.');
+defaultEmptySelection.destroy();
+const optionValueSelection=Selection.create({multiple:false,allowEmptyKey:true,value:''});
+assert.deepEqual(optionValueSelection.values,[''],'option-value Selection may preserve an empty string as a real value.');
+assert.equal(optionValueSelection.value,'');
+assert.equal(optionValueSelection.has(''),true);
+assert.equal(optionValueSelection.select('',{silent:true}),true);
+optionValueSelection.destroy();
+
+const emptyAnchorController=SelectionController.create({channels:{selected:{multiple:false,allowEmptyKey:true,value:''}}});
+assert.deepEqual(emptyAnchorController.selected.values,['']);
+emptyAnchorController.setAnchor('selected','');
+assert.equal(emptyAnchorController.getAnchor('selected'),'','opt-in option-value channels may retain empty-string anchors.');
+emptyAnchorController.clearAnchor('selected');
+assert.equal(emptyAnchorController.getAnchor('selected'),null);
+emptyAnchorController.destroy();
+
 const collection=Collection.create({items:[{key:'a'},{key:'b'}],getKey:function(item){return item.key;}});
 const controller=SelectionController.create({
   revisionSource:collection,
