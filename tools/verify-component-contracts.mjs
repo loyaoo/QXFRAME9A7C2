@@ -153,6 +153,7 @@ assertTypes('Result', 'size', ['string', 'number']);
   assert(apiSchemaRule(name, 'renderControl') === 'boolean', `${name}.renderControl must remain boolean.`);
 });
 assert(apiSchemaRule('Select', 'getKey').type === 'function', 'Select.getKey must remain a callback option.');
+['add','has'].forEach(name => assert(!Object.prototype.hasOwnProperty.call((api.components.find(item => item.name === 'TreeSelect') || {}).schema || {}, name), 'TreeSelect.' + name + ' must not reappear as a dead public option.'));
 assert(apiSchemaRule('Table', 'filters') === 'object', 'Table.filters must remain a column-keyed object map, not a generic array option.');
 
 // Custom validators must survive the generated JSON/TypeScript contract rather than disappearing via JSON.stringify(function).
