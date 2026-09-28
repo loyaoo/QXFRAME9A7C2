@@ -59,7 +59,7 @@ function labelOf(item, fallback) {
 function sizeName(value) { return Utils.normalizeSize(value, 'md'); }
     
 function asValues(value, multiple) {
-  if (value === undefined || value === null || value === '') return [];
+  if (value === undefined || value === null) return [];
   var values = Array.isArray(value) ? value.slice() : [value];
   values = values.map(String);
   return multiple ? values : values.slice(0, 1);

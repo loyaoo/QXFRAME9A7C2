@@ -191,9 +191,10 @@ function create(options) {
 
   function captureAnchor(channelName, key) {
     var name = normalizeChannelName(channelName || defaultChannelName());
-    requireChannel(name);
-    var normalized = key == null ? '' : String(key);
-    if (!normalized) return null;
+    var channel = requireChannel(name);
+    if (key === undefined || key === null) return null;
+    var normalized = String(key);
+    if (normalized === '' && channel.allowEmptyKey !== true) return null;
     var source = revisionSources.get(name) || null;
     if (source) return source.createRef(normalized);
     var local = localRevisions.get(name) || null;
@@ -230,8 +231,8 @@ function create(options) {
 
   function setAnchor(channelName, key) {
     var name = normalizeChannelName(channelName || defaultChannelName());
-    requireChannel(name);
-    if (key === undefined || key === null || key === '') {
+    var channel = requireChannel(name);
+    if (key === undefined || key === null || (key === '' && channel.allowEmptyKey !== true)) {
       anchors.delete(name);
       return null;
     }
