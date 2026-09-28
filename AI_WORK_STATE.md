@@ -14,10 +14,28 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready after WheelPanel interaction fix.
-- Current Task: `HANDOFF-READY-005`
+- Current Phase: handoff-ready after Ant interaction audit round 3 closeout.
+- Current Task: `HANDOFF-READY-006`
 
 ## CURRENT
+
+### HANDOFF-READY-006 — Ant interaction audit round 3 closeout
+Status: VERIFIED
+Task progress: 100%
+Repository state: PR #134 merged to `main` at `8a8fcfcc54885a00823f811dc3fe74accfd3e7f0`.
+Closed interaction findings:
+- Modal now honors validated `closable.onClose` on accepted close paths instead of accepting the option and silently dropping the callback.
+- Carousel default arrow glyphs follow horizontal/vertical orientation, and runtime direction changes cannot leave PointerSession locked to the creation-time drag axis.
+- InputOTP custom string masks now project through the existing Control Segments mask layer instead of being collapsed into native password masking.
+Verification:
+- Exact integrated PR head `5ba97c45d37ff8b132b1f7e4fc3ea5f31e55414c` passed QXFRAME CI #673, including full release verification and Windows tooling.
+- PR #134 was rebased onto main after PR #133 WheelPanel downstream-selection preservation merged, so the green gate covered the integrated state.
+Audit disposition:
+- TreeSelect `maxCount` visual disabling remains a design/parity gap, not a safe standalone bug fix: naïve dynamic disabled projection can change hierarchical checked/half-checked normalization. Existing `beforeCheck` enforcement remains canonical until a projection-layer design preserves checkedStrategy/checkStrictly/disabled-node semantics.
+- Ant-only feature additions such as Steps maxCount, Table group headers, Drawer resizable and InputNumber modifier stepping are enhancements, not current QXFRAME interaction bugs.
+Next exact step: finish the remaining Ant Design interaction comparison; only open another fix when a reproducible QXFRAME behavior bug is confirmed.
+
+## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-005 — WheelPanel interaction fix merged
 Status: VERIFIED
@@ -27,8 +45,6 @@ Finding closed: WheelPanel `selectIndex` had cleared every downstream value on u
 Outcome: `src/components/wheel-panel.js` preserves downstream candidate values while `rebuildFrom` revalidates each column. Browser regressions in `tools/verify-browser-smoke.html` cover TimePanel pointer, TimePicker keyboard, independent WheelPicker columns, and dependent column retention/fallback.
 Verification: exact PR head `17fdee81c3ad12ebde57abf40376d2461dcc5bf0` passed QXFRAME CI #665, including full release verification and Windows tooling. Local syntax and diff checks passed; local build lacked a Rollup provider.
 Next exact step: continue the Ant Design interaction comparison across remaining component families, without reopening this fixed WheelPanel finding absent new regression evidence.
-
-## PREVIOUS VERIFIED HANDOFF
 
 ### HANDOFF-READY-004 — post Ant interaction audit round 2 closeout
 Status: VERIFIED
