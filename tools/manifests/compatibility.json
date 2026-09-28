@@ -82,6 +82,30 @@
       "replacement": "Use CSS theme scope: [data-qxframe9a7c2-theme] and a scoped portalContainer when popup content must inherit a local theme.",
       "migrationNote": "Phase F removes Menu runtime theme ownership so CSS remains the sole Theme/Token authority. Menu no longer reads or projects theme state.",
       "apiParityAction": "remove"
+    },
+    {
+      "kind": "option",
+      "component": "TreeSelect",
+      "name": "add",
+      "status": "removed",
+      "since": "2.19.x",
+      "deprecatedSince": "2.19.81",
+      "removedIn": "2.19.81-ant-audit-cleanup",
+      "replacement": "None.",
+      "migrationNote": "TreeSelect.add was present only in the public option schema and was never consumed by TreeSelect, PopupFieldComponent, Trigger, or an instance method. It is removed rather than preserved as a dead API surface.",
+      "apiParityAction": "remove"
+    },
+    {
+      "kind": "option",
+      "component": "TreeSelect",
+      "name": "has",
+      "status": "removed",
+      "since": "2.19.x",
+      "deprecatedSince": "2.19.81",
+      "removedIn": "2.19.81-ant-audit-cleanup",
+      "replacement": "None.",
+      "migrationNote": "TreeSelect.has was present only in the public option schema and was never consumed by TreeSelect, PopupFieldComponent, Trigger, or an instance method. It is removed rather than preserved as a dead API surface.",
+      "apiParityAction": "remove"
     }
   ]
 }
