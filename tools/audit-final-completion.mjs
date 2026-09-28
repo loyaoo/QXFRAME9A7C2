@@ -20,12 +20,6 @@ function walk(dir, test=()=>true){
 }
 const srcFiles=walk(path.join(root,'src'),f=>/\.(?:js|mjs)$/.test(f));
 const source=new Map(srcFiles.map(f=>[posix(path.relative(root,f)),fs.readFileSync(f,'utf8')]));
-const pickerFamilyFiles=['src/components/date-picker.js','src/components/time-picker.js','src/components/color-picker.js','src/components/wheel-picker.js'];
-const pickerCommitFacadeViolations=[];
-for(const file of pickerFamilyFiles){
-  const text=source.get(file)||'';
-  for(const hit of occurrences(text,/\bfunction\s+(?:commit|cancel)\s*\(|\bpickerSession\.(?:commit|cancel)\s*\(/g)) pickerCommitFacadeViolations.push({file,match:hit.match,index:hit.index});
-}
 const secretScanFiles=[
   ...srcFiles,
   ...walk(path.join(root,'tools'),f=>/\.(?:js|mjs|json|ya?ml|md)$/.test(f)),
@@ -50,6 +44,12 @@ for(const file of secretScanFiles){
   }
 }
 const occurrences=(text,re)=>{const out=[];let m;re.lastIndex=0;while((m=re.exec(text)))out.push({index:m.index,match:m[0]});return out;};
+const pickerFamilyFiles=['src/components/date-picker.js','src/components/time-picker.js','src/components/color-picker.js','src/components/wheel-picker.js'];
+const pickerCommitFacadeViolations=[];
+for(const file of pickerFamilyFiles){
+  const text=source.get(file)||'';
+  for(const hit of occurrences(text,/\bfunction\s+(?:commit|cancel)\s*\(|\bpickerSession\.(?:commit|cancel)\s*\(/g)) pickerCommitFacadeViolations.push({file,match:hit.match,index:hit.index});
+}
 const security=[];
 const htmlSinks=/\b(?:eval\s*\(|new\s+Function\b|document\.write\s*\(|\.outerHTML\s*=|\.insertAdjacentHTML\s*\(|createContextualFragment\s*\(|\bsrcdoc\s*=|\.innerHTML\s*=)/g;
 for(const [file,text] of source){
