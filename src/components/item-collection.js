@@ -60,6 +60,13 @@ function assertCanonicalOptions(options) {
 function normalizeOwnerPrefix(value, fallback) {
   return String(value || fallback || 'item-collection').replace(/[^a-z0-9_-]+/gi, '-');
 }
+function sameSelectionValues(left, right) {
+  if (left.length !== right.length) return false;
+  for (var index = 0; index < left.length; index += 1) {
+    if (left[index] !== right[index]) return false;
+  }
+  return true;
+}
     
 function create(options) {
   assertCanonicalOptions(options);
@@ -744,7 +751,7 @@ function create(options) {
     if (callItemHandler(row, beforeName, beforeDetail) === false || destroyed) return false;
     if (Utils.isFunction(opts[beforeName]) && opts[beforeName](beforeDetail) === false) return false;
     if (destroyed) return false;
-    var beforeValues = selection.values.join('\u0000');
+    var beforeValues = selection.values.slice();
     var changed = nextSelected ? selection.select(row.value, meta) : selection.deselect(row.value, meta);
     if (!changed) return false;
     var selectionAnchorValue = selectionController.getAnchor(selectionChannel);
@@ -753,7 +760,7 @@ function create(options) {
       var remainingValues = selection.values;
       selectionController.setAnchor(selectionChannel, remainingValues.length ? remainingValues[remainingValues.length - 1] : null);
     }
-    var afterValues = selection.values.join('\u0000');
+    var afterValues = selection.values.slice();
     var detail = selectionDetail(row, selection.has(row.value), meta);
     callItemHandler(row, detail.selected ? 'onSelect' : 'onDeselect', detail);
     if (destroyed) return true;
@@ -763,7 +770,7 @@ function create(options) {
     if (destroyed) return true;
     emitter.emit(detail.selected ? 'select' : 'deselect', detail);
     if (destroyed) return true;
-    if (beforeValues !== afterValues && !emitSelectionChange(detail)) return true;
+    if (!sameSelectionValues(beforeValues, afterValues) && !emitSelectionChange(detail)) return true;
     if (destroyed) return true;
     if (opts.hideSelected === true && opts.multiple === true && mounted) render('selection-hide');
     else syncRowStates();
@@ -1329,15 +1336,15 @@ function create(options) {
   }
     
   function setValue(value, meta) {
-    var before = selection.values.join('\u0000');
+    var before = selection.values.slice();
     var accepted = selection.set(value, { silent: true, source: (meta && meta.source) || 'api', reason: (meta && meta.reason) || 'set-value' });
     if (!accepted) return false;
     var currentValues = selection.values;
     selectionController.setAnchor(selectionChannel, currentValues.length ? currentValues[currentValues.length - 1] : null);
-    var after = currentValues.join('\u0000');
+    var after = currentValues.slice();
     if (opts.hideSelected === true && opts.multiple === true && mounted) render('set-value-hide');
     else syncRowStates();
-    if (before !== after && !(meta && meta.silent)) {
+    if (!sameSelectionValues(before, after) && !(meta && meta.silent)) {
       var detail = {
         values: selection.values,
         value: selection.value,
@@ -1358,9 +1365,9 @@ function create(options) {
   function deselectValue(value, meta) {
     var row = rowByValue(value);
     if (!row) {
-      var before = selection.values.join('\u0000');
+      var before = selection.values.slice();
       selection.deselect(value, meta);
-      if (before !== selection.values.join('\u0000')) emitSelectionChange({ value: selection.value, values: selection.values, source: 'api', reason: 'deselect-value', controller: api });
+      if (!sameSelectionValues(before, selection.values)) emitSelectionChange({ value: selection.value, values: selection.values, source: 'api', reason: 'deselect-value', controller: api });
       syncRowStates();
       return true;
     }
