@@ -198,7 +198,8 @@ export class Carousel extends Component {
         const resolveItemOutput = (value, index, slot) => typeof value === 'function' ? value(Object.freeze({ index, item: items()[index], slot, instance: api })) : value;
         const defaultArrow = direction => {
             const glyph = doc.createElement('span');
-            glyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-caret-' + (direction === 'prev' ? 'left' : 'right') + ' is-line is-round is-stroke-3 is-sm';
+            const glyphDirection = opts.direction === 'vertical' ? (direction === 'prev' ? 'up' : 'down') : (direction === 'prev' ? 'left' : 'right');
+            glyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-caret-' + glyphDirection + ' is-line is-round is-stroke-3 is-sm';
             return glyph;
         };
         const renderArrow = (button, output, direction) => {

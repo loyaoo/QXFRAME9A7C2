@@ -47,6 +47,7 @@ function normalize(input, previous) {
   var closable = OverlayFramePolicy.normalizeClosable(own(incoming, 'closable') ? incoming.closable : undefined, previous, { owner:'Modal' });
   next.closable = closable.visible;
   next.closeOptions = closable.options;
+  if (next.closeOptions.onClose != null && typeof next.closeOptions.onClose !== 'function') throw new TypeError('[QXFRAME9A7C2] Modal closable.onClose must be a function.');
   ['showMask','closeOnMask','closeOnEscape','destroyOnHidden','lockScroll','focusTrap','restoreFocus','forceRender','autoOpen','fullscreen','center'].forEach(function (key) {
     var defaults = {showMask:true,closeOnMask:true,closeOnEscape:true,destroyOnHidden:false,lockScroll:true,focusTrap:true,restoreFocus:true,forceRender:false,autoOpen:true,fullscreen:false,center:false};
     next[key] = bool(next[key], defaults[key], key);
@@ -318,6 +319,9 @@ function createModalController(instance, options) {
     callback('onOpenChange', false, payload(reason, event));
     if (destroyed || opened) return api;
     callback('onClose', payload(reason, event));
+    if (destroyed || opened) return api;
+    var acceptedCloseConfig = closeConfig();
+    if (typeof acceptedCloseConfig.onClose === 'function') acceptedCloseConfig.onClose(reason || 'close', event || null, api);
     if (destroyed || opened) return api;
     emitter.emit('openChange', { open: false, source: DOM.activationSource(event), reason: reason || 'close', originalEvent: event || null });
     if (destroyed || opened) return api;
