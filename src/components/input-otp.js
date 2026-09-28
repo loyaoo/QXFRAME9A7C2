@@ -102,7 +102,7 @@ export class InputOTP extends FieldComponent {
                 key: 'digit-' + (index + 1), maxLength: 1, placeholder: this.#segmentPlaceholder(index),
                 inputMode: this.options.inputMode || (String(this.options.accept || 'digits').toLowerCase() === 'digits' ? 'numeric' : 'text'),
                 autocomplete: index === 0 ? (this.options.autocomplete || 'one-time-code') : 'off',
-                type: this.options.mask === true ? 'password' : 'text', mask: typeof this.options.mask === 'string' ? this.options.mask : false
+                type: this.options.mask === false ? 'text' : 'password', mask: typeof this.options.mask === 'string' ? this.options.mask : false
             });
         }
         return list;
