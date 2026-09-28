@@ -292,12 +292,10 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var retainedDisabled = disabledSelectedValues(apiValue()).filter(function (value) { var key = keyByValue(value); return key === null || key === undefined || !candidate.has(String(key)); }).length;
           return count + retainedDisabled > maxCountLimit();
         }
-        function treeCheckable(item, index) {
-          if (!hierarchicalCheckMode()) return false;
-          if (item && item.checkable === false) return false;
-          if (!maxCountApplies() || !tree) return true;
+        function maxCountCheckDisabled(item, index) {
+          if (!maxCountApplies() || !tree) return false;
           var key = keyOf(item, index), model = tree.getModel(), record = key === undefined || key === null || key === '' ? null : model.getRecord(String(key));
-          return !record || !maxCountWouldBlockRecord(record);
+          return !!record && maxCountWouldBlockRecord(record);
         }
         function wouldExceedMaxCount(shouldCheck, detail) {
           if (!shouldCheck || !detail || !tree) return false;
@@ -396,7 +394,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           multiple: false,
           selectable: !hierarchicalCheckMode(),
           selectionAppearance: 'highlight',
-          checkable: treeCheckable,
+          checkable: hierarchicalCheckMode(),
+          isItemCheckDisabled: maxCountCheckDisabled,
           checkStrictly: opts.checkStrictly === true,
           checkedKeys: hierarchicalCheckMode() ? checkedKeysForValues(apiValue()) : undefined,
           expandedKeys: opts.expandedKeys,
@@ -469,7 +468,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         // Tree.create() renders before the outer tree variable receives the returned
         // instance. Re-run the checkability projection once so an initially full
         // maxCount state is visible immediately, not only after the first mutation.
-        if (maxCountApplies()) tree.updateOptions({ checkable:treeCheckable });
+        if (maxCountApplies()) tree.updateOptions({ isItemCheckDisabled:maxCountCheckDisabled });
     
         var triggerSettings = createPopupFieldTriggerSettings(opts, {
           reference: root,
@@ -753,7 +752,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           var treeOptions = {
             multiple: false, selectable: !checkMode,
             selectionAppearance: 'highlight',
-            checkable: treeCheckable, checkStrictly: opts.checkStrictly === true,
+            checkable: checkMode, isItemCheckDisabled:maxCountCheckDisabled, checkStrictly: opts.checkStrictly === true,
             size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true,
             virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
             getKey: opts.getKey, getItems: opts.getItems, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled,
