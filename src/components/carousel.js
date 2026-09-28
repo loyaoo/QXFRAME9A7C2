@@ -198,7 +198,8 @@ export class Carousel extends Component {
         const resolveItemOutput = (value, index, slot) => typeof value === 'function' ? value(Object.freeze({ index, item: items()[index], slot, instance: api })) : value;
         const defaultArrow = direction => {
             const glyph = doc.createElement('span');
-            glyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-caret-' + (direction === 'prev' ? 'left' : 'right') + ' is-line is-round is-stroke-3 is-sm';
+            const glyphDirection = opts.direction === 'vertical' ? (direction === 'prev' ? 'up' : 'down') : (direction === 'prev' ? 'left' : 'right');
+            glyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-caret-' + glyphDirection + ' is-line is-round is-stroke-3 is-sm';
             return glyph;
         };
         const renderArrow = (button, output, direction) => {
@@ -435,7 +436,8 @@ export class Carousel extends Component {
         pointerSession = PointerSession.create({
             target: viewport,
             threshold: 0,
-            axis: opts.direction === 'vertical' ? 'y' : 'x',
+            // Keep both deltas: direction is mutable and the Carousel owns the final primary/cross-axis decision in onEnd.
+            axis: null,
             getState: () => ({ disabled: !userUnlocked() || (!opts.swipe && !opts.draggable) || count() <= 1 }),
             capabilities: { draggable: true },
             canStart: detail => {
