@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### THEME-PLAYGROUND-REGRESSION-002 — ColorPicker preset Enter / Menu empty overflow / Collapse header focus owner
-Status: IMPLEMENTING
-Task progress: 25%
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 80%
 Baseline: `main@2a4448ae3f53efdc98d4d93472f3eb9751c1cc7e`.
 Branch: `fix/theme-playground-regression-002`.
 User verification surface: `docs/theme-playground.html`.
@@ -38,10 +38,16 @@ Implementation guardrails:
 - Collapse must use one real focus host per item: the header. Child main/indicator controls remain outside sequential focus and must not become competing keyboard focus owners. Preserve header-vs-icon click semantics and Left/Right disclosure behavior.
 - Add browser-visible regressions for all three fixes; do not weaken existing gates.
 
+Implemented on branch:
+- ColorPicker preset Enter now resolves the focused preset through ColorPanel, promotes/commits through the existing ValueController/Picker session path, prevents duplicate native button activation, and closes immediate-mode picker.
+- Menu empty horizontal overflow is now CSS-robust: overflow wrapper/button explicitly honor [hidden]; the overflow Trigger starts disabled and remains disabled whenever no real overflow entries exist.
+- Collapse roving focus owner is the .qxframe9a7c2-collapse-header for every enabled item; child main/indicator remain non-Tab stops and redirect programmatic focus to the header. FocusController onActivate preserves Enter/Space disclosure while ArrowLeft/ArrowRight behavior remains unchanged.
+- Browser smoke now covers preset Enter select+close, computed display/disabled popup behavior for empty Menu overflow, Collapse header-only real focus, Enter/Space, and Left/Right disclosure.
+
 Next exact step:
-1. Implement the three runtime/CSS fixes on this branch.
-2. Extend Chromium/browser smoke coverage to verify preset Enter commits+closes, empty horizontal Menu has no paintable More/empty popup, and Collapse real focus lands on header rather than main/indicator.
-3. Create PR, verify exact-head CI, merge only after green CI, then update this checkpoint with PR/CI/main evidence.
+1. Open PR from this branch.
+2. Run exact-head QXFRAME CI including Chromium smoke and release verification.
+3. If green, mark verified and merge; if a gate fails, fix the implementation/test rather than weakening the gate.
 
 ## PREVIOUS VERIFIED HANDOFF
 
