@@ -218,11 +218,13 @@ function setupTabs(instance) {
           if (destroyed || !overflowPopover.getState().open) return;
           focusOverflowKey(overflowKeys.indexOf(activeKey) >= 0 ? activeKey : overflowKeys[0], { source:overflowOpenSource, reason:'overflow-open' });
         });
-      } else if (overflowReturnFocusSource && !overflowReturnFocusAfterLayout) {
+      } else if (overflowReturnFocusSource) {
         var returnSource = overflowReturnFocusSource;
-        overflowReturnFocusSource = '';
+        if (!overflowReturnFocusAfterLayout) overflowReturnFocusSource = '';
         Scheduler.mutate(function () {
-          if (!destroyed) focusOverflowTrigger(returnSource, 'tabs-overflow-close-return');
+          if (destroyed) return;
+          if (moreButton.parentNode === nav) focusOverflowTrigger(returnSource, 'tabs-overflow-close-return');
+          else focusTab(activeKey, { source:returnSource, reason:'tabs-overflow-close-return' });
         });
       }
     }
