@@ -137,7 +137,7 @@ function setupTreeRuntime(instance) {
         });
         var selectionController = SelectionController.create({
           channels: {
-            selected: { multiple: opts.multiple === true, value: opts.value !== undefined ? opts.value : opts.defaultValue },
+            selected: { multiple: opts.multiple === true, allowEmptyKey: opts.allowEmptyValue === true, value: opts.value !== undefined ? opts.value : opts.defaultValue },
             checked: { multiple: true, value: Array.isArray(opts.checkedKeys) ? opts.checkedKeys.map(String) : [] }
           }
         });
