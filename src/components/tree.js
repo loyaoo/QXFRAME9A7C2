@@ -11,6 +11,7 @@ import { SelectionController } from '../core/selectionController.js';
 import { Disclosure } from '../core/disclosure.js';
 import { AsyncTaskGroup } from '../core/asyncTaskGroup.js';
 import { CapabilityController } from '../core/capabilityController.js';
+import { ReorderInteraction } from '../core/reorderInteraction.js';
 import { Renderer } from '../core/renderer.js';
 import { ItemCollection } from './item-collection.js';
 import { Item } from './item.js';
@@ -58,7 +59,7 @@ function setupTreeRuntime(instance) {
           }
         });
         var indeterminateKeys = new Set();
-        var dragSession = null;
+        var reorderInteraction = null;
     
         var itemAccessors = ItemAccessors.create({
           getKey: function (item, index) {
@@ -671,13 +672,6 @@ function setupTreeRuntime(instance) {
           return 'inside';
         }
     
-        function clearDragProjection() {
-          if (!root) return;
-          Array.prototype.forEach.call(root.querySelectorAll('.is-drop-before,.is-drop-after,.is-drop-inside,.is-dragging'), function (node) {
-            node.classList.remove('is-drop-before','is-drop-after','is-drop-inside','is-dragging');
-          });
-        }
-    
         function isDropAllowed(sourceKey, targetKey, position, event) {
           if (!sourceKey || !targetKey || sourceKey === targetKey) return false;
           var source = model.getRecord(sourceKey), target = model.getRecord(targetKey);
@@ -685,6 +679,86 @@ function setupTreeRuntime(instance) {
           if (model.getAncestors(target.key).some(function (ancestor) { return ancestor.key === source.key; })) return false;
           if (Utils.isFunction(opts.canDrop)) return opts.canDrop({ sourceKey: source.key, sourceItem: source.item, targetKey: target.key, targetItem: target.item, position: position, originalEvent: event, tree: api }) !== false;
           return true;
+        }
+
+        function setupTreeReorderInteraction() {
+          if (!root || reorderInteraction) return reorderInteraction;
+          reorderInteraction = ReorderInteraction.create({
+            root: root,
+            document: doc,
+            rowSelector: '.qxframe9a7c2-tree-item',
+            orientation: 'vertical',
+            draggable: function () { return opts.draggable === true || Utils.isFunction(opts.draggable); },
+            disabled: function () { return opts.disabled === true; },
+            readOnly: function () { return opts.readOnly === true; },
+            dragOverlay: false,
+            commitSameIndex: true,
+            dropVisualClasses: ['is-drop-before','is-drop-after','is-drop-inside'],
+            getItems: function () {
+              return visibleRecords().map(function (record) {
+                return { key:record.key, disabled:!draggableOf(record.item, record.index), record:record };
+              });
+            },
+            getRowElement: function (key) { return list && list.getItemElement ? list.getItemElement(String(key)) : null; },
+            getKeyFromRow: function (row) { return treeKeyFromRowNode(row); },
+            getInstance: function () { return api; },
+            componentType: 'tree',
+            resolveDrop: function (event) {
+              var row = event && event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-tree-item') : null;
+              if (!row || !root.contains(row)) return null;
+              var targetKey = treeKeyFromRowNode(row);
+              var records = visibleRecords();
+              var targetIndex = records.findIndex(function (record) { return record.key === targetKey; });
+              if (targetIndex < 0) return null;
+              var position = dragPosition(event, row);
+              return {
+                targetKey: targetKey,
+                targetIndex: targetIndex,
+                markerRow: row,
+                before: position === 'before',
+                position: position,
+                visualClass: position === 'before' ? 'is-drop-before' : (position === 'after' ? 'is-drop-after' : 'is-drop-inside')
+              };
+            },
+            canDrop: function (detail) {
+              return isDropAllowed(detail.sourceKey, detail.targetKey, detail.position, detail.originalEvent);
+            },
+            onMove: function (detail) {
+              var sourceRecord = model.getRecord(detail.sourceKey), targetRecord = model.getRecord(detail.targetKey);
+              if (!sourceRecord || !targetRecord) return false;
+              var payload = {
+                sourceKey: sourceRecord.key,
+                sourceItem: sourceRecord.item,
+                targetKey: targetRecord.key,
+                targetItem: targetRecord.item,
+                position: detail.position,
+                originalEvent: detail.originalEvent || null,
+                tree: api
+              };
+              if (Utils.isFunction(opts.onMove)) opts.onMove(payload);
+              emitter.emit('move', payload);
+              return true;
+            },
+            onDragStart: function (detail) {
+              var record = model.getRecord(detail.key);
+              if (!record) return;
+              var payload = { sourceKey:record.key, sourceItem:record.item, originalEvent:detail.originalEvent || null, tree:api };
+              if (Utils.isFunction(opts.onDragStart)) opts.onDragStart(payload);
+              emitter.emit('dragStart', payload);
+            },
+            onDragCancel: function (detail) {
+              if (String(detail.reason || '') !== 'dragend') return;
+              var record = model.getRecord(detail.key);
+              var payload = { sourceKey:String(detail.key || ''), sourceItem:record ? record.item : null, originalEvent:detail.originalEvent || null, tree:api };
+              if (Utils.isFunction(opts.onDragEnd)) opts.onDragEnd(payload);
+              emitter.emit('dragEnd', payload);
+            }
+          });
+          scope.add(function () {
+            if (reorderInteraction) reorderInteraction.destroy();
+            reorderInteraction = null;
+          });
+          return reorderInteraction;
         }
     
         function setupRootEvents() {
@@ -726,54 +800,6 @@ function setupTreeRuntime(instance) {
               event.preventDefault(); event.stopPropagation(); if (event.stopImmediatePropagation) event.stopImmediatePropagation();
             }
           }, true));
-          scope.add(DOM.listen(root, 'dragstart', function (event) {
-            var row = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-tree-item') : null;
-            if (!row || !root.contains(row) || !row.draggable) return;
-            var key = treeKeyFromRowNode(row);
-            var record = model.getRecord(key);
-            if (!record || !draggableOf(record.item, record.index)) return;
-            dragSession = { sourceKey: key, targetKey: null, position: null };
-            row.classList.add('is-dragging');
-            if (event.dataTransfer) { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', key); }
-            var detail = { sourceKey: key, sourceItem: record.item, originalEvent: event, tree: api };
-            if (Utils.isFunction(opts.onDragStart)) opts.onDragStart(detail);
-            emitter.emit('dragStart', detail);
-          }));
-          scope.add(DOM.listen(root, 'dragover', function (event) {
-            if (!dragSession) return;
-            var row = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-tree-item') : null;
-            if (!row || !root.contains(row)) return;
-            var targetKey = treeKeyFromRowNode(row);
-            var position = dragPosition(event, row);
-            if (!isDropAllowed(dragSession.sourceKey, targetKey, position, event)) return;
-            event.preventDefault();
-            if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
-            clearDragProjection();
-            var sourceNode = list && list.getItemElement ? list.getItemElement(dragSession.sourceKey) : null;
-            if (sourceNode) sourceNode.classList.add('is-dragging');
-            row.classList.add(position === 'before' ? 'is-drop-before' : (position === 'after' ? 'is-drop-after' : 'is-drop-inside'));
-            dragSession.targetKey = targetKey;
-            dragSession.position = position;
-          }));
-          scope.add(DOM.listen(root, 'drop', function (event) {
-            if (!dragSession || !dragSession.targetKey || !dragSession.position) return;
-            if (!isDropAllowed(dragSession.sourceKey, dragSession.targetKey, dragSession.position, event)) return;
-            event.preventDefault();
-            var source = model.getRecord(dragSession.sourceKey), target = model.getRecord(dragSession.targetKey);
-            var detail = { sourceKey: source.key, sourceItem: source.item, targetKey: target.key, targetItem: target.item, position: dragSession.position, originalEvent: event, tree: api };
-            clearDragProjection();
-            dragSession = null;
-            if (Utils.isFunction(opts.onMove)) opts.onMove(detail);
-            emitter.emit('move', detail);
-          }));
-          scope.add(DOM.listen(root, 'dragend', function (event) {
-            if (!dragSession) { clearDragProjection(); return; }
-            var record = model.getRecord(dragSession.sourceKey);
-            var detail = { sourceKey: dragSession.sourceKey, sourceItem: record ? record.item : null, originalEvent: event, tree: api };
-            dragSession = null; clearDragProjection();
-            if (Utils.isFunction(opts.onDragEnd)) opts.onDragEnd(detail);
-            emitter.emit('dragEnd', detail);
-          }));
         }
     
         list = ItemCollection.create({
@@ -870,6 +896,7 @@ function setupTreeRuntime(instance) {
         root = list.getRootElement();
         if (root) {
           root.classList.add('qxframe9a7c2-tree');
+          setupTreeReorderInteraction();
           setupRootEvents();
           syncTreeRows();
         }
@@ -965,7 +992,7 @@ function setupTreeRuntime(instance) {
           checkedSelection = null;
           selectionController = null;
           loadedChildren.clear(); loadingKeys.clear(); loadedKeys.clear(); indeterminateKeys.clear();
-          dragSession = null; root = null;
+          reorderInteraction = null; root = null;
           return true;
         }
     
