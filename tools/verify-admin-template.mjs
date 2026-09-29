@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 function assert(condition,message){if(!condition)throw new Error('[QXFRAME9A7C2 admin template] '+message);}
 function read(rel){return fs.readFileSync(path.join(repoRoot,rel),'utf8');}
+function hasCompositeFieldLabel(html){return [...html.matchAll(/<label[^>]*qxframe9a7c2-form-field[^>]*>([\\s\\S]*?)<\\/label>/g)].some(match=>/<div\\b/.test(match[1]));}
 function exists(rel){return fs.existsSync(path.join(repoRoot,rel));}
 
 const shell='docs/admin/index.html';
@@ -50,7 +51,7 @@ for(const marker of [
 ])assert(shellJs.includes(marker),'admin shell capability missing '+marker);
 assert(!shellJs.includes("className='qx-admin-tab"),'admin shell must not maintain a second hand-authored Tabs implementation');
 assert(!shellCss.includes('.qx-admin-tab{'),'legacy admin tab CSS must be removed');
-assert(!/<label[^>]*qxframe9a7c2-form-field[^>]*>[\\s\\S]*?<div\\b[\\s\\S]*?<\\/label>/.test(adminFormHtml+'\n'+adminListHtml),'composite admin controls must not be wrapped by native label activation');
+assert(!hasCompositeFieldLabel(adminFormHtml+'\n'+adminListHtml),'composite admin controls must not be wrapped by native label activation');
 assert(shellCss.includes('.qx-admin-tabs-scroll>.qxframe9a7c2-tabs'),'admin tab bar must style the canonical Tabs root only');
 for(const marker of ["get('embed')==='1'",'is-admin-embedded','qxframe9a7c2-admin:navigate','qxframe9a7c2-admin:theme']){
   assert(demoJs.includes(marker),'standalone admin embed bridge missing '+marker);
@@ -83,7 +84,7 @@ for(const rel of canonicalAdmin){
 }
 
 const combinedAdminViews=viewFiles.map(name=>read('docs/admin/views/'+name)).join('\n');
-assert(!/<label[^>]*qxframe9a7c2-form-field[^>]*>[\\s\\S]*?<div\\b[\\s\\S]*?<\\/label>/.test(combinedAdminViews),'admin view composite controls must not be wrapped by native label activation');
+assert(!hasCompositeFieldLabel(combinedAdminViews),'admin view composite controls must not be wrapped by native label activation');
 for(const legacy of ['qx-admin-view-grid','qx-admin-view-page','qx-admin-view-head','qx-admin-search-hero']){
   assert(!viewCss.includes(legacy),'admin views CSS must not recreate structural layout '+legacy);
   assert(!combinedAdminViews.includes(legacy),'admin view markup must use framework row/column composition instead of '+legacy);
