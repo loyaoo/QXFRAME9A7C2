@@ -16030,6 +16030,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 }
 .qxframe9a7c2-table-scroll.qxframe9a7c2-scroll{width:100%;height:auto;min-height:0;flex:1 1 auto}
 .qxframe9a7c2-table-scroll>.qxframe9a7c2-table-scroll-viewport.qxframe9a7c2-scroll-viewport{height:100%;min-height:0}
+.qxframe9a7c2-table-scroll-content.qxframe9a7c2-scroll-content{box-sizing:border-box;width:max-content;min-width:100%;height:max-content;min-height:100%}
 
 .qxframe9a7c2-table-wrap.is-borderless{border-color:transparent;border-radius:0}
 .qxframe9a7c2-table-wrap.is-shadow{box-shadow:var(--_qxframe9a7c2-table-shadow)}
