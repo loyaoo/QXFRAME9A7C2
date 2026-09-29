@@ -97,7 +97,21 @@ function create(options) {
   var pendingCloseDetail = null;
   var motionActive = false;
   var motionPreparing = false;
+  var positioningGateActive = false;
   var api = null;
+
+  function beginPositioningGate() {
+    if (opts.position === false || !floating || !floating.classList) return false;
+    floating.classList.add('qxframe9a7c2-trigger-positioning');
+    positioningGateActive = true;
+    return true;
+  }
+  function clearPositioningGate() {
+    if (!positioningGateActive) return false;
+    positioningGateActive = false;
+    if (floating && floating.classList) floating.classList.remove('qxframe9a7c2-trigger-positioning');
+    return true;
+  }
     
   function projectMotionPlacement(placement) {
     var value = String(placement || opts.placement || 'bottom-start');
@@ -282,10 +296,12 @@ function create(options) {
       return Promise.resolve(runtime.preparePosition('motion-enter-prepare')).catch(function () { return null; }).then(function () {
         var livePlacement = floating.getAttribute('data-placement') || opts.placement;
         if (transitionElement !== floating) transitionElement.setAttribute('data-placement', String(livePlacement || 'bottom-start'));
+        clearPositioningGate();
         motionPreparing = false;
       });
     },
     onBeforeLeave: function () {
+      clearPositioningGate();
       motionPreparing = false;
       motionActive = true;
       if (transitionElement === floating && opts.position !== false) {
@@ -293,6 +309,7 @@ function create(options) {
       }
     },
     onAfterEnter: function () {
+      clearPositioningGate();
       motionPreparing = false;
       motionActive = false;
       runtime.setPositionSuspended(false, 'motion-enter-complete');
@@ -382,6 +399,7 @@ function create(options) {
     pendingCloseDetail = null;
     pendingOpenDetail = info;
     runtime.mount();
+    beginPositioningGate();
     surface.show(info);
     if (!runtime.getState().active) runtime.activate(info);
     else if (runtime.activateInteraction) runtime.activateInteraction(info);
@@ -423,6 +441,7 @@ function create(options) {
     // internal destroy authority is guarded; a public reason string cannot spoof teardown.
     if (destroyed || opened) return true;
     if (runtime.deactivateInteraction) runtime.deactivateInteraction(info);
+    clearPositioningGate();
     transition.setVisible(false, { reason: info.reason, originalEvent: info.originalEvent, immediate: !opts.transition || forceClose === 'destroy' });
     return true;
   }
@@ -615,6 +634,7 @@ function create(options) {
     if (interaction) interaction.destroy();
     interaction = null;
     if (opened) closeInternal('destroy', null, 'destroy');
+    clearPositioningGate();
     transition.destroy();
     runtime.destroy();
     surface.hide({ reason: 'destroy' });
