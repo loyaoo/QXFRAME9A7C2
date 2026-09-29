@@ -16188,7 +16188,9 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-transfer-list-host{min-height:0;flex:1 1 auto}
 .qxframe9a7c2-transfer-footer{box-sizing:border-box;flex:0 0 auto;padding:var(--qxframe9a7c2-space-2) var(--_qxframe9a7c2-control-padding-inline);border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle);color:var(--_qxframe9a7c2-transfer-muted-text)}
 .qxframe9a7c2-transfer-footer[hidden]{display:none}
-.qxframe9a7c2-transfer-pagination{box-sizing:border-box;flex:0 0 auto;padding:var(--qxframe9a7c2-space-2) var(--_qxframe9a7c2-control-padding-inline);border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle);overflow-x:auto}
+.qxframe9a7c2-transfer-pagination.qxframe9a7c2-scroll{box-sizing:border-box;width:100%;height:auto;flex:0 0 auto;padding:var(--qxframe9a7c2-space-2) var(--_qxframe9a7c2-control-padding-inline);border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-transfer-pagination-viewport{overflow-x:auto;overflow-y:hidden}
+.qxframe9a7c2-transfer-pagination>.qxframe9a7c2-transfer-pagination-viewport.qxframe9a7c2-scroll-viewport{width:100%;height:auto}
 .qxframe9a7c2-transfer-pagination[hidden]{display:none}
 .qxframe9a7c2-transfer-pagination .qxframe9a7c2-pagination{display:flex;width:max-content;min-width:100%;justify-content:center}
 .qxframe9a7c2-transfer.is-status-error{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-error)}
