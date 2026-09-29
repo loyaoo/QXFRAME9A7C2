@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
-Status: IMPLEMENTED — awaiting PR CI/browser verification
-Task progress: 70%
+Status: IN VERIFICATION — CI #867 caught and corrected native focus-origin selector ownership
+Task progress: 75%
 Branch: `fix/admin-framework-polish-001`.
 Baseline: `main@ebb827b47c5797021fc055242647d487bea09326` (PR #179 merge).
 
@@ -49,8 +49,11 @@ Implemented in branch:
 - `qx-admin-view-grid` removed from the admin views that used it; layouts now use framework responsive row/column classes.
 - Structural + Chromium regression gates extended for these exact cases.
 
+Verification note:
+- PR #180 CI #867 passed Windows + all verification through Table finalization, then `verify:final-focus-origin` rejected the first native-control keyboard outline selector because it used `:focus`. The gate was correct; the selector is tightened to keyboard-origin + `:focus-visible` rather than weakening the verifier.
+
 Next exact step:
-- Open PR, run exact-head release/browser CI, fix any gate finding, then merge and verify main Pages deployment.
+- Run exact-head release/browser CI again; if green, checkpoint VERIFIED/100%, re-run exact-head CI for that checkpoint, merge PR #180, then verify main CI + Pages.
 
 
 ### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template
