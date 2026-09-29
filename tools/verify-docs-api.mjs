@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 
 const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 function assert(condition,message){if(!condition)throw new Error('[QXFRAME9A7C2 docs api] '+message);}
@@ -37,7 +38,9 @@ assert(versionMatch[1]===pkg.version,'docs version '+versionMatch[1]+' does not 
 
 const catalog=parseFrozenAssignment(catalogSource,'window.QXFRAME9A7C2_DOCS_CATALOG = Object.freeze(');
 const apiSource=read('docs/assets/qxframe9a7c2-component-api.js');
-const api=parseFrozenAssignment(apiSource,'window.QXFRAME9A7C2_DOCS_API = Object.freeze(');
+const apiContext={window:{}};
+vm.runInNewContext(apiSource,apiContext,{filename:'docs/assets/qxframe9a7c2-component-api.js'});
+const api=apiContext.window.QXFRAME9A7C2_DOCS_API||{};
 const generated=JSON.parse(read('docs/generated/component-api.json'));
 const componentDir=path.join(repoRoot,'docs/components');
 const pages=fs.readdirSync(componentDir).filter(name=>name.endsWith('.html')).sort();
