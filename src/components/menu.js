@@ -1408,7 +1408,7 @@ function setupMenu(instance) {
     submenuModeAuto = (menuIntent.get(instance) || {}).submenuModeAuto === true;
     switchInlineOpenProjection(modeBefore, collapsedBefore);
     var popupAfter = popupMode();
-    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed','tooltip'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
+    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed','tooltip','scrollbarVisibility','scrollbarInteractive','scrollEdgeShadow','wheelPropagation'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
     if (structural) {
       if (selectedUpdate) syncSelectionOwners(nextSelected, { source:'options', reason:'update-options' });
       selection.updateOptions({ multiple: opts.multiple === true, values: selectedArray() });
@@ -1513,6 +1513,14 @@ function normalizeMenuPatch(instance, nextOptions) {
   if (own(next, 'selectable')) next.selectable = normalizeBoolean(next.selectable, 'selectable', true);
   if (own(next, 'forceSubMenuRender')) next.forceSubMenuRender = normalizeBoolean(next.forceSubMenuRender, 'forceSubMenuRender', false);
   if (own(next, 'disabledOverflow')) next.disabledOverflow = normalizeBoolean(next.disabledOverflow, 'disabledOverflow', false);
+  if (own(next, 'scrollbarInteractive')) next.scrollbarInteractive = normalizeBoolean(next.scrollbarInteractive, 'scrollbarInteractive', true);
+  if (own(next, 'scrollEdgeShadow')) next.scrollEdgeShadow = normalizeBoolean(next.scrollEdgeShadow, 'scrollEdgeShadow', false);
+  if (own(next, 'wheelPropagation')) next.wheelPropagation = normalizeBoolean(next.wheelPropagation, 'wheelPropagation', false);
+  if (own(next, 'scrollbarVisibility')) {
+    var visibility = String(next.scrollbarVisibility || 'auto');
+    if (['auto','always','hidden'].indexOf(visibility) < 0) throw new TypeError('[QXFRAME9A7C2] Menu scrollbarVisibility must be auto, always, or hidden.');
+    next.scrollbarVisibility = visibility;
+  }
   if (own(next, 'inlineIndent')) next.inlineIndent = normalizePositiveNumber(next.inlineIndent, 'inlineIndent', 24, true);
   if (own(next, 'collapsedWidth')) next.collapsedWidth = normalizePositiveNumber(next.collapsedWidth, 'collapsedWidth', 80, false);
   if (own(next, 'selectionAppearance')) next.selectionAppearance = Item.normalizeSelectionAppearance(next.selectionAppearance);
