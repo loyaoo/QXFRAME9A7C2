@@ -29,6 +29,26 @@
       /* User-reported keyboard/focus regression matrix. */
       function key(target,key,extra){var init=Object.assign({key:key,bubbles:true,cancelable:true},extra||{});var e=new KeyboardEvent('keydown',init);target.dispatchEvent(e);return e;}
       function makeRegressionHost(){var n=document.createElement('div');document.body.appendChild(n);return n;}
+      async function visiblePopupLeftSamples(component,count){
+        var values=[];
+        for(var sampleIndex=0;sampleIndex<(count||14);sampleIndex+=1){
+          await new Promise(function(resolve){requestAnimationFrame(resolve);});
+          var popup=component.getPopupElement?component.getPopupElement():null;
+          if(popup&&!popup.hidden&&getComputedStyle(popup).visibility!=='hidden'&&popup.getClientRects().length)values.push(popup.getBoundingClientRect().left);
+        }
+        return values;
+      }
+      function popupLeftSpread(values){return values.length?Math.max.apply(Math,values)-Math.min.apply(Math,values):Infinity;}
+      var positionSelectHost=makeRegressionHost();positionSelectHost.style.cssText='position:fixed;left:240px;top:70px;width:260px;z-index:1';
+      var positionSelect=C.Select.create({container:positionSelectHost,items:[{key:'a',value:'a',label:'Alpha'},{key:'b',value:'b',label:'Beta'}],defaultValue:'a',destroyOnClose:false});
+      positionSelect.open('first-frame-position');var positionSelectSamples=await visiblePopupLeftSamples(positionSelect,16);
+      record('regression-select-popup-first-frame-position',positionSelectSamples.length>=2&&popupLeftSpread(positionSelectSamples)<1.5,'samples='+positionSelectSamples.join(',')+',spread='+popupLeftSpread(positionSelectSamples));
+      positionSelect.destroy();positionSelectHost.remove();
+      var positionDateHost=makeRegressionHost();positionDateHost.style.cssText='position:fixed;left:240px;top:150px;width:260px;z-index:1';
+      var positionDate=C.DatePicker.create({container:positionDateHost,defaultValue:'2026-09-29',destroyOnClose:false});
+      positionDate.open('first-frame-position');var positionDateSamples=await visiblePopupLeftSamples(positionDate,16);
+      record('regression-date-picker-popup-first-frame-position',positionDateSamples.length>=2&&popupLeftSpread(positionDateSamples)<1.5,'samples='+positionDateSamples.join(',')+',spread='+popupLeftSpread(positionDateSamples));
+      positionDate.destroy();positionDateHost.remove();
       var selectHost2=makeRegressionHost(),select2=C.Select.create({container:selectHost2,items:[{key:'a',value:'a',label:'Alpha'},{key:'b',value:'b',label:'Beta'},{key:'c',value:'c',label:'Gamma'}],defaultValue:'a',searchable:true,clearable:true});
       var selectInput=select2.getInputElement();selectInput.focus();select2.open('regression');await delay(30);var selectOpenState=select2.getState();key(selectInput,'ArrowDown');var selectDownState=select2.getState(),selectFocusState=select2.getFocusController().getState(),selectFocusRings=select2.getPopupElement().querySelectorAll('.is-keyboard-focus');record('regression-select-hosted-focus-owner',selectFocusState.realFocusOwned===true&&selectFocusState.activeRegion==='options'&&document.activeElement===selectInput&&selectFocusRings.length===1,'focus='+JSON.stringify(selectFocusState)+',rings='+selectFocusRings.length+',active='+(document.activeElement&&document.activeElement.className));key(selectInput,'Enter');await delay(50);
       record('regression-select-enter-commits',select2.getState().value==='b',JSON.stringify({open:selectOpenState,down:selectDownState,final:select2.getState()}));
