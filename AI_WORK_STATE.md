@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template
-Status: IN PROGRESS
-Task progress: 80%
+Status: VERIFIED
+Task progress: 100%
 Branch: `docs/api-admin-closeout-001`.
 Baseline: current `main` after PR #178.
 
@@ -54,7 +54,13 @@ Implemented:
 - Branch diff is docs/tools/package/checkpoint only; no `src/` or `dist/` framework runtime file changed.
 
 Next exact step:
-- Open the PR from this exact branch head, run GitHub Actions, fix only concrete CI/browser failures, then merge and verify main Pages.
+- PR #179 exact-head CI #864 passed Windows tools, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build, and the 85-page canonical Chromium browser gate.
+- The API manual now merges all 2,326 canonical runtime parameter rows into the rich manual without overwriting existing curated descriptions; final API data contains 2,835 parameter rows and 310 event/callback rows with zero generated-contract omissions.
+- The complete admin template browser-smoke passed after fixing Dropdown action items to satisfy the canonical value contract.
+- Merge PR #179 to main, then verify main push CI and GitHub Pages deployment.
+
+Next exact step:
+- Merge PR #179, verify the resulting main CI/Pages deployment, then treat this closeout task as complete.
 
 ### THEME-PLAYGROUND-REVIEW-824-854 — merged-change manual review annotations
 Status: VERIFIED
