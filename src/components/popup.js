@@ -74,6 +74,13 @@ function createPopupFrame(options = {}) {
         return true;
     }
 
+    function destroyScroll(surface) {
+        if (!surface || !scrolls.has(surface)) return false;
+        scrolls.delete(surface);
+        try { if (Utils.isFunction(surface.destroy)) surface.destroy(); } catch (_) {}
+        return true;
+    }
+
     function destroy() {
         if (destroyed) return false;
         destroyed = true;
@@ -89,6 +96,7 @@ function createPopupFrame(options = {}) {
         createScroll,
         createAdapter,
         refresh,
+        destroyScroll,
         getPanelElement: function () { return panel; },
         getScrolls: function () { return Array.from(scrolls); },
         getPrimaryScroll: function () { const list = Array.from(scrolls); return list.length ? list[0] : null; },
