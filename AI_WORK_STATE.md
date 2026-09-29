@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-005 — family geometry cleanup / popup renderer pressure
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 60%
+Status: VERIFIED_PENDING_MERGE
+Task progress: 92%
 Baseline: `main@7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
 Branch: `audit/ant-edge-state-demos-005`.
 
@@ -57,12 +57,17 @@ Implemented:
 - Added Select/Cascader/TreeSelect popupRender primitive/array demos using [origin, primitive, number] output.
 - Added Chromium assertions that each popup keeps its canonical origin content and appends the primitive number through Renderer.
 - null/false popupRender fallback semantics remain unchanged in this round; no user-facing failure was established.
-- Main Round 4 push CI #846 is still being verified in parallel.
+- Main Round 4 push CI #846 completed successfully, including GitHub Pages deployment, for `main@7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
+- Round 5 exact-head `706f170092b7fec0e0b8e9966044ec9c5670bb33` passed QXFRAME CI #848 (Actions run `36505374856`): Windows tooling, dependency audit, Completion audit, Full release verification including Chromium pressure tests, npm pack, standalone dist/docs build and artifacts all succeeded.
+- Collapse xs/md/xl all honor the shared 50px family control height in the browser regression; removing the duplicated size heights did not disturb the retained xs/sm padding deltas.
+- Select/Cascader/TreeSelect popupRender array/primitive regressions all preserve canonical origin content and append primitive output without runtime errors.
+- The initial TreeSelect demo placement mistake was corrected before verification; the canonical demo now lives inside `mountTreeSelect`.
 
 Next exact step:
-1. Run Round 5 exact-head CI.
-2. Fix only reproduced failures; do not broaden popupRender semantics without evidence.
-3. Merge/deploy if green and record main #846/#Round5 deployment evidence.
+1. Run one final checkpoint-only exact-head CI.
+2. Merge PR #175 if green.
+3. Verify main push CI + Pages deployment.
+4. Start Round 6 from merged main with OTP canonical-focus, Carousel dynamic items and ColorPicker clear/drag pressure; do not reopen Round 5.
 
 ## PREVIOUS VERIFIED HANDOFF
 
