@@ -27,7 +27,7 @@ import { FocusOrigin } from '../core/focusOrigin.js';
 import { ObserverHub } from '../core/observerHub.js';
 import { PointerSession } from '../core/pointerSession.js';
 import { ReorderInteraction } from '../core/reorderInteraction.js';
-import { Trigger } from './trigger.js';
+import { PopupFrame, PopupRuntime } from './popup.js';
 import { Pagination } from './pagination.js';
 
 const global = globalThis;
@@ -275,6 +275,7 @@ function setupTable(instance) {
   var virtualizer = null;
   var filterTrigger = null;
   var filterPopup = null;
+  var filterPopupFrame = null;
   var filterScroll = null;
   var filterColumnKey = null;
   var filterDraftValues = [];
@@ -1772,7 +1773,9 @@ function setupTable(instance) {
     if (filterInteractionLease) { filterInteractionLease.release(); filterInteractionLease = null; }
     if (filterTrigger) filterTrigger.destroy(reason || 'table-filter-popup-destroy');
     filterTrigger = null;
-    if (filterScroll) { filterScroll.destroy(); filterScroll = null; }
+    if (filterPopupFrame) filterPopupFrame.destroy();
+    filterPopupFrame = null;
+    filterScroll = null;
     if (filterPopup) { Renderer.dispose(filterPopup); DOM.removeNode(filterPopup); }
     filterPopup = null; filterColumnKey = null; filterDraftValues = []; filterSearchValue = ''; syncOpenFilterFromModel = null;
   }
@@ -1814,6 +1817,7 @@ function setupTable(instance) {
     filterPopup = doc.createElement('div');
     filterPopup.className = 'qxframe9a7c2-table-filter-popup qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset';
     filterPopup.hidden = true;
+    filterPopupFrame = PopupFrame.create({ panel:filterPopup, document:doc });
     if (opts.keyboardNavigation && interactionController) {
       filterInteractionLease = interactionController.registerScope({
         id:'table-filter', parentId:'table', root:filterPopup, document:doc, profile:{ allowEditableKeys:['F6'] },
@@ -1890,7 +1894,7 @@ function setupTable(instance) {
       renderOptions(column.filterOptions || [], 0);
       var listScrollShell = doc.createElement('div'); listScrollShell.className = 'qxframe9a7c2-table-filter-scroll';
       listScrollShell.appendChild(list); filterPopup.appendChild(listScrollShell);
-      filterScroll = Scroll.attachViewport({
+      filterScroll = filterPopupFrame.attachViewport({
         root:listScrollShell, viewport:list, content:list, document:doc,
         axis:'y', wheelAxis:'y', wheelPropagation:false, scrollbarVisibility:'auto',
         focusable:false, keyboard:false, controller:api
@@ -1902,7 +1906,7 @@ function setupTable(instance) {
       actions.appendChild(reset); actions.appendChild(apply); filterPopup.appendChild(actions);
     }
     function renderFilterContent() {
-      if (filterScroll) { filterScroll.destroy(); filterScroll = null; }
+      if (filterScroll) { filterPopupFrame.destroyScroll(filterScroll); filterScroll = null; }
       filterPopup.textContent = '';
       if (column.filterDropdown) {
         var context = Object.freeze({ column: column, selectedValues: filterDraftValues.slice(), setSelectedValues: setSelectedValues, confirm: confirm, clearFilters: clearFilters, close: close, instance: api });
@@ -1941,7 +1945,8 @@ function setupTable(instance) {
     renderFilterContent();
     var portal = filterPortal();
     portal.appendChild(filterPopup);
-    filterTrigger = Trigger.create({ reference: reference, triggerTarget: reference, floating: filterPopup, portalContainer: portal, document: doc, trigger: 'manual', placement: column.filterPlacement || 'bottom-end', closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, tabExitTarget: opts.keyboardNavigation ? root : reference, closeOnEscape: true, restoreFocusOnDismiss: true, restoreFocusTarget: opts.keyboardNavigation ? root : reference, restoreFocusOnClose: function (detail) { var reason = String(detail && detail.reason || ''); return reason === 'filter-confirm' || reason === 'filter-clear' || reason === 'filter-close' || reason === 'api-close'; }, destroyOnClose: false, transition: null, beforeClose: function (detail) { if (filterOpenControlled(column) && column.filterDropdownOpen === true) { emitFilterOpenRequest(column, false, detail && detail.reason || 'filter-close-request', detail && detail.originalEvent || null); return false; } return true; }, onOpenChange: function (opened, detail) { if (!filterOpenControlled(column)) emitFilterOpenRequest(column, opened, detail && detail.reason || 'filter-open-change', detail && detail.originalEvent || null); } });
+    var filterPopupRuntime = PopupRuntime.create({ reference: reference, triggerTarget: reference, floating: filterPopup, popupFrame:filterPopupFrame, portalContainer: portal, document: doc, trigger: 'manual', placement: column.filterPlacement || 'bottom-end', closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, tabExitTarget: opts.keyboardNavigation ? root : reference, closeOnEscape: true, restoreFocusOnDismiss: true, restoreFocusTarget: opts.keyboardNavigation ? root : reference, restoreFocusOnClose: function (detail) { var reason = String(detail && detail.reason || ''); return reason === 'filter-confirm' || reason === 'filter-clear' || reason === 'filter-close' || reason === 'api-close'; }, destroyOnClose: false, transition: null, beforeClose: function (detail) { if (filterOpenControlled(column) && column.filterDropdownOpen === true) { emitFilterOpenRequest(column, false, detail && detail.reason || 'filter-close-request', detail && detail.originalEvent || null); return false; } return true; }, onOpenChange: function (opened, detail) { if (!filterOpenControlled(column)) emitFilterOpenRequest(column, opened, detail && detail.reason || 'filter-open-change', detail && detail.originalEvent || null); } });
+    filterTrigger = filterPopupRuntime.trigger;
     filterTrigger.open('filter', event || null);
     return true;
   }
