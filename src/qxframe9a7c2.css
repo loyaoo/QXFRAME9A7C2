@@ -14190,6 +14190,14 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 [data-placement^="top"].qxframe9a7c2-motion-popup-placement-appear-from,[data-placement^="top"].qxframe9a7c2-motion-popup-placement-enter-from,[data-placement^="top"].qxframe9a7c2-motion-popup-placement-leave-to,[data-placement^="top"].qxframe9a7c2-motion-popup-placement-appear-active,[data-placement^="top"].qxframe9a7c2-motion-popup-placement-enter-active,[data-placement^="top"].qxframe9a7c2-motion-popup-placement-leave-active{--_qxframe9a7c2-popup-motion-x:0;--_qxframe9a7c2-popup-motion-y:6px;transform-origin:50% 100%}
 [data-placement^="right"].qxframe9a7c2-motion-popup-placement-appear-from,[data-placement^="right"].qxframe9a7c2-motion-popup-placement-enter-from,[data-placement^="right"].qxframe9a7c2-motion-popup-placement-leave-to,[data-placement^="right"].qxframe9a7c2-motion-popup-placement-appear-active,[data-placement^="right"].qxframe9a7c2-motion-popup-placement-enter-active,[data-placement^="right"].qxframe9a7c2-motion-popup-placement-leave-active{--_qxframe9a7c2-popup-motion-x:-6px;--_qxframe9a7c2-popup-motion-y:0;transform-origin:0 50%}
 [data-placement^="left"].qxframe9a7c2-motion-popup-placement-appear-from,[data-placement^="left"].qxframe9a7c2-motion-popup-placement-enter-from,[data-placement^="left"].qxframe9a7c2-motion-popup-placement-leave-to,[data-placement^="left"].qxframe9a7c2-motion-popup-placement-appear-active,[data-placement^="left"].qxframe9a7c2-motion-popup-placement-enter-active,[data-placement^="left"].qxframe9a7c2-motion-popup-placement-leave-active{--_qxframe9a7c2-popup-motion-x:6px;--_qxframe9a7c2-popup-motion-y:0;transform-origin:100% 50%}
+[data-placement="bottom-start"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:0 0}
+[data-placement="bottom-end"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:100% 0}
+[data-placement="top-start"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:0 100%}
+[data-placement="top-end"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:100% 100%}
+[data-placement="right-start"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:0 0}
+[data-placement="right-end"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:0 100%}
+[data-placement="left-start"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:100% 0}
+[data-placement="left-end"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:100% 100%}
 
 /* Ant-style slide family for anchored popup panels. */
 .qxframe9a7c2-motion-slide-up-appear-from,.qxframe9a7c2-motion-slide-up-enter-from,.qxframe9a7c2-motion-slide-up-leave-to{opacity:0;transform:scaleY(.8);transform-origin:0 0}
