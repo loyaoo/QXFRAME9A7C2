@@ -255,6 +255,7 @@ function setupTable(instance) {
   var root = doc.createElement('div');
   var scrollShell = doc.createElement('div');
   var scrollViewport = doc.createElement('div');
+  var scrollContent = doc.createElement('div');
   var scrollSurface = null;
   var title = doc.createElement('div');
   var toolbar = doc.createElement('div');
@@ -444,6 +445,7 @@ function setupTable(instance) {
   toolbar.appendChild(toolbarStart); toolbar.appendChild(toolbarEnd);
   scrollShell.className = 'qxframe9a7c2-table-scroll';
   scrollViewport.className = 'qxframe9a7c2-table-scroll-viewport';
+  scrollContent.className = 'qxframe9a7c2-table-scroll-content';
   table.className = 'qxframe9a7c2-table';
   caption.className = 'qxframe9a7c2-table-caption';
   tfoot.className = 'qxframe9a7c2-table-summary';
@@ -455,14 +457,15 @@ function setupTable(instance) {
   loading.className = 'qxframe9a7c2-table-loading';
   errorPanel.className = 'qxframe9a7c2-table-error';
   table.appendChild(thead); table.appendChild(tbody);
-  scrollViewport.appendChild(table);
+  scrollContent.appendChild(table);
+  scrollViewport.appendChild(scrollContent);
   scrollShell.appendChild(scrollViewport);
   root.appendChild(scrollShell);
   opts.container.appendChild(root);
   scrollSurface = Scroll.attachViewport({
     root:scrollShell,
     viewport:scrollViewport,
-    content:table,
+    content:scrollContent,
     document:doc,
     axis:'both',
     wheelAxis:'auto',
