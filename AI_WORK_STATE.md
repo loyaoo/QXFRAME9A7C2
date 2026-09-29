@@ -15,72 +15,62 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-002`
+- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-003`
 
 ## CURRENT
 
-### ANT-DIFFERENTIAL-EDGE-STATES-002 — Ant regression pressure demos / dynamic-update audit
-Status: FIXED_PENDING_FINAL_HEAD_CI
-Task progress: 90%
-Baseline: `main@be4a9e7282a413c6a416674d82849bcb52e6e470`.
-Branch: `audit/ant-edge-state-demos-002`.
-Primary manual surface: `docs/theme-playground.html` canonical component demos.
+### ANT-DIFFERENTIAL-EDGE-STATES-003 — motion reversal / stale identity pressure demos
+Status: VERIFYING_BROWSER_BUDGET_FIX
+Task progress: 88%
+Baseline: `main@460322c75ebde024da678cadde0f5c894ea961e1`.
+Branch: `audit/ant-edge-state-demos-003`.
 
-Previous batch verification:
-- PR #171 merged to main at `be4a9e7282a413c6a416674d82849bcb52e6e470`.
-- main QXFRAME CI #830 passed Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build, Pages artifact upload, and deploy-pages.
-- Stale PRs #165 and #167 were closed as superseded by #171.
-- Table Loading/Empty exclusivity, remote query allMatching disabled-row ownership, and Result feedback non-empty → empty → 0 are therefore deployed and closed.
+Previous batch closed:
+- PR #172 merged at `460322c75ebde024da678cadde0f5c894ea961e1`.
+- PR head #833 passed exact-head Windows, Completion audit, Full release verification, pack, standalone docs/dist build and artifact upload.
+- main push CI #834 release passed the same full verification and uploaded the Pages artifact; deploy-pages was queued when this round started.
+- ANT-DIFFERENTIAL-EDGE-STATES-002 pressure checks for numeric 0 content, Transfer hot callbacks/all-disabled filters, frozen ColorPicker presets, disabled clear, List key 0, and Upload async remove+concurrent add all passed.
+- That matrix exposed and fixed a generic TransitionGroup child MotionCore leak: normally completed leave now destroys the child-owned MotionCore before its record is removed.
 
-Ant Design 6.6.1–6.6.5 regression classes selected for QX pressure testing:
-1. numeric `0` renderable content must not be dropped by truthy checks;
-2. callbacks/configuration replaced by `updateOptions` must not leave stale closures;
-3. filtered Transfer with no enabled results must disable select-all;
-4. frozen ColorPicker preset input must remain read-only to the framework;
-5. disabled ColorPicker clear path must not mutate value;
-6. Upload async `beforeRemove` must remove only its target even if another file is added while the promise is pending;
-7. numeric key `0` must remain stable through List reorder/update.
+Round 3 targets:
+1. Modal close -> immediate reopen while leave motion is active; only the final open state may win, overlay/focus/scroll resources must remain balanced.
+2. Drawer close -> immediate reopen while leave motion is active across mask + panel dual presence; stale after-close must not deactivate the reopened overlay.
+3. Modal/Drawer content/title update while open and during a reversal; projections must use current options rather than a stale pre-motion snapshot.
+4. ItemCollection/List selected/active identity after replacing/reordering items, including deletion of the previous active row and data-revision anchor invalidation.
+5. Transfer pagination/search page recovery after filter-to-empty -> clear/filter restore, matching the Ant 6.6 regression class but validating QX's PaginationModel + ItemCollection projection in a real browser.
+6. Search callbacks must fire exactly once per actual query transition; no duplicate clear event path.
 
-Current code audit disposition before browser tests:
-- Notification/Message close buttons use `type="button"`; Ant form-submit regression does not apply.
-- Notice/Modal render pipelines accept numeric 0; browser pressure coverage is still missing.
-- List/ItemCollection canonicalizes numeric key 0 to string "0"; pressure coverage is missing.
-- Transfer select-all already derives from current visible enabled values and disables when none exist.
-- Transfer runtime callbacks generally dereference mutable current `opts`; pagination callback closures are recreated whenever the pagination option itself is updated.
-- ColorPanel reads preset entries without mutating them; ColorPicker passes a copied preset array.
-- Upload async remove uses target uid plus a mutation generation. Adding unrelated files does not advance mutationGeneration, so the intended target should still be removed while the newly added file survives. Browser regression will verify this concurrency contract.
-
-Implementation plan:
-- Add canonical dynamic demos for the seven pressure cases above where they materially improve manual inspection.
-- Add strict Chromium regressions for state/data truth, not only visuals.
-- Do not change runtime code unless one of those regressions actually fails or a concrete owner-level flaw is proven.
-- Keep all fixes inside existing Controller/lifecycle ownership; no parallel state stores.
+Guardrails:
+- Add new canonical dynamic demos rather than duplicating ordinary open/close or basic list demos.
+- Browser tests assert final logical state + DOM + diagnostics ownership.
+- Do not add unsupported Ant APIs solely for parity.
+- If a failure is found, fix the canonical owner (MotionCore/OverlayController/SelectionController/PaginationModel/etc.) and retain the strict regression.
 
 Implemented on branch:
-- Added Upload async beforeRemove × concurrent add demo.
-- Added Transfer hot onSearch replacement + filtered all-disabled select-all demo.
-- Added ColorPicker frozen preset objects/array + disabled clear demo.
-- Added List numeric key/value 0 reorder demo.
-- Added Message and Notification numeric 0 demos and Modal title/content/footer numeric 0 demo.
-- Added strict Chromium checks for every pressure case above. The tests inspect real state/data and DOM truth; they do not weaken existing assertions.
-Runtime finding reproduced by the pressure matrix:
-- CI #831: every newly added semantic pressure assertion passed, but the final diagnostics balance failed with exactly `motion.liveMotions=2`.
-- The two new immediately-created/closed NoticeService instances (Message + Notification) exposed a lower-level TransitionGroup ownership leak.
-- Root cause: `TransitionGroup.removeRecord()` physically removed a child after completed leave and deleted its record before destroying the child-owned MotionCore. Once removed from `records`, a later `TransitionGroup.destroy()` could no longer reach that MotionCore. One normally completed child leave therefore leaked one MotionCore.
-- Owner-level fix: `TransitionGroup.removeRecord()` now destroys `record.core` immediately after physical removal/leave-layout restoration and before deleting the record reference. MotionCore explicitly supports re-entrant destroy from its unmount lifecycle edge, so the fix retires the child owner without adding a second motion authority.
-- CI #832 on runtime-fix head `33812286f1c874e197563a673e9d11ec5b31a9f8`: Windows success, Completion audit success, Full release verification success, clean pack success, standalone dist/docs build success, artifact upload success. Browser diagnostics returned balanced with the new pressure matrix.
+- Modal demo + Chromium regression: open -> begin leave -> update title/content -> reopen; final logical open, overlay active, shown motion phase, and latest DOM content are all asserted.
+- Drawer demo + Chromium regression: same reversal across independent mask + panel motions; final dual presence and latest content are asserted.
+- List demo + Chromium regression: selected/active Beta is removed by an items replacement. SelectionController's Collection-backed revision anchor must invalidate, while active focus falls to the row at the prior visual index.
+- Transfer demo + Chromium regression: source page 3 -> filter to zero rows -> clear filter. Page must clamp to 1 and onSearch must fire exactly once per query transition.
+- No runtime code changed yet in this round; the pressure matrix will determine whether a canonical owner defect exists.
 
-No-change confirmations from this Ant pass:
-- Transfer page restoration after an empty filter already clamps to page >= 1 in both PaginationModel and ItemCollection projection.
-- Transfer hot `onSearch`, filtered all-disabled select-all, frozen ColorPicker presets, disabled ColorPicker clear, numeric 0 renderables, List numeric key 0 reorder, and Upload async remove + concurrent add all passed Chromium without runtime changes.
-- Ant Transfer numeric-key/string-key stale-selection regression does not map directly: QX ItemCollection intentionally canonicalizes collection identity to strings.
+Verification:
+- PR #173 exact-head CI #835 at `2e09dfda9eac0eb8fed0408071efb88c4569703b` completed successfully.
+- Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build, and artifact uploads all passed.
+- No runtime code changes were required: all four new pressure regressions passed against the current canonical owners.
+- Modal/Drawer leave reversal retains the final reopened overlay and latest title/content without stale after-leave deactivation.
+- List Collection-backed data revision invalidates the removed selected anchor and reconciles active focus to the prior visual index.
+- Transfer source page 3 -> zero-result search clamps to page 1, clearing stays legal, and onSearch fires exactly once per query transition.
+- Final diagnostics balance also remains clean after the reversal cases.
+- Checkpoint-only CI #836 exposed a pre-existing nondeterministic verifier failure in `verify-phase-e-motion-closeout`: the Collapse enter test used fixed `wait(80)` and required the sampled height to be mid-animation. The same runtime/test had passed CI #835, proving the assertion depended on CI/browser frame timing rather than a source change.
+- Verifier fix on `6726823dc5790505526455a9cf2fd4fbe1729c50`: enter and rapid-toggle continuity now wait for an observable intermediate rendered height with a bounded timeout, matching the existing leave-side strategy. Final open/hidden settling and no-endpoint-jump assertions remain strict; runtime code is unchanged.
+- Follow-up `35acf10cc1a6a0e94777ebe50840c47157e754b3` also replaced fixed 300ms settle sleeps with bounded state/geometry waits; `verify-phase-e-motion-closeout` passed CI #839 after this change.
+- CI #839 then failed later in `verify-browser-smoke.mjs` without any failed browser assertion: the outer 12s whole-page result deadline expired while the smoke page still reported `PENDING`. The identical browser regression content passed CI #835, so the failure is a suite-budget race, not a component semantic failure.
+- Both browser result deadlines are now 30s. All individual assertions and component timing semantics are unchanged; a genuinely hung smoke page still fails by bounded timeout.
 
 Next exact step:
-1. Run one final exact-head CI after this checkpoint-only commit.
-2. Merge PR #172 if green.
-3. Verify main push CI and Pages deployment.
-4. Start the next Ant differential batch from the resulting main without re-auditing these closed cases.
-
+1. Run exact-head CI for the verifier-race fix.
+2. If stable/green, record verification, merge PR #173, and verify main CI + Pages.
+3. Start the next differential batch from resulting main without re-testing these closed cases.
 ## PREVIOUS VERIFIED HANDOFF
 
 ### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout

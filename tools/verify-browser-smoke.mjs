@@ -136,7 +136,7 @@ async function runSmoke(cdp) {
         const smokeResult = await cdp.call('Runtime.evaluate', { expression: smokeScript, sourceURL: 'verify-browser-smoke-page.js' }, sessionId);
         const smokeError = exceptionMessage(smokeResult, 'Browser smoke script');
         if (smokeError) throw smokeError;
-        const deadline = Date.now() + 12000;
+        const deadline = Date.now() + 30000;
         while (Date.now() < deadline) {
             const result = await cdp.call('Runtime.evaluate', {
                 expression: `(function(){var n=document.getElementById('qx-browser-smoke-result');return n?n.textContent:null})()`,
@@ -200,7 +200,7 @@ async function runDocsPlayground(cdp) {
             const scriptError = exceptionMessage(evaluated, 'Theme Playground script ' + artifacts.scripts[index].label);
             if (scriptError) throw scriptError;
         }
-        const deadline = Date.now() + 12000;
+        const deadline = Date.now() + 30000;
         while (Date.now() < deadline) {
             const ready = await cdp.call('Runtime.evaluate', { expression: `document.querySelectorAll('.qxframe9a7c2-play-card').length>0`, returnByValue: true }, sessionId);
             if (ready && ready.result && ready.result.value === true) break;
