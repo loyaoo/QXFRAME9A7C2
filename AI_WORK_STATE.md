@@ -20,18 +20,17 @@
 ## CURRENT
 
 ### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
-Status: VERIFIED — READY TO MERGE
-Task progress: 95%
-Branch: `fix/admin-grid-layout-004`.
-Baseline: `main@661c7280499f6e222c9f77d7076722e6e6552f5d` (PR #182 merged; main CI #892 + Pages green).
-PR: #183.
+Status: VERIFIED
+Task progress: 100%
+Baseline: `main@d14b4e635eebaa0e6953a700e21433b5a8e6a131`.
+PR: #183 merged.
 
 User evidence:
 - Multiple complete-admin pages rendered secondary content compressed into a narrow strip with per-character wrapping and horizontal overflow.
 
 Root cause:
 - Five views (`profile`, `orders`, `search`, `settings`, `users`) placed a framework `.qxframe9a7c2-row` directly inside another framework Row without a `col-*` owner.
-- Because Row is a flex container, the nested Row became an unconstrained flex item and could shrink to content width. This exactly matches the screenshot: the right-side card/list is compressed into a vertical strip while the page gains horizontal overflow.
+- Because Row is a flex container, the nested Row became an unconstrained flex item and could shrink to content width. This exactly matched the screenshot: the right-side card/list was compressed into a vertical strip while the page gained horizontal overflow.
 
 Implemented:
 - Restored canonical `Row -> col-24 -> nested Row` composition in all five affected views.
@@ -46,10 +45,13 @@ Guardrails:
 
 Verification evidence:
 - PR #183 implementation head `3957c7c045daf9071673d9ed2c8761df69527f92` passed QXFRAME CI #893.
-- CI #893 passed dependency audit, Completion audit, Full release verification (including the new admin Grid geometry checks), Windows tools, npm pack, standalone dist/docs build and artifact uploads.
+- Final PR head `c268b151db66643a35c2a07dff0ec1e9ea30a265` passed exact-head QXFRAME CI #894.
+- PR #183 merged as `d14b4e635eebaa0e6953a700e21433b5a8e6a131`.
+- Main QXFRAME CI #895 passed dependency audit, Completion audit, Full release verification, Windows tools, npm pack, standalone dist/docs build, artifact upload and GitHub Pages deployment.
+- GitHub Pages deployment for the merge commit completed successfully.
 
 Next exact step:
-- Run exact-head CI for this checkpoint-only commit; when green, merge PR #183 and verify main CI + GitHub Pages deployment.
+- Treat this regression as closed. Reopen only if a concrete admin page still reproduces abnormal compression/overflow after Pages serves `d14b4e635eebaa0e6953a700e21433b5a8e6a131`.
 
 ### ADMIN-COMPLETE-PRESET-003 — complete admin preset page matrix
 Status: VERIFIED
