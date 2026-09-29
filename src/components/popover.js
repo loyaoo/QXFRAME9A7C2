@@ -1,5 +1,4 @@
-import { PopupComponent } from './popup.js';
-import { Trigger } from './trigger.js';
+import { PopupComponent, PopupRuntime } from './popup.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { DOM } from '../core/dom.js';
@@ -66,7 +65,7 @@ export class Popover extends PopupComponent {
         this.setupPopupRuntime({
             reference, floating: panel, document: doc, portalContainer,
             trigger: opts.trigger, placement: opts.placement, arrow: opts.showArrow === true, arrowElement: arrow, arrowPadding: opts.arrowPadding, offset: opts.offset,
-            transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', middleware: opts.middleware, autoUpdate: opts.autoUpdate !== false,
+            transition: PopupRuntime.motion.popupPlacement, strategy: opts.strategy || 'absolute', middleware: opts.middleware, autoUpdate: opts.autoUpdate !== false,
             closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnFocusOutside: opts.closeOnFocusOutside !== false, closeOnTabExit: opts.closeOnTabExit !== false,
             focusScope: opts.focusScope, tabExitTarget: reference, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false,
             restoreFocus: opts.restoreFocus !== false, restoreFocusOnDismiss: opts.restoreFocus !== false, restoreFocusTarget: reference, restoreFocusOnClose: opts.restoreFocusOnClose,
