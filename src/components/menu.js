@@ -117,8 +117,7 @@ const MENU_DEFAULTS = Object.freeze({
   multiple: false, selectable: true, submenuMode: undefined, itemDisplay: 'icon-label', collapsed: false,
   disabled: false, size: 'md', submenuTrigger: 'hover', submenuOpenDelay: 0, submenuLeaveDelay: 100, submenuOffset: 8,
   placement: undefined, selectionAppearance: 'highlight', inlineIndent: 24, collapsedWidth: 80,
-  forceSubMenuRender: false, disabledOverflow: false, overflowedIndicator: DEFAULT_OVERFLOW_INDICATOR, tooltip: true,
-  scrollbarVisibility: 'auto', scrollbarInteractive: true, scrollEdgeShadow: false, wheelPropagation: false
+  forceSubMenuRender: false, disabledOverflow: false, overflowedIndicator: DEFAULT_OVERFLOW_INDICATOR, tooltip: true
 });
 const menuState = new WeakMap();
 const menuIntent = new WeakMap();
@@ -137,11 +136,6 @@ function normalizeMenuOptions(input, intent) {
   opts.selectable = normalizeBoolean(opts.selectable, 'selectable', true);
   opts.forceSubMenuRender = normalizeBoolean(opts.forceSubMenuRender, 'forceSubMenuRender', false);
   opts.disabledOverflow = normalizeBoolean(opts.disabledOverflow, 'disabledOverflow', false);
-  opts.scrollbarInteractive = normalizeBoolean(opts.scrollbarInteractive, 'scrollbarInteractive', true);
-  opts.scrollEdgeShadow = normalizeBoolean(opts.scrollEdgeShadow, 'scrollEdgeShadow', false);
-  opts.wheelPropagation = normalizeBoolean(opts.wheelPropagation, 'wheelPropagation', false);
-  if (['auto','always','hidden'].indexOf(String(opts.scrollbarVisibility || 'auto')) < 0) throw new TypeError('[QXFRAME9A7C2] Menu scrollbarVisibility must be auto, always, or hidden.');
-  opts.scrollbarVisibility = String(opts.scrollbarVisibility || 'auto');
   opts.inlineIndent = normalizePositiveNumber(opts.inlineIndent, 'inlineIndent', 24, true);
   opts.collapsedWidth = normalizePositiveNumber(opts.collapsedWidth, 'collapsedWidth', 80, false);
   opts.selectionAppearance = Item.normalizeSelectionAppearance(opts.selectionAppearance);
@@ -375,10 +369,10 @@ function setupMenu(instance) {
       document:doc,
       axis:'y',
       wheelAxis:'y',
-      wheelPropagation:opts.wheelPropagation === true,
-      scrollbarVisibility:opts.scrollbarVisibility,
-      scrollbarInteractive:opts.scrollbarInteractive !== false,
-      edgeShadow:opts.scrollEdgeShadow === true,
+      wheelPropagation:false,
+      scrollbarVisibility:'auto',
+      scrollbarInteractive:true,
+      edgeShadow:false,
       focusable:false,
       keyboard:false,
       controller:api
@@ -1408,7 +1402,7 @@ function setupMenu(instance) {
     submenuModeAuto = (menuIntent.get(instance) || {}).submenuModeAuto === true;
     switchInlineOpenProjection(modeBefore, collapsedBefore);
     var popupAfter = popupMode();
-    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed','tooltip','scrollbarVisibility','scrollbarInteractive','scrollEdgeShadow','wheelPropagation'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
+    var structural = ['items','mode','submenuMode','itemDisplay','selectionAppearance','forceSubMenuRender','disabledOverflow','overflowedIndicator','expandIcon','collapsed','tooltip'].some(function (name) { return own(next, name); }) || popupBefore !== popupAfter || modeBefore !== opts.mode || multipleBefore !== opts.multiple;
     if (structural) {
       if (selectedUpdate) syncSelectionOwners(nextSelected, { source:'options', reason:'update-options' });
       selection.updateOptions({ multiple: opts.multiple === true, values: selectedArray() });
@@ -1513,14 +1507,6 @@ function normalizeMenuPatch(instance, nextOptions) {
   if (own(next, 'selectable')) next.selectable = normalizeBoolean(next.selectable, 'selectable', true);
   if (own(next, 'forceSubMenuRender')) next.forceSubMenuRender = normalizeBoolean(next.forceSubMenuRender, 'forceSubMenuRender', false);
   if (own(next, 'disabledOverflow')) next.disabledOverflow = normalizeBoolean(next.disabledOverflow, 'disabledOverflow', false);
-  if (own(next, 'scrollbarInteractive')) next.scrollbarInteractive = normalizeBoolean(next.scrollbarInteractive, 'scrollbarInteractive', true);
-  if (own(next, 'scrollEdgeShadow')) next.scrollEdgeShadow = normalizeBoolean(next.scrollEdgeShadow, 'scrollEdgeShadow', false);
-  if (own(next, 'wheelPropagation')) next.wheelPropagation = normalizeBoolean(next.wheelPropagation, 'wheelPropagation', false);
-  if (own(next, 'scrollbarVisibility')) {
-    var visibility = String(next.scrollbarVisibility || 'auto');
-    if (['auto','always','hidden'].indexOf(visibility) < 0) throw new TypeError('[QXFRAME9A7C2] Menu scrollbarVisibility must be auto, always, or hidden.');
-    next.scrollbarVisibility = visibility;
-  }
   if (own(next, 'inlineIndent')) next.inlineIndent = normalizePositiveNumber(next.inlineIndent, 'inlineIndent', 24, true);
   if (own(next, 'collapsedWidth')) next.collapsedWidth = normalizePositiveNumber(next.collapsedWidth, 'collapsedWidth', 80, false);
   if (own(next, 'selectionAppearance')) next.selectionAppearance = Item.normalizeSelectionAppearance(next.selectionAppearance);
