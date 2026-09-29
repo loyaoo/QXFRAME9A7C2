@@ -14,10 +14,40 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: complete admin preset expansion.
-- Current Task: `SCROLL-UNIFICATION-005`
+- Current Phase: capability leakage / shared runtime unification closeout.
+- Current Task: `ARCH-UNIFICATION-006`
 
 ## CURRENT
+
+### ARCH-UNIFICATION-006 — Popup / Reorder / OverlayFrame shared-runtime closeout
+Status: IN_PROGRESS
+Task progress: 5%
+Branch: `refactor/capability-unification-006`.
+Baseline: `main@1fda904db5548f53ccdb9628c5f5c6e797f5abaf` (PR #184 merged; PR #185 remains open and is not the implementation base).
+
+User requirement:
+- Finish the architecture cleanup identified in the latest audit instead of patching only the visible Menu/Admin symptom.
+- Popup-family business components must consume one popup-layer Scroll/surface abstraction rather than importing/assembling popup Scroll independently.
+- Tree drag/drop must reuse ReorderInteraction rather than keep a second full drag lifecycle.
+- Modal/Drawer must share one OverlayFrame family runtime for common chrome/open-close/scroll/presence plumbing.
+- Preserve existing Value/Focus/Interaction/Capability/Selection/Form/Motion authorities and all shipped interaction semantics.
+
+Implementation plan:
+1. Popup layer: add canonical PopupFrame ownership API and migrate popup-specific Scroll consumers (Select/Autocomplete/Dropdown/Menu/Cascader/TreeSelect/Tabs overflow plus Popover/PopupField integration).
+2. Reorder layer: extend ReorderInteraction with a domain drop resolver/visual adapter and migrate Tree hierarchical drag to it.
+3. Overlay frame layer: extract shared Modal/Drawer frame/runtime plumbing while keeping geometry/motion profiles component-specific.
+4. Absorb only the valid PR #185 Menu-root Scroll/admin-browser pieces; do not merge #185 as-is.
+5. Add architecture/static/browser regression gates, run exact-head CI, open PR, fix failures, merge only when green, then verify main CI + Pages.
+
+Guardrails:
+- One owner / one truth; no compatibility parallel runtime.
+- Trigger remains trigger/Overlay/position/motion coordinator; popup Scroll belongs to the popup layer, not to Trigger.
+- Tree hierarchical before/inside/after stays a domain adapter over ReorderInteraction, not a second Reorder controller.
+- Theme/Token remain pure CSS.
+- Do not change Picker draft/commit semantics, Autocomplete input-first behavior, keyboard-vs-pointer focus-origin rules, or generic overflow/min-width policies.
+
+Next exact step:
+- Implement PopupFrame + migrate popup Scroll consumers, then checkpoint source/test evidence before starting Tree/Reorder.
 
 ### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
 Status: VERIFIED — READY TO MERGE
