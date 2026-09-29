@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-006 — canonical focus / dynamic item reconciliation / color interaction pressure
-Status: IMPLEMENTING
-Task progress: 20%
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 62%
 Baseline: `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
 Branch: `audit/ant-edge-state-demos-006`.
 
@@ -44,11 +44,19 @@ Static audit before pressure:
 - Carousel `applyOptions()` snapshots active item key before replacing opts, resolves that key in new items, and falls back to normalized prior index when key disappears. Structure appears correct; add regression instead of speculative fix.
 - ColorPanel has dragSnapshot/keyboardSnapshot and explicit locked() guards. Need concurrency pressure before changing it.
 
+Implemented:
+- InputOTP canonical focus reconciliation now updates real DOM focus only when the current activeElement already belongs to this OTP and the canonical first-empty slot changed. External page focus is never stolen.
+- Added InputOTP Theme Playground demo and Chromium coverage for both API setValue and controlled value update while focus is inside the OTP.
+- Added Carousel keyed dynamic-items demo and Chromium regression: reorder preserves active key; removing the active key reconciles by previous visual index and keeps DOM/ValueController aligned. No Carousel runtime change was needed.
+- ColorPanel now cancels active saturation PointerSession and rolls back pending keyboard interaction when entering disabled/readOnly mutation lock. This prevents a stale drag from surviving the lock and committing after re-enable.
+- Added ColorPicker interaction-lock demo and standalone ColorPanel Chromium pointer pressure: preview must roll back on lock and the later stale pointerup must not mutate value.
+- Round 5 main CI #850 and GitHub Pages deployment completed successfully for `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
+
 Next exact step:
-1. Add InputOTP real-focus reconciliation browser regression and demo.
-2. Add Carousel keyed reorder/remove pressure demo + Chromium regression.
-3. Add ColorPicker lock-during-interaction pressure where practical.
-4. Run exact-head CI and fix only reproduced failures.
+1. Open PR and run exact-head CI.
+2. Keep strict focus/value/identity assertions; fix owner logic rather than weakening tests if any fail.
+3. Merge/deploy when green.
+
 
 ## PREVIOUS VERIFIED HANDOFF
 
