@@ -15,55 +15,35 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-006`
+- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-007`
 
 ## CURRENT
 
-### ANT-DIFFERENTIAL-EDGE-STATES-006 — canonical focus / dynamic item reconciliation / color interaction pressure
-Status: VERIFIED_PENDING_MERGE
-Task progress: 92%
-Baseline: `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
-Branch: `audit/ant-edge-state-demos-006`.
+### ANT-DIFFERENTIAL-EDGE-STATES-007 — dynamic responsive / creatable-disabled / clear-drag pressure
+Status: IMPLEMENTING
+Task progress: 20%
+Baseline: `main@8cbec279e3171fda7ab1633f59522d5ce694da1a`.
+Branch: `audit/ant-edge-state-demos-007`.
 
 Previous batch closed:
-- PR #175 merged at `39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
-- Round 5 unified Collapse family control geometry and added Select/Cascader/TreeSelect popupRender primitive/array pressure coverage.
-- PR exact-head CI #849 passed.
-- main push CI #850 passed Windows tooling, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build, artifact uploads and GitHub Pages deployment.
-- Collapse xs/md/xl now honor shared family control height; popupRender array/primitive output remains stable across the three picker families.
+- PR #176 merged at `8cbec279e3171fda7ab1633f59522d5ce694da1a`.
+- Round 6 fixed InputOTP real-focus reconciliation after programmatic/controlled value changes while focus is inside OTP.
+- Round 6 fixed ColorPanel mutation-lock entry so active saturation PointerSession / pending keyboard interactions are cancelled and rolled back.
+- Carousel keyed dynamic item reorder/remove pressure passed without runtime changes.
+- PR exact-head CI #853 passed.
+- main push CI #854 (Actions run `36508260599`) passed Windows tooling, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build, artifact uploads and GitHub Pages deployment.
 
-Round 6 targets:
-1. InputOTP: programmatic `setValue` / controlled `updateOptions({value})` must keep real DOM focus aligned with the canonical first-empty slot when focus is already inside OTP. Updating only roving/tabIndex state while `document.activeElement` remains on an invalid later slot is not acceptable.
-2. Carousel: replacing/reordering keyed items must preserve the active item by key; removing the active key must reconcile by prior visual index and keep ValueController/index/DOM projection aligned.
-3. ColorPicker/ColorPanel: clear/disable/update while a saturation drag or range edit is active must not commit stale drag snapshots after lock/state changes. Disabled/readOnly must remain mutation locks across pointer/native-input paths.
-4. Do not change runtime code until browser pressure reproduces an owner-level failure.
-5. Keep current QX interaction decisions: InputOTP sequential-fill canonical focus, Carousel key identity, ColorPicker draft/commit rules.
-
-Static audit before pressure:
-- InputOTP `#syncFocusPolicy()` currently updates only Control.segmentFocusIndex/tabIndex. `Control.setSegmentFocusIndex()` does not move real DOM focus. If `setValue()` changes canonical slot while an old OTP slot remains focused, real focus may become stale until another focus event occurs. Browser reproduction required.
-- Carousel `applyOptions()` snapshots active item key before replacing opts, resolves that key in new items, and falls back to normalized prior index when key disappears. Structure appears correct; add regression instead of speculative fix.
-- ColorPanel has dragSnapshot/keyboardSnapshot and explicit locked() guards. Need concurrency pressure before changing it.
-
-Implemented:
-- InputOTP canonical focus reconciliation now updates real DOM focus only when the current activeElement already belongs to this OTP and the canonical first-empty slot changed. External page focus is never stolen.
-- Added InputOTP Theme Playground demo and Chromium coverage for both API setValue and controlled value update while focus is inside the OTP.
-- Added Carousel keyed dynamic-items demo and Chromium regression: reorder preserves active key; removing the active key reconciles by previous visual index and keeps DOM/ValueController aligned. No Carousel runtime change was needed.
-- ColorPanel now cancels active saturation PointerSession and rolls back pending keyboard interaction when entering disabled/readOnly mutation lock. This prevents a stale drag from surviving the lock and committing after re-enable.
-- Added ColorPicker interaction-lock demo and standalone ColorPanel Chromium pointer pressure: preview must roll back on lock and the later stale pointerup must not mutate value.
-- PR #176 CI #851 (Actions run `36507244870`) reached the browser suite but failed before any new semantic assertion: the new standalone ColorPanel smoke used `C.ColorPanel.create`, while ColorPanel is a BuildingBlock exposed as `B.ColorPanel`. This is a test namespace error, not a runtime result.
-- Corrected only the smoke namespace to `B.ColorPanel.create`; OTP/Carousel/ColorPanel assertions and runtime fixes remain unchanged.
-- Corrected head `2cbbe826c8418c5a3f1f710111f6b6065c30832d` passed PR #176 QXFRAME CI #852 (Actions run `36507536208`): Windows tooling, dependency audit, Completion audit, Full release verification including all Round 6 Chromium pressure checks, npm pack, standalone dist/docs build and artifact uploads all succeeded.
-- InputOTP programmatic `setValue('1')` and controlled value update both keep real activeElement aligned with the canonical first-empty segment while focus is already inside OTP; no external focus steal was observed.
-- Carousel keyed reorder/remove regression passed without runtime changes: active key survives reorder and missing active key reconciles to the prior visual index with DOM/state alignment.
-- ColorPanel active saturation drag rolls back immediately when disabled/readOnly mutation lock is entered; a stale pointerup after re-enable cannot commit the cancelled gesture.
-- Round 6 runtime work is complete pending final checkpoint-only exact-head CI and merge.
-- Round 5 main CI #850 and GitHub Pages deployment completed successfully for `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
+Round 7 targets:
+1. Table dynamic responsive configuration: start with a normal visible column, then update columns so it gains `responsive:'md'` while `responsiveMode:'hide'`. The rerender must add the responsive hide class immediately without losing active sort/filter ownership. Removing responsive must restore projection without rebuilding unrelated state.
+2. Select creatable + disabled existing option: tokenizing/search-creating a value that already maps to a disabled option must emit invalid intent and must not create/select a tag. Static code already has `beforeTagAdd -> findOptionByToken -> disabled -> false`; add browser pressure instead of speculative runtime change.
+3. ColorPicker/ColorPanel clear-to-drag continuity: repeated clear/reset interaction must not leave selection surfaces non-draggable. Ant's analogous bug was CSS/user-selection driven; QX uses a dedicated button and ColorPanel root already has user-select:none, so verify rather than copy the fix.
+4. Table filter popup close/reopen must project current filter state, extending the existing “programmatic update while popup remains open” regression.
+5. Do not add Ant-only APIs or unsupported responsive breakpoint systems.
 
 Next exact step:
-1. Run final exact-head CI after this checkpoint-only commit.
-2. Merge PR #176 if green.
-3. Verify main push CI + Pages deployment.
-4. Continue the next differential batch from merged main without reopening Round 6.
+1. Audit concrete public APIs needed for the three dynamic scenarios.
+2. Add Theme Playground dynamic demos and strict Chromium checks.
+3. Run exact-head CI; change runtime only if a pressure test reproduces a defect.
 
 ## PREVIOUS VERIFIED HANDOFF
 
