@@ -190,7 +190,7 @@ try{
   await navigateCanonical('/docs/admin-form-static.html',420);
   const popupFieldRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
-    var result={selectFound:false,selectToggleAndClear:false,selectOpened:false,selectValueKept:false,cascaderFound:false,cascaderToggleAndClear:false,cascaderOpened:false,cascaderValueKept:false};
+    var result={selectFound:false,selectToggleAndClear:false,selectBeforeValue:false,selectOpened:false,selectAfterValue:false,selectValueKept:false,selectPanelHidden:null,selectOwnerState:null,cascaderFound:false,cascaderToggleAndClear:false,cascaderBeforeValue:false,cascaderOpened:false,cascaderAfterValue:false,cascaderValueKept:false,cascaderPanelHidden:null,cascaderOwnerState:null};
     async function probe(root){
       if(!root)return null;
       root.dispatchEvent(new PointerEvent('pointerenter'));
@@ -208,17 +208,35 @@ try{
     var selectProbe=await probe(selectRoot);
     if(selectProbe){
       result.selectToggleAndClear=selectProbe.both;
+      result.selectBeforeValue=selectProbe.before;
       result.selectOpened=selectProbe.opened;
+      result.selectAfterValue=selectProbe.afterValue;
       result.selectValueKept=selectProbe.valueKept;
+      var selectPanel=document.querySelector('.qxframe9a7c2-select-panel');
+      result.selectPanelHidden=selectPanel?selectPanel.hidden:null;
     }
     var cascaderRoot=document.querySelector('#admin-category-cascader .qxframe9a7c2-cascader');
     result.cascaderFound=!!cascaderRoot;
     var cascaderProbe=await probe(cascaderRoot);
     if(cascaderProbe){
       result.cascaderToggleAndClear=cascaderProbe.both;
+      result.cascaderBeforeValue=cascaderProbe.before;
       result.cascaderOpened=cascaderProbe.opened;
+      result.cascaderAfterValue=cascaderProbe.afterValue;
       result.cascaderValueKept=cascaderProbe.valueKept;
+      var cascaderPanel=document.querySelector('.qxframe9a7c2-cascader-panel');
+      result.cascaderPanelHidden=cascaderPanel?cascaderPanel.hidden:null;
     }
+    var demo=window.QXFRAME9A7C2_ADMIN_DEMO;
+    var owners=demo&&demo.getOwners?demo.getOwners():[];
+    owners.forEach(function(owner){
+      if(!owner||typeof owner.getState!=='function')return;
+      try{
+        var state=owner.getState();
+        if(state&&Object.prototype.hasOwnProperty.call(state,'defaultActiveFirstOption'))result.selectOwnerState=state;
+        if(state&&Object.prototype.hasOwnProperty.call(state,'checkedStrategy'))result.cascaderOwnerState=state;
+      }catch(_){}
+    });
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const popupFieldValue=popupFieldRegression&&popupFieldRegression.result&&popupFieldRegression.result.value||{};
