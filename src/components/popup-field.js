@@ -2,7 +2,7 @@ import { Utils } from '../utils/utils.js';
 import { FieldComponent } from './field.js';
 import { fieldHooks } from '../core/fieldHooks.js';
 import { componentHooks } from '../core/componentHooks.js';
-import { Trigger } from './trigger.js';
+import { PopupFrame, PopupRuntime } from './popup.js';
 import { DOM } from '../core/dom.js';
 
 const state = new WeakMap();
@@ -69,7 +69,7 @@ export function createPopupFieldTriggerSettings(options = {}, context = {}, over
         document: ctx.document,
         portalContainer: ctx.portalContainer,
         placement: opts.placement,
-        transition: Trigger.motion.popupPlacement,
+        transition: PopupRuntime.motion.popupPlacement,
         strategy: opts.strategy || 'absolute',
         middleware: opts.middleware,
         flipOnOverflow: opts.flipOnOverflow !== false,
@@ -101,7 +101,17 @@ export function createPopupFieldTriggerSettings(options = {}, context = {}, over
 export class PopupFieldComponent extends FieldComponent {
     constructor(options = {}) {
         super(options);
-        state.set(this, { trigger: null, reference: null, popup: null, tabExitTarget: null });
+        state.set(this, { trigger: null, reference: null, popup: null, popupFrame: null, tabExitTarget: null });
+    }
+
+    setupPopupFrame(options = {}) {
+        const record = requireState(this);
+        if (record.popupFrame) return record.popupFrame;
+        const panel = options.panel || options.popup || record.popup;
+        if (!panel) throw new TypeError('[QXFRAME9A7C2] PopupFieldComponent setupPopupFrame requires a popup panel.');
+        if (!record.popup) record.popup = panel;
+        record.popupFrame = this.own(PopupFrame.create({ ...options, panel }));
+        return record.popupFrame;
     }
 
     setupPopupFieldRuntime(options = {}) {
@@ -111,6 +121,7 @@ export class PopupFieldComponent extends FieldComponent {
         record.reference = config.reference || null;
         record.popup = config.floating || null;
         record.tabExitTarget = config.tabExitTarget || null;
+        if (record.popupFrame && !config.popupFrame) config.popupFrame = record.popupFrame;
         const beforeOpen = config.beforeOpen;
         const beforeClose = config.beforeClose;
         const onOpen = config.onOpen;
@@ -136,7 +147,9 @@ export class PopupFieldComponent extends FieldComponent {
             const hook = this[popupFieldHooks.afterClose];
             if (typeof hook === 'function') hook.call(this, detail);
         };
-        return this.adoptPopupFieldRuntime(Trigger.create(config), { reference: record.reference, popup: record.popup, tabExitTarget: record.tabExitTarget, owned: true });
+        const runtime = PopupRuntime.create(config);
+        if (!record.popupFrame && runtime.frame) record.popupFrame = runtime.ownsFrame ? this.own(runtime.frame) : runtime.frame;
+        return this.adoptPopupFieldRuntime(runtime.trigger, { reference: record.reference, popup: record.popup, popupFrame: record.popupFrame, tabExitTarget: record.tabExitTarget, owned: true });
     }
 
     adoptPopupFieldRuntime(trigger, options = {}) {
@@ -145,6 +158,7 @@ export class PopupFieldComponent extends FieldComponent {
         if (!trigger || typeof trigger.open !== 'function' || typeof trigger.close !== 'function' || typeof trigger.getState !== 'function') throw new TypeError('[QXFRAME9A7C2] PopupFieldComponent requires a Trigger-compatible runtime.');
         if (Object.prototype.hasOwnProperty.call(options, 'reference')) record.reference = options.reference;
         if (Object.prototype.hasOwnProperty.call(options, 'popup')) record.popup = options.popup;
+        if (Object.prototype.hasOwnProperty.call(options, 'popupFrame')) record.popupFrame = options.popupFrame || null;
         if (Object.prototype.hasOwnProperty.call(options, 'tabExitTarget')) record.tabExitTarget = options.tabExitTarget;
         record.trigger = options.owned === true ? this.own(trigger) : trigger;
         return trigger;
@@ -186,6 +200,13 @@ export class PopupFieldComponent extends FieldComponent {
     getMotionController() { const trigger = this.getTrigger(); return trigger && typeof trigger.getMotionController === 'function' ? trigger.getMotionController() : null; }
     getReferenceElement() { return requireState(this).reference; }
     getPopupElement() { return requireState(this).popup; }
+    getPopupFrame() { return requireState(this).popupFrame; }
+    getPopupScroll() { const frame = this.getPopupFrame(); return frame ? frame.getPrimaryScroll() : null; }
+    createPopupScrollAdapter(defaults = {}) {
+        const frame = this.getPopupFrame();
+        if (!frame) throw new Error('[QXFRAME9A7C2] PopupField popup frame is not initialized.');
+        return frame.createAdapter(defaults);
+    }
     getTabExitTarget() { return requireState(this).tabExitTarget; }
     getPopupState() { const trigger = requireState(this).trigger; return trigger ? trigger.getState() : Object.freeze({ open: false, destroyed: this.destroyed }); }
 
@@ -195,6 +216,7 @@ export class PopupFieldComponent extends FieldComponent {
         record.trigger = null;
         record.reference = null;
         record.popup = null;
+        record.popupFrame = null;
         record.tabExitTarget = null;
     }
 
