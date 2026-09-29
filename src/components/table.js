@@ -2356,6 +2356,12 @@ function setupTable(instance) {
     if (opts.maxHeight != null) root.style.maxHeight = typeof opts.maxHeight === 'number' ? opts.maxHeight + 'px' : String(opts.maxHeight); else root.style.removeProperty('max-height');
     if ((opts.virtual === true || opts.virtual === 'auto') && opts.height == null && opts.maxHeight == null) root.style.maxHeight = '320px';
     if (opts.minWidth != null) table.style.minWidth = typeof opts.minWidth === 'number' ? opts.minWidth + 'px' : String(opts.minWidth); else table.style.removeProperty('min-width');
+    if (scrollSurface && Utils.isFunction(scrollSurface.updateOptions)) scrollSurface.updateOptions({
+      wheelPropagation:opts.wheelPropagation !== false,
+      scrollbarVisibility:opts.scrollbarVisibility || 'auto',
+      scrollbarInteractive:opts.scrollbarInteractive !== false,
+      edgeShadow:opts.scrollEdgeShadow === true
+    });
 
     var busy = opts.loading === true || remoteProcessing;
     if(feedbackController){
@@ -2495,6 +2501,7 @@ function setupTable(instance) {
     return withProjection(function () {
       if (filterTrigger || filterPopup) destroyFilterPopup('table-render');
       syncRoot(); renderTitleFooterCaption(); renderHead(); syncReorderInteractions(); ensureVirtualizer(reason || 'render'); renderBody(reason || 'render'); renderSummary(); renderPager(); refreshNavigationDomains(true); syncChromeOrder(); requestFixedGeometry(reason || 'render');
+      if (scrollSurface) scrollSurface.refresh('table-' + String(reason || 'render'));
       DOM.setPrivate(root, 'tableRenderReason', String(reason || 'render'));
       return true;
     });
