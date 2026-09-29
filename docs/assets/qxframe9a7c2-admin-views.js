@@ -103,6 +103,24 @@ if(view==='workflow'){
    if(C.Item){var ih=slot(sc,'qx-admin-inline-row');heading(ih,'Item 选择投影');['checkbox','check-start','check-end','highlight'].forEach(function(a2){var n=document.createElement('div');n.className='qxframe9a7c2-item-surface';n.textContent=a2;C.Item.applySelectionAppearance(n,a2);C.Item.syncState(n,{selected:true});var ind=C.Item.createSelectionIndicator({appearance:a2,checked:true});if(ind)n.insertBefore(ind,n.firstChild);ih.appendChild(n);});}
  }
 }
+if(view==='theme-center'){
+ var colors=byId('theme-colors'),controls=byId('theme-controls'),preview=byId('theme-preview');
+ if(colors){
+   if(C.ColorPicker){var cp=slot(colors,'qx-admin-inline-block');heading(cp,'品牌色');own(C.ColorPicker.create({container:cp,value:'#1677FF',showAlpha:true,presets:['#1677FF','#52C41A','#FAAD14','#F5222D']}));var cp2=slot(colors,'qx-admin-inline-block');heading(cp2,'确认会话');own(C.ColorPicker.create({container:cp2,value:'#722ED1',needConfirm:true,showCancel:true,presets:['#722ED1','#13C2C2','#EB2F96']}));var cp3=slot(colors,'qx-admin-inline-block');heading(cp3,'仅色块');own(C.ColorPicker.create({container:cp3,value:'#13C2C2',swatchOnly:true,presets:['#13C2C2','#1677FF','#52C41A']}));}
+   if(C.ColorPanel){var panel=slot(colors,'qx-admin-inline-block');heading(panel,'高级调色');own(C.ColorPanel.create({container:panel,value:'rgb(26, 74, 184)',format:'rgb',showAlpha:true,presets:['#1677FF','#52C41A','#FAAD14','#F5222D','#722ED1']}));}
+ }
+ if(controls){
+   if(C.Slider){var sl=slot(controls,'qx-admin-inline-block');heading(sl,'内容密度');own(C.Slider.create({container:sl,defaultValue:60,min:0,max:100,step:5,marks:{0:'紧凑',50:'默认',100:'宽松'}}));var range=slot(controls,'qx-admin-inline-block');heading(range,'字号范围');own(C.Slider.create({container:range,range:true,defaultValue:[14,20],min:12,max:24,step:1}));}
+   if(C.InputNumber){var num=slot(controls,'qx-admin-inline-block');heading(num,'基础间距');own(C.InputNumber.create({target:num,defaultValue:'8',min:'4',max:'24',step:'1',stringMode:true,suffix:'px',mode:'button'}));}
+   var native=slot(controls,'qx-admin-native-options');native.innerHTML='<label class="qxframe9a7c2-form-check"><input class="qxframe9a7c2-form-check-input" type="radio" name="theme-density" checked><span class="qxframe9a7c2-form-check-label">跟随系统</span></label><label class="qxframe9a7c2-form-check"><input class="qxframe9a7c2-form-check-input" type="radio" name="theme-density"><span class="qxframe9a7c2-form-check-label">固定紧凑</span></label><label class="qxframe9a7c2-form-check"><input class="qxframe9a7c2-form-check-input" type="checkbox" checked><span class="qxframe9a7c2-form-check-label">显示动画</span></label><label class="qxframe9a7c2-form-check"><input class="qxframe9a7c2-form-check-input" type="checkbox" disabled><span class="qxframe9a7c2-form-check-label">锁定企业字体</span><small class="qxframe9a7c2-form-check-description">由组织策略控制</small></label><label class="qxframe9a7c2-switch"><input class="qxframe9a7c2-switch-input" type="checkbox" checked><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span><span>启用阴影</span></label>';
+ }
+ if(preview){
+   var br=slot(preview,'qx-admin-inline-row');[['Primary','is-primary is-solid'],['Outlined','is-default is-outlined'],['Dashed','is-primary is-dashed'],['Filled','is-primary is-filled'],['Plain','is-primary is-plain'],['Text','is-primary is-text'],['Link','is-primary is-link']].forEach(function(x){var b=button(x[0],'qxframe9a7c2-button '+x[1]+' is-md is-ripple');br.appendChild(b);});
+   var tipBtn=button('Tooltip','qxframe9a7c2-button is-default is-outlined is-md'),popBtn=button('Popover','qxframe9a7c2-button is-default is-outlined is-md');br.appendChild(tipBtn);br.appendChild(popBtn);
+   if(C.Tooltip)own(C.Tooltip.create({reference:tipBtn,content:'键盘与鼠标都使用框架 Tooltip',placement:'top',showArrow:true,fresh:true}));
+   if(C.Popover)own(C.Popover.create({reference:popBtn,title:'预览说明',content:'此处组合展示当前主题配置。',trigger:'click',placement:'bottom-start'}));
+ }
+}
 var login=document.getElementById('admin-login-form');if(login)login.addEventListener('submit',function(e){e.preventDefault();window.location.href='index.html#/dashboard'});var register=document.getElementById('admin-register-form');if(register)register.addEventListener('submit',function(e){e.preventDefault();window.location.href='register-result.html'});
 window.addEventListener('pagehide',function(){owners.splice(0).forEach(function(o){try{o.destroy()}catch(_){}})});
 })();
