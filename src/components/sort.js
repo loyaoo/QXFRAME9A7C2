@@ -14,6 +14,7 @@ import { TransitionGroup } from '../core/transitionGroup.js';
 import { ReorderInteraction } from '../core/reorderInteraction.js';
 import { Utils } from '../utils/utils.js';
 import { Control } from './control.js';
+import { Scroll } from './scroll.js';
 
 const state = new WeakMap();
 const own = Utils.own;
@@ -94,7 +95,8 @@ export class Sort extends Component {
         const doc = fieldInit.document || incoming.document || (incoming.container && incoming.container.ownerDocument) || (incoming.formField && incoming.formField.ownerDocument) || globalThis.document;
         super(Utils.mergeOwn( incoming, { document: doc }));
         state.set(this, {
-            fieldInit, doc, root: null, rowByKey: new Map(), collection: null, transitionGroup: null,
+            fieldInit, doc, root: null, scrollShell: null, scrollViewport: null, scrollContent: null, scrollSurface: null,
+            rowByKey: new Map(), collection: null, transitionGroup: null,
             delegation: null, reorderInteraction: null, formBridge: null, initialItems: [],
             valueController: null, focusController: null, interactionController: null, interactionLease: null,
             capabilityController: null, selectionController: null
@@ -106,9 +108,24 @@ export class Sort extends Component {
         if (r.root) { this.#renderRows(); return r.root; }
         const opts = this.options;
         const root = r.doc.createElement('div');
+        const scrollShell = r.doc.createElement('div');
+        const scrollViewport = r.doc.createElement('div');
+        const scrollContent = r.doc.createElement('div');
         root.className = 'qxframe9a7c2-sort';
+        scrollShell.className = 'qxframe9a7c2-sort-scroll';
+        scrollViewport.className = 'qxframe9a7c2-sort-scroll-viewport';
+        scrollContent.className = 'qxframe9a7c2-sort-scroll-content';
+        scrollViewport.appendChild(scrollContent);
+        scrollShell.appendChild(scrollViewport);
+        root.appendChild(scrollShell);
         if (opts.container) opts.container.appendChild(root); else Control.placeFieldRoot(root, null, opts.formField);
-        r.root = root;
+        r.root = root; r.scrollShell = scrollShell; r.scrollViewport = scrollViewport; r.scrollContent = scrollContent;
+        r.scrollSurface = Scroll.attachViewport({
+            root:scrollShell, viewport:scrollViewport, content:scrollContent, document:r.doc,
+            axis:'both', wheelAxis:'auto', wheelPropagation:true, scrollbarVisibility:'auto',
+            focusable:false, keyboard:false, controller:this
+        });
+        this.own(() => { if (r.scrollSurface) r.scrollSurface.destroy(); r.scrollSurface = null; });
         this.own(() => DOM.removeNode(root));
 
         r.collection = this.own(Collection.create({
@@ -177,7 +194,7 @@ export class Sort extends Component {
         this.own(() => { if (r.interactionLease) r.interactionLease.release(); r.interactionLease = null; });
 
         r.transitionGroup = this.own(TransitionGroup.create({
-            container: root,
+            container: scrollContent,
             appear: false,
             transition: {
                 enter: { from:{style:{opacity:'1'}}, active:{style:{transitionProperty:'opacity',transitionDuration:'0ms'}}, to:{style:{opacity:'1'}} },
@@ -205,7 +222,7 @@ export class Sort extends Component {
         }));
 
         r.reorderInteraction = this.own(ReorderInteraction.create({
-            root,
+            root: scrollContent,
             document: r.doc,
             rowSelector: '.qxframe9a7c2-sort-item',
             handleSelector: () => this.#effectiveHandleOnly() ? '.qxframe9a7c2-sort-handle' : null,
@@ -262,7 +279,7 @@ export class Sort extends Component {
         const r = state.get(this);
         if (!r) return;
         r.rowByKey.clear();
-        r.root = r.collection = r.transitionGroup = r.delegation = r.reorderInteraction = r.formBridge = null;
+        r.root = r.scrollShell = r.scrollViewport = r.scrollContent = r.scrollSurface = r.collection = r.transitionGroup = r.delegation = r.reorderInteraction = r.formBridge = null;
     }
 
     #locked() { const r = recordFor(this); return this.destroyed || !r.capabilityController || !r.capabilityController.can('edit'); }
@@ -299,6 +316,7 @@ export class Sort extends Component {
             this.#renderOutput(label, item.content !== undefined ? item.content : item.label, item); entries.push({ key, element: row });
         });
         r.transitionGroup.sync(entries, { reason: 'sort-render' });
+        if (r.scrollSurface) r.scrollSurface.refresh('sort-render');
         if (r.formBridge) r.formBridge.setValue(current.map(item => item.key), { silent: true, source: 'sort', reason: 'render' });
         return this;
     }
@@ -335,6 +353,8 @@ export class Sort extends Component {
     cancelDrag(reason) { const r = recordFor(this); return r.reorderInteraction ? r.reorderInteraction.cancelDrag(reason || 'api') : false; }
     focus(key) { return key == null ? this.#focusBoundary(false) : this.#focusRow(String(key)); }
     getRootElement() { return recordFor(this).root; }
+    getScroll() { return recordFor(this).scrollSurface; }
+    getScrollViewport() { return recordFor(this).scrollViewport; }
     getFormField() { const r = recordFor(this); return r.formBridge ? r.formBridge.getFormField() : null; }
     getFormBridge() { return recordFor(this).formBridge; }
     getCollection() { return recordFor(this).collection; }

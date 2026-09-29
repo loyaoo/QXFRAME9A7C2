@@ -8,6 +8,7 @@ const triggerSource=read('src/components/trigger.js');
 const overlayRuntimeSource=read('src/core/overlayRuntime.js');
 const pressSource=read('src/core/pressInteraction.js');
 const triggerInteractionSource=read('src/core/triggerInteraction.js');
+const cssSource=read('src/qxframe9a7c2.css');
 
 const profile=ComponentProfile.define(Trigger.profile);
 assert.equal(profile.name,'Trigger');
@@ -30,6 +31,13 @@ assert.match(triggerSource,/capability\.can\('open'\)/,'Trigger open path must b
 assert.match(triggerSource,/capabilityController:\s*capability/,'TriggerInteraction must share Trigger CapabilityController.');
 assert.match(triggerSource,/interactionController:\s*interactionController/,'TriggerInteraction must share Trigger InteractionController.');
 assert.doesNotMatch(triggerSource,/\bInteractionPolicy\b/,'Trigger must not bypass CapabilityController through InteractionPolicy.');
+assert.match(triggerSource,/beginPositioningGate\(\);[\s\S]*surface\.show\(info\);[\s\S]*runtime\.activate/,'Trigger must keep the floating surface invisible while the first placement is prepared.');
+assert.match(triggerSource,/beginPositioningMeasure\(\);[\s\S]*runtime\.preparePosition\('motion-enter-prepare'\)/,'Trigger first placement must be measured without the entry motion transform.');
+assert.match(triggerSource,/clearPositioningMeasure\(\);[\s\S]*clearPositioningGate\(\);/,'Trigger must reveal only after full-size placement measurement completes.');
+assert.match(cssSource,/\.qxframe9a7c2-trigger-positioning\{visibility:hidden!important;pointer-events:none!important\}/,'Trigger positioning gate must remain measurable but invisible.');
+assert.match(cssSource,/\.qxframe9a7c2-trigger-positioning-measure\{transform:none!important\}/,'Trigger positioning measure must neutralize popup scale/translate transforms.');
+assert.match(cssSource,/\[data-placement="bottom-start"\]\[class\*="qxframe9a7c2-motion-popup-placement-"\]\{transform-origin:0 0\}/,'bottom-start popup motion must stay anchored to the reference start edge.');
+assert.match(cssSource,/\[data-placement="bottom-end"\]\[class\*="qxframe9a7c2-motion-popup-placement-"\]\{transform-origin:100% 0\}/,'bottom-end popup motion must stay anchored to the reference end edge.');
 
 assert.match(overlayRuntimeSource,/import \{ FocusController \} from '\.\/focusController\.js';/,'OverlayRuntime focus resources must enter FocusController.');
 assert.match(overlayRuntimeSource,/FocusController\.createManager\s*\(/,'OverlayRuntime focus manager must be created by FocusController.');

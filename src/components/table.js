@@ -14,6 +14,7 @@ import { Lifecycle } from '../core/lifecycle.js';
 import { Scheduler } from '../core/scheduler.js';
 import { IdManager } from '../utils/id.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
+import { Scroll } from './scroll.js';
 import { TableModel } from '../core/tableModel.js';
 import { AsyncTask } from '../core/asyncTask.js';
 import { EventDelegation } from '../core/eventDelegation.js';
@@ -251,6 +252,10 @@ function setupTable(instance) {
   var tableId = IdManager.next('table');
   var scope = Lifecycle.createScope();
   var root = doc.createElement('div');
+  var scrollShell = doc.createElement('div');
+  var scrollViewport = doc.createElement('div');
+  var scrollContent = doc.createElement('div');
+  var scrollSurface = null;
   var title = doc.createElement('div');
   var toolbar = doc.createElement('div');
   var toolbarStart = doc.createElement('div');
@@ -270,6 +275,7 @@ function setupTable(instance) {
   var virtualizer = null;
   var filterTrigger = null;
   var filterPopup = null;
+  var filterScroll = null;
   var filterColumnKey = null;
   var filterDraftValues = [];
   var filterSearchValue = '';
@@ -437,6 +443,9 @@ function setupTable(instance) {
   toolbarStart.className = 'qxframe9a7c2-table-toolbar-start';
   toolbarEnd.className = 'qxframe9a7c2-table-toolbar-end';
   toolbar.appendChild(toolbarStart); toolbar.appendChild(toolbarEnd);
+  scrollShell.className = 'qxframe9a7c2-table-scroll';
+  scrollViewport.className = 'qxframe9a7c2-table-scroll-viewport';
+  scrollContent.className = 'qxframe9a7c2-table-scroll-content';
   table.className = 'qxframe9a7c2-table';
   caption.className = 'qxframe9a7c2-table-caption';
   tfoot.className = 'qxframe9a7c2-table-summary';
@@ -448,17 +457,36 @@ function setupTable(instance) {
   loading.className = 'qxframe9a7c2-table-loading';
   errorPanel.className = 'qxframe9a7c2-table-error';
   table.appendChild(thead); table.appendChild(tbody);
-  root.appendChild(table);
+  scrollContent.appendChild(table);
+  scrollViewport.appendChild(scrollContent);
+  scrollShell.appendChild(scrollViewport);
+  root.appendChild(scrollShell);
   opts.container.appendChild(root);
+  scrollSurface = Scroll.attachViewport({
+    root:scrollShell,
+    viewport:scrollViewport,
+    content:scrollContent,
+    document:doc,
+    axis:'both',
+    wheelAxis:'auto',
+    wheelPropagation:true,
+    scrollbarVisibility:'auto',
+    scrollbarInteractive:true,
+    edgeShadow:false,
+    focusable:false,
+    keyboard:false,
+    controller:api
+  });
+  scope.add(function () { if (scrollSurface) scrollSurface.destroy(); scrollSurface = null; });
   scope.add(function () {
     if (geometryMeasureCancel) geometryMeasureCancel();
     if (geometryMutateCancel) geometryMutateCancel();
     geometryMeasureCancel = null; geometryMutateCancel = null;
   });
   scope.add(function () { if (virtualMeasureCancel) virtualMeasureCancel(); virtualMeasureCancel = null; bodyRowRecords.clear(); deferredEditRows.clear(); });
-  scope.add(DOM.listen(root, 'scroll', function () { syncFixedScrollState(); }));
+  scope.add(DOM.listen(scrollViewport, 'scroll', function () { syncFixedScrollState(); }));
   if ((doc.defaultView && doc.defaultView.ResizeObserver) || global.ResizeObserver) {
-    geometryObserver = ObserverHub.resize([root, table], function () { syncFixedScrollState(); requestFixedGeometry('table-resize'); });
+    geometryObserver = ObserverHub.resize([scrollViewport, table], function () { syncFixedScrollState(); requestFixedGeometry('table-resize'); });
     scope.add(function () { if (geometryObserver) geometryObserver(); geometryObserver = null; });
   } else if (doc.defaultView) {
     scope.add(DOM.listen(doc.defaultView, 'resize', function () { syncFixedScrollState(); requestFixedGeometry('window-resize'); }));
@@ -725,9 +753,9 @@ function setupTable(instance) {
   function applyScrollPolicy(reason) {
     var mode = scrollModeFor(reason);
     if (mode === 'preserve') return false;
-    var left = Number(root.scrollLeft) || 0;
-    if (mode === 'reset') { root.scrollLeft = 0; root.scrollTop = 0; return true; }
-    if (mode === 'reset-y' || mode === 'preserve-x-reset-y') { root.scrollTop = 0; if (mode === 'preserve-x-reset-y') root.scrollLeft = left; return true; }
+    var left = Number(scrollViewport.scrollLeft) || 0;
+    if (mode === 'reset') { scrollViewport.scrollLeft = 0; scrollViewport.scrollTop = 0; return true; }
+    if (mode === 'reset-y' || mode === 'preserve-x-reset-y') { scrollViewport.scrollTop = 0; if (mode === 'preserve-x-reset-y') scrollViewport.scrollLeft = left; return true; }
     return false;
   }
   function filterValuesFor(column) {
@@ -814,7 +842,7 @@ function setupTable(instance) {
     var cell = findNavigationCell(key);
     if (!cell) { pendingCellVisibilityKey = String(key); return true; }
     pendingCellVisibilityKey = null;
-    return ScrollVisibility.ensureVisible(root, cell, { axis: 'both', align: 'nearest' });
+    return ScrollVisibility.ensureVisible(scrollViewport, cell, { axis: 'both', align: 'nearest' });
   }
   function completePendingCellVisibility() {
     if (!pendingCellVisibilityKey || !cellDomain || !keyboard) return false;
@@ -824,7 +852,7 @@ function setupTable(instance) {
     if (!cell) return false;
     var key = pendingCellVisibilityKey;
     pendingCellVisibilityKey = null;
-    ScrollVisibility.ensureVisible(root, cell, { axis: 'both', align: 'nearest' });
+    ScrollVisibility.ensureVisible(scrollViewport, cell, { axis: 'both', align: 'nearest' });
     return !!key;
   }
   function activateNavigationCell(rowIndex, columnIndex, reason, event) {
@@ -860,7 +888,7 @@ function setupTable(instance) {
     return activateNavigationCell(row, column, reason, event);
   }
   function pageNavigationCell(delta, event) {
-    var viewportRows = Math.max(1, Math.floor((Number(root.clientHeight) || opts.rowHeight * 8) / Math.max(1, opts.rowHeight)) - 1);
+    var viewportRows = Math.max(1, Math.floor((Number(scrollViewport.clientHeight) || opts.rowHeight * 8) / Math.max(1, opts.rowHeight)) - 1);
     return moveNavigationCell(delta * viewportRows, 0, delta < 0 ? 'table-page-up' : 'table-page-down', event);
   }
   function resolveDataCellContext(key) {
@@ -1171,7 +1199,7 @@ function setupTable(instance) {
     keyboard = focusController.keyboard;
     var cellBinding = focusController.bindVirtualFocus({ controller:focusController.virtualFocus, hosted:false, domain:{ name:'table-cells-' + tableId, getElement:findNavigationCell, reconcile:reconcileNavigationCell, ensureVisible:ensureNavigationCellVisible } });
     cellDomain = cellBinding ? cellBinding.domain : null;
-    var headerBinding = focusController.bindVirtualFocus({ controller:focusController.virtualFocus, hosted:false, domain:{ name:'table-header-' + tableId, getElement:headerActionElement, reconcile:headerReconcile, ensureVisible:function (key) { var element=headerActionElement(key); return element?ScrollVisibility.ensureVisible(root,element,{axis:'both',align:'nearest'}):false; } } });
+    var headerBinding = focusController.bindVirtualFocus({ controller:focusController.virtualFocus, hosted:false, domain:{ name:'table-header-' + tableId, getElement:headerActionElement, reconcile:headerReconcile, ensureVisible:function (key) { var element=headerActionElement(key); return element?ScrollVisibility.ensureVisible(scrollViewport,element,{axis:'both',align:'nearest'}):false; } } });
     headerDomain = headerBinding ? headerBinding.domain : null;
     return true;
   }
@@ -1319,11 +1347,11 @@ function setupTable(instance) {
   }
   function syncFixedScrollState() {
     if (destroyed || !root) return false;
-    var clientWidth = Math.max(0, Number(root.clientWidth) || 0);
-    var scrollWidth = Math.max(clientWidth, Number(root.scrollWidth) || 0);
+    var clientWidth = Math.max(0, Number(scrollViewport.clientWidth) || 0);
+    var scrollWidth = Math.max(clientWidth, Number(scrollViewport.scrollWidth) || 0);
     var maxScroll = Math.max(0, scrollWidth - clientWidth);
     var overflow = maxScroll > 1;
-    var scrollLeft = Math.max(0, Math.min(maxScroll, Number(root.scrollLeft) || 0));
+    var scrollLeft = Math.max(0, Math.min(maxScroll, Number(scrollViewport.scrollLeft) || 0));
     root.classList.toggle('has-horizontal-overflow', overflow);
     root.classList.toggle('can-scroll-start', overflow && scrollLeft > 1);
     root.classList.toggle('can-scroll-end', overflow && scrollLeft < maxScroll - 1);
@@ -1352,8 +1380,8 @@ function setupTable(instance) {
       renderedByKey[column.key] = rendered;
       return rendered;
     }
-    var rootRect = root.getBoundingClientRect ? root.getBoundingClientRect() : null;
-    var availableWidth = Math.max(0, Number(root.clientWidth) || (rootRect && rootRect.width) || 0);
+    var rootRect = scrollViewport.getBoundingClientRect ? scrollViewport.getBoundingClientRect() : null;
+    var availableWidth = Math.max(0, Number(scrollViewport.clientWidth) || (rootRect && rootRect.width) || 0);
     var layoutColumns = columns.filter(columnIsRendered);
     var widthSolution = solveManagedColumnWidths(layoutColumns, availableWidth);
     function visibleWidth(column) {
@@ -1708,8 +1736,8 @@ function setupTable(instance) {
   }
   function resolveChromeValue(value) { return typeof value === 'function' ? value(currentState(), api) : value; }
   function syncChromeOrder() {
-    if (title.parentNode === root) root.insertBefore(title, table);
-    if (toolbar.parentNode === root) root.insertBefore(toolbar, table);
+    if (title.parentNode === root) root.insertBefore(title, scrollShell);
+    if (toolbar.parentNode === root) root.insertBefore(toolbar, scrollShell);
     [footer, pager, errorPanel, loading].forEach(function (node) { if (node.parentNode === root) root.appendChild(node); });
   }
   function renderTitleFooterCaption() {
@@ -1725,8 +1753,8 @@ function setupTable(instance) {
     renderOutput(toolbarStart, toolbarValue != null ? toolbarValue : toolbarStartValue, doc); renderOutput(toolbarEnd, toolbarValue != null ? null : toolbarEndValue, doc);
     if (footerValue != null) { renderOutput(footerStart, footerValue, doc); renderOutput(footerEnd, null, doc); }
     else { renderOutput(footerStart, footerStartValue, doc); renderOutput(footerEnd, footerEndValue, doc); }
-    setOptionalNode(title, root, hasRenderedOutput(title), table);
-    setOptionalNode(toolbar, root, hasRenderedOutput(toolbarStart) || hasRenderedOutput(toolbarEnd), table);
+    setOptionalNode(title, root, hasRenderedOutput(title), scrollShell);
+    setOptionalNode(toolbar, root, hasRenderedOutput(toolbarStart) || hasRenderedOutput(toolbarEnd), scrollShell);
     setOptionalNode(footer, root, hasRenderedOutput(footerStart) || hasRenderedOutput(footerEnd), null);
     setOptionalNode(caption, table, hasRenderedOutput(caption), thead);
     root.classList.toggle('has-title', title.parentNode === root);
@@ -1744,6 +1772,7 @@ function setupTable(instance) {
     if (filterInteractionLease) { filterInteractionLease.release(); filterInteractionLease = null; }
     if (filterTrigger) filterTrigger.destroy(reason || 'table-filter-popup-destroy');
     filterTrigger = null;
+    if (filterScroll) { filterScroll.destroy(); filterScroll = null; }
     if (filterPopup) { Renderer.dispose(filterPopup); DOM.removeNode(filterPopup); }
     filterPopup = null; filterColumnKey = null; filterDraftValues = []; filterSearchValue = ''; syncOpenFilterFromModel = null;
   }
@@ -1859,13 +1888,21 @@ function setupTable(instance) {
         });
       }
       renderOptions(column.filterOptions || [], 0);
-      filterPopup.appendChild(list);
+      var listScrollShell = doc.createElement('div'); listScrollShell.className = 'qxframe9a7c2-table-filter-scroll';
+      listScrollShell.appendChild(list); filterPopup.appendChild(listScrollShell);
+      filterScroll = Scroll.attachViewport({
+        root:listScrollShell, viewport:list, content:list, document:doc,
+        axis:'y', wheelAxis:'y', wheelPropagation:false, scrollbarVisibility:'auto',
+        focusable:false, keyboard:false, controller:api
+      });
+      filterScroll.refresh('table-filter-options');
       var actions = doc.createElement('div'); actions.className = 'qxframe9a7c2-table-filter-actions';
       var reset = doc.createElement('button'); reset.type='button'; reset.className='qxframe9a7c2-button is-default is-filled'; Renderer.append(reset,column.filterResetText==null?'Reset':column.filterResetText,doc); scope.add(DOM.listen(reset,'click',function(e){clearFilters({source:DOM.activationSource(e),originalEvent:e});}));
       var apply = doc.createElement('button'); apply.type='button'; apply.className='qxframe9a7c2-button is-primary is-solid'; Renderer.append(apply,column.filterConfirmText==null?'Apply':column.filterConfirmText,doc); scope.add(DOM.listen(apply,'click',function(e){confirm({source:DOM.activationSource(e),originalEvent:e});}));
       actions.appendChild(reset); actions.appendChild(apply); filterPopup.appendChild(actions);
     }
     function renderFilterContent() {
+      if (filterScroll) { filterScroll.destroy(); filterScroll = null; }
       filterPopup.textContent = '';
       if (column.filterDropdown) {
         var context = Object.freeze({ column: column, selectedValues: filterDraftValues.slice(), setSelectedValues: setSelectedValues, confirm: confirm, clearFilters: clearFilters, close: close, instance: api });
@@ -2319,6 +2356,13 @@ function setupTable(instance) {
     if (opts.maxHeight != null) root.style.maxHeight = typeof opts.maxHeight === 'number' ? opts.maxHeight + 'px' : String(opts.maxHeight); else root.style.removeProperty('max-height');
     if ((opts.virtual === true || opts.virtual === 'auto') && opts.height == null && opts.maxHeight == null) root.style.maxHeight = '320px';
     if (opts.minWidth != null) table.style.minWidth = typeof opts.minWidth === 'number' ? opts.minWidth + 'px' : String(opts.minWidth); else table.style.removeProperty('min-width');
+    if (scrollSurface && Utils.isFunction(scrollSurface.updateOptions)) scrollSurface.updateOptions({
+      wheelPropagation:opts.wheelPropagation !== false,
+      scrollbarVisibility:opts.scrollbarVisibility || 'auto',
+      scrollbarInteractive:opts.scrollbarInteractive !== false,
+      edgeShadow:opts.scrollEdgeShadow === true
+    });
+
     var busy = opts.loading === true || remoteProcessing;
     if(feedbackController){
       feedbackController.publish({
@@ -2354,7 +2398,7 @@ function setupTable(instance) {
     try {
       if (!virtualizer) {
         var created = Virtualizer.create({
-          viewport: root,
+          viewport: scrollViewport,
           count: entries.length,
           itemKeys: entries.map(function (entry) { return entry.key; }),
           enabled: enabled,
@@ -2457,6 +2501,7 @@ function setupTable(instance) {
     return withProjection(function () {
       if (filterTrigger || filterPopup) destroyFilterPopup('table-render');
       syncRoot(); renderTitleFooterCaption(); renderHead(); syncReorderInteractions(); ensureVirtualizer(reason || 'render'); renderBody(reason || 'render'); renderSummary(); renderPager(); refreshNavigationDomains(true); syncChromeOrder(); requestFixedGeometry(reason || 'render');
+      if (scrollSurface) scrollSurface.refresh('table-' + String(reason || 'render'));
       DOM.setPrivate(root, 'tableRenderReason', String(reason || 'render'));
       return true;
     });
@@ -2846,7 +2891,7 @@ function setupTable(instance) {
       if(index<0)return false;
       if(virtualizer&&virtualizer.enabled)return virtualizer.scrollToIndex(index,config||{align:'nearest'});
       var row=DOM.findPrivate(root,'tableRow',String(key));if(!row)return false;
-      var local=config||{};return ScrollVisibility.ensureVisible(root,row,{axis:'y',align:local.align||'nearest',offset:local.offset});
+      var local=config||{};return ScrollVisibility.ensureVisible(scrollViewport,row,{axis:'y',align:local.align||'nearest',offset:local.offset});
     },
     focusCell:function(rowKey,columnKey,config){
       if(!keyboard||!cellDomain)return false;
@@ -2868,7 +2913,7 @@ function setupTable(instance) {
     getExportData:getExportData, getExportCSV:getExportCSV, reflow:reflow, resize:reflow, applyOptions:applyOptions,
     getState:function(){var state=currentState(),focusState=keyboard?keyboard.virtualFocus.getState():null,decoded=focusState&&cellDomain&&focusState.domain===cellDomain.name?decodeNavigationCellKey(focusState.key):null;return Object.freeze(Utils.mergeOwn(state,{value:valueBinding.value.slice(),virtual:!!virtualizer&&virtualizer.enabled,keyboardNavigation:opts.keyboardNavigation===true,activeCell:decoded?Object.freeze({rowKey:decoded.rowKey,kind:decoded.kind,columnKey:decoded.kind==='data'?decoded.columnKey:null}):null,editingCell:editStateSnapshot(),forceRenderExpanded:opts.forceRenderExpanded===true,disabled:opts.disabled===true,readOnly:opts.readOnly===true,loading:opts.loading===true||remoteProcessing,processing:remoteProcessing,remoteStatus:remoteStatus(),loadError:remoteError,remoteSummary:remoteSummary,remote:isRemote(),query:isRemote()?remoteQuery():null,requestEpoch:remoteEpoch,selection:selectionStateSnapshot(),destroyed:destroyed}));},
     getDiagnostics:function(){return Object.freeze(Utils.mergeOwn(model.getDiagnostics?model.getDiagnostics():{},tableDiagnostics));},
-    getModel:function(){return model;}, getRootElement:function(){return root;}, getTableElement:function(){return table;},
+    getModel:function(){return model;}, getRootElement:function(){return root;}, getTableElement:function(){return table;}, getScroll:function(){return scrollSurface;}, getScrollViewport:function(){return scrollViewport;},
     getVirtualizer:function(){return virtualizer;}, getKeyboardNavigation:function(){return keyboard;}, getFocusController:function(){return focusController;}, getInteractionController:function(){return interactionController;}, getCapabilityController:function(){return capabilityController;}, getSelectionController:function(){return selectionController;}, getFilterPopup:function(){return filterPopup;},
     openFilter:function(key){var column=currentColumns().filter(function(entry){return entry.key===String(key);})[0];if(!column)return false;var reference=DOM.findPrivate(thead,'tableFilter',column.key);if(!reference)return false;if(filterOpenControlled(column)&&column.filterDropdownOpen!==true){emitFilterOpenRequest(column,true,'api-open',null);return false;}return openFilterPopup(reference,column,null);},
     closeFilter:function(){if(!filterTrigger||!filterColumnKey)return false;var column=currentColumns().filter(function(entry){return entry.key===filterColumnKey;})[0];if(column&&filterOpenControlled(column)&&column.filterDropdownOpen===true){emitFilterOpenRequest(column,false,'api-close',null);return false;}return filterTrigger.close('api-close');}
@@ -2975,6 +3020,8 @@ export class Table extends Component {
   getModel(){return recordForTable(this).getModel();}
   getRootElement(){return recordForTable(this).getRootElement();}
   getTableElement(){return recordForTable(this).getTableElement();}
+  getScroll(){return recordForTable(this).getScroll();}
+  getScrollViewport(){return recordForTable(this).getScrollViewport();}
   getVirtualizer(){return recordForTable(this).getVirtualizer();}
   getKeyboardNavigation(){return recordForTable(this).getKeyboardNavigation();}
   getValueController(){return recordForTable(this).getValueController();}

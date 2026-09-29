@@ -14,6 +14,7 @@ import { FieldComponent, createSimpleFieldProfile } from './field.js';
 import { Image } from './image.js';
 import { Control } from './control.js';
 import { Item } from './item.js';
+import { Scroll } from './scroll.js';
 
 const global = globalThis;
 const own = Utils.own;
@@ -100,6 +101,7 @@ function setupUpload(instance) {
   var previewMask = null;
   var previewPanel = null;
   var previewOverlay = null;
+  var previewScroll = null;
   var previewMediaController = null;
   var previewUid = '';
   var reorderInteraction = null;
@@ -491,6 +493,7 @@ function setupUpload(instance) {
     previewMask = null;
     previewPanel = null;
     previewOverlay = null;
+    if (previewScroll) { previewScroll.destroy(); previewScroll = null; }
     previewUid = '';
     syncPreviewSelection('', 'document-preview-close');
     clearPreviewListeners();
@@ -610,13 +613,19 @@ function setupUpload(instance) {
       syncPreviewSelection(previewUid, 'document-preview-open');
       previewModal = doc.createElement('div'); previewModal.className='qxframe9a7c2-upload-preview-root';
       previewMask=doc.createElement('div'); previewPanel=doc.createElement('div');
-      var panel=previewPanel, head=doc.createElement('div'), title=doc.createElement('div'), close=doc.createElement('button'), body=doc.createElement('div');
+      var panel=previewPanel, head=doc.createElement('div'), title=doc.createElement('div'), close=doc.createElement('button'), bodyShell=doc.createElement('div'), body=doc.createElement('div');
       previewMask.className='qxframe9a7c2-upload-preview-mask';
-      panel.className='qxframe9a7c2-upload-preview-panel is-'+kind; head.className='qxframe9a7c2-upload-preview-head'; title.className='qxframe9a7c2-upload-preview-title'; title.textContent=record.name; close.type='button'; close.className='qxframe9a7c2-upload-preview-close qxframe9a7c2-button is-default is-text is-sm'; close.textContent='Close'; body.className='qxframe9a7c2-upload-preview-body';
-      head.appendChild(title); head.appendChild(close); panel.appendChild(head); panel.appendChild(body); previewModal.appendChild(previewMask); previewModal.appendChild(panel);
+      panel.className='qxframe9a7c2-upload-preview-panel is-'+kind; head.className='qxframe9a7c2-upload-preview-head'; title.className='qxframe9a7c2-upload-preview-title'; title.textContent=record.name; close.type='button'; close.className='qxframe9a7c2-upload-preview-close qxframe9a7c2-button is-default is-text is-sm'; close.textContent='Close'; bodyShell.className='qxframe9a7c2-upload-preview-scroll'; body.className='qxframe9a7c2-upload-preview-body';
+      head.appendChild(title); head.appendChild(close); bodyShell.appendChild(body); panel.appendChild(head); panel.appendChild(bodyShell); previewModal.appendChild(previewMask); previewModal.appendChild(panel);
+      previewScroll = Scroll.attachViewport({
+        root:bodyShell, viewport:body, content:body, document:doc,
+        axis:'both', wheelAxis:'auto', wheelPropagation:false, scrollbarVisibility:'auto',
+        focusable:false, keyboard:false, controller:api
+      });
       var media;
       if (kind==='pdf') { media=doc.createElement('iframe'); media.src=URLPolicy.sanitize(url,'document'); media.title=record.name||'PDF'; media.setAttribute('sandbox','allow-same-origin allow-downloads'); body.appendChild(media); }
       else { var link=doc.createElement('a'); link.href=URLPolicy.sanitize(url,'download'); link.download=record.name||''; link.rel='noreferrer'; link.textContent='Download '+record.name; body.appendChild(link); }
+      if (previewScroll) previewScroll.refresh('upload-preview-open');
       previewOverlay = OverlayController.create({
         reference: root,
         floating: previewModal,

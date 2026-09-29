@@ -3,6 +3,7 @@ import { PickerField } from './picker-field.js';
 import { Calendar } from './calendar.js';
 import { PeriodPanel } from './period-panel.js';
 import { TimePanel } from './time-panel.js';
+import { Scroll } from './scroll.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
@@ -150,8 +151,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
   var timePanel = null;
   var panelShell = null;
   var selectionHost = null;
+  var selectionScrollShell = null;
+  var selectionScroll = null;
   var timeHost = null;
   var presetsHost = null;
+  var presetsScrollShell = null;
+  var presetsScroll = null;
   var presetCleanups = [];
   var presetFocusController = null;
   var presetDomain = null;
@@ -1326,9 +1331,20 @@ function setupDatePickerRuntime(instance, fieldInit) {
   panelShell.className = 'qxframe9a7c2-date-picker-composite' + (withTime ? ' has-time' : '') + (Number(opts.panelCount) === 2 ? ' has-dual-calendar' : '');
   presetsHost = doc.createElement('div');
   presetsHost.className = 'qxframe9a7c2-date-picker-presets';
+  presetsScrollShell = doc.createElement('div');
+  presetsScrollShell.className = 'qxframe9a7c2-date-picker-presets-scroll';
+  presetsScrollShell.appendChild(presetsHost);
   selectionHost = doc.createElement('div');
   selectionHost.className = 'qxframe9a7c2-date-picker-selection-panel';
-  panelShell.appendChild(selectionHost);
+  selectionScrollShell = doc.createElement('div');
+  selectionScrollShell.className = 'qxframe9a7c2-date-picker-selection-scroll';
+  selectionScrollShell.appendChild(selectionHost);
+  panelShell.appendChild(selectionScrollShell);
+  selectionScroll = Scroll.attachViewport({
+    root:selectionScrollShell, viewport:selectionHost, content:selectionHost, document:doc,
+    axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
+    focusable:false, keyboard:false, controller:api
+  });
   if (withTime) {
     timeHost = doc.createElement('div');
     timeHost.className = 'qxframe9a7c2-date-picker-time-panel';
@@ -1530,7 +1546,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
       presetActions.push(handler);
     });
     if (presets.length) {
-      if (presetsHost.parentNode !== panelShell || presetsHost.nextSibling !== selectionHost) panelShell.insertBefore(presetsHost, selectionHost);
+      if (!presetsScroll) presetsScroll = Scroll.attachViewport({
+        root:presetsScrollShell, viewport:presetsHost, content:presetsHost, document:doc,
+        axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
+        focusable:false, keyboard:false, controller:api
+      });
+      if (presetsScrollShell.parentNode !== panelShell || presetsScrollShell.nextSibling !== selectionScrollShell) panelShell.insertBefore(presetsScrollShell, selectionScrollShell);
+      presetsScroll.refresh('date-picker-presets');
       function enabledIndex(start, step) {
         var index = start;
         while (index >= 0 && index < presetButtons.length) {
@@ -1571,7 +1593,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (doc.activeElement === presetsHost && activePresetIndex >= 0) activatePreset(activePresetIndex, 'preset-rebuild');
     } else {
       presetsHost.tabIndex = -1;
-      if (presetsHost.parentNode) presetsHost.parentNode.removeChild(presetsHost);
+      if (presetsScroll) { presetsScroll.destroy(); presetsScroll = null; }
+      if (presetsScrollShell.parentNode) presetsScrollShell.parentNode.removeChild(presetsScrollShell);
     }
   }
 
@@ -1723,9 +1746,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (periodPanel) periodPanel.destroy(destroyReason);
     if (yearPanel) yearPanel.destroy(destroyReason);
     if (monthPanel) monthPanel.destroy(destroyReason);
+    if (presetsScroll) { presetsScroll.destroy(); presetsScroll = null; }
+    if (selectionScroll) { selectionScroll.destroy(); selectionScroll = null; }
     draft.destroy();
   
-    timePanel = calendarSecondary = calendar = periodPanel = yearPanel = monthPanel = field = panelShell = selectionHost = timeHost = presetsHost = panelProjection = calendarGroup = calendarPrimaryHost = calendarSecondaryHost = null;
+    timePanel = calendarSecondary = calendar = periodPanel = yearPanel = monthPanel = field = panelShell = selectionHost = selectionScrollShell = timeHost = presetsHost = presetsScrollShell = panelProjection = calendarGroup = calendarPrimaryHost = calendarSecondaryHost = null;
     return true;
   }
 

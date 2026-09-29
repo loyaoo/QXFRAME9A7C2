@@ -22,6 +22,7 @@ import { DOMTemplate } from '../core/domTemplate.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 import { Trigger } from './trigger.js';
 import { Tooltip } from './tooltip.js';
+import { Scroll } from './scroll.js';
 import { Item } from './item.js';
 
 const global=globalThis;
@@ -214,6 +215,7 @@ function setupMenu(instance) {
   var levelPresentation = typeof WeakMap === 'function' ? new WeakMap() : null;
   var selectionIndicatorByButton = typeof WeakMap === 'function' ? new WeakMap() : null;
   var scrollOwnerByLevel = new Map();
+  var scrollSurfaceByLevel = new Map();
   var triggerByKey = new Map();
   var tooltipByKey = new Map();
   var panelByKey = new Map();
@@ -354,6 +356,37 @@ function setupMenu(instance) {
   }
   function visibleActiveKey() { return ownsBrowserFocus() ? activeKey : ''; }
 
+  function attachPopupScroll(panel, level) {
+    if (!panel || !level) return null;
+    var shell = doc.createElement('div');
+    shell.className = 'qxframe9a7c2-menu-submenu-scroll';
+    shell.appendChild(level);
+    panel.appendChild(shell);
+    var scroll = Scroll.attachViewport({
+      root:shell,
+      viewport:level,
+      content:level,
+      document:doc,
+      axis:'y',
+      wheelAxis:'y',
+      wheelPropagation:false,
+      scrollbarVisibility:'auto',
+      scrollbarInteractive:true,
+      edgeShadow:false,
+      focusable:false,
+      keyboard:false,
+      controller:api
+    });
+    scrollSurfaceByLevel.set(level, scroll);
+    scrollOwnerByLevel.set(level, scroll.getViewportElement());
+    return scroll;
+  }
+
+  function refreshPopupScroll(level, reason) {
+    var scroll = scrollSurfaceByLevel.get(level);
+    return scroll && Utils.isFunction(scroll.refresh) ? scroll.refresh(reason || 'menu-popup') : null;
+  }
+
   function syncPanelContext(panel) {
     if (!panel || !panel.classList) return;
     ['xs','sm','md','lg','xl'].forEach(function (size) { panel.classList.remove('is-' + size); });
@@ -449,6 +482,7 @@ function setupMenu(instance) {
     } else removeDescendantOpenKeys(key);
     rememberInlineOpenKeys();
     syncClasses();
+    if (opened) refreshPopupScroll(panelLevelByKey.get(key), 'menu-open');
     if (!sameKeys(before, Array.from(openKeys))) emitOpenChange(detail && detail.reason || (opened ? 'submenu-open' : 'submenu-close'), detail && detail.originalEvent || null, detail && detail.source || null);
   }
 
@@ -554,8 +588,7 @@ function setupMenu(instance) {
         var popupLevel = doc.createElement('ul');
         popupLevel.className = 'qxframe9a7c2-menu-level qxframe9a7c2-menu-popup-level';
         if (levelPresentation) levelPresentation.set(popupLevel, 'popup');
-        panel.appendChild(popupLevel);
-        scrollOwnerByLevel.set(popupLevel, panel);
+        attachPopupScroll(panel, popupLevel);
         panelByKey.set(key, panel); panelLevelByKey.set(key, popupLevel);
         var placement = opts.mode === 'horizontal' && !parentKey ? 'bottom-start' : 'right-start';
         var trigger = Trigger.create({
@@ -612,6 +645,8 @@ function setupMenu(instance) {
     tooltipByKey.clear();
     inlineTransitionByKey.forEach(function (transition) { transition.destroy(); });
     inlineTransitionByKey.clear();
+    scrollSurfaceByLevel.forEach(function (scroll) { if (scroll && Utils.isFunction(scroll.destroy)) scroll.destroy(); });
+    scrollSurfaceByLevel.clear();
     panelByKey.forEach(function (panel) { DOM.removeNode(panel); });
     panelByKey.clear(); panelLevelByKey.clear(); buttonByKey.clear(); buttonMeta.clear();
     scrollOwnerByLevel.clear();
@@ -640,15 +675,14 @@ function setupMenu(instance) {
     syncPanelContext(overflowPanel, null);
     overflowLevel = doc.createElement('ul');
     overflowLevel.className = 'qxframe9a7c2-menu-level qxframe9a7c2-menu-popup-level qxframe9a7c2-menu-overflow-level';
-    overflowPanel.appendChild(overflowLevel);
-    scrollOwnerByLevel.set(overflowLevel, overflowPanel);
+    attachPopupScroll(overflowPanel, overflowLevel);
     overflowTrigger = Trigger.create({
       reference: overflowButton, floating: overflowPanel, document: doc, portalContainer: portalContainer,
       trigger: opts.submenuTrigger, placement: 'bottom-end', transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', offset: opts.submenuOffset, middleware: opts.middleware,
       flipOnOverflow: opts.flipOnOverflow !== false, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true,
       destroyOnClose: opts.forceSubMenuRender === true ? false : opts.destroyOnClose !== false, forceRender: opts.forceSubMenuRender === true, restoreFocus: false,
       openDelay: opts.submenuOpenDelay, closeDelay: opts.submenuLeaveDelay, disabled: true,
-      onOpenChange: function () { syncClasses(); }
+      onOpenChange: function (opened) { syncClasses(); if (opened) refreshPopupScroll(overflowLevel, 'menu-overflow-open'); }
     });
     overflowLi.hidden = true;
     overflowButton.hidden = true;
@@ -732,6 +766,7 @@ function setupMenu(instance) {
     overflowLi.hidden = false;
     overflowButton.hidden = false;
     overflowLi.style.visibility = '';
+    refreshPopupScroll(overflowLevel, 'menu-overflow-layout');
     syncClasses();
     api.emit('overflow', { reason: reason || 'refresh', overflowedKeys: Array.from(overflowedKeys), visibleCount: visibleCount, menu: api });
     return true;

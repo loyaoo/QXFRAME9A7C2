@@ -25,8 +25,33 @@ function skipped(reason) {
     process.exitCode = required ? 1 : 0;
 }
 
+function adaptLegacySmokeSource(source) {
+    const normalized = path.relative(root, smokePath).split(path.sep).join('/');
+    if (normalized !== 'tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html') return source;
+    // The HOTFIX6 fixture intentionally remains frozen. Table's canonical scroll owner
+    // moved from the component root to the public Scroll viewport, so translate only
+    // those legacy root-scroll probes while preserving every other historical assertion.
+    return source
+        .replace(
+            "var stickyRoot=sticky.getRootElement();var firstFixed=",
+            "var stickyRoot=sticky.getRootElement();var stickyViewport=sticky.getScrollViewport?sticky.getScrollViewport():stickyRoot;var firstFixed="
+        )
+        .replace(
+            "stickyRoot.scrollHeight>stickyRoot.clientHeight&&stickyRoot.scrollWidth>stickyRoot.clientWidth,'scroll='+stickyRoot.scrollWidth+'x'+stickyRoot.scrollHeight+',client='+stickyRoot.clientWidth+'x'+stickyRoot.clientHeight",
+            "stickyViewport.scrollHeight>stickyViewport.clientHeight&&stickyViewport.scrollWidth>stickyViewport.clientWidth,'scroll='+stickyViewport.scrollWidth+'x'+stickyViewport.scrollHeight+',client='+stickyViewport.clientWidth+'x'+stickyViewport.clientHeight"
+        )
+        .replace(
+            "stickyRoot.scrollLeft=180;stickyRoot.scrollTop=120;stickyRoot.dispatchEvent(new Event('scroll',{bubbles:true}))",
+            "stickyViewport.scrollLeft=180;stickyViewport.scrollTop=120;stickyViewport.dispatchEvent(new Event('scroll',{bubbles:true}))"
+        )
+        .replace(
+            "var virtualRoot=virtual.getRootElement();virtualRoot.scrollTop=1200;virtualRoot.dispatchEvent(new Event('scroll',{bubbles:true}))",
+            "var virtualRoot=virtual.getRootElement(),virtualViewport=virtual.getScrollViewport?virtual.getScrollViewport():virtualRoot;virtualViewport.scrollTop=1200;virtualViewport.dispatchEvent(new Event('scroll',{bubbles:true}))"
+        );
+}
+
 function smokeArtifacts() {
-    const source = fs.readFileSync(smokePath, 'utf8');
+    const source = adaptLegacySmokeSource(fs.readFileSync(smokePath, 'utf8'));
     const css = fs.readFileSync(path.join(root, 'dist', 'qxframe9a7c2.css'), 'utf8');
     const framework = fs.readFileSync(path.join(root, 'dist', 'qxframe9a7c2.js'), 'utf8');
     const scripts = [];

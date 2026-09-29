@@ -15,9 +15,69 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: complete admin preset expansion.
-- Current Task: `ADMIN-VIEW-GRID-REGRESSION-004`
+- Current Task: `SCROLL-UNIFICATION-005`
 
 ## CURRENT
+
+### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
+Status: VERIFIED — READY TO MERGE
+Task progress: 100%
+Branch: `refactor/scroll-unification-005`.
+Baseline: `main@7cbaa7b18d7953c267a8c525eab8ccc6aecb20f1`.
+
+User requirements:
+- Runtime components with their own scrollable surfaces should use framework Scroll by default instead of independently exposing native scrollbar chrome.
+- Native scrolling remains the browser physics layer and is allowed for intentional hidden/fallback/CSS-only surfaces, but every visible native track/thumb must consume the same Scroll geometry/color tokens.
+- Select/DatePicker and other Trigger-based popup panels must be correctly positioned on their first visible frame; no end-of-enter horizontal correction/jump.
+
+Implemented Scroll ownership:
+- ItemCollection defaults `scrollAdapter` to `Scroll.attachViewport` unless explicitly opted out with false/null.
+- VirtualList defaults to Scroll ownership and exposes `getScroll()`; ItemCollection virtual mode avoids double ownership by explicitly disabling the nested VirtualList adapter before attaching its outer Scroll.
+- Menu submenu/overflow popup levels are Scroll-owned.
+- Table main viewport and filter-option list are Scroll-owned; sticky/fixed geometry, ScrollVisibility and Virtualizer now use the Scroll viewport instead of the outer Table root.
+- Cascader horizontal columns are Scroll-owned.
+- DatePicker responsive selection strip and preset strip are Scroll-owned.
+- Transfer pagination is Scroll-owned; Transfer's Table projection reuses Table's Scroll instead of introducing a second owner.
+- Sort overflow is Scroll-owned through a dedicated shell/viewport/content structure.
+- Upload document-preview overflow is Scroll-owned.
+- Existing Scroll-owned paths (WheelPanel, Modal body, Select, Autocomplete, TreeSelect and other ItemCollection consumers) remain intact.
+- Intentional core/CSS-only/native fallback surfaces such as Layout/Descriptions and hidden Notice viewport physics remain native, with shared visual tokens rather than a second component implementation.
+
+Native fallback parity:
+- Added shared `--qxframe9a7c2-scroll-track-size`, track radius and thumb inset tokens.
+- Native scrollbar size/radius/thumb inset reference the Scroll tokens instead of duplicating `8px / 999px / 1px`.
+- Native track/thumb/hover consume the same Scroll color tokens.
+- Intentional hidden native viewports remain hidden.
+
+Popup first-frame regression from user video:
+- Frame-by-frame inspection of `PixPin_2026-09-29_19-39-37.mp4` confirmed the DatePicker panel performs an end-of-enter horizontal correction.
+- Root cause: Trigger applied popup-placement `scale(.96)` before `runtime.preparePosition()`. Floating UI measured transformed geometry; when motion completed at `scale(1)` and auto-update resumed, full-size geometry produced a visible correction.
+- Trigger now keeps the floating surface measurable-but-invisible during first positioning, neutralizes entry motion transform for the first placement measurement, computes full-size coordinates, restores motion transform, then reveals/animates from the already-correct coordinates.
+- Placement-specific transform origins keep `bottom-start/end`, `top-start/end`, and side placements anchored to the resolved edge throughout scale motion.
+- This is a Trigger-level fix for Select, DatePicker, Dropdown, TreeSelect, Cascader, Menu popup and other anchored popup consumers.
+
+Regression gates:
+- `verify:phase-h-carousel-scroll` requires default Scroll ownership for ItemCollection, VirtualList, Menu, Table, Table filter, Cascader, DatePicker, Transfer pagination, Sort and Upload preview, plus shared native geometry tokens.
+- `verify:phase-h-trigger-controller-family` requires first-frame visibility gating, transform-neutral full-size placement measurement and placement-specific motion origins.
+- Required browser smoke samples visible Select and DatePicker popup left positions over the whole enter sequence and rejects any first-frame/end-of-motion horizontal jump.
+
+Guardrails:
+- Scroll remains native-scroll-backed internally; do not replace scrollTop/scrollLeft browser physics.
+- Do not introduce per-component scrollbar implementations.
+- Pure CSS/fallback surfaces may retain native overflow, but visible chrome must match Scroll exactly.
+- Do not disable popup motion to hide positioning defects; preserve animation and fix measurement/order.
+
+Verification:
+- PR #184 exact implementation head `cdf6861063c4b241d15fc6511869a69dde0a832c`.
+- QXFRAME CI #918 passed Windows tools and the full release pipeline.
+- Full release verification passed current Chromium smoke, source ESM/UMD browser verification, high-risk browser verification, subpath verification, and the frozen HOTFIX6 legacy smoke through a narrow runner adaptation for Table's migrated public Scroll viewport.
+- Standalone dist + docs demo build passed canonical docs verification and canonical admin browser regression checks.
+- Select and DatePicker popup first-frame position regressions are sampled across the complete enter sequence and passed.
+- Table Scroll geometry/sticky/fixed/virtual behavior uses the public inner Scroll viewport and passed current + legacy browser verification.
+- No popup motion was disabled and no legacy second scroll owner was reintroduced.
+
+Next exact step:
+- Run exact-head CI for this checkpoint-only commit, merge PR #184, then verify main CI and Pages deployment.
 
 ### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
 Status: VERIFIED
