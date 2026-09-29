@@ -1464,6 +1464,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
  * the common floating surface border/background/radius/shadow so Menu/Dropdown/Popover do not
  * duplicate the same visual shell. Component classes may override the public surface variables. */
 .qxframe9a7c2-trigger-positioning{visibility:hidden!important;pointer-events:none!important}
+.qxframe9a7c2-trigger-positioning-measure{transform:none!important}
 .qxframe9a7c2-popup-surface{
   --_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-popup-bg);
   --_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-popup-border);
