@@ -87,6 +87,22 @@ if(view==='schedule'){
    if(C.WheelPicker){var wh=slot(times,'qx-admin-inline-block');heading(wh,'财年 / 月份轮选');own(C.WheelPicker.create({container:wh,columns:[{key:'year',label:'Year',items:['2026','2027','2028'].map(function(v){return{key:v,value:v,label:v};})},{key:'month',label:'Month',items:['01','02','03','04','05','06','07','08','09','10','11','12'].map(function(v){return{key:v,value:v,label:v};})}],value:['2026','10'],needConfirm:true,showCancel:true}));}
  }
 }
+if(view==='workflow'){
+ var tree=byId('workflow-tree'),transfer=byId('workflow-transfer'),steps=byId('workflow-steps'),sc=byId('workflow-sort-collapse');
+ var treeItems=[{key:'ops',value:'ops',label:'运营中心',items:[{key:'content',value:'content',label:'内容组'},{key:'growth',value:'growth',label:'增长组'}]},{key:'product',value:'product',label:'商品中心',items:[{key:'merch',value:'merch',label:'商品组'},{key:'supply',value:'supply',label:'供应链'}]}];
+ if(tree){
+   if(C.Tree){var th=slot(tree,'qx-admin-inline-block');heading(th,'组织树');own(C.Tree.create({container:th,items:treeItems,value:'content',checkable:true,checkedKeys:['content'],expandedKeys:['ops','product'],showLine:true,expandOnRowClick:true}));}
+   if(C.TreeSelect){var ts=slot(tree,'qx-admin-inline-block');heading(ts,'审批组织');own(C.TreeSelect.create({container:ts,items:treeItems,defaultValue:['content','supply'],multiple:true,searchable:true,clearable:true,expandedKeys:['ops','product'],maxVisibleTags:1}));}
+   if(C.Cascader){var ca=slot(tree,'qx-admin-inline-block');heading(ca,'区域范围');own(C.Cascader.create({container:ca,items:[{key:'cn',value:'cn',label:'中国',items:[{key:'east',value:'east',label:'华东',items:[{key:'sh',value:'sh',label:'上海'},{key:'hz',value:'hz',label:'杭州'}]},{key:'south',value:'south',label:'华南',items:[{key:'sz',value:'sz',label:'深圳'}]}]}],multiple:true,clearable:true,maxVisibleTags:1}));}
+ }
+ if(transfer&&C.Transfer)own(C.Transfer.create({container:transfer,items:[{key:'u1',value:'u1',label:'产品运营'},{key:'u2',value:'u2',label:'内容编辑'},{key:'u3',value:'u3',label:'仓储经理'},{key:'u4',value:'u4',label:'财务审核'},{key:'u5',value:'u5',label:'客服主管'}],value:['u2','u4'],titles:['可选成员','审批成员'],searchable:true,sortable:true,pagination:{pageSize:3,hideOnSinglePage:false}}));
+ if(steps&&C.Steps){var st=slot(steps,'qx-admin-inline-block');heading(st,'标准审批');own(C.Steps.create({container:st,current:1,percent:68,clickable:true,items:[{title:'发起',description:'填写申请'},{title:'审核',subTitle:'68%',description:'业务复核'},{title:'执行',description:'落地变更'},{title:'归档',description:'记录结果'}]}));var nav=slot(steps,'qx-admin-inline-block');heading(nav,'导航步骤');own(C.Steps.create({container:nav,type:'navigation',size:'sm',current:0,clickable:true,items:[{title:'配置'},{title:'规则'},{title:'发布'}]}));}
+ if(sc){
+   if(C.Sort){var sh=slot(sc,'qx-admin-inline-block');heading(sh,'阶段排序');own(C.Sort.create({container:sh,items:[{key:'design',label:'设计'},{key:'review',label:'复核'},{key:'release',label:'发布'},{key:'archive',label:'归档'}]}));}
+   if(C.Collapse){var ch=slot(sc,'qx-admin-inline-block');heading(ch,'规则说明');own(C.Collapse.create({container:ch,defaultValue:['a'],accordion:true,items:[{key:'a',label:'通过条件',content:'全部必审节点通过后进入执行。'},{key:'b',label:'驳回条件',content:'任一必审节点驳回即退回发起人。'},{key:'c',label:'超时策略',content:'超过 24 小时自动提醒负责人。'}]}));}
+   if(C.Item){var ih=slot(sc,'qx-admin-inline-row');heading(ih,'Item 选择投影');['checkbox','check-start','check-end','highlight'].forEach(function(a2){var n=document.createElement('div');n.className='qxframe9a7c2-item-surface';n.textContent=a2;C.Item.applySelectionAppearance(n,a2);C.Item.syncState(n,{selected:true});var ind=C.Item.createSelectionIndicator({appearance:a2,checked:true});if(ind)n.insertBefore(ind,n.firstChild);ih.appendChild(n);});}
+ }
+}
 var login=document.getElementById('admin-login-form');if(login)login.addEventListener('submit',function(e){e.preventDefault();window.location.href='index.html#/dashboard'});var register=document.getElementById('admin-register-form');if(register)register.addEventListener('submit',function(e){e.preventDefault();window.location.href='register-result.html'});
 window.addEventListener('pagehide',function(){owners.splice(0).forEach(function(o){try{o.destroy()}catch(_){}})});
 })();
