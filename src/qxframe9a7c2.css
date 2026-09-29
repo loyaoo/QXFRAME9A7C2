@@ -16697,8 +16697,9 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-form-selectgroup.is-vertical.is-buttons .qxframe9a7c2-form-selectgroup-item:last-child .qxframe9a7c2-form-selectgroup-label{border-start-start-radius:0;border-start-end-radius:0;border-end-start-radius:var(--_qxframe9a7c2-control-radius);border-end-end-radius:var(--_qxframe9a7c2-control-radius)}
 .qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item{z-index:var(--qxframe9a7c2-z-local-raised)}
 .qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:hover{z-index:var(--qxframe9a7c2-z-local-above)}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:has(>.qxframe9a7c2-form-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
 .qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label{z-index:var(--qxframe9a7c2-z-local-overlay)}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
+.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:focus-within{z-index:calc(var(--qxframe9a7c2-z-local-active) + 1)}
 
 /* Nested stable GroupItem projects child interaction state to the composition stacking owner. */
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{--_qxframe9a7c2-group-stack:2}
