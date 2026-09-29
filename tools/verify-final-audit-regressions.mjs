@@ -19,6 +19,7 @@ const tabsSource=fs.readFileSync(path.join(root,'src/components/tabs.js'),'utf8'
 const uploadSource=fs.readFileSync(path.join(root,'src/components/upload.js'),'utf8');
 const paginationSource=fs.readFileSync(path.join(root,'src/components/pagination.js'),'utf8');
 const modalSource=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
+const overlayFrameRuntimeSource=fs.readFileSync(path.join(root,'src/components/overlay-frame-runtime.js'),'utf8');
 const carouselSource=fs.readFileSync(path.join(root,'src/components/carousel.js'),'utf8');
 const inputOtpSource=fs.readFileSync(path.join(root,'src/components/input-otp.js'),'utf8');
 const css=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8');
@@ -47,7 +48,8 @@ assert.match(tabsSource,/function moveOverflowFocus\(step, edge, event\)/,'Tabs 
 assert.doesNotMatch(tabsSource,/reason: 'overflow'[^\n]*focus: true/,'Tabs overflow selection must not focus a hidden main-tab element.');
 assert.match(uploadSource,/var replaceableSingle = Number\(opts\.maxCount\) === 1/,'Upload maxCount:1 must keep its replacement trigger available.');
 assert.match(paginationSource,/event\.key === 'ArrowUp' \? 1 : -1/,'Pagination jumper ArrowUp must increment and ArrowDown must decrement.');
-assert.match(modalSource,/acceptedCloseConfig\.onClose/,'Modal must honor closable.onClose after an accepted close.');
+assert.match(modalSource,/afterAcceptedClose\(ctx, reason, event\)[\s\S]*close\.onClose/,'Modal must project closable.onClose through the shared accepted-close hook.');
+assert.match(overlayFrameRuntimeSource,/typeof config\.afterAcceptedClose === 'function'[\s\S]*config\.afterAcceptedClose\(context\(\), reason, event\)/,'OverlayFrameRuntime must invoke the component accepted-close hook exactly after canonical close acceptance.');
 assert.match(carouselSource,/opts\.direction === 'vertical' \? \(direction === 'prev' \? 'up' : 'down'\)/,'Carousel default arrow glyphs must follow vertical orientation.');
 assert.match(carouselSource,/axis: null/,'Carousel PointerSession must retain both deltas so runtime direction updates cannot leave a stale drag axis.');
 assert.match(inputOtpSource,/type: this\.options\.mask === true \? 'password' : 'text', mask: typeof this\.options\.mask === 'string'/,'InputOTP string masks must use the canonical Control segment mask instead of native password masking.');
