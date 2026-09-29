@@ -21,12 +21,14 @@ const pages=[
   '/docs/admin-list-static.html',
   '/docs/admin/index.html',
   '/docs/admin/login.html',
+  '/docs/admin/register.html',
+  '/docs/admin/register-result.html',
   ...adminViewPages,
   '/docs/index.html',
   '/docs/theme-playground.html',
   '/docs/tokens.html'
 ];
-if(componentPages.length!==66||adminViewPages.length!==11||pages.length!==85)throw new Error('[QXFRAME9A7C2 canonical docs browser] expected 66 component / 11 admin view / 85 canonical pages.');
+if(componentPages.length!==66||adminViewPages.length!==36||pages.length!==112)throw new Error('[QXFRAME9A7C2 canonical docs browser] expected 66 component / 36 admin view / 112 canonical pages.');
 
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
 function launch(){

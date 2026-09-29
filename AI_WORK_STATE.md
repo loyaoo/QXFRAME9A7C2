@@ -14,10 +14,48 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: admin template + shared framework interaction/layout polish.
-- Current Task: `ADMIN-INTERACTION-POLISH-002`
+- Current Phase: complete admin preset expansion.
+- Current Task: `ADMIN-COMPLETE-PRESET-003`
 
 ## CURRENT
+
+### ADMIN-COMPLETE-PRESET-003 — complete admin preset page matrix
+Status: VERIFIED
+Task progress: 100%
+Branch: `docs/admin-complete-preset-003`.
+Baseline: `main@4c2a281a12a0fb891aad9bc1d23df5480ce61903` (PR #181 merged; admin interaction polish verified).
+
+User goal:
+- Expand `docs/admin` from the existing shell + core pages into a complete preset admin demonstration.
+- Use layuiAdmin, TDesign React Starter, Arco Design Pro and Ant Design Pro only as information-architecture/page-breadth references.
+- Keep QXFRAME9A7C2 components, tokens, interactions and DOM conventions as the implementation authority.
+- Integrate all 66 public framework components and their normal admin-relevant usage families into actual admin scenarios instead of building a second isolated component showcase.
+
+Frozen decisions:
+- Preserve PR #179–#181 shell/runtime fixes; do not rebuild Tabs/Menu/Picker behavior locally in admin code.
+- Reuse existing dashboard/content list/content form demos instead of duplicating them.
+- Keep demo data local/static and dependency-free.
+- Low-level primitives such as Trigger/Transition/TransitionGroup appear only in legitimate developer/diagnostic admin scenarios.
+- Exhaustive API/state matrices remain in `docs/components/*.html`; the admin preset covers normal public usage families in real application contexts.
+- Third-party admin projects are information-architecture references only; no third-party source/assets are copied.
+
+Implemented:
+- Expanded shell routes from 14 to 39 and admin views from 11 to 36.
+- Added monitor/workplace, products/inventory/customers/marketing/finance, list/form/detail families, notifications/jobs, schedule/workflow/theme/developer tools, account settings, result/failure/403 plus register/register-result presets.
+- Added real admin scenarios for the Picker family, selection/tree/transfer/steps/sort/collapse families, theme inputs, diagnostics primitives, business-facing image/tags/modal/drawer/popconfirm/carousel/rate/progress/pagination/OTP families, while retaining existing Menu/Tabs/Dropdown/Autocomplete/Select/Table/Upload/layout/card/badge/avatar/icon/Descriptions coverage.
+- Fixed declarative Select initial-value parsing so `value:label` option descriptors project the actual option value instead of the raw descriptor.
+- Added `docs/admin/COMPONENT_COVERAGE.md`, mapping all 66 component docs to admin scenarios and implementation markers.
+- `verify:admin-template` now derives the 66-component catalog and fails if any component lacks an admin coverage mapping/marker.
+- Canonical publication verification now covers 66 component pages, 36 admin views and 112 HTML pages total, including register/register-result.
+- Updated the standalone Chromium publication verifier to the 112-page canonical set.
+
+Verification evidence:
+- PR #182 head `78a72d2c7bdd1e50325b865f430aaa21fad34315` passed QXFRAME CI run #890 after retrying an unrelated existing iframe-readiness flake.
+- Successful gates: Windows tools, dependency security audit, Completion audit, Full release verification, npm package, standalone dist/docs demo build and artifact uploads.
+- The earlier exact-head run also passed Full release verification; its only failure was the stale standalone canonical browser count (66/11/85), which was corrected to 66/36/112 before CI #890 passed.
+
+Next exact step:
+- Run exact-head CI for this checkpoint commit; when green, merge PR #182 and verify the resulting main CI plus GitHub Pages deployment.
 
 ### ADMIN-INTERACTION-POLISH-002 — popup-field opening, admin Tabs focus, native focus precedence, SelectGroup stacking, flex layout and collapsed Menu
 Status: VERIFIED

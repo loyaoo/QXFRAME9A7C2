@@ -23,14 +23,16 @@ const canonical=[
   'docs/admin-list-static.html',
   'docs/admin/index.html',
   'docs/admin/login.html',
+  'docs/admin/register.html',
+  'docs/admin/register-result.html',
   ...adminViewPages,
   'docs/index.html',
   'docs/theme-playground.html',
   'docs/tokens.html'
 ];
 assert(componentPages.length===66,'expected 66 component pages, found '+componentPages.length);
-assert(adminViewPages.length===11,'expected 11 complete-admin view pages, found '+adminViewPages.length);
-assert(canonical.length===85,'expected 85 canonical HTML pages, found '+canonical.length);
+assert(adminViewPages.length===36,'expected 36 complete-admin view pages, found '+adminViewPages.length);
+assert(canonical.length===112,'expected 112 canonical HTML pages, found '+canonical.length);
 
 const forbidden=/(^|\/)(?:src|tests|audit|migration|vendor)(?:\/|$)|(?:^|\/)stage-\d+\.html(?:$|[?#])/i;
 const runtimeJs=/qxframe9a7c2\.js(?:[?#].*)?$/i;
