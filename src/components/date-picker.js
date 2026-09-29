@@ -1341,6 +1341,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
   selectionScrollShell.className = 'qxframe9a7c2-date-picker-selection-scroll';
   selectionScrollShell.appendChild(selectionHost);
   panelShell.appendChild(selectionScrollShell);
+  // Establish popup ownership before PopupFrame creates any Scroll resource.
+  // This keeps PopupFrame's panel-descendant invariant strict instead of
+  // permitting detached surfaces that may later be mounted elsewhere.
+  field.getPanelHost().appendChild(panelShell);
   selectionScroll = popupFrame.attachViewport({
     root:selectionScrollShell, viewport:selectionHost, content:selectionHost, document:doc,
     axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
@@ -1351,7 +1355,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
     timeHost.className = 'qxframe9a7c2-date-picker-time-panel';
     panelShell.appendChild(timeHost);
   }
-  field.getPanelHost().appendChild(panelShell);
 
   if (unit === 'date' || unit === 'week') {
     calendarGroup = doc.createElement('div');
