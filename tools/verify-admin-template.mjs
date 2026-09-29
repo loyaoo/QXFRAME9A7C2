@@ -131,7 +131,7 @@ for(const marker of [
   'border-start-start-radius:max(0px,calc(var(--_qxframe9a7c2-card-radius) - 1px))',
   'can-scroll-start','can-scroll-end','--_qxframe9a7c2-table-fixed-head-z'
 ])assert(frameworkCss.includes(marker),'shared framework CSS polish marker missing '+marker);
-for(const marker of ["classList.toggle('has-horizontal-overflow'","classList.toggle('can-scroll-start'","classList.toggle('can-scroll-end'","DOM.listen(root, 'scroll'"])assert(tableSource.includes(marker),'Table horizontal-overflow state marker missing '+marker);
+for(const marker of ["classList.toggle('has-horizontal-overflow'","classList.toggle('can-scroll-start'","classList.toggle('can-scroll-end'","DOM.listen(scrollViewport, 'scroll'"])assert(tableSource.includes(marker),'Table horizontal-overflow state marker missing '+marker);
 
 const viewJs=read('docs/assets/qxframe9a7c2-admin-views.js');
 const coverageLedger='docs/admin/COMPONENT_COVERAGE.md';
