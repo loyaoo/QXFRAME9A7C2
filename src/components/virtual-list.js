@@ -7,9 +7,16 @@ import { Renderer } from '../core/renderer.js';
 import { Virtualizer } from '../core/virtualizer.js';
 import { Utils } from '../utils/utils.js';
 import { Item } from './item.js';
+import { Scroll } from './scroll.js';
 
 const state = new WeakMap();
 const own = Utils.own;
+
+function resolveScrollAdapter(options) {
+    if (options.scrollAdapter === false || options.scrollAdapter === null) return null;
+    if (options.scrollAdapter !== undefined && !Utils.isFunction(options.scrollAdapter)) throw new TypeError('[QXFRAME9A7C2] VirtualList scrollAdapter must be a function, false, or null.');
+    return Utils.isFunction(options.scrollAdapter) ? options.scrollAdapter : Scroll.attachViewport;
+}
 
 const blueprint = DOMTemplate.staticHTML`
   <div class="qxframe9a7c2-virtual-list" data-qxframe9a7c2-ref="root">
@@ -58,7 +65,7 @@ function recordFor(instance) {
 }
 
 export class VirtualList extends Component {
-    static immutableOptions = Object.freeze(['container', 'elements', 'createDOM', 'document']);
+    static immutableOptions = Object.freeze(['container', 'elements', 'createDOM', 'document', 'scrollAdapter']);
 
     static create(options = {}) {
         const instance = new this(options);
@@ -76,7 +83,7 @@ export class VirtualList extends Component {
         const items = Array.isArray(options.items) ? options.items.slice() : [];
         state.set(this, {
             doc, items, host: null, root: null, viewport: null, spacer: null, layer: null,
-            virtualizer: null, domBinding: null, lastGeometry: '', lastRange: '', rendered: new Map(), renderCount: 0
+            virtualizer: null, scrollSurface: null, domBinding: null, lastGeometry: '', lastRange: '', rendered: new Map(), renderCount: 0
         });
         this.#itemKeysFor(items);
     }
@@ -119,6 +126,27 @@ export class VirtualList extends Component {
         if (r.domBinding.syncClasses) r.domBinding.syncClasses(opts.classes);
         if (opts.height !== undefined && opts.height !== null) r.root.style.height = typeof opts.height === 'number' ? opts.height + 'px' : String(opts.height);
 
+        const scrollAdapter = resolveScrollAdapter(opts);
+        if (scrollAdapter) {
+            r.scrollSurface = scrollAdapter({
+                root: r.root,
+                viewport: r.viewport,
+                content: r.viewport,
+                document: r.doc,
+                axis: opts.horizontal === true ? 'x' : 'y',
+                wheelAxis: opts.horizontal === true ? 'x' : 'y',
+                wheelPropagation: opts.wheelPropagation !== false,
+                scrollbarVisibility: opts.scrollbarVisibility || 'auto',
+                scrollbarInteractive: opts.scrollbarInteractive !== false,
+                edgeShadow: opts.scrollEdgeShadow === true,
+                focusable: false,
+                keyboard: false,
+                controller: this
+            });
+            if (!r.scrollSurface || !Utils.isFunction(r.scrollSurface.destroy) || !Utils.isFunction(r.scrollSurface.refresh)) throw new TypeError('[QXFRAME9A7C2] VirtualList scrollAdapter must return a Scroll-compatible instance.');
+            this.own(() => { if (r.scrollSurface) r.scrollSurface.destroy(); r.scrollSurface = null; });
+        }
+
         r.virtualizer = Virtualizer.create({
             viewport: r.viewport,
             count: r.items.length,
@@ -145,6 +173,14 @@ export class VirtualList extends Component {
         if (hasItems) { r.items = candidateItems; r.lastRange = ''; }
         if (r.root && own(patch, 'height')) r.root.style.height = typeof next.height === 'number' ? next.height + 'px' : String(next.height || '');
         if (r.viewport && own(patch, 'focusable')) this.#syncFocusPolicy();
+        if (r.scrollSurface && Utils.isFunction(r.scrollSurface.updateOptions) && (own(patch, 'scrollbarVisibility') || own(patch, 'scrollbarInteractive') || own(patch, 'wheelPropagation') || own(patch, 'scrollEdgeShadow'))) {
+            r.scrollSurface.updateOptions({
+                scrollbarVisibility: next.scrollbarVisibility || 'auto',
+                scrollbarInteractive: next.scrollbarInteractive !== false,
+                wheelPropagation: next.wheelPropagation !== false,
+                edgeShadow: next.scrollEdgeShadow === true
+            });
+        }
         r.lastGeometry = '';
         if (r.virtualizer) {
             r.virtualizer.updateOptions({
@@ -163,7 +199,7 @@ export class VirtualList extends Component {
         const r = state.get(this);
         if (!r) return;
         r.rendered.clear();
-        r.host = r.root = r.viewport = r.spacer = r.layer = r.virtualizer = r.domBinding = null;
+        r.host = r.root = r.viewport = r.spacer = r.layer = r.virtualizer = r.scrollSurface = r.domBinding = null;
     }
 
     #syncFocusPolicy() { const r = recordFor(this); if (r.viewport) r.viewport.tabIndex = this.options.focusable === false ? -1 : 0; }
@@ -223,6 +259,7 @@ export class VirtualList extends Component {
         r.layer.appendChild(fragment); r.renderCount += 1;
         if (r.virtualizer && !(Number(this.options.itemSize) > 0) && this.options.measureItems !== false) r.rendered.forEach(element => r.virtualizer.measureElement(Number(DOM.getPrivate(element, 'virtualIndex')), element));
         const detail = { state: this.#stateSnapshot(next.reason), reason: next.reason, controller: this };
+        if (r.scrollSurface) r.scrollSurface.refresh('virtual-list-' + (next.reason || 'render'));
         if (Utils.isFunction(this.options.onRender)) this.options.onRender(detail);
         if (!this.destroyed) this.emit('render', detail);
         return !this.destroyed;
@@ -235,7 +272,7 @@ export class VirtualList extends Component {
         if (r.virtualizer) r.virtualizer.updateOptions({ count: r.items.length, itemKeys: candidateKeys });
         return true;
     }
-    refresh(reason) { const r = recordFor(this); if (!r.virtualizer || this.destroyed) return null; r.lastGeometry = ''; r.virtualizer.refresh(reason || 'refresh'); return this.#stateSnapshot(reason || 'refresh'); }
+    refresh(reason) { const r = recordFor(this); if (!r.virtualizer || this.destroyed) return null; r.lastGeometry = ''; r.virtualizer.refresh(reason || 'refresh'); if (r.scrollSurface) r.scrollSurface.refresh(reason || 'refresh'); return this.#stateSnapshot(reason || 'refresh'); }
     setFocusable(value) { this.updateOptions({ focusable: value !== false }); return this; }
     scrollToIndex(index, local) { const r = recordFor(this); return r.virtualizer ? r.virtualizer.scrollToIndex(index, local) : false; }
     scrollToOffset(offset) { const r = recordFor(this); return r.virtualizer ? r.virtualizer.scrollToOffset(offset) : false; }
@@ -243,6 +280,7 @@ export class VirtualList extends Component {
     getVisibleRange() { const r = recordFor(this); return r.virtualizer ? r.virtualizer.getRange() : { start: 0, end: -1, visibleStart: 0, visibleEnd: -1, total: r.items.length }; }
     getState(reason) { return this.#stateSnapshot(reason); }
     getVirtualizer() { return recordFor(this).virtualizer; }
+    getScroll() { return recordFor(this).scrollSurface; }
     getRootElement() { return recordFor(this).root; }
     getViewportElement() { return recordFor(this).viewport; }
     getRefs() { const r = recordFor(this); return r.domBinding ? r.domBinding.refs : null; }
