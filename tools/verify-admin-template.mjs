@@ -73,6 +73,9 @@ assert(!shellJs.includes("className='qx-admin-tab"),'admin shell must not mainta
 assert(!shellCss.includes('.qx-admin-tab{'),'legacy admin tab CSS must be removed');
 assert(!hasCompositeFieldLabel(adminFormHtml+'\n'+adminListHtml),'composite admin controls must not be wrapped by native label activation');
 assert(shellCss.includes('.qx-admin-tabs-scroll>.qxframe9a7c2-tabs'),'admin tab bar must style the canonical Tabs root only');
+assert(/\.qx-admin-menu\{[^}]*overflow:hidden/.test(shellCss),'admin menu host must not expose a native scrollbar');
+assert(/\.qx-admin-menu \.qxframe9a7c2-menu\{[^}]*height:100%/.test(shellCss),'admin Menu must fill its scroll-owning shell');
+assert(frameworkCss.includes('.qxframe9a7c2-menu-root-scroll'),'Menu root must expose framework Scroll composition');
 for(const marker of ["get('embed')==='1'",'is-admin-embedded','qxframe9a7c2-admin:navigate','qxframe9a7c2-admin:theme']){
   assert(demoJs.includes(marker),'standalone admin embed bridge missing '+marker);
 }
