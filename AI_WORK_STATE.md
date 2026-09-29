@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ARCH-UNIFICATION-006 — Popup / Reorder / OverlayFrame shared-runtime closeout
-Status: IN_PROGRESS
-Task progress: 5%
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 88%
 Branch: `refactor/capability-unification-006`.
 Baseline: `main@1fda904db5548f53ccdb9628c5f5c6e797f5abaf` (PR #184 merged; PR #185 remains open and is not the implementation base).
 
@@ -46,9 +46,17 @@ Guardrails:
 - Theme/Token remain pure CSS.
 - Do not change Picker draft/commit semantics, Autocomplete input-first behavior, keyboard-vs-pointer focus-origin rules, or generic overflow/min-width policies.
 
-Next exact step:
-- Implement PopupFrame + migrate popup Scroll consumers, then checkpoint source/test evidence before starting Tree/Reorder.
+Implemented:
+- PopupComponent / PopupField / PickerField now route physical popup construction through PopupRuntime; PopupFrame owns popup Scroll resources and exposes adapters/release semantics.
+- Select, Autocomplete, TreeSelect, Cascader, Dropdown, Menu submenu/overflow, Tabs overflow, Tooltip, Table filter, Tags overflow and DatePicker selection/preset popup Scroll paths are migrated to PopupFrame/Popover ownership.
+- Menu root scrolling remains an intentional business-level Scroll owner; admin shell native scrolling is disabled and browser coverage checks real Scroll track/thumb/movement.
+- ReorderInteraction now supports a component-agnostic domain drop resolver; Tree no longer owns dragSession or raw dragstart/dragover/drop/dragend lifecycle and supplies only hierarchical before/inside/after semantics.
+- Modal and Drawer now share OverlayFrameRuntime for frame DOM, body Scroll, OverlayFrameShell, OverlayController, PopupSurface, Transition presence and open/close/destroy lifecycle; component files retain only normalization/geometry/motion profiles.
+- Architecture verifiers now reject the old direct Trigger/popup Scroll/Tree drag/Modal-Drawer frame resource paths; a dedicated verify:capability-unification gate is wired into the full release verification.
+- Valid PR #185 Menu-root Scroll/admin browser coverage has been absorbed; PR #185 itself remains unmerged.
 
+Next exact step:
+- Open the unified PR, run exact-head CI, inspect every failing structural/browser/release gate, fix on this branch until green, then merge and verify main CI + Pages.
 ### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
 Status: VERIFIED — READY TO MERGE
 Task progress: 100%
