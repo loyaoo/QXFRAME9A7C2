@@ -20,13 +20,14 @@
 ## CURRENT
 
 ### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
-Status: IMPLEMENTED — PENDING PR CI
-Task progress: 80%
+Status: VERIFIED — READY TO MERGE
+Task progress: 95%
 Branch: `fix/admin-grid-layout-004`.
 Baseline: `main@661c7280499f6e222c9f77d7076722e6e6552f5d` (PR #182 merged; main CI #892 + Pages green).
+PR: #183.
 
 User evidence:
-- Multiple complete-admin pages render secondary content compressed into a narrow strip with per-character wrapping and horizontal overflow.
+- Multiple complete-admin pages rendered secondary content compressed into a narrow strip with per-character wrapping and horizontal overflow.
 
 Root cause:
 - Five views (`profile`, `orders`, `search`, `settings`, `users`) placed a framework `.qxframe9a7c2-row` directly inside another framework Row without a `col-*` owner.
@@ -39,12 +40,16 @@ Implemented:
 - Added canonical Chromium geometry regression coverage for the five affected views. It verifies the nested Grid section exists, is not a direct Row child, occupies normal page width, keeps child columns above a sane minimum width, and does not create document-level horizontal overflow.
 
 Guardrails:
-- No framework Grid CSS behavior is changed; this is malformed admin composition, not a framework Grid defect.
-- Do not add an admin-only CSS workaround that makes invalid Row nesting appear to work.
-- Preserve PR #182 component coverage and the 112-page canonical publication set.
+- No framework Grid CSS behavior changed; this was malformed admin composition, not a framework Grid defect.
+- No admin-only CSS workaround was added.
+- PR #182 component coverage and the 112-page canonical publication set remain intact.
+
+Verification evidence:
+- PR #183 implementation head `3957c7c045daf9071673d9ed2c8761df69527f92` passed QXFRAME CI #893.
+- CI #893 passed dependency audit, Completion audit, Full release verification (including the new admin Grid geometry checks), Windows tools, npm pack, standalone dist/docs build and artifact uploads.
 
 Next exact step:
-- Open PR for this branch, run exact-head CI, fix only concrete failures, then merge and verify main CI + Pages.
+- Run exact-head CI for this checkpoint-only commit; when green, merge PR #183 and verify main CI + GitHub Pages deployment.
 
 ### ADMIN-COMPLETE-PRESET-003 — complete admin preset page matrix
 Status: VERIFIED
