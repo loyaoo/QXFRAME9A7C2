@@ -7,17 +7,60 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-28
+- Last checkpoint date: 2026-09-29
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `THEME-PLAYGROUND-REVIEW-824-854`
+- Current Phase: documentation + complete admin template closeout.
+- Current Task: `DOCS-ADMIN-CLOSEOUT-001`
 
 ## CURRENT
+
+### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template
+Status: VERIFIED
+Task progress: 100%
+Branch: `docs/api-admin-closeout-001`.
+Baseline: current `main` after PR #178.
+
+User goal:
+- Finish the user-facing API / METHOD / PARAMS manual and keep it synchronized with the canonical component demos/runtime.
+- Build a complete QXFRAME admin UI template comparable in breadth and shell behavior to a mature iframe-style admin theme, while using QXFRAME's own components/CSS and not copying third-party source.
+- Keep the already verified framework runtime behavior unchanged unless a documentation-only integration exposes a concrete regression.
+
+Frozen implementation decisions:
+- Do not restart Controller/component interaction audits; the framework behavior closeout remains verified.
+- The 66 component HTML pages remain thin shells; API/manual improvements belong in shared docs assets and verification tooling.
+- Existing `docs/admin-dashboard-static.html`, `docs/admin-list-static.html`, and `docs/admin-form-static.html` remain standalone composition demos and become embeddable views for the new admin shell rather than being replaced.
+- The complete admin template gets a dedicated iframe/multi-tab host under `docs/admin/`, with shared shell assets, route/tab lifecycle, theme propagation and responsive sidebar behavior.
+- Third-party layuiAdmin material is reference-only for information architecture and interaction breadth; do not copy proprietary source/assets.
+
+Planned batches:
+1. Docs contract parity: remove stale v2.19.79 labels, expose Params/Props + Methods + Events/Callbacks clearly, add package-version/API-coverage verification, and link the admin template from docs navigation.
+2. Admin shell: iframe multi-tab host, collapsible sidebar, route/hash restore, tab close controls, refresh/theme/user actions and embedded-view bridge.
+3. Admin view matrix: dashboard/list/form plus representative user/role/settings/profile/search/result/auth/error pages using QXFRAME primitives.
+4. Exact-head CI, PR, merge and main Pages verification.
+
+Implemented:
+- Shared component docs now expose the package-aligned v2.19.81 version instead of stale v2.19.79 chrome.
+- All 66 thin component pages continue to share one API data source and one renderer; the renderer now presents Props/Params, Methods with extracted parameter lists/return values, and Events/Callbacks with one searchable reference surface.
+- Added `verify:docs-api` to assert package/docs version parity, all 66 catalog/page/API links, expanded docs API coverage against the generated runtime contracts, and shared renderer/navigation markers.
+- Added `docs/admin/index.html` as the complete multi-iframe admin host with retained tab state, hash routing, tab restore/close controls, refresh/fullscreen/theme actions, responsive/collapsible navigation and child-to-parent route bridging.
+- Existing dashboard/list/form composition demos remain standalone and also support `?embed=1` inside the complete shell.
+- Added real admin pages for orders, users, roles/permissions, media, global search, operation logs, settings, profile, result, 404, 500 and login.
+- Added `verify:admin-template` plus canonical-doc expansion; complete admin pages are now CI-governed publication surfaces.
+- Branch diff is docs/tools/package/checkpoint only; no `src/` or `dist/` framework runtime file changed.
+
+Next exact step:
+- PR #179 exact-head CI #864 passed Windows tools, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build, and the 85-page canonical Chromium browser gate.
+- The API manual now merges all 2,326 canonical runtime parameter rows into the rich manual without overwriting existing curated descriptions; final API data contains 2,835 parameter rows and 310 event/callback rows with zero generated-contract omissions.
+- The complete admin template browser-smoke passed after fixing Dropdown action items to satisfy the canonical value contract.
+- Merge PR #179 to main, then verify main push CI and GitHub Pages deployment.
+
+Next exact step:
+- Merge PR #179, verify the resulting main CI/Pages deployment, then treat this closeout task as complete.
 
 ### THEME-PLAYGROUND-REVIEW-824-854 — merged-change manual review annotations
 Status: VERIFIED

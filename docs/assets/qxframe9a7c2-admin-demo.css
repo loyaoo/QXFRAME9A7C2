@@ -79,3 +79,14 @@ a{color:inherit}
 .admin-table-host>.qxframe9a7c2-table-root{min-width:900px}
 .admin-pagination-host{display:flex;align-items:center;justify-content:flex-end;min-width:0}
 .admin-control>.qxframe9a7c2-input,.admin-control>.qxframe9a7c2-select,.admin-control>.qxframe9a7c2-cascader,.admin-control>.qxframe9a7c2-picker-field,.admin-control>.qxframe9a7c2-tag-input,.admin-control>.qxframe9a7c2-input-number,.admin-control>.qxframe9a7c2-upload{width:100%}
+
+/* Complete Admin Template iframe bridge */
+html.qxframe9a7c2-admin-embedded,html.qxframe9a7c2-admin-embedded body{min-height:100%;height:auto}
+body.admin-demo.is-admin-embedded{overflow:auto;background:var(--_qxframe9a7c2-semantic-subtle)}
+.is-admin-embedded .admin-shell{display:block;height:auto;min-height:100vh}
+.is-admin-embedded .admin-sider,.is-admin-embedded .admin-header{display:none!important}
+.is-admin-embedded .admin-main{display:block;min-height:100vh;overflow:visible!important;padding-top:0!important}
+.is-admin-embedded .admin-content{min-height:100vh;overflow:visible!important}
+.is-admin-embedded .admin-page{min-height:100vh;padding:20px 22px 34px}
+.is-admin-embedded .admin-actionbar{position:sticky;left:0;right:0;bottom:0}
+@media(max-width:720px){.is-admin-embedded .admin-page{padding:14px 12px 28px}.is-admin-embedded .admin-form-layout{grid-template-columns:1fr}.is-admin-embedded .admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}

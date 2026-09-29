@@ -1,6 +1,9 @@
 (function(){
   'use strict';
   var theme=window.QXFRAME9A7C2_DOCS_THEME;
+  var embedded=false;
+  try{embedded=new URLSearchParams(window.location.search).get('embed')==='1';}catch(_){}
+  if(embedded){document.documentElement.classList.add('qxframe9a7c2-admin-embedded');document.body.classList.add('is-admin-embedded');}
   var Q=window.QXFRAME9A7C2;
   var C=Q&&Q.Components;
   var owners=[];
@@ -145,6 +148,31 @@
   function initAuthorAutocomplete(){ var host=byId('admin-author-autocomplete'); if(!C||!C.Autocomplete||!host)return; keep(C.Autocomplete.create({container:host,items:[{key:'liao',value:'廖垚',label:'廖垚 · 超级管理员'},{key:'product',value:'产品运营',label:'产品运营 · 内容组'},{key:'editor',value:'内容编辑',label:'内容编辑 · 编辑组'},{key:'brand',value:'品牌组',label:'品牌组 · 品牌内容'},{key:'channel',value:'渠道运营',label:'渠道运营 · 渠道组'}],defaultValue:'廖垚',trigger:'focus',highlightFirst:true,matchOnly:true,clearable:true,prefix:icon('user',2),placeholder:'搜索作者'})); }
   function initFormDropdown(){ var trigger=byId('admin-save-more'); if(!C||!C.Dropdown||!trigger)return; keep(C.Dropdown.create({reference:trigger,trigger:'click',placement:'top-end',showArrow:true,selectable:false,items:[actionItem('preview','保存并预览','eye'),actionItem('template','另存为模板','copy'),actionItem('schedule','定时发布','calendar'),{key:'form-divider',type:'divider'},actionItem('discard','放弃修改','close')]})); }
 
+  function initEmbeddedBridge(){
+    if(!embedded||window.parent===window)return;
+    function send(payload){
+      var origin=window.location.origin&&window.location.origin!=='null'?window.location.origin:'*';
+      window.parent.postMessage(payload,origin);
+    }
+    document.addEventListener('click',function(event){
+      var node=event.target;
+      while(node&&node!==document&&node.tagName!=='A')node=node.parentNode;
+      if(!node||node===document)return;
+      var href=node.getAttribute('href')||'';
+      if(!/^admin-(?:dashboard|list|form)-static\.html(?:[?#]|$)/.test(href))return;
+      event.preventDefault();
+      send({type:'qxframe9a7c2-admin:navigate',href:href.replace(/[?#].*$/,'')});
+    });
+    window.addEventListener('message',function(event){
+      var data=event.data||{};
+      if(data.type==='qxframe9a7c2-admin:theme'&&theme&&data.mode){
+        theme.setState({mode:data.mode});
+      }
+    });
+    send({type:'qxframe9a7c2-admin:ready',path:window.location.pathname});
+  }
+
+  initEmbeddedBridge();
   initTheme();
   if(!Q||!C)return;
   initNavigation(); initGlobalAutocomplete(); initUserDropdown(); initDashboardDropdown();

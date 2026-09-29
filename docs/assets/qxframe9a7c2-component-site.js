@@ -8,6 +8,7 @@
   var shellOwners = [];
   var shell = { themeButton: null, menu: null };
   var docsTheme = global.QXFRAME9A7C2_DOCS_THEME || null;
+  var docsVersion = String(global.QXFRAME9A7C2_DOCS_VERSION || '2.19.81');
 
   function esc(value) {
     return String(value == null ? '' : value).replace(/[&<>"']/g, function (ch) {
@@ -117,10 +118,10 @@
   function topbar(home) {
     return '<header class="qxframe9a7c2-docs-topbar qxframe9a7c2-layout-header">' +
       '<a class="qxframe9a7c2-docs-brand" href="' + (home ? 'index.html' : '../index.html') + '">' +
-        '<span class="qxframe9a7c2-docs-brand-mark">QXFRAME9A7C2</span><span>QXFRAME9A7C2</span><span class="qxframe9a7c2-docs-version">v2.19.79</span>' +
+        '<span class="qxframe9a7c2-docs-brand-mark">QXFRAME9A7C2</span><span>QXFRAME9A7C2</span><span class="qxframe9a7c2-docs-version">v' + esc(docsVersion) + '</span>' +
       '</a>' +
       (home ? '' : '<div class="qxframe9a7c2-docs-search"><span class="qxframe9a7c2-docs-search-icon" data-qxframe9a7c2-docs-search-icon></span><input type="search" data-qxframe9a7c2-docs-nav-search placeholder="搜索组件 / 功能…"></div>') +
-      '<div class="qxframe9a7c2-docs-top-actions"><a class="qxframe9a7c2-button is-default is-text is-sm" href="' + (home ? 'tokens.html' : '../tokens.html') + '">Tokens</a><a class="qxframe9a7c2-button is-default is-text is-sm" href="' + (home ? 'theme-playground.html' : '../theme-playground.html') + '">Theme Playground</a><span data-qxframe9a7c2-docs-theme-host></span></div>' +
+      '<div class="qxframe9a7c2-docs-top-actions"><a class="qxframe9a7c2-button is-default is-text is-sm" href="' + (home ? 'tokens.html' : '../tokens.html') + '">Tokens</a><a class="qxframe9a7c2-button is-default is-text is-sm" href="' + (home ? 'theme-playground.html' : '../theme-playground.html') + '">Theme Playground</a><a class="qxframe9a7c2-button is-default is-text is-sm" href="' + (home ? 'admin/index.html' : '../admin/index.html') + '">Admin Template</a><span data-qxframe9a7c2-docs-theme-host></span></div>' +
     '</header>';
   }
 
@@ -156,7 +157,7 @@
         '<a href="../tokens.html">Tokens & Theme Reference</a>' +
         '<a href="../theme-playground.html">Theme Playground</a>' +
         '<a href="../all-components-static.html">All Components Static</a>' +
-        '<a href="../admin-dashboard-static.html">Admin Static Demos</a>' +
+        '<a href="../admin/index.html">Complete Admin Template</a><a href="../admin-dashboard-static.html">Admin Static Demos</a>' +
       '</div>' +
     '</aside>';
   }
@@ -182,11 +183,11 @@
     document.title = 'QXFRAME9A7C2 · Components';
     app.innerHTML = '<div class="qxframe9a7c2-layout qxframe9a7c2-docs-app-layout">' + topbar(true) +
       '<main class="qxframe9a7c2-docs-home qxframe9a7c2-layout-content">' +
-        '<section class="qxframe9a7c2-docs-home-hero"><div><div class="qxframe9a7c2-docs-eyebrow">COMPONENTS · LIVE DEMOS</div><h1>组件演示中心</h1><p class="qxframe9a7c2-docs-home-lead">按 Design System → Component → Runtime 分层浏览。每个组件保留独立 live demo、完整 Options / Methods / Events、实时 state 与 event log；Token Reference 直接展示当前 canonical CSS theme/token 链，避免文档与生产 token 再次漂移。</p></div><div class="qxframe9a7c2-docs-home-stat"><strong>' + catalog.length + '</strong><span>独立组件 / Building Block 演示页</span></div></section>' +
-        '<section class="qxframe9a7c2-docs-home-reference"><a class="qxframe9a7c2-docs-home-reference-card is-primary" href="tokens.html"><span class="qxframe9a7c2-docs-eyebrow">DESIGN SYSTEM</span><strong>Tokens & Theme Reference</strong><p>Primary 1–13、MIX Auxiliary 1–13、Neutral 1–13、13 套 physical palettes、semantic、spacing / type / radius / motion / z-index 与 CSS Theme API。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="theme-playground.html"><span class="qxframe9a7c2-docs-eyebrow">LIVE CANVAS</span><strong>Theme Playground</strong><p>实时切换 seed、Neutral policy、字体、圆角与 Light / Dark，观察全部组件继承同一套 public theme contract。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="all-components-static.html"><span class="qxframe9a7c2-docs-eyebrow">STATIC</span><strong>All Components Static</strong><p>查看完整组件 DOM 场景中的 Light / Dark、状态、组合与视觉一致性。</p></a></section>' +
+        '<section class="qxframe9a7c2-docs-home-hero"><div><div class="qxframe9a7c2-docs-eyebrow">COMPONENTS · LIVE DEMOS</div><h1>组件演示中心</h1><p class="qxframe9a7c2-docs-home-lead">按 Design System → Component → Runtime 分层浏览。每个组件保留独立 live demo、完整 Props / Params / Methods / Events、实时 state 与 event log；Token Reference 直接展示当前 canonical CSS theme/token 链，避免文档与生产 token 再次漂移。</p></div><div class="qxframe9a7c2-docs-home-stat"><strong>' + catalog.length + '</strong><span>独立组件 / Building Block 演示页</span></div></section>' +
+        '<section class="qxframe9a7c2-docs-home-reference"><a class="qxframe9a7c2-docs-home-reference-card is-primary" href="tokens.html"><span class="qxframe9a7c2-docs-eyebrow">DESIGN SYSTEM</span><strong>Tokens & Theme Reference</strong><p>Primary 1–13、MIX Auxiliary 1–13、Neutral 1–13、13 套 physical palettes、semantic、spacing / type / radius / motion / z-index 与 CSS Theme API。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="theme-playground.html"><span class="qxframe9a7c2-docs-eyebrow">LIVE CANVAS</span><strong>Theme Playground</strong><p>实时切换 seed、Neutral policy、字体、圆角与 Light / Dark，观察全部组件继承同一套 public theme contract。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="all-components-static.html"><span class="qxframe9a7c2-docs-eyebrow">STATIC</span><strong>All Components Static</strong><p>查看完整组件 DOM 场景中的 Light / Dark、状态、组合与视觉一致性。</p></a><a class="qxframe9a7c2-docs-home-reference-card" href="admin/index.html"><span class="qxframe9a7c2-docs-eyebrow">ADMIN UI</span><strong>Complete Admin Template</strong><p>iframe 多标签后台宿主、折叠菜单、主题同步以及 Dashboard / CRUD / 权限 / 设置 / 结果页等完整业务页面矩阵。</p></a></section>' +
         '<div class="qxframe9a7c2-docs-home-search"><span class="qxframe9a7c2-docs-search-icon" data-qxframe9a7c2-docs-search-icon></span><input type="search" data-qxframe9a7c2-docs-home-search placeholder="搜索组件名称、中文名称或功能（如 popup、range、keyboard）"></div>' +
         '<div data-qxframe9a7c2-docs-home-groups></div>' +
-        '<div class="qxframe9a7c2-docs-home-tools"><a href="tokens.html">Tokens & Theme Reference</a><a href="theme-playground.html">Theme Playground</a><a href="all-components-static.html">All Components Static</a><a href="admin-dashboard-static.html">Admin Static Demos</a><a href="../README.md">README</a></div>' +
+        '<div class="qxframe9a7c2-docs-home-tools"><a href="tokens.html">Tokens & Theme Reference</a><a href="theme-playground.html">Theme Playground</a><a href="all-components-static.html">All Components Static</a><a href="admin/index.html">Complete Admin Template</a><a href="admin-dashboard-static.html">Admin Static Demos</a><a href="../README.md">README</a></div>' +
       '</main></div>';
 
     mountTopbarShell();
@@ -221,7 +222,7 @@
     app.innerHTML = '<div class="qxframe9a7c2-layout qxframe9a7c2-docs-app-layout">' + topbar(false) +
       '<div class="qxframe9a7c2-docs-layout qxframe9a7c2-layout is-horizontal">' + sidebarMarkup() +
         '<main class="qxframe9a7c2-docs-main qxframe9a7c2-layout-content">' +
-          '<section class="qxframe9a7c2-docs-hero"><div class="qxframe9a7c2-docs-eyebrow">' + esc(meta.category) + ' · ' + esc(meta.api === 'BuildingBlocks' ? 'BUILDING BLOCK' : (meta.api === 'CSS' ? 'CSS / DOM' : (meta.api === 'DOMHeadless' ? 'DOM HEADLESS' : 'COMPONENT'))) + '</div><h1>' + esc(meta.name) + '<span class="qxframe9a7c2-docs-cn-title">' + esc(meta.cn) + '</span>' + changeBadge(changeFor(meta), 'is-hero') + '<span class="qxframe9a7c2-docs-release-badge is-hero is-semantic" title="v2.19.79 updates Semantic DOM with independent pseudo-state inspection and Ant-style hover peek.">v2.19.79 · SEMANTIC DOM</span></h1><p class="qxframe9a7c2-docs-lead">' + esc(meta.description) + '</p><div class="qxframe9a7c2-docs-feature-row">' + meta.features.map(function (feature) { return '<span class="qxframe9a7c2-docs-chip">' + esc(feature) + '</span>'; }).join('') + '</div><div class="qxframe9a7c2-docs-runtime-note"><strong>演示原则：</strong> 交互组件直接运行 canonical Runtime；纯视觉/原生语义组件直接使用 HTML + CSS contract，不创建无意义 JS owner。</div></section>' +
+          '<section class="qxframe9a7c2-docs-hero"><div class="qxframe9a7c2-docs-eyebrow">' + esc(meta.category) + ' · ' + esc(meta.api === 'BuildingBlocks' ? 'BUILDING BLOCK' : (meta.api === 'CSS' ? 'CSS / DOM' : (meta.api === 'DOMHeadless' ? 'DOM HEADLESS' : 'COMPONENT'))) + '</div><h1>' + esc(meta.name) + '<span class="qxframe9a7c2-docs-cn-title">' + esc(meta.cn) + '</span>' + changeBadge(changeFor(meta), 'is-hero') + '<span class="qxframe9a7c2-docs-release-badge is-hero is-semantic" title="Current canonical Semantic DOM inspection surface.">v' + esc(docsVersion) + ' · CURRENT</span></h1><p class="qxframe9a7c2-docs-lead">' + esc(meta.description) + '</p><div class="qxframe9a7c2-docs-feature-row">' + meta.features.map(function (feature) { return '<span class="qxframe9a7c2-docs-chip">' + esc(feature) + '</span>'; }).join('') + '</div><div class="qxframe9a7c2-docs-runtime-note"><strong>演示原则：</strong> 交互组件直接运行 canonical Runtime；纯视觉/原生语义组件直接使用 HTML + CSS contract，不创建无意义 JS owner。</div></section>' +
           '<section><div class="qxframe9a7c2-docs-section-head"><div><h2>代码演示</h2><p>按能力拆分的真实交互样例</p></div></div><div id="qxframe9a7c2-docs-demo-grid" class="qxframe9a7c2-docs-demo-grid"></div></section>' +
           '<section><div class="qxframe9a7c2-docs-section-head"><div><h2>运行时观察</h2><p>当前 namespace / instance surface 与实时状态</p></div></div><div class="qxframe9a7c2-docs-observe"><div class="qxframe9a7c2-docs-observe-card"><h3>API Surface</h3><div id="qxframe9a7c2-docs-api" class="qxframe9a7c2-docs-api-list"></div></div><div class="qxframe9a7c2-docs-observe-card"><h3>State Snapshot</h3><pre id="qxframe9a7c2-docs-state" class="qxframe9a7c2-docs-state">等待 Demo 挂载…</pre></div><div class="qxframe9a7c2-docs-observe-card"><h3>Event Log</h3><pre id="qxframe9a7c2-docs-log" class="qxframe9a7c2-docs-log">页面已加载。</pre></div><div class="qxframe9a7c2-docs-observe-card"><h3>Loader</h3><pre class="qxframe9a7c2-docs-api">Module: ' + esc(meta.module) + '\nShell: Layout + Menu + Button/Icon CSS-DOM\nNamespace: ' + esc(meta.api) + '\nDirect file:// compatible: yes</pre></div></div></section>' +
         '</main></div></div>';

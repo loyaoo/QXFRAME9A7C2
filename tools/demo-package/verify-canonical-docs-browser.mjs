@@ -12,16 +12,21 @@ const WebSocketClient=await getWebSocketConstructor();
 
 const componentDir=path.join(root,'docs','components');
 const componentPages=fs.readdirSync(componentDir).filter(name=>name.endsWith('.html')).sort().map(name=>'/docs/components/'+name);
+const adminViewDir=path.join(root,'docs','admin','views');
+const adminViewPages=fs.readdirSync(adminViewDir).filter(name=>name.endsWith('.html')).sort().map(name=>'/docs/admin/views/'+name);
 const pages=[
   ...componentPages,
   '/docs/admin-dashboard-static.html',
   '/docs/admin-form-static.html',
   '/docs/admin-list-static.html',
+  '/docs/admin/index.html',
+  '/docs/admin/login.html',
+  ...adminViewPages,
   '/docs/index.html',
   '/docs/theme-playground.html',
   '/docs/tokens.html'
 ];
-if(componentPages.length!==66||pages.length!==72)throw new Error('[QXFRAME9A7C2 canonical docs browser] expected 66 component / 72 canonical pages.');
+if(componentPages.length!==66||adminViewPages.length!==11||pages.length!==85)throw new Error('[QXFRAME9A7C2 canonical docs browser] expected 66 component / 11 admin view / 85 canonical pages.');
 
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
 function launch(){
@@ -94,7 +99,7 @@ try{
     if(reasons.length)failures.push({page:pathname,reasons});
   }
   if(failures.length)throw new Error('[QXFRAME9A7C2 canonical docs browser] '+JSON.stringify(failures));
-  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,canonicalPages:pages.length,origin}));
+  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin}));
 }finally{
   if(targetId)await cdp.call('Target.closeTarget',{targetId}).catch(()=>{});
   try{cdp.socket.close()}catch{}
