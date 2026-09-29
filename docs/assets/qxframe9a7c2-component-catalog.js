@@ -1,3 +1,4 @@
+window.QXFRAME9A7C2_DOCS_VERSION = '2.19.81';
 window.QXFRAME9A7C2_DOCS_CATALOG = Object.freeze([
   {
     "name": "Button",
