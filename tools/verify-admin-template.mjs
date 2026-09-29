@@ -11,7 +11,7 @@ function hasDirectRowChildOfRow(html){
   const source=String(html||'').replace(/<script\b[\s\S]*?<\/script>/gi,'').replace(/<style\b[\s\S]*?<\/style>/gi,'');
   const stack=[];
   const voidTags=new Set(['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']);
-  for(const match of source.matchAll(/<\/?([a-z][\\w-]*)([^>]*)>/gi)){
+  for(const match of source.matchAll(/<\/?([a-z][\w-]*)([^>]*)>/gi)){
     const raw=match[0],tag=match[1].toLowerCase(),attrs=match[2]||'';
     if(raw.startsWith('</')){
       let index=stack.length-1;
@@ -19,8 +19,8 @@ function hasDirectRowChildOfRow(html){
       if(index>=0)stack.length=index;
       continue;
     }
-    const classText=(attrs.match(/\\bclass\\s*=\\s*["']([^"']*)["']/i)||[])[1]||'';
-    const classes=new Set(classText.split(/\\s+/).filter(Boolean));
+    const classText=(attrs.match(/\bclass\s*=\s*["']([^"']*)["']/i)||[])[1]||'';
+    const classes=new Set(classText.split(/\s+/).filter(Boolean));
     const parent=stack[stack.length-1];
     if(classes.has('qxframe9a7c2-row')&&parent?.classes?.has('qxframe9a7c2-row'))return true;
     if(!voidTags.has(tag)&&!raw.endsWith('/>'))stack.push({tag,classes});
