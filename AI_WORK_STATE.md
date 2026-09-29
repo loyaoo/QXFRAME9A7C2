@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-006 — canonical focus / dynamic item reconciliation / color interaction pressure
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 62%
+Status: VERIFYING_AFTER_TEST_FIX
+Task progress: 68%
 Baseline: `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
 Branch: `audit/ant-edge-state-demos-006`.
 
@@ -50,6 +50,8 @@ Implemented:
 - Added Carousel keyed dynamic-items demo and Chromium regression: reorder preserves active key; removing the active key reconciles by previous visual index and keeps DOM/ValueController aligned. No Carousel runtime change was needed.
 - ColorPanel now cancels active saturation PointerSession and rolls back pending keyboard interaction when entering disabled/readOnly mutation lock. This prevents a stale drag from surviving the lock and committing after re-enable.
 - Added ColorPicker interaction-lock demo and standalone ColorPanel Chromium pointer pressure: preview must roll back on lock and the later stale pointerup must not mutate value.
+- PR #176 CI #851 (Actions run `36507244870`) reached the browser suite but failed before any new semantic assertion: the new standalone ColorPanel smoke used `C.ColorPanel.create`, while ColorPanel is a BuildingBlock exposed as `B.ColorPanel`. This is a test namespace error, not a runtime result.
+- Corrected only the smoke namespace to `B.ColorPanel.create`; OTP/Carousel/ColorPanel assertions and runtime fixes remain unchanged.
 - Round 5 main CI #850 and GitHub Pages deployment completed successfully for `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
 
 Next exact step:
