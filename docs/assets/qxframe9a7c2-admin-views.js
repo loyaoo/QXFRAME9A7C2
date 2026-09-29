@@ -4,6 +4,12 @@ var Q=window.QXFRAME9A7C2,C=Q&&Q.Components,theme=window.QXFRAME9A7C2_DOCS_THEME
 if(!Q||!C)return;
 function own(x){if(x&&typeof x.destroy==='function')owners.push(x);return x}
 function byId(id){return document.getElementById(id)}
+function slot(host,cls){var n=document.createElement('div');if(cls)n.className=cls;host.appendChild(n);return n}
+function button(text,cls){var b=document.createElement('button');b.type='button';b.className=cls||'qxframe9a7c2-button is-default is-outlined is-sm';b.textContent=text;return b}
+function heading(host,textValue){var n=document.createElement('strong');n.className='qx-admin-inline-title';n.textContent=textValue;host.appendChild(n);return n}
+function appendCard(title,id){var root=document.body.firstElementChild;if(!root)return null;var a=document.createElement('article');a.className='qxframe9a7c2-col-24 qxframe9a7c2-card qx-admin-view-card';var h=document.createElement('header');h.className='qxframe9a7c2-card-header';var t=document.createElement('div');t.className='qxframe9a7c2-card-title';t.textContent=title;h.appendChild(t);var b=document.createElement('div');b.className='qxframe9a7c2-card-body';var host=document.createElement('div');host.id=id;host.className='qx-admin-component-host';b.appendChild(host);a.appendChild(h);a.appendChild(b);root.appendChild(a);return host}
+function demoImage(label,color){var svg='<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" rx="24" fill="'+color+'"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="system-ui" font-size="42" font-weight="700">'+label+'</text></svg>';return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
+
 function icon(name){var n=document.createElement('span');n.className='qxframe9a7c2-icon qxframe9a7c2-icon-'+name+' is-line is-round is-stroke-2';return n}
 function badge(text,tone){var n=document.createElement('span');n.className='qxframe9a7c2-badge '+(tone||'is-default');n.textContent=text;return n}
 function route(key){if(window.parent!==window)window.parent.postMessage({type:'qxframe9a7c2-admin:navigate',href:key},'*')}
