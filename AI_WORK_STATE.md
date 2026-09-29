@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-005 — family geometry cleanup / popup renderer pressure
-Status: IMPLEMENTING
-Task progress: 20%
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 60%
 Baseline: `main@7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
 Branch: `audit/ant-edge-state-demos-005`.
 
@@ -50,10 +50,19 @@ Implementation plan:
 - Keep all existing renderer/focus/value ownership; no compatibility layer.
 - Run exact-head CI, fix only reproduced failures, merge/deploy if green.
 
+Implemented:
+- Removed Collapse's duplicated size-specific shared control-height assignments. xs/sm retain only their component-specific inline-padding deltas; all sizes now inherit the shared family/size control-height owner.
+- Added Collapse Theme Playground family-height matrix for xs/md/xl under a 50px family control height.
+- Added Chromium measured-height regression requiring all three Collapse headers to render ~50px under the shared family override.
+- Added Select/Cascader/TreeSelect popupRender primitive/array demos using [origin, primitive, number] output.
+- Added Chromium assertions that each popup keeps its canonical origin content and appends the primitive number through Renderer.
+- null/false popupRender fallback semantics remain unchanged in this round; no user-facing failure was established.
+- Main Round 4 push CI #846 is still being verified in parallel.
+
 Next exact step:
-1. Implement Collapse family geometry cleanup.
-2. Add popupRender pressure demos + Chromium checks.
-3. Run exact-head CI while main #846 deployment is verified in parallel.
+1. Run Round 5 exact-head CI.
+2. Fix only reproduced failures; do not broaden popupRender semantics without evidence.
+3. Merge/deploy if green and record main #846/#Round5 deployment evidence.
 
 ## PREVIOUS VERIFIED HANDOFF
 
