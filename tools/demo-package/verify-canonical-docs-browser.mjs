@@ -189,6 +189,34 @@ try{
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin shell regression '+JSON.stringify(shellValue));
   }
 
+  const adminGridRegression={};
+  for(const name of ['profile','orders','search','settings','users']){
+    await navigateCanonical('/docs/admin/views/'+name+'.html',220);
+    const probe=await cdp.call('Runtime.evaluate',{expression:`(function(){
+      var root=document.querySelector('body.qx-admin-view > .qxframe9a7c2-row');
+      var section=root&&Array.prototype.find.call(root.children,function(node){
+        return node.classList&&node.classList.contains('qxframe9a7c2-col-24')&&node.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-g-4');
+      });
+      var nested=section&&section.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-g-4');
+      var rect=nested&&nested.getBoundingClientRect();
+      var children=nested?Array.prototype.slice.call(nested.children):[];
+      var widths=children.map(function(node){return node.getBoundingClientRect().width;}).filter(function(width){return width>0;});
+      return {
+        found:!!nested,
+        directRowUnderRoot:!!(root&&Array.prototype.some.call(root.children,function(node){return node.classList&&node.classList.contains('qxframe9a7c2-row');})),
+        viewport:document.documentElement.clientWidth,
+        sectionWidth:rect?rect.width:0,
+        minChildWidth:widths.length?Math.min.apply(Math,widths):0,
+        horizontalOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2
+      };
+    })()`,returnByValue:true},sessionId);
+    const value=probe&&probe.result&&probe.result.value||{};
+    adminGridRegression[name]=value;
+    if(!value.found||value.directRowUnderRoot||value.sectionWidth<value.viewport*.72||value.minChildWidth<120||value.horizontalOverflow){
+      throw new Error('[QXFRAME9A7C2 canonical docs browser] admin Grid geometry regression '+name+' '+JSON.stringify(value));
+    }
+  }
+
   await navigateCanonical('/docs/admin-form-static.html',420);
   const popupFieldRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
@@ -308,7 +336,7 @@ try{
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin/Table/CSS regression '+JSON.stringify(tableValue));
   }
 
-  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin,adminShell:shellValue,popupFields:popupFieldValue,tableCss:tableValue}));
+  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin,adminShell:shellValue,adminGrid:adminGridRegression,popupFields:popupFieldValue,tableCss:tableValue}));
 }finally{
   if(targetId)await cdp.call('Target.closeTarget',{targetId}).catch(()=>{});
   try{cdp.socket.close()}catch{}
