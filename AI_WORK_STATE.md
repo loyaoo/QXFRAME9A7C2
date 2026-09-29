@@ -19,37 +19,51 @@
 
 ## CURRENT
 
-### SCROLL-UNIFICATION-005 — unified Scroll ownership + native scrollbar visual parity
-Status: IN_PROGRESS
-Task progress: 20%
+### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 82%
 Branch: `refactor/scroll-unification-005`.
 Baseline: `main@7cbaa7b18d7953c267a8c525eab8ccc6aecb20f1`.
 
-User requirement:
-- Menu, Table and other framework-internal scrollable components should use the framework Scroll component by default instead of exposing independent native-scrollbar implementations.
-- Native scrolling remains the low-level browser mechanism inside Scroll and for CSS-only/fallback surfaces.
-- Any native scrollbar that is not intentionally hidden must share Scroll's track/thumb sizing, radius, colors and hover language rather than maintaining duplicated hard-coded styling.
+User requirements:
+- Runtime components with their own scrollable surfaces should use framework Scroll by default instead of independently exposing native scrollbar chrome.
+- Native scrolling remains the browser physics layer and is allowed for intentional hidden/fallback/CSS-only surfaces, but every visible native track/thumb must consume the same Scroll geometry/color tokens.
+- Select/DatePicker and other Trigger-based popup panels must be correctly positioned on their first visible frame; no end-of-enter horizontal correction/jump.
 
-Audit findings:
-- Already Scroll-owned: WheelPanel, Modal body, Select, Autocomplete, TreeSelect and several ItemCollection-based popup paths.
-- ItemCollection currently enables Scroll only when a caller supplies `scrollAdapter`; plain List/OptionList/default Tree paths can therefore fall back to native scrollbar UI.
-- Public VirtualList currently owns a native overflow viewport directly.
-- Menu popup panels and Table main wrap currently expose native scrollbars.
-- Additional runtime-native overflow exists in Cascader horizontal columns, responsive DatePicker strips, Sort horizontal mode and Upload preview body.
-- Pure-CSS structures such as Layout sider and Descriptions cannot instantiate runtime Scroll and therefore remain native/fallback surfaces.
-- Framework native scrollbar CSS currently copies Scroll geometry with hard-coded `8px / 999px / 1px` values, so custom Scroll geometry can drift from native fallback geometry.
+Implemented Scroll ownership:
+- ItemCollection defaults `scrollAdapter` to `Scroll.attachViewport` unless explicitly opted out with false/null.
+- VirtualList defaults to Scroll ownership and exposes `getScroll()`; ItemCollection virtual mode avoids double ownership by explicitly disabling the nested VirtualList adapter before attaching its outer Scroll.
+- Menu submenu/overflow popup levels are Scroll-owned, with canonical visibility/interaction options.
+- Table now has a dedicated Scroll shell/viewport/content owner; sticky/fixed geometry, ScrollVisibility, virtualizer viewport and scroll policy read/write the new viewport instead of the outer component root.
+- Table filter option lists are Scroll-owned.
+- Cascader horizontal columns are Scroll-owned.
+- Transfer Table host no longer creates a second native scroll owner around its Scroll-owned Table projection.
+- Existing Scroll-owned paths (WheelPanel, Modal body, Select, Autocomplete, TreeSelect and other ItemCollection consumers) remain intact.
 
-Architecture decision:
-- Scroll remains native-scroll-backed internally; do not replace browser scrollTop/scrollLeft physics.
-- Default runtime ownership is Scroll; native overflow is the viewport implementation detail, hidden under Scroll chrome.
-- Preserve explicit opt-out/custom adapter paths where a component exposes them.
-- Pure-CSS/fallback native scrollbars consume the same Scroll geometry/color variables.
+Native fallback parity:
+- Added shared `--qxframe9a7c2-scroll-track-size`, track radius and thumb inset tokens.
+- Native scrollbar size/radius/thumb inset now reference the Scroll tokens instead of duplicating `8px / 999px / 1px`.
+- Native track/thumb/hover continue to consume the same Scroll color tokens.
+- Intentional hidden native viewports remain hidden.
+
+Popup first-frame regression from user video:
+- Frame-by-frame inspection of `PixPin_2026-09-29_19-39-37.mp4` confirmed the DatePicker panel performs an approximately 12px horizontal correction at enter completion.
+- Root cause: Trigger applied popup-placement `scale(.96)` before `runtime.preparePosition()`. Floating UI therefore measured the transformed 96% box; when motion completed at `scale(1)` and auto-update resumed, the full-size measurement changed placement and visibly jumped.
+- Trigger now keeps the floating surface measurable-but-invisible for first positioning, temporarily neutralizes entry motion transform during measurement, computes placement at full geometry, restores the motion transform, then reveals/animates from the already-correct coordinates.
+- This is a Trigger-level fix for Select, DatePicker, Dropdown, TreeSelect, Cascader, Menu popup and other anchored popup consumers rather than per-component patches.
+
+Regression gates:
+- `verify:phase-h-carousel-scroll` now requires default Scroll ownership for ItemCollection/VirtualList/Menu/Table/Table-filter/Cascader and shared native geometry tokens.
+- `verify:phase-h-trigger-controller-family` now requires first-frame visibility gating and transform-neutral full-size placement measurement.
+
+Guardrails:
+- Scroll remains native-scroll-backed internally; do not replace scrollTop/scrollLeft browser physics.
 - Do not introduce per-component scrollbar implementations.
+- Pure CSS/fallback surfaces may retain native overflow, but their visible chrome must match Scroll exactly.
+- Do not disable popup motion to hide the positioning bug; preserve animation and fix measurement order.
 
 Next exact step:
-- Make ItemCollection and VirtualList default to Scroll ownership, then migrate Menu/Table and remaining runtime-native surfaces without breaking virtualization, sticky positioning or focus ownership.
-- Add static/browser regression coverage, run exact-head CI, merge only when green, then verify main CI + Pages.
-
+- Open PR, run exact-head full release CI/browser verification, fix concrete regressions only, then merge and verify main CI + Pages.
 
 ### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
 Status: VERIFIED
