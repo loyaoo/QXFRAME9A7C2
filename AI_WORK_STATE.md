@@ -30,7 +30,7 @@ Previous batch closed:
 - PR exact-head CI #840 passed Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build and artifacts.
 - Round 3 Modal/Drawer leave reversal, live content update, List data-revision anchor invalidation, and Transfer page-3 -> empty-filter -> clear recovery all passed without runtime component changes.
 - Two verifier races were hardened without weakening semantics: Collapse motion checks now wait for observable state/geometry instead of fixed milliseconds, and the 300+ browser regression suite result budget is 30s instead of the previous 12s.
-- main push CI #841 was started after merge and remains the deployment gate for the previous batch.
+- main push CI #841 and deploy-pages both completed successfully for `main@50c372ffd437476c7fa47ee545654b6154859134`.
 
 Round 4 targets selected from Ant 6.6.x regressions that map to QX capabilities:
 1. Select single vs multiple Control geometry under authored family control font-size/height overrides. Both modes must keep the same one-line shell height when tags do not wrap.
@@ -58,3 +58,1604 @@ Next exact step:
 1. Open PR and run exact-head CI.
 2. If geometry/responsive assertions fail, fix the canonical Control/Table owner rather than weakening them.
 3. Merge/deploy when green, then continue with the next unclosed Ant interaction class.
+
+## PREVIOUS VERIFIED HANDOFF
+
+### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
+Status: VERIFIED
+Task progress: 100% for the reported batch
+User verification surface: `docs/theme-playground.html`.
+Current verified main after runtime fixes + browser regression coverage: `bc3e8818f60ea5bb86d526b9fefccdcb9953be4a`.
+
+Merged runtime fixes:
+- PR #152 — TreeSelect `maxCount` projects capacity into check-only disabled capability. At capacity, unchecked choices that would exceed the limit visibly disable their checkbox/check intent while already-selected choices remain removable; parent disclosure/navigation/search remain available. Pages Max count demo text documents the behavior.
+- PR #155 — InputOTP keyboard ArrowRight cannot bypass the canonical first-empty slot. Pointer and keyboard now share the same sequential-fill constraint while completed OTPs remain editable.
+- PR #157 — Picker keyboard/focus closeout:
+  - DatePicker default open region remains the day/date virtual region.
+  - DatePicker Tab cycle is presets → active year → active month → date virtual region → cancel → confirm, so Shift+Tab from the default date region reaches month then year.
+  - Dual-panel DatePicker horizontal navigation crosses the visual seam geometrically on the same rendered row in both directions instead of waiting for calendar month rollover.
+  - ColorPicker with `needConfirm:false` commits current dirty/preview value and closes on Enter; confirm mode remains explicit.
+  - Dropdown item and Picker/Wheel virtual-focus outlines stay 2px but move an extra pixel inward inside clipped scroll viewports so Chromium does not trim the outer edge.
+- PR #158 — Menu interaction closeout:
+  - horizontal root entries use stable intrinsic width so ResponsiveOverflow moves real items into the More submenu instead of flex-shrinking them while the More panel stays empty;
+  - collapsed inline root leaves use framework Tooltip for labels;
+  - collapsed items with children retain submenu Trigger ownership rather than receiving competing tooltip behavior/native title.
+- PR #159 — Carousel keyboard/focus ownership:
+  - root, arrows and dots are not Tab stops;
+  - the active slide outer is the Carousel-level Tab owner;
+  - focusable descendants are available only on the active slide;
+  - direction keys remain Carousel-owned from both the active slide outer and interactive descendants;
+  - keyboard slide changes transfer real focus to the new active slide;
+  - the active-slide focus ring is inset to avoid viewport clipping.
+- PR #160 — Image preview closeout:
+  - component-specific fade states make preview mask opacity visibly animate despite the steady mask-opacity rule;
+  - preview chrome remembers the focused action across media rerenders and restores focus to the equivalent replacement action, so ImageGroup Left/Right navigation continues after the first switch.
+- PR #156 — shared Theme Playground focus/keyboard closeout:
+  - Slider pointer-origin focus no longer shows the keyboard-only outline;
+  - List `hideSelected` reconciles canonical active item after the selected row disappears, allowing immediate repeated Enter selection;
+  - JSON first real focus synchronizes Tree activeKey + VirtualFocus so the first directional key works;
+  - Modal / Drawer body Scroll is not a Tab stop, removing the invisible focus stop after close;
+  - TimePanel/WheelPanel internal Scroll roots remain `tabIndex=-1`; TimePanel outer composite is the sole Tab owner;
+  - Tabs keyboard/Backspace removal prefers the previous enabled tab and restores real focus after the removed DOM disappears;
+  - Collapse supports Tree-style ArrowRight=open and ArrowLeft=close in addition to Enter/Space.
+  Exact integrated head `7d2de0d198556fdf5e2027f09799f4afc51177cf` passed QXFRAME CI #784. The prior head timed out with no failed browser assertions; the integrated rerun passed Full release verification without extending the global browser timeout.
+- PR #161 — real browser regression layer for PRs #158–#160:
+  - horizontal Menu must move real items into a non-empty More panel;
+  - collapsed Menu leaf Tooltip vs submenu ownership is exercised in Chromium;
+  - Carousel direction keys are exercised from both slide outer and inner button after motion completes;
+  - Image preview Right → Left repeated navigation must keep focus on rebuilt equivalent chrome action.
+  First CI #786 exposed a test-timing false positive because the second Carousel key was sent during `waitForAnimate:true`; the test now waits for the first motion. Exact final head `eb81676e9c3f7874916b22d7d892e757c16b39fb` passed QXFRAME CI #787.
+
+Deployment evidence:
+- Runtime-complete main `6fe10afaa6f62b8438de71fd57a1cdf21467fca0` passed push QXFRAME CI #785.
+- CI #785 `deploy-pages` completed successfully, so GitHub Pages serves the runtime fixes from this batch.
+- PR #161 is test-only; it does not alter runtime/CSS/demo behavior.
+
+User-reported batch disposition:
+- TreeSelect Max count disabled projection: closed.
+- Slider pointer outline: closed.
+- InputOTP keyboard bypass of sequential-focus/fill limit: closed.
+- Dropdown / PickerList clipped keyboard outline: closed via inward focus-ring offset.
+- DatePicker Tab order and dual-panel same-row horizontal seam: closed.
+- ColorPicker immediate-mode Enter commit/close: closed.
+- Menu collapsed submenu/Tooltip behavior and Horizontal+Overflow empty panel: closed.
+- Tabs focus after keyboard deletion: closed.
+- List Search+Multiple+Groups second Enter after hideSelected active-row reconciliation: closed.
+- TimePanel internal column Tab stops: closed.
+- Modal / Drawer invisible Scroll Tab stop: closed.
+- Collapse Left/Right disclosure: closed.
+- Carousel focus model and directional navigation from active-slide content: closed.
+- Image preview mask fade and repeated ImageGroup keyboard navigation: closed.
+- JSON first-focus active-key mismatch: closed.
+
+
+### HANDOFF-READY-007 — Ant interaction audit final closeout
+Status: VERIFIED
+Task progress: 100%
+Repository state: PR #137 merged to `main` at `0503df0be2f175a3d6039a1425cc899bd7d7a23e`.
+Closed interaction findings:
+- Slider `step:null` keyboard navigation traverses the ordered discrete points `min + marks + max` instead of adding 1 and snapping back to the same mark.
+- Slider public contract and frozen generated API now consistently allow `number|null` for `step`.
+- Tabs overflow selection arms focus restoration before active-key changes can schedule responsive overflow measurement, eliminating the race that intermittently left focus inside the closing overflow popup.
+Verification:
+- Exact PR head `078d79e24018ab6266665e2c7722029c08605cf9` passed QXFRAME CI #682, including Windows tooling, full release verification, Chromium regressions, npm packing, and standalone dist/docs build.
+- CI #679 on the prior integrated Slider head intentionally blocked merge by exposing the intermittent Tabs focus-return race; the test remained strict and the component ordering was fixed rather than extending sleeps.
+Audit disposition:
+- Current Ant Design interaction comparison is complete for the maintained QXFRAME component surface reviewed in this pass.
+- TreeSelect `maxCount` dynamic visual disabling remains a documented parity/design gap, not an unresolved selection correctness bug: QX enforces the limit through canonical `beforeCheck`, while a safe disabled projection must not alter hierarchical checked/half-checked semantics.
+- Ant-only additions such as Steps `maxCount`, Table grouped headers, Drawer resizable, and InputNumber modifier stepping remain optional enhancements.
+Next exact step: perform user-driven browser/manual verification or a later independent Astra audit; do not reopen the closed findings without new reproduction evidence.
+
+## PREVIOUS VERIFIED HANDOFF
+
+### HANDOFF-READY-006 — Ant interaction audit round 3 closeout
+Status: VERIFIED
+Task progress: 100%
+Repository state: PR #134 merged to `main` at `8a8fcfcc54885a00823f811dc3fe74accfd3e7f0`.
+Closed interaction findings:
+- Modal now honors validated `closable.onClose` on accepted close paths instead of accepting the option and silently dropping the callback.
+- Carousel default arrow glyphs follow horizontal/vertical orientation, and runtime direction changes cannot leave PointerSession locked to the creation-time drag axis.
+- InputOTP custom string masks now project through the existing Control Segments mask layer instead of being collapsed into native password masking.
+Verification:
+- Exact integrated PR head `5ba97c45d37ff8b132b1f7e4fc3ea5f31e55414c` passed QXFRAME CI #673, including full release verification and Windows tooling.
+- PR #134 was rebased onto main after PR #133 WheelPanel downstream-selection preservation merged, so the green gate covered the integrated state.
+Audit disposition:
+- TreeSelect `maxCount` visual disabling remains a design/parity gap, not a safe standalone bug fix: naïve dynamic disabled projection can change hierarchical checked/half-checked normalization. Existing `beforeCheck` enforcement remains canonical until a projection-layer design preserves checkedStrategy/checkStrictly/disabled-node semantics.
+- Ant-only feature additions such as Steps maxCount, Table group headers, Drawer resizable and InputNumber modifier stepping are enhancements, not current QXFRAME interaction bugs.
+Next exact step: finish the remaining Ant Design interaction comparison; only open another fix when a reproducible QXFRAME behavior bug is confirmed.
+
+### HANDOFF-READY-005 — WheelPanel interaction fix merged
+Status: VERIFIED
+Task progress: 100%
+Repository state: PR #133 merged to `main` at `2ca016d08b72a6d2302f4a39a06bc8fe25f77d05`.
+Finding closed: WheelPanel `selectIndex` had cleared every downstream value on upstream selection. TimePanel/TimePicker lost minutes and seconds when hours changed; independent WheelPicker columns also reset.
+Outcome: `src/components/wheel-panel.js` preserves downstream candidate values while `rebuildFrom` revalidates each column. Browser regressions in `tools/verify-browser-smoke.html` cover TimePanel pointer, TimePicker keyboard, independent WheelPicker columns, and dependent column retention/fallback.
+Verification: exact PR head `17fdee81c3ad12ebde57abf40376d2461dcc5bf0` passed QXFRAME CI #665, including full release verification and Windows tooling. Local syntax and diff checks passed; local build lacked a Rollup provider.
+Next exact step: continue the Ant Design interaction comparison across remaining component families, without reopening this fixed WheelPanel finding absent new regression evidence.
+
+### HANDOFF-READY-004 — post Ant interaction audit round 2 closeout
+Status: VERIFIED
+Task progress: 100%
+Repository state:
+- PR #132 merged to `main` at `7013c439a0e9fe1bc407420c852be21ffa58e4c2`.
+- Final PR head `06fb534675e105b890446feae8de2fa20ad6beaa` passed QXFRAME CI #662.
+Closed interaction findings:
+- DatePicker complete ordered range hover/click/keyboard now share one canonical range projection; focusing the end segment cannot change hover semantics away from the current-end anchor.
+- Cascader keyboard Enter routes parent activation through the same `activateAt` path as pointer activation, so `changeOnSelect:true` updates the parent value before entering the child column.
+- Tabs overflow has keyboard navigation and returns focus only after responsive overflow layout completes; it never focuses a hidden main-tab element.
+- Upload `maxCount:1` keeps the trigger available so selecting another file can replace the current file.
+- Pagination quick jumper uses conventional numeric direction: ArrowUp increments and ArrowDown decrements.
+Verification:
+- New Chromium behavior regressions cover all five findings.
+- Existing source-ESM browser fixture was updated for the corrected Pagination direction.
+- Full release verification and Windows tooling passed on exact PR head before merge.
+Next exact step:
+1. Query current `main`, open PRs and latest CI before any new task.
+2. Continue the Ant Design horizontal interaction audit from the remaining component families; do not reopen these five findings unless new evidence shows a regression.
+3. Keep this file current after each merged fix.
+
+## Current authority snapshot — after Phase A
+
+This section is current-state truth. Do not treat earlier Phase A gap findings as still active if they conflict with this snapshot.
+
+- Action/event metadata: `ActionContext` and structured `OperationResult` exist above existing `InteractionDetails`, `OpenStateBridge` and logical events.
+- Value ownership: `ValueController` is the sole canonical committed/draft/preview/rawInput/session/revision authority. `ValueDraft` and `StateController` compatibility aliases are removed; `ControllableStateCore` owns controlled/external-vs-internal and pending-request metadata only. DatePicker / TimePicker / ColorPicker / WheelPicker declare ValueController ownership directly. There is no second committed value.
+- Logical ownership: `LogicalOwnership` remains node/parent-child authority; `LogicalOwnerTree` exists as the shared facade/registry layer.
+- Focus/navigation: `FocusController` is the aggregate entry point over `FocusManager`, `FocusScope`, `KeyboardRegion` and `KeyboardNavigation` virtual focus. WheelPanel / TimePanel / Calendar / PeriodPanel / Select / TreeSelect / Cascader / Menu / Tags / Table enter through it. Underlying ActiveItem/RovingProjection/domain state remains the execution truth. Handbook Phase C Focus scope is accepted.
+- Interaction/capability: `InteractionController` is the semantic key/action + logical scope routing entry and `KeyboardNavigation` consumes its resolver; `CapabilityController` is the component-facing entry over `InteractionPolicy`. Handbook Phase C priority owners are accepted through PR #56 and #58–#61, including Date/Time composites, Menu, Select, TreeSelect, Cascader, Tags and Table.
+- Overlay/open: `OverlayController` is now the resource facade over existing `OverlayRuntime` / `LayerManager` / `DismissableLayer` execution authorities; `OpenStateBridge` remains logical open authority. Trigger is the first representative consumer. OverlayController must not become a second public open-state owner.
+- Form: `FormBridge` remains native field/FormData/reset carrier authority. `FormController` is the accepted Phase G field/form transaction coordinator above it; Phase H public field/form consumers are migrated and H accepted without duplicating carrier/value ownership.
+- Theme/token: Phase F is accepted. CSS is the sole visual authority; ComponentProfile exposes exactly 9 Runtime Controllers and no theme/tokens runtime capabilities. CI recursively rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime and JS projection/reading of the canonical CSS theme selector.
+- Selection/data: `SelectionController` is the accepted Phase D facade over canonical Selection/HierarchicalSelection execution stores. ItemCollection/List/OptionList/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader enter through it; Table remote allMatching is semantic rather than materialized page keys. `ActiveItem`/component navigation remains activeKey authority and public value remains ValueController-owned where applicable.
+- Projection/scheduling: shared `ProjectionScheduler` exists over `Scheduler`, but it is intentionally not inserted into synchronous `DOMProjection` / `RovingProjection` paths until it can replace a real stale/async projection owner.
+- Motion: `MotionController` is the accepted intent facade over canonical `MotionCore`; `Transition` and `TransitionGroup` enter through it while MotionCore remains generation/timing/style authority. Collapse rapid reversal is fixed by stable DOM projection before motion, with no parallel generation or component timer.
+- Environment: `ObserverHub` now delegates Resize/Mutation/Intersection/media environment resolution to shared `EnvironmentPort`; additional ad-hoc environment consumers migrate only when their owning Controller/family is touched.
+- Diagnostics: semantic `Diagnostics` with stable codes is injectable; `Collection` reports duplicate stable keys observationally when a sink is supplied. Further diagnostics adoption occurs with the owning Controller.
+- Component capability declaration: `Component` and `ComponentRuntime` now carry validated immutable `ComponentProfile` metadata; concrete profiles are authored as each family migrates, with no runtime component-name inference.
+- Input modality / focus origin: `InteractionModality` remains the raw device-context authority and exposes touch/programmatic modalities plus the `InputModality` alias; `FocusOrigin` is the Shared Protocol authority for real DOM focus origin; `KeyboardNavigation` / VirtualFocus owns virtual-navigation modality.
+- Shared Protocol verification covers the canonical foundation and Collection/ValueController integration; removed ValueDraft/StateController aliases must not reappear.
+
+## ACTIVE KNOWN ISSUES — NOT DONE
+
+No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
+
+## DONE / VERIFIED EXISTING
+
+### WHEEL-PANEL-DOWNSTREAM-PRESERVE-001 — valid downstream values retained
+Status: DONE_MERGED_VERIFIED
+Evidence: PR #133 merged at `2ca016d08b72a6d2302f4a39a06bc8fe25f77d05`; exact head passed QXFRAME CI #665.
+
+### ANT-INTERACTION-AUDIT-ROUND2-001 — five cross-component interaction fixes
+Status: DONE_MERGED_VERIFIED
+Evidence:
+- PR #132 merged at `7013c439a0e9fe1bc407420c852be21ffa58e4c2`.
+- Exact PR head `06fb534675e105b890446feae8de2fa20ad6beaa` passed QXFRAME CI #662.
+Outcome:
+- DatePicker preview/selection range projection unified.
+- Cascader `changeOnSelect` keyboard/pointer activation unified.
+- Tabs overflow keyboard navigation and post-layout focus return fixed.
+- Upload `maxCount:1` replacement trigger preserved.
+- Pagination jumper ArrowUp/ArrowDown direction corrected.
+- Chromium regression coverage added for all five behaviors.
+
+
+### DATEPICKER-RANGE-REPLACE-001 — end-anchored complete-range replacement
+Status: DONE
+Evidence:
+- PR #131 merged at `f586bb3e01a76e624219d3b3a61314164f90c70a`.
+- CI #652 passed on implementation/test head; CI #653 passed on final PR head.
+Outcome:
+- Complete ordered ranges now preserve two endpoints immediately after selection.
+- Clicking before the current end makes the clicked date the new start and preserves the current end.
+- Clicking on/after the current end promotes the previous end to start and makes the clicked date the new end.
+- The superseded transient unsorted-slot/commit-reorder path was removed; range normalization is single-path again.
+- Current and legacy browser regression fixtures, plus release-preflight approved-difference normalization, encode the same interaction.
+
+
+### DATEPICKER-RANGE-EDIT-PREVIEW-001 — ordered active-endpoint hover preview
+Status: DONE
+Evidence:
+- PR #130 merged at `74559789ea0a9616f8a5909e7f0db9af9257356b`.
+- QXFRAME CI #637 passed on implementation head; CI #638 passed on final PR head.
+Outcome:
+- active range hover preview now projects exactly two visual endpoints and follows `order:true` role swapping across the fixed anchor.
+- browser regression covers editing both start and end across the opposite endpoint.
+
+
+### UX-CLOSEOUT-001 — Picker projection + range controls + component surface regressions
+Status: DONE
+Task progress: 100%
+Evidence:
+- PR #122 is the atomic implementation vehicle; GitHub PR / Actions facts remain authoritative for merge and CI state.
+Outcome:
+- Picker controls stay on one committed-seeded grey draft projection while open; hover preview replaces that projection in-place and falls back to the seeded draft on leave.
+- DatePicker range supports single-input, dual-Control and Segments dual-input control forms.
+- Autocomplete defaults to input-first suggestions with optional openOnFocus.
+- Notification has one shadow-gutter owner and a non-clipping outer stack.
+- Table removes empty title/toolbar/footer shells, the permanent right scrollbar gutter and inappropriate header corner seams.
+- Image preview remains operable after source-load failure, and the canonical demo no longer relies on a broken remote image.
+
+
+### SELF-AUDIT-FOLLOWUP-001 — FocusOrigin handoff + ItemCollection empty-focus edge
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Evidence:
+- PR #119 merged.
+- PR exact head `ce1446f40e73d7cb2b02f7c12dd5b5a564455201`; CI run #599: release success, Windows tooling success.
+- merged main `18830d387a60b53c76c97e54e2ac9cf6700c7baa`; CI run #600: release success, Windows tooling success, Pages success.
+Outcome:
+- related ancestor/descendant pointer focus handoff preserves pointer intent through the ensuing real-focus transition.
+- empty ItemCollection `focusFirst()` / `focusLast()` no longer steals focus or reports success.
+- same-active-item API refocus remains covered and working.
+
+### FINAL-AUDIT-FOCUS-ORIGIN-001 — final audit remediation + Focus Origin unification
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Evidence:
+- PR #118 merged.
+- merge commit `9ecc4dc658fe9319a9febb5e946a1219c525d110`.
+- merged-main run #597: release success, Windows tooling success, Pages success.
+Outcome:
+- A01/A02, B01/B03, A04-A11 and D01/D02 final-audit remediation landed.
+- FocusOrigin is Shared Protocol infrastructure rather than a 10th Runtime Controller.
+- managed focus, async/form lifecycle, runtime cleanup, Windows tool paths, release and legacy browser regressions are required gates.
+
+
+### POST-AUDIT-CORE-INTEGRITY-PERF-003 — shared state integrity + hotpath cleanup
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Scope:
+- Fix confirmed ValueController integrity defects: duplicate normalization, copied reset baseline, public mutable-reference leakage, and stale callback reentrancy events.
+- Fix TimePanel/WheelPanel canonicalization so visual wheel selection and parent value cannot diverge.
+- Remove redundant TimePanel refresh/rebuild work and share pure selectable-time canonicalization across TimePanel/TimePicker/DatePicker without changing wheel/keyboard behavior.
+- Decouple Control visual projection from committed FormBridge synchronization and collapse duplicate FormBridge sync operations.
+- Remove Tree applyOptions duplicate rows/list refresh work.
+- Avoid ItemCollection O(N) row-state refresh on pointermove when hover row did not change.
+- Optimize Scroll snap geometry reads without changing snap semantics.
+Risk policy:
+- Preserve synchronous public API semantics; do not replace immediate projection with requestAnimationFrame/debounce.
+- Do not change commit/draft behavior from PR #115.
+- Do not merge an optimization that changes visible interaction unless it fixes a confirmed bug.
+- WheelPanel same-value hard no-op and VirtualList keyed DOM reuse are deliberately deferred: both alter refresh/DOM lifecycle contracts and need a separate invalidation/reconciliation design before implementation.
+Baseline:
+- base main: `02060d0385dc7f85598361b4b483f8862b2d950e`
+- last code-affecting main: `18a276417a2331b889d3994931f3effb82d9facd`
+- latest verified main CI + Pages: #574 / `36204351824` success
+- open PRs at task start: none
+Implementation evidence:
+- ValueController normalizes once per write, owns a copied normalized reset baseline, isolates public mutable reads, and rejects stale outer publication after callback reentrancy.
+- TimePanel exposes one pure normalizeAvailable rule; TimePicker and DatePicker(time) use the same rule so canonical value, visual wheel selection and FormData start aligned.
+- DatePicker/TimePanel duplicate refresh chains were removed.
+- WheelPicker form reset re-normalizes its baseline against current columns before re-publishing committed/FormData.
+- ColorPicker keeps mode/value invariant for draft writes and separates user-session mode from final external option rebases; reset baseline follows final mode/format configuration.
+- Control caches FormBridge option/value projection so visual-only syncView calls do not recreate hidden form fields.
+- Tree options, ItemCollection pointermove and Scroll snap geometry hotpaths remove confirmed duplicate/O(N) work without changing public timing semantics.
+- Deliberately not implemented: WheelPanel same-value unconditional no-op; VirtualList keyed reuse.
+Verification added:
+- tools/verify-value-controller.mjs
+- tools/verify-core-hotpaths.mjs
+- tools/verify-browser-smoke.html
+CI evidence:
+- PR #116 run #575 / `36212460277` attempt 1 reached core checks but Chrome CDP startup timed out in the existing phase-d Table browser harness (infrastructure failure).
+- PR #116 run #575 attempt 2 started Chrome and passed phase-d Table, then exposed a real ValueController boundary regression in phase-d Tags: optional `previousPreviewValue=undefined` was incorrectly sent through TokenInput's array-only copyValue adapter.
+- fix commit `2008ce5b8fb53e28f2498c0a4ecc4303c44b1b82`: optional undefined event metadata bypasses the value copy adapter; domain values remain copied at public boundaries. Added a strict array-copy adapter regression.
+- PR #116 final exact-head CI #576 / `36212774177`: success, including Full release verification, strict Chromium regressions, npm pack, standalone dist/docs, and artifacts.
+- PR #116 squash merged as `0c40decacebcbd8c35e7c77a2b141a8161adbfd7`.
+- main CI #577 / `36212979450`: release success and deploy-pages success on the merged code.
+Next exact step:
+1. Resume `ASTRA-HIGH-FINAL-ACCEPTANCE` only for newly confirmed findings.
+2. Do not reopen this task unless a new reproducible regression contradicts the verified coverage.
+3. Keep WheelPanel same-value hard no-op and VirtualList keyed reuse deferred until a dedicated invalidation/reconciliation contract makes their interaction risks explicit.
+
+
+### PICKER-VALUE-DISPLAY-UNIFICATION-002 — Picker family visual-value and commit-policy unification
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Scope:
+- Do not treat the migration handbook as infallible; preserve correct shipped behavior and use a single coherent Picker-family rule based on interaction semantics.
+- Closed control/projected value shows committed value only.
+- Open picker shows the current interaction value with priority rawInput -> preview -> draft -> committed; needConfirm affects commit timing, not whether draft is visible.
+- Multiple/tag controls project draft tags while open; the token editor remains raw-input only.
+- External renderControl:false projection follows the same visual-value rule instead of freezing committed value during navigation.
+- DatePicker multiple add/remove while open must participate in draft/confirm/rollback semantics.
+- ColorPicker mode changes must not bypass an open confirm session or lose the current draft.
+- Clear visibility/action must be reconciled with the currently displayed session value rather than stale committed-only state.
+Non-goals:
+- Do not add controlled mode to DatePicker/TimePicker/ColorPicker/WheelPicker merely because an older handbook checklist mentioned it; that is a separate API decision.
+- Do not redesign Tags overflow focus.
+Baseline:
+- branch: `fix/picker-value-display-unification-20260926`
+- base main: `37ae0b84f5de4b12e9552d789586192df77a4527`
+- latest main CI + Pages: #568 / `36158000520` success
+- open PRs at task start: none
+Implementation evidence:
+- PickerComponent now owns one visual projection rule: closed => committed; open => rawInput -> preview -> draft -> committed.
+- needConfirm controls commit timing only; it no longer decides whether the control/valueTarget shows the live draft.
+- built-in Control and renderControl:false authored projection now follow the same open-session visual value.
+- DatePicker multiple add/remove participates in the popup draft transaction and rolls back on Cancel/Escape when confirmation is required.
+- ColorPicker solid/gradient mode changes convert the current draft, do not bypass needConfirm, and restore/advance mode baselines correctly across cancel, commit, clear and external final setValue.
+- Picker-family final-value replacement releases rawInput/preview before replacing committed+draft, without changing global ValueController semantics.
+- clear visibility and clear() changed-result semantics follow the current visual/session value, including draft-only values.
+- the handbook was corrected where the old draftValueTarget/controlled checklist contradicted the accepted interaction model.
+Verification:
+- PR #115 first implementation head `d2797d60003603c08dd27eda75e26e460be99492`: CI #569 / `36202979518` success.
+- PR #115 final exact-head `21a942bfb64b4b9f1fd505626cacee659b699091`: CI #572 / `36203814588` success, including strict Chromium browser regressions, full release verification, npm artifact, and standalone dist/docs build.
+- PR #115 squash merged as `18a276417a2331b889d3994931f3effb82d9facd`.
+- main CI #573 / `36204025514`: release success and deploy-pages success on the merged code.
+Next exact step:
+1. Resume `ASTRA-HIGH-FINAL-ACCEPTANCE` only for newly confirmed findings.
+2. Do not reopen this task unless a new reproducible regression contradicts the verified browser coverage.
+
+
+### PICKER-DRAFT-PROJECTION-001 — Picker family open-session draft projection regression
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Scope:
+- DatePicker multiple control projection must reflect the current open-session draft while committed/FormData remain unchanged until commit.
+- DatePicker needConfirm=false presets must commit immediately and close after a successful complete preset selection.
+- DatePicker needConfirm=true presets update draft and keep the popup open until explicit confirm.
+- TimePicker / ColorPicker / WheelPicker controls must display draft/preview while the popup is open, independent of whether a separate draftValueTarget exists.
+- Escape/cancel/outside-close rollback semantics remain unchanged; close itself never implies commit.
+- Preserve ValueController as the only committed/draft/preview authority and keep external draftValueTarget as an additional projection only, not a reason to suppress control draft display.
+Baseline:
+- merged PR: #114
+- merge commit: `898be09e28d7c7ddcbb9b6af7dafc70385a54be5`
+- PR exact-head CI: #565 / `36156818440` on `0b51167239850bcf7df73c3ddbe3a968cf61c608` — green
+- latest verified code main CI before this task: #560 / `36150117894` green
+Implementation evidence:
+- DatePicker multiple uses draft tags while the token editor remains an editor, not an aggregate-value mirror.
+- DatePicker needConfirm=false preset activation commits then closes independently from ordinary panel closeOnSelect policy.
+- PickerField projects open-session draft text through Control.setInputValue(), so Control state and DOM cannot diverge; tag mode projects through tags instead.
+- TimePicker / ColorPicker / WheelPicker no longer gate open-session draft projection on needConfirm or a separate draft target.
+- production Chromium smoke coverage now checks Date multiple draft/cancel, immediate range preset close, and Time/Color/Wheel open control draft state.
+- browser assertions capture Time/Color/Wheel Control draft state before Enter commit; the earlier post-commit sampling mistake was corrected before acceptance.
+- static Phase-H Picker gate rejects reintroducing draft-target suppression or raw-DOM-only draft projection.
+Verification:
+- PR #114 exact-head CI #565 / `36156818440` on `0b51167239850bcf7df73c3ddbe3a968cf61c608` — success, including full release verification and strict Chromium browser regressions.
+- `main` CI + Pages #567 / `36157349913` on `8e34553795c17e7a38413d22c0a251dfff14b223` — release success and `deploy-pages` success.
+- Main code merge commit remains `898be09e28d7c7ddcbb9b6af7dafc70385a54be5`; this checkpoint update is documentation-only.
+Next exact step:
+1. Resume `ASTRA-HIGH-FINAL-ACCEPTANCE` only for newly confirmed findings.
+2. Do not reopen or reimplement `PICKER-DRAFT-PROJECTION-001` unless a new reproducible regression contradicts the verified browser coverage.
+
+### PHASE-I-001 — release-integrity + Astra High handoff
+Status: DONE
+Evidence:
+- PR #109 merged
+- merge commit `f00455ecd2d1e8274673806fad5d5629fb08803d`
+- exact-head CI #517 / `36112109009`: success
+- main CI + Pages #518 / `36112480912`: success
+Outcome:
+- Phase H profiled/completed target floors are frozen at 40/40.
+- `verify:phase-i-release-integrity` is part of the required verify chain and proves 40-component target/owner parity, 40 H-accepted rows, clean Phase I checkpoint state and canonical release-chain coverage.
+- Table/Phase H acceptance evidence is current and stale H-027/needConfirm checkpoint state is removed.
+- `PHASE_I_ASTRA_AUDIT_HANDOFF.md` contains the requested broad final audit scope and non-goals.
+- migration/release-integrity implementation is complete; broad final audit acceptance remains intentionally pending GPT-6 Astra High.
+
+
+
+### PHASE-H-027 — Table final V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #108 merged
+- merge commit `a331356fcc418f200b58950153beb346aab2e3b9`
+- exact-head CI #515 / `36109887374`: success
+- main CI + Pages #516 / `36111306682`: success
+Outcome:
+- Table declares/consumes exact Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form ownership and intentionally has no Motion owner.
+- explicit selected keys are the canonical ValueController value; SelectionController remains local/remote/allMatching execution/projection authority.
+- controlled selection changes remain proposals until external acknowledgement/sync; form reset preserves the current controlled committed V/S and only resets uncontrolled values/transient form state.
+- filter popup reuses Trigger→OverlayController; remote pending/error enters FeedbackController; FormBridge remains native carrier and FormController owns registration/serialization.
+- prior high-risk Chromium coverage includes uncontrolled/controlled V/S, silent projection rollback, Feedback, Overlay and repeated-entry Form serialization; PR #111 supersedes the old controlled-reset proposal semantics.
+- Table is H accepted; public Phase H component floor is 40/40.
+
+### Phase H — full public component migration
+Status: PUBLIC SURFACE ACCEPTED 40/40
+Evidence:
+- final component PR #108 / exact-head #515 / main + Pages #516
+- `verify:phase-h-target-matrix` + family-specific Phase H gates + browser regressions
+Outcome:
+- all 40 maintained public components match their handbook Runtime Controller target combinations.
+- remaining broad internal-target/final architecture acceptance is delegated to Phase I/Astra High audit and is not silently inferred from the 40/40 public result.
+
+
+
+### PHASE-H-026 — Carousel + Scroll closeout
+Status: DONE
+Evidence:
+- PR #107 merged
+- merge commit `157cf96d119ce50c4dd8a38c02c3782adc99e578`
+- final exact-head CI #510 / `36107647790`: success
+- main CI + Pages #511 / `36108104799`: first release attempt hit the pre-existing Phase E intermediate-frame timing probe; failed-job rerun succeeded including Pages
+Outcome:
+- Carousel declares/consumes exact Value/Focus/Interaction/Capability/Motion ownership.
+- Scroll declares/consumes exact Focus/Interaction/Capability/Motion ownership.
+- Scroll imperative smooth motion enters MotionController while native scroll state remains Scroll execution authority.
+- keyboard/focus/capability paths are browser-gated and no duplicate value/motion authority was introduced.
+- Carousel and Scroll are H accepted; public-component floor is 39/40.
+
+### PHASE-H-025 — Sort + Tabs shared navigation/value closeout
+Status: DONE
+Evidence:
+- PR #106 merged
+- merge commit `26d116b38dac03761a4841c1a5db1806aa11610d`
+- exact-head CI #503 / `36104289572`: success
+- main CI + Pages #504 / `36104608435`: success
+Outcome:
+- Sort and Tabs declare/consume their exact handbook controller targets with ValueController as committed value owner.
+- shared Focus/Interaction/Capability paths replace direct duplicate keyboard ownership; Selection remains projection/execution authority.
+- Sort drag overlay enters OverlayController and motion remains shared MotionController path.
+- Sort and Tabs are H accepted.
+
+
+
+### PHASE-H-025 — Sort + Tabs shared navigation/value closeout
+Status: DONE
+Evidence:
+- PR #106 merged
+- merge commit `26d116b38dac03761a4841c1a5db1806aa11610d`
+- exact-head CI #503 / `36104289572`: success
+- main CI + Pages #504 / `36104608435`: success
+Outcome:
+- Sort declares and consumes exact Value/Focus/Interaction/Capability/Motion/Selection/Overlay ownership.
+- Sort committed order remains ValueController-owned while Collection/ReorderInteraction remain execution authorities; keyboard reorder/navigation enters InteractionController and capability gates, focus/active projection enters Focus/Selection controllers.
+- Tabs declares and consumes exact Value/Focus/Interaction/Capability/Motion/Selection/Overlay ownership.
+- Tabs activeKey remains ValueController-owned with SelectionController projection; direct KeyboardNavigation owner is removed in favor of FocusController-hosted InteractionController semantics.
+- Sort and Tabs are H accepted; accepted public-component floor is 37/40.
+
+
+
+### PHASE-H-024 — Upload V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #105 merged
+- merge commit `fe44fc60d78384b78374cd9d23bd19db8d69ee47`
+- final exact-head CI #501 / `36102589108`: success
+- main CI + Pages #502 / `36102876651`: success
+Outcome:
+- Upload declares and consumes the exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form owners.
+- public committed file-list truth is inherited FieldComponent ValueController; UploadLifecycle remains upload/task execution authority.
+- controlled add/remove/move stay proposals, while explicit lifecycle `set-value` (including clear/public setValue) synchronizes the committed ValueController owner.
+- preview selection, document/media overlay, feedback projection, keyboard open/capability gates and FormController registration are browser-gated.
+- Upload is H accepted.
+
+
+
+### PHASE-H-023 — Image F/I/C/M/O/B closeout
+Status: DONE
+Evidence:
+- PR #104 merged
+- merge commit `b984c6589fbc45f17c90628f474aa6eea173a19a`
+- exact-head CI #496 / `36099779410`: success
+- main CI + Pages #497 / `36100069067`: success
+Outcome:
+- Image declares exact Focus/Interaction/Capability/Motion/Overlay/Feedback ownership.
+- preview keyboard semantics enter one InteractionController and disabled/navigation/edit gates enter one CapabilityController.
+- source pending/error visuals enter FeedbackController; preview resources remain OverlayController and focus scope remains OverlayRuntime→FocusController.
+- mask/content presence remains Transition→MotionController with no component-owned motion generation/timer.
+- source-ESM Chromium proves feedback, overlay/focus scope, motion access, ArrowRight routing and disabled open blocking.
+- Image is H accepted; accepted public-component floor is 34/40.
+
+
+
+### PHASE-H-022 — Transfer V/F/I/C/S/B/R closeout
+Status: DONE
+Evidence:
+- PR #103 merged
+- merge commit `119ad00ef226b2a58d24d1d5e5641d518824b19c`
+- exact-head CI #494 / `36098771206`: success
+- main CI + Pages #495 / `36099068281`: success
+Outcome:
+- Transfer reuses shared FieldComponent Value/Focus/Interaction/Capability/Feedback/Form ownership and one existing multi-channel SelectionController.
+- committed target value remains ValueController-owned; source/target checked channels remain SelectionController-owned projections.
+- native form carrier uses FieldComponent bindFormBridge; no parallel Control.createFormFieldBridge remains.
+- operation keyboard semantics enter InteractionController and disabled mutation blocking enters the bound CapabilityController.
+- local busy/error/warning projection enters FeedbackController.
+- FormController serialization/unregister and per-channel Selection revision behavior are Chromium-gated.
+- Transfer is H accepted; accepted public-component floor is 33/40.
+
+
+
+### PHASE-H-021 — Menu V/F/I/C/S/O closeout
+Status: DONE
+Evidence:
+- PR #102 merged
+- merge commit `2f83d3464a396dd10250be1b3af5fdf0fd1e66ed`
+- exact-head CI #490 / `36096268302`: success
+- main CI + Pages #491 / `36096555627`: success
+Outcome:
+- Menu declares exact Value/Focus/Interaction/Capability/Selection/Overlay ownership.
+- selectedKey(s) canonical state is ValueController-owned; SelectionController selected state is a synchronized projection rather than a second public value owner.
+- direct Selection ownership is removed; FocusController/InteractionController remain the semantic keyboard path and share Menu CapabilityController.
+- submenu/overflow popup resources remain Trigger→OverlayController; Menu does not invent a Motion owner.
+- target-matrix floors are 34 profiled / 32 complete.
+- Menu is H accepted.
+
+
+
+### PHASE-H-020 — Dropdown V/F/I/C/M/S/O closeout
+Status: DONE
+Evidence:
+- PR #101 merged
+- merge commit `5ebdc44be5e2481483ff500291af226b4ed1882b`
+- exact-head CI #487 / `36094628225` attempt 2: success
+- main CI + Pages #488 / `36095210276`: success
+Outcome:
+- Dropdown declares exact Value/Focus/Interaction/Capability/Motion/Selection/Overlay ownership.
+- committed value remains StateController→ValueController; SelectionController owns selected/hierarchy projection and FocusController owns the reference keyboard region.
+- direct Selection/HierarchicalSelection/KeyboardNavigation ownership is removed.
+- PopupComponent→Trigger remains the shared Interaction/Capability/Motion/Overlay path.
+- Dropdown is H accepted.
+
+
+
+### PHASE-H-019 — Ripple I/C/M closeout
+Status: DONE
+Evidence:
+- PR #100 merged
+- merge commit `709e5dc2c6ce3447e138f1a90f548c038b5983f4`
+- exact-head CI #485 / `36093452646`: success
+- main CI + Pages #486 / `36093996030`: success
+Outcome:
+- Ripple declares exact Interaction/Capability/Motion ownership.
+- press semantics enter InteractionController, loading/disabled mutation blocking enters CapabilityController and wave lifetime remains MotionController-owned.
+- direct duplicate authority paths are rejected by the H-019 verifier and Chromium regression.
+- target-matrix floor reaches 33 profiled / 30 complete.
+- Ripple is H accepted.
+
+### PHASE-H-018 — JSON F/I/C/B closeout
+Status: DONE
+Evidence:
+- PR #99 merged
+- merge commit `f4a7f37d31e3685ead3ff911274f87f8a2ed0d4f`
+- exact-head CI #483 / `36092472277`: success
+- main CI + Pages #484 / `36092917404`: success
+Outcome:
+- JSON declares exact Focus/Interaction/Capability/Feedback ownership.
+- root/tree/toolbar focus enters FocusController while KeyboardNavigation remains semantic execution through InteractionController.
+- CapabilityController gates edit/toolbar/copy and FeedbackController projects status only.
+- JSON is H accepted.
+
+
+
+### PHASE-H-018 — JSON F/I/C/B closeout
+Status: DONE
+Evidence:
+- PR #99 merged
+- merge commit `f4a7f37d31e3685ead3ff911274f87f8a2ed0d4f`
+- exact-head CI #483 / `36092472277` attempt 2: success
+- main CI + Pages #484 / `36092917404`: success
+Outcome:
+- direct KeyboardRegion ownership is removed; root/tree/toolbar focus enters FocusController.
+- keyboard semantics remain the existing KeyboardNavigation→InteractionController path.
+- CapabilityController gates edit/commit, toolbar activation and copy.
+- FeedbackController projects root loading/error/warning/success only and does not own JSON business data.
+- exact F/I/C/B profile is gated and strict Chromium verifies focus-region identity, feedback and readOnly/edit behavior.
+- JSON is H accepted.
+
+
+
+### PHASE-H-017 — Steps V/F/I/C/B closeout
+Status: DONE
+Evidence:
+- PR #98 merged
+- merge commit `71687b9057fc25f432d78885821aaf6287734f5f`
+- exact-head CI #481 / `36091760761`: success
+- main CI + Pages #482 / `36092055152`: success
+Outcome:
+- current index remains the public API but canonical state is projected through StateController→ValueController.
+- direct KeyboardNavigation construction is removed; step navigation enters FocusController→KeyboardRegion with shared InteractionController semantics.
+- CapabilityController gates user navigation/click activation while programmatic `setCurrent()` remains available.
+- FeedbackController projects loading/error/warning/success root state without becoming a second business-state owner.
+- exact V/F/I/C/B profile is permanently gated and strict Chromium verifies current sync, arrow navigation, feedback and disabled blocking.
+- Steps is H accepted.
+
+
+
+### PHASE-H-016 — Autocomplete V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #97 merged
+- merge commit `f97417350a24397d95d27e41426d108f12143214`
+- exact-head CI #479 / `36090821302`: success
+- main CI + Pages #480 / `36091284678`: success
+Outcome:
+- Autocomplete keeps one canonical ValueController and reuses inherited FieldComponent/FormController ownership.
+- keyboard/virtual focus enters FocusController; edit/clear/select reuse the PopupField Trigger CapabilityController.
+- OptionList remains the sole SelectionController, local feedback enters FieldComponent FeedbackController, and popup resources remain Trigger→OverlayController.
+- exact V/F/I/C/S/O/B/R profile is gated; direct KeyboardNavigation and duplicate Selection/Feedback owners are prohibited.
+- target-matrix floor reaches 30 profiled / 27 complete.
+- Autocomplete is H accepted.
+
+
+
+### PHASE-H-015 — Tags + TagInput V/F/I/C/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #96 merged
+- merge commit `0d8044846fc3e02977c73d950a5cf88ef3d4159f`
+- exact-head CI #477 / `36089782080`: success
+- main CI + Pages #478 / `36090124257`: success
+Outcome:
+- TokenInput tag list is ValueController-owned; Tags binds exactly one canonical public ValueController per mode.
+- Tags and TagInput share the FieldComponent Focus/Interaction/Capability/Feedback/Form facades and the existing SelectionController/Popover overlay authorities without duplicate projectors or writable value stores.
+- ValueController binding now exposes the read-only canonical controller accessor required to verify owner identity rather than treating the binding wrapper as the owner.
+- strict browser/structural gates verify owner identity, disabled interaction blocking, feedback projection, selection/overlay identity and Form serialization.
+- target-matrix floor reaches 30 profiled / 26 complete.
+- Tags and TagInput are H accepted.
+
+
+
+### PHASE-H-014 — Collapse + Pagination V/F/I/C(+M) closeout
+Status: DONE
+Evidence:
+- PR #95 merged
+- merge commit `865db8e8e2e45d7bd7cd45c1fb54fac58bc59233`
+- exact-head CI #471 / `36088695602`: success
+- main CI + Pages #472 / `36088993467`: success
+Outcome:
+- Collapse declares exact V/F/I/C/M ownership; open-key state remains StateController→ValueController, navigation enters FocusController and activation is capability-gated.
+- Collapse motion remains Transition→MotionController with the existing rapid-reversal fix unchanged.
+- Pagination declares exact V/F/I/C ownership; page state is StateController→ValueController, focus/keyboard region enters FocusController and jumper edit is capability-gated.
+- shared keyboard semantics continue through KeyboardNavigation→InteractionController resolver without a second keydown owner.
+- Collapse and Pagination are H accepted.
+- target-matrix floors are 29 profiled / 24 complete.
+
+
+
+### PHASE-H-013 — InputNumber + InputOTP + Rate + Slider V/F/I/C/B/R closeout
+Status: DONE
+Evidence:
+- PR #93 merged
+- merge commit `5a77fd6a5e7e757ba2f20a552e4cc151305b6891`
+- exact-head CI #467 / `36086835393`: success
+- main CI + Pages #468 / `36087140788`: success
+Outcome:
+- all four components declare the exact V/F/I/C/B/R target through one shared simple-field profile factory.
+- FieldComponent shared Focus/Interaction/Capability/Feedback/Form paths are reused instead of four component-local controller stacks.
+- InputNumber binds the existing NumericInput canonical ValueController and routes Enter/Arrow stepping through InteractionController + CapabilityController.
+- InputOTP routes segment navigation/edit semantics through InteractionController while retaining its canonical ValueController.
+- Rate and Slider retain existing numeric/value execution stores while focus, interaction, capability and feedback become shared controller facades.
+- no duplicate committed value owner or duplicated feedback projector remains.
+- target-matrix floors are 27 profiled / 22 complete after this pack.
+- InputNumber, InputOTP, Rate and Slider are H accepted.
+
+
+
+### PHASE-H-012 — Picker family shared V/F/I/C/M/S/O/B/R closeout
+Status: DONE
+Evidence:
+- PR #92 merged
+- merge commit `120f57d98be4f95da53f5564a6f96332d787c15b`
+- exact-head CI #462 / `36085025052`: success
+- main CI + Pages #463 / `36085329998`: success
+Outcome:
+- DatePicker, TimePicker, ColorPicker and WheelPicker bind their existing picker-session ValueController directly into FieldComponent with no second committed value.
+- PickerField keyboard ownership enters one shared FocusController; the missing local `focusController` declaration found by #460 was fixed and permanently gated before acceptance.
+- PopupFieldComponent exposes canonical Trigger Interaction/Capability/Overlay/Motion facades; PickerComponent shares Field feedback/form without duplicating Control serialization.
+- DatePicker, TimePicker and WheelPicker use stable semantic SelectionController selected-key channels while committed/draft business values remain ValueController-owned.
+- Date/Time selection follows draft/confirm/cancel semantics; Wheel uses column-scoped stable keys; ColorPicker correctly has no SelectionController target.
+- all four public Picker profiles match the handbook target exactly; shared profile factory removes repeated profile regions.
+- `minimumProfiled=23` remains unchanged because the four components already had profiles before H-012; exact completeness is enforced by `verify:phase-h-picker-family`.
+- strict Chromium covers shared V/F/I/C/M/O/B/R, stable S keys, needConfirm separation, feedback, canonical Form serialization, focus declaration and destroy cleanup.
+- DatePicker, TimePicker, ColorPicker and WheelPicker are H accepted.
+
+
+
+### PHASE-H-011 — shared ValueController binding for simple Field consumers
+Status: DONE
+Evidence:
+- PR #91 merged
+- merge commit `3a0d62162a884ec6e9c4b66120f4e974b2665841`
+- exact-head CI #451 / `36082593230`: success
+- main CI + Pages #452 / `36082994382`: success
+Outcome:
+- Autocomplete, InputOTP, Rate and Slider bind their existing canonical ValueController into FieldComponent exactly once.
+- controlled proposal/draft paths do not masquerade as committed Field/Form writes.
+- FieldComponent `detail.sync` is projection-only for consumers that already updated the canonical ValueController.
+- FieldComponent supports a pure external value projector for normalized internal ValueController shapes.
+- Slider canonical state remains the handle array while public Field/Form state is scalar/range; Chromium verifies canonical value, external projection, FormController serialization and destroy unregister.
+- no second committed Field value is restored.
+- these four public components remain pending their remaining Phase H controller-family closeout.
+
+
+
+### PHASE-H-010 — FieldComponent ValueController authority
+Status: DONE
+Evidence:
+- PR #90 merged
+- merge commit `c43f6290bf464420f00d9e6739f75a43a4a68b20`
+- exact-head CI #445 / `36080900679`: success
+- main CI + Pages #446 / `36081202515`: success
+Outcome:
+- FieldComponent's plain committed-value mirror is removed.
+- default FieldComponent value is owned by ValueController.
+- setFieldValue/options sync enter ValueController and FormBridge/FormController project that canonical committed value.
+- components with specialized ValueControllers can bind the same controller into FieldComponent; the external controller remains authoritative and lifecycle ownership is explicit.
+- FieldComponent internal Value path is H-migrated.
+
+
+
+### PHASE-H-009 — Select / TreeSelect / Cascader O/B closeout
+Status: DONE
+Evidence:
+- PR #89 merged
+- merge commit `4ac4187990cf299013d1845eed2926fda412bc67`
+- exact-head CI #442 / `36079189990`: success
+- main CI + Pages #443 / `36079511984`: success
+Outcome:
+- FieldComponent provides one shared local FeedbackController projection over canonical Control state.
+- Select, TreeSelect and Cascader bind visible pending/error/warning state through that shared path; authored state restores on clear.
+- PopupFieldComponent→Trigger remains the sole popup OverlayController resource path.
+- all three declare exact handbook Value/Focus/Interaction/Capability/Selection/Overlay/Feedback/Form profiles.
+- no component-local parallel FeedbackController is added.
+- Select, TreeSelect and Cascader are H accepted.
+
+
+
+### PHASE-H-008 — OverlayFrameShell I/C/B + Modal/Drawer migration
+Status: DONE
+Evidence:
+- PR #88 merged
+- merge commit `c006b036652892ef00fb1d1cfaf3a7434e258971`
+- exact-head CI #440 / `36077958731`: success
+- main CI + Pages #441 / `36078235274`: success
+Outcome:
+- OverlayFrameShell owns one shared InteractionController for close/footer actions.
+- close/footer activation enters PressInteraction/CapabilityController; duplicate direct DOM click semantic owners are removed.
+- AsyncAction remains task owner while FeedbackController owns autoLoading visible projection.
+- Modal and Drawer declare exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback profiles.
+- strict Chromium covers async pending loading, duplicate activation blocking, terminal cleanup and Drawer close PressInteraction.
+- Modal and Drawer are H accepted; OverlayFrameShell action path is H-migrated.
+
+
+
+### PHASE-H-007 — Popconfirm F/I/C/M/O/B migration
+Status: DONE
+Evidence:
+- PR #87 merged
+- merge commit `b6c6cb5404be86856c6897664648e5f7f0d66ff5`
+- exact-head CI #438 / `36076980019`: success
+- main CI + Pages #439 / `36077293582`: success
+Outcome:
+- Popconfirm declares exact handbook Focus/Interaction/Capability/Motion/Overlay/Feedback ownership.
+- Popover→PopupComponent→Trigger remains the sole popup F/I/C/M/O path.
+- AsyncAction remains async confirm task owner; CapabilityController gates confirm/cancel and pending lock.
+- FeedbackController is the sole internal visible pending/loading projector for confirm action state.
+- strict Chromium verifies pending loading, duplicate activation blocking and terminal feedback cleanup.
+- Popconfirm is H accepted.
+
+
+
+### PHASE-H-006 — Tooltip + Popover popup-facade migration
+Status: DONE
+Evidence:
+- PR #86 merged
+- merge commit `7b49dd8d85e51de462b1aad854d94ee0bdfe0925`
+- exact-head CI #436 / `36075356993`: success
+- main CI + Pages #437 / `36075810132`: success
+Outcome:
+- Tooltip no longer accesses LayerManager directly; parent-layer lookup and grouped singleton resource ownership enter OverlayController.
+- Tooltip declares the exact handbook Motion/Overlay profile and retains Trigger as the physical popup/motion authority.
+- PopupComponent exposes inherited Interaction/Capability/Overlay/Motion controller facades from its canonical Trigger.
+- Popover declares the exact handbook Focus/Interaction/Capability/Motion/Overlay profile and consumes those authorities through PopupComponent→Trigger.
+- strict Chromium preserves Tooltip singleton switching and verifies Popover inherited controller facade identity.
+- Tooltip and Popover are H accepted.
+
+
+
+### PHASE-H-005 — Trigger F/I/C/M/O controller-family migration
+Status: DONE
+Evidence:
+- PR #85 merged
+- merge commit `bc56d9cd1377ebd34d5a898413852a2b29a1c180`
+- exact-head CI #434 / `36074443611`: success
+- main CI + Pages #435 / `36074753673`: success
+Outcome:
+- Trigger declares and consumes the exact handbook Focus/Interaction/Capability/Motion/Overlay authorities.
+- Trigger shares one CapabilityController and InteractionController through TriggerInteraction→PressInteraction.
+- OverlayRuntime focus manager/scope resources enter FocusController; direct FocusManager/FocusScope imports are removed.
+- presence remains Transition→MotionController, physical popup resources remain OverlayController→OverlayRuntime, and logical open remains OpenStateBridge.
+- strict Chromium verifies Enter activation through InteractionController and disabled blocking through CapabilityController.
+- Trigger is H accepted.
+
+
+
+### PHASE-H-004 — FieldComponent → FormController shared binding
+Status: DONE
+Evidence:
+- PR #84 merged
+- merge commit `fccf929b03170b9e6eff1331274b7a81b5dfebfb`
+- exact-head CI #432 / `36072251524`: success
+- main CI + Pages #433 / `36072642871`: success
+Outcome:
+- FieldComponent owns the shared FormController registration/notification bridge while FormBridge remains native carrier and ValueController remains value/reset-baseline owner.
+- duplicate-name registration, rename re-indexing, validation, touched, serialization and destroy cleanup are gated.
+- real Chromium Rate consumer verifies bind → dirty/serialize → destroy unregister.
+- ten R-capable public components declare FormController ownership through the inherited FieldComponent path; their remaining Phase H controllers still require final component signoff.
+- FieldComponent internal Form path is H-migrated.
+
+
+
+### PHASE-H-003 — Progress + Result + Loading feedback presenters
+Status: DONE
+Evidence:
+- PR #83 merged
+- merge commit `a7eb78ca9db866acd0bc60f470b241bfe7858bce`
+- exact-head CI #430 / `36071355296`: success
+- main CI + Pages #431 / `36071805997`: success
+Outcome:
+- FeedbackController gained generic local/form/global projector binding without new state ownership.
+- Progress is H accepted for Feedback-only presentation projection.
+- Result is H accepted for Feedback-only result projection.
+- Loading is H accepted for Capability/Motion/Overlay/Feedback; open enters CapabilityController while existing Motion/Overlay authorities remain canonical.
+- strict source-ESM Chromium covers pending/progress/terminal/clear presenter behavior.
+
+
+
+### PHASE-H-002 — NoticeService + Message/Notification M/O/B migration
+Status: DONE
+Evidence:
+- PR #82 merged
+- merge commit `deede43a127e525458c1b3163b24c048881c56dc`
+- exact-head CI #427 / `36029897206`: success
+- main CI + Pages #428 / `36070432617`: success
+Outcome:
+- NoticeService no longer accesses LayerManager directly; notice layer resource ownership enters OverlayController through `createLayerLease()`.
+- NoticeService/NoticeClock remain notice lifecycle/timing authorities and TransitionGroup→MotionController remains presence authority.
+- Message and Notification declare exact handbook Motion/Overlay/Feedback profiles.
+- operation/task-linked global feedback uses FeedbackController identity de-dup while raw Message/Notification APIs remain compatible.
+- Message and Notification are H accepted; NoticeService internal overlay path is H-migrated.
+
+
+
+### PHASE-H-001 — executable 40-component target matrix
+Status: DONE
+Evidence:
+- PR #81 merged
+- merge commit `4c901ed23be08b71e8c938d346f2730060b6d766`
+- exact-head CI #423 / `36028486399`: success
+- main CI + Pages #424 / `36028914790`: success
+Outcome:
+- handbook target Runtime Controller combinations for all 40 public components are machine-readable.
+- the matrix exactly matches the public Components namespace and rejects out-of-target capabilities/controller owners.
+- internal/base migration targets are explicitly ledgered.
+- current missing profile/ownership coverage is reportable without falsely claiming Phase H completion.
+
+
+
+### PHASE-G-001 — FeedbackController + FormController foundations
+Status: DONE
+Evidence:
+- PR #80 merged
+- merge commit `e99cf3aa376277cf4d040c69f51b8c6916869ebe`
+- exact-head CI #421 / `36025556499`: success
+- main CI + Pages #422 / `36026105260`: success
+Outcome:
+- FeedbackController is the operation/task visible-feedback facade; NoticeService/NoticeClock remain global notice/timing execution authorities.
+- feedback identity de-dup is owner + operation + actionId/requestId, with stale generation rejection and identity-preserving updates.
+- FormController owns field registry + dirty/touched/pending/valid + validation/submit/reset coordination without copying the ValueController reset baseline or FormBridge native carrier.
+- fieldId is unique identity and duplicate names serialize independently.
+- async validator and submit completions are stale-safe; reset cancels pending submit/validation work.
+- FormController can represent an explicit adapter-level requested reset, but public controlled value owners do not use reset as an implicit value proposal; their committed value remains owner-controlled.
+- native submit/reset/FormData/reset-cancellation behavior is verified in Chromium.
+
+### Phase G — Feedback + Form
+Status: ACCEPTED
+Evidence:
+- PR #80 / exact-head #421 / main + Pages #422
+- `verify:phase-g-foundation` + strict source-ESM browser gates
+Outcome:
+- all handbook Phase G gates are covered.
+- Phase G acceptance does not claim Phase H/I completion.
+
+
+
+### PHASE-F-008 — runtime profile Theme/Token residue closeout
+Status: DONE
+Evidence:
+- PR #78 merged
+- merge commit `e7903d9ff08ecde8bdb000da64b6a77ceea837f1`
+- exact-head CI #408 / `36021985007`: success
+- main CI + Pages #409 / `36022470128`: success
+Outcome:
+- removed `theme` / `tokens` from ComponentProfile runtime capabilities.
+- removed ThemeController / TokenController from ComponentProfile legal controllers; the runtime controller list is exactly 9.
+- `verify:phase-f-css-authority` now recursively scans all `src/**/*.js` and rejects ThemeController/TokenController/ThemeRuntime/TokenRuntime plus JS use of canonical CSS theme selectors.
+- Shared Protocol gates reject theme/tokens profile fields and theme runtime dependencies.
+- no CSS or component visual implementation changed.
+
+### PHASE-F — CSS Theme / Token System Unification
+Status: ACCEPTED
+Evidence:
+- implementation/closeout PRs #70–#76 and #78; #77 was intentionally closed unmerged after discovering F-008.
+- exact-head CI #392 / #395 / #397 / #399 / #401 / #403 / #405 / #408: success
+- corresponding main release + Pages #393 / #396 / #398 / #400 / #402 / #404 / #406 / #409: success
+Outcome:
+- one canonical CSS Theme/Token authority and one final self-contained `dist/qxframe9a7c2.css`.
+- no ThemeController / TokenController / ThemeRuntime / TokenRuntime and no ComponentProfile theme/token runtime capability.
+- primitive → semantic → family → component → state graph, Light/Dark/scoped theme, semantic overlay/shadow channels and state cascade are required gates.
+- token graph/cycle/reference/color-channel/specificity/duplicate-owner audits are required CI.
+- static no-framework-JS state matrix, scoped portal inheritance, and theme/business-state separation are required CI.
+- Phase F acceptance does not claim Phase G–I completion.
+
+### PHASE-F-007 — static CSS / scoped-theme closeout
+Status: DONE
+Evidence:
+- PR #76 merged
+- merge commit `b764a1a378cf8fc2dde8edc83dc6c0bc4155b3d8`
+- exact-head CI #405 / `36019147203`: success
+- main CI + Pages #406 / `36019711807`: success
+Outcome:
+- `verify:phase-f-static-closeout` requires final dist CSS with no framework runtime JS on the all-components static state matrix.
+- representative visual states remain authored directly in static HTML; docs helpers do not synthesize component state.
+- CSS-only browser coverage proves scoped popup/portal theme inheritance.
+- value/class/open/selected-key/real-focus remain invariant across theme changes.
+- no production component CSS or runtime JS changed in the closeout pack.
+
+### PHASE-F-006 — duplicate CSS owner / dead-rule cleanup
+Status: DONE
+Evidence:
+- PR #75 merged
+- merge commit `108fa1d67d6a129c13f7f9397e11968867a05adb`
+- exact-head CI #403 / `36017571445`: success
+- main CI + Pages #404 / `36018227817`: success
+Outcome:
+- retired duplicate early Control Contract secondary/danger accent owners while keeping the shared Color Variant contract canonical.
+- removed dead Notice passive-scrollbar rules in favor of the canonical hidden-scrollbar Notice viewport.
+- folded ItemCollection/List item gaps and SelectGroup image-grid width into their canonical owner rules.
+- removed the unreachable second Image Preview hidden-state patch.
+- preserved intentional staged Button paint-z, Image Preview motion and JSON refinement rules.
+- required `verify:phase-f-duplicate-owners` prevents the retired owners from returning.
+
+### PHASE-F-005 — repeated compound selector specificity normalization
+Status: DONE
+Evidence:
+- PR #74 merged
+- merge commit `885b5202e69a8b43fe6d82bdbac8839c28aff957`
+- exact-head CI #401 / `36016034020`: success
+- main CI + Pages #402 / `36016716760`: success
+Outcome:
+- four Table expand-trigger selector chains were normalized so one compound no longer repeats the same state atom.
+- declarations and rule order were preserved.
+- required `verify:phase-f-selector-specificity` performs compound-aware duplicate-state detection and does not flag legitimate state constraints on separate relationship compounds.
+
+### PHASE-F-004 — state cascade / specificity ownership closeout
+Status: DONE
+Evidence:
+- PR #73 merged
+- merge commit `cd53968dee909f551bfc1b8ac3ab9d235580d066`
+- exact-head CI #399 / `36014584198`: success
+- main CI + Pages #400 / `36015116050`: success
+Outcome:
+- the late `unlayered overrides (kept last to preserve original cascade strength)` patch bucket is removed.
+- Picker/TimePicker and Table filter rules now live with their canonical component owners.
+- InputGroup stacking resolves through its existing private state channel instead of a duplicate late z-index patch.
+- Card overflow/corner ownership is consolidated in the Card section while the unified keyboard focus/modality contract remains unchanged.
+- required `verify:phase-f-state-cascade` prevents late cascade-patch recovery and owner drift.
+
+### PHASE-F-003 — semantic overlay / shadow color-channel closeout
+Status: DONE
+Evidence:
+- PR #72 merged
+- merge commit `c5f5eb654c20c62b97f32ba0d2f88ba9303ab8d4`
+- exact-head CI #397 / `36012650779`: success
+- main CI + Pages #398 / `36013188043`: success
+Outcome:
+- all post-foundation component/family physical black/white palette consumers were routed through existing semantic overlay-base/overlay-text channels.
+- original alpha and shadow geometry were preserved; ColorPanel HSV/Hue and ColorPicker contrast-stop colors remain classified functional color-model data.
+- required `verify:phase-f-color-channels` forbids new post-foundation physical palette consumption and unexpected component hard-coded colors.
+
+### PHASE-F-002 — canonical CSS token graph closeout
+Status: DONE
+Evidence:
+- PR #71 merged
+- merge commit `85921cfc12e7af95a1b8f64cf54b4dbf6c50056d`
+- exact-head CI #395 / `36011237135`: success
+- main CI + Pages #396 / `36011730662`: success
+Outcome:
+- three real static unresolved references were redirected to existing canonical control/font owners.
+- four JS-owned dynamic CSS variables remain intentionally instance-scoped and are verified against their JS projection owners.
+- the sole custom-property dependency cycle (Scroll edge shadow self-fallback) is removed.
+- duplicate Light/Dark selector members are removed while the symmetric 93-variable mode contract remains unchanged.
+- required `verify:phase-f-token-graph` enforces acyclic token dependencies, unresolved-input classification, Light/Dark symmetry, white/black baseline and output-only compatibility aliases.
+
+### PHASE-F-001 — CSS authority + JS Theme/Token decoupling
+Status: DONE
+Evidence:
+- PR #70 merged
+- merge commit `7c9e9455d7102dc0ba945bb5ab29ea28a5ab827d`
+- exact-head CI #392 / `36009735693`: success
+- main CI + Pages #393 / `36010087461`: success
+Outcome:
+- Core.Config no longer owns or projects Theme/Token state; runtime behavior configuration remains.
+- OverlayRuntime no longer copies theme/token CSS context; Menu runtime theme scopes/options are removed with an explicit migration record.
+- ColorPicker behavioral defaults no longer read CSS token state.
+- `src/qxframe9a7c2.css` is the one physical production CSS authority and the stale split `src/css/00...10.css` mirror is removed.
+- immutable HOTFIX6 API baseline remains untouched; completion audit permits only manifest-authorized `Menu.theme` removal.
+- required CSS-only Chromium gate proves Light white / Dark black / scoped theme resolution without framework JS.
+
+### PHASE-E-005 — Motion closeout
+Status: DONE
+Evidence:
+- PR #69 merged
+- merge commit `b4b1f506d4f14db8f1bd521c9ca4611515a19e5b`
+- PR CI #385 / `36005279398`: success
+- main CI + Pages #386 / `36005795095`: success
+Outcome:
+- Collapse rapid close/reopen no longer resets native autosize transition by re-appending the live section after motion starts.
+- TransitionGroup enters child/move motion through MotionController; MotionCore remains canonical generation/timing authority.
+- Chromium gate verifies live intermediate height, repeated rapid toggles, stable DOM order and final settle.
+- no component-local timer or duplicate motion truth was added.
+
+### PHASE-E — Overlay + Motion scope
+Status: DONE
+Evidence:
+- PR #65 / #66 / #67 / #68 / #69 merged
+- exact-head CI #374 / #376 / #378 / #380 / #385: success
+- merged main CI + Pages #375 / #377 / #379 / #381 / #386: success
+Outcome:
+- OverlayController is the physical resource facade while OpenStateBridge/family adapters retain logical open.
+- Trigger/Popup bases, Modal/Drawer, Image Preview, Loading and Upload preview use the canonical overlay resource path.
+- MotionController fronts MotionCore through Transition and TransitionGroup without a second generation truth.
+- nested/reopen/leave lease, rapid reverse and autosize Collapse regressions are covered.
+- Phase E is accepted; current work advances to pure-CSS Phase F.
+
+### PHASE-E-004 — Remaining direct OverlayRuntime consumers
+Status: DONE
+Evidence:
+- PR #68 merged
+- merge commit `30034b15d1d19acff0c3ff5cef44981568074ffd`
+- PR CI #380 / `35996521940`: success
+- main CI + Pages #381 / `35997097751`: success
+Outcome:
+- Image Preview, Loading and Upload document preview enter physical overlay resources through OverlayController.
+- raw OverlayRuntime getters remain compatibility views of controller.getRuntime().
+- Image and Loading expose their existing MotionController channels; Upload media preview delegates Image and document preview invents no synthetic motion owner.
+- dedicated Chromium coverage verifies resource identity, leave lifetime and cleanup.
+- remaining Phase E blocker is motion closeout, not component OverlayRuntime construction.
+
+### PHASE-E-003 — Modal/Drawer physical Overlay + multi-motion migration
+Status: DONE
+Evidence:
+- PR #67 merged
+- merge commit `7a03e956ed227170418906614294d27964286a33`
+- PR CI #378 / `35995208862`: success
+- main CI + Pages #379 / `35995590673`: success
+Outcome:
+- Modal/Drawer no longer import or create OverlayRuntime directly; physical resources enter through OverlayController.
+- logical family open/close state remains separate from physical overlay state.
+- raw OverlayRuntime callback/getter compatibility is preserved through the controller facade.
+- mask + dialog/panel transitions remain distinct MotionController-backed visual channels.
+- Chromium verifies leave resource lifetime, rapid close→reopen stale-completion safety and final lease release.
+- required `verify:phase-e-modal-drawer` passed.
+
+### PHASE-E-002 — Popup facade propagation + overlay naming closeout
+Status: DONE
+Evidence:
+- PR #66 merged
+- merge commit `a3a8bb87c538741568266d38ee68a540edab99a2`
+- PR CI #376 / `35994260669`: success
+- main CI + Pages #377 / `35994605514`: success
+Outcome:
+- PopupComponent and PopupFieldComponent forward the exact Trigger OverlayController/MotionController identities.
+- Popover/Tooltip/Dropdown/Select browser conformance proves facade identity without duplicate open/value state.
+- OverlayComponent explicitly separates its Modal/Drawer family logical adapter from the physical resource-controller accessor.
+- legacy OverlayComponent accessor names remain compatibility aliases while internal Modal/Drawer code uses explicit family naming.
+- required `verify:phase-e-popup-facades` passed.
+
+### PHASE-E-001 — OverlayController + MotionController foundations
+Status: DONE
+Evidence:
+- PR #65 merged
+- merge commit `a7b6d55ba1fe755adb9409d045e67f12f211ac54`
+- PR CI #374 / `35992315155`: success
+- main CI + Pages #375 / `35992675173`: success
+Outcome:
+- OverlayController delegates to OverlayRuntime and owns no logical-open truth.
+- MotionController delegates to MotionCore and creates no second generation authority.
+- MotionCore exposes canonical generation plus bounded cancel through its existing completion path.
+- Transition is the compatibility facade over MotionController.
+- Trigger enters overlay resources through OverlayController while logical open remains OpenStateBridge-owned.
+- sandbox Chromium verified rapid reverse/cancel and Open/Overlay/Motion three-state resource lifetime.
+- required `verify:phase-e-foundation` plus full release gates passed.
+
+### PHASE-D-005 — Select/TreeSelect/Cascader selection closeout
+Status: DONE
+Evidence:
+- PR #64 merged
+- merge commit `eef0048a5f2c88f1a0e9fcf1de23eb8a064d7c4a`
+- PR CI #371 / `35986798091`: success
+- main CI + Pages #372 / `35990367837`: success
+Outcome:
+- Select exposes/reuses OptionList SelectionController identity without a second selected store.
+- TreeSelect exposes/reuses Tree selected/checked channels from the same SelectionController.
+- Cascader direct Selection/HierarchicalSelection/component-local anchor ownership is replaced by one SelectionController facade.
+- Cascader item replacement/lazy child data changes advance selection data revision and stale anchors invalidate.
+- ValueController and Phase C focus/interaction/capability authorities remain unchanged.
+- required `verify:phase-d-popup-selection` covers source ownership and Chromium identity/revision behavior.
+
+### PHASE-D — Selection scope
+Status: DONE
+Evidence:
+- PR #55 / #57 / #62 / #63 / #64 merged
+- exact-head CI #341 / #344 / #366 / #368 / #371: success
+- main CI + Pages #342 / #345 / #367 / #369 / #372: success
+Outcome:
+- handbook Phase D scope (OptionList/List/Tree, Transfer, Table, Tags, Select/TreeSelect/Cascader) is accepted.
+- multi-channel selection, stable keys, DataRevision-bound anchors, remote allMatching/exclusions, lazy-data revision and no-duplicate-selection-truth constraints are covered.
+- `FOUR_UNIFICATIONS_ACCEPTANCE.md` records D accepted only for public Phase D consumers; later E–I signoff remains pending.
+- Phase D acceptance does not imply overall migration completion; current work advances to Phase E.
+
+### PHASE-D-004 — Tags SelectionController semantics
+Status: DONE
+Evidence:
+- PR #63 merged
+- merge commit `bf3823248a7a5725b20a9711dfc12736bf7ff60e`
+- PR CI #368 / `35985407152`: success
+- main CI + Pages #369 / `35985810168`: success
+Outcome:
+- Tags direct Selection ownership is replaced by one SelectionController selected channel.
+- public controlled/uncontrolled value remains owned by the existing ValueController/StateController binding.
+- item membership/order/value mutations advance selection dataset revision and invalidate stale anchors.
+- controlled proposal/external-sync, FormBridge and Phase C interaction/capability behavior remain intact.
+- required `verify:phase-d-tags-selection` covers controller identity, pruning, revision invalidation and controlled semantics.
+
+### PHASE-D-003 — Table local/remote SelectionController semantics
+Status: DONE
+Evidence:
+- PR #62 merged
+- merge commit `af757cb76c7511c46ae4953da4da718a08a3c20e`
+- PR CI #366 / `35984401592`: success
+- main CI + Pages #367 / `35984812326`: success
+Outcome:
+- TableModel local selected keys are the SelectionController `selected` channel; direct Selection ownership is removed.
+- TableModel dataset DataRevision invalidates stale selection anchors across data mutations.
+- Table remote query-wide selection uses a SelectionController semantic channel with allMatching/queryKey/excludedKeys/knownCount/revision.
+- remote exclusions reuse Selection and allMatching is never materialized as current-page selectedKeys.
+- Table reuses the exact TableModel SelectionController while Focus/Interaction/Capability/Hybrid Edit authorities remain unchanged.
+- required `verify:phase-d-table-selection` covers Node/store identity and Chromium remote-query semantics.
+
+### PHASE-C-004D — Tags/Table Interaction + Capability tail
+Status: DONE
+Evidence:
+- PR #61 merged
+- merge commit `56bbf6698a9116630c37158fbdd9879269c18a25`
+- PR CI #364 / `35981073140`: success
+- main CI + Pages #365 / `35981438989`: success
+Outcome:
+- standalone Tags owns one InteractionController scope + one instance CapabilityController while native input editing remains a separate child edit domain.
+- duplicate Tags root keydown business ownership is removed; printable +Add entry routes through the canonical FocusController/InteractionController path.
+- Table owns explicit main-grid, filter-popup and resize-session interaction scopes with one CapabilityController snapshot.
+- Table native cell editor remains an edit subdomain; filter F6 and resize Escape listeners are delivery surfaces rather than parallel business-key authorities.
+- required `verify:phase-c-tail` gates source ownership plus Chromium behavior.
+
+### PHASE-C-004 — Focus + Interaction + Capability priority scope
+Status: DONE
+Evidence:
+- foundation PR #56
+- owner packs PR #58 / #59 / #60 / #61
+- exact-head CI #343 / #358 / #360 / #362 / #364: success
+- merged main + Pages #346 / #359 / #361 / #363 / #365: success
+Outcome:
+- handbook Phase C priority set (TimePanel, Date Calendar/PeriodPanel, Select, TreeSelect, Cascader, Menu, Tags, Table Hybrid Edit) is accepted.
+- canonical real-focus ownership, scoped semantic interaction, native/IME priority, repeat suppression, Home/End/Page behavior and loading/readOnly/disabled operation gates are covered by required browser/source gates.
+- `FOUR_UNIFICATIONS_ACCEPTANCE.md` records C accepted only for the Phase C priority public components; non-priority rows remain Base/C partial until their owning later phase or final H/I signoff.
+- Phase C acceptance does not imply overall 9-Runtime-Controller completion; current work resumes at Phase D.
+
+### PHASE-C-004C — TreeSelect/Cascader Interaction + Capability owners
+Status: DONE
+Evidence:
+- PR #60 merged
+- merge commit `a2cf08c4777d1afbc94b958cc229415b1ef255a5`
+- PR CI #362 / `35979415228`: success
+- main CI + Pages #363 / `35979815823`: success
+Outcome:
+- TreeSelect/Cascader use explicit InteractionController + CapabilityController ownership.
+- FocusController/KeyboardNavigation is the sole DOM keyboard owner.
+- readOnly/busy browse behavior is separated from mutation authority.
+- Cascader child traversal remains available without leaf commit while locked.
+- legacy duplicate Cascader panel-keydown logic is removed.
+
+### PHASE-C-004B — Select Interaction + Capability reference
+Status: DONE
+Evidence:
+- PR #59 merged
+- merge commit `460895256268187c5a795aa9c7e2348e558239f3`
+- PR CI #360 / `35977872248`: success
+- main CI + Pages #361 / `35978193325`: success
+Outcome:
+- PopupField open lifecycle uses semantic open capability.
+- Select has explicit InteractionController + CapabilityController ownership with one DOM keyboard owner.
+- readOnly/busy browsing remains possible while value mutation is blocked; disabled cannot open.
+- IME, repeat activation, native caret and controlled proposal behavior are required browser gates.
+
+### PHASE-C-004A — Date/Time composite Interaction + Capability owners
+Status: DONE
+Evidence:
+- PR #58 merged
+- merge commit `75d07e96d6648ee2f7a695b05a722b1252817383`
+- PR CI #358 / `35976568725`: success
+- main CI + Pages #359 / `35977068529`: success
+Outcome:
+- WheelPanel / Calendar / PeriodPanel have explicit InteractionController + CapabilityController ownership without a second DOM keyboard listener.
+- TimePanel has local CapabilityController authority and delegates interaction to its canonical WheelPanel scope.
+- DatePicker / TimePicker propagate busy/loading capability state into inner composite panels.
+- readOnly/loading browsing, mutation blocking, disabled blocking, IME pass-through and repeat activation suppression are browser-gated.
+- semantic action-to-key projection is centralized in InteractionController.
+
+### PHASE-C-FOUNDATION — InteractionController + CapabilityController
+Status: DONE
+Evidence:
+- PR #56 merged
+- merge commit `599076ed92b88b2464e45b3a926acbb9324ce757`
+- PR CI #343 / `35972148887`: success
+- joint main CI + Pages #346 / `35973772633`: success
+Outcome:
+- canonical InteractionController and CapabilityController foundations exist.
+- Menu routes semantic keyboard actions through a logical InteractionController scope and held non-navigation activation is repeat-suppressed.
+- DatePicker presets use a FocusController virtual region with one composite Tab stop and arrow/Home/End navigation.
+- CapabilityController provides operation-level semantics while preserving bounded InteractionPolicy compatibility forwarding.
+- `FOUR_UNIFICATIONS_ACCEPTANCE.md` intentionally records Phase C as partial; this foundation entry does not claim full Phase C completion.
+
+### PHASE-D-002 — Transfer multi-channel selection + per-channel DataRevision
+Status: DONE
+Evidence:
+- PR #57 merged
+- merge commit `fb4e5fb5ee8ba8644916431d431de5e18e1edd5a`
+- PR CI #344 / `35972507182`: success
+- main CI + Pages #345 / `35972849325`: success
+Outcome:
+- SelectionController supports channel-scoped revision sources without a second selected-key store.
+- ItemCollection binds Collection revision to its explicit selection channel.
+- Transfer uses one SelectionController with independent `sourceChecked` / `targetChecked` channels.
+- source/target dataset revisions invalidate only their own anchors.
+- final target value/order remains Transfer + targetOrder authority and FormBridge source.
+- structural and Chromium/browser regressions cover single-facade identity, checked-channel independence and per-channel stale-anchor invalidation.
+
+### PHASE-C foundation supplement — InteractionController + CapabilityController
+Status: FOUNDATION DONE / ACCEPTANCE SUPERSEDED BY PHASE-C-004
+Evidence:
+- PR #56 merged
+- merge commit `599076ed92b88b2464e45b3a926acbb9324ce757`
+- PR CI #343 / `35972148887`: success
+- merged main CI + Pages #346 / `35973772633`: success
+Outcome:
+- added CapabilityController as component-facing entry over InteractionPolicy and required structural gate.
+- added InteractionController semantic action/scope routing and canonical keyboard resolver.
+- KeyboardNavigation uses canonical InteractionController key resolution and blocks activation repeat by default.
+- Menu uses an explicit logical InteractionController scope; held Space no longer repeats multiple selection.
+- DatePicker presets use one virtual-focus region and dual-panel drill first-arrow regressions are covered.
+- owner-by-owner Phase C priority acceptance is now complete in PHASE-C-004; this foundation supplement is retained only as historical evidence.
+
+### Repository branch cleanup
+Status: DONE
+Evidence:
+- audited 68 branches against current main and all PR associations.
+- PR #56 was the only remaining useful independent line and was merged before cleanup.
+- closed/merged/superseded historical fix/staging branches were removed by a one-shot temporary Actions branch.
+- cleanup run #3 / `35974049408`: success.
+Outcome:
+- repository branch count reduced from 68 to 1.
+- only `main` remains.
+- the temporary cleanup branch deleted itself and no cleanup workflow was merged into main.
+
+### PHASE-D-001 — SelectionController foundation + ItemCollection/List/OptionList/Tree first pack
+Status: DONE
+Evidence:
+- PR #55 merged
+- merge commit `2933f1feae0b6bf6891f4db5fe578984aca8aa54`
+- PR CI #341 / `35970615817`: success
+- main CI + Pages #342 / `35970931277`: success
+Outcome:
+- SelectionController composes canonical Selection / HierarchicalSelection stores and revision-bound anchors without a second selected-key store.
+- Selection uses shared DataRevision for reentrant/stale mutation protection and exposes revision refs.
+- ItemCollection/List/OptionList route selection through SelectionController while retaining raw Selection compatibility.
+- Tree uses one controller with independent selected/checked channels and shares the selected channel with its ItemCollection.
+- ActiveItem remains the sole activeKey owner.
+- required structural gate and browser regressions cover single-store identity, selected/checked separation and stale-anchor invalidation.
+- sandbox targeted gates passed before merge: verify:selection-controller, verify:shared-protocol, verify:collection-family, verify:architecture.
+
+### PHASE-C-003 — Table Hybrid Edit focus lease
+Status: DONE
+Evidence:
+- PR #54 merged
+- merge commit `37a506d3c6dc2bfdfe3e00a059e7f0fb9970bd49`
+- PR CI #337 / `35965963724`: success
+- main CI + Pages #338 / `35966293514`: success
+Outcome:
+- Table root keyboard navigation enters through FocusController with the existing F6/arrows/Home/End/Page/Enter/Space/F2 keymap preserved.
+- cells/header virtual domains use FocusController canonical binding with existing reconcile/visibility algorithms intact.
+- Hybrid Edit keeps editTransaction as draft/validate/save/cancel authority; FocusController owns only the root-to-editor real-focus lease.
+- Escape rollback restores initial editor value, releases the lease and returns focus to the Table root.
+- native textarea/contenteditable Enter remains editor-owned; readOnly/disabled/loading mutation gates remain Table/InteractionPolicy owned.
+- Table ComponentProfile declares FocusController ownership only; Table selection remains deferred to Phase D.
+- browser coverage verifies lease acquire/release, rollback/root return, native Enter and readOnly/disabled blocking while retaining virtual-scroll edit survival.
+
+
+### PHASE-C-002 — Popup-hosted + standalone composite focus migration
+Status: DONE
+Evidence:
+- PR #53 merged
+- merge commit `6bb926b93c4f0f16dae042cc41f8426bf77d4733`
+- PR CI #335 / `35962474270`: success
+- main CI + Pages #336 / `35962763162`: success
+Outcome:
+- Select / TreeSelect / Cascader editable hosts enter through FocusController with `manageTabIndex:false`, preserving Control/Field tabindex ownership.
+- Menu root uses FocusController and canonical domain binding while retaining existing menu keymap/typeahead/disclosure behavior.
+- Tags standalone root uses FocusController; TagNavigation remains canonical tag-domain behavior owner.
+- Tags +Add editor uses FocusController edit lease and releases it on all existing add-exit paths.
+- browser coverage verifies popup real-focus retention + one ring, Menu root ownership and Tags lease acquire/release.
+
+
+### PHASE-C-001 — FocusController foundation + Time/Date composite regions
+Status: DONE
+Evidence:
+- PR #52 merged
+- merge commit `a1f19b25ceb2de4ef238e5bbc7d3c4c250c366b0`
+- PR CI #333 / `35960898199`: success on attempt 2
+- main CI + Pages #334 / `35961330135`: success
+- #333 attempt 1 failed only the unrelated high-risk NoticeClock explicit-realm timing check; identical HEAD passed on retry, so runtime was not changed.
+Outcome:
+- added FocusController as facade over existing focus authorities with no second DOM-focus/domain engine.
+- TimePanel root is the sole real-focus/Tab owner; inner WheelPanel is hosted/non-tabbable and the active wheel item owns the visible ring.
+- Calendar / PeriodPanel / WheelPanel use the FocusController entry path and canonical virtual-domain binding.
+- DatePicker-hosted Calendar keeps real focus on the editor with one virtual cell ring.
+- canonical root outline duplication was removed.
+- frozen HOTFIX6 artifact remains unchanged; a Phase-C derived compatibility smoke differs in exactly the two superseded TimePanel focus-owner checks, enforced by release-preflight.
+
+
+### PHASE-B-002 — ValueController + picker-like popup second migration pack
+Status: DONE
+Evidence:
+- PR #51 merged
+- merge commit `7f3a475565fec5548871e7c6c52a7ed8c0e945bc`
+- PR CI #326 / `35958353342`: success
+- main CI + Pages #327 / `35958853046`: success
+Outcome:
+- `ValueController.createValueBinding()` and `createOptionValueBinding()` are canonical; StateController is compatibility forwarding for these helpers.
+- Select / TreeSelect / Cascader use ValueController directly for controlled/defaultValue binding.
+- Autocomplete uses ValueController directly for committed/draft value.
+- all four declare explicit ValueController ComponentProfile ownership while retaining existing Search/Selection/Tree/OptionList focus authorities.
+- structural and browser gates preserve controlled proposal/external-sync and uncontrolled defaultValue semantics.
+
+
+### PHASE-B-001 — ValueController + Picker Family first migration pack
+Status: DONE
+Evidence:
+- PR #50 merged
+- merge commit `be2263e5c9cd388efe42142cfa28657fe0c8f5b4`
+- PR CI #324 / `35957442947`: success
+- main CI + Pages #325 / `35957755294`: success
+- CI #322 initially failed only because TimePicker/WheelPicker duplicated the same scoped Enter-confirm block; the implementation was centralized in `PickerComponent.confirmFromKeyboard()`, then Completion audit and full release passed.
+Outcome:
+- canonical `ValueController` owns committed/draft/preview/rawInput/session/revision channels; `ValueDraft` is its compatibility alias.
+- `PickerSession.close()` no longer performs hidden dirty commit; uncommitted draft rolls back by default.
+- DatePicker / TimePicker / ColorPicker / WheelPicker create ValueController directly and declare ComponentProfile ownership.
+- Date/Time raw input and hover preview are controller channels; ColorPicker hot-path interaction is preview-first and promotes to draft on completion.
+- scoped Enter confirmation is shared by PickerComponent and used by TimePicker / ColorPicker / WheelPicker only in their open confirm session.
+- browser coverage verifies draft projection without FormData commit, Esc rollback, immediate preset commit, and scoped Enter confirm.
+
+### PHASE-A-003 — EnvironmentPort / Diagnostics / ComponentProfile authority adoption
+Status: DONE
+Evidence:
+- PR #49 merged
+- merge commit `b2ecdb4e33bea642932092693d0ad5a8a47fd4e3`
+- PR CI #320 / `35955216461`: success
+- main CI + Pages #321 / `35955524890`: success
+- PR CI #317 initially failed only the existing platform fail-closed source contract; implementation was corrected so observer constructors remain in the resolved document/window realm and `ObserverHub` retains an explicit fail-closed guard.
+Outcome:
+- `ObserverHub` delegates observer/media environment resolution to `EnvironmentPort` while retaining scheduling/statistics ownership.
+- `EnvironmentPort` covers validated IntersectionObserver construction and no longer leaks observer constructors across resolved realms.
+- `Diagnostics` is injectable and `Collection` can report duplicate stable keys without mutating data state.
+- `Component` / `ComponentRuntime` carry normalized `ComponentProfile` metadata; adapters forward only explicitly authored profiles.
+- no first-wave Picker business behavior was changed in Phase A.
+
+
+### PHASE-A-002 — Shared Protocol authority integration
+Status: DONE
+Evidence:
+- PR #48 merged
+- merge commit `01875c583fe99c47ee249a4e9eeb6e86304f23f2`
+- PR CI #315 / `35953604691`: success
+- main CI + Pages #316 / `35953925660`: success on attempt 2
+- attempt 1 failed only `tabs-indicator-measured` with an empty inline width while the identical code passed PR #315; retry of the identical main commit passed. Treat this as a recorded browser timing flake, not a framework semantic failure.
+Outcome:
+- `Collection` now uses `DataRevision` as stale-transaction revision authority.
+- `ValueDraft` delegates controlled/external ownership and pending-request metadata to `ControllableStateCore`.
+- `StateController.createValueBinding` exposes delegated ownership state without adding a second value truth.
+- `verify:shared-protocol` covers Collection stale refs/reentrancy plus controlled proposal/external sync/uncontrolled transition behavior.
+- ProjectionScheduler adoption was explicitly deferred because current DOM/Roving projection paths are synchronous and no competing async revision owner exists to replace.
+
+### PHASE-A-001 — Baseline inventory + Shared Protocol foundation
+Status: DONE
+Evidence:
+- PR #47 merged
+- merge commit `51b7f317037fc538beaadc6f710da077a8429d0f`
+- PR CI #312 / `35952642035`: success
+- main CI + Pages #313 / `35952965100`: success
+Outcome:
+- existing authorities were mapped before adding Controller abstractions;
+- added `ActionContext`, `OperationResult`, `ControllableStateCore`, `DataRevision`, `EnvironmentPort`, `ProjectionScheduler`, `Diagnostics`, `ComponentProfile`, `LogicalOwnerTree`, `InputModality` alias and Shared Protocol exports;
+- no direct component migration was performed.
+
+### OPS-001 — AI persistent state + repository documentation cleanup
+Status: DONE
+Evidence:
+- PR #46 merged
+- merge commit `a459e28f2486ce89615322c6e49094fddd8464a4`
+- PR CI #307: success
+- main CI + Pages #308: success
+Outcome:
+- added `AGENTS.md`, `AI_WORK_STATE.md`, and the complete master handbook;
+- removed obsolete historical migration/stage/audit files;
+- retained required HOTFIX6 compatibility artifacts only as `tools/fixtures/legacy-hotfix6/**`;
+- removed numbered Stage navigation from canonical docs.
+
+### CTRL-LEGACY-001 — Cascader controlled value
+Status: DONE
+Evidence:
+- PR #36 merged
+- merge commit `1ce69ad304088f0910993229426ba1a843b3d1fd`
+- shared StateController option-value binding; controlled proposal/external sync and uncontrolled defaultValue coverage
+
+### CTRL-LEGACY-002 — TagInput controlled value
+Status: DONE
+Evidence:
+- PR #39 merged
+- merge commit `6357bc0b88c72f2dd777641b942a97c48929a3d8`
+
+### CTRL-LEGACY-003 — Collapse controlled value
+Status: DONE
+Evidence:
+- PR #41 merged
+- merge commit `20327c0d717a3a56a45e098d756e40eb9ae8c743`
+Note:
+- controlled ownership is done;
+- rapid autosize animation reversal remains an active Motion issue.
+
+### CTRL-LEGACY-004 — Dropdown controlled value
+Status: DONE
+Evidence:
+- PR #43 merged
+- merge commit `e2300ff0eb59fca8621218930fe6343f41c56309`
+
+### CTRL-LEGACY-005 — Upload controlled file-list membership/order
+Status: DONE
+Evidence:
+- PR #45 merged
+- merge commit `a7702a2a66a2f201d1152c23c5d20ff1b1e9607e`
+- UploadLifecycle remains runtime status/progress authority.
+
+### FOCUS-LEGACY-001 — prior DatePicker/TimePanel focus cleanup
+Status: VERIFIED_EXISTING, NOT SUFFICIENT FOR CURRENT QA
+Evidence:
+- PR #27 merged
+- merge commit `6558fc5d1d008725a43a40fa869a0f9ba69cd367`
+Rule:
+- do not repeat the old investigation from zero;
+- PHASE-C-001 superseded the remaining TimePanel owner defect; reopen only if a new reproducible regression appears.
+
+## DO NOT REDO
+
+Unless a current regression or architecture migration invalidates the evidence:
+
+- Do not redo the original 17-component controlled/defaultValue survey from zero.
+- Do not recreate the completed ESM/src-to-dist migration as a new migration project.
+- Do not restore `src/modules`, runtime Registry dependency lookup or old monolithic source architecture.
+- Do not recreate Shared Protocol primitives already landed in PHASE-A-001.
+- Do not re-run PHASE-A-002 authority ownership analysis from zero; only inspect impact when PHASE-A-003 touches those authorities.
+- Do not reintroduce numbered Stage documentation as a second canonical docs tree.
+- Do not re-open completed controlled semantics merely because a new Controller is being introduced; migrate the existing contract and test it.
+- Do not treat deleted historical audit/log files as active requirements. Git history is the archive.
+- Do not convert the recorded #316 attempt-1 Tabs timing flake into a framework change unless it reproduces with evidence.
+
+## PAUSED
+
+None.
+
+## BLOCKED
+
+None.
+
+## Frozen decisions
+
+- One owner / one truth; projection is not a second writable truth.
+- The 9 Runtime Controllers reuse/evolve existing mature authorities rather than duplicating them.
+- Shared Protocol Layer is infrastructure, not a 12th business Controller.
+- Controller code must not branch on component names.
+- Interaction routing is scoped/logical-owner based, not one global keydown handler.
+- Enter and Space are context/profile dependent; they are not globally equivalent.
+- Multiple checkbox primary toggle uses Space within its composite keymap; navigation/activation semantics remain profile-scoped.
+- Picker close is not an implicit commit. Escape/cancel rolls back uncommitted draft.
+- Tags overflow summary is intentionally non-focusable/hover-only; do not place it in the main Tags virtual-focus sequence without an explicit full popup-focus redesign.
+- Complex composite regions use one canonical real-focus host plus virtual focus unless a native/hybrid-edit profile explicitly leases real focus.
+- Current Git source/tests/manifests are preserved while migrating; do not roll back later fixes to match an old document snapshot.
+
+## Checkpoint maintenance rule
+
+Keep this file compact and non-contradictory:
+- `CURRENT` contains exactly one active/ready Task ID plus one exact next step.
+- Current authority facts belong only in `Current authority snapshot`.
+- When a gap is resolved, replace its old current-state wording; do not leave both “does not exist” and “added” statements in active sections.
+- `DONE` retains Task ID + outcome + PR/commit/test/CI evidence, not the full historical investigation.
+- Historical findings that are no longer current truth move to DONE evidence or Git/PR history.
+- Never append a second CURRENT task at the bottom of the file.
+
+
+## UX-REGRESSION-002 — Picker projection / component surface regressions (2026-09-27)
+
+- Status: **VERIFIED — READY TO MERGE**
+- Baseline: `main@fc5fa38a9353bba92910f88cb94a87445c0a2b64` (post UX-CLOSEOUT-001)
+- Branch: `fix/ux-regression-002-picker-surfaces`
+- User evidence: current canonical demos plus uploaded picker/table recordings and table screenshots.
+- Scope:
+  - Picker Control projection must derive visual mode from the active ValueController projection channel; opening alone must not turn an unchanged committed value into a grey draft, while real draft/hover preview must stay projected continuously in-Control.
+  - DatePicker range keeps three canonical built-in forms: single input, dual independent Controls, and one segmented Control with two inputs.
+  - Autocomplete remains input-first by default: focus/click/Tab do not open; actual user input may open; `openOnFocus:true` is explicit opt-in.
+  - Notification keeps one spacing/shadow-gutter owner and no clipping ancestor that cuts normal card elevation.
+  - Table optional title/toolbar/footer chrome must detach when empty; scrolling must not create a false right padding/gutter; table cell corner radii must flatten against adjacent chrome.
+  - Image preview must open on the first user/API activation independently of source load/error state; the normal canonical demo must not require a “break src” step.
+- Guardrails: preserve ValueController as sole value owner, preserve existing focus/navigation semantics, add browser-visible regression coverage before merge, then verify exact-head PR CI before merge.
+
+- Implementation checkpoint: picker grey-state is now projection-channel driven (draft/preview only); DatePicker single/dual/segments range forms are browser-locked; Autocomplete input-first default is browser-locked; Notification stacked viewport is shadow-safe with a single edge-gutter owner; Table empty chrome/right gutter/corner seams are regression-locked; Image first activation is tested before load settles and after error, and the canonical demo no longer requires a break-src button.
+- Verification: PR #123 exact implementation head `0d3ccad11c44b7418a9498191e12af7cae315c34` passed QXFRAME CI run #617: dependency audit, completion audit, full release verification, npm pack, standalone dist/docs build, artifact upload, and Windows tools all succeeded. This status-only checkpoint is the sole change after that verified implementation head.
+
+
+## IMAGE-PREVIEW-MOTION-001 — Image preview trajectory continuity (2026-09-27)
+
+- Status: **VERIFIED — READY TO MERGE**
+- Baseline: `main@7c18b8a55792e3a86ba9fa0127c43ed9263f4b27`.
+- Verification: PR #125 implementation head `43ccfd17cd94415226be26e921a76fa0585679a1` passed QXFRAME CI #621 including full release verification, standalone dist/docs build, artifact packaging, and Windows tools. This status-only checkpoint is the only change after that verified implementation head.
+- User evidence: PixPin_2026-09-27_18-31-14.mp4 showed the preview copy changing size at the enter/leave boundary and a visible source/preview overlap on close.
+- Root cause: the trajectory phase locked `previewMotion` to viewport-derived pixel geometry, then `onAfterEnter` released that lock into `.qxframe9a7c2-image-preview-image { max-width:94%; max-height:92%; }`, whose percentages were relative to the auto-sized motion wrapper rather than the viewport. Closing locked the geometry again, producing another size jump. In addition, the authored source image was made visible at leave start while the preview copy was still travelling back to it.
+- Fix: settled Image preview sizing now uses `94vw / 92vh`, matching the trajectory viewport basis; trajectory content is transform-only while the mask owns fading; the authored source stays hidden until `finalizePreviewLeave()`; closing resets inner zoom/pan/rotate/flip while the outer copy returns to the source.
+- Non-goals: no Image public API, OverlayController, TransformModel, media preview, focus, keyboard, or toolbar behavior changes.
+- Regression coverage: verifies post-enter geometry does not jump, source visibility remains single-owner through leave, and zoom/rotate followed by close completes ownership handoff correctly.
+
+
+## UX-REGRESSION-003 — Image leave / TimePanel centering / DatePicker pointer focus (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@97ce558ab6199d266e8db0dff4f18c7dba9a829b`.
+- User evidence: uploaded videos `PixPin_2026-09-27_19-17-56.mp4`, `19-19-23.mp4`, and `19-20-30.mp4`.
+- Image root cause/fix: leave could recalculate/lock canonical geometry instead of the exact currently painted preview box, and `releasePreviewTrajectoryGeometry()` ran while the preview surface was still paintable, allowing a one-frame snap at the end. Leave now locks the current painted rect and hides the preview surface before releasing trajectory geometry/source ownership.
+- TimePanel root cause/fix: initial WheelPanel centering ran before final layout metrics and initial construction lacked the two-frame visible-layout correction already used by update paths. WheelPanel now schedules `refreshVisible()` after initial bind; TimePicker also refreshes its TimePanel after popup open.
+- DatePicker root cause/fix: a reused virtual-focus controller could retain keyboard modality when a later popup open was pointer-origin. Pointer/mouse/touch open explicitly demotes virtual focus to pointer before hosted calendar domains bind; pointerdown inside the selection panel also does so.
+- Regression coverage: exact current-rect lock on Image leave, TimePanel hour/minute/second snap centering, and pointer-open DatePicker with zero `.is-keyboard-focus` calendar cells.
+
+
+## UX-REGRESSION-004 — Image leave rebound + canonical date-cell states (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@49d8ba5e4e7ba5343a9a25b5e9f3da0e85c3042c`.
+- User evidence: `PixPin_2026-09-27_19-51-30.mp4` shows the Image preview correctly shrinking toward the source, then snapping back to the centered large resting geometry before finally disappearing.
+- Image root cause/fix: content leave completes before the mask lifecycle fully finishes. Motion cleanup clears the trajectory transform after the content transition callback, so the still-paintable preview copy returns to its centered resting geometry. The landed motion node is now hidden inside content `onAfterLeave` before cleanup can repaint it, and visual ownership is transferred to the authored source at that exact landing boundary. Opening explicitly restores motion visibility.
+- DatePicker architecture: DatePicker directly composes `Calendar` and `PeriodPanel`; both already render the shared `.qxframe9a7c2-date-panel-cell` primitive. DatePicker no longer treats hover `previewValue` as selected state. Selected endpoints come only from committed/draft selection; preview may project a provisional range band.
+- Canonical state styling: Calendar and PeriodPanel both project `.is-hover`; shared cell CSS now defines normal hover, in-range hover, selected, and selected-hover as distinct states using subtle-hover, accent-soft-hover, accent, and accent-hover tokens respectively.
+- Regression coverage: Image landed copy cannot repaint after leave cleanup; DatePicker hover target is not selected while the actual selection remains selected; Calendar and PeriodPanel expose the same canonical hover state.
+
+
+## FOCUS-ORIGIN-CLOSEOUT-002 — Pointer outline repository-wide audit (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@59a3636d1768ea1265568aae5d791f3724d12d79`.
+- User regression: DatePicker opened by mouse correctly stayed pointer-origin, but clicking the year/month headers called `setCalendarPanelMode()`, which unconditionally re-activated hosted virtual focus as keyboard and painted `.is-keyboard-focus` on the newly shown PeriodPanel.
+- Systemic root cause: `KeyboardNavigation.VirtualFocus.activate()` defaulted every activation that was not explicitly pointer to keyboard. Programmatic/sync/domain handoffs could therefore manufacture keyboard modality after a pointer action.
+- Shared fix: virtual-focus activation now changes modality only for explicit keyboard or pointer/mouse/touch evidence (including the original event type); otherwise it preserves the controller's current modality. This applies to every composite component using the shared VirtualFocus controller.
+- DatePicker fix: year/month/date drill transitions now carry the actual interaction metadata into `setCalendarPanelMode()`; pointer transitions explicitly retain pointer modality, and the return-to-date activation is keyboard-only when the source is keyboard.
+- CSS/component audit: all `src/components/*.js` are now CI-scanned for direct `is-keyboard-focus` ownership; only Control and Image may project it locally and both must derive it from `FocusOrigin.isKeyboard()`. CSS is CI-scanned so `:focus` / `:focus-within` cannot paint a nonzero outline. Image's old unconditional `:focus-within` outline and the forced-colors segmented-input `:focus-within` outline were converted to keyboard-origin classes.
+- Browser regression coverage: pointer-open DatePicker -> year panel -> month panel -> date panel must remain pointer modality with zero `.is-keyboard-focus` cells throughout; pointer-focused Image must have no keyboard outline.
+
+
+## DATEPICKER-OUTSIDE-MONTH-COLOR-001 — Outside-month text regression (2026-09-27)
+
+- Status: **IMPLEMENTED — PENDING PR CI**
+- Baseline: `main@32b4c06bf86cd6fc5fd34603156973f8208bd97a`.
+- User regression: DatePicker calendar cells from the previous/next month still receive `.is-outside`, but their text is no longer visually muted/light gray.
+- Root cause: the Calendar owner rule survived the shared Calendar/PeriodPanel cell unification with the retired private variable `--_qxframe9a7c2-calendar-cell-text`. The canonical shared cell now paints `color` from `--_qxframe9a7c2-date-panel-cell-text`, so the outside-month rule was writing a dead channel and had no visual effect.
+- Fix: `.qxframe9a7c2-calendar-cell.is-outside:not(.is-selected):not(.is-in-range)` now sets the canonical `--_qxframe9a7c2-date-panel-cell-text` to `--_qxframe9a7c2-semantic-text-disabled`, restoring the former light-gray treatment while preserving selected/range colors.
+- Audit: no other `--_qxframe9a7c2-calendar-cell-*` private state channels remain in the stylesheet.
+- Outside-month interaction parity: normal state keeps muted text; hover keeps the muted text while adding the canonical hover background; clicking the filler selects that exact date and navigates the panel so the selected cell is rendered in-view, matching Ant Design's current cell model.
+- Range ordering: DatePicker already exposes `order`; it remains `true` by default (chronological auto-order for range/multiple) and `order:false` preserves explicit start/end slot order. This matches Ant Design's current API default and avoids adding a second overlapping option.
+- Regression gates: Phase-F rejects the retired variable and requires the canonical outside-month rule; browser regression checks outside/current-month color, outside hover, outside click-selection/navigation, default auto-order, and explicit fixed-order range selection.
