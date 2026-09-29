@@ -59,6 +59,9 @@ The maintained user-facing demo surfaces are:
 - `docs/admin-dashboard-static.html`
 - `docs/admin-form-static.html`
 - `docs/admin-list-static.html`
+- `docs/admin/index.html`
+- `docs/admin/login.html`
+- `docs/admin/views/*.html`
 - `docs/index.html`
 - `docs/theme-playground.html`
 - `docs/tokens.html`
