@@ -186,6 +186,13 @@ function setupMenu(instance) {
   var binding = DOMBinding.resolve({ options: opts, target: host, component: api, requiredRefs: ['root', 'level'], defaultFactory: DOMFactory.createDefaultDOM });
   var root = binding.refs.root;
   var rootLevel = binding.refs.level;
+  var rootScrollShell = doc.createElement('div');
+  rootScrollShell.className = 'qxframe9a7c2-menu-root-scroll';
+  var rootLevelParent = rootLevel.parentNode || root;
+  if (rootLevel.parentNode) rootLevelParent.insertBefore(rootScrollShell, rootLevel);
+  else root.appendChild(rootScrollShell);
+  rootScrollShell.appendChild(rootLevel);
+  var rootScroll = null;
   var initialSelection = initialSelected();
   valueController = ValueController.create({ value: initialSelection, normalizeValue: normalizeKeys, copyValue: normalizeKeys });
   selectionController = SelectionController.create({ channels: { selected: { values: initialSelection, multiple: opts.multiple === true } } });
@@ -355,6 +362,44 @@ function setupMenu(instance) {
     return focusTargetBelongsToMenu(active);
   }
   function visibleActiveKey() { return ownsBrowserFocus() ? activeKey : ''; }
+
+  function syncRootScrollOwnership(reason) {
+    if (!rootScrollShell || !rootLevel) return null;
+    if (opts.mode === 'horizontal') {
+      if (rootScroll) { rootScroll.destroy(); rootScroll = null; }
+      scrollOwnerByLevel.set(rootLevel, root);
+      return null;
+    }
+    if (!rootScroll) {
+      rootScroll = Scroll.attachViewport({
+        root:rootScrollShell,
+        viewport:rootLevel,
+        content:rootLevel,
+        document:doc,
+        axis:'y',
+        wheelAxis:'y',
+        wheelPropagation:true,
+        scrollbarVisibility:'auto',
+        scrollbarInteractive:true,
+        edgeShadow:false,
+        focusable:false,
+        keyboard:false,
+        controller:api
+      });
+    } else if (Utils.isFunction(rootScroll.updateOptions)) {
+      rootScroll.updateOptions({
+        axis:'y',
+        wheelAxis:'y',
+        wheelPropagation:true,
+        scrollbarVisibility:'auto',
+        scrollbarInteractive:true,
+        edgeShadow:false
+      });
+    }
+    scrollOwnerByLevel.set(rootLevel, rootLevel);
+    if (Utils.isFunction(rootScroll.refresh)) rootScroll.refresh(reason || 'menu-root');
+    return rootScroll;
+  }
 
   function attachPopupScroll(panel, level) {
     if (!panel || !level) return null;
@@ -848,7 +893,7 @@ function setupMenu(instance) {
     finally { triggerOpenSync = previousTriggerOpenSync; }
     while (rootLevel.firstChild) rootLevel.removeChild(rootLevel.firstChild);
     scrollOwnerByLevel.clear();
-    scrollOwnerByLevel.set(rootLevel, root);
+    syncRootScrollOwnership('menu-rebuild-before-items');
     indexItems();
     buildLevel(opts.items, rootLevel, null, '', []);
     rootEntryNodes = Array.prototype.slice.call(rootLevel.children || []);
@@ -856,6 +901,7 @@ function setupMenu(instance) {
     syncOpenTriggers();
     if (activeKey && (!buttonByKey.has(activeKey) || isDisabledItem(itemByKey.get(activeKey)))) activeKey = '';
     syncClasses();
+    if (rootScroll && Utils.isFunction(rootScroll.refresh)) rootScroll.refresh('menu-rebuild');
     syncResizeObserver();
     scheduleOverflow('rebuild');
   }
@@ -1437,7 +1483,14 @@ function setupMenu(instance) {
   }
   function destroyRuntime(reason) {
     if (destroyed) return false;
-    destroyed = true; destroySubmenuResources(); scope.dispose(); if (binding) binding.release(); binding = null; root = rootLevel = null; return true;
+    destroyed = true;
+    destroySubmenuResources();
+    if (rootScroll) { rootScroll.destroy(); rootScroll = null; }
+    scope.dispose();
+    if (binding) binding.release();
+    binding = null;
+    root = rootLevel = rootScrollShell = null;
+    return true;
   }
 
   var record = {
@@ -1455,6 +1508,8 @@ function setupMenu(instance) {
     refreshOverflow: function () { return refreshOverflow('api'); },
     containsSurface: containsSurface, getState: getState,
     getRootElement: function () { return root; }, getListElement: function () { return rootLevel; },
+    getScroll: function () { return rootScroll; },
+    getScrollViewport: function () { return rootScroll ? rootLevel : null; },
     getButtonElement: function (key) { return buttonByKey.get(String(key)) || null; },
     findItem: function (query) { var key = query && typeof query === 'object' ? query.key : query; return itemByKey.get(String(key || '')) || null; },
     getSubmenuElement: function (key) { return panelByKey.get(String(key)) || panelLevelByKey.get(String(key)) || null; },
@@ -1580,6 +1635,8 @@ export class Menu extends Component {
   getState() { return recordForMenu(this).getState(); }
   getRootElement() { return recordForMenu(this).getRootElement(); }
   getListElement() { return recordForMenu(this).getListElement(); }
+  getScroll() { return recordForMenu(this).getScroll(); }
+  getScrollViewport() { return recordForMenu(this).getScrollViewport(); }
   getButtonElement(key) { return recordForMenu(this).getButtonElement(key); }
   findItem(query) { return recordForMenu(this).findItem(query); }
   getSubmenuElement(key) { return recordForMenu(this).getSubmenuElement(key); }
