@@ -14,10 +14,35 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: documentation + complete admin template closeout.
-- Current Task: `DOCS-ADMIN-CLOSEOUT-001`
+- Current Phase: admin template + shared framework visual/runtime polish.
+- Current Task: `ADMIN-FRAMEWORK-POLISH-001`
 
 ## CURRENT
+
+### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
+Status: IN PROGRESS
+Task progress: 15%
+Branch: `fix/admin-framework-polish-001`.
+Baseline: `main@ebb827b47c5797021fc055242647d487bea09326` (PR #179 merge).
+
+User-reported scope:
+- Close the global Autocomplete popup when the user interacts inside an admin iframe.
+- Replace the hand-authored admin multi-tab strip with the canonical Tabs component so sizing, scrolling/ResponsiveOverflow and overflow-list behavior come from the framework.
+- Correct Table fixed-header stacking and make fixed-column boundary shadows depend on real horizontal scroll reachability instead of always painting.
+- Give plain native text input/textarea/select elements the canonical Control visual contract in framework CSS without overriding checkbox/radio/range/file or framework-owned internals.
+- Synchronize Card header/footer corner radii with the Card surface radius while preserving `overflow: visible`.
+- Remove the redundant `qx-admin-view-grid` layout abstraction and compose those admin view layouts with the framework's responsive row/column CSS.
+
+Frozen decisions:
+- Do not reopen the completed Controller migration or unrelated component audits.
+- Shared visual defects are fixed in `src/qxframe9a7c2.css`; admin-only behavior remains in admin shell/assets.
+- Admin tabs must consume `Components.Tabs`; do not create a second overflow/scroll implementation.
+- Table shadow visibility is runtime geometry state, while actual shadow paint remains CSS-owned.
+- Card remains non-clipping; corner-radius ownership is on header/footer backgrounds, not `overflow:hidden`.
+
+Next exact step:
+- Implement source/admin changes, extend structural/browser regression gates, build generated dist, then open a PR and run exact-head CI.
+
 
 ### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template
 Status: VERIFIED
