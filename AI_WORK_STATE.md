@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
-Status: IMPLEMENTED — PENDING PR CI
-Task progress: 90%
+Status: VERIFIED — READY TO MERGE
+Task progress: 100%
 Branch: `refactor/scroll-unification-005`.
 Baseline: `main@7cbaa7b18d7953c267a8c525eab8ccc6aecb20f1`.
 
@@ -67,8 +67,17 @@ Guardrails:
 - Pure CSS/fallback surfaces may retain native overflow, but visible chrome must match Scroll exactly.
 - Do not disable popup motion to hide positioning defects; preserve animation and fix measurement/order.
 
+Verification:
+- PR #184 exact implementation head `cdf6861063c4b241d15fc6511869a69dde0a832c`.
+- QXFRAME CI #918 passed Windows tools and the full release pipeline.
+- Full release verification passed current Chromium smoke, source ESM/UMD browser verification, high-risk browser verification, subpath verification, and the frozen HOTFIX6 legacy smoke through a narrow runner adaptation for Table's migrated public Scroll viewport.
+- Standalone dist + docs demo build passed canonical docs verification and canonical admin browser regression checks.
+- Select and DatePicker popup first-frame position regressions are sampled across the complete enter sequence and passed.
+- Table Scroll geometry/sticky/fixed/virtual behavior uses the public inner Scroll viewport and passed current + legacy browser verification.
+- No popup motion was disabled and no legacy second scroll owner was reintroduced.
+
 Next exact step:
-- Open PR, run exact-head full release CI/browser verification, fix concrete regressions only, then merge and verify main CI + Pages.
+- Run exact-head CI for this checkpoint-only commit, merge PR #184, then verify main CI and Pages deployment.
 
 ### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
 Status: VERIFIED
