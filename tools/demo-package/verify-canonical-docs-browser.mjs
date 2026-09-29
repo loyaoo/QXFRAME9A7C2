@@ -187,6 +187,45 @@ try{
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin shell regression '+JSON.stringify(shellValue));
   }
 
+  await navigateCanonical('/docs/admin-form-static.html',420);
+  const popupFieldRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
+    function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
+    var result={selectFound:false,selectToggleAndClear:false,selectOpened:false,selectValueKept:false,cascaderFound:false,cascaderToggleAndClear:false,cascaderOpened:false,cascaderValueKept:false};
+    async function probe(root){
+      if(!root)return null;
+      root.dispatchEvent(new PointerEvent('pointerenter'));
+      await sleep(30);
+      var clear=root.querySelector('.qxframe9a7c2-input-clear');
+      var toggle=root.querySelector('.qxframe9a7c2-input-toggle');
+      var before=root.classList.contains('has-value');
+      var both=!!(clear&&toggle&&!clear.hidden&&!toggle.hidden&&getComputedStyle(clear).display!=='none'&&getComputedStyle(toggle).display!=='none');
+      if(toggle)toggle.click();
+      await sleep(150);
+      return {both:both,opened:root.classList.contains('is-open'),valueKept:before&&root.classList.contains('has-value')};
+    }
+    var selectRoot=document.querySelector('#admin-content-type-select .qxframe9a7c2-select');
+    result.selectFound=!!selectRoot;
+    var selectProbe=await probe(selectRoot);
+    if(selectProbe){
+      result.selectToggleAndClear=selectProbe.both;
+      result.selectOpened=selectProbe.opened;
+      result.selectValueKept=selectProbe.valueKept;
+    }
+    var cascaderRoot=document.querySelector('#admin-category-cascader .qxframe9a7c2-cascader');
+    result.cascaderFound=!!cascaderRoot;
+    var cascaderProbe=await probe(cascaderRoot);
+    if(cascaderProbe){
+      result.cascaderToggleAndClear=cascaderProbe.both;
+      result.cascaderOpened=cascaderProbe.opened;
+      result.cascaderValueKept=cascaderProbe.valueKept;
+    }
+    return result;
+  })()`,awaitPromise:true,returnByValue:true},sessionId);
+  const popupFieldValue=popupFieldRegression&&popupFieldRegression.result&&popupFieldRegression.result.value||{};
+  if(!popupFieldValue.selectFound||!popupFieldValue.selectToggleAndClear||!popupFieldValue.selectOpened||!popupFieldValue.selectValueKept||!popupFieldValue.cascaderFound||!popupFieldValue.cascaderToggleAndClear||!popupFieldValue.cascaderOpened||!popupFieldValue.cascaderValueKept){
+    throw new Error('[QXFRAME9A7C2 canonical docs browser] popup field clear/toggle regression '+JSON.stringify(popupFieldValue));
+  }
+
   await navigateCanonical('/docs/admin-list-static.html',380);
   const tableRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
@@ -242,7 +281,7 @@ try{
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin/Table/CSS regression '+JSON.stringify(tableValue));
   }
 
-  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin,adminShell:shellValue,tableCss:tableValue}));
+  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin,adminShell:shellValue,popupFields:popupFieldValue,tableCss:tableValue}));
 }finally{
   if(targetId)await cdp.call('Target.closeTarget',{targetId}).catch(()=>{});
   try{cdp.socket.close()}catch{}
