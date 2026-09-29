@@ -26,10 +26,12 @@ assert.match(source,/CapabilityController\.create\s*\(/,'Menu disabled/activatio
 assert.match(source,/FocusController\.create\s*\(/,'Menu virtual focus must remain FocusController-owned.');
 assert.match(source,/InteractionController\.create\s*\(/,'Menu semantic keyboard actions must remain InteractionController-owned.');
 assert.match(source,/capability:capabilityController/,'Menu InteractionController scope must share CapabilityController.');
-assert.match(source,/Trigger\.create\s*\(/,'Menu popup submenus must continue through Trigger→OverlayController.');
+assert.match(source,/PopupRuntime\.create\s*\(/,'Menu popup submenus must enter PopupRuntime→Trigger→OverlayController.');
+assert.match(source,/PopupFrame\.create\s*\(/,'Menu submenu/overflow scroll must be owned by PopupFrame.');
+assert.doesNotMatch(source,/Trigger\.create\s*\(/,'Menu business runtime must not create Trigger directly.');
 assert.match(source,/Tooltip\.create\s*\(/,'Collapsed Menu leaf labels must use framework Tooltip rather than native title-only affordance.');
 assert.match(source,/inlineCollapsed\(\) && depth === 0 && !hasChildren\(item\)/,'Collapsed Menu submenu owners must stay popup-only while leaf items own tooltip projection.');
-assert.match(css,/\.qxframe9a7c2-menu\.is-horizontal>\.qxframe9a7c2-menu-root-level>\.qxframe9a7c2-menu-item-wrap\{flex:0 0 auto\}/,'Horizontal Menu root entries must preserve intrinsic width so ResponsiveOverflow can move real entries into More.');
+assert.match(css,/\.qxframe9a7c2-menu\.is-horizontal>\.qxframe9a7c2-menu-root-scroll>\.qxframe9a7c2-menu-root-level>\.qxframe9a7c2-menu-item-wrap\{flex:0 0 auto\}/,'Horizontal Menu root entries must preserve intrinsic width through the root Scroll shell so ResponsiveOverflow can move real entries into More.');
 assert.match(source,/getValueController\(\)/,'Menu must expose canonical ValueController identity.');
 assert.match(source,/getSelectionController\(\)/,'Menu must expose SelectionController identity.');
 assert.match(source,/getCapabilityController\(\)/,'Menu must expose CapabilityController identity.');
