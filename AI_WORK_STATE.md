@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
-Status: IN VERIFICATION — CI #867 caught and corrected native focus-origin selector ownership
-Task progress: 82%
+Status: VERIFIED
+Task progress: 100%
 Branch: `fix/admin-framework-polish-001`.
 Baseline: `main@ebb827b47c5797021fc055242647d487bea09326` (PR #179 merge).
 
@@ -49,12 +49,15 @@ Implemented in branch:
 - `qx-admin-view-grid` removed from the admin views that used it; layouts now use framework responsive row/column classes.
 - Structural + Chromium regression gates extended for these exact cases.
 
-Verification notes:
-- PR #180 CI #867 passed Windows + all verification through Table finalization, then `verify:final-focus-origin` rejected the first native-control keyboard outline selector because it used `:focus`. The gate was correct; the selector was tightened to keyboard-origin + `:focus-visible`.
-- CI #868 passed the complete release verification and npm pack. Chromium confirmed admin Tabs overflow, iframe→Autocomplete dismissal, Table overflow-shadow state and native controls. It then exposed two final test points: sticky-header selector specificity still overrode the fixed-header z-index, and the Card regression probe targeted a page with no Card header/footer. The z-index selector is now specificity-safe; the Card test now creates a real header/body/footer probe instead of removing the assertion.
+Verification evidence:
+- PR #180 CI #867 correctly rejected the first native-control outline selector; it was tightened to keyboard-origin + `:focus-visible`.
+- CI #868 passed full release verification and confirmed the core browser behaviors, exposing the remaining fixed-header specificity and Card probe issues.
+- CI #869 is green: Windows tools, full release verification, npm pack, standalone dist/docs build, and 85-page Chromium all passed.
+- Chromium #869 explicitly reported: admin canonical Tabs mounted; overflow list visible; tab font-size 14px; global search opened and closed from iframe interaction; Table no-overflow shadow hidden; horizontal-overflow state true; start shadow appears after scrolling; fixed header stacks above ordinary header; native control styling applied; Card corner radius synchronized.
+- The release artifact contains the generated dist CSS/JS with the Table/native-control changes. `dist/` is generated and is not tracked in the repository tree.
 
 Next exact step:
-- Run exact-head release/browser CI again; if green, checkpoint VERIFIED/100%, re-run exact-head CI for that checkpoint, merge PR #180, then verify main CI + Pages.
+- Run exact-head CI for this VERIFIED checkpoint. If green, merge PR #180 and verify the resulting main CI + GitHub Pages deployment.
 
 
 ### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template
