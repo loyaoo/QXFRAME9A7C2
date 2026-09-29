@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-004 — responsive/filter + control geometry pressure audit
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 60%
+Status: FIXING_SELECT_FAMILY_GEOMETRY
+Task progress: 72%
 Baseline: `main@50c372ffd437476c7fa47ee545654b6154859134`.
 Branch: `audit/ant-edge-state-demos-004`.
 
@@ -51,6 +51,10 @@ Implemented:
 - Added Table responsive-hidden filter demo + Chromium regression; switching hide/scroll must not change filteredTotal or row projection.
 - Fixed Table filter Reset/Apply falsy content: fallback now applies only to null/undefined and rendering goes through Renderer, preserving numeric 0.
 - Added Chromium regression requiring both action labels to render exactly `0`.
+- Exact-head CI #843 reproduced a separate Control geometry defect: both Select single and multiple rendered 32px under `--qxframe9a7c2-family-control-height:46px`. The modes agreed with each other but both ignored the authored family height.
+- Root cause is CSS ownership: the generic size recipe correctly resolves `--_qxframe9a7c2-control-height` from the family slot, but `.qxframe9a7c2-input.is-xs/sm/md/lg/xl` later overwrote `--_qxframe9a7c2-control-local-height` with fixed size literals. The input shell consumes local-height, cutting the family token chain.
+- Fix removes those redundant fixed local-height size overrides. Input local-height now remains `var(--_qxframe9a7c2-control-height)` from the base input rule, so xs/sm/md/lg/xl still use the shared size resolver by default while any family height override remains authoritative.
+- The other new #843 browser checks (Table responsive-hidden filter ownership and numeric 0 filter action labels) produced no failed checks; keep them unchanged.
 - Existing empty-string filter regression retained; Upload style-height case marked not applicable.
 - main CI #841 and Pages both succeeded for `main@50c372ffd437476c7fa47ee545654b6154859134`.
 
