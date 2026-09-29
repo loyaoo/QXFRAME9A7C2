@@ -203,8 +203,7 @@ const TABLE_DEFAULTS = Object.freeze({
   loading: false, loadingText: 'Loading…', emptyText: 'No data', errorText: 'Failed to load data',
   toolbar: null, toolbarStart: null, toolbarEnd: null, footerStart: null, footerEnd: null,
   responsiveMode: 'hide', keyboardNavigation: false, editEnterBehavior: 'commit', columnReorder: false, rowReorder: false,
-  virtual: false, virtualThreshold: 100, rowHeight: 44, overscan: 4, height: null, maxHeight: null, scrollPolicy: 'auto',
-  scrollbarVisibility: 'auto', scrollbarInteractive: true, scrollEdgeShadow: false, wheelPropagation: true
+  virtual: false, virtualThreshold: 100, rowHeight: 44, overscan: 4, height: null, maxHeight: null, scrollPolicy: 'auto'
 });
 const tableState = new WeakMap();
 
@@ -240,14 +239,6 @@ function normalizeTablePatch(patch, current) {
   if (own(next, 'searchValue')) next.searchValue = next.searchValue == null ? '' : String(next.searchValue);
   if (own(next, 'remoteSelectionScope')) next.remoteSelectionScope = normalizeRemoteSelectionScope(next.remoteSelectionScope);
   if (own(next, 'scrollPolicy')) next.scrollPolicy = normalizeScrollPolicy(next.scrollPolicy);
-  ['scrollbarInteractive','scrollEdgeShadow','wheelPropagation'].forEach(function (name) {
-    if (own(next, name) && typeof next[name] !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Table ' + name + ' must be boolean.');
-  });
-  if (own(next, 'scrollbarVisibility')) {
-    var scrollbarVisibility = String(next.scrollbarVisibility || 'auto');
-    if (['auto','always','hidden'].indexOf(scrollbarVisibility) < 0) throw new TypeError('[QXFRAME9A7C2] Table scrollbarVisibility must be auto, always, or hidden.');
-    next.scrollbarVisibility = scrollbarVisibility;
-  }
   var candidate = Utils.mergeOwn(TABLE_DEFAULTS, current || {}, next);
   assertStableRowIdentity(candidate.items, candidate);
   validateFeatureCombination(candidate);
@@ -478,10 +469,10 @@ function setupTable(instance) {
     document:doc,
     axis:'both',
     wheelAxis:'auto',
-    wheelPropagation:opts.wheelPropagation !== false,
-    scrollbarVisibility:opts.scrollbarVisibility || 'auto',
-    scrollbarInteractive:opts.scrollbarInteractive !== false,
-    edgeShadow:opts.scrollEdgeShadow === true,
+    wheelPropagation:true,
+    scrollbarVisibility:'auto',
+    scrollbarInteractive:true,
+    edgeShadow:false,
     focusable:false,
     keyboard:false,
     controller:api
@@ -2365,12 +2356,7 @@ function setupTable(instance) {
     if (opts.maxHeight != null) root.style.maxHeight = typeof opts.maxHeight === 'number' ? opts.maxHeight + 'px' : String(opts.maxHeight); else root.style.removeProperty('max-height');
     if ((opts.virtual === true || opts.virtual === 'auto') && opts.height == null && opts.maxHeight == null) root.style.maxHeight = '320px';
     if (opts.minWidth != null) table.style.minWidth = typeof opts.minWidth === 'number' ? opts.minWidth + 'px' : String(opts.minWidth); else table.style.removeProperty('min-width');
-    if (scrollSurface && Utils.isFunction(scrollSurface.updateOptions)) scrollSurface.updateOptions({
-      wheelPropagation:opts.wheelPropagation !== false,
-      scrollbarVisibility:opts.scrollbarVisibility || 'auto',
-      scrollbarInteractive:opts.scrollbarInteractive !== false,
-      edgeShadow:opts.scrollEdgeShadow === true
-    });
+
     var busy = opts.loading === true || remoteProcessing;
     if(feedbackController){
       feedbackController.publish({
