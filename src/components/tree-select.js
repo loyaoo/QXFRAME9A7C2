@@ -1,7 +1,6 @@
 import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings, popupSelectionOpenPlan } from './popup-field.js';
 import { Control } from './control.js';
 import { Tree } from './tree.js';
-import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
@@ -118,6 +117,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         treeHost.className = 'qxframe9a7c2-tree-select-tree-host';
         popupContentHost.appendChild(treeHost);
         panel.appendChild(popupContentHost);
+        var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
     
         var tree = null;
         var valueRecordIndex = new Map();
@@ -407,7 +407,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           virtualThreshold: opts.virtualThreshold,
           height: opts.height,
           maxHeight: opts.maxHeight,
-          scrollAdapter: function (config) { return Scroll.attachViewport(config); },
+          scrollAdapter: popupFrame.createAdapter(),
           keyboardFocusOwner: function () { return fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : input; },
           getKey: opts.getKey,
           getItems: opts.getItems,
