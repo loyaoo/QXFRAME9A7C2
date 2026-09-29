@@ -18,6 +18,7 @@ import { Item } from './item.js';
 import { Control } from './control.js';
 import { Pagination } from './pagination.js';
 import { Table } from './table.js';
+import { Scroll } from './scroll.js';
 
 const global=globalThis;
 
@@ -130,6 +131,8 @@ function setupTransfer(instance) {
   var selectionController = null;
   var sourcePagination = null;
   var targetPagination = null;
+  var sourcePaginationScroll = null;
+  var targetPaginationScroll = null;
   var sourceTable = null;
   var targetTable = null;
   var destroyed = false;
@@ -225,8 +228,12 @@ function setupTransfer(instance) {
       var panel = refs[side + 'Panel'];
       var footer = refs[side + 'Footer'];
       var host = doc.createElement('div');
+      var viewport = doc.createElement('div');
       host.className = 'qxframe9a7c2-transfer-pagination';
+      viewport.className = 'qxframe9a7c2-transfer-pagination-viewport';
+      host.appendChild(viewport);
       refs[refName] = host;
+      refs[side + 'PaginationViewport'] = viewport;
     }
     function ensureTableHost(side) {
       var refName = side + 'Table';
@@ -278,6 +285,8 @@ function setupTransfer(instance) {
   function setTableForSide(side, table) { if (side === 'source') sourceTable = table; else targetTable = table; }
   function pagerForSide(side) { return side === 'source' ? sourcePagination : targetPagination; }
   function setPagerForSide(side, pager) { if (side === 'source') sourcePagination = pager; else targetPagination = pager; }
+  function pagerScrollForSide(side) { return side === 'source' ? sourcePaginationScroll : targetPaginationScroll; }
+  function setPagerScrollForSide(side, scroll) { if (side === 'source') sourcePaginationScroll = scroll; else targetPaginationScroll = scroll; }
   function sideItems(side) { return side === 'source' ? sourceItems() : targetItems(); }
   function syncPaginationCount(side) {
     var pager = pagerForSide(side);
@@ -296,20 +305,32 @@ function setupTransfer(instance) {
     var pager = pagerForSide(side);
     if (pager) pager.destroy();
     setPagerForSide(side, null);
+    var scroll = pagerScrollForSide(side);
+    if (scroll) scroll.destroy();
+    setPagerScrollForSide(side, null);
     var hostNode = refs && refs[side + 'Pagination'];
-    if (hostNode) { detachNode(hostNode); hostNode.textContent = ''; }
+    var viewportNode = refs && refs[side + 'PaginationViewport'];
+    if (hostNode) detachNode(hostNode);
+    if (viewportNode) viewportNode.textContent = '';
   }
   function createPagination(side) {
     destroyPagination(side);
     var cfg = paginationConfig(opts.pagination, side);
     var hostNode = refs && refs[side + 'Pagination'];
-    if (!cfg || !hostNode) return null;
+    var viewportNode = refs && refs[side + 'PaginationViewport'];
+    if (!cfg || !hostNode || !viewportNode) return null;
     setSideSurfacePresence(side, 'Pagination', true);
+    var pagerScroll = Scroll.attachViewport({
+      root:hostNode, viewport:viewportNode, content:viewportNode, document:doc,
+      axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
+      focusable:false, keyboard:false, controller:api
+    });
+    setPagerScrollForSide(side, pagerScroll);
     var userChange = cfg.onChange;
     var userSizeChange = cfg.onSizeChange;
     var initialCount = sideItems(side).length;
     var pager = Pagination.create(Utils.mergeOwn( cfg, {
-      container: hostNode,
+      container: viewportNode,
       count: initialCount,
       size: sizeName(opts.size),
       disabled: opts.disabled === true,
@@ -328,6 +349,7 @@ function setupTransfer(instance) {
       }
     }));
     setPagerForSide(side, pager);
+    if (pagerScroll) pagerScroll.refresh('transfer-pagination-create');
     return pager;
   }
   function syncPaginationControllers(recreate) {
@@ -809,7 +831,7 @@ function setupTransfer(instance) {
     if (targetList) targetList.destroy();
     if (targetOrder) targetOrder.destroy();
     if (selectionController) selectionController.destroy();
-    sourceList = null; targetList = null; targetOrder = null; selectionController = null; sourcePagination = null; targetPagination = null; sourceTable = null; targetTable = null;
+    sourceList = null; targetList = null; targetOrder = null; selectionController = null; sourcePagination = null; targetPagination = null; sourcePaginationScroll = null; targetPaginationScroll = null; sourceTable = null; targetTable = null;
     scope.dispose();
     if (formBridge) formBridge.destroy(); formBridge = null;
     if (domBinding) domBinding.release();
