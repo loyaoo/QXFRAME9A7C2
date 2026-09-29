@@ -50,7 +50,13 @@ const block=START+'\n'+
       if(!exists)record.options.push(row);
       if(/^on[A-Z]/.test(row.name)&&/function/.test(String(row.type||''))){
         var eventExists=record.events.some(function(entry){return entry&&entry.name===row.name;});
-        if(!eventExists)record.events.push({name:row.name,type:row.type,signature:row.type,default:row.default,description:row.description});
+        if(!eventExists)record.events.push({
+          name:row.name,
+          type:row.type,
+          signature:row.type,
+          default:row.default,
+          description:row.description
+        });
       }
     });
   });
