@@ -114,7 +114,7 @@ try{
   await navigateCanonical('/docs/admin/index.html',500);
   const shellRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
-    var result={tabsMounted:false,overflowList:false,tabFontSize:0,searchOpened:false,searchClosedFromFrame:false};
+    var result={tabsMounted:false,overflowList:false,tabFontSize:0,tabsKeyboardSwitchFocus:false,tabsKeyboardRemoveFocus:false,collapsedMenuFits:false,collapsedGroupsHidden:false,collapsedIconCentered:false,searchOpened:false,searchClosedFromFrame:false};
     ['content-list','content-add','orders','users','roles','media','search','logs','settings','profile','result','404','500'].forEach(function(key){
       history.replaceState(null,'','#/'+key);
       window.dispatchEvent(new Event('hashchange'));
@@ -127,6 +127,35 @@ try{
     var tab=tabs&&tabs.querySelector('.qxframe9a7c2-tabs-tab');
     result.tabsMounted=!!tabs;
     result.tabFontSize=tab?parseFloat(getComputedStyle(tab).fontSize)||0:0;
+    var activeAction=tabs&&tabs.querySelector('.qxframe9a7c2-tabs-tab.is-active .qxframe9a7c2-tabs-tab-action');
+    if(activeAction){
+      activeAction.focus();
+      activeAction.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));
+      await sleep(100);
+      var switched=document.activeElement;
+      result.tabsKeyboardSwitchFocus=!!(switched&&switched!==activeAction&&switched.classList&&switched.classList.contains('qxframe9a7c2-tabs-tab-action'));
+      if(result.tabsKeyboardSwitchFocus){
+        switched.dispatchEvent(new KeyboardEvent('keydown',{key:'Delete',bubbles:true,cancelable:true}));
+        await sleep(140);
+        var removedFallback=document.activeElement;
+        result.tabsKeyboardRemoveFocus=!!(removedFallback&&removedFallback.classList&&removedFallback.classList.contains('qxframe9a7c2-tabs-tab-action'));
+      }
+    }
+    var shellRoot=document.querySelector('.qx-admin-shell');
+    var collapse=document.getElementById('qx-admin-collapse');
+    if(shellRoot&&collapse&&!shellRoot.classList.contains('is-collapsed'))collapse.click();
+    await sleep(140);
+    var menuHost=document.getElementById('qx-admin-menu');
+    var menuRoot=menuHost&&menuHost.querySelector('.qxframe9a7c2-menu.is-inline.is-collapsed');
+    var groupLabels=menuRoot?Array.prototype.slice.call(menuRoot.querySelectorAll('.qxframe9a7c2-menu-group-label')):[];
+    result.collapsedMenuFits=!!(menuHost&&menuRoot&&menuHost.scrollWidth<=menuHost.clientWidth+1&&menuRoot.scrollWidth<=menuRoot.clientWidth+1);
+    result.collapsedGroupsHidden=groupLabels.length>0&&groupLabels.every(function(node){return getComputedStyle(node).display==='none';});
+    var menuItem=menuRoot&&menuRoot.querySelector('.qxframe9a7c2-menu-item');
+    var menuIcon=menuItem&&menuItem.querySelector('.qxframe9a7c2-menu-icon');
+    if(menuItem&&menuIcon){
+      var itemRect=menuItem.getBoundingClientRect(),iconRect=menuIcon.getBoundingClientRect();
+      result.collapsedIconCentered=Math.abs((itemRect.left+itemRect.width/2)-(iconRect.left+iconRect.width/2))<=2;
+    }
     if(tabsHost){tabsHost.style.flex='0 0 320px';tabsHost.style.width='320px';}
     await sleep(300);
     var more=tabsHost&&tabsHost.querySelector('.qxframe9a7c2-tabs-more');
@@ -154,7 +183,7 @@ try{
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const shellValue=shellRegression&&shellRegression.result&&shellRegression.result.value||{};
-  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.searchOpened||!shellValue.searchClosedFromFrame){
+  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.tabsKeyboardSwitchFocus||!shellValue.tabsKeyboardRemoveFocus||!shellValue.collapsedMenuFits||!shellValue.collapsedGroupsHidden||!shellValue.collapsedIconCentered||!shellValue.searchOpened||!shellValue.searchClosedFromFrame){
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin shell regression '+JSON.stringify(shellValue));
   }
 
