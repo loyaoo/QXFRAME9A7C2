@@ -2,7 +2,6 @@ import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings, 
 import { Control } from './control.js';
 import { OptionList } from './option-list.js';
 import { Item } from './item.js';
-import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { AsyncTask } from '../core/asyncTask.js';
@@ -119,7 +118,7 @@ var selectionRangeScheduler = null;
         if (portalContainer && typeof portalContainer === 'string') portalContainer = DOM.resolveElement(portalContainer, doc);
         if (!portalContainer) portalContainer = doc.body;
         if (!portalContainer || !portalContainer.appendChild) throw new TypeError('[QXFRAME9A7C2] Autocomplete portalContainer must be an Element.');
-        panel.className = 'qxframe9a7c2-autocomplete-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true; optionHost.className = 'qxframe9a7c2-autocomplete-option-host'; panel.appendChild(optionHost);
+        panel.className = 'qxframe9a7c2-autocomplete-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true; optionHost.className = 'qxframe9a7c2-autocomplete-option-host'; panel.appendChild(optionHost); var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
     
         var initialValue = opts.value !== undefined ? opts.value : opts.defaultValue;
         var valueState = ValueController.create({
@@ -393,7 +392,7 @@ var selectionRangeScheduler = null;
           itemSemanticClasses: function () { return ['qxframe9a7c2-autocomplete-item','qxframe9a7c2-autocomplete-option']; },
           itemClassParts: ['item','option'],
           classes: opts.classes,
-          container: optionHost, scrollAdapter: function (config) { return Scroll.attachViewport(config); }, items: currentItems.slice(), searchable: false, size: opts.size,
+          container: optionHost, scrollAdapter: popupFrame.createAdapter(), items: currentItems.slice(), searchable: false, size: opts.size,
           disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
           itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems,
           loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText,
