@@ -31,8 +31,8 @@ const canonical=[
   'docs/tokens.html'
 ];
 assert(componentPages.length===66,'expected 66 component pages, found '+componentPages.length);
-assert(adminViewPages.length===32,'expected 32 complete-admin view pages, found '+adminViewPages.length);
-assert(canonical.length===108,'expected 108 canonical HTML pages, found '+canonical.length);
+assert(adminViewPages.length===36,'expected 36 complete-admin view pages, found '+adminViewPages.length);
+assert(canonical.length===112,'expected 112 canonical HTML pages, found '+canonical.length);
 
 const forbidden=/(^|\/)(?:src|tests|audit|migration|vendor)(?:\/|$)|(?:^|\/)stage-\d+\.html(?:$|[?#])/i;
 const runtimeJs=/qxframe9a7c2\.js(?:[?#].*)?$/i;
