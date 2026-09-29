@@ -193,13 +193,19 @@ try{
     var ps=getComputedStyle(probe);
     result.nativeControlStyled=parseFloat(ps.minHeight)>=28&&ps.borderStyle==='solid'&&parseFloat(ps.borderRadius)>0;
     probe.remove();
-    var header=document.querySelector('.qxframe9a7c2-card-header');
-    var card=header&&header.closest('.qxframe9a7c2-card');
-    if(card&&header){
-      var cr=parseFloat(getComputedStyle(card).borderTopLeftRadius)||0;
-      var hr=parseFloat(getComputedStyle(header).borderTopLeftRadius)||0;
-      result.cardRadiusSynced=cr>0&&hr>0&&Math.abs(cr-hr)<=2;
-    }
+    var card=document.createElement('article');
+    card.className='qxframe9a7c2-card';
+    var header=document.createElement('div');
+    header.className='qxframe9a7c2-card-header';
+    var body=document.createElement('div');
+    body.className='qxframe9a7c2-card-body';
+    var footer=document.createElement('div');
+    footer.className='qxframe9a7c2-card-footer';
+    card.appendChild(header);card.appendChild(body);card.appendChild(footer);document.body.appendChild(card);
+    var cardStyle=getComputedStyle(card),headerStyle=getComputedStyle(header),footerStyle=getComputedStyle(footer);
+    var cr=parseFloat(cardStyle.borderTopLeftRadius)||0,hr=parseFloat(headerStyle.borderTopLeftRadius)||0,fr=parseFloat(footerStyle.borderBottomLeftRadius)||0;
+    result.cardRadiusSynced=cr>0&&hr>0&&fr>0&&Math.abs(cr-hr)<=2&&Math.abs(cr-fr)<=2;
+    card.remove();
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const tableValue=tableRegression&&tableRegression.result&&tableRegression.result.value||{};

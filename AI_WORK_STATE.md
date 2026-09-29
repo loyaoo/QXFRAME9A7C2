@@ -21,7 +21,7 @@
 
 ### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
 Status: IN VERIFICATION — CI #867 caught and corrected native focus-origin selector ownership
-Task progress: 75%
+Task progress: 82%
 Branch: `fix/admin-framework-polish-001`.
 Baseline: `main@ebb827b47c5797021fc055242647d487bea09326` (PR #179 merge).
 
@@ -49,8 +49,9 @@ Implemented in branch:
 - `qx-admin-view-grid` removed from the admin views that used it; layouts now use framework responsive row/column classes.
 - Structural + Chromium regression gates extended for these exact cases.
 
-Verification note:
-- PR #180 CI #867 passed Windows + all verification through Table finalization, then `verify:final-focus-origin` rejected the first native-control keyboard outline selector because it used `:focus`. The gate was correct; the selector is tightened to keyboard-origin + `:focus-visible` rather than weakening the verifier.
+Verification notes:
+- PR #180 CI #867 passed Windows + all verification through Table finalization, then `verify:final-focus-origin` rejected the first native-control keyboard outline selector because it used `:focus`. The gate was correct; the selector was tightened to keyboard-origin + `:focus-visible`.
+- CI #868 passed the complete release verification and npm pack. Chromium confirmed admin Tabs overflow, iframe→Autocomplete dismissal, Table overflow-shadow state and native controls. It then exposed two final test points: sticky-header selector specificity still overrode the fixed-header z-index, and the Card regression probe targeted a page with no Card header/footer. The z-index selector is now specificity-safe; the Card test now creates a real header/body/footer probe instead of removing the assertion.
 
 Next exact step:
 - Run exact-head release/browser CI again; if green, checkpoint VERIFIED/100%, re-run exact-head CI for that checkpoint, merge PR #180, then verify main CI + Pages.

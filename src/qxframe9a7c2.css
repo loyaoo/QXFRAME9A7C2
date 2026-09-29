@@ -16049,6 +16049,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-table-wrap.is-sticky-summary .qxframe9a7c2-table tfoot td{position:sticky;bottom:0;z-index:var(--qxframe9a7c2-z-local-overlay)}
 .qxframe9a7c2-table .is-fixed-start,.qxframe9a7c2-table .is-fixed-end{position:sticky!important;z-index:var(--qxframe9a7c2-z-local-above);background:var(--_qxframe9a7c2-table-row-bg,var(--_qxframe9a7c2-semantic-surface-raised))!important}
 .qxframe9a7c2-table th.is-fixed-start,.qxframe9a7c2-table th.is-fixed-end{z-index:var(--_qxframe9a7c2-table-fixed-head-z);background:var(--_qxframe9a7c2-table-head-bg)!important}
+.qxframe9a7c2-table-wrap.is-sticky-header .qxframe9a7c2-table th.is-fixed-start,.qxframe9a7c2-table-wrap.is-sticky-header .qxframe9a7c2-table th.is-fixed-end{z-index:var(--_qxframe9a7c2-table-fixed-head-z)}
 .qxframe9a7c2-table .is-fixed-start{inset-inline-start:var(--qxframe9a7c2-table-fixed-start,0)}
 .qxframe9a7c2-table .is-fixed-end{inset-inline-end:var(--qxframe9a7c2-table-fixed-end,0)}
 .qxframe9a7c2-table .is-fixed-start.is-last::after,.qxframe9a7c2-table .is-fixed-end.is-first::before{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-raised);top:0;bottom:0;width:.625rem;opacity:0;pointer-events:none;transition:opacity var(--qxframe9a7c2-motion-duration-fast) var(--qxframe9a7c2-easing-standard)}
