@@ -276,6 +276,7 @@ function setupTable(instance) {
   var virtualizer = null;
   var filterTrigger = null;
   var filterPopup = null;
+  var filterScroll = null;
   var filterColumnKey = null;
   var filterDraftValues = [];
   var filterSearchValue = '';
@@ -1772,6 +1773,7 @@ function setupTable(instance) {
     if (filterInteractionLease) { filterInteractionLease.release(); filterInteractionLease = null; }
     if (filterTrigger) filterTrigger.destroy(reason || 'table-filter-popup-destroy');
     filterTrigger = null;
+    if (filterScroll) { filterScroll.destroy(); filterScroll = null; }
     if (filterPopup) { Renderer.dispose(filterPopup); DOM.removeNode(filterPopup); }
     filterPopup = null; filterColumnKey = null; filterDraftValues = []; filterSearchValue = ''; syncOpenFilterFromModel = null;
   }
@@ -1887,13 +1889,21 @@ function setupTable(instance) {
         });
       }
       renderOptions(column.filterOptions || [], 0);
-      filterPopup.appendChild(list);
+      var listScrollShell = doc.createElement('div'); listScrollShell.className = 'qxframe9a7c2-table-filter-scroll';
+      listScrollShell.appendChild(list); filterPopup.appendChild(listScrollShell);
+      filterScroll = Scroll.attachViewport({
+        root:listScrollShell, viewport:list, content:list, document:doc,
+        axis:'y', wheelAxis:'y', wheelPropagation:false, scrollbarVisibility:'auto',
+        focusable:false, keyboard:false, controller:api
+      });
+      filterScroll.refresh('table-filter-options');
       var actions = doc.createElement('div'); actions.className = 'qxframe9a7c2-table-filter-actions';
       var reset = doc.createElement('button'); reset.type='button'; reset.className='qxframe9a7c2-button is-default is-filled'; Renderer.append(reset,column.filterResetText==null?'Reset':column.filterResetText,doc); scope.add(DOM.listen(reset,'click',function(e){clearFilters({source:DOM.activationSource(e),originalEvent:e});}));
       var apply = doc.createElement('button'); apply.type='button'; apply.className='qxframe9a7c2-button is-primary is-solid'; Renderer.append(apply,column.filterConfirmText==null?'Apply':column.filterConfirmText,doc); scope.add(DOM.listen(apply,'click',function(e){confirm({source:DOM.activationSource(e),originalEvent:e});}));
       actions.appendChild(reset); actions.appendChild(apply); filterPopup.appendChild(actions);
     }
     function renderFilterContent() {
+      if (filterScroll) { filterScroll.destroy(); filterScroll = null; }
       filterPopup.textContent = '';
       if (column.filterDropdown) {
         var context = Object.freeze({ column: column, selectedValues: filterDraftValues.slice(), setSelectedValues: setSelectedValues, confirm: confirm, clearFilters: clearFilters, close: close, instance: api });
