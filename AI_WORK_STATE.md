@@ -21,7 +21,7 @@
 
 ### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template
 Status: IN PROGRESS
-Task progress: 0%
+Task progress: 80%
 Branch: `docs/api-admin-closeout-001`.
 Baseline: current `main` after PR #178.
 
@@ -43,8 +43,18 @@ Planned batches:
 3. Admin view matrix: dashboard/list/form plus representative user/role/settings/profile/search/result/auth/error pages using QXFRAME primitives.
 4. Exact-head CI, PR, merge and main Pages verification.
 
+Implemented:
+- Shared component docs now expose the package-aligned v2.19.81 version instead of stale v2.19.79 chrome.
+- All 66 thin component pages continue to share one API data source and one renderer; the renderer now presents Props/Params, Methods with extracted parameter lists/return values, and Events/Callbacks with one searchable reference surface.
+- Added `verify:docs-api` to assert package/docs version parity, all 66 catalog/page/API links, expanded docs API coverage against the generated runtime contracts, and shared renderer/navigation markers.
+- Added `docs/admin/index.html` as the complete multi-iframe admin host with retained tab state, hash routing, tab restore/close controls, refresh/fullscreen/theme actions, responsive/collapsible navigation and child-to-parent route bridging.
+- Existing dashboard/list/form composition demos remain standalone and also support `?embed=1` inside the complete shell.
+- Added real admin pages for orders, users, roles/permissions, media, global search, operation logs, settings, profile, result, 404, 500 and login.
+- Added `verify:admin-template` plus canonical-doc expansion; complete admin pages are now CI-governed publication surfaces.
+- Branch diff is docs/tools/package/checkpoint only; no `src/` or `dist/` framework runtime file changed.
+
 Next exact step:
-- Implement Batch 1 shared API/manual rendering + verifier, then Batch 2 shell/bridge without changing framework runtime.
+- Open the PR from this exact branch head, run GitHub Actions, fix only concrete CI/browser failures, then merge and verify main Pages.
 
 ### THEME-PLAYGROUND-REVIEW-824-854 — merged-change manual review annotations
 Status: VERIFIED
