@@ -199,9 +199,9 @@ try{
       var toggle=root.querySelector('.qxframe9a7c2-input-toggle');
       var before=root.classList.contains('has-value');
       var both=!!(clear&&toggle&&!clear.hidden&&!toggle.hidden&&getComputedStyle(clear).display!=='none'&&getComputedStyle(toggle).display!=='none');
-      if(toggle)toggle.click();
+      root.click();
       await sleep(150);
-      return {both:both,opened:root.classList.contains('is-open'),valueKept:before&&root.classList.contains('has-value')};
+      return {before:before,both:both,opened:root.classList.contains('is-open'),afterValue:root.classList.contains('has-value'),valueKept:before&&root.classList.contains('has-value')};
     }
     var selectRoot=document.querySelector('#admin-content-type-select .qxframe9a7c2-select');
     result.selectFound=!!selectRoot;
