@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ADMIN-INTERACTION-POLISH-002 — popup-field opening, admin Tabs focus, native focus precedence, SelectGroup stacking, flex layout and collapsed Menu
-Status: IN PROGRESS
-Task progress: 5%
+Status: VERIFYING
+Task progress: 90%
 Branch: `fix/admin-interaction-polish-002`.
 Baseline: `main@e49a8f8f95396938cfce246515d8f80c354332b6` (PR #180 merge; main CI #871 + Pages green).
 
@@ -48,8 +48,16 @@ Current evidence / suspected owners:
 - SelectGroup raises only `:focus-within`; checked connected siblings have no higher stacking context.
 - Remaining admin view CSS still defines the three custom structural classes named above.
 
+Implemented evidence:
+- Control default no longer replaces the popup toggle with clear; CSS now lets both render together, keeping the toggle hit target stable while clear appears.
+- Admin Tabs synchronize item collections only when tabs actually change, preserving the canonical Tabs keyboard focus path during activation/removal.
+- Native text-control hover excludes :focus; checked SelectGroup items now stack above connected peers; collapsed inline Menu is constrained to its host and hides group headings.
+- All 11 admin views removed qx-admin-view-page / qx-admin-view-head / qx-admin-search-hero structural wrappers in favor of framework row/col composition.
+- Static and Chromium gates cover popup committed values, tab keyboard focus/removal, collapsed Menu fit/alignment and SelectGroup stacking.
+- PR #181 is open from this branch; CI #872 is running on exact head `5f0133e11da0f7ed0f4eb031c44205d44a11e2a1`.
+
 Next exact step:
-- Inspect Tabs/Menu/native-control CSS and existing verification gates, then implement framework/admin fixes and add exact Chromium regressions before opening the PR.
+- Finish CI #872. Fix any failing regression at its shared owner, then update this checkpoint to VERIFIED, run exact-head CI if the checkpoint commit changes the head, merge PR #181, and verify main CI + Pages.
 
 ### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
 Status: VERIFIED
