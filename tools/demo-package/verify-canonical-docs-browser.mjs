@@ -99,7 +99,115 @@ try{
     if(reasons.length)failures.push({page:pathname,reasons});
   }
   if(failures.length)throw new Error('[QXFRAME9A7C2 canonical docs browser] '+JSON.stringify(failures));
-  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin}));
+
+  async function navigateCanonical(pathname,settle){
+    await cdp.call('Page.navigate',{url:new URL(pathname,origin).href},sessionId);
+    const deadline=Date.now()+7000;
+    while(Date.now()<deadline){
+      const ready=await cdp.call('Runtime.evaluate',{expression:'document.readyState',returnByValue:true},sessionId);
+      if(ready&&ready.result&&ready.result.value==='complete')break;
+      await wait(50);
+    }
+    await wait(settle||250);
+  }
+
+  await navigateCanonical('/docs/admin/index.html',500);
+  const shellRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
+    function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
+    var result={tabsMounted:false,overflowList:false,tabFontSize:0,searchOpened:false,searchClosedFromFrame:false};
+    ['content-list','content-add','orders','users','roles','media','search','logs','settings','profile','result','404','500'].forEach(function(key){
+      history.replaceState(null,'','#/'+key);
+      window.dispatchEvent(new Event('hashchange'));
+    });
+    history.replaceState(null,'','#/dashboard');
+    window.dispatchEvent(new Event('hashchange'));
+    await sleep(250);
+    var tabsHost=document.getElementById('qx-admin-tabs');
+    var tabs=tabsHost&&tabsHost.querySelector('.qxframe9a7c2-tabs');
+    var tab=tabs&&tabs.querySelector('.qxframe9a7c2-tabs-tab');
+    result.tabsMounted=!!tabs;
+    result.tabFontSize=tab?parseFloat(getComputedStyle(tab).fontSize)||0:0;
+    if(tabsHost){tabsHost.style.flex='0 0 320px';tabsHost.style.width='320px';}
+    await sleep(300);
+    var more=tabsHost&&tabsHost.querySelector('.qxframe9a7c2-tabs-more');
+    if(more&&more.isConnected){
+      more.click();
+      await sleep(160);
+      result.overflowList=document.querySelectorAll('.qxframe9a7c2-tabs-overflow-item').length>0;
+    }
+    var searchHost=document.getElementById('qx-admin-global-search');
+    var input=searchHost&&searchHost.querySelector('input');
+    if(input){
+      input.focus();
+      input.value='订单';
+      input.dispatchEvent(new Event('input',{bubbles:true}));
+      await sleep(220);
+      var panel=document.querySelector('.qxframe9a7c2-autocomplete-panel');
+      result.searchOpened=!!(panel&&!panel.hidden);
+      var frame=document.querySelector('.qx-admin-frame.is-active');
+      if(frame&&frame.contentDocument&&frame.contentDocument.body){
+        frame.contentDocument.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}));
+        await sleep(260);
+        result.searchClosedFromFrame=!!(panel&&panel.hidden);
+      }
+    }
+    return result;
+  })()`,awaitPromise:true,returnByValue:true},sessionId);
+  const shellValue=shellRegression&&shellRegression.result&&shellRegression.result.value||{};
+  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.searchOpened||!shellValue.searchClosedFromFrame){
+    throw new Error('[QXFRAME9A7C2 canonical docs browser] admin shell regression '+JSON.stringify(shellValue));
+  }
+
+  await navigateCanonical('/docs/admin-list-static.html',380);
+  const tableRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
+    function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
+    var host=document.getElementById('admin-list-table');
+    var wrap=host&&host.querySelector('.qxframe9a7c2-table-wrap');
+    var result={found:false,noOverflowShadowHidden:false,overflowState:false,startShadowAfterScroll:false,fixedHeaderAbove:false,nativeControlStyled:false,cardRadiusSynced:false};
+    if(!wrap)return result;
+    result.found=true;
+    wrap.style.width='3000px';
+    wrap.style.maxWidth='none';
+    await sleep(240);
+    var start=wrap.querySelector('thead th.is-fixed-start.is-last');
+    var ordinary=Array.prototype.slice.call(wrap.querySelectorAll('thead th')).find(function(node){return !node.classList.contains('is-fixed-start')&&!node.classList.contains('is-fixed-end');});
+    var noOverflow=wrap.scrollWidth<=wrap.clientWidth+1;
+    var startOpacity=start?parseFloat(getComputedStyle(start,'::after').opacity)||0:0;
+    result.noOverflowShadowHidden=noOverflow&&!wrap.classList.contains('has-horizontal-overflow')&&startOpacity===0;
+    if(start&&ordinary){
+      var fixedZ=parseFloat(getComputedStyle(start).zIndex)||0;
+      var ordinaryZ=parseFloat(getComputedStyle(ordinary).zIndex)||0;
+      result.fixedHeaderAbove=fixedZ>ordinaryZ;
+    }
+    wrap.style.width='480px';
+    await sleep(240);
+    result.overflowState=wrap.classList.contains('has-horizontal-overflow')&&wrap.classList.contains('can-scroll-end');
+    wrap.scrollLeft=Math.min(120,Math.max(0,wrap.scrollWidth-wrap.clientWidth));
+    wrap.dispatchEvent(new Event('scroll'));
+    await sleep(80);
+    result.startShadowAfterScroll=!!(start&&wrap.classList.contains('can-scroll-start')&&(parseFloat(getComputedStyle(start,'::after').opacity)||0)>0);
+    var probe=document.createElement('input');
+    probe.type='text';
+    probe.value='native';
+    document.body.appendChild(probe);
+    var ps=getComputedStyle(probe);
+    result.nativeControlStyled=parseFloat(ps.minHeight)>=28&&ps.borderStyle==='solid'&&parseFloat(ps.borderRadius)>0;
+    probe.remove();
+    var header=document.querySelector('.qxframe9a7c2-card-header');
+    var card=header&&header.closest('.qxframe9a7c2-card');
+    if(card&&header){
+      var cr=parseFloat(getComputedStyle(card).borderTopLeftRadius)||0;
+      var hr=parseFloat(getComputedStyle(header).borderTopLeftRadius)||0;
+      result.cardRadiusSynced=cr>0&&hr>0&&Math.abs(cr-hr)<=2;
+    }
+    return result;
+  })()`,awaitPromise:true,returnByValue:true},sessionId);
+  const tableValue=tableRegression&&tableRegression.result&&tableRegression.result.value||{};
+  if(!tableValue.found||!tableValue.noOverflowShadowHidden||!tableValue.overflowState||!tableValue.startShadowAfterScroll||!tableValue.fixedHeaderAbove||!tableValue.nativeControlStyled||!tableValue.cardRadiusSynced){
+    throw new Error('[QXFRAME9A7C2 canonical docs browser] admin/Table/CSS regression '+JSON.stringify(tableValue));
+  }
+
+  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin,adminShell:shellValue,tableCss:tableValue}));
 }finally{
   if(targetId)await cdp.call('Target.closeTarget',{targetId}).catch(()=>{});
   try{cdp.socket.close()}catch{}
