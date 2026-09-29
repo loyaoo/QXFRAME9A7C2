@@ -14,49 +14,48 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: capability leakage / shared runtime unification closeout.
-- Current Task: `ARCH-UNIFICATION-006`
+- Current Phase: capability leakage / shared runtime unification closeout complete.
+- Current Task: none — `ARCH-UNIFICATION-006` implementation and acceptance are complete.
 
 ## CURRENT
 
 ### ARCH-UNIFICATION-006 — Popup / Reorder / OverlayFrame shared-runtime closeout
-Status: IMPLEMENTED — PENDING PR CI
-Task progress: 88%
-Branch: `refactor/capability-unification-006`.
-Baseline: `main@1fda904db5548f53ccdb9628c5f5c6e797f5abaf` (PR #184 merged; PR #185 remains open and is not the implementation base).
+Status: COMPLETE
+Task progress: 100%
 
-User requirement:
-- Finish the architecture cleanup identified in the latest audit instead of patching only the visible Menu/Admin symptom.
-- Popup-family business components must consume one popup-layer Scroll/surface abstraction rather than importing/assembling popup Scroll independently.
-- Tree drag/drop must reuse ReorderInteraction rather than keep a second full drag lifecycle.
-- Modal/Drawer must share one OverlayFrame family runtime for common chrome/open-close/scroll/presence plumbing.
-- Preserve existing Value/Focus/Interaction/Capability/Selection/Form/Motion authorities and all shipped interaction semantics.
+Outcome:
+- Popup-family physical runtime is unified as `business component -> PopupComponent/PopupField/PickerField -> PopupRuntime/PopupFrame -> Trigger -> OverlayController/PositionAdapter`.
+- PopupFrame owns popup Scroll resources; business popup components no longer construct parallel popup Scroll/Trigger paths.
+- Menu main/root navigation remains an intentional business-level Scroll owner; submenu/overflow popup scrolling is PopupFrame-owned.
+- Table main viewport, Tabs main navigation, Tags scroll mode, Transfer/Upload/WheelPanel/Sort remain intentional non-popup Scroll owners.
+- Tree hierarchical drag/drop is a domain adapter over ReorderInteraction; Tree no longer owns a second raw drag lifecycle.
+- Modal and Drawer share OverlayFrameRuntime for common frame DOM, body Scroll, OverlayFrameShell, OverlayController, PopupSurface, transitions and open/close/destroy resource lifecycle, while retaining component-specific geometry/motion profiles.
+- Admin Menu uses the canonical Menu-owned Scroll and explicitly requests persistent visible chrome through Scroll.showScrollbar(); the admin shell no longer exposes a second native scrollbar.
+- PR #185's valid Menu-root Scroll/admin acceptance intent was absorbed into the unified implementation; its architecture is superseded by PR #186.
 
-Implementation plan:
-1. Popup layer: add canonical PopupFrame ownership API and migrate popup-specific Scroll consumers (Select/Autocomplete/Dropdown/Menu/Cascader/TreeSelect/Tabs overflow plus Popover/PopupField integration).
-2. Reorder layer: extend ReorderInteraction with a domain drop resolver/visual adapter and migrate Tree hierarchical drag to it.
-3. Overlay frame layer: extract shared Modal/Drawer frame/runtime plumbing while keeping geometry/motion profiles component-specific.
-4. Absorb only the valid PR #185 Menu-root Scroll/admin-browser pieces; do not merge #185 as-is.
-5. Add architecture/static/browser regression gates, run exact-head CI, open PR, fix failures, merge only when green, then verify main CI + Pages.
-
-Guardrails:
+Guardrails retained:
 - One owner / one truth; no compatibility parallel runtime.
-- Trigger remains trigger/Overlay/position/motion coordinator; popup Scroll belongs to the popup layer, not to Trigger.
-- Tree hierarchical before/inside/after stays a domain adapter over ReorderInteraction, not a second Reorder controller.
+- Trigger remains trigger/Overlay/position/motion coordinator; popup Scroll belongs to PopupFrame, not Trigger or business popup components.
+- Tree before/inside/after semantics stay in Tree while drag lifecycle stays in ReorderInteraction.
 - Theme/Token remain pure CSS.
-- Do not change Picker draft/commit semantics, Autocomplete input-first behavior, keyboard-vs-pointer focus-origin rules, or generic overflow/min-width policies.
+- Picker draft/commit/cancel semantics, Autocomplete input-first behavior, keyboard-vs-pointer focus-origin separation, generic overflow policy and min-width policy remain unchanged.
+- No ARIA/a11y/RTL reintroduction.
 
-Implemented:
-- PopupComponent / PopupField / PickerField now route physical popup construction through PopupRuntime; PopupFrame owns popup Scroll resources and exposes adapters/release semantics.
-- Select, Autocomplete, TreeSelect, Cascader, Dropdown, Menu submenu/overflow, Tabs overflow, Tooltip, Table filter, Tags overflow and DatePicker selection/preset popup Scroll paths are migrated to PopupFrame/Popover ownership.
-- Menu root scrolling remains an intentional business-level Scroll owner; admin shell native scrolling is disabled and browser coverage checks real Scroll track/thumb/movement.
-- ReorderInteraction now supports a component-agnostic domain drop resolver; Tree no longer owns dragSession or raw dragstart/dragover/drop/dragend lifecycle and supplies only hierarchical before/inside/after semantics.
-- Modal and Drawer now share OverlayFrameRuntime for frame DOM, body Scroll, OverlayFrameShell, OverlayController, PopupSurface, Transition presence and open/close/destroy lifecycle; component files retain only normalization/geometry/motion profiles.
-- Architecture verifiers now reject the old direct Trigger/popup Scroll/Tree drag/Modal-Drawer frame resource paths; a dedicated verify:capability-unification gate is wired into the full release verification.
-- Valid PR #185 Menu-root Scroll/admin browser coverage has been absorbed; PR #185 itself remains unmerged.
+Regression gates:
+- `verify:capability-unification` rejects direct business Trigger creation, direct popup Scroll ownership, Tree-local raw drag lifecycle, and Modal/Drawer-local frame resource ownership.
+- Existing popup-field, popup facade, Scroll, Tree/Reorder, Modal/Drawer and final-audit verifiers were updated to assert the canonical owners rather than the superseded duplicate paths.
+- Canonical Admin browser coverage validates Menu custom Scroll DOM/scrollability/track+thumb visibility/movement and the real Orders DatePicker first-frame popup position.
 
-Next exact step:
-- Open the unified PR, run exact-head CI, inspect every failing structural/browser/release gate, fix on this branch until green, then merge and verify main CI + Pages.
+Verification evidence:
+- PR #186 implementation head `846140367ad247d9044398804ea9d91d74105ad2`.
+- QXFRAME CI #926 passed Windows tools, Completion audit, Full release verification, npm pack, standalone dist + docs demo build, canonical docs verification, canonical Admin browser regression, and artifact uploads.
+- The canonical Admin browser accepted `menuCustomScrollPresent`, disabled host native scroll, a scrollable Menu viewport, visible framework track/thumb, actual Scroll movement, collapsed Menu geometry, global search close behavior, and stable Orders DatePicker popup placement.
+- Earlier CI failures in this task exposed and fixed two real DatePicker PopupFrame mount-order defects; PopupFrame's strict panel-descendant ownership invariant was preserved rather than weakened.
+- Select/DatePicker first-frame positioning regressions remain covered and passed with motion enabled.
+
+Resume rule:
+- No implementation work remains for ARCH-UNIFICATION-006. On resume, query Git/PR/CI/Pages first and only act on current repository state; do not re-run this architecture migration from the beginning.
+
 ### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
 Status: VERIFIED — READY TO MERGE
 Task progress: 100%
