@@ -15,9 +15,30 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: complete admin preset expansion.
-- Current Task: `ADMIN-COMPLETE-PRESET-003`
+- Current Task: `ADMIN-VIEW-GRID-REGRESSION-004`
 
 ## CURRENT
+
+### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
+Status: IN_PROGRESS
+Task progress: 55%
+Branch: `fix/admin-grid-layout-004`.
+Baseline: `main@661c7280499f6e222c9f77d7076722e6e6552f5d` (PR #182 merged; main CI #892 + Pages green).
+
+User evidence:
+- Multiple complete-admin pages render secondary content compressed into a narrow strip with per-character wrapping and horizontal overflow.
+
+Root cause:
+- Five views (`profile`, `orders`, `search`, `settings`, `users`) place a framework `.qxframe9a7c2-row` directly inside another framework Row without a `col-*` owner. Because Row is a flex container, the nested Row becomes an unconstrained flex item and can shrink to content width.
+
+Fix plan:
+- Restore canonical Row -> Column -> nested Row composition in all five affected views.
+- Add a static `verify:admin-template` regression gate that rejects direct Row-under-Row nesting in every admin view.
+- Run exact-head CI, merge only when green, then verify main CI + Pages.
+
+Next exact step:
+- Commit the five markup corrections + verifier gate, open a PR, and run exact-head GitHub Actions.
+
 
 ### ADMIN-COMPLETE-PRESET-003 — complete admin preset page matrix
 Status: VERIFIED
