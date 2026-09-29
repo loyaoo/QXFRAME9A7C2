@@ -240,6 +240,14 @@ function normalizeTablePatch(patch, current) {
   if (own(next, 'searchValue')) next.searchValue = next.searchValue == null ? '' : String(next.searchValue);
   if (own(next, 'remoteSelectionScope')) next.remoteSelectionScope = normalizeRemoteSelectionScope(next.remoteSelectionScope);
   if (own(next, 'scrollPolicy')) next.scrollPolicy = normalizeScrollPolicy(next.scrollPolicy);
+  ['scrollbarInteractive','scrollEdgeShadow','wheelPropagation'].forEach(function (name) {
+    if (own(next, name) && typeof next[name] !== 'boolean') throw new TypeError('[QXFRAME9A7C2] Table ' + name + ' must be boolean.');
+  });
+  if (own(next, 'scrollbarVisibility')) {
+    var scrollbarVisibility = String(next.scrollbarVisibility || 'auto');
+    if (['auto','always','hidden'].indexOf(scrollbarVisibility) < 0) throw new TypeError('[QXFRAME9A7C2] Table scrollbarVisibility must be auto, always, or hidden.');
+    next.scrollbarVisibility = scrollbarVisibility;
+  }
   var candidate = Utils.mergeOwn(TABLE_DEFAULTS, current || {}, next);
   assertStableRowIdentity(candidate.items, candidate);
   validateFeatureCombination(candidate);
