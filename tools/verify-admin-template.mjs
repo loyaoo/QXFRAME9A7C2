@@ -15,7 +15,7 @@ assert(exists(shell),'missing '+shell);
 assert(exists(login),'missing '+login);
 assert(fs.existsSync(viewsDir),'missing docs/admin/views');
 const viewFiles=fs.readdirSync(viewsDir).filter(name=>name.endsWith('.html')).sort();
-assert(viewFiles.length===11,'expected 11 admin view pages, found '+viewFiles.length);
+assert(viewFiles.length===32,'expected 32 admin view pages, found '+viewFiles.length);
 
 const shellHtml=read(shell);
 const shellJs=read('docs/assets/qxframe9a7c2-admin-shell.js');
@@ -58,7 +58,7 @@ for(const marker of ["get('embed')==='1'",'is-admin-embedded','qxframe9a7c2-admi
 }
 
 const routeMatches=[...shellJs.matchAll(/href:'([^']+)'/g)].map(match=>match[1]);
-assert(routeMatches.length===14,'expected 14 admin shell routes, found '+routeMatches.length);
+assert(routeMatches.length===35,'expected 35 admin shell routes, found '+routeMatches.length);
 const uniqueRoutes=new Set(routeMatches);
 assert(uniqueRoutes.size===routeMatches.length,'admin shell contains duplicate route hrefs');
 for(const href of routeMatches){
@@ -67,7 +67,11 @@ for(const href of routeMatches){
   assert(fs.existsSync(resolved),'admin shell route target missing: '+href);
 }
 
-const canonicalAdmin=[shell,login,...viewFiles.map(name=>'docs/admin/views/'+name)];
+const register='docs/admin/register.html';
+const registerResult='docs/admin/register-result.html';
+assert(exists(register),'missing '+register);
+assert(exists(registerResult),'missing '+registerResult);
+const canonicalAdmin=[shell,login,register,registerResult,...viewFiles.map(name=>'docs/admin/views/'+name)];
 for(const rel of canonicalAdmin){
   const html=read(rel);
   assert(/qxframe9a7c2\.css/.test(html),'current dist CSS missing from '+rel);
@@ -83,6 +87,8 @@ for(const rel of canonicalAdmin){
   }
 }
 
+for(const required of ['monitor.html','workplace.html','products.html','inventory.html','customers.html','marketing.html','finance.html','table-list.html','standard-list.html','card-list.html','search-list.html','basic-form.html','step-form.html','advanced-form.html','basic-detail.html','advanced-detail.html','notifications.html','jobs.html','account-settings.html','result-fail.html','403.html'])assert(viewFiles.includes(required),'missing complete-admin preset view '+required);
+for(const key of ['monitor','workplace','products','inventory','customers','marketing','finance','table-list','standard-list','card-list','search-list','basic-form','step-form','advanced-form','basic-detail','advanced-detail','notifications','jobs','account-settings','result-fail','403'])assert(shellJs.includes("key:'"+key+"'"),'admin shell missing preset route '+key);
 const combinedAdminViews=viewFiles.map(name=>read('docs/admin/views/'+name)).join('\n');
 assert(!hasCompositeFieldLabel(combinedAdminViews),'admin view composite controls must not be wrapped by native label activation');
 for(const legacy of ['qx-admin-view-grid','qx-admin-view-page','qx-admin-view-head','qx-admin-search-hero']){

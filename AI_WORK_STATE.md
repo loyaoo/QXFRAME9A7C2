@@ -21,7 +21,7 @@
 
 ### ADMIN-COMPLETE-PRESET-003 — complete admin preset page matrix
 Status: IN_PROGRESS
-Task progress: 10%
+Task progress: 65%
 Branch: `docs/admin-complete-preset-003`.
 Baseline: `main@4c2a281a12a0fb891aad9bc1d23df5480ce61903` (PR #181 merged; admin interaction polish verified).
 
@@ -37,8 +37,15 @@ Frozen decisions:
 - Keep demo data local/static and dependency-free.
 - Extend admin/canonical-doc verifiers and browser publication coverage with the expanded page matrix.
 
+Implemented batch:
+- Expanded shell routes from 14 to 35 while preserving canonical Menu/Tabs behavior.
+- Expanded admin views from 11 to 32 with monitor/workplace, business, list, form, detail, system, account and exception/result families.
+- Added register + register-result auth presets alongside existing login.
+- Reused existing QXFRAME components and shared admin assets; no third-party source/assets copied.
+- Extended admin and canonical-doc verification contracts to the 108-page publication set.
+
 Next exact step:
-- Build the new view/auth pages, expand shell routes and shared admin view assets, then update verification counts/contracts and run exact-head CI.
+- Commit the implementation batch, open PR, run exact-head CI and fix only concrete verification failures.
 
 
 ### ADMIN-INTERACTION-POLISH-002 — popup-field opening, admin Tabs focus, native focus precedence, SelectGroup stacking, flex layout and collapsed Menu
