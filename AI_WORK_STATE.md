@@ -14,10 +14,46 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: complete admin preset expansion.
-- Current Task: `SCROLL-UNIFICATION-005`
+- Current Phase: runtime Scroll visual ownership + popup alignment regression closeout.
+- Current Task: `SCROLL-VISUAL-006`
 
 ## CURRENT
+
+### SCROLL-VISUAL-006 — actual admin Scroll chrome + popup alignment verification
+Status: IN_PROGRESS
+Task progress: 60%
+Branch: `fix/scroll-visual-and-popup-alignment-006`.
+Baseline: `main@1fda904db5548f53ccdb9628c5f5c6e797f5abaf` (PR #184 merged; main CI #920 + Pages green).
+
+User evidence:
+- Current deployed admin screenshot still shows a browser-native vertical scrollbar beside the left navigation.
+- User also reports the Select/DatePicker popup opening position still visibly shifts in the actual admin page.
+- This invalidates the previous completion claim: source-level Scroll ownership was not enough evidence that the final admin DOM had switched away from native scrolling.
+
+Confirmed root cause:
+- `docs/assets/qxframe9a7c2-admin-shell.css` still had `.qx-admin-menu{overflow:auto}`; the shell, not Menu, owned the visible left-nav scrollbar.
+- Menu root itself only used Scroll for popup submenu/overflow levels. Inline/vertical root-level navigation had no Scroll owner.
+- Previous browser smoke covered synthetic Select/DatePicker instances, but not the real order-page DatePicker inside the complete admin iframe.
+
+Implemented so far:
+- Menu now wraps its root level in `.qxframe9a7c2-menu-root-scroll` and uses `Scroll.attachViewport` by default for vertical/inline root scrolling.
+- Horizontal Menu keeps native no-scroll root behavior and destroys the root Scroll owner when switching into horizontal mode.
+- Menu exposes `getScroll()` / `getScrollViewport()`.
+- Admin shell `.qx-admin-menu` now uses `overflow:hidden`; its canonical Menu fills the available height and owns scrolling internally.
+- Menu selectors were updated for the canonical `Menu -> root Scroll shell -> root level` DOM.
+- Static admin verification rejects any return to native `.qx-admin-menu overflow:auto`.
+- Canonical admin Chromium verification now forces sidebar overflow and requires: Scroll shell/viewport/track/thumb present, host overflow hidden, viewport actually scrollable, custom track visible, and scrolling moves the Scroll viewport.
+- Canonical admin Chromium verification now opens the real `orders.html` DatePicker inside the iframe and samples its visible popup left position throughout enter motion; spread must stay below 1.5px.
+
+Guardrails:
+- Do not style a native sidebar scrollbar and call it Scroll.
+- Do not reintroduce shell-level scrolling around Menu.
+- Do not disable popup motion to hide positioning instability.
+- Completion requires actual admin-page Chromium evidence, not only source/static checks.
+
+Next exact step:
+- Open PR, run exact-head CI/standalone canonical browser verification, fix any real DOM/layout failures, then merge and verify main CI + Pages.
+
 
 ### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
 Status: VERIFIED — READY TO MERGE
