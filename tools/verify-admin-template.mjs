@@ -7,6 +7,26 @@ function assert(condition,message){if(!condition)throw new Error('[QXFRAME9A7C2 
 function read(rel){return fs.readFileSync(path.join(repoRoot,rel),'utf8');}
 function hasCompositeFieldLabel(html){return [...html.matchAll(/<label[^>]*qxframe9a7c2-form-field[^>]*>([\s\S]*?)<\/label>/g)].some(match=>/<div\b/.test(match[1]));}
 function exists(rel){return fs.existsSync(path.join(repoRoot,rel));}
+function hasDirectRowChildOfRow(html){
+  const source=String(html||'').replace(/<script\b[\s\S]*?<\/script>/gi,'').replace(/<style\b[\s\S]*?<\/style>/gi,'');
+  const stack=[];
+  const voidTags=new Set(['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']);
+  for(const match of source.matchAll(/<\/?([a-z][\\w-]*)([^>]*)>/gi)){
+    const raw=match[0],tag=match[1].toLowerCase(),attrs=match[2]||'';
+    if(raw.startsWith('</')){
+      let index=stack.length-1;
+      while(index>=0&&stack[index].tag!==tag)index--;
+      if(index>=0)stack.length=index;
+      continue;
+    }
+    const classText=(attrs.match(/\\bclass\\s*=\\s*["']([^"']*)["']/i)||[])[1]||'';
+    const classes=new Set(classText.split(/\\s+/).filter(Boolean));
+    const parent=stack[stack.length-1];
+    if(classes.has('qxframe9a7c2-row')&&parent?.classes?.has('qxframe9a7c2-row'))return true;
+    if(!voidTags.has(tag)&&!raw.endsWith('/>'))stack.push({tag,classes});
+  }
+  return false;
+}
 
 const shell='docs/admin/index.html';
 const login='docs/admin/login.html';
@@ -98,6 +118,7 @@ for(const legacy of ['qx-admin-view-grid','qx-admin-view-page','qx-admin-view-he
 for(const name of viewFiles){
   const html=read('docs/admin/views/'+name);
   assert(html.includes('qxframe9a7c2-row qxframe9a7c2-gx-0 qxframe9a7c2-gy-4'),'admin view root must use canonical row/column composition: '+name);
+  assert(!hasDirectRowChildOfRow(html),'admin Grid row must be nested through a framework column, not directly under another row: '+name);
 }
 assert(combinedAdminViews.includes('qxframe9a7c2-row')&&combinedAdminViews.includes('qxframe9a7c2-col-md-17'),'admin view markup is missing framework responsive grid composition');
 assert(controlSource.includes('clearReplacesToggle: false')&&!controlSource.includes('clearReplacesToggle: true'),'Control must keep popup toggle available beside clear by default');
