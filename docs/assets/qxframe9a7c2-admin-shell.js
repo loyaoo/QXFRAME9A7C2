@@ -50,7 +50,7 @@ function renderTabs(){
    var route=byKey[key];if(!route)return;
    var tab=document.createElement('button');tab.type='button';tab.className='qx-admin-tab'+(key===state.active?' is-active':'');tab.dataset.key=key;
    var label=document.createElement('span');label.className='qx-admin-tab-label';label.textContent=route.title;tab.appendChild(label);
-   if(!route.pinned){var close=document.createElement('button');close.type='button';close.className='qx-admin-tab-close';close.textContent='×';close.dataset.close=key;tab.appendChild(close)}
+   if(!route.pinned){var close=document.createElement('span');close.className='qx-admin-tab-close';close.textContent='×';close.dataset.close=key;tab.appendChild(close)}
    tab.addEventListener('click',function(event){var closeKey=event.target&&event.target.dataset&&event.target.dataset.close;if(closeKey){event.stopPropagation();closeTab(closeKey);return}activate(key)});
    tabsHost.appendChild(tab);ensureFrame(key);
  });
