@@ -395,12 +395,11 @@ function setupTags(instance) {
   }
   function destroyOverflowPopup(reason) {
     destroyOverflowRows();
-    if (overflowScroll) overflowScroll.destroy();
+    if (overflowPopover) overflowPopover.destroy(reason || 'tags-overflow-destroy');
+    overflowPopover = null;
     overflowScroll = null;
     overflowScrollHost = null;
     overflowList = null;
-    if (overflowPopover) overflowPopover.destroy(reason || 'tags-overflow-destroy');
-    overflowPopover = null;
     overflowPopoverConfig = null;
   }
   function destroyOverflow() {
@@ -988,27 +987,11 @@ function setupTags(instance) {
       overflowList = doc.createElement('div');
       overflowList.className = 'qxframe9a7c2-tags-overflow-list qxframe9a7c2-overflow-list';
       overflowScrollHost.appendChild(overflowList);
-      overflowScroll = Scroll.create({
-        container: overflowScrollHost,
-        axis: 'y',
-        wheelAxis: 'y',
-        scrollbarVisibility: opts.scrollbarVisibility,
-        edgeShadow: true,
-        disabled: opts.disabled === true,
-        readOnly: opts.readOnly === true
-      });
     }
     reconcileOverflowRows(hiddenItems);
     var maxHeight = Number(opts.overflowMaxHeight);
     if (Number.isFinite(maxHeight) && maxHeight > 0) overflowScrollHost.style.height = Math.min(maxHeight, Math.max(32, hiddenItems.length * 34)) + 'px';
     else overflowScrollHost.style.height = '';
-    overflowScroll.updateOptions({
-      scrollbarVisibility: opts.scrollbarVisibility,
-      disabled: opts.disabled === true,
-      readOnly: opts.readOnly === true
-    });
-    overflowScroll.refresh('tags-overflow-items');
-    
     var nextConfig = {
       placement: String(opts.overflowPlacement || 'bottom-start'),
       size: String(opts.size || 'md'),
@@ -1027,6 +1010,15 @@ function setupTags(instance) {
         disabled: nextConfig.disabled
       });
       overflowPopoverConfig = nextConfig;
+      overflowScroll = overflowPopover.getPopupFrame().createScroll({
+        container: overflowScrollHost,
+        axis: 'y',
+        wheelAxis: 'y',
+        scrollbarVisibility: opts.scrollbarVisibility,
+        edgeShadow: true,
+        disabled: opts.disabled === true,
+        readOnly: opts.readOnly === true
+      });
     } else {
       var patch = {};
       if (!overflowPopoverConfig || overflowPopoverConfig.placement !== nextConfig.placement) patch.placement = nextConfig.placement;
@@ -1036,6 +1028,14 @@ function setupTags(instance) {
       if (hasPatch) overflowPopover.updateOptions(patch);
       overflowPopoverConfig = nextConfig;
       if (!hasPatch && overflowPopover.getState().open) overflowPopover.reposition('overflow-items');
+    }
+    if (overflowScroll) {
+      overflowScroll.updateOptions({
+        scrollbarVisibility: opts.scrollbarVisibility,
+        disabled: opts.disabled === true,
+        readOnly: opts.readOnly === true
+      });
+      overflowScroll.refresh('tags-overflow-items');
     }
   }
     
