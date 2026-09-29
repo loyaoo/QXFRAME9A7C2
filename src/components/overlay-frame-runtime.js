@@ -94,6 +94,7 @@ function create(config = {}) {
       source: DOM.activationSource(event),
       reason: reason || 'api',
       event: event || null,
+      originalEvent: event || null,
       root, mask, wrap, body, title, footer,
       overlayRuntime: overlay && overlay.getRuntime ? overlay.getRuntime() : null
     };
