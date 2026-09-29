@@ -113,6 +113,90 @@ for(const marker of [
 for(const marker of ["classList.toggle('has-horizontal-overflow'","classList.toggle('can-scroll-start'","classList.toggle('can-scroll-end'","DOM.listen(root, 'scroll'"])assert(tableSource.includes(marker),'Table horizontal-overflow state marker missing '+marker);
 
 const viewJs=read('docs/assets/qxframe9a7c2-admin-views.js');
+const coverageLedger='docs/admin/COMPONENT_COVERAGE.md';
+assert(exists(coverageLedger),'missing '+coverageLedger);
+const coverageText=read(coverageLedger);
+const adminCoverageSource=[
+  shellHtml,shellJs,demoJs,viewJs,shellCss,viewCss,adminFormHtml,adminListHtml,
+  read('docs/admin-dashboard-static.html'),combinedAdminViews
+].join('\n');
+const componentPages=fs.readdirSync(path.join(repoRoot,'docs/components')).filter(name=>name.endsWith('.html')).map(name=>name.replace(/\.html$/,'')).sort();
+const coverageMarkers={
+  "alert": "qxframe9a7c2-alert-root",
+  "autocomplete": "C.Autocomplete",
+  "avatar": "qxframe9a7c2-avatar",
+  "badge": "qxframe9a7c2-badge",
+  "button": "qxframe9a7c2-button",
+  "calendar": "C.Calendar",
+  "card": "qxframe9a7c2-card",
+  "carousel": "C.Carousel",
+  "cascader": "C.Cascader",
+  "checkbox": "type=\"checkbox\"",
+  "collapse": "C.Collapse",
+  "color-panel": "C.ColorPanel",
+  "color-picker": "C.ColorPicker",
+  "control": "Control.enhance",
+  "date-picker": "C.DatePicker",
+  "descriptions": "qxframe9a7c2-descriptions",
+  "drawer": "C.Drawer",
+  "dropdown": "C.Dropdown",
+  "empty": "qxframe9a7c2-empty",
+  "form": "qxframe9a7c2-form qx-admin-form-layout",
+  "grid": "qxframe9a7c2-row",
+  "icon": "qxframe9a7c2-icon",
+  "image": "C.Image",
+  "input-number": "C.InputNumber",
+  "input-otp": "C.InputOTP",
+  "item": "C.Item",
+  "json": "C.JSON",
+  "layout": "qxframe9a7c2-layout",
+  "list": "C.List",
+  "loading": "C.Loading",
+  "menu": "C.Menu",
+  "message": "C.Message",
+  "modal": "C.Modal",
+  "notification": "C.Notification",
+  "option-list": "C.OptionList",
+  "pagination": "C.Pagination",
+  "period-panel": "C.PeriodPanel",
+  "popconfirm": "C.Popconfirm",
+  "popover": "C.Popover",
+  "progress": "C.Progress",
+  "radio": "type=\"radio\"",
+  "rate": "C.Rate",
+  "result": "C.Result",
+  "ripple": "is-ripple",
+  "scroll": "C.Scroll",
+  "select": "C.Select",
+  "slider": "C.Slider",
+  "sort": "C.Sort",
+  "steps": "C.Steps",
+  "switch": "qxframe9a7c2-switch",
+  "table": "C.Table",
+  "tabs": "C.Tabs",
+  "tag-input": "C.TagInput",
+  "tags": "C.Tags",
+  "time-panel": "C.TimePanel",
+  "time-picker": "C.TimePicker",
+  "tooltip": "C.Tooltip",
+  "transfer": "C.Transfer",
+  "transition-group": "DOMHeadless.TransitionGroup",
+  "transition": "DOMHeadless.Transition.create",
+  "tree-select": "C.TreeSelect",
+  "tree": "C.Tree",
+  "trigger": "C.Trigger",
+  "upload": "C.Upload",
+  "virtual-list": "C.VirtualList",
+  "wheel-picker": "C.WheelPicker"
+};
+assert(componentPages.length===66,'expected 66 component docs pages for admin coverage, found '+componentPages.length);
+assert(Object.keys(coverageMarkers).length===componentPages.length,'admin coverage marker count must match component catalog');
+for(const name of componentPages){
+  assert(Object.prototype.hasOwnProperty.call(coverageMarkers,name),'admin coverage marker missing for '+name);
+  assert(coverageText.includes('| '+name+' |'),'admin coverage ledger row missing '+name);
+  assert(adminCoverageSource.includes(coverageMarkers[name]),'admin preset does not exercise '+name+' using marker '+coverageMarkers[name]);
+}
+
 for(const marker of ['Components','Control.enhance','Table.create','Upload.create','Autocomplete.create','DatePicker.create','Select.create']){
   assert(viewJs.includes(marker),'admin view component composition marker missing '+marker);
 }
