@@ -1550,12 +1550,14 @@ function setupDatePickerRuntime(instance, fieldInit) {
       presetActions.push(handler);
     });
     if (presets.length) {
+      if (presetsScrollShell.parentNode !== panelShell || presetsScrollShell.nextSibling !== selectionScrollShell) {
+        panelShell.insertBefore(presetsScrollShell, selectionScrollShell);
+      }
       if (!presetsScroll) presetsScroll = popupFrame.attachViewport({
         root:presetsScrollShell, viewport:presetsHost, content:presetsHost, document:doc,
         axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
         focusable:false, keyboard:false, controller:api
       });
-      if (presetsScrollShell.parentNode !== panelShell || presetsScrollShell.nextSibling !== selectionScrollShell) panelShell.insertBefore(presetsScrollShell, selectionScrollShell);
       presetsScroll.refresh('date-picker-presets');
       function enabledIndex(start, step) {
         var index = start;
