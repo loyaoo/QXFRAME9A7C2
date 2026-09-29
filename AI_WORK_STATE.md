@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-004 — responsive/filter + control geometry pressure audit
-Status: FIXING_SELECT_FAMILY_GEOMETRY
-Task progress: 72%
+Status: VERIFIED_PENDING_MERGE
+Task progress: 92%
 Baseline: `main@50c372ffd437476c7fa47ee545654b6154859134`.
 Branch: `audit/ant-edge-state-demos-004`.
 
@@ -55,13 +55,17 @@ Implemented:
 - Root cause is CSS ownership: the generic size recipe correctly resolves `--_qxframe9a7c2-control-height` from the family slot, but `.qxframe9a7c2-input.is-xs/sm/md/lg/xl` later overwrote `--_qxframe9a7c2-control-local-height` with fixed size literals. The input shell consumes local-height, cutting the family token chain.
 - Fix removes those redundant fixed local-height size overrides. Input local-height now remains `var(--_qxframe9a7c2-control-height)` from the base input rule, so xs/sm/md/lg/xl still use the shared size resolver by default while any family height override remains authoritative.
 - The other new #843 browser checks (Table responsive-hidden filter ownership and numeric 0 filter action labels) produced no failed checks; keep them unchanged.
+- Fix head `a7d7be5e71970730675a969a111c0bc83ec75482` passed exact-head QXFRAME CI #844 (Actions run `36504322626`): Windows tools, dependency audit, Completion audit, Full release verification including Chromium smoke, npm pack, standalone dist/docs build and artifact uploads all succeeded.
+- The Select geometry regression now observes the authored family height rather than the old fixed 32px md local height; single and one-line multiple remain equal under the same owner.
+- Round 4 is runtime-complete pending one final checkpoint-only exact-head CI and merge. No further Round 4 code changes are planned.
 - Existing empty-string filter regression retained; Upload style-height case marked not applicable.
 - main CI #841 and Pages both succeeded for `main@50c372ffd437476c7fa47ee545654b6154859134`.
 
 Next exact step:
-1. Open PR and run exact-head CI.
-2. If geometry/responsive assertions fail, fix the canonical Control/Table owner rather than weakening them.
-3. Merge/deploy when green, then continue with the next unclosed Ant interaction class.
+1. Run final exact-head CI after this checkpoint-only commit.
+2. Merge PR #174 if green.
+3. Verify main push CI + Pages deployment.
+4. Start the next Ant differential batch from the merged main; do not reopen Round 4 cases.
 
 ## PREVIOUS VERIFIED HANDOFF
 
