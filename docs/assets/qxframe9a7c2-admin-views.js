@@ -140,6 +140,42 @@ if(view==='developer-tools'){
    var empty=slot(mh,'qx-admin-inline-block');empty.innerHTML='<div class="qxframe9a7c2-empty is-simple"><div class="qxframe9a7c2-empty-image is-default"></div><div class="qxframe9a7c2-empty-description">当前没有失败任务</div></div>';
  }
 }
+if(view==='monitor'){
+ var extra=appendCard('状态与事件','monitor-components');
+ if(extra){
+   extra.innerHTML='<div class="qxframe9a7c2-alert-root is-warning"><div class="qxframe9a7c2-alert-wrapper"><span class="qxframe9a7c2-alert-icon"><i class="qxframe9a7c2-icon qxframe9a7c2-icon-alert-triangle is-line is-round is-stroke-3 is-lg"></i></span><div class="qxframe9a7c2-alert-section"><strong class="qxframe9a7c2-alert-title">1 个服务需要关注</strong><div class="qxframe9a7c2-alert-description">搜索服务 P95 响应高于告警阈值。</div></div></div></div>';
+   var pg=slot(extra,'qx-admin-inline-block');if(C.Progress){own(C.Progress.create({container:pg,type:'line',percent:68,status:'active',success:{percent:42}}));var circle=slot(extra,'qx-admin-inline-row');own(C.Progress.create({container:circle,type:'circle',percent:99}));own(C.Progress.create({container:circle,type:'dashboard',percent:84}));}
+   if(C.List){var lh=slot(extra,'qx-admin-inline-block');heading(lh,'最近事件');own(C.List.create({container:lh,items:[{key:'evt1',value:'evt1',label:'10:24 搜索索引刷新'},{key:'evt2',value:'evt2',label:'10:18 API 自动扩容'},{key:'evt3',value:'evt3',label:'09:56 队列积压恢复'}],value:'evt2',selectionAppearance:'highlight'}));}
+ }
+}
+if(view==='marketing'){
+ var car=appendCard('活动素材轮播','marketing-carousel');
+ if(car&&C.Carousel)own(C.Carousel.create({container:car,items:[{key:'a',content:'秋季新品主视觉'},{key:'b',content:'企业采购季'},{key:'c',content:'老客复购券'}],effect:'slide',dots:true,arrows:true,loop:true,autoplay:false}));
+}
+if(view==='customers'){
+ var rate=appendCard('客户满意度','customers-rate');
+ if(rate&&C.Rate){own(C.Rate.create({container:rate,defaultValue:4.5,count:5,half:true,size:'lg'}));var rr=slot(rate,'qx-admin-inline-block');heading(rr,'只读历史评分');own(C.Rate.create({container:rr,value:4,readOnly:true}));}
+}
+if(view==='products'){
+ var pc=appendCard('商品素材与标签','products-components');
+ if(pc){
+   if(C.Image){var ih=slot(pc,'qx-admin-inline-row');own(C.Image.create({container:ih,src:demoImage('TX-36','#1677ff'),fallback:demoImage('Fallback','#8c8c8c'),preview:true,rounded:true,alt:'商品主图'}));}
+   if(C.Tags){var tg=slot(pc,'qx-admin-inline-block');own(C.Tags.create({container:tg,items:[{key:'new',value:'new',label:'新品'},{key:'hot',value:'hot',label:'热卖'},{key:'enterprise',value:'enterprise',label:'企业采购'},{key:'solid',value:'solid',label:'实木'}],value:['new','enterprise'],checkable:true,closable:true,overflow:'collapse',maxVisible:3}));}
+   if(C.TagInput){var ti=slot(pc,'qx-admin-inline-block');own(C.TagInput.create({container:ti,value:[{key:'walnut',value:'walnut',label:'胡桃木'},{key:'meeting',value:'meeting',label:'会议桌'}],creatable:true,tokenSeparators:[',',';'],placeholder:'输入搜索标签 + Enter'}));}
+   var actions=slot(pc,'qx-admin-inline-row'),modalBtn=button('批量改价','qxframe9a7c2-button is-primary is-solid is-sm'),drawerBtn=button('编辑商品','qxframe9a7c2-button is-default is-outlined is-sm'),deleteBtn=button('删除草稿','qxframe9a7c2-button is-error is-text is-sm');actions.appendChild(modalBtn);actions.appendChild(drawerBtn);actions.appendChild(deleteBtn);
+   if(C.Modal){var m=own(C.Modal.create({autoOpen:false,title:'批量改价',content:'确认将所选商品价格按规则重新计算？',buttons:[{content:'取消',role:'cancel'},{content:'确认',role:'confirm'}]}));modalBtn.addEventListener('click',function(){m.open('products');});}
+   if(C.Drawer){var dr=own(C.Drawer.create({autoOpen:false,placement:'right',title:'编辑商品',content:'商品资料编辑区可继续嵌入 Select / InputNumber / Upload。'}));drawerBtn.addEventListener('click',function(){dr.open('products');});}
+   if(C.Popconfirm)own(C.Popconfirm.create({reference:deleteBtn,title:'删除这份草稿？',content:'删除后不可恢复。',danger:true,confirmText:'删除',cancelText:'保留',placement:'top'}));
+ }
+}
+if(view==='table-list'){
+ var ph=appendCard('分页','table-list-pagination');
+ if(ph&&C.Pagination){own(C.Pagination.create({container:ph,current:5,count:240,pageSize:10,showSizeChanger:true,showJumper:true}));var ps=slot(ph,'qx-admin-inline-block');own(C.Pagination.create({container:ps,simple:true,size:'sm',current:3,count:90,pageSize:10}));}
+}
+if(view==='account-settings'){
+ var oh=appendCard('双重验证','account-otp');
+ if(oh&&C.InputOTP){own(C.InputOTP.create({container:oh,length:6,value:'12',accept:'digits'}));var masked=slot(oh,'qx-admin-inline-block');own(C.InputOTP.create({container:masked,length:4,accept:'digits',mask:true,value:'1234'}));}
+}
 var login=document.getElementById('admin-login-form');if(login)login.addEventListener('submit',function(e){e.preventDefault();window.location.href='index.html#/dashboard'});var register=document.getElementById('admin-register-form');if(register)register.addEventListener('submit',function(e){e.preventDefault();window.location.href='register-result.html'});
 window.addEventListener('pagehide',function(){owners.splice(0).forEach(function(o){try{o.destroy()}catch(_){}})});
 })();
