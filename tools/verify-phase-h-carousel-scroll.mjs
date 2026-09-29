@@ -21,6 +21,11 @@ exactProfile(Scroll,'Scroll',['FocusController','InteractionController','Capabil
 const carousel=read('src/components/carousel.js');
 const scroll=read('src/components/scroll.js');
 const wheelPanel=read('src/components/wheel-panel.js');
+const itemCollection=read('src/components/item-collection.js');
+const virtualList=read('src/components/virtual-list.js');
+const menu=read('src/components/menu.js');
+const table=read('src/components/table.js');
+const cascader=read('src/components/cascader.js');
 const css=read('src/qxframe9a7c2.css');
 assert.match(carousel,/ValueController\.createValueBinding\s*\(/);
 assert.match(carousel,/FocusController\.create\s*\(/);
@@ -59,6 +64,16 @@ assert.match(scroll,/if \(!sequentialFocusEnabled\) viewport\.tabIndex = -1;/,'S
 assert.match(scroll,/else if \(originalViewportTabindex === null\) viewport\.removeAttribute\('tabindex'\);/,'Scroll focusable=true must restore default viewport Tab behavior instead of leaving an owned -1.');
 assert.match(wheelPanel,/keyboard:\s*false,[\s\S]*focusable:\s*false,/,'WheelPanel columns must opt out through Scroll focusable=false.');
 assert.doesNotMatch(wheelPanel,/scrollRoot\.tabIndex|scrollViewport\.tabIndex/,'WheelPanel must not patch Scroll tabindex ownership itself.');
+assert.match(itemCollection,/return Utils\.isFunction\(opts\.scrollAdapter\) \? opts\.scrollAdapter : Scroll\.attachViewport;/,'ItemCollection must default its scroll adapter to framework Scroll.');
+assert.match(virtualList,/return Utils\.isFunction\(options\.scrollAdapter\) \? options\.scrollAdapter : Scroll\.attachViewport;/,'VirtualList must default its scroll adapter to framework Scroll.');
+assert.match(menu,/Scroll\.attachViewport\(\{[\s\S]*root:shell,[\s\S]*viewport:level/,'Menu popup levels must use framework Scroll.');
+assert.match(table,/scrollSurface = Scroll\.attachViewport\(\{[\s\S]*viewport:scrollViewport/,'Table main viewport must use framework Scroll.');
+assert.match(table,/filterScroll = Scroll\.attachViewport\(\{/,'Table filter options must use framework Scroll.');
+assert.match(cascader,/columnsScroll = Scroll\.attachViewport\(\{/,'Cascader horizontal columns must use framework Scroll.');
+assert.match(css,/--qxframe9a7c2-native-scrollbar-size:\s*var\(--qxframe9a7c2-scroll-track-size\)/,'Native fallback scrollbar size must consume the Scroll geometry token.');
+assert.match(css,/--qxframe9a7c2-native-scrollbar-radius:\s*var\(--qxframe9a7c2-scroll-track-radius\)/,'Native fallback scrollbar radius must consume the Scroll geometry token.');
+assert.match(css,/--qxframe9a7c2-native-scrollbar-thumb-inset:\s*var\(--qxframe9a7c2-scroll-thumb-inset\)/,'Native fallback thumb inset must consume the Scroll geometry token.');
+assert.doesNotMatch(css,/::-webkit-scrollbar\{width:8px;height:8px\}/,'Native fallback scrollbar geometry must not duplicate hard-coded Scroll sizing.');
 
 console.log(JSON.stringify({
   ok:true,
