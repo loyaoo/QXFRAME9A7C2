@@ -15,13 +15,13 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-002`
+- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-003`
 
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-003 — motion reversal / stale identity pressure demos
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 55%
+Status: VERIFIED_PENDING_MERGE
+Task progress: 90%
 Baseline: `main@460322c75ebde024da678cadde0f5c894ea961e1`.
 Branch: `audit/ant-edge-state-demos-003`.
 
@@ -53,10 +53,20 @@ Implemented on branch:
 - Transfer demo + Chromium regression: source page 3 -> filter to zero rows -> clear filter. Page must clamp to 1 and onSearch must fire exactly once per query transition.
 - No runtime code changed yet in this round; the pressure matrix will determine whether a canonical owner defect exists.
 
+Verification:
+- PR #173 exact-head CI #835 at `2e09dfda9eac0eb8fed0408071efb88c4569703b` completed successfully.
+- Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build, and artifact uploads all passed.
+- No runtime code changes were required: all four new pressure regressions passed against the current canonical owners.
+- Modal/Drawer leave reversal retains the final reopened overlay and latest title/content without stale after-leave deactivation.
+- List Collection-backed data revision invalidates the removed selected anchor and reconciles active focus to the prior visual index.
+- Transfer source page 3 -> zero-result search clamps to page 1, clearing stays legal, and onSearch fires exactly once per query transition.
+- Final diagnostics balance also remains clean after the reversal cases.
+
 Next exact step:
-1. Open PR and run exact-head CI.
-2. If a new strict assertion fails, fix the responsible canonical owner without weakening the assertion.
-3. Merge if green and verify main CI + Pages.
+1. Run final exact-head CI after this checkpoint-only commit.
+2. Merge PR #173 if green.
+3. Verify main push CI + Pages deployment.
+4. Start the next differential batch from resulting main without re-testing these closed cases.
 ## PREVIOUS VERIFIED HANDOFF
 
 ### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
