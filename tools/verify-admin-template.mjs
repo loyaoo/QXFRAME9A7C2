@@ -35,7 +35,7 @@ for(const marker of [
   'qxframe9a7c2-admin:theme',
   'requestFullscreen'
 ])assert(shellJs.includes(marker),'admin shell capability missing '+marker);
-for(const marker of ['embed=1','is-admin-embedded','qxframe9a7c2-admin:navigate','qxframe9a7c2-admin:theme']){
+for(const marker of ["get('embed')==='1'",'is-admin-embedded','qxframe9a7c2-admin:navigate','qxframe9a7c2-admin:theme']){
   assert(demoJs.includes(marker),'standalone admin embed bridge missing '+marker);
 }
 
