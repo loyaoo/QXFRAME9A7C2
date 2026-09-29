@@ -89,6 +89,12 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-flush'; panel.hidden = true; panel.tabIndex = -1;
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
+        var columnsScroll = Scroll.attachViewport({
+          root: popupContentHost, viewport: columnsHost, content: columnsHost, document: doc,
+          axis: 'x', wheelAxis: 'x', wheelPropagation: true, scrollbarVisibility: 'auto',
+          focusable: false, keyboard: false, controller: instance
+        });
+        scope.add(function () { if (columnsScroll) columnsScroll.destroy(); columnsScroll = null; });
         var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, focusController = null, interactionController = null, tagNavigation = null;
         var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if(destroyed)return; if(triggerSession&&triggerSession.getState().open)renderColumns(); syncControl(); var payload={searchValue:value,reason:meta.reason||'search',originalEvent:meta.originalEvent||null,cascader:instance}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(!destroyed&&meta.silent!==true)emitter.emit('search',payload); } });
@@ -577,6 +583,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             onActivate: function (detail) { activateSearchResult(detail.item, detail); }
           });
           columnRecords = [{ index: 0, items: results, host: hostNode, list: searchList, search: true }]; activeColumnIndex = 0;
+          if (columnsScroll) columnsScroll.refresh('cascader-search-results');
           bindListVirtualFocus(columnRecords[0]);
           if (results.length) { searchList.prepareOpen({ strategy: 'first', source: 'keyboard', reason: 'cascader-search' }); activateRecordVirtualFocus(columnRecords[0], 'cascader-search', null); }
         }
@@ -626,6 +633,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var activeRecord = columnRecords[activeColumnIndex];
           if (activeRecord && keyboardCursorKey) { activeRecord.list.setActiveKey(keyboardCursorKey, { source: 'instance', reason: 'restore-keyboard-cursor', silent: true }); if (keyboard && keyboard.virtualFocus && keyboard.virtualFocus.getState().modality === 'keyboard') activateRecordVirtualFocus(activeRecord, 'restore-keyboard-cursor', null); }
           refreshSelectionSurfaces();
+          if (columnsScroll) columnsScroll.refresh('cascader-columns');
         }
     
         function emitOpen(opened, detail) {
@@ -964,7 +972,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           return Object.freeze({ value: opts.multiple === true ? values.slice() : current, values: values.slice(), controlled:!!(valueState && valueState.controlled), searchValue: searchState.query, checkedStrategy: String(opts.checkedStrategy || 'child'), changeOnSelect: opts.changeOnSelect === true, searchable: opts.searchable === true, maxVisibleTags:opts.maxVisibleTags === 'responsive' ? 'responsive' : Math.max(0, Math.floor(Number(opts.maxVisibleTags) || 0)), popupCustomized:Utils.isFunction(opts.popupRender), loadedKeys: Array.from(loadedKeys), loadingKeys: Array.from(loadingKeys), pathKeys: path.map(function (item) { return String(item.key); }), pathLabels: path.map(function (item) { return String(item.label); }), activePathKeys: activePathKeys.slice(), activeColumnIndex: activeColumnIndex, keyboardCursorKey: keyboardCursorKey, selectionAnchorValue: selectionController.getAnchor('selected'), keyboardHostStable: !triggerSession.getState().open || doc.activeElement === controlFocusElement(), open: triggerSession.getState().open, headless: headlessMode, projection: projectionMode, multiple: opts.multiple === true, disabled: opts.disabled === true, readOnly: opts.readOnly === true, destroyed: destroyed });
         }
         function disposeRuntime(reason) {
-          if (destroyed) return false; destroyed = true; loadTasks.destroy(); if (searchState) searchState.destroy(); destroySearchList(); destroyColumns(); loadedChildren.clear(); loadedKeys.clear(); loadingKeys.clear(); triggerSession = null; scope.dispose(); if (fieldControl) fieldControl.destroy(reason || 'cascader-destroy'); fieldControl = null; DOM.removeNode(panel); if (binding) binding.release(); binding = null; root = controlElement = valuesNode = input = clearButton = arrow = panel = popupContentHost = columnsHost = null; return true;
+          if (destroyed) return false; destroyed = true; loadTasks.destroy(); if (searchState) searchState.destroy(); destroySearchList(); destroyColumns(); loadedChildren.clear(); loadedKeys.clear(); loadingKeys.clear(); triggerSession = null; scope.dispose(); if (fieldControl) fieldControl.destroy(reason || 'cascader-destroy'); fieldControl = null; DOM.removeNode(panel); if (binding) binding.release(); binding = null; root = controlElement = valuesNode = input = clearButton = arrow = panel = popupContentHost = columnsHost = columnsScroll = null; return true;
         }
     
         var initialFormValue = opts.multiple === true ? selection.values.slice() : selection.value;
