@@ -98,6 +98,7 @@ function create(options) {
   var motionActive = false;
   var motionPreparing = false;
   var positioningGateActive = false;
+  var positioningMeasureActive = false;
   var api = null;
 
   function beginPositioningGate() {
@@ -110,6 +111,18 @@ function create(options) {
     if (!positioningGateActive) return false;
     positioningGateActive = false;
     if (floating && floating.classList) floating.classList.remove('qxframe9a7c2-trigger-positioning');
+    return true;
+  }
+  function beginPositioningMeasure() {
+    if (opts.position === false || opts.useTransformPosition === true || transitionElement !== floating || !floating || !floating.classList) return false;
+    floating.classList.add('qxframe9a7c2-trigger-positioning-measure');
+    positioningMeasureActive = true;
+    return true;
+  }
+  function clearPositioningMeasure() {
+    if (!positioningMeasureActive) return false;
+    positioningMeasureActive = false;
+    if (floating && floating.classList) floating.classList.remove('qxframe9a7c2-trigger-positioning-measure');
     return true;
   }
     
@@ -292,15 +305,18 @@ function create(options) {
       motionPreparing = true;
       if (transitionElement === floating && opts.position !== false) {
         runtime.setPositionSuspended(true, 'motion-enter-prepare');
+        beginPositioningMeasure();
       }
       return Promise.resolve(runtime.preparePosition('motion-enter-prepare')).catch(function () { return null; }).then(function () {
         var livePlacement = floating.getAttribute('data-placement') || opts.placement;
         if (transitionElement !== floating) transitionElement.setAttribute('data-placement', String(livePlacement || 'bottom-start'));
+        clearPositioningMeasure();
         clearPositioningGate();
         motionPreparing = false;
       });
     },
     onBeforeLeave: function () {
+      clearPositioningMeasure();
       clearPositioningGate();
       motionPreparing = false;
       motionActive = true;
@@ -309,6 +325,7 @@ function create(options) {
       }
     },
     onAfterEnter: function () {
+      clearPositioningMeasure();
       clearPositioningGate();
       motionPreparing = false;
       motionActive = false;
@@ -441,6 +458,7 @@ function create(options) {
     // internal destroy authority is guarded; a public reason string cannot spoof teardown.
     if (destroyed || opened) return true;
     if (runtime.deactivateInteraction) runtime.deactivateInteraction(info);
+    clearPositioningMeasure();
     clearPositioningGate();
     transition.setVisible(false, { reason: info.reason, originalEvent: info.originalEvent, immediate: !opts.transition || forceClose === 'destroy' });
     return true;
@@ -634,6 +652,7 @@ function create(options) {
     if (interaction) interaction.destroy();
     interaction = null;
     if (opened) closeInternal('destroy', null, 'destroy');
+    clearPositioningMeasure();
     clearPositioningGate();
     transition.destroy();
     runtime.destroy();
