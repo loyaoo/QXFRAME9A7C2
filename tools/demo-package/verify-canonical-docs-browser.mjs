@@ -231,7 +231,7 @@ try{
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
     var host=document.getElementById('admin-list-table');
     var wrap=host&&host.querySelector('.qxframe9a7c2-table-wrap');
-    var result={found:false,noOverflowShadowHidden:false,overflowState:false,startShadowAfterScroll:false,fixedHeaderAbove:false,nativeControlStyled:false,cardRadiusSynced:false};
+    var result={found:false,noOverflowShadowHidden:false,overflowState:false,startShadowAfterScroll:false,fixedHeaderAbove:false,nativeControlStyled:false,selectGroupCheckedAbove:false,cardRadiusSynced:false};
     if(!wrap)return result;
     result.found=true;
     wrap.style.width='3000px';
@@ -261,6 +261,13 @@ try{
     var ps=getComputedStyle(probe);
     result.nativeControlStyled=parseFloat(ps.minHeight)>=28&&ps.borderStyle==='solid'&&parseFloat(ps.borderRadius)>0;
     probe.remove();
+    var group=document.createElement('div');
+    group.className='qxframe9a7c2-form-selectgroup is-buttons';
+    group.innerHTML='<label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" type="radio" name="zprobe" checked><span class="qxframe9a7c2-form-selectgroup-label">A</span></label><label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" type="radio" name="zprobe"><span class="qxframe9a7c2-form-selectgroup-label">B</span></label>';
+    document.body.appendChild(group);
+    var groupItems=group.querySelectorAll('.qxframe9a7c2-form-selectgroup-item');
+    result.selectGroupCheckedAbove=groupItems.length===2&&(parseFloat(getComputedStyle(groupItems[0]).zIndex)||0)>(parseFloat(getComputedStyle(groupItems[1]).zIndex)||0);
+    group.remove();
     var card=document.createElement('article');
     card.className='qxframe9a7c2-card';
     var header=document.createElement('div');
@@ -277,7 +284,7 @@ try{
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const tableValue=tableRegression&&tableRegression.result&&tableRegression.result.value||{};
-  if(!tableValue.found||!tableValue.noOverflowShadowHidden||!tableValue.overflowState||!tableValue.startShadowAfterScroll||!tableValue.fixedHeaderAbove||!tableValue.nativeControlStyled||!tableValue.cardRadiusSynced){
+  if(!tableValue.found||!tableValue.noOverflowShadowHidden||!tableValue.overflowState||!tableValue.startShadowAfterScroll||!tableValue.fixedHeaderAbove||!tableValue.nativeControlStyled||!tableValue.selectGroupCheckedAbove||!tableValue.cardRadiusSynced){
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin/Table/CSS regression '+JSON.stringify(tableValue));
   }
 
