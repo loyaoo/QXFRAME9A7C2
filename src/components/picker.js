@@ -104,6 +104,7 @@ export class PickerComponent extends PopupFieldComponent {
             this.adoptPopupFieldRuntime(trigger, {
                 reference: field.getRootElement(),
                 popup: field.getPanelElement(),
+                popupFrame: field.getPopupFrame ? field.getPopupFrame() : null,
                 tabExitTarget: field.getInputElement ? field.getInputElement() : field.getRootElement(),
                 owned: false
             });
@@ -237,6 +238,8 @@ export class PickerComponent extends PopupFieldComponent {
     getRootElement() { const field = requireState(this).field; return field ? field.getRootElement() : this.root; }
     getInputElement() { const field = requireState(this).field; return field && field.getInputElement ? field.getInputElement() : null; }
     getPopupElement() { const field = requireState(this).field; return field ? field.getPanelElement() : super.getPopupElement(); }
+    getPopupFrame() { const field = requireState(this).field; return field && field.getPopupFrame ? field.getPopupFrame() : super.getPopupFrame(); }
+    getPopupScroll() { const frame = this.getPopupFrame(); return frame ? frame.getPrimaryScroll() : null; }
 
     [popupFieldHooks.optionsUpdated](next, previous, patch) {
         const hook = this[pickerHooks.optionsUpdated];
