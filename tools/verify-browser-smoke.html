@@ -310,11 +310,12 @@
       var stickyRows=[];for(var sr=0;sr<40;sr+=1)stickyRows.push({key:'s'+sr,a:'A'+sr,b:'B'+sr,c:'C'+sr});
       var sticky=C.Table.create({container:stickyHost,items:stickyRows,getKey:function(r){return r.key;},height:180,stickyHeader:true,columns:[{key:'a',title:'A',width:280,fixed:'start'},{key:'b',title:'B',width:360},{key:'c',title:'C',width:280,fixed:'end'}]});transient.push(sticky);
       await raf();await delay(60);
-      var stickyRoot=sticky.getRootElement();var firstFixed=stickyRoot.querySelector('tbody td');var lastFixed=stickyRoot.querySelector('tbody tr td:last-child');var headerCell=stickyRoot.querySelector('thead th');
-      assert('table-scrollbars-active',stickyRoot.scrollHeight>stickyRoot.clientHeight&&stickyRoot.scrollWidth>stickyRoot.clientWidth,'scroll='+stickyRoot.scrollWidth+'x'+stickyRoot.scrollHeight+',client='+stickyRoot.clientWidth+'x'+stickyRoot.clientHeight);
+      var stickyRoot=sticky.getRootElement();var stickyViewport=sticky.getScrollViewport();var firstFixed=stickyRoot.querySelector('tbody td');var lastFixed=stickyRoot.querySelector('tbody tr td:last-child');var headerCell=stickyRoot.querySelector('thead th');
+      assert('table-scroll-owner-is-framework-scroll',!!sticky.getScroll()&&!!stickyViewport&&stickyViewport.classList.contains('qxframe9a7c2-scroll-viewport'),'viewport='+(stickyViewport&&stickyViewport.className));
+      assert('table-scrollbars-active',stickyViewport.scrollHeight>stickyViewport.clientHeight&&stickyViewport.scrollWidth>stickyViewport.clientWidth,'scroll='+stickyViewport.scrollWidth+'x'+stickyViewport.scrollHeight+',client='+stickyViewport.clientWidth+'x'+stickyViewport.clientHeight);
       assert('table-fixed-cells-sticky',getComputedStyle(firstFixed).position==='sticky'&&getComputedStyle(lastFixed).position==='sticky',getComputedStyle(firstFixed).position+'/'+getComputedStyle(lastFixed).position);
       assert('table-header-sticky',getComputedStyle(headerCell).position==='sticky',getComputedStyle(headerCell).position);
-      var fixedLeft=firstFixed.getBoundingClientRect().left;stickyRoot.scrollLeft=180;stickyRoot.scrollTop=120;stickyRoot.dispatchEvent(new Event('scroll',{bubbles:true}));await raf();await delay(30);
+      var fixedLeft=firstFixed.getBoundingClientRect().left;stickyViewport.scrollLeft=180;stickyViewport.scrollTop=120;stickyViewport.dispatchEvent(new Event('scroll',{bubbles:true}));await raf();await delay(30);
       assert('table-fixed-start-holds-on-scroll',Math.abs(firstFixed.getBoundingClientRect().left-fixedLeft)<2,'delta='+(firstFixed.getBoundingClientRect().left-fixedLeft));sticky.destroy();stickyHost.remove();await delay(100);await raf();var diagSticky=Diagnostics.diff(before,Diagnostics.snapshot('after-sticky'));record('diag-after-sticky',diagSticky.domProjection.activeProjections===0,JSON.stringify(diagSticky.domProjection));
 
       var virtualHost=document.createElement('div');virtualHost.style.width='600px';document.body.appendChild(virtualHost);var virtualRows=[];for(var vr=0;vr<160;vr+=1)virtualRows.push({key:'v'+vr,name:'Name '+vr});var committed=null;
