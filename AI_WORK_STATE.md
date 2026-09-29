@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
-Status: IN PROGRESS
-Task progress: 15%
+Status: IMPLEMENTED — awaiting PR CI/browser verification
+Task progress: 70%
 Branch: `fix/admin-framework-polish-001`.
 Baseline: `main@ebb827b47c5797021fc055242647d487bea09326` (PR #179 merge).
 
@@ -40,8 +40,17 @@ Frozen decisions:
 - Table shadow visibility is runtime geometry state, while actual shadow paint remains CSS-owned.
 - Card remains non-clipping; corner-radius ownership is on header/footer backgrounds, not `overflow:hidden`.
 
+Implemented in branch:
+- Admin multi-tab strip now consumes canonical `Tabs` with framework Scroll/ResponsiveOverflow instead of `.qx-admin-tab`.
+- Admin iframe pointer/focus interaction closes the global Autocomplete popup.
+- Table projects horizontal overflow/reachability classes; fixed-boundary shadows now follow actual scroll geometry; fixed header z-order is raised above ordinary headers.
+- Native text input/textarea/select receive the Control visual recipe in framework CSS while specialized/framework-owned inputs remain excluded.
+- Card header/footer backgrounds inherit synchronized inner corner radii without clipping the Card root.
+- `qx-admin-view-grid` removed from the admin views that used it; layouts now use framework responsive row/column classes.
+- Structural + Chromium regression gates extended for these exact cases.
+
 Next exact step:
-- Implement source/admin changes, extend structural/browser regression gates, build generated dist, then open a PR and run exact-head CI.
+- Open PR, run exact-head release/browser CI, fix any gate finding, then merge and verify main Pages deployment.
 
 
 ### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template
