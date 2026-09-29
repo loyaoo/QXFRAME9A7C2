@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-006 — canonical focus / dynamic item reconciliation / color interaction pressure
-Status: VERIFYING_AFTER_TEST_FIX
-Task progress: 68%
+Status: VERIFIED_PENDING_MERGE
+Task progress: 92%
 Baseline: `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
 Branch: `audit/ant-edge-state-demos-006`.
 
@@ -52,13 +52,18 @@ Implemented:
 - Added ColorPicker interaction-lock demo and standalone ColorPanel Chromium pointer pressure: preview must roll back on lock and the later stale pointerup must not mutate value.
 - PR #176 CI #851 (Actions run `36507244870`) reached the browser suite but failed before any new semantic assertion: the new standalone ColorPanel smoke used `C.ColorPanel.create`, while ColorPanel is a BuildingBlock exposed as `B.ColorPanel`. This is a test namespace error, not a runtime result.
 - Corrected only the smoke namespace to `B.ColorPanel.create`; OTP/Carousel/ColorPanel assertions and runtime fixes remain unchanged.
+- Corrected head `2cbbe826c8418c5a3f1f710111f6b6065c30832d` passed PR #176 QXFRAME CI #852 (Actions run `36507536208`): Windows tooling, dependency audit, Completion audit, Full release verification including all Round 6 Chromium pressure checks, npm pack, standalone dist/docs build and artifact uploads all succeeded.
+- InputOTP programmatic `setValue('1')` and controlled value update both keep real activeElement aligned with the canonical first-empty segment while focus is already inside OTP; no external focus steal was observed.
+- Carousel keyed reorder/remove regression passed without runtime changes: active key survives reorder and missing active key reconciles to the prior visual index with DOM/state alignment.
+- ColorPanel active saturation drag rolls back immediately when disabled/readOnly mutation lock is entered; a stale pointerup after re-enable cannot commit the cancelled gesture.
+- Round 6 runtime work is complete pending final checkpoint-only exact-head CI and merge.
 - Round 5 main CI #850 and GitHub Pages deployment completed successfully for `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
 
 Next exact step:
-1. Open PR and run exact-head CI.
-2. Keep strict focus/value/identity assertions; fix owner logic rather than weakening tests if any fail.
-3. Merge/deploy when green.
-
+1. Run final exact-head CI after this checkpoint-only commit.
+2. Merge PR #176 if green.
+3. Verify main push CI + Pages deployment.
+4. Continue the next differential batch from merged main without reopening Round 6.
 
 ## PREVIOUS VERIFIED HANDOFF
 
