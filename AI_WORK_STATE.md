@@ -19,58 +19,38 @@
 
 ## CURRENT
 
-### ANT-DIFFERENTIAL-EDGE-STATES-003 — motion reversal / stale identity pressure demos
-Status: VERIFYING_BROWSER_BUDGET_FIX
-Task progress: 88%
-Baseline: `main@460322c75ebde024da678cadde0f5c894ea961e1`.
-Branch: `audit/ant-edge-state-demos-003`.
+### ANT-DIFFERENTIAL-EDGE-STATES-004 — responsive/filter + control geometry pressure audit
+Status: IMPLEMENTING
+Task progress: 20%
+Baseline: `main@50c372ffd437476c7fa47ee545654b6154859134`.
+Branch: `audit/ant-edge-state-demos-004`.
 
 Previous batch closed:
-- PR #172 merged at `460322c75ebde024da678cadde0f5c894ea961e1`.
-- PR head #833 passed exact-head Windows, Completion audit, Full release verification, pack, standalone docs/dist build and artifact upload.
-- main push CI #834 release passed the same full verification and uploaded the Pages artifact; deploy-pages was queued when this round started.
-- ANT-DIFFERENTIAL-EDGE-STATES-002 pressure checks for numeric 0 content, Transfer hot callbacks/all-disabled filters, frozen ColorPicker presets, disabled clear, List key 0, and Upload async remove+concurrent add all passed.
-- That matrix exposed and fixed a generic TransitionGroup child MotionCore leak: normally completed leave now destroys the child-owned MotionCore before its record is removed.
+- PR #173 merged at `50c372ffd437476c7fa47ee545654b6154859134`.
+- PR exact-head CI #840 passed Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build and artifacts.
+- Round 3 Modal/Drawer leave reversal, live content update, List data-revision anchor invalidation, and Transfer page-3 -> empty-filter -> clear recovery all passed without runtime component changes.
+- Two verifier races were hardened without weakening semantics: Collapse motion checks now wait for observable state/geometry instead of fixed milliseconds, and the 300+ browser regression suite result budget is 30s instead of the previous 12s.
+- main push CI #841 was started after merge and remains the deployment gate for the previous batch.
 
-Round 3 targets:
-1. Modal close -> immediate reopen while leave motion is active; only the final open state may win, overlay/focus/scroll resources must remain balanced.
-2. Drawer close -> immediate reopen while leave motion is active across mask + panel dual presence; stale after-close must not deactivate the reopened overlay.
-3. Modal/Drawer content/title update while open and during a reversal; projections must use current options rather than a stale pre-motion snapshot.
-4. ItemCollection/List selected/active identity after replacing/reordering items, including deletion of the previous active row and data-revision anchor invalidation.
-5. Transfer pagination/search page recovery after filter-to-empty -> clear/filter restore, matching the Ant 6.6 regression class but validating QX's PaginationModel + ItemCollection projection in a real browser.
-6. Search callbacks must fire exactly once per actual query transition; no duplicate clear event path.
+Round 4 targets selected from Ant 6.6.x regressions that map to QX capabilities:
+1. Select single vs multiple Control geometry under authored family control font-size/height overrides. Both modes must keep the same one-line shell height when tags do not wrap.
+2. Table active filter state must continue to filter data when that column is responsive-hidden; responsive rendering is CSS projection only and must not remove the column from TableModel filter ownership.
+3. Table single-select/tree filter must preserve a legitimate empty-string option value.
+4. Table filter action labels with numeric `0` must render `0` rather than fall back via truthy checks.
+5. Upload custom dropzone geometry will be tested only if QX exposes an authored style owner for the dropzone; do not invent an Ant-style prop solely for parity.
 
-Guardrails:
-- Add new canonical dynamic demos rather than duplicating ordinary open/close or basic list demos.
-- Browser tests assert final logical state + DOM + diagnostics ownership.
-- Do not add unsupported Ant APIs solely for parity.
-- If a failure is found, fix the canonical owner (MotionCore/OverlayController/SelectionController/PaginationModel/etc.) and retain the strict regression.
-
-Implemented on branch:
-- Modal demo + Chromium regression: open -> begin leave -> update title/content -> reopen; final logical open, overlay active, shown motion phase, and latest DOM content are all asserted.
-- Drawer demo + Chromium regression: same reversal across independent mask + panel motions; final dual presence and latest content are asserted.
-- List demo + Chromium regression: selected/active Beta is removed by an items replacement. SelectionController's Collection-backed revision anchor must invalidate, while active focus falls to the row at the prior visual index.
-- Transfer demo + Chromium regression: source page 3 -> filter to zero rows -> clear filter. Page must clamp to 1 and onSearch must fire exactly once per query transition.
-- No runtime code changed yet in this round; the pressure matrix will determine whether a canonical owner defect exists.
-
-Verification:
-- PR #173 exact-head CI #835 at `2e09dfda9eac0eb8fed0408071efb88c4569703b` completed successfully.
-- Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build, and artifact uploads all passed.
-- No runtime code changes were required: all four new pressure regressions passed against the current canonical owners.
-- Modal/Drawer leave reversal retains the final reopened overlay and latest title/content without stale after-leave deactivation.
-- List Collection-backed data revision invalidates the removed selected anchor and reconciles active focus to the prior visual index.
-- Transfer source page 3 -> zero-result search clamps to page 1, clearing stays legal, and onSearch fires exactly once per query transition.
-- Final diagnostics balance also remains clean after the reversal cases.
-- Checkpoint-only CI #836 exposed a pre-existing nondeterministic verifier failure in `verify-phase-e-motion-closeout`: the Collapse enter test used fixed `wait(80)` and required the sampled height to be mid-animation. The same runtime/test had passed CI #835, proving the assertion depended on CI/browser frame timing rather than a source change.
-- Verifier fix on `6726823dc5790505526455a9cf2fd4fbe1729c50`: enter and rapid-toggle continuity now wait for an observable intermediate rendered height with a bounded timeout, matching the existing leave-side strategy. Final open/hidden settling and no-endpoint-jump assertions remain strict; runtime code is unchanged.
-- Follow-up `35acf10cc1a6a0e94777ebe50840c47157e754b3` also replaced fixed 300ms settle sleeps with bounded state/geometry waits; `verify-phase-e-motion-closeout` passed CI #839 after this change.
-- CI #839 then failed later in `verify-browser-smoke.mjs` without any failed browser assertion: the outer 12s whole-page result deadline expired while the smoke page still reported `PENDING`. The identical browser regression content passed CI #835, so the failure is a suite-budget race, not a component semantic failure.
-- Both browser result deadlines are now 30s. All individual assertions and component timing semantics are unchanged; a genuinely hung smoke page still fails by bounded timeout.
+Static audit before browser pressure:
+- TableModel owns filters independently from responsive cell classes. `setColumns` only prunes filters when a column key is actually removed, not when CSS hides it.
+- QX responsiveMode=hide adds `.qxframe9a7c2-table-col-hide-sm/md`; media queries only change `display`, so hidden columns should still participate in filtering.
+- Select single and multiple both render the same `.qxframe9a7c2-input` shell and use shared `--_qxframe9a7c2-control-local-height`; hosted Tags derive their internal height from that same variable.
+- Potential falsy-label defect found in Table filter popup: `column.filterResetText || 'Reset'` and `column.filterConfirmText || 'Apply'` would replace numeric 0. This must be reproduced before runtime change.
+- Picker footer/confirm numeric 0 and generic Control prefix/suffix numeric 0 already preserve values and/or have regression coverage; do not duplicate them.
 
 Next exact step:
-1. Run exact-head CI for the verifier-race fix.
-2. If stable/green, record verification, merge PR #173, and verify main CI + Pages.
-3. Start the next differential batch from resulting main without re-testing these closed cases.
+1. Add canonical Select geometry + Table responsive/filter/falsy-label pressure demos.
+2. Add strict Chromium assertions for measured geometry, projected rows/filter state, empty-string selection and numeric labels.
+3. Run exact-head CI; fix only reproduced owner-level defects.
+4. In parallel, verify main #841 + Pages for PR #173 deployment.
 ## PREVIOUS VERIFIED HANDOFF
 
 ### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
