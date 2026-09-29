@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### THEME-PLAYGROUND-REVIEW-824-854 — merged-change manual review annotations
-Status: IMPLEMENTING
-Task progress: 20%
+Status: IMPLEMENTED_PENDING_CI
+Task progress: 75%
 Baseline: `main@8cbec279e3171fda7ab1633f59522d5ce694da1a` / successful main CI #854.
 Branch: `docs/theme-playground-review-824-854`.
 
@@ -50,6 +50,23 @@ Implementation plan:
 3. Distinguish RUNTIME / CSS OWNER / NEW DEMO / TEST INFRA.
 4. Relocate the unreachable ColorPicker mutation-lock demo into `mountColorPicker`.
 5. Run exact-head CI, merge, then verify main Pages deployment.
+
+Implemented:
+- `docs/theme-playground.html` now contains an explicit CI #824–#854 review manifest.
+- Top review panel lists CI #824/#830/#834/#841/#846/#850/#854 with PR links, main merge SHAs, batch summaries and affected component anchors.
+- Component cards are marked separately as RUNTIME / CSS OWNER / NEW DEMO / TEST INFRA / STATE ONLY / REVIEW FIX.
+- Each affected card gets a concise manual-review note with PR/CI provenance and the exact behavior to re-test.
+- Every canonical demo added during PR #171–#176 is tagged `824–854 NEW/CHANGED` when rendered.
+- Added a docs-only “只看 #824–#854 修改组件” switch; existing search/category filters remain independent.
+- CI #824 / PR #170 is explicitly shown as state-only, preventing false UI regression attribution.
+- Fixed the PR #176 manual-review surface: `Mutation lock cancels active gesture` was unreachable after `return out` inside `wheelItems()`; it now mounts inside `mountColorPicker` while `wheelItems()` is restored to a pure helper.
+- No framework runtime behavior was changed by the annotation work.
+
+Next exact step:
+1. Open PR and run exact-head QXFRAME CI, including Theme Playground browser smoke.
+2. Merge if green.
+3. Verify main CI + Pages deployment so the annotated review page is publicly testable.
+
 
 ## PREVIOUS VERIFIED HANDOFF
 
