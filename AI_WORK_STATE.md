@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-003 — motion reversal / stale identity pressure demos
-Status: VERIFIED_PENDING_MERGE
-Task progress: 90%
+Status: VERIFYING_FLAKE_FIX
+Task progress: 85%
 Baseline: `main@460322c75ebde024da678cadde0f5c894ea961e1`.
 Branch: `audit/ant-edge-state-demos-003`.
 
@@ -61,12 +61,13 @@ Verification:
 - List Collection-backed data revision invalidates the removed selected anchor and reconciles active focus to the prior visual index.
 - Transfer source page 3 -> zero-result search clamps to page 1, clearing stays legal, and onSearch fires exactly once per query transition.
 - Final diagnostics balance also remains clean after the reversal cases.
+- Checkpoint-only CI #836 exposed a pre-existing nondeterministic verifier failure in `verify-phase-e-motion-closeout`: the Collapse enter test used fixed `wait(80)` and required the sampled height to be mid-animation. The same runtime/test had passed CI #835, proving the assertion depended on CI/browser frame timing rather than a source change.
+- Verifier fix on `6726823dc5790505526455a9cf2fd4fbe1729c50`: enter and rapid-toggle continuity now wait for an observable intermediate rendered height with a bounded timeout, matching the existing leave-side strategy. Final open/hidden settling and no-endpoint-jump assertions remain strict; runtime code is unchanged.
 
 Next exact step:
-1. Run final exact-head CI after this checkpoint-only commit.
-2. Merge PR #173 if green.
-3. Verify main push CI + Pages deployment.
-4. Start the next differential batch from resulting main without re-testing these closed cases.
+1. Run exact-head CI for the verifier-race fix.
+2. If stable/green, record verification, merge PR #173, and verify main CI + Pages.
+3. Start the next differential batch from resulting main without re-testing these closed cases.
 ## PREVIOUS VERIFIED HANDOFF
 
 ### THEME-PLAYGROUND-REGRESSION-001 — user-driven keyboard/focus interaction closeout
