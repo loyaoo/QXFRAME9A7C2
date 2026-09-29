@@ -456,11 +456,12 @@ function setupTable(instance) {
     geometryMeasureCancel = null; geometryMutateCancel = null;
   });
   scope.add(function () { if (virtualMeasureCancel) virtualMeasureCancel(); virtualMeasureCancel = null; bodyRowRecords.clear(); deferredEditRows.clear(); });
+  scope.add(DOM.listen(root, 'scroll', function () { syncFixedScrollState(); }));
   if ((doc.defaultView && doc.defaultView.ResizeObserver) || global.ResizeObserver) {
-    geometryObserver = ObserverHub.resize([root, table], function () { requestFixedGeometry('table-resize'); });
+    geometryObserver = ObserverHub.resize([root, table], function () { syncFixedScrollState(); requestFixedGeometry('table-resize'); });
     scope.add(function () { if (geometryObserver) geometryObserver(); geometryObserver = null; });
   } else if (doc.defaultView) {
-    scope.add(DOM.listen(doc.defaultView, 'resize', function () { requestFixedGeometry('window-resize'); }));
+    scope.add(DOM.listen(doc.defaultView, 'resize', function () { syncFixedScrollState(); requestFixedGeometry('window-resize'); }));
   }
     
   function modelOptions() {
@@ -1316,6 +1317,18 @@ function setupTable(instance) {
     }
     return result;
   }
+  function syncFixedScrollState() {
+    if (destroyed || !root) return false;
+    var clientWidth = Math.max(0, Number(root.clientWidth) || 0);
+    var scrollWidth = Math.max(clientWidth, Number(root.scrollWidth) || 0);
+    var maxScroll = Math.max(0, scrollWidth - clientWidth);
+    var overflow = maxScroll > 1;
+    var scrollLeft = Math.max(0, Math.min(maxScroll, Number(root.scrollLeft) || 0));
+    root.classList.toggle('has-horizontal-overflow', overflow);
+    root.classList.toggle('can-scroll-start', overflow && scrollLeft > 1);
+    root.classList.toggle('can-scroll-end', overflow && scrollLeft < maxScroll - 1);
+    return overflow;
+  }
   function measureFixedGeometry() {
     if (destroyed || !table.isConnected) return null;
     var columns = currentColumns();
@@ -1406,6 +1419,7 @@ function setupTable(instance) {
       cell.classList.toggle('is-last', column.fixed === 'start' && key === measurement.boundaryStart);
       cell.classList.toggle('is-first', column.fixed === 'end' && key === measurement.boundaryEnd);
     });
+    syncFixedScrollState();
     return true;
   }
   function requestFixedGeometry(reason) {
