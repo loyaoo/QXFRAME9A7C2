@@ -1,4 +1,4 @@
-import { PopupComponent } from './popup.js';
+import { PopupComponent, PopupFrame, PopupRuntime } from './popup.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { ComponentContracts } from '../core/componentContracts.js';
 import { CapabilityController } from '../core/capabilityController.js';
@@ -13,8 +13,6 @@ import { ItemAccessors } from '../core/itemAccessors.js';
 import { TreeQuery } from '../utils/treeQuery.js';
 import { FocusController } from '../core/focusController.js';
 import { ItemCollection } from './item-collection.js';
-import { Trigger } from './trigger.js';
-import { Scroll } from './scroll.js';
 
 const state = new WeakMap();
 const own = Utils.own;
@@ -77,6 +75,7 @@ function initializeDropdown(instance, options) {
   var arrow = doc.createElement('div');
   panel.className = 'qxframe9a7c2-dropdown-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true;
   arrow.className = 'qxframe9a7c2-dropdown-arrow';
+  var rootPopupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
   var triggerSession = null;
   var rootSurface = null;
   var allSurfaces = [];
@@ -287,8 +286,10 @@ function initializeDropdown(instance, options) {
   }
       
   function buildSurface(targetPanel, items, parentTrigger, parentRecord, isRoot) {
+    var popupFrame = isRoot ? rootPopupFrame : (parentRecord && parentRecord.popupFrame);
+    if (!popupFrame) throw new Error('[QXFRAME9A7C2] Dropdown popup surface requires PopupFrame ownership.');
     var host = doc.createElement('div'); host.className = 'qxframe9a7c2-dropdown-list-host'; targetPanel.appendChild(host);
-    var surface = { panel: targetPanel, host: host, items: items, list: null, trigger: parentTrigger, parentRecord: parentRecord || null, childRecords: [], disposeKeyboard: null };
+    var surface = { panel: targetPanel, popupFrame: popupFrame, host: host, items: items, list: null, trigger: parentTrigger, parentRecord: parentRecord || null, childRecords: [], disposeKeyboard: null };
     allSurfaces.push(surface);
     surface.list = ItemCollection.create({
       ownerPrefix: 'dropdown',
@@ -296,7 +297,7 @@ function initializeDropdown(instance, options) {
       itemClassParts: ['item'],
       classes: opts.classes,
       styles: opts.styles,
-      container: host, keyboardFocusOwner: reference, scrollAdapter:function(config){return Scroll.attachViewport(config);}, items: items, selectable: false, searchable: isRoot && opts.searchable === true,
+      container: host, keyboardFocusOwner: reference, scrollAdapter:popupFrame.createAdapter(), items: items, selectable: false, searchable: isRoot && opts.searchable === true,
       searchValue: isRoot ? String(opts.searchValue || '') : '', disabled: opts.disabled === true, readOnly: opts.readOnly === true,
       size: opts.size, virtual: false, itemRender: renderActionItem,
       selectionAppearance: opts.selectable === false ? 'highlight' : opts.selectionAppearance,
@@ -335,14 +336,16 @@ function initializeDropdown(instance, options) {
       if (!row) return;
       row.classList.add('has-submenu');
       var childPanel = doc.createElement('div'); childPanel.className = 'qxframe9a7c2-dropdown-submenu-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; childPanel.hidden = true;
-      var childRecord = { key: String(item.key), item: item, trigger: null, surface: null, panel: childPanel, parentSurface: surface };
-      var childTrigger = Trigger.create({
-        reference: row, floating: childPanel, document: doc, portalContainer: portalContainer, trigger: opts.submenuTrigger || 'hover', placement: 'right-start', arrow: false, offset: own(item, 'submenuOffset') ? item.submenuOffset : opts.submenuOffset, transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute',
+      var childFrame = PopupFrame.create({ panel: childPanel, document: doc });
+      var childRecord = { key: String(item.key), item: item, trigger: null, popupFrame: childFrame, surface: null, panel: childPanel, parentSurface: surface };
+      var childRuntime = PopupRuntime.create({
+        reference: row, floating: childPanel, document: doc, portalContainer: portalContainer, popupFrame: childFrame, trigger: opts.submenuTrigger || 'hover', placement: 'right-start', arrow: false, offset: own(item, 'submenuOffset') ? item.submenuOffset : opts.submenuOffset, transition: PopupRuntime.motion.popupPlacement, strategy: opts.strategy || 'absolute',
         middleware: opts.middleware, flipOnOverflow: opts.flipOnOverflow !== false, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true, destroyOnClose: opts.destroyOnClose !== false, restoreFocus: false,
         openDelay: opts.submenuOpenDelay, closeDelay: opts.submenuLeaveDelay, disabled: opts.disabled === true || item.disabled === true, parent: parentTrigger,
         onOpen: function () { row; if (surface.list) surface.list.refreshItemStates(); },
         onClose: function () { row; if (surface.list) surface.list.refreshItemStates(); if (childTrigger) childTrigger.closeChildren('submenu-close'); }
       });
+      var childTrigger = childRuntime.trigger;
       childRecord.trigger = childTrigger; childTriggerRecords.push(childRecord); surface.childRecords.push(childRecord);
       childRecord.surface = buildSurface(childPanel, childrenOf(item), childTrigger, childRecord, false);
     });
@@ -351,7 +354,7 @@ function initializeDropdown(instance, options) {
   }
       
   function destroyActionSurfaces() {
-    childTriggerRecords.slice().reverse().forEach(function (record) { if (record.trigger) record.trigger.destroy('dropdown-rebuild'); if (record.panel) DOM.removeNode(record.panel); });
+    childTriggerRecords.slice().reverse().forEach(function (record) { if (record.trigger) record.trigger.destroy('dropdown-rebuild'); if (record.popupFrame) record.popupFrame.destroy(); if (record.panel) DOM.removeNode(record.panel); });
     childTriggerRecords = [];
     allSurfaces.slice().reverse().forEach(function (surface) { if (surface.disposeKeyboard) surface.disposeKeyboard(); surface.disposeKeyboard = null; if (surface.list) surface.list.destroy(); });
     allSurfaces = []; rootSurface = null;
@@ -449,8 +452,8 @@ function initializeDropdown(instance, options) {
   keyboard = focusController.keyboard;
   scope.add(function(){ if (focusController) focusController.destroy(); focusController = null; keyboard = null; });
       
-  triggerSession = Trigger.create({
-    reference: reference, floating: panel, document: doc, portalContainer: portalContainer, trigger: opts.trigger, placement: opts.placement, arrow: opts.showArrow === true, arrowElement: arrow, arrowPadding: opts.arrowPadding, offset: opts.offset, transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', middleware: opts.middleware,
+  var rootPopupRuntime = PopupRuntime.create({
+    reference: reference, floating: panel, document: doc, portalContainer: portalContainer, popupFrame: rootPopupFrame, trigger: opts.trigger, placement: opts.placement, arrow: opts.showArrow === true, arrowElement: arrow, arrowPadding: opts.arrowPadding, offset: opts.offset, transition: PopupRuntime.motion.popupPlacement, strategy: opts.strategy || 'absolute', middleware: opts.middleware,
     flipOnOverflow: opts.flipOnOverflow !== false,
     autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnFocusOutside: true, closeOnTabExit: true, tabExitTarget: reference, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false,
     restoreFocusTarget: reference,
@@ -478,6 +481,7 @@ function initializeDropdown(instance, options) {
       emitOpen(false, detail);
     }
   });
+  triggerSession = rootPopupRuntime.trigger;
   var ownedTrigger = triggerSession;
   instance.adoptPopupRuntime(Object.freeze({
     open: function (reason, event) { return ownedTrigger.open(reason, event); },
@@ -487,7 +491,7 @@ function initializeDropdown(instance, options) {
     getState: function () { return ownedTrigger.getState(); },
     updateOptions: function (patch) { return ownedTrigger.updateOptions(patch); },
     destroy: function (reason) { return ownedTrigger.destroy(reason || 'dropdown-destroy'); }
-  }), { reference: reference, popup: panel, owned: true });
+  }), { reference: reference, popup: panel, popupFrame: rootPopupFrame, owned: true });
       
   rebuildActionSurfaces();
       
