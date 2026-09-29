@@ -15,57 +15,59 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-003`
+- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-005`
 
 ## CURRENT
 
-### ANT-DIFFERENTIAL-EDGE-STATES-004 — responsive/filter + control geometry pressure audit
+### ANT-DIFFERENTIAL-EDGE-STATES-005 — family geometry cleanup / popup renderer pressure
 Status: VERIFIED_PENDING_MERGE
 Task progress: 92%
-Baseline: `main@50c372ffd437476c7fa47ee545654b6154859134`.
-Branch: `audit/ant-edge-state-demos-004`.
+Baseline: `main@7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
+Branch: `audit/ant-edge-state-demos-005`.
 
-Previous batch closed:
-- PR #173 merged at `50c372ffd437476c7fa47ee545654b6154859134`.
-- PR exact-head CI #840 passed Windows tooling, Completion audit, Full release verification, packaging, standalone dist/docs build and artifacts.
-- Round 3 Modal/Drawer leave reversal, live content update, List data-revision anchor invalidation, and Transfer page-3 -> empty-filter -> clear recovery all passed without runtime component changes.
-- Two verifier races were hardened without weakening semantics: Collapse motion checks now wait for observable state/geometry instead of fixed milliseconds, and the 300+ browser regression suite result budget is 30s instead of the previous 12s.
-- main push CI #841 and deploy-pages both completed successfully for `main@50c372ffd437476c7fa47ee545654b6154859134`.
+Previous batch closed at runtime level:
+- PR #174 merged to main at `7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
+- PR final checkpoint head `e9126a69ba51a56fdd35c61169ab19a29ef07ea3` passed exact-head QXFRAME CI #845.
+- Round 4 fixed Table filter Reset/Apply authored numeric `0` labels by using Renderer with null/undefined-only fallback.
+- Round 4 also exposed and fixed a CSS ownership defect: `.qxframe9a7c2-input.is-xs/sm/md/lg/xl` hard-coded local heights and therefore ignored `--qxframe9a7c2-family-control-height`. Input local height now inherits the shared resolved `--_qxframe9a7c2-control-height`.
+- Select single and one-line multiple now both honor the authored family height while retaining equal geometry.
+- Table responsive-hidden columns preserve TableModel filter ownership and filtered rows.
+- main push CI #846 is the deployment gate for the just-merged Round 4 batch and is being verified in parallel.
 
-Round 4 targets selected from Ant 6.6.x regressions that map to QX capabilities:
-1. Select single vs multiple Control geometry under authored family control font-size/height overrides. Both modes must keep the same one-line shell height when tags do not wrap.
-2. Table active filter state must continue to filter data when that column is responsive-hidden; responsive rendering is CSS projection only and must not remove the column from TableModel filter ownership.
-3. Existing Chromium coverage already verifies Table single-select filter option value `''`, including live programmatic sync while the popup stays open; no duplicate test added.
-4. Table filter action labels with numeric `0` must render `0` rather than fall back via truthy checks.
-5. Upload custom dropzone geometry is not mapped: QX Upload exposes no Ant-style public dropzone `style.height` owner, so adding that API solely for parity is out of scope.
+Round 5 audit findings / targets:
+1. Full CSS scan shows Collapse is the only remaining component size block that directly overwrites shared `--_qxframe9a7c2-control-height` with 24/28/32/36/40px. Those values duplicate the shared size recipe and sever family height overrides exactly like the fixed Input path.
+2. Collapse xs/sm also carries component-specific padding adjustments. Keep those padding decisions unless browser pressure proves they are wrong; remove only the duplicated height ownership.
+3. Steps size projection already consumes `--_qxframe9a7c2-control-height` / gap and needs no change.
+4. Ant popupRender non-element crash class maps to QX Select/Cascader/TreeSelect. QX Renderer supports arrays and primitive values, but existing demos only return DOM wrappers. Add real number/array popupRender pressure to verify the contract.
+5. Select treats only `undefined` popupRender output as “use origin”; Cascader/TreeSelect also fall back on null/false. This is a semantic consistency candidate, not a proven user-facing bug. Do not change null/false semantics in this round without an explicit contract/reproduction.
+6. Ant DatePicker disabled navigation-focus regression does not map directly: QX Calendar nav buttons are `tabIndex=-1` and nav/title pointerdown is prevented, so real picker focus is not transferred onto a button that can become disabled.
+7. Ant Table stale deferred horizontal scroll synchronization does not map to QX current architecture: Table has one root scroll owner and no delayed cross-surface `scrollLeft` mirror.
 
-Static audit before browser pressure:
-- TableModel owns filters independently from responsive cell classes. `setColumns` only prunes filters when a column key is actually removed, not when CSS hides it.
-- QX responsiveMode=hide adds `.qxframe9a7c2-table-col-hide-sm/md`; media queries only change `display`, so hidden columns should still participate in filtering.
-- Select single and multiple both render the same `.qxframe9a7c2-input` shell and use shared `--_qxframe9a7c2-control-local-height`; hosted Tags derive their internal height from that same variable.
-- Potential falsy-label defect found in Table filter popup: `column.filterResetText || 'Reset'` and `column.filterConfirmText || 'Apply'` would replace numeric 0. This must be reproduced before runtime change.
-- Picker footer/confirm numeric 0 and generic Control prefix/suffix numeric 0 already preserve values and/or have regression coverage; do not duplicate them.
+Implementation plan:
+- Remove Collapse's duplicated size-specific shared height overrides while preserving its explicit xs/sm padding deltas.
+- Add a Theme Playground Collapse family-height demo and Chromium measured-height regression.
+- Add Select/Cascader/TreeSelect popupRender primitive/array demos or a compact shared pressure matrix and Chromium assertions.
+- Keep all existing renderer/focus/value ownership; no compatibility layer.
+- Run exact-head CI, fix only reproduced failures, merge/deploy if green.
 
 Implemented:
-- Added Select family-token geometry demo + Chromium measurement for single vs one-line multiple shell height.
-- Added Table responsive-hidden filter demo + Chromium regression; switching hide/scroll must not change filteredTotal or row projection.
-- Fixed Table filter Reset/Apply falsy content: fallback now applies only to null/undefined and rendering goes through Renderer, preserving numeric 0.
-- Added Chromium regression requiring both action labels to render exactly `0`.
-- Exact-head CI #843 reproduced a separate Control geometry defect: both Select single and multiple rendered 32px under `--qxframe9a7c2-family-control-height:46px`. The modes agreed with each other but both ignored the authored family height.
-- Root cause is CSS ownership: the generic size recipe correctly resolves `--_qxframe9a7c2-control-height` from the family slot, but `.qxframe9a7c2-input.is-xs/sm/md/lg/xl` later overwrote `--_qxframe9a7c2-control-local-height` with fixed size literals. The input shell consumes local-height, cutting the family token chain.
-- Fix removes those redundant fixed local-height size overrides. Input local-height now remains `var(--_qxframe9a7c2-control-height)` from the base input rule, so xs/sm/md/lg/xl still use the shared size resolver by default while any family height override remains authoritative.
-- The other new #843 browser checks (Table responsive-hidden filter ownership and numeric 0 filter action labels) produced no failed checks; keep them unchanged.
-- Fix head `a7d7be5e71970730675a969a111c0bc83ec75482` passed exact-head QXFRAME CI #844 (Actions run `36504322626`): Windows tools, dependency audit, Completion audit, Full release verification including Chromium smoke, npm pack, standalone dist/docs build and artifact uploads all succeeded.
-- The Select geometry regression now observes the authored family height rather than the old fixed 32px md local height; single and one-line multiple remain equal under the same owner.
-- Round 4 is runtime-complete pending one final checkpoint-only exact-head CI and merge. No further Round 4 code changes are planned.
-- Existing empty-string filter regression retained; Upload style-height case marked not applicable.
-- main CI #841 and Pages both succeeded for `main@50c372ffd437476c7fa47ee545654b6154859134`.
+- Removed Collapse's duplicated size-specific shared control-height assignments. xs/sm retain only their component-specific inline-padding deltas; all sizes now inherit the shared family/size control-height owner.
+- Added Collapse Theme Playground family-height matrix for xs/md/xl under a 50px family control height.
+- Added Chromium measured-height regression requiring all three Collapse headers to render ~50px under the shared family override.
+- Added Select/Cascader/TreeSelect popupRender primitive/array demos using [origin, primitive, number] output.
+- Added Chromium assertions that each popup keeps its canonical origin content and appends the primitive number through Renderer.
+- null/false popupRender fallback semantics remain unchanged in this round; no user-facing failure was established.
+- Main Round 4 push CI #846 completed successfully, including GitHub Pages deployment, for `main@7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
+- Round 5 exact-head `706f170092b7fec0e0b8e9966044ec9c5670bb33` passed QXFRAME CI #848 (Actions run `36505374856`): Windows tooling, dependency audit, Completion audit, Full release verification including Chromium pressure tests, npm pack, standalone dist/docs build and artifacts all succeeded.
+- Collapse xs/md/xl all honor the shared 50px family control height in the browser regression; removing the duplicated size heights did not disturb the retained xs/sm padding deltas.
+- Select/Cascader/TreeSelect popupRender array/primitive regressions all preserve canonical origin content and append primitive output without runtime errors.
+- The initial TreeSelect demo placement mistake was corrected before verification; the canonical demo now lives inside `mountTreeSelect`.
 
 Next exact step:
-1. Run final exact-head CI after this checkpoint-only commit.
-2. Merge PR #174 if green.
+1. Run one final checkpoint-only exact-head CI.
+2. Merge PR #175 if green.
 3. Verify main push CI + Pages deployment.
-4. Start the next Ant differential batch from the merged main; do not reopen Round 4 cases.
+4. Start Round 6 from merged main with OTP canonical-focus, Carousel dynamic items and ColorPicker clear/drag pressure; do not reopen Round 5.
 
 ## PREVIOUS VERIFIED HANDOFF
 

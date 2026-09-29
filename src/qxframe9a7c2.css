@@ -16407,11 +16407,10 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-collapse-transition-enter-from,.qxframe9a7c2-collapse-transition-leave-to{height:0;opacity:0}
 .qxframe9a7c2-collapse-transition-enter-to,.qxframe9a7c2-collapse-transition-leave-from{height:var(--qxframe9a7c2-collapse-motion-height);opacity:1}
 .qxframe9a7c2-collapse-transition-enter-active,.qxframe9a7c2-collapse-transition-leave-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-duration-mid,200ms) var(--qxframe9a7c2-motion-ease-in-out,cubic-bezier(.645,.045,.355,1)),opacity var(--qxframe9a7c2-motion-duration-mid,200ms) var(--qxframe9a7c2-motion-ease-in-out,cubic-bezier(.645,.045,.355,1))}
-.qxframe9a7c2-collapse.is-xs{--_qxframe9a7c2-control-height:24px;--_qxframe9a7c2-control-padding-inline:8px}
-.qxframe9a7c2-collapse.is-sm{--_qxframe9a7c2-control-height:28px;--_qxframe9a7c2-control-padding-inline:10px}
-.qxframe9a7c2-collapse.is-md{--_qxframe9a7c2-control-height:32px}
-.qxframe9a7c2-collapse.is-lg{--_qxframe9a7c2-control-height:36px}
-.qxframe9a7c2-collapse.is-xl{--_qxframe9a7c2-control-height:40px}
+/* Collapse size classes inherit the shared control-height family/size resolver.
+   Keep only the component-specific compact inline-padding deltas. */
+.qxframe9a7c2-collapse.is-xs{--_qxframe9a7c2-control-padding-inline:8px}
+.qxframe9a7c2-collapse.is-sm{--_qxframe9a7c2-control-padding-inline:10px}
 
 
 /* Carousel · Original parity rebuilt as one public runtime owner. */
