@@ -24,6 +24,7 @@ const viewCss=read('docs/assets/qxframe9a7c2-admin-views.css');
 const frameworkCss=read('src/qxframe9a7c2.css');
 const tableSource=read('src/components/table.js');
 const controlSource=read('src/components/control.js');
+const adminFormHtml=read('docs/admin-form-static.html');
 for(const marker of [
   'qxframe9a7c2-admin-shell.css',
   'qxframe9a7c2-admin-shell.js',
@@ -48,6 +49,7 @@ for(const marker of [
 ])assert(shellJs.includes(marker),'admin shell capability missing '+marker);
 assert(!shellJs.includes("className='qx-admin-tab"),'admin shell must not maintain a second hand-authored Tabs implementation');
 assert(!shellCss.includes('.qx-admin-tab{'),'legacy admin tab CSS must be removed');
+assert(!/<label[^>]*qxframe9a7c2-form-field[^>]*>[\\s\\S]*?id="admin-(?:content-type-select|category-cascader)"/.test(adminFormHtml),'composite popup fields must not be wrapped by native label activation');
 assert(shellCss.includes('.qx-admin-tabs-scroll>.qxframe9a7c2-tabs'),'admin tab bar must style the canonical Tabs root only');
 for(const marker of ["get('embed')==='1'",'is-admin-embedded','qxframe9a7c2-admin:navigate','qxframe9a7c2-admin:theme']){
   assert(demoJs.includes(marker),'standalone admin embed bridge missing '+marker);
