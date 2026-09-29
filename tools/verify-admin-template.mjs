@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 function assert(condition,message){if(!condition)throw new Error('[QXFRAME9A7C2 admin template] '+message);}
 function read(rel){return fs.readFileSync(path.join(repoRoot,rel),'utf8');}
-function hasCompositeFieldLabel(html){return [...html.matchAll(/<label[^>]*qxframe9a7c2-form-field[^>]*>([\s\S]*?)<\/label>/g)].some(match=><div\b/.test(match[1]));}
+function hasCompositeFieldLabel(html){return [...html.matchAll(/<label[^>]*qxframe9a7c2-form-field[^>]*>([\s\S]*?)<\/label>/g)].some(match=>/<div\b/.test(match[1]));}
 function exists(rel){return fs.existsSync(path.join(repoRoot,rel));}
 
 const shell='docs/admin/index.html';
