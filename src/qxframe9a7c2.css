@@ -717,9 +717,16 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --qxframe9a7c2-scroll-track-color: var(--_qxframe9a7c2-token-scroll-track);
   --qxframe9a7c2-scroll-thumb-color: var(--_qxframe9a7c2-token-scroll-thumb);
   --qxframe9a7c2-scroll-thumb-hover-color: var(--_qxframe9a7c2-token-scroll-thumb-hover);
+  --qxframe9a7c2-scroll-track-size: 8px;
+  --qxframe9a7c2-scroll-track-inset: 2px;
+  --qxframe9a7c2-scroll-track-radius: 999px;
+  --qxframe9a7c2-scroll-thumb-inset: 1px;
   --qxframe9a7c2-native-scrollbar-track: var(--qxframe9a7c2-scroll-track-color);
   --qxframe9a7c2-native-scrollbar-thumb: var(--qxframe9a7c2-scroll-thumb-color);
   --qxframe9a7c2-native-scrollbar-thumb-hover: var(--qxframe9a7c2-scroll-thumb-hover-color);
+  --qxframe9a7c2-native-scrollbar-size: var(--qxframe9a7c2-scroll-track-size);
+  --qxframe9a7c2-native-scrollbar-radius: var(--qxframe9a7c2-scroll-track-radius);
+  --qxframe9a7c2-native-scrollbar-thumb-inset: var(--qxframe9a7c2-scroll-thumb-inset);
 
   --qxframe9a7c2-ripple-color: rgba(var(--qxframe9a7c2-palette-black), .52);
   --qxframe9a7c2-ripple-inside-color: var(--qxframe9a7c2-ripple-color);
@@ -1674,16 +1681,16 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 }
 
 
-/* Framework-wide native-overflow chrome. Components.Scroll remains the advanced scroll owner;
-   native overflow surfaces only reuse its passive visual language. */
+/* Native overflow is a fallback/low-level surface. Runtime components prefer Components.Scroll.
+   When native chrome is visible, it consumes the same Scroll geometry/color contract. */
 .qxframe9a7c2-native-scrollbar,[class^="qxframe9a7c2-"],[class*=" qxframe9a7c2-"]{
   scrollbar-width:thin;
   scrollbar-color:var(--qxframe9a7c2-scroll-thumb-color) var(--qxframe9a7c2-scroll-track-color)
 }
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar,[class^="qxframe9a7c2-"]::-webkit-scrollbar,[class*=" qxframe9a7c2-"]::-webkit-scrollbar{width:8px;height:8px}
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-track,[class^="qxframe9a7c2-"]::-webkit-scrollbar-track,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-track{background:var(--qxframe9a7c2-scroll-track-color);border-radius:999px}
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb,[class^="qxframe9a7c2-"]::-webkit-scrollbar-thumb,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb{background:var(--qxframe9a7c2-scroll-thumb-color);border:1px solid transparent;background-clip:padding-box;border-radius:999px}
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb:hover,[class^="qxframe9a7c2-"]::-webkit-scrollbar-thumb:hover,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb:hover{background:var(--qxframe9a7c2-scroll-thumb-hover-color);background-clip:padding-box}
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar,[class^="qxframe9a7c2-"]::-webkit-scrollbar,[class*=" qxframe9a7c2-"]::-webkit-scrollbar{width:var(--qxframe9a7c2-native-scrollbar-size);height:var(--qxframe9a7c2-native-scrollbar-size)}
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-track,[class^="qxframe9a7c2-"]::-webkit-scrollbar-track,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-track{background:var(--qxframe9a7c2-native-scrollbar-track);border-radius:var(--qxframe9a7c2-native-scrollbar-radius)}
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb,[class^="qxframe9a7c2-"]::-webkit-scrollbar-thumb,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb{background:var(--qxframe9a7c2-native-scrollbar-thumb);border:var(--qxframe9a7c2-native-scrollbar-thumb-inset) solid transparent;background-clip:padding-box;border-radius:var(--qxframe9a7c2-native-scrollbar-radius)}
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb:hover,[class^="qxframe9a7c2-"]::-webkit-scrollbar-thumb:hover,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb:hover{background:var(--qxframe9a7c2-native-scrollbar-thumb-hover);background-clip:padding-box}
 
 /* QXFRAME9A7C2 Tags
  * Shared tag presentation primitive + public Tags surface.
@@ -14218,6 +14225,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --_qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-scroll-track-radius, 999px);
   --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-bg, var(--qxframe9a7c2-scroll-track-color));
   --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, var(--qxframe9a7c2-scroll-thumb-color));
+  --_qxframe9a7c2-scroll-thumb-inset: var(--qxframe9a7c2-scroll-thumb-inset, 1px);
   --_qxframe9a7c2-scroll-edge-shadow: var(--qxframe9a7c2-scroll-edge-shadow, var(--_qxframe9a7c2-semantic-border-strong));
   --_qxframe9a7c2-scroll-motion-duration: var(--qxframe9a7c2-scroll-motion-duration, 120ms);
   --_qxframe9a7c2-scroll-motion-easing: var(--qxframe9a7c2-scroll-motion-easing, ease);
@@ -14302,18 +14310,19 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 }
 
 .qxframe9a7c2-scroll-thumb-y {
-  left: 1px;
-  right: 1px;
+  left: var(--_qxframe9a7c2-scroll-thumb-inset);
+  right: var(--_qxframe9a7c2-scroll-thumb-inset);
   top: 0;
   min-height: 18px;
 }
 
 .qxframe9a7c2-scroll-thumb-x {
-  top: 1px;
-  bottom: 1px;
+  top: var(--_qxframe9a7c2-scroll-thumb-inset);
+  bottom: var(--_qxframe9a7c2-scroll-thumb-inset);
   left: 0;
   min-width: 18px;
 }
+.qxframe9a7c2-scroll-thumb:hover{background:var(--qxframe9a7c2-scroll-thumb-hover-color)}
 
 .qxframe9a7c2-scroll.is-scrollbar-auto:not(.is-scrollbar-active):not(.is-scrollbar-manual-show) .qxframe9a7c2-scroll-track {
   opacity: 0;
@@ -14633,8 +14642,10 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-menu-inline-transition-enter-active,.qxframe9a7c2-menu-inline-transition-leave-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard),opacity var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-easing-standard)}
 
 /* Popup hierarchy: Trigger remains the one popup interaction/positioning owner. */
-.qxframe9a7c2-menu-submenu-panel{--_qxframe9a7c2-menu-item-height:var(--qxframe9a7c2-menu-item-height,var(--_qxframe9a7c2-control-height));--_qxframe9a7c2-menu-item-radius:var(--qxframe9a7c2-menu-item-radius,var(--_qxframe9a7c2-navigation-radius));--_qxframe9a7c2-menu-popup-radius:var(--qxframe9a7c2-menu-popup-radius,var(--_qxframe9a7c2-popup-radius));--_qxframe9a7c2-popup-surface-radius:var(--_qxframe9a7c2-menu-popup-radius);position:absolute;min-width:12rem;max-width:min(22rem,calc(100vw - 2rem));transform-origin:top left;max-height:min(26rem,calc(100vh - 2rem));overflow-y:auto;overscroll-behavior:contain}
+.qxframe9a7c2-menu-submenu-panel{--_qxframe9a7c2-menu-item-height:var(--qxframe9a7c2-menu-item-height,var(--_qxframe9a7c2-control-height));--_qxframe9a7c2-menu-item-radius:var(--qxframe9a7c2-menu-item-radius,var(--_qxframe9a7c2-navigation-radius));--_qxframe9a7c2-menu-popup-radius:var(--qxframe9a7c2-menu-popup-radius,var(--_qxframe9a7c2-popup-radius));--_qxframe9a7c2-popup-surface-radius:var(--_qxframe9a7c2-menu-popup-radius);position:absolute;min-width:12rem;max-width:min(22rem,calc(100vw - 2rem));transform-origin:top left;max-height:min(26rem,calc(100vh - 2rem));overflow:hidden;overscroll-behavior:contain}
 .qxframe9a7c2-menu-submenu-panel[hidden]{display:none}
+.qxframe9a7c2-menu-submenu-scroll.qxframe9a7c2-scroll{height:auto;max-height:min(26rem,calc(100vh - 2rem))}
+.qxframe9a7c2-menu-submenu-scroll>.qxframe9a7c2-menu-popup-level.qxframe9a7c2-scroll-viewport{height:auto;max-height:min(26rem,calc(100vh - 2rem))}
 .qxframe9a7c2-menu-popup-level{padding:0}
 .qxframe9a7c2-menu-submenu-panel .qxframe9a7c2-menu-popup-level>.qxframe9a7c2-menu-item-wrap>.qxframe9a7c2-menu-item{width:100%;margin-inline:0}
 
@@ -15990,15 +16001,20 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
   box-sizing:border-box;
   width:100%;
   max-width:100%;
+  display:flex;
+  min-height:0;
+  flex-direction:column;
   padding:0;
-  overflow:auto;
+  overflow:hidden;
   border:1px solid var(--_qxframe9a7c2-semantic-border-subtle);
   border-radius:var(--_qxframe9a7c2-table-radius);
   background:var(--_qxframe9a7c2-semantic-surface-raised);
   color:var(--_qxframe9a7c2-semantic-text);
   opacity:var(--_qxframe9a7c2-table-wrap-opacity);
-  scrollbar-gutter:auto;
 }
+.qxframe9a7c2-table-scroll.qxframe9a7c2-scroll{width:100%;height:auto;min-height:0;flex:1 1 auto}
+.qxframe9a7c2-table-scroll>.qxframe9a7c2-table-scroll-viewport.qxframe9a7c2-scroll-viewport{height:100%;min-height:0}
+
 .qxframe9a7c2-table-wrap.is-borderless{border-color:transparent;border-radius:0}
 .qxframe9a7c2-table-wrap.is-shadow{box-shadow:var(--_qxframe9a7c2-table-shadow)}
 .qxframe9a7c2-table-wrap.is-keyboard-navigation:focus{outline:0}
