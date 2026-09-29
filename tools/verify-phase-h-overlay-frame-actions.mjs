@@ -6,6 +6,7 @@ import { Drawer } from '../src/components/drawer.js';
 
 const read=rel=>fs.readFileSync(new URL('../'+rel,import.meta.url),'utf8');
 const shell=read('src/core/overlayFrameShell.js');
+const frameRuntime=read('src/components/overlay-frame-runtime.js');
 const modal=read('src/components/modal.js');
 const drawer=read('src/components/drawer.js');
 
@@ -38,12 +39,15 @@ assert.match(shell,/getInteractionController:function\(\)\{return interactionCon
 assert.match(shell,/getCapabilityControllers:function\(\)/,'OverlayFrameShell must expose action CapabilityControllers.');
 assert.match(shell,/getFeedbackControllers:function\(\)/,'OverlayFrameShell must expose action FeedbackControllers.');
 
+assert.match(frameRuntime,/OverlayController\.create\s*\(/,'OverlayFrameRuntime must retain OverlayController resource ownership.');
+assert.match(frameRuntime,/Transition\.create\s*\(/,'OverlayFrameRuntime must retain Transition→MotionController presence ownership.');
+assert.match(frameRuntime,/getInteractionController\(\) \{ return frameShell\.getInteractionController\(\); \}/,'OverlayFrameRuntime must expose shared frame interaction authority.');
+assert.match(frameRuntime,/getCapabilityControllers\(\) \{ return frameShell\.getCapabilityControllers\(\); \}/,'OverlayFrameRuntime must expose frame capabilities.');
+assert.match(frameRuntime,/getFeedbackControllers\(\) \{ return frameShell\.getFeedbackControllers\(\); \}/,'OverlayFrameRuntime must expose frame feedback projectors.');
 for(const [name,source] of [['Modal',modal],['Drawer',drawer]]){
-  assert.match(source,/OverlayController\.create\s*\(/,name+' must retain OverlayController resource ownership.');
-  assert.match(source,/Transition\.create\s*\(/,name+' must retain Transition→MotionController presence ownership.');
-  assert.match(source,/getInteractionController: function \(\) \{ return frameShell\.getInteractionController\(\); \}/,name+' must expose shared frame interaction authority.');
-  assert.match(source,/getCapabilityControllers: function \(\) \{ return frameShell\.getCapabilityControllers\(\); \}/,name+' must expose frame capabilities.');
-  assert.match(source,/getFeedbackControllers: function \(\) \{ return frameShell\.getFeedbackControllers\(\); \}/,name+' must expose frame feedback projectors.');
+  assert.match(source,/OverlayFrameRuntime\.create\s*\(/,name+' must consume the shared OverlayFrameRuntime.');
+  assert.doesNotMatch(source,/OverlayController\.create\s*\(/,name+' must not retain a component-local OverlayController.');
+  assert.doesNotMatch(source,/Transition\.create\s*\(/,name+' must not retain component-local presence transitions.');
   assert.doesNotMatch(source,/DOM\.listen\(closeButton,\s*'click'/,name+' must not keep a duplicate close-button click owner.');
 }
 
