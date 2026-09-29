@@ -24,6 +24,7 @@ import { DOMBinding } from '../core/domBinding.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { mergeOptions } from '../core/options.js';
 import { VirtualList } from './virtual-list.js';
+import { Scroll } from './scroll.js';
 import { Item } from './item.js';
 
 var DOMFactory;
@@ -969,9 +970,16 @@ function create(options) {
     scrollShell = null;
   }
     
+  function resolveScrollAdapter() {
+    if (opts.scrollAdapter === false || opts.scrollAdapter === null) return null;
+    if (opts.scrollAdapter !== undefined && !Utils.isFunction(opts.scrollAdapter)) throw new TypeError('[QXFRAME9A7C2] ItemCollection scrollAdapter must be a function, false, or null.');
+    return Utils.isFunction(opts.scrollAdapter) ? opts.scrollAdapter : Scroll.attachViewport;
+  }
+
   function createScrollSurface(rootNode, viewportNode, contentNode) {
-    if (!Utils.isFunction(opts.scrollAdapter)) return null;
-    var created = opts.scrollAdapter({
+    var adapter = resolveScrollAdapter();
+    if (!adapter) return null;
+    var created = adapter({
       root: rootNode,
       viewport: viewportNode,
       content: contentNode || viewportNode,
@@ -1000,7 +1008,7 @@ function create(options) {
       viewport.classList.add('qxframe9a7c2-item-collection-viewport', ownerClass('viewport'));
       content.classList.add('qxframe9a7c2-item-collection-content', ownerClass('content'));
       viewport.tabIndex = -1;
-      if (Utils.isFunction(opts.scrollAdapter)) {
+      if (resolveScrollAdapter()) {
         scrollShell = doc.createElement('div');
         scrollShell.className = 'qxframe9a7c2-item-collection-scroll';
         scrollShell.appendChild(viewport);
@@ -1045,6 +1053,7 @@ function create(options) {
         overscan: Math.max(0, Math.floor(Number(opts.overscan) || 4)),
         height: opts.height || opts.maxHeight || undefined,
         focusable: false,
+        scrollAdapter: false,
         getKey: function (row) { return row.key; },
         itemRender: function (row) { var fragment = doc.createDocumentFragment(); renderRowContent(fragment, row); return fragment; },
         decorateItem: function (element, row) { decorateRow(element, row); },
@@ -1069,7 +1078,7 @@ function create(options) {
         },
         onRangeChange: function (detail) { emitter.emit('range-change', { range: detail.range, source: 'virtual-list', controller: api }); }
       });
-      if (Utils.isFunction(opts.scrollAdapter)) createScrollSurface(virtualList.getRootElement(), virtualList.getViewportElement(), virtualList.getViewportElement());
+      if (resolveScrollAdapter()) createScrollSurface(virtualList.getRootElement(), virtualList.getViewportElement(), virtualList.getViewportElement());
     } else {
       virtualList.updateOptions({ items: currentRows, itemSize: itemSize, estimateSize: estimateSize, overscan: Math.max(0, Math.floor(Number(opts.overscan) || 4)), height: opts.height || opts.maxHeight || undefined, focusable: false });
     }
