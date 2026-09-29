@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ADMIN-INTERACTION-POLISH-002 — popup-field opening, admin Tabs focus, native focus precedence, SelectGroup stacking, flex layout and collapsed Menu
-Status: VERIFYING
-Task progress: 90%
+Status: VERIFIED
+Task progress: 100%
 Branch: `fix/admin-interaction-polish-002`.
 Baseline: `main@e49a8f8f95396938cfce246515d8f80c354332b6` (PR #180 merge; main CI #871 + Pages green).
 
@@ -54,10 +54,10 @@ Implemented evidence:
 - Native text-control hover excludes :focus; checked SelectGroup items now stack above connected peers; collapsed inline Menu is constrained to its host and hides group headings.
 - All 11 admin views removed qx-admin-view-page / qx-admin-view-head / qx-admin-search-hero structural wrappers in favor of framework row/col composition.
 - Static and Chromium gates cover popup committed values, tab keyboard focus/removal, collapsed Menu fit/alignment and SelectGroup stacking.
-- PR #181 is open from this branch; CI #872 is running on exact head `5f0133e11da0f7ed0f4eb031c44205d44a11e2a1`.
+- PR #181 is open from this branch; exact-head CI #886 passed on `5cb65005b9b6107b7a3213710f9bf594e009efc9`.
 
 Next exact step:
-- Finish CI #872. Fix any failing regression at its shared owner, then update this checkpoint to VERIFIED, run exact-head CI if the checkpoint commit changes the head, merge PR #181, and verify main CI + Pages.
+- Run exact-head CI for this VERIFIED checkpoint commit; if green, merge PR #181 and verify main CI + GitHub Pages deployment.
 
 ### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
 Status: VERIFIED
