@@ -14,10 +14,32 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: admin template + shared framework interaction/layout polish.
-- Current Task: `ADMIN-INTERACTION-POLISH-002`
+- Current Phase: complete admin preset expansion.
+- Current Task: `ADMIN-COMPLETE-PRESET-003`
 
 ## CURRENT
+
+### ADMIN-COMPLETE-PRESET-003 — complete admin preset page matrix
+Status: IN_PROGRESS
+Task progress: 10%
+Branch: `docs/admin-complete-preset-003`.
+Baseline: `main@4c2a281a12a0fb891aad9bc1d23df5480ce61903` (PR #181 merged; admin interaction polish verified).
+
+User goal:
+- Expand `docs/admin` from the existing shell + core pages into a complete preset admin demonstration.
+- Use layuiAdmin, TDesign React Starter, Arco Design Pro and Ant Design Pro only as information-architecture/page-breadth references.
+- Keep QXFRAME9A7C2 components, tokens, interactions and DOM conventions as the implementation authority.
+
+Frozen decisions:
+- Preserve PR #179–#181 shell/runtime fixes; do not rebuild Tabs/Menu/Picker behavior locally in admin code.
+- Reuse existing dashboard/content list/content form demos instead of duplicating them.
+- Add missing mature-admin page families: dashboard monitor/workplace; business products/inventory/customers/marketing/finance; list variants; form variants; detail variants; system notices/jobs; account settings; failure/403; register flow.
+- Keep demo data local/static and dependency-free.
+- Extend admin/canonical-doc verifiers and browser publication coverage with the expanded page matrix.
+
+Next exact step:
+- Build the new view/auth pages, expand shell routes and shared admin view assets, then update verification counts/contracts and run exact-head CI.
+
 
 ### ADMIN-INTERACTION-POLISH-002 — popup-field opening, admin Tabs focus, native focus precedence, SelectGroup stacking, flex layout and collapsed Menu
 Status: VERIFIED
