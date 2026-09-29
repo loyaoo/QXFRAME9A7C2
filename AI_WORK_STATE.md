@@ -15,9 +15,41 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: complete admin preset expansion.
-- Current Task: `ADMIN-VIEW-GRID-REGRESSION-004`
+- Current Task: `SCROLL-UNIFICATION-005`
 
 ## CURRENT
+
+### SCROLL-UNIFICATION-005 — unified Scroll ownership + native scrollbar visual parity
+Status: IN_PROGRESS
+Task progress: 20%
+Branch: `refactor/scroll-unification-005`.
+Baseline: `main@7cbaa7b18d7953c267a8c525eab8ccc6aecb20f1`.
+
+User requirement:
+- Menu, Table and other framework-internal scrollable components should use the framework Scroll component by default instead of exposing independent native-scrollbar implementations.
+- Native scrolling remains the low-level browser mechanism inside Scroll and for CSS-only/fallback surfaces.
+- Any native scrollbar that is not intentionally hidden must share Scroll's track/thumb sizing, radius, colors and hover language rather than maintaining duplicated hard-coded styling.
+
+Audit findings:
+- Already Scroll-owned: WheelPanel, Modal body, Select, Autocomplete, TreeSelect and several ItemCollection-based popup paths.
+- ItemCollection currently enables Scroll only when a caller supplies `scrollAdapter`; plain List/OptionList/default Tree paths can therefore fall back to native scrollbar UI.
+- Public VirtualList currently owns a native overflow viewport directly.
+- Menu popup panels and Table main wrap currently expose native scrollbars.
+- Additional runtime-native overflow exists in Cascader horizontal columns, responsive DatePicker strips, Sort horizontal mode and Upload preview body.
+- Pure-CSS structures such as Layout sider and Descriptions cannot instantiate runtime Scroll and therefore remain native/fallback surfaces.
+- Framework native scrollbar CSS currently copies Scroll geometry with hard-coded `8px / 999px / 1px` values, so custom Scroll geometry can drift from native fallback geometry.
+
+Architecture decision:
+- Scroll remains native-scroll-backed internally; do not replace browser scrollTop/scrollLeft physics.
+- Default runtime ownership is Scroll; native overflow is the viewport implementation detail, hidden under Scroll chrome.
+- Preserve explicit opt-out/custom adapter paths where a component exposes them.
+- Pure-CSS/fallback native scrollbars consume the same Scroll geometry/color variables.
+- Do not introduce per-component scrollbar implementations.
+
+Next exact step:
+- Make ItemCollection and VirtualList default to Scroll ownership, then migrate Menu/Table and remaining runtime-native surfaces without breaking virtualization, sticky positioning or focus ownership.
+- Add static/browser regression coverage, run exact-head CI, merge only when green, then verify main CI + Pages.
+
 
 ### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
 Status: VERIFIED
