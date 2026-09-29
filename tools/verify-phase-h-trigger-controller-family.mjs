@@ -36,6 +36,8 @@ assert.match(triggerSource,/beginPositioningMeasure\(\);[\s\S]*runtime\.prepareP
 assert.match(triggerSource,/clearPositioningMeasure\(\);[\s\S]*clearPositioningGate\(\);/,'Trigger must reveal only after full-size placement measurement completes.');
 assert.match(cssSource,/\.qxframe9a7c2-trigger-positioning\{visibility:hidden!important;pointer-events:none!important\}/,'Trigger positioning gate must remain measurable but invisible.');
 assert.match(cssSource,/\.qxframe9a7c2-trigger-positioning-measure\{transform:none!important\}/,'Trigger positioning measure must neutralize popup scale/translate transforms.');
+assert.match(cssSource,/\[data-placement="bottom-start"\]\[class\*="qxframe9a7c2-motion-popup-placement-"\]\{transform-origin:0 0\}/,'bottom-start popup motion must stay anchored to the reference start edge.');
+assert.match(cssSource,/\[data-placement="bottom-end"\]\[class\*="qxframe9a7c2-motion-popup-placement-"\]\{transform-origin:100% 0\}/,'bottom-end popup motion must stay anchored to the reference end edge.');
 
 assert.match(overlayRuntimeSource,/import \{ FocusController \} from '\.\/focusController\.js';/,'OverlayRuntime focus resources must enter FocusController.');
 assert.match(overlayRuntimeSource,/FocusController\.createManager\s*\(/,'OverlayRuntime focus manager must be created by FocusController.');
