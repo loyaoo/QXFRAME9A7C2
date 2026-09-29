@@ -666,6 +666,13 @@ function create(options) {
     candidateOptions.format = formatName(candidateOptions.format);
     var candidateState = hasOwn(next, 'value') ? parseColor(next.value) : null;
     if (hasOwn(next, 'value') && !candidateState) throw new TypeError('[QXFRAME9A7C2] ColorPanel value is not a supported color.');
+    var enteringLock = !locked() && CapabilityController.mutationLocked(candidateOptions);
+    // A mutation lock terminates the current gesture immediately. Otherwise an active
+    // PointerSession can survive disabled/readOnly, then resume and commit after unlock.
+    if (enteringLock) {
+      if (saturationPointer && saturationPointer.active) saturationPointer.cancel('interaction-lock');
+      if (keyboardSnapshot) rollbackKeyboardInteraction(null);
+    }
     opts = candidateOptions;
     if (candidateState) { resetInteractionSnapshots(); state = candidateState; }
     if (hasOwn(next, 'presets')) renderPresets();

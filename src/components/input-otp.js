@@ -119,6 +119,18 @@ export class InputOTP extends FieldComponent {
         const record = state.get(this), current = record.control.getState();
         const index = this.#canonicalFocusIndex(current.segmentValues);
         record.control.setSegmentFocusIndex(index);
+        const inputs = record.control.getInputElements();
+        const doc = inputs[0] && inputs[0].ownerDocument || globalThis.document;
+        const active = doc && doc.activeElement;
+        const activeIndex = inputs.indexOf(active);
+        // Canonical focus is a real-focus invariant while focus is already inside OTP.
+        // Programmatic value changes may move the first-empty slot; reconcile the browser
+        // activeElement as well as roving tabIndex, but never steal focus from outside OTP.
+        if (activeIndex >= 0 && activeIndex !== index && inputs[index]) {
+            const origin = FocusOrigin.originOf(active) || FocusOrigin.inherited(doc);
+            focusOtpInput(inputs[index], origin, 'otp-canonical-sync');
+            if (inputs[index].select) inputs[index].select();
+        }
         return index;
     }
 

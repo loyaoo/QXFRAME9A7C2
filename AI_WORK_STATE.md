@@ -15,59 +15,55 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: handoff-ready; independent Ant interaction follow-up.
-- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-005`
+- Current Task: `ANT-DIFFERENTIAL-EDGE-STATES-006`
 
 ## CURRENT
 
-### ANT-DIFFERENTIAL-EDGE-STATES-005 — family geometry cleanup / popup renderer pressure
+### ANT-DIFFERENTIAL-EDGE-STATES-006 — canonical focus / dynamic item reconciliation / color interaction pressure
 Status: VERIFIED_PENDING_MERGE
 Task progress: 92%
-Baseline: `main@7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
-Branch: `audit/ant-edge-state-demos-005`.
+Baseline: `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
+Branch: `audit/ant-edge-state-demos-006`.
 
-Previous batch closed at runtime level:
-- PR #174 merged to main at `7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
-- PR final checkpoint head `e9126a69ba51a56fdd35c61169ab19a29ef07ea3` passed exact-head QXFRAME CI #845.
-- Round 4 fixed Table filter Reset/Apply authored numeric `0` labels by using Renderer with null/undefined-only fallback.
-- Round 4 also exposed and fixed a CSS ownership defect: `.qxframe9a7c2-input.is-xs/sm/md/lg/xl` hard-coded local heights and therefore ignored `--qxframe9a7c2-family-control-height`. Input local height now inherits the shared resolved `--_qxframe9a7c2-control-height`.
-- Select single and one-line multiple now both honor the authored family height while retaining equal geometry.
-- Table responsive-hidden columns preserve TableModel filter ownership and filtered rows.
-- main push CI #846 is the deployment gate for the just-merged Round 4 batch and is being verified in parallel.
+Previous batch closed:
+- PR #175 merged at `39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
+- Round 5 unified Collapse family control geometry and added Select/Cascader/TreeSelect popupRender primitive/array pressure coverage.
+- PR exact-head CI #849 passed.
+- main push CI #850 passed Windows tooling, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build, artifact uploads and GitHub Pages deployment.
+- Collapse xs/md/xl now honor shared family control height; popupRender array/primitive output remains stable across the three picker families.
 
-Round 5 audit findings / targets:
-1. Full CSS scan shows Collapse is the only remaining component size block that directly overwrites shared `--_qxframe9a7c2-control-height` with 24/28/32/36/40px. Those values duplicate the shared size recipe and sever family height overrides exactly like the fixed Input path.
-2. Collapse xs/sm also carries component-specific padding adjustments. Keep those padding decisions unless browser pressure proves they are wrong; remove only the duplicated height ownership.
-3. Steps size projection already consumes `--_qxframe9a7c2-control-height` / gap and needs no change.
-4. Ant popupRender non-element crash class maps to QX Select/Cascader/TreeSelect. QX Renderer supports arrays and primitive values, but existing demos only return DOM wrappers. Add real number/array popupRender pressure to verify the contract.
-5. Select treats only `undefined` popupRender output as “use origin”; Cascader/TreeSelect also fall back on null/false. This is a semantic consistency candidate, not a proven user-facing bug. Do not change null/false semantics in this round without an explicit contract/reproduction.
-6. Ant DatePicker disabled navigation-focus regression does not map directly: QX Calendar nav buttons are `tabIndex=-1` and nav/title pointerdown is prevented, so real picker focus is not transferred onto a button that can become disabled.
-7. Ant Table stale deferred horizontal scroll synchronization does not map to QX current architecture: Table has one root scroll owner and no delayed cross-surface `scrollLeft` mirror.
+Round 6 targets:
+1. InputOTP: programmatic `setValue` / controlled `updateOptions({value})` must keep real DOM focus aligned with the canonical first-empty slot when focus is already inside OTP. Updating only roving/tabIndex state while `document.activeElement` remains on an invalid later slot is not acceptable.
+2. Carousel: replacing/reordering keyed items must preserve the active item by key; removing the active key must reconcile by prior visual index and keep ValueController/index/DOM projection aligned.
+3. ColorPicker/ColorPanel: clear/disable/update while a saturation drag or range edit is active must not commit stale drag snapshots after lock/state changes. Disabled/readOnly must remain mutation locks across pointer/native-input paths.
+4. Do not change runtime code until browser pressure reproduces an owner-level failure.
+5. Keep current QX interaction decisions: InputOTP sequential-fill canonical focus, Carousel key identity, ColorPicker draft/commit rules.
 
-Implementation plan:
-- Remove Collapse's duplicated size-specific shared height overrides while preserving its explicit xs/sm padding deltas.
-- Add a Theme Playground Collapse family-height demo and Chromium measured-height regression.
-- Add Select/Cascader/TreeSelect popupRender primitive/array demos or a compact shared pressure matrix and Chromium assertions.
-- Keep all existing renderer/focus/value ownership; no compatibility layer.
-- Run exact-head CI, fix only reproduced failures, merge/deploy if green.
+Static audit before pressure:
+- InputOTP `#syncFocusPolicy()` currently updates only Control.segmentFocusIndex/tabIndex. `Control.setSegmentFocusIndex()` does not move real DOM focus. If `setValue()` changes canonical slot while an old OTP slot remains focused, real focus may become stale until another focus event occurs. Browser reproduction required.
+- Carousel `applyOptions()` snapshots active item key before replacing opts, resolves that key in new items, and falls back to normalized prior index when key disappears. Structure appears correct; add regression instead of speculative fix.
+- ColorPanel has dragSnapshot/keyboardSnapshot and explicit locked() guards. Need concurrency pressure before changing it.
 
 Implemented:
-- Removed Collapse's duplicated size-specific shared control-height assignments. xs/sm retain only their component-specific inline-padding deltas; all sizes now inherit the shared family/size control-height owner.
-- Added Collapse Theme Playground family-height matrix for xs/md/xl under a 50px family control height.
-- Added Chromium measured-height regression requiring all three Collapse headers to render ~50px under the shared family override.
-- Added Select/Cascader/TreeSelect popupRender primitive/array demos using [origin, primitive, number] output.
-- Added Chromium assertions that each popup keeps its canonical origin content and appends the primitive number through Renderer.
-- null/false popupRender fallback semantics remain unchanged in this round; no user-facing failure was established.
-- Main Round 4 push CI #846 completed successfully, including GitHub Pages deployment, for `main@7dbc9d8a28c6c31c9fc52b01eb94ad0f04fc9484`.
-- Round 5 exact-head `706f170092b7fec0e0b8e9966044ec9c5670bb33` passed QXFRAME CI #848 (Actions run `36505374856`): Windows tooling, dependency audit, Completion audit, Full release verification including Chromium pressure tests, npm pack, standalone dist/docs build and artifacts all succeeded.
-- Collapse xs/md/xl all honor the shared 50px family control height in the browser regression; removing the duplicated size heights did not disturb the retained xs/sm padding deltas.
-- Select/Cascader/TreeSelect popupRender array/primitive regressions all preserve canonical origin content and append primitive output without runtime errors.
-- The initial TreeSelect demo placement mistake was corrected before verification; the canonical demo now lives inside `mountTreeSelect`.
+- InputOTP canonical focus reconciliation now updates real DOM focus only when the current activeElement already belongs to this OTP and the canonical first-empty slot changed. External page focus is never stolen.
+- Added InputOTP Theme Playground demo and Chromium coverage for both API setValue and controlled value update while focus is inside the OTP.
+- Added Carousel keyed dynamic-items demo and Chromium regression: reorder preserves active key; removing the active key reconciles by previous visual index and keeps DOM/ValueController aligned. No Carousel runtime change was needed.
+- ColorPanel now cancels active saturation PointerSession and rolls back pending keyboard interaction when entering disabled/readOnly mutation lock. This prevents a stale drag from surviving the lock and committing after re-enable.
+- Added ColorPicker interaction-lock demo and standalone ColorPanel Chromium pointer pressure: preview must roll back on lock and the later stale pointerup must not mutate value.
+- PR #176 CI #851 (Actions run `36507244870`) reached the browser suite but failed before any new semantic assertion: the new standalone ColorPanel smoke used `C.ColorPanel.create`, while ColorPanel is a BuildingBlock exposed as `B.ColorPanel`. This is a test namespace error, not a runtime result.
+- Corrected only the smoke namespace to `B.ColorPanel.create`; OTP/Carousel/ColorPanel assertions and runtime fixes remain unchanged.
+- Corrected head `2cbbe826c8418c5a3f1f710111f6b6065c30832d` passed PR #176 QXFRAME CI #852 (Actions run `36507536208`): Windows tooling, dependency audit, Completion audit, Full release verification including all Round 6 Chromium pressure checks, npm pack, standalone dist/docs build and artifact uploads all succeeded.
+- InputOTP programmatic `setValue('1')` and controlled value update both keep real activeElement aligned with the canonical first-empty segment while focus is already inside OTP; no external focus steal was observed.
+- Carousel keyed reorder/remove regression passed without runtime changes: active key survives reorder and missing active key reconciles to the prior visual index with DOM/state alignment.
+- ColorPanel active saturation drag rolls back immediately when disabled/readOnly mutation lock is entered; a stale pointerup after re-enable cannot commit the cancelled gesture.
+- Round 6 runtime work is complete pending final checkpoint-only exact-head CI and merge.
+- Round 5 main CI #850 and GitHub Pages deployment completed successfully for `main@39aa8bc1796d02b48d2c70c68b1dc67daf5d341d`.
 
 Next exact step:
-1. Run one final checkpoint-only exact-head CI.
-2. Merge PR #175 if green.
+1. Run final exact-head CI after this checkpoint-only commit.
+2. Merge PR #176 if green.
 3. Verify main push CI + Pages deployment.
-4. Start Round 6 from merged main with OTP canonical-focus, Carousel dynamic items and ColorPicker clear/drag pressure; do not reopen Round 5.
+4. Continue the next differential batch from merged main without reopening Round 6.
 
 ## PREVIOUS VERIFIED HANDOFF
 
