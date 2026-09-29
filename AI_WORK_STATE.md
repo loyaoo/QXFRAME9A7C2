@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ANT-DIFFERENTIAL-EDGE-STATES-003 — motion reversal / stale identity pressure demos
-Status: VERIFYING_FLAKE_FIX
-Task progress: 85%
+Status: VERIFYING_BROWSER_BUDGET_FIX
+Task progress: 88%
 Baseline: `main@460322c75ebde024da678cadde0f5c894ea961e1`.
 Branch: `audit/ant-edge-state-demos-003`.
 
@@ -63,6 +63,9 @@ Verification:
 - Final diagnostics balance also remains clean after the reversal cases.
 - Checkpoint-only CI #836 exposed a pre-existing nondeterministic verifier failure in `verify-phase-e-motion-closeout`: the Collapse enter test used fixed `wait(80)` and required the sampled height to be mid-animation. The same runtime/test had passed CI #835, proving the assertion depended on CI/browser frame timing rather than a source change.
 - Verifier fix on `6726823dc5790505526455a9cf2fd4fbe1729c50`: enter and rapid-toggle continuity now wait for an observable intermediate rendered height with a bounded timeout, matching the existing leave-side strategy. Final open/hidden settling and no-endpoint-jump assertions remain strict; runtime code is unchanged.
+- Follow-up `35acf10cc1a6a0e94777ebe50840c47157e754b3` also replaced fixed 300ms settle sleeps with bounded state/geometry waits; `verify-phase-e-motion-closeout` passed CI #839 after this change.
+- CI #839 then failed later in `verify-browser-smoke.mjs` without any failed browser assertion: the outer 12s whole-page result deadline expired while the smoke page still reported `PENDING`. The identical browser regression content passed CI #835, so the failure is a suite-budget race, not a component semantic failure.
+- Both browser result deadlines are now 30s. All individual assertions and component timing semantics are unchanged; a genuinely hung smoke page still fails by bounded timeout.
 
 Next exact step:
 1. Run exact-head CI for the verifier-race fix.
