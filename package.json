@@ -129,8 +129,9 @@
     "verify:final-audit-closeout": "node tools/verify-final-audit-closeout.mjs",
     "verify:final-focus-lifecycle": "node tools/verify-final-focus-lifecycle.mjs",
     "verify:windows-tool-paths": "node tools/verify-windows-tool-paths.mjs",
-    "verify:docs-api": "node tools/verify-docs-api.mjs",
-    "verify:admin-template": "node tools/verify-admin-template.mjs"
+    "verify:docs-api": "node tools/sync-docs-api-contracts.mjs --check && node tools/verify-docs-api.mjs",
+    "verify:admin-template": "node tools/verify-admin-template.mjs",
+    "sync:docs-api": "node tools/sync-docs-api-contracts.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",
