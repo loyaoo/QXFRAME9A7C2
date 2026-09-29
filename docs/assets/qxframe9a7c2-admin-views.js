@@ -71,6 +71,22 @@ if(view==='advanced-detail'){
  mountTable('advanced-detail-table',rows,[{key:'item',title:'交付项',width:220},{key:'owner',title:'负责人',width:120},{key:'status',title:'状态',width:100,render:function(v){return badge(v,v==='已完成'?'is-success':v==='进行中'?'is-primary':'is-default')}}]);
 }
 
+if(view==='schedule'){
+ var cal=byId('schedule-calendar'),period=byId('schedule-period'),dates=byId('schedule-dates'),times=byId('schedule-times');
+ if(cal&&C.Calendar)own(C.Calendar.create({container:cal,value:'2026-09-29',disabledDate:function(d){return d.getDay()===0;}}));
+ if(period&&C.PeriodPanel){[['month','2026-09'],['quarter','2026-Q3'],['year','2026']].forEach(function(x){var h=slot(period,'qx-admin-inline-block');heading(h,x[0]==='month'?'月份':x[0]==='quarter'?'季度':'年份');own(C.PeriodPanel.create({container:h,unit:x[0],value:x[1]}));});}
+ if(dates&&C.DatePicker){
+   var a=slot(dates,'qx-admin-inline-block');heading(a,'单日期');own(C.DatePicker.create({container:a,value:'2026-09-29',clearable:true}));
+   var b=slot(dates,'qx-admin-inline-block');heading(b,'范围 · 双 Control');own(C.DatePicker.create({container:b,selection:'range',rangeControl:'dual',value:['2026-09-29','2026-10-06'],needConfirm:true,showCancel:true}));
+   var c2=slot(dates,'qx-admin-inline-block');heading(c2,'范围 · Segments');own(C.DatePicker.create({container:c2,selection:'range',rangeControl:'segments',value:['2026-10-01','2026-10-15']}));
+   var d=slot(dates,'qx-admin-inline-block');heading(d,'多选日期');own(C.DatePicker.create({container:d,selection:'multiple',value:['2026-10-02','2026-10-09','2026-10-16']}));
+ }
+ if(times){
+   if(C.TimePicker){var tp=slot(times,'qx-admin-inline-block');heading(tp,'会议时间');own(C.TimePicker.create({container:tp,value:'09:30:00',minuteStep:5}));var tp2=slot(times,'qx-admin-inline-block');heading(tp2,'确认后提交');own(C.TimePicker.create({container:tp2,value:'13:15:00',use12Hours:true,needConfirm:true,showCancel:true}));}
+   if(C.TimePanel){var tpanel=slot(times,'qx-admin-inline-block');heading(tpanel,'只读时间面板');own(C.TimePanel.create({container:tpanel,value:'13:15:00',use12Hours:true,readOnly:true}));}
+   if(C.WheelPicker){var wh=slot(times,'qx-admin-inline-block');heading(wh,'财年 / 月份轮选');own(C.WheelPicker.create({container:wh,columns:[{key:'year',label:'Year',items:['2026','2027','2028'].map(function(v){return{key:v,value:v,label:v};})},{key:'month',label:'Month',items:['01','02','03','04','05','06','07','08','09','10','11','12'].map(function(v){return{key:v,value:v,label:v};})}],value:['2026','10'],needConfirm:true,showCancel:true}));}
+ }
+}
 var login=document.getElementById('admin-login-form');if(login)login.addEventListener('submit',function(e){e.preventDefault();window.location.href='index.html#/dashboard'});var register=document.getElementById('admin-register-form');if(register)register.addEventListener('submit',function(e){e.preventDefault();window.location.href='register-result.html'});
 window.addEventListener('pagehide',function(){owners.splice(0).forEach(function(o){try{o.destroy()}catch(_){}})});
 })();
