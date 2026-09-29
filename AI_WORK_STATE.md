@@ -14,10 +14,50 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: admin template + shared framework visual/runtime polish.
-- Current Task: `ADMIN-FRAMEWORK-POLISH-001`
+- Current Phase: admin template + shared framework interaction/layout polish.
+- Current Task: `ADMIN-INTERACTION-POLISH-002`
 
 ## CURRENT
+
+### ADMIN-INTERACTION-POLISH-002 — popup-field opening, admin Tabs focus, native focus precedence, SelectGroup stacking, flex layout and collapsed Menu
+Status: VERIFIED
+Task progress: 100%
+Branch: `fix/admin-interaction-polish-002`.
+Baseline: `main@e49a8f8f95396938cfce246515d8f80c354332b6` (PR #180 merge; main CI #871 + Pages green).
+
+User-reported scope:
+- Opening the content-add Cascader must preserve its committed category until the user actually selects/clears a value.
+- Searchable Select with an existing value must open normally without requiring the user to clear the value first.
+- Admin canonical Tabs must preserve keyboard focus across keyboard activation and tab removal instead of losing focus when shell state synchronizes.
+- Plain native input/textarea/select focus border must take precedence over hover while focused.
+- Checked SelectGroup radio/checkbox items must stack above adjacent unselected items so connected borders paint correctly.
+- Remove remaining admin structural layout abstractions `qx-admin-view-page`, `qx-admin-view-head`, and `qx-admin-search-hero`; use canonical framework row/col composition (Layout remains the page shell owner).
+- Correct collapsed inline Menu geometry/alignment and eliminate the horizontal overflow visible in the admin sidebar screenshot.
+
+Frozen decisions:
+- Do not reopen completed Controller migration or PR #180 work.
+- Fix shared picker/control/Menu/SelectGroup/native-control defects in framework source; do not mask them with admin-only CSS/JS.
+- Admin Tabs already consume `Components.Tabs`; shell synchronization must not reconstruct tab DOM on ordinary keyboard activation/close if the item model did not change.
+- Browser-visible regressions get Chromium coverage; structural admin layout rules get static verification.
+
+Current evidence / suspected owners:
+- `docs/admin-form-static.html` mounts searchable Select value `topic` and Cascader value `season`, both `clearable:true`.
+- Control currently shows the clear action on hover/focus and lets it replace the picker toggle; this can move the pointer hit target from the toggle to clear before the primary click.
+- Searchable Select open starts an empty draft while preserving committed value; Cascader open seeds from committed selection, so committed-value loss is not intended picker transaction behavior.
+- Admin `syncTabs()` currently calls `tabsOwner.setItems(...)` on every activation, which can rebuild the tab strip and detach the focused keyboard tab.
+- SelectGroup raises only `:focus-within`; checked connected siblings have no higher stacking context.
+- Remaining admin view CSS still defines the three custom structural classes named above.
+
+Implemented evidence:
+- Control default no longer replaces the popup toggle with clear; CSS now lets both render together, keeping the toggle hit target stable while clear appears.
+- Admin Tabs synchronize item collections only when tabs actually change, preserving the canonical Tabs keyboard focus path during activation/removal.
+- Native text-control hover excludes :focus; checked SelectGroup items now stack above connected peers; collapsed inline Menu is constrained to its host and hides group headings.
+- All 11 admin views removed qx-admin-view-page / qx-admin-view-head / qx-admin-search-hero structural wrappers in favor of framework row/col composition.
+- Static and Chromium gates cover popup committed values, tab keyboard focus/removal, collapsed Menu fit/alignment and SelectGroup stacking.
+- PR #181 is open from this branch; exact-head CI #886 passed on `5cb65005b9b6107b7a3213710f9bf594e009efc9`.
+
+Next exact step:
+- Run exact-head CI for this VERIFIED checkpoint commit; if green, merge PR #181 and verify main CI + GitHub Pages deployment.
 
 ### ADMIN-FRAMEWORK-POLISH-001 — admin shell convergence + shared Table/Card/native-control CSS polish
 Status: VERIFIED
@@ -56,8 +96,8 @@ Verification evidence:
 - Chromium #869 explicitly reported: admin canonical Tabs mounted; overflow list visible; tab font-size 14px; global search opened and closed from iframe interaction; Table no-overflow shadow hidden; horizontal-overflow state true; start shadow appears after scrolling; fixed header stacks above ordinary header; native control styling applied; Card corner radius synchronized.
 - The release artifact contains the generated dist CSS/JS with the Table/native-control changes. `dist/` is generated and is not tracked in the repository tree.
 
-Next exact step:
-- Run exact-head CI for this VERIFIED checkpoint. If green, merge PR #180 and verify the resulting main CI + GitHub Pages deployment.
+Completion evidence:
+- PR #180 merged to main as `e49a8f8f95396938cfce246515d8f80c354332b6`; main CI #871 and GitHub Pages deployment passed.
 
 
 ### DOCS-ADMIN-CLOSEOUT-001 — API manual/demo parity + complete iframe admin template

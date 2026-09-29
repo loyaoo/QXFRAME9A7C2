@@ -114,7 +114,7 @@ try{
   await navigateCanonical('/docs/admin/index.html',500);
   const shellRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
-    var result={tabsMounted:false,overflowList:false,tabFontSize:0,searchOpened:false,searchClosedFromFrame:false};
+    var result={tabsMounted:false,overflowList:false,tabFontSize:0,tabsKeyboardSwitchFocus:false,tabsKeyboardRemoveFocus:false,collapsedMenuFits:false,collapsedGroupsHidden:false,collapsedIconCentered:false,searchOpened:false,searchClosedFromFrame:false};
     ['content-list','content-add','orders','users','roles','media','search','logs','settings','profile','result','404','500'].forEach(function(key){
       history.replaceState(null,'','#/'+key);
       window.dispatchEvent(new Event('hashchange'));
@@ -127,6 +127,35 @@ try{
     var tab=tabs&&tabs.querySelector('.qxframe9a7c2-tabs-tab');
     result.tabsMounted=!!tabs;
     result.tabFontSize=tab?parseFloat(getComputedStyle(tab).fontSize)||0:0;
+    var activeAction=tabs&&tabs.querySelector('.qxframe9a7c2-tabs-tab.is-active .qxframe9a7c2-tabs-tab-action');
+    if(activeAction){
+      activeAction.focus();
+      activeAction.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));
+      await sleep(100);
+      var switched=document.activeElement;
+      result.tabsKeyboardSwitchFocus=!!(switched&&switched!==activeAction&&switched.classList&&switched.classList.contains('qxframe9a7c2-tabs-tab-action'));
+      if(result.tabsKeyboardSwitchFocus){
+        switched.dispatchEvent(new KeyboardEvent('keydown',{key:'Delete',bubbles:true,cancelable:true}));
+        await sleep(140);
+        var removedFallback=document.activeElement;
+        result.tabsKeyboardRemoveFocus=!!(removedFallback&&removedFallback.classList&&removedFallback.classList.contains('qxframe9a7c2-tabs-tab-action'));
+      }
+    }
+    var shellRoot=document.querySelector('.qx-admin-shell');
+    var collapse=document.getElementById('qx-admin-collapse');
+    if(shellRoot&&collapse&&!shellRoot.classList.contains('is-collapsed'))collapse.click();
+    await sleep(140);
+    var menuHost=document.getElementById('qx-admin-menu');
+    var menuRoot=menuHost&&menuHost.querySelector('.qxframe9a7c2-menu.is-inline.is-collapsed');
+    var groupLabels=menuRoot?Array.prototype.slice.call(menuRoot.querySelectorAll('.qxframe9a7c2-menu-group-label')):[];
+    result.collapsedMenuFits=!!(menuHost&&menuRoot&&menuHost.scrollWidth<=menuHost.clientWidth+1&&menuRoot.scrollWidth<=menuRoot.clientWidth+1);
+    result.collapsedGroupsHidden=groupLabels.length>0&&groupLabels.every(function(node){return getComputedStyle(node).display==='none';});
+    var menuItem=menuRoot&&menuRoot.querySelector('.qxframe9a7c2-menu-item');
+    var menuIcon=menuItem&&menuItem.querySelector('.qxframe9a7c2-menu-icon');
+    if(menuItem&&menuIcon){
+      var itemRect=menuItem.getBoundingClientRect(),iconRect=menuIcon.getBoundingClientRect();
+      result.collapsedIconCentered=Math.abs((itemRect.left+itemRect.width/2)-(iconRect.left+iconRect.width/2))<=2;
+    }
     if(tabsHost){tabsHost.style.flex='0 0 320px';tabsHost.style.width='320px';}
     await sleep(300);
     var more=tabsHost&&tabsHost.querySelector('.qxframe9a7c2-tabs-more');
@@ -154,8 +183,65 @@ try{
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const shellValue=shellRegression&&shellRegression.result&&shellRegression.result.value||{};
-  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.searchOpened||!shellValue.searchClosedFromFrame){
+  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.tabsKeyboardSwitchFocus||!shellValue.tabsKeyboardRemoveFocus||!shellValue.collapsedMenuFits||!shellValue.collapsedGroupsHidden||!shellValue.collapsedIconCentered||!shellValue.searchOpened||!shellValue.searchClosedFromFrame){
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin shell regression '+JSON.stringify(shellValue));
+  }
+
+  await navigateCanonical('/docs/admin-form-static.html',420);
+  const popupFieldRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
+    function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
+    var result={selectFound:false,selectToggleAndClear:false,selectBeforeValue:false,selectOpened:false,selectAfterValue:false,selectValueKept:false,selectPanelHidden:null,selectOwnerState:null,cascaderFound:false,cascaderToggleAndClear:false,cascaderBeforeValue:false,cascaderOpened:false,cascaderAfterValue:false,cascaderValueKept:false,cascaderPanelHidden:null,cascaderOwnerState:null};
+    async function probe(root){
+      if(!root)return null;
+      root.dispatchEvent(new PointerEvent('pointerenter'));
+      await sleep(30);
+      var clear=root.querySelector('.qxframe9a7c2-input-clear');
+      var toggle=root.querySelector('.qxframe9a7c2-input-toggle');
+      var before=root.classList.contains('has-value');
+      var both=!!(clear&&toggle&&!clear.hidden&&!toggle.hidden&&getComputedStyle(clear).display!=='none'&&getComputedStyle(toggle).display!=='none');
+      root.click();
+      await sleep(150);
+      return {before:before,both:both,opened:root.classList.contains('is-open'),afterValue:root.classList.contains('has-value'),valueKept:before&&root.classList.contains('has-value')};
+    }
+    var selectRoot=document.querySelector('#admin-content-type-select .qxframe9a7c2-select');
+    result.selectFound=!!selectRoot;
+    var selectProbe=await probe(selectRoot);
+    if(selectProbe){
+      result.selectToggleAndClear=selectProbe.both;
+      result.selectBeforeValue=selectProbe.before;
+      result.selectOpened=selectProbe.opened;
+      result.selectAfterValue=selectProbe.afterValue;
+      result.selectValueKept=selectProbe.valueKept;
+      var selectPanel=document.querySelector('.qxframe9a7c2-select-panel');
+      result.selectPanelHidden=selectPanel?selectPanel.hidden:null;
+    }
+    var cascaderRoot=document.querySelector('#admin-category-cascader .qxframe9a7c2-cascader');
+    result.cascaderFound=!!cascaderRoot;
+    var cascaderProbe=await probe(cascaderRoot);
+    if(cascaderProbe){
+      result.cascaderToggleAndClear=cascaderProbe.both;
+      result.cascaderBeforeValue=cascaderProbe.before;
+      result.cascaderOpened=cascaderProbe.opened;
+      result.cascaderAfterValue=cascaderProbe.afterValue;
+      result.cascaderValueKept=cascaderProbe.valueKept;
+      var cascaderPanel=document.querySelector('.qxframe9a7c2-cascader-panel');
+      result.cascaderPanelHidden=cascaderPanel?cascaderPanel.hidden:null;
+    }
+    var demo=window.QXFRAME9A7C2_ADMIN_DEMO;
+    var owners=demo&&demo.getOwners?demo.getOwners():[];
+    owners.forEach(function(owner){
+      if(!owner||typeof owner.getState!=='function')return;
+      try{
+        var state=owner.getState();
+        if(state&&Object.prototype.hasOwnProperty.call(state,'defaultActiveFirstOption'))result.selectOwnerState=state;
+        if(state&&Object.prototype.hasOwnProperty.call(state,'checkedStrategy'))result.cascaderOwnerState=state;
+      }catch(_){}
+    });
+    return result;
+  })()`,awaitPromise:true,returnByValue:true},sessionId);
+  const popupFieldValue=popupFieldRegression&&popupFieldRegression.result&&popupFieldRegression.result.value||{};
+  if(!popupFieldValue.selectFound||!popupFieldValue.selectToggleAndClear||!popupFieldValue.selectOpened||!popupFieldValue.selectValueKept||!popupFieldValue.cascaderFound||!popupFieldValue.cascaderToggleAndClear||!popupFieldValue.cascaderOpened||!popupFieldValue.cascaderValueKept){
+    throw new Error('[QXFRAME9A7C2 canonical docs browser] popup field clear/toggle regression '+JSON.stringify(popupFieldValue));
   }
 
   await navigateCanonical('/docs/admin-list-static.html',380);
@@ -163,7 +249,7 @@ try{
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
     var host=document.getElementById('admin-list-table');
     var wrap=host&&host.querySelector('.qxframe9a7c2-table-wrap');
-    var result={found:false,noOverflowShadowHidden:false,overflowState:false,startShadowAfterScroll:false,fixedHeaderAbove:false,nativeControlStyled:false,cardRadiusSynced:false};
+    var result={found:false,noOverflowShadowHidden:false,overflowState:false,startShadowAfterScroll:false,fixedHeaderAbove:false,nativeControlStyled:false,selectGroupCheckedAbove:false,cardRadiusSynced:false};
     if(!wrap)return result;
     result.found=true;
     wrap.style.width='3000px';
@@ -193,6 +279,13 @@ try{
     var ps=getComputedStyle(probe);
     result.nativeControlStyled=parseFloat(ps.minHeight)>=28&&ps.borderStyle==='solid'&&parseFloat(ps.borderRadius)>0;
     probe.remove();
+    var group=document.createElement('div');
+    group.className='qxframe9a7c2-form-selectgroup is-buttons';
+    group.innerHTML='<label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" type="radio" name="zprobe" checked><span class="qxframe9a7c2-form-selectgroup-label">A</span></label><label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" type="radio" name="zprobe"><span class="qxframe9a7c2-form-selectgroup-label">B</span></label>';
+    document.body.appendChild(group);
+    var groupItems=group.querySelectorAll('.qxframe9a7c2-form-selectgroup-item');
+    result.selectGroupCheckedAbove=groupItems.length===2&&(parseFloat(getComputedStyle(groupItems[0]).zIndex)||0)>(parseFloat(getComputedStyle(groupItems[1]).zIndex)||0);
+    group.remove();
     var card=document.createElement('article');
     card.className='qxframe9a7c2-card';
     var header=document.createElement('div');
@@ -209,11 +302,11 @@ try{
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const tableValue=tableRegression&&tableRegression.result&&tableRegression.result.value||{};
-  if(!tableValue.found||!tableValue.noOverflowShadowHidden||!tableValue.overflowState||!tableValue.startShadowAfterScroll||!tableValue.fixedHeaderAbove||!tableValue.nativeControlStyled||!tableValue.cardRadiusSynced){
+  if(!tableValue.found||!tableValue.noOverflowShadowHidden||!tableValue.overflowState||!tableValue.startShadowAfterScroll||!tableValue.fixedHeaderAbove||!tableValue.nativeControlStyled||!tableValue.selectGroupCheckedAbove||!tableValue.cardRadiusSynced){
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin/Table/CSS regression '+JSON.stringify(tableValue));
   }
 
-  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin,adminShell:shellValue,tableCss:tableValue}));
+  console.log(JSON.stringify({ok:true,componentPages:componentPages.length,adminViewPages:adminViewPages.length,canonicalPages:pages.length,origin,adminShell:shellValue,popupFields:popupFieldValue,tableCss:tableValue}));
 }finally{
   if(targetId)await cdp.call('Target.closeTarget',{targetId}).catch(()=>{});
   try{cdp.socket.close()}catch{}

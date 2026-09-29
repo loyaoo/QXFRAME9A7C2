@@ -292,7 +292,7 @@ function create(source, overrides) {
   var configElement = fieldInit.target || fieldInit.formField || (source && source.nodeType === 1 ? source : null);
   var opts = mergeOptions({
     mode: 'input', editor: 'input', size: Config.resolve('size', undefined, configElement), variant: Config.resolve('variant', undefined, configElement), focusOutline: Config.resolve('focusOutline', undefined, configElement), status: 'default', disabled: false, readOnly: false, required: false,
-    editable: true, clearable: false, clearVisibility: 'interaction', clearReplacesToggle: true, clearContent: null, toggleContent: undefined, hasValue: false, draftVisual: false,
+    editable: true, clearable: false, clearVisibility: 'interaction', clearReplacesToggle: false, clearContent: null, toggleContent: undefined, hasValue: false, draftVisual: false,
     placeholder: '', inputValue: '', displayValue: null, inputType: 'text', autocomplete: 'off', minLength: null, maxLength: null, count: false, lengthMode: 'native', limitMode: 'hard',
     toggleVisible: false, toggle: null, busy: false, busyIndicator: null,
     tags:[],creatableTags:false,tagsControlled:false,tokenSeparators: [], tokenizeOnPaste: true, addOnEnter: true, addOnTab: false, addOnBlur: false,
