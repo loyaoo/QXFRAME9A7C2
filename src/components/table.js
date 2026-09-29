@@ -1847,8 +1847,8 @@ function setupTable(instance) {
       renderOptions(column.filterOptions || [], 0);
       filterPopup.appendChild(list);
       var actions = doc.createElement('div'); actions.className = 'qxframe9a7c2-table-filter-actions';
-      var reset = doc.createElement('button'); reset.type='button'; reset.className='qxframe9a7c2-button is-default is-filled'; reset.textContent=column.filterResetText||'Reset'; scope.add(DOM.listen(reset,'click',function(e){clearFilters({source:DOM.activationSource(e),originalEvent:e});}));
-      var apply = doc.createElement('button'); apply.type='button'; apply.className='qxframe9a7c2-button is-primary is-solid'; apply.textContent=column.filterConfirmText||'Apply'; scope.add(DOM.listen(apply,'click',function(e){confirm({source:DOM.activationSource(e),originalEvent:e});}));
+      var reset = doc.createElement('button'); reset.type='button'; reset.className='qxframe9a7c2-button is-default is-filled'; Renderer.append(reset,column.filterResetText==null?'Reset':column.filterResetText,doc); scope.add(DOM.listen(reset,'click',function(e){clearFilters({source:DOM.activationSource(e),originalEvent:e});}));
+      var apply = doc.createElement('button'); apply.type='button'; apply.className='qxframe9a7c2-button is-primary is-solid'; Renderer.append(apply,column.filterConfirmText==null?'Apply':column.filterConfirmText,doc); scope.add(DOM.listen(apply,'click',function(e){confirm({source:DOM.activationSource(e),originalEvent:e});}));
       actions.appendChild(reset); actions.appendChild(apply); filterPopup.appendChild(actions);
     }
     function renderFilterContent() {
