@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### ADMIN-VIEW-GRID-REGRESSION-004 — admin responsive Grid ownership regression
-Status: IN_PROGRESS
-Task progress: 55%
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 80%
 Branch: `fix/admin-grid-layout-004`.
 Baseline: `main@661c7280499f6e222c9f77d7076722e6e6552f5d` (PR #182 merged; main CI #892 + Pages green).
 
@@ -29,16 +29,22 @@ User evidence:
 - Multiple complete-admin pages render secondary content compressed into a narrow strip with per-character wrapping and horizontal overflow.
 
 Root cause:
-- Five views (`profile`, `orders`, `search`, `settings`, `users`) place a framework `.qxframe9a7c2-row` directly inside another framework Row without a `col-*` owner. Because Row is a flex container, the nested Row becomes an unconstrained flex item and can shrink to content width.
+- Five views (`profile`, `orders`, `search`, `settings`, `users`) placed a framework `.qxframe9a7c2-row` directly inside another framework Row without a `col-*` owner.
+- Because Row is a flex container, the nested Row became an unconstrained flex item and could shrink to content width. This exactly matches the screenshot: the right-side card/list is compressed into a vertical strip while the page gains horizontal overflow.
 
-Fix plan:
-- Restore canonical Row -> Column -> nested Row composition in all five affected views.
-- Add a static `verify:admin-template` regression gate that rejects direct Row-under-Row nesting in every admin view.
-- Run exact-head CI, merge only when green, then verify main CI + Pages.
+Implemented:
+- Restored canonical `Row -> col-24 -> nested Row` composition in all five affected views.
+- Audited all 36 `docs/admin/views/*.html`; these five were the only direct Row-under-Row violations.
+- Added `hasDirectRowChildOfRow()` to `verify:admin-template`; every admin view now fails static verification if Row is directly nested under Row.
+- Added canonical Chromium geometry regression coverage for the five affected views. It verifies the nested Grid section exists, is not a direct Row child, occupies normal page width, keeps child columns above a sane minimum width, and does not create document-level horizontal overflow.
+
+Guardrails:
+- No framework Grid CSS behavior is changed; this is malformed admin composition, not a framework Grid defect.
+- Do not add an admin-only CSS workaround that makes invalid Row nesting appear to work.
+- Preserve PR #182 component coverage and the 112-page canonical publication set.
 
 Next exact step:
-- Commit the five markup corrections + verifier gate, open a PR, and run exact-head GitHub Actions.
-
+- Open PR for this branch, run exact-head CI, fix only concrete failures, then merge and verify main CI + Pages.
 
 ### ADMIN-COMPLETE-PRESET-003 — complete admin preset page matrix
 Status: VERIFIED
