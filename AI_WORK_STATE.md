@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### THEME-PLAYGROUND-REVIEW-824-854 — merged-change manual review annotations
-Status: IMPLEMENTED_PENDING_CI
-Task progress: 75%
+Status: VERIFIED
+Task progress: 100%
 Baseline: `main@8cbec279e3171fda7ab1633f59522d5ce694da1a` / successful main CI #854.
 Branch: `docs/theme-playground-review-824-854`.
 
@@ -62,10 +62,17 @@ Implemented:
 - Fixed the PR #176 manual-review surface: `Mutation lock cancels active gesture` was unreachable after `return out` inside `wheelItems()`; it now mounts inside `mountColorPicker` while `wheelItems()` is restored to a pure helper.
 - No framework runtime behavior was changed by the annotation work.
 
+Verification:
+- PR #177 exact-head CI #855 passed Windows tools, dependency audit, Completion audit, Full release verification including Theme Playground/browser smoke, package/build and artifact checks.
+- PR #177 merged to main as `8bf7a6a179b7f8f0e9e8227ada35501be9dfe8f1`.
+- Main push CI #856 passed Windows tools, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build, artifact uploads and GitHub Pages deployment.
+- `docs/theme-playground.html` now exposes the complete CI #824–#854 manual-review surface on Pages.
+- ColorPicker `Mutation lock cancels active gesture` canonical demo is restored to the actual ColorPicker mount and is manually reviewable.
+- No framework runtime change was introduced by the annotation layer.
+
 Next exact step:
-1. Open PR and run exact-head QXFRAME CI, including Theme Playground browser smoke.
-2. Merge if green.
-3. Verify main CI + Pages deployment so the annotated review page is publicly testable.
+- User manually reviews the marked Theme Playground cards/demos and reports only concrete regressions against main `8bf7a6a179b7f8f0e9e8227ada35501be9dfe8f1` or newer.
+
 
 
 ## PREVIOUS VERIFIED HANDOFF
