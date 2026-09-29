@@ -20,7 +20,7 @@ import { ResponsiveOverflow } from '../core/responsiveOverflow.js';
 import { Transition } from '../core/transition.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { TreeQuery } from '../utils/treeQuery.js';
-import { Trigger } from './trigger.js';
+import { PopupFrame, PopupRuntime } from './popup.js';
 import { Tooltip } from './tooltip.js';
 import { Scroll } from './scroll.js';
 import { Item } from './item.js';
@@ -186,6 +186,13 @@ function setupMenu(instance) {
   var binding = DOMBinding.resolve({ options: opts, target: host, component: api, requiredRefs: ['root', 'level'], defaultFactory: DOMFactory.createDefaultDOM });
   var root = binding.refs.root;
   var rootLevel = binding.refs.level;
+  var rootScrollShell = doc.createElement('div');
+  rootScrollShell.className = 'qxframe9a7c2-menu-root-scroll';
+  var rootLevelParent = rootLevel.parentNode || root;
+  if (rootLevel.parentNode) rootLevelParent.insertBefore(rootScrollShell, rootLevel);
+  else root.appendChild(rootScrollShell);
+  rootScrollShell.appendChild(rootLevel);
+  var rootScroll = null;
   var initialSelection = initialSelected();
   valueController = ValueController.create({ value: initialSelection, normalizeValue: normalizeKeys, copyValue: normalizeKeys });
   selectionController = SelectionController.create({ channels: { selected: { values: initialSelection, multiple: opts.multiple === true } } });
@@ -216,6 +223,7 @@ function setupMenu(instance) {
   var selectionIndicatorByButton = typeof WeakMap === 'function' ? new WeakMap() : null;
   var scrollOwnerByLevel = new Map();
   var scrollSurfaceByLevel = new Map();
+  var popupFrameByLevel = new Map();
   var triggerByKey = new Map();
   var tooltipByKey = new Map();
   var panelByKey = new Map();
@@ -356,13 +364,52 @@ function setupMenu(instance) {
   }
   function visibleActiveKey() { return ownsBrowserFocus() ? activeKey : ''; }
 
+  function syncRootScrollOwnership(reason) {
+    if (!rootScrollShell || !rootLevel) return null;
+    if (opts.mode === 'horizontal') {
+      if (rootScroll) { rootScroll.destroy(); rootScroll = null; }
+      scrollOwnerByLevel.set(rootLevel, root);
+      return null;
+    }
+    if (!rootScroll) {
+      rootScroll = Scroll.attachViewport({
+        root:rootScrollShell,
+        viewport:rootLevel,
+        content:rootLevel,
+        document:doc,
+        axis:'y',
+        wheelAxis:'y',
+        wheelPropagation:true,
+        scrollbarVisibility:'auto',
+        scrollbarInteractive:true,
+        edgeShadow:false,
+        focusable:false,
+        keyboard:false,
+        controller:api
+      });
+    } else if (Utils.isFunction(rootScroll.updateOptions)) {
+      rootScroll.updateOptions({
+        axis:'y',
+        wheelAxis:'y',
+        wheelPropagation:true,
+        scrollbarVisibility:'auto',
+        scrollbarInteractive:true,
+        edgeShadow:false
+      });
+    }
+    scrollOwnerByLevel.set(rootLevel, rootLevel);
+    if (Utils.isFunction(rootScroll.refresh)) rootScroll.refresh(reason || 'menu-root');
+    return rootScroll;
+  }
+
   function attachPopupScroll(panel, level) {
     if (!panel || !level) return null;
     var shell = doc.createElement('div');
     shell.className = 'qxframe9a7c2-menu-submenu-scroll';
     shell.appendChild(level);
     panel.appendChild(shell);
-    var scroll = Scroll.attachViewport({
+    var popupFrame = PopupFrame.create({ panel:panel, document:doc });
+    var scroll = popupFrame.attachViewport({
       root:shell,
       viewport:level,
       content:level,
@@ -377,6 +424,7 @@ function setupMenu(instance) {
       keyboard:false,
       controller:api
     });
+    popupFrameByLevel.set(level, popupFrame);
     scrollSurfaceByLevel.set(level, scroll);
     scrollOwnerByLevel.set(level, scroll.getViewportElement());
     return scroll;
@@ -591,9 +639,9 @@ function setupMenu(instance) {
         attachPopupScroll(panel, popupLevel);
         panelByKey.set(key, panel); panelLevelByKey.set(key, popupLevel);
         var placement = opts.mode === 'horizontal' && !parentKey ? 'bottom-start' : 'right-start';
-        var trigger = Trigger.create({
-          reference: button, floating: panel, document: doc, portalContainer: portalContainer, trigger: opts.submenuTrigger,
-          placement: item.placement || opts.placement || placement, transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', offset: own(item, 'submenuOffset') ? item.submenuOffset : opts.submenuOffset, middleware: item.middleware || opts.middleware,
+        var popupRuntime = PopupRuntime.create({
+          reference: button, floating: panel, document: doc, portalContainer: portalContainer, popupFrame: popupFrameByLevel.get(popupLevel), trigger: opts.submenuTrigger,
+          placement: item.placement || opts.placement || placement, transition: PopupRuntime.motion.popupPlacement, strategy: opts.strategy || 'absolute', offset: own(item, 'submenuOffset') ? item.submenuOffset : opts.submenuOffset, middleware: item.middleware || opts.middleware,
           flipOnOverflow: opts.flipOnOverflow !== false, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true,
           destroyOnClose: opts.forceSubMenuRender === true ? false : opts.destroyOnClose !== false, forceRender: opts.forceSubMenuRender === true, restoreFocus: false,
           openDelay: item.submenuOpenDelay !== undefined ? item.submenuOpenDelay : opts.submenuOpenDelay,
@@ -601,6 +649,7 @@ function setupMenu(instance) {
           disabled: isDisabledItem(item), parent: parentTrigger || null,
           onOpenChange: function (opened, detail) { onTriggerOpenChange(key, opened, detail); }
         });
+        var trigger = popupRuntime.trigger;
         triggerByKey.set(key, trigger);
         buildLevel(childrenOf(item), popupLevel, trigger, key, path.concat(key));
       }
@@ -645,7 +694,8 @@ function setupMenu(instance) {
     tooltipByKey.clear();
     inlineTransitionByKey.forEach(function (transition) { transition.destroy(); });
     inlineTransitionByKey.clear();
-    scrollSurfaceByLevel.forEach(function (scroll) { if (scroll && Utils.isFunction(scroll.destroy)) scroll.destroy(); });
+    popupFrameByLevel.forEach(function (frame) { if (frame && Utils.isFunction(frame.destroy)) frame.destroy(); });
+    popupFrameByLevel.clear();
     scrollSurfaceByLevel.clear();
     panelByKey.forEach(function (panel) { DOM.removeNode(panel); });
     panelByKey.clear(); panelLevelByKey.clear(); buttonByKey.clear(); buttonMeta.clear();
@@ -676,14 +726,15 @@ function setupMenu(instance) {
     overflowLevel = doc.createElement('ul');
     overflowLevel.className = 'qxframe9a7c2-menu-level qxframe9a7c2-menu-popup-level qxframe9a7c2-menu-overflow-level';
     attachPopupScroll(overflowPanel, overflowLevel);
-    overflowTrigger = Trigger.create({
-      reference: overflowButton, floating: overflowPanel, document: doc, portalContainer: portalContainer,
-      trigger: opts.submenuTrigger, placement: 'bottom-end', transition: Trigger.motion.popupPlacement, strategy: opts.strategy || 'absolute', offset: opts.submenuOffset, middleware: opts.middleware,
+    var overflowRuntime = PopupRuntime.create({
+      reference: overflowButton, floating: overflowPanel, document: doc, portalContainer: portalContainer, popupFrame: popupFrameByLevel.get(overflowLevel),
+      trigger: opts.submenuTrigger, placement: 'bottom-end', transition: PopupRuntime.motion.popupPlacement, strategy: opts.strategy || 'absolute', offset: opts.submenuOffset, middleware: opts.middleware,
       flipOnOverflow: opts.flipOnOverflow !== false, autoUpdate: opts.autoUpdate !== false, closeOnOutsidePress: true, closeOnFocusOutside: true, closeOnTabExit: true, closeOnEscape: true,
       destroyOnClose: opts.forceSubMenuRender === true ? false : opts.destroyOnClose !== false, forceRender: opts.forceSubMenuRender === true, restoreFocus: false,
       openDelay: opts.submenuOpenDelay, closeDelay: opts.submenuLeaveDelay, disabled: true,
       onOpenChange: function (opened) { syncClasses(); if (opened) refreshPopupScroll(overflowLevel, 'menu-overflow-open'); }
     });
+    overflowTrigger = overflowRuntime.trigger;
     overflowLi.hidden = true;
     overflowButton.hidden = true;
   }
@@ -848,7 +899,7 @@ function setupMenu(instance) {
     finally { triggerOpenSync = previousTriggerOpenSync; }
     while (rootLevel.firstChild) rootLevel.removeChild(rootLevel.firstChild);
     scrollOwnerByLevel.clear();
-    scrollOwnerByLevel.set(rootLevel, root);
+    syncRootScrollOwnership('menu-rebuild-before-items');
     indexItems();
     buildLevel(opts.items, rootLevel, null, '', []);
     rootEntryNodes = Array.prototype.slice.call(rootLevel.children || []);
@@ -856,6 +907,7 @@ function setupMenu(instance) {
     syncOpenTriggers();
     if (activeKey && (!buttonByKey.has(activeKey) || isDisabledItem(itemByKey.get(activeKey)))) activeKey = '';
     syncClasses();
+    if (rootScroll && Utils.isFunction(rootScroll.refresh)) rootScroll.refresh('menu-rebuild');
     syncResizeObserver();
     scheduleOverflow('rebuild');
   }
@@ -1437,7 +1489,14 @@ function setupMenu(instance) {
   }
   function destroyRuntime(reason) {
     if (destroyed) return false;
-    destroyed = true; destroySubmenuResources(); scope.dispose(); if (binding) binding.release(); binding = null; root = rootLevel = null; return true;
+    destroyed = true;
+    destroySubmenuResources();
+    if (rootScroll) { rootScroll.destroy(); rootScroll = null; }
+    scope.dispose();
+    if (binding) binding.release();
+    binding = null;
+    root = rootLevel = rootScrollShell = null;
+    return true;
   }
 
   var record = {
@@ -1455,6 +1514,8 @@ function setupMenu(instance) {
     refreshOverflow: function () { return refreshOverflow('api'); },
     containsSurface: containsSurface, getState: getState,
     getRootElement: function () { return root; }, getListElement: function () { return rootLevel; },
+    getScroll: function () { return rootScroll; },
+    getScrollViewport: function () { return rootScroll ? rootLevel : null; },
     getButtonElement: function (key) { return buttonByKey.get(String(key)) || null; },
     findItem: function (query) { var key = query && typeof query === 'object' ? query.key : query; return itemByKey.get(String(key || '')) || null; },
     getSubmenuElement: function (key) { return panelByKey.get(String(key)) || panelLevelByKey.get(String(key)) || null; },
@@ -1580,6 +1641,8 @@ export class Menu extends Component {
   getState() { return recordForMenu(this).getState(); }
   getRootElement() { return recordForMenu(this).getRootElement(); }
   getListElement() { return recordForMenu(this).getListElement(); }
+  getScroll() { return recordForMenu(this).getScroll(); }
+  getScrollViewport() { return recordForMenu(this).getScrollViewport(); }
   getButtonElement(key) { return recordForMenu(this).getButtonElement(key); }
   findItem(query) { return recordForMenu(this).findItem(query); }
   getSubmenuElement(key) { return recordForMenu(this).getSubmenuElement(key); }
