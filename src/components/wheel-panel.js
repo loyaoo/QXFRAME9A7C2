@@ -71,7 +71,7 @@ function normalizeColumn(column, index) {
     getItems: hasGetter ? column.getItems : null,
     itemHeight: column.itemHeight === undefined ? null : normalizePositiveInteger(column.itemHeight, undefined, 'column itemHeight'),
     visibleItemCount: column.visibleItemCount === undefined ? null : normalizeVisibleCount(column.visibleItemCount),
-    scrollbarVisibility: column.scrollbarVisibility === undefined ? null : normalizeEnum(column.scrollbarVisibility, ['auto','always','hidden'], 'auto', 'column scrollbarVisibility'),
+    scrollbarVisibility: column.scrollbarVisibility === undefined ? null : normalizeEnum(column.scrollbarVisibility, ['scroll','always','hover','hidden'], 'scroll', 'column scrollbarVisibility'),
     wheelPropagation: column.wheelPropagation === undefined ? null : column.wheelPropagation !== false,
     snapDuration: column.snapDuration === undefined ? null : Math.max(0, Number(column.snapDuration) || 0),
     snapBehavior: column.snapBehavior === undefined ? null : normalizeEnum(column.snapBehavior, ['auto','smooth'], 'smooth', 'column snapBehavior'),
@@ -99,7 +99,7 @@ function create(options) {
     columns: null,
     value: [],
     visibleItemCount: 7,
-    scrollbarVisibility: 'auto',
+    scrollbarVisibility:'scroll',
     wheelPropagation: true,
     snapBehavior: 'smooth',
     snapDuration: 220,
@@ -118,7 +118,7 @@ function create(options) {
   var visibleItemCount = normalizeVisibleCount(opts.visibleItemCount);
   opts.size = WheelMetrics.normalizeSize(opts.size);
   var itemHeight = normalizePositiveInteger(itemHeightExplicit ? opts.itemHeight : WheelMetrics.itemHeight(opts.size), undefined, 'itemHeight');
-  opts.scrollbarVisibility = normalizeEnum(opts.scrollbarVisibility, ['auto','always','hidden'], 'auto', 'scrollbarVisibility');
+  opts.scrollbarVisibility = normalizeEnum(opts.scrollbarVisibility, ['scroll','always','hover','hidden'], 'scroll', 'scrollbarVisibility');
   opts.snapBehavior = normalizeEnum(opts.snapBehavior, ['auto','smooth'], 'smooth', 'snapBehavior');
   opts.snapDuration = Math.max(0, Number(opts.snapDuration) || 0);
   opts.scrollIdleDelay = Math.max(0, Number(opts.scrollIdleDelay) || 0);
@@ -636,7 +636,7 @@ function create(options) {
     var candidateItemHeight = itemHeight;
     if (own(next, 'itemHeight')) candidateItemHeight = normalizePositiveInteger(next.itemHeight, undefined, 'itemHeight');
     else if (!candidateItemHeightExplicit && own(next, 'size')) candidateItemHeight = WheelMetrics.itemHeight(candidateSize);
-    if (own(next, 'scrollbarVisibility')) next.scrollbarVisibility = normalizeEnum(next.scrollbarVisibility, ['auto','always','hidden'], 'auto', 'scrollbarVisibility');
+    if (own(next, 'scrollbarVisibility')) next.scrollbarVisibility = normalizeEnum(next.scrollbarVisibility, ['scroll','always','hover','hidden'], 'scroll', 'scrollbarVisibility');
     if (own(next, 'snapBehavior')) next.snapBehavior = normalizeEnum(next.snapBehavior, ['auto','smooth'], 'smooth', 'snapBehavior');
     if (own(next, 'snapDuration')) next.snapDuration = Math.max(0, Number(next.snapDuration) || 0);
     if (own(next, 'scrollIdleDelay')) next.scrollIdleDelay = Math.max(0, Number(next.scrollIdleDelay) || 0);
