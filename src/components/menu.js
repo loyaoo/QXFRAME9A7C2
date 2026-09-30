@@ -380,7 +380,7 @@ function setupMenu(instance) {
         axis:'y',
         wheelAxis:'y',
         wheelPropagation:true,
-        scrollbarVisibility:'auto',
+        scrollbarVisibility:'scroll',
         scrollbarInteractive:true,
         edgeShadow:false,
         focusable:false,
@@ -392,7 +392,7 @@ function setupMenu(instance) {
         axis:'y',
         wheelAxis:'y',
         wheelPropagation:true,
-        scrollbarVisibility:'auto',
+        scrollbarVisibility:'scroll',
         scrollbarInteractive:true,
         edgeShadow:false
       });
@@ -417,7 +417,7 @@ function setupMenu(instance) {
       axis:'y',
       wheelAxis:'y',
       wheelPropagation:false,
-      scrollbarVisibility:'auto',
+      scrollbarVisibility:'scroll',
       scrollbarInteractive:true,
       edgeShadow:false,
       focusable:false,
