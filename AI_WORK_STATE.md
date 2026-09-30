@@ -21,7 +21,7 @@
 
 ### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
 Status: IN PROGRESS
-Task progress: 25%
+Task progress: 70%
 
 User authority:
 - Audit every remaining standard-theme/component consumer of the cold `Gray` palette and migrate it back to canonical `Grey`.
@@ -47,8 +47,25 @@ Frozen mapping method:
 - `Gray-9 (222,227,231)` -> `Grey-10 (229,229,229)` for Dark scroll chrome.
 - Preserve existing alpha values unless verification shows a contrast regression; this task removes hue contamination, not redesigns scrollbar/shadow/loading behavior.
 
+Implementation checkpoint:
+- Standard Light scroll track/thumb/hover now use canonical Grey-5 (82,82,82), chosen by rendered-lightness proximity to old cold Gray-5 (85,95,109).
+- Standard Dark scroll track/thumb/hover now use canonical Grey-10 (229,229,229), chosen by rendered-lightness proximity to old cold Gray-9 (222,227,231); this intentionally is not a same-index replacement.
+- Light popup shadow and the retained Dark loading utility token now use Grey-3 (38,38,38), matching the perceived darkness of old cold Gray-1 (27,36,44) much more closely than Grey-1.
+- `.is-gray` remains as a spelling/API alias but now consumes the same canonical Grey seed/on-color as `.is-grey`; component color variants no longer consume the cold Gray seed.
+- The cold Gray physical palette, compatibility outputs, neutral-theme option, and theme seed remain available as explicit optional palette infrastructure.
+- Phase F verifier now locks all above mappings and rejects any direct cold `palette-gray-*` consumer outside palette compatibility declarations / explicit theme seed.
+
+Implementation commits:
+- `cf8dcda30ff3de6d5a462e602343f7b5b29469c4` — standard utility tokens -> canonical Grey.
+- `0a9f829f09593785a62379398813861620f0e0b3` — verifier for utility consumers.
+- `0a76a448c142804a8e5a66bfb70ffcf82eb6ffe5` — component `.is-gray` -> canonical Grey alias.
+- `5d1be6a3ec60be3eed19c4da84337aad669c6b7a` — verifier for component gray alias.
+
+Verification note:
+- Local clone/Node verification is unavailable in the execution sandbox because outbound DNS to GitHub is blocked; GitHub Actions remains the authoritative validation path.
+
 Next exact step:
-- Update canonical CSS and Phase F verifier so standard-theme utility tokens cannot consume cold Gray, then run PR CI and merge only when exact-head checks are green.
+- Open PR, run exact-head QXFRAME CI, reconcile any failures, then update this checkpoint and merge only after green evidence.
 
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
