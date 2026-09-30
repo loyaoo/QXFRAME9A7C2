@@ -133,7 +133,7 @@ const greyExpected=[
   '212, 212, 212','220, 220, 220','229, 229, 229','237, 237, 237','245, 245, 245','250, 250, 250'
 ];
 assert.doesNotMatch(css,/--qxframe9a7c2-palette-grey-0\b/,'Canonical Grey must not retain grey-0.');
-assert.doesNotMatch(css,/--qxframe9a7c2-color-grey-\d+\s*:/,'Numbered color-grey forwarding aliases must not exist.');
+assert.doesNotMatch(css,/--qxframe9a7c2-color-grey-[a-z0-9-]+\s*:/i,'color-grey forwarding aliases must not exist.');
 for(let i=1;i<=13;i+=1){
   const paletteName='--qxframe9a7c2-palette-grey-'+i;
   const paletteValues=(definitions.get(paletteName)||[]).map(entry=>entry.value);
