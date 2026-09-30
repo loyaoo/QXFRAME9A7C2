@@ -69,7 +69,7 @@ export class Steps extends Component {
     static options = Object.freeze({
         items: [], current: 0, initial: 0, direction: 'horizontal', status: 'process', type: 'default',
         labelPlacement: 'horizontal', progressDot: false, responsive: true, clickable: false,
-        disabled: false, allowCurrentClick: false, size: 'md', className: ''
+        disabled: false, allowCurrentClick: false, size: 'md'
     });
     static immutableOptions = Object.freeze(['container', 'document']);
     static optionNormalizers = Object.freeze({
@@ -91,9 +91,11 @@ export class Steps extends Component {
         },
         percent: value => value === undefined ? undefined : clampPercent(value),
         onChange: value => { if (value != null && typeof value !== 'function') throw new TypeError('[QXFRAME9A7C2] Steps onChange must be a function.'); return value; },
-        itemRender: value => { if (value != null && typeof value !== 'function') throw new TypeError('[QXFRAME9A7C2] Steps itemRender must be a function.'); return value; },
-        className: value => value == null ? '' : String(value)
+        itemRender: value => { if (value != null && typeof value !== 'function') throw new TypeError('[QXFRAME9A7C2] Steps itemRender must be a function.'); return value; }
     });
+    static semanticElements = Object.freeze(['root','item','main','connector','icon','content','heading','title','subtitle','description']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
     static contract = ComponentContracts.get('Steps');
 
     constructor(options = {}) {
@@ -257,9 +259,18 @@ export class Steps extends Component {
             (opts.progressDot || opts.labelPlacement === 'vertical' ? ' is-label-vertical' : '') +
             (opts.responsive ? ' is-responsive' : '') +
             (opts.responsive && opts.direction === 'horizontal' && opts.type === 'default' ? ' is-responsive-stack' : '') +
-            (opts.disabled ? ' is-disabled' : '') + (opts.className ? ' ' + opts.className : '');
+            (opts.disabled ? ' is-disabled' : '');
         this.#ensureActive();
         while (root.firstChild) root.removeChild(root.firstChild);
+        const semantic = { item:[], main:[], connector:[], icon:[], content:[], heading:[], title:[], subtitle:[], description:[] };
+        const contexts = { item:[], main:[], connector:[], icon:[], content:[], heading:[], title:[], subtitle:[], description:[] };
+        const semanticContext = (item, index, status, disabled) => ({
+            item,
+            state:Object.freeze({
+                key:item.key, index, status, disabled:disabled === true,
+                selected:index === r.current, active:item.key === r.activeItem.activeKey
+            })
+        });
         opts.items.forEach((item, index) => {
             const status = this.#itemStatus(item, index), disabled = opts.disabled || item.disabled === true, clickable = this.#interactive(item);
             const step = doc.createElement('li'), connector = doc.createElement('span'), main = doc.createElement(clickable ? 'button' : 'div');
@@ -270,22 +281,36 @@ export class Steps extends Component {
             if (clickable) { main.type = 'button'; DOM.setPrivate(main, 'stepAction', String(index)); DOM.setPrivate(main, 'stepKey', item.key); }
             icon.className = 'qxframe9a7c2-steps-icon';
             const ctx = this.#contextFor(item, index, status, main);
+            const semanticMeta = semanticContext(item, index, status, disabled);
+            semantic.item.push(step); contexts.item.push(semanticMeta);
+            semantic.main.push(main); contexts.main.push(semanticMeta);
+            semantic.icon.push(icon); contexts.icon.push(semanticMeta);
+            semantic.content.push(content); contexts.content.push(semanticMeta);
+            semantic.heading.push(heading); contexts.heading.push(semanticMeta);
+            semantic.title.push(title); contexts.title.push(semanticMeta);
+            if (index !== opts.items.length - 1) { semantic.connector.push(connector); contexts.connector.push(semanticMeta); }
             if (opts.progressDot) this.#renderDot(icon, item, index, status); else if (item.icon !== undefined) renderOutput(icon, item.icon, ctx, doc); else this.#renderDefaultIcon(icon, status, index);
             if (index === r.current && opts.percent !== undefined && opts.type === 'default' && !opts.progressDot) { icon.classList.add('has-progress'); icon.style.setProperty('--qxframe9a7c2-step-percent', String(opts.percent * 3.6) + 'deg'); }
             content.className = 'qxframe9a7c2-steps-content qxframe9a7c2-steps-item-section'; heading.className = 'qxframe9a7c2-steps-heading qxframe9a7c2-steps-item-header'; title.className = 'qxframe9a7c2-steps-title';
             renderOutput(title, item.title === undefined ? 'Step ' + (index + 1) : item.title, ctx, doc); heading.appendChild(title);
-            if (item.subTitle !== undefined) { const subTitle = doc.createElement('span'); subTitle.className = 'qxframe9a7c2-steps-subtitle'; renderOutput(subTitle, item.subTitle, ctx, doc); heading.appendChild(subTitle); }
+            if (item.subTitle !== undefined) { const subTitle = doc.createElement('span'); subTitle.className = 'qxframe9a7c2-steps-subtitle'; renderOutput(subTitle, item.subTitle, ctx, doc); heading.appendChild(subTitle); semantic.subtitle.push(subTitle); contexts.subtitle.push(semanticMeta); }
             if (typeof opts.itemRender === 'function') {
                 const customSlot = doc.createElement('span'); customSlot.className = 'qxframe9a7c2-steps-item-content'; let iconClaimed = false;
                 const itemCtx = this.#contextFor(item, index, status, main, { parts: Item.createParts({ icon: () => { iconClaimed = true; return icon; } }) });
                 Renderer.append(customSlot, opts.itemRender(item, itemCtx)); while (heading.firstChild) heading.removeChild(heading.firstChild); heading.appendChild(customSlot); while (content.firstChild) content.removeChild(content.firstChild); content.appendChild(heading); if (!iconClaimed) main.appendChild(icon); main.appendChild(content);
             } else {
                 content.appendChild(heading);
-                if (item.description !== undefined && opts.type !== 'inline') { const description = doc.createElement('span'); description.className = 'qxframe9a7c2-steps-description'; renderOutput(description, item.description, ctx, doc); content.appendChild(description); }
+                if (item.description !== undefined && opts.type !== 'inline') { const description = doc.createElement('span'); description.className = 'qxframe9a7c2-steps-description'; renderOutput(description, item.description, ctx, doc); content.appendChild(description); semantic.description.push(description); contexts.description.push(semanticMeta); }
                 main.appendChild(icon); main.appendChild(content);
             }
             step.appendChild(main); if (index !== opts.items.length - 1) step.appendChild(connector); root.appendChild(step);
         });
+        this.registerSemanticElements({
+            root,
+            item:semantic.item, main:semantic.main, connector:semantic.connector, icon:semantic.icon,
+            content:semantic.content, heading:semantic.heading, title:semantic.title,
+            subtitle:semantic.subtitle, description:semantic.description
+        }, contexts);
         this.#syncRoving();
         root.classList.toggle('is-loading', r.feedbackStatus === 'pending' || r.feedbackStatus === 'progress');
         root.classList.toggle('is-error', r.feedbackStatus === 'error');
