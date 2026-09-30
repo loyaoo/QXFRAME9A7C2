@@ -96,7 +96,7 @@ function setSemanticElements(record, elements, contexts) {
   return elements || {};
 }
 function syncSemantic(record) {
-  if (record && record.semantic) record.semantic.sync(record.options || {});
+  if (record && record.semantic) record.semantic.sync({ class:record.options && record.options.class, style:record.options && record.options.style });
   return record;
 }
 function appendNoticeIcon(record, host, config) {
