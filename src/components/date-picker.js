@@ -1347,7 +1347,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   field.getPanelHost().appendChild(panelShell);
   selectionScroll = popupFrame.attachViewport({
     root:selectionScrollShell, viewport:selectionHost, content:selectionHost, document:doc,
-    axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
+    axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'scroll',
     focusable:false, keyboard:false, controller:api
   });
   if (withTime) {
@@ -1555,7 +1555,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       }
       if (!presetsScroll) presetsScroll = popupFrame.attachViewport({
         root:presetsScrollShell, viewport:presetsHost, content:presetsHost, document:doc,
-        axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
+        axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'scroll',
         focusable:false, keyboard:false, controller:api
       });
       presetsScroll.refresh('date-picker-presets');
