@@ -9,6 +9,7 @@ const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const page=read('docs/all-components-static.html');
 const docsTheme=read('docs/assets/qxframe9a7c2-docs-theme-state.js');
 const staticTool=read('docs/assets/qxframe9a7c2-all-components-static.js');
+const css=read('src/qxframe9a7c2.css');
 
 const scriptTags=[...page.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].map(match=>{
   const attrs=match[1]||'';
@@ -53,6 +54,40 @@ assert.match(docsTheme,/setAttribute\(['"]data-qxframe9a7c2-theme['"],\s*mode\)/
   'Docs theme helper must project mode through the canonical CSS theme selector.');
 assert.doesNotMatch(docsTheme,/style\.setProperty\([^\n]*--_qxframe9a7c2-/,
   'Docs theme mode helper must not mirror private semantic/family/component CSS variables.');
+
+
+const gridStart=css.indexOf('/* QXFRAME9A7C2 Static Grid');
+const gridEnd=css.indexOf('/* Layout · CSS-only structural surface',gridStart);
+assert.ok(gridStart>=0&&gridEnd>gridStart,'Canonical Grid block must exist before Layout.');
+const grid=css.slice(gridStart,gridEnd);
+assert.match(grid,/\.qxframe9a7c2-row\s*\{[\s\S]*?row-gap:\s*var\(--qxframe9a7c2-grid-gap-y,\s*0\)[\s\S]*?box-sizing:\s*border-box/,
+  'Grid row must preserve the mature SCSS flex/gap/box-sizing contract.');
+assert.match(grid,/\.qxframe9a7c2-col\s*\{[\s\S]*?max-width:\s*100%[\s\S]*?box-sizing:\s*border-box[\s\S]*?padding:\s*0 calc\(var\(--qxframe9a7c2-grid-gap-x,\s*0\) \* 0\.5\)/,
+  'Grid col must preserve the mature SCSS sizing/gutter contract.');
+for(const sample of [
+  '.qxframe9a7c2-row-cols-24 > *',
+  '.qxframe9a7c2-row-cols-xxl-24 > *',
+  '.qxframe9a7c2-col-24',
+  '.qxframe9a7c2-col-xxl-24',
+  '.qxframe9a7c2-push-24',
+  '.qxframe9a7c2-pull-md-24',
+  '.qxframe9a7c2-offset-xl-24',
+  '.qxframe9a7c2-order-xxl-last',
+  '.qxframe9a7c2-hidden-xxl-only',
+  '.qxframe9a7c2-visible-xl-only'
+]) assert.ok(grid.includes(sample),'Grid contract missing '+sample);
+assert.match(grid,/\.qxframe9a7c2-g-24,[\s\S]*?\.qxframe9a7c2-gx-24\s*\{\s*--qxframe9a7c2-grid-gap-x:\s*3rem/,
+  'g/gx must cover 0..24 using the mature 0.125rem step.');
+assert.match(grid,/\.qxframe9a7c2-g-md-8,[\s\S]*?\.qxframe9a7c2-gy-md-8\s*\{\s*--qxframe9a7c2-grid-gap-y:\s*1rem/,
+  'responsive g/gy must preserve the same 0.125rem step.');
+assert.match(grid,/@media screen and \(min-width:\s*1600px\)[\s\S]*?\.qxframe9a7c2-col-xxl-24/,
+  'xxl Grid breakpoint must start at 1600px.');
+assert.doesNotMatch(grid,/\.qxframe9a7c2-row-(?:[1-9]|1\d|2[0-4])\s*>/,
+  'Legacy misnamed row-1..24 API must not replace row-cols-*.');
+assert.doesNotMatch(grid,/\.qxframe9a7c2-col(?:-[a-z]+)?-0\b/,
+  'Mature Grid contract does not expose col-0.');
+assert.doesNotMatch(grid,/\.qxframe9a7c2-gutter(?:-|\b)/,
+  'Canonical Grid gutter API must remain the short g/gx/gy form.');
 
 console.log(JSON.stringify({
   ok:true,
