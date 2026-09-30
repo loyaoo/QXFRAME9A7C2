@@ -369,7 +369,7 @@ function collectApiParityDifferences(expected,current){
     const left=expectedByName.get(name),right=currentByName.get(name);
     if(!left||!right){differences.push({component:name,field:'component',expected:!!left,current:!!right});continue;}
     for(const field of ['schema','defaults','immutable','legacy','optionImpact','initializer','allowUnknown','dependencies']){
-      if(json(left[field])===json(right[field]))continue;
+      if((field==='schema'?stableApiJson(left[field]):json(left[field]))===(field==='schema'?stableApiJson(right[field]):json(right[field])))continue;
       const detail={component:name,field:field};
       if(field==='schema'&&left.schema&&right.schema){
         const keys=Array.from(new Set([...Object.keys(left.schema),...Object.keys(right.schema)])).sort();
@@ -384,7 +384,17 @@ function collectApiParityDifferences(expected,current){
   }
   return differences;
 }
-const apiParity=json(expectedApi)===json(comparableApi);
+function stableApiValue(value){
+  if(Array.isArray(value)) return value.map(stableApiValue);
+  if(value&&typeof value==='object'){
+    const out={};
+    Object.keys(value).sort().forEach(function(key){out[key]=stableApiValue(value[key]);});
+    return out;
+  }
+  return value;
+}
+const stableApiJson=value=>JSON.stringify(stableApiValue(value));
+const apiParity=stableApiJson(expectedApi)===stableApiJson(comparableApi);
 const apiParityDifferences=apiParity?[]:collectApiParityDifferences(expectedApi,comparableApi);
 const moduleParity=json(expectedModules)===json(comparableModules);
 
