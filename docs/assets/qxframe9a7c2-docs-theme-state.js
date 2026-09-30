@@ -127,11 +127,11 @@
     /* Docs chrome and component demos must consume the same canonical semantic owner.
      * Clear legacy direct semantic overrides rather than creating a second docs palette. */
     ['light', 'dark'].forEach(function (themeMode) {
-      ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'border-subtle', 'border-strong'].forEach(function (name) {
+      ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'input-border', 'border-subtle', 'border-strong'].forEach(function (name) {
         setPublic('--qxframe9a7c2-theme-' + themeMode + '-' + name, null);
       });
     });
-    ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'border-subtle', 'border-strong'].forEach(function (name) {
+    ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'input-border', 'border-subtle', 'border-strong'].forEach(function (name) {
       setPublic('--qxframe9a7c2-semantic-' + name, null);
     });
 
