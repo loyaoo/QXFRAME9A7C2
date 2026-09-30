@@ -47,7 +47,7 @@ DOMFactory = Object.freeze({ createDefaultDOM: createDefaultDOM, blueprint: blue
 var STRUCTURAL_OPTIONS = Object.freeze(['container', 'elements', 'createDOM', 'document']);
 var AXES = Object.freeze(['x', 'y', 'both']);
 var WHEEL_AXES = Object.freeze(['auto', 'x', 'y']);
-var VISIBILITIES = Object.freeze(['auto', 'always', 'hidden']);
+var VISIBILITIES = Object.freeze(['auto', 'always', 'hover', 'hidden']);
 var SNAP_ALIGNS = Object.freeze(['start', 'center', 'end', 'nearest']);
 var WHEEL_BEHAVIORS = Object.freeze(['pixel', 'snap-step']);
 var SNAP_BEHAVIORS = Object.freeze(['auto', 'smooth']);
@@ -172,7 +172,7 @@ function attachViewport(options) {
     var result = instance.destroy();
     decorations.forEach(function (node) { if (node.parentNode) node.parentNode.removeChild(node); });
     owned.forEach(function (entry) { entry[0].classList.remove(entry[1]); });
-    ['is-axis-x','is-axis-y','is-axis-both','is-scrollbar-auto','is-scrollbar-always','is-scrollbar-hidden','is-scrollbar-interactive','is-scrollbar-manual-show','is-scrollbar-manual-hide','has-edge-shadow','is-disabled','is-readonly','is-scrollbar-active','can-scroll-up','can-scroll-down','can-scroll-left','can-scroll-right'].forEach(function (name) { root.classList.remove(name); });
+    ['is-axis-x','is-axis-y','is-axis-both','is-scrollbar-auto','is-scrollbar-always','is-scrollbar-hover','is-scrollbar-hidden','is-scrollbar-interactive','is-scrollbar-manual-show','is-scrollbar-manual-hide','has-edge-shadow','is-disabled','is-readonly','is-scrollbar-active','can-scroll-up','can-scroll-down','can-scroll-left','can-scroll-right'].forEach(function (name) { root.classList.remove(name); });
     if (originalTabindex === null) root.removeAttribute('tabindex'); else root.setAttribute('tabindex', originalTabindex);
     return result;
   }
