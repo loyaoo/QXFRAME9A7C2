@@ -202,6 +202,7 @@ function create(options = {}) {
     if (destroyed) return;
     projection.destroy();
     projection = DOMProjection.create();
+    if (!names.length) return;
 
     const classMap = resolveClassMap(currentOptions.class, names, defaultClassSlot);
     Object.keys(classMap).forEach(name => {
