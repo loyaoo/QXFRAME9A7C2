@@ -569,7 +569,7 @@ var controlHost = FieldHost.resolvePickerControl({
           }
     
           if (fieldControl) fieldControl.updateOptions({
-            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, tagClasses: opts.tagClasses, tagStyles: opts.tagStyles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true || opts.loading === true, busyIndicator: opts.loadingIcon,
+            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, tagClasses: opts.tagClasses, tagStyles: opts.tagStyles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true || opts.loading === true, busyIndicator: opts.loadingIcon,
             disabled: opts.disabled === true, readOnly: opts.readOnly === true, editable: opts.searchable === true, clearable: opts.clearable === true, clearContent: opts.clearContent, toggleContent: opts.toggleContent, tagRemoveContent: opts.tagRemoveContent, hasValue: values.length > 0, expanded: !!(triggerSession && triggerSession.getState().open), toggleVisible: true,
           });
           if (fieldControl && multiple) fieldControl.setDraftVisual(searchState.query !== '');
@@ -639,7 +639,6 @@ var controlHost = FieldHost.resolvePickerControl({
           ownerPrefix: 'select',
           itemSemanticClasses: function () { return ['qxframe9a7c2-select-item','qxframe9a7c2-select-list-item','qxframe9a7c2-select-option']; },
           itemClassParts: ['item','listItem','option'],
-          classes: opts.classes,
           styles: opts.itemStyles,
           container: optionHost,
           scrollAdapter: popupFrame.createAdapter(),
@@ -737,7 +736,7 @@ var controlHost = FieldHost.resolvePickerControl({
           tagRemoveClassName: 'qxframe9a7c2-select-tag-remove',
           tagRemoveContent: opts.tagRemoveContent,
           size: opts.size,
-          variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles,
+          variant: opts.variant, focusOutline: opts.focusOutline,
           status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true || opts.loading === true, busyIndicator: opts.loadingIcon, clearContent: opts.clearContent, toggleContent: opts.toggleContent,
           disabled: opts.disabled === true,
           readOnly: opts.readOnly === true,
@@ -1004,7 +1003,6 @@ var controlHost = FieldHost.resolvePickerControl({
             readOnly: opts.readOnly === true,
             disabled: opts.disabled === true,
             size: opts.size,
-            classes: opts.classes,
             styles: opts.itemStyles,
             virtual: opts.virtual,
             virtualThreshold: opts.virtualThreshold,
@@ -1038,7 +1036,6 @@ var controlHost = FieldHost.resolvePickerControl({
           syncView();
           if (Object.prototype.hasOwnProperty.call(next, 'open')) setOpen(next.open === true, 'update-options');
           else if (triggerSession.getState().open) triggerSession.reposition('options');
-          if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
           return instance;
         }
     
@@ -1104,6 +1101,7 @@ var controlHost = FieldHost.resolvePickerControl({
         if (opts.open === true) open('initial');
         return Object.freeze({
           root:root,input:input,panel:panel,optionHost:optionHost,triggerTarget:triggerTarget,
+          getElements:function(){return Object.freeze({root:root,input:input,values:valuesNode,prefix:prefix,suffix:suffix,clear:clearButton,toggle:arrow,trigger:triggerTarget,popup:panel,list:optionHost});},
           getState:getState,setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,
           refreshTagOverflow:function(){return !destroyed&&fieldControl&&fieldControl.refreshTagOverflow?fieldControl.refreshTagOverflow():false;},
           getOptionList:function(){return optionList;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getSelectionController:function(){return optionList&&optionList.getSelectionController?optionList.getSelectionController():null;},
@@ -1130,12 +1128,15 @@ export class Select extends PopupFieldComponent {
    ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
  });
  static contract=getContract('Select');
+ static semanticElements=Object.freeze(['root','input','values','prefix','suffix','clear','toggle','trigger','popup','list']);
+ static defaultClassSlot='root';
+ static defaultStyleSlot='root';
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
  static create(source,overrides){return new this(source,overrides).render();}
  static enhance(input,options){return this.create(input,options||{});}
  static createDefaultDOM=createDefaultDOM;
  constructor(source={},overrides){const prepared=prepareOptions(source,overrides);super(prepared.opts);runtimeState.set(this,{fieldInit:prepared.fieldInit,runtime:null});}
- [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime)return record.runtime.root;const runtime=setupSelectRuntime(this,record.fieldInit);record.runtime=runtime;this.own(()=>runtime.dispose('select-destroy'));return runtime.root;}
+ [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime){this.registerSemanticElements(record.runtime.getElements());return record.runtime.root;}const runtime=setupSelectRuntime(this,record.fieldInit);record.runtime=runtime;this.registerSemanticElements(runtime.getElements());this.own(()=>runtime.dispose('select-destroy'));return runtime.root;}
  [popupFieldHooks.optionsUpdated](next,previous,patch){const record=runtimeState.get(this);if(record.runtime)record.runtime.applyOptions(patch);}
  setItems(items){const r=runtimeState.get(this).runtime;return r?r.setItems(items):this;}
  setValue(value,meta){const r=runtimeState.get(this).runtime;return r?r.setValue(value,meta):this;}
@@ -1152,7 +1153,6 @@ export class Select extends PopupFieldComponent {
  getTagOverflowPopover(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowPopover():null;}
  getTagOverflowScroll(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowScroll():null;}
  getTagOverflowReference(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowReference():null;}
- getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
  getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}
  getPopupOriginElement(){const r=runtimeState.get(this).runtime;return r?r.optionHost:null;}
  getInputElement(){const r=runtimeState.get(this).runtime;return r?r.input:null;}
