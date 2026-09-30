@@ -10,6 +10,7 @@ const END='/* QXFRAME9A7C2 GENERATED CONTRACT PARAMS:END */';
 function typeLabel(spec){
   if(typeof spec==='string')return spec;
   if(!spec||typeof spec!=='object')return 'any';
+  if(Array.isArray(spec.enum)&&spec.enum.length)return spec.enum.map(value=>JSON.stringify(value)).join(' | ');
   let type=spec.type||'any';
   if(spec.nullable&&!String(type).includes('null'))type+=' | null';
   return String(type);
