@@ -9,12 +9,13 @@
         "autoUpdate": "boolean",
         "backfill": "boolean",
         "busy": "boolean",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -126,6 +127,7 @@
         },
         "open": "boolean",
         "openDelay": "number",
+        "openOnFocus": "boolean",
         "overscan": "number",
         "placeholder": "string",
         "placement": "string",
@@ -141,8 +143,11 @@
         "source": "any",
         "status": "string",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
@@ -152,8 +157,7 @@
         "valueTarget": "any",
         "variant": "string",
         "virtual": "any",
-        "virtualThreshold": "any",
-        "openOnFocus": "boolean"
+        "virtualThreshold": "any"
       },
       "defaults": {},
       "immutable": [],
@@ -220,13 +224,13 @@
           "nullable": true
         },
         "cardHeight": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -236,8 +240,15 @@
         "dotPlacement": "any",
         "dots": "boolean",
         "draggable": "boolean",
-        "duration": "number",
-        "easing": "string",
+        "duration": {
+          "types": [
+            "number",
+            "string",
+            "function",
+            "object"
+          ],
+          "nullable": true
+        },
         "effect": "any",
         "elements": {
           "type": "object",
@@ -269,8 +280,11 @@
         },
         "required": "boolean",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "swipe": "boolean",
@@ -328,12 +342,13 @@
         "busy": "boolean",
         "changeOnSelect": "boolean",
         "checkedStrategy": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -358,7 +373,6 @@
         "height": "any",
         "inputTarget": "any",
         "itemRender": "any",
-        "itemStyles": "any",
         "items": "array",
         "key": "any",
         "loadChildren": "any",
@@ -431,13 +445,14 @@
         "source": "any",
         "status": "string",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
-        "tagClasses": "any",
-        "tagStyles": "any",
         "trigger": "string",
         "triggerTarget": "any",
         "value": "any",
@@ -501,12 +516,13 @@
           "nullable": true
         },
         "bordered": "boolean",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "collapsible": "any",
@@ -516,6 +532,15 @@
         "destroyInactive": "boolean",
         "disabled": "boolean",
         "document": "document",
+        "duration": {
+          "types": [
+            "number",
+            "string",
+            "function",
+            "object"
+          ],
+          "nullable": true
+        },
         "elements": {
           "type": "object",
           "nullable": true
@@ -541,8 +566,11 @@
         "required": "boolean",
         "size": "string",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "transition": "any",
@@ -604,12 +632,13 @@
         },
         "busy": "boolean",
         "cancelText": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -704,8 +733,11 @@
         "source": "any",
         "status": "string",
         "stops": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
@@ -771,12 +803,13 @@
         },
         "busy": "boolean",
         "cancelText": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -871,6 +904,8 @@
         "preserveInvalidOnBlur": "boolean",
         "presets": "array",
         "previewValue": "any",
+        "rangeControl": "string",
+        "rangePlaceholders": "array",
         "rangeSeparator": "string",
         "readOnly": "boolean",
         "reference": "any",
@@ -886,8 +921,11 @@
         "size": "string",
         "source": "any",
         "status": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
@@ -898,9 +936,7 @@
         "value": "any",
         "valueTarget": "any",
         "variant": "string",
-        "weekStartsOn": "number",
-        "rangeControl": "string",
-        "rangePlaceholders": "array"
+        "weekStartsOn": "number"
       },
       "defaults": {},
       "immutable": [],
@@ -971,13 +1007,13 @@
         "buttonType": "any",
         "buttons": "array",
         "cancelText": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closable": {
@@ -1001,14 +1037,19 @@
         "destroyOnHidden": "any",
         "disabled": "boolean",
         "document": "document",
-        "duration": "custom",
-        "easing": "string",
+        "duration": {
+          "types": [
+            "number",
+            "string",
+            "function",
+            "object"
+          ],
+          "nullable": true
+        },
         "elements": {
           "type": "object",
           "nullable": true
         },
-        "enterDuration": "number",
-        "enterEasing": "any",
         "focusTrap": "boolean",
         "footer": "any",
         "forceRender": "boolean",
@@ -1020,12 +1061,15 @@
         "id": "any",
         "inputTarget": "any",
         "key": "any",
-        "leaveDuration": "number",
-        "leaveEasing": "any",
         "lockScroll": "boolean",
-        "maskClassName": "any",
         "maskColor": "any",
-        "maskStyle": "any",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
         "name": "string",
         "onBeforeClose": {
           "type": "function",
@@ -1075,14 +1119,6 @@
         "scrollbarVisibility": "any",
         "showMask": "boolean",
         "source": "any",
-        "style": {
-          "type": "object",
-          "nullable": true
-        },
-        "styles": {
-          "type": "object",
-          "nullable": true
-        },
         "target": "any",
         "title": "any",
         "triggerTarget": "any",
@@ -1143,12 +1179,13 @@
           "type": "function",
           "nullable": true
         },
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closeDelay": "number",
@@ -1230,11 +1267,10 @@
         "source": "any",
         "strategy": "string",
         "style": {
-          "type": "object",
-          "nullable": true
-        },
-        "styles": {
-          "type": "object",
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "submenuLeaveDelay": "number",
@@ -1315,12 +1351,13 @@
       "schema": {
         "alt": "any",
         "circle": "boolean",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -1328,6 +1365,15 @@
         "destroyOnClose": "boolean",
         "disabled": "boolean",
         "document": "document",
+        "duration": {
+          "types": [
+            "number",
+            "string",
+            "function",
+            "object"
+          ],
+          "nullable": true
+        },
         "doubleClickZoom": "boolean",
         "draggable": "boolean",
         "elements": {
@@ -1394,8 +1440,11 @@
         "scaleStep": "number",
         "source": "any",
         "src": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "trajectory": "any",
@@ -1440,12 +1489,13 @@
       "schema": {
         "changeOnBlur": "boolean",
         "changeOnWheel": "boolean",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -1513,8 +1563,11 @@
           "nullable": true
         },
         "stringMode": "boolean",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
@@ -1561,12 +1614,13 @@
         "accept": "any",
         "autoFocus": "boolean",
         "autocomplete": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -1628,8 +1682,11 @@
         "size": "string",
         "source": "any",
         "status": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "target": "any",
@@ -1676,13 +1733,13 @@
       "schema": {
         "addEventListener": "any",
         "autocomplete": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "collapsed": "boolean",
@@ -1717,8 +1774,11 @@
         "sortKeys": "any",
         "source": "any",
         "spellcheck": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "tabIndex": "any",
@@ -1777,11 +1837,22 @@
         "showMask": "boolean",
         "lockScroll": "boolean",
         "blocking": "boolean",
-        "className": "string",
-        "style": "object",
-        "boxStyle": "object",
-        "maskColor": "string",
-        "maskBlur": "any",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
+          "nullable": true
+        },
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
         "onOpen": "function",
         "onClose": "function"
       },
@@ -1830,13 +1901,13 @@
       "name": "Menu",
       "schema": {
         "autoUpdate": "boolean",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "collapsed": "boolean",
@@ -1913,11 +1984,10 @@
         "source": "any",
         "strategy": "string",
         "style": {
-          "type": "object",
-          "nullable": true
-        },
-        "styles": {
-          "type": "object",
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "submenuLeaveDelay": "number",
@@ -1979,13 +2049,13 @@
       "name": "Message",
       "schema": {
         "actions": "array",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closable": "boolean",
@@ -1995,20 +2065,16 @@
         "disabled": "boolean",
         "document": "document",
         "duration": "number",
-        "easing": "string",
         "elements": {
           "type": "object",
           "nullable": true
         },
-        "enterDuration": "number",
         "formField": "any",
         "formTarget": "any",
         "icon": "any",
         "inputTarget": "any",
         "key": "any",
-        "leaveDuration": "number",
         "maxCount": "number",
-        "moveDuration": "number",
         "name": "string",
         "onBeforeClose": {
           "type": "function",
@@ -2036,17 +2102,11 @@
         "showProgress": "boolean",
         "source": "any",
         "stack": "any",
-        "stackClassName": "any",
-        "stackStyle": {
-          "type": "object",
-          "nullable": true
-        },
         "style": {
-          "type": "object",
-          "nullable": true
-        },
-        "styles": {
-          "type": "object",
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "triggerTarget": "any",
@@ -2095,13 +2155,13 @@
         "buttons": "array",
         "cancelText": "any",
         "center": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closable": {
@@ -2125,12 +2185,19 @@
         "destroyOnHidden": "any",
         "disabled": "boolean",
         "document": "document",
-        "duration": "custom",
+        "duration": {
+          "types": [
+            "number",
+            "string",
+            "function",
+            "object"
+          ],
+          "nullable": true
+        },
         "elements": {
           "type": "object",
           "nullable": true
         },
-        "enterDuration": "number",
         "focusTrap": "boolean",
         "footer": "any",
         "forceRender": "boolean",
@@ -2143,16 +2210,17 @@
         "inputTarget": "any",
         "key": "any",
         "label": "any",
-        "leaveDuration": "number",
         "lockScroll": "boolean",
         "maskAnimation": "any",
         "maskBlur": "any",
-        "maskClassName": "any",
         "maskColor": "any",
-        "maskDuration": "custom",
-        "maskEnterDuration": "number",
-        "maskLeaveDuration": "number",
-        "maskStyle": "any",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
+          "nullable": true
+        },
         "maxWidth": "any",
         "name": "string",
         "onBeforeClose": {
@@ -2203,14 +2271,6 @@
         "scrollbarVisibility": "any",
         "showMask": "boolean",
         "source": "any",
-        "style": {
-          "type": "object",
-          "nullable": true
-        },
-        "styles": {
-          "type": "object",
-          "nullable": true
-        },
         "target": "any",
         "text": "any",
         "title": "any",
@@ -2256,13 +2316,13 @@
       "name": "Notification",
       "schema": {
         "actions": "array",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closable": "boolean",
@@ -2272,22 +2332,18 @@
         "disabled": "boolean",
         "document": "document",
         "duration": "number",
-        "easing": "string",
         "elements": {
           "type": "object",
           "nullable": true
         },
-        "enterDuration": "number",
         "formField": "any",
         "formTarget": "any",
         "icon": "any",
         "inputTarget": "any",
         "key": "any",
-        "leaveDuration": "number",
         "maxCount": "number",
         "maxWidth": "any",
         "minWidth": "any",
-        "moveDuration": "number",
         "name": "string",
         "onAction": {
           "type": "function",
@@ -2319,17 +2375,11 @@
         "showProgress": "boolean",
         "source": "any",
         "stack": "any",
-        "stackClassName": "any",
-        "stackStyle": {
-          "type": "object",
-          "nullable": true
-        },
         "style": {
-          "type": "object",
-          "nullable": true
-        },
-        "styles": {
-          "type": "object",
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "title": "any",
@@ -2361,13 +2411,13 @@
       "name": "Pagination",
       "schema": {
         "background": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "components": "any",
@@ -2429,8 +2479,11 @@
         "simple": "any",
         "size": "string",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "triggerTarget": "any",
@@ -2508,12 +2561,13 @@
         },
         "cancelDisabled": "any",
         "cancelText": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closeDelay": "number",
@@ -2582,8 +2636,11 @@
         "size": "string",
         "source": "any",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "title": "any",
@@ -2647,12 +2704,13 @@
           "type": "function",
           "nullable": true
         },
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closeDelay": "number",
@@ -2709,8 +2767,11 @@
         "size": "string",
         "source": "any",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "title": "any",
@@ -2768,12 +2829,13 @@
     {
       "name": "Progress",
       "schema": {
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "color": "any",
@@ -2816,8 +2878,11 @@
         "strokeColor": "any",
         "strokeLinecap": "any",
         "strokeWidth": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "success": "any",
@@ -2858,12 +2923,13 @@
       "name": "Rate",
       "schema": {
         "character": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -2903,8 +2969,11 @@
         "silent": "any",
         "size": "string",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "toggle": "any",
@@ -2951,12 +3020,13 @@
     {
       "name": "Result",
       "schema": {
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -2984,8 +3054,11 @@
           "nullable": true
         },
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "subtitle": "any",
@@ -3070,12 +3143,13 @@
         "align": "any",
         "axis": "any",
         "behavior": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -3136,8 +3210,11 @@
         "snapOnIdle": "boolean",
         "snapTargets": "any",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "triggerTarget": "any",
@@ -3206,12 +3283,13 @@
         "addOnTab": "any",
         "autoUpdate": "boolean",
         "busy": "boolean",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearContent": "any",
@@ -3260,7 +3338,6 @@
         },
         "itemRender": "any",
         "itemSize": "number",
-        "itemStyles": "any",
         "items": "array",
         "loading": "boolean",
         "loadingIcon": "any",
@@ -3365,15 +3442,16 @@
         "source": "any",
         "status": "string",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
-        "tagClasses": "any",
         "tagInputMinWidth": "any",
         "tagRemoveContent": "any",
-        "tagStyles": "any",
         "tagTextMaxLength": "any",
         "toggleContent": "any",
         "tokenSeparators": {
@@ -3448,12 +3526,13 @@
       "name": "Slider",
       "schema": {
         "allowCross": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -3511,8 +3590,11 @@
           ],
           "nullable": true
         },
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "tooltip": "any",
@@ -3562,12 +3644,13 @@
           "type": "function",
           "nullable": true
         },
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "container": "any",
@@ -3617,8 +3700,11 @@
         "showHandle": "any",
         "silent": "any",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "triggerTarget": "any",
@@ -3679,13 +3765,13 @@
       "name": "Steps",
       "schema": {
         "allowCurrentClick": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clickable": "any",
@@ -3726,8 +3812,11 @@
         "size": "string",
         "source": "any",
         "status": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "triggerTarget": "any",
@@ -3776,13 +3865,13 @@
         "borderless": "any",
         "caption": "any",
         "checked": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "columns": "array",
@@ -3895,7 +3984,6 @@
           "nullable": true
         },
         "required": "boolean",
-        "rowClassName": "any",
         "rowExpandable": "any",
         "rowHeight": "any",
         "rowReorder": "any",
@@ -3914,8 +4002,11 @@
         "stickyHeader": "boolean",
         "stickySummary": "boolean",
         "striped": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "summary": "any",
@@ -3991,13 +4082,13 @@
         "addable": "boolean",
         "animated": "any",
         "centered": "boolean",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closable": "boolean",
@@ -4007,6 +4098,15 @@
         "destroyInactive": "boolean",
         "disabled": "boolean",
         "document": "document",
+        "duration": {
+          "types": [
+            "number",
+            "string",
+            "function",
+            "object"
+          ],
+          "nullable": true
+        },
         "edgeShadow": "boolean",
         "editable": "boolean",
         "elements": {
@@ -4054,8 +4154,11 @@
         "size": "string",
         "source": "any",
         "stretch": "boolean",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "transition": "any",
@@ -4129,12 +4232,13 @@
           "type": "function",
           "nullable": true
         },
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearVisibility": "any",
@@ -4204,8 +4308,11 @@
         "size": "string",
         "source": "any",
         "status": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
@@ -4282,13 +4389,13 @@
           "nullable": true
         },
         "checkable": "boolean",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closable": "boolean",
@@ -4401,16 +4508,15 @@
         "showOverflowPopover": "any",
         "size": "string",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "tabIndex": "any",
-        "tagClassName": "any",
-        "tagOverflowClassName": "any",
-        "tagRemoveClassName": "any",
         "tagRemoveContent": "any",
-        "tagTextClassName": "any",
         "tokenSeparators": {
           "types": [
             "array",
@@ -4494,12 +4600,13 @@
         "cancelText": "any",
         "cellRender": "any",
         "changeOnScroll": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -4595,8 +4702,11 @@
         "size": "string",
         "source": "any",
         "status": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
@@ -4661,12 +4771,13 @@
           "type": "function",
           "nullable": true
         },
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closeDelay": "number",
@@ -4727,8 +4838,11 @@
         "size": "string",
         "source": "any",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "trigger": "string",
@@ -4787,12 +4901,13 @@
       "name": "Transfer",
       "schema": {
         "checked": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "columns": "array",
@@ -4859,15 +4974,17 @@
           "nullable": true
         },
         "required": "boolean",
-        "rowClassName": "any",
         "searchable": "boolean",
         "serializeValue": "any",
         "size": "string",
         "sortable": "boolean",
         "source": "any",
         "status": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "table": "any",
@@ -4937,12 +5054,13 @@
         "checkStrictly": "boolean",
         "checkable": "boolean",
         "checkedStrategy": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -4990,7 +5108,6 @@
           "nullable": true
         },
         "itemRender": "any",
-        "itemStyles": "any",
         "items": "array",
         "loadChildren": "any",
         "loadedKeys": "array",
@@ -5074,13 +5191,14 @@
         "source": "any",
         "status": "string",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
-        "tagClasses": "any",
-        "tagStyles": "any",
         "trigger": "string",
         "triggerTarget": "any",
         "value": "any",
@@ -5171,12 +5289,13 @@
           "type": "function",
           "nullable": true
         },
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "closeDelay": "number",
@@ -5278,8 +5397,11 @@
         "setVisible": "any",
         "source": "any",
         "strategy": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "tabExitTarget": "any",
@@ -5358,13 +5480,13 @@
           "nullable": true
         },
         "capture": "any",
-        "className": "string",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "click": "any",
@@ -5480,8 +5602,11 @@
         "showLabel": "any",
         "showList": "boolean",
         "source": "any",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "tabIndex": "any",
@@ -5565,12 +5690,13 @@
         },
         "busy": "boolean",
         "cancelText": "any",
-        "classNames": {
-          "type": "object",
-          "nullable": true
-        },
-        "classes": {
-          "type": "object",
+        "class": {
+          "types": [
+            "string",
+            "array",
+            "function",
+            "object"
+          ],
           "nullable": true
         },
         "clearable": "boolean",
@@ -5651,8 +5777,11 @@
         "snapDuration": "number",
         "source": "any",
         "status": "string",
-        "styles": {
-          "type": "object",
+        "style": {
+          "types": [
+            "object",
+            "function"
+          ],
           "nullable": true
         },
         "suffix": "any",
