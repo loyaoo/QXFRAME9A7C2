@@ -35,6 +35,11 @@ assert.match(source,/getOverlayController:function\(\)\{return filterTrigger&&fi
 assert.doesNotMatch(source,/OverlayController\.create\s*\(/,'Table must not create a second overlay owner beside filter Trigger.');
 
 assert.match(source,/FeedbackController\.createForProjector\s*\(/,'Table loading/error visual feedback must enter FeedbackController.');
+assert.match(source,/static semanticElements = Object\.freeze\(\['root','scroll','viewport','table','caption','header','body','row','expandedRow','summary','footer','pagination','loading','error'\]\)/,'Table rows must be repeated semantic elements in the canonical registry.');
+assert.match(source,/registerSemanticElements\(\s*\{ row:rows, expandedRow:expandedRows \}/,'Table must refresh repeated row semantic elements after projection.');
+assert.doesNotMatch(source,/opts\.rowClassName|\browClassName\s*:/,'Table must not retain the rowClassName customization path.');
+assert.match(source,/if \(rowProps\.class\)/,'Table onRow customization must use class rather than className.');
+assert.match(source,/if \(cellProps\.class\)/,'Table onCell customization must use class rather than className.');
 assert.match(source,/remoteProcessing\s*=\s*state\.state\s*===\s*['"]pending['"]/,'Remote AsyncTask must remain the processing execution authority.');
 assert.match(source,/remoteError\s*=\s*state\.state\s*===\s*['"]error['"]/,'Remote AsyncTask must remain the error execution authority.');
 
