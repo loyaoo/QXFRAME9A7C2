@@ -2561,7 +2561,13 @@ function setupTable(instance) {
     var target = editTransaction.target;
     if (!target || (event.target !== target && !(target.contains && target.contains(event.target)))) return;
     if (['Escape','F6','Enter'].indexOf(String(event.key || '')) < 0) return;
-    interactionController.dispatch(event, { ownerId:'table' });
+    var action = resolveTableInteractionAction(event);
+    if (!action) return;
+    var result = handleTableInteractionAction(action, { originalEvent:event, ownerId:'table' });
+    if (result === 'handled' || result === 'blocked') {
+      if (event.preventDefault) event.preventDefault();
+      if (event.stopPropagation) event.stopPropagation();
+    }
   }, true));
   scope.add(DOM.listen(doc, 'keydown', function (event) {
     if (!activeColumnResize || event.defaultPrevented) return;
