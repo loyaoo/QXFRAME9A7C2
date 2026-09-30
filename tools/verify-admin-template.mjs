@@ -44,6 +44,18 @@ function hasMixedGridComponentRoot(html){
   }
   return false;
 }
+function hasGridSpanWithoutBaseColumn(html){
+  const source=String(html||'').replace(/<script\b[\s\S]*?<\/script>/gi,'').replace(/<style\b[\s\S]*?<\/style>/gi,'');
+  for(const match of source.matchAll(/<([a-z][\w-]*)([^>]*)>/gi)){
+    const attrs=match[2]||'';
+    const classText=(attrs.match(/\bclass\s*=\s*["']([^"']*)["']/i)||[])[1]||'';
+    const classes=classText.split(/\s+/).filter(Boolean);
+    const hasSpan=classes.some(name=>/^qxframe9a7c2-col-(?:auto|\d+|(?:xs|sm|md|lg|xl|xxl)-(?:auto|\d+))$/.test(name));
+    if(hasSpan&&!classes.includes('qxframe9a7c2-col'))return true;
+  }
+  return false;
+}
+
 
 const shell='docs/admin/index.html';
 const login='docs/admin/login.html';
@@ -93,7 +105,7 @@ assert(shellCss.includes('.qx-admin-tabs-scroll>.qxframe9a7c2-tabs'),'admin tab 
 assert(/\.qx-admin-menu\{[^}]*overflow:hidden/.test(shellCss),'admin menu host must not expose a native scrollbar');
 assert(/\.qx-admin-menu \.qxframe9a7c2-menu\{[^}]*height:100%/.test(shellCss),'admin Menu must fill its scroll-owning shell');
 assert(frameworkCss.includes('.qxframe9a7c2-menu-root-scroll'),'Menu root must expose framework Scroll composition');
-assert(!/\.showScrollbar\s*\(/.test(shellJs),'admin Menu must keep canonical Scroll auto visibility and must not force persistent scrollbar chrome');
+assert(!/\.showScrollbar\s*\(/.test(shellJs),'admin Menu must keep canonical Scroll scroll visibility and must not force persistent scrollbar chrome');
 for(const marker of ["get('embed')==='1'",'is-admin-embedded','qxframe9a7c2-admin:navigate','qxframe9a7c2-admin:theme']){
   assert(demoJs.includes(marker),'standalone admin embed bridge missing '+marker);
 }
@@ -138,9 +150,11 @@ for(const legacy of ['qx-admin-view-grid','qx-admin-view-page','qx-admin-view-he
 }
 for(const name of viewFiles){
   const html=read('docs/admin/views/'+name);
-  assert(html.includes('qxframe9a7c2-row qxframe9a7c2-gx-0 qxframe9a7c2-gy-4'),'admin view root must use canonical row/column composition: '+name);
+  assert(html.includes('qxframe9a7c2-row qxframe9a7c2-gutter-x-0 qxframe9a7c2-gutter-y-4'),'admin view root must use canonical row/column composition: '+name);
   assert(!hasDirectRowChildOfRow(html),'admin Grid row must be nested through a framework column, not directly under another row: '+name);
   assert(!hasMixedGridComponentRoot(html),'admin Grid column must wrap component roots instead of sharing one DOM node with them: '+name);
+  assert(!hasGridSpanWithoutBaseColumn(html),'admin Grid span classes must include the base qxframe9a7c2-col class so wxui gutter padding is applied: '+name);
+  assert(!/qxframe9a7c2-(?:g|gx|gy)-(?:\d|xs|sm|md|lg|xl|xxl)/.test(html),'legacy Grid g/gx/gy classes must not remain: '+name);
 }
 assert(combinedAdminViews.includes('qxframe9a7c2-row')&&combinedAdminViews.includes('qxframe9a7c2-col-md-17'),'admin view markup is missing framework responsive grid composition');
 assert(controlSource.includes('clearReplacesToggle: false')&&!controlSource.includes('clearReplacesToggle: true'),'Control must keep popup toggle available beside clear by default');
@@ -157,7 +171,7 @@ for(const marker of ["classList.toggle('has-horizontal-overflow'","classList.tog
 
 const viewJs=read('docs/assets/qxframe9a7c2-admin-views.js');
 assert(!/className=['"][^'"]*qxframe9a7c2-col[^'"]*qxframe9a7c2-card[^'"]*['"]/.test(viewJs),'dynamic admin view builders must not merge Grid column and Card classes on one node');
-assert(viewJs.includes("col.className='qxframe9a7c2-col-24'")&&viewJs.includes('col.appendChild(a)'),'dynamic admin Card builder must compose Grid column > Card');
+assert(viewJs.includes("col.className='qxframe9a7c2-col qxframe9a7c2-col-24'")&&viewJs.includes('col.appendChild(a)'),'dynamic admin Card builder must compose base Grid column > Card');
 const coverageLedger='docs/admin/COMPONENT_COVERAGE.md';
 assert(exists(coverageLedger),'missing '+coverageLedger);
 const coverageText=read(coverageLedger);
