@@ -245,25 +245,45 @@ try{
     await navigateCanonical('/docs/admin/views/'+name+'.html',220);
     const probe=await cdp.call('Runtime.evaluate',{expression:`(function(){
       var root=document.querySelector('body.qx-admin-view > .qxframe9a7c2-row');
-      var section=root&&Array.prototype.find.call(root.children,function(node){
-        return node.classList&&node.classList.contains('qxframe9a7c2-col-24')&&node.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-g-4');
-      });
-      var nested=section&&section.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-g-4');
+      var rows=Array.prototype.slice.call(document.querySelectorAll('.qxframe9a7c2-row'));
+      var nested=rows.find(function(node){
+        return Array.prototype.some.call(node.classList,function(name){return /^qxframe9a7c2-gutter-(?:[1-9]|1[0-9]|2[0-4])$/.test(name);});
+      })||null;
       var rect=nested&&nested.getBoundingClientRect();
       var children=nested?Array.prototype.slice.call(nested.children):[];
       var widths=children.map(function(node){return node.getBoundingClientRect().width;}).filter(function(width){return width>0;});
+      var cards=Array.prototype.slice.call(document.querySelectorAll('.qxframe9a7c2-card'));
+      var card=cards.find(function(node){
+        var parent=node.parentElement;
+        return parent&&parent.classList&&parent.classList.contains('qxframe9a7c2-col');
+      })||null;
+      var column=card&&card.parentElement;
+      var style=column&&getComputedStyle(column);
+      var columnHasSpan=!!(column&&Array.prototype.some.call(column.classList,function(cls){return /^qxframe9a7c2-col-(?:auto|\\d+|(?:xs|sm|md|lg|xl|xxl)-(?:auto|\\d+))$/.test(cls);}));
+      var mixedCard=cards.some(function(node){return Array.prototype.some.call(node.classList,function(cls){return /^qxframe9a7c2-col(?:-|$)/.test(cls);});});
+      var spanWithoutBase=Array.prototype.some.call(document.querySelectorAll('[class*="qxframe9a7c2-col-"]'),function(node){
+        var hasSpan=Array.prototype.some.call(node.classList,function(cls){return /^qxframe9a7c2-col-(?:auto|\\d+|(?:xs|sm|md|lg|xl|xxl)-(?:auto|\\d+))$/.test(cls);});
+        return hasSpan&&!node.classList.contains('qxframe9a7c2-col');
+      });
       return {
         found:!!nested,
         directRowUnderRoot:!!(root&&Array.prototype.some.call(root.children,function(node){return node.classList&&node.classList.contains('qxframe9a7c2-row');})),
         viewport:document.documentElement.clientWidth,
         sectionWidth:rect?rect.width:0,
         minChildWidth:widths.length?Math.min.apply(Math,widths):0,
-        horizontalOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2
+        horizontalOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2,
+        cardNestedInColumn:!!(card&&column),
+        columnHasBase:!!(column&&column.classList.contains('qxframe9a7c2-col')),
+        columnHasSpan:columnHasSpan,
+        columnPaddingLeft:style?parseFloat(style.paddingLeft)||0:0,
+        columnPaddingRight:style?parseFloat(style.paddingRight)||0:0,
+        mixedCard:mixedCard,
+        spanWithoutBase:spanWithoutBase
       };
     })()`,returnByValue:true},sessionId);
     const value=probe&&probe.result&&probe.result.value||{};
     adminGridRegression[name]=value;
-    if(!value.found||value.directRowUnderRoot||value.sectionWidth<value.viewport*.72||value.minChildWidth<120||value.horizontalOverflow){
+    if(!value.found||value.directRowUnderRoot||value.sectionWidth<value.viewport*.72||value.minChildWidth<120||value.horizontalOverflow||!value.cardNestedInColumn||!value.columnHasBase||!value.columnHasSpan||value.columnPaddingLeft<=0||value.columnPaddingRight<=0||value.mixedCard||value.spanWithoutBase){
       throw new Error('[QXFRAME9A7C2 canonical docs browser] admin Grid geometry regression '+name+' '+JSON.stringify(value));
     }
   }
