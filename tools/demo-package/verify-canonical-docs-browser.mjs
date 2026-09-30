@@ -246,9 +246,9 @@ try{
     const probe=await cdp.call('Runtime.evaluate',{expression:`(function(){
       var root=document.querySelector('body.qx-admin-view > .qxframe9a7c2-row');
       var section=root&&Array.prototype.find.call(root.children,function(node){
-        return node.classList&&node.classList.contains('qxframe9a7c2-col-24')&&node.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-g-4');
+        return node.classList&&node.classList.contains('qxframe9a7c2-col-24')&&node.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-gutter-4');
       });
-      var nested=section&&section.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-g-4');
+      var nested=section&&section.querySelector(':scope > .qxframe9a7c2-row.qxframe9a7c2-gutter-4');
       var rect=nested&&nested.getBoundingClientRect();
       var children=nested?Array.prototype.slice.call(nested.children):[];
       var widths=children.map(function(node){return node.getBoundingClientRect().width;}).filter(function(width){return width>0;});
