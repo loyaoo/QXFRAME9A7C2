@@ -9,6 +9,7 @@ import { Renderer } from './renderer.js';
 import { OverlayController } from './overlayController.js';
 import { TransitionGroup } from './transitionGroup.js';
 import { ObserverHub } from './observerHub.js';
+import { SemanticProjection } from './semanticProjection.js';
 
 const global = globalThis;
 
@@ -61,16 +62,9 @@ function normalizeAction(raw, index, owner) {
   action.type = enumValue(action.type, ACTION_TYPES, 'default', 'action.type', owner);
   action.disabled = bool(action.disabled, false, 'action.disabled', owner);
   action.closeOnClick = bool(action.closeOnClick, true, 'action.closeOnClick', owner);
-  action.className = action.className == null ? '' : String(action.className);
+  if (own(action, 'className')) throw new TypeError('[QXFRAME9A7C2] ' + owner + ' action.className was removed. Use action.class.');
+  action.class = action.class == null ? null : action.class;
   return action;
-}
-function applyStyle(element, style) {
-  if (!element || !style) return;
-  Object.keys(style).forEach(function (key) { if (Utils.safeOwnKey(key)) element.style[key] = style[key] == null ? '' : String(style[key]); });
-}
-function clearStyleObject(element, previous) {
-  if (!element || !previous) return;
-  Object.keys(previous).forEach(function (key) { if (Utils.safeOwnKey(key)) element.style[key] = ''; });
 }
 function renderValue(host, value, record) {
   var output = typeof value === 'function' ? value({ instance: record.instance, options: record.options }) : value;
@@ -79,15 +73,31 @@ function renderValue(host, value, record) {
 var DEFAULT_NOTICE_ICONS = Object.freeze({ success:'check-circle', error:'error-octagon', warning:'alert-triangle', info:'info', loading:'sync' });
 function beginRender(record, config) {
   var cfg = config || {}, opts = record.options, item = record.item;
-  clearStyleObject(item, record.appliedStyle);
-  record.appliedStyle = opts.style ? Utils.mergeOwn(opts.style) : null;
+  if (record.semantic) record.semantic.clear();
   item.className = String(typeof cfg.className === 'function' ? cfg.className(opts, record) : (cfg.className || item.className || ''));
   if (cfg.widths === true) { item.style.width = opts.width || ''; item.style.minWidth = opts.minWidth || ''; item.style.maxWidth = opts.maxWidth || ''; }
-  applyStyle(item, record.appliedStyle);
   if (record.closeButton && record.closeButton.parentNode) record.closeButton.parentNode.removeChild(record.closeButton);
   if (record.progress && record.progress.parentNode) record.progress.parentNode.removeChild(record.progress);
   record.closeButton = null; record.progress = null;
+  if (record.semantic) {
+    var reset = {};
+    record.semanticNames.forEach(function (name) { reset[name] = null; });
+    reset.root = item; reset.wrapper = record.body;
+    record.semantic.setElements(reset);
+  }
   return Object.freeze({ options:opts, item:item, body:record.body, document:record.body.ownerDocument });
+}
+function setSemanticElement(record, name, element, contexts) {
+  if (record && record.semantic && record.semanticNames.indexOf(name) >= 0) record.semantic.setElement(name, element || null, contexts);
+  return element || null;
+}
+function setSemanticElements(record, elements, contexts) {
+  if (record && record.semantic) record.semantic.setElements(elements || {}, contexts || null);
+  return elements || {};
+}
+function syncSemantic(record) {
+  if (record && record.semantic) record.semantic.sync(record.options || {});
+  return record;
 }
 function appendNoticeIcon(record, host, config) {
   var cfg = config || {}, opts = record.options, iconValue = opts.icon === false ? null : (opts.icon !== undefined ? opts.icon : DEFAULT_NOTICE_ICONS[opts.type]);
@@ -97,16 +107,17 @@ function appendNoticeIcon(record, host, config) {
   if (opts.icon === undefined) { icon.classList.add('qxframe9a7c2-icon','qxframe9a7c2-icon-' + iconValue,'is-line','is-round','is-stroke-3',cfg.sizeClass || 'is-md'); if (opts.type === 'loading') icon.classList.add('is-spin'); }
   else renderValue(icon, iconValue, record);
   host.appendChild(icon);
+  setSemanticElement(record, 'icon', icon);
   return icon;
 }
 function appendNoticeChrome(record, config) {
   var cfg = config || {}, opts = record.options, item = record.item, doc = item.ownerDocument;
   if (opts.closable) {
     var closeButton = doc.createElement('button'); closeButton.type = 'button'; closeButton.className = String(cfg.closeClass || 'qxframe9a7c2-notice-close'); DOM.setPrivate(closeButton, 'noticeClose', 'true');
-    var closeGlyph = doc.createElement('span'); closeGlyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-close is-line is-round is-stroke-3 is-sm'; closeButton.appendChild(closeGlyph); item.appendChild(closeButton); record.closeButton = closeButton;
+    var closeGlyph = doc.createElement('span'); closeGlyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-close is-line is-round is-stroke-3 is-sm'; closeButton.appendChild(closeGlyph); item.appendChild(closeButton); record.closeButton = closeButton; setSemanticElement(record, 'close', closeButton);
   }
   if (opts.showProgress && opts.duration > 0) {
-    var progress = doc.createElement('progress'); progress.className = String(cfg.progressClass || 'qxframe9a7c2-notice-progress'); progress.max = 1; progress.value = 1; item.appendChild(progress); record.progress = progress;
+    var progress = doc.createElement('progress'); progress.className = String(cfg.progressClass || 'qxframe9a7c2-notice-progress'); progress.max = 1; progress.value = 1; item.appendChild(progress); record.progress = progress; setSemanticElement(record, 'progress', progress);
   }
   return Object.freeze({ closeButton:record.closeButton, progress:record.progress });
 }
@@ -139,12 +150,13 @@ var utils = Object.freeze({
   cssLength: cssLength,
   styleObject: styleObject,
   normalizeAction: normalizeAction,
-  applyStyle: applyStyle,
-  clearStyleObject: clearStyleObject,
   renderValue: renderValue,
   beginRender: beginRender,
   appendNoticeIcon: appendNoticeIcon,
   appendNoticeChrome: appendNoticeChrome,
+  setSemanticElement: setSemanticElement,
+  setSemanticElements: setSemanticElements,
+  syncSemantic: syncSemantic,
   isTop: isTop,
   isBottom: isBottom,
   horizontalSide: horizontalSide
@@ -162,6 +174,7 @@ function createChannel(profile) {
   var documentIds = new WeakMap();
   var documentSequence = 0;
   var orderSequence = 0;
+  var semanticNames = Object.freeze(Array.from(new Set(['root','wrapper','icon','close','progress'].concat(Array.isArray(profile.semanticElements) ? profile.semanticElements : []))));
 
   function resolveFrameDocument(opts) {
     var source = opts || {};
@@ -1134,6 +1147,7 @@ function createChannel(profile) {
     clearExpiryFrame(record);
     if (record.clock) record.clock.pause();
     profile.render(record, previous, utils);
+    syncSemantic(record);
     record.item;
     record.item.classList.remove('is-updated');
     void record.item.offsetWidth;
@@ -1207,7 +1221,6 @@ function createChannel(profile) {
       updateFlashDelay: null,
       expiryDelay: null,
       expiryPaintScheduler: null,
-      appliedStyle: null,
       enterComplete: false,
       enterDisplacementReady: false,
       enterDisplacement: 0,
@@ -1302,13 +1315,19 @@ function createChannel(profile) {
           transition: transitionState
         });
       },
-      getElement: function () { return record.item; },
+      getElement: function (name) { return record.semantic ? record.semantic.getElement.apply(null, arguments) : null; },
+      getRootElement: function () { return record.item; },
       getStackElement: function () { return record.entry.frame; },
       getViewportElement: function () { return record.entry.viewport; }
     });
     record.instance = api;
+    record.semanticNames = semanticNames;
+    record.semantic = SemanticProjection.create({ instance:api, semanticNames:semanticNames, defaultClassSlot:'root', defaultStyleSlot:'root' });
+    record.semantic.setElements({ root:item, wrapper:body });
+    scope.add(function () { if (record.semantic) { record.semantic.destroy(); record.semantic = null; } });
     
     profile.render(record, null, utils);
+    syncSemantic(record);
     scope.add(DOM.listen(item, 'mouseenter', function (event) {
       updateFramePointer(entry, event);
       if (shouldTrackFrameHover(entry)) setFrameHover(entry, true);
