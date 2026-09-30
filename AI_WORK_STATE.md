@@ -14,10 +14,44 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Docs self-hosting + Card/Color token cleanup complete.
-- Current Task: `DOCS-SELF-HOSTING-CSS-012` (COMPLETE)
+- Current Phase: Component Semantic API + Motion System migration.
+- Current Task: `SEMANTIC-MOTION-API-013` (IN PROGRESS)
 
 ## CURRENT
+
+### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
+Status: IN PROGRESS
+Task progress: 8%
+
+User authority:
+- Use the uploaded "QXFRAME9A7C2 Component Semantic API + Motion System 一体化修改手册" as the task specification.
+- This is a one-track replacement: no old API/token aliases and no dual timing authority.
+- Preserve existing user-visible interaction behavior and the completed 9 Runtime Controller architecture unless this task explicitly changes API/timing ownership.
+
+Baseline / reconciliation:
+- Baseline main: `21b9312b8a1930af225712a2b72f912c8183c8f5`.
+- Previous `DOCS-SELF-HOSTING-CSS-012`, `NEUTRAL-GREY-CSS-011`, and the 9-controller Phase A-I program remain complete and must not be redone.
+- Mandatory architecture files reviewed: `AGENTS.md`, `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`, `FOUR_UNIFICATIONS_ACCEPTANCE.md`, and current `AI_WORK_STATE.md`.
+
+Phase A inventory confirmed on current main:
+- `src/core/domBinding.js` still exposes `options.classes`, `normalizeClasses()`, `createClassProjection()`, and `syncClasses()`.
+- `src/utils/semanticStyles.js` still exposes `classNames/styles`.
+- Modal still has `className/maskClassName/maskStyle`, JS duration fallbacks 240/180, and writes old motion duration variables.
+- Drawer still has `className/maskClassName/maskStyle`, `enterDuration/leaveDuration`, JS default easing, and writes old motion duration variables.
+- Carousel still owns JS default `duration:320` / easing and writes `transitionDuration/transitionTimingFunction`.
+- Sort still writes move `160ms` + cubic-bezier in JS.
+- Image Preview still selects default timing tokens inside JS motion descriptors.
+- MotionCore still accepts explicit visual duration for completion waits.
+- Existing canonical CSS still requires a full old-duration/easing hardcode audit.
+
+Risk review:
+- This task changes API expression, DOM projection, CSS timing authority, and composite motion coordination; it must not change picker/menu/popup interaction semantics or completed focus/value/selection behavior.
+- Concrete components remain responsible for semantic names/default slots; base Component must not blindly route class/style to root.
+- MotionCore interruption/reversal/completion stays; only default visual timing authority moves to CSS/computed style.
+
+Next exact step:
+- Implement the shared Semantic Element Registry + unified class/style projection foundation, add regression verifiers, then migrate representative components (Modal, Drawer, Carousel, Select, Tabs) before expanding to all affected consumers.
+
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
 Status: COMPLETE
