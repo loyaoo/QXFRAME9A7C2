@@ -133,7 +133,8 @@ const greyExpected=[
   '212, 212, 212','220, 220, 220','229, 229, 229','237, 237, 237','245, 245, 245','250, 250, 250'
 ];
 assert.doesNotMatch(css,/--qxframe9a7c2-palette-grey-0\b/,'Canonical Grey must not retain grey-0.');
-assert.doesNotMatch(css,/--qxframe9a7c2-color-grey-[a-z0-9-]+\s*:/i,'color-grey forwarding aliases must not exist.');
+assert.doesNotMatch(css,/--qxframe9a7c2-color-[a-z0-9-]+\s*:\s*var\(--qxframe9a7c2-(?:palette|theme-seed)-[a-z0-9-]+\)\s*;/i,
+  'Physical/theme-seed forwarding color aliases must not exist; consume the canonical palette RGB source or semantic/theme owner directly.');
 for(let i=1;i<=13;i+=1){
   const paletteName='--qxframe9a7c2-palette-grey-'+i;
   const paletteValues=(definitions.get(paletteName)||[]).map(entry=>entry.value);
@@ -218,6 +219,8 @@ assert.doesNotMatch(css,/--_qxframe9a7c2-semantic-(?:subtle|subtle-hover|subtle-
   'Ordinary Neutral subtle/disabled semantic states must resolve from the mode recipe instead of ad-hoc color-mix.');
 assert.match(css,/--_qxframe9a7c2-control-border:\s*var\(--qxframe9a7c2-family-control-border,\s*var\(--_qxframe9a7c2-semantic-input-border\)\)/,
   'Control family must consume the semantic input-border role.');
+assert.match(css,/--_qxframe9a7c2-card-divider:\s*var\(--qxframe9a7c2-card-divider-color,\s*var\(--_qxframe9a7c2-card-border\)\)/,
+  'Card internal dividers must default to the same resolved border as the Card outer frame; divider-color remains an explicit override slot.');
 
 assert.match(lightCandidates[0].body,/--_qxframe9a7c2-mode-focus-visible:\s*rgb\(var\(--qxframe9a7c2-palette-black\)\)/,'Light keyboard focus-visible must remain black.');
 assert.match(darkCandidates[0].body,/--_qxframe9a7c2-mode-focus-visible:\s*rgb\(var\(--qxframe9a7c2-palette-white\)\)/,'Dark keyboard focus-visible must remain white.');

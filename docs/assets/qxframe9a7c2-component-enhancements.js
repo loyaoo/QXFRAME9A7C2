@@ -38,7 +38,7 @@ function table(title,rows,kind){
     }
     return '<tr'+attrs+'><td><code>'+esc(row.name)+'</code></td><td>'+esc(row.description)+'</td><td><code>'+esc(row.type||'—')+'</code></td><td><code>'+esc(row.default||'—')+'</code></td></tr>';
   }).join('');
-  return '<section class="qxframe9a7c2-docs-api-block" id="api-'+id+'"><h3>'+title+'</h3><div class="qxframe9a7c2-docs-api-table-wrap"><table class="qxframe9a7c2-docs-api-table"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table><div class="qxframe9a7c2-docs-api-empty">当前过滤条件下没有匹配项。</div></div></section>';
+  return '<section class="qxframe9a7c2-docs-api-block" id="api-'+id+'"><h3>'+title+'</h3><div class="qxframe9a7c2-table-wrap qxframe9a7c2-docs-api-table-wrap"><table class="qxframe9a7c2-table is-sm qxframe9a7c2-docs-api-table"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table><div class="qxframe9a7c2-docs-api-empty">当前过滤条件下没有匹配项。</div></div></section>';
 }
 function boot(){
   var metaName=document.body.getAttribute('data-qxframe9a7c2-component');
@@ -67,8 +67,8 @@ function boot(){
   var paramsTitle=api.kind==='css'?'DOM / CSS Contract':'参数 / Props & Params';
   sec.innerHTML=
     '<div class="qxframe9a7c2-docs-section-head"><div><h2>API / Params / Methods</h2><p>与当前 v'+esc(version)+' canonical docs/runtime 同步的公共契约。参数、方法签名、方法参数、返回值以及事件回调在同一处检索；live demo 与本手册共用同一组件版本。</p></div><span class="qxframe9a7c2-docs-api-source">'+esc(api.source||'runtime')+'</span></div>'+
-    '<div class="qxframe9a7c2-docs-api-summary"><span>v'+esc(version)+'</span><span>'+counts.options+' Params</span><span>'+counts.methods+' Methods</span><span>'+counts.events+' Events / Callbacks</span><span>'+(api.kind==='css'?'CSS / native DOM':'Runtime owner')+'</span></div>'+
-    '<label class="qxframe9a7c2-docs-api-filter"><input type="search" data-qxframe9a7c2-api-filter placeholder="过滤参数 / 方法 / 事件，例如 value、open、updateOptions、onChange"></label>'+
+    '<div class="qxframe9a7c2-docs-api-summary"><span class="qxframe9a7c2-tag">v'+esc(version)+'</span><span class="qxframe9a7c2-tag">'+counts.options+' Params</span><span class="qxframe9a7c2-tag">'+counts.methods+' Methods</span><span class="qxframe9a7c2-tag">'+counts.events+' Events / Callbacks</span><span class="qxframe9a7c2-tag">'+(api.kind==='css'?'CSS / native DOM':'Runtime owner')+'</span></div>'+
+    '<label class="qxframe9a7c2-docs-api-filter"><input class="qxframe9a7c2-form-input is-md" type="search" data-qxframe9a7c2-api-filter placeholder="过滤参数 / 方法 / 事件，例如 value、open、updateOptions、onChange"></label>'+
     table(paramsTitle,api.options,api.kind==='css'?'contract':'options')+
     table('方法 / Methods',api.methods,'methods')+
     table('事件 / Events & Callbacks',api.events,'events');
