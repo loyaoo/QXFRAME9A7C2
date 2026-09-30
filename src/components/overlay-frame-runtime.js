@@ -76,6 +76,9 @@ function create(config = {}) {
   let surfaceTransition = null;
   let buttons = [];
   let beforeOpenGuard = false;
+  let enterMaskDone = true;
+  let enterSurfaceDone = true;
+  let pendingEnterDetail = null;
   let leaveMaskDone = true;
   let leaveSurfaceDone = true;
   let pendingLeaveDetail = null;
@@ -198,6 +201,16 @@ function create(config = {}) {
       ? (config.presenceOptions(context(), kind, showing, reason, event) || {})
       : {};
   }
+  function finalizeEnter() {
+    if (destroyed || !opened || !enterMaskDone || !enterSurfaceDone || !pendingEnterDetail) return false;
+    const detail = pendingEnterDetail;
+    pendingEnterDetail = null;
+    scroll.refresh('overlay-frame-open');
+    callback('afterOpenChange', true, payload(detail.reason, detail.originalEvent));
+    if (destroyed || !opened) return true;
+    emitter.emit('afterOpenChange', { open:true, source:DOM.activationSource(detail.originalEvent), reason:detail.reason, originalEvent:detail.originalEvent });
+    return true;
+  }
   function finalizeLeave() {
     if (destroyed || opened || !leaveMaskDone || !leaveSurfaceDone || !pendingLeaveDetail) return false;
     const detail = pendingLeaveDetail;
@@ -213,6 +226,9 @@ function create(config = {}) {
   }
   function closeAccepted(reason, event) {
     opened = false;
+    pendingEnterDetail = null;
+    enterMaskDone = true;
+    enterSurfaceDone = true;
     callback('onOpenChange', false, payload(reason, event));
     if (destroyed || opened) return controller;
     callback('onClose', payload(reason, event));
@@ -273,6 +289,11 @@ function create(config = {}) {
     ...maskTransitionOptions,
     element: mask,
     appear: maskTransitionOptions.appear !== false,
+    onAfterEnter() {
+      if (typeof maskTransitionOptions.onAfterEnter === 'function') maskTransitionOptions.onAfterEnter.apply(null, arguments);
+      enterMaskDone = true;
+      finalizeEnter();
+    },
     onAfterLeave() {
       if (typeof maskTransitionOptions.onAfterLeave === 'function') maskTransitionOptions.onAfterLeave.apply(null, arguments);
       leaveMaskDone = true;
@@ -296,12 +317,8 @@ function create(config = {}) {
     },
     onAfterEnter(transitionContext) {
       if (typeof surfaceTransitionOptions.onAfterEnter === 'function') surfaceTransitionOptions.onAfterEnter(transitionContext);
-      if (destroyed || !opened) return;
-      scroll.refresh('overlay-frame-open');
-      const reason = transitionContext.reason || 'open', event = transitionContext.originalEvent || null;
-      callback('afterOpenChange', true, payload(reason, event));
-      if (destroyed || !opened) return;
-      emitter.emit('afterOpenChange', { open:true, source:DOM.activationSource(event), reason, originalEvent:event });
+      enterSurfaceDone = true;
+      finalizeEnter();
     },
     onAfterLeave() {
       if (typeof surfaceTransitionOptions.onAfterLeave === 'function') surfaceTransitionOptions.onAfterLeave.apply(null, arguments);
@@ -327,6 +344,9 @@ function create(config = {}) {
     pendingLeaveDetail = null;
     leaveMaskDone = true;
     leaveSurfaceDone = true;
+    pendingEnterDetail = { reason, originalEvent:event || null };
+    enterMaskDone = false;
+    enterSurfaceDone = false;
     overlay.mount();
     opened = true;
     applyVisualOptions(true);
@@ -386,6 +406,12 @@ function create(config = {}) {
         placement:opts.placement, buttonCount:buttons.length, contentMounted:!hiddenContentDestroyed
       };
       return Object.freeze(typeof config.stateExtras === 'function' ? Utils.assignOwn(base, config.stateExtras(context()) || {}) : base);
+    },
+    getElements() {
+      const surfaceName = String(config.motionSurfaceKey || 'surface');
+      const result = { root, mask, wrapper:wrap, header, title, close:closeButton, body, footer };
+      result[surfaceName] = surfaceNode;
+      return Object.freeze(result);
     },
     getRootElement() { return root; },
     getMaskElement() { return mask; },
