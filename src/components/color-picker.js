@@ -266,7 +266,7 @@ function setupColorPickerRuntime(instance, fieldInit) {
      field = PickerField.create({
        container: opts.container, headless: opts.headless === true, renderControl: opts.renderControl !== false, reference: opts.reference, triggerTarget: opts.triggerTarget, valueTarget: opts.valueTarget, draftValueTarget: opts.draftValueTarget, inputTarget: opts.inputTarget, formTarget: opts.formTarget, formField: opts.formField, committedValue: initialCanonical, serializeValue: fieldDisplay, elements: opts.elements, createDOM: opts.createDOM,
        document: opts.document, portalContainer: opts.portalContainer,
-       className: 'qxframe9a7c2-color-picker', panelClass: 'qxframe9a7c2-color-picker-panel',
+       rootClass: 'qxframe9a7c2-color-picker', panelClass: 'qxframe9a7c2-color-picker-panel',
        size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: fieldPrefixContent(), suffix: fieldSuffixContent(), required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: false,
        clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
        closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false,
