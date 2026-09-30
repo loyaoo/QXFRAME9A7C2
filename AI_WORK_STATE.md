@@ -14,10 +14,42 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Neutral / Grey CSS-only refactor complete.
-- Current Task: `NEUTRAL-GREY-CSS-010` (COMPLETE)
+- Current Phase: Neutral / Grey CSS-only closeout.
+- Current Task: `NEUTRAL-GREY-CSS-011` (IN PROGRESS)
 
 ## CURRENT
+
+### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
+Status: IN PROGRESS
+Task progress: 25%
+
+User authority:
+- Audit every remaining standard-theme/component consumer of the cold `Gray` palette and migrate it back to canonical `Grey`.
+- Do not mechanically replace matching numeric steps; choose the target Grey tone by actual RGB/perceived lightness and semantic role, using Tailwind Neutral and shadcn neutral-token usage as the reference model.
+- Keep the cold Gray physical palette available only as an explicit optional palette/theme input; it must not leak into standard Light/Dark component utility tokens.
+
+Baseline / reconciliation:
+- Baseline `main@5b0bb20bc4681105dff1def193e5052dede6ce7d`; no open PR at task start.
+- Main QXFRAME CI #950 / run `36683036709` passed.
+- NEUTRAL-GREY-CSS-010 remains complete and must not be redone.
+
+Audit findings:
+- No component selector directly consumes cold Gray. The remaining leakage is centralized in shared utility tokens and therefore fans out to multiple component families.
+- Standard Light scroll track/thumb/hover use cold `Gray-5 = 85,95,109`.
+- Light popup shadow and Dark loading mask use cold `Gray-1 = 27,36,44`.
+- Standard Dark scroll track/thumb/hover use cold `Gray-9 = 222,227,231`.
+- Cold Gray declarations and `theme-seed-gray` are intentional optional-palette infrastructure, not standard-theme consumers.
+
+Frozen mapping method:
+- Compare rendered RGB/perceived lightness rather than palette index.
+- `Gray-1 (27,36,44)` -> `Grey-3 (38,38,38)` for popup shadow/loading-mask darkness.
+- `Gray-5 (85,95,109)` -> `Grey-5 (82,82,82)` for Light scroll chrome.
+- `Gray-9 (222,227,231)` -> `Grey-10 (229,229,229)` for Dark scroll chrome.
+- Preserve existing alpha values unless verification shows a contrast regression; this task removes hue contamination, not redesigns scrollbar/shadow/loading behavior.
+
+Next exact step:
+- Update canonical CSS and Phase F verifier so standard-theme utility tokens cannot consume cold Gray, then run PR CI and merge only when exact-head checks are green.
+
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
 Status: COMPLETE
