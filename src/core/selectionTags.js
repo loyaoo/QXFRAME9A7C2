@@ -2,6 +2,33 @@
 import { Utils } from '../utils/utils.js';
 import { ItemAccessors } from './itemAccessors.js';
 
+function tagForSemanticNode(node, list, fallbackIndex) {
+  var key = '';
+  if (node && typeof node.getAttribute === 'function') key = node.getAttribute('data-tags-shell-key') || '';
+  if (!key && node && typeof node.closest === 'function') {
+    var shell = node.closest('[data-tags-shell-key]');
+    if (shell) key = shell.getAttribute('data-tags-shell-key') || '';
+  }
+  if (key) {
+    for (var i = 0; i < list.length; i += 1) if (String(list[i].key) === String(key)) return list[i];
+  }
+  return list[fallbackIndex] || null;
+}
+function projectHostedSemantic(hostedTags, selectionTags, elements, contexts) {
+  if (!hostedTags || typeof hostedTags.getElement !== 'function') return false;
+  var list = selectionTags && typeof selectionTags.tags === 'function' ? selectionTags.tags() : (Array.isArray(selectionTags) ? selectionTags : []);
+  ['tagShell','tag','tagContent','tagClose'].forEach(function (name) {
+    var value = hostedTags.getElement(name);
+    elements[name] = Array.isArray(value) ? value : [];
+    contexts[name] = elements[name].map(function (node, index) {
+      var tag = tagForSemanticNode(node, list, index);
+      return { item:tag, state:Object.freeze({ selected:true, disabled:!!(tag && tag.disabled), removable:!!(tag && tag.removable) }) };
+    });
+  });
+  elements.tagOverflow = hostedTags.getElement('overflow');
+  return true;
+}
+
 function createSelectionTags(options) {
   var opts = options || {};
   function values() { var source = Utils.isFunction(opts.getValues) ? opts.getValues() : opts.values; return Array.isArray(source) ? source : []; }
@@ -29,5 +56,5 @@ function createSelectionTags(options) {
   return Object.freeze({ values: values, tags: tags, keyOf: keyOf, remove: remove, reconcileKey: function (key) { var list = tags(); if (!list.length) return null; for (var i=0;i<list.length;i+=1) if(list[i].key===String(key)) return list[i].key; return list[list.length-1].key; } });
 }
 
-export const SelectionTags = Object.freeze({ create: createSelectionTags });
-export { createSelectionTags };
+export const SelectionTags = Object.freeze({ create: createSelectionTags, projectHostedSemantic: projectHostedSemantic });
+export { createSelectionTags, projectHostedSemantic };
