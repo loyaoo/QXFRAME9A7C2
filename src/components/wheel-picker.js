@@ -14,7 +14,7 @@ import { Utils } from '../utils/utils.js';
 
 const runtimeState = new WeakMap();
 const WHEEL_PICKER_DEFAULTS = Object.freeze({
-  value:undefined, defaultValue:[], visibleItemCount:7, scrollbarVisibility:'auto', wheelPropagation:true,
+  value:undefined, defaultValue:[], visibleItemCount:7, scrollbarVisibility:'scroll', wheelPropagation:true,
   snapBehavior:'smooth', snapDuration:220, scrollIdleDelay:100, loop:false, size:'md', disabled:false, readOnly:false,
   clearable:false, placeholder:'请选择', needConfirm:false, showCancel:false, closeOnSelect:false, separator:' / ', trigger:'click', open:false
 });
