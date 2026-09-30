@@ -561,7 +561,11 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           SelectionTags.projectHostedSemantic(hostedTags(), selectionTags, elements, contexts);
           return {elements:elements,contexts:contexts};
         }
-        function syncSemanticRegistry(){var snapshot=semanticSnapshot();instance.registerSemanticElements(snapshot.elements,snapshot.contexts);return snapshot;}
+        function syncSemanticRegistry() {
+          var snapshot = semanticSnapshot();
+          if (!destroyed && !instance.destroyed) instance.registerSemanticElements(snapshot.elements, snapshot.contexts);
+          return snapshot;
+        }
         function bindCompositeVirtualFocus() {
           if (!keyboard || !keyboard.virtualFocus) return;
           tree.bindVirtualFocus(keyboard.virtualFocus);
