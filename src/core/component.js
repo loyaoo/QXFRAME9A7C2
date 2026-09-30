@@ -169,6 +169,7 @@ export class Component {
     render() {
         const record = requireState(this);
         assertAlive(record, 'render');
+        record.semantic.clear();
         const hook = this[componentHooks.render];
         const result = typeof hook === 'function' ? hook.call(this, record.options) : undefined;
         if (result !== undefined) updateRoot(this, record, result);
@@ -181,6 +182,7 @@ export class Component {
     mount(target) {
         const record = requireState(this);
         assertAlive(record, 'mount');
+        record.semantic.clear();
         if (arguments.length) updateRoot(this, record, target);
         const hook = this[componentHooks.mount];
         const result = typeof hook === 'function' ? hook.call(this, record.root, record.options) : undefined;
@@ -195,8 +197,10 @@ export class Component {
         const record = requireState(this);
         assertAlive(record, 'reload');
         this.updateOptions(options);
+        record.semantic.clear();
         const hook = this[componentHooks.reload];
         if (typeof hook === 'function') hook.call(this, record.options);
+        record.semantic.sync(record.options);
         record.emitter.emit('reload', { instance: this, options: record.options });
         return this;
     }
@@ -212,6 +216,7 @@ export class Component {
         OptionTransaction.rejectImmutable(patch, record.immutableOptions, name);
         record.options = record.transaction.update(patch);
         const hook = this[componentHooks.optionsUpdated];
+        record.semantic.clear();
         try {
             if (typeof hook === 'function') hook.call(this, record.options, previous, patch);
             record.semantic.sync(record.options);
