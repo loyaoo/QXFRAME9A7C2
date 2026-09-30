@@ -63,6 +63,17 @@ assert.doesNotMatch(scroll,/function\s+onKeyDown\s*\(/,'Scroll must not keep a p
 assert.doesNotMatch(scroll,/CapabilityController\.mutationLocked\s*\(/,'Scroll runtime mutation gate must use its canonical CapabilityController instance.');
 assert.doesNotMatch(scroll,/DOM\.focusElement\(root/,'Scroll root focus must enter FocusController.');
 assert.match(scroll,/focusable:\s*true,/,'Scroll must remain keyboard-focusable by default for existing callers.');
+assert.match(scroll,/Object\.freeze\(\['scroll', 'always', 'hover', 'hidden'\]\)/,'Scroll visibility contract must expose exactly scroll/always/hover/hidden.');
+assert.match(scroll,/scrollbarVisibility:\s*'scroll',/,'Scroll default visibility must be scroll.');
+assert.match(scroll,/if \(input\.scrollbarVisibility === undefined\) input\.scrollbarVisibility = 'scroll';/,'Scroll.attachViewport must inherit the scroll visibility default.');
+assert.match(scroll,/opts\.scrollbarVisibility !== 'scroll'/,'Auto-activation must belong only to scroll visibility mode.');
+assert.doesNotMatch(scroll,/scrollbarVisibility[^\n]*'auto'|is-scrollbar-auto/,'Legacy auto scrollbar visibility must be removed.');
+assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-scroll:not\(\.is-scrollbar-active\):not\(\.is-scrollbar-manual-show\) \.qxframe9a7c2-scroll-track/,'scroll mode must hide chrome while idle.');
+assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-hover:hover \.qxframe9a7c2-scroll-track:not\(\[hidden\]\)/,'hover mode must reveal chrome while the Scroll root is hovered.');
+assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-always \.qxframe9a7c2-scroll-track:not\(\[hidden\]\)/,'always mode must keep chrome visible.');
+assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-hidden:not\(\.is-scrollbar-manual-show\) \.qxframe9a7c2-scroll-track[\s\S]*display:\s*none/,'hidden mode must suppress custom chrome.');
+assert.match(css,/\.qxframe9a7c2-scroll-viewport[\s\S]*overflow:\s*auto/,'hidden mode must not disable the scrollable viewport itself.');
+
 assert.match(scroll,/var sequentialFocusEnabled = opts\.disabled !== true && opts\.focusable !== false;/,'Scroll focusable must own sequential-focus participation.');
 assert.match(scroll,/if \(!sequentialFocusEnabled\) viewport\.tabIndex = -1;/,'Scroll focusable=false must explicitly remove the native overflow viewport from Tab order.');
 assert.match(scroll,/else if \(originalViewportTabindex === null\) viewport\.removeAttribute\('tabindex'\);/,'Scroll focusable=true must restore default viewport Tab behavior instead of leaving an owned -1.');
