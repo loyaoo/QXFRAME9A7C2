@@ -128,6 +128,17 @@ for(const [name,value] of [
 }
 assert.match(lightCandidates[0].body,/--_qxframe9a7c2-mode-focus-visible:\s*rgb\(var\(--qxframe9a7c2-palette-black\)\)/,'Light keyboard focus-visible must remain black.');
 assert.match(darkCandidates[0].body,/--_qxframe9a7c2-mode-focus-visible:\s*rgb\(var\(--qxframe9a7c2-palette-white\)\)/,'Dark keyboard focus-visible must remain white.');
+for(const name of ['--qxframe9a7c2-shadow-none','--qxframe9a7c2-shadow-low','--qxframe9a7c2-shadow-mid','--qxframe9a7c2-shadow-high']){
+  assert.ok(definitions.has(name),'Canonical elevation token missing: '+name);
+}
+assert.match(css,/--_qxframe9a7c2-popup-shadow:\s*var\(--qxframe9a7c2-shadow-mid\)/,'Popup surfaces must use medium elevation.');
+assert.match(css,/--_qxframe9a7c2-overlay-shadow:\s*var\(--qxframe9a7c2-shadow-high\)/,'Modal/Drawer overlays must use high elevation.');
+assert.match(css,/--qxframe9a7c2-card-shadow:\s*var\(--qxframe9a7c2-shadow-none\)/,'Base Card must remain flat until an elevated state explicitly requests low shadow.');
+for(const name of ['--qxframe9a7c2-motion-duration-fast','--qxframe9a7c2-motion-duration-mid','--qxframe9a7c2-motion-duration-slow','--qxframe9a7c2-motion-ease-standard','--qxframe9a7c2-motion-ease-out','--qxframe9a7c2-motion-ease-in']){
+  assert.ok(definitions.has(name),'Canonical motion token missing: '+name);
+}
+assert.doesNotMatch(css,/--qxframe9a7c2-easing-(?:standard|out|in)\b/,'Legacy easing-* token family must not coexist with canonical motion-ease-* tokens.');
+
 
 let withoutCompatDeclarations=css.replace(/--qxframe9a7c2-color-[a-z0-9-]+\s*:\s*[^;{}]*(?:;|(?=\}))/ig,'');
 const compatConsumers=[...withoutCompatDeclarations.matchAll(/var\(\s*(--qxframe9a7c2-color-[a-z0-9-]+)/ig)].map(m=>m[1]);
