@@ -116,7 +116,7 @@ try{
   await navigateCanonical('/docs/admin/index.html',500);
   const shellRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
-    var result={tabsMounted:false,overflowList:false,tabFontSize:0,tabsKeyboardSwitchFocus:false,tabsKeyboardRemoveFocus:false,menuCustomScrollPresent:false,menuHostNativeScrollDisabled:false,menuViewportScrollable:false,menuTrackVisible:false,menuScrollMoves:false,collapsedMenuFits:false,collapsedGroupsHidden:false,collapsedIconCentered:false,searchOpened:false,searchClosedFromFrame:false,adminDatePopupStable:false,adminDatePopupSpread:null};
+    var result={tabsMounted:false,overflowList:false,tabFontSize:0,tabsKeyboardSwitchFocus:false,tabsKeyboardRemoveFocus:false,menuCustomScrollPresent:false,menuHostNativeScrollDisabled:false,menuViewportScrollable:false,menuTrackHiddenIdle:false,menuTrackVisibleWhileScrolling:false,menuTrackHiddenAfterIdle:false,menuScrollMoves:false,collapsedMenuFits:false,collapsedGroupsHidden:false,collapsedIconCentered:false,searchOpened:false,searchClosedFromFrame:false,adminDatePopupStable:false,adminDatePopupSpread:null};
     ['content-list','content-add','orders','users','roles','media','search','logs','settings','profile','result','404','500'].forEach(function(key){
       history.replaceState(null,'','#/'+key);
       window.dispatchEvent(new Event('hashchange'));
@@ -157,13 +157,19 @@ try{
       result.menuCustomScrollPresent=!!(menuScroll&&menuViewport&&menuTrack&&menuThumb);
       result.menuHostNativeScrollDisabled=getComputedStyle(menuHost).overflowY==='hidden';
       result.menuViewportScrollable=!!(menuViewport&&menuViewport.scrollHeight>menuViewport.clientHeight+1);
-      result.menuTrackVisible=!!(menuTrack&&menuTrack.isConnected&&getComputedStyle(menuTrack).display!=='none'&&getComputedStyle(menuTrack).visibility!=='hidden'&&menuTrack.getBoundingClientRect().height>0&&menuThumb&&menuThumb.getBoundingClientRect().height>0);
+      function menuTrackVisible(){
+        return !!(menuTrack&&menuTrack.isConnected&&getComputedStyle(menuTrack).display!=='none'&&getComputedStyle(menuTrack).visibility!=='hidden'&&menuTrack.getBoundingClientRect().height>0&&menuThumb&&menuThumb.getBoundingClientRect().height>0);
+      }
+      result.menuTrackHiddenIdle=!!(menuTrack&&!menuTrackVisible());
       if(menuViewport){
         var beforeMenuTop=menuViewport.scrollTop;
         menuViewport.scrollTop=Math.min(120,Math.max(1,menuViewport.scrollHeight-menuViewport.clientHeight));
         menuViewport.dispatchEvent(new Event('scroll',{bubbles:true}));
         await sleep(80);
         result.menuScrollMoves=menuViewport.scrollTop>beforeMenuTop;
+        result.menuTrackVisibleWhileScrolling=menuTrackVisible();
+        await sleep(1150);
+        result.menuTrackHiddenAfterIdle=!menuTrackVisible();
       }
       menuHost.style.flex=oldFlex;
       menuHost.style.height=oldHeight;
@@ -230,7 +236,7 @@ try{
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const shellValue=shellRegression&&shellRegression.result&&shellRegression.result.value||{};
-  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.tabsKeyboardSwitchFocus||!shellValue.tabsKeyboardRemoveFocus||!shellValue.menuCustomScrollPresent||!shellValue.menuHostNativeScrollDisabled||!shellValue.menuViewportScrollable||!shellValue.menuTrackVisible||!shellValue.menuScrollMoves||!shellValue.collapsedMenuFits||!shellValue.collapsedGroupsHidden||!shellValue.collapsedIconCentered||!shellValue.searchOpened||!shellValue.searchClosedFromFrame||!shellValue.adminDatePopupStable){
+  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.tabsKeyboardSwitchFocus||!shellValue.tabsKeyboardRemoveFocus||!shellValue.menuCustomScrollPresent||!shellValue.menuHostNativeScrollDisabled||!shellValue.menuViewportScrollable||!shellValue.menuTrackHiddenIdle||!shellValue.menuTrackVisibleWhileScrolling||!shellValue.menuTrackHiddenAfterIdle||!shellValue.menuScrollMoves||!shellValue.collapsedMenuFits||!shellValue.collapsedGroupsHidden||!shellValue.collapsedIconCentered||!shellValue.searchOpened||!shellValue.searchClosedFromFrame||!shellValue.adminDatePopupStable){
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin shell regression '+JSON.stringify(shellValue));
   }
 
