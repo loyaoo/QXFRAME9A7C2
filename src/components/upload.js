@@ -619,7 +619,7 @@ function setupUpload(instance) {
       head.appendChild(title); head.appendChild(close); bodyShell.appendChild(body); panel.appendChild(head); panel.appendChild(bodyShell); previewModal.appendChild(previewMask); previewModal.appendChild(panel);
       previewScroll = Scroll.attachViewport({
         root:bodyShell, viewport:body, content:body, document:doc,
-        axis:'both', wheelAxis:'auto', wheelPropagation:false, scrollbarVisibility:'auto',
+        axis:'both', wheelAxis:'auto', wheelPropagation:false, scrollbarVisibility:'scroll',
         focusable:false, keyboard:false, controller:api
       });
       var media;
