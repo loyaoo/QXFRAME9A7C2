@@ -136,10 +136,6 @@ function createModalController(instance, options) {
     resolveButtons,
     applyVisualOptions(ctx) {
       var opts = ctx.options(), dialog = ctx.surface;
-      ctx.root.className = 'qxframe9a7c2-modal-root';
-      ctx.mask.className = 'qxframe9a7c2-modal-mask';
-      ctx.wrap.className = 'qxframe9a7c2-modal-wrapper';
-      dialog.className = 'qxframe9a7c2-modal-container';
       ctx.root.dataset.placement = opts.placement;
       ctx.wrap.dataset.placement = opts.placement;
       DOM.setPrivate(ctx.mask, 'maskAnimation', opts.maskAnimation === false ? 'none' : (opts.maskAnimation || 'fade'));
