@@ -14,10 +14,24 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: capability leakage / shared runtime unification complete.
-- Current Task: `ARCH-MERGE-CLOSEOUT-007`
+- Current Phase: Menu root Scroll visibility correction.
+- Current Task: `MENU-SCROLL-AUTO-008`
 
 ## CURRENT
+
+### MENU-SCROLL-AUTO-008 — Menu root Scroll auto visibility correction
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 85%
+
+Current truth:
+- Menu root Scroll ownership remains canonical `Menu -> Scroll`.
+- Admin no longer calls `Scroll.showScrollbar()`; the root Scroll remains on the framework default `scrollbarVisibility:'auto'`.
+- Browser acceptance now requires the Menu scrollbar to be hidden while idle, visible during scrolling, and hidden again after the configured idle delay.
+- Native Admin host scrolling remains disabled; the framework Scroll remains the only visible scrollbar owner.
+
+Next exact step:
+- Run exact-head CI for PR #189 and merge only if the auto-visibility browser lifecycle passes.
+- After merge, verify main CI + Pages and mark this task COMPLETE.
 
 ### ARCH-MERGE-CLOSEOUT-007 — merge / main / Pages closeout
 Status: COMPLETE
