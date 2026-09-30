@@ -471,7 +471,7 @@ function setupTable(instance) {
     axis:'both',
     wheelAxis:'auto',
     wheelPropagation:true,
-    scrollbarVisibility:'auto',
+    scrollbarVisibility:'scroll',
     scrollbarInteractive:true,
     edgeShadow:false,
     focusable:false,
@@ -1896,7 +1896,7 @@ function setupTable(instance) {
       listScrollShell.appendChild(list); filterPopup.appendChild(listScrollShell);
       filterScroll = filterPopupFrame.attachViewport({
         root:listScrollShell, viewport:list, content:list, document:doc,
-        axis:'y', wheelAxis:'y', wheelPropagation:false, scrollbarVisibility:'auto',
+        axis:'y', wheelAxis:'y', wheelPropagation:false, scrollbarVisibility:'scroll',
         focusable:false, keyboard:false, controller:api
       });
       filterScroll.refresh('table-filter-options');
@@ -2363,7 +2363,7 @@ function setupTable(instance) {
     if (opts.minWidth != null) table.style.minWidth = typeof opts.minWidth === 'number' ? opts.minWidth + 'px' : String(opts.minWidth); else table.style.removeProperty('min-width');
     if (scrollSurface && Utils.isFunction(scrollSurface.updateOptions)) scrollSurface.updateOptions({
       wheelPropagation:opts.wheelPropagation !== false,
-      scrollbarVisibility:opts.scrollbarVisibility || 'auto',
+      scrollbarVisibility:opts.scrollbarVisibility || 'scroll',
       scrollbarInteractive:opts.scrollbarInteractive !== false,
       edgeShadow:opts.scrollEdgeShadow === true
     });
