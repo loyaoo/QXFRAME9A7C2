@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
-Status: IN PROGRESS
-Task progress: 98%
+Status: VALIDATING
+Task progress: 96%
 
 User authority:
 - Use uploaded "QXFRAME9A7C2 Component Semantic API + Motion System 一体化修改手册" as task specification.
@@ -61,6 +61,15 @@ Next exact step:
 1. Finish exact-head PR #199 CI run #989.
 2. If any step fails, patch the same branch and validate the new exact head.
 3. When all required checks are green, set this checkpoint to DONE / 100%, merge PR #199, then verify main and Pages.
+
+
+PR / CI:
+- PR #199: https://github.com/loyaoo/QXFRAME9A7C2/pull/199
+- Exact head after Table editor Escape fix: `be2cd703023706d5f233a1286e2a6e0563a91be7`.
+- CI run #1015 failed only in browser smoke: Table editor Escape did not cancel; diagnostics imbalance was consequential because cleanup did not complete.
+- Fixed the editor descendant key bridge by routing Escape/F6/Enter to the existing canonical Table action handler; no duplicate edit logic added.
+- CI run #1016 is currently IN PROGRESS on exact head `be2cd703...`.
+- Do not merge until run #1016 is fully green.
 
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
