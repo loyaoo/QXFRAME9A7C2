@@ -13,7 +13,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
  */
 
 :root {
-  /* Original UIKit physical color palette: 172/172 restored exactly. */
+  /* Physical color palettes. Canonical Grey is the Tailwind-derived 13-step Neutral scale. */
   --qxframe9a7c2-palette-white: 255, 255, 255;
   --qxframe9a7c2-color-white: var(--qxframe9a7c2-palette-white);
   --qxframe9a7c2-palette-black: 0, 0, 0;
@@ -857,9 +857,9 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   }
 
   /* Built-in standard theme preset.
-   * Resolution order is: user theme slot -> clean standard preset -> mixed Neutral/Auxiliary.
-   * Keeping the mixed value last makes the tint algorithm a resilient fallback without making
-   * ordinary Light/Dark surfaces look tinted during normal use. */
+   * Standard Light/Dark Neutral resolves directly from canonical Grey. MixedGray/Auxiliary
+   * remains available as an explicit public theme-neutral override recipe, never as the
+   * mandatory default path. */
   :root,[data-qxframe9a7c2-theme] {
     --_qxframe9a7c2-standard-light-bg: rgb(var(--qxframe9a7c2-palette-white));
     --_qxframe9a7c2-standard-light-surface: rgb(var(--qxframe9a7c2-palette-white));
