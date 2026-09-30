@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
-Status: IN_PROGRESS
-Task progress: 60%
+Status: READY_FOR_CI
+Task progress: 85%
 
 User authority:
 - Attached `QXFRAME9A7C2 — Neutral / Grey CSS-only 重构修改手册` dated 2026-09-30.
@@ -59,8 +59,14 @@ Implementation checkpoint:
 - Keyboard focus-visible remains Light black / Dark white.
 - No runtime JS was modified.
 
+Docs / verification checkpoint:
+- Docs-only theme state, Theme Playground, and Tokens Reference now default to Grey; MixedGray is explicit and projects `theme-neutral-N -> _auxiliary-N` only when selected.
+- Physical palette display now reads `palette-*-N` primitives rather than the removed numbered Grey compatibility aliases.
+- Phase F token-graph verification now locks the exact 13 Grey RGB values, absence of grey-0 / numbered color-grey aliases, default Grey fallback, preserved MixedGray chain, Light/Dark recipe assignments, Dark alpha borders/input, semantic input-border routing, and removal of ordinary Neutral semantic color-mix.
+- Scope diff is limited to `src/qxframe9a7c2.css`, docs-only theme/token JS, `tools/verify-phase-f-token-graph.mjs`, and this checkpoint. No `src/**/*.js` runtime file changed.
+
 Next exact step:
-- Synchronize docs-only theme/token tools so Grey is the default Neutral and MixedGray is an explicit optional selection, harden Phase F verification for the new contract, then open the PR and run exact-head CI.
+- Open the implementation PR from `fix/neutral-grey-css-010`, run exact-head QXFRAME CI, fix any gate regression, then record CI evidence before merge.
 
 
 ### ADMIN-GRID-CARD-LAYERING-009 — Admin Grid column / component-root DOM separation
