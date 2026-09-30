@@ -1418,7 +1418,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 .qxframe9a7c2-control-contract.is-danger,.qxframe9a7c2-progress.is-exception{--_qxframe9a7c2-accent:var(--_qxframe9a7c2-semantic-error);--_qxframe9a7c2-accent-hover:var(--_qxframe9a7c2-semantic-error-hover);--_qxframe9a7c2-accent-active:var(--_qxframe9a7c2-semantic-error-active);--_qxframe9a7c2-accent-soft:var(--_qxframe9a7c2-semantic-error-soft)}
 
 .is-grey{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-grey);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-grey,var(--_qxframe9a7c2-semantic-on-accent))}
-.is-gray{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-gray);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-gray,var(--_qxframe9a7c2-semantic-on-accent))}
+.is-gray{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-grey);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-grey,var(--_qxframe9a7c2-semantic-on-accent))}
 .is-cyan{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-cyan);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-cyan,var(--_qxframe9a7c2-semantic-on-accent))}
 .is-teal{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-teal);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-teal,var(--_qxframe9a7c2-semantic-on-accent))}
 .is-green{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-green);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-green,var(--_qxframe9a7c2-semantic-on-accent))}
