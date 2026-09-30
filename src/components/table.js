@@ -1195,6 +1195,7 @@ function setupTable(instance) {
       navigation: {
         focusRoot: root,
         editableKeys: ['F6','Escape','Enter'],
+        capture: true,
         shouldHandle: function (ctx) {
           if (editTransaction) return ctx.target === editTransaction.target;
           return ctx.target === root;
