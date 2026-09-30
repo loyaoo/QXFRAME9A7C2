@@ -71,9 +71,9 @@ Resume rule:
 - No implementation work remains for ARCH-UNIFICATION-006. On resume, query Git/PR/CI/Pages first and only act on current repository state; do not re-run this architecture migration from the beginning.
 
 ### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
-Status: VERIFIED — READY TO MERGE
+Status: DONE_MERGED_VERIFIED
 Task progress: 100%
-Branch: `refactor/scroll-unification-005`.
+Merged via PR #184 as `1fda904db5548f53ccdb9628c5f5c6e797f5abaf`.
 Baseline: `main@7cbaa7b18d7953c267a8c525eab8ccc6aecb20f1`.
 
 User requirements:
