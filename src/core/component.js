@@ -8,6 +8,7 @@ import { ComponentProfile } from './componentProfile.js';
 import { IdManager } from '../utils/id.js';
 import { Utils } from '../utils/utils.js';
 import { DOM } from './dom.js';
+import { SemanticProjection } from './semanticProjection.js';
 
 const state = new WeakMap();
 
@@ -97,6 +98,7 @@ function updateRoot(instance, record, nextRoot) {
     if (nextRoot === record.root) return record.root;
     InstanceRegistry.bindRoot(instance, nextRoot);
     record.root = nextRoot == null ? null : nextRoot;
+    if (record.semantic && record.semanticNames && record.semanticNames.includes('root')) record.semantic.setElement('root', record.root);
     return record.root;
 }
 
@@ -106,6 +108,11 @@ export class Component {
     static immutableOptions = Object.freeze([]);
     static contract = null;
     static profile = null;
+    static semanticElements = Object.freeze([]);
+    static defaultClassSlot = null;
+    static defaultStyleSlot = null;
+    static defaultMotionSlot = null;
+    static motionSlots = Object.freeze({});
 
     static create(options = {}) {
         const instance = new this(options);
@@ -124,10 +131,21 @@ export class Component {
         const defaults = collectDefaults(this.constructor);
         const normalizers = collectStaticObject(this.constructor, 'optionNormalizers');
         const immutableOptions = collectStaticList(this.constructor, 'immutableOptions');
+        const semanticNames = collectStaticList(this.constructor, 'semanticElements');
+        const motionSlots = collectStaticObject(this.constructor, 'motionSlots');
         const transaction = OptionTransaction.create(defaults, normalizers, candidate => validateContractOptions(contract, candidate, name));
         const resolved = transaction.update(input);
         const emitter = Events.createEmitter();
         const scope = Lifecycle.createScope();
+        const semantic = SemanticProjection.create({
+            instance: this,
+            names: semanticNames,
+            defaultClassSlot: this.constructor.defaultClassSlot || null,
+            defaultStyleSlot: this.constructor.defaultStyleSlot || null,
+            defaultMotionSlot: this.constructor.defaultMotionSlot || null,
+            motionSlots,
+            options: resolved
+        });
         const record = {
             id: IdManager.next(name),
             options: resolved,
@@ -136,6 +154,8 @@ export class Component {
             profile,
             emitter,
             scope,
+            semantic,
+            semanticNames,
             root: null,
             rendered: false,
             mounted: false,
@@ -152,6 +172,7 @@ export class Component {
         const hook = this[componentHooks.render];
         const result = typeof hook === 'function' ? hook.call(this, record.options) : undefined;
         if (result !== undefined) updateRoot(this, record, result);
+        record.semantic.sync(record.options);
         record.rendered = true;
         record.emitter.emit('render', { instance: this, root: record.root });
         return this;
@@ -164,6 +185,7 @@ export class Component {
         const hook = this[componentHooks.mount];
         const result = typeof hook === 'function' ? hook.call(this, record.root, record.options) : undefined;
         if (result !== undefined) updateRoot(this, record, result);
+        record.semantic.sync(record.options);
         record.mounted = true;
         record.emitter.emit('mount', { instance: this, root: record.root });
         return this;
@@ -192,8 +214,10 @@ export class Component {
         const hook = this[componentHooks.optionsUpdated];
         try {
             if (typeof hook === 'function') hook.call(this, record.options, previous, patch);
+            record.semantic.sync(record.options);
         } catch (error) {
             record.options = record.transaction.restore(previous);
+            record.semantic.sync(previous);
             throw error;
         }
         record.emitter.emit('options', { instance: this, options: record.options, previous, patch });
@@ -207,11 +231,13 @@ export class Component {
         const errors = [];
         const before = this[componentHooks.beforeDestroy];
         try { if (typeof before === 'function') before.call(this); } catch (error) { errors.push(error); }
+        try { if (record.semantic) record.semantic.destroy(); } catch (error) { errors.push(error); }
         try { errors.push(...record.scope.dispose()); } catch (error) { errors.push(error); }
         try { record.emitter.dispose(); } catch (error) { errors.push(error); }
         record.eventOffs.clear();
         InstanceRegistry.unregister(this);
         record.root = null;
+        record.semantic = null;
         record.mounted = false;
         const after = this[componentHooks.afterDestroy];
         try { if (typeof after === 'function') after.call(this, errors.slice()); } catch (error) { errors.push(error); }
@@ -292,6 +318,28 @@ export class Component {
         record.scope.add(cleanup);
         return cleanup;
     }
+
+    registerSemanticElement(name, element) {
+        const record = requireState(this);
+        assertAlive(record, 'register semantic elements on');
+        record.semantic.setElement(name, element);
+        return this;
+    }
+
+    registerSemanticElements(elements) {
+        const record = requireState(this);
+        assertAlive(record, 'register semantic elements on');
+        record.semantic.setElements(elements);
+        return this;
+    }
+
+    getElement(name) {
+        const record = requireState(this);
+        if (!record.semantic) return arguments.length ? null : Object.freeze({});
+        return arguments.length ? record.semantic.getElement(name) : record.semantic.getElement();
+    }
+
+    getRootElement() { return this.getElement('root'); }
 
     get id() { return requireState(this).id; }
     get root() { return requireState(this).root; }
