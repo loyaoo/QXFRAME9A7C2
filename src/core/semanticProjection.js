@@ -65,7 +65,7 @@ function classTokens(value, label) {
 }
 function semanticContext(instance, name, element, options, extra) {
   const context = { instance: instance || null, name, element, options: Object.freeze(options || {}) };
-  if (extra) Object.keys(extra).forEach(key => { context[key] = extra[key]; });
+  if (extra) Object.keys(extra).forEach(key => { if (Utils.safeOwnKey(key)) context[key] = extra[key]; });
   return Object.freeze(context);
 }
 function resolveClassMap(input, names, defaultSlot) {
