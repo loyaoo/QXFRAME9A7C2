@@ -105,7 +105,7 @@ function create(options) {
   var footerCleanups = [], footerActionButtons = [];
   var interactionGeneration = 0, navigationActive = false, editorSnapshot = null, editorPointerPending = false, suppressOpenEvent = null;
 
-  if (!projectionMode && !headlessMode) { root.classList.add('qxframe9a7c2-picker-field'); if (dualMode) root.classList.add('is-dual-control'); if (opts.className) root.classList.add(String(opts.className)); }
+  if (!projectionMode && !headlessMode) { root.classList.add('qxframe9a7c2-picker-field'); if (dualMode) root.classList.add('is-dual-control'); if (opts.rootClass) root.classList.add(String(opts.rootClass)); }
   panel.className = 'qxframe9a7c2-picker-field-panel qxframe9a7c2-popup-surface is-' + sizeName(opts.size) + (opts.panelClass ? ' ' + String(opts.panelClass) : '');
   panel.hidden = true; body.className = 'qxframe9a7c2-picker-field-body'; footer.className = 'qxframe9a7c2-picker-field-footer';
   panel.appendChild(body);
