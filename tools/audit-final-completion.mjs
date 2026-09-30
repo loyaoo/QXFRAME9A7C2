@@ -276,7 +276,28 @@ const currentTable=currentApi.components.find(component=>component.name==='Table
 if(!expectedTable||expectedTable.schema.filters!=='array'||!currentTable||currentTable.schema.filters!=='object')
   throw new Error('Table.filters contract migration must correct the frozen generic array inference to the canonical object map.');
 expectedTable.schema.filters='object';
-const authorizedApiSchemaExpansions=Object.freeze(['Slider.step: number→number|null','Table.filters: array→object']);
+const authorizedApiSchemaExpansions=['Slider.step: number→number|null','Table.filters: array→object'];
+const semanticStyleRule={types:['object','function'],nullable:true};
+for(const componentName of ['Drawer','Dropdown','Loading','Menu','Message','Modal','Notification']){
+  const expected=(expectedApi.components||[]).find(record=>record&&record.name===componentName);
+  const current=(currentApi.components||[]).find(record=>record&&record.name===componentName);
+  if(!expected||!current||!expected.schema||!current.schema) throw new Error('Semantic style schema migration component missing: '+componentName);
+  const oldStyle=expected.schema.style;
+  const oldStyleIsObject=oldStyle==='object'||(oldStyle&&oldStyle.type==='object'&&oldStyle.nullable===true);
+  if(!oldStyleIsObject||json(current.schema.style)!==json(semanticStyleRule)) throw new Error('Semantic style schema migration mismatch: '+componentName+'.style');
+  expected.schema.style=semanticStyleRule;
+  authorizedApiSchemaExpansions.push(componentName+'.style: object→object|function');
+}
+const semanticDurationRule={types:['number','string','function','object'],nullable:true};
+for(const componentName of ['Carousel','Drawer','Modal']){
+  const expected=(expectedApi.components||[]).find(record=>record&&record.name===componentName);
+  const current=(currentApi.components||[]).find(record=>record&&record.name===componentName);
+  if(!expected||!current||!expected.schema||!current.schema||json(current.schema.duration)!==json(semanticDurationRule))
+    throw new Error('Semantic duration schema migration mismatch: '+componentName+'.duration');
+  expected.schema.duration=semanticDurationRule;
+  authorizedApiSchemaExpansions.push(componentName+'.duration: legacy visual timing→semantic motion override');
+}
+Object.freeze(authorizedApiSchemaExpansions);
 const authorizedCapabilityMigrations=Object.freeze(Object.entries(BASELINE_CAPABILITY_MIGRATIONS).map(function(entry){return entry[0]+'→'+entry[1];}));
 const authorizedApiRemovals=[];
 for(const entry of compatibility.entries||[]){
