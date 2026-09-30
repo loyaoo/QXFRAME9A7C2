@@ -14,14 +14,14 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Neutral / Grey CSS-only closeout.
-- Current Task: `NEUTRAL-GREY-CSS-011` (IN PROGRESS)
+- Current Phase: Neutral / Grey CSS-only closeout complete.
+- Current Task: `NEUTRAL-GREY-CSS-011` (COMPLETE)
 
 ## CURRENT
 
 ### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
-Status: IN PROGRESS
-Task progress: 92%
+Status: COMPLETE
+Task progress: 100%
 
 User authority:
 - Audit every remaining standard-theme/component consumer of the cold `Gray` palette and migrate it back to canonical `Grey`.
@@ -69,8 +69,16 @@ PR / CI checkpoint:
 - QXFRAME CI #951 / run `36685505007` passed on head `4de0d7e1e5e0f608ff471caffa09d5b1360d00cd`.
 - Windows tools = success; dependency audit = success; Completion audit = success; Full release verification = success; npm pack = success; standalone dist/docs build = success; artifact uploads = success. Pages upload is intentionally skipped for PR events.
 
+Completion / verification evidence:
+- Final exact-head PR CI #952 / run `36686017880` passed on `50a2ada9f81bbb0d7b140dab56282a44ec641418`: Windows tools, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build and artifact uploads all succeeded.
+- PR #195 was squash-merged to `main` as `ebd9c6eed426c720dff7531ee9302784de3d681c`.
+- Main QXFRAME CI #953 / run `36686567648` passed release + Windows, uploaded the GitHub Pages artifact, and `deploy-pages` completed successfully.
+- Standard/component CSS no longer directly consumes cold `palette-gray-*`; the only remaining cold Gray palette references are the physical palette/compatibility declarations and explicit theme seed infrastructure.
+- `.is-gray` is retained only as a spelling/API alias of canonical `.is-grey` behavior.
+- No runtime component/controller JS changed.
+
 Next exact step:
-- Run one final exact-head CI including this checkpoint commit; if green, merge PR #195 and verify main CI / Pages.
+- No remaining `NEUTRAL-GREY-CSS-011` work. On resume, query current Git / PR / CI / Pages state first and wait for the next user-directed task.
 
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
