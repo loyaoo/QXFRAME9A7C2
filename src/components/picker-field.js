@@ -122,7 +122,7 @@ function create(options) {
     var startControl=null,endControl=null;
     function common(index) {
       return {
-        document:doc, size:opts.size, variant:opts.variant, focusOutline:opts.focusOutline, classNames:opts.classNames, styles:opts.styles, status:opts.status,
+        document:doc, size:opts.size, variant:opts.variant, focusOutline:opts.focusOutline, class:opts.class, style:opts.style, status:opts.status,
         required:opts.required===true, busy:opts.busy===true, disabled:opts.disabled, readOnly:opts.readOnly, editable:opts.editable,
         clearVisibility:'interaction', draftVisual:opts.draftVisual===true, placeholder:placeholders[index], inputValue:rangeDisplayValues[index] || '',
         expanded:false
@@ -148,7 +148,7 @@ function create(options) {
     function setRange(values){rangeDisplayValues=Array.isArray(values)?[String(values[0]||''),String(values[1]||'')]:['',''];startControl.setInputValue(rangeDisplayValues[0]);endControl.setInputValue(rangeDisplayValues[1]);return facade;}
     function updateDual(next) {
       var n=next||{}, ph=dualPlaceholders();
-      var commonNext={size:n.size,variant:n.variant,focusOutline:n.focusOutline,classNames:n.classNames,styles:n.styles,status:n.status,required:n.required,busy:n.busy,disabled:n.disabled,readOnly:n.readOnly,editable:n.editable,draftVisual:n.draftVisual,expanded:n.expanded};
+      var commonNext={size:n.size,variant:n.variant,focusOutline:n.focusOutline,class:n.class,style:n.style,status:n.status,required:n.required,busy:n.busy,disabled:n.disabled,readOnly:n.readOnly,editable:n.editable,draftVisual:n.draftVisual,expanded:n.expanded};
       Object.keys(commonNext).forEach(function(k){if(commonNext[k]===undefined)delete commonNext[k];});
       startControl.updateOptions(Utils.assignOwn(commonNext,{prefix:opts.prefix,placeholder:ph[0],clearable:false,toggleVisible:false}));
       endControl.updateOptions(Utils.assignOwn(commonNext,{suffix:opts.suffix,placeholder:ph[1],clearable:opts.clearable,hasValue:clearVisible,toggleVisible:true,toggle:opts.toggle}));
@@ -186,7 +186,7 @@ function create(options) {
     document: doc, formField: opts.formField, committedValue: opts.committedValue, serializeValue: opts.serializeValue, mode: opts.controlMode || 'input', tags: tags, creatableTags:opts.creatableTags===true,tagsControlled:true, tokenSeparators: opts.tokenSeparators, tokenizeOnPaste: opts.tokenizeOnPaste !== false, addOnEnter: opts.addOnEnter !== false, addOnTab: opts.addOnTab === true, addOnBlur: opts.addOnBlur === true,
     segments:opts.segments,segmentValues:opts.segmentValues,segmentSeparator:opts.segmentSeparator,valueAdapter:opts.valueAdapter,formatSegment:opts.formatSegment,
     tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName,
-    size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable,
+    size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class:opts.class, style:opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: opts.editable,
     clearable: opts.clearable, clearVisibility: 'interaction', hasValue: clearVisible, draftDisplayValue: draftDisplayValue, draftVisual: opts.draftVisual === true, inputValue: displayValue,
     placeholder: displayPlaceholder, expanded: false, toggleVisible: true, toggle: opts.toggle,
     onInput: function (value, event) { displayValue = value; if (typeof opts.onInput === 'function') opts.onInput(value, event, api); },
@@ -453,7 +453,7 @@ function create(options) {
   function syncControl() {
     if (!control) return;
     var editorValue = navigationActive && editorSnapshot ? editorSnapshot.value : displayValue;
-    var controlOptions={ tags:tags,creatableTags:opts.creatableTags===true,tagsControlled:true,tokenSeparators:opts.tokenSeparators,tokenizeOnPaste:opts.tokenizeOnPaste!==false,addOnEnter:opts.addOnEnter!==false,addOnTab:opts.addOnTab===true,addOnBlur:opts.addOnBlur===true,tagClassName:opts.tagClassName,tagTextClassName:opts.tagTextClassName,tagRemoveClassName:opts.tagRemoveClassName,size:opts.size,variant:opts.variant,focusOutline:opts.focusOutline,classNames:opts.classNames,styles:opts.styles,status:opts.status,prefix:opts.prefix,suffix:opts.suffix,required:opts.required===true,name:opts.name,busy:opts.busy===true,disabled:opts.disabled,readOnly:opts.readOnly,editable:opts.editable,clearable:opts.clearable,clearVisibility:'interaction',draftDisplayValue:draftDisplayValue,draftVisual:opts.draftVisual===true,placeholder:displayPlaceholder,hasValue:clearVisible,toggleVisible:true,toggle:opts.toggle,expanded:!!(triggerSession&&triggerSession.getState().open)};
+    var controlOptions={ tags:tags,creatableTags:opts.creatableTags===true,tagsControlled:true,tokenSeparators:opts.tokenSeparators,tokenizeOnPaste:opts.tokenizeOnPaste!==false,addOnEnter:opts.addOnEnter!==false,addOnTab:opts.addOnTab===true,addOnBlur:opts.addOnBlur===true,tagClassName:opts.tagClassName,tagTextClassName:opts.tagTextClassName,tagRemoveClassName:opts.tagRemoveClassName,size:opts.size,variant:opts.variant,focusOutline:opts.focusOutline,class:opts.class, style:opts.style,status:opts.status,prefix:opts.prefix,suffix:opts.suffix,required:opts.required===true,name:opts.name,busy:opts.busy===true,disabled:opts.disabled,readOnly:opts.readOnly,editable:opts.editable,clearable:opts.clearable,clearVisibility:'interaction',draftDisplayValue:draftDisplayValue,draftVisual:opts.draftVisual===true,placeholder:displayPlaceholder,hasValue:clearVisible,toggleVisible:true,toggle:opts.toggle,expanded:!!(triggerSession&&triggerSession.getState().open)};
     if(!dualMode){controlOptions.mode=opts.controlMode||'input';controlOptions.inputValue=editorValue;}
     control.updateOptions(controlOptions);
     if (navigationActive) projectNavigationVisual(opts.draftVisual === true ? draftDisplayValue : displayValue);
@@ -543,7 +543,6 @@ function create(options) {
     if (Object.prototype.hasOwnProperty.call(next, 'open')) setOpen(next.open === true, 'update-options');
     else if (!canActivatePicker() && triggerSession.getState().open) close(opts.busy === true ? 'loading' : 'disabled');
     else if (triggerSession.getState().open) triggerSession.reposition('options');
-    if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
     return api;
   }
   function footerActionTabIndex() { return opts.focusScope && opts.focusScope !== 'none' ? 0 : -1; }
