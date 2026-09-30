@@ -21,7 +21,7 @@
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: IN PROGRESS
-Task progress: 32%
+Task progress: 82%
 
 User authority:
 - Use uploaded `QXFRAME9A7C2 Component Semantic API + Motion System 一体化修改手册` as task specification.
@@ -48,6 +48,12 @@ Completed on active branch:
 - Modal/Drawer browser acceptance now uses `duration: { dialog|panel, mask }` plus semantic `class/style` and verifies CSS custom-property projection.
 - Grid subtask complete on branch: mature 24-column Flexbox contract replaces the previous generated Grid block; `g/gx/gy 0..24` use 0.125rem steps; `row-cols` naming restored; `col-0` and misnamed `row-1..24` removed; six breakpoints through `xxl >= 1600px`; docs/API/catalog and Phase-F regression gate updated.
 
+
+- Tags/Select/Cascader/TreeSelect now project repeated tag/item nodes through the canonical semantic registry; old itemStyles/tagClasses/tagStyles/tag*ClassName public paths are removed.
+- Table/Transfer rowClassName is removed; Table row/expandedRow are repeated semantic elements and Transfer composes selected-row styling through child Table class.row.
+- Message/Notification retain duration strictly as lifetime/auto-close semantics; visual enter/leave/move timing now comes only from computed CSS semantic motion tokens.
+- NoticeService now reuses SemanticProjection for class/style/getElement(name?) instead of manual className/style side channels.
+
 Current verified architectural risks / remaining work:
 - `DOMBinding` still owns the old external `classes` projection path and many consumers still call `syncClasses()`.
 - `SemanticStyles` still exposes the old `classNames/styles` protocol.
@@ -59,12 +65,10 @@ Current verified architectural risks / remaining work:
 - Full class/style contract migration, generated docs, dist, clean-pack and exact-head browser/CI validation remain pending.
 
 Next exact step:
-1. Finish Modal/Drawer semantic-motion CSS authority and remove any stale old API references/tests.
-2. Migrate `DOMBinding classes` + `SemanticStyles classNames/styles` consumers to the single SemanticProjection path.
-3. Migrate Image + Message/Notification/Notice timing/class/style.
-4. Audit/remove explicit MotionCore visual-duration consumers, old motion token/hardcoded timing residues and redundant specialized getters.
-5. Update docs/dist/verifiers, open PR, run exact-head GitHub Actions, merge only after green.
-
+1. Run exact-head PR CI/browser verifiers against the semantic API + CSS motion migration.
+2. Fix only concrete failures found by CI; do not reopen completed architecture phases.
+3. Regenerate/sync dist and canonical API/demo docs where CI identifies stale generated output.
+4. Re-run exact-head checks, update this checkpoint to 100%, merge only after green, then verify main/Pages.
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
 Status: COMPLETE
