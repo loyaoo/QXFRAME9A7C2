@@ -179,6 +179,89 @@ assert.equal(tableProbe.options.disabled, true);
 assert.throws(() => tableProbe.updateOptions({ container:{ nodeType:1 } }), /immutable/);
 tableProbe.destroy();
 
+
+function createSemanticElement() {
+    const classes = new Set(['authored']);
+    const values = new Map();
+    const priorities = new Map();
+    return {
+        nodeType: 1,
+        classList: {
+            contains(name) { return classes.has(name); },
+            toggle(name, on) { if (on === false) classes.delete(name); else classes.add(name); return classes.has(name); },
+            add(name) { classes.add(name); },
+            remove(name) { classes.delete(name); }
+        },
+        style: {
+            getPropertyValue(name) { return values.get(name) || ''; },
+            getPropertyPriority(name) { return priorities.get(name) || ''; },
+            setProperty(name, value, priority = '') { values.set(name, String(value)); priorities.set(name, String(priority || '')); },
+            removeProperty(name) { const old = values.get(name) || ''; values.delete(name); priorities.delete(name); return old; }
+        }
+    };
+}
+
+const semanticElement = createSemanticElement();
+class SemanticLifecycleComponent extends Component {
+    static options = Object.freeze({
+        baseWidth: '10px',
+        class: 'projected-a',
+        style: Object.freeze({ width: '20px' }),
+        duration: 120
+    });
+    static semanticElements = Object.freeze(['root']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
+    static defaultMotionSlot = 'root';
+    static motionSlots = Object.freeze({
+        root: Object.freeze({
+            appear: '--qxframe9a7c2-test-enter-duration',
+            enter: '--qxframe9a7c2-test-enter-duration',
+            leave: '--qxframe9a7c2-test-leave-duration'
+        })
+    });
+    [componentHooks.render]() {
+        semanticElement.style.setProperty('width', this.options.baseWidth);
+        return semanticElement;
+    }
+    [componentHooks.optionsUpdated]() {
+        semanticElement.style.setProperty('width', this.options.baseWidth);
+    }
+}
+const semanticLifecycle = new SemanticLifecycleComponent();
+semanticLifecycle.render();
+assert.equal(semanticLifecycle.getElement('root'), semanticElement, 'semantic root must use the shared Component element registry.');
+assert.equal(semanticLifecycle.getElement('missing'), null, 'unknown semantic element reads must return null.');
+assert.ok(Object.isFrozen(semanticLifecycle.getElement()), 'no-argument getElement() must return a readonly semantic map.');
+assert.equal(semanticLifecycle.getElement().root, semanticElement);
+assert.equal(semanticElement.classList.contains('projected-a'), true, 'flat class must target the declared default class slot.');
+assert.equal(semanticElement.classList.contains('authored'), true, 'semantic class projection must preserve authored classes.');
+assert.equal(semanticElement.style.getPropertyValue('width'), '20px', 'flat style must target the declared default style slot.');
+assert.equal(semanticElement.style.getPropertyValue('--qxframe9a7c2-test-enter-duration'), '120ms', 'numeric duration must project to the declared CSS duration token in ms.');
+
+semanticLifecycle.updateOptions({ baseWidth:'30px', class:null, style:null, duration:null });
+assert.equal(semanticElement.style.getPropertyValue('width'), '30px',
+    'updateOptions must remove the old semantic projection before the component writes its new base DOM state.');
+assert.equal(semanticElement.classList.contains('projected-a'), false, 'removed semantic class projection must not linger.');
+assert.equal(semanticElement.classList.contains('authored'), true, 'projection teardown must preserve authored class state.');
+assert.equal(semanticElement.style.getPropertyValue('--qxframe9a7c2-test-enter-duration'), '', 'removed duration override must restore the underlying CSS custom property state.');
+
+semanticLifecycle.updateOptions({
+    class:{ root:['projected-b','projected-c'] },
+    style:{ root:{ width:'44px', '--local-token':'ok' } },
+    duration:{ root:{ enter:250, leave:'180ms' } }
+});
+assert.equal(semanticElement.style.getPropertyValue('width'), '44px');
+assert.equal(semanticElement.style.getPropertyValue('--local-token'), 'ok');
+assert.equal(semanticElement.style.getPropertyValue('--qxframe9a7c2-test-enter-duration'), '250ms');
+assert.equal(semanticElement.style.getPropertyValue('--qxframe9a7c2-test-leave-duration'), '180ms');
+assert.equal(semanticElement.classList.contains('projected-b'), true);
+assert.equal(semanticElement.classList.contains('projected-c'), true);
+semanticLifecycle.destroy();
+assert.equal(semanticElement.classList.contains('projected-b'), false, 'destroy must remove projected classes.');
+assert.equal(semanticElement.style.getPropertyValue('--local-token'), '', 'destroy must remove projected inline style values.');
+assert.equal(semanticElement.style.getPropertyValue('--qxframe9a7c2-test-enter-duration'), '', 'destroy must remove projected duration custom properties.');
+
 class FactoryComponent extends Component {
     [componentHooks.render]() { lifecycleEvents.push('factory-render'); }
 }
