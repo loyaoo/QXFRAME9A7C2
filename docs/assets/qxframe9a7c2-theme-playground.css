@@ -23,7 +23,7 @@ a{color:inherit}
 .qxframe9a7c2-play-icon-button{display:grid;place-items:center;width:2rem;height:2rem;padding:0}
 
 .qxframe9a7c2-play-settings{display:grid;gap:.75rem;padding-block:1rem}
-.qxframe9a7c2-play-setting{display:grid;gap:.55rem;padding:.75rem;border:1px solid rgba(255,255,255,.1);border-radius:.75rem;background:rgba(255,255,255,.025)}
+.qxframe9a7c2-play-setting{--qxframe9a7c2-card-border-color:rgba(255,255,255,.1);--qxframe9a7c2-card-divider-color:rgba(255,255,255,.1);--qxframe9a7c2-card-surface:rgba(255,255,255,.025);display:grid;gap:.55rem;padding:.75rem}
 .qxframe9a7c2-play-setting-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
 .qxframe9a7c2-play-setting-label{display:grid;gap:.1rem;min-width:0}
 .qxframe9a7c2-play-setting-label small{font-size:.68rem;color:#a1a1aa}
