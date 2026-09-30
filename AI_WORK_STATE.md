@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
-Status: READY_FOR_CI
-Task progress: 85%
+Status: CI_PASS_PENDING_MERGE
+Task progress: 95%
 
 User authority:
 - Attached `QXFRAME9A7C2 — Neutral / Grey CSS-only 重构修改手册` dated 2026-09-30.
@@ -65,8 +65,18 @@ Docs / verification checkpoint:
 - Phase F token-graph verification now locks the exact 13 Grey RGB values, absence of grey-0 / numbered color-grey aliases, default Grey fallback, preserved MixedGray chain, Light/Dark recipe assignments, Dark alpha borders/input, semantic input-border routing, and removal of ordinary Neutral semantic color-mix.
 - Scope diff is limited to `src/qxframe9a7c2.css`, docs-only theme/token JS, `tools/verify-phase-f-token-graph.mjs`, and this checkpoint. No `src/**/*.js` runtime file changed.
 
+CI checkpoint:
+- PR: #193 `style: rebuild canonical Neutral Grey system`.
+- Verified implementation head before this checkpoint: `a524a260240e5f8c21b33311be28bde1c3a36873`.
+- QXFRAME CI #946 / run `36680986669`: release = success, windows-tools = success.
+- Completion audit = success.
+- Full release verification = success, including the updated Phase F token graph, existing architecture gates, browser/legacy verification, build and package verification.
+- npm pack, standalone dist/docs demo build, and artifact uploads = success.
+- PR-event Pages deploy is intentionally skipped by workflow policy.
+- No gate was weakened to obtain the green result.
+
 Next exact step:
-- Open the implementation PR from `fix/neutral-grey-css-010`, run exact-head QXFRAME CI, fix any gate regression, then record CI evidence before merge.
+- Re-run QXFRAME CI on the checkpoint-only final PR head; if green and PR remains mergeable, merge #193 into main and verify the resulting main workflow.
 
 
 ### ADMIN-GRID-CARD-LAYERING-009 — Admin Grid column / component-root DOM separation
