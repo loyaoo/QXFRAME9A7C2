@@ -49,6 +49,12 @@ const loadingSource=fs.readFileSync(new URL('../src/components/loading.js',impor
 assert.match(loadingSource,/CapabilityController\.create\s*\(/,'Loading must consume CapabilityController, not only declare it.');
 assert.match(loadingSource,/record\.capability\.can\('open'\)/,'Loading open path must enter CapabilityController.');
 assert.match(loadingSource,/FeedbackController\.createForProjector\s*\(/,'Loading must bind visible feedback through FeedbackController.');
+
+assert.match(loadingSource,/static semanticElements = Object\.freeze\(\['root','mask','box','indicator','spinner','content','text','progress'\]\)/,'Loading semantic elements must own class/style projection.');
+assert.match(loadingSource,/registerSemanticElements\(\{ root, mask, box, indicator: indicatorHost, spinner, content, text, progress: progressHost \}\)/,'Loading must register its semantic DOM once.');
+assert.doesNotMatch(loadingSource,/\bclassName:\s*value\s*=>|opts\.className|next\.className|\bboxStyle\b|\bmaskColor\b|\bmaskBlur\b/,'Loading must not retain legacy node-style APIs.');
+assert.doesNotMatch(loadingSource,/\n\s*getElement\(\)\s*\{/,'Loading must inherit canonical Component.getElement(name?) instead of overriding it.');
+assert.doesNotMatch(loadingSource,/root\.className\s*=\s*\([^\n]*opts/,'Loading runtime updates must not replace semantic projected classes.');
 for(const file of ['progress.js','result.js']){
   const source=fs.readFileSync(new URL('../src/components/'+file,import.meta.url),'utf8');
   assert.match(source,/FeedbackController\.createForProjector\s*\(/,file+' must bind through FeedbackController.');
