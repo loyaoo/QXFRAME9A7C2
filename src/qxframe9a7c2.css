@@ -318,6 +318,12 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --qxframe9a7c2-motion-image-preview-mask-leave-duration: var(--qxframe9a7c2-motion-duration-2);
   --qxframe9a7c2-motion-image-preview-mask-enter-easing: var(--qxframe9a7c2-motion-easing-enter);
   --qxframe9a7c2-motion-image-preview-mask-leave-easing: var(--qxframe9a7c2-motion-easing-leave);
+
+  --qxframe9a7c2-motion-notice-enter-duration: 500ms;
+  --qxframe9a7c2-motion-notice-leave-duration: 220ms;
+  --qxframe9a7c2-motion-notice-move-duration: 500ms;
+  --qxframe9a7c2-motion-notice-presence-easing: cubic-bezier(.22,1,.36,1);
+  --qxframe9a7c2-motion-notice-move-easing: cubic-bezier(.22,1,.36,1);
 }
 
 /* Canonical theme-mode semantic projection.
@@ -14966,12 +14972,12 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 /* Shared presence motion presets. Ant-style motion families with direct Transition names. */
 :root{--qxframe9a7c2-motion-distance:8px;}
 @media (prefers-reduced-motion:reduce){
-  :root{--qxframe9a7c2-motion-duration-1:0ms;--qxframe9a7c2-motion-duration-2:0ms;--qxframe9a7c2-motion-duration-3:0ms;--qxframe9a7c2-motion-duration-4:0ms;--qxframe9a7c2-motion-duration-5:0ms}
+  :root{--qxframe9a7c2-motion-duration-1:0ms;--qxframe9a7c2-motion-duration-2:0ms;--qxframe9a7c2-motion-duration-3:0ms;--qxframe9a7c2-motion-duration-4:0ms;--qxframe9a7c2-motion-duration-5:0ms;--qxframe9a7c2-motion-notice-enter-duration:0ms;--qxframe9a7c2-motion-notice-leave-duration:0ms;--qxframe9a7c2-motion-notice-move-duration:0ms}
   [class^="qxframe9a7c2-"],[class*=" qxframe9a7c2-"]{animation:none!important;transition-duration:0ms!important;scroll-behavior:auto!important}
 }
 
 /* Canonical runtime motion override. Theme/token resolution remains CSS-only. */
-.qxframe9a7c2-motion-disabled{--qxframe9a7c2-motion-duration-1:0ms;--qxframe9a7c2-motion-duration-2:0ms;--qxframe9a7c2-motion-duration-3:0ms;--qxframe9a7c2-motion-duration-4:0ms;--qxframe9a7c2-motion-duration-5:0ms}
+.qxframe9a7c2-motion-disabled{--qxframe9a7c2-motion-duration-1:0ms;--qxframe9a7c2-motion-duration-2:0ms;--qxframe9a7c2-motion-duration-3:0ms;--qxframe9a7c2-motion-duration-4:0ms;--qxframe9a7c2-motion-duration-5:0ms;--qxframe9a7c2-motion-notice-enter-duration:0ms;--qxframe9a7c2-motion-notice-leave-duration:0ms;--qxframe9a7c2-motion-notice-move-duration:0ms}
 .qxframe9a7c2-motion-disabled[class^="qxframe9a7c2-"],.qxframe9a7c2-motion-disabled[class*=" qxframe9a7c2-"],.qxframe9a7c2-motion-disabled [class^="qxframe9a7c2-"],.qxframe9a7c2-motion-disabled [class*=" qxframe9a7c2-"]{animation:none!important;transition-duration:0ms!important;scroll-behavior:auto!important}
 
 /* fade */
@@ -15936,8 +15942,6 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-drawer.is-footerless .qxframe9a7c2-drawer-body{padding-bottom:1.125rem}
 
 .qxframe9a7c2-notice-stack{
-  --qxframe9a7c2-notice-move-duration:500ms;
-  --qxframe9a7c2-notice-easing:cubic-bezier(.22,1,.36,1);
   --qxframe9a7c2-notice-inset:18px;
   --qxframe9a7c2-notice-shadow-gutter:24px;
   --qxframe9a7c2-notice-gap:8px;
@@ -16016,9 +16020,6 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
   position:absolute;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none
 }
 .qxframe9a7c2-notice-slot{
-  --qxframe9a7c2-notice-enter-duration:500ms;
-  --qxframe9a7c2-notice-leave-duration:220ms;
-  --qxframe9a7c2-notice-easing:cubic-bezier(.22,1,.36,1);
   --qxframe9a7c2-notice-enter-x:0px;--qxframe9a7c2-notice-enter-y:-32px;
   --qxframe9a7c2-notice-leave-x:0px;--qxframe9a7c2-notice-leave-y:-64px;
   position:absolute;top:0;left:0;box-sizing:border-box;display:flex;width:max-content;
