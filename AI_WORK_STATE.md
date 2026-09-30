@@ -21,7 +21,7 @@
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: IN PROGRESS
-Task progress: 95%
+Task progress: 98%
 
 User authority:
 - Use uploaded "QXFRAME9A7C2 Component Semantic API + Motion System 一体化修改手册" as task specification.
@@ -48,14 +48,20 @@ Completed in branch:
 - Branch/main comparison: ahead 93, behind 0.
 
 Current validation:
-- Repository container cannot reach github.com directly, so branch validation is delegated to repository CI after PR creation.
-- No PR/CI result yet at this checkpoint.
+- PR #199 is open against main.
+- Exact head: `e1b15b794bf127518714af775b53fd43a9f6e705`.
+- QXFRAME CI run #989 is active for the exact head.
+- Dependency security audit: PASS.
+- Completion audit: PASS.
+- Windows tool paths: PASS.
+- Full release verification: IN PROGRESS.
+- Duplicate non-zero Notice timing literals were removed; semantic Notice timing now resolves through canonical motion tokens. Reduced-motion 0ms overrides remain intentional.
 
 Next exact step:
-1. Open PR for refactor/semantic-motion-api-013 -> main.
-2. Inspect all PR workflow/check results at exact head.
-3. Fix any CI/static/regression failure on the same branch.
-4. When all required checks are green, update this checkpoint to DONE, merge PR, then verify main/Pages.
+1. Finish exact-head PR #199 CI run #989.
+2. If any step fails, patch the same branch and validate the new exact head.
+3. When all required checks are green, set this checkpoint to DONE / 100%, merge PR #199, then verify main and Pages.
+
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
 Status: COMPLETE
