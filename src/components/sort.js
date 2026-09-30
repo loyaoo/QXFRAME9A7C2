@@ -84,6 +84,9 @@ export class Sort extends Component {
     static immutableOptions = Object.freeze(['target', 'container', 'formField']);
     static optionNormalizers = Object.freeze({ orientation: normalizeOrientation, items: normalizeItems });
     static contract = ComponentContracts.get('Sort');
+    static semanticElements = Object.freeze(['root','item']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
 
     static create(source = {}, overrides) { return new this(source, overrides).render(); }
     static enhance(input, options) { return this.create(input, options || {}); }
@@ -120,6 +123,7 @@ export class Sort extends Component {
         root.appendChild(scrollShell);
         if (opts.container) opts.container.appendChild(root); else Control.placeFieldRoot(root, null, opts.formField);
         r.root = root; r.scrollShell = scrollShell; r.scrollViewport = scrollViewport; r.scrollContent = scrollContent;
+        this.registerSemanticElement('root', root);
         r.scrollSurface = Scroll.attachViewport({
             root:scrollShell, viewport:scrollViewport, content:scrollContent, document:r.doc,
             axis:'both', wheelAxis:'auto', wheelPropagation:true, scrollbarVisibility:'auto',
@@ -200,7 +204,7 @@ export class Sort extends Component {
                 enter: { from:{style:{opacity:'1'}}, active:{style:{transitionProperty:'opacity',transitionDuration:'0ms'}}, to:{style:{opacity:'1'}} },
                 leave: { from:{style:{opacity:'1'}}, active:{style:{transitionProperty:'opacity',transitionDuration:'0ms'}}, to:{style:{opacity:'1'}} }
             },
-            move: { type:'transition', active:{style:{transitionProperty:'transform',transitionDuration:'160ms',transitionTimingFunction:'cubic-bezier(.2,.8,.2,1)'}} },
+            move: { type:'transition', active:'qxframe9a7c2-sort-move-active' },
             reducedMotion: () => this.options.animation === false,
             onAfterLeave: context => {
                 const key = String(context.key);
@@ -316,6 +320,7 @@ export class Sort extends Component {
             this.#renderOutput(label, item.content !== undefined ? item.content : item.label, item); entries.push({ key, element: row });
         });
         r.transitionGroup.sync(entries, { reason: 'sort-render' });
+        this.registerSemanticElement('item', entries.map(entry => entry.element));
         if (r.scrollSurface) r.scrollSurface.refresh('sort-render');
         if (r.formBridge) r.formBridge.setValue(current.map(item => item.key), { silent: true, source: 'sort', reason: 'render' });
         return this;
@@ -352,7 +357,6 @@ export class Sort extends Component {
     setReadOnly(value) { this.updateOptions({ readOnly: value === true }); return this; }
     cancelDrag(reason) { const r = recordFor(this); return r.reorderInteraction ? r.reorderInteraction.cancelDrag(reason || 'api') : false; }
     focus(key) { return key == null ? this.#focusBoundary(false) : this.#focusRow(String(key)); }
-    getRootElement() { return recordFor(this).root; }
     getScroll() { return recordFor(this).scrollSurface; }
     getScrollViewport() { return recordFor(this).scrollViewport; }
     getFormField() { const r = recordFor(this); return r.formBridge ? r.formBridge.getFormField() : null; }
