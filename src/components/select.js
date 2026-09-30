@@ -410,8 +410,8 @@ var controlHost = FieldHost.resolvePickerControl({
           return {elements:elements,contexts:contexts};
         }
         function syncSemanticRegistry() {
-          var snapshot=semanticSnapshot();
-          instance.registerSemanticElements(snapshot.elements,snapshot.contexts);
+          var snapshot = semanticSnapshot();
+          if (!destroyed && !instance.destroyed) instance.registerSemanticElements(snapshot.elements, snapshot.contexts);
           return snapshot;
         }
     
