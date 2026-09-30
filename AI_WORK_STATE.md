@@ -21,7 +21,7 @@
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
 Status: IN PROGRESS
-Task progress: 40%
+Task progress: 92%
 
 User authority:
 - Canonical docs should be built from the framework's existing components/CSS wherever an equivalent framework primitive already exists; docs-only classes may own documentation layout but should not recreate Card/Button/Input/Table visual systems.
@@ -37,7 +37,7 @@ Audit findings:
 - Component docs already dogfood Layout/Menu/Button/Icon in parts, but demo cards, observe cards, home cards, Theme Playground cards, and Token Reference card-like surfaces still recreate Card border/background/radius styling.
 - Component demo cards are generated as `qxframe9a7c2-docs-demo-card` without `qxframe9a7c2-card`; Theme Playground generates `qxframe9a7c2-play-card` without Card; Token Reference creates several card-like shells with custom border/background/radius.
 - Card root defaults `--_qxframe9a7c2-card-border` to semantic border, while `--_qxframe9a7c2-card-divider` defaults to semantic border-subtle; header/footer/actions/grid therefore render lighter internal lines by default.
-- Canonical CSS still contains 156 numbered physical forwarding aliases for 12 non-Grey palette families, plus additional pure forwarding seed/status aliases. Canonical CSS does not consume these aliases internally.
+- Canonical CSS contained 242 pure physical/theme-seed forwarding aliases in total (including numbered palette aliases and seed aliases). Canonical CSS did not consume them internally; all 242 have now been removed.
 
 Frozen decisions:
 - Docs-specific classes retain only docs layout/spacing/content behavior; framework Card owns the common visual shell.
@@ -46,8 +46,19 @@ Frozen decisions:
 - Preserve semantic output tokens such as `--qxframe9a7c2-color-border`, `--qxframe9a7c2-color-primary`, etc.; this cleanup targets physical palette forwarding duplication, not semantic public outputs.
 - Add regression gates so docs self-hosting and physical-alias removal cannot silently regress.
 
+Implementation checkpoint:
+- `src/qxframe9a7c2.css`: removed all 242 pure `color-* -> palette/theme-seed-*` forwarding aliases; semantic public output tokens remain.
+- Card `--_qxframe9a7c2-card-divider` now defaults to resolved `--_qxframe9a7c2-card-border`, while `--qxframe9a7c2-card-divider-color` remains an explicit override.
+- Component docs now dogfood framework Card for demo/home/reference/observe shells; search uses Form Input, feature/API pills use Tag.
+- Component API reference now dogfoods Table + TableWrap + Tag + Form Input instead of rebuilding table/form visuals.
+- Theme Playground now dogfoods Card for component cards, hero/token board and setting panels; header/body/footer map to Card structure; existing Button/Form controls are reused.
+- Token Reference now dogfoods Card for hero/control/section/token/foundation surfaces and uses framework Button/Form controls.
+- Dead parallel `.qxframe9a7c2-docs-card`, `.qxframe9a7c2-docs-button`, and `.qxframe9a7c2-docs-table` styles were removed.
+- Residual docs consumers of removed `color-white/color-black` aliases were migrated to canonical physical palette tokens.
+- Canonical docs + Phase F verifiers now reject return of parallel docs visual primitives, removed forwarding aliases, Card border mismatch, and missing Card/Table/Form dogfood mappings.
+
 Next exact step:
-- Implement canonical CSS cleanup first, then convert canonical docs card-like surfaces to framework Card and update docs/Phase-F verifiers before PR CI.
+- Open PR, run exact-head QXFRAME CI, fix any verifier/build regression, then merge only after green CI and main Pages verification.
 
 
 ### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
