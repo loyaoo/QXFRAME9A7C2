@@ -14,10 +14,41 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Neutral / Grey CSS-only closeout complete.
-- Current Task: `NEUTRAL-GREY-CSS-011` (COMPLETE)
+- Current Phase: Docs self-hosting + Card/Color token cleanup.
+- Current Task: `DOCS-SELF-HOSTING-CSS-012` (IN PROGRESS)
 
 ## CURRENT
+
+### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
+Status: IN PROGRESS
+Task progress: 40%
+
+User authority:
+- Canonical docs should be built from the framework's existing components/CSS wherever an equivalent framework primitive already exists; docs-only classes may own documentation layout but should not recreate Card/Button/Input/Table visual systems.
+- Card outer and internal divider borders should not default to visibly different neutral strengths. Keep a dedicated divider override slot only if useful, but its default must inherit the Card border.
+- Remove redundant physical color forwarding aliases such as `--qxframe9a7c2-color-gray-1: var(--qxframe9a7c2-palette-gray-1)`; physical palettes should have one RGB triplet source.
+
+Baseline / reconciliation:
+- Baseline `main@09f7494df1eb9bdf0095e8a3d830ce7e66715bc4`.
+- Previous `NEUTRAL-GREY-CSS-011` is complete. Main QXFRAME CI #955 / run `36687659711` is success.
+- Existing controller/runtime work remains frozen; this task is CSS/docs/verifier only unless a docs runtime adapter is strictly required.
+
+Audit findings:
+- Component docs already dogfood Layout/Menu/Button/Icon in parts, but demo cards, observe cards, home cards, Theme Playground cards, and Token Reference card-like surfaces still recreate Card border/background/radius styling.
+- Component demo cards are generated as `qxframe9a7c2-docs-demo-card` without `qxframe9a7c2-card`; Theme Playground generates `qxframe9a7c2-play-card` without Card; Token Reference creates several card-like shells with custom border/background/radius.
+- Card root defaults `--_qxframe9a7c2-card-border` to semantic border, while `--_qxframe9a7c2-card-divider` defaults to semantic border-subtle; header/footer/actions/grid therefore render lighter internal lines by default.
+- Canonical CSS still contains 156 numbered physical forwarding aliases for 12 non-Grey palette families, plus additional pure forwarding seed/status aliases. Canonical CSS does not consume these aliases internally.
+
+Frozen decisions:
+- Docs-specific classes retain only docs layout/spacing/content behavior; framework Card owns the common visual shell.
+- `--_qxframe9a7c2-card-divider` remains an explicit override slot but defaults to `--_qxframe9a7c2-card-border`.
+- Remove all pure `--qxframe9a7c2-color-*-N -> --qxframe9a7c2-palette-*-N` forwarding aliases; do not replace them with another alias layer.
+- Preserve semantic output tokens such as `--qxframe9a7c2-color-border`, `--qxframe9a7c2-color-primary`, etc.; this cleanup targets physical palette forwarding duplication, not semantic public outputs.
+- Add regression gates so docs self-hosting and physical-alias removal cannot silently regress.
+
+Next exact step:
+- Implement canonical CSS cleanup first, then convert canonical docs card-like surfaces to framework Card and update docs/Phase-F verifiers before PR CI.
+
 
 ### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
 Status: COMPLETE
