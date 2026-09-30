@@ -74,6 +74,15 @@ const tokenCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-r
 const docsCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-docs.css'),'utf8');
 assert(!/\.qxframe9a7c2-docs-(?:card|button|table)(?:\b|[-_])/.test(docsCss),
   'Obsolete parallel docs Card/Button/Table visual primitives must not return; canonical docs must dogfood framework primitives.');
+const removedPhysicalAlias=/--qxframe9a7c2-color-(?:white|black|(?:gray|grey|cyan|teal|green|lime|yellow|orange|red|pink|purple|blue|azure|primary|success|warning|error|info)-\d+|(?:gray|grey|cyan|teal|green|lime|yellow|orange|red|pink|purple|blue|azure|white|black|primary|success|warning|error|info)-seed)\b/;
+for(const rel of fs.readdirSync(path.join(docsRoot,'assets')).filter(name=>/\.(?:css|js)$/.test(name))){
+  const source=fs.readFileSync(path.join(docsRoot,'assets',rel),'utf8');
+  assert(!removedPhysicalAlias.test(source),'Removed physical color forwarding alias is still consumed by docs/assets/'+rel);
+}
+for(const rel of canonical){
+  const source=fs.readFileSync(path.join(targetRoot,rel),'utf8');
+  assert(!removedPhysicalAlias.test(source),'Removed physical color forwarding alias is still consumed by '+rel);
+}
 
 for(const [label,source,patterns] of [
   ['component docs',componentSiteJs,[
