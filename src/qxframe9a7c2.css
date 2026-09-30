@@ -311,6 +311,11 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --qxframe9a7c2-motion-sort-item-easing: var(--qxframe9a7c2-motion-easing-move);
   --qxframe9a7c2-motion-carousel-track-duration: var(--qxframe9a7c2-motion-duration-5);
   --qxframe9a7c2-motion-carousel-track-easing: var(--qxframe9a7c2-motion-easing-move);
+  --qxframe9a7c2-motion-notice-enter-duration: var(--qxframe9a7c2-motion-duration-5);
+  --qxframe9a7c2-motion-notice-leave-duration: var(--qxframe9a7c2-motion-duration-3);
+  --qxframe9a7c2-motion-notice-move-duration: var(--qxframe9a7c2-motion-duration-5);
+  --qxframe9a7c2-motion-notice-presence-easing: var(--qxframe9a7c2-motion-easing-enter-emphasized);
+  --qxframe9a7c2-motion-notice-move-easing: var(--qxframe9a7c2-motion-easing-move);
   --qxframe9a7c2-motion-image-preview-trajectory-enter-duration: var(--qxframe9a7c2-motion-duration-3);
   --qxframe9a7c2-motion-image-preview-trajectory-leave-duration: var(--qxframe9a7c2-motion-duration-3);
   --qxframe9a7c2-motion-image-preview-trajectory-easing: var(--qxframe9a7c2-motion-easing-move);
