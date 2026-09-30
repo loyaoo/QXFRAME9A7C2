@@ -419,7 +419,6 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
    * state selectors. Public theme inputs are --qxframe9a7c2-theme-<color>.
    */
   --qxframe9a7c2-theme-seed-grey: rgb(var(--qxframe9a7c2-palette-grey-5));
-  --qxframe9a7c2-color-grey-seed: var(--qxframe9a7c2-theme-seed-grey);
   --qxframe9a7c2-theme-seed-gray: rgb(var(--qxframe9a7c2-palette-gray-5));
   --qxframe9a7c2-color-gray-seed: var(--qxframe9a7c2-theme-seed-gray);
   --qxframe9a7c2-theme-seed-cyan: rgb(var(--qxframe9a7c2-palette-cyan-5));
