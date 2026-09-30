@@ -510,7 +510,10 @@ function create(source, overrides) {
     
   semanticStyles = SemanticStyles.create({
     slots: { root: root, input: input, valueHost: valueHost, prefix: prefix, suffix: suffix, clear: clearButton, toggle: toggle, loading: loading, count: countNode, segments: segmentsHost },
-    classNames: opts.classNames, styles: opts.styles
+    defaultClassSlot: 'root',
+    defaultStyleSlot: 'root',
+    class: opts.class,
+    style: opts.style
   });
   formBridge = createFormFieldBridge({ document:doc, root:root, target:host, formField:formField, name:opts.name, value:committedValue, serializeValue:opts.serializeValue, disabled:opts.disabled===true, readOnly:opts.readOnly===true, required:opts.required===true, projectLayout:projectFormFieldLayout, moveIntoRoot:true, onNativeChange:function(value,detail){ if(typeof opts.onFormFieldChange==='function') opts.onFormFieldChange(value,detail,api); else if(mode==='input'&&!externalCommitted){ inputValue=stringValue(Array.isArray(value)?value[0]:value); committedValue=cloneCommitted(value); formSyncValue=cloneCommitted(committedValue); syncView(); } }, onReset:handleFormReset });
   formField = formBridge.getFormField();
@@ -893,7 +896,7 @@ function create(source, overrides) {
     if (hasOwn(next, 'suffix')) renderSuffixContent(opts.suffix);
     if (hasOwn(next, 'busyIndicator')) renderBusyIndicator(opts.busyIndicator);
     if (hasOwn(next, 'clearContent') || hasOwn(next, 'toggleContent') || hasOwn(next, 'toggle')) syncSystemActionContent();
-    if ((hasOwn(next, 'classNames') || hasOwn(next, 'styles')) && semanticStyles) semanticStyles.update({ classNames: opts.classNames, styles: opts.styles });
+    if ((hasOwn(next, 'class') || hasOwn(next, 'style')) && semanticStyles) semanticStyles.update({ class: opts.class, style: opts.style });
     if (modeChanged) initializeMode(nextMode);
     else if (mode === 'value' && (hasOwn(next, 'displayValue') || hasOwn(next, 'placeholder'))) renderDisplayValue();
     else if (mode === 'tags' && tagsInstance) { if(hasOwn(next,'tags')) opts.tags=Array.isArray(next.tags)?next.tags.slice():[]; tagsInstance.updateOptions(tagsOptions(hasOwn(next,'tags'))); }
@@ -913,7 +916,7 @@ function create(source, overrides) {
     syncResponsiveTagObserver();
     if (hasOwn(next, 'committedValue')) applyCommittedValue(next.committedValue, { source: 'api', reason: 'update-options' }, true);
     syncTextBehaviorOptions();
-    syncDerivedValue(); if (binding && binding.syncClasses) binding.syncClasses(opts.classes); return api;
+    syncDerivedValue(); return api;
   }
     
   function captureDisplayState() {
