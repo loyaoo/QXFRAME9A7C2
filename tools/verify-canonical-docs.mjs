@@ -62,4 +62,44 @@ for(const rel of canonical){
   }
   report.push({page:rel,refs:refs.length});
 }
-console.log(JSON.stringify({ok:true,componentPages:componentPages.length,canonicalPages:canonical.length,checkedRefs:report.reduce((sum,row)=>sum+row.refs,0)}));
+
+// Canonical docs dogfood the framework instead of rebuilding parallel visual primitives.
+const componentSiteJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-site.js'),'utf8');
+const componentSiteCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-site.css'),'utf8');
+const playgroundJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-theme-playground.js'),'utf8');
+const playgroundCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-theme-playground.css'),'utf8');
+const tokenJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.js'),'utf8');
+const tokenCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.css'),'utf8');
+
+for(const [label,source,patterns] of [
+  ['component docs',componentSiteJs,[
+    /qxframe9a7c2-card qxframe9a7c2-docs-demo-card/,
+    /qxframe9a7c2-card qxframe9a7c2-docs-observe-card/,
+    /qxframe9a7c2-card is-hoverable qxframe9a7c2-docs-home-card/,
+    /qxframe9a7c2-form-input is-(?:sm|lg)/
+  ]],
+  ['Theme Playground',playgroundJs,[
+    /qxframe9a7c2-card qxframe9a7c2-play-card/,
+    /qxframe9a7c2-card-header qxframe9a7c2-play-card-head/,
+    /qxframe9a7c2-card-body qxframe9a7c2-play-card-body/,
+    /qxframe9a7c2-card-footer qxframe9a7c2-play-card-foot/
+  ]],
+  ['Token Reference',tokenJs,[
+    /qxframe9a7c2-card qxframe9a7c2-token-hero-copy/,
+    /qxframe9a7c2-card qxframe9a7c2-token-control-card/,
+    /qxframe9a7c2-card qxframe9a7c2-token-section/,
+    /qxframe9a7c2-button is-primary is-solid is-sm qxframe9a7c2-token-button/
+  ]]
+]){
+  for(const pattern of patterns) assert(pattern.test(source),label+' must dogfood framework Card/form/button primitives: '+pattern);
+}
+for(const [label,source,pattern] of [
+  ['component demo Card',componentSiteCss,/\.qxframe9a7c2-docs-demo-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
+  ['component observe Card',componentSiteCss,/\.qxframe9a7c2-docs-observe-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
+  ['Theme Playground Card',playgroundCss,/\.qxframe9a7c2-play-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
+  ['Token Reference shared Card',tokenCss,/\.qxframe9a7c2-token-(?:hero-copy|control-card|section)\{[^}]*\b(?:border|background|border-radius)\s*:/]
+]){
+  assert(!pattern.test(source),label+' must not recreate the framework Card visual shell.');
+}
+
+console.log(JSON.stringify({ok:true,componentPages:componentPages.length,canonicalPages:canonical.length,checkedRefs:report.reduce((sum,row)=>sum+row.refs,0),docsDogfood:true}));
