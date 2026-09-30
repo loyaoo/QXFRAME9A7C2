@@ -31,6 +31,18 @@ function normalizeElement(value, name) {
   throw new TypeError('[QXFRAME9A7C2] Semantic element "' + name + '" must be an Element, Element[], or null.');
 }
 function targets(value) { return Array.isArray(value) ? value.slice() : (value ? [value] : []); }
+function normalizeElementContexts(value, semanticValue, name) {
+  if (value === undefined || value === null) return null;
+  const count = targets(semanticValue).length;
+  if (typeof value === 'function') return value;
+  if (!Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] Semantic element context "' + name + '" must be a resolver, context array, or null.');
+  if (value.length !== count) throw new TypeError('[QXFRAME9A7C2] Semantic element context "' + name + '" must align with its Element[] length.');
+  return Object.freeze(value.map((entry, index) => {
+    if (entry === undefined || entry === null) return null;
+    if (!plain(entry)) throw new TypeError('[QXFRAME9A7C2] Semantic element context "' + name + '[' + index + ']" must be a plain object or null.');
+    return Object.freeze({ ...entry });
+  }));
+}
 function styleName(value) {
   const name = String(value || '').trim();
   if (!name) return '';
@@ -178,7 +190,8 @@ function create(options = {}) {
   });
 
   const elements = Object.create(null);
-  names.forEach(name => { elements[name] = null; });
+  const elementContexts = Object.create(null);
+  names.forEach(name => { elements[name] = null; elementContexts[name] = null; });
   let destroyed = false;
   let currentOptions = {};
   let projection = DOMProjection.create();
@@ -198,6 +211,22 @@ function create(options = {}) {
     names.forEach(key => { out[key] = snapshotValue(elements[key]); });
     return Object.freeze(out);
   }
+  function elementExtra(name, semanticValue, node, index) {
+    const base = { elements: snapshotValue(semanticValue), index };
+    const source = elementContexts[name];
+    let extra = null;
+    if (typeof source === 'function') {
+      extra = source(Object.freeze({ instance: instance || null, name, element: node, elements: base.elements, index, options: Object.freeze(currentOptions || {}) }));
+    } else if (Array.isArray(source)) extra = source[index];
+    if (extra !== undefined && extra !== null) {
+      if (!plain(extra)) throw new TypeError('[QXFRAME9A7C2] Semantic element context resolver for "' + name + '" must return a plain object, null, or undefined.');
+      Object.keys(extra).forEach(key => {
+        if (['instance','name','element','elements','index','options','phase'].includes(key)) return;
+        base[key] = extra[key];
+      });
+    }
+    return base;
+  }
   function clearProjection() {
     projection.destroy();
     projection = DOMProjection.create();
@@ -211,7 +240,7 @@ function create(options = {}) {
     Object.keys(classMap).forEach(name => {
       const semanticValue = elements[name];
       targets(semanticValue).forEach((node, index) => {
-        const context = semanticContext(instance, name, node, currentOptions, { elements: snapshotValue(semanticValue), index });
+        const context = semanticContext(instance, name, node, currentOptions, elementExtra(name, semanticValue, node, index));
         const raw = typeof classMap[name] === 'function' ? classMap[name](context) : classMap[name];
         classTokens(raw, 'class.' + name).forEach(token => projection.addClass(node, token));
       });
@@ -221,7 +250,7 @@ function create(options = {}) {
     Object.keys(styleMap).forEach(name => {
       const semanticValue = elements[name];
       targets(semanticValue).forEach((node, index) => {
-        const context = semanticContext(instance, name, node, currentOptions, { elements: snapshotValue(semanticValue), index });
+        const context = semanticContext(instance, name, node, currentOptions, elementExtra(name, semanticValue, node, index));
         const raw = typeof styleMap[name] === 'function' ? styleMap[name](context) : styleMap[name];
         if (raw === undefined || raw === null) return;
         if (!plain(raw)) throw new TypeError('[QXFRAME9A7C2] style.' + name + ' resolver must return a style object, null, or undefined.');
@@ -251,19 +280,24 @@ function create(options = {}) {
       });
     });
   }
-  function setElement(name, value) {
+  function setElement(name, value, contexts) {
     if (destroyed) return false;
     const normalized = assertName(name);
-    elements[normalized] = normalizeElement(value, normalized);
+    const semanticValue = normalizeElement(value, normalized);
+    elements[normalized] = semanticValue;
+    elementContexts[normalized] = normalizeElementContexts(contexts, semanticValue, normalized);
     rebuild();
     return true;
   }
-  function setElements(next) {
+  function setElements(next, contexts) {
     if (destroyed) return false;
     if (!plain(next)) throw new TypeError('[QXFRAME9A7C2] Semantic element registry update must be an object.');
+    if (contexts !== undefined && contexts !== null && !plain(contexts)) throw new TypeError('[QXFRAME9A7C2] Semantic element context registry update must be an object.');
     Object.keys(next).forEach(name => {
       const normalized = assertName(name);
-      elements[normalized] = normalizeElement(next[name], normalized);
+      const semanticValue = normalizeElement(next[name], normalized);
+      elements[normalized] = semanticValue;
+      elementContexts[normalized] = normalizeElementContexts(contexts && contexts[name], semanticValue, normalized);
     });
     rebuild();
     return true;
@@ -283,7 +317,7 @@ function create(options = {}) {
     if (destroyed) return false;
     destroyed = true;
     projection.destroy();
-    names.forEach(name => { elements[name] = null; });
+    names.forEach(name => { elements[name] = null; elementContexts[name] = null; });
     currentOptions = {};
     return true;
   }
