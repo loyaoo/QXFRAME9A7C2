@@ -223,7 +223,7 @@ function setupTabs(instance) {
     axis: 'y',
     wheelAxis: 'y',
     wheelPropagation: true,
-    scrollbarVisibility: 'auto',
+    scrollbarVisibility:'scroll',
     edgeShadow: true,
     keyboard: false,
     focusable: false,
