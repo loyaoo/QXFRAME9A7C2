@@ -322,7 +322,7 @@ function setupTransfer(instance) {
     setSideSurfacePresence(side, 'Pagination', true);
     var pagerScroll = Scroll.attachViewport({
       root:hostNode, viewport:viewportNode, content:viewportNode, document:doc,
-      axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
+      axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'scroll',
       focusable:false, keyboard:false, controller:api
     });
     setPagerScrollForSide(side, pagerScroll);
