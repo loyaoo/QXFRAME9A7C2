@@ -262,6 +262,45 @@ assert.equal(semanticElement.classList.contains('projected-b'), false, 'destroy 
 assert.equal(semanticElement.style.getPropertyValue('--local-token'), '', 'destroy must remove projected inline style values.');
 assert.equal(semanticElement.style.getPropertyValue('--qxframe9a7c2-test-enter-duration'), '', 'destroy must remove projected duration custom properties.');
 
+
+const repeatedA = createSemanticElement();
+const repeatedB = createSemanticElement();
+class RepeatedSemanticComponent extends Component {
+    static semanticElements = Object.freeze(['root','item']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
+    [componentHooks.render]() {
+        const root = createSemanticElement();
+        this.registerSemanticElements(
+            { root, item:[repeatedA,repeatedB] },
+            { item:[
+                { item:Object.freeze({ key:'a' }), state:Object.freeze({ selected:true }) },
+                { item:Object.freeze({ key:'b' }), state:Object.freeze({ selected:false }) }
+            ] }
+        );
+        return root;
+    }
+}
+const repeatedSemantic = new RepeatedSemanticComponent({
+    class:{ item:({ item, index, state }) => ['semantic-item-' + item.key, state.selected ? 'is-picked' : 'is-idle', 'at-' + index] },
+    style:{ item:({ item, index }) => ({ '--semantic-key':item.key, '--semantic-index':index }) }
+});
+repeatedSemantic.render();
+assert.deepEqual(repeatedSemantic.getElement('item'), [repeatedA,repeatedB], 'repeated semantic registry must expose Element[] only.');
+assert.equal(repeatedA.classList.contains('semantic-item-a'), true);
+assert.equal(repeatedA.classList.contains('is-picked'), true);
+assert.equal(repeatedA.classList.contains('at-0'), true);
+assert.equal(repeatedB.classList.contains('semantic-item-b'), true);
+assert.equal(repeatedB.classList.contains('is-idle'), true);
+assert.equal(repeatedB.classList.contains('at-1'), true);
+assert.equal(repeatedA.style.getPropertyValue('--semantic-key'), 'a');
+assert.equal(repeatedB.style.getPropertyValue('--semantic-key'), 'b');
+assert.equal(repeatedA.style.getPropertyValue('--semantic-index'), '0');
+assert.equal(repeatedB.style.getPropertyValue('--semantic-index'), '1');
+repeatedSemantic.destroy();
+assert.equal(repeatedA.classList.contains('semantic-item-a'), false);
+assert.equal(repeatedB.style.getPropertyValue('--semantic-key'), '');
+
 class FactoryComponent extends Component {
     [componentHooks.render]() { lifecycleEvents.push('factory-render'); }
 }
