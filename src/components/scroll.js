@@ -47,7 +47,7 @@ DOMFactory = Object.freeze({ createDefaultDOM: createDefaultDOM, blueprint: blue
 var STRUCTURAL_OPTIONS = Object.freeze(['container', 'elements', 'createDOM', 'document']);
 var AXES = Object.freeze(['x', 'y', 'both']);
 var WHEEL_AXES = Object.freeze(['auto', 'x', 'y']);
-var VISIBILITIES = Object.freeze(['auto', 'always', 'hidden']);
+var VISIBILITIES = Object.freeze(['scroll', 'always', 'hover', 'hidden']);
 var SNAP_ALIGNS = Object.freeze(['start', 'center', 'end', 'nearest']);
 var WHEEL_BEHAVIORS = Object.freeze(['pixel', 'snap-step']);
 var SNAP_BEHAVIORS = Object.freeze(['auto', 'smooth']);
@@ -57,7 +57,7 @@ const SCROLL_DEFAULTS = Object.freeze({
   axis: 'y',
   wheelAxis: 'auto',
   wheelPropagation: true,
-  scrollbarVisibility: 'auto',
+  scrollbarVisibility: 'scroll',
   scrollbarInteractive: true,
   scrollbarHideDelay: 1000,
   edgeShadow: false,
@@ -160,7 +160,7 @@ function attachViewport(options) {
   if (input.axis === undefined) input.axis = 'y';
   if (input.focusable === undefined) input.focusable = true;
   if (input.keyboard === undefined) input.keyboard = false;
-  if (input.scrollbarVisibility === undefined) input.scrollbarVisibility = 'auto';
+  if (input.scrollbarVisibility === undefined) input.scrollbarVisibility = 'scroll';
   var instance = new Scroll(input);
   attachedScrollInstances.add(instance);
   instance.render();
@@ -172,7 +172,7 @@ function attachViewport(options) {
     var result = instance.destroy();
     decorations.forEach(function (node) { if (node.parentNode) node.parentNode.removeChild(node); });
     owned.forEach(function (entry) { entry[0].classList.remove(entry[1]); });
-    ['is-axis-x','is-axis-y','is-axis-both','is-scrollbar-auto','is-scrollbar-always','is-scrollbar-hidden','is-scrollbar-interactive','is-scrollbar-manual-show','is-scrollbar-manual-hide','has-edge-shadow','is-disabled','is-readonly','is-scrollbar-active','can-scroll-up','can-scroll-down','can-scroll-left','can-scroll-right'].forEach(function (name) { root.classList.remove(name); });
+    ['is-axis-x','is-axis-y','is-axis-both','is-scrollbar-scroll','is-scrollbar-always','is-scrollbar-hover','is-scrollbar-hidden','is-scrollbar-interactive','is-scrollbar-manual-show','is-scrollbar-manual-hide','has-edge-shadow','is-disabled','is-readonly','is-scrollbar-active','can-scroll-up','can-scroll-down','can-scroll-left','can-scroll-right'].forEach(function (name) { root.classList.remove(name); });
     if (originalTabindex === null) root.removeAttribute('tabindex'); else root.setAttribute('tabindex', originalTabindex);
     return result;
   }
@@ -327,19 +327,19 @@ function setupScroll(instance) {
     
   function scheduleScrollbarHide() {
     clearHideTimer();
-    if (opts.scrollbarVisibility !== 'auto' || manualScrollbarVisibility !== null) return;
+    if (opts.scrollbarVisibility !== 'scroll' || manualScrollbarVisibility !== null) return;
     var delay = Math.max(0, Number(opts.scrollbarHideDelay) || 0);
     scrollbarHideDelay.request(delay, 'scrollbar-hide');
   }
     
   function activateScrollbar() {
-    if (opts.scrollbarVisibility !== 'auto' || manualScrollbarVisibility === false) return;
+    if (opts.scrollbarVisibility !== 'scroll' || manualScrollbarVisibility === false) return;
     setInteractionClass(true);
     scheduleScrollbarHide();
   }
     
   function holdScrollbarVisible() {
-    if (opts.scrollbarVisibility !== 'auto' || manualScrollbarVisibility === false || opts.scrollbarInteractive === false) return;
+    if (opts.scrollbarVisibility !== 'scroll' || manualScrollbarVisibility === false || opts.scrollbarInteractive === false) return;
     clearHideTimer();
     setInteractionClass(true);
   }
@@ -1075,7 +1075,7 @@ function setupScroll(instance) {
   function resetScrollbarVisibility() {
     manualScrollbarVisibility = null;
     applyRootOptions();
-    if (opts.scrollbarVisibility === 'auto') scheduleScrollbarHide();
+    if (opts.scrollbarVisibility === 'scroll') scheduleScrollbarHide();
     updateProjection('scrollbar-reset', false);
     return api;
   }
@@ -1091,7 +1091,7 @@ function setupScroll(instance) {
     lastScrollState = null;
     focusController.setDisabled(opts.disabled === true || opts.focusable === false);
     applyRootOptions();
-    if (opts.scrollbarVisibility !== 'auto' || manualScrollbarVisibility !== null) clearHideTimer();
+    if (opts.scrollbarVisibility !== 'scroll' || manualScrollbarVisibility !== null) clearHideTimer();
     else if (hideDelayChanged && hadPendingScrollbarHide) scheduleScrollbarHide();
     writeScrollX(preservedX);
     requestProjection('options');
@@ -1252,7 +1252,7 @@ export class Scroll extends Component {
   static optionNormalizers = Object.freeze({
     axis: value => normalizeEnum(value, AXES, 'y', 'axis'),
     wheelAxis: value => normalizeEnum(value, WHEEL_AXES, 'auto', 'wheelAxis'),
-    scrollbarVisibility: value => normalizeEnum(value, VISIBILITIES, 'auto', 'scrollbarVisibility'),
+    scrollbarVisibility: value => normalizeEnum(value, VISIBILITIES, 'scroll', 'scrollbarVisibility'),
     snapAxis: value => normalizeEnum(value, WHEEL_AXES, 'auto', 'snapAxis'),
     snapAlign: value => normalizeEnum(value, SNAP_ALIGNS, 'nearest', 'snapAlign'),
     wheelBehavior: value => normalizeEnum(value, WHEEL_BEHAVIORS, 'pixel', 'wheelBehavior'),
