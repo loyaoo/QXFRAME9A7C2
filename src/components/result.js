@@ -6,7 +6,6 @@ import { FeedbackController } from '../core/feedbackController.js';
 import { DOM } from '../core/dom.js';
 import { Scheduler } from '../core/scheduler.js';
 import { Renderer } from '../core/renderer.js';
-import { SemanticStyles } from '../utils/semanticStyles.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const circle = 'M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493';
@@ -103,6 +102,9 @@ export class Result extends Component {
         visible: value => normalizeBoolean(value, false, 'visible')
     });
     static immutableOptions = Object.freeze(['container', 'document']);
+    static semanticElements = Object.freeze(['root','icon','title','subtitle','extra']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
     static contract = ComponentContracts.get('Result');
     static names = names;
 
@@ -131,13 +133,12 @@ export class Result extends Component {
             doc, root, icon, title, subtitle, extra,
             svg: null, iconMode: '', iconKey: '', iconValue: undefined,
             name: opts.name, visible: opts.visible === true,
-            semanticStyles: null, scheduler: null
+            scheduler: null
         };
         state.set(this, record);
 
         this.own(() => { DOM.removeNode(root); record.root = null; record.svg = null; });
-        record.semanticStyles = SemanticStyles.create({ slots: Object.freeze({ root, icon, title, subtitle, extra }), classNames: opts.classNames, styles: opts.styles });
-        this.own(record.semanticStyles);
+        this.registerSemanticElements({ root, icon, title, subtitle, extra });
         record.scheduler = Scheduler.createFrameScheduler(() => {
             if (this.destroyed) return;
             this.updateOptions({ visible: true });
@@ -152,7 +153,6 @@ export class Result extends Component {
         if (!record || !record.root) return;
         record.name = next.name;
         record.visible = next.visible === true;
-        record.semanticStyles.update({ classNames: next.classNames, styles: next.styles });
         this.#renderContent();
     }
 
@@ -179,7 +179,6 @@ export class Result extends Component {
             destroyed: this.destroyed
         });
     }
-    getRootElement() { return this.root; }
     getIconElement() { const record = state.get(this); return record ? record.icon : null; }
 
     #hasCustomIcon() {
