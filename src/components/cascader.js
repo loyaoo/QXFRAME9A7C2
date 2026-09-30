@@ -91,7 +91,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
         var columnsScroll = popupFrame.attachViewport({
           root: popupContentHost, viewport: columnsHost, content: columnsHost, document: doc,
-          axis: 'x', wheelAxis: 'x', wheelPropagation: true, scrollbarVisibility: 'auto',
+          axis: 'x', wheelAxis: 'x', wheelPropagation: true, scrollbarVisibility:'scroll',
           focusable: false, keyboard: false, controller: instance
         });
         scope.add(function () { if (columnsScroll) columnsScroll.destroy(); columnsScroll = null; });
