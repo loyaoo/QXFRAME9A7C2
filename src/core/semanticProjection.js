@@ -1,9 +1,9 @@
 import { DOMProjection } from './domProjection.js';
+import { Utils } from '../utils/utils.js';
 
 const PHASES = Object.freeze(['appear','enter','leave']);
 
 function own(object, key) { return Object.prototype.hasOwnProperty.call(Object(object), key); }
-function safeOwnKey(key) { return key !== '__proto__' && key !== 'prototype' && key !== 'constructor'; }
 function plain(value) {
   if (!value || Object.prototype.toString.call(value) !== '[object Object]') return false;
   const proto = Object.getPrototypeOf(value);
@@ -66,7 +66,7 @@ function classTokens(value, label) {
 }
 function semanticContext(instance, name, element, options, extra) {
   const context = { instance: instance || null, name, element, options: Object.freeze(options || {}) };
-  if (extra) Object.keys(extra).forEach(key => { if (safeOwnKey(key)) context[key] = extra[key]; });
+  if (extra) Object.keys(extra).forEach(key => { if (Utils.safeOwnKey(key)) context[key] = extra[key]; });
   return Object.freeze(context);
 }
 function resolveClassMap(input, names, defaultSlot) {
