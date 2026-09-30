@@ -71,6 +71,9 @@ const playgroundCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-th
 const enhancementsJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-enhancements.js'),'utf8');
 const tokenJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.js'),'utf8');
 const tokenCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.css'),'utf8');
+const docsCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-docs.css'),'utf8');
+assert(!/\.qxframe9a7c2-docs-(?:card|button|table)(?:\b|[-_])/.test(docsCss),
+  'Obsolete parallel docs Card/Button/Table visual primitives must not return; canonical docs must dogfood framework primitives.');
 
 for(const [label,source,patterns] of [
   ['component docs',componentSiteJs,[
