@@ -21,7 +21,7 @@
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
 Status: IN_PROGRESS
-Task progress: 20%
+Task progress: 60%
 
 User authority:
 - Attached `QXFRAME9A7C2 — Neutral / Grey CSS-only 重构修改手册` dated 2026-09-30.
@@ -48,8 +48,19 @@ Frozen decisions for this task:
 - Keep the distinct cold `Gray` palette; it is not the canonical default Neutral and must not leak into standard neutral recipe.
 - No JS runtime changes.
 
+Implementation checkpoint:
+- CSS implementation commit: `b28c7785adc4ddff202c45ccb7e8a091ae8b18b5`.
+- `src/qxframe9a7c2.css` now defines only Grey `1..13` with the handbook Tailwind-derived RGB values; `grey-0` and numbered `color-grey-N` forwarding aliases are removed.
+- Resolved `--_qxframe9a7c2-neutral-1..13` now default directly to the Grey palette while preserving public `--qxframe9a7c2-theme-neutral-N` overrides.
+- MixedGray/Auxiliary `base-1..13`, `auxiliary-1..13`, and neutral mix ratio remain present.
+- Light text/border/subtle roles and Dark surface/text/border roles were remapped; Dark general borders are white/10%, subtle white/8%, strong/input white/15%.
+- Added a dedicated semantic input-border role so control borders can follow the Dark 15% input recipe without making every Dark border equally strong.
+- Ordinary subtle/disabled semantic fallbacks now resolve to mode recipe tokens instead of regenerating near-grey values with text/background color-mix.
+- Keyboard focus-visible remains Light black / Dark white.
+- No runtime JS was modified.
+
 Next exact step:
-- Rewrite Grey primitive + canonical Light/Dark Neutral mode/state tokens in `src/qxframe9a7c2.css`, update docs-only references that still consume removed Grey aliases/default Mixed neutral, then run exact-head CI.
+- Synchronize docs-only theme/token tools so Grey is the default Neutral and MixedGray is an explicit optional selection, harden Phase F verification for the new contract, then open the PR and run exact-head CI.
 
 
 ### ADMIN-GRID-CARD-LAYERING-009 — Admin Grid column / component-root DOM separation
