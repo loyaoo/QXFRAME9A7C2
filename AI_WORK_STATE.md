@@ -7,17 +7,32 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-29
+- Last checkpoint date: 2026-09-30
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: capability leakage / shared runtime unification closeout complete.
-- Current Task: none — `ARCH-UNIFICATION-006` implementation and acceptance are complete.
+- Current Phase: capability leakage / shared runtime unification merge closeout.
+- Current Task: `ARCH-MERGE-CLOSEOUT-007`
 
 ## CURRENT
+
+### ARCH-MERGE-CLOSEOUT-007 — merge / main / Pages closeout
+Status: IN PROGRESS — CHECKPOINT CI
+Task progress: 70%
+
+Current truth:
+- ARCH-UNIFICATION-006 implementation is complete and already passed full PR acceptance on implementation head `846140367ad247d9044398804ea9d91d74105ad2` in QXFRAME CI #926.
+- The checkpoint-only head failed only because Phase I release-integrity requires `Current Task` to be a live backticked task id; no runtime/build/browser regression failed before that assertion.
+- PR #186 remains open and mergeable; PR #185 remains superseded and unmerged.
+
+Next exact step:
+- Run exact-head CI for this checkpoint correction.
+- If green, merge PR #186.
+- Close superseded PR #185.
+- Verify the resulting main QXFRAME CI and GitHub Pages deployment/canonical admin browser publication.
 
 ### ARCH-UNIFICATION-006 — Popup / Reorder / OverlayFrame shared-runtime closeout
 Status: COMPLETE
