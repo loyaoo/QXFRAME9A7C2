@@ -346,7 +346,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             tagTextClassName: 'qxframe9a7c2-tree-select-tag-text',
             tagRemoveClassName: 'qxframe9a7c2-tree-select-tag-remove',
             size: opts.size,
-            variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles,
+            variant: opts.variant, focusOutline: opts.focusOutline, class:opts.class, style:opts.style,
             status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
             disabled: opts.disabled === true,
             readOnly: opts.readOnly === true,
@@ -601,7 +601,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           tagTextClassName: 'qxframe9a7c2-tree-select-tag-text',
           tagRemoveClassName: 'qxframe9a7c2-tree-select-tag-remove',
           size: opts.size,
-          variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles,
+          variant: opts.variant, focusOutline: opts.focusOutline, class:opts.class, style:opts.style,
           status: opts.status, prefix: opts.prefix, suffix: opts.suffix,
           required: opts.required === true, name: opts.name, busy: opts.busy === true,
           disabled: opts.disabled === true,
@@ -785,7 +785,6 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (opts.disabled === true && triggerSession.getState().open) close('disabled');
           if (hasOwn(next, 'popupRender') || triggerSession.getState().open) syncPopupContent();
           syncView();
-          if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
           return api;
         }
         function getState() {
