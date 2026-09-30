@@ -1179,6 +1179,7 @@ function setupScroll(instance) {
   instance.own(destroyRuntime);
 
   scope.add(DOM.listen(viewport, 'scroll', function () {
+    activateScrollbar();
     requestProjection('scroll');
     if (!snapSettling && !motion && now() >= idleSuppressUntil) {
       emitScrollStart('scroll');
