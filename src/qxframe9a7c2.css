@@ -330,11 +330,6 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --qxframe9a7c2-motion-image-preview-mask-enter-easing: var(--qxframe9a7c2-motion-easing-enter);
   --qxframe9a7c2-motion-image-preview-mask-leave-easing: var(--qxframe9a7c2-motion-easing-leave);
 
-  --qxframe9a7c2-motion-notice-enter-duration: 500ms;
-  --qxframe9a7c2-motion-notice-leave-duration: 220ms;
-  --qxframe9a7c2-motion-notice-move-duration: 500ms;
-  --qxframe9a7c2-motion-notice-presence-easing: cubic-bezier(.22,1,.36,1);
-  --qxframe9a7c2-motion-notice-move-easing: cubic-bezier(.22,1,.36,1);
 }
 
 /* Canonical theme-mode semantic projection.
