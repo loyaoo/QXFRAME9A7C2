@@ -55,12 +55,14 @@ window.QXFRAME9A7C2_DOCS_CATALOG = Object.freeze([
     "api": "CSS",
     "category": "布局",
     "cn": "栅格",
-    "description": "24 栅格、响应式列宽、offset/order 与 gutter 场景。",
+    "description": "wxui 原始 24 栅格：row/col gutter、五级响应式断点、row-cols、push/pull、offset/order 与区间显隐。",
     "features": [
       "24 columns",
-      "responsive",
-      "offset / order",
-      "auto"
+      "gutter 0–24",
+      "row-cols",
+      "responsive sm/md/lg/xl/xxl",
+      "push / pull / offset / order",
+      "only / and-up / and-down visibility"
     ]
   },
   {
