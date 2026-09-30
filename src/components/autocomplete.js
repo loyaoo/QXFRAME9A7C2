@@ -197,7 +197,7 @@ var selectionRangeScheduler = null;
         function syncControl(meta) {
           if (!control) return;
           control.updateOptions({
-            mode: 'input', size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix,
+            mode: 'input', size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class:opts.class, style:opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix,
             required: opts.required === true, name: opts.name, busy: loading || opts.busy === true,
             disabled: opts.disabled, readOnly: opts.readOnly, editable: true, clearable: opts.clearable,
             clearVisibility: 'interaction', placeholder: opts.placeholder, displayValue: displayedValue(), inputValue: displayedValue(), hasValue: displayedValue() !== '', expanded: triggerSession && triggerSession.getState().open, toggleVisible: true
@@ -391,7 +391,6 @@ var selectionRangeScheduler = null;
           ownerPrefix: 'autocomplete',
           itemSemanticClasses: function () { return ['qxframe9a7c2-autocomplete-item','qxframe9a7c2-autocomplete-option']; },
           itemClassParts: ['item','option'],
-          classes: opts.classes,
           container: optionHost, scrollAdapter: popupFrame.createAdapter(), items: currentItems.slice(), searchable: false, size: opts.size,
           disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
           itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems,
@@ -482,7 +481,7 @@ var selectionRangeScheduler = null;
           onBlur: function (event) { if (Utils.isFunction(opts.onBlur)) opts.onBlur(event, instance); }
         }) : Control.create({
           elements: { root: root, input: input, clear: clearButton, toggle: arrow, prefix: prefix, suffix: suffix }, document: doc, formField: opts.formField, committedValue: committedValue(),
-          mode: 'input', size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix,
+          mode: 'input', size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class:opts.class, style:opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix,
           required: opts.required === true, name: opts.name, busy: loading || opts.busy === true,
           disabled: opts.disabled, readOnly: opts.readOnly, editable: true, clearable: opts.clearable, clearVisibility: 'interaction', hasValue: displayedValue() !== '', inputValue: displayedValue(),
           placeholder: opts.placeholder, expanded: false, toggleVisible: true,
@@ -534,13 +533,13 @@ var selectionRangeScheduler = null;
           Utils.copyOwn(opts, next);
           if ((hasOwn(next,'trigger')||hasOwn(next,'openOnFocus')) && triggerSession && triggerSession.updateOptions) triggerSession.updateOptions({trigger:effectiveTrigger()});
           if (focusController) focusController.setDisabled(opts.disabled === true);
-          var listOptions = { size: opts.size, classes: opts.classes, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
+          var listOptions = { size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, itemSize: opts.itemSize, overscan: opts.overscan, filterItem: opts.filterItem, sortItems: opts.sortItems, loadingText: opts.loadingText, emptyText: opts.emptyText, error: opts.error, errorText: opts.errorText, getKey: opts.getKey, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled, itemRender: Utils.isFunction(opts.itemRender) ? function (item, ctx) { return opts.itemRender(item, Item.createContext(item, Utils.mergeOwn( ctx || {}, { component:instance, controller:instance, query:String(draftValue() || '') }))); } : null };
           if (hasOwn(next, 'items') && !Utils.isFunction(opts.loadSuggestions)) { currentItems = Array.isArray(opts.items) ? opts.items.slice() : []; listOptions.items = currentItems.slice(); }
           optionList.updateOptions(listOptions);
           if (hasOwn(next, 'controlled')) valueState.setControlled(opts.controlled === true);
           if (hasOwn(next, 'value')) {  valueState.syncExternal(opts.value, { silent: true, source: 'options', reason: 'options-value', preserveDraft: true }); instance.setFieldValue(committedValue(), { silent:true, force:true, sync:true, source:'options', reason:'options-value' }); clearBackfill(); }
           else if (triggerSession.getState().open) refreshSuggestions('options'); else applyQuery('options');
-          if (opts.disabled === true && triggerSession.getState().open) close('disabled'); syncControl(); if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
+          if (opts.disabled === true && triggerSession.getState().open) close('disabled'); syncControl();
           return instance;
         }
     
