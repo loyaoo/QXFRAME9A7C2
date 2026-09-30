@@ -297,7 +297,7 @@
       var tipButton=document.createElement('button');tipButton.type='button';tipButton.textContent='tip';
       var last=document.createElement('button');last.type='button';last.textContent='last';
       modalContent.appendChild(first);modalContent.appendChild(selectHost);modalContent.appendChild(tipButton);modalContent.appendChild(last);
-      var modal=C.Modal.create({title:'Browser matrix',content:modalContent,header:false,footer:false,closable:false,animation:false,maskAnimation:false,enterDuration:0,leaveDuration:0,maskEnterDuration:0,maskLeaveDuration:0,autoFocus:first});transient.push(modal);
+      var modal=C.Modal.create({title:'Browser matrix',content:modalContent,header:false,footer:false,closable:false,animation:false,maskAnimation:false,duration:{dialog:{enter:0,leave:0},mask:{enter:0,leave:0}},autoFocus:first});transient.push(modal);
       await raf();await delay(30);
       var modalDialog=modal.getDialogElement();var modalTabNodes=Array.prototype.slice.call(modalDialog.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex=\"-1\"]),[contenteditable=\"true\"]')).filter(function(node){return node.getClientRects().length>0;});
       var modalFirstTab=modalTabNodes[0],modalLastTab=modalTabNodes[modalTabNodes.length-1];assert('modal-has-tabbable-boundaries',!!modalFirstTab&&!!modalLastTab,'count='+modalTabNodes.length);modalFirstTab.focus();modalFirstTab.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true,cancelable:true}));await delay(20);
