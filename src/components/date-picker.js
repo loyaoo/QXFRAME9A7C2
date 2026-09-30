@@ -1262,7 +1262,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     className: 'qxframe9a7c2-date-picker',
     panelClass: 'qxframe9a7c2-date-picker-panel',
     size: opts.size,
-    variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles,
+    variant: opts.variant, focusOutline: opts.focusOutline, class: opts.class, style: opts.style,
     status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
     disabled: opts.disabled,
     readOnly: opts.readOnly,
@@ -1275,9 +1275,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
     onRangePartFocus:function(index){activeRangePart=index===1?1:0;},
     tags: selection === 'multiple' ? dateTags(draft.value) : [],
     creatableTags:false,tagsControlled:true,
-    tagClassName: 'qxframe9a7c2-date-picker-tag',
-    tagTextClassName: 'qxframe9a7c2-date-picker-tag-text',
-    tagRemoveClassName: 'qxframe9a7c2-date-picker-tag-remove',
     editable: true,
     clearable: opts.clearable,
     placeholder: opts.placeholder,
@@ -1687,7 +1684,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       throw error;
     }
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
-    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, rangeSeparator:opts.rangeSeparator, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
+    field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class: opts.class, style: opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, rangeSeparator:opts.rangeSeparator, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
     if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
