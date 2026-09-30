@@ -558,15 +558,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
               })});
             });
           }
-          var tags=hostedTags();
-          if(tags&&tags.getElement){
-            ['tagShell','tag','tagContent','tagClose'].forEach(function(name){var value=tags.getElement(name);elements[name]=Array.isArray(value)?value:[];});
-            elements.tagOverflow=tags.getElement('overflow');
-            var selectedTags=selectionTags.tags();
-            ['tagShell','tag','tagContent','tagClose'].forEach(function(name){
-              contexts[name]=elements[name].map(function(_node,index){var tag=selectedTags[index]||null;return {item:tag,state:Object.freeze({selected:true,disabled:!!(tag&&tag.disabled),removable:!!(tag&&tag.removable)})};});
-            });
-          }
+          SelectionTags.projectHostedSemantic(hostedTags(), selectionTags, elements, contexts);
           return {elements:elements,contexts:contexts};
         }
         function syncSemanticRegistry(){var snapshot=semanticSnapshot();instance.registerSemanticElements(snapshot.elements,snapshot.contexts);return snapshot;}
