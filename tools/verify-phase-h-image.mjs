@@ -34,6 +34,12 @@ assert.doesNotMatch(source,/root\.classList\.toggle\('is-loading',\s*loading\)/,
 assert.doesNotMatch(source,/root\.classList\.toggle\('is-error',\s*error\)/,'Image must not keep a parallel direct error class projector.');
 assert.match(source,/OverlayController\.create\s*\(/,'Image preview resource must remain OverlayController-owned.');
 assert.match(source,/Transition\.create\s*\(/,'Image preview presence must remain Transition→MotionController-owned.');
+assert.match(source,/static semanticElements = Object\.freeze\(\['root','image','preview','mask','stage','trajectory','media'\]\)/,'Image preview must publish canonical semantic elements.');
+assert.match(source,/trajectory:Object\.freeze\([\s\S]*--qxframe9a7c2-motion-image-preview-trajectory-enter-duration[\s\S]*--qxframe9a7c2-motion-image-preview-trajectory-leave-duration/,'Image preview semantic motion slots must map duration overrides to CSS.');
+assert.match(source,/mask:Object\.freeze\([\s\S]*--qxframe9a7c2-motion-image-preview-mask-enter-duration[\s\S]*--qxframe9a7c2-motion-image-preview-mask-leave-duration/,'Image preview mask duration must share the semantic registry.');
+assert.doesNotMatch(source,/transitionDuration\s*:|transitionTimingFunction\s*:|motion-duration-(?:fast|mid|slow)|easing-(?:standard|out|in)/,'Image Preview JS must not select default visual timing.');
+assert.match(css,/--qxframe9a7c2-motion-image-preview-trajectory-enter-duration:\s*var\(--qxframe9a7c2-motion-duration-3\)/,'Image trajectory enter default must be CSS semantic token → primitive duration-3.');
+assert.match(css,/--qxframe9a7c2-motion-image-preview-mask-leave-duration:\s*var\(--qxframe9a7c2-motion-duration-2\)/,'Image mask leave default must be CSS semantic token → primitive duration-2.');
 assert.match(source,/classList\.toggle\('is-pannable',\s*state\.scale\s*>\s*1\.001\s*&&\s*cfg\('draggable',\s*opts\.draggable\)\s*!==\s*false\)/,'Image grab cursor capability must require both zoom and draggable permission.');
 const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
 assert.match(css,/\.qxframe9a7c2-image-preview-image\.is-pannable\{cursor:grab\}/,'Image preview grab cursor must follow pannable capability.');
