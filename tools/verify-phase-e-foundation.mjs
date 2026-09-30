@@ -16,6 +16,18 @@ const triggerSource=read('src/components/trigger.js');
 const coreIndex=read('src/core/index.js');
 const css=read('src/qxframe9a7c2.css');
 const componentDemos=read('docs/assets/qxframe9a7c2-component-demos.js');
+function collectDocsGridSources(dir){
+  const out=[];
+  for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+    const full=path.join(dir,entry.name);
+    if(entry.isDirectory()){out.push(...collectDocsGridSources(full));continue;}
+    if(!/\.(?:html|js|mjs)$/i.test(entry.name))continue;
+    out.push({file:path.relative(root,full).split(path.sep).join('/'),source:fs.readFileSync(full,'utf8')});
+  }
+  return out;
+}
+const docsGridSources=collectDocsGridSources(path.join(root,'docs'));
+
 
 assert.match(motionControllerSource,/from ['"]\.\/motion\.js['"]/,'MotionController must delegate to MotionCore.');
 assert.doesNotMatch(motionControllerSource,/var\s+generation\s*=/,'MotionController must not create a second generation authority.');
@@ -48,6 +60,14 @@ assert.match(css,/\.qxframe9a7c2-gutter-md-4,\.qxframe9a7c2-gutter-md-y-4\{--qxf
 assert.doesNotMatch(css,/\.qxframe9a7c2-(?:g|gx|gy)(?:-(?:xs|sm|md|lg|xl|xxl))?-\d+\b/,'Pre-wxui g/gx/gy Grid classes must be removed from canonical CSS.');
 assert.match(componentDemos,/qxframe9a7c2-row qxframe9a7c2-gutter-4/,'Grid docs must consume wxui gutter classes.');
 assert.doesNotMatch(componentDemos,/qxframe9a7c2-(?:g|gx|gy)-\d+\b/,'Grid docs must not teach removed gutter aliases.');
+for(const record of docsGridSources){
+  assert.doesNotMatch(record.source,/\bqxframe9a7c2-(?:g|gx|gy)(?:-(?:xs|sm|md|lg|xl|xxl))?-\d+\b/,'No current docs source may retain pre-wxui g/gx/gy aliases: '+record.file);
+  for(const match of record.source.matchAll(/\b(?:class|className)\s*=\s*["']([^"']*)["']/g)){
+    const classes=match[1].split(/\s+/).filter(Boolean);
+    const sized=classes.some(name=>/^qxframe9a7c2-col-(?:auto|\d+|(?:xs|sm|md|lg|xl|xxl)-(?:auto|\d+))$/.test(name));
+    assert.ok(!sized||classes.includes('qxframe9a7c2-col'),'Sized Grid columns must include base qxframe9a7c2-col for gutter padding: '+record.file+' :: '+match[1]);
+  }
+}
 
 let visible=false,generation=0,destroyed=false;
 const fakeCore={
