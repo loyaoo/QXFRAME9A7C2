@@ -28,7 +28,7 @@ const TAGS_DEFAULTS = Object.freeze({
   items: [], value: [], editable: false, closable: true, checkable: false, multiple: true, variant: 'filled',
   overflow: 'wrap', maxVisible: 0, showOverflowPopover: true, hosted: false, controlled: false, creatable: true,
   formField: null, name: '', overflowTrigger: 'hover', overflowPlacement: 'bottom-start', overflowMaxHeight: 240,
-  scrollbarVisibility: 'auto', size: 'md', disabled: false, readOnly: false, required: false,
+  scrollbarVisibility:'scroll', size: 'md', disabled: false, readOnly: false, required: false,
   inputValue: '', tokenSeparators: [','], tokenizeOnPaste: true, addOnEnter: true, addOnTab: false, addOnBlur: true,
   unique: true, maxCount: 0, maxTagLength: 0, tagRemoveContent: null, classes: null, styles: null
 });
