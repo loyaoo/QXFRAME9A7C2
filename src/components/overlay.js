@@ -22,6 +22,13 @@ export class OverlayComponent extends Component {
             throw new TypeError('[QXFRAME9A7C2] OverlayComponent requires an overlay family controller.');
         }
         record.controller = controller;
+        if (typeof controller.getElements === 'function') {
+            const declared = this.getElement();
+            const source = controller.getElements();
+            const projected = {};
+            Object.keys(declared).forEach(name => { if (Object.prototype.hasOwnProperty.call(source, name)) projected[name] = source[name]; });
+            if (Object.keys(projected).length) this.registerSemanticElements(projected);
+        }
         return controller;
     }
 
@@ -64,10 +71,9 @@ export class OverlayComponent extends Component {
         return controller ? controller.getState() : Object.freeze({ open: false, destroyed: this.destroyed });
     }
 
-    getRootElement() { const c = requireState(this).controller; return c && c.getRootElement ? c.getRootElement() : this.root; }
-    getMaskElement() { const c = requireState(this).controller; return c && c.getMaskElement ? c.getMaskElement() : null; }
-    getWrapElement() { const c = requireState(this).controller; return c && c.getWrapElement ? c.getWrapElement() : null; }
-    getBodyElement() { const c = requireState(this).controller; return c && c.getBodyElement ? c.getBodyElement() : null; }
+    getMaskElement() { const semantic = this.getElement('mask'); if (semantic) return semantic; const c = requireState(this).controller; return c && c.getMaskElement ? c.getMaskElement() : null; }
+    getWrapElement() { const semantic = this.getElement('wrapper'); if (semantic) return semantic; const c = requireState(this).controller; return c && c.getWrapElement ? c.getWrapElement() : null; }
+    getBodyElement() { const semantic = this.getElement('body'); if (semantic) return semantic; const c = requireState(this).controller; return c && c.getBodyElement ? c.getBodyElement() : null; }
     getOverlayRuntime() {
         const resource = this.getOverlayResourceController();
         if (resource && typeof resource.getRuntime === 'function') return resource.getRuntime();
