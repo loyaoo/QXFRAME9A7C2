@@ -137,6 +137,12 @@ for(const stale of ['--qxframe9a7c2-control-height-md','--qxframe9a7c2-font-fami
   assert.ok(!noFallback.some(entry=>entry.name===stale),'Static unresolved token remains: '+stale);
 }
 assert.doesNotMatch(css,/--_qxframe9a7c2-scroll-edge-shadow\s*:\s*var\(--qxframe9a7c2-scroll-edge-shadow\s*,\s*var\(--_qxframe9a7c2-scroll-edge-shadow\)\)/,'Scroll edge shadow must not self-reference.');
+assert.match(css,/--qxframe9a7c2-shadow-low:/,'Missing canonical low elevation token.');
+assert.match(css,/--qxframe9a7c2-shadow-medium:/,'Missing canonical medium elevation token.');
+assert.match(css,/--qxframe9a7c2-shadow-high:/,'Missing canonical high elevation token.');
+assert.equal((css.match(/--_qxframe9a7c2-mode-popup-shadow:\s*var\(--qxframe9a7c2-shadow-medium\);/g)||[]).length,2,'Light and dark popup elevation must both consume medium shadow.');
+assert.match(css,/--_qxframe9a7c2-overlay-shadow:\s*var\(--qxframe9a7c2-family-surface-overlay-shadow, var\(--qxframe9a7c2-shadow-high\)\);/,'Overlay elevation must consume high shadow.');
+assert.match(css,/--qxframe9a7c2-card-shadow:var\(--qxframe9a7c2-shadow-low\)/,'Card elevation must consume low shadow.');
 
 const physicalUses=[];
 for(let i=0;i<lines.length;i++){
