@@ -14,6 +14,8 @@ const motionSource=read('src/core/motion.js');
 const transitionSource=read('src/core/transition.js');
 const triggerSource=read('src/components/trigger.js');
 const coreIndex=read('src/core/index.js');
+const css=read('src/qxframe9a7c2.css');
+const componentDemos=read('docs/assets/qxframe9a7c2-component-demos.js');
 
 assert.match(motionControllerSource,/from ['"]\.\/motion\.js['"]/,'MotionController must delegate to MotionCore.');
 assert.doesNotMatch(motionControllerSource,/var\s+generation\s*=/,'MotionController must not create a second generation authority.');
@@ -29,6 +31,16 @@ assert.match(triggerSource,/getOverlayController/,'Trigger must expose OverlayCo
 assert.match(triggerSource,/getMotionController/,'Trigger must expose MotionController identity.');
 assert.match(coreIndex,/export \{ MotionController \}/,'MotionController must be exported from core/index.');
 assert.match(coreIndex,/export \{ OverlayController \}/,'OverlayController must be exported from core/index.');
+assert.match(css,/\.qxframe9a7c2-col\{[^}]*padding:0 calc\(var\(--qxframe9a7c2-grid-gap-x,0\)\*\.5\)/,'wxui Grid base col must own half-gutter inline padding.');
+assert.match(css,/\.qxframe9a7c2-gutter-4,\.qxframe9a7c2-gutter-x-4\{--qxframe9a7c2-grid-gap-x:\.5rem\}/,'wxui Grid gutter scale must preserve 0.125rem increments.');
+assert.match(css,/\.qxframe9a7c2-gutter-24,\.qxframe9a7c2-gutter-x-24\{--qxframe9a7c2-grid-gap-x:3rem\}/,'wxui Grid gutter 24 must equal 3rem.');
+assert.match(css,/\.qxframe9a7c2-row-cols-sm-3>\*\{display:block;flex:0 0 33\.333333333333%;max-width:33\.333333333333%\}/,'wxui responsive row-cols naming must be preserved.');
+assert.match(css,/\.qxframe9a7c2-col-xl-6\{display:block;flex:0 0 25%;max-width:25%\}/,'wxui 24-column responsive span contract must be preserved.');
+assert.match(css,/\.qxframe9a7c2-hidden-sm-only\{display:none!important\}/,'wxui breakpoint hidden utilities must be present.');
+assert.match(css,/\.qxframe9a7c2-visible-md-and-up\{display:flex!important\}/,'wxui breakpoint visible utilities must be present.');
+assert.doesNotMatch(css,/\.qxframe9a7c2-(?:g|gx|gy)(?:-(?:xs|sm|md|lg|xl|xxl))?-\d+\b/,'Pre-wxui g/gx/gy Grid classes must be removed from canonical CSS.');
+assert.match(componentDemos,/qxframe9a7c2-row qxframe9a7c2-gutter-4/,'Grid docs must consume wxui gutter classes.');
+assert.doesNotMatch(componentDemos,/qxframe9a7c2-(?:g|gx|gy)-\d+\b/,'Grid docs must not teach removed gutter aliases.');
 
 let visible=false,generation=0,destroyed=false;
 const fakeCore={
