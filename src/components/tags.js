@@ -861,19 +861,20 @@ function setupTags(instance) {
   }
   function syncSemanticElements(items) {
     var source = Array.isArray(items) ? items : publicItems();
-    var shells=[], tags=[], contents=[], closes=[], contexts=[];
+    var shells=[], tags=[], contents=[], closes=[], contexts=[], closeContexts=[];
     source.forEach(function(item,index){
       var record=tagRecordsByKey[item.key];
       if(!record)return;
-      shells.push(record.shell); tags.push(record.tag); contents.push(record.content); closes.push(record.close);
-      contexts.push(semanticItemContext(item,index));
+      var context=semanticItemContext(item,index);
+      shells.push(record.shell); tags.push(record.tag); contents.push(record.content); contexts.push(context);
+      if(record.close){closes.push(record.close);closeContexts.push(context);}
     });
-    var overflowItems=[], overflowLabels=[], overflowCloses=[], overflowContexts=[];
+    var overflowItems=[], overflowLabels=[], overflowCloses=[], overflowContexts=[], overflowCloseContexts=[];
     Object.keys(overflowRowsByKey).forEach(function(key){
       var record=overflowRowsByKey[key]; if(!record)return;
-      var item=record.item, index=source.findIndex(function(entry){return entry.key===key;});
-      overflowItems.push(record.row); overflowLabels.push(record.label); overflowCloses.push(record.close);
-      overflowContexts.push(semanticItemContext(item,index));
+      var item=record.item, index=source.findIndex(function(entry){return entry.key===key;}), context=semanticItemContext(item,index);
+      overflowItems.push(record.row); overflowLabels.push(record.label); overflowContexts.push(context);
+      if(record.close){overflowCloses.push(record.close);overflowCloseContexts.push(context);}
     });
     instance.registerSemanticElements({
       root:root, surface:surface, input:opts.editable&&(opts.hosted===true||adding)?input:null,
@@ -881,8 +882,8 @@ function setupTags(instance) {
       tagShell:shells, tag:tags, tagContent:contents, tagClose:closes,
       overflow:summary, overflowList:overflowList, overflowItem:overflowItems, overflowLabel:overflowLabels, overflowClose:overflowCloses
     }, {
-      tagShell:contexts, tag:contexts, tagContent:contexts, tagClose:contexts,
-      overflowItem:overflowContexts, overflowLabel:overflowContexts, overflowClose:overflowContexts
+      tagShell:contexts, tag:contexts, tagContent:contexts, tagClose:closeContexts,
+      overflowItem:overflowContexts, overflowLabel:overflowContexts, overflowClose:overflowCloseContexts
     });
   }
     
