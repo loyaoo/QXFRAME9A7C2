@@ -13,6 +13,8 @@ assert.match(groupSource,/from ['"]\.\/motionController\.js['"]/,'TransitionGrou
 assert.doesNotMatch(groupSource,/from ['"]\.\/motion\.js['"]/,'TransitionGroup must not import MotionCore directly.');
 assert.match(groupSource,/MotionController\.create\s*\(/,'TransitionGroup child motion must use MotionController.');
 assert.match(groupSource,/MotionController\.waitMotionEnd\s*\(/,'TransitionGroup move completion must use MotionController facade.');
+assert.match(groupSource,/LEGACY_OPTIONS[^\n]*['"]duration['"]/,'TransitionGroup must reject the removed visual duration channel.');
+assert.doesNotMatch(groupSource,/duration:\s*function\s*\(ctx\)/,'TransitionGroup child MotionController must not receive explicit visual duration.');
 assert.match(collapseSource,/if \(itemRecord\.section !== orderCursor\) root\.insertBefore\(itemRecord\.section, orderCursor\);/,'Collapse must project stable DOM order before motion starts.');
 assert.doesNotMatch(collapseSource,/syncRecord\([^\n]+\);\s*\n\s*root\.appendChild\(itemRecord\.section\)/,'Collapse must not reappend a section after setVisible().');
 
