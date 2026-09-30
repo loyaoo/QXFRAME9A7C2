@@ -30,28 +30,6 @@ function normalizeProgress(value) {
     return Math.min(100, Math.max(0, number));
 }
 function normalizeSize(value, fallback = 'md') { return Utils.normalizeEnum(value === undefined || value === null || value === '' ? fallback : value, SIZES, undefined, 'Loading size'); }
-function styleObject(value, label) {
-    if (value === undefined || value === null) return null;
-    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('[QXFRAME9A7C2] Loading ' + label + ' must be an object.');
-    return Utils.mergeOwn( value);
-}
-function applyStyle(element, style) {
-    if (!element || !style) return;
-    Object.keys(style).forEach(key => { if (Utils.safeOwnKey(key)) element.style[key] = style[key] == null ? '' : String(style[key]); });
-}
-function clearStyle(element, style) {
-    if (!element || !style) return;
-    Object.keys(style).forEach(key => { if (Utils.safeOwnKey(key)) element.style[key] = ''; });
-}
-function normalizeBlur(value) {
-    if (value === undefined || value === null || value === false || value === 0 || value === '') return '';
-    if (typeof value === 'number') {
-        if (!Number.isFinite(value) || value < 0) throw new TypeError('[QXFRAME9A7C2] Loading maskBlur must be a non-negative number or CSS length.');
-        return value + 'px';
-    }
-    if (typeof value !== 'string') throw new TypeError('[QXFRAME9A7C2] Loading maskBlur must be a non-negative number or CSS length.');
-    return value;
-}
 function isElement(value) { return !!(value && value.nodeType === 1 && value.style); }
 function liveRenderable(value) { return value; }
 function recordFor(instance) {
@@ -101,7 +79,7 @@ export class Loading extends Component {
     });
     static options = Object.freeze({
         text: '加载中...', indicator: null, size: 'md', progress: null, delay: 0,
-        showMask: true, blocking: true, className: '', maskColor: '', maskBlur: '', open: true
+        showMask: true, blocking: true, open: true
     });
     static optionNormalizers = Object.freeze({
         size: value => normalizeSize(value, 'md'),
@@ -110,14 +88,12 @@ export class Loading extends Component {
         showMask: value => bool(value, true, 'showMask'),
         lockScroll: value => value === undefined ? undefined : bool(value, true, 'lockScroll'),
         blocking: value => bool(value, true, 'blocking'),
-        className: value => value == null ? '' : String(value),
-        style: value => styleObject(value, 'style'),
-        boxStyle: value => styleObject(value, 'boxStyle'),
-        maskColor: value => value == null ? '' : String(value),
-        maskBlur: normalizeBlur,
         open: value => bool(value, true, 'open'),
         fullscreen: value => bool(value, false, 'fullscreen')
     });
+    static semanticElements = Object.freeze(['root','mask','box','indicator','spinner','content','text','progress']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
     static contract = ComponentContracts.get('Loading');
 
     constructor(options = {}) { super(contextualOptions(options)); }
@@ -168,10 +144,11 @@ export class Loading extends Component {
             root, mask, box, indicatorHost, spinner, content, text, progressHost,
             target, doc, view, isGlobal, fullscreen, portalContainer, scrollLockTarget,
             overlay: null, surface: null, presence: null, progress: null, delayScheduler: null, capability: null,
-            opened: false, pendingCloseReason: null, appliedMaskStyle: null, appliedBoxStyle: null,
+            opened: false, pendingCloseReason: null,
             targetPositionProjection: null, methodPatch: null, setOptions: next => { opts = next; }
         };
         state.set(this, record);
+        this.registerSemanticElements({ root, mask, box, indicator: indicatorHost, spinner, content, text, progress: progressHost });
 
         const isOpen = () => record.opened;
         const effectiveLockScroll = () => opts.lockScroll === undefined ? opts.showMask : opts.lockScroll;
@@ -192,8 +169,7 @@ export class Loading extends Component {
         const getOptionsSnapshot = () => ({
             target, fullscreen, text: opts.text, indicator: opts.indicator, size: opts.size,
             progress: opts.progress, delay: opts.delay, showMask: opts.showMask,
-            lockScroll: effectiveLockScroll(), blocking: opts.blocking, className: opts.className,
-            maskColor: opts.maskColor, maskBlur: opts.maskBlur
+            lockScroll: effectiveLockScroll(), blocking: opts.blocking, class: opts.class, style: opts.style
         });
         const syncContentHost = () => {
             const present = text.parentNode === content || progressHost.parentNode === content;
@@ -237,16 +213,11 @@ export class Loading extends Component {
             } else record.progress.updateOptions({ percent: opts.progress, size: opts.size, showInfo: true });
         };
         const applyVisualOptions = () => {
-            clearStyle(mask, record.appliedMaskStyle);
-            clearStyle(box, record.appliedBoxStyle);
-            record.appliedMaskStyle = opts.style ? Utils.mergeOwn( opts.style) : null;
-            record.appliedBoxStyle = opts.boxStyle ? Utils.mergeOwn( opts.boxStyle) : null;
-            root.className = ('qxframe9a7c2-loading-root ' + (isGlobal ? 'is-global' : 'is-local') + ' is-' + opts.size + (opts.blocking ? '' : ' is-nonblocking') + (opts.className ? ' ' + opts.className : '')).trim();
-            mask.className = 'qxframe9a7c2-loading-mask' + (opts.showMask ? '' : ' is-maskless');
-            mask.style.background = opts.maskColor || '';
-            mask.style.backdropFilter = opts.maskBlur ? 'blur(' + opts.maskBlur + ')' : '';
-            applyStyle(mask, record.appliedMaskStyle);
-            applyStyle(box, record.appliedBoxStyle);
+            root.classList.toggle('is-global', isGlobal);
+            root.classList.toggle('is-local', !isGlobal);
+            SIZES.forEach(size => root.classList.toggle('is-' + size, size === opts.size));
+            root.classList.toggle('is-nonblocking', opts.blocking === false);
+            mask.classList.toggle('is-maskless', opts.showMask !== true);
             renderIndicator();
             renderText();
             renderProgress();
@@ -327,7 +298,7 @@ export class Loading extends Component {
         const methodPatch = record.methodPatch;
         record.methodPatch = null;
         if (methodPatch === 'text') {
-            const value = typeof next.text === 'function' ? next.text({ instance: this, options: Object.freeze({ target: record.target, fullscreen: record.fullscreen, text: next.text, indicator: next.indicator, size: next.size, progress: next.progress, delay: next.delay, showMask: next.showMask, lockScroll: next.lockScroll === undefined ? next.showMask : next.lockScroll, blocking: next.blocking, className: next.className, maskColor: next.maskColor, maskBlur: next.maskBlur }) }) : next.text;
+            const value = typeof next.text === 'function' ? next.text({ instance: this, options: Object.freeze({ target: record.target, fullscreen: record.fullscreen, text: next.text, indicator: next.indicator, size: next.size, progress: next.progress, delay: next.delay, showMask: next.showMask, lockScroll: next.lockScroll === undefined ? next.showMask : next.lockScroll, blocking: next.blocking, class: next.class, style: next.style }) }) : next.text;
             const present = value !== null && value !== undefined && value !== '';
             Renderer.replace(record.text, liveRenderable(present ? value : ''), record.doc);
             if (present) record.content.insertBefore(record.text, record.progressHost.parentNode === record.content ? record.progressHost : null);
@@ -427,7 +398,6 @@ export class Loading extends Component {
             blocking: opts.blocking
         });
     }
-    getElement() { return this.root; }
     getMaskElement() { const record = state.get(this); return record ? record.mask : null; }
     getBoxElement() { const record = state.get(this); return record ? record.box : null; }
     getIndicatorElement() { const record = state.get(this); return record ? record.indicatorHost : null; }
