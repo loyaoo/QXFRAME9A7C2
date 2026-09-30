@@ -116,7 +116,7 @@ try{
   await navigateCanonical('/docs/admin/index.html',500);
   const shellRegression=await cdp.call('Runtime.evaluate',{expression:`(async function(){
     function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
-    var result={tabsMounted:false,overflowList:false,tabFontSize:0,tabsKeyboardSwitchFocus:false,tabsKeyboardRemoveFocus:false,collapsedMenuFits:false,collapsedGroupsHidden:false,collapsedIconCentered:false,searchOpened:false,searchClosedFromFrame:false};
+    var result={tabsMounted:false,overflowList:false,tabFontSize:0,tabsKeyboardSwitchFocus:false,tabsKeyboardRemoveFocus:false,menuCustomScrollPresent:false,menuHostNativeScrollDisabled:false,menuViewportScrollable:false,menuTrackVisible:false,menuScrollMoves:false,collapsedMenuFits:false,collapsedGroupsHidden:false,collapsedIconCentered:false,searchOpened:false,searchClosedFromFrame:false,adminDatePopupStable:false,adminDatePopupSpread:null};
     ['content-list','content-add','orders','users','roles','media','search','logs','settings','profile','result','404','500'].forEach(function(key){
       history.replaceState(null,'','#/'+key);
       window.dispatchEvent(new Event('hashchange'));
@@ -144,10 +144,34 @@ try{
       }
     }
     var shellRoot=document.querySelector('.qx-admin-shell');
+    var menuHost=document.getElementById('qx-admin-menu');
+    if(menuHost){
+      var oldFlex=menuHost.style.flex,oldHeight=menuHost.style.height;
+      menuHost.style.flex='0 0 320px';
+      menuHost.style.height='320px';
+      await sleep(180);
+      var menuScroll=menuHost.querySelector('.qxframe9a7c2-menu-root-scroll.qxframe9a7c2-scroll');
+      var menuViewport=menuScroll&&menuScroll.querySelector('.qxframe9a7c2-menu-root-level.qxframe9a7c2-scroll-viewport');
+      var menuTrack=menuScroll&&menuScroll.querySelector('.qxframe9a7c2-scroll-track-y');
+      var menuThumb=menuTrack&&menuTrack.querySelector('.qxframe9a7c2-scroll-thumb-y');
+      result.menuCustomScrollPresent=!!(menuScroll&&menuViewport&&menuTrack&&menuThumb);
+      result.menuHostNativeScrollDisabled=getComputedStyle(menuHost).overflowY==='hidden';
+      result.menuViewportScrollable=!!(menuViewport&&menuViewport.scrollHeight>menuViewport.clientHeight+1);
+      result.menuTrackVisible=!!(menuTrack&&menuTrack.isConnected&&getComputedStyle(menuTrack).display!=='none'&&getComputedStyle(menuTrack).visibility!=='hidden'&&menuTrack.getBoundingClientRect().height>0&&menuThumb&&menuThumb.getBoundingClientRect().height>0);
+      if(menuViewport){
+        var beforeMenuTop=menuViewport.scrollTop;
+        menuViewport.scrollTop=Math.min(120,Math.max(1,menuViewport.scrollHeight-menuViewport.clientHeight));
+        menuViewport.dispatchEvent(new Event('scroll',{bubbles:true}));
+        await sleep(80);
+        result.menuScrollMoves=menuViewport.scrollTop>beforeMenuTop;
+      }
+      menuHost.style.flex=oldFlex;
+      menuHost.style.height=oldHeight;
+      await sleep(120);
+    }
     var collapse=document.getElementById('qx-admin-collapse');
     if(shellRoot&&collapse&&!shellRoot.classList.contains('is-collapsed'))collapse.click();
     await sleep(140);
-    var menuHost=document.getElementById('qx-admin-menu');
     var menuRoot=menuHost&&menuHost.querySelector('.qxframe9a7c2-menu.is-inline.is-collapsed');
     var groupLabels=menuRoot?Array.prototype.slice.call(menuRoot.querySelectorAll('.qxframe9a7c2-menu-group-label')):[];
     result.collapsedMenuFits=!!(menuHost&&menuRoot&&menuHost.scrollWidth<=menuHost.clientWidth+1&&menuRoot.scrollWidth<=menuRoot.clientWidth+1);
@@ -182,10 +206,31 @@ try{
         result.searchClosedFromFrame=!!(panel&&panel.hidden);
       }
     }
+    history.replaceState(null,'','#/orders');
+    window.dispatchEvent(new Event('hashchange'));
+    await sleep(420);
+    var orderFrame=document.querySelector('.qx-admin-frame.is-active');
+    var orderDoc=orderFrame&&orderFrame.contentDocument;
+    var dateRoot=orderDoc&&orderDoc.querySelector('[data-qx-date] .qxframe9a7c2-picker-field');
+    if(dateRoot){
+      dateRoot.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,pointerType:'mouse',button:0,buttons:1}));
+      dateRoot.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,button:0}));
+      var samples=[];
+      for(var sampleIndex=0;sampleIndex<18;sampleIndex+=1){
+        await new Promise(function(resolve){(orderFrame.contentWindow||window).requestAnimationFrame(resolve);});
+        var datePopup=orderDoc.querySelector('.qxframe9a7c2-date-picker-panel');
+        if(datePopup&&!datePopup.hidden&&getComputedStyle(datePopup).visibility!=='hidden'&&datePopup.getClientRects().length)samples.push(datePopup.getBoundingClientRect().left);
+      }
+      if(samples.length>=2){
+        var spread=Math.max.apply(Math,samples)-Math.min.apply(Math,samples);
+        result.adminDatePopupSpread=spread;
+        result.adminDatePopupStable=spread<1.5;
+      }
+    }
     return result;
   })()`,awaitPromise:true,returnByValue:true},sessionId);
   const shellValue=shellRegression&&shellRegression.result&&shellRegression.result.value||{};
-  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.tabsKeyboardSwitchFocus||!shellValue.tabsKeyboardRemoveFocus||!shellValue.collapsedMenuFits||!shellValue.collapsedGroupsHidden||!shellValue.collapsedIconCentered||!shellValue.searchOpened||!shellValue.searchClosedFromFrame){
+  if(!shellValue.tabsMounted||!shellValue.overflowList||shellValue.tabFontSize<12||!shellValue.tabsKeyboardSwitchFocus||!shellValue.tabsKeyboardRemoveFocus||!shellValue.menuCustomScrollPresent||!shellValue.menuHostNativeScrollDisabled||!shellValue.menuViewportScrollable||!shellValue.menuTrackVisible||!shellValue.menuScrollMoves||!shellValue.collapsedMenuFits||!shellValue.collapsedGroupsHidden||!shellValue.collapsedIconCentered||!shellValue.searchOpened||!shellValue.searchClosedFromFrame||!shellValue.adminDatePopupStable){
     throw new Error('[QXFRAME9A7C2 canonical docs browser] admin shell regression '+JSON.stringify(shellValue));
   }
 

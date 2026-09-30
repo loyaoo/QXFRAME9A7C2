@@ -15,7 +15,9 @@ assert.equal(typeof FieldComponent.prototype.bindFeedbackControl,'function','Fie
 assert.equal(typeof FieldComponent.prototype.getFeedbackController,'function','FieldComponent must expose canonical FeedbackController access.');
 assert.match(fieldSource,/FeedbackController\.createForProjector\s*\(/,'FieldComponent local visible feedback must enter FeedbackController.');
 assert.match(popupFieldSource,/getOverlayController\(\)/,'PopupFieldComponent must expose Trigger overlay authority.');
-assert.match(popupFieldSource,/Trigger\.create\s*\(/,'PopupFieldComponent popup resource path must remain Trigger-owned.');
+assert.match(popupFieldSource,/PopupRuntime\.create\s*\(/,'PopupFieldComponent popup resource path must enter PopupRuntime.');
+assert.match(popupFieldSource,/PopupFrame\.create\s*\(/,'PopupFieldComponent popup Scroll/surface resources must enter PopupFrame.');
+assert.doesNotMatch(popupFieldSource,/Trigger\.create\s*\(/,'PopupFieldComponent must not create Trigger directly.');
 
 const expected=['value','focus','interaction','capability','selection','overlay','feedback','form'];
 const owner={
@@ -47,5 +49,5 @@ console.log(JSON.stringify({
   components:['Select','TreeSelect','Cascader'],
   ownership:expected.map(cap=>owner[cap]),
   sharedFeedback:'FieldComponent',
-  sharedOverlay:'PopupFieldComponent→Trigger'
+  sharedOverlay:'PopupFieldComponent→PopupRuntime→Trigger'
 }));

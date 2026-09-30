@@ -5,7 +5,9 @@ import { fileURLToPath } from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const source=fs.readFileSync(path.join(root,'src/components/popup-field.js'),'utf8');
 assert.match(source,/export class PopupFieldComponent extends FieldComponent/,'PopupFieldComponent must extend FieldComponent.');
-assert.match(source,/Trigger\.create\(/,'PopupFieldComponent must compose Trigger rather than inherit PopupComponent.');
+assert.match(source,/PopupRuntime\.create\(/,'PopupFieldComponent must compose the canonical PopupRuntime.');
+assert.match(source,/PopupFrame\.create\(/,'PopupFieldComponent must own popup surface resources through PopupFrame.');
+assert.doesNotMatch(source,/Trigger\.create\(/,'PopupFieldComponent must not create Trigger directly.');
 assert.ok(!/extends\s+PopupComponent/.test(source),'PopupFieldComponent must not inherit PopupComponent.');
 for(const method of ['open','close','toggle','setOpen','reposition','focusReference','focusPopup']) assert.match(source,new RegExp('\\n\\s*'+method+'\\s*\\('),'PopupFieldComponent must own '+method+'().');
 for(const pattern of [/Registry\.(?:get|define|assert)/,/defineModule\s*\(/,/(?:globalThis|window)\.QXFRAME9A7C2/]) assert.ok(!pattern.test(source),'PopupFieldComponent contains legacy dependency '+pattern);
@@ -27,4 +29,4 @@ assert.match(cascaderSource,/export class Cascader extends PopupFieldComponent/,
 for(const method of ['open','close','toggle','setOpen','reposition','destroy','updateOptions']) assert.ok(!new RegExp('\\n\\s*'+method+'\\s*\\(').test(cascaderSource),'Cascader must inherit '+method+' from PopupFieldComponent/Component.');
 for(const pattern of [/Registry\.(?:get|define|assert)/,/defineModule\s*\(/,/(?:globalThis|window)\.QXFRAME9A7C2/]) assert.ok(!pattern.test(cascaderSource),'Cascader contains legacy dependency '+pattern);
 
-console.log(JSON.stringify({ok:true,family:'PopupFieldComponent',extends:'FieldComponent',composition:['Trigger'],membersComplete:['Autocomplete','Select','Cascader','TreeSelect'],membersPending:[]}));
+console.log(JSON.stringify({ok:true,family:'PopupFieldComponent',extends:'FieldComponent',composition:['PopupRuntime','PopupFrame','Trigger'],membersComplete:['Autocomplete','Select','Cascader','TreeSelect'],membersPending:[]}));

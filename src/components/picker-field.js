@@ -10,7 +10,7 @@ import { FocusController } from '../core/focusController.js';
 import { OpenStateBridge } from '../core/openStateBridge.js';
 import { Utils } from '../utils/utils.js';
 import { Control } from './control.js';
-import { Trigger } from './trigger.js';
+import { PopupFrame, PopupRuntime } from './popup.js';
 
 let DOMFactory;
 var blueprint = DOMTemplate.staticHTML`
@@ -91,6 +91,8 @@ function create(options) {
     }
   }
   var panel = doc.createElement('div'), body = doc.createElement('div'), footer = doc.createElement('div');
+  var popupFrame = PopupFrame.create({ panel: panel, document: doc });
+  scope.add(function () { if (popupFrame) popupFrame.destroy(); popupFrame = null; });
   var triggerSession = null, control = null, focusController = null, keyboard = null, destroyed = false, api = null;
   var displayValue = opts.displayValue == null ? '' : String(opts.displayValue);
   var draftDisplayValue = opts.draftDisplayValue == null ? '' : String(opts.draftDisplayValue);
@@ -338,7 +340,7 @@ function create(options) {
     });
   }
 
-  triggerSession = Trigger.create({
+  var popupRuntime = PopupRuntime.create({
     reference: root,
     triggerTarget: headlessMode ? triggerTarget : (projectionMode ? triggerTarget : (triggerTarget || root)),
     floating: panel,
@@ -347,7 +349,7 @@ function create(options) {
     trigger: opts.trigger,
     keyboardActivation: false,
     placement: opts.placement,
-    transition: Trigger.motion.popupPlacement,
+    transition: PopupRuntime.motion.popupPlacement,
     strategy: opts.strategy || 'absolute',
     middleware: opts.middleware,
     matchReferenceWidth: opts.matchReferenceWidth === true,
@@ -372,8 +374,10 @@ function create(options) {
     onOpen: function (detail) { beginNavigationInteraction(); if (typeof opts.onOpen === 'function') opts.onOpen(detail); if (!destroyed) emitOpen(true, detail); },
     onClose: function (detail) { if (typeof opts.onClose === 'function') opts.onClose(detail); if (!destroyed) { endNavigationInteraction(detail); if (keyboard && keyboard.virtualFocus) keyboard.virtualFocus.clear({ modality:keyboard.virtualFocus.getState().modality }); restoreFocusAfterLogicalClose(detail); emitOpen(false, detail); } },
     afterOpen: function (detail) { if (typeof opts.afterOpen === 'function') opts.afterOpen(detail); },
-    afterClose: function (detail) { if (typeof opts.afterClose === 'function') opts.afterClose(detail); }
+    afterClose: function (detail) { if (typeof opts.afterClose === 'function') opts.afterClose(detail); },
+    popupFrame: popupFrame
   });
+  triggerSession = popupRuntime.trigger;
 
   if (root) scope.add(DOM.listen(root, 'click', function (event) {
     if (!editorPointerPending || !isSelectorEditor(event.target)) return;
@@ -593,6 +597,7 @@ function create(options) {
     getState: function () { return Object.freeze({ open: !!(triggerSession && triggerSession.getState().open), displayValue: displayValue, draftDisplayValue: draftDisplayValue, placeholder: displayPlaceholder, draftVisual: opts.draftVisual === true, hasDraftValueTarget: !!draftValueTarget, renderControl: !projectionMode && !headlessMode, projection: projectionMode, headless: headlessMode, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.busy === true, focusScope: opts.focusScope, interactionMode: navigationActive ? 'navigation' : 'text', keyboardOwner: navigationActive ? 'picker' : 'editor', editorSuspended: navigationActive, interactionGeneration: interactionGeneration, destroyed: destroyed }); },
     getRootElement:function(){return root;}, getControlElement:function(){return control?control.getControlElement():controlElement;}, getInputElement:function(){return editorElement();}, getInputElements:function(){return editorElements();}, getDraftValueElement:function(){return draftValueTarget;},
     getPanelElement: function () { return panel; }, getPanelHost: function () { return body; }, getFooterElement: function () { return footer; },
+    getPopupFrame: function () { return popupFrame; }, getPopupScroll: function () { return popupFrame ? popupFrame.getPrimaryScroll() : null; },
     getControl: function () { return control; }, getKeyboardNavigation: function () { return keyboard; }, getFocusController: function () { return focusController; }, getFormField: function () { return control ? control.getFormField() : null; }, getCommittedValue: function () { return control ? control.getCommittedValue() : committedValue; }, getTrigger: function () { return triggerSession; },
     destroy: function (reason) {
       if (destroyed) return false; scope.dispose(); footerCleanups.splice(0).forEach(function (cleanup) { cleanup(); });

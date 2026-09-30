@@ -2,7 +2,6 @@ import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings, 
 import { Control } from './control.js';
 import { ItemCollection } from './item-collection.js';
 import { Item } from './item.js';
-import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { SelectionController } from '../core/selectionController.js';
@@ -89,7 +88,8 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-flush'; panel.hidden = true; panel.tabIndex = -1;
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
-        var columnsScroll = Scroll.attachViewport({
+        var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
+        var columnsScroll = popupFrame.attachViewport({
           root: popupContentHost, viewport: columnsHost, content: columnsHost, document: doc,
           axis: 'x', wheelAxis: 'x', wheelPropagation: true, scrollbarVisibility: 'auto',
           focusable: false, keyboard: false, controller: instance
@@ -578,7 +578,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           destroyColumns(); destroySearchList();
           var hostNode = doc.createElement('div'); hostNode.className = 'qxframe9a7c2-cascader-search-results'; columnsHost.appendChild(hostNode);
           var results = searchPaths();
-          searchList = ItemCollection.create({ container: hostNode, scrollAdapter:function(config){return Scroll.attachViewport(config);}, items: results, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
+          searchList = ItemCollection.create({ container: hostNode, scrollAdapter:popupFrame.createAdapter(), items: results, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
             keyboardFocusOwner: controlFocusElement, getKey: function (entry) { return entry.key; }, getLabel: function (entry) { return entry.label; }, getValue: function (entry) { return entry.value; }, ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], classes:opts.classes, styles:opts.itemStyles, itemRender: function (entry, ctx) { return renderColumnItem(entry, ctx, 0, true); },
             onActivate: function (detail) { activateSearchResult(detail.item, detail); }
           });

@@ -120,11 +120,23 @@ function autoScroll(event) {
   }
   return false;
 }
+function dropVisualClasses() {
+  var configured = option('dropVisualClasses', null);
+  var values = Array.isArray(configured) ? configured : ['is-drag-before','is-drag-after','is-drop-before','is-drop-after','is-drop-inside'];
+  var seen = Object.create(null), output = ['is-dragging'];
+  values.forEach(function (name) {
+    var key = String(name || '');
+    if (!key || seen[key]) return;
+    seen[key] = true; output.push(key);
+  });
+  return output;
+}
 function clearVisual() {
+  var classes = dropVisualClasses();
   entries().forEach(function (entry) {
     var row = rowForKey(entry.key);
     if (!row) return;
-    row.classList.remove('is-dragging','is-drag-before','is-drag-after');
+    row.classList.remove.apply(row.classList, classes);
   });
 }
 function dropSlot(event) {
@@ -152,12 +164,49 @@ function fallbackDropSlot(event) {
   if (!key || key === session.key) return null;
   var remaining = entries().filter(function (entry) { return entry.key !== session.key; });
   for (var i = 0; i < remaining.length; i += 1) {
-    if (remaining[i].key === key) return { targetIndex: i, markerRow: target, before: true };
+    if (remaining[i].key === key) return { targetIndex: i, markerRow: target, targetKey:key, before: true, position:'before', visualClass:'is-drag-before' };
   }
   return null;
 }
+function resolveDrop(event) {
+  if (typeof source.resolveDrop === 'function') {
+    var resolved = source.resolveDrop(event, {
+      key:session.key, sourceKey:session.key, fromIndex:session.fromIndex,
+      root:root, rowSelector:rowSelector, orientation:orientation(), entries:entries(),
+      rowForKey:rowForKey, keyOfRow:keyOfRow, instance:api
+    });
+    if (!resolved) return null;
+    var markerRow = resolved.markerRow || null;
+    var targetKey = resolved.targetKey === undefined || resolved.targetKey === null
+      ? (markerRow ? keyOfRow(markerRow) : null)
+      : String(resolved.targetKey);
+    var targetIndex = Number.isFinite(Number(resolved.targetIndex)) ? Number(resolved.targetIndex) : (targetKey ? indexOfKey(targetKey) : session.fromIndex);
+    return {
+      targetIndex:targetIndex,
+      markerRow:markerRow,
+      targetKey:targetKey,
+      before:resolved.before !== false,
+      position:resolved.position == null ? (resolved.before === false ? 'after' : 'before') : String(resolved.position),
+      visualClass:resolved.visualClass == null ? '' : String(resolved.visualClass)
+    };
+  }
+  var slot = dropSlot(event);
+  var targetKey = slot.markerRow ? keyOfRow(slot.markerRow) : null;
+  return Utils.assignOwn(slot, {
+    targetKey:targetKey,
+    position:slot.before ? 'before' : 'after',
+    visualClass:slot.before ? 'is-drag-before' : 'is-drag-after'
+  });
+}
+function projectDrop(slot, detail) {
+  if (!slot || !slot.markerRow || detail.allowed !== true) return false;
+  if (typeof source.projectDrop === 'function') return source.projectDrop(Utils.assignOwn({ row:slot.markerRow }, detail)) !== false;
+  var className = slot.visualClass || (slot.before ? 'is-drag-before' : 'is-drag-after');
+  if (className) slot.markerRow.classList.add(className);
+  return true;
+}
 function createOverlay(row, event) {
-  if (!row || !doc.body) return null;
+  if (option('dragOverlay', true) === false || !row || !doc.body) return null;
   var rect = row.getBoundingClientRect ? row.getBoundingClientRect() : { width:0, height:0 };
   var overlay = row.cloneNode(true);
   overlay.classList.add('qxframe9a7c2-sort-overlay');
@@ -227,7 +276,7 @@ function beginDrag(event, row) {
     if (!handle || !row.contains(handle)) { if (event.preventDefault) event.preventDefault(); return false; }
   }
   var ghost = createOverlay(row, event);
-  session = { key: key, fromIndex: index, targetIndex: index, before: true, hasPointerSlot: false, dropAllowed: true, dataVersion: dataVersion(), scrollContainers: scrollableAncestors(), overlay: ghost && ghost.element || null, overlayLease: ghost && ghost.layerLease || null };
+  session = { key: key, fromIndex: index, targetIndex: index, targetKey:null, position:null, before: true, hasPointerSlot: false, dropAllowed: true, dataVersion: dataVersion(), scrollContainers: scrollableAncestors(), overlay: ghost && ghost.element || null, overlayLease: ghost && ghost.layerLease || null };
   row.classList.add('is-dragging');
   if (event.dataTransfer) {
     event.dataTransfer.effectAllowed = 'move';
@@ -244,20 +293,27 @@ function updateDrag(event) {
   autoScroll(event);
   positionOverlay(session.overlay, event);
   if (session.dataVersion !== dataVersion()) { cancelDrag('data-version', event); return false; }
-  var slot = dropSlot(event);
-  var targetKey = slot.markerRow ? keyOfRow(slot.markerRow) : null;
-  var dropDetail = { key: session.key, sourceKey: session.key, fromIndex: session.fromIndex, toIndex: slot.targetIndex, targetIndex: slot.targetIndex, targetKey: targetKey, before: slot.before, originalEvent: event, instance: api };
-  session.dropAllowed = typeof source.canDrop !== 'function' || source.canDrop(dropDetail) !== false;
-  var changedSlot = session.targetIndex !== slot.targetIndex || session.before !== slot.before;
-  session.targetIndex = slot.targetIndex;
-  session.before = slot.before;
-  session.hasPointerSlot = true;
+  var slot = resolveDrop(event);
   clearVisual();
   var moving = rowForKey(session.key);
-  if (moving) { moving.classList.add('is-dragging'); }
-  if (slot.markerRow && session.dropAllowed) slot.markerRow.classList.add(slot.before ? 'is-drag-before' : 'is-drag-after');
-  if (typeof source.onPreview === 'function') source.onPreview(Utils.mergeOwn( dropDetail, { allowed: session.dropAllowed }));
-  if (changedSlot) notify('onDragMove', { key: session.key, fromIndex: session.fromIndex, toIndex: slot.targetIndex, allowed: session.dropAllowed, originalEvent: event });
+  if (moving) moving.classList.add('is-dragging');
+  if (!slot) {
+    session.dropAllowed = false;
+    session.hasPointerSlot = false;
+    return false;
+  }
+  var targetKey = slot.targetKey;
+  var dropDetail = { key: session.key, sourceKey: session.key, fromIndex: session.fromIndex, toIndex: slot.targetIndex, targetIndex: slot.targetIndex, targetKey: targetKey, before: slot.before, position:slot.position, originalEvent: event, instance: api };
+  session.dropAllowed = typeof source.canDrop !== 'function' || source.canDrop(dropDetail) !== false;
+  var changedSlot = session.targetIndex !== slot.targetIndex || session.before !== slot.before || session.targetKey !== targetKey || session.position !== slot.position;
+  session.targetIndex = slot.targetIndex;
+  session.targetKey = targetKey;
+  session.position = slot.position;
+  session.before = slot.before;
+  session.hasPointerSlot = true;
+  projectDrop(slot, Utils.mergeOwn(dropDetail, { allowed:session.dropAllowed }));
+  if (typeof source.onPreview === 'function') source.onPreview(Utils.mergeOwn(dropDetail, { allowed: session.dropAllowed }));
+  if (changedSlot) notify('onDragMove', { key: session.key, sourceKey:session.key, fromIndex: session.fromIndex, toIndex: slot.targetIndex, targetIndex:slot.targetIndex, targetKey:targetKey, position:slot.position, allowed: session.dropAllowed, originalEvent: event });
   return true;
 }
 function finishDrag(event) {
@@ -267,22 +323,31 @@ function finishDrag(event) {
   if (event && event.preventDefault) event.preventDefault();
   if (option('stopPropagation', false) === true && event && event.stopPropagation) event.stopPropagation();
   if (!session.hasPointerSlot) {
-    var fallback = fallbackDropSlot(event);
-    if (fallback) { session.targetIndex = fallback.targetIndex; session.before = fallback.before; }
+    var fallback = resolveDrop(event) || fallbackDropSlot(event);
+    if (fallback) {
+      session.targetIndex = fallback.targetIndex;
+      session.targetKey = fallback.targetKey || (fallback.markerRow ? keyOfRow(fallback.markerRow) : null);
+      session.position = fallback.position || (fallback.before ? 'before' : 'after');
+      session.before = fallback.before;
+      session.hasPointerSlot = true;
+      var fallbackDetail = { key:session.key, sourceKey:session.key, fromIndex:session.fromIndex, toIndex:fallback.targetIndex, targetIndex:fallback.targetIndex, targetKey:session.targetKey, before:fallback.before, position:session.position, originalEvent:event, instance:api };
+      session.dropAllowed = typeof source.canDrop !== 'function' || source.canDrop(fallbackDetail) !== false;
+    }
   }
+  if (!session.hasPointerSlot || session.dropAllowed === false) return cancelDrag('forbidden-drop', event);
   var active = session;
   session = null;
   removeOverlay(active);
   clearVisual();
-  if (active.targetIndex === active.fromIndex) {
-    notify('onDragEnd', { key: active.key, fromIndex: active.fromIndex, toIndex: active.fromIndex, changed: false, originalEvent: event || null });
+  if (active.targetIndex === active.fromIndex && option('commitSameIndex', false) !== true) {
+    notify('onDragEnd', { key: active.key, fromIndex: active.fromIndex, toIndex: active.fromIndex, targetKey:active.targetKey, position:active.position, changed: false, originalEvent: event || null });
     return false;
   }
-  var commitDetail = { key: active.key, sourceKey: active.key, fromIndex: active.fromIndex, toIndex: active.targetIndex, source: 'pointer', reason: 'drag', originalEvent: event || null };
+  var commitDetail = { key: active.key, sourceKey: active.key, fromIndex: active.fromIndex, toIndex: active.targetIndex, targetIndex:active.targetIndex, targetKey:active.targetKey, position:active.position, source: 'pointer', reason: 'drag', originalEvent: event || null };
   var changed = source.onMove(commitDetail) !== false;
   if (changed && typeof source.onCommit === 'function') source.onCommit(Utils.mergeOwn( commitDetail));
   var finalIndex = changed ? indexOfKey(active.key) : active.fromIndex;
-  notify('onDragEnd', { key: active.key, fromIndex: active.fromIndex, toIndex: finalIndex < 0 ? active.targetIndex : finalIndex, changed: changed, originalEvent: event || null });
+  notify('onDragEnd', { key: active.key, sourceKey:active.key, fromIndex: active.fromIndex, toIndex: finalIndex < 0 ? active.targetIndex : finalIndex, targetKey:active.targetKey, position:active.position, changed: changed, originalEvent: event || null });
   return changed;
 }
   
@@ -302,7 +367,7 @@ scope.add(DOM.listen(doc, 'contextmenu', function (event) {
   
 api = Object.freeze({
   cancelDrag: function (reason) { return cancelDrag(reason || 'api'); },
-  getState: function () { return Object.freeze({ dragging: !!session, dragOverlay: !!(session && session.overlay), key: session ? session.key : null, fromIndex: session ? session.fromIndex : -1, toIndex: session ? session.targetIndex : -1, destroyed: destroyed }); },
+  getState: function () { return Object.freeze({ dragging: !!session, dragOverlay: !!(session && session.overlay), key: session ? session.key : null, fromIndex: session ? session.fromIndex : -1, toIndex: session ? session.targetIndex : -1, targetKey:session ? session.targetKey : null, position:session ? session.position : null, destroyed: destroyed }); },
   destroy: function () {
     if (destroyed) return false;
     if (session) cancelDrag('destroy');

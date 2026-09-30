@@ -3,7 +3,6 @@ import { PickerField } from './picker-field.js';
 import { Calendar } from './calendar.js';
 import { PeriodPanel } from './period-panel.js';
 import { TimePanel } from './time-panel.js';
-import { Scroll } from './scroll.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
@@ -1325,6 +1324,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
     onClearRequest: function (event) { clear({ source: DOM.activationSource(event), reason: 'clear-button', originalEvent: event }); }
   });
   instance.adoptPickerField(field);
+  var popupFrame = field.getPopupFrame ? field.getPopupFrame() : null;
+  if (!popupFrame) throw new Error('[QXFRAME9A7C2] DatePicker requires PickerField PopupFrame ownership.');
 
   var doc = opts.document || globalThis.document;
   panelShell = doc.createElement('div');
@@ -1340,7 +1341,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
   selectionScrollShell.className = 'qxframe9a7c2-date-picker-selection-scroll';
   selectionScrollShell.appendChild(selectionHost);
   panelShell.appendChild(selectionScrollShell);
-  selectionScroll = Scroll.attachViewport({
+  // Establish popup ownership before PopupFrame creates any Scroll resource.
+  // This keeps PopupFrame's panel-descendant invariant strict instead of
+  // permitting detached surfaces that may later be mounted elsewhere.
+  field.getPanelHost().appendChild(panelShell);
+  selectionScroll = popupFrame.attachViewport({
     root:selectionScrollShell, viewport:selectionHost, content:selectionHost, document:doc,
     axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
     focusable:false, keyboard:false, controller:api
@@ -1350,7 +1355,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
     timeHost.className = 'qxframe9a7c2-date-picker-time-panel';
     panelShell.appendChild(timeHost);
   }
-  field.getPanelHost().appendChild(panelShell);
 
   if (unit === 'date' || unit === 'week') {
     calendarGroup = doc.createElement('div');
@@ -1546,12 +1550,14 @@ function setupDatePickerRuntime(instance, fieldInit) {
       presetActions.push(handler);
     });
     if (presets.length) {
-      if (!presetsScroll) presetsScroll = Scroll.attachViewport({
+      if (presetsScrollShell.parentNode !== panelShell || presetsScrollShell.nextSibling !== selectionScrollShell) {
+        panelShell.insertBefore(presetsScrollShell, selectionScrollShell);
+      }
+      if (!presetsScroll) presetsScroll = popupFrame.attachViewport({
         root:presetsScrollShell, viewport:presetsHost, content:presetsHost, document:doc,
         axis:'x', wheelAxis:'x', wheelPropagation:true, scrollbarVisibility:'auto',
         focusable:false, keyboard:false, controller:api
       });
-      if (presetsScrollShell.parentNode !== panelShell || presetsScrollShell.nextSibling !== selectionScrollShell) panelShell.insertBefore(presetsScrollShell, selectionScrollShell);
       presetsScroll.refresh('date-picker-presets');
       function enabledIndex(start, step) {
         var index = start;
@@ -1593,7 +1599,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (doc.activeElement === presetsHost && activePresetIndex >= 0) activatePreset(activePresetIndex, 'preset-rebuild');
     } else {
       presetsHost.tabIndex = -1;
-      if (presetsScroll) { presetsScroll.destroy(); presetsScroll = null; }
+      if (presetsScroll) { popupFrame.destroyScroll(presetsScroll); presetsScroll = null; }
       if (presetsScrollShell.parentNode) presetsScrollShell.parentNode.removeChild(presetsScrollShell);
     }
   }
@@ -1746,8 +1752,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (periodPanel) periodPanel.destroy(destroyReason);
     if (yearPanel) yearPanel.destroy(destroyReason);
     if (monthPanel) monthPanel.destroy(destroyReason);
-    if (presetsScroll) { presetsScroll.destroy(); presetsScroll = null; }
-    if (selectionScroll) { selectionScroll.destroy(); selectionScroll = null; }
+    // PickerField owns PopupFrame and destroys all popup Scroll surfaces.
+    presetsScroll = null;
+    selectionScroll = null;
+    popupFrame = null;
     draft.destroy();
   
     timePanel = calendarSecondary = calendar = periodPanel = yearPanel = monthPanel = field = panelShell = selectionHost = selectionScrollShell = timeHost = presetsHost = presetsScrollShell = panelProjection = calendarGroup = calendarPrimaryHost = calendarSecondaryHost = null;

@@ -187,18 +187,7 @@ function setupTabs(instance) {
   tabList.classList.add('qxframe9a7c2-tabs-list');
   tabList.appendChild(indicator);
 
-  var overflowScroll = Scroll.create({
-    container: overflowScrollHost,
-    axis: 'y',
-    wheelAxis: 'y',
-    wheelPropagation: true,
-    scrollbarVisibility: 'auto',
-    edgeShadow: true,
-    keyboard: false,
-    focusable: false,
-    disabled: opts.disabled === true,
-    readOnly: opts.readOnly === true
-  });
+  var overflowScroll = null;
 
   var overflowPopover = Popover.create({
     reference: moreButton,
@@ -228,6 +217,18 @@ function setupTabs(instance) {
         });
       }
     }
+  });
+  overflowScroll = overflowPopover.getPopupFrame().createScroll({
+    container: overflowScrollHost,
+    axis: 'y',
+    wheelAxis: 'y',
+    wheelPropagation: true,
+    scrollbarVisibility: 'auto',
+    edgeShadow: true,
+    keyboard: false,
+    focusable: false,
+    disabled: opts.disabled === true,
+    readOnly: opts.readOnly === true
   });
 
   var tabByKey = new Map();
@@ -1162,8 +1163,8 @@ function setupTabs(instance) {
     panelTransitionByKey.clear();
     rovingProjection.destroy();
     activeItem.destroy();
-    overflowScroll.destroy();
     overflowPopover.destroy();
+    overflowScroll = null;
     scroll.destroy();
     collection.destroy();
     tabByKey.clear();

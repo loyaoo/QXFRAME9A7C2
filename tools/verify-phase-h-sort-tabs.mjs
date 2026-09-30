@@ -7,6 +7,7 @@ import { Tabs } from '../src/components/tabs.js';
 const read=rel=>fs.readFileSync(new URL('../'+rel,import.meta.url),'utf8');
 const sortSource=read('src/components/sort.js');
 const tabsSource=read('src/components/tabs.js');
+const treeSource=read('src/components/tree.js');
 const reorderSource=read('src/core/reorderInteraction.js');
 const transitionGroupSource=read('src/core/transitionGroup.js');
 const transitionSource=read('src/core/transition.js');
@@ -33,6 +34,11 @@ assert.match(sortSource,/valueController\.setValue\s*\(/,'Sort committed order m
 assert.match(sortSource,/valueController\.syncExternal\s*\(/,'Sort option item changes must synchronize ValueController externally.');
 assert.match(reorderSource,/OverlayController\.createLayerLease\s*\(/,'Reorder drag ghost must enter OverlayController.');
 assert.doesNotMatch(reorderSource,/\bLayerManager\b/,'ReorderInteraction must not bypass OverlayController with LayerManager.');
+assert.match(reorderSource,/typeof source\.resolveDrop === 'function'/,'ReorderInteraction must expose a domain drop resolver for hierarchical consumers.');
+assert.match(treeSource,/ReorderInteraction\.create\s*\(/,'Tree drag/drop must reuse ReorderInteraction.');
+assert.match(treeSource,/position: position/,'Tree must supply before/inside/after as a domain adapter over ReorderInteraction.');
+assert.doesNotMatch(treeSource,/\bdragSession\b/,'Tree must not retain a second drag session authority.');
+assert.doesNotMatch(treeSource,/DOM\.listen\(root,\s*['"](?:dragstart|dragover|drop|dragend)['"]/,'Tree must not retain a second raw drag lifecycle.');
 assert.match(transitionGroupSource,/MotionController\.create\s*\(/,'Sort TransitionGroup motion must enter MotionController.');
 assert.doesNotMatch(sortSource,/delegation\.on\('keydown'[\s\S]{0,900}event\.preventDefault\(\)/,'Sort component must not retain a parallel direct keyboard semantic owner.');
 

@@ -2,7 +2,6 @@ import { PopupFieldComponent, popupFieldHooks, createPopupFieldTriggerSettings, 
 import { Control } from './control.js';
 import { OptionList } from './option-list.js';
 import { Item } from './item.js';
-import { Scroll } from './scroll.js';
 import { componentHooks } from '../core/componentHooks.js';
 import { getContract } from '../core/componentContracts.js';
 import { OptionTransaction } from '../core/optionTransaction.js';
@@ -148,6 +147,7 @@ var controlHost = FieldHost.resolvePickerControl({
         optionHost = doc.createElement('div');
         optionHost.className = 'qxframe9a7c2-select-option-host';
         panel.appendChild(optionHost);
+        var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
     
         function syncPopupProjection() {
           if (!panel || !optionHost) return false;
@@ -642,7 +642,7 @@ var controlHost = FieldHost.resolvePickerControl({
           classes: opts.classes,
           styles: opts.itemStyles,
           container: optionHost,
-          scrollAdapter: function (config) { return Scroll.attachViewport(config); },
+          scrollAdapter: popupFrame.createAdapter(),
           items: Array.isArray(opts.items) ? opts.items.slice() : [],
           value: apiValue(),
           multiple: opts.multiple === true,

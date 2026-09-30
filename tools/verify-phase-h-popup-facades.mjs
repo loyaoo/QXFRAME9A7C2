@@ -28,9 +28,13 @@ assert.equal(profile.ownership.overlay,'OverlayController');
 assert.doesNotMatch(tooltipSource,/\bLayerManager\b/,'Tooltip must not bypass OverlayController for layer singleton/parent lookup.');
 assert.match(tooltipSource,/OverlayController\.findParentLayerId\s*\(/,'Tooltip parent-layer lookup must enter OverlayController.');
 assert.match(tooltipSource,/OverlayController\.acquireSingleton\s*\(/,'Tooltip singleton allocation must enter OverlayController.');
-assert.match(tooltipSource,/Trigger\.create\s*\(/,'Tooltip visible overlay/motion remains Trigger-owned.');
+assert.match(tooltipSource,/PopupRuntime\.create\s*\(/,'Tooltip physical singleton/independent surfaces must enter PopupRuntime.');
+assert.match(tooltipSource,/PopupFrame\.create\s*\(/,'Tooltip shared singleton surface must own one PopupFrame.');
+assert.doesNotMatch(tooltipSource,/Trigger\.create\s*\(/,'Tooltip must not create Trigger directly.');
 
-assert.match(popoverSource,/setupPopupRuntime\s*\(/,'Popover must enter the shared PopupComponent→Trigger runtime.');
+assert.match(popoverSource,/setupPopupRuntime\s*\(/,'Popover must enter the shared PopupComponent→PopupRuntime→Trigger runtime.');
+assert.match(popupSource,/export const PopupFrame/,'Popup family must expose the canonical PopupFrame resource owner.');
+assert.match(popupSource,/export const PopupRuntime/,'Popup family must expose the canonical PopupRuntime physical path.');
 assert.match(popupSource,/getInteractionController\s*\(\)/,'PopupComponent must expose inherited InteractionController.');
 assert.match(popupSource,/getCapabilityController\s*\(\)/,'PopupComponent must expose inherited CapabilityController.');
 assert.match(popupSource,/getOverlayController\s*\(\)/,'PopupComponent must expose inherited OverlayController.');

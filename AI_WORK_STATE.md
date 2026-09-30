@@ -7,17 +7,69 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-29
+- Last checkpoint date: 2026-09-30
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: complete admin preset expansion.
-- Current Task: `SCROLL-UNIFICATION-005`
+- Current Phase: capability leakage / shared runtime unification merge closeout.
+- Current Task: `ARCH-MERGE-CLOSEOUT-007`
 
 ## CURRENT
+
+### ARCH-MERGE-CLOSEOUT-007 — merge / main / Pages closeout
+Status: IN PROGRESS — CHECKPOINT CI
+Task progress: 70%
+
+Current truth:
+- ARCH-UNIFICATION-006 implementation is complete and already passed full PR acceptance on implementation head `846140367ad247d9044398804ea9d91d74105ad2` in QXFRAME CI #926.
+- The checkpoint-only head failed only because Phase I release-integrity requires `Current Task` to be a live backticked task id; no runtime/build/browser regression failed before that assertion.
+- PR #186 remains open and mergeable; PR #185 remains superseded and unmerged.
+
+Next exact step:
+- Run exact-head CI for this checkpoint correction.
+- If green, merge PR #186.
+- Close superseded PR #185.
+- Verify the resulting main QXFRAME CI and GitHub Pages deployment/canonical admin browser publication.
+
+### ARCH-UNIFICATION-006 — Popup / Reorder / OverlayFrame shared-runtime closeout
+Status: COMPLETE
+Task progress: 100%
+
+Outcome:
+- Popup-family physical runtime is unified as `business component -> PopupComponent/PopupField/PickerField -> PopupRuntime/PopupFrame -> Trigger -> OverlayController/PositionAdapter`.
+- PopupFrame owns popup Scroll resources; business popup components no longer construct parallel popup Scroll/Trigger paths.
+- Menu main/root navigation remains an intentional business-level Scroll owner; submenu/overflow popup scrolling is PopupFrame-owned.
+- Table main viewport, Tabs main navigation, Tags scroll mode, Transfer/Upload/WheelPanel/Sort remain intentional non-popup Scroll owners.
+- Tree hierarchical drag/drop is a domain adapter over ReorderInteraction; Tree no longer owns a second raw drag lifecycle.
+- Modal and Drawer share OverlayFrameRuntime for common frame DOM, body Scroll, OverlayFrameShell, OverlayController, PopupSurface, transitions and open/close/destroy resource lifecycle, while retaining component-specific geometry/motion profiles.
+- Admin Menu uses the canonical Menu-owned Scroll and explicitly requests persistent visible chrome through Scroll.showScrollbar(); the admin shell no longer exposes a second native scrollbar.
+- PR #185's valid Menu-root Scroll/admin acceptance intent was absorbed into the unified implementation; its architecture is superseded by PR #186.
+
+Guardrails retained:
+- One owner / one truth; no compatibility parallel runtime.
+- Trigger remains trigger/Overlay/position/motion coordinator; popup Scroll belongs to PopupFrame, not Trigger or business popup components.
+- Tree before/inside/after semantics stay in Tree while drag lifecycle stays in ReorderInteraction.
+- Theme/Token remain pure CSS.
+- Picker draft/commit/cancel semantics, Autocomplete input-first behavior, keyboard-vs-pointer focus-origin separation, generic overflow policy and min-width policy remain unchanged.
+- No ARIA/a11y/RTL reintroduction.
+
+Regression gates:
+- `verify:capability-unification` rejects direct business Trigger creation, direct popup Scroll ownership, Tree-local raw drag lifecycle, and Modal/Drawer-local frame resource ownership.
+- Existing popup-field, popup facade, Scroll, Tree/Reorder, Modal/Drawer and final-audit verifiers were updated to assert the canonical owners rather than the superseded duplicate paths.
+- Canonical Admin browser coverage validates Menu custom Scroll DOM/scrollability/track+thumb visibility/movement and the real Orders DatePicker first-frame popup position.
+
+Verification evidence:
+- PR #186 implementation head `846140367ad247d9044398804ea9d91d74105ad2`.
+- QXFRAME CI #926 passed Windows tools, Completion audit, Full release verification, npm pack, standalone dist + docs demo build, canonical docs verification, canonical Admin browser regression, and artifact uploads.
+- The canonical Admin browser accepted `menuCustomScrollPresent`, disabled host native scroll, a scrollable Menu viewport, visible framework track/thumb, actual Scroll movement, collapsed Menu geometry, global search close behavior, and stable Orders DatePicker popup placement.
+- Earlier CI failures in this task exposed and fixed two real DatePicker PopupFrame mount-order defects; PopupFrame's strict panel-descendant ownership invariant was preserved rather than weakened.
+- Select/DatePicker first-frame positioning regressions remain covered and passed with motion enabled.
+
+Resume rule:
+- No implementation work remains for ARCH-UNIFICATION-006. On resume, query Git/PR/CI/Pages first and only act on current repository state; do not re-run this architecture migration from the beginning.
 
 ### SCROLL-UNIFICATION-005 — unified Scroll ownership + first-frame popup positioning
 Status: VERIFIED — READY TO MERGE

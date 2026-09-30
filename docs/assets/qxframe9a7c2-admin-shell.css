@@ -9,7 +9,10 @@ button,input{font:inherit}
 .qx-admin-brand-mark{display:grid;place-items:center;width:34px;height:34px;min-width:34px;border-radius:10px;background:var(--_qxframe9a7c2-semantic-accent);color:var(--_qxframe9a7c2-semantic-on-accent);font-size:12px;font-weight:800}
 .qx-admin-brand-copy{display:grid;gap:2px;min-width:0}.qx-admin-brand-copy strong{font-size:13px}.qx-admin-brand-copy span{color:var(--_qxframe9a7c2-semantic-text-muted);font-size:9px}
 .is-collapsed .qx-admin-brand-copy{display:none}
-.qx-admin-menu{flex:1;min-height:0;overflow:auto;padding:10px 8px}.qx-admin-menu .qxframe9a7c2-menu{width:100%}
+.qx-admin-menu{flex:1;min-height:0;overflow:hidden;padding:10px 8px}
+.qx-admin-menu .qxframe9a7c2-menu{width:100%;height:100%}
+.qx-admin-menu .qxframe9a7c2-menu-root-scroll.qxframe9a7c2-scroll{height:100%;max-height:none}
+.qx-admin-menu .qxframe9a7c2-menu-root-scroll>.qxframe9a7c2-menu-root-level.qxframe9a7c2-scroll-viewport{height:100%;max-height:none}
 .qx-admin-sider-foot{padding:10px;border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
 .qx-admin-user-mini{display:flex;align-items:center;gap:9px;padding:7px;border-radius:var(--qxframe9a7c2-radius-md);overflow:hidden}
 .qx-admin-user-copy{display:grid;gap:2px;white-space:nowrap}.qx-admin-user-copy strong{font-size:11px}.qx-admin-user-copy span{font-size:9px;color:var(--_qxframe9a7c2-semantic-text-muted)}
