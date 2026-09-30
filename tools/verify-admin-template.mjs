@@ -44,6 +44,16 @@ function hasMixedGridComponentRoot(html){
   }
   return false;
 }
+function hasSizedColumnWithoutBase(html){
+  const source=String(html||'').replace(/<script\b[\s\S]*?<\/script>/gi,'').replace(/<style\b[\s\S]*?<\/style>/gi,'');
+  for(const match of source.matchAll(/<([a-z][\w-]*)([^>]*)>/gi)){
+    const classText=((match[2]||'').match(/\bclass\s*=\s*["']([^"']*)["']/i)||[])[1]||'';
+    const classes=classText.split(/\s+/).filter(Boolean);
+    const sized=classes.some(name=>/^qxframe9a7c2-col-(?:auto|\d+|(?:xs|sm|md|lg|xl|xxl)-(?:auto|\d+))$/.test(name));
+    if(sized&&!classes.includes('qxframe9a7c2-col'))return true;
+  }
+  return false;
+}
 
 const shell='docs/admin/index.html';
 const login='docs/admin/login.html';
@@ -143,6 +153,7 @@ for(const name of viewFiles){
   assert(!hasMixedGridComponentRoot(html),'admin Grid column must wrap component roots instead of sharing one DOM node with them: '+name);
 }
 assert(combinedAdminViews.includes('qxframe9a7c2-row')&&combinedAdminViews.includes('qxframe9a7c2-col-md-17'),'admin view markup is missing framework responsive grid composition');
+assert(!/\bqxframe9a7c2-(?:g|gx|gy)(?:-(?:xs|sm|md|lg|xl|xxl))?-\d+\b/.test(combinedAdminViews),'admin views must not retain pre-wxui g/gx/gy Grid aliases');
 assert(controlSource.includes('clearReplacesToggle: false')&&!controlSource.includes('clearReplacesToggle: true'),'Control must keep popup toggle available beside clear by default');
 for(const marker of [
   'Native text controls consume the same visual recipe as Control',
