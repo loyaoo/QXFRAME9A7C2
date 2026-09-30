@@ -482,7 +482,18 @@ function createChannel(profile) {
   }
     
   function releaseFrame(entry) {
-    if (!entry || activeRecords(entry).length || entry.list.children.length) return false;
+    if (!entry || activeRecords(entry).length) return false;
+    // When an immediate close settles synchronously, Notice finalization can run from the
+    // TransitionGroup child's leave callback while that group is still unwinding its sync().
+    // The Notice record list is already empty at this point, so the group has no remaining
+    // logical owner. Destroy it first to flush any retained leave child before testing the
+    // physical list. This keeps immediate lifecycle completion synchronous without leaking
+    // the placement frame/scope.
+    if (!entry.records.length && entry.transitionGroup) {
+      entry.transitionGroup.destroy();
+      entry.transitionGroup = null;
+    }
+    if (entry.list.children.length) return false;
     frames.delete(entry.frameKey);
     if (entry.listHeightAnimation) { try { entry.listHeightAnimation.cancel(); } catch (_) {} entry.listHeightAnimation = null; }
     if (entry.layerLease) { entry.layerLease.destroy(); entry.layerLease = null; }
