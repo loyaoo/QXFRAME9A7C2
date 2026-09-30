@@ -86,7 +86,6 @@ function copyPublicItem(item) {
   if (item.color) output.color = item.color;
   if (item.icon !== undefined) output.icon = item.icon;
   if (item.href) output.href = item.href;
-  if (item.className) output.className = item.className;
   return Object.freeze(output);
 }
 function normalizeItems(value) {
@@ -106,8 +105,7 @@ function normalizeItems(value) {
       disabled: raw.disabled === true,
       color: raw.color == null || raw.color === '' ? '' : String(raw.color).toLowerCase(),
       icon: raw.icon,
-      href: raw.href == null || raw.href === '' ? '' : URLPolicy.sanitize(raw.href, 'navigation'),
-      className: raw.className == null ? '' : String(raw.className)
+      href: raw.href == null || raw.href === '' ? '' : URLPolicy.sanitize(raw.href, 'navigation')
     };
     if (keys[item.key]) throw new TypeError('[QXFRAME9A7C2] Tags item.key values must be unique.');
     if (values[item.value]) throw new TypeError('[QXFRAME9A7C2] Tags item.value values must be unique.');
@@ -189,8 +187,7 @@ function setupTags(instance) {
     return {
       color: item.color || '',
       icon: item.icon,
-      href: item.href || '',
-      className: item.className || ''
+      href: item.href || ''
     };
   }
   function rebuildMetadata(items) {
@@ -301,7 +298,7 @@ function setupTags(instance) {
     beforeTagEdit:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]);if(Utils.isFunction(opts.beforeEdit))return opts.beforeEdit(copyPublicItem(current),Utils.mergeOwn(detail,{instance:api}))!==false;},
     beforeTagRemove:function(tag,detail){var current=Utils.mergeOwn(tag,metadataByKey[tag.key]||{}),item=copyPublicItem(current);if(detail&&detail.user===true&&!itemUserRemovable(current))return false;if(Utils.isFunction(opts.beforeRemove)&&opts.beforeRemove(item,Utils.mergeOwn(detail,{instance:api}))===false)return false;if(opts.controlled===true){var proposed=publicItems().filter(function(entry){return entry.key!==item.key;});if(Utils.isFunction(opts.onRemoveRequest))opts.onRemoveRequest(item,Utils.mergeOwn(detail,{items:proposed,tags:proposed,instance:api}));return TokenInput.REQUEST_HANDLED;}},
     onTagAdd: function (tag, detail) {
-      var item = Utils.assignOwn({ color: '', icon: undefined, href: '', className: '' }, tag);
+      var item = Utils.assignOwn({ color: '', icon: undefined, href: '' }, tag);
       metadataByKey[tag.key] = itemExtras(item);
       if (Utils.isFunction(opts.onAdd)) opts.onAdd(copyPublicItem(item), Utils.mergeOwn( detail, { instance: api }));
     },
@@ -806,7 +803,6 @@ function setupTags(instance) {
     if (item.color) record.tag.classList.add('is-colored', 'is-' + item.color);
     if (item.disabled) record.tag.classList.add('is-disabled');
     if (selection.has(item.value)) record.tag.classList.add('is-checked', 'is-selected');
-    if (item.className) String(item.className).split(/\s+/).filter(Boolean).forEach(function (name) { record.tag.classList.add(name); });
     record.tag.setAttribute('data-tags-value', item.value);
     record.tag.setAttribute('data-tags-key', item.key);
     record.tag.tabIndex = -1;
@@ -1742,7 +1738,7 @@ function resolveTagsOptions(options) {
         var option=Array.prototype.find.call(formField.options||[],function(entry){return String(entry.value)===String(value);});
         if(option)label=String(option.textContent||option.label||option.value);
       }
-      return {key:String(value),value:String(value),label:label,removable:true,disabled:false,color:'',icon:undefined,href:'',className:''};
+      return {key:String(value),value:String(value),label:label,removable:true,disabled:false,color:'',icon:undefined,href:''};
     });
   }
   if(!own(source,'value')&&!own(source,'defaultValue')&&formField&&opts.checkable===true){
