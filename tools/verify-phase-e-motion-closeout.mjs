@@ -9,12 +9,18 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const groupSource=read('src/core/transitionGroup.js');
 const collapseSource=read('src/components/collapse.js');
+const stylesheet=read('src/qxframe9a7c2.css');
 assert.match(groupSource,/from ['"]\.\/motionController\.js['"]/,'TransitionGroup must enter motion through MotionController.');
 assert.doesNotMatch(groupSource,/from ['"]\.\/motion\.js['"]/,'TransitionGroup must not import MotionCore directly.');
 assert.match(groupSource,/MotionController\.create\s*\(/,'TransitionGroup child motion must use MotionController.');
 assert.match(groupSource,/MotionController\.waitMotionEnd\s*\(/,'TransitionGroup move completion must use MotionController facade.');
 assert.match(collapseSource,/if \(itemRecord\.section !== orderCursor\) root\.insertBefore\(itemRecord\.section, orderCursor\);/,'Collapse must project stable DOM order before motion starts.');
 assert.doesNotMatch(collapseSource,/syncRecord\([^\n]+\);\s*\n\s*root\.appendChild\(itemRecord\.section\)/,'Collapse must not reappend a section after setVisible().');
+for(const token of ['--qxframe9a7c2-motion-duration-fast','--qxframe9a7c2-motion-duration-mid','--qxframe9a7c2-motion-duration-slow','--qxframe9a7c2-motion-ease-linear','--qxframe9a7c2-motion-ease-standard','--qxframe9a7c2-motion-ease-enter','--qxframe9a7c2-motion-ease-leave','--qxframe9a7c2-motion-ease-emphasized'])assert.ok(stylesheet.includes(token+':'),'Missing semantic motion token '+token);
+assert.match(stylesheet,/--qxframe9a7c2-easing-standard:\s*var\(--qxframe9a7c2-motion-ease-standard\)/,'Legacy standard easing must adapt to semantic standard easing.');
+assert.match(stylesheet,/--qxframe9a7c2-motion-ease-out-circ:var\(--qxframe9a7c2-motion-ease-enter\)/,'Enter motion preset must consume semantic enter easing.');
+assert.match(stylesheet,/--qxframe9a7c2-motion-ease-in-quint:var\(--qxframe9a7c2-motion-ease-leave\)/,'Leave motion preset must consume semantic leave easing.');
+assert.match(stylesheet,/--_qxframe9a7c2-scroll-motion-easing:\s*var\(--qxframe9a7c2-scroll-motion-easing, var\(--qxframe9a7c2-motion-ease-standard\)\)/,'Scroll motion must consume semantic standard easing.');
 
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);
 if(!browser){console.log(JSON.stringify({ok:true,structural:true,browserSkipped:true}));process.exit(0);}
