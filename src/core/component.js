@@ -324,17 +324,17 @@ export class Component {
         return cleanup;
     }
 
-    registerSemanticElement(name, element) {
+    registerSemanticElement(name, element, contexts) {
         const record = requireState(this);
         assertAlive(record, 'register semantic elements on');
-        record.semantic.setElement(name, element);
+        record.semantic.setElement(name, element, contexts);
         return this;
     }
 
-    registerSemanticElements(elements) {
+    registerSemanticElements(elements, contexts) {
         const record = requireState(this);
         assertAlive(record, 'register semantic elements on');
-        record.semantic.setElements(elements);
+        record.semantic.setElements(elements, contexts);
         return this;
     }
 
