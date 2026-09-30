@@ -296,7 +296,7 @@ function create(source, overrides) {
     placeholder: '', inputValue: '', displayValue: null, inputType: 'text', autocomplete: 'off', minLength: null, maxLength: null, count: false, lengthMode: 'native', limitMode: 'hard',
     toggleVisible: false, toggle: null, busy: false, busyIndicator: null,
     tags:[],creatableTags:false,tagsControlled:false,tokenSeparators: [], tokenizeOnPaste: true, addOnEnter: true, addOnTab: false, addOnBlur: false,
-    maxVisibleTags: 0, tagInputMinWidth: 0, renderTag: null, renderTagOverflow: null, tagRemoveContent: null, tagOverflowInteractive: false, tagClasses: null, tagStyles: null,
+    maxVisibleTags: 0, tagInputMinWidth: 0, renderTag: null, renderTagOverflow: null, tagRemoveContent: null, tagOverflowInteractive: false,
     measureAvailableWidth: null, measureTagWidth: null, measureTagOverflowWidth: null, onTagProjectionChange: null,
     segments: [], segmentSeparator: '', segmentValues: [], segmentFocusIndex: null
   }, rawOptions);
@@ -543,8 +543,6 @@ function create(source, overrides) {
       renderTag: opts.renderTag,
       renderOverflow: typeof opts.renderTagOverflow === 'function' ? function (context) { return opts.renderTagOverflow(context.hiddenItems.slice(), { visibleTags: context.items.slice(0, context.items.length-context.hiddenItems.length), tags: context.items.slice(), hiddenCount: context.count, controller: api }); } : null,
       tagRemoveContent: opts.tagRemoveContent,
-      tagClassName: opts.tagClassName, tagTextClassName: opts.tagTextClassName, tagRemoveClassName: opts.tagRemoveClassName, tagOverflowClassName: opts.tagOverflowClassName,
-      classes: opts.tagClasses, styles: opts.tagStyles,
       onAddRequest: function (tag, detail) { if (typeof opts.onTagAdd === 'function') opts.onTagAdd(tag, detail, api); },
       onRemoveRequest: function (tag, detail) { if (typeof opts.onTagRemove === 'function') opts.onTagRemove(tag, detail, api); },
       onAdd: function (tag, detail) { syncDerivedValue(); if (typeof opts.onTagAdd === 'function') opts.onTagAdd(tag, detail, api); },
