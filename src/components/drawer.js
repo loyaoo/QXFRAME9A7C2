@@ -105,10 +105,12 @@ function createDrawerController(instance, options) {
     },
     applyVisualOptions(ctx) {
       var opts = ctx.options(), panel = ctx.surface;
-      ctx.root.className = 'qxframe9a7c2-drawer-root';
-      ctx.mask.className = 'qxframe9a7c2-drawer-mask';
-      ctx.wrap.className = ('qxframe9a7c2-drawer-wrap is-' + opts.placement).trim();
-      panel.className = ('qxframe9a7c2-drawer qxframe9a7c2-drawer-' + opts.placement).trim();
+      PLACEMENTS.forEach(function (placement) {
+        ctx.wrap.classList.remove('is-' + placement);
+        panel.classList.remove('qxframe9a7c2-drawer-' + placement);
+      });
+      ctx.wrap.classList.add('is-' + opts.placement);
+      panel.classList.add('qxframe9a7c2-drawer-' + opts.placement);
       ctx.root.dataset.placement = opts.placement;
       ctx.wrap.dataset.placement = opts.placement;
       panel.dataset.placement = opts.placement;
