@@ -123,7 +123,6 @@ export class VirtualList extends Component {
         r.spacer.classList.add('qxframe9a7c2-virtual-list-spacer');
         r.layer.classList.add('qxframe9a7c2-virtual-list-layer');
         if (opts.horizontal === true) r.root.classList.add('is-horizontal');
-        if (r.domBinding.syncClasses) r.domBinding.syncClasses(opts.classes);
         if (opts.height !== undefined && opts.height !== null) r.root.style.height = typeof opts.height === 'number' ? opts.height + 'px' : String(opts.height);
 
         const scrollAdapter = resolveScrollAdapter(opts);
