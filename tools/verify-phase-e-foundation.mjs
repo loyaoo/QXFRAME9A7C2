@@ -38,6 +38,13 @@ assert.match(css,/\.qxframe9a7c2-row-cols-sm-3>\*\{display:block;flex:0 0 33\.33
 assert.match(css,/\.qxframe9a7c2-col-xl-6\{display:block;flex:0 0 25%;max-width:25%\}/,'wxui 24-column responsive span contract must be preserved.');
 assert.match(css,/\.qxframe9a7c2-hidden-sm-only\{display:none!important\}/,'wxui breakpoint hidden utilities must be present.');
 assert.match(css,/\.qxframe9a7c2-visible-md-and-up\{display:flex!important\}/,'wxui breakpoint visible utilities must be present.');
+assert.match(css,/\.qxframe9a7c2-push-lg-6\{left:25%\}/,'wxui push utility must be preserved.');
+assert.match(css,/\.qxframe9a7c2-pull-md-2\{right:8\.333333333333%\}/,'wxui pull utility must be preserved.');
+assert.match(css,/\.qxframe9a7c2-order-xl-last\{order:9999\}/,'wxui responsive order utility must be preserved.');
+assert.match(css,/\.qxframe9a7c2-offset-sm-6\{margin-left:25%\}/,'wxui responsive offset utility must be preserved.');
+assert.match(css,/\.qxframe9a7c2-row-space-between-lg\{justify-content:space-between\}/,'wxui responsive row alignment suffix naming must be preserved.');
+assert.match(css,/\.qxframe9a7c2-gutter-md-4,\.qxframe9a7c2-gutter-md-x-4\{--qxframe9a7c2-grid-gap-x:\.5rem\}/,'wxui responsive gutter-x utility must be preserved.');
+assert.match(css,/\.qxframe9a7c2-gutter-md-4,\.qxframe9a7c2-gutter-md-y-4\{--qxframe9a7c2-grid-gap-y:\.5rem\}/,'wxui responsive gutter-y utility must be preserved.');
 assert.doesNotMatch(css,/\.qxframe9a7c2-(?:g|gx|gy)(?:-(?:xs|sm|md|lg|xl|xxl))?-\d+\b/,'Pre-wxui g/gx/gy Grid classes must be removed from canonical CSS.');
 assert.match(componentDemos,/qxframe9a7c2-row qxframe9a7c2-gutter-4/,'Grid docs must consume wxui gutter classes.');
 assert.doesNotMatch(componentDemos,/qxframe9a7c2-(?:g|gx|gy)-\d+\b/,'Grid docs must not teach removed gutter aliases.');
