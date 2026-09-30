@@ -30,7 +30,7 @@ const TAGS_DEFAULTS = Object.freeze({
   formField: null, name: '', overflowTrigger: 'hover', overflowPlacement: 'bottom-start', overflowMaxHeight: 240,
   scrollbarVisibility: 'auto', size: 'md', disabled: false, readOnly: false, required: false,
   inputValue: '', tokenSeparators: [','], tokenizeOnPaste: true, addOnEnter: true, addOnTab: false, addOnBlur: true,
-  unique: true, maxCount: 0, maxTagLength: 0, tagRemoveContent: null, classes: null, styles: null
+  unique: true, maxCount: 0, maxTagLength: 0, tagRemoveContent: null
 });
 const tagsState = new WeakMap();
 
@@ -71,33 +71,6 @@ function normalizeStringArray(value, label) {
 }
 function cloneNodeLike(value) {
   return value && typeof value === 'object' && typeof value.nodeType === 'number' && typeof value.cloneNode === 'function' ? value.cloneNode(true) : null;
-}
-function resolveClasses(value, item, context) {
-  if (Utils.isFunction(value)) value = value(item, context || {});
-  var output = [];
-  function append(entry) {
-    if (!entry) return;
-    if (typeof entry === 'string') { entry.split(/\s+/).forEach(function (name) { if (name && output.indexOf(name) < 0) output.push(name); }); return; }
-    if (Array.isArray(entry)) { entry.forEach(append); return; }
-    if (typeof entry === 'object') { Object.keys(entry).forEach(function (name) { if (entry[name]) append(name); }); }
-  }
-  append(value);
-  return output;
-}
-function applyClasses(node, resolver, item, context) {
-  if (!node || !node.classList) return;
-  resolveClasses(resolver, item, context).forEach(function (name) { node.classList.add(name); });
-}
-function applyStyles(node, resolver, item, context) {
-  if (!node || !node.style) return;
-  var value = Utils.isFunction(resolver) ? resolver(item, context || {}) : resolver;
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return;
-  Object.keys(value).forEach(function (name) {
-    var styleValue = value[name];
-    if (styleValue === undefined || styleValue === null || styleValue === false) return;
-    var property = String(name).replace(/[A-Z]/g, function (letter) { return '-' + letter.toLowerCase(); });
-    node.style.setProperty(property, String(styleValue));
-  });
 }
 function itemCore(item) {
   return {
@@ -206,6 +179,11 @@ function setupTags(instance) {
   input.type = 'text';
   addTrigger.tabIndex = -1;
   container.appendChild(root);
+  instance.registerSemanticElements({
+    root:root, surface:surface, input:input, add:addTrigger,
+    tagShell:[], tag:[], tagContent:[], tagClose:[],
+    overflow:summary, overflowList:overflowList, overflowItem:[], overflowLabel:[], overflowClose:[]
+  }, { tagShell:[], tag:[], tagContent:[], tagClose:[], overflowItem:[], overflowLabel:[], overflowClose:[] });
     
   function itemExtras(item) {
     return {
@@ -714,12 +692,8 @@ function setupTags(instance) {
     var close = doc.createElement('button');
     close.type = 'button';
     close.tabIndex = -1;
-    close.className=(overflow?'qxframe9a7c2-tag-close qxframe9a7c2-overflow-close':'qxframe9a7c2-tag-close')+(opts.tagRemoveClassName?' '+String(opts.tagRemoveClassName):'');
+    close.className=overflow?'qxframe9a7c2-tag-close qxframe9a7c2-overflow-close':'qxframe9a7c2-tag-close';
     syncCloseContent(close, publicItem, Utils.mergeOwn( projection || {}, { overflow: overflow === true }));
-    if (!overflow) {
-      applyClasses(close, opts.classes && opts.classes.close, publicItem, projection);
-      applyStyles(close, opts.styles && opts.styles.close, publicItem, projection);
-    }
     return close;
   }
   function createTagRecord(item, index, projectionItems) {
@@ -785,11 +759,8 @@ function setupTags(instance) {
         if (current) removeTagRecordWithFocus(record, { user: true, source: DOM.activationSource(event), reason: 'close', originalEvent: event });
       });
     } else {
-      record.close.className='qxframe9a7c2-tag-close'+(opts.tagRemoveClassName?' '+String(opts.tagRemoveClassName):'');
+      record.close.className='qxframe9a7c2-tag-close';
       syncCloseContent(record.close, publicItem, projection);
-      record.close.removeAttribute('style');
-      applyClasses(record.close, opts.classes && opts.classes.close, publicItem, projection);
-      applyStyles(record.close, opts.styles && opts.styles.close, publicItem, projection);
     }
     if (record.close.parentNode !== record.tag) record.tag.appendChild(record.close);
   }
@@ -831,11 +802,7 @@ function setupTags(instance) {
     record.shell.removeAttribute('style');
     record.shell.setAttribute('data-tags-shell-value', item.value);
     record.shell.setAttribute('data-tags-shell-key', item.key);
-    applyClasses(record.shell, opts.classes && opts.classes.shell, publicItem, projection);
-    applyStyles(record.shell, opts.styles && opts.styles.shell, publicItem, projection);
-    
-    record.tag.className='qxframe9a7c2-tag'+(opts.tagClassName?' '+String(opts.tagClassName):'');
-    record.tag.removeAttribute('style');
+    record.tag.className='qxframe9a7c2-tag';
     if (item.color) record.tag.classList.add('is-colored', 'is-' + item.color);
     if (item.disabled) record.tag.classList.add('is-disabled');
     if (selection.has(item.value)) record.tag.classList.add('is-checked', 'is-selected');
@@ -843,18 +810,11 @@ function setupTags(instance) {
     record.tag.setAttribute('data-tags-value', item.value);
     record.tag.setAttribute('data-tags-key', item.key);
     record.tag.tabIndex = -1;
-    applyClasses(record.tag, opts.classes && opts.classes.tag, publicItem, projection);
-    applyStyles(record.tag, opts.styles && opts.styles.tag, publicItem, projection);
-    
     syncRecordIcon(record, item.icon);
     
-    record.content.className='qxframe9a7c2-tag-label qxframe9a7c2-tag-content'+(opts.tagTextClassName?' '+String(opts.tagTextClassName):'');
-    record.content.removeAttribute('style');
+    record.content.className='qxframe9a7c2-tag-label qxframe9a7c2-tag-content';
     var rendered = Utils.isFunction(opts.renderTag) ? opts.renderTag(publicItem, projection) : item.label;
     renderNodeContent(record.content, rendered);
-    applyClasses(record.content, opts.classes && opts.classes.content, publicItem, projection);
-    applyStyles(record.content, opts.styles && opts.styles.content, publicItem, projection);
-    
     syncTagClose(record, publicItem, projection);
     var contentParent = syncTagLink(record);
     reconcileChildOrder(contentParent, [record.icon, record.content]);
@@ -884,6 +844,45 @@ function setupTags(instance) {
       if (!record) return;
       if (record.shell !== cursor) surface.insertBefore(record.shell, cursor);
       cursor = record.shell.nextSibling;
+    });
+    syncSemanticElements(items);
+  }
+
+  function semanticItemContext(item, index) {
+    return {
+      item:copyPublicItem(item),
+      state:Object.freeze({
+        key:item.key, value:item.value, selected:selection.has(item.value),
+        disabled:item.disabled === true || opts.disabled === true,
+        readOnly:opts.readOnly === true, removable:itemUserRemovable(item)
+      }),
+      index:index
+    };
+  }
+  function syncSemanticElements(items) {
+    var source = Array.isArray(items) ? items : publicItems();
+    var shells=[], tags=[], contents=[], closes=[], contexts=[];
+    source.forEach(function(item,index){
+      var record=tagRecordsByKey[item.key];
+      if(!record)return;
+      shells.push(record.shell); tags.push(record.tag); contents.push(record.content); closes.push(record.close);
+      contexts.push(semanticItemContext(item,index));
+    });
+    var overflowItems=[], overflowLabels=[], overflowCloses=[], overflowContexts=[];
+    Object.keys(overflowRowsByKey).forEach(function(key){
+      var record=overflowRowsByKey[key]; if(!record)return;
+      var item=record.item, index=source.findIndex(function(entry){return entry.key===key;});
+      overflowItems.push(record.row); overflowLabels.push(record.label); overflowCloses.push(record.close);
+      overflowContexts.push(semanticItemContext(item,index));
+    });
+    instance.registerSemanticElements({
+      root:root, surface:surface, input:opts.editable&&(opts.hosted===true||adding)?input:null,
+      add:opts.editable&&opts.hosted!==true&&!adding?addTrigger:null,
+      tagShell:shells, tag:tags, tagContent:contents, tagClose:closes,
+      overflow:summary, overflowList:overflowList, overflowItem:overflowItems, overflowLabel:overflowLabels, overflowClose:overflowCloses
+    }, {
+      tagShell:contexts, tag:contexts, tagContent:contexts, tagClose:contexts,
+      overflowItem:overflowContexts, overflowLabel:overflowContexts, overflowClose:overflowContexts
     });
   }
     
@@ -938,7 +937,7 @@ function setupTags(instance) {
       });
       record.closeDispose = function () { disposePointer(); disposeClick(); };
     } else {
-      record.close.className='qxframe9a7c2-tag-close qxframe9a7c2-overflow-close'+(opts.tagRemoveClassName?' '+String(opts.tagRemoveClassName):'');
+      record.close.className='qxframe9a7c2-tag-close qxframe9a7c2-overflow-close';
       syncCloseContent(record.close, copyPublicItem(record.item), { overflow:true, instance:api });
     }
     if (record.close.parentNode !== record.row) record.row.appendChild(record.close);
@@ -989,6 +988,7 @@ function setupTags(instance) {
       overflowScrollHost.appendChild(overflowList);
     }
     reconcileOverflowRows(hiddenItems);
+    syncSemanticElements(publicItems());
     var maxHeight = Number(opts.overflowMaxHeight);
     if (Number.isFinite(maxHeight) && maxHeight > 0) overflowScrollHost.style.height = Math.min(maxHeight, Math.max(32, hiddenItems.length * 34)) + 'px';
     else overflowScrollHost.style.height = '';
@@ -1042,13 +1042,14 @@ function setupTags(instance) {
   function ensureSummary(hiddenItems, allItems) {
     if (!hiddenItems.length) { destroyOverflow(); return null; }
     if (!summary) summary = doc.createElement('span');
-    summary.className='qxframe9a7c2-tag qxframe9a7c2-tag-overflow is-summary'+(opts.tagOverflowClassName?' '+String(opts.tagOverflowClassName):'');
+    summary.className='qxframe9a7c2-tag qxframe9a7c2-tag-overflow is-summary';
     summary.tabIndex = -1;
     summary.setAttribute('data-tags-overflow', String(hiddenItems.length));
     renderNodeContent(summary, overflowLabel(hiddenItems, allItems));
     var editor = opts.editable ? (opts.hosted === true || adding ? input : addTrigger) : null;
     if (summary.parentNode !== surface || summary.nextSibling !== editor) surface.insertBefore(summary, editor);
     ensureOverflowPopup(hiddenItems);
+    syncSemanticElements(allItems || publicItems());
     return summary;
   }
     
@@ -1091,7 +1092,7 @@ function setupTags(instance) {
       if (Number.isFinite(measured) && measured >= 0) return measured;
     }
     var probe = doc.createElement('span');
-    probe.className='qxframe9a7c2-tag qxframe9a7c2-tag-overflow is-summary'+(opts.tagOverflowClassName?' '+String(opts.tagOverflowClassName):'');
+    probe.className='qxframe9a7c2-tag qxframe9a7c2-tag-overflow is-summary';
     probe.style.position = 'absolute';
     probe.style.visibility = 'hidden';
     probe.style.pointerEvents = 'none';
@@ -1229,6 +1230,7 @@ function setupTags(instance) {
       items.forEach(function (item) { var record=tagRecordsByKey[item.key]; if(record) record.shell.hidden=false; });
       destroyOverflow();
       syncTagTabStops();
+      syncSemanticElements(items);
     }
     if (keyboard && keyboard.virtualFocus) keyboard.virtualFocus.refresh({ reason:'tags-render' });
     return true;
@@ -1776,6 +1778,9 @@ export class Tags extends FieldComponent {
   });
   static options = TAGS_DEFAULTS;
   static contract = ComponentContracts.get('Tags');
+  static semanticElements = Object.freeze(['root','surface','input','add','tagShell','tag','tagContent','tagClose','overflow','overflowList','overflowItem','overflowLabel','overflowClose']);
+  static defaultClassSlot = 'root';
+  static defaultStyleSlot = 'root';
   static immutableOptions = Object.freeze(['container','document','formField','hosted']);
 
   constructor(options = {}) {
@@ -1842,7 +1847,6 @@ export class Tags extends FieldComponent {
   focus(){return recordForTags(this).focus();}
   blur(){return recordForTags(this).blur();}
   getState(){return recordForTags(this).getState();}
-  getRootElement(){return recordForTags(this).getRootElement();}
   getSurfaceElement(){return recordForTags(this).getSurfaceElement();}
   getInputElement(){return recordForTags(this).getInputElement();}
   getAddTriggerElement(){return recordForTags(this).getAddTriggerElement();}
