@@ -14,14 +14,14 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Neutral / Grey CSS-only refactor.
-- Current Task: `NEUTRAL-GREY-CSS-010`
+- Current Phase: Neutral / Grey CSS-only refactor complete.
+- Current Task: `NEUTRAL-GREY-CSS-010` (COMPLETE)
 
 ## CURRENT
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
-Status: CI_PASS_PENDING_MERGE
-Task progress: 95%
+Status: COMPLETE
+Task progress: 100%
 
 User authority:
 - Attached `QXFRAME9A7C2 — Neutral / Grey CSS-only 重构修改手册` dated 2026-09-30.
@@ -65,18 +65,19 @@ Docs / verification checkpoint:
 - Phase F token-graph verification now locks the exact 13 Grey RGB values, absence of grey-0 / numbered color-grey aliases, default Grey fallback, preserved MixedGray chain, Light/Dark recipe assignments, Dark alpha borders/input, semantic input-border routing, and removal of ordinary Neutral semantic color-mix.
 - Scope diff is limited to `src/qxframe9a7c2.css`, docs-only theme/token JS, `tools/verify-phase-f-token-graph.mjs`, and this checkpoint. No `src/**/*.js` runtime file changed.
 
-CI checkpoint:
-- PR: #193 `style: rebuild canonical Neutral Grey system`.
-- Verified implementation head before this checkpoint: `a524a260240e5f8c21b33311be28bde1c3a36873`.
-- QXFRAME CI #946 / run `36680986669`: release = success, windows-tools = success.
-- Completion audit = success.
-- Full release verification = success, including the updated Phase F token graph, existing architecture gates, browser/legacy verification, build and package verification.
-- npm pack, standalone dist/docs demo build, and artifact uploads = success.
-- PR-event Pages deploy is intentionally skipped by workflow policy.
-- No gate was weakened to obtain the green result.
+Completion / verification evidence:
+- PR #193 `style: rebuild canonical Neutral Grey system` passed final exact-head QXFRAME CI #947 / run `36681486935` on `b6edc2685eb825a998ca4aab17f87953f4d69c6b`.
+- PR #193 was squash-merged to `main` as `9352523eca7afc80de7aca654208115b73cbaa53`.
+- Main QXFRAME CI #948 / run `36681944315` passed: release = success, windows-tools = success, Completion audit = success, Full release verification = success, npm pack = success, standalone dist/docs build = success, artifact uploads = success.
+- Main #948 uploaded the GitHub Pages artifact and `deploy-pages` completed successfully.
+- Canonical Grey is exactly 13 RGB-channel primitives; `grey-0` and every `color-grey-*` forwarding declaration are gone.
+- Standard Light/Dark Neutral defaults directly to Grey; MixedGray/Auxiliary remains available only as an explicit optional theme recipe.
+- Light/Dark semantic recipes, Dark alpha border/input roles, semantic input-border routing, focus-visible black/white invariants, and ordinary Neutral color-mix removal are all regression-locked.
+- Runtime scope remained CSS-only: no `src/**/*.js` runtime component/controller file changed.
+- No implementation work remains for `NEUTRAL-GREY-CSS-010`.
 
 Next exact step:
-- Re-run QXFRAME CI on the checkpoint-only final PR head; if green and PR remains mergeable, merge #193 into main and verify the resulting main workflow.
+- No remaining `NEUTRAL-GREY-CSS-010` work. On resume, query current Git / PR / CI / Pages state first and wait for the next user-directed task.
 
 
 ### ADMIN-GRID-CARD-LAYERING-009 — Admin Grid column / component-root DOM separation
