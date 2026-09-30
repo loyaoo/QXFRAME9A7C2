@@ -404,7 +404,6 @@ function setupTransfer(instance) {
       return classes;
     };
     output.class = tableClassMap;
-    delete output.rowClassName;
     output.onRowClick = function (item, detail) {
       var record = recordByItem.get(item);
       if (record && !record.disabled && !mutationLocked() && list) {
