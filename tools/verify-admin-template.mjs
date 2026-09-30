@@ -27,6 +27,23 @@ function hasDirectRowChildOfRow(html){
   }
   return false;
 }
+function hasMixedGridComponentRoot(html){
+  const componentRoots=new Set([
+    'qxframe9a7c2-card','qxframe9a7c2-table','qxframe9a7c2-tabs','qxframe9a7c2-collapse',
+    'qxframe9a7c2-descriptions','qxframe9a7c2-list','qxframe9a7c2-form','qxframe9a7c2-alert',
+    'qxframe9a7c2-result','qxframe9a7c2-calendar','qxframe9a7c2-transfer','qxframe9a7c2-tree',
+    'qxframe9a7c2-menu'
+  ]);
+  const source=String(html||'').replace(/<script\b[\s\S]*?<\/script>/gi,'').replace(/<style\b[\s\S]*?<\/style>/gi,'');
+  for(const match of source.matchAll(/<([a-z][\w-]*)([^>]*)>/gi)){
+    const attrs=match[2]||'';
+    const classText=(attrs.match(/\bclass\s*=\s*["']([^"']*)["']/i)||[])[1]||'';
+    const classes=classText.split(/\s+/).filter(Boolean);
+    if(!classes.some(name=>/^qxframe9a7c2-col(?:-|$)/.test(name)))continue;
+    if(classes.some(name=>componentRoots.has(name)))return true;
+  }
+  return false;
+}
 
 const shell='docs/admin/index.html';
 const login='docs/admin/login.html';
@@ -123,6 +140,7 @@ for(const name of viewFiles){
   const html=read('docs/admin/views/'+name);
   assert(html.includes('qxframe9a7c2-row qxframe9a7c2-gx-0 qxframe9a7c2-gy-4'),'admin view root must use canonical row/column composition: '+name);
   assert(!hasDirectRowChildOfRow(html),'admin Grid row must be nested through a framework column, not directly under another row: '+name);
+  assert(!hasMixedGridComponentRoot(html),'admin Grid column must wrap component roots instead of sharing one DOM node with them: '+name);
 }
 assert(combinedAdminViews.includes('qxframe9a7c2-row')&&combinedAdminViews.includes('qxframe9a7c2-col-md-17'),'admin view markup is missing framework responsive grid composition');
 assert(controlSource.includes('clearReplacesToggle: false')&&!controlSource.includes('clearReplacesToggle: true'),'Control must keep popup toggle available beside clear by default');
@@ -138,6 +156,8 @@ for(const marker of [
 for(const marker of ["classList.toggle('has-horizontal-overflow'","classList.toggle('can-scroll-start'","classList.toggle('can-scroll-end'","DOM.listen(scrollViewport, 'scroll'"])assert(tableSource.includes(marker),'Table horizontal-overflow state marker missing '+marker);
 
 const viewJs=read('docs/assets/qxframe9a7c2-admin-views.js');
+assert(!/className=['"][^'"]*qxframe9a7c2-col[^'"]*qxframe9a7c2-card[^'"]*['"]/.test(viewJs),'dynamic admin view builders must not merge Grid column and Card classes on one node');
+assert(viewJs.includes("col.className='qxframe9a7c2-col-24'")&&viewJs.includes('col.appendChild(a)'),'dynamic admin Card builder must compose Grid column > Card');
 const coverageLedger='docs/admin/COMPONENT_COVERAGE.md';
 assert(exists(coverageLedger),'missing '+coverageLedger);
 const coverageText=read(coverageLedger);

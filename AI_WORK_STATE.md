@@ -14,10 +14,26 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Menu root Scroll auto-visibility correction complete.
-- Current Task: `MENU-SCROLL-AUTO-008`
+- Current Phase: Admin Grid column / component-root DOM separation.
+- Current Task: `ADMIN-GRID-CARD-LAYERING-009`
 
 ## CURRENT
+
+### ADMIN-GRID-CARD-LAYERING-009 — Admin Grid column / component-root DOM separation
+Status: IMPLEMENTED — PENDING PR CI
+Task progress: 90%
+
+Current truth:
+- Admin Grid columns now own responsive width/gutter only; Card/component roots are nested children instead of sharing the same DOM node.
+- Existing mixed `qxframe9a7c2-col*` + `qxframe9a7c2-card` markup was split across Admin views, including KPI, view cards, app cards, job cards, profile/search/settings/account sidebars, schedule/workflow/developer-tools layouts, and other repeated Card compositions.
+- Dynamic `appendCard()` now creates `div.qxframe9a7c2-col-24 > article.qxframe9a7c2-card...`.
+- Admin CSS remains component-root based and did not require compatibility selectors for the old mixed structure.
+- `verify-admin-template.mjs` now rejects Grid columns that also carry known framework component-root classes, and rejects dynamic builders that recombine Grid and Card classes.
+
+Next exact step:
+- Open a PR from `fix/admin-grid-card-layering-009`.
+- Run exact-head CI; if the new verifier exposes any remaining mixed Grid/component node, fix it on this branch.
+- Merge only after exact-head CI passes, then verify main CI + Pages and mark this task COMPLETE.
 
 ### MENU-SCROLL-AUTO-008 — Menu root Scroll auto visibility correction
 Status: COMPLETE
