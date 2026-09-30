@@ -76,7 +76,7 @@ assert(shellCss.includes('.qx-admin-tabs-scroll>.qxframe9a7c2-tabs'),'admin tab 
 assert(/\.qx-admin-menu\{[^}]*overflow:hidden/.test(shellCss),'admin menu host must not expose a native scrollbar');
 assert(/\.qx-admin-menu \.qxframe9a7c2-menu\{[^}]*height:100%/.test(shellCss),'admin Menu must fill its scroll-owning shell');
 assert(frameworkCss.includes('.qxframe9a7c2-menu-root-scroll'),'Menu root must expose framework Scroll composition');
-assert(/menuOwner&&menuOwner\.getScroll\?menuOwner\.getScroll\(\):null/.test(shellJs)&&/menuScroll&&menuScroll\.showScrollbar/.test(shellJs),'admin Menu must request persistent visible chrome through the canonical Scroll API');
+assert(!/\.showScrollbar\s*\(/.test(shellJs),'admin Menu must keep canonical Scroll auto visibility and must not force persistent scrollbar chrome');
 for(const marker of ["get('embed')==='1'",'is-admin-embedded','qxframe9a7c2-admin:navigate','qxframe9a7c2-admin:theme']){
   assert(demoJs.includes(marker),'standalone admin embed bridge missing '+marker);
 }
