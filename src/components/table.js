@@ -2553,6 +2553,16 @@ function setupTable(instance) {
     
   delegation = EventDelegation.create({ root: root });
   scope.add(function () { delegation.destroy(); });
+  // A real editor temporarily owns DOM focus while Table keeps virtual navigation ownership.
+  // Bridge only the edit-lease keys into the existing InteractionController so Escape/F6/Enter
+  // cannot be lost inside descendant native controls. Action resolution remains single-owned.
+  scope.add(DOM.listen(root, 'keydown', function (event) {
+    if (!editTransaction || !event || event.defaultPrevented) return;
+    var target = editTransaction.target;
+    if (!target || (event.target !== target && !(target.contains && target.contains(event.target)))) return;
+    if (['Escape','F6','Enter'].indexOf(String(event.key || '')) < 0) return;
+    interactionController.dispatch(event, { ownerId:'table' });
+  }, true));
   scope.add(DOM.listen(doc, 'keydown', function (event) {
     if (!activeColumnResize || event.defaultPrevented) return;
     interactionController.dispatch(event, { ownerId:'table-resize' });
