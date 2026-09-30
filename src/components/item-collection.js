@@ -987,7 +987,7 @@ function create(options) {
       axis: 'y',
       focusable: false,
       keyboard: false,
-      scrollbarVisibility: opts.scrollbarVisibility || 'auto',
+      scrollbarVisibility: opts.scrollbarVisibility || 'scroll',
       edgeShadow: opts.scrollEdgeShadow === true,
       controller: api
     });
