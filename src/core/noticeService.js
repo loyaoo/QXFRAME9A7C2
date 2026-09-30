@@ -17,17 +17,17 @@ var NOTICE_TRANSITION = Object.freeze({
   type: 'transition',
   appear: Object.freeze({
     from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--qxframe9a7c2-notice-enter-x), var(--qxframe9a7c2-notice-enter-y), 0)', opacity: '0' }) }),
-    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform, opacity', transitionDuration: 'var(--qxframe9a7c2-notice-enter-duration)', transitionTimingFunction: 'var(--qxframe9a7c2-notice-easing)' }) }),
+    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform, opacity', transitionDuration: 'var(--qxframe9a7c2-motion-notice-enter-duration)', transitionTimingFunction: 'var(--qxframe9a7c2-motion-notice-presence-easing)' }) }),
     to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0, 0, 0)', opacity: '1' }) })
   }),
   enter: Object.freeze({
     from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--qxframe9a7c2-notice-enter-x), var(--qxframe9a7c2-notice-enter-y), 0)', opacity: '0' }) }),
-    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform, opacity', transitionDuration: 'var(--qxframe9a7c2-notice-enter-duration)', transitionTimingFunction: 'var(--qxframe9a7c2-notice-easing)' }) }),
+    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform, opacity', transitionDuration: 'var(--qxframe9a7c2-motion-notice-enter-duration)', transitionTimingFunction: 'var(--qxframe9a7c2-motion-notice-presence-easing)' }) }),
     to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0, 0, 0)', opacity: '1' }) })
   }),
   leave: Object.freeze({
     from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0, 0, 0)', opacity: '1' }) }),
-    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform, opacity', transitionDuration: 'var(--qxframe9a7c2-notice-leave-duration)', transitionTimingFunction: 'var(--qxframe9a7c2-notice-easing)' }) }),
+    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform, opacity', transitionDuration: 'var(--qxframe9a7c2-motion-notice-leave-duration)', transitionTimingFunction: 'var(--qxframe9a7c2-motion-notice-presence-easing)' }) }),
     to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--qxframe9a7c2-notice-leave-x), var(--qxframe9a7c2-notice-leave-y), 0)', opacity: '0', pointerEvents: 'none' }) })
   })
 });
@@ -82,9 +82,6 @@ function beginRender(record, config) {
   clearStyleObject(item, record.appliedStyle);
   record.appliedStyle = opts.style ? Utils.mergeOwn(opts.style) : null;
   item.className = String(typeof cfg.className === 'function' ? cfg.className(opts, record) : (cfg.className || item.className || ''));
-  record.slot.style.setProperty('--qxframe9a7c2-notice-enter-duration', opts.enterDuration + 'ms');
-  record.slot.style.setProperty('--qxframe9a7c2-notice-leave-duration', opts.leaveDuration + 'ms');
-  record.slot.style.setProperty('--qxframe9a7c2-notice-easing', opts.easing);
   if (cfg.widths === true) { item.style.width = opts.width || ''; item.style.minWidth = opts.minWidth || ''; item.style.maxWidth = opts.maxWidth || ''; }
   applyStyle(item, record.appliedStyle);
   if (record.closeButton && record.closeButton.parentNode) record.closeButton.parentNode.removeChild(record.closeButton);
@@ -206,23 +203,15 @@ function createChannel(profile) {
     
   function applyFrameOptions(entry, opts) {
     var frame = entry.frame;
-    clearStyleObject(frame, entry.appliedStackStyle);
-    entry.appliedStackStyle = opts.stackStyle ? Utils.mergeOwn(opts.stackStyle) : null;
-    (entry.appliedStackClassTokens || []).forEach(function (token) { if (token) frame.classList.remove(token); });
     frame.classList.add('qxframe9a7c2-notice-stack', 'qxframe9a7c2-' + slug + '-stack', 'is-' + entry.placement);
-    entry.appliedStackClassTokens = String(opts.stackClassName || '').split(/\s+/).filter(Boolean);
-    entry.appliedStackClassTokens.forEach(function (token) { frame.classList.add(token); });
     DOM.setPrivate(frame, 'noticeChannel', slug);
     frame.setAttribute('data-qxframe9a7c2-placement', entry.placement);
-    frame.style.setProperty('--qxframe9a7c2-notice-move-duration', Math.max(0, Number(opts.moveDuration) || 0) + 'ms');
-    frame.style.setProperty('--qxframe9a7c2-notice-easing', opts.easing || 'ease');
     frame.style.setProperty('--qxframe9a7c2-notice-gap', NOTICE_GAP + 'px');
     frame.style.top = '';
     frame.style.right = '';
     frame.style.bottom = '';
     frame.style.left = '';
     frame.style.transform = '';
-    applyStyle(frame, entry.appliedStackStyle);
     entry.options = Utils.mergeOwn(opts);
     entry.stack = stackConfig(opts);
     frame.classList.toggle('is-stack-enabled', entry.stack.enabled);
@@ -379,8 +368,6 @@ function createChannel(profile) {
       scope: scope,
       options: null,
       stack: null,
-      appliedStackStyle: null,
-      appliedStackClassTokens: [],
       layout: null,
       transitionGroup: null,
       layerLease: null,
@@ -496,7 +483,7 @@ function createChannel(profile) {
     
   function ensurePaintedEnterBaseline(record) {
     if (!record || record.closed || record.closing || record.enterBaselineReady) return null;
-    var duration = Math.max(0, Number(record.options && record.options.enterDuration) || 0);
+    var duration = cssMotionDuration(record.slot, '--qxframe9a7c2-motion-notice-enter-duration');
     if (duration <= 0 || noticeReducedMotion() || !record.enterBaselineScheduler) {
       record.enterBaselineReady = true;
       return null;
@@ -517,6 +504,13 @@ function createChannel(profile) {
     var value = view.getComputedStyle(element).getPropertyValue(property);
     return value == null || value === '' ? fallback : String(value).trim();
   }
+  function parseMotionTime(value) {
+    var text=String(value==null?'':value).trim(), number=parseFloat(text);
+    if(!text||!Number.isFinite(number))return 0;
+    return /ms$/i.test(text)?Math.max(0,number):/s$/i.test(text)?Math.max(0,number*1000):Math.max(0,number);
+  }
+  function cssMotionDuration(element,property){return parseMotionTime(computedStyleValue(element,property,'0ms'));}
+  function cssMotionEasing(element,property,fallback){return String(computedStyleValue(element,property,fallback||'ease')||fallback||'ease');}
     
   function seedNoticePresenceGeometry(record) {
     if (!record || record.enterDisplacementReady || !record.slot || !record.entry) return false;
@@ -594,7 +588,8 @@ function createChannel(profile) {
     var nextWidthCss = nextWidth + 'px';
     var nextHeightCss = nextHeight + 'px';
     var nextScale = nextScaleX + ' 1';
-    var animateLayout = !slot.classList.contains('is-new-slot') && !noticeReducedMotion() && Math.max(0, Number(record.options && record.options.moveDuration) || 0) > 0 && typeof slot.animate === 'function';
+    var moveDuration = cssMotionDuration(slot, '--qxframe9a7c2-motion-notice-move-duration');
+    var animateLayout = !slot.classList.contains('is-new-slot') && !noticeReducedMotion() && moveDuration > 0 && typeof slot.animate === 'function';
     
     var targetKey = [nextTranslate, nextLeft, nextWidthCss, nextHeightCss, nextScale, nextFilter].join('|');
     var sameActiveTarget = !!(record.layoutAnimation && record.layoutTargetKey === targetKey);
@@ -642,8 +637,8 @@ function createChannel(profile) {
         { translate: fromTranslate, left: fromLeft, width: fromWidth, height: fromHeight, scale: fromScale, filter: fromFilter },
         { translate: nextTranslate, left: nextLeft, width: nextWidthCss, height: nextHeightCss, scale: nextScale, filter: nextFilter }
       ], {
-        duration: Math.max(0, Number(record.options.moveDuration) || 0),
-        easing: String(record.options.easing || 'ease'),
+        duration: moveDuration,
+        easing: cssMotionEasing(slot, '--qxframe9a7c2-motion-notice-move-easing', 'ease'),
         fill: 'none'
       });
       record.layoutAnimation = animation;
@@ -686,7 +681,7 @@ function createChannel(profile) {
     }
     list.style.height = nextHeight;
     entry.listHeightTarget = next;
-    var duration = Math.max(0, Number(entry.options && entry.options.moveDuration) || 0);
+    var duration = cssMotionDuration(list, '--qxframe9a7c2-motion-notice-move-duration');
     var canAnimate = !sameActiveTarget && !noticeReducedMotion() && duration > 0 && typeof list.animate === 'function' && fromHeight !== nextHeight;
     list.classList.toggle('is-height-moving', sameActiveTarget || canAnimate);
     if (canAnimate) {
@@ -700,7 +695,7 @@ function createChannel(profile) {
         { height: nextHeight }
       ], {
         duration: duration,
-        easing: String(entry.options && entry.options.easing || 'cubic-bezier(.645,.045,.355,1)'),
+        easing: cssMotionEasing(list, '--qxframe9a7c2-motion-notice-move-easing', 'ease'),
         fill: 'none'
       });
       entry.listHeightAnimation = animation;
