@@ -14,24 +14,27 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Menu root Scroll visibility correction.
+- Current Phase: Menu root Scroll auto-visibility correction complete.
 - Current Task: `MENU-SCROLL-AUTO-008`
 
 ## CURRENT
 
 ### MENU-SCROLL-AUTO-008 — Menu root Scroll auto visibility correction
-Status: IMPLEMENTED — PENDING PR CI
-Task progress: 85%
+Status: COMPLETE
+Task progress: 100%
 
-Current truth:
-- Menu root Scroll ownership remains canonical `Menu -> Scroll`.
-- Admin no longer calls `Scroll.showScrollbar()`; the root Scroll remains on the framework default `scrollbarVisibility:'auto'`.
-- Browser acceptance now requires the Menu scrollbar to be hidden while idle, visible during scrolling, and hidden again after the configured idle delay.
-- Native Admin host scrolling remains disabled; the framework Scroll remains the only visible scrollbar owner.
+Completion evidence:
+- Menu root Scroll ownership remains canonical `Menu -> Scroll`; Admin no longer calls `Scroll.showScrollbar()`.
+- Menu keeps the framework default `scrollbarVisibility:'auto'`: idle chrome is hidden, scrolling activates the chrome, and it hides again after the configured idle delay.
+- The shared Scroll runtime now calls `activateScrollbar()` from the native viewport `scroll` listener, so wheel, trackpad/native inertia, programmatic scrolling and other native scroll paths share the same auto-visibility behavior instead of relying only on wheel/keyboard/thumb/track entry points.
+- Canonical browser acceptance explicitly verifies `menuTrackHiddenIdle`, `menuTrackVisibleWhileScrolling`, `menuTrackHiddenAfterIdle`, and actual Menu scroll movement.
+- PR #189 merged into `main` as `ab3036c0d26ad0dee410bc99745df6f9aa06ea68`.
+- Exact-head QXFRAME CI #937 passed Windows tools, Full release verification, npm pack, standalone dist + docs demo build, and canonical browser verification.
+- Main QXFRAME CI #938 for merge SHA `ab3036c0d26ad0dee410bc99745df6f9aa06ea68` passed release, Windows, standalone browser verification, artifact uploads, and `deploy-pages`.
+- No implementation work remains for MENU-SCROLL-AUTO-008.
 
-Next exact step:
-- Run exact-head CI for PR #189 and merge only if the auto-visibility browser lifecycle passes.
-- After merge, verify main CI + Pages and mark this task COMPLETE.
+Resume rule:
+- Query current Git / PR / CI / Pages state first. Do not restore persistent Menu scrollbar chrome or re-add an Admin `showScrollbar()` override unless a new requirement explicitly asks for always-visible scrollbars.
 
 ### ARCH-MERGE-CLOSEOUT-007 — merge / main / Pages closeout
 Status: COMPLETE
