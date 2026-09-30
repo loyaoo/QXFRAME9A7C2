@@ -9,8 +9,7 @@ var REMOVED_OPTIONS = Object.freeze(['target', 'el', 'mount', 'message', 'text',
 var NOTIFICATION_ONLY_OPTIONS = Object.freeze(['title', 'actions', 'onAction']);
 var SUPPORTED_OPTIONS = Object.freeze([
   'key', 'content', 'type', 'icon', 'placement', 'duration', 'closable', 'closeOnClick', 'pauseOnHover', 'pauseOnHoverScope',
-  'maxCount', 'stack', 'showProgress', 'className', 'style',
-  'stackClassName', 'stackStyle', 'enterDuration', 'leaveDuration', 'moveDuration', 'easing',
+  'maxCount', 'stack', 'showProgress', 'class', 'style',
   'zIndex', 'document', 'onOpen', 'onBeforeClose', 'onClose', 'onUpdate'
 ]);
 var CALLBACKS = Object.freeze(['onOpen', 'onBeforeClose', 'onClose', 'onUpdate']);
@@ -18,10 +17,9 @@ var CALLBACKS = Object.freeze(['onOpen', 'onBeforeClose', 'onClose', 'onUpdate']
 var DEFAULTS = {
   placement: 'top', type: 'info', duration: 3000, closable: false, closeOnClick: false,
   pauseOnHover: true, pauseOnHoverScope: 'stack', maxCount: 0, stack: { threshold: 3, offset: 8, scale: 0.95 },
-  showProgress: false, enterDuration: 500, leaveDuration: 220, moveDuration: 500,
-  easing: 'cubic-bezier(.22,1,.36,1)', zIndex: null
+  showProgress: false, zIndex: null
 };
-var preset = NoticePreset.create({ owner:'Message', allowedConfigure:['placement','type','duration','closable','closeOnClick','pauseOnHover','pauseOnHoverScope','maxCount','stack','showProgress','enterDuration','leaveDuration','moveDuration','easing','zIndex'] });
+var preset = NoticePreset.create({ owner:'Message', allowedConfigure:['placement','type','duration','closable','closeOnClick','pauseOnHover','pauseOnHoverScope','maxCount','stack','showProgress','zIndex'] });
     
 function rejectUnsupported(input) {
   Object.keys(input || {}).forEach(function (key) {
@@ -40,9 +38,6 @@ function normalize(input, previous) {
   source.type = U.enumValue(source.type, TYPES, 'info', 'type', 'Message');
   source.placement = U.enumValue(source.placement, PLACEMENTS, 'top', 'placement', 'Message');
   source.duration = U.finite(source.duration, DEFAULTS.duration, 0, 'duration', 'Message');
-  source.enterDuration = U.finite(source.enterDuration, DEFAULTS.enterDuration, 0, 'enterDuration', 'Message');
-  source.leaveDuration = U.finite(source.leaveDuration, DEFAULTS.leaveDuration, 0, 'leaveDuration', 'Message');
-  source.moveDuration = U.finite(source.moveDuration, DEFAULTS.moveDuration, 0, 'moveDuration', 'Message');
   source.maxCount = Math.floor(U.finite(source.maxCount, DEFAULTS.maxCount, 0, 'maxCount', 'Message'));
   source.stack = preset.normalizeStack(source.stack);
   source.zIndex = source.zIndex === undefined || source.zIndex === null || source.zIndex === '' ? null : Math.floor(U.finite(source.zIndex, 0, 0, 'zIndex', 'Message'));
@@ -53,17 +48,12 @@ function normalize(input, previous) {
   CALLBACKS.forEach(function (key) {
     if (source[key] != null && typeof source[key] !== 'function') throw new TypeError('[QXFRAME9A7C2] Message ' + key + ' must be a function.');
   });
-  source.className = source.className == null ? '' : String(source.className);
-  source.stackClassName = source.stackClassName == null ? '' : String(source.stackClassName);
-  source.easing = source.easing == null || source.easing === '' ? DEFAULTS.easing : String(source.easing);
-  source.style = U.styleObject(source.style, 'style', 'Message');
-  source.stackStyle = U.styleObject(source.stackStyle, 'stackStyle', 'Message');
   source.actions = [];
   return source;
 }
     
 function render(record, previous) {
-  var context = U.beginRender(record, { className:function (opts) { return ('qxframe9a7c2-notice qxframe9a7c2-message-root is-' + opts.type + (opts.className ? ' ' + opts.className : '')).trim(); } });
+  var context = U.beginRender(record, { className:function (opts) { return ('qxframe9a7c2-notice qxframe9a7c2-message-root is-' + opts.type).trim(); } });
   var opts = context.options, wrapper = context.body, doc = context.document;
   while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild);
   U.appendNoticeIcon(record, wrapper, { className:'qxframe9a7c2-message-icon', sizeClass:'is-md' });
@@ -74,10 +64,11 @@ function render(record, previous) {
   U.renderValue(content, opts.content, record);
   section.appendChild(content);
   wrapper.appendChild(section);
+  U.setSemanticElements(record, { section:section, content:content });
   U.appendNoticeChrome(record, { closeClass:'qxframe9a7c2-message-close', progressClass:'qxframe9a7c2-notice-progress qxframe9a7c2-message-progress' });
 }
     
-var channel = NoticeService.createChannel({ name: 'Message', slug: 'message', collapsedVisible: 3, fixedStackGeometry: true, normalize: normalize, render: render });
+var channel = NoticeService.createChannel({ name: 'Message', slug: 'message', semanticElements:['section','content'], collapsedVisible: 3, fixedStackGeometry: true, normalize: normalize, render: render });
     
 function configure(next) { return preset.configure(DEFAULTS, next, normalize); }
     
