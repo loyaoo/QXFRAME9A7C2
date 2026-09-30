@@ -67,7 +67,7 @@ assert.match(scroll,/Object\.freeze\(\['auto', 'always', 'hover', 'hidden'\]\)/,
 assert.match(scroll,/root\.classList\.add\('is-scrollbar-' \+ opts\.scrollbarVisibility\)/,'Scroll root must project visibility mode as one canonical class.');
 assert.match(scroll,/DOM\.listen\(viewport, 'scroll',[\s\S]*?activateScrollbar\(\)/,'Native/programmatic viewport scrolling must activate auto scrollbar chrome.');
 assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-hover:hover \.qxframe9a7c2-scroll-track:not\(\[hidden\]\)/,'Scroll hover mode must reveal custom chrome while the Scroll root is hovered.');
-assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-hidden \.qxframe9a7c2-scroll-track \{\s*display: none !important;/,'Scroll hidden mode must hide chrome without disabling viewport scrolling.');
+assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-hidden:not\(\.is-scrollbar-manual-show\) \.qxframe9a7c2-scroll-track \{\s*display: none !important;/,'Scroll hidden mode must hide chrome without disabling viewport scrolling.');
 assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-auto\.is-scrollbar-active \.qxframe9a7c2-scroll-track:not\(\[hidden\]\)/,'Scroll auto mode must reveal chrome only while active.');
 assert.match(css,/\.qxframe9a7c2-scroll\.is-scrollbar-always \.qxframe9a7c2-scroll-track:not\(\[hidden\]\)/,'Scroll always mode must keep chrome visible.');
 assert.match(scroll,/var sequentialFocusEnabled = opts\.disabled !== true && opts\.focusable !== false;/,'Scroll focusable must own sequential-focus participation.');
