@@ -2576,8 +2576,13 @@ function setupTable(instance) {
     var key = DOM.getPrivate(cell, 'tableNavigationCell');
     var target = key != null ? resolveEditTarget(String(key)) : null;
     if (target && (event.target === target || (target.contains && target.contains(event.target)))) {
-      if (!editTransaction || editTransaction.key !== String(key)) enterCellEdit(String(key), 'table-edit-pointer', event);
-      if (cellDomain && editTransaction) cellDomain.activate(editTransaction.key, { source: 'table-edit-pointer', modality: 'pointer', reason: 'table-edit-pointer', originalEvent: event, ensureVisible: false });
+      // beginEdit() focuses the editor for keyboard/API entry. That focusin must not be
+      // reclassified as pointer input, otherwise the edit lease loses its keyboard origin
+      // and Escape is no longer routed back through the table interaction scope.
+      if (!editTransaction || editTransaction.key !== String(key)) {
+        enterCellEdit(String(key), 'table-edit-pointer', event);
+        if (cellDomain && editTransaction) cellDomain.activate(editTransaction.key, { source: 'table-edit-pointer', modality: 'pointer', reason: 'table-edit-pointer', originalEvent: event, ensureVisible: false });
+      }
     }
   }));
   scope.add(DOM.listen(root, 'focusout', function () {
