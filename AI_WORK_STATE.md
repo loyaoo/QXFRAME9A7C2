@@ -21,36 +21,49 @@
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: IN PROGRESS
-Task progress: 8%
+Task progress: 32%
 
 User authority:
-- Use the uploaded "QXFRAME9A7C2 Component Semantic API + Motion System 一体化修改手册" as the task specification.
-- This is a one-track replacement: no old API/token aliases and no dual timing authority.
-- Preserve existing user-visible interaction behavior and the completed 9 Runtime Controller architecture unless this task explicitly changes API/timing ownership.
+- Use uploaded `QXFRAME9A7C2 Component Semantic API + Motion System 一体化修改手册` as task specification.
+- One-track replacement: no old API/token aliases and no dual timing authority.
+- Preserve existing interaction behavior and completed 9 Runtime Controller architecture unless this task explicitly changes API/timing ownership.
+- Additional user-directed Grid replacement: the uploaded mature `grid.scss` is the canonical Grid behavior source, converted to normal CSS with framework prefix; gutter shorthand remains `g/gx/gy`; responsive breakpoints are `xs/sm/md/lg/xl/xxl`, with `xxl >= 1600px`.
 
 Baseline / reconciliation:
 - Baseline main: `21b9312b8a1930af225712a2b72f912c8183c8f5`.
-- Previous `DOCS-SELF-HOSTING-CSS-012`, `NEUTRAL-GREY-CSS-011`, and the 9-controller Phase A-I program remain complete and must not be redone.
-- Mandatory architecture files reviewed: `AGENTS.md`, `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md`, `FOUR_UNIFICATIONS_ACCEPTANCE.md`, and current `AI_WORK_STATE.md`.
+- Active implementation branch: `refactor/semantic-motion-api-013`.
+- Previous docs/Neutral/9-controller tasks remain complete and must not be redone.
+- Mandatory architecture files and the uploaded semantic-motion manual were re-read against the current branch.
 
-Phase A inventory confirmed on current main:
-- `src/core/domBinding.js` still exposes `options.classes`, `normalizeClasses()`, `createClassProjection()`, and `syncClasses()`.
-- `src/utils/semanticStyles.js` still exposes `classNames/styles`.
-- Modal still has `className/maskClassName/maskStyle`, JS duration fallbacks 240/180, and writes old motion duration variables.
-- Drawer still has `className/maskClassName/maskStyle`, `enterDuration/leaveDuration`, JS default easing, and writes old motion duration variables.
-- Carousel still owns JS default `duration:320` / easing and writes `transitionDuration/transitionTimingFunction`.
-- Sort still writes move `160ms` + cubic-bezier in JS.
-- Image Preview still selects default timing tokens inside JS motion descriptors.
-- MotionCore still accepts explicit visual duration for completion waits.
-- Existing canonical CSS still requires a full old-duration/easing hardcode audit.
+Completed on active branch:
+- Added shared `SemanticProjection` and Component Semantic Element Registry foundation.
+- Component now exposes canonical `getElement(name?)`; no-arg returns a frozen semantic-name object; unknown reads return null.
+- Concrete components can declare `semanticElements`, `defaultClassSlot`, `defaultStyleSlot`, `defaultMotionSlot`, and explicit motion-slot → CSS-variable maps.
+- Unified `class`, `style`, and `duration` normalization/projection supports flat/default-slot and semantic-map forms; duration supports number/string/resolver/phase/semantic maps.
+- Fixed semantic projection lifecycle ordering: old projection is cleared before component DOM update, then new projection is applied. Regression coverage locks the stale-style restore failure case.
+- Canonical numbered finite motion tokens + easing tokens + initial component semantic motion tokens are present; legacy fast/mid/slow primitives are already absent on this branch.
+- Carousel consumes semantic track motion tokens and no longer owns JS default transition duration/easing.
+- Sort FLIP timing moved out of JS into semantic CSS motion tokens.
+- Modal/Drawer declare canonical semantic element sets and composite duration slots; their option updates no longer reset `className` and therefore preserve authored/semantic projected classes.
+- Modal/Drawer browser acceptance now uses `duration: { dialog|panel, mask }` plus semantic `class/style` and verifies CSS custom-property projection.
+- Grid subtask complete on branch: mature 24-column Flexbox contract replaces the previous generated Grid block; `g/gx/gy 0..24` use 0.125rem steps; `row-cols` naming restored; `col-0` and misnamed `row-1..24` removed; six breakpoints through `xxl >= 1600px`; docs/API/catalog and Phase-F regression gate updated.
 
-Risk review:
-- This task changes API expression, DOM projection, CSS timing authority, and composite motion coordination; it must not change picker/menu/popup interaction semantics or completed focus/value/selection behavior.
-- Concrete components remain responsible for semantic names/default slots; base Component must not blindly route class/style to root.
-- MotionCore interruption/reversal/completion stays; only default visual timing authority moves to CSS/computed style.
+Current verified architectural risks / remaining work:
+- `DOMBinding` still owns the old external `classes` projection path and many consumers still call `syncClasses()`.
+- `SemanticStyles` still exposes the old `classNames/styles` protocol.
+- Specialized legacy node getters remain across component families and need an internal-call audit before deleting redundant public paths; `getRootElement()` remains the allowed high-frequency shortcut.
+- Image Preview still needs default timing token selection moved fully out of JS while preserving trajectory geometry/reversal.
+- Message/Notification/Notice stack still require class/style/duration migration and timing authority cleanup.
+- MotionCore still exposes explicit wait-duration paths; remove them only after all standard visual-timing consumers migrate to computed CSS timing.
+- Modal/Drawer motion descriptor timing expression still needs final CSS-authority audit; geometry/lifecycle remains JS-owned.
+- Full class/style contract migration, generated docs, dist, clean-pack and exact-head browser/CI validation remain pending.
 
 Next exact step:
-- Implement the shared Semantic Element Registry + unified class/style projection foundation, add regression verifiers, then migrate representative components (Modal, Drawer, Carousel, Select, Tabs) before expanding to all affected consumers.
+1. Finish Modal/Drawer semantic-motion CSS authority and remove any stale old API references/tests.
+2. Migrate `DOMBinding classes` + `SemanticStyles classNames/styles` consumers to the single SemanticProjection path.
+3. Migrate Image + Message/Notification/Notice timing/class/style.
+4. Audit/remove explicit MotionCore visual-duration consumers, old motion token/hardcoded timing residues and redundant specialized getters.
+5. Update docs/dist/verifiers, open PR, run exact-head GitHub Actions, merge only after green.
 
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
