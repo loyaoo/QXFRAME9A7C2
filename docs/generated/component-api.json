@@ -3127,7 +3127,14 @@
         "scrollIdleDelay": "number",
         "scrollbarHideDelay": "any",
         "scrollbarInteractive": "any",
-        "scrollbarVisibility": "any",
+        "scrollbarVisibility": {
+          "enum": [
+            "auto",
+            "always",
+            "hover",
+            "hidden"
+          ]
+        },
         "snapAlign": "any",
         "snapAxis": "any",
         "snapBehavior": "any",
