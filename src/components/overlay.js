@@ -1,5 +1,6 @@
 import { Component } from '../core/component.js';
 import { componentHooks } from '../core/componentHooks.js';
+import { Utils } from '../utils/utils.js';
 
 const state = new WeakMap();
 
