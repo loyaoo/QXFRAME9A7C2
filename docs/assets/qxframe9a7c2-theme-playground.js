@@ -14,9 +14,9 @@ var PRESETS=[
   {key:'rose',name:'Rose',seed:'#e11d48'}
 ];
 var BASES={
-  mixed:{name:'Mixed · r2 曲线 × 强度',palette:null},
-  grey:{name:'Grey · 纯灰',palette:'grey'},
-  gray:{name:'Gray · 冷灰',palette:'gray'}
+  grey:{name:'Grey · Default Neutral',palette:'grey'},
+  mixed:{name:'MixedGray · Optional r2 mix',palette:null},
+  gray:{name:'Gray · Cold Neutral',palette:'gray'}
 };
 var FONTS={
   inter:{name:'Inter',value:'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'},
@@ -25,7 +25,7 @@ var FONTS={
   serif:{name:'Serif',value:'Georgia, "Times New Roman", serif'},
   mono:{name:'Mono',value:'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'}
 };
-var defaults={mode:'light',preset:'nova',primarySeed:'#5b5bd6',base:'mixed',mixRatio:100,font:'inter',radius:8,focusRing:2,query:'',category:'all',kind:'all',railCollapsed:false};
+var defaults={mode:'light',preset:'nova',primarySeed:'#5b5bd6',base:'grey',mixRatio:100,font:'inter',radius:8,focusRing:2,query:'',category:'all',kind:'all',railCollapsed:false};
 var state=loadState();
 var componentRecords=new Map();
 var observer=null;
@@ -34,12 +34,12 @@ var media=global.matchMedia?global.matchMedia('(prefers-color-scheme: dark)'):nu
 
 function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
 function clamp(n,min,max){n=Number(n);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):min;}
-function loadState(){try{var raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')||{};delete raw.customPrimary;if(!/^#[0-9a-f]{6}$/i.test(raw.primarySeed||'')){var old=PRESETS.find(function(x){return x.key===raw.preset;});raw.primarySeed=old?old.seed:defaults.primarySeed;}if(!BASES[raw.base])raw.base='mixed';var merged=Object.assign({},defaults,raw);if(docsTheme){var shared=docsTheme.getState();Object.assign(merged,{mode:shared.mode,preset:shared.preset,primarySeed:shared.primarySeed,base:shared.base,mixRatio:shared.mixRatio,font:shared.font,radius:shared.radius,focusRing:shared.focusRing});}return merged;}catch(_){var fallback=Object.assign({},defaults);if(docsTheme){var sharedFallback=docsTheme.getState();Object.assign(fallback,{mode:sharedFallback.mode,preset:sharedFallback.preset,primarySeed:sharedFallback.primarySeed,base:sharedFallback.base,mixRatio:sharedFallback.mixRatio,font:sharedFallback.font,radius:sharedFallback.radius,focusRing:sharedFallback.focusRing});}return fallback;}}
+function loadState(){try{var raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')||{};delete raw.customPrimary;if(!/^#[0-9a-f]{6}$/i.test(raw.primarySeed||'')){var old=PRESETS.find(function(x){return x.key===raw.preset;});raw.primarySeed=old?old.seed:defaults.primarySeed;}if(!BASES[raw.base])raw.base='grey';var merged=Object.assign({},defaults,raw);if(docsTheme){var shared=docsTheme.getState();Object.assign(merged,{mode:shared.mode,preset:shared.preset,primarySeed:shared.primarySeed,base:shared.base,mixRatio:shared.mixRatio,font:shared.font,radius:shared.radius,focusRing:shared.focusRing});}return merged;}catch(_){var fallback=Object.assign({},defaults);if(docsTheme){var sharedFallback=docsTheme.getState();Object.assign(fallback,{mode:sharedFallback.mode,preset:sharedFallback.preset,primarySeed:sharedFallback.primarySeed,base:sharedFallback.base,mixRatio:sharedFallback.mixRatio,font:sharedFallback.font,radius:sharedFallback.radius,focusRing:sharedFallback.focusRing});}return fallback;}}
 function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(_){}}
 function effectiveMode(){if(state.mode==='system')return media&&media.matches?'dark':'light';return state.mode==='dark'?'dark':'light';}
 function preset(){return PRESETS.find(function(x){return x.key===state.preset;})||{key:'custom',name:'Custom',seed:state.primarySeed||defaults.primarySeed};}
 function primary(){return /^#[0-9a-f]{6}$/i.test(state.primarySeed||'')?state.primarySeed:preset().seed;}
-function base(){return BASES[state.base]||BASES.mixed;}
+function base(){return BASES[state.base]||BASES.grey;}
 function font(){return FONTS[state.font]||FONTS.inter;}
 function setPublic(name,value){var root=document.documentElement;if(value==null||value==='')root.style.removeProperty(name);else root.style.setProperty(name,value);}
 function applyTheme(){
@@ -54,7 +54,11 @@ function applyTheme(){
     root.classList.toggle('qxframe9a7c2-theme-light',mode!=='dark');
     root.setAttribute('data-theme',mode);root.setAttribute('data-qxframe9a7c2-theme',mode);
     setPublic('--qxframe9a7c2-theme-primary',primary());setPublic('--qxframe9a7c2-theme-neutral-mix-ratio',clamp(state.mixRatio,0,100)+'%');
-    for(var step=1;step<=13;step+=1){setPublic('--qxframe9a7c2-theme-primary-'+step,null);setPublic('--qxframe9a7c2-theme-neutral-'+step,selectedBase.palette?'rgb(var(--qxframe9a7c2-color-'+selectedBase.palette+'-'+step+'))':null);}
+    for(var step=1;step<=13;step+=1){
+      setPublic('--qxframe9a7c2-theme-primary-'+step,null);
+      var neutralValue=selectedBase.palette==='grey'?null:selectedBase.palette?'rgb(var(--qxframe9a7c2-palette-'+selectedBase.palette+'-'+step+'))':'var(--_qxframe9a7c2-auxiliary-'+step+')';
+      setPublic('--qxframe9a7c2-theme-neutral-'+step,neutralValue);
+    }
     setPublic('--qxframe9a7c2-theme-radius',clamp(state.radius,0,24)+'px');setPublic('--qxframe9a7c2-theme-font-family',font().value);setPublic('--qxframe9a7c2-theme-focus-ring-size',clamp(state.focusRing,1,4)+'px');
   }
   updateThemeControls();updateLiveBoard();updateExport();saveState();
@@ -69,8 +73,9 @@ function themeCss(){
     '  --qxframe9a7c2-theme-font-family: '+font().value+';',
     '  --qxframe9a7c2-theme-focus-ring-size: '+clamp(state.focusRing,1,4)+'px;'
   ];
-  if(selectedBase.palette){for(var step=1;step<=13;step+=1)lines.push('  --qxframe9a7c2-theme-neutral-'+step+': rgb(var(--qxframe9a7c2-color-'+selectedBase.palette+'-'+step+'));');}
-  else lines.push('  /* Neutral omitted intentionally: the theme intermediary synthesizes the 13-tone MIX auxiliary palette from Grey + resolved Primary (统一可调比例). */');
+  if(state.base==='grey') lines.push('  /* Neutral omitted intentionally: canonical Grey 1–13 is the standard default recipe. */');
+  else if(selectedBase.palette){for(var step=1;step<=13;step+=1)lines.push('  --qxframe9a7c2-theme-neutral-'+step+': rgb(var(--qxframe9a7c2-palette-'+selectedBase.palette+'-'+step+'));');}
+  else {for(var mixedStep=1;mixedStep<=13;mixedStep+=1)lines.push('  --qxframe9a7c2-theme-neutral-'+mixedStep+': var(--_qxframe9a7c2-auxiliary-'+mixedStep+');');}
   lines.push('}');return lines.join('\n');
 }
 
@@ -94,7 +99,7 @@ function renderShell(){
       '<div class="qxframe9a7c2-play-settings">'+
         '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>模式</small><strong data-qxframe9a7c2-mode-label>浅色</strong></span></div><div class="qxframe9a7c2-play-segments" data-qxframe9a7c2-mode-segments><button class="qxframe9a7c2-play-segment" data-value="light">Light</button><button class="qxframe9a7c2-play-segment" data-value="dark">Dark</button><button class="qxframe9a7c2-play-segment" data-value="system">System</button></div></section>'+
         '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>Primary Seed</small><strong data-qxframe9a7c2-preset-label>Nova</strong></span><span class="qxframe9a7c2-play-setting-value" data-qxframe9a7c2-primary-value>#5b5bd6</span></div><div class="qxframe9a7c2-play-palette" data-qxframe9a7c2-preset-palette></div><div class="qxframe9a7c2-play-seed-row"><input class="qxframe9a7c2-play-seed-color" type="color" data-qxframe9a7c2-primary-color value="#5b5bd6"><input class="qxframe9a7c2-play-dark-input" type="text" data-qxframe9a7c2-primary-text value="#5b5bd6" spellcheck="false"></div><div class="qxframe9a7c2-play-palette-contract"><strong data-qxframe9a7c2-primary-family>Seed / optional 13 tones</strong><small>Primary 可只输入一个 Seed 自动解析 13 色，也可由项目 CSS 逐阶覆盖；Light/Dark 继续使用框架既有转换规则。</small></div></section>'+
-        '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>辅助色</small><strong>Neutral Palette</strong></span></div><select class="qxframe9a7c2-play-dark-select" data-qxframe9a7c2-base>'+baseOptions()+'</select></section>'+        '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>MIX 强度</small><strong data-qxframe9a7c2-mix-label>100%</strong></span></div><div class="qxframe9a7c2-play-range-row"><input class="qxframe9a7c2-play-range" type="range" min="0" max="100" step="1" data-qxframe9a7c2-mix><span class="qxframe9a7c2-play-setting-value">0–100% · 100% = r2 原始 MIX</span></div></section>'+
+        '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>辅助色</small><strong>Neutral Palette</strong></span></div><select class="qxframe9a7c2-play-dark-select" data-qxframe9a7c2-base>'+baseOptions()+'</select></section>'+        '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>MixedGray 强度</small><strong data-qxframe9a7c2-mix-label>100%</strong></span></div><div class="qxframe9a7c2-play-range-row"><input class="qxframe9a7c2-play-range" type="range" min="0" max="100" step="1" data-qxframe9a7c2-mix><span class="qxframe9a7c2-play-setting-value">仅 MixedGray 使用 · 100% = r2 MIX</span></div></section>'+
 
         '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>字体</small><strong>Theme Font</strong></span></div><select class="qxframe9a7c2-play-dark-select" data-qxframe9a7c2-font>'+fontOptions()+'</select></section>'+
         '<section class="qxframe9a7c2-play-setting"><div class="qxframe9a7c2-play-setting-head"><span class="qxframe9a7c2-play-setting-label"><small>圆角</small><strong data-qxframe9a7c2-radius-label>8px</strong></span><span class="qxframe9a7c2-play-radius-preview" data-qxframe9a7c2-radius-preview></span></div><div class="qxframe9a7c2-play-range-row"><input class="qxframe9a7c2-play-range" type="range" min="0" max="24" step="1" data-qxframe9a7c2-radius><span class="qxframe9a7c2-play-setting-value">0–24</span></div></section>'+
