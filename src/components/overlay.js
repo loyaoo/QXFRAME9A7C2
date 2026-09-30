@@ -26,7 +26,7 @@ export class OverlayComponent extends Component {
             const declared = this.getElement();
             const source = controller.getElements();
             const projected = {};
-            Object.keys(declared).forEach(name => { if (Object.prototype.hasOwnProperty.call(source, name)) projected[name] = source[name]; });
+            Object.keys(declared).forEach(name => { if (Utils.safeOwnKey(name) && Object.prototype.hasOwnProperty.call(source, name)) projected[name] = source[name]; });
             if (Object.keys(projected).length) this.registerSemanticElements(projected);
         }
         return controller;
