@@ -61,7 +61,7 @@ function create(config = {}) {
     container: body,
     axis: 'y',
     wheelPropagation: true,
-    scrollbarVisibility: opts.scrollbarVisibility || 'auto',
+    scrollbarVisibility: opts.scrollbarVisibility || 'scroll',
     keyboard: false,
     focusable: false,
     document: doc
