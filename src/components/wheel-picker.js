@@ -154,7 +154,7 @@ field = PickerField.create({
   createDOM: opts.createDOM,
   document: opts.document,
   portalContainer: opts.portalContainer,
-  className: 'qxframe9a7c2-wheel-picker',
+  rootClass: 'qxframe9a7c2-wheel-picker',
   panelClass: 'qxframe9a7c2-wheel-picker-popup',
   size: opts.size,
   variant: opts.variant, focusOutline: opts.focusOutline, class: opts.class, style: opts.style,
