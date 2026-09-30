@@ -68,6 +68,7 @@ const componentSiteJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-
 const componentSiteCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-site.css'),'utf8');
 const playgroundJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-theme-playground.js'),'utf8');
 const playgroundCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-theme-playground.css'),'utf8');
+const enhancementsJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-enhancements.js'),'utf8');
 const tokenJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.js'),'utf8');
 const tokenCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.css'),'utf8');
 
@@ -77,6 +78,12 @@ for(const [label,source,patterns] of [
     /qxframe9a7c2-card qxframe9a7c2-docs-observe-card/,
     /qxframe9a7c2-card is-hoverable qxframe9a7c2-docs-home-card/,
     /qxframe9a7c2-form-input is-(?:sm|lg)/
+  ]],
+  ['component API tables',enhancementsJs,[
+    /qxframe9a7c2-table-wrap qxframe9a7c2-docs-api-table-wrap/,
+    /qxframe9a7c2-table is-sm qxframe9a7c2-docs-api-table/,
+    /qxframe9a7c2-form-input is-md/,
+    /qxframe9a7c2-tag/
   ]],
   ['Theme Playground',playgroundJs,[
     /qxframe9a7c2-card qxframe9a7c2-play-card/,
@@ -97,6 +104,8 @@ for(const [label,source,patterns] of [
 for(const [label,source,pattern] of [
   ['component demo Card',componentSiteCss,/\.qxframe9a7c2-docs-demo-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
   ['component observe Card',componentSiteCss,/\.qxframe9a7c2-docs-observe-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
+  ['component API Table wrap',componentSiteCss,/\.qxframe9a7c2-docs-api-table-wrap\{[^}]*\b(?:border|background|border-radius)\s*:/],
+  ['component API Table',componentSiteCss,/\.qxframe9a7c2-docs-api-table\{[^}]*\b(?:background|border-collapse)\s*:/],
   ['Theme Playground Card',playgroundCss,/\.qxframe9a7c2-play-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
   ['Theme Playground setting Card',playgroundCss,/\.qxframe9a7c2-play-setting\{[^}]*(?:^|[;{])\s*(?:border|background|border-radius)\s*:/],
   ['Token Reference shared Card',tokenCss,/\.qxframe9a7c2-token-(?:hero-copy|control-card|section)\{[^}]*\b(?:border|background|border-radius)\s*:/]
