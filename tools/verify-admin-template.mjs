@@ -138,7 +138,7 @@ for(const legacy of ['qx-admin-view-grid','qx-admin-view-page','qx-admin-view-he
 }
 for(const name of viewFiles){
   const html=read('docs/admin/views/'+name);
-  assert(html.includes('qxframe9a7c2-row qxframe9a7c2-gx-0 qxframe9a7c2-gy-4'),'admin view root must use canonical row/column composition: '+name);
+  assert(html.includes('qxframe9a7c2-row qxframe9a7c2-gutter-x-0 qxframe9a7c2-gutter-y-4'),'admin view root must use canonical row/column composition: '+name);
   assert(!hasDirectRowChildOfRow(html),'admin Grid row must be nested through a framework column, not directly under another row: '+name);
   assert(!hasMixedGridComponentRoot(html),'admin Grid column must wrap component roots instead of sharing one DOM node with them: '+name);
 }
@@ -157,7 +157,7 @@ for(const marker of ["classList.toggle('has-horizontal-overflow'","classList.tog
 
 const viewJs=read('docs/assets/qxframe9a7c2-admin-views.js');
 assert(!/className=['"][^'"]*qxframe9a7c2-col[^'"]*qxframe9a7c2-card[^'"]*['"]/.test(viewJs),'dynamic admin view builders must not merge Grid column and Card classes on one node');
-assert(viewJs.includes("col.className='qxframe9a7c2-col-24'")&&viewJs.includes('col.appendChild(a)'),'dynamic admin Card builder must compose Grid column > Card');
+assert(viewJs.includes("col.className='qxframe9a7c2-col qxframe9a7c2-col-24'")&&viewJs.includes('col.appendChild(a)'),'dynamic admin Card builder must compose Grid column > Card');
 const coverageLedger='docs/admin/COMPONENT_COVERAGE.md';
 assert(exists(coverageLedger),'missing '+coverageLedger);
 const coverageText=read(coverageLedger);
