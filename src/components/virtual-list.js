@@ -136,7 +136,7 @@ export class VirtualList extends Component {
                 axis: opts.horizontal === true ? 'x' : 'y',
                 wheelAxis: opts.horizontal === true ? 'x' : 'y',
                 wheelPropagation: opts.wheelPropagation !== false,
-                scrollbarVisibility: opts.scrollbarVisibility || 'auto',
+                scrollbarVisibility: opts.scrollbarVisibility || 'scroll',
                 scrollbarInteractive: opts.scrollbarInteractive !== false,
                 edgeShadow: opts.scrollEdgeShadow === true,
                 focusable: false,
@@ -175,7 +175,7 @@ export class VirtualList extends Component {
         if (r.viewport && own(patch, 'focusable')) this.#syncFocusPolicy();
         if (r.scrollSurface && Utils.isFunction(r.scrollSurface.updateOptions) && (own(patch, 'scrollbarVisibility') || own(patch, 'scrollbarInteractive') || own(patch, 'wheelPropagation') || own(patch, 'scrollEdgeShadow'))) {
             r.scrollSurface.updateOptions({
-                scrollbarVisibility: next.scrollbarVisibility || 'auto',
+                scrollbarVisibility: next.scrollbarVisibility || 'scroll',
                 scrollbarInteractive: next.scrollbarInteractive !== false,
                 wheelPropagation: next.wheelPropagation !== false,
                 edgeShadow: next.scrollEdgeShadow === true
