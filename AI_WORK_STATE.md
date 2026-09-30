@@ -24,14 +24,17 @@ Status: VALIDATING
 Task progress: 96%
 
 User authority:
-- Use uploaded "QXFRAME9A7C2 Component Semantic API + Motion System 一体化修改手册" as task specification.
-- one-track replacement: no old API/token aliases and no dual timing authority.
-- Preserve existing user-visible interaction behavior and completed 9 Runtime Controller architecture unless this task explicitly changes API/timing ownership.
+- One-track replacement: no old API/token aliases and no dual visual timing authority.
+- Canonical public styling API is `class` / `style` / `getElement(name?)`; `duration` remains only where semantically correct (for Notice/Message/Notification it is lifetime, not visual motion duration).
+- CSS is the sole default visual Motion timing authority; MotionCore owns lifecycle/interruption/reversal/completion coordination and may read computed CSS timing.
+- Preserve the completed 9 Runtime Controller architecture; Theme/Token remain pure CSS.
+- Grid replacement is the mature 24-column contract with `g/gx/gy`, gutter 0..24 at 0.125rem increments, and xs/sm/md/lg/xl/xxl with xxl >= 1600px.
 
 Baseline:
 - main@21b9312b8a1930af225712a2b72f912c8183c8f5
 - branch: refactor/semantic-motion-api-013
-- branch is ahead of main and not behind.
+- branch comparison at recovery: ahead 141, behind 0.
+- PR #199 is open against main.
 
 Completed in branch:
 - Added shared SemanticProjection + Component semantic element registry/getElement().
@@ -42,34 +45,24 @@ Completed in branch:
 - Migrated Tags repeated semantic elements including tag/tagContent/tagClose/overflow nodes.
 - Migrated Select / Cascader / TreeSelect repeated item/tag semantic projection; removed itemStyles/tagClasses/tagStyles/tag*ClassName implementation paths.
 - Removed corresponding legacy contract fields from ComponentContracts.
-- Migrated Message / Notification / NoticeService away from enterDuration/leaveDuration/moveDuration/easing and old className/stackClassName/stackStyle.
-- Notice duration remains lifetime/auto-close duration only; visual presence/layout timing reads CSS semantic motion tokens.
+- Migrated NoticeService / Message / Notification away from enterDuration/leaveDuration/moveDuration/easing and old className/stackClassName/stackStyle public paths.
+- Notice/Message/Notification duration remains lifetime/auto-close duration only; visual presence/layout timing resolves through CSS semantic motion tokens.
 - Added canonical Notice motion tokens in production CSS.
-- Branch/main comparison: ahead 93, behind 0.
+- Grid contract replacement and docs/catalog/regression gates are included in this branch.
 
-Current validation:
-- PR #199 is open against main.
-- Exact head: `e1b15b794bf127518714af775b53fd43a9f6e705`.
-- QXFRAME CI run #989 is active for the exact head.
-- Dependency security audit: PASS.
-- Completion audit: PASS.
-- Windows tool paths: PASS.
-- Full release verification: IN PROGRESS.
-- Duplicate non-zero Notice timing literals were removed; semantic Notice timing now resolves through canonical motion tokens. Reduced-motion 0ms overrides remain intentional.
+Reconciled validation state (2026-10-01):
+- PR #199: https://github.com/loyaoo/QXFRAME9A7C2/pull/199
+- Exact branch head before this checkpoint update: `8b3882462d0af6b7fe1944367159ecb37e256ca2` (`fix: keep immediate motion completion synchronous`).
+- QXFRAME CI run #1021 / run id 36733168755 completed FAILURE on that exact head.
+- Do not merge until the failing job is diagnosed, patched on this same branch, and the replacement exact-head CI is fully green.
 
 Next exact step:
-1. Finish exact-head PR #199 CI run #989.
-2. If any step fails, patch the same branch and validate the new exact head.
-3. When all required checks are green, set this checkpoint to DONE / 100%, merge PR #199, then verify main and Pages.
-
-
-PR / CI:
-- PR #199: https://github.com/loyaoo/QXFRAME9A7C2/pull/199
-- Exact head after Table editor Escape fix: `be2cd703023706d5f233a1286e2a6e0563a91be7`.
-- CI run #1015 failed only in browser smoke: Table editor Escape did not cancel; diagnostics imbalance was consequential because cleanup did not complete.
-- Fixed the editor descendant key bridge by routing Escape/F6/Enter to the existing canonical Table action handler; no duplicate edit logic added.
-- CI run #1016 is currently IN PROGRESS on exact head `be2cd703...`.
-- Do not merge until run #1016 is fully green.
+1. Inspect run #1021 failed job/step logs.
+2. Patch only the demonstrated regression on `refactor/semantic-motion-api-013`; do not reopen completed semantic/Grid migrations.
+3. Run exact-head PR CI and finish final static/contract gates.
+4. If all required checks are green, merge PR #199.
+5. Verify main CI and GitHub Pages deployment.
+6. Update this task to DONE / 100% with merge + main/Pages evidence.
 
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
