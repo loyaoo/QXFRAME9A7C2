@@ -1322,7 +1322,7 @@ function createChannel(profile) {
     });
     record.instance = api;
     record.semanticNames = semanticNames;
-    record.semantic = SemanticProjection.create({ instance:api, semanticNames:semanticNames, defaultClassSlot:'root', defaultStyleSlot:'root' });
+    record.semantic = SemanticProjection.create({ instance:api, names:semanticNames, defaultClassSlot:'root', defaultStyleSlot:'root' });
     record.semantic.setElements({ root:item, wrapper:body });
     scope.add(function () { if (record.semantic) { record.semantic.destroy(); record.semantic = null; } });
     
