@@ -145,6 +145,49 @@ for(let i=1;i<=13;i+=1){
   assert.ok(definitions.has('--_qxframe9a7c2-auxiliary-'+i),'MixedGray auxiliary '+i+' must remain available.');
 }
 assert.ok(definitions.has('--_qxframe9a7c2-neutral-mix-ratio'),'MixedGray neutral mix ratio must remain available.');
+
+// NEUTRAL-GREY-CSS-011: cold Gray may exist only as an explicit optional palette/theme seed.
+// Standard Light/Dark utility output must remain on the chroma-zero canonical Grey axis.
+for(const [name,value] of [
+  ['--qxframe9a7c2-shadow-popup','0 0.75rem 2rem rgba(var(--qxframe9a7c2-palette-grey-3), .18)']
+]){
+  assert.ok((definitions.get(name)||[]).some(entry=>entry.value===value),name+' must preserve perceived darkness while using canonical Grey.');
+}
+for(const [name,values] of [
+  ['--_qxframe9a7c2-token-scroll-track',[
+    'rgba(var(--qxframe9a7c2-palette-grey-5), .14)',
+    'rgba(var(--qxframe9a7c2-palette-grey-10), .14)'
+  ]],
+  ['--_qxframe9a7c2-token-scroll-thumb',[
+    'rgba(var(--qxframe9a7c2-palette-grey-5), .46)',
+    'rgba(var(--qxframe9a7c2-palette-grey-10), .46)'
+  ]],
+  ['--_qxframe9a7c2-token-scroll-thumb-hover',[
+    'rgba(var(--qxframe9a7c2-palette-grey-5), .68)',
+    'rgba(var(--qxframe9a7c2-palette-grey-10), .68)'
+  ]],
+  ['--_qxframe9a7c2-token-loading-mask',[
+    'rgba(var(--qxframe9a7c2-palette-white), .74)',
+    'rgba(var(--qxframe9a7c2-palette-grey-3), .74)'
+  ]]
+]){
+  const actual=(definitions.get(name)||[]).map(entry=>entry.value);
+  for(const value of values) assert.ok(actual.includes(value),name+' must include '+value+'.');
+}
+const coldGrayConsumerLines=[];
+for(let i=0;i<lines.length;i+=1){
+  const line=lines[i];
+  if(!/var\(\s*--qxframe9a7c2-palette-gray-[0-9]+\)/i.test(line)) continue;
+  if(/^\s*--qxframe9a7c2-color-gray-[0-9]+\s*:/i.test(line)) continue;
+  if(/^\s*--qxframe9a7c2-theme-seed-gray\s*:/i.test(line)) continue;
+  coldGrayConsumerLines.push(i+1);
+}
+assert.deepEqual(coldGrayConsumerLines,[],
+  'Cold Gray is optional palette infrastructure only; standard/component CSS must consume canonical Grey instead.');
+assert.match(css,/\.is-gray\{--_qxframe9a7c2-accent-seed:var\(--_qxframe9a7c2-seed-grey\);--_qxframe9a7c2-accent-on:var\(--_qxframe9a7c2-on-grey,/,
+  '.is-gray must remain only as a spelling alias for the canonical Grey component accent.');
+assert.doesNotMatch(css,/\.is-gray\{[^}]*var\(--_qxframe9a7c2-(?:seed|on)-gray\)/,
+  'No component gray variant may consume the cold Gray accent seed.');
 for(const [label,body,patterns] of [
   ['Light',lightCandidates[0].body,[
     /--_qxframe9a7c2-mode-surface-muted:\s*var\(--qxframe9a7c2-theme-light-surface-muted,\s*var\(--_qxframe9a7c2-neutral-12\)\)/,

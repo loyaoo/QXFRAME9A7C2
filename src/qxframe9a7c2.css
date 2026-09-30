@@ -577,10 +577,10 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --_qxframe9a7c2-token-code-bg: var(--_qxframe9a7c2-mode-code-bg);
   --_qxframe9a7c2-token-json-guide: color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) 54%, transparent);
   --_qxframe9a7c2-token-focus-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) 24%, transparent);
-  --_qxframe9a7c2-token-scroll-track: rgba(var(--qxframe9a7c2-palette-gray-5), .14);
-  --_qxframe9a7c2-token-scroll-thumb: rgba(var(--qxframe9a7c2-palette-gray-5), .46);
-  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(var(--qxframe9a7c2-palette-gray-5), .68);
-  --qxframe9a7c2-shadow-popup: 0 0.75rem 2rem rgba(var(--qxframe9a7c2-palette-gray-1), .18);
+  --_qxframe9a7c2-token-scroll-track: rgba(var(--qxframe9a7c2-palette-grey-5), .14);
+  --_qxframe9a7c2-token-scroll-thumb: rgba(var(--qxframe9a7c2-palette-grey-5), .46);
+  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(var(--qxframe9a7c2-palette-grey-5), .68);
+  --qxframe9a7c2-shadow-popup: 0 0.75rem 2rem rgba(var(--qxframe9a7c2-palette-grey-3), .18);
 }
 
 [data-qxframe9a7c2-theme="dark"] {
@@ -631,13 +631,13 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
   --_qxframe9a7c2-token-warning-soft: color-mix(in srgb, var(--_qxframe9a7c2-semantic-warning) 22%, transparent);
   --_qxframe9a7c2-token-error-soft: color-mix(in srgb, var(--_qxframe9a7c2-semantic-error) 22%, transparent);
   --_qxframe9a7c2-token-info-soft: color-mix(in srgb, var(--_qxframe9a7c2-semantic-info) 22%, transparent);
-  --_qxframe9a7c2-token-loading-mask: rgba(var(--qxframe9a7c2-palette-gray-1), .74);
+  --_qxframe9a7c2-token-loading-mask: rgba(var(--qxframe9a7c2-palette-grey-3), .74);
   --_qxframe9a7c2-token-code-bg: var(--_qxframe9a7c2-mode-code-bg);
   --_qxframe9a7c2-token-json-guide: color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) 56%, transparent);
   --_qxframe9a7c2-token-focus-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-semantic-accent) 30%, transparent);
-  --_qxframe9a7c2-token-scroll-track: rgba(var(--qxframe9a7c2-palette-gray-9), .14);
-  --_qxframe9a7c2-token-scroll-thumb: rgba(var(--qxframe9a7c2-palette-gray-9), .46);
-  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(var(--qxframe9a7c2-palette-gray-9), .68);
+  --_qxframe9a7c2-token-scroll-track: rgba(var(--qxframe9a7c2-palette-grey-10), .14);
+  --_qxframe9a7c2-token-scroll-thumb: rgba(var(--qxframe9a7c2-palette-grey-10), .46);
+  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(var(--qxframe9a7c2-palette-grey-10), .68);
   --qxframe9a7c2-shadow-popup: 0 0.875rem 2.625rem rgba(var(--qxframe9a7c2-palette-black), .46);
 }
 
@@ -1418,7 +1418,7 @@ button[class^="qxframe9a7c2-"],input[class^="qxframe9a7c2-"],select[class^="qxfr
 .qxframe9a7c2-control-contract.is-danger,.qxframe9a7c2-progress.is-exception{--_qxframe9a7c2-accent:var(--_qxframe9a7c2-semantic-error);--_qxframe9a7c2-accent-hover:var(--_qxframe9a7c2-semantic-error-hover);--_qxframe9a7c2-accent-active:var(--_qxframe9a7c2-semantic-error-active);--_qxframe9a7c2-accent-soft:var(--_qxframe9a7c2-semantic-error-soft)}
 
 .is-grey{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-grey);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-grey,var(--_qxframe9a7c2-semantic-on-accent))}
-.is-gray{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-gray);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-gray,var(--_qxframe9a7c2-semantic-on-accent))}
+.is-gray{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-grey);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-grey,var(--_qxframe9a7c2-semantic-on-accent))}
 .is-cyan{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-cyan);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-cyan,var(--_qxframe9a7c2-semantic-on-accent))}
 .is-teal{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-teal);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-teal,var(--_qxframe9a7c2-semantic-on-accent))}
 .is-green{--_qxframe9a7c2-accent-seed:var(--_qxframe9a7c2-seed-green);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-green,var(--_qxframe9a7c2-semantic-on-accent))}

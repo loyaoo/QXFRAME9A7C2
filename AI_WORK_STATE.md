@@ -14,10 +14,64 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Neutral / Grey CSS-only refactor complete.
-- Current Task: `NEUTRAL-GREY-CSS-010` (COMPLETE)
+- Current Phase: Neutral / Grey CSS-only closeout.
+- Current Task: `NEUTRAL-GREY-CSS-011` (IN PROGRESS)
 
 ## CURRENT
+
+### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
+Status: IN PROGRESS
+Task progress: 92%
+
+User authority:
+- Audit every remaining standard-theme/component consumer of the cold `Gray` palette and migrate it back to canonical `Grey`.
+- Do not mechanically replace matching numeric steps; choose the target Grey tone by actual RGB/perceived lightness and semantic role, using Tailwind Neutral and shadcn neutral-token usage as the reference model.
+- Keep the cold Gray physical palette available only as an explicit optional palette/theme input; it must not leak into standard Light/Dark component utility tokens.
+
+Baseline / reconciliation:
+- Baseline `main@5b0bb20bc4681105dff1def193e5052dede6ce7d`; no open PR at task start.
+- Main QXFRAME CI #950 / run `36683036709` passed.
+- NEUTRAL-GREY-CSS-010 remains complete and must not be redone.
+
+Audit findings:
+- No component selector directly consumes cold Gray. The remaining leakage is centralized in shared utility tokens and therefore fans out to multiple component families.
+- Standard Light scroll track/thumb/hover use cold `Gray-5 = 85,95,109`.
+- Light popup shadow and Dark loading mask use cold `Gray-1 = 27,36,44`.
+- Standard Dark scroll track/thumb/hover use cold `Gray-9 = 222,227,231`.
+- Cold Gray declarations and `theme-seed-gray` are intentional optional-palette infrastructure, not standard-theme consumers.
+
+Frozen mapping method:
+- Compare rendered RGB/perceived lightness rather than palette index.
+- `Gray-1 (27,36,44)` -> `Grey-3 (38,38,38)` for popup shadow/loading-mask darkness.
+- `Gray-5 (85,95,109)` -> `Grey-5 (82,82,82)` for Light scroll chrome.
+- `Gray-9 (222,227,231)` -> `Grey-10 (229,229,229)` for Dark scroll chrome.
+- Preserve existing alpha values unless verification shows a contrast regression; this task removes hue contamination, not redesigns scrollbar/shadow/loading behavior.
+
+Implementation checkpoint:
+- Standard Light scroll track/thumb/hover now use canonical Grey-5 (82,82,82), chosen by rendered-lightness proximity to old cold Gray-5 (85,95,109).
+- Standard Dark scroll track/thumb/hover now use canonical Grey-10 (229,229,229), chosen by rendered-lightness proximity to old cold Gray-9 (222,227,231); this intentionally is not a same-index replacement.
+- Light popup shadow and the retained Dark loading utility token now use Grey-3 (38,38,38), matching the perceived darkness of old cold Gray-1 (27,36,44) much more closely than Grey-1.
+- `.is-gray` remains as a spelling/API alias but now consumes the same canonical Grey seed/on-color as `.is-grey`; component color variants no longer consume the cold Gray seed.
+- The cold Gray physical palette, compatibility outputs, neutral-theme option, and theme seed remain available as explicit optional palette infrastructure.
+- Phase F verifier now locks all above mappings and rejects any direct cold `palette-gray-*` consumer outside palette compatibility declarations / explicit theme seed.
+
+Implementation commits:
+- `cf8dcda30ff3de6d5a462e602343f7b5b29469c4` — standard utility tokens -> canonical Grey.
+- `0a9f829f09593785a62379398813861620f0e0b3` — verifier for utility consumers.
+- `0a76a448c142804a8e5a66bfb70ffcf82eb6ffe5` — component `.is-gray` -> canonical Grey alias.
+- `5d1be6a3ec60be3eed19c4da84337aad669c6b7a` — verifier for component gray alias.
+
+Verification note:
+- Local clone/Node verification is unavailable in the execution sandbox because outbound DNS to GitHub is blocked; GitHub Actions remains the authoritative validation path.
+
+PR / CI checkpoint:
+- PR #195 `style: remove cold Gray leakage from component visuals` opened against `main`.
+- QXFRAME CI #951 / run `36685505007` passed on head `4de0d7e1e5e0f608ff471caffa09d5b1360d00cd`.
+- Windows tools = success; dependency audit = success; Completion audit = success; Full release verification = success; npm pack = success; standalone dist/docs build = success; artifact uploads = success. Pages upload is intentionally skipped for PR events.
+
+Next exact step:
+- Run one final exact-head CI including this checkpoint commit; if green, merge PR #195 and verify main CI / Pages.
+
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
 Status: COMPLETE
