@@ -21,7 +21,7 @@
 
 ### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
 Status: IN PROGRESS
-Task progress: 70%
+Task progress: 92%
 
 User authority:
 - Audit every remaining standard-theme/component consumer of the cold `Gray` palette and migrate it back to canonical `Grey`.
@@ -64,8 +64,13 @@ Implementation commits:
 Verification note:
 - Local clone/Node verification is unavailable in the execution sandbox because outbound DNS to GitHub is blocked; GitHub Actions remains the authoritative validation path.
 
+PR / CI checkpoint:
+- PR #195 `style: remove cold Gray leakage from component visuals` opened against `main`.
+- QXFRAME CI #951 / run `36685505007` passed on head `4de0d7e1e5e0f608ff471caffa09d5b1360d00cd`.
+- Windows tools = success; dependency audit = success; Completion audit = success; Full release verification = success; npm pack = success; standalone dist/docs build = success; artifact uploads = success. Pages upload is intentionally skipped for PR events.
+
 Next exact step:
-- Open PR, run exact-head QXFRAME CI, reconcile any failures, then update this checkpoint and merge only after green evidence.
+- Run one final exact-head CI including this checkpoint commit; if green, merge PR #195 and verify main CI / Pages.
 
 
 ### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
