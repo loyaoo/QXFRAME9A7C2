@@ -321,7 +321,7 @@
       tooltip.destroy('browser-nested-complete');select.destroy('browser-nested-complete');modal.destroy('browser-nested-complete');await delay(120);await raf();var diagNested=Diagnostics.diff(before,Diagnostics.snapshot('after-nested'));record('diag-after-nested',diagNested.domProjection.activeProjections===0,JSON.stringify(diagNested.domProjection));
 
       var motionBox=document.createElement('div');motionBox.textContent='motion';document.body.appendChild(motionBox);
-      var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,duration:{enter:90,leave:90},reducedMotion:false});transient.push(transition);
+      var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,reducedMotion:false});transient.push(transition);
       transition.setVisible(true,{reason:'browser-open'});await delay(20);transition.setVisible(false,{reason:'browser-close'});await delay(20);transition.setVisible(true,{reason:'browser-reopen'});
       await transition.whenSettled();var motionState=transition.getState();
       assert('transition-rapid-reverse-settled',motionState.visible===true&&motionState.present===true&&motionState.settled===true,JSON.stringify(motionState));transition.destroy();motionBox.remove();await delay(80);await raf();var diagTransition=Diagnostics.diff(before,Diagnostics.snapshot('after-transition'));record('diag-after-transition',diagTransition.domProjection.activeProjections===0,JSON.stringify(diagTransition.domProjection));
