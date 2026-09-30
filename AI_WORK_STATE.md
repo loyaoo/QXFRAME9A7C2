@@ -14,10 +14,70 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Admin Grid column / component-root DOM separation complete.
-- Current Task: `ADMIN-GRID-CARD-LAYERING-009`
+- Current Phase: Neutral / Grey CSS-only refactor.
+- Current Task: `NEUTRAL-GREY-CSS-010`
 
 ## CURRENT
+
+### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
+Status: CI_PASS_PENDING_MERGE
+Task progress: 95%
+
+User authority:
+- Attached `QXFRAME9A7C2 — Neutral / Grey CSS-only 重构修改手册` dated 2026-09-30.
+- Scope is CSS-only runtime refactor: Grey palette, Light/Dark Neutral recipe, semantic/family consumers; docs may be synchronized.
+- Do not modify Component/Controller/Picker/Popup runtime JS for this task.
+
+Baseline / reconciliation:
+- Baseline `main@e6879399483b6c4f25b93d3423519390d853e485`; no open PR at task start.
+- Main QXFRAME CI #944 (run 36662982378) passed.
+- Existing 9-controller migration, Phase F CSS Theme/Token architecture, Popup/Scroll/Admin closeouts remain complete and must not be redone.
+
+Inventory findings:
+- Canonical CSS still has Grey `0..13` (14 tones), including `--qxframe9a7c2-palette-grey-0`.
+- Canonical CSS still has 14 pure forwarding `--qxframe9a7c2-color-grey-N` aliases.
+- Standard Light/Dark mode recipes still default through `--_qxframe9a7c2-neutral-N -> Auxiliary/MixedGray -> Primary`, so default Neutral remains Primary-tinted.
+- The separate cold `Gray` palette remains a distinct optional palette; current compatibility/token helpers still reference it in several places.
+- Component/family CSS already routes physical color meaning through semantic/family owners after the foundation section, so the main correction can stay in CSS token/recipe layers.
+
+Frozen decisions for this task:
+- Canonical Grey becomes exactly `1..13`, 1 darkest -> 13 lightest, using the handbook Tailwind Neutral anchors plus two added light-region tones.
+- Remove Grey `0` and all `--qxframe9a7c2-color-grey-N` pure forwarding aliases; no replacement compatibility alias.
+- Keep MixedGray/Auxiliary generation intact as an optional/fallback recipe, but standard Light/Dark Neutral must directly use Grey.
+- Keep Primary/selected/focus on the Primary axis; keyboard focus-visible remains Light black / Dark white.
+- Keep the distinct cold `Gray` palette; it is not the canonical default Neutral and must not leak into standard neutral recipe.
+- No JS runtime changes.
+
+Implementation checkpoint:
+- CSS implementation commit: `b28c7785adc4ddff202c45ccb7e8a091ae8b18b5`.
+- `src/qxframe9a7c2.css` now defines only Grey `1..13` with the handbook Tailwind-derived RGB values; `grey-0` and numbered `color-grey-N` forwarding aliases are removed.
+- Resolved `--_qxframe9a7c2-neutral-1..13` now default directly to the Grey palette while preserving public `--qxframe9a7c2-theme-neutral-N` overrides.
+- MixedGray/Auxiliary `base-1..13`, `auxiliary-1..13`, and neutral mix ratio remain present.
+- Light text/border/subtle roles and Dark surface/text/border roles were remapped; Dark general borders are white/10%, subtle white/8%, strong/input white/15%.
+- Added a dedicated semantic input-border role so control borders can follow the Dark 15% input recipe without making every Dark border equally strong.
+- Ordinary subtle/disabled semantic fallbacks now resolve to mode recipe tokens instead of regenerating near-grey values with text/background color-mix.
+- Keyboard focus-visible remains Light black / Dark white.
+- No runtime JS was modified.
+
+Docs / verification checkpoint:
+- Docs-only theme state, Theme Playground, and Tokens Reference now default to Grey; MixedGray is explicit and projects `theme-neutral-N -> _auxiliary-N` only when selected.
+- Physical palette display now reads `palette-*-N` primitives rather than the removed numbered Grey compatibility aliases.
+- Phase F token-graph verification now locks the exact 13 Grey RGB values, absence of grey-0 / numbered color-grey aliases, default Grey fallback, preserved MixedGray chain, Light/Dark recipe assignments, Dark alpha borders/input, semantic input-border routing, and removal of ordinary Neutral semantic color-mix.
+- Scope diff is limited to `src/qxframe9a7c2.css`, docs-only theme/token JS, `tools/verify-phase-f-token-graph.mjs`, and this checkpoint. No `src/**/*.js` runtime file changed.
+
+CI checkpoint:
+- PR: #193 `style: rebuild canonical Neutral Grey system`.
+- Verified implementation head before this checkpoint: `a524a260240e5f8c21b33311be28bde1c3a36873`.
+- QXFRAME CI #946 / run `36680986669`: release = success, windows-tools = success.
+- Completion audit = success.
+- Full release verification = success, including the updated Phase F token graph, existing architecture gates, browser/legacy verification, build and package verification.
+- npm pack, standalone dist/docs demo build, and artifact uploads = success.
+- PR-event Pages deploy is intentionally skipped by workflow policy.
+- No gate was weakened to obtain the green result.
+
+Next exact step:
+- Re-run QXFRAME CI on the checkpoint-only final PR head; if green and PR remains mergeable, merge #193 into main and verify the resulting main workflow.
+
 
 ### ADMIN-GRID-CARD-LAYERING-009 — Admin Grid column / component-root DOM separation
 Status: COMPLETE

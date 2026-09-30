@@ -13,9 +13,9 @@
     Object.freeze({ key: 'rose', name: 'Rose', seed: '#e11d48' })
   ]);
   var BASES = Object.freeze({
-    mixed: Object.freeze({ name: 'Mixed · r2 曲线 × 强度', palette: null }),
-    grey: Object.freeze({ name: 'Grey · 纯灰', palette: 'grey' }),
-    gray: Object.freeze({ name: 'Gray · 冷灰', palette: 'gray' })
+    grey: Object.freeze({ name: 'Grey · Default Neutral', palette: 'grey' }),
+    mixed: Object.freeze({ name: 'MixedGray · Optional r2 mix', palette: null }),
+    gray: Object.freeze({ name: 'Gray · Cold Neutral', palette: 'gray' })
   });
   var FONTS = Object.freeze({
     inter: Object.freeze({ name: 'Inter', value: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }),
@@ -25,7 +25,7 @@
     mono: Object.freeze({ name: 'Mono', value: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' })
   });
   var DEFAULTS = Object.freeze({
-    mode: 'light', preset: 'nova', primarySeed: '#5b5bd6', base: 'mixed', mixRatio: 100, mixCurveVersion: 2, font: 'inter', radius: 8, focusRing: 2
+    mode: 'light', preset: 'nova', primarySeed: '#5b5bd6', base: 'grey', mixRatio: 100, mixCurveVersion: 2, font: 'inter', radius: 8, focusRing: 2
   });
   var media = global.matchMedia ? global.matchMedia('(prefers-color-scheme: dark)') : null;
   var state = load();
@@ -113,7 +113,12 @@
     setPublic('--qxframe9a7c2-theme-neutral-mix-ratio', state.mixRatio + '%');
     for (var step = 1; step <= 13; step += 1) {
       setPublic('--qxframe9a7c2-theme-primary-' + step, null);
-      setPublic('--qxframe9a7c2-theme-neutral-' + step, selectedBase.palette ? 'rgb(var(--qxframe9a7c2-color-' + selectedBase.palette + '-' + step + '))' : null);
+      var neutralValue = selectedBase.palette === 'grey'
+        ? null
+        : selectedBase.palette
+          ? 'rgb(var(--qxframe9a7c2-palette-' + selectedBase.palette + '-' + step + '))'
+          : 'var(--_qxframe9a7c2-auxiliary-' + step + ')';
+      setPublic('--qxframe9a7c2-theme-neutral-' + step, neutralValue);
     }
     setPublic('--qxframe9a7c2-theme-radius', state.radius + 'px');
     setPublic('--qxframe9a7c2-theme-font-family', FONTS[state.font].value);
@@ -122,11 +127,11 @@
     /* Docs chrome and component demos must consume the same canonical semantic owner.
      * Clear legacy direct semantic overrides rather than creating a second docs palette. */
     ['light', 'dark'].forEach(function (themeMode) {
-      ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'border-subtle', 'border-strong'].forEach(function (name) {
+      ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'input-border', 'border-subtle', 'border-strong'].forEach(function (name) {
         setPublic('--qxframe9a7c2-theme-' + themeMode + '-' + name, null);
       });
     });
-    ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'border-subtle', 'border-strong'].forEach(function (name) {
+    ['bg', 'surface', 'surface-raised', 'surface-muted', 'text', 'text-secondary', 'text-muted', 'text-placeholder', 'border', 'input-border', 'border-subtle', 'border-strong'].forEach(function (name) {
       setPublic('--qxframe9a7c2-semantic-' + name, null);
     });
 

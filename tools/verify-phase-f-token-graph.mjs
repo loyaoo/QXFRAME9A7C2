@@ -110,7 +110,7 @@ assert.equal(lightCandidates.length,1,'Expected exactly one canonical Light mode
 assert.equal(darkCandidates.length,1,'Expected exactly one canonical Dark mode recipe.');
 const lightVars=variableNames(lightCandidates[0].body),darkVars=variableNames(darkCandidates[0].body);
 assert.deepEqual([...lightVars].sort(),[...darkVars].sort(),'Light and Dark mode recipes must define the same custom-property contract.');
-assert.equal(lightVars.size,93,'Canonical Light/Dark mode recipe contract unexpectedly changed; audit additions/removals before updating this count.');
+assert.equal(lightVars.size,94,'Canonical Light/Dark mode recipe contract unexpectedly changed; audit additions/removals before updating this count.');
 
 assert.doesNotMatch(lightCandidates[0].selector,/\[data-qxframe9a7c2-theme="light"\][\s\S]*\[data-qxframe9a7c2-theme="light"\]/,'Light selector must not contain duplicate members.');
 assert.doesNotMatch(darkCandidates[0].selector,/\[data-qxframe9a7c2-theme="dark"\][\s\S]*\[data-qxframe9a7c2-theme="dark"\]/,'Dark selector must not contain duplicate members.');
@@ -119,13 +119,63 @@ for(const [name,value] of [
   ['--_qxframe9a7c2-standard-light-bg','rgb(var(--qxframe9a7c2-palette-white))'],
   ['--_qxframe9a7c2-standard-light-surface','rgb(var(--qxframe9a7c2-palette-white))'],
   ['--_qxframe9a7c2-standard-light-surface-raised','rgb(var(--qxframe9a7c2-palette-white))'],
-  ['--_qxframe9a7c2-standard-dark-bg','rgb(var(--qxframe9a7c2-palette-black))'],
-  ['--_qxframe9a7c2-standard-dark-surface','rgb(var(--qxframe9a7c2-palette-black))'],
-  ['--_qxframe9a7c2-standard-dark-surface-raised','rgb(var(--qxframe9a7c2-palette-black))']
+  ['--_qxframe9a7c2-standard-dark-bg','var(--_qxframe9a7c2-neutral-1)'],
+  ['--_qxframe9a7c2-standard-dark-surface','var(--_qxframe9a7c2-neutral-2)'],
+  ['--_qxframe9a7c2-standard-dark-surface-raised','var(--_qxframe9a7c2-neutral-2)']
 ]){
   const values=(definitions.get(name)||[]).map(entry=>entry.value);
-  assert.ok(values.includes(value),name+' must preserve the clean white/black standard baseline.');
+  assert.ok(values.includes(value),name+' must preserve the canonical standard Neutral baseline.');
 }
+
+// NEUTRAL-GREY-CSS-010: canonical Grey/Neutral contract.
+const greyExpected=[
+  '10, 10, 10','23, 23, 23','38, 38, 38','64, 64, 64','82, 82, 82','115, 115, 115','161, 161, 161',
+  '212, 212, 212','220, 220, 220','229, 229, 229','237, 237, 237','245, 245, 245','250, 250, 250'
+];
+assert.doesNotMatch(css,/--qxframe9a7c2-palette-grey-0\b/,'Canonical Grey must not retain grey-0.');
+assert.doesNotMatch(css,/--qxframe9a7c2-color-grey-[a-z0-9-]+\s*:/i,'color-grey forwarding aliases must not exist.');
+for(let i=1;i<=13;i+=1){
+  const paletteName='--qxframe9a7c2-palette-grey-'+i;
+  const paletteValues=(definitions.get(paletteName)||[]).map(entry=>entry.value);
+  assert.deepEqual(paletteValues,[greyExpected[i-1]],paletteName+' must match the Tailwind-derived canonical RGB primitive.');
+  const neutralName='--_qxframe9a7c2-neutral-'+i;
+  const expected='var(--qxframe9a7c2-theme-neutral-'+i+', rgb(var(--qxframe9a7c2-palette-grey-'+i+')))';
+  assert.ok((definitions.get(neutralName)||[]).some(entry=>entry.value===expected),neutralName+' must default directly to Grey while preserving the public override.');
+  assert.ok(definitions.has('--_qxframe9a7c2-auxiliary-base-'+i),'MixedGray auxiliary base '+i+' must remain available.');
+  assert.ok(definitions.has('--_qxframe9a7c2-auxiliary-'+i),'MixedGray auxiliary '+i+' must remain available.');
+}
+assert.ok(definitions.has('--_qxframe9a7c2-neutral-mix-ratio'),'MixedGray neutral mix ratio must remain available.');
+for(const [label,body,patterns] of [
+  ['Light',lightCandidates[0].body,[
+    /--_qxframe9a7c2-mode-surface-muted:\s*var\(--qxframe9a7c2-theme-light-surface-muted,\s*var\(--_qxframe9a7c2-neutral-12\)\)/,
+    /--_qxframe9a7c2-mode-text:\s*var\(--qxframe9a7c2-theme-light-text,\s*var\(--_qxframe9a7c2-neutral-1\)\)/,
+    /--_qxframe9a7c2-mode-text-secondary:\s*var\(--qxframe9a7c2-theme-light-text-secondary,\s*var\(--_qxframe9a7c2-neutral-2\)\)/,
+    /--_qxframe9a7c2-mode-text-muted:\s*var\(--qxframe9a7c2-theme-light-text-muted,\s*var\(--_qxframe9a7c2-neutral-6\)\)/,
+    /--_qxframe9a7c2-mode-text-placeholder:\s*var\(--qxframe9a7c2-theme-light-text-placeholder,\s*var\(--_qxframe9a7c2-neutral-6\)\)/,
+    /--_qxframe9a7c2-mode-border:\s*var\(--qxframe9a7c2-theme-light-border,\s*var\(--_qxframe9a7c2-neutral-10\)\)/,
+    /--_qxframe9a7c2-mode-border-subtle:\s*var\(--qxframe9a7c2-theme-light-border-subtle,\s*var\(--_qxframe9a7c2-neutral-12\)\)/,
+    /--_qxframe9a7c2-mode-border-strong:\s*var\(--qxframe9a7c2-theme-light-border-strong,\s*var\(--_qxframe9a7c2-neutral-8\)\)/,
+    /--_qxframe9a7c2-mode-input-border:\s*var\(--qxframe9a7c2-theme-light-input-border,\s*var\(--_qxframe9a7c2-neutral-10\)\)/
+  ]],
+  ['Dark',darkCandidates[0].body,[
+    /--_qxframe9a7c2-mode-surface-muted:\s*var\(--qxframe9a7c2-theme-dark-surface-muted,\s*var\(--_qxframe9a7c2-neutral-3\)\)/,
+    /--_qxframe9a7c2-mode-text:\s*var\(--qxframe9a7c2-theme-dark-text,\s*var\(--_qxframe9a7c2-neutral-13\)\)/,
+    /--_qxframe9a7c2-mode-text-secondary:\s*var\(--qxframe9a7c2-theme-dark-text-secondary,\s*var\(--_qxframe9a7c2-neutral-13\)\)/,
+    /--_qxframe9a7c2-mode-text-muted:\s*var\(--qxframe9a7c2-theme-dark-text-muted,\s*var\(--_qxframe9a7c2-neutral-7\)\)/,
+    /--_qxframe9a7c2-mode-text-placeholder:\s*var\(--qxframe9a7c2-theme-dark-text-placeholder,\s*var\(--_qxframe9a7c2-neutral-7\)\)/,
+    /--_qxframe9a7c2-mode-border:\s*var\(--qxframe9a7c2-theme-dark-border,\s*rgba\(var\(--qxframe9a7c2-palette-white\),\s*\.10\)\)/,
+    /--_qxframe9a7c2-mode-border-subtle:\s*var\(--qxframe9a7c2-theme-dark-border-subtle,\s*rgba\(var\(--qxframe9a7c2-palette-white\),\s*\.08\)\)/,
+    /--_qxframe9a7c2-mode-border-strong:\s*var\(--qxframe9a7c2-theme-dark-border-strong,\s*rgba\(var\(--qxframe9a7c2-palette-white\),\s*\.15\)\)/,
+    /--_qxframe9a7c2-mode-input-border:\s*var\(--qxframe9a7c2-theme-dark-input-border,\s*rgba\(var\(--qxframe9a7c2-palette-white\),\s*\.15\)\)/
+  ]]
+]){
+  for(const pattern of patterns) assert.match(body,pattern,label+' Neutral recipe mapping changed unexpectedly.');
+}
+assert.doesNotMatch(css,/--_qxframe9a7c2-semantic-(?:subtle|subtle-hover|subtle-active|text-disabled|bg-disabled|border-disabled):[^;]*color-mix\(/,
+  'Ordinary Neutral subtle/disabled semantic states must resolve from the mode recipe instead of ad-hoc color-mix.');
+assert.match(css,/--_qxframe9a7c2-control-border:\s*var\(--qxframe9a7c2-family-control-border,\s*var\(--_qxframe9a7c2-semantic-input-border\)\)/,
+  'Control family must consume the semantic input-border role.');
+
 assert.match(lightCandidates[0].body,/--_qxframe9a7c2-mode-focus-visible:\s*rgb\(var\(--qxframe9a7c2-palette-black\)\)/,'Light keyboard focus-visible must remain black.');
 assert.match(darkCandidates[0].body,/--_qxframe9a7c2-mode-focus-visible:\s*rgb\(var\(--qxframe9a7c2-palette-white\)\)/,'Dark keyboard focus-visible must remain white.');
 
