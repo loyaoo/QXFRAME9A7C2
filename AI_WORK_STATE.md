@@ -14,14 +14,14 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Docs self-hosting + Card/Color token cleanup.
-- Current Task: `DOCS-SELF-HOSTING-CSS-012` (IN PROGRESS)
+- Current Phase: Docs self-hosting + Card/Color token cleanup complete.
+- Current Task: `DOCS-SELF-HOSTING-CSS-012` (COMPLETE)
 
 ## CURRENT
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
-Status: IN PROGRESS
-Task progress: 92%
+Status: COMPLETE
+Task progress: 100%
 
 User authority:
 - Canonical docs should be built from the framework's existing components/CSS wherever an equivalent framework primitive already exists; docs-only classes may own documentation layout but should not recreate Card/Button/Input/Table visual systems.
@@ -57,8 +57,14 @@ Implementation checkpoint:
 - Residual docs consumers of removed `color-white/color-black` aliases were migrated to canonical physical palette tokens.
 - Canonical docs + Phase F verifiers now reject return of parallel docs visual primitives, removed forwarding aliases, Card border mismatch, and missing Card/Table/Form dogfood mappings.
 
+Completion / verification evidence:
+- PR #197 `docs: dogfood framework primitives and clean color aliases` merged to `main` as `f5399052fdee0445af067f6999ac5ad6d2caf4ea`.
+- Exact-head PR QXFRAME CI #957 / run `36691177918` passed on `c82f20d66c64659964e5fbcdcfb07be50aacda93`.
+- Main QXFRAME CI #958 / run `36692022708` passed: Windows tools, dependency audit, Completion audit, Full release verification, npm pack, standalone dist/docs build, artifact uploads, GitHub Pages artifact upload and `deploy-pages` all succeeded.
+- No runtime component/controller behavior changed in this task.
+
 Next exact step:
-- Open PR, run exact-head QXFRAME CI, fix any verifier/build regression, then merge only after green CI and main Pages verification.
+- No remaining `DOCS-SELF-HOSTING-CSS-012` work. On resume, query current Git/PR/CI/Pages state first and wait for the next user-directed task.
 
 
 ### NEUTRAL-GREY-CSS-011 — Cold Gray leakage closeout
