@@ -369,7 +369,7 @@ function setupTimePickerRuntime(instance, fieldInit) {
   field = PickerField.create({
     container: opts.container, headless: opts.headless === true, renderControl: opts.renderControl !== false, reference: opts.reference, triggerTarget: opts.triggerTarget, valueTarget: opts.valueTarget, draftValueTarget: opts.draftValueTarget, inputTarget: opts.inputTarget, formTarget: opts.formTarget, formField: opts.formField, committedValue: draft.value, serializeValue: function (value) { if (selection === 'single') return TimeUnit.format(value, { showSecond:opts.showSecond, use12Hours:opts.use12Hours }); return (value || []).map(function (entry) { return TimeUnit.format(entry, { showSecond:opts.showSecond, use12Hours:opts.use12Hours }); }); }, elements: opts.elements, createDOM: opts.createDOM,
     document: opts.document, portalContainer: opts.portalContainer,
-    className: 'qxframe9a7c2-time-picker', panelClass: 'qxframe9a7c2-time-picker-panel',
+    rootClass: 'qxframe9a7c2-time-picker', panelClass: 'qxframe9a7c2-time-picker-panel',
     size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class: opts.class, style: opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, editable: true,
     clearable: opts.clearable, placeholder: opts.placeholder, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay,
     closeOnOutsidePress: opts.closeOnOutsidePress !== false, closeOnEscape: opts.closeOnEscape !== false, destroyOnClose: opts.destroyOnClose !== false,
