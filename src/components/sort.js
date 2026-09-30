@@ -122,7 +122,7 @@ export class Sort extends Component {
         r.root = root; r.scrollShell = scrollShell; r.scrollViewport = scrollViewport; r.scrollContent = scrollContent;
         r.scrollSurface = Scroll.attachViewport({
             root:scrollShell, viewport:scrollViewport, content:scrollContent, document:r.doc,
-            axis:'both', wheelAxis:'auto', wheelPropagation:true, scrollbarVisibility:'auto',
+            axis:'both', wheelAxis:'auto', wheelPropagation:true, scrollbarVisibility:'scroll',
             focusable:false, keyboard:false, controller:this
         });
         this.own(() => { if (r.scrollSurface) r.scrollSurface.destroy(); r.scrollSurface = null; });
