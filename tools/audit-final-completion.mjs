@@ -360,7 +360,32 @@ for(const moduleRecord of comparableModules.modules||[]){
   if(caps.domHeadless.length===0) delete caps.domHeadless;
   authorizedSharedProtocolChanges.push(moduleRecord.name+'.domHeadless+FocusOrigin'+(rule.restore?'/-'+rule.restore:''));
 }
+function collectApiParityDifferences(expected,current){
+  const differences=[];
+  const expectedByName=new Map((expected.components||[]).map(record=>[record.name,record]));
+  const currentByName=new Map((current.components||[]).map(record=>[record.name,record]));
+  const names=Array.from(new Set([...expectedByName.keys(),...currentByName.keys()])).sort();
+  for(const name of names){
+    const left=expectedByName.get(name),right=currentByName.get(name);
+    if(!left||!right){differences.push({component:name,field:'component',expected:!!left,current:!!right});continue;}
+    for(const field of ['schema','defaults','immutable','legacy','optionImpact','initializer','allowUnknown','dependencies']){
+      if(json(left[field])===json(right[field]))continue;
+      const detail={component:name,field:field};
+      if(field==='schema'&&left.schema&&right.schema){
+        const keys=Array.from(new Set([...Object.keys(left.schema),...Object.keys(right.schema)])).sort();
+        detail.keys=keys.filter(key=>json(left.schema[key])!==json(right.schema[key])).map(key=>({key,expected:left.schema[key],current:right.schema[key]}));
+      }else{
+        detail.expected=left[field];
+        detail.current=right[field];
+      }
+      differences.push(detail);
+      if(differences.length>=40)return differences;
+    }
+  }
+  return differences;
+}
 const apiParity=json(expectedApi)===json(comparableApi);
+const apiParityDifferences=apiParity?[]:collectApiParityDifferences(expectedApi,comparableApi);
 const moduleParity=json(expectedModules)===json(comparableModules);
 
 const oldBrowser=fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/verify-browser.log'),'utf8');
@@ -429,6 +454,7 @@ const report={
   staleActiveMetadata:staleMetadata,
   parity:{
     api:apiParity,
+    apiParityDifferences,
     authorizedApiSchemaExpansions,
     authorizedApiRemovals,
     authorizedLegacyPromotions,
