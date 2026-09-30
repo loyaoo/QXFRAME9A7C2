@@ -384,7 +384,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             fieldControl.setDraftVisual(openSearch && searchState.query !== '');
           }
           fieldControl.updateOptions({
-            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
+            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class:opts.class, style:opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
             disabled: opts.disabled === true, readOnly: opts.readOnly === true, editable: opts.searchable === true, clearable: opts.clearable === true, hasValue: values.length > 0,
             expanded: !!(triggerSession && triggerSession.getState().open), toggleVisible: true});
           fieldControl.setCommittedValue(opts.multiple === true ? values.slice() : selection.value, commitMeta || { silent: true, source: 'selection', reason: 'projection' });
@@ -579,7 +579,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var hostNode = doc.createElement('div'); hostNode.className = 'qxframe9a7c2-cascader-search-results'; columnsHost.appendChild(hostNode);
           var results = searchPaths();
           searchList = ItemCollection.create({ container: hostNode, scrollAdapter:popupFrame.createAdapter(), items: results, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
-            keyboardFocusOwner: controlFocusElement, getKey: function (entry) { return entry.key; }, getLabel: function (entry) { return entry.label; }, getValue: function (entry) { return entry.value; }, ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], classes:opts.classes, styles:opts.itemStyles, itemRender: function (entry, ctx) { return renderColumnItem(entry, ctx, 0, true); },
+            keyboardFocusOwner: controlFocusElement, getKey: function (entry) { return entry.key; }, getLabel: function (entry) { return entry.label; }, getValue: function (entry) { return entry.value; }, ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], styles:opts.itemStyles, itemRender: function (entry, ctx) { return renderColumnItem(entry, ctx, 0, true); },
             onActivate: function (detail) { activateSearchResult(detail.item, detail); }
           });
           columnRecords = [{ index: 0, items: results, host: hostNode, list: searchList, search: true }]; activeColumnIndex = 0;
@@ -601,7 +601,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             record.list = ItemCollection.create({
               container: column, items: items, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: false,
               keyboardFocusOwner: controlFocusElement,
-              ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], classes:opts.classes, styles:opts.itemStyles,
+              ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], styles:opts.itemStyles,
               itemRender: function (entry, ctx) { return renderColumnItem(entry, ctx, index, false); }, selectionAppearance: opts.selectionAppearance || (opts.multiple === true ? 'checkbox' : 'highlight'),
               getCheckState: function (entry) { return cascadeCheckState(entry); },
               getItemState: function (entry) {
@@ -963,7 +963,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             syncSelectionFromApiValue('options-value');
           }
           normalizeSelection(); triggerSession.updateOptions({ trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, placement: opts.placement, strategy: opts.strategy || 'absolute', middleware: opts.middleware, matchReferenceWidth: opts.matchReferenceWidth === true, autoUpdate: opts.autoUpdate !== false, destroyOnClose: opts.destroyOnClose !== false, disabled: opts.disabled === true });
-          if (triggerSession.getState().open) { renderColumns(); syncPopupContent(); } syncControl(); if (own(next, 'open')) triggerSession.setOpen(next.open === true, 'update-options'); if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
+          if (triggerSession.getState().open) { renderColumns(); syncPopupContent(); } syncControl(); if (own(next, 'open')) triggerSession.setOpen(next.open === true, 'update-options');
           return instance;
         }
         function getState() {
