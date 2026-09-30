@@ -415,7 +415,6 @@ function create(options) {
     if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true);
     if (title) title.tabIndex = typeof opts.onTitleRequest === 'function' && opts.disabled !== true ? 0 : -1;
     render();
-    if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     return api;
   }
   function destroy() {
