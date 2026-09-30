@@ -198,10 +198,13 @@ function create(options = {}) {
     names.forEach(key => { out[key] = snapshotValue(elements[key]); });
     return Object.freeze(out);
   }
-  function rebuild() {
-    if (destroyed) return;
+  function clearProjection() {
     projection.destroy();
     projection = DOMProjection.create();
+  }
+  function rebuild() {
+    if (destroyed) return;
+    clearProjection();
     if (!names.length) return;
 
     const classMap = resolveClassMap(currentOptions.class, names, defaultClassSlot);
@@ -271,6 +274,11 @@ function create(options = {}) {
     rebuild();
     return true;
   }
+  function clear() {
+    if (destroyed) return false;
+    clearProjection();
+    return true;
+  }
   function destroy() {
     if (destroyed) return false;
     destroyed = true;
@@ -292,7 +300,7 @@ function create(options = {}) {
 
   currentOptions = options.options && typeof options.options === 'object' ? options.options : {};
   rebuild();
-  return Object.freeze({ getElement, setElement, setElements, sync, destroy, getState });
+  return Object.freeze({ getElement, setElement, setElements, sync, clear, destroy, getState });
 }
 
 export const SemanticProjection = Object.freeze({ create });
