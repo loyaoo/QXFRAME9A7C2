@@ -565,6 +565,18 @@ function create(options) {
     // before hooks are allowed to close/reopen/destroy. Do not run prepare work for a
     // generation that the hook has already superseded.
     if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+    // Immediate is a synchronous lifecycle contract. It must not be delayed by an async
+    // onPrepare hook (for example a painted-baseline promise owned by Notice presence).
+    if (immediate) {
+      cleanupActive = applyPatch(element, phaseDescriptor.active);
+      void element.offsetWidth;
+      setEngineState(direction, 'start', direction === 'leave' ? 'leaving' : 'entering');
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      callHook('onStart', [context({ status: direction, reversal: false, immediate: true })], context({ status: direction, reversal: false, immediate: true }));
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      activeTarget(runGeneration, direction, phaseDescriptor, true, false);
+      return;
+    }
     runPrepare(runGeneration, direction, false, function () {
       if (disposed || runGeneration !== generation || currentDirection !== direction) return;
       if (immediate || reduced) {
@@ -606,6 +618,23 @@ function create(options) {
       callHook('onBeforeLeave', [context({ reversal: true })], context({ reversal: true }));
     } else callHook('onBeforeEnter', [context({ reversal: true })], context({ reversal: true }));
     if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+    if (immediate) {
+      cleanupActive = applyPatch(element, phaseDescriptor.active);
+      void element.offsetWidth;
+      setEngineState(direction, 'start', direction === 'leave' ? 'leaving' : 'entering', { reversal: true });
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      callHook('onStart', [context({ status: direction, reversal: true, immediate: true })], context({ status: direction, reversal: true, immediate: true }));
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      cleanupSnapshot(); cleanupSnapshot = noop;
+      cleanupFrom(); cleanupFrom = noop;
+      cleanupTo = applyPatch(element, phaseDescriptor.to);
+      setEngineState(direction, 'active', direction === 'leave' ? 'leaving' : 'entering', { reversal: true });
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      callHook('onActive', [context({ status: direction, reversal: true, immediate: true })], context({ status: direction, reversal: true, immediate: true }));
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      beginCompletion(runGeneration, direction, phaseDescriptor, true);
+      return;
+    }
     runPrepare(runGeneration, direction, true, function () {
       if (disposed || runGeneration !== generation || currentDirection !== direction) return;
       // Freeze the computed reversal origin only for the synchronous retarget commit.
