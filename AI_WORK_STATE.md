@@ -14,10 +14,43 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Admin Grid column / component-root DOM separation complete.
-- Current Task: `ADMIN-GRID-CARD-LAYERING-009`
+- Current Phase: Neutral / Grey CSS-only refactor.
+- Current Task: `NEUTRAL-GREY-CSS-010`
 
 ## CURRENT
+
+### NEUTRAL-GREY-CSS-010 — Tailwind-derived Grey 13 + shadcn-style Neutral semantic recipe
+Status: IN_PROGRESS
+Task progress: 20%
+
+User authority:
+- Attached `QXFRAME9A7C2 — Neutral / Grey CSS-only 重构修改手册` dated 2026-09-30.
+- Scope is CSS-only runtime refactor: Grey palette, Light/Dark Neutral recipe, semantic/family consumers; docs may be synchronized.
+- Do not modify Component/Controller/Picker/Popup runtime JS for this task.
+
+Baseline / reconciliation:
+- Baseline `main@e6879399483b6c4f25b93d3423519390d853e485`; no open PR at task start.
+- Main QXFRAME CI #944 (run 36662982378) passed.
+- Existing 9-controller migration, Phase F CSS Theme/Token architecture, Popup/Scroll/Admin closeouts remain complete and must not be redone.
+
+Inventory findings:
+- Canonical CSS still has Grey `0..13` (14 tones), including `--qxframe9a7c2-palette-grey-0`.
+- Canonical CSS still has 14 pure forwarding `--qxframe9a7c2-color-grey-N` aliases.
+- Standard Light/Dark mode recipes still default through `--_qxframe9a7c2-neutral-N -> Auxiliary/MixedGray -> Primary`, so default Neutral remains Primary-tinted.
+- The separate cold `Gray` palette remains a distinct optional palette; current compatibility/token helpers still reference it in several places.
+- Component/family CSS already routes physical color meaning through semantic/family owners after the foundation section, so the main correction can stay in CSS token/recipe layers.
+
+Frozen decisions for this task:
+- Canonical Grey becomes exactly `1..13`, 1 darkest -> 13 lightest, using the handbook Tailwind Neutral anchors plus two added light-region tones.
+- Remove Grey `0` and all `--qxframe9a7c2-color-grey-N` pure forwarding aliases; no replacement compatibility alias.
+- Keep MixedGray/Auxiliary generation intact as an optional/fallback recipe, but standard Light/Dark Neutral must directly use Grey.
+- Keep Primary/selected/focus on the Primary axis; keyboard focus-visible remains Light black / Dark white.
+- Keep the distinct cold `Gray` palette; it is not the canonical default Neutral and must not leak into standard neutral recipe.
+- No JS runtime changes.
+
+Next exact step:
+- Rewrite Grey primitive + canonical Light/Dark Neutral mode/state tokens in `src/qxframe9a7c2.css`, update docs-only references that still consume removed Grey aliases/default Mixed neutral, then run exact-head CI.
+
 
 ### ADMIN-GRID-CARD-LAYERING-009 — Admin Grid column / component-root DOM separation
 Status: COMPLETE
