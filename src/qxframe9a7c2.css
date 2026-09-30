@@ -14707,7 +14707,7 @@ button.qxframe9a7c2-tabs-tab{padding:0 var(--_qxframe9a7c2-tabs-pad-x);gap:var(-
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-indicator{left:calc(100% - 2px);top:0;width:2px;height:0}
 .qxframe9a7c2-tabs.is-placement-right .qxframe9a7c2-tabs-indicator{left:0}
 .qxframe9a7c2-tabs:not(.is-line) .qxframe9a7c2-tabs-indicator{display:none}
-.qxframe9a7c2-tabs.is-animated-indicator .qxframe9a7c2-tabs-indicator{transition:transform var(--qxframe9a7c2-motion-duration-3) var(--qxframe9a7c2-motion-easing-standard),width var(--qxframe9a7c2-motion-duration-3) var(--qxframe9a7c2-motion-easing-standard),height var(--qxframe9a7c2-motion-duration-3) var(--qxframe9a7c2-motion-easing-standard)}
+.qxframe9a7c2-tabs.is-animated-indicator .qxframe9a7c2-tabs-indicator{transition:transform var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing),width var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing),height var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing)}
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab{--_qxframe9a7c2-tabs-tab-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface-muted);border:1px solid var(--_qxframe9a7c2-tabs-tab-border)}
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-tabs-tab-border:var(--_qxframe9a7c2-semantic-accent)}
 .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{padding:3px;border-radius:var(--_qxframe9a7c2-tabs-radius);background:var(--_qxframe9a7c2-semantic-surface-muted)}
@@ -16256,7 +16256,8 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-collapse-indicator:disabled{--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-ring:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed}
 .qxframe9a7c2-collapse-transition-enter-from,.qxframe9a7c2-collapse-transition-leave-to{height:0;opacity:0}
 .qxframe9a7c2-collapse-transition-enter-to,.qxframe9a7c2-collapse-transition-leave-from{height:var(--qxframe9a7c2-collapse-motion-height);opacity:1}
-.qxframe9a7c2-collapse-transition-enter-active,.qxframe9a7c2-collapse-transition-leave-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-duration-3,200ms) var(--qxframe9a7c2-motion-easing-move,cubic-bezier(.645,.045,.355,1)),opacity var(--qxframe9a7c2-motion-duration-3,200ms) var(--qxframe9a7c2-motion-easing-move,cubic-bezier(.645,.045,.355,1))}
+.qxframe9a7c2-collapse-transition-enter-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-collapse-panel-enter-duration) var(--qxframe9a7c2-motion-collapse-panel-easing),opacity var(--qxframe9a7c2-motion-collapse-panel-enter-duration) var(--qxframe9a7c2-motion-collapse-panel-easing)}
+.qxframe9a7c2-collapse-transition-leave-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-collapse-panel-leave-duration) var(--qxframe9a7c2-motion-collapse-panel-easing),opacity var(--qxframe9a7c2-motion-collapse-panel-leave-duration) var(--qxframe9a7c2-motion-collapse-panel-easing)}
 /* Collapse size classes inherit the shared control-height family/size resolver.
    Keep only the component-specific compact inline-padding deltas. */
 .qxframe9a7c2-collapse.is-xs{--_qxframe9a7c2-control-padding-inline:8px}
@@ -16355,6 +16356,10 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-appear-to,
 .qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-enter-to,
 .qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-leave-from{opacity:var(--qxframe9a7c2-image-preview-mask-opacity,82%)}
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-appear-active,.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-enter-active{transition-duration:var(--qxframe9a7c2-motion-image-preview-mask-enter-duration);transition-timing-function:var(--qxframe9a7c2-motion-image-preview-mask-enter-easing)}
+.qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-leave-active{transition-duration:var(--qxframe9a7c2-motion-image-preview-mask-leave-duration);transition-timing-function:var(--qxframe9a7c2-motion-image-preview-mask-leave-easing)}
+.qxframe9a7c2-image-preview-trajectory-enter-active{transition-property:transform;transition-duration:var(--qxframe9a7c2-motion-image-preview-trajectory-enter-duration);transition-timing-function:var(--qxframe9a7c2-motion-image-preview-trajectory-easing)}
+.qxframe9a7c2-image-preview-trajectory-leave-active{transition-property:transform;transition-duration:var(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration);transition-timing-function:var(--qxframe9a7c2-motion-image-preview-trajectory-easing)}
 .qxframe9a7c2-image-preview-stage{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-raised);display:grid;width:100%;height:100%;place-items:center;overflow:visible;cursor:default;pointer-events:none}
 .qxframe9a7c2-image-preview-motion{position:relative;display:grid;place-items:center;max-width:none;max-height:none;transform-origin:center center;pointer-events:none}
 .qxframe9a7c2-image-preview-motion.is-trajectory-active{will-change:transform,opacity}
