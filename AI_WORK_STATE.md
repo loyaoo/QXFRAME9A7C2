@@ -14,25 +14,24 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: capability leakage / shared runtime unification merge closeout.
+- Current Phase: capability leakage / shared runtime unification complete.
 - Current Task: `ARCH-MERGE-CLOSEOUT-007`
 
 ## CURRENT
 
 ### ARCH-MERGE-CLOSEOUT-007 — merge / main / Pages closeout
-Status: IN PROGRESS — CHECKPOINT CI
-Task progress: 70%
+Status: COMPLETE
+Task progress: 100%
 
-Current truth:
-- ARCH-UNIFICATION-006 implementation is complete and already passed full PR acceptance on implementation head `846140367ad247d9044398804ea9d91d74105ad2` in QXFRAME CI #926.
-- The checkpoint-only head failed only because Phase I release-integrity requires `Current Task` to be a live backticked task id; no runtime/build/browser regression failed before that assertion.
-- PR #186 remains open and mergeable; PR #185 remains superseded and unmerged.
+Completion evidence:
+- PR #186 merged into `main` as `a78e0a4a5fda5d72441074fe85090aaf9a23051f`.
+- Superseded PR #185 was closed unmerged after its valid Menu-root Scroll/admin acceptance intent had been absorbed by #186.
+- Main QXFRAME CI #930 for merge SHA `a78e0a4a5fda5d72441074fe85090aaf9a23051f` passed Windows tools, Completion audit, Full release verification, npm pack, standalone dist + docs demo build, canonical browser verification and artifact uploads.
+- The same main run uploaded the GitHub Pages artifact and `deploy-pages` completed successfully.
+- No implementation work remains for ARCH-UNIFICATION-006 or ARCH-MERGE-CLOSEOUT-007.
 
-Next exact step:
-- Run exact-head CI for this checkpoint correction.
-- If green, merge PR #186.
-- Close superseded PR #185.
-- Verify the resulting main QXFRAME CI and GitHub Pages deployment/canonical admin browser publication.
+Resume rule:
+- Query current Git / PR / CI / Pages state first. Do not re-run the popup/reorder/OverlayFrame migration or reopen superseded PR #185 unless new repository evidence proves a regression.
 
 ### ARCH-UNIFICATION-006 — Popup / Reorder / OverlayFrame shared-runtime closeout
 Status: COMPLETE
