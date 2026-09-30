@@ -21,6 +21,10 @@ assert.match(overlayControllerSource,/from ['"]\.\/overlayRuntime\.js['"]/,'Over
 assert.doesNotMatch(overlayControllerSource,/OpenStateBridge|\bopened\s*=/,'OverlayController must not own logical open state.');
 assert.match(motionSource,/generation:\s*generation/,'MotionCore must expose its canonical generation through state.');
 assert.match(motionSource,/function cancel\(meta\)/,'MotionCore must expose bounded cancellation without a second timer.');
+assert.match(motionSource,/getComputedStyle\(element, pseudoElement \|\| null\)/,'MotionCore must detect timing from computed CSS.');
+assert.match(motionSource,/does not accept visual duration; timing must come from computed CSS/,'computed CSS timing must be the only MotionCore completion authority.');
+assert.doesNotMatch(motionSource,/resolveDuration\s*\(|explicitDuration|settings\.duration[^\n]*resolve/,'MotionCore must not retain explicit visual duration ownership.');
+assert.doesNotMatch(transitionSource,/duration:\s*settings\.duration/,'Transition must not forward a second visual timing authority.');
 assert.match(transitionSource,/MotionController\.create\s*\(/,'Transition must be a compatibility facade over MotionController.');
 assert.doesNotMatch(transitionSource,/from ['"]\.\/motion\.js['"]/,'Transition must not bypass MotionController.');
 assert.match(triggerSource,/OverlayController\.create\s*\(/,'Trigger must enter overlay resources through OverlayController.');
