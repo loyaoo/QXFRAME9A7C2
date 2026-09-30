@@ -5,6 +5,7 @@ import { ComponentProfile } from '../src/core/componentProfile.js';
 
 const source=fs.readFileSync(new URL('../src/components/image.js',import.meta.url),'utf8');
 const overlayRuntime=fs.readFileSync(new URL('../src/core/overlayRuntime.js',import.meta.url),'utf8');
+const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
 const profile=ComponentProfile.define(Image.profile);
 const expected=['focus','interaction','capability','motion','overlay','feedback'];
 const owners={
@@ -41,7 +42,6 @@ assert.doesNotMatch(source,/transitionDuration\s*:|transitionTimingFunction\s*:|
 assert.match(css,/--qxframe9a7c2-motion-image-preview-trajectory-enter-duration:\s*var\(--qxframe9a7c2-motion-duration-3\)/,'Image trajectory enter default must be CSS semantic token → primitive duration-3.');
 assert.match(css,/--qxframe9a7c2-motion-image-preview-mask-leave-duration:\s*var\(--qxframe9a7c2-motion-duration-2\)/,'Image mask leave default must be CSS semantic token → primitive duration-2.');
 assert.match(source,/classList\.toggle\('is-pannable',\s*state\.scale\s*>\s*1\.001\s*&&\s*cfg\('draggable',\s*opts\.draggable\)\s*!==\s*false\)/,'Image grab cursor capability must require both zoom and draggable permission.');
-const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
 assert.match(css,/\.qxframe9a7c2-image-preview-image\.is-pannable\{cursor:grab\}/,'Image preview grab cursor must follow pannable capability.');
 assert.match(source,/previewNodeByAction\.set\(String\(action\), button\)/,'Image preview chrome must retain action identity across media rerenders.');
 assert.match(source,/chromeOwnedFocus[\s\S]*FocusOrigin\.prepare\(nextFocus, focusOrigin[\s\S]*DOM\.focusElement\(nextFocus/,'Image preview media switching must restore focus when the active chrome node is rebuilt.');
