@@ -553,7 +553,6 @@ function setupTransfer(instance) {
   function listRuntimeOptions(side) {
     var projection = listProjectionOptions(side);
     return {
-      classes: opts.classes,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
       size: opts.size,
