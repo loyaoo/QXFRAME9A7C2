@@ -1,3 +1,4 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { Trigger } from '../src/components/trigger.js';
@@ -8,7 +9,7 @@ const triggerSource=read('src/components/trigger.js');
 const overlayRuntimeSource=read('src/core/overlayRuntime.js');
 const pressSource=read('src/core/pressInteraction.js');
 const triggerInteractionSource=read('src/core/triggerInteraction.js');
-const cssSource=read('src/qxframe9a7c2.css');
+const cssSource=readCanonicalStyleSource({root});
 
 const profile=ComponentProfile.define(Trigger.profile);
 assert.equal(profile.name,'Trigger');

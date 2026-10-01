@@ -1,14 +1,27 @@
 {
-  "framework": "QXFRAME9A7C2",
-  "frameworkVersion": "2.19.81",
-  "version": 2,
-  "policy": "src/qxframe9a7c2.css is the sole production CSS source. Foundation/theme/semantic/family/component/state/composite/utility/compatibility are conceptual sections inside this one physical file; no split CSS mirror may become a second authority.",
+  "version": 5,
+  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS modules are the only writable style authority. The Phase A CSS baseline is retained only under tools/fixtures for equivalence testing and is never shipped or consumed by the release build.",
   "files": [
     {
       "stage": "canonical",
-      "name": "single-source",
-      "file": "src/qxframe9a7c2.css"
+      "name": "scss-entry",
+      "file": "src/styles/qxframe9a7c2.scss"
     }
+  ],
+  "migrationBaseline": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
+  "migrationModules": [
+    "src/styles/base/_reset.scss",
+    "src/styles/preset/_foundation.scss",
+    "src/styles/theme/_default.scss",
+    "src/styles/theme/_family.scss",
+    "src/styles/components/_components.scss"
+  ],
+  "physicalOrder": [
+    "base",
+    "preset",
+    "theme-default",
+    "theme-family-category",
+    "components"
   ],
   "conceptualOrder": [
     "foundation",

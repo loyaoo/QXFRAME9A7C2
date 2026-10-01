@@ -1,3 +1,4 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { ComponentProfile } from '../src/core/componentProfile.js';
@@ -30,7 +31,7 @@ const datePicker=read('src/components/date-picker.js');
 const transfer=read('src/components/transfer.js');
 const sort=read('src/components/sort.js');
 const upload=read('src/components/upload.js');
-const css=read('src/qxframe9a7c2.css');
+const css=readCanonicalStyleSource({root});
 assert.match(carousel,/ValueController\.createValueBinding\s*\(/);
 assert.match(carousel,/FocusController\.create\s*\(/);
 assert.match(carousel,/InteractionController\.create\s*\(/);

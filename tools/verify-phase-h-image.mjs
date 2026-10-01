@@ -1,3 +1,4 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { Image } from '../src/components/image.js';
@@ -5,7 +6,7 @@ import { ComponentProfile } from '../src/core/componentProfile.js';
 
 const source=fs.readFileSync(new URL('../src/components/image.js',import.meta.url),'utf8');
 const overlayRuntime=fs.readFileSync(new URL('../src/core/overlayRuntime.js',import.meta.url),'utf8');
-const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
+const css=readCanonicalStyleSource();
 const profile=ComponentProfile.define(Image.profile);
 const expected=['focus','interaction','capability','motion','overlay','feedback'];
 const owners={
