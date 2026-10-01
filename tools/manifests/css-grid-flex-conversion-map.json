@@ -9,20 +9,20 @@
   },
   "baseline": {
     "phaseBWideCssGridMatches": 436,
-    "actualGridRuleCount": 42,
-    "actualGridDeclarationCount": 83
+    "actualGridRuleCount": 37,
+    "actualGridDeclarationCount": 78
   },
   "summary": {
     "byRisk": {
       "medium": 18,
-      "low": 13,
-      "high": 11
+      "high": 11,
+      "low": 8
     },
     "byStrategy": {
       "manual-flex-span": 11,
-      "flex": 10,
       "manual-flex-sizing": 7,
       "flex-wrap-basis": 6,
+      "flex": 5,
       "manual-review": 3,
       "absolute-stack": 1,
       "flex-center": 1,
@@ -32,18 +32,17 @@
     },
     "byFamily": {
       "form": 8,
-      "card": 7,
+      "card": 6,
       "descriptions": 6,
-      "upload": 5,
       "color-picker": 3,
       "form-selectgroup": 3,
+      "upload": 3,
       "carousel": 2,
-      "color-panel": 2,
       "tree": 2,
+      "color-panel": 1,
       "image": 1,
       "period-panel": 1,
-      "picker": 1,
-      "table": 1
+      "picker": 1
     },
     "protected24ColumnFlexGridRulesMatched": 0
   },
@@ -170,21 +169,6 @@
       ],
       "suggestedStrategy": "manual-flex-sizing",
       "risk": "medium",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-card-skeleton",
-      "family": "card",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex",
-      "risk": "low",
       "approved": false,
       "finalStrategy": null
     },
@@ -624,21 +608,6 @@
       "finalStrategy": null
     },
     {
-      "selector": ".qxframe9a7c2-color-panel-sliders",
-      "family": "color-panel",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
       "selector": ".qxframe9a7c2-color-panel-fields",
       "family": "color-panel",
       "declarations": [
@@ -744,52 +713,7 @@
       "finalStrategy": null
     },
     {
-      "selector": ".qxframe9a7c2-table-filter-options",
-      "family": "table",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-upload",
-      "family": "upload",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
       "selector": ".qxframe9a7c2-upload-list",
-      "family": "upload",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-upload-main",
       "family": "upload",
       "declarations": [
         {

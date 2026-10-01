@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "batch": "css-grid-stack-batch-4",
+  "convertedSelectors": [
+    ".qxframe9a7c2-card-skeleton",
+    ".qxframe9a7c2-color-panel-sliders",
+    ".qxframe9a7c2-table-filter-options",
+    ".qxframe9a7c2-upload",
+    ".qxframe9a7c2-upload-main"
+  ],
+  "before": {
+    "actualGridRules": 42,
+    "actualGridDeclarations": 83
+  },
+  "after": {
+    "actualGridRules": 37,
+    "actualGridDeclarations": 78
+  },
+  "policy": "Vertical implicit Grid stacks only; converted to flex-direction:column while preserving existing gap and stretch behavior."
+}
