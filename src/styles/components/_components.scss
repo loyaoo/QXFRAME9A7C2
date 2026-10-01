@@ -15028,7 +15028,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-form-check.is-lg{--_qxframe9a7c2-form-check-size-default:1.125rem;font-size:1.0625rem}
 .qxframe9a7c2-form-check.is-xl{--_qxframe9a7c2-form-check-size-default:1.25rem;font-size:1.125rem}
 .qxframe9a7c2-form-check.is-block,.qxframe9a7c2-form-selectgroup.is-block{width:100%}
-.qxframe9a7c2-form-selectgroup.is-block>.qxframe9a7c2-form-selectgroup-item{flex:1 1 0;min-width:0}
+.qxframe9a7c2-form-selectgroup.is-block>.qxframe9a7c2-form-selectgroup-item{flex:1 1 var(--_qxframe9a7c2-form-selectgroup-item-basis,0);min-width:var(--_qxframe9a7c2-form-selectgroup-item-min-width,0)}
 .qxframe9a7c2-form-selectgroup.is-block>.qxframe9a7c2-form-selectgroup-item>.qxframe9a7c2-form-selectgroup-label{width:100%}
 
 /* v1.44 Native Choice Foundation — Checkbox / Radio remain authored HTML + CSS. */
@@ -15083,7 +15083,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-form-selectgroup.is-connected>.qxframe9a7c2-form-selectgroup-item:first-child>.qxframe9a7c2-form-selectgroup-label{border-start-start-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius));border-end-start-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius))}
 .qxframe9a7c2-form-selectgroup.is-connected>.qxframe9a7c2-form-selectgroup-item:last-child>.qxframe9a7c2-form-selectgroup-label{border-start-end-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius));border-end-end-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius))}
 .qxframe9a7c2-form-selectgroup.is-connected>.qxframe9a7c2-form-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
-.qxframe9a7c2-form-selectgroup.is-image-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:var(--qxframe9a7c2-theme-space-3,12px)}
+.qxframe9a7c2-form-selectgroup.is-image-grid{display:flex;--_qxframe9a7c2-form-selectgroup-item-basis:8.5rem;--_qxframe9a7c2-form-selectgroup-item-min-width:8.5rem;gap:var(--qxframe9a7c2-theme-space-3,12px)}
 .qxframe9a7c2-form-selectgroup.is-image-grid>.qxframe9a7c2-form-selectgroup-item{display:block;min-width:0}
 .qxframe9a7c2-form-selectgroup.is-color-grid{display:flex;gap:var(--qxframe9a7c2-theme-space-2,8px)}
 .qxframe9a7c2-form-selectgroup-content{display:block;min-width:0;flex:1 1 auto;text-align:start}
@@ -15093,7 +15093,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-form-selectgroup-avatar>img{display:block;width:100%;height:100%;object-fit:cover}
 .qxframe9a7c2-form-selectgroup-payment{display:inline-flex;align-items:center;justify-content:center;min-width:3rem;height:2rem;padding-inline:.5rem;border:1px solid var(--_qxframe9a7c2-semantic-border-subtle);border-radius:var(--qxframe9a7c2-theme-radius-sm);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text);font-size:.75em;font-weight:700;letter-spacing:.02em}
 
-.qxframe9a7c2-form-selectgroup.is-boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(13.125rem,1fr))}
+.qxframe9a7c2-form-selectgroup.is-boxes{display:flex;--_qxframe9a7c2-form-selectgroup-item-basis:13.125rem;--_qxframe9a7c2-form-selectgroup-item-min-width:13.125rem}
 .qxframe9a7c2-form-selectgroup.is-boxes .qxframe9a7c2-form-selectgroup-item{display:block}
 .qxframe9a7c2-form-selectgroup.is-boxes .qxframe9a7c2-form-selectgroup-label{height:100%;justify-content:flex-start;padding:.875rem;text-align:start}
 .qxframe9a7c2-form-selectgroup-title{display:block;color:var(--_qxframe9a7c2-semantic-text);font-weight:600}

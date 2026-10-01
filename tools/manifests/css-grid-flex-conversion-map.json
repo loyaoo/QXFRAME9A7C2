@@ -9,19 +9,19 @@
   },
   "baseline": {
     "phaseBWideCssGridMatches": 436,
-    "actualGridRuleCount": 31,
-    "actualGridDeclarationCount": 66
+    "actualGridRuleCount": 29,
+    "actualGridDeclarationCount": 60
   },
   "summary": {
     "byRisk": {
-      "medium": 18,
+      "medium": 16,
       "high": 10,
       "low": 3
     },
     "byStrategy": {
       "manual-flex-span": 10,
       "manual-flex-sizing": 7,
-      "flex-wrap-basis": 6,
+      "flex-wrap-basis": 4,
       "manual-review": 3,
       "flex": 2,
       "absolute-stack": 1,
@@ -34,7 +34,6 @@
       "card": 5,
       "color-picker": 3,
       "carousel": 2,
-      "form-selectgroup": 2,
       "upload": 2,
       "color-panel": 1,
       "period-panel": 1,
@@ -435,56 +434,6 @@
       ],
       "suggestedStrategy": "manual-flex-span",
       "risk": "high",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-form-selectgroup.is-image-grid",
-      "family": "form-selectgroup",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        },
-        {
-          "kind": "grid-template",
-          "property": "grid-template-columns",
-          "value": "repeat(auto-fit,minmax(8.5rem,1fr))"
-        },
-        {
-          "kind": "fr-unit",
-          "property": null,
-          "value": "1fr"
-        }
-      ],
-      "suggestedStrategy": "flex-wrap-basis",
-      "risk": "medium",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-form-selectgroup.is-boxes",
-      "family": "form-selectgroup",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        },
-        {
-          "kind": "grid-template",
-          "property": "grid-template-columns",
-          "value": "repeat(auto-fit,minmax(13.125rem,1fr))"
-        },
-        {
-          "kind": "fr-unit",
-          "property": null,
-          "value": "1fr"
-        }
-      ],
-      "suggestedStrategy": "flex-wrap-basis",
-      "risk": "medium",
       "approved": false,
       "finalStrategy": null
     },
