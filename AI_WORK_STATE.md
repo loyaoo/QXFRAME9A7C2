@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 25%
-Phase: Phase A DONE; Phase B consumer inventory generation in progress
+Task progress: 28%
+Phase: Phase A DONE; Phase B inventory generated/validated; persistence and closeout pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -83,9 +83,15 @@ Current baseline inventory summary:
 - JS geometry-coupling sites: 147
 - Inventory values are discovery only; they are not approval for mechanical replacement.
 
+Phase B exact-head evidence:
+- PR #203 QXFRAME CI #1056 / run 36837720548: SUCCESS.
+- Generated full inventory artifact #11150345740.
+- Counts: odd px 45; decimal px 14; viewport units 54; fr 21; CSS Grid matches 436; JS geometry sites 154.
+
 Next exact step:
-- Phase B: generate and persist full consumer-level tables from canonical SCSS for odd/decimal px, forbidden viewport units, fr, CSS Grid, and JS geometry coupling.
-- Inventory/classification only. Do not normalize sizes or convert layout until consumer tables are reviewed and gated.
+- Persist the full Phase B inventory JSON and the consumer-decision manifest in-repo.
+- Remove the temporary CI write permission after persistence, rerun exact-head CI, then close Phase B.
+- Do not normalize sizes or convert layout until these consumer tables remain the migration basis.
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE
