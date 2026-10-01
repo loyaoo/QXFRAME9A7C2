@@ -9,22 +9,22 @@
   },
   "baseline": {
     "phaseBWideCssGridMatches": 436,
-    "actualGridRuleCount": 64,
-    "actualGridDeclarationCount": 105
+    "actualGridRuleCount": 57,
+    "actualGridDeclarationCount": 98
   },
   "summary": {
     "byRisk": {
-      "low": 35,
+      "low": 28,
       "medium": 18,
       "high": 11
     },
     "byStrategy": {
-      "flex-center": 13,
-      "flex": 12,
+      "flex": 11,
       "manual-flex-span": 11,
-      "inline-flex-center": 8,
+      "flex-center": 10,
       "manual-flex-sizing": 7,
       "flex-wrap-basis": 6,
+      "inline-flex-center": 5,
       "manual-review": 3,
       "inline-flex": 2,
       "absolute-stack": 1,
@@ -40,10 +40,7 @@
       "carousel": 4,
       "image": 4,
       "color-picker": 3,
-      "image-preview": 3,
-      "avatar": 2,
       "color-panel": 2,
-      "loading": 2,
       "tree": 2,
       "native-form": 1,
       "period-panel": 1,
@@ -63,36 +60,6 @@
         }
       ],
       "suggestedStrategy": "flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-avatar",
-      "family": "avatar",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "inline-grid"
-        }
-      ],
-      "suggestedStrategy": "inline-flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-avatar-group-overflow",
-      "family": "avatar",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "inline-grid"
-        }
-      ],
-      "suggestedStrategy": "inline-flex-center",
       "risk": "low",
       "approved": false,
       "finalStrategy": null
@@ -379,36 +346,6 @@
       ],
       "suggestedStrategy": "manual-review",
       "risk": "medium",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-loading-indicator",
-      "family": "loading",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "inline-grid"
-        }
-      ],
-      "suggestedStrategy": "inline-flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-loading-content",
-      "family": "loading",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex",
-      "risk": "low",
       "approved": false,
       "finalStrategy": null
     },
@@ -1160,51 +1097,6 @@
     {
       "selector": ".qxframe9a7c2-image-mask",
       "family": "image",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-image-preview-stage",
-      "family": "image-preview",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-image-preview-motion",
-      "family": "image-preview",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-image-preview-tool,.qxframe9a7c2-image-preview-nav",
-      "family": "image-preview",
       "declarations": [
         {
           "kind": "display-grid",
