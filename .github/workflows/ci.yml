@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   release:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -56,6 +58,40 @@ jobs:
           name: css-token-phase-b-inventory-${{ github.sha }}
           path: artifacts/css-token-phase-b-inventory.json
           retention-days: 7
+
+      - name: Persist Phase B inventory once
+        if: github.event_name == 'pull_request' && github.head_ref == 'refactor/css-token-phase-b-inventory'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          if [ -f tools/manifests/css-token-phase-b-inventory.json ]; then
+            echo "Phase B inventory already persisted."
+            exit 0
+          fi
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const headers={
+            Authorization:`Bearer ${process.env.GH_TOKEN}`,
+            Accept:'application/vnd.github+json',
+            'X-GitHub-Api-Version':'2022-11-28',
+            'Content-Type':'application/json'
+          };
+          const generated=fs.readFileSync('artifacts/css-token-phase-b-inventory.json');
+          const response=await fetch(`https://api.github.com/repos/${process.env.REPOSITORY}/contents/tools/manifests/css-token-phase-b-inventory.json`,{
+            method:'PUT',
+            headers,
+            body:JSON.stringify({
+              message:'audit: persist Phase B CSS consumer inventory',
+              content:generated.toString('base64'),
+              branch:process.env.HEAD_REF
+            })
+          });
+          if(!response.ok) throw new Error(`Persist Phase B inventory failed: ${response.status} ${await response.text()}`);
+          console.log('Persisted Phase B inventory.');
+          NODE
 
       - name: Pack npm artifact
         shell: bash
