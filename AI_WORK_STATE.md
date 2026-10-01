@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 73%
-Phase: Phase A/B/C DONE; Size Tree + audits DONE; odd fonts/pill/control-radius DONE; Sort/Upload drop-indicator geometry implemented, CI pending
+Task progress: 77%
+Phase: Phase A/B/C DONE; Size Tree + audits DONE; odd fonts/pill/control-radius/drop-indicator DONE; overlay arrow geometry implemented, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
