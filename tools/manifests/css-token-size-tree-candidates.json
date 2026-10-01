@@ -241,9 +241,9 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1262,
+    "totalCandidates": 1261,
     "exactNodeCandidates": 897,
-    "needsReview": 122,
+    "needsReview": 121,
     "signedOffsets": 48,
     "pillSentinels": 1,
     "protectedBreakpoints": 242,
@@ -251,14 +251,14 @@
       "base": 0,
       "preset": 1,
       "theme": 6,
-      "component": 1255
+      "component": 1254
     },
     "byDomain": {
       "breakpoint-boundary": 242,
       "geometry": 120,
       "pill-radius-sentinel": 1,
       "position": 41,
-      "radius": 130,
+      "radius": 129,
       "shadow": 32,
       "signed-offset": 48,
       "spacing": 496,
@@ -23930,31 +23930,7 @@
         "px": 88
       },
       "selector": ".qxframe9a7c2-color-picker-gradient-angle",
-      "text": ".qxframe9a7c2-color-picker-gradient-angle{box-sizing:border-box;width:5.25rem;min-height:var(--_qxframe9a7c2-control-height);flex:0 0 5.25rem;margin-inline-end:auto;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-semantic-bg);color:var(--_qxframe9a7c2-semantic-text);padding:0 var(--_qxframe9a7c2-control-padding-inline)}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15595,
-      "raw": "5.25rem",
-      "unit": "rem",
-      "value": 5.25,
-      "pxEquivalent": 84,
-      "domain": "radius",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-32",
-        "px": 80
-      },
-      "upperNode": {
-        "name": "size-33",
-        "px": 88
-      },
-      "selector": ".qxframe9a7c2-color-picker-gradient-angle",
-      "text": ".qxframe9a7c2-color-picker-gradient-angle{box-sizing:border-box;width:5.25rem;min-height:var(--_qxframe9a7c2-control-height);flex:0 0 5.25rem;margin-inline-end:auto;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-semantic-bg);color:var(--_qxframe9a7c2-semantic-text);padding:0 var(--_qxframe9a7c2-control-padding-inline)}",
+      "text": ".qxframe9a7c2-color-picker-gradient-angle{box-sizing:border-box;width:5.25rem;min-height:var(--_qxframe9a7c2-control-height);flex:0 0 auto;margin-inline-end:auto;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-semantic-bg);color:var(--_qxframe9a7c2-semantic-text);padding:0 var(--_qxframe9a7c2-control-padding-inline)}",
       "finalTarget": null,
       "approved": false
     },
