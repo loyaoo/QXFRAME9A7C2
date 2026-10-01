@@ -52,6 +52,10 @@ function adaptLegacySmokeSource(source) {
         .replace(
             "animation:false,maskAnimation:false,enterDuration:0,leaveDuration:0,maskEnterDuration:0,maskLeaveDuration:0,autoFocus:first",
             "animation:false,maskAnimation:false,duration:{dialog:0,mask:0},autoFocus:first"
+        )
+        .replace(
+            "var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,duration:{enter:90,leave:90},reducedMotion:false});",
+            "motionBox.style.setProperty('--qxframe9a7c2-motion-duration-3','90ms');var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,reducedMotion:false});"
         );
 }
 
