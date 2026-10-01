@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 84%
-Phase: Phase A/B/C DONE; Size Tree + audits DONE; Card skeleton 15px→16px DONE; exact Theme control geometry -> Size Tree rebased, CI pending
+Task progress: 87%
+Phase: Phase A/B/C DONE; Size Tree + audits DONE; Theme control geometry DONE; second exact Theme Size Tree batch implemented, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
