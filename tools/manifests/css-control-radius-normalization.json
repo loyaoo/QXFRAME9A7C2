@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "phase": "control-radius-normalization",
+  "policy": "Control radius uses Theme radius slots backed by the even Size Tree. No global mechanical odd rounding.",
+  "mappings": [
+    {
+      "size": "xs",
+      "beforePx": 3,
+      "themeToken": "--qxframe9a7c2-theme-radius-xs",
+      "afterPx": 2,
+      "deltaPx": -1
+    },
+    {
+      "size": "sm",
+      "beforePx": 3,
+      "themeToken": "--qxframe9a7c2-theme-radius-sm",
+      "afterPx": 4,
+      "deltaPx": 1
+    },
+    {
+      "size": "md",
+      "beforePx": 4,
+      "themeToken": "--qxframe9a7c2-theme-radius-sm",
+      "afterPx": 4,
+      "deltaPx": 0
+    },
+    {
+      "size": "lg",
+      "beforePx": 4,
+      "themeToken": "--qxframe9a7c2-theme-radius-sm",
+      "afterPx": 4,
+      "deltaPx": 0
+    },
+    {
+      "size": "xl",
+      "beforePx": 5,
+      "themeToken": "--qxframe9a7c2-theme-radius-md",
+      "afterPx": 6,
+      "deltaPx": 1
+    }
+  ],
+  "rationale": [
+    "Use the nearest even semantic radius while keeping max physical delta at 1px.",
+    "Keep the scale nondecreasing across xs/sm/md/lg/xl.",
+    "Route Theme -> Preset radius -> Size Tree so html font-size scaling remains proportional."
+  ]
+}

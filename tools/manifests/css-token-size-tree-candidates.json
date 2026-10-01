@@ -6,7 +6,7 @@
     "defaultRootFontSizePx": 16,
     "automaticOddRounding": false,
     "automaticApproval": false,
-    "note": "Candidate table only. Canonical --size-* definitions and all implemented odd-font decisions are excluded; finalTarget and approved remain unset until each remaining consumer/domain decision is reviewed."
+    "note": "Candidate table only. Canonical --size-* definitions are excluded; finalTarget and approved remain unset until each consumer/domain decision is reviewed."
   },
   "sizeTree": [
     {
@@ -241,16 +241,16 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1328,
-    "exactNodeCandidates": 938,
-    "needsReview": 155,
+    "totalCandidates": 1323,
+    "exactNodeCandidates": 936,
+    "needsReview": 152,
     "signedOffsets": 66,
     "pillSentinels": 1,
     "protectedBreakpoints": 234,
     "byLayer": {
       "base": 0,
       "preset": 1,
-      "theme": 49,
+      "theme": 44,
       "component": 1278
     },
     "byDomain": {
@@ -258,7 +258,7 @@
       "geometry": 138,
       "pill-radius-sentinel": 1,
       "position": 45,
-      "radius": 137,
+      "radius": 132,
       "shadow": 42,
       "signed-offset": 66,
       "spacing": 511,
@@ -270,7 +270,7 @@
     {
       "module": "src/styles/preset/_foundation.scss",
       "layer": "preset",
-      "line": 305,
+      "line": 300,
       "raw": "100rem",
       "unit": "rem",
       "value": 100,
@@ -291,7 +291,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 146,
+      "line": 147,
       "raw": "0.75rem",
       "unit": "rem",
       "value": 0.75,
@@ -315,7 +315,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 146,
+      "line": 147,
       "raw": "2rem",
       "unit": "rem",
       "value": 2,
@@ -339,7 +339,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 204,
+      "line": 205,
       "raw": "0.875rem",
       "unit": "rem",
       "value": 0.875,
@@ -363,7 +363,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 204,
+      "line": 205,
       "raw": "2.625rem",
       "unit": "rem",
       "value": 2.625,
@@ -387,7 +387,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 267,
+      "line": 268,
       "raw": "8px",
       "unit": "px",
       "value": 8,
@@ -411,7 +411,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 268,
+      "line": 269,
       "raw": "2px",
       "unit": "px",
       "value": 2,
@@ -435,7 +435,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 283,
+      "line": 284,
       "raw": ".625rem",
       "unit": "rem",
       "value": 0.625,
@@ -459,7 +459,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 286,
+      "line": 287,
       "raw": "0.1875rem",
       "unit": "rem",
       "value": 0.1875,
@@ -483,7 +483,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 524,
+      "line": 525,
       "raw": ".75rem",
       "unit": "rem",
       "value": 0.75,
@@ -507,7 +507,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 524,
+      "line": 525,
       "raw": "2rem",
       "unit": "rem",
       "value": 2,
@@ -531,7 +531,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 622,
+      "line": 623,
       "raw": ".875rem",
       "unit": "rem",
       "value": 0.875,
@@ -555,7 +555,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 622,
+      "line": 623,
       "raw": "2.625rem",
       "unit": "rem",
       "value": 2.625,
@@ -579,7 +579,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 696,
+      "line": 697,
       "raw": "2px",
       "unit": "px",
       "value": 2,
@@ -603,7 +603,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 697,
+      "line": 698,
       "raw": "2px",
       "unit": "px",
       "value": 2,
@@ -627,7 +627,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 704,
+      "line": 705,
       "raw": "1.25rem",
       "unit": "rem",
       "value": 1.25,
@@ -651,7 +651,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 704,
+      "line": 705,
       "raw": "3.75rem",
       "unit": "rem",
       "value": 3.75,
@@ -717,30 +717,6 @@
       },
       "selector": ":root,.is-md",
       "text": "--_qxframe9a7c2-size-control-padding-inline: 10px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 58,
-      "raw": "4px",
-      "unit": "px",
-      "value": 4,
-      "pxEquivalent": 4,
-      "domain": "radius",
-      "status": "exact-node-candidate",
-      "exactNode": "size-2",
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ":root,.is-md",
-      "text": "--_qxframe9a7c2-size-control-radius: 4px;",
       "finalTarget": null,
       "approved": false
     },
@@ -813,30 +789,6 @@
       },
       "selector": ".is-xs",
       "text": "--_qxframe9a7c2-size-control-padding-inline: 6px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 67,
-      "raw": "3px",
-      "unit": "px",
-      "value": 3,
-      "pxEquivalent": 3,
-      "domain": "radius",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".is-xs",
-      "text": "--_qxframe9a7c2-size-control-radius: 3px;",
       "finalTarget": null,
       "approved": false
     },
@@ -963,30 +915,6 @@
     {
       "module": "src/styles/theme/_family.scss",
       "layer": "theme",
-      "line": 76,
-      "raw": "3px",
-      "unit": "px",
-      "value": 3,
-      "pxEquivalent": 3,
-      "domain": "radius",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".is-sm",
-      "text": "--_qxframe9a7c2-size-control-radius: 3px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
       "line": 77,
       "raw": ".8125rem",
       "unit": "rem",
@@ -1083,30 +1011,6 @@
     {
       "module": "src/styles/theme/_family.scss",
       "layer": "theme",
-      "line": 85,
-      "raw": "4px",
-      "unit": "px",
-      "value": 4,
-      "pxEquivalent": 4,
-      "domain": "radius",
-      "status": "exact-node-candidate",
-      "exactNode": "size-2",
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".is-lg",
-      "text": "--_qxframe9a7c2-size-control-radius: 4px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
       "line": 86,
       "raw": "1rem",
       "unit": "rem",
@@ -1173,30 +1077,6 @@
       },
       "selector": ".is-xl",
       "text": "--_qxframe9a7c2-size-control-padding-inline: 14px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 94,
-      "raw": "5px",
-      "unit": "px",
-      "value": 5,
-      "pxEquivalent": 5,
-      "domain": "radius",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": ".is-xl",
-      "text": "--_qxframe9a7c2-size-control-radius: 5px;",
       "finalTarget": null,
       "approved": false
     },
@@ -14048,7 +13928,7 @@
         "px": 6
       },
       "selector": ".qxframe9a7c2-descriptions.is-xs",
-      "text": ".qxframe9a7c2-descriptions.is-xs{--_qxframe9a7c2-descriptions-size-gap-y:var(--qxframe9a7c2-theme-space-3);--_qxframe9a7c2-descriptions-size-padding-y:.3125rem;--_qxframe9a7c2-descriptions-size-padding-x:var(--qxframe9a7c2-theme-space-3);--_qxframe9a7c2-descriptions-size-font-size:var(--qxframe9a7c2-theme-font-size-xs);--_qxframe9a7c2-descriptions-size-label-font-size:var(--qxframe9a7c2-theme-font-size-11)}",
+      "text": ".qxframe9a7c2-descriptions.is-xs{--_qxframe9a7c2-descriptions-size-gap-y:var(--qxframe9a7c2-theme-space-3);--_qxframe9a7c2-descriptions-size-padding-y:.3125rem;--_qxframe9a7c2-descriptions-size-padding-x:var(--qxframe9a7c2-theme-space-3);--_qxframe9a7c2-descriptions-size-font-size:var(--qxframe9a7c2-theme-font-size-xs);--_qxframe9a7c2-descriptions-size-label-font-size:var(--qxframe9a7c2-theme-font-size-xs)}",
       "finalTarget": null,
       "approved": false
     },
@@ -21494,7 +21374,7 @@
         "px": 4
       },
       "selector": ".qxframe9a7c2-native-form input[type=\"range\"]::-webkit-slider-runnable-track",
-      "text": ".qxframe9a7c2-native-form input[type=\"range\"]::-webkit-slider-runnable-track{height:4px;border-radius:999px;background:var(--_qxframe9a7c2-semantic-border-strong)}",
+      "text": ".qxframe9a7c2-native-form input[type=\"range\"]::-webkit-slider-runnable-track{height:4px;border-radius:var(--qxframe9a7c2-theme-radius-pill);background:var(--_qxframe9a7c2-semantic-border-strong)}",
       "finalTarget": null,
       "approved": false
     },
@@ -21614,7 +21494,7 @@
         "px": 4
       },
       "selector": ".qxframe9a7c2-native-form input[type=\"range\"]::-moz-range-track",
-      "text": ".qxframe9a7c2-native-form input[type=\"range\"]::-moz-range-track{height:4px;border:0;border-radius:999px;background:var(--_qxframe9a7c2-semantic-border-strong)}",
+      "text": ".qxframe9a7c2-native-form input[type=\"range\"]::-moz-range-track{height:4px;border:0;border-radius:var(--qxframe9a7c2-theme-radius-pill);background:var(--_qxframe9a7c2-semantic-border-strong)}",
       "finalTarget": null,
       "approved": false
     },
@@ -21854,7 +21734,7 @@
         "px": 2
       },
       "selector": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after",
-      "text": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:\"\";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:.5rem;height:2px;border-radius:999px;background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}",
+      "text": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:\"\";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:.5rem;height:2px;border-radius:var(--qxframe9a7c2-theme-radius-pill);background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}",
       "finalTarget": null,
       "approved": false
     },
@@ -21878,7 +21758,7 @@
         "px": 8
       },
       "selector": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after",
-      "text": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:\"\";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:.5rem;height:2px;border-radius:999px;background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}",
+      "text": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:\"\";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:.5rem;height:2px;border-radius:var(--qxframe9a7c2-theme-radius-pill);background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}",
       "finalTarget": null,
       "approved": false
     },
@@ -22520,7 +22400,7 @@
         "px": 14
       },
       "selector": ".qxframe9a7c2-color-panel-hue,.qxframe9a7c2-color-panel-alpha",
-      "text": ".qxframe9a7c2-color-panel-hue,.qxframe9a7c2-color-panel-alpha{width:100%;height:.875rem;margin:0;padding:0;appearance:none;border:0;border-radius:999px;outline:none;cursor:pointer}",
+      "text": ".qxframe9a7c2-color-panel-hue,.qxframe9a7c2-color-panel-alpha{width:100%;height:.875rem;margin:0;padding:0;appearance:none;border:0;border-radius:var(--qxframe9a7c2-theme-radius-pill);outline:none;cursor:pointer}",
       "finalTarget": null,
       "approved": false
     },
@@ -25130,7 +25010,7 @@
         "px": 4
       },
       "selector": ".qxframe9a7c2-color-picker-gradient-track",
-      "text": ".qxframe9a7c2-color-picker-gradient-track{position:relative;box-sizing:border-box;grid-column:1/-1;height:calc(var(--_qxframe9a7c2-control-icon-size) + 4px);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:999px;box-shadow:none;cursor:crosshair}",
+      "text": ".qxframe9a7c2-color-picker-gradient-track{position:relative;box-sizing:border-box;grid-column:1/-1;height:calc(var(--_qxframe9a7c2-control-icon-size) + 4px);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--qxframe9a7c2-theme-radius-pill);box-shadow:none;cursor:crosshair}",
       "finalTarget": null,
       "approved": false
     },
