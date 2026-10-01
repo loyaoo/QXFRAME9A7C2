@@ -7,9 +7,21 @@ import { compileStyles } from './compile-styles.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const baseline=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8');
-const legacy=fs.readFileSync(path.join(root,'src/styles/_legacy.scss'),'utf8');
+const modulePaths=[
+  "src/styles/base/_reset.scss",
+  "src/styles/preset/_foundation.scss",
+  "src/styles/theme/_default.scss",
+  "src/styles/theme/_family.scss",
+  "src/styles/components/_components.scss"
+];
+const sourceModules=modulePaths.map(rel=>fs.readFileSync(path.join(root,rel),'utf8'));
+const reconstructed=sourceModules.join('');
 
-assert.equal(legacy,baseline,'Phase A legacy SCSS module must remain byte-identical to the frozen CSS baseline until equivalence is accepted.');
+assert.equal(
+  reconstructed,
+  baseline,
+  'Phase A SCSS modules must reconstruct the frozen CSS baseline byte-for-byte before token refactoring begins.'
+);
 
 const direct=sass.compileString(baseline,{
   syntax:'scss',
@@ -21,7 +33,7 @@ const direct=sass.compileString(baseline,{
 const canonical=compileStyles({root}).css;
 const directNormalized=direct.endsWith('\n')?direct:direct+'\n';
 
-assert.equal(canonical,directNormalized,'Canonical SCSS entry must compile to exactly the same Sass output as the frozen Phase A baseline.');
+assert.equal(canonical,directNormalized,'Canonical SCSS modules must compile to exactly the same Sass output as the frozen Phase A baseline.');
 assert.doesNotMatch(canonical,/@use\b|@forward\b/,'SCSS module directives must not leak into release CSS.');
 
 for(const protectedPattern of [
@@ -39,6 +51,7 @@ console.log(JSON.stringify({
   phase:'A',
   baselineBytes:Buffer.byteLength(baseline),
   compiledBytes:Buffer.byteLength(canonical),
-  byteIdenticalLegacy:true,
+  moduleCount:modulePaths.length,
+  byteIdenticalModuleConcat:true,
   sassOutputEquivalent:true
 }));

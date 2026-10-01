@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "source": "src/qxframe9a7c2.css",
+  "sourceBlob": "9989e4ca5f458003255a698a3374c9c7d168347f",
+  "sourceLines": 17774,
+  "rule": "All split starts were verified at CSS top-level brace depth 0; concatenating module source must reproduce the frozen baseline byte-for-byte.",
+  "boundaries": [
+    {
+      "startLine": 1,
+      "endLine": 7,
+      "category": "base",
+      "file": "src/styles/base/_reset.scss",
+      "blob": "363696d7e216d976b1152c155263f7995a8ea034"
+    },
+    {
+      "startLine": 8,
+      "endLine": 334,
+      "category": "preset/foundation",
+      "file": "src/styles/preset/_foundation.scss",
+      "blob": "39e4a90f4c555685eb4d5524072392d477b38a65"
+    },
+    {
+      "startLine": 335,
+      "endLine": 955,
+      "category": "theme/default-and-mode",
+      "file": "src/styles/theme/_default.scss",
+      "blob": "2fc7e81d700e5c5adad54ad551d158e990b8dc8d"
+    },
+    {
+      "startLine": 956,
+      "endLine": 1322,
+      "category": "theme/family-category",
+      "file": "src/styles/theme/_family.scss",
+      "blob": "40e8e1daee39eb649832994abf4140c14a614048"
+    },
+    {
+      "startLine": 1323,
+      "endLine": 17774,
+      "category": "components",
+      "file": "src/styles/components/_components.scss",
+      "blob": "62aa5aa47027f516f0cc00acd03f3f8df8ffe8fe"
+    }
+  ],
+  "tokenLayers": [
+    "preset",
+    "theme",
+    "component"
+  ],
+  "note": "theme/family-category is source organization inside the Theme layer, not a fourth public Token layer."
+}

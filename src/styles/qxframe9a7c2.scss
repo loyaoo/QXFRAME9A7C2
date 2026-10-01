@@ -1,4 +1,7 @@
-// Canonical SCSS entry.
-// Phase A starts with an exact legacy-content module so Sass compilation can be
-// proven equivalent before token architecture or size values are changed.
-@use "legacy";
+// Canonical SCSS source order. Keep this order stable because QXFRAME does not use @layer.
+// Phase A decomposition only: no token/value/state changes are allowed in this commit.
+@use "base/reset";
+@use "preset/foundation";
+@use "theme/default";
+@use "theme/family";
+@use "components/components";
