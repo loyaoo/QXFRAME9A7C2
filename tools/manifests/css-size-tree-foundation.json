@@ -410,16 +410,27 @@
   },
   "preserved": {
     "oddFontSizePx": [
-      9,
       11,
-      13,
-      15,
-      17
+      13
     ],
     "hairlinePx": 1,
     "pill": "100rem",
     "circle": "50%",
     "motionScales": "not Size Tree consumers"
   },
-  "policy": "This phase changes dependency only. It does not normalize odd values or alter computed physical defaults."
+  "policy": "Size Tree foundation is active. Odd font presets remain explicit only while their consumer-level normalization decision is unresolved.",
+  "completedOddFontDecisions": [
+    {
+      "sourcePx": 9,
+      "action": "Badge XS count -> font-size-10 -> size-5"
+    },
+    {
+      "sourcePx": 15,
+      "action": "LG Control -> font-size-16 -> size-8"
+    },
+    {
+      "sourcePx": 17,
+      "action": "remove unused preset"
+    }
+  ]
 }

@@ -5,7 +5,12 @@
     "scope": "Odd numeric font-size preset decisions only.",
     "automaticNormalization": false,
     "approvalRequired": true,
-    "note": "Suggestions are design-review inputs, not migration authority. Consumers sharing the same old numeric token may choose different Size Tree nodes."
+    "note": "Suggestions are design-review inputs, not migration authority. Consumers sharing the same old numeric token may choose different Size Tree nodes.",
+    "implementedLowRiskBatch": [
+      "font-9-badge-xs-count",
+      "font-15-control-lg",
+      "font-17-unused"
+    ]
   },
   "decisions": [
     {
@@ -28,8 +33,16 @@
       "visualChange": "+1px",
       "rationale": "Badge XS count remains very small but avoids an 8px text floor; 10px already exists in the adjacent Badge XS/SM typography scale.",
       "risk": "low",
-      "approved": false,
-      "finalTarget": null
+      "approved": true,
+      "finalTarget": "--qxframe9a7c2-size-5",
+      "finalPx": 10,
+      "status": "implemented",
+      "implementationPath": [
+        "--qxframe9a7c2-badge-xs-count-font-size",
+        "--qxframe9a7c2-theme-font-size-10",
+        "--qxframe9a7c2-font-size-10",
+        "--qxframe9a7c2-size-5"
+      ]
     },
     {
       "id": "font-11-small-labels",
@@ -129,8 +142,15 @@
       "visualChange": "+1px",
       "rationale": "Control LG should remain visually above MD 14px. Mapping upward preserves the hierarchy; LG and XL would share 16px typography while differing by height/padding.",
       "risk": "medium",
-      "approved": false,
-      "finalTarget": null
+      "approved": true,
+      "finalTarget": "--qxframe9a7c2-size-8",
+      "finalPx": 16,
+      "status": "implemented",
+      "implementationPath": [
+        ".is-lg --_qxframe9a7c2-size-control-font-size",
+        "--qxframe9a7c2-font-size-16",
+        "--qxframe9a7c2-size-8"
+      ]
     },
     {
       "id": "font-17-unused",
@@ -149,8 +169,10 @@
       "visualChange": "none if reference audit remains zero",
       "rationale": "No current canonical SCSS consumer references the numeric 17px preset; retaining it would preserve an odd physical alias with no semantic owner.",
       "risk": "low",
-      "approved": false,
-      "finalTarget": null
+      "approved": true,
+      "finalTarget": null,
+      "finalAction": "remove-unused-token",
+      "status": "implemented"
     }
   ]
 }

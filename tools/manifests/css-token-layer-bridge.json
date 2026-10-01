@@ -10,7 +10,7 @@
     ],
     "component": "src/styles/components/_components.scss"
   },
-  "genericPresetBridgeCount": 30,
+  "genericPresetBridgeCount": 29,
   "genericPresetMappings": [
     {
       "source": "--qxframe9a7c2-font-size-10",
@@ -23,10 +23,6 @@
     {
       "source": "--qxframe9a7c2-font-size-24",
       "theme": "--qxframe9a7c2-theme-font-size-24"
-    },
-    {
-      "source": "--qxframe9a7c2-font-size-9",
-      "theme": "--qxframe9a7c2-theme-font-size-9"
     },
     {
       "source": "--qxframe9a7c2-font-size-lg",
