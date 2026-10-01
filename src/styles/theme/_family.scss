@@ -359,7 +359,7 @@
 .qxframe9a7c2-overflow-action:focus-visible{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-overflow-action:disabled{color:var(--_qxframe9a7c2-semantic-text-disabled);cursor:not-allowed}
 .qxframe9a7c2-overflow-label{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.qxframe9a7c2-overflow-close{box-sizing:border-box;display:inline-flex;width:1.0625rem;height:1.0625rem;flex:0 0 1.0625rem;align-items:center;justify-content:center;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;font:inherit;line-height:1;cursor:pointer}
+.qxframe9a7c2-overflow-close{box-sizing:border-box;display:inline-flex;width:var(--qxframe9a7c2-theme-overflow-close-size);height:var(--qxframe9a7c2-theme-overflow-close-size);flex:0 0 var(--qxframe9a7c2-theme-overflow-close-size);align-items:center;justify-content:center;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;font:inherit;line-height:1;cursor:pointer}
 .qxframe9a7c2-overflow-close:hover{background:var(--_qxframe9a7c2-semantic-subtle-hover)}
 .qxframe9a7c2-overflow-close:focus-visible{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 

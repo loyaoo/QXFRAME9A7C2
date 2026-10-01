@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "phase": "overflow-close-size",
+  "previousPx": 17,
+  "targetPx": 16,
+  "deltaPx": -1,
+  "themeToken": "--qxframe9a7c2-theme-overflow-close-size",
+  "presetSource": "--qxframe9a7c2-size-8",
+  "consumer": ".qxframe9a7c2-overflow-close",
+  "invariant": "Width, height and flex-basis share one Theme-owned size token."
+}
