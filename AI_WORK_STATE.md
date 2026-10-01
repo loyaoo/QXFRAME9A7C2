@@ -22,7 +22,7 @@
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
 Task progress: 34%
-Phase: Phase A DONE; Phase B DONE; Phase C Preset -> Theme -> Component bridge implemented, CI pending
+Phase: Phase A DONE; Phase B DONE; Phase C layered bridge refined for scoped Component motion overrides, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -96,7 +96,7 @@ Phase B persisted basis:
 
 Next exact step:
 - Phase B exact-head closeout CI #1062 passed and PR #203 merged as `40ba304be93753a722a995c9f7fc612e3084a6c5`.
-- Phase C first slice maps every Preset token consumed by component SCSS through an explicit Theme token bridge; verify exact-head CI before expanding Theme/Component semantic classification.
+- Phase C first slice maps generic Preset consumers through Theme and moves 49 component-semantic motion tokens out of Preset into Component ownership with Theme defaults; local Ripple/Motion overrides remain scoped. Verify exact-head CI before expanding Theme/Component semantic classification.
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE

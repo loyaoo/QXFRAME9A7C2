@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "phase": "C",
-  "policy": "Preset -> Theme -> Component. Component SCSS must not consume Preset custom properties directly.",
+  "policy": "Preset -> Theme -> Component. Generic materials bridge Preset to Theme; component-semantic motion tokens are owned by Component and default from Theme.",
   "sourceModules": {
     "preset": "src/styles/preset/_foundation.scss",
     "theme": [
@@ -10,8 +10,8 @@
     ],
     "component": "src/styles/components/_components.scss"
   },
-  "bridgeCount": 60,
-  "mappings": [
+  "genericPresetBridgeCount": 30,
+  "genericPresetMappings": [
     {
       "source": "--qxframe9a7c2-font-size-10",
       "theme": "--qxframe9a7c2-theme-font-size-10"
@@ -49,42 +49,6 @@
       "theme": "--qxframe9a7c2-theme-font-size-xs"
     },
     {
-      "source": "--qxframe9a7c2-motion-carousel-track-duration",
-      "theme": "--qxframe9a7c2-theme-motion-carousel-track-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-carousel-track-easing",
-      "theme": "--qxframe9a7c2-theme-motion-carousel-track-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-collapse-panel-easing",
-      "theme": "--qxframe9a7c2-theme-motion-collapse-panel-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-collapse-panel-enter-duration",
-      "theme": "--qxframe9a7c2-theme-motion-collapse-panel-enter-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-collapse-panel-leave-duration",
-      "theme": "--qxframe9a7c2-theme-motion-collapse-panel-leave-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-drawer-mask-enter-duration",
-      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-enter-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-drawer-mask-enter-easing",
-      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-enter-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-drawer-mask-leave-duration",
-      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-leave-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-drawer-mask-leave-easing",
-      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-leave-easing"
-    },
-    {
       "source": "--qxframe9a7c2-motion-duration-1",
       "theme": "--qxframe9a7c2-theme-motion-duration-1"
     },
@@ -119,90 +83,6 @@
     {
       "source": "--qxframe9a7c2-motion-easing-standard",
       "theme": "--qxframe9a7c2-theme-motion-easing-standard"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-image-preview-mask-enter-duration",
-      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-enter-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-image-preview-mask-enter-easing",
-      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-enter-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-image-preview-mask-leave-duration",
-      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-leave-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-image-preview-mask-leave-easing",
-      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-leave-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-image-preview-trajectory-easing",
-      "theme": "--qxframe9a7c2-theme-motion-image-preview-trajectory-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-image-preview-trajectory-enter-duration",
-      "theme": "--qxframe9a7c2-theme-motion-image-preview-trajectory-enter-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-image-preview-trajectory-leave-duration",
-      "theme": "--qxframe9a7c2-theme-motion-image-preview-trajectory-leave-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-modal-mask-enter-duration",
-      "theme": "--qxframe9a7c2-theme-motion-modal-mask-enter-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-modal-mask-enter-easing",
-      "theme": "--qxframe9a7c2-theme-motion-modal-mask-enter-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-modal-mask-leave-duration",
-      "theme": "--qxframe9a7c2-theme-motion-modal-mask-leave-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-modal-mask-leave-easing",
-      "theme": "--qxframe9a7c2-theme-motion-modal-mask-leave-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-ripple-inside-enter-duration",
-      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-enter-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-ripple-inside-enter-easing",
-      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-enter-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-ripple-inside-leave-duration",
-      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-leave-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-ripple-inside-leave-easing",
-      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-leave-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-ripple-outside-duration",
-      "theme": "--qxframe9a7c2-theme-motion-ripple-outside-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-ripple-outside-easing",
-      "theme": "--qxframe9a7c2-theme-motion-ripple-outside-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-sort-item-duration",
-      "theme": "--qxframe9a7c2-theme-motion-sort-item-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-sort-item-easing",
-      "theme": "--qxframe9a7c2-theme-motion-sort-item-easing"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-tabs-indicator-duration",
-      "theme": "--qxframe9a7c2-theme-motion-tabs-indicator-duration"
-    },
-    {
-      "source": "--qxframe9a7c2-motion-tabs-indicator-easing",
-      "theme": "--qxframe9a7c2-theme-motion-tabs-indicator-easing"
     },
     {
       "source": "--qxframe9a7c2-radius-circle",
@@ -253,10 +133,259 @@
       "theme": "--qxframe9a7c2-theme-space-8"
     }
   ],
+  "componentMotionTokenCount": 49,
+  "componentMotionMappings": [
+    {
+      "component": "--qxframe9a7c2-motion-tooltip-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-tooltip-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-2)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-tooltip-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-tooltip-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-1)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-popup-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-popup-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-popup-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-popup-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-2)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-popup-enter-easing",
+      "theme": "--qxframe9a7c2-theme-motion-popup-enter-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-enter)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-popup-leave-easing",
+      "theme": "--qxframe9a7c2-theme-motion-popup-leave-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-leave)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-dialog-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-modal-dialog-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-4)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-dialog-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-modal-dialog-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-dialog-enter-easing",
+      "theme": "--qxframe9a7c2-theme-motion-modal-dialog-enter-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-enter-emphasized)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-dialog-leave-easing",
+      "theme": "--qxframe9a7c2-theme-motion-modal-dialog-leave-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-leave)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-mask-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-modal-mask-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-mask-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-modal-mask-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-2)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-mask-enter-easing",
+      "theme": "--qxframe9a7c2-theme-motion-modal-mask-enter-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-enter)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-modal-mask-leave-easing",
+      "theme": "--qxframe9a7c2-theme-motion-modal-mask-leave-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-leave)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-panel-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-panel-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-5)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-panel-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-panel-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-4)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-panel-enter-easing",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-panel-enter-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move-emphasized)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-panel-leave-easing",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-panel-leave-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-mask-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-mask-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-2)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-mask-enter-easing",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-enter-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-enter)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-drawer-mask-leave-easing",
+      "theme": "--qxframe9a7c2-theme-motion-drawer-mask-leave-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-leave)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-collapse-panel-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-collapse-panel-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-collapse-panel-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-collapse-panel-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-collapse-panel-easing",
+      "theme": "--qxframe9a7c2-theme-motion-collapse-panel-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-tabs-indicator-duration",
+      "theme": "--qxframe9a7c2-theme-motion-tabs-indicator-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-2)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-tabs-indicator-easing",
+      "theme": "--qxframe9a7c2-theme-motion-tabs-indicator-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-sort-item-duration",
+      "theme": "--qxframe9a7c2-theme-motion-sort-item-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-2)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-sort-item-easing",
+      "theme": "--qxframe9a7c2-theme-motion-sort-item-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-carousel-track-duration",
+      "theme": "--qxframe9a7c2-theme-motion-carousel-track-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-5)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-carousel-track-easing",
+      "theme": "--qxframe9a7c2-theme-motion-carousel-track-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-ripple-inside-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-5)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-ripple-inside-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-ripple-outside-duration",
+      "theme": "--qxframe9a7c2-theme-motion-ripple-outside-duration",
+      "previousPresetDefault": "820ms"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-ripple-inside-enter-easing",
+      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-enter-easing",
+      "previousPresetDefault": "cubic-bezier(.4,0,.2,1)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-ripple-inside-leave-easing",
+      "theme": "--qxframe9a7c2-theme-motion-ripple-inside-leave-easing",
+      "previousPresetDefault": "linear"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-ripple-outside-easing",
+      "theme": "--qxframe9a7c2-theme-motion-ripple-outside-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-enter-emphasized)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-notice-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-notice-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-5)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-notice-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-notice-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-notice-move-duration",
+      "theme": "--qxframe9a7c2-theme-motion-notice-move-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-5)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-notice-presence-easing",
+      "theme": "--qxframe9a7c2-theme-motion-notice-presence-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-enter-emphasized)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-notice-move-easing",
+      "theme": "--qxframe9a7c2-theme-motion-notice-move-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-image-preview-trajectory-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-image-preview-trajectory-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-image-preview-trajectory-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-image-preview-trajectory-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-image-preview-trajectory-easing",
+      "theme": "--qxframe9a7c2-theme-motion-image-preview-trajectory-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-move)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-image-preview-mask-enter-duration",
+      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-enter-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-3)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-image-preview-mask-leave-duration",
+      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-leave-duration",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-duration-2)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-image-preview-mask-enter-easing",
+      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-enter-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-enter)"
+    },
+    {
+      "component": "--qxframe9a7c2-motion-image-preview-mask-leave-easing",
+      "theme": "--qxframe9a7c2-theme-motion-image-preview-mask-leave-easing",
+      "previousPresetDefault": "var(--qxframe9a7c2-motion-easing-leave)"
+    }
+  ],
   "baseline": {
     "directPresetReferencesBefore": 613,
     "uniquePresetTokensBefore": 60,
-    "directPresetReferencesAfter": 0
+    "directPresetReferencesAfter": 0,
+    "componentSemanticMotionTokensMovedFromPreset": 49
   },
-  "note": "This bridge preserves current computed values. It creates an overrideable Theme selection layer; later Size Tree normalization changes the Preset mappings, not component consumers."
+  "overrideContract": "Component-semantic public tokens keep their original names and may be overridden on a component subtree; their default values resolve through Theme tokens."
 }
