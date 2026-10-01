@@ -36,9 +36,9 @@ assert.match(css,/\.qxframe9a7c2-item-collection-item\{[^}]*display:flex;align-i
   'ItemCollection gap must live in the canonical item owner.');
 assert.equal(css.includes('.qxframe9a7c2-item-collection-item{gap:var(--_qxframe9a7c2-control-gap)}'),false,
   'ItemCollection gap-only selector reopening must not return.');
-assert.match(css,/\.qxframe9a7c2-list-item\{[^}]*display:flex;align-items:center;gap:var\(--qxframe9a7c2-space-2\);width:100%;/,
+assert.match(css,/\.qxframe9a7c2-list-item\{[^}]*display:flex;align-items:center;gap:var\(--qxframe9a7c2-theme-space-2\);width:100%;/,
   'List gap must live in the canonical item owner.');
-assert.equal(css.includes('.qxframe9a7c2-list-item{gap:var(--qxframe9a7c2-space-2)}'),false,
+assert.equal(css.includes('.qxframe9a7c2-list-item{gap:var(--qxframe9a7c2-theme-space-2)}'),false,
   'List gap-only selector reopening must not return.');
 
 assert.match(css,/\.qxframe9a7c2-form-selectgroup\.is-image-grid \.qxframe9a7c2-form-selectgroup-label\{width:100%;min-width:8\.25rem;padding:0;align-items:stretch\}/,
