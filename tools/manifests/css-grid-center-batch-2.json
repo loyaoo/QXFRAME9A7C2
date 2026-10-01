@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "batch": "css-grid-centered-batch-2",
+  "convertedSelectors": [
+    ".qxframe9a7c2-native-form input[type=\"checkbox\"],.qxframe9a7c2-native-form input[type=\"radio\"],.qxframe9a7c2-form-check-input,.qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,.qxframe9a7c2-form-selectgroup-indicator.is-checkbox,.qxframe9a7c2-form-selectgroup-indicator.is-radio",
+    ".qxframe9a7c2-form-selectgroup-image-preview",
+    ".qxframe9a7c2-form-selectgroup-avatar",
+    ".qxframe9a7c2-table .qxframe9a7c2-table-filter",
+    ".qxframe9a7c2-table .qxframe9a7c2-table-expand-trigger",
+    ".qxframe9a7c2-table-loading",
+    ".qxframe9a7c2-upload-thumb",
+    ".qxframe9a7c2-upload-preview-root",
+    ".qxframe9a7c2-upload-preview-body",
+    ".qxframe9a7c2-image-placeholder,.qxframe9a7c2-image-error",
+    ".qxframe9a7c2-image.is-error .qxframe9a7c2-image-error",
+    ".qxframe9a7c2-image-mask"
+  ],
+  "before": {
+    "actualGridRules": 57,
+    "actualGridDeclarations": 98
+  },
+  "after": {
+    "actualGridRules": 45,
+    "actualGridDeclarations": 86
+  },
+  "policy": "Centered wrappers only; structural Grid rules remain deferred."
+}

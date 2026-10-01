@@ -702,7 +702,7 @@
       "unit": "vh",
       "suggestedStrategy": "container-block-percentage-or-token-cap",
       "risk": "medium",
-      "text": ".qxframe9a7c2-upload-preview-body{display:grid;min-height:12rem;max-height:72vh;place-items:center;overflow:auto;padding:1rem}",
+      "text": ".qxframe9a7c2-upload-preview-body{display:flex;min-height:12rem;max-height:72vh;align-items:center;justify-content:center;overflow:auto;padding:1rem}",
       "approved": false,
       "finalReplacement": null
     },
