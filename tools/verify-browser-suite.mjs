@@ -44,7 +44,14 @@ for (const script of scripts) {
                     error: payload && payload.error || null,
                     failedChecks: Array.isArray(payload && payload.checks)
                         ? payload.checks.filter(check => check && check.ok === false).map(check => ({ name:check.name, detail:check.detail || '' }))
-                        : []
+                        : [],
+                    docs: payload && payload.docs ? {
+                        ok: payload.docs.ok === true,
+                        failures: Array.isArray(payload.docs.failures) ? payload.docs.failures : [],
+                        unmounted: Array.isArray(payload.docs.unmounted) ? payload.docs.unmounted : [],
+                        windowErrors: Array.isArray(payload.docs.windowErrors) ? payload.docs.windowErrors : [],
+                        inputOtp: payload.docs.inputOtp || null
+                    } : null
                 };
             } catch (_) {}
         }
