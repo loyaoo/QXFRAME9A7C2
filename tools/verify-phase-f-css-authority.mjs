@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { Config } from '../src/core/config.js';
 import { ComponentProfile } from '../src/core/componentProfile.js';
 import { getWebSocketConstructor } from './websocket-client.mjs';
+import { compileStyles } from './compile-styles.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
@@ -24,7 +25,10 @@ const overlaySource=read('src/core/overlayRuntime.js');
 const menuSource=read('src/components/menu.js');
 const colorPickerSource=read('src/components/color-picker.js');
 const contractsSource=read('src/core/componentContracts.js');
-const css=read('src/qxframe9a7c2.css');
+const baselineCss=read('src/qxframe9a7c2.css');
+const legacyScss=read('src/styles/_legacy.scss');
+const compiledCss=compileStyles({root}).css;
+const css=baselineCss;
 const postbuild=read('tools/postbuild-release.mjs');
 const tokenDocs=read('docs/assets/qxframe9a7c2-token-reference.js');
 const siteDocs=read('docs/assets/qxframe9a7c2-component-site.js');
@@ -44,11 +48,13 @@ assert.throws(()=>ComponentProfile.define({name:'ThemeRuntimeProbe',theme:{}}),/
 assert.throws(()=>ComponentProfile.define({name:'TokenRuntimeProbe',tokens:{}}),/Unknown ComponentProfile field: tokens/,'ComponentProfile.tokens must be rejected as a runtime capability.');
 assert.throws(()=>ComponentProfile.define({name:'ThemeDependencyProbe',dependencies:{feedback:['theme']}}),/Unknown ComponentProfile dependency: theme/,'ComponentProfile dependencies must not route through theme runtime state.');
 
-assert.equal(fs.existsSync(path.join(root,'src/css')),false,'src/css split mirror must be removed; src/qxframe9a7c2.css is the sole CSS source.');
-assert.equal(cssOrder.files.length,1,'CSS order manifest must expose one physical source.');
-assert.equal(cssOrder.files[0].file,'src/qxframe9a7c2.css','CSS order manifest must point at canonical CSS.');
-assert.match(postbuild,/path\.join\(root,\s*['"]src\/qxframe9a7c2\.css['"]\)/,'release build must copy the canonical CSS source.');
-assert.doesNotMatch(postbuild,/src\/css|00-foundation|10-compatibility/,'release build must not consume split CSS mirrors.');
+assert.equal(fs.existsSync(path.join(root,'src/css')),false,'Retired src/css split mirror must remain absent.');
+assert.equal(cssOrder.files.length,1,'CSS order manifest must expose one canonical source entry.');
+assert.equal(cssOrder.files[0].file,'src/styles/qxframe9a7c2.scss','CSS order manifest must point at canonical SCSS entry.');
+assert.equal(cssOrder.migrationBaseline,'src/qxframe9a7c2.css','Phase A must identify the frozen CSS equivalence baseline explicitly.');
+assert.equal(legacyScss,baselineCss,'Phase A legacy SCSS module must be byte-identical to the frozen CSS baseline.');
+assert.match(postbuild,/compileStyles\(\{\s*root,\s*outputFile:/,'release build must compile canonical SCSS into dist CSS.');
+assert.doesNotMatch(postbuild,/copyFile\(path\.join\(root,\s*['"]src\/qxframe9a7c2\.css['"]/,'release build must not copy the frozen CSS baseline into dist.');
 
 for(const pattern of [
   /\btheme\s*:/,
@@ -83,7 +89,7 @@ assert.match(css,/\[data-qxframe9a7c2-theme="dark"\]/,'Canonical CSS must contai
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);
 if(!browser){console.log(JSON.stringify({ok:true,structural:true,browserSkipped:true,reason:'chromium not found'}));process.exit(0);}
 const WebSocketClient=await getWebSocketConstructor();
-const safeCss=css.replace(/<\/style/gi,'<\\/style');
+const safeCss=compiledCss.replace(/<\/style/gi,'<\\/style');
 const html=`<!doctype html><meta charset=utf-8><style>${safeCss}</style>
 <div id="light" style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div>
 <div id="lightPopup" class="qxframe9a7c2-popup-surface">light popup</div>

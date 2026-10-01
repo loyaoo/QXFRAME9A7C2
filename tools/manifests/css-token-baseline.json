@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-01",
+  "task": "CSS-TOKEN-SCHEMA-001",
+  "source": {
+    "path": "src/qxframe9a7c2.css",
+    "sha256": "72eefc2a738b744c09b7243b94db3dac92f2d0b68237478b1ba170208c243234",
+    "bytes": 884967,
+    "lines": 17774
+  },
+  "build": {
+    "entry": "src/styles/qxframe9a7c2.scss",
+    "temporaryMigrationModule": "src/styles/_legacy.scss",
+    "sass": "1.93.2",
+    "releaseCss": "dist/qxframe9a7c2.css"
+  },
+  "counts": {
+    "publicTokenDefinitions": 483,
+    "privateTokenDefinitions": 824,
+    "px": 492,
+    "rem": 1104,
+    "nonHairlinePx": 272,
+    "oddPx": 45,
+    "decimalPx": 14,
+    "forbiddenViewportUnits": 54,
+    "frUnits": 21,
+    "cssGridDeclarations": 436,
+    "colorMixCalls": 206,
+    "jsGeometryCouplingSites": 147
+  },
+  "verification": {
+    "pullRequest": 200,
+    "workflow": "QXFRAME CI",
+    "runNumber": 1045,
+    "runId": 36829080678,
+    "conclusion": "success"
+  },
+  "policy": {
+    "inventoryOnly": true,
+    "mechanicalReplacementApproved": false,
+    "note": "Counts establish the migration baseline only. Consumer-level decisions remain required by the v1.6 execution guide."
+  }
+}
