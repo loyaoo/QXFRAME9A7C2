@@ -17,21 +17,6 @@ function noop() {}
 function isFunction(value) { return typeof value === 'function'; }
 function viewOfElement(element) { var doc = element && element.ownerDocument; return doc && doc.defaultView || global; }
 function asBoolean(value, fallback) { return value === undefined ? fallback : value === true; }
-function finiteNumber(value) { var number = Number(value); return Number.isFinite(number) ? number : null; }
-function resolveDuration(source, direction, ctx) {
-  var value = isFunction(source) ? source(ctx) : source;
-  if (value == null || value === '') return null;
-  if (value && typeof value === 'object' && !Array.isArray(value)) {
-    if (own(value, direction)) value = value[direction];
-    else if (direction === 'appear' && own(value, 'enter')) value = value.enter;
-    else return null;
-    if (isFunction(value)) value = value(ctx);
-  }
-  if (value == null || value === '') return null;
-  var number = finiteNumber(value);
-  if (number === null || number < 0) throw new TypeError('[QXFRAME9A7C2] MotionCore duration must be a finite non-negative millisecond value.');
-  return number;
-}
 function normalizeType(value, fallback) {
   var next = value == null || value === '' ? (fallback || 'auto') : String(value);
   if (TYPES.indexOf(next) < 0) throw new TypeError('[QXFRAME9A7C2] MotionCore type must be auto, transition, animation, or both.');
@@ -270,11 +255,9 @@ function waitMotionEnd(element, type, options, done) {
     timing.animation = timing.animation.filter(function (item) { return item.name === settings.animationName; });
     timing.maxAnimation = timing.animation.reduce(function (value, item) { return Math.max(value, item.total); }, 0);
   }
-  var explicitDuration = settings.duration == null || settings.duration === '' ? null : finiteNumber(settings.duration);
-  if (explicitDuration !== null && explicitDuration < 0) throw new TypeError('[QXFRAME9A7C2] MotionCore wait duration must be a finite non-negative millisecond value.');
-  if (settings.duration != null && settings.duration !== '' && explicitDuration === null) throw new TypeError('[QXFRAME9A7C2] MotionCore wait duration must be a finite non-negative millisecond value.');
-  var max = explicitDuration === null ? selectedMax(timing, type) : explicitDuration;
-  if (settings.immediate || max <= 0) { done(explicitDuration === null ? 'instant' : 'duration', timing); return noop; }
+  if (own(settings, 'duration')) throw new TypeError('[QXFRAME9A7C2] MotionCore waitMotionEnd does not accept visual duration; timing must come from computed CSS.');
+  var max = selectedMax(timing, type);
+  if (settings.immediate || max <= 0) { done('instant', timing); return noop; }
   var finished = false;
   var tolerance = 20;
   var timer = 0;
@@ -298,7 +281,7 @@ function waitMotionEnd(element, type, options, done) {
     finish(reason);
   }
   function onTransitionEnd(event) {
-    if (explicitDuration !== null || event.target !== element || !waitsForKind(type, 'transition')) return;
+    if (event.target !== element || !waitsForKind(type, 'transition')) return;
     var total = eventTotal(timing.transition, event.propertyName || 'all');
     if (total < timing.maxTransition - tolerance || elapsed() < timing.maxTransition - tolerance) return;
     transitionDone = true;
@@ -306,7 +289,7 @@ function waitMotionEnd(element, type, options, done) {
     maybeFinishBoth('transitionend');
   }
   function onAnimationEnd(event) {
-    if (explicitDuration !== null || event.target !== element || !waitsForKind(type, 'animation')) return;
+    if (event.target !== element || !waitsForKind(type, 'animation')) return;
     if (settings.pseudoElement && event.pseudoElement !== settings.pseudoElement) return;
     if (settings.animationName && event.animationName !== settings.animationName) return;
     var total = eventTotal(timing.animation, event.animationName || '');
@@ -315,13 +298,9 @@ function waitMotionEnd(element, type, options, done) {
     if (type === 'auto' && timing.maxAnimation + tolerance < timing.maxTransition) return;
     maybeFinishBoth('animationend');
   }
-  if (explicitDuration === null) {
-    element.addEventListener('transitionend', onTransitionEnd);
-    element.addEventListener('animationend', onAnimationEnd);
-    timer = global.setTimeout(function () { finish('deadline'); }, max + Math.max(32, Number(settings.deadlinePadding) || 80));
-  } else {
-    timer = global.setTimeout(function () { finish('duration'); }, explicitDuration);
-  }
+  element.addEventListener('transitionend', onTransitionEnd);
+  element.addEventListener('animationend', onAnimationEnd);
+  timer = global.setTimeout(function () { finish('deadline'); }, max + Math.max(32, Number(settings.deadlinePadding) || 80));
   return function cancelWait() {
     if (finished) return false;
     finished = true;
@@ -535,7 +514,6 @@ function create(options) {
     cancelWait = waitMotionEnd(element, phaseDescriptor.type, {
       immediate: immediate || reduced,
       deadlinePadding: settings.deadlinePadding,
-      duration: resolveDuration(settings.duration, direction, context({ status: direction })),
       properties: phaseDescriptor.properties
     }, function (reason) { finish(runGeneration, direction, reason); });
   }
@@ -587,6 +565,18 @@ function create(options) {
     // before hooks are allowed to close/reopen/destroy. Do not run prepare work for a
     // generation that the hook has already superseded.
     if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+    // Immediate is a synchronous lifecycle contract. It must not be delayed by an async
+    // onPrepare hook (for example a painted-baseline promise owned by Notice presence).
+    if (immediate) {
+      cleanupActive = applyPatch(element, phaseDescriptor.active);
+      void element.offsetWidth;
+      setEngineState(direction, 'start', direction === 'leave' ? 'leaving' : 'entering');
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      callHook('onStart', [context({ status: direction, reversal: false, immediate: true })], context({ status: direction, reversal: false, immediate: true }));
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      activeTarget(runGeneration, direction, phaseDescriptor, true, false);
+      return;
+    }
     runPrepare(runGeneration, direction, false, function () {
       if (disposed || runGeneration !== generation || currentDirection !== direction) return;
       if (immediate || reduced) {
@@ -628,6 +618,23 @@ function create(options) {
       callHook('onBeforeLeave', [context({ reversal: true })], context({ reversal: true }));
     } else callHook('onBeforeEnter', [context({ reversal: true })], context({ reversal: true }));
     if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+    if (immediate) {
+      cleanupActive = applyPatch(element, phaseDescriptor.active);
+      void element.offsetWidth;
+      setEngineState(direction, 'start', direction === 'leave' ? 'leaving' : 'entering', { reversal: true });
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      callHook('onStart', [context({ status: direction, reversal: true, immediate: true })], context({ status: direction, reversal: true, immediate: true }));
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      cleanupSnapshot(); cleanupSnapshot = noop;
+      cleanupFrom(); cleanupFrom = noop;
+      cleanupTo = applyPatch(element, phaseDescriptor.to);
+      setEngineState(direction, 'active', direction === 'leave' ? 'leaving' : 'entering', { reversal: true });
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      callHook('onActive', [context({ status: direction, reversal: true, immediate: true })], context({ status: direction, reversal: true, immediate: true }));
+      if (disposed || runGeneration !== generation || currentDirection !== direction) return;
+      beginCompletion(runGeneration, direction, phaseDescriptor, true);
+      return;
+    }
     runPrepare(runGeneration, direction, true, function () {
       if (disposed || runGeneration !== generation || currentDirection !== direction) return;
       // Freeze the computed reversal origin only for the synchronous retarget commit.

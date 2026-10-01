@@ -98,7 +98,7 @@ export class InputNumber extends FieldComponent {
         const numeric=this.own(NumericInput.create(this.#numericOptions(true))), initial=numeric.getState();
         const control=this.own(Control.create({
             container:this.options.container,formField:this.options.formField,mode:'input',inputValue:initial.inputValue,committedValue:initial.stringValue,
-            editable:true,clearable:false,disabled:this.disabled,readOnly:this.readOnly,required:this.options.required===true,size:this.options.size,status:this.options.status,variant:this.options.variant,focusOutline:this.options.focusOutline,classNames:this.options.classNames,styles:this.options.styles,placeholder:this.options.placeholder,prefix:this.options.prefix,suffix:this.options.suffix,name:this.options.name,
+            editable:true,clearable:false,disabled:this.disabled,readOnly:this.readOnly,required:this.options.required===true,size:this.options.size,status:this.options.status,variant:this.options.variant,focusOutline:this.options.focusOutline,class:this.options.class,style:this.options.style,placeholder:this.options.placeholder,prefix:this.options.prefix,suffix:this.options.suffix,name:this.options.name,
             onInput:(display,event)=>{numeric.collectInput(display,{reason:'input',source:'input',originalEvent:event,composing:record.composing});this.#syncProjection(true,{source:'input',reason:'input'});},
             onFocus:event=>{if(typeof this.options.onFocus==='function')this.options.onFocus(event,this);}
         }));
@@ -148,7 +148,7 @@ export class InputNumber extends FieldComponent {
         record.numeric.updateOptions({...this.#numericOptions(false,candidate),...(own(patch,'value')?{value:patch.value}:{})});
     }
     [fieldHooks.fieldOptionsUpdated](next) {
-        const r=state.get(this);if(!r.control)return;r.control.updateOptions({disabled:next.disabled===true,readOnly:next.readOnly===true,required:next.required===true,size:next.size,status:next.status,variant:next.variant,focusOutline:next.focusOutline,classNames:next.classNames,styles:next.styles,placeholder:next.placeholder,prefix:next.prefix,suffix:next.suffix,name:next.name});DOM.configureTextInput(r.field,{mode:'numeric',inputMode:next.inputMode||'decimal'});this.#renderActions();this.#syncProjection(false);
+        const r=state.get(this);if(!r.control)return;r.control.updateOptions({disabled:next.disabled===true,readOnly:next.readOnly===true,required:next.required===true,size:next.size,status:next.status,variant:next.variant,focusOutline:next.focusOutline,class:next.class,style:next.style,placeholder:next.placeholder,prefix:next.prefix,suffix:next.suffix,name:next.name});DOM.configureTextInput(r.field,{mode:'numeric',inputMode:next.inputMode||'decimal'});this.#renderActions();this.#syncProjection(false);
     }
     setValue(value,config={}){if(this.destroyed)return false;const r=state.get(this);r.numeric.setValue(value,{reason:config.reason||'api',source:config.source||'api',silent:config.silent===true,strict:config.strict===true});this.#syncProjection(false,{silent:config.silent===true,source:config.source||'api',reason:config.reason||'api'});return this;}
     getValue(){return state.get(this).numeric.getState().value;}

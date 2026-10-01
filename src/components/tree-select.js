@@ -71,7 +71,7 @@ function validateItems(items, opts) {
 }
 
 
-const TREE_SELECT_DEFAULTS=Object.freeze({items:[],multiple:false,checkable:false,checkStrictly:false,checkedStrategy:'child',searchable:true,clearable:false,maxCount:0,maxVisibleTags:0,renderTag:null,renderTagOverflow:null,popupRender:null,itemStyles:null,tagClasses:null,tagStyles:null,disabled:false,readOnly:false,size:'md',placeholder:'',trigger:'click',placement:'bottom-start',closeOnSelect:undefined,matchReferenceWidth:true,renderControl:true,headless:false});
+const TREE_SELECT_DEFAULTS=Object.freeze({items:[],multiple:false,checkable:false,checkStrictly:false,checkedStrategy:'child',searchable:true,clearable:false,maxCount:0,maxVisibleTags:0,renderTag:null,renderTagOverflow:null,popupRender:null,disabled:false,readOnly:false,size:'md',placeholder:'',trigger:'click',placement:'bottom-start',closeOnSelect:undefined,matchReferenceWidth:true,renderControl:true,headless:false});
 const runtimeState=new WeakMap();
 function validateTreeSelectOptions(opts){validateItems(opts.items,opts);if(['child','parent','all'].indexOf(String(opts.checkedStrategy||'child'))<0)throw new TypeError('[QXFRAME9A7C2] TreeSelect checkedStrategy must be "child", "parent", or "all".');if(opts.maxCount!=null&&(!Number.isFinite(Number(opts.maxCount))||Number(opts.maxCount)<0))throw new TypeError('[QXFRAME9A7C2] TreeSelect maxCount must be a non-negative number.');if(opts.maxVisibleTags!=='responsive'&&opts.maxVisibleTags!=null&&(!Number.isFinite(Number(opts.maxVisibleTags))||Number(opts.maxVisibleTags)<0))throw new TypeError('[QXFRAME9A7C2] TreeSelect maxVisibleTags must be a non-negative number or "responsive".');if(opts.popupRender!=null&&!Utils.isFunction(opts.popupRender))throw new TypeError('[QXFRAME9A7C2] TreeSelect popupRender must be a function or null.');return opts;}
 function prepareOptions(source,overrides){const fieldInit=Control.resolveFieldOptions(source,overrides);const incoming=fieldInit.options;if(fieldInit.formField&&!hasOwn(incoming,'value')&&!hasOwn(incoming,'defaultValue'))incoming.value=fieldInit.nativeValue;return{fieldInit,opts:validateTreeSelectOptions(Utils.mergeOwn(TREE_SELECT_DEFAULTS,incoming))};}
@@ -330,6 +330,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             var projectionInput = opts.searchable === true && triggerSession && triggerSession.getState().open ? searchState.query : projectionDisplay;
             fieldControl.updateOptions({ mode:multipleMode() ? 'tags':(opts.searchable === true ? 'input':'value'), tags:projectionTags, displayValue:projectionDisplay, inputValue:projectionInput, editable:opts.searchable === true, disabled:opts.disabled === true, readOnly:opts.readOnly === true, required:opts.required === true, name:opts.name, placeholder:placeholder, hasValue:values.length > 0, expanded:!!(triggerSession && triggerSession.getState().open) });
             fieldControl.setDisplayValue(projectionDisplay); fieldControl.setInputValue(projectionInput); fieldControl.setDraftVisual(!multipleMode() && opts.searchable === true && !!(triggerSession && triggerSession.getState().open) && searchState.query !== ''); fieldControl.setCommittedValue(multipleMode() ? values.slice() : values[0], commitMeta || { silent:true, source:'selection', reason:'projection' });
+            syncSemanticRegistry();
             return;
           }
           if (fieldControl) fieldControl.updateOptions({
@@ -340,13 +341,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             maxVisibleTags: opts.maxVisibleTags, tagInputMinWidth: opts.searchable === true ? 32 : 0,
             renderTag: renderSelectedTag,
             renderTagOverflow: renderSelectedTagOverflow,
-            tagClasses: opts.tagClasses, tagStyles: opts.tagStyles,
-            tagOverflowClassName: 'qxframe9a7c2-tree-select-tag qxframe9a7c2-tree-select-tag-overflow',
-            tagClassName: 'qxframe9a7c2-tree-select-tag',
-            tagTextClassName: 'qxframe9a7c2-tree-select-tag-text',
-            tagRemoveClassName: 'qxframe9a7c2-tree-select-tag-remove',
             size: opts.size,
-            variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles,
+            variant: opts.variant, focusOutline: opts.focusOutline,
             status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
             disabled: opts.disabled === true,
             readOnly: opts.readOnly === true,
@@ -361,6 +357,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (fieldControl) { fieldControl.setDraftVisual(!multipleMode() && opts.searchable === true && !!(triggerSession && triggerSession.getState().open) && searchState.query !== ''); fieldControl.setCommittedValue(multipleMode() ? values.slice() : values[0], commitMeta || { silent: true, source: 'selection', reason: 'projection' }); }
           else { input.value = inputValue; input.placeholder = placeholder; }
           if (!projectionMode) { root.classList.add('qxframe9a7c2-tree-select'); root.classList.toggle('has-value', values.length > 0); root.classList.toggle('is-multiple', multipleMode()); }
+          syncSemanticRegistry();
         }
     
         function syncView(commitMeta) { renderValues(commitMeta); }
@@ -420,7 +417,6 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           beforeCheck: beforeTreeCheck,
           beforeExpand: opts.beforeExpand,
           itemRender: opts.itemRender,
-          styles: opts.itemStyles,
           renderIcon: opts.renderIcon,
           showLine: opts.showLine,
           indent: opts.indent,
@@ -543,6 +539,33 @@ function setupTreeSelectRuntime(instance,fieldInit) {
     
     
         function hostedTags() { return fieldControl && fieldControl.getTags ? fieldControl.getTags() : null; }
+        function semanticSnapshot() {
+          var elements={root:root,input:input,values:valuesNode,prefix:prefix,suffix:suffix,clear:clearButton,toggle:arrow,trigger:triggerTarget,popup:panel,tree:treeHost,item:[],tagShell:[],tag:[],tagContent:[],tagClose:[],tagOverflow:null};
+          var contexts={item:[],tagShell:[],tag:[],tagContent:[],tagClose:[]};
+          if(tree&&tree.getList&&tree.getVisibleItems){
+            var list=tree.getList(), visible=tree.getVisibleItems(), treeState=tree.getState?tree.getState():{}, selected=selectedValues();
+            visible.forEach(function(item,index){
+              var key=String(keyOf(item,index)), node=list&&list.getItemElement?list.getItemElement(key):null;
+              if(!node)return;
+              var value=String(valueOf(item,index));
+              elements.item.push(node);
+              contexts.item.push({item:item,state:Object.freeze({
+                key:key,value:value,selected:selected.indexOf(value)>=0,
+                active:String(treeState.activeKey||'')===key,
+                checked:Array.isArray(treeState.checkedKeys)&&treeState.checkedKeys.map(String).indexOf(key)>=0,
+                expanded:Array.isArray(treeState.expandedKeys)&&treeState.expandedKeys.map(String).indexOf(key)>=0,
+                disabled:itemAccessors.disabled(item,index)===true
+              })});
+            });
+          }
+          SelectionTags.projectHostedSemantic(hostedTags(), selectionTags, elements, contexts);
+          return {elements:elements,contexts:contexts};
+        }
+        function syncSemanticRegistry() {
+          var snapshot = semanticSnapshot();
+          if (!destroyed && !instance.destroyed) instance.registerSemanticElements(snapshot.elements, snapshot.contexts);
+          return snapshot;
+        }
         function bindCompositeVirtualFocus() {
           if (!keyboard || !keyboard.virtualFocus) return;
           tree.bindVirtualFocus(keyboard.virtualFocus);
@@ -595,13 +618,8 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           maxVisibleTags: opts.maxVisibleTags, tagInputMinWidth: opts.searchable === true ? 32 : 0,
           renderTag: renderSelectedTag,
           renderTagOverflow: renderSelectedTagOverflow,
-          tagClasses: opts.tagClasses, tagStyles: opts.tagStyles,
-          tagOverflowClassName: 'qxframe9a7c2-tree-select-tag qxframe9a7c2-tree-select-tag-overflow',
-          tagClassName: 'qxframe9a7c2-tree-select-tag',
-          tagTextClassName: 'qxframe9a7c2-tree-select-tag-text',
-          tagRemoveClassName: 'qxframe9a7c2-tree-select-tag-remove',
           size: opts.size,
-          variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles,
+          variant: opts.variant, focusOutline: opts.focusOutline,
           status: opts.status, prefix: opts.prefix, suffix: opts.suffix,
           required: opts.required === true, name: opts.name, busy: opts.busy === true,
           disabled: opts.disabled === true,
@@ -761,7 +779,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
             getKey: opts.getKey, getItems: opts.getItems, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled,
             filterItem: opts.filterItem, loadChildren: opts.loadChildren, beforeCheck: beforeTreeCheck, beforeExpand: opts.beforeExpand,
-            itemRender: opts.itemRender, styles: opts.itemStyles, renderIcon: opts.renderIcon, showLine: opts.showLine, indent: opts.indent,
+            itemRender: opts.itemRender, renderIcon: opts.renderIcon, showLine: opts.showLine, indent: opts.indent,
             onLoad: opts.onLoad, onLoadError: opts.onLoadError
           };
           if (hasOwn(next, 'items')) treeOptions.items = Array.isArray(opts.items) ? opts.items.slice() : [];
@@ -780,12 +798,12 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           if (hasOwn(next, 'expandedKeys')) treeOptions.expandedKeys = opts.expandedKeys;
           tree.updateOptions(treeOptions);
           valueRecordIndexRevision = -1;
+          syncSemanticRegistry();
           if (checkMode && !valueState.controlled) valueState.write(checkedValues(), { silent:true, source:'options', reason:'options-check-normalize' }, false);
           else restoreTreeFromApiValue('options-controlled');
           if (opts.disabled === true && triggerSession.getState().open) close('disabled');
           if (hasOwn(next, 'popupRender') || triggerSession.getState().open) syncPopupContent();
           syncView();
-          if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
           return api;
         }
         function getState() {
@@ -824,6 +842,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         if (opts.open === true) instance.open('initial');
         return Object.freeze({
           root:root,input:input,panel:panel,treeHost:treeHost,triggerTarget:triggerTarget,
+          getSemanticSnapshot:semanticSnapshot,
           setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,
           setCheckedKeys:function(keys,meta){if(destroyed||!hierarchicalCheckMode())return instance;tree.setCheckedKeys(keys,meta||{source:'api',reason:'tree-select-set-checked-keys'});return instance;},
           check:function(key,next,meta){return destroyed||!hierarchicalCheckMode()?false:tree.check(key,next,meta||{source:'api',reason:'tree-select-check'});},
@@ -851,12 +870,15 @@ export class TreeSelect extends PopupFieldComponent {
      ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
   });
   static contract=getContract('TreeSelect');
+  static semanticElements=Object.freeze(['root','input','values','prefix','suffix','clear','toggle','trigger','popup','tree','item','tagShell','tag','tagContent','tagClose','tagOverflow']);
+  static defaultClassSlot='root';
+  static defaultStyleSlot='root';
   static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
   static create(source,overrides){return new this(source,overrides).render();}
   static enhance(input,options){return this.create(input,options||{});}
   static createDefaultDOM=createDefaultDOM;
   constructor(source={},overrides){const prepared=prepareOptions(source,overrides);super(prepared.opts);runtimeState.set(this,{fieldInit:prepared.fieldInit,runtime:null});}
-  [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime)return record.runtime.root;const runtime=setupTreeSelectRuntime(this,record.fieldInit);record.runtime=runtime;this.own(()=>runtime.dispose('tree-select-destroy'));return runtime.root;}
+  [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime){const snapshot=record.runtime.getSemanticSnapshot();this.registerSemanticElements(snapshot.elements,snapshot.contexts);return record.runtime.root;}const runtime=setupTreeSelectRuntime(this,record.fieldInit);record.runtime=runtime;const snapshot=runtime.getSemanticSnapshot();this.registerSemanticElements(snapshot.elements,snapshot.contexts);this.own(()=>runtime.dispose('tree-select-destroy'));return runtime.root;}
   [popupFieldHooks.optionsUpdated](next,previous,patch){const record=runtimeState.get(this);if(record.runtime)record.runtime.applyOptions(patch);}
   setItems(items){const r=runtimeState.get(this).runtime;return r?r.setItems(items):this;}
   setValue(value,meta){const r=runtimeState.get(this).runtime;return r?r.setValue(value,meta):this;}
@@ -875,7 +897,6 @@ export class TreeSelect extends PopupFieldComponent {
   getInteractionController(){const r=runtimeState.get(this).runtime;return r?r.getInteractionController():null;}
   getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
   getSelectionController(){const r=runtimeState.get(this).runtime;return r?r.getSelectionController():null;}
-  getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
   getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
   getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}
   getPopupOriginElement(){const r=runtimeState.get(this).runtime;return r?r.treeHost:null;}

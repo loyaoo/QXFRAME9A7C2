@@ -276,7 +276,28 @@ const currentTable=currentApi.components.find(component=>component.name==='Table
 if(!expectedTable||expectedTable.schema.filters!=='array'||!currentTable||currentTable.schema.filters!=='object')
   throw new Error('Table.filters contract migration must correct the frozen generic array inference to the canonical object map.');
 expectedTable.schema.filters='object';
-const authorizedApiSchemaExpansions=Object.freeze(['Slider.step: number→number|null','Table.filters: array→object']);
+const authorizedApiSchemaExpansions=['Slider.step: number→number|null','Table.filters: array→object'];
+const semanticStyleRule={types:['object','function'],nullable:true};
+for(const componentName of ['Drawer','Dropdown','Loading','Menu','Message','Modal','Notification']){
+  const expected=(expectedApi.components||[]).find(record=>record&&record.name===componentName);
+  const current=(currentApi.components||[]).find(record=>record&&record.name===componentName);
+  if(!expected||!current||!expected.schema||!current.schema) throw new Error('Semantic style schema migration component missing: '+componentName);
+  const oldStyle=expected.schema.style;
+  const oldStyleIsObject=oldStyle==='object'||(oldStyle&&oldStyle.type==='object'&&oldStyle.nullable===true);
+  if(!oldStyleIsObject||json(current.schema.style)!==json(semanticStyleRule)) throw new Error('Semantic style schema migration mismatch: '+componentName+'.style');
+  expected.schema.style=semanticStyleRule;
+  authorizedApiSchemaExpansions.push(componentName+'.style: object→object|function');
+}
+const semanticDurationRule={types:['number','string','function','object'],nullable:true};
+for(const componentName of ['Carousel','Drawer','Modal']){
+  const expected=(expectedApi.components||[]).find(record=>record&&record.name===componentName);
+  const current=(currentApi.components||[]).find(record=>record&&record.name===componentName);
+  if(!expected||!current||!expected.schema||!current.schema||json(current.schema.duration)!==json(semanticDurationRule))
+    throw new Error('Semantic duration schema migration mismatch: '+componentName+'.duration');
+  expected.schema.duration=semanticDurationRule;
+  authorizedApiSchemaExpansions.push(componentName+'.duration: legacy visual timing→semantic motion override');
+}
+Object.freeze(authorizedApiSchemaExpansions);
 const authorizedCapabilityMigrations=Object.freeze(Object.entries(BASELINE_CAPABILITY_MIGRATIONS).map(function(entry){return entry[0]+'→'+entry[1];}));
 const authorizedApiRemovals=[];
 for(const entry of compatibility.entries||[]){
@@ -339,7 +360,42 @@ for(const moduleRecord of comparableModules.modules||[]){
   if(caps.domHeadless.length===0) delete caps.domHeadless;
   authorizedSharedProtocolChanges.push(moduleRecord.name+'.domHeadless+FocusOrigin'+(rule.restore?'/-'+rule.restore:''));
 }
-const apiParity=json(expectedApi)===json(comparableApi);
+function collectApiParityDifferences(expected,current){
+  const differences=[];
+  const expectedByName=new Map((expected.components||[]).map(record=>[record.name,record]));
+  const currentByName=new Map((current.components||[]).map(record=>[record.name,record]));
+  const names=Array.from(new Set([...expectedByName.keys(),...currentByName.keys()])).sort();
+  for(const name of names){
+    const left=expectedByName.get(name),right=currentByName.get(name);
+    if(!left||!right){differences.push({component:name,field:'component',expected:!!left,current:!!right});continue;}
+    for(const field of ['schema','defaults','immutable','legacy','optionImpact','initializer','allowUnknown','dependencies']){
+      if((field==='schema'?stableApiJson(left[field]):json(left[field]))===(field==='schema'?stableApiJson(right[field]):json(right[field])))continue;
+      const detail={component:name,field:field};
+      if(field==='schema'&&left.schema&&right.schema){
+        const keys=Array.from(new Set([...Object.keys(left.schema),...Object.keys(right.schema)])).sort();
+        detail.keys=keys.filter(key=>json(left.schema[key])!==json(right.schema[key])).map(key=>({key,expected:left.schema[key],current:right.schema[key]}));
+      }else{
+        detail.expected=left[field];
+        detail.current=right[field];
+      }
+      differences.push(detail);
+      if(differences.length>=40)return differences;
+    }
+  }
+  return differences;
+}
+function stableApiValue(value){
+  if(Array.isArray(value)) return value.map(stableApiValue);
+  if(value&&typeof value==='object'){
+    const out={};
+    Object.keys(value).sort().forEach(function(key){out[key]=stableApiValue(value[key]);});
+    return out;
+  }
+  return value;
+}
+const stableApiJson=value=>JSON.stringify(stableApiValue(value));
+const apiParity=stableApiJson(expectedApi)===stableApiJson(comparableApi);
+const apiParityDifferences=apiParity?[]:collectApiParityDifferences(expectedApi,comparableApi);
 const moduleParity=json(expectedModules)===json(comparableModules);
 
 const oldBrowser=fs.readFileSync(path.join(root,'tools/fixtures/legacy-hotfix6/verify-browser.log'),'utf8');
@@ -408,6 +464,7 @@ const report={
   staleActiveMetadata:staleMetadata,
   parity:{
     api:apiParity,
+    apiParityDifferences,
     authorizedApiSchemaExpansions,
     authorizedApiRemovals,
     authorizedLegacyPromotions,

@@ -375,7 +375,7 @@ function setupTransfer(instance) {
   }
   function tableProjectionOptions(side, config) {
     var list = listForSide(side);
-    var userRowClassName = config.rowClassName;
+    var userTableClass = config.class;
     var userRowClick = config.onRowClick;
     var output = Utils.mergeOwn( config);
     delete output.source; delete output.target;
@@ -389,14 +389,21 @@ function setupTransfer(instance) {
     output.page = 1; output.pageSize = 0;
     output.size = sizeName(config.size === undefined ? opts.size : config.size);
     output.disabled = opts.disabled === true; output.readOnly = opts.readOnly === true;
-    output.rowClassName = function (item, context) {
+    var tableClassMap = {};
+    if (userTableClass && typeof userTableClass === 'object' && !Array.isArray(userTableClass)) Utils.copyOwn(tableClassMap, userTableClass);
+    else if (userTableClass !== undefined && userTableClass !== null) tableClassMap.root = userTableClass;
+    var userRowClass = tableClassMap.row;
+    tableClassMap.row = function (semantic) {
+      var item = semantic && semantic.item;
       var record = recordByItem.get(item);
       var classes = [];
       if (record && list && list.getSelection().has(record.value)) classes.push('is-transfer-selected');
-      var custom = Utils.isFunction(userRowClassName) ? userRowClassName(item, context) : userRowClassName;
-      if (custom) classes.push(String(custom));
-      return classes.join(' ');
+      var custom = Utils.isFunction(userRowClass) ? userRowClass(semantic) : userRowClass;
+      if (Array.isArray(custom)) classes.push.apply(classes, custom.map(String).filter(Boolean));
+      else if (custom) classes.push.apply(classes, String(custom).split(/\s+/).filter(Boolean));
+      return classes;
     };
+    output.class = tableClassMap;
     output.onRowClick = function (item, detail) {
       var record = recordByItem.get(item);
       if (record && !record.disabled && !mutationLocked() && list) {
@@ -545,7 +552,6 @@ function setupTransfer(instance) {
   function listRuntimeOptions(side) {
     var projection = listProjectionOptions(side);
     return {
-      classes: opts.classes,
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
       size: opts.size,

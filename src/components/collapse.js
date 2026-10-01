@@ -84,6 +84,17 @@ export class Collapse extends Component {
     });
     static immutableOptions = Object.freeze(['container']);
     static contract = ComponentContracts.get('Collapse');
+    static semanticElements = Object.freeze(['root','item','header','panel']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
+    static defaultMotionSlot = 'panel';
+    static motionSlots = Object.freeze({
+        panel:Object.freeze({
+            appear:'--qxframe9a7c2-motion-collapse-panel-enter-duration',
+            enter:'--qxframe9a7c2-motion-collapse-panel-enter-duration',
+            leave:'--qxframe9a7c2-motion-collapse-panel-leave-duration'
+        })
+    });
 
     [componentHooks.render]() {
         const existing = state.get(this);
@@ -94,6 +105,7 @@ export class Collapse extends Component {
         const root = doc.createElement('div');
         root.className = 'qxframe9a7c2-collapse';
         opts.container.appendChild(root);
+        this.registerSemanticElement('root', root);
 
         const record = {
             doc,
@@ -356,6 +368,12 @@ export class Collapse extends Component {
                 syncRecord(itemRecord, item, open, reason);
             });
             Object.keys(record.records).forEach(key => { if (!live[key]) { destroyRecord(record.records[key]); delete record.records[key]; } });
+            const liveRecords = record.items.map(item => record.records[item.key]).filter(Boolean);
+            this.registerSemanticElements({
+                item:liveRecords.map(entry => entry.section),
+                header:liveRecords.map(entry => entry.header),
+                panel:liveRecords.map(entry => entry.panel)
+            });
             record.active.updateOptions({ entries: record.items });
             record.active.ensureValid({ silent: true, reason: 'render' });
             syncRoving();
@@ -496,7 +514,6 @@ export class Collapse extends Component {
     getFocusController() { return recordFor(this).focusController; }
     getCapabilityController() { return recordFor(this).capabilityController; }
     getKeyboardNavigation() { return recordFor(this).keyboard; }
-    getRootElement() { return this.root; }
 }
 
 export { SIZES as COLLAPSE_SIZES, COLLAPSIBLE as COLLAPSE_MODES };

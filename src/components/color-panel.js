@@ -677,7 +677,6 @@ function create(options) {
     if (candidateState) { resetInteractionSnapshots(); state = candidateState; }
     if (hasOwn(next, 'presets')) renderPresets();
     sync();
-    if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
     return api;
   }
   function getState() {

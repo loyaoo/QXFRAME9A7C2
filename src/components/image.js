@@ -37,13 +37,13 @@ var PREVIEW_TRANSITION = Object.freeze({
   enter: Object.freeze({
     type: 'transition',
     from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) }),
-    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform', transitionDuration: 'var(--qxframe9a7c2-motion-duration-mid)', transitionTimingFunction: 'var(--qxframe9a7c2-easing-standard)' }) }),
+    active: 'qxframe9a7c2-image-preview-trajectory-enter-active',
     to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) })
   }),
   leave: Object.freeze({
     type: 'transition',
     from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) }),
-    active: Object.freeze({ style: Object.freeze({ transitionProperty: 'transform', transitionDuration: 'var(--qxframe9a7c2-motion-duration-mid)', transitionTimingFunction: 'var(--qxframe9a7c2-easing-standard)' }) }),
+    active: 'qxframe9a7c2-image-preview-trajectory-leave-active',
     to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) })
   })
 });
@@ -160,6 +160,8 @@ function setupImage(instance) {
   var previewTransformDirty = false;
   var maskPresence = null;
   var pendingOpenDetail = null;
+  var enterMaskDone = true;
+  var enterContentDone = true;
   var pendingCloseDetail = null;
   var leaveMaskDone = true;
   var leaveContentDone = true;
@@ -199,6 +201,7 @@ function setupImage(instance) {
   root.appendChild(image);
   root.appendChild(errorLayer);
   opts.container.appendChild(root);
+  instance.registerSemanticElements({ root:root, image:image, preview:null, mask:null, stage:null, trajectory:null, media:null });
 
   capabilityController = CapabilityController.create({
     getState: function () { return { disabled: destroyed || opts.disabled === true, readOnly: false, loading: false }; },
@@ -642,6 +645,17 @@ function setupImage(instance) {
     previewMotion.style.setProperty('--_qxframe9a7c2-image-preview-origin-scale-y', String(sy));
     return valid;
   }
+  function finalizePreviewEnter(context) {
+    if (!previewOpen || destroyed || !enterMaskDone || !enterContentDone || !pendingOpenDetail) return false;
+    var detail = pendingOpenDetail || previewDetail(context && context.reason || 'preview', context && context.originalEvent || null);
+    pendingOpenDetail = null;
+    releasePreviewTrajectoryGeometry('enter-complete');
+    call(cfg('onVisibleChange', opts.onPreviewVisibleChange), true, Object.freeze({
+      source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent,
+      index: previewIndex, item: currentPreviewItem(), instance: api
+    }));
+    return true;
+  }
   function finalizePreviewLeave(context) {
     if (previewOpen || destroyed || !leaveMaskDone || !leaveContentDone || !pendingCloseDetail) return false;
     var detail = pendingCloseDetail || previewDetail(context && context.reason || 'close', context && context.originalEvent || null);
@@ -665,6 +679,8 @@ function setupImage(instance) {
     if (!previewOpen || !presence) return api;
     previewOpen = false;
     pendingOpenDetail = null;
+    enterMaskDone = true;
+    enterContentDone = true;
     pendingCloseDetail = previewDetail(reason || 'api', event || null);
     leaveMaskDone = false;
     leaveContentDone = false;
@@ -737,6 +753,13 @@ function setupImage(instance) {
     previewStage.appendChild(previewMotion);
     previewRoot.appendChild(previewMask);
     previewRoot.appendChild(previewStage);
+    instance.registerSemanticElements({
+      preview:previewRoot,
+      mask:previewMask,
+      stage:previewStage,
+      trajectory:previewMotion,
+      media:[previewImage, previewVideo, previewAudio]
+    });
     
     scope.add(DOM.listen(previewRoot, 'click', function (event) {
       var actionNode = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-image-preview-tool') : null;
@@ -851,6 +874,10 @@ function setupImage(instance) {
       visible: false,
       appear: false,
       reducedMotion: function () { return Config.resolve('motion', undefined, root) === false ? true : undefined; },
+      onAfterEnter: function (context) {
+        enterMaskDone = true;
+        finalizePreviewEnter(context);
+      },
       onAfterLeave: function (context) {
         leaveMaskDone = true;
         finalizePreviewLeave(context);
@@ -863,11 +890,8 @@ function setupImage(instance) {
       appear: false,
       reducedMotion: function () { return Config.resolve('motion', undefined, root) === false ? true : undefined; },
       onAfterEnter: function (context) {
-        if (!previewOpen || destroyed) return;
-        releasePreviewTrajectoryGeometry('enter-complete');
-        var detail = pendingOpenDetail || previewDetail(context && context.reason || 'preview', context && context.originalEvent || null);
-        pendingOpenDetail = null;
-        call(cfg('onVisibleChange', opts.onPreviewVisibleChange), true, Object.freeze({ source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent, index: previewIndex, item: currentPreviewItem(), instance: api }));
+        enterContentDone = true;
+        finalizePreviewEnter(context);
       },
       onAfterLeave: function (context) {
         // The trajectory has physically landed on the authored source. Motion cleanup
@@ -898,6 +922,8 @@ function setupImage(instance) {
     leaveMaskDone = true;
     leaveContentDone = true;
     pendingOpenDetail = previewDetail('preview', event || null);
+    enterMaskDone = false;
+    enterContentDone = false;
     overlay.mount();
     surface.show(pendingOpenDetail);
     if (previewMotion) previewMotion.style.visibility = '';
@@ -974,6 +1000,9 @@ function setupImage(instance) {
     if (surface) surface.destroy();
     if (transformModel) transformModel.destroy();
     if (wasOpen) call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: 'api', reason: 'destroy', event: null, index: previewIndex, item: currentPreviewItem(), instance: api }));
+    // Component.destroy() has already destroyed SemanticProjection before owned runtime
+    // cleanups execute. Do not call the public semantic registration API from teardown:
+    // it rejects destroyed instances and would abort the remaining resource disposal.
     overlay = null; surface = null; presence = null; previewRoot = null; previewMask = null; previewStage = null; previewMotion = null;
     previewImage = null; previewVideo = null; previewAudio = null; previewMedia = null; panMetrics = null;
     scope.dispose(); DOM.removeNode(root); return true;
@@ -1117,6 +1146,22 @@ export class Image extends Component {
   });
   static immutableOptions = Object.freeze(['container', 'document']);
   static contract = ComponentContracts.get('Image');
+  static semanticElements = Object.freeze(['root','image','preview','mask','stage','trajectory','media']);
+  static defaultClassSlot = 'root';
+  static defaultStyleSlot = 'root';
+  static defaultMotionSlot = 'trajectory';
+  static motionSlots = Object.freeze({
+    trajectory:Object.freeze({
+      appear:'--qxframe9a7c2-motion-image-preview-trajectory-enter-duration',
+      enter:'--qxframe9a7c2-motion-image-preview-trajectory-enter-duration',
+      leave:'--qxframe9a7c2-motion-image-preview-trajectory-leave-duration'
+    }),
+    mask:Object.freeze({
+      appear:'--qxframe9a7c2-motion-image-preview-mask-enter-duration',
+      enter:'--qxframe9a7c2-motion-image-preview-mask-enter-duration',
+      leave:'--qxframe9a7c2-motion-image-preview-mask-leave-duration'
+    })
+  });
   static createPreview(options) { return createPreview(options); }
 
   [componentHooks.render]() {
@@ -1148,7 +1193,6 @@ export class Image extends Component {
   setSrc(src) { return recordForImage(this).setSrc(src); }
   setPreviewItems(items) { return recordForImage(this).setPreviewItems(items); }
   getState() { return recordForImage(this).getState(); }
-  getRootElement() { return recordForImage(this).getRootElement(); }
   getImageElement() { return recordForImage(this).getImageElement(); }
   getPreviewElement() { return recordForImage(this).getPreviewElement(); }
   getPreviewMaskElement() { return recordForImage(this).getPreviewMaskElement(); }

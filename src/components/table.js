@@ -463,6 +463,11 @@ function setupTable(instance) {
   scrollShell.appendChild(scrollViewport);
   root.appendChild(scrollShell);
   opts.container.appendChild(root);
+  instance.registerSemanticElements({
+    root:root, scroll:scrollShell, viewport:scrollViewport, table:table, caption:caption,
+    header:thead, body:tbody, row:[], expandedRow:[], summary:tfoot,
+    footer:footer, pagination:pager, loading:loading, error:errorPanel
+  }, { row:[], expandedRow:[] });
   scrollSurface = Scroll.attachViewport({
     root:scrollShell,
     viewport:scrollViewport,
@@ -1190,6 +1195,7 @@ function setupTable(instance) {
       navigation: {
         focusRoot: root,
         editableKeys: ['F6','Escape','Enter'],
+        capture: true,
         shouldHandle: function (ctx) {
           if (editTransaction) return ctx.target === editTransaction.target;
           return ctx.target === root;
@@ -2094,13 +2100,9 @@ function setupTable(instance) {
     if (disabled) row.classList.add('is-disabled');
     if (entry.item && entry.item.status) row.classList.add('is-' + String(entry.item.status));
     if (typeof opts.onRowClick === 'function') row.classList.add('is-clickable');
-    if (typeof opts.rowClassName === 'function') {
-      var rowClass = opts.rowClassName(entry.item, context);
-      if (rowClass) row.classList.add.apply(row.classList, String(rowClass).split(/\s+/).filter(Boolean));
-    } else if (opts.rowClassName) row.classList.add.apply(row.classList, String(opts.rowClassName).split(/\s+/).filter(Boolean));
     if (typeof opts.onRow === 'function') {
       var rowProps = opts.onRow(entry.item, context) || {};
-      if (rowProps.className) row.classList.add.apply(row.classList, String(rowProps.className).split(/\s+/).filter(Boolean));
+      if (rowProps.class) row.classList.add.apply(row.classList, (Array.isArray(rowProps.class) ? rowProps.class : String(rowProps.class).split(/\s+/)).map(String).filter(Boolean));
       applyAttributes(row, rowProps.attributes || rowProps);
     }
     if (state.selectionMode !== 'none') {
@@ -2152,7 +2154,7 @@ function setupTable(instance) {
       cellContent.className = 'qxframe9a7c2-table-cell-content qxframe9a7c2-table-cell-' + column.overflow;
       if (typeof column.onCell === 'function') {
         var cellProps = column.onCell(entry.item, cellContext) || {};
-        if (cellProps.className) cellContent.classList.add.apply(cellContent.classList, String(cellProps.className).split(/\s+/).filter(Boolean));
+        if (cellProps.class) cellContent.classList.add.apply(cellContent.classList, (Array.isArray(cellProps.class) ? cellProps.class : String(cellProps.class).split(/\s+/)).map(String).filter(Boolean));
         if (cellProps.style && typeof cellProps.style === 'object') Object.keys(cellProps.style).forEach(function (property) { var styleValue = cellProps.style[property]; if (styleValue === undefined || styleValue === null) cellContent.style.removeProperty(property); else cellContent.style.setProperty(property, String(styleValue)); });
         applyAttributes(td, cellProps.attributes || cellProps);
       }
@@ -2179,6 +2181,41 @@ function setupTable(instance) {
     cell.appendChild(content); row.appendChild(cell);
     return row;
   }
+  function syncSemanticRows() {
+    var rows = [], rowContexts = [], expandedRows = [], expandedContexts = [];
+    bodyRowRecords.forEach(function (record, key) {
+      if (record && record.row) {
+        rows.push(record.row);
+        rowContexts.push({
+          item: record.item,
+          state: Object.freeze({
+            key: String(key),
+            sourceIndex: record.sourceIndex,
+            visibleIndex: record.visibleIndex,
+            selected: isKeySelected(String(key), currentState()),
+            expanded: isKeyExpanded(String(key), currentState()),
+            disabled: record.item ? isEntryDisabled({ item:record.item, sourceIndex:record.sourceIndex, key:String(key) }) : false
+          })
+        });
+      }
+      if (record && record.expandedRow) {
+        expandedRows.push(record.expandedRow);
+        expandedContexts.push({
+          item: record.item,
+          state: Object.freeze({
+            key: String(key),
+            sourceIndex: record.sourceIndex,
+            visibleIndex: record.visibleIndex,
+            expanded: isKeyExpanded(String(key), currentState())
+          })
+        });
+      }
+    });
+    instance.registerSemanticElements(
+      { row:rows, expandedRow:expandedRows },
+      { row:rowContexts, expandedRow:expandedContexts }
+    );
+  }
   function renderBody(reason) {
     var entries = projectedEntries();
     var columns = currentColumns();
@@ -2192,6 +2229,7 @@ function setupTable(instance) {
     var forceContent = contentRenderRequired(reason);
     if (!entries.length) {
       bodyRowRecords.clear();
+      instance.registerSemanticElements({ row:[], expandedRow:[] }, { row:[], expandedRow:[] });
       var busyEmpty = opts.loading === true || remoteProcessing === true;
       if (busyEmpty) {
         Array.prototype.slice.call(tbody.children).forEach(function (node) { removeRenderedNode(node); });
@@ -2262,6 +2300,7 @@ function setupTable(instance) {
     desiredNodes.forEach(function (node) { tbody.appendChild(node); });
     var keep = new Set(desiredNodes);
     Array.prototype.slice.call(tbody.children).forEach(function (node) { if (!keep.has(node)) removeRenderedNode(node); });
+    syncSemanticRows();
 
     if (virtualMeasureCancel) { virtualMeasureCancel(); virtualMeasureCancel = null; }
     if (variableVirtual && measureRows.length) {
@@ -2514,6 +2553,22 @@ function setupTable(instance) {
     
   delegation = EventDelegation.create({ root: root });
   scope.add(function () { delegation.destroy(); });
+  // A real editor temporarily owns DOM focus while Table keeps virtual navigation ownership.
+  // Bridge only the edit-lease keys into the existing InteractionController so Escape/F6/Enter
+  // cannot be lost inside descendant native controls. Action resolution remains single-owned.
+  scope.add(DOM.listen(root, 'keydown', function (event) {
+    if (!editTransaction || !event) return;
+    var target = editTransaction.target;
+    if (!target || (event.target !== target && !(target.contains && target.contains(event.target)))) return;
+    if (['Escape','F6','Enter'].indexOf(String(event.key || '')) < 0) return;
+    var action = resolveTableInteractionAction(event);
+    if (!action) return;
+    var result = handleTableInteractionAction(action, { originalEvent:event, ownerId:'table' });
+    if (result === 'handled' || result === 'blocked') {
+      if (event.preventDefault) event.preventDefault();
+      if (event.stopPropagation) event.stopPropagation();
+    }
+  }, true));
   scope.add(DOM.listen(doc, 'keydown', function (event) {
     if (!activeColumnResize || event.defaultPrevented) return;
     interactionController.dispatch(event, { ownerId:'table-resize' });
@@ -2538,8 +2593,13 @@ function setupTable(instance) {
     var key = DOM.getPrivate(cell, 'tableNavigationCell');
     var target = key != null ? resolveEditTarget(String(key)) : null;
     if (target && (event.target === target || (target.contains && target.contains(event.target)))) {
-      if (!editTransaction || editTransaction.key !== String(key)) enterCellEdit(String(key), 'table-edit-pointer', event);
-      if (cellDomain && editTransaction) cellDomain.activate(editTransaction.key, { source: 'table-edit-pointer', modality: 'pointer', reason: 'table-edit-pointer', originalEvent: event, ensureVisible: false });
+      // beginEdit() focuses the editor for keyboard/API entry. That focusin must not be
+      // reclassified as pointer input, otherwise the edit lease loses its keyboard origin
+      // and Escape is no longer routed back through the table interaction scope.
+      if (!editTransaction || editTransaction.key !== String(key)) {
+        enterCellEdit(String(key), 'table-edit-pointer', event);
+        if (cellDomain && editTransaction) cellDomain.activate(editTransaction.key, { source: 'table-edit-pointer', modality: 'pointer', reason: 'table-edit-pointer', originalEvent: event, ensureVisible: false });
+      }
     }
   }));
   scope.add(DOM.listen(root, 'focusout', function () {
@@ -2952,6 +3012,9 @@ export class Table extends Component {
     ownership:Object.freeze({ value:'ValueController', focus:'FocusController', interaction:'InteractionController', capability:'CapabilityController', selection:'SelectionController', overlay:'OverlayController', feedback:'FeedbackController', form:'FormController' })
   });
   static contract = ComponentContracts.get('Table');
+  static semanticElements = Object.freeze(['root','scroll','viewport','table','caption','header','body','row','expandedRow','summary','footer','pagination','loading','error']);
+  static defaultClassSlot = 'root';
+  static defaultStyleSlot = 'root';
   static immutableOptions = Object.freeze(['container','document']);
   static sizes = SIZES.slice();
 
@@ -3023,7 +3086,6 @@ export class Table extends Component {
   getState(){return recordForTable(this).getState();}
   getDiagnostics(){return recordForTable(this).getDiagnostics();}
   getModel(){return recordForTable(this).getModel();}
-  getRootElement(){return recordForTable(this).getRootElement();}
   getTableElement(){return recordForTable(this).getTableElement();}
   getScroll(){return recordForTable(this).getScroll();}
   getScrollViewport(){return recordForTable(this).getScrollViewport();}

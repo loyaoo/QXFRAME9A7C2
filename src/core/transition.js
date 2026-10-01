@@ -2,7 +2,7 @@
 import { MotionController } from './motionController.js';
 import { MotionPresets } from './motionPresets.js';
 
-var LEGACY_OPTIONS = Object.freeze(['motion', 'target', 'el']);
+var LEGACY_OPTIONS = Object.freeze(['motion', 'target', 'el', 'duration']);
 
 function own(object, key) { return Object.prototype.hasOwnProperty.call(Object(object), key); }
 function rejectLegacy(settings) {
@@ -31,7 +31,6 @@ function create(options) {
     leave: settings.leave,
     reducedMotion: settings.reducedMotion,
     disabled: settings.disabled,
-    duration: settings.duration,
     deadlinePadding: settings.deadlinePadding,
     onStateChange: settings.onStateChange,
     onPrepare: settings.onPrepare,

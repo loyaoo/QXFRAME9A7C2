@@ -6,7 +6,7 @@ import { Config } from './config.js';
 
 const global = globalThis;
 
-var LEGACY_OPTIONS = Object.freeze(['motion', 'target', 'el']);
+var LEGACY_OPTIONS = Object.freeze(['motion', 'target', 'el', 'duration']);
 
 function own(object, key) { return Object.prototype.hasOwnProperty.call(Object(object), key); }
 function isFunction(value) { return typeof value === 'function'; }
@@ -447,7 +447,6 @@ function create(options) {
       leave: settings.leave,
       reducedMotion: settings.reducedMotion,
       disabled: settings.disabled,
-      duration: function (ctx) { return isFunction(settings.duration) ? settings.duration(recordContext(record, ctx)) : settings.duration; },
       deadlinePadding: settings.deadlinePadding,
       onPrepare: function (ctx) {
         return isFunction(settings.onPrepare) ? settings.onPrepare(recordContext(record, ctx)) : null;

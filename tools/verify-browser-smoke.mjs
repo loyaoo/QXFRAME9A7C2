@@ -28,9 +28,10 @@ function skipped(reason) {
 function adaptLegacySmokeSource(source) {
     const normalized = path.relative(root, smokePath).split(path.sep).join('/');
     if (normalized !== 'tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html') return source;
-    // The HOTFIX6 fixture intentionally remains frozen. Table's canonical scroll owner
-    // moved from the component root to the public Scroll viewport, so translate only
-    // those legacy root-scroll probes while preserving every other historical assertion.
+    // The HOTFIX6 fixture intentionally remains frozen. Translate only historical
+    // harness calls whose public contracts were intentionally removed: Table root-scroll
+    // probes now target the canonical Scroll viewport, and Modal's split JS timing options
+    // map to the semantic duration slots used by the current CSS-timing projection.
     return source
         .replace(
             "var stickyRoot=sticky.getRootElement();var firstFixed=",
@@ -47,6 +48,14 @@ function adaptLegacySmokeSource(source) {
         .replace(
             "var virtualRoot=virtual.getRootElement();virtualRoot.scrollTop=1200;virtualRoot.dispatchEvent(new Event('scroll',{bubbles:true}))",
             "var virtualRoot=virtual.getRootElement(),virtualViewport=virtual.getScrollViewport?virtual.getScrollViewport():virtualRoot;virtualViewport.scrollTop=1200;virtualViewport.dispatchEvent(new Event('scroll',{bubbles:true}))"
+        )
+        .replace(
+            "animation:false,maskAnimation:false,enterDuration:0,leaveDuration:0,maskEnterDuration:0,maskLeaveDuration:0,autoFocus:first",
+            "animation:false,maskAnimation:false,duration:{dialog:0,mask:0},autoFocus:first"
+        )
+        .replace(
+            "var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,duration:{enter:90,leave:90},reducedMotion:false});",
+            "motionBox.style.setProperty('--qxframe9a7c2-motion-duration-3','90ms');var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,reducedMotion:false});"
         );
 }
 

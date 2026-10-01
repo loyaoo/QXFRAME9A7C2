@@ -21,15 +21,6 @@ function rejectRemoved(input) {
 }
 function bool(value, fallback, label) { return Utils.booleanValue(value, fallback, 'Modal ' + label); }
 function enumValue(value, allowed, fallback, label) { return Utils.enumValue(value, allowed, fallback, 'Modal ' + label); }
-function finite(value, fallback, label) { return Utils.finiteAtLeast(value, fallback, 0, 'Modal ' + label); }
-function durationPair(input, enterKey, leaveKey, fallbackEnter, fallbackLeave) {
-  var configured = input.duration;
-  if (enterKey.indexOf('mask') === 0) configured = input.maskDuration;
-  var list = Array.isArray(configured) ? configured : [configured, configured];
-  var enter = own(input, enterKey) ? input[enterKey] : (list[0] !== undefined ? list[0] : fallbackEnter);
-  var leave = own(input, leaveKey) ? input[leaveKey] : (list[1] !== undefined ? list[1] : (list[0] !== undefined ? list[0] : fallbackLeave));
-  return [finite(enter, fallbackEnter, enterKey), finite(leave, fallbackLeave, leaveKey)];
-}
 var overlayButtonPolicy = Object.freeze({ owner:'Modal', dangerType:'error', closeOnClickDefault:true, autoLoadingDefault:true, classNamePolicy:true });
 function resolveButtons(opts) { return OverlayFramePolicy.resolveButtons(opts, Utils.mergeOwn(overlayButtonPolicy, { requireExplicitFooter:false })); }
 function normalize(input, previous) {
@@ -55,11 +46,7 @@ function normalize(input, previous) {
   if (next.maxWidth !== undefined && next.maxWidth !== null && typeof next.maxWidth !== 'string' && !Number.isFinite(Number(next.maxWidth))) throw new TypeError('[QXFRAME9A7C2] Modal maxWidth must be a number or string.');
   if (next.zIndex !== undefined && next.zIndex !== null && next.zIndex !== '' && !Number.isFinite(Number(next.zIndex))) throw new TypeError('[QXFRAME9A7C2] Modal zIndex must be a finite number.');
   next.zIndex = next.zIndex === undefined || next.zIndex === null || next.zIndex === '' ? null : Math.floor(Number(next.zIndex));
-  durationPair(next, 'enterDuration', 'leaveDuration', 240, 180);
-  durationPair(next, 'maskEnterDuration', 'maskLeaveDuration', 240, 180);
   next.title = next.title === undefined ? '提示' : next.title;
-  next.className = next.className == null ? '' : String(next.className);
-  next.maskClassName = next.maskClassName == null ? '' : String(next.maskClassName);
   return next;
 }
 function px(value) { return typeof value === 'number' ? value + 'px' : (value || ''); }
@@ -74,17 +61,6 @@ function createModalController(instance, options) {
   var recentPointer = null;
 
   function motionDisabled(ctx) { return !Config.motionEnabled(ctx.root); }
-  function durations(ctx) {
-    var opts = ctx.options();
-    var modal = durationPair(opts, 'enterDuration', 'leaveDuration', 240, 180);
-    var mask = durationPair(opts, 'maskEnterDuration', 'maskLeaveDuration', modal[0], modal[1]);
-    if (motionDisabled(ctx)) { modal = [0,0]; mask = [0,0]; }
-    else {
-      if (opts.animation === false) modal = [0,0];
-      if (opts.maskAnimation === false) mask = [0,0];
-    }
-    return { modal:modal, mask:mask };
-  }
   function eventPoint(event) {
     if (!event || !Number.isFinite(event.clientX) || !Number.isFinite(event.clientY)) return null;
     if (event.clientX === 0 && event.clientY === 0 && event.detail === 0) return null;
@@ -116,12 +92,6 @@ function createModalController(instance, options) {
     return rect;
   }
   function applyMotion(ctx, showing, event) {
-    var timing = durations(ctx);
-    var modalDuration = showing ? timing.modal[0] : timing.modal[1];
-    var maskDuration = showing ? timing.mask[0] : timing.mask[1];
-    ctx.surface.style.setProperty('--qxframe9a7c2-motion-duration-slow', modalDuration + 'ms');
-    ctx.surface.style.setProperty('--qxframe9a7c2-motion-duration-mid', modalDuration + 'ms');
-    ctx.mask.style.setProperty('--qxframe9a7c2-motion-duration-mid', maskDuration + 'ms');
     if (!showing) return;
     var point = originPoint(ctx, event);
     var rect = measureSurfaceRect(ctx);
@@ -136,9 +106,9 @@ function createModalController(instance, options) {
     if (name !== 'zoom-origin' && name !== 'zoom' && name !== 'zoomIn') return MotionPresets.resolve(name);
     return {
       type:'transition',
-      appear:{ from:{style:{transform:'scale(.2)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-duration-slow) var(--qxframe9a7c2-motion-ease-out-circ), opacity var(--qxframe9a7c2-motion-duration-slow) var(--qxframe9a7c2-motion-ease-out-circ)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      enter:{ from:{style:{transform:'scale(.2)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-duration-slow) var(--qxframe9a7c2-motion-ease-out-circ), opacity var(--qxframe9a7c2-motion-duration-slow) var(--qxframe9a7c2-motion-ease-out-circ)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-motion-ease-in-out-circ), opacity var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-motion-ease-in-out-circ)'}}, to:{style:{transform:'scale(.2)',opacity:'0'}} }
+      appear:{ from:{style:{transform:'scale(.2)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      enter:{ from:{style:{transform:'scale(.2)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing)'}}, to:{style:{transform:'scale(.2)',opacity:'0'}} }
     };
   }
 
@@ -166,10 +136,6 @@ function createModalController(instance, options) {
     resolveButtons,
     applyVisualOptions(ctx) {
       var opts = ctx.options(), dialog = ctx.surface;
-      ctx.root.className = 'qxframe9a7c2-modal-root';
-      ctx.mask.className = ('qxframe9a7c2-modal-mask ' + opts.maskClassName).trim();
-      ctx.wrap.className = 'qxframe9a7c2-modal-wrapper';
-      dialog.className = ('qxframe9a7c2-modal-container ' + opts.className).trim();
       ctx.root.dataset.placement = opts.placement;
       ctx.wrap.dataset.placement = opts.placement;
       DOM.setPrivate(ctx.mask, 'maskAnimation', opts.maskAnimation === false ? 'none' : (opts.maskAnimation || 'fade'));
@@ -181,8 +147,6 @@ function createModalController(instance, options) {
       if (own(opts, 'maxWidth')) dialog.style.maxWidth = px(opts.maxWidth);
       if (own(opts, 'maskColor')) ctx.mask.style.background = opts.maskColor || '';
       if (own(opts, 'maskBlur')) ctx.mask.style.backdropFilter = opts.maskBlur ? 'blur(' + px(opts.maskBlur) + ')' : '';
-      ctx.frameShell.applyStyle(dialog, opts.style);
-      ctx.frameShell.applyStyle(ctx.mask, opts.maskStyle);
     },
     beforePresence(ctx, showing, _reason, event) { applyMotion(ctx, showing, event); },
     maskTransition(ctx) {
@@ -195,9 +159,9 @@ function createModalController(instance, options) {
     surfaceTransition(ctx) {
       return { transition:function () { return dialogMotion(ctx); }, appear:true, reducedMotion:function () { return motionDisabled(ctx); } };
     },
-    presenceOptions(ctx, kind, showing) {
-      var timing = durations(ctx), opts = ctx.options(), index = showing ? 0 : 1;
-      return { immediate:kind === 'mask' ? (timing.mask[index] <= 0 || opts.maskAnimation === false) : (timing.modal[index] <= 0 || opts.animation === false) };
+    presenceOptions(ctx, kind) {
+      var opts = ctx.options();
+      return { immediate:kind === 'mask' ? opts.maskAnimation === false : opts.animation === false };
     },
     afterAcceptedClose(ctx, reason, event) {
       var close = ctx.closeConfig();
@@ -231,6 +195,22 @@ export class Modal extends OverlayComponent {
         })
     });
     static options = Object.freeze({ title:'提示', content:'', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, placement:'center', animation:'zoom-origin', maskAnimation:'fade', fullscreen:false, center:false });
+    static semanticElements = Object.freeze(['root','mask','wrapper','dialog','header','title','body','footer','close']);
+    static defaultClassSlot = 'dialog';
+    static defaultStyleSlot = 'dialog';
+    static defaultMotionSlot = 'dialog';
+    static motionSlots = Object.freeze({
+        dialog:Object.freeze({
+            appear:'--qxframe9a7c2-motion-modal-dialog-enter-duration',
+            enter:'--qxframe9a7c2-motion-modal-dialog-enter-duration',
+            leave:'--qxframe9a7c2-motion-modal-dialog-leave-duration'
+        }),
+        mask:Object.freeze({
+            appear:'--qxframe9a7c2-motion-modal-mask-enter-duration',
+            enter:'--qxframe9a7c2-motion-modal-mask-enter-duration',
+            leave:'--qxframe9a7c2-motion-modal-mask-leave-duration'
+        })
+    });
     static immutableOptions = Object.freeze(['id','document','portalContainer']);
     static contract = ComponentContracts.get('Modal');
     static placements = PLACEMENTS.slice();
@@ -240,7 +220,7 @@ export class Modal extends OverlayComponent {
         this.adoptOverlayFamilyController(createModalController(this, this.options));
     }
 
-    getDialogElement() { const c = this.getOverlayFamilyController(); return c && c.getDialogElement ? c.getDialogElement() : null; }
+    getDialogElement() { return this.getElement('dialog'); }
 }
 
 export { PLACEMENTS };

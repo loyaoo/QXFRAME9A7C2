@@ -55,12 +55,14 @@ window.QXFRAME9A7C2_DOCS_CATALOG = Object.freeze([
     "api": "CSS",
     "category": "布局",
     "cn": "栅格",
-    "description": "24 栅格、响应式列宽、offset/order 与 gutter 场景。",
+    "description": "由成熟 SCSS 规范展开的 24 栅格：六档响应式、row-cols、g/gx/gy、offset/order/push/pull 与可见性工具。",
     "features": [
       "24 columns",
-      "responsive",
-      "offset / order",
-      "auto"
+      "xs / sm / md / lg / xl / xxl",
+      "row-cols 1–24",
+      "g / gx / gy 0–24",
+      "offset / order / push / pull",
+      "hidden / visible"
     ]
   },
   {

@@ -66,44 +66,6 @@ function isNodeLike(value) {
     });
   }
 
-  function normalizeClasses(value, context) {
-    if (typeof value === 'function') value = value(null, context || {});
-    var result = [];
-    function append(input) {
-      if (!input) return;
-      if (typeof input === 'string') { input.split(/\s+/).forEach(function (name) { if (name && result.indexOf(name) < 0) result.push(name); }); return; }
-      if (Array.isArray(input)) { input.forEach(append); return; }
-      if (typeof input === 'object') { Object.keys(input).forEach(function (name) { if (input[name]) append(name); }); return; }
-      append(String(input));
-    }
-    append(value); return result;
-  }
-
-  function createClassProjection(refs, component, initialClasses) {
-    var owned = typeof WeakMap === 'function' ? new WeakMap() : null;
-    var current = initialClasses || {};
-    function sync(classes) {
-      current = classes || {};
-      Object.keys(refs || {}).forEach(function (part) {
-        var node = refs[part]; if (!isNodeLike(node) || !node.classList) return;
-        var previous = owned && owned.get(node) || [];
-        var context = Object.freeze({ part: part, element: node, component: component || null });
-        var next = normalizeClasses(current[part], context);
-        previous.forEach(function (name) { if (next.indexOf(name) < 0) node.classList.remove(name); });
-        next.forEach(function (name) { if (previous.indexOf(name) < 0) node.classList.add(name); });
-        if (owned) owned.set(node, next.slice());
-      });
-    }
-    function clear() {
-      Object.keys(refs || {}).forEach(function (part) {
-        var node = refs[part]; if (!isNodeLike(node) || !node.classList || !owned) return;
-        (owned.get(node) || []).forEach(function (name) { node.classList.remove(name); }); owned.delete(node);
-      });
-    }
-    sync(current);
-    return Object.freeze({ sync: sync, clear: clear });
-  }
-
   function resolve(config) {
     config = config || {};
     var options = config.options || {};
@@ -149,17 +111,14 @@ function isNodeLike(value) {
     }
 
     var released = false;
-    var classProjection = createClassProjection(normalized.refs, config.component || null, options.classes || {});
     var binding = {
       source: source,
       root: normalized.root,
       refs: normalized.refs,
       ownedRoot: source === 'external' ? false : normalized.ownedRoot,
-      syncClasses: function (classes) { classProjection.sync(classes || {}); return binding; },
       release: function () {
         if (released) return;
         released = true;
-        classProjection.clear();
         if (binding.ownedRoot && binding.root && binding.root.parentNode) {
           binding.root.parentNode.removeChild(binding.root);
         }
@@ -169,5 +128,5 @@ function isNodeLike(value) {
     return Object.freeze(binding);
   }
 
-export const DOMBinding = Object.freeze({ resolve, normalizeClasses, normalizeElements, isNodeLike });
-export { resolve, normalizeClasses, normalizeElements, isNodeLike };
+export const DOMBinding = Object.freeze({ resolve, normalizeElements, isNodeLike });
+export { resolve, normalizeElements, isNodeLike };

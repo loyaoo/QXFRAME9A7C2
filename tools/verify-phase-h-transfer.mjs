@@ -31,6 +31,9 @@ assert.match(source,/api\.bindInteractionController\s*\(/,'Transfer operation ke
 for(const action of ['move-right','move-left','move-up','move-down'])assert.match(source,new RegExp("'"+action+"'"),'Transfer must expose '+action+' semantic action.');
 assert.match(source,/api\.bindFeedbackControl\s*\(/,'Transfer visible busy/error/warning feedback must enter FeedbackController.');
 assert.match(source,/SelectionController\.create\s*\(/,'Transfer checked state must retain one canonical SelectionController.');
+assert.match(source,/tableClassMap\.row = function \(semantic\)/,'Transfer Table projection must compose its selected-row state through Table class.row.');
+assert.match(source,/classes\.push\('is-transfer-selected'\)/,'Transfer selected row state must remain visible through the semantic row resolver.');
+assert.doesNotMatch(source,/output\.rowClassName\s*=|userRowClassName/,'Transfer must not recreate the removed rowClassName path.');
 
 console.log(JSON.stringify({
   ok:true,

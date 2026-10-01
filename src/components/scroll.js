@@ -1095,7 +1095,6 @@ function setupScroll(instance) {
     else if (hideDelayChanged && hadPendingScrollbarHide) scheduleScrollbarHide();
     writeScrollX(preservedX);
     requestProjection('options');
-    if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     return api;
   }
 

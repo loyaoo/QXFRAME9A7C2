@@ -829,8 +829,6 @@ function setupTreeRuntime(instance) {
           getItemState: function (row, context) { return { open: isExpanded(row.key), descendantSelected: selectableDescendant(row.record, context && context.values) }; },
           itemSemanticClasses: function () { return ['qxframe9a7c2-tree-item','qxframe9a7c2-tree-node']; },
           itemClassParts: ['item','node'],
-          classes: opts.classes,
-          styles: opts.styles,
           itemRender: renderTreeRow,
           beforeSelect: function (detail) {
             var row = detail && detail.item;
@@ -940,7 +938,7 @@ function setupTreeRuntime(instance) {
           var listOptions = {
             items: nextRows, multiple: opts.multiple === true, selectable: opts.selectable !== false,
             selectionAppearance: opts.selectionAppearance || 'highlight', size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true,
-            virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight, classes: opts.classes, styles: opts.styles,
+            virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
             getItemState: function (row, context) { return { open: isExpanded(row.key), descendantSelected: selectableDescendant(row.record, context && context.values) }; }
           };
           if (hasOwn(next, 'value')) listOptions.value = opts.value;

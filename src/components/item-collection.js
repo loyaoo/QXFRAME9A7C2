@@ -1528,7 +1528,6 @@ function create(options) {
       if (isComponentDisabled()) pointerKey = null;
       syncSearchDOM();
     }
-    if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     if (mounted) render('options');
     return api;
   }

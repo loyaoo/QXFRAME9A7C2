@@ -34,7 +34,7 @@ const blueprint = DOMTemplate.staticHTML`
     </span>
   </div>`;
 function createDefaultDOM(context){const instance=blueprint.instantiate(context.document);instance.refs.control=instance.root;return{root:instance.root,refs:instance.refs};}
-const SELECT_DEFAULTS=Object.freeze({items:[],multiple:false,searchable:false,clearable:false,disabled:false,readOnly:false,size:'md',placement:'bottom-start',trigger:'click',open:false,placeholder:'',hideSelectedOptions:false,clearSearchOnSelect:true,creatable:false,tokenSeparators:[],defaultActiveFirstOption:false,maxCount:0,maxVisibleTags:0,tagTextMaxLength:0,searchFields:null,tagInputMinWidth:32,popupRender:null,loadingIcon:null,itemStyles:null,tagClasses:null,tagStyles:null,matchReferenceWidth:true,renderControl:true,headless:false});
+const SELECT_DEFAULTS=Object.freeze({items:[],multiple:false,searchable:false,clearable:false,disabled:false,readOnly:false,size:'md',placement:'bottom-start',trigger:'click',open:false,placeholder:'',hideSelectedOptions:false,clearSearchOnSelect:true,creatable:false,tokenSeparators:[],defaultActiveFirstOption:false,maxCount:0,maxVisibleTags:0,tagTextMaxLength:0,searchFields:null,tagInputMinWidth:32,popupRender:null,loadingIcon:null,matchReferenceWidth:true,renderControl:true,headless:false});
 const runtimeState=new WeakMap();
 const hasOwn=Utils.own;
 function validateSelectOptions(opts){
@@ -389,6 +389,31 @@ var controlHost = FieldHost.resolvePickerControl({
         function hostedTags() {
           return fieldControl && fieldControl.getTags ? fieldControl.getTags() : null;
         }
+        function optionSemanticKey(item,index) {
+          var value=Utils.isFunction(opts.getKey)?opts.getKey(item,index):(item&&typeof item==='object'&&item.key!==undefined?item.key:optionValue(item,index));
+          return String(value);
+        }
+        function semanticSnapshot() {
+          var elements={root:root,input:input,values:valuesNode,prefix:prefix,suffix:suffix,clear:clearButton,toggle:arrow,trigger:triggerTarget,popup:panel,list:optionHost,item:[],tagShell:[],tag:[],tagContent:[],tagClose:[],tagOverflow:null};
+          var contexts={item:[],tagShell:[],tag:[],tagContent:[],tagClose:[]};
+          if(optionList&&optionList.getVisibleItems&&optionList.getItemElement){
+            var visible=optionList.getVisibleItems(), listState=optionList.getState?optionList.getState():{}, selected=selectedValues();
+            visible.forEach(function(item,index){
+              var node=optionList.getItemElement(optionSemanticKey(item,index));
+              if(!node)return;
+              var value=optionValue(item,index);
+              elements.item.push(node);
+              contexts.item.push({item:item,state:Object.freeze({value:value,selected:selected.indexOf(value)>=0,active:String(listState.activeKey||'')===optionSemanticKey(item,index),disabled:optionDisabled(item,index)})});
+            });
+          }
+          SelectionTags.projectHostedSemantic(hostedTags(), selectionTags, elements, contexts);
+          return {elements:elements,contexts:contexts};
+        }
+        function syncSemanticRegistry() {
+          var snapshot = semanticSnapshot();
+          if (!destroyed && !instance.destroyed) instance.registerSemanticElements(snapshot.elements, snapshot.contexts);
+          return snapshot;
+        }
     
         function inputCaretStart() {
           var target = fieldControl && fieldControl.getFocusElement ? fieldControl.getFocusElement() : input;
@@ -512,6 +537,7 @@ var controlHost = FieldHost.resolvePickerControl({
             fieldControl.setInputValue(projectionInput);
             fieldControl.setDraftVisual(projectionEditing && draftValue !== '');
             fieldControl.setCommittedValue(multiple ? values.slice() : values[0], commitMeta || { silent:true, source:'selection', reason:'projection' });
+            syncSemanticRegistry();
             return;
           }
     
@@ -537,15 +563,9 @@ var controlHost = FieldHost.resolvePickerControl({
                 measureTagOverflowWidth: Utils.isFunction(opts.measureTagOverflowWidth) ? function (hiddenTags) { return opts.measureTagOverflowWidth(hiddenTags.slice(), { root: root, values: valuesNode, input: input, select: instance }); } : null,
                 renderTag: renderSelectedTag,
                 renderTagOverflow: renderSelectedTagOverflow,
-                tagClasses: opts.tagClasses,
-                tagStyles: opts.tagStyles,
                 inputValue: searchState.query,
                 placeholder: values.length ? '' : String(opts.placeholder || ''),
-                tagClassName: 'qxframe9a7c2-select-tag',
-                tagTextClassName: 'qxframe9a7c2-select-tag-text',
-                tagRemoveClassName: 'qxframe9a7c2-select-tag-remove',
                 tagRemoveContent: opts.tagRemoveContent,
-                tagOverflowClassName: 'qxframe9a7c2-select-tag qxframe9a7c2-select-tag-overflow',
                 tagOverflowInteractive: true
               });
               if (!projectionMode) root.classList.remove('has-rich-value');
@@ -569,10 +589,11 @@ var controlHost = FieldHost.resolvePickerControl({
           }
     
           if (fieldControl) fieldControl.updateOptions({
-            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, tagClasses: opts.tagClasses, tagStyles: opts.tagStyles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true || opts.loading === true, busyIndicator: opts.loadingIcon,
+            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true || opts.loading === true, busyIndicator: opts.loadingIcon,
             disabled: opts.disabled === true, readOnly: opts.readOnly === true, editable: opts.searchable === true, clearable: opts.clearable === true, clearContent: opts.clearContent, toggleContent: opts.toggleContent, tagRemoveContent: opts.tagRemoveContent, hasValue: values.length > 0, expanded: !!(triggerSession && triggerSession.getState().open), toggleVisible: true,
           });
           if (fieldControl && multiple) fieldControl.setDraftVisual(searchState.query !== '');
+          syncSemanticRegistry();
           if (fieldControl) fieldControl.setCommittedValue(opts.multiple === true ? values.slice() : values[0], commitMeta || { silent: true, source: 'selection', reason: 'projection' });
           if (!projectionMode) {
             root.classList.toggle('has-value', values.length > 0);
@@ -639,8 +660,6 @@ var controlHost = FieldHost.resolvePickerControl({
           ownerPrefix: 'select',
           itemSemanticClasses: function () { return ['qxframe9a7c2-select-item','qxframe9a7c2-select-list-item','qxframe9a7c2-select-option']; },
           itemClassParts: ['item','listItem','option'],
-          classes: opts.classes,
-          styles: opts.itemStyles,
           container: optionHost,
           scrollAdapter: popupFrame.createAdapter(),
           items: Array.isArray(opts.items) ? opts.items.slice() : [],
@@ -679,11 +698,13 @@ var controlHost = FieldHost.resolvePickerControl({
             if (Utils.isFunction(opts.onActiveChange)) opts.onActiveChange(payload);
             if (detail && detail.item && detail.source !== 'pointer' && Utils.isFunction(opts.onActive)) { var location = optionLocation(detail.item); opts.onActive(optionValue(detail.item, location ? location.index : 0), payload); }
             emitter.emit('activeChange', payload);
+            syncSemanticRegistry();
           },
           onHoverChange: function (detail) {
             if (!detail || !detail.item || !Utils.isFunction(opts.onActive)) return;
             var location = optionLocation(detail.item);
             opts.onActive(optionValue(detail.item, location ? location.index : 0), Utils.mergeOwn( detail, { select:instance }));
+            syncSemanticRegistry();
           }
         });
     
@@ -728,16 +749,10 @@ var controlHost = FieldHost.resolvePickerControl({
           tagsControlled:true,
           renderTag: renderSelectedTag,
           renderTagOverflow: renderSelectedTagOverflow,
-          tagClasses: opts.tagClasses,
-          tagStyles: opts.tagStyles,
-          tagOverflowClassName: 'qxframe9a7c2-select-tag qxframe9a7c2-select-tag-overflow',
           tagOverflowInteractive: true,
-          tagClassName: 'qxframe9a7c2-select-tag',
-          tagTextClassName: 'qxframe9a7c2-select-tag-text',
-          tagRemoveClassName: 'qxframe9a7c2-select-tag-remove',
           tagRemoveContent: opts.tagRemoveContent,
           size: opts.size,
-          variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles,
+          variant: opts.variant, focusOutline: opts.focusOutline,
           status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true || opts.loading === true, busyIndicator: opts.loadingIcon, clearContent: opts.clearContent, toggleContent: opts.toggleContent,
           disabled: opts.disabled === true,
           readOnly: opts.readOnly === true,
@@ -1004,8 +1019,6 @@ var controlHost = FieldHost.resolvePickerControl({
             readOnly: opts.readOnly === true,
             disabled: opts.disabled === true,
             size: opts.size,
-            classes: opts.classes,
-            styles: opts.itemStyles,
             virtual: opts.virtual,
             virtualThreshold: opts.virtualThreshold,
             itemSize: opts.itemSize,
@@ -1029,6 +1042,7 @@ var controlHost = FieldHost.resolvePickerControl({
           if (hasOwn(next, 'items')) listOptions.items = Array.isArray(opts.items) ? opts.items.slice() : [];
           if (hasOwn(next, 'value') || hasOwn(next, 'multiple')) listOptions.value = apiValue();
           optionList.updateOptions(listOptions);
+          syncSemanticRegistry();
           if (hasOwn(next, 'popupRender')) syncPopupProjection();
           restoreOptionListFromApiValue('options-controlled');
           if (opts.multiple !== true && hasOwn(next, 'value')) {
@@ -1038,7 +1052,6 @@ var controlHost = FieldHost.resolvePickerControl({
           syncView();
           if (Object.prototype.hasOwnProperty.call(next, 'open')) setOpen(next.open === true, 'update-options');
           else if (triggerSession.getState().open) triggerSession.reposition('options');
-          if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
           return instance;
         }
     
@@ -1104,6 +1117,8 @@ var controlHost = FieldHost.resolvePickerControl({
         if (opts.open === true) open('initial');
         return Object.freeze({
           root:root,input:input,panel:panel,optionHost:optionHost,triggerTarget:triggerTarget,
+          getSemanticSnapshot:semanticSnapshot,
+          getElements:function(){return Object.freeze(semanticSnapshot().elements);},
           getState:getState,setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,
           refreshTagOverflow:function(){return !destroyed&&fieldControl&&fieldControl.refreshTagOverflow?fieldControl.refreshTagOverflow():false;},
           getOptionList:function(){return optionList;},getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getSelectionController:function(){return optionList&&optionList.getSelectionController?optionList.getSelectionController():null;},
@@ -1130,12 +1145,15 @@ export class Select extends PopupFieldComponent {
    ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
  });
  static contract=getContract('Select');
+ static semanticElements=Object.freeze(['root','input','values','prefix','suffix','clear','toggle','trigger','popup','list','item','tagShell','tag','tagContent','tagClose','tagOverflow']);
+ static defaultClassSlot='root';
+ static defaultStyleSlot='root';
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless']);
  static create(source,overrides){return new this(source,overrides).render();}
  static enhance(input,options){return this.create(input,options||{});}
  static createDefaultDOM=createDefaultDOM;
  constructor(source={},overrides){const prepared=prepareOptions(source,overrides);super(prepared.opts);runtimeState.set(this,{fieldInit:prepared.fieldInit,runtime:null});}
- [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime)return record.runtime.root;const runtime=setupSelectRuntime(this,record.fieldInit);record.runtime=runtime;this.own(()=>runtime.dispose('select-destroy'));return runtime.root;}
+ [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime){const snapshot=record.runtime.getSemanticSnapshot();this.registerSemanticElements(snapshot.elements,snapshot.contexts);return record.runtime.root;}const runtime=setupSelectRuntime(this,record.fieldInit);record.runtime=runtime;const snapshot=runtime.getSemanticSnapshot();this.registerSemanticElements(snapshot.elements,snapshot.contexts);this.own(()=>runtime.dispose('select-destroy'));return runtime.root;}
  [popupFieldHooks.optionsUpdated](next,previous,patch){const record=runtimeState.get(this);if(record.runtime)record.runtime.applyOptions(patch);}
  setItems(items){const r=runtimeState.get(this).runtime;return r?r.setItems(items):this;}
  setValue(value,meta){const r=runtimeState.get(this).runtime;return r?r.setValue(value,meta):this;}
@@ -1152,7 +1170,6 @@ export class Select extends PopupFieldComponent {
  getTagOverflowPopover(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowPopover():null;}
  getTagOverflowScroll(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowScroll():null;}
  getTagOverflowReference(){const r=runtimeState.get(this).runtime;return r?r.getTagOverflowReference():null;}
- getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
  getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}
  getPopupOriginElement(){const r=runtimeState.get(this).runtime;return r?r.optionHost:null;}
  getInputElement(){const r=runtimeState.get(this).runtime;return r?r.input:null;}

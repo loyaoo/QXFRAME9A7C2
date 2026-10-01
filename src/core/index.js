@@ -31,6 +31,7 @@ export { AsyncAction } from './asyncAction.js';
 export { ActiveItem } from './activeItem.js';
 export { Lifecycle } from './lifecycle.js';
 export { DOMProjection } from './domProjection.js';
+export { SemanticProjection } from './semanticProjection.js';
 export { Config } from './config.js';
 export { DOM } from './dom.js';
 export { Collection } from './collection.js';

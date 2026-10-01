@@ -16,22 +16,6 @@ var own = Utils.own;
 
 function bool(value, fallback, label) { return Utils.booleanValue(value, fallback, 'Drawer ' + label); }
 function enumValue(value, allowed, fallback, label) { return Utils.enumValue(value, allowed, fallback, 'Drawer ' + label); }
-function finite(value, fallback, label) { return Utils.finiteAtLeast(value, fallback, 0, 'Drawer ' + label); }
-function durationPair(input) {
-  var configured = input.duration;
-  var list = Array.isArray(configured) ? configured : [configured, configured];
-  var enter = own(input, 'enterDuration') ? input.enterDuration : (list[0] !== undefined ? list[0] : 240);
-  var leave = own(input, 'leaveDuration') ? input.leaveDuration : (list[1] !== undefined ? list[1] : (list[0] !== undefined ? list[0] : 200));
-  return [finite(enter, 240, 'enterDuration'), finite(leave, 200, 'leaveDuration')];
-}
-function easingPair(input) {
-  var configured = input.easing;
-  var list = Array.isArray(configured) ? configured : [configured, configured];
-  return [
-    input.enterEasing !== undefined ? String(input.enterEasing) : String(list[0] || 'cubic-bezier(.08,.82,.17,1)'),
-    input.leaveEasing !== undefined ? String(input.leaveEasing) : String(list[1] || list[0] || 'cubic-bezier(.6,.04,.98,.34)')
-  ];
-}
 var overlayButtonPolicy = Object.freeze({ owner:'Drawer', dangerType:'error', closeOnClickDefault:true, autoLoadingDefault:true, classNamePolicy:true });
 function resolveButtons(opts) { return OverlayFramePolicy.resolveButtons(opts, Utils.mergeOwn(overlayButtonPolicy, { requireExplicitFooter:true })); }
 function validRenderable(value) {
@@ -60,12 +44,8 @@ function normalize(input, previous) {
     if (next[key] !== undefined && next[key] !== null && next[key] !== '' && typeof next[key] !== 'string' && !Number.isFinite(Number(next[key]))) throw new TypeError('[QXFRAME9A7C2] Drawer ' + key + ' must be a number or string.');
   });
   if (next.animation !== false) next.animation = enumValue(next.animation, ANIMATIONS, 'slide', 'animation');
-  durationPair(next);
-  easingPair(next);
   next.title = next.title === undefined ? '' : next.title;
   next.content = next.content === undefined ? '' : next.content;
-  next.className = next.className == null ? '' : String(next.className);
-  next.maskClassName = next.maskClassName == null ? '' : String(next.maskClassName);
   return next;
 }
 function px(value) { return typeof value === 'number' ? value + 'px' : (value || ''); }
@@ -82,16 +62,12 @@ function createDrawerController(instance, options) {
     var opts = ctx.options();
     return opts.animation !== false && Config.motionEnabled(ctx.root, undefined, opts.respectReducedMotion !== false);
   }
-  function durations(ctx) {
-    var pair = durationPair(ctx.options());
-    return transitionEnabled(ctx) ? pair : [0,0];
-  }
   function transformDescriptor(hidden, origin) {
     return {
       type:'transition',
-      appear:{ from:{style:{transform:hidden,transformOrigin:origin}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-motion-ease-out-circ)'}}, to:{style:{transform:'translate3d(0,0,0) scale(1)'}} },
-      enter:{ from:{style:{transform:hidden,transformOrigin:origin}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-motion-ease-out-circ)'}}, to:{style:{transform:'translate3d(0,0,0) scale(1)'}} },
-      leave:{ from:{style:{transform:'translate3d(0,0,0) scale(1)',transformOrigin:origin}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-duration-mid) var(--qxframe9a7c2-motion-ease-in-out-circ)'}}, to:{style:{transform:hidden}} }
+      appear:{ from:{style:{transform:hidden,transformOrigin:origin}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-drawer-panel-enter-duration) var(--qxframe9a7c2-motion-drawer-panel-enter-easing)'}}, to:{style:{transform:'translate3d(0,0,0) scale(1)'}} },
+      enter:{ from:{style:{transform:hidden,transformOrigin:origin}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-drawer-panel-enter-duration) var(--qxframe9a7c2-motion-drawer-panel-enter-easing)'}}, to:{style:{transform:'translate3d(0,0,0) scale(1)'}} },
+      leave:{ from:{style:{transform:'translate3d(0,0,0) scale(1)',transformOrigin:origin}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-drawer-panel-leave-duration) var(--qxframe9a7c2-motion-drawer-panel-leave-easing)'}}, to:{style:{transform:hidden}} }
     };
   }
   function panelMotion(ctx) {
@@ -127,23 +103,18 @@ function createDrawerController(instance, options) {
     normalizeOpenRequest(reason, event) {
       return reason && typeof reason === 'object' && reason.type ? { reason:'event', event:reason } : { reason, event };
     },
-    applyVisualOptions(ctx, showing) {
+    applyVisualOptions(ctx) {
       var opts = ctx.options(), panel = ctx.surface;
-      var pair = durations(ctx), ease = easingPair(opts), index = showing === false ? 1 : 0;
-      ctx.root.className = 'qxframe9a7c2-drawer-root';
-      ctx.mask.className = ('qxframe9a7c2-drawer-mask ' + opts.maskClassName).trim();
-      ctx.wrap.className = ('qxframe9a7c2-drawer-wrap is-' + opts.placement).trim();
-      panel.className = ('qxframe9a7c2-drawer qxframe9a7c2-drawer-' + opts.placement + ' ' + opts.className).trim();
+      PLACEMENTS.forEach(function (placement) {
+        ctx.wrap.classList.remove('is-' + placement);
+        panel.classList.remove('qxframe9a7c2-drawer-' + placement);
+      });
+      ctx.wrap.classList.add('is-' + opts.placement);
+      panel.classList.add('qxframe9a7c2-drawer-' + opts.placement);
       ctx.root.dataset.placement = opts.placement;
       ctx.wrap.dataset.placement = opts.placement;
       panel.dataset.placement = opts.placement;
       DOM.setPrivate(ctx.root, 'animation', opts.animation === false ? 'none' : opts.animation);
-      ctx.mask.style.setProperty('--qxframe9a7c2-motion-duration-mid', pair[index] + 'ms');
-      panel.style.setProperty('--qxframe9a7c2-motion-duration-mid', pair[index] + 'ms');
-      ctx.mask.style.setProperty('--qxframe9a7c2-motion-ease-out-circ', ease[index]);
-      ctx.mask.style.setProperty('--qxframe9a7c2-motion-ease-in-out-circ', ease[index]);
-      panel.style.setProperty('--qxframe9a7c2-motion-ease-out-circ', ease[index]);
-      panel.style.setProperty('--qxframe9a7c2-motion-ease-in-out-circ', ease[index]);
       ctx.mask.classList.toggle('is-maskless', opts.showMask === false);
       if (opts.placement === 'left' || opts.placement === 'right') {
         panel.style.width = px(opts.width);
@@ -157,8 +128,6 @@ function createDrawerController(instance, options) {
       var showFooter = opts.footer !== false && opts.footer !== null && (ctx.buttons().length > 0 || customFooter);
       panel.classList.toggle('is-headerless', opts.header === false);
       panel.classList.toggle('is-footerless', !showFooter);
-      ctx.frameShell.applyStyle(panel, opts.style);
-      ctx.frameShell.applyStyle(ctx.mask, opts.maskStyle);
     },
     maskTransition(ctx) {
       return {
@@ -176,9 +145,8 @@ function createDrawerController(instance, options) {
         disabled:function () { return ctx.options().animation === false; }
       };
     },
-    presenceOptions(ctx, _kind, showing) {
-      var pair = durations(ctx);
-      return { immediate:pair[showing ? 0 : 1] <= 0 };
+    presenceOptions(ctx) {
+      return { immediate:ctx.options().animation === false };
     },
     stateExtras(ctx) {
       var opts = ctx.options(), close = ctx.closeConfig();
@@ -202,6 +170,22 @@ export class Drawer extends OverlayComponent {
         })
     });
     static options = Object.freeze({ title:'', content:'', placement:'right', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, respectReducedMotion:true, animation:'slide' });
+    static semanticElements = Object.freeze(['root','mask','wrapper','panel','header','title','body','footer','close']);
+    static defaultClassSlot = 'panel';
+    static defaultStyleSlot = 'panel';
+    static defaultMotionSlot = 'panel';
+    static motionSlots = Object.freeze({
+        panel:Object.freeze({
+            appear:'--qxframe9a7c2-motion-drawer-panel-enter-duration',
+            enter:'--qxframe9a7c2-motion-drawer-panel-enter-duration',
+            leave:'--qxframe9a7c2-motion-drawer-panel-leave-duration'
+        }),
+        mask:Object.freeze({
+            appear:'--qxframe9a7c2-motion-drawer-mask-enter-duration',
+            enter:'--qxframe9a7c2-motion-drawer-mask-enter-duration',
+            leave:'--qxframe9a7c2-motion-drawer-mask-leave-duration'
+        })
+    });
     static immutableOptions = Object.freeze(['id','document','portalContainer']);
     static contract = ComponentContracts.get('Drawer');
     static placements = PLACEMENTS.slice();
@@ -212,7 +196,7 @@ export class Drawer extends OverlayComponent {
         this.adoptOverlayFamilyController(createDrawerController(this, this.options));
     }
 
-    getPanelElement() { const c = this.getOverlayFamilyController(); return c && c.getPanelElement ? c.getPanelElement() : null; }
+    getPanelElement() { return this.getElement('panel'); }
 }
 
 export { PLACEMENTS, ANIMATIONS };

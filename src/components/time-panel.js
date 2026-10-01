@@ -316,7 +316,6 @@ function create(options) {
     structuralRefreshScheduler.cancel();
     refreshWheel('time-panel-options');
     if (focusController) focusController.setDisabled(opts.disabled === true);
-    if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     return api;
   }
   function destroy() {

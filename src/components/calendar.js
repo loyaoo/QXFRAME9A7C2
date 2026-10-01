@@ -460,7 +460,7 @@ function create(options) {
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) { setValue(next.value, { source: 'options', reason: 'options-value', silent: true }); }
     if (Object.prototype.hasOwnProperty.call(Object(next), 'viewValue')) changeView(next.viewValue, { source: 'options', reason: 'controlled-view', silent: true });
     if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true);
-    render(); if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
+    render();
     return api;
   }
     

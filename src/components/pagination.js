@@ -609,7 +609,6 @@ function setupPagination(instance) {
     model.updateOptions(modelOptions);
     if (own(changed, 'current') || own(changed, 'pageSize') || own(changed, 'count')) jumperDraft = String(model.page);
     if (mounted) requestRender('options');
-    if (domBinding && domBinding.syncClasses) domBinding.syncClasses(opts.classes);
     return api;
   }
 

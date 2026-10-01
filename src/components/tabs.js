@@ -29,7 +29,7 @@ const TABS_DEFAULTS = Object.freeze({
   destroyInactive: false, overflow: true, edgeShadow: true, wheelPropagation: true,
   editable: false, addable: undefined, closable: false, disabled: false, readOnly: false,
   stretch: false, centered: false, indicator: null, animated: undefined, overflowPopupRender: null,
-  transition: 'qxframe9a7c2-tabs-transition', size: 'md', className: ''
+  transition: 'qxframe9a7c2-tabs-transition', size: 'md'
 });
 const tabsState = new WeakMap();
 
@@ -509,7 +509,6 @@ function setupTabs(instance) {
 
   function syncRoot() {
     root.className = 'qxframe9a7c2-tabs is-' + opts.orientation + ' is-placement-' + opts.placement + ' is-' + opts.type + ' is-' + opts.size;
-    if (opts.className) String(opts.className).split(/\s+/).filter(Boolean).forEach(function (name) { root.classList.add(name); });
     root.classList.toggle('is-disabled', opts.disabled === true);
     root.classList.toggle('is-readonly', opts.readOnly === true);
     root.classList.toggle('is-stretch', opts.stretch === true);
@@ -1219,8 +1218,17 @@ function setupTabs(instance) {
     isReadOnly: function () { return opts.readOnly === true; }
   };
   tabsState.set(instance, record);
+  instance.registerSemanticElements({
+    root:root,
+    nav:nav,
+    scroll:scrollHost,
+    more:moreButton,
+    overflow:overflowPanel,
+    add:addButton,
+    panels:panels,
+    indicator:indicator
+  });
   instance.own(destroyRuntime);
-
 
   render(true);
   return root;
@@ -1255,6 +1263,17 @@ export class Tabs extends Component {
   static options = TABS_DEFAULTS;
   static immutableOptions = IMMUTABLE_OPTIONS;
   static contract = ComponentContracts.get('Tabs');
+  static semanticElements = Object.freeze(['root','nav','scroll','more','overflow','add','panels','indicator']);
+  static defaultClassSlot = 'root';
+  static defaultStyleSlot = 'root';
+  static defaultMotionSlot = 'indicator';
+  static motionSlots = Object.freeze({
+    indicator: Object.freeze({
+      appear:'--qxframe9a7c2-motion-tabs-indicator-duration',
+      enter:'--qxframe9a7c2-motion-tabs-indicator-duration',
+      leave:'--qxframe9a7c2-motion-tabs-indicator-duration'
+    })
+  });
 
   constructor(options = {}) { super(canonicalTabsOptions(options)); }
 

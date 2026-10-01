@@ -34,7 +34,7 @@ const blueprint=DOMTemplate.staticHTML`
 <input class="qxframe9a7c2-cascader-input qxframe9a7c2-input-control" type="text" autocomplete="off" data-qxframe9a7c2-ref="input">
 <span class="qxframe9a7c2-cascader-suffix qxframe9a7c2-input-suffix" data-qxframe9a7c2-ref="suffix"><button class="qxframe9a7c2-cascader-clear qxframe9a7c2-input-clear is-hidden" type="button" hidden data-qxframe9a7c2-ref="clear"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-close is-line is-round is-stroke-3"></span></button><span class="qxframe9a7c2-cascader-toggle qxframe9a7c2-input-toggle is-hidden" hidden data-qxframe9a7c2-ref="toggle"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-caret-down is-line is-round is-stroke-3"></span></span></span></div>`;
 function createDefaultDOM(context){const instance=blueprint.instantiate(context.document);instance.refs.control=instance.root;return{root:instance.root,refs:instance.refs};}
-const CASCADER_DEFAULTS=Object.freeze({items:[],multiple:false,clearable:false,disabled:false,readOnly:false,placeholder:'',separator:' / ',placement:'bottom-start',open:false,trigger:'click',expandTrigger:'click',closeOnSelect:undefined,changeOnSelect:false,searchable:false,checkedStrategy:'child',maxVisibleTags:0,renderTag:null,renderTagOverflow:null,popupRender:null,itemStyles:null,tagClasses:null,tagStyles:null,matchReferenceWidth:false,selectionAppearance:undefined,renderControl:true,headless:false});
+const CASCADER_DEFAULTS=Object.freeze({items:[],multiple:false,clearable:false,disabled:false,readOnly:false,placeholder:'',separator:' / ',placement:'bottom-start',open:false,trigger:'click',expandTrigger:'click',closeOnSelect:undefined,changeOnSelect:false,searchable:false,checkedStrategy:'child',maxVisibleTags:0,renderTag:null,renderTagOverflow:null,popupRender:null,matchReferenceWidth:false,selectionAppearance:undefined,renderControl:true,headless:false});
 const runtimeState=new WeakMap();
 const own=Utils.own;
 function validateCascaderOptions(opts){if(['click','hover'].indexOf(String(opts.expandTrigger||'click'))<0)throw new TypeError('[QXFRAME9A7C2] Cascader expandTrigger must be click or hover.');if(['child','parent','all'].indexOf(String(opts.checkedStrategy||'child'))<0)throw new TypeError('[QXFRAME9A7C2] Cascader checkedStrategy must be "child", "parent", or "all".');if(opts.maxVisibleTags!=='responsive'&&opts.maxVisibleTags!=null&&(!Number.isFinite(Number(opts.maxVisibleTags))||Number(opts.maxVisibleTags)<0))throw new TypeError('[QXFRAME9A7C2] Cascader maxVisibleTags must be a non-negative number or "responsive".');if(opts.popupRender!=null&&!Utils.isFunction(opts.popupRender))throw new TypeError('[QXFRAME9A7C2] Cascader popupRender must be a function or null.');validateItems(opts.items);return opts;}
@@ -360,13 +360,13 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             var pPlaceholder = pEditing ? (pDisplay || String(opts.placeholder || '')) : String(opts.placeholder || '');
             fieldControl.updateOptions({ mode:opts.multiple === true ? 'tags':(opts.searchable === true ? 'input':'value'), tags:pTags, displayValue:pDisplay, inputValue:pInput, editable:opts.searchable === true, disabled:opts.disabled === true, readOnly:opts.readOnly === true, required:opts.required === true, name:opts.name, placeholder:pPlaceholder, hasValue:values.length > 0, expanded:!!(triggerSession && triggerSession.getState().open) });
             fieldControl.setDisplayValue(pDisplay); fieldControl.setInputValue(pInput); fieldControl.setDraftVisual(pEditing && searchState.query !== ''); fieldControl.setCommittedValue(opts.multiple === true ? values.slice() : selection.value, commitMeta || { silent:true, source:'selection', reason:'projection' });
+            syncSemanticRegistry();
             return;
           }
           if (opts.multiple === true) {
             root.classList.remove('has-rich-path');
             fieldControl.updateOptions({
-              mode: 'tags', tags: selectionTags.tags(), creatableTags:false,tagsControlled:true, maxVisibleTags:opts.maxVisibleTags, tagInputMinWidth:opts.searchable === true ? 32 : 0, renderTag:renderSelectedTag, renderTagOverflow:renderSelectedTagOverflow, tagClasses:opts.tagClasses, tagStyles:opts.tagStyles, tagOverflowClassName:'qxframe9a7c2-cascader-tag qxframe9a7c2-cascader-tag-overflow', inputValue: opts.searchable === true && triggerSession && triggerSession.getState().open ? searchState.query : '', placeholder: values.length ? '' : String(opts.placeholder || ''),
-              tagClassName: 'qxframe9a7c2-cascader-tag', tagTextClassName: 'qxframe9a7c2-cascader-tag-text', tagRemoveClassName: 'qxframe9a7c2-cascader-tag-remove'
+              mode: 'tags', tags: selectionTags.tags(), creatableTags:false,tagsControlled:true, maxVisibleTags:opts.maxVisibleTags, tagInputMinWidth:opts.searchable === true ? 32 : 0, renderTag:renderSelectedTag, renderTagOverflow:renderSelectedTagOverflow, inputValue: opts.searchable === true && triggerSession && triggerSession.getState().open ? searchState.query : '', placeholder: values.length ? '' : String(opts.placeholder || '')
             });
           } else {
             var path = displayPath();
@@ -384,11 +384,12 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             fieldControl.setDraftVisual(openSearch && searchState.query !== '');
           }
           fieldControl.updateOptions({
-            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, classNames: opts.classNames, styles: opts.styles, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
+            size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
             disabled: opts.disabled === true, readOnly: opts.readOnly === true, editable: opts.searchable === true, clearable: opts.clearable === true, hasValue: values.length > 0,
             expanded: !!(triggerSession && triggerSession.getState().open), toggleVisible: true});
           fieldControl.setCommittedValue(opts.multiple === true ? values.slice() : selection.value, commitMeta || { silent: true, source: 'selection', reason: 'projection' });
           root.classList.toggle('has-value', values.length > 0); root.classList.toggle('is-multiple', opts.multiple === true); root.classList.toggle('is-open', !!(triggerSession && triggerSession.getState().open));
+          syncSemanticRegistry();
         }
     
         function renderColumnItem(item, ctx, columnIndex, searchMode) {
@@ -579,13 +580,14 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var hostNode = doc.createElement('div'); hostNode.className = 'qxframe9a7c2-cascader-search-results'; columnsHost.appendChild(hostNode);
           var results = searchPaths();
           searchList = ItemCollection.create({ container: hostNode, scrollAdapter:popupFrame.createAdapter(), items: results, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
-            keyboardFocusOwner: controlFocusElement, getKey: function (entry) { return entry.key; }, getLabel: function (entry) { return entry.label; }, getValue: function (entry) { return entry.value; }, ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], classes:opts.classes, styles:opts.itemStyles, itemRender: function (entry, ctx) { return renderColumnItem(entry, ctx, 0, true); },
+            keyboardFocusOwner: controlFocusElement, getKey: function (entry) { return entry.key; }, getLabel: function (entry) { return entry.label; }, getValue: function (entry) { return entry.value; }, ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], itemRender: function (entry, ctx) { return renderColumnItem(entry, ctx, 0, true); },
             onActivate: function (detail) { activateSearchResult(detail.item, detail); }
           });
           columnRecords = [{ index: 0, items: results, host: hostNode, list: searchList, search: true }]; activeColumnIndex = 0;
           if (columnsScroll) columnsScroll.refresh('cascader-search-results');
           bindListVirtualFocus(columnRecords[0]);
           if (results.length) { searchList.prepareOpen({ strategy: 'first', source: 'keyboard', reason: 'cascader-search' }); activateRecordVirtualFocus(columnRecords[0], 'cascader-search', null); }
+          syncSemanticRegistry();
         }
     
         function renderColumns() {
@@ -601,7 +603,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             record.list = ItemCollection.create({
               container: column, items: items, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: false,
               keyboardFocusOwner: controlFocusElement,
-              ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'], classes:opts.classes, styles:opts.itemStyles,
+              ownerPrefix: 'cascader', itemSemanticClasses: function () { return ['qxframe9a7c2-cascader-item','qxframe9a7c2-cascader-option']; }, itemClassParts:['item','option'],
               itemRender: function (entry, ctx) { return renderColumnItem(entry, ctx, index, false); }, selectionAppearance: opts.selectionAppearance || (opts.multiple === true ? 'checkbox' : 'highlight'),
               getCheckState: function (entry) { return cascadeCheckState(entry); },
               getItemState: function (entry) {
@@ -634,6 +636,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           if (activeRecord && keyboardCursorKey) { activeRecord.list.setActiveKey(keyboardCursorKey, { source: 'instance', reason: 'restore-keyboard-cursor', silent: true }); if (keyboard && keyboard.virtualFocus && keyboard.virtualFocus.getState().modality === 'keyboard') activateRecordVirtualFocus(activeRecord, 'restore-keyboard-cursor', null); }
           refreshSelectionSurfaces();
           if (columnsScroll) columnsScroll.refresh('cascader-columns');
+          syncSemanticRegistry();
         }
     
         function emitOpen(opened, detail) {
@@ -649,6 +652,33 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
     
     
         function hostedTags() { return fieldControl && fieldControl.getTags ? fieldControl.getTags() : null; }
+        function semanticSnapshot() {
+          var elements={root:root,input:input,values:valuesNode,prefix:prefix,suffix:suffix,clear:clearButton,toggle:arrow,trigger:triggerTarget,popup:panel,columns:columnsHost,item:[],tagShell:[],tag:[],tagContent:[],tagClose:[],tagOverflow:null};
+          var contexts={item:[],tagShell:[],tag:[],tagContent:[],tagClose:[]};
+          columnRecords.forEach(function(record){
+            if(!record||!record.list||!record.list.getItemElement)return;
+            var items=record.list.getVisibleItems?record.list.getVisibleItems():(record.items||[]);
+            var listState=record.list.getState?record.list.getState():{};
+            items.forEach(function(item,index){
+              var key=String(item&&item.key!==undefined?item.key:index), node=record.list.getItemElement(key);
+              if(!node)return;
+              elements.item.push(node);
+              contexts.item.push({item:item,state:Object.freeze({
+                key:key,columnIndex:record.index,search:record.search===true,
+                selected:selection.values.map(String).indexOf(String(item&&item.value))>=0,
+                active:String(listState.activeKey||'')===key,
+                disabled:!!(item&&item.disabled===true)
+              })});
+            });
+          });
+          SelectionTags.projectHostedSemantic(hostedTags(), selectionTags, elements, contexts);
+          return {elements:elements,contexts:contexts};
+        }
+        function syncSemanticRegistry() {
+          var snapshot = semanticSnapshot();
+          if (!destroyed && !instance.destroyed) instance.registerSemanticElements(snapshot.elements, snapshot.contexts);
+          return snapshot;
+        }
         function bindCompositeVirtualFocus() {
           if (!keyboard || !keyboard.virtualFocus) return;
           columnRecords.forEach(bindListVirtualFocus);
@@ -699,8 +729,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         }) : Control.create({
           elements: { root: root, valueHost: valuesNode, input: input, clear: clearButton, toggle: arrow, prefix: prefix, suffix: suffix }, document: doc, formField: opts.formField, committedValue: opts.multiple === true ? selection.values.slice() : selection.value,
           mode: opts.multiple === true ? 'tags' : (opts.searchable === true ? 'input' : 'value'), tags: opts.multiple === true ? selectionTags.tags() : [], creatableTags:false,tagsControlled:true,
-          maxVisibleTags: opts.maxVisibleTags, tagInputMinWidth:opts.searchable === true ? 32 : 0, renderTag: renderSelectedTag, renderTagOverflow: renderSelectedTagOverflow, tagClasses:opts.tagClasses, tagStyles:opts.tagStyles, tagOverflowClassName:'qxframe9a7c2-cascader-tag qxframe9a7c2-cascader-tag-overflow',
-          tagClassName: 'qxframe9a7c2-cascader-tag', tagTextClassName: 'qxframe9a7c2-cascader-tag-text', tagRemoveClassName: 'qxframe9a7c2-cascader-tag-remove',
+          maxVisibleTags: opts.maxVisibleTags, tagInputMinWidth:opts.searchable === true ? 32 : 0, renderTag: renderSelectedTag, renderTagOverflow: renderSelectedTagOverflow,
           size: opts.size, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true,
           disabled: opts.disabled === true, readOnly: opts.readOnly === true, editable: opts.searchable === true, clearable: opts.clearable === true, clearVisibility: 'interaction', hasValue: selection.values.length > 0,
           inputValue: '', placeholder: opts.placeholder, expanded: false, toggleVisible: true,
@@ -963,7 +992,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
             syncSelectionFromApiValue('options-value');
           }
           normalizeSelection(); triggerSession.updateOptions({ trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, placement: opts.placement, strategy: opts.strategy || 'absolute', middleware: opts.middleware, matchReferenceWidth: opts.matchReferenceWidth === true, autoUpdate: opts.autoUpdate !== false, destroyOnClose: opts.destroyOnClose !== false, disabled: opts.disabled === true });
-          if (triggerSession.getState().open) { renderColumns(); syncPopupContent(); } syncControl(); if (own(next, 'open')) triggerSession.setOpen(next.open === true, 'update-options'); if (binding && binding.syncClasses) binding.syncClasses(opts.classes);
+          if (triggerSession.getState().open) { renderColumns(); syncPopupContent(); } syncControl(); if (own(next, 'open')) triggerSession.setOpen(next.open === true, 'update-options');
           return instance;
         }
         function getState() {
@@ -987,6 +1016,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         if (opts.open === true) instance.open('initial');
         return Object.freeze({
           root:root,input:input,panel:panel,columnsHost:columnsHost,triggerTarget:triggerTarget,
+          getSemanticSnapshot:semanticSnapshot,
           setItems:setItems,setValue:setValue,setSearch:setSearch,clear:clear,getState:getState,
           loadChildren:function(key,meta){var path=pathByKeys([key]);var item=path[0]||null;if(!item){var found=findPathByValue(key);item=found.length?found[found.length-1]:null;}return item?loadChildrenFor(item,meta):Promise.resolve([]);},
           getControl:function(){return fieldControl;},getFocusController:function(){return focusController;},getInteractionController:function(){return interactionController;},getCapabilityController:function(){return capabilityController;},getSelectionController:function(){return selectionController;},getInputElement:function(){return fieldControl&&fieldControl.getInputElement?fieldControl.getInputElement():input;},getColumns:function(){return columnRecords.map(function(record){return record.list;});},
@@ -1010,12 +1040,15 @@ export class Cascader extends PopupFieldComponent{
    ownership:Object.freeze({value:'ValueController',focus:'FocusController',interaction:'InteractionController',capability:'CapabilityController',selection:'SelectionController',overlay:'OverlayController',feedback:'FeedbackController',form:'FormController'})
  });
  static contract=getContract('Cascader');
+ static semanticElements=Object.freeze(['root','input','values','prefix','suffix','clear','toggle','trigger','popup','columns','item','tagShell','tag','tagContent','tagClose','tagOverflow']);
+ static defaultClassSlot='root';
+ static defaultStyleSlot='root';
  static immutableOptions=Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','inputTarget','formTarget','renderControl','headless','portalContainer','multiple']);
  static create(source,overrides){return new this(source,overrides).render();}
  static enhance(input,options){return this.create(input,options||{});}
  static createDefaultDOM=createDefaultDOM;
  constructor(source={},overrides){const prepared=prepareOptions(source,overrides);super(prepared.opts);runtimeState.set(this,{fieldInit:prepared.fieldInit,runtime:null});}
- [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime)return record.runtime.root;const runtime=setupCascaderRuntime(this,record.fieldInit);record.runtime=runtime;this.own(()=>runtime.dispose('cascader-destroy'));return runtime.root;}
+ [componentHooks.render](){const record=runtimeState.get(this);if(record.runtime){const snapshot=record.runtime.getSemanticSnapshot();this.registerSemanticElements(snapshot.elements,snapshot.contexts);return record.runtime.root;}const runtime=setupCascaderRuntime(this,record.fieldInit);record.runtime=runtime;const snapshot=runtime.getSemanticSnapshot();this.registerSemanticElements(snapshot.elements,snapshot.contexts);this.own(()=>runtime.dispose('cascader-destroy'));return runtime.root;}
  [popupFieldHooks.optionsUpdated](next,previous,patch){const record=runtimeState.get(this);if(record.runtime)record.runtime.applyOptions(patch);}
  setItems(items){const r=runtimeState.get(this).runtime;return r?r.setItems(items):this;}
  setValue(value,meta){const r=runtimeState.get(this).runtime;return r?r.setValue(value,meta):this;}
@@ -1029,7 +1062,6 @@ export class Cascader extends PopupFieldComponent{
  getCapabilityController(){const r=runtimeState.get(this).runtime;return r?r.getCapabilityController():null;}
  getSelectionController(){const r=runtimeState.get(this).runtime;return r?r.getSelectionController():null;}
  getColumns(){const r=runtimeState.get(this).runtime;return r?r.getColumns():[];}
- getRootElement(){const r=runtimeState.get(this).runtime;return r?r.root:this.root;}
  getInputElement(){const r=runtimeState.get(this).runtime;return r?r.getInputElement():null;}
  getPopupElement(){const r=runtimeState.get(this).runtime;return r?r.panel:super.getPopupElement();}
  getPopupOriginElement(){const r=runtimeState.get(this).runtime;return r?r.columnsHost:null;}

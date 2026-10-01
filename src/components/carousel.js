@@ -74,8 +74,8 @@ export class Carousel extends Component {
         items: [], initialIndex: 0, loop: true, autoplay: false, interval: 4000,
         pauseOnHover: true, pauseOnFocus: true, arrows: true, dots: true,
         keyboard: true, swipe: true, draggable: true, effect: 'slide', direction: 'horizontal',
-        dotPlacement: 'bottom', trigger: 'click', adaptiveHeight: false, duration: 320,
-        easing: 'cubic-bezier(.2,.8,.2,1)', waitForAnimate: true, disabled: false,
+        dotPlacement: 'bottom', trigger: 'click', adaptiveHeight: false,
+        waitForAnimate: true, disabled: false,
         swipeThreshold: 36, cardHeight: 0
     });
     static optionNormalizers = Object.freeze({
@@ -85,13 +85,23 @@ export class Carousel extends Component {
         trigger: value => oneOf(value, DOT_TRIGGERS, 'trigger', 'click'),
         arrows: normalizeArrows,
         interval: value => finiteNumber(value, 4000, 'interval', 0),
-        duration: value => finiteNumber(value, 320, 'duration', 0),
         swipeThreshold: value => finiteNumber(value, 36, 'swipeThreshold', 0),
         cardHeight: value => finiteNumber(value, 0, 'cardHeight', 0),
         items: normalizeItems
     });
     static immutableOptions = Object.freeze(['container', 'document']);
     static contract = ComponentContracts.get('Carousel');
+    static semanticElements = Object.freeze(['root','viewport','track','slide','prev','next','dots','dot']);
+    static defaultClassSlot = 'root';
+    static defaultStyleSlot = 'root';
+    static defaultMotionSlot = 'track';
+    static motionSlots = Object.freeze({
+        track:Object.freeze({
+            appear:'--qxframe9a7c2-motion-carousel-track-duration',
+            enter:'--qxframe9a7c2-motion-carousel-track-duration',
+            leave:'--qxframe9a7c2-motion-carousel-track-duration'
+        })
+    });
 
     [componentHooks.render]() {
         const existing = state.get(this);
@@ -141,6 +151,7 @@ export class Carousel extends Component {
         root.appendChild(next);
         root.appendChild(dots);
         opts.container.appendChild(root);
+        this.registerSemanticElements({ root, viewport, track, prev, next, dots, slide:[], dot:[] });
 
         const motionEnabled = () => Config.motionEnabled(root);
         const items = () => opts.items;
@@ -300,8 +311,6 @@ export class Carousel extends Component {
             root.classList.toggle('is-adaptive-height', opts.adaptiveHeight === true);
             root.classList.toggle('is-disabled', opts.disabled === true);
             DOM.setPrivate(root, 'dotPlacement', opts.dotPlacement);
-            root.style.setProperty('--qxframe9a7c2-carousel-duration', Math.max(0, opts.duration) + 'ms');
-            root.style.setProperty('--qxframe9a7c2-carousel-easing', String(opts.easing || 'ease'));
             root.style.setProperty('--qxframe9a7c2-carousel-autoplay-duration', Math.max(800, opts.interval) + 'ms');
             root.tabIndex = -1;
             syncControls();
@@ -361,9 +370,7 @@ export class Carousel extends Component {
         }
         function updatePosition(animate, meta) {
             syncCurrent(count() ? normalizeIndex(current) : 0, { source:'carousel', reason:'position-normalize' }, false);
-            const duration = animate === false || !motionEnabled() ? 0 : Math.max(0, Number(opts.duration || 0));
-            track.style.transitionDuration = duration + 'ms';
-            track.style.transitionTimingFunction = String(opts.easing || 'ease');
+            const shouldAnimate = animate !== false && motionEnabled();
             if (opts.effect === 'fade' || opts.effect === 'card') track.style.transform = '';
             else if (opts.direction === 'vertical') {
                 const active = track.children[current];
@@ -374,10 +381,10 @@ export class Carousel extends Component {
             syncControls();
             requestMeasure('position');
             clearMotionWait();
-            if (animate !== false && duration > 0) {
+            if (shouldAnimate) {
                 animating = true;
                 animationMeta = meta || null;
-                cancelMotionWait = MotionController.waitMotionEnd(track, 'transition', { duration }, () => {
+                cancelMotionWait = MotionController.waitMotionEnd(track, 'transition', {}, () => {
                     cancelMotionWait = null;
                     finishAnimation('motion-end');
                 });
@@ -447,6 +454,10 @@ export class Carousel extends Component {
             });
             renderArrow(prev, opts.prevArrow, 'prev');
             renderArrow(next, opts.nextArrow, 'next');
+            instance.registerSemanticElements({
+                slide:Array.prototype.slice.call(track.children),
+                dot:Array.prototype.slice.call(dots.children)
+            });
             updatePosition(false, { previous: current, reason: 'render', source: 'render' });
             restartAutoplay();
             return api;
@@ -589,7 +600,6 @@ export class Carousel extends Component {
     getInteractionController() { return recordFor(this).getInteractionController(); }
     getCapabilityController() { return recordFor(this).getCapabilityController(); }
     getMotionController() { return recordFor(this).getMotionController(); }
-    getRootElement() { return this.root; }
 }
 
 export { EFFECTS as CAROUSEL_EFFECTS, DIRECTIONS as CAROUSEL_DIRECTIONS, DOT_PLACEMENTS as CAROUSEL_DOT_PLACEMENTS };
