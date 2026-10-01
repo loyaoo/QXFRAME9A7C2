@@ -44,6 +44,19 @@ jobs:
       - name: Full release verification
         run: npm run release
 
+      - name: Generate Phase B CSS inventory
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          npm run audit:css-token-phase-b -- --write=artifacts/css-token-phase-b-inventory.json
+
+      - name: Upload Phase B CSS inventory
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: css-token-phase-b-inventory-${{ github.sha }}
+          path: artifacts/css-token-phase-b-inventory.json
+          retention-days: 7
+
       - name: Pack npm artifact
         shell: bash
         run: |

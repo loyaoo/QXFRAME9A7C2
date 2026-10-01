@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 24%
-Phase: Phase 0 complete; Phase A closeout implemented; exact-head CI pending
+Task progress: 25%
+Phase: Phase A DONE; Phase B consumer inventory generation in progress
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -55,6 +55,11 @@ Phase A build handoff delivered:
 - Existing CSS-authority/browser checks execute against compiled SCSS output while structural source assertions still use the frozen baseline during this transition.
 - CI returned to strict `contents: read` + `npm ci`; the one-time lock refresh/write path has been removed.
 
+Phase A closeout verified:
+- PR #202 QXFRAME CI #1054 / run 36837090404: SUCCESS.
+- Legacy `src/qxframe9a7c2.css` removed from production source.
+- SCSS source-authority guard passed; full release, Windows, npm pack and docs demo passed.
+
 Verified CI:
 - PR #200 QXFRAME CI #1045 / run 36829080678: SUCCESS.
 - PR #201 QXFRAME CI #1048 / run 36830551150: SUCCESS (exact decomposed-SCSS head before status-only checkpoint).
@@ -79,10 +84,8 @@ Current baseline inventory summary:
 - Inventory values are discovery only; they are not approval for mechanical replacement.
 
 Next exact step:
-- Verify Phase A closeout with exact-head PR CI, then merge it.
-- Phase B: persist full consumer-level tables for odd/decimal sizes, forbidden units, CSS Grid, and JS geometry coupling.
-- Do not begin Size Tree remapping, odd-size normalization, Grid conversion, or runtime color cleanup until the corresponding inventory/mapping tables are reviewed and gated.
-
+- Phase B: generate and persist full consumer-level tables from canonical SCSS for odd/decimal px, forbidden viewport units, fr, CSS Grid, and JS geometry coupling.
+- Inventory/classification only. Do not normalize sizes or convert layout until consumer tables are reviewed and gated.
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE
