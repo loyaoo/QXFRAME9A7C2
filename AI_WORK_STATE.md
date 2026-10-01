@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 90%
-Phase: Phase A/B/C DONE; Theme exact Size Tree batch merged; odd Theme control recipe rebased on latest main, exact-head CI pending
+Task progress: 92%
+Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid low-risk closeout batch 4 implemented, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -103,10 +103,10 @@ Recent evidence:
 - Control recipe normalization branch rebased onto that main; exact-head CI must pass before merge.
 
 Next exact step:
-- Main CI #1094 on `e6429c55bbdb2b44ee26d29bd14518159a18b224`: SUCCESS; odd numeric font normalization is verified.
-- PR #212 / CI #1095: SUCCESS and merged as `5fdf117a15f8077ea146ed9901be6db1aefe8a78`; remaining odd/decimal geometry is classified.
-- Semantic pill batch: replace all 8 historical `999px` pill sentinels with the existing Theme pill slot; preserve all other odd/decimal geometry until category-specific approval.
-- Do not modify responsive .9px boundaries, 1.5px choice-glyph strokes, -.5px hairline centering, or paired 3/5px structural offsets in this batch.
+- Verify CSS Grid low-risk closeout batch 4 on exact-head CI.
+- This batch converts Card Actions, SelectGroup image, Tree checkbox wrapper, Upload preview panel, and Image wrapper from CSS Grid to Flex/normal positioning.
+- Live CSS Grid set is reduced from 37 to 31 rules; Descriptions/Form span, Card Grid, auto-fit Upload/SelectGroup, Carousel fade and other coupled layouts remain for dedicated structural batches.
+- Keep viewport-unit replacement separate and containing-block verified; do not mechanically replace vw/vh.
 
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
