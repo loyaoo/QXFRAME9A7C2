@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "task": "CSS-TOKEN-SCHEMA-001",
+  "phase": "B",
+  "basis": {
+    "ciRun": 36837720548,
+    "ciNumber": 1056,
+    "artifactId": 11150345740,
+    "source": "canonical ordered SCSS modules"
+  },
+  "summary": {
+    "oddPx": 45,
+    "decimalPx": 14,
+    "forbiddenViewportUnits": 54,
+    "frUnits": 21,
+    "cssGridMatches": 436,
+    "jsGeometryCouplingSites": 154
+  },
+  "decisions": {
+    "oddPx": {
+      "mechanicalReplacement": false,
+      "categories": {
+        "positionalOffsets": 18,
+        "borderOrRadius": 10,
+        "pillRadiusSentinels": 6,
+        "visualGeometry": 10,
+        "shadowGeometry": 1
+      },
+      "rules": [
+        "999px pill radii are semantic pill/circle geometry, not sequential Size Tree nodes.",
+        "Negative arrow/drop-indicator offsets are structural geometry and require paired consumer migration.",
+        "3px/5px/7px values require visual consumer review before normalization; no value-only replacement."
+      ]
+    },
+    "decimalPx": {
+      "mechanicalReplacement": false,
+      "protectedBreakpointBoundaries": 10,
+      "checkboxStrokeMinimum": 2,
+      "onePixelLineCenteringOffsets": 2,
+      "rules": [
+        "Responsive .9px max boundaries preserve current breakpoint behavior until the responsive contract is migrated explicitly.",
+        "1.5px checkbox glyph strokes are visual stroke geometry, not spacing tokens.",
+        "-0.5px Tree line transforms center a 1px hairline and must remain paired with the 1px line unless redesigned."
+      ]
+    },
+    "viewportUnits": {
+      "mechanicalReplacement": false,
+      "rule": "Replace per containing-block/overlay geometry. Fixed full-screen owners should prefer inset/percentage geometry; popup/preview consumers require parent-size verification before removing viewport units.",
+      "highRiskFamilies": [
+        "Modal",
+        "Drawer",
+        "Notice/Message/Notification",
+        "Popup/Pickers",
+        "Upload Preview",
+        "Image Preview"
+      ]
+    },
+    "cssGridAndFr": {
+      "mechanicalReplacement": false,
+      "rule": "Convert internal CSS Grid layouts to Flex per consumer while preserving the framework 24-column Grid component's existing Flex math.",
+      "protected": [
+        "24-column Grid breakpoints and flex math"
+      ],
+      "migrationFamilies": [
+        "Card",
+        "Descriptions",
+        "Form",
+        "SelectGroup",
+        "Calendar/PeriodPanel",
+        "ColorPanel/ColorPicker",
+        "Table",
+        "Upload",
+        "Image Preview",
+        "Loading"
+      ]
+    },
+    "jsGeometry": {
+      "mechanicalRemoval": false,
+      "byKind": {
+        "box-metric": 65,
+        "rect": 43,
+        "computed-style": 20,
+        "resize-observer": 17,
+        "intersection-observer": 9
+      },
+      "rule": "Separate legitimate measurement infrastructure (positioning/scroll/virtualization/observers/motion) from hard-coded CSS-size coupling. Do not remove runtime measurement solely because it reads geometry."
+    }
+  },
+  "nextPhaseRule": "Phase C/D may map tokens only after consumer decisions preserve interaction, breakpoints, overlay geometry and motion contracts."
+}
