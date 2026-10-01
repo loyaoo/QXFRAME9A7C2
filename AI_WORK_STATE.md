@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 28%
-Phase: Phase A DONE; Phase B inventory generated/validated; persistence and closeout pending
+Task progress: 30%
+Phase: Phase A DONE; Phase B inventory persisted/classified; exact-head closeout CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -88,10 +88,15 @@ Phase B exact-head evidence:
 - Generated full inventory artifact #11150345740.
 - Counts: odd px 45; decimal px 14; viewport units 54; fr 21; CSS Grid matches 436; JS geometry sites 154.
 
+Phase B persisted basis:
+- Full consumer inventory: `tools/manifests/css-token-phase-b-inventory.json`.
+- Decision/classification manifest: `tools/manifests/css-token-phase-b-decisions.json`.
+- `verify:css-token-phase-b` regenerates the current inventory and fails if the persisted basis is stale.
+- Temporary CI write permission and self-commit step are removed.
+
 Next exact step:
-- Persist the full Phase B inventory JSON and the consumer-decision manifest in-repo.
-- Remove the temporary CI write permission after persistence, rerun exact-head CI, then close Phase B.
-- Do not normalize sizes or convert layout until these consumer tables remain the migration basis.
+- Run exact-head Phase B closeout CI; if green, merge PR #203.
+- Then begin the three-layer Token dependency refactor (Preset -> Theme -> Component) before any approved odd-size normalization.
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE
