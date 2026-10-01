@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const css=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+assert.match(css,/\.qxframe9a7c2-card-meta\{display:flex;gap:\.625rem;align-items:center\}/);
+assert.match(css,/\.qxframe9a7c2-card-meta>\*:last-child\{min-width:0;flex:1 1 auto\}/);
+assert.match(css,/\.qxframe9a7c2-card-meta\.is-block\{flex-direction:column;align-items:stretch\}/);
+assert.doesNotMatch(css,/\.qxframe9a7c2-card-meta(?:\.is-block)?\{[^}]*(?:display:grid|grid-template-columns)/);
+console.log(JSON.stringify({ok:true,batch:'card-meta-grid-to-flex',convertedRules:2}));
