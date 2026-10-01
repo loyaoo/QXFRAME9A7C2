@@ -1000,7 +1000,9 @@ function setupImage(instance) {
     if (surface) surface.destroy();
     if (transformModel) transformModel.destroy();
     if (wasOpen) call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: 'api', reason: 'destroy', event: null, index: previewIndex, item: currentPreviewItem(), instance: api }));
-    instance.registerSemanticElements({ preview:null, mask:null, stage:null, trajectory:null, media:null });
+    // Component.destroy() has already destroyed SemanticProjection before owned runtime
+    // cleanups execute. Do not call the public semantic registration API from teardown:
+    // it rejects destroyed instances and would abort the remaining resource disposal.
     overlay = null; surface = null; presence = null; previewRoot = null; previewMask = null; previewStage = null; previewMotion = null;
     previewImage = null; previewVideo = null; previewAudio = null; previewMedia = null; panMetrics = null;
     scope.dispose(); DOM.removeNode(root); return true;
