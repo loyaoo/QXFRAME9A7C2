@@ -22,4 +22,16 @@ assert.match(components,/\.qxframe9a7c2-slider\.is-xs\{[^}]*--_qxframe9a7c2-slid
 assert.match(components,/\.qxframe9a7c2-slider\.is-sm\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-sm\)\}/);
 assert.match(components,/\.qxframe9a7c2-slider\.is-lg\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-lg\)\}/);
 assert.match(preset,/--qxframe9a7c2-radius-pill:\s*100rem;/,'Pill radius is an intentional semantic sentinel, not a scalable Size Tree dimension.');
+assert.match(theme,/--qxframe9a7c2-theme-badge-sm-padding-x:\s*var\(--qxframe9a7c2-space-3\)/);
+assert.match(theme,/--qxframe9a7c2-theme-badge-md-padding-y:\s*var\(--qxframe9a7c2-space-1\)/);
+assert.match(theme,/--qxframe9a7c2-theme-badge-xl-padding-y:\s*var\(--qxframe9a7c2-space-2\)/);
+assert.match(theme,/--qxframe9a7c2-theme-badge-sm-gap:\s*var\(--qxframe9a7c2-space-2\)/);
+assert.match(theme,/--qxframe9a7c2-theme-badge-md-gap:\s*var\(--qxframe9a7c2-space-3\)/);
+assert.match(theme,/--qxframe9a7c2-theme-badge-xs-count-padding-x:\s*var\(--qxframe9a7c2-space-1\)/);
+assert.match(components,/--qxframe9a7c2-badge-sm-padding-x:var\(--qxframe9a7c2-theme-badge-sm-padding-x\)/);
+assert.match(components,/--qxframe9a7c2-badge-md-padding-y:var\(--qxframe9a7c2-theme-badge-md-padding-y\)/);
+assert.match(components,/--qxframe9a7c2-badge-xl-padding-y:var\(--qxframe9a7c2-theme-badge-xl-padding-y\)/);
+assert.match(components,/--qxframe9a7c2-badge-sm-gap:var\(--qxframe9a7c2-theme-badge-sm-gap\)/);
+assert.match(components,/--qxframe9a7c2-badge-md-gap:var\(--qxframe9a7c2-theme-badge-md-gap\)/);
+assert.match(components,/--qxframe9a7c2-badge-xs-count-padding-x:var\(--qxframe9a7c2-theme-badge-xs-count-padding-x\)/);
 console.log(JSON.stringify({ok:true,...map.summary}));
