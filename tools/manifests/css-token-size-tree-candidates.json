@@ -241,9 +241,9 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1254,
+    "totalCandidates": 1248,
     "exactNodeCandidates": 897,
-    "needsReview": 116,
+    "needsReview": 110,
     "signedOffsets": 48,
     "pillSentinels": 1,
     "protectedBreakpoints": 240,
@@ -251,7 +251,7 @@
       "base": 0,
       "preset": 1,
       "theme": 4,
-      "component": 1249
+      "component": 1243
     },
     "byDomain": {
       "breakpoint-boundary": 240,
@@ -261,7 +261,7 @@
       "radius": 130,
       "shadow": 32,
       "signed-offset": 48,
-      "spacing": 497,
+      "spacing": 491,
       "typography": 122,
       "visual-geometry": 24
     }
@@ -10731,30 +10731,6 @@
     {
       "module": "src/styles/components/_components.scss",
       "layer": "component",
-      "line": 13367,
-      "raw": ".3125rem",
-      "unit": "rem",
-      "value": 0.3125,
-      "pxEquivalent": 5,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-sm-padding-x:.3125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
       "line": 13368,
       "raw": ".5rem",
       "unit": "rem",
@@ -10947,27 +10923,6 @@
     {
       "module": "src/styles/components/_components.scss",
       "layer": "component",
-      "line": 13378,
-      "raw": ".0625rem",
-      "unit": "rem",
-      "value": 0.0625,
-      "pxEquivalent": 1,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": null,
-      "upperNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-md-padding-y:.0625rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
       "line": 13379,
       "raw": ".125rem",
       "unit": "rem",
@@ -10992,30 +10947,6 @@
     {
       "module": "src/styles/components/_components.scss",
       "layer": "component",
-      "line": 13380,
-      "raw": ".1875rem",
-      "unit": "rem",
-      "value": 0.1875,
-      "pxEquivalent": 3,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-xl-padding-y:.1875rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
       "line": 13381,
       "raw": ".25rem",
       "unit": "rem",
@@ -11034,54 +10965,6 @@
       },
       "selector": null,
       "text": "--qxframe9a7c2-badge-xs-gap:.25rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13382,
-      "raw": ".3125rem",
-      "unit": "rem",
-      "value": 0.3125,
-      "pxEquivalent": 5,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-sm-gap:.3125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13383,
-      "raw": ".3125rem",
-      "unit": "rem",
-      "value": 0.3125,
-      "pxEquivalent": 5,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-md-gap:.3125rem;",
       "finalTarget": null,
       "approved": false
     },
@@ -11130,30 +11013,6 @@
       },
       "selector": null,
       "text": "--qxframe9a7c2-badge-xl-gap:.5rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13386,
-      "raw": ".1875rem",
-      "unit": "rem",
-      "value": 0.1875,
-      "pxEquivalent": 3,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-xs-count-padding-x:.1875rem;",
       "finalTarget": null,
       "approved": false
     },
