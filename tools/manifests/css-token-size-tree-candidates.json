@@ -241,9 +241,9 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1295,
+    "totalCandidates": 1294,
     "exactNodeCandidates": 932,
-    "needsReview": 128,
+    "needsReview": 127,
     "signedOffsets": 48,
     "pillSentinels": 1,
     "protectedBreakpoints": 234,
@@ -251,11 +251,11 @@
       "base": 0,
       "preset": 1,
       "theme": 41,
-      "component": 1253
+      "component": 1252
     },
     "byDomain": {
       "breakpoint-boundary": 234,
-      "geometry": 134,
+      "geometry": 133,
       "pill-radius-sentinel": 1,
       "position": 42,
       "radius": 129,
@@ -13698,30 +13698,6 @@
       },
       "selector": ".qxframe9a7c2-card-skeleton-line",
       "text": ".qxframe9a7c2-card-skeleton-line{height:.75rem;border-radius:var(--qxframe9a7c2-theme-radius-pill);background:linear-gradient(90deg,var(--_qxframe9a7c2-semantic-subtle),var(--_qxframe9a7c2-semantic-subtle-active),var(--_qxframe9a7c2-semantic-subtle));background-size:200% 100%;animation:qxframe9a7c2-card-skeleton 1.3s ease-in-out infinite}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13570,
-      "raw": ".9375rem",
-      "unit": "rem",
-      "value": 0.9375,
-      "pxEquivalent": 15,
-      "domain": "geometry",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "upperNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "selector": ".qxframe9a7c2-card-skeleton-line.is-title",
-      "text": ".qxframe9a7c2-card-skeleton-line.is-title{width:42%;height:.9375rem}",
       "finalTarget": null,
       "approved": false
     },
