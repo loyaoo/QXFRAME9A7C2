@@ -52,6 +52,7 @@ export function generateSizeTreeAudit({rootDir=root}={}){
     const layer=rel.includes('/preset/')?'preset':rel.includes('/theme/')?'theme':rel.includes('/components/')?'component':'base';
     for(let i=0;i<lines.length;i++){
       const text=lines[i];
+      if(/^\s*--qxframe9a7c2-size-\d+\s*:/.test(text))continue;
       const matches=[
         ...[...text.matchAll(/(-?\d*\.?\d+)px\b/g)].map(m=>({unit:'px',value:Number(m[1]),raw:m[0]})),
         ...[...text.matchAll(/(-?\d*\.?\d+)rem\b/g)].map(m=>({unit:'rem',value:Number(m[1]),raw:m[0]}))
