@@ -14,7 +14,7 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Grid closeout merged; viewport closeout has removed 31/54 consumers, with 23 preview/Notice consumers remaining
+- Current Phase: CSS Grid closeout merged; viewport-unit code closeout complete (54 -> 0), exact-head CI pending
 - Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
 
 ## CURRENT
@@ -22,7 +22,7 @@
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
 Task progress: 99%
-Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid final closeout merged; viewport closeout in final preview/Notice geometry pass
+Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid final closeout merged; viewport-unit code closeout complete, exact-head CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -104,17 +104,18 @@ Recent evidence:
 
 Recent viewport closeout evidence (2026-10-02):
 - PR #232 merged to main as `f74409534045d5fdf60dbd281cf72805fd1c7ad7`; CSS Grid/fr live inventory is zero.
-- PR #233 remains the active viewport closeout branch.
+- PR #233 is the active viewport closeout branch.
 - Fixed-root Modal/Drawer/Notice rail batch removed 12 consumers: 54 -> 42.
-- Container-relative popup/overflow/loading/sort batch removed 19 more consumers: 42 -> 23.
-- Theme viewport-unit inventory is now zero.
-- Remaining 23 consumers are intentionally limited to Upload preview (7), Image preview (10), and Notice zero-width slot geometry (6).
+- Container-relative popup/overflow/loading/sort batch removed 19 consumers: 42 -> 23.
+- Upload preview and Image preview now derive percentage constraints from their proven fixed `inset:0` preview roots; Image trajectory JS keeps its existing pixel geometry ownership.
+- NoticeService preserves the zero-width list/absolute slot model and now projects measured viewport availability through `--qxframe9a7c2-notice-available-inline-size`; no percentage is resolved against the zero-width list.
+- Canonical CSS viewport-unit inventory is now 0; the verifier rejects any future vw/vh/vmin/vmax consumer globally.
 
 Next exact step:
-- Finish Upload preview and Image preview from their proven fixed `inset:0` roots without changing Image trajectory geometry.
-- Close the final six Notice consumers only after preserving its JS-owned zero-width list/absolute slot measurement model; do not substitute percentages against the zero-width list.
-- Regenerate the viewport inventory to zero, strengthen the verifier to reject vw/vh/vmin/vmax globally, then run exact-head PR CI.
-- Merge only after full QXFRAME CI succeeds.
+- Run exact-head PR #233 QXFRAME CI and inspect any verifier/browser regression.
+- If CI fails, fix only demonstrated viewport-closeout regressions; do not reopen completed Grid/Controller work.
+- Merge PR #233 only after full QXFRAME CI succeeds, then verify main CI.
+- After main is green, continue the final v1.6 CSS token-schema audit/closeout from the next recorded inventory item.
 
 
 
