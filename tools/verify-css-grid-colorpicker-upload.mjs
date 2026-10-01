@@ -9,7 +9,7 @@ const css=fs.readFileSync(path.join(root,'src/styles/components/_components.scss
 assert.match(css,/\.qxframe9a7c2-color-picker-gradient\{display:flex;flex-wrap:wrap;/,'ColorPicker gradient host must use wrapped Flex.');
 assert.match(css,/\.qxframe9a7c2-color-picker-gradient-hint\{width:100%;flex:1 0 100%;/,'Gradient hint must keep a full row.');
 assert.match(css,/\.qxframe9a7c2-color-picker-gradient-track\{[^}]*width:100%;flex:1 0 100%;/,'Gradient track must keep a full row.');
-assert.match(css,/\.qxframe9a7c2-color-picker-gradient-angle\{[^}]*flex:0 0 5\.25rem;margin-inline-end:auto;/,'Gradient angle must preserve fixed width plus Grid-equivalent remaining space.');
+assert.match(css,/\.qxframe9a7c2-color-picker-gradient-angle\{[^}]*width:5\.25rem;[^}]*flex:0 0 auto;margin-inline-end:auto;/,'Gradient angle must preserve fixed width and use width as the Flex basis while retaining Grid-equivalent remaining space.');
 assert.doesNotMatch(css,/\.qxframe9a7c2-color-picker-gradient\{[^}]*display:grid/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-color-picker-gradient-(?:hint|track)\{[^}]*grid-column/);
 
