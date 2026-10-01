@@ -241,29 +241,29 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1259,
-    "exactNodeCandidates": 899,
-    "needsReview": 123,
+    "totalCandidates": 1261,
+    "exactNodeCandidates": 898,
+    "needsReview": 121,
     "signedOffsets": 48,
     "pillSentinels": 1,
-    "protectedBreakpoints": 236,
+    "protectedBreakpoints": 241,
     "byLayer": {
       "base": 0,
       "preset": 1,
       "theme": 6,
-      "component": 1252
+      "component": 1254
     },
     "byDomain": {
-      "breakpoint-boundary": 236,
+      "breakpoint-boundary": 241,
       "geometry": 119,
       "pill-radius-sentinel": 1,
       "position": 41,
       "radius": 129,
       "shadow": 32,
       "signed-offset": 48,
-      "spacing": 499,
+      "spacing": 497,
       "typography": 122,
-      "visual-geometry": 32
+      "visual-geometry": 31
     }
   },
   "consumers": [
@@ -19826,8 +19826,8 @@
       "unit": "px",
       "value": 12,
       "pxEquivalent": 12,
-      "domain": "spacing",
-      "status": "exact-node-candidate",
+      "domain": "breakpoint-boundary",
+      "status": "preserve-breakpoint",
       "exactNode": "size-6",
       "lowerNode": {
         "name": "size-6",
@@ -19838,7 +19838,7 @@
         "px": 12
       },
       "selector": ".qxframe9a7c2-form-selectgroup.is-image-grid",
-      "text": ".qxframe9a7c2-form-selectgroup.is-image-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:var(--qxframe9a7c2-theme-space-3,12px)}",
+      "text": ".qxframe9a7c2-form-selectgroup.is-image-grid{display:flex;--_qxframe9a7c2-form-selectgroup-item-basis:8.5rem;--_qxframe9a7c2-form-selectgroup-item-min-width:8.5rem;gap:var(--qxframe9a7c2-theme-space-3,12px)}",
       "finalTarget": null,
       "approved": false
     },
@@ -19850,8 +19850,8 @@
       "unit": "rem",
       "value": 8.5,
       "pxEquivalent": 136,
-      "domain": "spacing",
-      "status": "needs-review",
+      "domain": "breakpoint-boundary",
+      "status": "preserve-breakpoint",
       "exactNode": null,
       "lowerNode": {
         "name": "size-38",
@@ -19862,7 +19862,31 @@
         "px": 144
       },
       "selector": ".qxframe9a7c2-form-selectgroup.is-image-grid",
-      "text": ".qxframe9a7c2-form-selectgroup.is-image-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:var(--qxframe9a7c2-theme-space-3,12px)}",
+      "text": ".qxframe9a7c2-form-selectgroup.is-image-grid{display:flex;--_qxframe9a7c2-form-selectgroup-item-basis:8.5rem;--_qxframe9a7c2-form-selectgroup-item-min-width:8.5rem;gap:var(--qxframe9a7c2-theme-space-3,12px)}",
+      "finalTarget": null,
+      "approved": false
+    },
+    {
+      "module": "src/styles/components/_components.scss",
+      "layer": "component",
+      "line": 15086,
+      "raw": "8.5rem",
+      "unit": "rem",
+      "value": 8.5,
+      "pxEquivalent": 136,
+      "domain": "breakpoint-boundary",
+      "status": "preserve-breakpoint",
+      "exactNode": null,
+      "lowerNode": {
+        "name": "size-38",
+        "px": 128
+      },
+      "upperNode": {
+        "name": "size-39",
+        "px": 144
+      },
+      "selector": ".qxframe9a7c2-form-selectgroup.is-image-grid",
+      "text": ".qxframe9a7c2-form-selectgroup.is-image-grid{display:flex;--_qxframe9a7c2-form-selectgroup-item-basis:8.5rem;--_qxframe9a7c2-form-selectgroup-item-min-width:8.5rem;gap:var(--qxframe9a7c2-theme-space-3,12px)}",
       "finalTarget": null,
       "approved": false
     },
@@ -20042,8 +20066,8 @@
       "unit": "rem",
       "value": 13.125,
       "pxEquivalent": 210,
-      "domain": "visual-geometry",
-      "status": "needs-review",
+      "domain": "breakpoint-boundary",
+      "status": "preserve-breakpoint",
       "exactNode": null,
       "lowerNode": {
         "name": "size-43",
@@ -20054,7 +20078,31 @@
         "px": 224
       },
       "selector": ".qxframe9a7c2-form-selectgroup.is-boxes",
-      "text": ".qxframe9a7c2-form-selectgroup.is-boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(13.125rem,1fr))}",
+      "text": ".qxframe9a7c2-form-selectgroup.is-boxes{display:flex;--_qxframe9a7c2-form-selectgroup-item-basis:13.125rem;--_qxframe9a7c2-form-selectgroup-item-min-width:13.125rem}",
+      "finalTarget": null,
+      "approved": false
+    },
+    {
+      "module": "src/styles/components/_components.scss",
+      "layer": "component",
+      "line": 15096,
+      "raw": "13.125rem",
+      "unit": "rem",
+      "value": 13.125,
+      "pxEquivalent": 210,
+      "domain": "breakpoint-boundary",
+      "status": "preserve-breakpoint",
+      "exactNode": null,
+      "lowerNode": {
+        "name": "size-43",
+        "px": 208
+      },
+      "upperNode": {
+        "name": "size-44",
+        "px": 224
+      },
+      "selector": ".qxframe9a7c2-form-selectgroup.is-boxes",
+      "text": ".qxframe9a7c2-form-selectgroup.is-boxes{display:flex;--_qxframe9a7c2-form-selectgroup-item-basis:13.125rem;--_qxframe9a7c2-form-selectgroup-item-min-width:13.125rem}",
       "finalTarget": null,
       "approved": false
     },
