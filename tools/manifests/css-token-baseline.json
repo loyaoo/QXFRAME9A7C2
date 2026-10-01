@@ -3,7 +3,7 @@
   "recordedAt": "2026-10-01",
   "task": "CSS-TOKEN-SCHEMA-001",
   "source": {
-    "path": "src/qxframe9a7c2.css",
+    "path": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
     "sha256": "72eefc2a738b744c09b7243b94db3dac92f2d0b68237478b1ba170208c243234",
     "bytes": 884967,
     "lines": 17774
@@ -12,7 +12,8 @@
     "entry": "src/styles/qxframe9a7c2.scss",
     "temporaryMigrationModule": "src/styles/_legacy.scss",
     "sass": "1.93.2",
-    "releaseCss": "dist/qxframe9a7c2.css"
+    "releaseCss": "dist/qxframe9a7c2.css",
+    "currentSourceEntry": "src/styles/qxframe9a7c2.scss"
   },
   "counts": {
     "publicTokenDefinitions": 483,
@@ -38,6 +39,6 @@
   "policy": {
     "inventoryOnly": true,
     "mechanicalReplacementApproved": false,
-    "note": "Counts establish the migration baseline only. Consumer-level decisions remain required by the v1.6 execution guide."
+    "note": "Historical Phase A equivalence fixture only. Current inventories must read the canonical ordered SCSS modules."
   }
 }

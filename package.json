@@ -195,8 +195,7 @@
   "sideEffects": [
     "./dist/qxframe9a7c2.js",
     "./src/index.umd.js",
-    "./dist/*.css",
-    "./src/*.css"
+    "./dist/*.css"
   ],
   "engines": {
     "node": ">=18.0.0"
