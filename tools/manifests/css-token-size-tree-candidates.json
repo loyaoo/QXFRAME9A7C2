@@ -241,22 +241,22 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1336,
+    "totalCandidates": 1328,
     "exactNodeCandidates": 938,
     "needsReview": 155,
     "signedOffsets": 66,
-    "pillSentinels": 9,
+    "pillSentinels": 1,
     "protectedBreakpoints": 234,
     "byLayer": {
       "base": 0,
       "preset": 1,
-      "theme": 50,
-      "component": 1285
+      "theme": 49,
+      "component": 1278
     },
     "byDomain": {
       "breakpoint-boundary": 234,
       "geometry": 138,
-      "pill-radius-sentinel": 9,
+      "pill-radius-sentinel": 1,
       "position": 45,
       "radius": 137,
       "shadow": 42,
@@ -429,27 +429,6 @@
       },
       "selector": null,
       "text": "--qxframe9a7c2-scroll-track-inset: 2px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_default.scss",
-      "layer": "theme",
-      "line": 269,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
-      "selector": null,
-      "text": "--qxframe9a7c2-scroll-track-radius: 999px;",
       "finalTarget": null,
       "approved": false
     },
@@ -15216,27 +15195,6 @@
     {
       "module": "src/styles/components/_components.scss",
       "layer": "component",
-      "line": 13830,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
-      "selector": ".qxframe9a7c2-scroll",
-      "text": "--_qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-scroll-track-radius, 999px);",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
       "line": 13921,
       "raw": "18px",
       "unit": "px",
@@ -21543,27 +21501,6 @@
     {
       "module": "src/styles/components/_components.scss",
       "layer": "component",
-      "line": 15258,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
-      "selector": ".qxframe9a7c2-native-form input[type=\"range\"]::-webkit-slider-runnable-track",
-      "text": ".qxframe9a7c2-native-form input[type=\"range\"]::-webkit-slider-runnable-track{height:4px;border-radius:999px;background:var(--_qxframe9a7c2-semantic-border-strong)}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
       "line": 15259,
       "raw": "-6px",
       "unit": "px",
@@ -21676,27 +21613,6 @@
         "name": "size-2",
         "px": 4
       },
-      "selector": ".qxframe9a7c2-native-form input[type=\"range\"]::-moz-range-track",
-      "text": ".qxframe9a7c2-native-form input[type=\"range\"]::-moz-range-track{height:4px;border:0;border-radius:999px;background:var(--_qxframe9a7c2-semantic-border-strong)}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15260,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
       "selector": ".qxframe9a7c2-native-form input[type=\"range\"]::-moz-range-track",
       "text": ".qxframe9a7c2-native-form input[type=\"range\"]::-moz-range-track{height:4px;border:0;border-radius:999px;background:var(--_qxframe9a7c2-semantic-border-strong)}",
       "finalTarget": null,
@@ -21937,27 +21853,6 @@
         "name": "size-1",
         "px": 2
       },
-      "selector": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after",
-      "text": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:\"\";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:.5rem;height:2px;border-radius:999px;background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15327,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
       "selector": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after",
       "text": ".qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:\"\";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:.5rem;height:2px;border-radius:999px;background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}",
       "finalTarget": null,
@@ -22602,27 +22497,6 @@
       },
       "selector": ".qxframe9a7c2-color-panel-preview",
       "text": ".qxframe9a7c2-color-panel-preview{width:var(--_qxframe9a7c2-control-height);height:var(--_qxframe9a7c2-control-height);flex:0 0 var(--_qxframe9a7c2-control-height);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:50%;background-color:transparent;background-image:linear-gradient(45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(-45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--_qxframe9a7c2-seman",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15394,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
-      "selector": ".qxframe9a7c2-color-panel-hue,.qxframe9a7c2-color-panel-alpha",
-      "text": ".qxframe9a7c2-color-panel-hue,.qxframe9a7c2-color-panel-alpha{width:100%;height:.875rem;margin:0;padding:0;appearance:none;border:0;border-radius:999px;outline:none;cursor:pointer}",
       "finalTarget": null,
       "approved": false
     },
@@ -25255,27 +25129,6 @@
         "name": "size-2",
         "px": 4
       },
-      "selector": ".qxframe9a7c2-color-picker-gradient-track",
-      "text": ".qxframe9a7c2-color-picker-gradient-track{position:relative;box-sizing:border-box;grid-column:1/-1;height:calc(var(--_qxframe9a7c2-control-icon-size) + 4px);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:999px;box-shadow:none;cursor:crosshair}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15589,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
       "selector": ".qxframe9a7c2-color-picker-gradient-track",
       "text": ".qxframe9a7c2-color-picker-gradient-track{position:relative;box-sizing:border-box;grid-column:1/-1;height:calc(var(--_qxframe9a7c2-control-icon-size) + 4px);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:999px;box-shadow:none;cursor:crosshair}",
       "finalTarget": null,
@@ -28512,27 +28365,6 @@
       },
       "selector": ".qxframe9a7c2-slider.is-xl",
       "text": ".qxframe9a7c2-slider.is-xl{--_qxframe9a7c2-slider-handle-default:1.25rem;--_qxframe9a7c2-slider-rail-default:.375rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15964,
-      "raw": "999px",
-      "unit": "px",
-      "value": 999,
-      "pxEquivalent": 999,
-      "domain": "pill-radius-sentinel",
-      "status": "needs-review-sentinel",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
-      "selector": ".qxframe9a7c2-slider-rail,.qxframe9a7c2-slider-track",
-      "text": ".qxframe9a7c2-slider-rail,.qxframe9a7c2-slider-track{position:absolute;left:0;top:50%;height:var(--_qxframe9a7c2-slider-rail);transform:translateY(-50%);border-radius:999px}",
       "finalTarget": null,
       "approved": false
     },

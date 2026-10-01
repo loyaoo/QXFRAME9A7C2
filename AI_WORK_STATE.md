@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 58%
-Phase: Phase A/B/C DONE; Size Tree foundation + Grid/vw/JS geometry audits DONE; all odd numeric font presets normalized, CI pending
+Task progress: 64%
+Phase: Phase A/B/C DONE; Size Tree foundation + Grid/vw/JS geometry audits DONE; odd numeric fonts DONE; semantic pill geometry implemented, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -95,10 +95,10 @@ Phase B persisted basis:
 - Temporary CI write permission and self-commit step are removed.
 
 Next exact step:
-- Low-risk odd-font PR #211 / CI #1090: SUCCESS and merged as `50c8c8d9cc312c5820000fb647ca28f7c02de8b2`.
-- Verify final odd-font semantic batch: 11px small labels -> 12px, 13px global-sm -> 14px, 13px SM Control -> 12px.
-- After this batch, no 9/11/13/15/17 numeric font preset remains.
-- Odd/decimal non-font geometry is tracked separately in PR #212 and must not be mechanically rounded.
+- Main CI #1094 on `e6429c55bbdb2b44ee26d29bd14518159a18b224`: SUCCESS; odd numeric font normalization is verified.
+- PR #212 / CI #1095: SUCCESS and merged as `5fdf117a15f8077ea146ed9901be6db1aefe8a78`; remaining odd/decimal geometry is classified.
+- Semantic pill batch: replace all 8 historical `999px` pill sentinels with the existing Theme pill slot; preserve all other odd/decimal geometry until category-specific approval.
+- Do not modify responsive .9px boundaries, 1.5px choice-glyph strokes, -.5px hairline centering, or paired 3/5px structural offsets in this batch.
 
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement

@@ -264,7 +264,7 @@
   --qxframe9a7c2-scroll-thumb-hover-color: var(--_qxframe9a7c2-token-scroll-thumb-hover);
   --qxframe9a7c2-scroll-track-size: 8px;
   --qxframe9a7c2-scroll-track-inset: 2px;
-  --qxframe9a7c2-scroll-track-radius: 999px;
+  --qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-theme-radius-pill);
   --qxframe9a7c2-scroll-thumb-inset: 1px;
   --qxframe9a7c2-native-scrollbar-track: var(--qxframe9a7c2-scroll-track-color);
   --qxframe9a7c2-native-scrollbar-thumb: var(--qxframe9a7c2-scroll-thumb-color);
