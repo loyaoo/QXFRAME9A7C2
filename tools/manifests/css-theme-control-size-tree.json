@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "batch": "theme-control-size-tree-exact",
+  "mappings": [
+    {
+      "from": "--_qxframe9a7c2-size-control-height: 2rem;",
+      "to": "--_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-16);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-icon-size: .875rem;",
+      "to": "--_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-7);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-padding-inline: 10px;",
+      "to": "--_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-5);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-height: 1.5rem;",
+      "to": "--_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-12);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-icon-size: .75rem;",
+      "to": "--_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-6);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-padding-inline: 6px;",
+      "to": "--_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-3);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-height: 1.75rem;",
+      "to": "--_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-14);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-padding-inline: 8px;",
+      "to": "--_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-4);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-height: 2.25rem;",
+      "to": "--_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-18);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-icon-size: 1rem;",
+      "to": "--_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-8);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-padding-inline: 12px;",
+      "to": "--_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-6);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-height: 2.5rem;",
+      "to": "--_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-20);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-icon-size: 1.125rem;",
+      "to": "--_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-9);"
+    },
+    {
+      "from": "--_qxframe9a7c2-size-control-padding-inline: 14px;",
+      "to": "--_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-7);"
+    }
+  ],
+  "preserved": [
+    ".is-sm 13px icon-size",
+    ".is-sm 5px padding-block/gap",
+    ".is-lg 7px padding-block",
+    "1px border width"
+  ],
+  "policy": "Dependency-only exact-value mapping; no physical size changes."
+}

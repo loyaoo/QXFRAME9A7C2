@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 81%
-Phase: Phase A/B/C DONE; Size Tree + audits DONE; odd fonts/pill/control-radius/drop-indicator/overlay-arrow/overflow-close DONE; Card skeleton title 15px→16px implemented, CI pending
+Task progress: 84%
+Phase: Phase A/B/C DONE; Size Tree + audits DONE; Card skeleton 15px→16px DONE; exact Theme control geometry -> Size Tree rebased, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -93,6 +93,10 @@ Phase B persisted basis:
 - Decision/classification manifest: `tools/manifests/css-token-phase-b-decisions.json`.
 - `verify:css-token-phase-b` regenerates the current inventory and fails if the persisted basis is stale.
 - Temporary CI write permission and self-commit step are removed.
+
+Recent evidence:
+- Main CI #1116 on `da54e4ee70971718a4d342ca902dfa2fe596817a`: SUCCESS; Card skeleton title 15px→16px is merged and verified.
+- Theme control geometry batch maps 14 exact literals to Size Tree nodes without changing physical values; odd 13/5/7px control values remain explicit.
 
 Next exact step:
 - Main CI #1094 on `e6429c55bbdb2b44ee26d29bd14518159a18b224`: SUCCESS; odd numeric font normalization is verified.

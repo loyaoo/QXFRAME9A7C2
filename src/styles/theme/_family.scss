@@ -50,49 +50,49 @@
   }
 /* QXFRAME9A7C2 unified size recipe + family geometry resolver. */
   :root,.is-md {
-    --_qxframe9a7c2-size-control-height: 2rem;
+    --_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-16);
     --_qxframe9a7c2-size-control-font-size: var(--qxframe9a7c2-font-size-14);
-    --_qxframe9a7c2-size-control-padding-inline: 10px;
+    --_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-5);
     --_qxframe9a7c2-size-control-padding-block: var(--qxframe9a7c2-space-3);
     --_qxframe9a7c2-size-control-gap: var(--qxframe9a7c2-space-3);
     --_qxframe9a7c2-size-control-radius: var(--qxframe9a7c2-theme-radius-sm);
-    --_qxframe9a7c2-size-control-icon-size: .875rem;
+    --_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-7);
   }
   .is-xs {
-    --_qxframe9a7c2-size-control-height: 1.5rem;
+    --_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-12);
     --_qxframe9a7c2-size-control-font-size: var(--qxframe9a7c2-font-size-12);
-    --_qxframe9a7c2-size-control-padding-inline: 6px;
+    --_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-3);
     --_qxframe9a7c2-size-control-padding-block: var(--qxframe9a7c2-space-2);
     --_qxframe9a7c2-size-control-gap: var(--qxframe9a7c2-space-2);
     --_qxframe9a7c2-size-control-radius: var(--qxframe9a7c2-theme-radius-xs);
-    --_qxframe9a7c2-size-control-icon-size: .75rem;
+    --_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-6);
   }
   .is-sm {
-    --_qxframe9a7c2-size-control-height: 1.75rem;
+    --_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-14);
     --_qxframe9a7c2-size-control-font-size: var(--qxframe9a7c2-font-size-12);
-    --_qxframe9a7c2-size-control-padding-inline: 8px;
+    --_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-4);
     --_qxframe9a7c2-size-control-padding-block: .3125rem;
     --_qxframe9a7c2-size-control-gap: .3125rem;
     --_qxframe9a7c2-size-control-radius: var(--qxframe9a7c2-theme-radius-sm);
     --_qxframe9a7c2-size-control-icon-size: .8125rem;
   }
   .is-lg {
-    --_qxframe9a7c2-size-control-height: 2.25rem;
+    --_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-18);
     --_qxframe9a7c2-size-control-font-size: var(--qxframe9a7c2-font-size-16);
-    --_qxframe9a7c2-size-control-padding-inline: 12px;
+    --_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-6);
     --_qxframe9a7c2-size-control-padding-block: .4375rem;
     --_qxframe9a7c2-size-control-gap: var(--qxframe9a7c2-space-4);
     --_qxframe9a7c2-size-control-radius: var(--qxframe9a7c2-theme-radius-sm);
-    --_qxframe9a7c2-size-control-icon-size: 1rem;
+    --_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-8);
   }
   .is-xl {
-    --_qxframe9a7c2-size-control-height: 2.5rem;
+    --_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-20);
     --_qxframe9a7c2-size-control-font-size: var(--qxframe9a7c2-font-size-16);
-    --_qxframe9a7c2-size-control-padding-inline: 14px;
+    --_qxframe9a7c2-size-control-padding-inline: var(--qxframe9a7c2-size-7);
     --_qxframe9a7c2-size-control-padding-block: var(--qxframe9a7c2-space-4);
     --_qxframe9a7c2-size-control-gap: var(--qxframe9a7c2-space-5);
     --_qxframe9a7c2-size-control-radius: var(--qxframe9a7c2-theme-radius-md);
-    --_qxframe9a7c2-size-control-icon-size: 1.125rem;
+    --_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-9);
   }
 
   :root,.is-xs,.is-sm,.is-md,.is-lg,.is-xl {
