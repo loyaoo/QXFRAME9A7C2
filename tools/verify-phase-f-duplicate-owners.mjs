@@ -1,10 +1,11 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8');
+const css=readCanonicalStyleSource({root});
 const count=needle=>css.split(needle).length-1;
 
 assert.equal(count('.qxframe9a7c2-control-contract.is-secondary{'),1,

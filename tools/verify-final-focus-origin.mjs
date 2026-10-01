@@ -1,3 +1,4 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -78,7 +79,7 @@ assert.match(
   'VirtualFocus programmatic activation must preserve current modality instead of defaulting to keyboard.'
 );
 
-const css=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
+const css=readCanonicalStyleSource({root}).replace(/\/\*[\s\S]*?\*\//g,'');
 const unsafeFocusOutlineRules=[];
 const ruleRe=/([^{}]+)\{([^{}]*)\}/g;
 let match;
