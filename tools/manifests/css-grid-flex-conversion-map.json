@@ -9,13 +9,13 @@
   },
   "baseline": {
     "phaseBWideCssGridMatches": 436,
-    "actualGridRuleCount": 45,
-    "actualGridDeclarationCount": 86
+    "actualGridRuleCount": 42,
+    "actualGridDeclarationCount": 83
   },
   "summary": {
     "byRisk": {
       "medium": 18,
-      "low": 16,
+      "low": 13,
       "high": 11
     },
     "byStrategy": {
@@ -23,11 +23,11 @@
       "flex": 10,
       "manual-flex-sizing": 7,
       "flex-wrap-basis": 6,
-      "flex-center": 3,
       "manual-review": 3,
-      "inline-flex": 2,
       "absolute-stack": 1,
+      "flex-center": 1,
       "flex-label-content": 1,
+      "inline-flex": 1,
       "inline-flex-center": 1
     },
     "byFamily": {
@@ -35,15 +35,15 @@
       "card": 7,
       "descriptions": 6,
       "upload": 5,
-      "carousel": 4,
       "color-picker": 3,
       "form-selectgroup": 3,
+      "carousel": 2,
       "color-panel": 2,
-      "table": 2,
       "tree": 2,
       "image": 1,
       "period-panel": 1,
-      "picker": 1
+      "picker": 1,
+      "table": 1
     },
     "protected24ColumnFlexGridRulesMatched": 0
   },
@@ -744,21 +744,6 @@
       "finalStrategy": null
     },
     {
-      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-selection-choice",
-      "family": "table",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "inline-grid"
-        }
-      ],
-      "suggestedStrategy": "inline-flex",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
       "selector": ".qxframe9a7c2-table-filter-options",
       "family": "table",
       "declarations": [
@@ -880,36 +865,6 @@
       ],
       "suggestedStrategy": "absolute-stack",
       "risk": "medium",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-carousel-arrow",
-      "family": "carousel",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-carousel-dot",
-      "family": "carousel",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex-center",
-      "risk": "low",
       "approved": false,
       "finalStrategy": null
     },
