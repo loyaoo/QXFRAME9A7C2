@@ -14,15 +14,15 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Grid + viewport closeout merged and verified; small visual-geometry Size Tree batch verified on PR #234 implementation head
+- Current Phase: CSS Grid + viewport + small visual-geometry batches merged and verified; Badge spacing batch verified on PR #235 implementation head
 - Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 99.2%
-Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid + viewport closeout merged; small visual-geometry closeout batch in final checkpoint
+Task progress: 99.4%
+Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid + viewport + small visual-geometry closeouts merged; Badge spacing batch in final checkpoint
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -126,9 +126,21 @@ Small visual-geometry batch (PR #234):
 - Size Tree candidate inventory: 1259 -> 1254; needs-review: 121 -> 116.
 - PR #234 implementation head `ec4443e96123eb5507f6c4aee75839e96762d492` passed QXFRAME CI #1182 / run `36938028212`: Full release, Windows tools, Size Tree, Grid/viewport/JS geometry gates, npm pack and standalone dist/docs all succeeded.
 
+Small visual-geometry merge evidence:
+- PR #234 merged to main as `b24cf4ac3703911862a09fd24587ad9aee697567`.
+- Main QXFRAME CI #1184 / run `36938939246`: SUCCESS, including Full release, Windows tools, npm pack, standalone dist/docs and GitHub Pages deployment.
+
+Badge spacing batch (PR #235):
+- Normalized six Badge spacing literals through Preset spacing/Size Tree -> Theme Badge spacing -> Component Badge token.
+- SM padding-x 5px -> 6px; MD padding-y 1px -> 2px; XL padding-y 3px -> 4px.
+- SM gap 5px -> 4px; MD gap 5px -> 6px; XS count padding-x 3px -> 2px.
+- This yields ordered even progressions instead of odd scalable spacing and reserves 1px for physical hairlines.
+- Size Tree candidates: 1254 -> 1248; needs-review: 116 -> 110; spacing candidates: 497 -> 491.
+- PR #235 implementation head `8d2d162179f07e0e611a203a9b0dd2f9f2f561dc` passed QXFRAME CI #1185 / run `36939188847`: Full release, Windows tools, Size Tree, Grid/viewport/JS geometry gates, npm pack and standalone dist/docs all succeeded.
+
 Next exact step:
-- This checkpoint-only update must pass exact-head PR #234 QXFRAME CI, then merge PR #234 and verify main CI.
-- Continue CSS-TOKEN-SCHEMA-001 in multi-item semantic batches; next low-risk pool is remaining odd/decimal spacing and small geometry, while preserving explicit exceptions (1px hairlines, 100rem pill, 50% circle, protected breakpoints and approved typography exceptions).
+- This checkpoint-only update must pass exact-head PR #235 QXFRAME CI, then merge PR #235 and verify main CI.
+- Continue CSS-TOKEN-SCHEMA-001 in multi-item semantic batches; next low-risk pool is remaining component spacing/micro-geometry, preserving explicit exceptions (1px hairlines, 100rem pill, 50% circle, protected breakpoints and approved typography exceptions).
 - Do not reopen completed Grid/viewport/Controller work without a demonstrated regression.
 
 
