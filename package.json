@@ -132,7 +132,8 @@
     "verify:windows-tool-paths": "node tools/verify-windows-tool-paths.mjs",
     "verify:docs-api": "node tools/sync-docs-api-contracts.mjs --check && node tools/verify-docs-api.mjs",
     "verify:admin-template": "node tools/verify-admin-template.mjs",
-    "sync:docs-api": "node tools/sync-docs-api-contracts.mjs"
+    "sync:docs-api": "node tools/sync-docs-api-contracts.mjs",
+    "audit:css-token-migration": "node tools/audit-css-token-migration.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",
