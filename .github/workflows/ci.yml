@@ -41,6 +41,9 @@ jobs:
       - name: Completion audit
         run: npm run audit:completion
 
+      - name: Verify Size Tree candidate inventory
+        run: node tools/verify-css-token-size-tree.mjs
+
       - name: Full release verification
         run: npm run release
 
