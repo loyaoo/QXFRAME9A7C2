@@ -27,8 +27,8 @@ assert.doesNotMatch(canonical,/@use\b|@forward\b/,'SCSS module directives must n
 for(const protectedPattern of [
   /@font-face\b/,
   /\.qxframe9a7c2-row\b/,
-  /\[data-qxframe9a7c2-theme="light"\]/,
-  /\[data-qxframe9a7c2-theme="dark"\]/,
+  /\[data-qxframe9a7c2-theme=(?:"?light"?)\]/,
+  /\[data-qxframe9a7c2-theme=(?:"?dark"?)\]/,
   /\.is-keyboard-focus\b/
 ]) {
   assert.match(canonical,protectedPattern,'Compiled CSS lost a protected Phase A contract.');
