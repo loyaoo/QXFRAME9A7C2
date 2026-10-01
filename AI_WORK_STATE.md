@@ -14,14 +14,14 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid color-picker/upload batch implemented, CI pending
+- Current Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid final structural closeout implemented, CI pending
 - Current Task: `SEMANTIC-MOTION-API-013` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 95%
+Task progress: 97%
 Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid low-risk closeout batch 4 implemented, CI pending
 
 User authority:
@@ -103,10 +103,10 @@ Recent evidence:
 - Control recipe normalization branch rebased onto that main; exact-head CI must pass before merge.
 
 Next exact step:
-- Verify ColorPicker gradient + Upload list Grid-to-Flex batch on exact-head CI.
-- Live CSS Grid set is reduced from 24 to 19 rules.
-- Remaining structural families are Card Grid/horizontal, Descriptions, Form, Carousel fade.
-- Keep viewport-unit replacement separate and containing-block verified; do not mechanically replace vw/vh.
+- Verify final CSS Grid structural closeout on exact-head CI.
+- Live CSS Grid/fr set is now 0; 24-column QXFRAME Flex Grid remains untouched.
+- After Grid closeout, continue viewport-unit containing-block batches and final v1.6 audit.
+- Do not mechanically replace vw/vh; every replacement must preserve popup/overlay/container geometry.
 
 
 
