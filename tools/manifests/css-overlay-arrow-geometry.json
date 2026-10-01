@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "phase": "overlay-arrow-geometry",
+  "themeToken": "--qxframe9a7c2-theme-overlay-arrow-size",
+  "presetSource": "--qxframe9a7c2-size-5",
+  "sizePx": 10,
+  "halfExpression": "calc(var(--private-arrow-size) * -.5)",
+  "components": [
+    {
+      "component": "Popover",
+      "publicToken": "--qxframe9a7c2-popover-arrow-size",
+      "privateSize": "--_qxframe9a7c2-popover-arrow-size",
+      "privateHalf": "--_qxframe9a7c2-popover-arrow-half"
+    },
+    {
+      "component": "Dropdown",
+      "publicToken": "--qxframe9a7c2-dropdown-arrow-size",
+      "privateSize": "--_qxframe9a7c2-dropdown-arrow-size",
+      "privateHalf": "--_qxframe9a7c2-dropdown-arrow-half"
+    }
+  ],
+  "preserved": {
+    "dropdownPlacementDepthPx": -6
+  },
+  "invariant": "Arrow half-offset is derived from the owning arrow size; no literal -5px centering remains."
+}
