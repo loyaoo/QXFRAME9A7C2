@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "phase": "card-skeleton-title-size",
+  "previousPx": 15,
+  "targetPx": 16,
+  "deltaPx": 1,
+  "presetSource": "--qxframe9a7c2-size-8",
+  "themeToken": "--qxframe9a7c2-theme-card-skeleton-title-height",
+  "componentToken": "--qxframe9a7c2-card-skeleton-title-height",
+  "selector": ".qxframe9a7c2-card-skeleton-line.is-title",
+  "invariant": "Skeleton title height resolves Preset -> Theme -> Component and changes by at most 1px."
+}
