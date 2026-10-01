@@ -110,7 +110,7 @@
       "unit": "vw",
       "suggestedStrategy": "container-inline-percentage-or-token-cap",
       "risk": "medium",
-      "text": ".qxframe9a7c2-popover-root{--_qxframe9a7c2-popover-bg:var(--qxframe9a7c2-popover-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-popover-border:var(--qxframe9a7c2-popover-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-popover-text:var(--qxframe9a7c2-popover-text,var(--_qxframe9a7c2-popup-text));max-width:min(28rem,calc(100vw - 2rem));color:var(--_qxframe9a7c2-popover-text);font-size:var(--_qxframe9a7c2-control-font-size);line-height:1.5}",
+      "text": ".qxframe9a7c2-popover-root{--_qxframe9a7c2-popover-arrow-size:var(--qxframe9a7c2-popover-arrow-size,var(--qxframe9a7c2-theme-overlay-arrow-size));--_qxframe9a7c2-popover-arrow-half:calc(var(--_qxframe9a7c2-popover-arrow-size) * -.5);--_qxframe9a7c2-popover-bg:var(--qxframe9a7c2-popover-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-popover-border:var(--qxframe9a7c2-popover-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-popover-text:var(--qxframe9a7c2-popover-text,var(--_qxframe9a7c2-popup-text));max-width:min(28rem,calc(100vw - 2rem));color:var(--_qxframe9a7c2-popover-text);font-size:var(--_qxframe9a7c2-control-font-size);line-h",
       "approved": false,
       "finalReplacement": null
     },
@@ -542,7 +542,7 @@
       "unit": "vw",
       "suggestedStrategy": "container-inline-percentage-or-token-cap",
       "risk": "medium",
-      "text": ".qxframe9a7c2-dropdown-panel,.qxframe9a7c2-dropdown-submenu-panel{--_qxframe9a7c2-dropdown-min-width:var(--qxframe9a7c2-dropdown-min-width,180px);--_qxframe9a7c2-dropdown-max-width:var(--qxframe9a7c2-dropdown-max-width,min(32rem,calc(100vw - 2rem)));--_qxframe9a7c2-dropdown-bg:var(--qxframe9a7c2-dropdown-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-dropdown-border:var(--qxframe9a7c2-dropdown-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-dropdown-shadow:var(--qxframe9a7c2-dropdown-shadow,var(--_qxframe9a7c2-popup-shadow));--_qxframe9a7c2-dropdown-z:var(--qxframe9a7c2-dropdown-z,1000);--_qxframe9a7c2-popup-surface-bg:var(--_qxf",
+      "text": ".qxframe9a7c2-dropdown-panel,.qxframe9a7c2-dropdown-submenu-panel{--_qxframe9a7c2-dropdown-arrow-size:var(--qxframe9a7c2-dropdown-arrow-size,var(--qxframe9a7c2-theme-overlay-arrow-size));--_qxframe9a7c2-dropdown-arrow-half:calc(var(--_qxframe9a7c2-dropdown-arrow-size) * -.5);--_qxframe9a7c2-dropdown-min-width:var(--qxframe9a7c2-dropdown-min-width,180px);--_qxframe9a7c2-dropdown-max-width:var(--qxframe9a7c2-dropdown-max-width,min(32rem,calc(100vw - 2rem)));--_qxframe9a7c2-dropdown-bg:var(--qxframe9a7c2-dropdown-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-dropdown-border:var(--qxframe9a7c2-dropdown-border,var(--_qxframe9a7c2-popup-border)",
       "approved": false,
       "finalReplacement": null
     },
