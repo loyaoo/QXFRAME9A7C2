@@ -28,10 +28,11 @@ const scanned=[
 ];
 const offenders=[];
 for(const file of scanned){
+  const relative=path.relative(root,file).replaceAll('\\','/');
+  // Immutable migration evidence may quote the retired path as historical context.
+  if(/^tools\/manifests\/css-token-phase-[a-z0-9-]+\.json$/i.test(relative)) continue;
   const source=fs.readFileSync(file,'utf8');
-  if(source.includes(forbidden)){
-    offenders.push(path.relative(root,file).replaceAll('\\','/'));
-  }
+  if(source.includes(forbidden)) offenders.push(relative);
 }
 
 assert.equal(fs.existsSync(path.join(root,'src','qxframe9a7c2.css')),false,'Legacy CSS source must not exist in src/.');

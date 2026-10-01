@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 24%
-Phase: Phase 0 complete; Phase A closeout implemented; exact-head CI pending
+Task progress: 30%
+Phase: Phase A DONE; Phase B inventory persisted/classified; exact-head closeout CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -55,6 +55,11 @@ Phase A build handoff delivered:
 - Existing CSS-authority/browser checks execute against compiled SCSS output while structural source assertions still use the frozen baseline during this transition.
 - CI returned to strict `contents: read` + `npm ci`; the one-time lock refresh/write path has been removed.
 
+Phase A closeout verified:
+- PR #202 QXFRAME CI #1054 / run 36837090404: SUCCESS.
+- Legacy `src/qxframe9a7c2.css` removed from production source.
+- SCSS source-authority guard passed; full release, Windows, npm pack and docs demo passed.
+
 Verified CI:
 - PR #200 QXFRAME CI #1045 / run 36829080678: SUCCESS.
 - PR #201 QXFRAME CI #1048 / run 36830551150: SUCCESS (exact decomposed-SCSS head before status-only checkpoint).
@@ -78,11 +83,20 @@ Current baseline inventory summary:
 - JS geometry-coupling sites: 147
 - Inventory values are discovery only; they are not approval for mechanical replacement.
 
-Next exact step:
-- Verify Phase A closeout with exact-head PR CI, then merge it.
-- Phase B: persist full consumer-level tables for odd/decimal sizes, forbidden units, CSS Grid, and JS geometry coupling.
-- Do not begin Size Tree remapping, odd-size normalization, Grid conversion, or runtime color cleanup until the corresponding inventory/mapping tables are reviewed and gated.
+Phase B exact-head evidence:
+- PR #203 QXFRAME CI #1056 / run 36837720548: SUCCESS.
+- Generated full inventory artifact #11150345740.
+- Counts: odd px 45; decimal px 14; viewport units 54; fr 21; CSS Grid matches 436; JS geometry sites 154.
 
+Phase B persisted basis:
+- Full consumer inventory: `tools/manifests/css-token-phase-b-inventory.json`.
+- Decision/classification manifest: `tools/manifests/css-token-phase-b-decisions.json`.
+- `verify:css-token-phase-b` regenerates the current inventory and fails if the persisted basis is stale.
+- Temporary CI write permission and self-commit step are removed.
+
+Next exact step:
+- Run exact-head Phase B closeout CI; if green, merge PR #203.
+- Then begin the three-layer Token dependency refactor (Preset -> Theme -> Component) before any approved odd-size normalization.
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE
