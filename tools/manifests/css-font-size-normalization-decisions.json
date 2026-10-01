@@ -10,6 +10,11 @@
       "font-9-badge-xs-count",
       "font-15-control-lg",
       "font-17-unused"
+    ],
+    "implementedSemanticBatch": [
+      "font-11-small-labels",
+      "font-13-global-sm",
+      "font-13-control-sm"
     ]
   },
   "decisions": [
@@ -65,8 +70,17 @@
       "visualChange": "-1px",
       "rationale": "These labels are intentionally subordinate to 12px XS/body text; 10px preserves that hierarchy instead of collapsing upward to 12px.",
       "risk": "medium",
-      "approved": false,
-      "finalTarget": null
+      "approved": true,
+      "finalTarget": "--qxframe9a7c2-size-6",
+      "finalPx": 12,
+      "status": "implemented",
+      "implementationPath": [
+        "Badge SM / Descriptions XS label",
+        "--qxframe9a7c2-theme-font-size-xs",
+        "--qxframe9a7c2-font-size-xs",
+        "--qxframe9a7c2-font-size-12",
+        "--qxframe9a7c2-size-6"
+      ]
     },
     {
       "id": "font-13-global-sm",
@@ -96,8 +110,16 @@
       "visualChange": "+1px",
       "rationale": "Global small text is broadly used for readable secondary copy. 14px is the safer readability-preserving even node; the tradeoff is that SM and current MD typography become equal unless MD is later re-tiered.",
       "risk": "high",
-      "approved": false,
-      "finalTarget": null
+      "approved": true,
+      "finalTarget": "--qxframe9a7c2-size-7",
+      "finalPx": 14,
+      "status": "implemented",
+      "implementationPath": [
+        "--qxframe9a7c2-theme-font-size-sm",
+        "--qxframe9a7c2-font-size-sm",
+        "--qxframe9a7c2-font-size-14",
+        "--qxframe9a7c2-size-7"
+      ]
     },
     {
       "id": "font-13-control-sm",
@@ -119,8 +141,15 @@
       "visualChange": "-1px",
       "rationale": "Control SM should remain visually below MD 14px. Mapping downward preserves the size hierarchy; XS and SM would share 12px typography while differing by height/padding.",
       "risk": "medium",
-      "approved": false,
-      "finalTarget": null
+      "approved": true,
+      "finalTarget": "--qxframe9a7c2-size-6",
+      "finalPx": 12,
+      "status": "implemented",
+      "implementationPath": [
+        ".is-sm --_qxframe9a7c2-size-control-font-size",
+        "--qxframe9a7c2-font-size-12",
+        "--qxframe9a7c2-size-6"
+      ]
     },
     {
       "id": "font-15-control-lg",

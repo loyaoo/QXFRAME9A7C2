@@ -409,20 +409,25 @@
     ]
   },
   "preserved": {
-    "oddFontSizePx": [
-      11,
-      13
-    ],
+    "oddFontSizePx": [],
     "hairlinePx": 1,
     "pill": "100rem",
     "circle": "50%",
     "motionScales": "not Size Tree consumers"
   },
-  "policy": "Size Tree foundation is active. Odd font presets remain explicit only while their consumer-level normalization decision is unresolved.",
+  "policy": "Size Tree foundation is active; all former odd numeric font presets have consumer-level decisions and are retired.",
   "completedOddFontDecisions": [
     {
       "sourcePx": 9,
       "action": "Badge XS count -> font-size-10 -> size-5"
+    },
+    {
+      "sourcePx": 11,
+      "action": "Badge SM / Descriptions XS label -> font-size-xs -> font-size-12 -> size-6"
+    },
+    {
+      "sourcePx": 13,
+      "action": "global font-size-sm -> font-size-14 -> size-7; SM Control -> font-size-12 -> size-6"
     },
     {
       "sourcePx": 15,
