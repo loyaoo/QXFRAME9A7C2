@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS modules are the only writable style authority. The Phase A CSS baseline is retained only under tools/fixtures for equivalence testing and is never shipped or consumed by the release build.",
   "files": [
     {
@@ -9,13 +9,6 @@
     }
   ],
   "migrationBaseline": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
-  "migrationModules": [
-    "src/styles/base/_reset.scss",
-    "src/styles/preset/_foundation.scss",
-    "src/styles/theme/_default.scss",
-    "src/styles/theme/_family.scss",
-    "src/styles/components/_components.scss"
-  ],
   "physicalOrder": [
     "base",
     "preset",
@@ -35,5 +28,12 @@
     "composite-relation",
     "utilities",
     "compatibility"
+  ],
+  "sourceModules": [
+    "src/styles/base/_reset.scss",
+    "src/styles/preset/_foundation.scss",
+    "src/styles/theme/_default.scss",
+    "src/styles/theme/_family.scss",
+    "src/styles/components/_components.scss"
   ]
 }

@@ -54,8 +54,8 @@ assert.equal(fs.existsSync(path.join(root,'src/css')),false,'Retired src/css spl
 assert.equal(cssOrder.files.length,1,'CSS order manifest must expose one canonical source entry.');
 assert.equal(cssOrder.files[0].file,'src/styles/qxframe9a7c2.scss','CSS order manifest must point at canonical SCSS entry.');
 assert.equal(cssOrder.migrationBaseline,'tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css','Phase A must identify the frozen CSS equivalence fixture explicitly.');
-assert.equal(fs.existsSync(path.join(root,'src/qxframe9a7c2.css')),false,'Legacy production CSS source must be removed after the SCSS handoff.');
-assert.deepEqual(cssOrder.migrationModules,phaseAModulePaths,'Phase A migration module order must be explicit and stable.');
+assert.equal(fs.existsSync(path.join(root,'src','qxframe9a7c2.css')),false,'Legacy production CSS source must be removed after the SCSS handoff.');
+assert.deepEqual(cssOrder.sourceModules,phaseAModulePaths,'Canonical SCSS module order must be explicit and stable.');
 assert.equal(phaseAModuleScss,baselineCss,'Phase A SCSS modules must reconstruct the frozen CSS baseline byte-for-byte.');
 assert.match(postbuild,/compileStyles\(\{\s*root,\s*outputFile:/,'release build must compile canonical SCSS into dist CSS.');
 assert.doesNotMatch(postbuild,/copyFile\(path\.join\(root,\s*['"]src\/qxframe9a7c2\.css['"]/,'release build must not copy the frozen CSS baseline into dist.');

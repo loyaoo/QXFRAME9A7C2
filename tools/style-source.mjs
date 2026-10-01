@@ -12,10 +12,10 @@ function readOrder(root){
 
 export function getCanonicalStyleModulePaths({root=ownRoot}={}){
   const order=readOrder(root);
-  if(!Array.isArray(order.migrationModules)||order.migrationModules.length===0){
-    throw new Error('CSS source-order manifest must declare migrationModules.');
+  if(!Array.isArray(order.sourceModules)||order.sourceModules.length===0){
+    throw new Error('CSS source-order manifest must declare sourceModules.');
   }
-  return [...order.migrationModules];
+  return [...order.sourceModules];
 }
 
 export function readCanonicalStyleSource({root=ownRoot}={}){
