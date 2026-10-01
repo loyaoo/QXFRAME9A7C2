@@ -146,7 +146,7 @@
   --_qxframe9a7c2-token-scroll-track: rgba(var(--qxframe9a7c2-palette-grey-5), .14);
   --_qxframe9a7c2-token-scroll-thumb: rgba(var(--qxframe9a7c2-palette-grey-5), .46);
   --_qxframe9a7c2-token-scroll-thumb-hover: rgba(var(--qxframe9a7c2-palette-grey-5), .68);
-  --qxframe9a7c2-shadow-popup: 0 0.75rem 2rem rgba(var(--qxframe9a7c2-palette-grey-3), .18);
+  --qxframe9a7c2-shadow-popup: 0 var(--qxframe9a7c2-size-6) var(--qxframe9a7c2-size-16) rgba(var(--qxframe9a7c2-palette-grey-3), .18);
 }
 
 [data-qxframe9a7c2-theme="dark"] {
@@ -204,7 +204,7 @@
   --_qxframe9a7c2-token-scroll-track: rgba(var(--qxframe9a7c2-palette-grey-10), .14);
   --_qxframe9a7c2-token-scroll-thumb: rgba(var(--qxframe9a7c2-palette-grey-10), .46);
   --_qxframe9a7c2-token-scroll-thumb-hover: rgba(var(--qxframe9a7c2-palette-grey-10), .68);
-  --qxframe9a7c2-shadow-popup: 0 0.875rem 2.625rem rgba(var(--qxframe9a7c2-palette-black), .46);
+  --qxframe9a7c2-shadow-popup: 0 var(--qxframe9a7c2-size-7) var(--qxframe9a7c2-size-21) rgba(var(--qxframe9a7c2-palette-black), .46);
 }
 
 @supports (color: contrast-color(red)) {
@@ -267,8 +267,8 @@
   --qxframe9a7c2-scroll-track-color: var(--_qxframe9a7c2-token-scroll-track);
   --qxframe9a7c2-scroll-thumb-color: var(--_qxframe9a7c2-token-scroll-thumb);
   --qxframe9a7c2-scroll-thumb-hover-color: var(--_qxframe9a7c2-token-scroll-thumb-hover);
-  --qxframe9a7c2-scroll-track-size: 8px;
-  --qxframe9a7c2-scroll-track-inset: 2px;
+  --qxframe9a7c2-scroll-track-size: var(--qxframe9a7c2-size-4);
+  --qxframe9a7c2-scroll-track-inset: var(--qxframe9a7c2-size-1);
   --qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-theme-radius-pill);
   --qxframe9a7c2-scroll-thumb-inset: 1px;
   --qxframe9a7c2-native-scrollbar-track: var(--qxframe9a7c2-scroll-track-color);
@@ -283,7 +283,7 @@
   --qxframe9a7c2-ripple-outside-color: rgba(var(--qxframe9a7c2-palette-black), .64);
   --qxframe9a7c2-ripple-opacity: 1;
   --qxframe9a7c2-ripple-outside-opacity: .78;
-  --qxframe9a7c2-ripple-outside-size: .625rem;
+  --qxframe9a7c2-ripple-outside-size: var(--qxframe9a7c2-size-5);
   --qxframe9a7c2-json-guide: var(--_qxframe9a7c2-token-json-guide); --qxframe9a7c2-theme-overflow-close-size: var(--qxframe9a7c2-size-8); --qxframe9a7c2-theme-card-skeleton-title-height: var(--qxframe9a7c2-size-8);
 
   --qxframe9a7c2-focus-ring: 0 0 0 0.1875rem var(--_qxframe9a7c2-token-focus-ring-color);
@@ -524,7 +524,7 @@
     --_qxframe9a7c2-mode-focus-visible: rgb(var(--qxframe9a7c2-palette-black));
     --_qxframe9a7c2-mode-error-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-ring-weight), transparent);
     --_qxframe9a7c2-mode-warning-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-ring-weight), transparent);
-    --_qxframe9a7c2-mode-popup-shadow: 0 .75rem 2rem color-mix(in srgb, var(--_qxframe9a7c2-neutral-1) 18%, transparent);
+    --_qxframe9a7c2-mode-popup-shadow: 0 var(--qxframe9a7c2-size-6) var(--qxframe9a7c2-size-16) color-mix(in srgb, var(--_qxframe9a7c2-neutral-1) 18%, transparent);
     --_qxframe9a7c2-ripple-default-inside: rgba(var(--qxframe9a7c2-palette-black), .22);
     --_qxframe9a7c2-ripple-default-outside: rgba(var(--qxframe9a7c2-palette-black), .38);
     --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
@@ -622,7 +622,7 @@
     --_qxframe9a7c2-mode-focus-visible: rgb(var(--qxframe9a7c2-palette-white));
     --_qxframe9a7c2-mode-error-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-error) var(--_qxframe9a7c2-accent-ring-weight), transparent);
     --_qxframe9a7c2-mode-warning-ring-color: color-mix(in srgb, var(--_qxframe9a7c2-mode-warning) var(--_qxframe9a7c2-accent-ring-weight), transparent);
-    --_qxframe9a7c2-mode-popup-shadow: 0 .875rem 2.625rem color-mix(in srgb, var(--_qxframe9a7c2-neutral-1) 46%, transparent);
+    --_qxframe9a7c2-mode-popup-shadow: 0 var(--qxframe9a7c2-size-7) var(--qxframe9a7c2-size-21) color-mix(in srgb, var(--_qxframe9a7c2-neutral-1) 46%, transparent);
     --_qxframe9a7c2-ripple-default-inside: rgba(var(--qxframe9a7c2-palette-white), .22);
     --_qxframe9a7c2-ripple-default-outside: rgba(var(--qxframe9a7c2-palette-white), .38);
     --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
@@ -696,15 +696,15 @@
     --_qxframe9a7c2-semantic-loading-mask: var(--qxframe9a7c2-semantic-loading-mask, var(--_qxframe9a7c2-mode-loading-mask));
     --_qxframe9a7c2-semantic-code-bg: var(--qxframe9a7c2-semantic-code-bg, var(--_qxframe9a7c2-mode-code-bg));
 
-    --_qxframe9a7c2-focus-ring-size: var(--qxframe9a7c2-theme-focus-ring-size, 2px);
-    --_qxframe9a7c2-focus-visible-width: var(--qxframe9a7c2-focus-visible-width, 2px);
+    --_qxframe9a7c2-focus-ring-size: var(--qxframe9a7c2-theme-focus-ring-size, var(--qxframe9a7c2-size-1));
+    --_qxframe9a7c2-focus-visible-width: var(--qxframe9a7c2-focus-visible-width, var(--qxframe9a7c2-size-1));
     --_qxframe9a7c2-focus-visible-offset: var(--qxframe9a7c2-focus-visible-offset, -1px);
     --_qxframe9a7c2-focus-visible-outline: var(--_qxframe9a7c2-focus-visible-width) solid var(--_qxframe9a7c2-semantic-focus-visible);
     --_qxframe9a7c2-focus-ring: 0 0 0 var(--_qxframe9a7c2-focus-ring-size) color-mix(in srgb, var(--_qxframe9a7c2-semantic-focus) var(--_qxframe9a7c2-accent-ring-weight), transparent);
     --_qxframe9a7c2-validation-error-ring: 0 0 0 var(--_qxframe9a7c2-focus-ring-size) color-mix(in srgb, var(--_qxframe9a7c2-semantic-error) var(--_qxframe9a7c2-accent-ring-weight), transparent);
     --_qxframe9a7c2-validation-warning-ring: 0 0 0 var(--_qxframe9a7c2-focus-ring-size) color-mix(in srgb, var(--_qxframe9a7c2-semantic-warning) var(--_qxframe9a7c2-accent-ring-weight), transparent);
     --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-family-popup-shadow, var(--_qxframe9a7c2-mode-popup-shadow));
-    --_qxframe9a7c2-overlay-shadow: var(--qxframe9a7c2-family-surface-overlay-shadow, 0 1.25rem 3.75rem color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 22%, transparent));
+    --_qxframe9a7c2-overlay-shadow: var(--qxframe9a7c2-family-surface-overlay-shadow, 0 var(--qxframe9a7c2-size-10) var(--qxframe9a7c2-size-27) color-mix(in srgb, var(--_qxframe9a7c2-semantic-overlay-base) 22%, transparent));
     --_qxframe9a7c2-font-family: var(--qxframe9a7c2-theme-font-family, inherit);
   }
 

@@ -150,10 +150,16 @@ assert.ok(definitions.has('--_qxframe9a7c2-neutral-mix-ratio'),'MixedGray neutra
 
 // NEUTRAL-GREY-CSS-011: cold Gray may exist only as an explicit optional palette/theme seed.
 // Standard Light/Dark utility output must remain on the chroma-zero canonical Grey axis.
-for(const [name,value] of [
-  ['--qxframe9a7c2-shadow-popup','0 0.75rem 2rem rgba(var(--qxframe9a7c2-palette-grey-3), .18)']
+for(const [name,values] of [
+  ['--qxframe9a7c2-shadow-popup',[
+    '0 var(--qxframe9a7c2-size-6) var(--qxframe9a7c2-size-16) rgba(var(--qxframe9a7c2-palette-grey-3), .18)',
+    '0 var(--qxframe9a7c2-size-7) var(--qxframe9a7c2-size-21) rgba(var(--qxframe9a7c2-palette-black), .46)'
+  ]]
 ]){
-  assert.ok((definitions.get(name)||[]).some(entry=>entry.value===value),name+' must preserve perceived darkness while using canonical Grey.');
+  const actual=(definitions.get(name)||[]).map(entry=>entry.value);
+  for(const value of values){
+    assert.ok(actual.includes(value),name+' must preserve shadow darkness/color while routing exact geometry through Size Tree.');
+  }
 }
 for(const [name,values] of [
   ['--_qxframe9a7c2-token-scroll-track',[
