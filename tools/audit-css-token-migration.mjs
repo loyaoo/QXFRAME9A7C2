@@ -17,16 +17,27 @@ function walk(dir, predicate) {
   return out;
 }
 
-function loc(text, index) {
-  return text.slice(0, index).split('\n').length;
+function makeLineLocator(text) {
+  const breaks = [];
+  for (let i = 0; i < text.length; i += 1) if (text.charCodeAt(i) === 10) breaks.push(i);
+  return index => {
+    let lo = 0;
+    let hi = breaks.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (breaks[mid] < index) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo + 1;
+  };
 }
 
-function collectMatches(text, re, mapper = m => m[0], limit = 5000) {
+function collectMatches(text, lineAt, re, mapper = m => m[0], limit = 5000) {
   const out = [];
   re.lastIndex = 0;
   let m;
   while ((m = re.exec(text)) && out.length < limit) {
-    out.push({ line: loc(text, m.index), value: mapper(m) });
+    out.push({ line: lineAt(m.index), value: mapper(m) });
     if (m[0] === '') re.lastIndex += 1;
   }
   return out;
@@ -37,16 +48,17 @@ if (!fs.existsSync(cssPath)) {
 }
 
 const css = fs.readFileSync(cssPath, 'utf8');
+const lineAt = makeLineLocator(css);
 const jsFiles = walk(path.join(root, 'src'), file => file.endsWith('.js'));
 
-const px = collectMatches(css, /(-?\d*\.?\d+)px\b/g, m => Number(m[1]));
-const rem = collectMatches(css, /(-?\d*\.?\d+)rem\b/g, m => Number(m[1]));
-const forbiddenViewport = collectMatches(css, /(-?\d*\.?\d+)(vw|vh|vmin|vmax)\b/g, m => m[0]);
-const fr = collectMatches(css, /(-?\d*\.?\d+)fr\b/g, m => m[0]);
-const gridDecls = collectMatches(css, /\bdisplay\s*:\s*(?:inline-)?grid\b|\bgrid-(?:template|column|row|area|auto|gap)[a-z-]*\s*:/gi);
-const colorMix = collectMatches(css, /\bcolor-mix\s*\(/gi);
-const publicDefs = collectMatches(css, /(--qxframe9a7c2-[a-z0-9-]+)\s*:/gi, m => m[1]);
-const privateDefs = collectMatches(css, /(--_qxframe9a7c2-[a-z0-9-]+)\s*:/gi, m => m[1]);
+const px = collectMatches(css, lineAt, /(-?\d*\.?\d+)px\b/g, m => Number(m[1]));
+const rem = collectMatches(css, lineAt, /(-?\d*\.?\d+)rem\b/g, m => Number(m[1]));
+const forbiddenViewport = collectMatches(css, lineAt, /(-?\d*\.?\d+)(vw|vh|vmin|vmax)\b/g, m => m[0]);
+const fr = collectMatches(css, lineAt, /(-?\d*\.?\d+)fr\b/g, m => m[0]);
+const gridDecls = collectMatches(css, lineAt, /\bdisplay\s*:\s*(?:inline-)?grid\b|\bgrid-(?:template|column|row|area|auto|gap)[a-z-]*\s*:/gi);
+const colorMix = collectMatches(css, lineAt, /\bcolor-mix\s*\(/gi);
+const publicDefs = collectMatches(css, lineAt, /(--qxframe9a7c2-[a-z0-9-]+)\s*:/gi, m => m[1]);
+const privateDefs = collectMatches(css, lineAt, /(--_qxframe9a7c2-[a-z0-9-]+)\s*:/gi, m => m[1]);
 
 const oddPx = px.filter(x => Number.isInteger(x.value) && Math.abs(x.value) > 1 && Math.abs(x.value) % 2 === 1);
 const decimalPx = px.filter(x => !Number.isInteger(x.value));
