@@ -1,12 +1,16 @@
 {
-  "version": 2,
-  "policy": "src/qxframe9a7c2.css is the sole production CSS source. Foundation/theme/semantic/family/component/state/composite/utility/compatibility are conceptual sections inside this one physical file; no split CSS mirror may become a second authority.",
+  "version": 3,
+  "policy": "src/styles/qxframe9a7c2.scss is the production CSS source entry. During Phase A only, src/qxframe9a7c2.css is a frozen equivalence baseline and src/styles/_legacy.scss must remain byte-identical to it. The baseline is not a second writable authority and must be removed before Phase A closeout.",
   "files": [
     {
       "stage": "canonical",
-      "name": "single-source",
-      "file": "src/qxframe9a7c2.css"
+      "name": "scss-entry",
+      "file": "src/styles/qxframe9a7c2.scss"
     }
+  ],
+  "migrationBaseline": "src/qxframe9a7c2.css",
+  "migrationModules": [
+    "src/styles/_legacy.scss"
   ],
   "conceptualOrder": [
     "foundation",

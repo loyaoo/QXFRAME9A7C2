@@ -1,0 +1,4 @@
+// Canonical SCSS entry.
+// Phase A starts with an exact legacy-content module so Sass compilation can be
+// proven equivalent before token architecture or size values are changed.
+@use "legacy";

@@ -32,6 +32,16 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Refresh CSS migration dependency lock
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Upload refreshed package lock
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: css-token-package-lock-${{ github.sha }}
+          path: package-lock.json
+          retention-days: 7
+
       - name: Install dependencies
         run: npm ci
 
@@ -136,6 +146,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      - name: Refresh CSS migration dependency lock
+        run: npm install --package-lock-only --ignore-scripts
 
       - name: Install dependencies
         run: npm ci
