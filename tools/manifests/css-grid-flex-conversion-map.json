@@ -1,0 +1,1221 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01",
+  "policy": {
+    "finalLayout": "Flex-only; CSS Grid and fr are migration targets.",
+    "protected": "QXFRAME 24-column Grid remains a Flex layout system and its span/breakpoint math is not part of CSS Grid conversion.",
+    "automaticConversionApproved": false,
+    "note": "Suggested strategies are planning hints only. Every rule remains approved:false until component-level visual/interaction verification."
+  },
+  "baseline": {
+    "phaseBWideCssGridMatches": 436,
+    "actualGridRuleCount": 64,
+    "actualGridDeclarationCount": 105
+  },
+  "summary": {
+    "byRisk": {
+      "low": 35,
+      "medium": 18,
+      "high": 11
+    },
+    "byStrategy": {
+      "flex-center": 13,
+      "flex": 12,
+      "manual-flex-span": 11,
+      "inline-flex-center": 8,
+      "manual-flex-sizing": 7,
+      "flex-wrap-basis": 6,
+      "manual-review": 3,
+      "inline-flex": 2,
+      "absolute-stack": 1,
+      "flex-label-content": 1
+    },
+    "byFamily": {
+      "form": 8,
+      "upload": 8,
+      "card": 7,
+      "descriptions": 6,
+      "form-selectgroup": 5,
+      "table": 5,
+      "carousel": 4,
+      "image": 4,
+      "color-picker": 3,
+      "image-preview": 3,
+      "avatar": 2,
+      "color-panel": 2,
+      "loading": 2,
+      "tree": 2,
+      "native-form": 1,
+      "period-panel": 1,
+      "picker": 1
+    },
+    "protected24ColumnFlexGridRulesMatched": 0
+  },
+  "rules": [
+    {
+      "selector": ".qxframe9a7c2-native-form input[type=\"checkbox\"],.qxframe9a7c2-native-form input[type=\"radio\"],.qxframe9a7c2-form-check-input,.qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,.qxframe9a7c2-form-selectgroup-indicator.is-checkbox,.qxframe9a7c2-form-selectgroup-indicator.is-radio",
+      "family": "native-form",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-avatar",
+      "family": "avatar",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-avatar-group-overflow",
+      "family": "avatar",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-card-meta",
+      "family": "card",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "auto minmax(0,1fr)"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-sizing",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-card-meta.is-block",
+      "family": "card",
+      "declarations": [
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "1fr"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-review",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-card-actions",
+      "family": "card",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-placement",
+          "property": "grid-auto-flow",
+          "value": "column"
+        },
+        {
+          "kind": "grid-placement",
+          "property": "grid-auto-columns",
+          "value": "1fr"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-card-grid",
+      "family": "card",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "repeat(var(--qxframe9a7c2-card-grid-columns,auto-fit),minmax(var(--qxframe9a7c2-card-grid-min,9.375rem),1fr))"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-wrap-basis",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-card.is-horizontal",
+      "family": "card",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "minmax(7.5rem,var(--qxframe9a7c2-card-media-width,36%)) minmax(0,1fr)"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-sizing",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-card-skeleton",
+      "family": "card",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-card.is-horizontal",
+      "family": "card",
+      "declarations": [
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "1fr"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-review",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions-grid",
+      "family": "descriptions",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "repeat(var(--_qxframe9a7c2-descriptions-columns),minmax(0,1fr))"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-wrap-basis",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions-item",
+      "family": "descriptions",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "auto / span var(--_qxframe9a7c2-descriptions-span,1)"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions-item.is-full",
+      "family": "descriptions",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "1/-1"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions.is-horizontal .qxframe9a7c2-descriptions-item",
+      "family": "descriptions",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "max-content minmax(0,1fr)"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-label-content",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions.is-bordered .qxframe9a7c2-descriptions-item",
+      "family": "descriptions",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "minmax(5.625rem,.42fr) minmax(0,1fr)"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": ".42fr,1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-sizing",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-descriptions.is-bordered.is-vertical .qxframe9a7c2-descriptions-item",
+      "family": "descriptions",
+      "declarations": [
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "1fr"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-review",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-loading-indicator",
+      "family": "loading",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-loading-content",
+      "family": "loading",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form.is-layout-horizontal .qxframe9a7c2-form-field",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "minmax(7.5rem,25%) minmax(0,1fr)"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-sizing",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form.is-layout-horizontal .qxframe9a7c2-form-field>label:first-child,.qxframe9a7c2-form.is-layout-horizontal .qxframe9a7c2-form-field>.qxframe9a7c2-form-label:first-child",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "1"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form.is-layout-horizontal .qxframe9a7c2-form-field>:not(label):not(.qxframe9a7c2-form-label)",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "2"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form.is-layout-horizontal .qxframe9a7c2-form-feedback",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "2"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-check",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "var(--_qxframe9a7c2-form-check-size) minmax(0,1fr)"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-sizing",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-check-input",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-row",
+          "value": "1"
+        },
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "1"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-check-label",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "2"
+        },
+        {
+          "kind": "grid-placement",
+          "property": "grid-row",
+          "value": "1"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-check-description",
+      "family": "form",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "2"
+        },
+        {
+          "kind": "grid-placement",
+          "property": "grid-row",
+          "value": "2"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-selectgroup-image",
+      "family": "form-selectgroup",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-selectgroup-image-preview",
+      "family": "form-selectgroup",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-selectgroup.is-image-grid",
+      "family": "form-selectgroup",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "repeat(auto-fit,minmax(8.5rem,1fr))"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-wrap-basis",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-selectgroup-avatar",
+      "family": "form-selectgroup",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-form-selectgroup.is-boxes",
+      "family": "form-selectgroup",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "repeat(auto-fit,minmax(13.125rem,1fr))"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-wrap-basis",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-tree .qxframe9a7c2-tree-check-wrap",
+      "family": "tree",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "var(--_qxframe9a7c2-form-check-size)"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-rows",
+          "value": "var(--_qxframe9a7c2-form-check-size)"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-tree .qxframe9a7c2-tree-check-indicator",
+      "family": "tree",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "1"
+        },
+        {
+          "kind": "grid-placement",
+          "property": "grid-row",
+          "value": "1"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-period-panel-grid",
+      "family": "period-panel",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "repeat(4,minmax(0,1fr))"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-wrap-basis",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-color-panel-sliders",
+      "family": "color-panel",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-color-panel-fields",
+      "family": "color-panel",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "auto minmax(0,1fr) auto"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-sizing",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-picker-range-dual",
+      "family": "picker",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "minmax(0,1fr) auto minmax(0,1fr)"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-sizing",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-color-picker-gradient",
+      "family": "color-picker",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        },
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "1fr auto auto"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-color-picker-gradient-hint",
+      "family": "color-picker",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "1/-1"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-color-picker-gradient-track",
+      "family": "color-picker",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-column",
+          "value": "1/-1"
+        }
+      ],
+      "suggestedStrategy": "manual-flex-span",
+      "risk": "high",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-selection-choice",
+      "family": "table",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-filter",
+      "family": "table",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-table .qxframe9a7c2-table-expand-trigger",
+      "family": "table",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-table-loading",
+      "family": "table",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-table-filter-options",
+      "family": "table",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload-list",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload-main",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload-thumb",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload.is-picture-card .qxframe9a7c2-upload-list,.qxframe9a7c2-upload.is-picture-circle .qxframe9a7c2-upload-list",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "grid-template",
+          "property": "grid-template-columns",
+          "value": "repeat(auto-fill,minmax(9rem,1fr))"
+        },
+        {
+          "kind": "fr-unit",
+          "property": null,
+          "value": "1fr"
+        }
+      ],
+      "suggestedStrategy": "flex-wrap-basis",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload-preview-root",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload-preview-panel",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-upload-preview-body",
+      "family": "upload",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-carousel.is-fade .qxframe9a7c2-carousel-track",
+      "family": "carousel",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-carousel.is-fade .qxframe9a7c2-carousel-slide",
+      "family": "carousel",
+      "declarations": [
+        {
+          "kind": "grid-placement",
+          "property": "grid-area",
+          "value": "1/1"
+        }
+      ],
+      "suggestedStrategy": "absolute-stack",
+      "risk": "medium",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-carousel-arrow",
+      "family": "carousel",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-carousel-dot",
+      "family": "carousel",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-image",
+      "family": "image",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "inline-grid"
+        }
+      ],
+      "suggestedStrategy": "inline-flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-image-placeholder,.qxframe9a7c2-image-error",
+      "family": "image",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-image.is-error .qxframe9a7c2-image-error",
+      "family": "image",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-image-mask",
+      "family": "image",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-stage",
+      "family": "image-preview",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-motion",
+      "family": "image-preview",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    },
+    {
+      "selector": ".qxframe9a7c2-image-preview-tool,.qxframe9a7c2-image-preview-nav",
+      "family": "image-preview",
+      "declarations": [
+        {
+          "kind": "display-grid",
+          "property": "display",
+          "value": "grid"
+        }
+      ],
+      "suggestedStrategy": "flex-center",
+      "risk": "low",
+      "approved": false,
+      "finalStrategy": null
+    }
+  ]
+}
