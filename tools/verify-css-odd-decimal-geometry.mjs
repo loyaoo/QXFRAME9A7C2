@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const phase=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-token-phase-b-inventory.json'),'utf8'));
+const map=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-odd-decimal-geometry-map.json'),'utf8'));
+assert.equal(map.summary.odd,phase.tables.oddPx.length);
+assert.equal(map.summary.decimal,phase.tables.decimalPx.length);
+assert.equal(map.summary.total,phase.tables.oddPx.length+phase.tables.decimalPx.length);
+assert.equal(map.policy.automaticReplacementApproved,false);
+assert.ok(map.consumers.every(x=>x.approved===false&&x.finalAction===null),'Audit must not pre-approve geometry changes.');
+assert.equal(map.consumers.filter(x=>x.category==='responsive-boundary').length,10);
+assert.equal(map.consumers.filter(x=>x.category==='choice-glyph-stroke').length,2);
+assert.equal(map.consumers.filter(x=>x.category==='hairline-centering').length,2);
+console.log(JSON.stringify({ok:true,...map.summary}));
