@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 18%
-Phase: Phase 0 complete; Phase A build-authority handoff verified; Phase A source decomposition implemented, CI pending
+Task progress: 20%
+Phase: Phase 0 complete; Phase A build-authority handoff verified; Phase A source decomposition verified
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -55,6 +55,7 @@ Phase A build handoff delivered:
 
 Verified CI:
 - PR #200 QXFRAME CI #1045 / run 36829080678: SUCCESS.
+- PR #201 QXFRAME CI #1048 / run 36830551150: SUCCESS (exact decomposed-SCSS head before status-only checkpoint).
 - Full release verification: SUCCESS.
 - Windows tool paths: SUCCESS.
 - npm pack + standalone dist/docs demo: SUCCESS.
@@ -76,7 +77,7 @@ Current baseline inventory summary:
 - Inventory values are discovery only; they are not approval for mechanical replacement.
 
 Next exact step:
-- Verify the decomposed SCSS source with exact-head PR CI, then remove the frozen CSS oracle from `src/` after all remaining hard-coded tool references are redirected to a fixture/compiled output.
+- Merge the verified Phase A module decomposition, then remove the frozen CSS oracle from `src/` after all remaining hard-coded tool references are redirected to a fixture/compiled output.
 - Then run Phase B and persist the full consumer-level tables for odd/decimal sizes, forbidden units, CSS Grid, and JS geometry coupling.
 - Do not begin Size Tree remapping, odd-size normalization, Grid conversion, or runtime color cleanup until the corresponding inventory/mapping tables are reviewed and gated.
 
