@@ -50,6 +50,9 @@ jobs:
       - name: Verify viewport-unit conversion map
         run: node tools/verify-css-viewport-unit-map.mjs
 
+      - name: Verify JS geometry coupling map
+        run: node tools/verify-js-geometry-coupling.mjs
+
       - name: Full release verification
         run: npm run release
 
