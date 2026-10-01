@@ -9,7 +9,7 @@ const triggerSource=read('src/components/trigger.js');
 const overlayRuntimeSource=read('src/core/overlayRuntime.js');
 const pressSource=read('src/core/pressInteraction.js');
 const triggerInteractionSource=read('src/core/triggerInteraction.js');
-const cssSource=readCanonicalStyleSource({root});
+const cssSource=readCanonicalStyleSource();
 
 const profile=ComponentProfile.define(Trigger.profile);
 assert.equal(profile.name,'Trigger');

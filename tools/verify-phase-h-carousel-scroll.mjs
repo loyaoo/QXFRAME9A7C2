@@ -31,7 +31,7 @@ const datePicker=read('src/components/date-picker.js');
 const transfer=read('src/components/transfer.js');
 const sort=read('src/components/sort.js');
 const upload=read('src/components/upload.js');
-const css=readCanonicalStyleSource({root});
+const css=readCanonicalStyleSource();
 assert.match(carousel,/ValueController\.createValueBinding\s*\(/);
 assert.match(carousel,/FocusController\.create\s*\(/);
 assert.match(carousel,/InteractionController\.create\s*\(/);
