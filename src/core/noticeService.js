@@ -458,6 +458,10 @@ function createChannel(profile) {
     // active. Item mouseleave never owns collapse: layout motion can move an item away from a
     // stationary pointer and must not synthesize an expand/collapse feedback loop.
     scope.add(DOM.listen(doc, 'mousemove', function (event) { handlePhysicalFramePointerMove(entry, event); }, { passive: true }));
+    if (doc.defaultView) scope.add(DOM.listen(doc.defaultView, 'resize', function () {
+      syncNoticeAvailableInlineSize(entry);
+      if (entry.layout) entry.layout.request('viewport-resize');
+    }, { passive: true }));
     if (doc.documentElement) scope.add(DOM.listen(doc.documentElement, 'mouseleave', function () { if (entry.hovering) setFrameHover(entry, false); if (entry.timerHovering) setFrameTimerHover(entry, false); }));
     scope.add(function () {
       entry.layout.dispose();
@@ -468,6 +472,7 @@ function createChannel(profile) {
       entry.deferLayoutKey = null;
     });
     applyFrameOptions(entry, opts);
+    syncNoticeAvailableInlineSize(entry);
     frames.set(key, entry);
     return entry;
   }
@@ -817,8 +822,23 @@ function createChannel(profile) {
     return afterScrollTop - beforeScrollTop;
   }
     
+  function syncNoticeAvailableInlineSize(entry) {
+    if (!entry || !entry.frame || !entry.document) return 0;
+    var doc = entry.document;
+    var view = doc.defaultView || global;
+    var docRoot = doc.documentElement;
+    var viewportWidth = Math.max(0, Number(docRoot && docRoot.clientWidth || view && view.innerWidth || 0));
+    if (!(viewportWidth > 0)) return 0;
+    var style = view && view.getComputedStyle ? view.getComputedStyle(entry.frame) : null;
+    var gutter = style ? (parseFloat(style.getPropertyValue('--qxframe9a7c2-notice-viewport-gutter')) || 0) : 0;
+    var available = Math.max(1, Math.floor(viewportWidth - gutter * 2));
+    entry.frame.style.setProperty('--qxframe9a7c2-notice-available-inline-size', available + 'px');
+    return available;
+  }
+
   function layoutEntry(entry, reason) {
     if (!entry || !entry.frame.parentNode) return;
+    syncNoticeAvailableInlineSize(entry);
     var residents = residentRecords(entry);
     var list = layoutRecords(entry);
     var fixedStackGeometry = profile.fixedStackGeometry === true;
