@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 5%
-Phase: Phase 0 complete; Phase A baseline/scaffolding in progress
+Task progress: 12%
+Phase: Phase 0 complete; Phase A build-authority handoff verified; Phase A source decomposition next
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -37,18 +37,46 @@ Baseline / reconciliation (2026-10-01):
 - Main QXFRAME CI #1039 / run 36803727898: SUCCESS.
 - Open PRs at task start: none.
 - Existing semantic/motion/controller work is frozen and must not be reopened without a demonstrated regression.
-- Current production CSS authority is still `src/qxframe9a7c2.css`; `tools/postbuild-release.mjs` copies it directly to dist.
-- Existing Phase-F verifiers still encode the old single-CSS-source contract and must migrate atomically with the SCSS build handoff.
+- Frozen CSS baseline SHA-256: `72eefc2a738b744c09b7243b94db3dac92f2d0b68237478b1ba170208c243234`.
+- Frozen CSS baseline: 884,967 bytes / 17,774 lines.
 
-Delivered in this checkpoint:
-- Added the v1.6 execution guide to the repository.
-- Added `tools/audit-css-token-migration.mjs` for repeatable current-value/unit/Grid/JS-geometry inventory.
-- Added npm script `audit:css-token-migration`.
-- No component style values, selectors, interaction behavior, or dist contract changed in this checkpoint.
+Phase A build handoff delivered:
+- Canonical release entry is now `src/styles/qxframe9a7c2.scss`.
+- Sass is pinned and lockfile-backed at `sass@1.93.2`.
+- `tools/compile-styles.mjs` compiles the SCSS entry into the single `dist/qxframe9a7c2.css` release file.
+- `tools/postbuild-release.mjs` no longer copies `src/qxframe9a7c2.css` into dist.
+- `src/styles/_legacy.scss` is a temporary Phase A migration module and is byte-identical to the frozen CSS baseline.
+- `src/qxframe9a7c2.css` remains temporarily only as the frozen equivalence oracle; it is not a second writable authority and must be removed before Phase A closeout.
+- `verify:css-scss-equivalence` proves the migration module is byte-identical to the baseline and that the canonical entry produces the same Sass output as direct baseline compilation.
+- Existing CSS-authority/browser checks execute against compiled SCSS output while structural source assertions still use the frozen baseline during this transition.
+- CI returned to strict `contents: read` + `npm ci`; the one-time lock refresh/write path has been removed.
+
+Verified CI:
+- PR #200 QXFRAME CI #1045 / run 36829080678: SUCCESS.
+- Full release verification: SUCCESS.
+- Windows tool paths: SUCCESS.
+- npm pack + standalone dist/docs demo: SUCCESS.
+- Browser suite remained green after SCSS compilation.
+
+Current baseline inventory summary:
+- public token definitions: 483
+- private token definitions: 824
+- px occurrences: 492
+- rem occurrences: 1,104
+- non-1px/0px occurrences: 272
+- odd px occurrences: 45
+- decimal px occurrences: 14
+- forbidden viewport-unit occurrences: 54
+- fr occurrences: 21
+- CSS Grid declarations: 436
+- color-mix() calls: 206
+- JS geometry-coupling sites: 147
+- Inventory values are discovery only; they are not approval for mechanical replacement.
 
 Next exact step:
-- Phase A: introduce the SCSS source tree and Sass build seam, then prove compiled CSS visual/cascade equivalence before any Token or size normalization.
-- Update old CSS-authority verifiers in the same atomic change; do not leave CSS and SCSS as dual writable authorities.
+- Finish Phase A source decomposition without changing values or cascade: split the temporary legacy module into ordered SCSS source modules while preserving compiled behavior.
+- Then run Phase B and persist the full consumer-level tables for odd/decimal sizes, forbidden units, CSS Grid, and JS geometry coupling.
+- Do not begin Size Tree remapping, odd-size normalization, Grid conversion, or runtime color cleanup until the corresponding inventory/mapping tables are reviewed and gated.
 
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
