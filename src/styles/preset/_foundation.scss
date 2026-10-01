@@ -270,58 +270,9 @@
   --qxframe9a7c2-motion-easing-move-emphasized: cubic-bezier(.78, .14, .15, .86);
 
   /* Component semantic finite-motion tokens. */
-  --qxframe9a7c2-motion-tooltip-enter-duration: var(--qxframe9a7c2-motion-duration-2);
-  --qxframe9a7c2-motion-tooltip-leave-duration: var(--qxframe9a7c2-motion-duration-1);
-  --qxframe9a7c2-motion-popup-enter-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-popup-leave-duration: var(--qxframe9a7c2-motion-duration-2);
-  --qxframe9a7c2-motion-popup-enter-easing: var(--qxframe9a7c2-motion-easing-enter);
-  --qxframe9a7c2-motion-popup-leave-easing: var(--qxframe9a7c2-motion-easing-leave);
 
-  --qxframe9a7c2-motion-modal-dialog-enter-duration: var(--qxframe9a7c2-motion-duration-4);
-  --qxframe9a7c2-motion-modal-dialog-leave-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-modal-dialog-enter-easing: var(--qxframe9a7c2-motion-easing-enter-emphasized);
-  --qxframe9a7c2-motion-modal-dialog-leave-easing: var(--qxframe9a7c2-motion-easing-leave);
-  --qxframe9a7c2-motion-modal-mask-enter-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-modal-mask-leave-duration: var(--qxframe9a7c2-motion-duration-2);
-  --qxframe9a7c2-motion-modal-mask-enter-easing: var(--qxframe9a7c2-motion-easing-enter);
-  --qxframe9a7c2-motion-modal-mask-leave-easing: var(--qxframe9a7c2-motion-easing-leave);
 
-  --qxframe9a7c2-motion-drawer-panel-enter-duration: var(--qxframe9a7c2-motion-duration-5);
-  --qxframe9a7c2-motion-drawer-panel-leave-duration: var(--qxframe9a7c2-motion-duration-4);
-  --qxframe9a7c2-motion-drawer-panel-enter-easing: var(--qxframe9a7c2-motion-easing-move-emphasized);
-  --qxframe9a7c2-motion-drawer-panel-leave-easing: var(--qxframe9a7c2-motion-easing-move);
-  --qxframe9a7c2-motion-drawer-mask-enter-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-drawer-mask-leave-duration: var(--qxframe9a7c2-motion-duration-2);
-  --qxframe9a7c2-motion-drawer-mask-enter-easing: var(--qxframe9a7c2-motion-easing-enter);
-  --qxframe9a7c2-motion-drawer-mask-leave-easing: var(--qxframe9a7c2-motion-easing-leave);
 
-  --qxframe9a7c2-motion-collapse-panel-enter-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-collapse-panel-leave-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-collapse-panel-easing: var(--qxframe9a7c2-motion-easing-move);
-  --qxframe9a7c2-motion-tabs-indicator-duration: var(--qxframe9a7c2-motion-duration-2);
-  --qxframe9a7c2-motion-tabs-indicator-easing: var(--qxframe9a7c2-motion-easing-move);
-  --qxframe9a7c2-motion-sort-item-duration: var(--qxframe9a7c2-motion-duration-2);
-  --qxframe9a7c2-motion-sort-item-easing: var(--qxframe9a7c2-motion-easing-move);
-  --qxframe9a7c2-motion-carousel-track-duration: var(--qxframe9a7c2-motion-duration-5);
-  --qxframe9a7c2-motion-carousel-track-easing: var(--qxframe9a7c2-motion-easing-move);
-  --qxframe9a7c2-motion-ripple-inside-enter-duration: var(--qxframe9a7c2-motion-duration-5);
-  --qxframe9a7c2-motion-ripple-inside-leave-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-ripple-outside-duration: 820ms;
-  --qxframe9a7c2-motion-ripple-inside-enter-easing: cubic-bezier(.4,0,.2,1);
-  --qxframe9a7c2-motion-ripple-inside-leave-easing: linear;
-  --qxframe9a7c2-motion-ripple-outside-easing: var(--qxframe9a7c2-motion-easing-enter-emphasized);
-  --qxframe9a7c2-motion-notice-enter-duration: var(--qxframe9a7c2-motion-duration-5);
-  --qxframe9a7c2-motion-notice-leave-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-notice-move-duration: var(--qxframe9a7c2-motion-duration-5);
-  --qxframe9a7c2-motion-notice-presence-easing: var(--qxframe9a7c2-motion-easing-enter-emphasized);
-  --qxframe9a7c2-motion-notice-move-easing: var(--qxframe9a7c2-motion-easing-move);
-  --qxframe9a7c2-motion-image-preview-trajectory-enter-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-image-preview-trajectory-leave-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-image-preview-trajectory-easing: var(--qxframe9a7c2-motion-easing-move);
-  --qxframe9a7c2-motion-image-preview-mask-enter-duration: var(--qxframe9a7c2-motion-duration-3);
-  --qxframe9a7c2-motion-image-preview-mask-leave-duration: var(--qxframe9a7c2-motion-duration-2);
-  --qxframe9a7c2-motion-image-preview-mask-enter-easing: var(--qxframe9a7c2-motion-easing-enter);
-  --qxframe9a7c2-motion-image-preview-mask-leave-easing: var(--qxframe9a7c2-motion-easing-leave);
 
 }
 

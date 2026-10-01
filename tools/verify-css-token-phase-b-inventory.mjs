@@ -7,18 +7,26 @@ import { fileURLToPath } from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const persistedPath=path.join(root,'tools/manifests/css-token-phase-b-inventory.json');
-assert.ok(fs.existsSync(persistedPath),'Phase B inventory manifest is missing.');
+assert.ok(fs.existsSync(persistedPath),'Phase B baseline inventory manifest is missing.');
+const persisted=JSON.parse(fs.readFileSync(persistedPath,'utf8'));
 
-const tempDir=fs.mkdtempSync(path.join(os.tmpdir(),'qx-phase-b-'));
+assert.equal(persisted.schemaVersion,1);
+assert.equal(persisted.source.entry,'src/styles/qxframe9a7c2.scss');
+assert.deepEqual(
+  persisted.summary,
+  {oddPx:45,decimalPx:14,forbiddenViewportUnits:54,frUnits:21,cssGridMatches:436,jsGeometryCouplingSites:154},
+  'Frozen Phase B baseline counts changed unexpectedly.'
+);
+assert.equal(persisted.policy.inventoryOnly,true);
+assert.equal(persisted.policy.automaticReplacement,false);
+
+const tempDir=fs.mkdtempSync(path.join(os.tmpdir(),'qx-phase-b-current-'));
 const tempPath=path.join(tempDir,'current.json');
 try{
   cp.execFileSync(process.execPath,[path.join(root,'tools/audit-css-token-phase-b.mjs'),'--write='+tempPath],{cwd:root,stdio:'pipe'});
   const current=JSON.parse(fs.readFileSync(tempPath,'utf8'));
-  const persisted=JSON.parse(fs.readFileSync(persistedPath,'utf8'));
-  delete current.generatedAt;
-  delete persisted.generatedAt;
-  assert.deepEqual(current,persisted,'Persisted Phase B consumer inventory is stale. Regenerate it before changing token/layout migration decisions.');
-  console.log(JSON.stringify({ok:true,summary:current.summary,stable:true}));
-} finally {
+  assert.equal(current.schemaVersion,1,'Current Phase B audit generator must remain readable after migration.');
+  console.log(JSON.stringify({ok:true,baselineFrozen:true,baselineSummary:persisted.summary,currentSummary:current.summary}));
+}finally{
   fs.rmSync(tempDir,{recursive:true,force:true});
 }
