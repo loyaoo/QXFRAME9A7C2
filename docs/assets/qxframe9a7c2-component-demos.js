@@ -411,11 +411,12 @@ function createPresence(host,label,transition,options,withToggle){
   var userStateChange=opts.onStateChange;
   var config=Object.assign({},opts,{
     transition:transition,
-    mount:function(){box=motionBox(currentLabel);stage.appendChild(box);return box;},
+    mount:function(){box=motionBox(currentLabel);if(opts.cssMotionDuration)box.style.setProperty('--qxframe9a7c2-motion-duration-3',String(opts.cssMotionDuration));stage.appendChild(box);return box;},
     unmount:function(el){if(el&&el.parentNode)el.parentNode.removeChild(el);if(box===el)box=null;},
     onStateChange:function(info){if(typeof userStateChange==='function')userStateChange(info);ctx.refresh();}
   });
   delete config.label;
+  delete config.cssMotionDuration;
   var x=stateful(ctx,C.create(config),'transition '+label);
   x.setVisible(true,{reason:'demo-init',immediate:opts.appear!==true});
   if(withToggle!==false){var r=ctx.row();r.style.marginTop='12px';r.appendChild(ctx.button('Toggle',function(event){visible=!visible;x.setVisible(visible,{reason:'demo-toggle',originalEvent:event});}));host.appendChild(r);}
@@ -452,11 +453,13 @@ ex(ctx,'生命周期 Hooks','before/after enter/leave 用于观察 Presence 生�
   onBeforeEnter(ctx){...}, onAfterEnter(ctx){...},
   onBeforeLeave(ctx){...}, onAfterLeave(ctx){...}
 })`,function(h){createPresence(h,'Watch Event Log','fade',{appear:false,onBeforeEnter:function(){ctx.log('beforeEnter');},onAfterEnter:function(){ctx.log('afterEnter');ctx.refresh();},onBeforeLeave:function(){ctx.log('beforeLeave');},onAfterLeave:function(){ctx.log('afterLeave');ctx.refresh();}},true);});
-ex(ctx,'显式 Duration · Nested horizon','根元素自身 transitionend 不足以覆盖嵌套子动画时，可用 duration 明确声明 Presence 完成边界；这是调用方给出的显式契约，不是 setTimeout 猜测。完成边界到达后才 unmount。',`Transition.create({
-  mount, unmount,
-  transition:'fadeUp',
-  duration:{ enter:420, leave:260 }
-})`,function(h){createPresence(h,'Explicit 420ms completion horizon','fadeUp',{appear:false,duration:{enter:420,leave:260},onStart:function(info){ctx.log('start '+info.status);},onActive:function(info){ctx.log('active '+info.status);},onVisibleChanged:function(value,info){ctx.log('visibleComplete '+value+' · '+info.status);ctx.refresh();}},true);});
+ex(ctx,'CSS Timing Authority · Computed horizon','Transition 不再接受 JS duration。视觉时长由 CSS 决定，MotionCore 读取元素最终 computed timing 来协调 Presence 完成与 unmount。这里仅覆盖 demo 元素的 motion primitive，验证 420ms CSS 时长会成为真实完成边界。',`const el = mount();
+el.style.setProperty('--qxframe9a7c2-motion-duration-3','420ms');
+Transition.create({
+  mount:() => el,
+  unmount,
+  transition:'fadeUp'
+});`,function(h){createPresence(h,'CSS-computed 420ms completion horizon','fadeUp',{appear:false,cssMotionDuration:'420ms',onStart:function(info){ctx.log('start '+info.status);},onActive:function(info){ctx.log('active '+info.status);},onVisibleChanged:function(value,info){ctx.log('visibleComplete '+value+' · '+info.status);ctx.refresh();}},true);});
 ex(ctx,'快速反向 · Interrupt','进入/退出尚未完成时可以反向；generation 会忽略旧 transitionend，视觉从当前 computed frame 连续反转，而且反向发生前不会卸载同一 DOM。',`t.setVisible(false);
 setTimeout(() => t.setVisible(true), 70); // intentional mid-flight reversal`,function(h){var p=createPresence(h,'Rapid reversal','zoomIn',{appear:false,onInterrupt:function(info){ctx.log('interrupt '+info.from+' → '+info.to);ctx.refresh();}},false);var x=p.transition;h.appendChild(ctx.button('Leave → reverse in 70ms',function(event){p.setVisible(false,{reason:'reverse-out',originalEvent:event});setTimeout(function(){p.setVisible(true,{reason:'reverse-in'});},70);}));});
 ex(ctx,'Popup placement motion','Dropdown / Select / Picker 这类锚点浮层通过 MotionPresets.popup(placement) 选择与边缘一致的 slide 方向。切换 placement 用 whenSettled() 等待 leave，再重新 mount。',`await t.setVisible(false).whenSettled();
