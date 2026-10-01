@@ -47,6 +47,9 @@ jobs:
       - name: Verify actual CSS Grid conversion map
         run: node tools/verify-css-grid-flex-map.mjs
 
+      - name: Verify viewport-unit conversion map
+        run: node tools/verify-css-viewport-unit-map.mjs
+
       - name: Full release verification
         run: npm run release
 
