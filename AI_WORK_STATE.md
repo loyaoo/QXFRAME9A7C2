@@ -20,8 +20,8 @@
 ## CURRENT
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
-Status: VALIDATING
-Task progress: 98%
+Status: DONE
+Task progress: 100%
 
 User authority:
 - One-track replacement: no old API/token aliases and no dual visual timing authority.
@@ -30,46 +30,32 @@ User authority:
 - Preserve the completed 9 Runtime Controller architecture; Theme/Token remain pure CSS.
 - Grid replacement is the mature 24-column contract with `g/gx/gy`, gutter 0..24 at 0.125rem increments, and xs/sm/md/lg/xl/xxl with xxl >= 1600px.
 
-Baseline:
-- main@21b9312b8a1930af225712a2b72f912c8183c8f5
-- branch: refactor/semantic-motion-api-013
-- branch comparison at recovery: ahead 141, behind 0.
-- PR #199 is open against main.
+Delivered:
+- Shared SemanticProjection + Component semantic element registry/getElement().
+- Canonical class/style semantic projection with explicit default slots and repeated Element[] semantic surfaces.
+- Modal / Drawer / Loading / Table / Transfer / Image / Carousel / Sort motion ownership migrated to the unified contract.
+- MotionCore completion is coordinated from computed CSS timing instead of JS-owned visual-duration defaults.
+- DOMBinding styling side-channels and legacy component styling aliases removed from active implementation/contracts.
+- Tags / Select / Cascader / TreeSelect repeated item/tag semantic projection unified.
+- NoticeService / Message / Notification legacy enterDuration/leaveDuration/moveDuration/easing and className/stackClassName/stackStyle public paths removed; notice `duration` remains lifetime only.
+- Canonical Notice motion tokens added to production CSS.
+- Grid replaced by the mature 24-column contract with `g/gx/gy`, 0..24 gutter scale, row-cols utilities, and xs/sm/md/lg/xl/xxl breakpoints.
+- Frozen HOTFIX6 browser fixture remains unchanged; test-runner adapters translate only intentionally removed historical APIs into current semantic/CSS-motion contracts.
+- Browser regression harness now reports docs sub-failures explicitly and uses deadline-safe waits for CSS-owned motion completion.
 
-Completed in branch:
-- Added shared SemanticProjection + Component semantic element registry/getElement().
-- Unified canonical class/style semantic projection with explicit default slots.
-- Migrated Modal / Drawer / Loading / Table / Transfer / Image / Carousel / Sort motion ownership.
-- MotionCore completion waits no longer require JS-owned visual duration defaults.
-- Removed DOMBinding classes projection side-channel and migrated SemanticStyles toward canonical projection.
-- Migrated Tags repeated semantic elements including tag/tagContent/tagClose/overflow nodes.
-- Migrated Select / Cascader / TreeSelect repeated item/tag semantic projection; removed itemStyles/tagClasses/tagStyles/tag*ClassName implementation paths.
-- Removed corresponding legacy contract fields from ComponentContracts.
-- Migrated NoticeService / Message / Notification away from enterDuration/leaveDuration/moveDuration/easing and old className/stackClassName/stackStyle public paths.
-- Notice/Message/Notification duration remains lifetime/auto-close duration only; visual presence/layout timing resolves through CSS semantic motion tokens.
-- Added canonical Notice motion tokens in production CSS.
-- Grid contract replacement and docs/catalog/regression gates are included in this branch.
-
-Reconciled validation state (2026-10-01):
-- PR #199 is open, mergeable, and titled `refactor: unify semantic component API, motion timing, and Grid contract`.
-- PR body explicitly records the three required surfaces: Component Semantic API, CSS Motion single timing authority, and mature 24-column Grid.
-- CI #1021 on old head `8b388246...` failed only at browser smoke resource balance after immediate Message/Notification close; static/dependency/Windows gates passed.
-- Root cause was the Notice placement-frame release order during synchronous immediate Motion completion.
-- Fix commit `fbedcdb3add80e7d3159996800be0233606ca0c0` destroys an empty TransitionGroup before physical-list release testing, preventing retained frame/scope ownership.
-- Regression commit `0fe70334f3a3ddda851adad7644751690b21567a` asserts Message and Notification immediate close both return channel `activeCount` and `frameCount` to zero.
-- Static recheck confirms canonical Grid `g/gx/gy`, 0..24 scale, row-cols, no old gutter/col-0/row-count API, and xxl media at >=1600px.
-- Repeated semantic projection recheck confirms optional close elements use compact Element[] + matching close-context arrays; no null placeholders are inserted.
-- Legacy `popupStyle/panelStyle` strings that remain in `componentContracts.js` are rejection metadata under `legacy`, not active schema aliases.
-- Notice internal `moveDuration` is computed from `--qxframe9a7c2-motion-notice-move-duration`; it is not a public option or JS default timing authority.
-- Exact code-batch head before this checkpoint commit: `0fe70334f3a3ddda851adad7644751690b21567a`.
-- QXFRAME CI #1024 / run id 36793181252 was queued for that code-batch head. This checkpoint commit becomes the new branch HEAD and must receive its own exact-head PR CI before merge.
+Final validation (2026-10-01):
+- PR #199: `refactor: unify semantic component API, motion timing, and Grid contract`.
+- Exact PR head: `4e16164e82cb3c7d4b6c1b4f06c7469a6a9703c0`.
+- PR QXFRAME CI #1037: SUCCESS — Full release verification, npm artifact, standalone dist/docs, and Windows tools all green.
+- PR #199 merged into main successfully.
+- Merge commit: `a694409da842885e02ed7bf94f445d41a37eb6c2`.
+- Main QXFRAME CI #1038 / run id 36802146232: SUCCESS.
+- Main release job: SUCCESS, including dependency audit, completion audit, full release verification, npm artifact, standalone dist/docs, and GitHub Pages artifact upload.
+- Main `deploy-pages` job: SUCCESS.
+- Canonical Grid, semantic styling, CSS timing authority, browser regression layers, legacy HOTFIX6 compatibility harness, dist, package, and Pages are all validated on main.
 
 Next exact step:
-1. Validate the exact checkpoint HEAD generated by this update with PR GitHub Actions.
-2. If any gate fails, inspect the failing job and patch only the demonstrated regression on this same branch.
-3. When all required exact-head checks are green, merge PR #199.
-4. Verify main CI and GitHub Pages.
-5. Mark this task DONE / 100% with merge + main/Pages evidence.
+- None for SEMANTIC-MOTION-API-013. Do not reopen or redo this phase unless a new regression is demonstrated against current main.
 
 ### DOCS-SELF-HOSTING-CSS-012 — Docs dogfood + Card border + physical color alias cleanup
 Status: COMPLETE
