@@ -139,7 +139,7 @@
     "verify:css-scss-equivalence": "node tools/verify-css-scss-equivalence.mjs",
     "verify:scss-source-authority": "node tools/verify-scss-source-authority.mjs",
     "audit:css-token-phase-b": "node tools/audit-css-token-phase-b.mjs",
-    "verify:css-token-phase-b": "node tools/audit-css-token-phase-b.mjs"
+    "verify:css-token-phase-b": "node tools/verify-css-token-phase-b-inventory.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",
