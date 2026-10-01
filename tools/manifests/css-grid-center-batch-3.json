@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "batch": "css-grid-centered-batch-3",
+  "convertedSelectors": [
+    ".qxframe9a7c2-carousel-arrow",
+    ".qxframe9a7c2-carousel-dot",
+    ".qxframe9a7c2-table .qxframe9a7c2-table-selection-choice"
+  ],
+  "before": {
+    "actualGridRules": 45,
+    "actualGridDeclarations": 86
+  },
+  "after": {
+    "actualGridRules": 42,
+    "actualGridDeclarations": 83
+  },
+  "policy": "Single-child/center wrappers only; no fr sizing, span math, responsive breakpoints, structural Grid or 24-column Flex Grid math changed."
+}
