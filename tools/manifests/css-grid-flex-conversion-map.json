@@ -9,32 +9,32 @@
   },
   "baseline": {
     "phaseBWideCssGridMatches": 436,
-    "actualGridRuleCount": 24,
-    "actualGridDeclarationCount": 46
+    "actualGridRuleCount": 22,
+    "actualGridDeclarationCount": 41
   },
   "summary": {
     "byRisk": {
-      "medium": 11,
       "high": 10,
+      "medium": 9,
       "low": 3
     },
     "byStrategy": {
       "manual-flex-span": 10,
-      "manual-flex-sizing": 4,
       "flex-wrap-basis": 3,
+      "manual-flex-sizing": 3,
       "flex": 2,
-      "manual-review": 2,
       "absolute-stack": 1,
       "flex-center": 1,
-      "flex-label-content": 1
+      "flex-label-content": 1,
+      "manual-review": 1
     },
     "byFamily": {
       "form": 8,
       "descriptions": 6,
-      "card": 3,
       "color-picker": 3,
       "carousel": 2,
-      "upload": 2
+      "upload": 2,
+      "card": 1
     },
     "protected24ColumnFlexGridRulesMatched": 0
   },
@@ -60,51 +60,6 @@
         }
       ],
       "suggestedStrategy": "flex-wrap-basis",
-      "risk": "medium",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-card.is-horizontal",
-      "family": "card",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        },
-        {
-          "kind": "grid-template",
-          "property": "grid-template-columns",
-          "value": "minmax(7.5rem,var(--qxframe9a7c2-card-media-width,36%)) minmax(0,1fr)"
-        },
-        {
-          "kind": "fr-unit",
-          "property": null,
-          "value": "1fr"
-        }
-      ],
-      "suggestedStrategy": "manual-flex-sizing",
-      "risk": "medium",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-card.is-horizontal",
-      "family": "card",
-      "declarations": [
-        {
-          "kind": "grid-template",
-          "property": "grid-template-columns",
-          "value": "1fr"
-        },
-        {
-          "kind": "fr-unit",
-          "property": null,
-          "value": "1fr"
-        }
-      ],
-      "suggestedStrategy": "manual-review",
       "risk": "medium",
       "approved": false,
       "finalStrategy": null

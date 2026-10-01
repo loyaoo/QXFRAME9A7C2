@@ -13558,10 +13558,10 @@
 .qxframe9a7c2-card-tab{position:relative;z-index:var(--qxframe9a7c2-z-local-raised);display:inline-flex;min-height:2.625rem;align-items:center;border:0;background:transparent;color:var(--_qxframe9a7c2-semantic-text-secondary);font:inherit;cursor:pointer;white-space:nowrap}
 .qxframe9a7c2-card-tab.is-active{color:var(--_qxframe9a7c2-semantic-accent)}
 .qxframe9a7c2-card-tab.is-active::after{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0;bottom:0;height:.125rem;background:var(--_qxframe9a7c2-semantic-accent)}
-.qxframe9a7c2-card.is-horizontal{display:grid;grid-template-columns:minmax(7.5rem,var(--qxframe9a7c2-card-media-width,36%)) minmax(0,1fr)}
-.qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover{height:100%;border-radius:calc(var(--_qxframe9a7c2-card-radius) - .0625rem) 0 0 calc(var(--_qxframe9a7c2-card-radius) - .0625rem)}
+.qxframe9a7c2-card.is-horizontal{display:flex}
+.qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover{height:100%;flex:0 0 max(7.5rem,var(--qxframe9a7c2-card-media-width,36%));border-radius:calc(var(--_qxframe9a7c2-card-radius) - .0625rem) 0 0 calc(var(--_qxframe9a7c2-card-radius) - .0625rem)}
 .qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover>img{height:100%}
-.qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-main{min-width:0}
+.qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-main{min-width:0;flex:1 1 0}
 .qxframe9a7c2-card.is-loading{--_qxframe9a7c2-card-transform:none}
 .qxframe9a7c2-card.is-loading.is-hoverable:not(.is-selected),.qxframe9a7c2-card.is-loading.is-hover-shadow:not(.is-selected){--_qxframe9a7c2-card-shadow:none}
 .qxframe9a7c2-card.is-loading .qxframe9a7c2-card-body{pointer-events:none}
@@ -13570,7 +13570,7 @@
 .qxframe9a7c2-card-skeleton-line.is-title{width:42%;height:var(--qxframe9a7c2-card-skeleton-title-height)}
 .qxframe9a7c2-card-skeleton-line.is-short{width:68%}
 @keyframes qxframe9a7c2-card-skeleton{to{background-position-x:-200%}}
-@media (max-width:38.75rem){.qxframe9a7c2-card.is-horizontal{grid-template-columns:1fr}.qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover{height:auto;border-radius:calc(var(--_qxframe9a7c2-card-radius) - .0625rem) calc(var(--_qxframe9a7c2-card-radius) - .0625rem) 0 0}}
+@media (max-width:38.75rem){.qxframe9a7c2-card.is-horizontal{flex-direction:column}.qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover{width:100%;min-width:0;height:auto;flex-basis:auto;border-radius:calc(var(--_qxframe9a7c2-card-radius) - .0625rem) calc(var(--_qxframe9a7c2-card-radius) - .0625rem) 0 0}}
 
 
 /* Descriptions · static data surface with size defaults -> public override -> private final channels. */
