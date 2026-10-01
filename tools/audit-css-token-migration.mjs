@@ -2,9 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { CANONICAL_STYLE_ENTRY, getCanonicalStyleModulePaths, readCanonicalStyleSource } from './style-source.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const cssPath = path.join(root, 'src', 'qxframe9a7c2.css');
 
 function walk(dir, predicate) {
   const out = [];
@@ -43,11 +43,8 @@ function collectMatches(text, lineAt, re, mapper = m => m[0], limit = 5000) {
   return out;
 }
 
-if (!fs.existsSync(cssPath)) {
-  throw new Error('Current baseline CSS source is missing: src/qxframe9a7c2.css');
-}
-
-const css = fs.readFileSync(cssPath, 'utf8');
+const styleModules = getCanonicalStyleModulePaths({root});
+const css = readCanonicalStyleSource({root});
 const lineAt = makeLineLocator(css);
 const jsFiles = walk(path.join(root, 'src'), file => file.endsWith('.js'));
 
@@ -86,7 +83,8 @@ const report = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
   baseline: {
-    css: 'src/qxframe9a7c2.css',
+    css: CANONICAL_STYLE_ENTRY,
+    modules: styleModules,
     sha256: crypto.createHash('sha256').update(css).digest('hex'),
     bytes: Buffer.byteLength(css),
     lines: css.split(/\r?\n/).length

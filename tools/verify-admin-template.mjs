@@ -1,3 +1,4 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -59,7 +60,7 @@ const shellJs=read('docs/assets/qxframe9a7c2-admin-shell.js');
 const demoJs=read('docs/assets/qxframe9a7c2-admin-demo.js');
 const shellCss=read('docs/assets/qxframe9a7c2-admin-shell.css');
 const viewCss=read('docs/assets/qxframe9a7c2-admin-views.css');
-const frameworkCss=read('src/qxframe9a7c2.css');
+const frameworkCss=readCanonicalStyleSource({root:repoRoot});
 const tableSource=read('src/components/table.js');
 const controlSource=read('src/components/control.js');
 const adminFormHtml=read('docs/admin-form-static.html');

@@ -4,18 +4,12 @@ import assert from 'node:assert/strict';
 import * as sass from 'sass';
 import { fileURLToPath } from 'node:url';
 import { compileStyles } from './compile-styles.mjs';
+import { getCanonicalStyleModulePaths, readCanonicalStyleSource, readPhaseABaseline } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const baseline=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8');
-const modulePaths=[
-  "src/styles/base/_reset.scss",
-  "src/styles/preset/_foundation.scss",
-  "src/styles/theme/_default.scss",
-  "src/styles/theme/_family.scss",
-  "src/styles/components/_components.scss"
-];
-const sourceModules=modulePaths.map(rel=>fs.readFileSync(path.join(root,rel),'utf8'));
-const reconstructed=sourceModules.join('');
+const baseline=readPhaseABaseline({root});
+const modulePaths=getCanonicalStyleModulePaths({root});
+const reconstructed=readCanonicalStyleSource({root});
 
 assert.equal(
   reconstructed,

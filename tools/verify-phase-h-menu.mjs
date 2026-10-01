@@ -1,10 +1,11 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { Menu } from '../src/components/menu.js';
 import { ComponentProfile } from '../src/core/componentProfile.js';
 
 const source=fs.readFileSync(new URL('../src/components/menu.js',import.meta.url),'utf8');
-const css=fs.readFileSync(new URL('../src/qxframe9a7c2.css',import.meta.url),'utf8');
+const css=readCanonicalStyleSource();
 const profile=ComponentProfile.define(Menu.profile);
 
 assert.equal(profile.name,'Menu');

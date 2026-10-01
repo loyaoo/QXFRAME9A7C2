@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "source": "src/qxframe9a7c2.css",
+  "source": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
   "sourceBlob": "9989e4ca5f458003255a698a3374c9c7d168347f",
   "sourceLines": 17774,
-  "rule": "All split starts were verified at CSS top-level brace depth 0; concatenating module source must reproduce the frozen baseline byte-for-byte.",
+  "rule": "All split starts were verified at CSS top-level brace depth 0; concatenating current SCSS modules reproduces this frozen Phase A fixture byte-for-byte until intentional token refactoring begins.",
   "boundaries": [
     {
       "startLine": 1,

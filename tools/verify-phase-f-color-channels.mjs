@@ -1,10 +1,11 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8');
+const css=readCanonicalStyleSource({root});
 const lines=css.split(/\r?\n/);
 const componentStart=1300;
 

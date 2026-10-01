@@ -1,3 +1,4 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,7 +23,7 @@ const modalSource=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf
 const overlayFrameRuntimeSource=fs.readFileSync(path.join(root,'src/components/overlay-frame-runtime.js'),'utf8');
 const carouselSource=fs.readFileSync(path.join(root,'src/components/carousel.js'),'utf8');
 const inputOtpSource=fs.readFileSync(path.join(root,'src/components/input-otp.js'),'utf8');
-const css=fs.readFileSync(path.join(root,'src/qxframe9a7c2.css'),'utf8');
+const css=readCanonicalStyleSource({root});
 assert.doesNotMatch(valueSource,/controlled:\s*Object\.prototype\.hasOwnProperty\.call\([^\n]*['"]value['"]/, 'ValueController option binding must not infer controlled ownership from value.');
 assert.match(dateSource,/function rememberCalendarDrillOwner\(detail\)/,'DatePicker dual-panel drill must preserve the physical panel owner independently from range edit ownership.');
 assert.match(dateSource,/function restoreDateKeyboardAnchor\(fallback, source\)/,'DatePicker must restore one canonical keyboard anchor after year\/month drill.');

@@ -1,3 +1,4 @@
+import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -9,7 +10,7 @@ const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const page=read('docs/all-components-static.html');
 const docsTheme=read('docs/assets/qxframe9a7c2-docs-theme-state.js');
 const staticTool=read('docs/assets/qxframe9a7c2-all-components-static.js');
-const css=read('src/qxframe9a7c2.css');
+const css=readCanonicalStyleSource({root});
 
 const scriptTags=[...page.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].map(match=>{
   const attrs=match[1]||'';
