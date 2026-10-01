@@ -17,9 +17,9 @@ assert.equal(map.consumers.filter(x=>x.category==='responsive-boundary').length,
 assert.equal(map.consumers.filter(x=>x.category==='choice-glyph-stroke').length,2);
 assert.equal(map.consumers.filter(x=>x.category==='hairline-centering').length,2);
 assert.doesNotMatch(theme,/--qxframe9a7c2-focus-ring\s*:/,'Retired public 3px focus-ring alias must not return; canonical focus geometry is the private 2px Size Tree-backed focus contract.');
-assert.match(components,/\.qxframe9a7c2-switch:active\{--_qxframe9a7c2-switch-press-offset:var\(--qxframe9a7c2-size-2\)\}/);
-assert.match(components,/\.qxframe9a7c2-slider\.is-xs\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-size-1\)\}/);
-assert.match(components,/\.qxframe9a7c2-slider\.is-sm\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-size-1\)\}/);
-assert.match(components,/\.qxframe9a7c2-slider\.is-lg\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-size-3\)\}/);
+assert.match(components,/\.qxframe9a7c2-switch:active\{--_qxframe9a7c2-switch-press-offset:var\(--qxframe9a7c2-theme-switch-press-offset\)\}/);
+assert.match(components,/\.qxframe9a7c2-slider\.is-xs\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-xs\)\}/);
+assert.match(components,/\.qxframe9a7c2-slider\.is-sm\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-sm\)\}/);
+assert.match(components,/\.qxframe9a7c2-slider\.is-lg\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-lg\)\}/);
 assert.match(preset,/--qxframe9a7c2-radius-pill:\s*100rem;/,'Pill radius is an intentional semantic sentinel, not a scalable Size Tree dimension.');
 console.log(JSON.stringify({ok:true,...map.summary}));
