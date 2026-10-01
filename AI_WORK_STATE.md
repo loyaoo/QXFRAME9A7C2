@@ -14,14 +14,14 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid final structural closeout implemented, CI pending
+- Current Phase: CSS Grid closeout parent pending CI; viewport fixed-root batch implemented on stacked branch, CI pending
 - Current Task: `SEMANTIC-MOTION-API-013` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 97%
+Task progress: 98%
 Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid low-risk closeout batch 4 implemented, CI pending
 
 User authority:
@@ -103,10 +103,10 @@ Recent evidence:
 - Control recipe normalization branch rebased onto that main; exact-head CI must pass before merge.
 
 Next exact step:
-- Verify final CSS Grid structural closeout on exact-head CI.
-- Live CSS Grid/fr set is now 0; 24-column QXFRAME Flex Grid remains untouched.
-- After Grid closeout, continue viewport-unit containing-block batches and final v1.6 audit.
-- Do not mechanically replace vw/vh; every replacement must preserve popup/overlay/container geometry.
+- Parent Grid closeout must pass and merge first.
+- Verify fixed-root viewport replacements: Modal, Drawer, Notice rails.
+- Viewport-unit inventory drops 54 -> 42 without touching floating popup/media cases.
+- Continue floating popup and preview/media containing-block batches; no mechanical viewport replacement.
 
 
 
