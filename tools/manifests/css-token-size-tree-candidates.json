@@ -241,27 +241,27 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1263,
+    "totalCandidates": 1259,
     "exactNodeCandidates": 901,
-    "needsReview": 127,
+    "needsReview": 123,
     "signedOffsets": 48,
     "pillSentinels": 1,
     "protectedBreakpoints": 234,
     "byLayer": {
       "base": 0,
       "preset": 1,
-      "theme": 10,
+      "theme": 6,
       "component": 1252
     },
     "byDomain": {
       "breakpoint-boundary": 234,
-      "geometry": 120,
+      "geometry": 119,
       "pill-radius-sentinel": 1,
       "position": 41,
       "radius": 129,
       "shadow": 32,
       "signed-offset": 48,
-      "spacing": 504,
+      "spacing": 501,
       "typography": 122,
       "visual-geometry": 32
     }
@@ -309,102 +309,6 @@
       },
       "selector": null,
       "text": "--qxframe9a7c2-focus-ring: 0 0 0 0.1875rem var(--_qxframe9a7c2-token-focus-ring-color);",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 74,
-      "raw": ".3125rem",
-      "unit": "rem",
-      "value": 0.3125,
-      "pxEquivalent": 5,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": ".is-sm",
-      "text": "--_qxframe9a7c2-size-control-padding-block: .3125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 75,
-      "raw": ".3125rem",
-      "unit": "rem",
-      "value": 0.3125,
-      "pxEquivalent": 5,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": ".is-sm",
-      "text": "--_qxframe9a7c2-size-control-gap: .3125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 77,
-      "raw": ".8125rem",
-      "unit": "rem",
-      "value": 0.8125,
-      "pxEquivalent": 13,
-      "domain": "geometry",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "upperNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "selector": ".is-sm",
-      "text": "--_qxframe9a7c2-size-control-icon-size: .8125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 83,
-      "raw": ".4375rem",
-      "unit": "rem",
-      "value": 0.4375,
-      "pxEquivalent": 7,
-      "domain": "spacing",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "upperNode": {
-        "name": "size-4",
-        "px": 8
-      },
-      "selector": ".is-lg",
-      "text": "--_qxframe9a7c2-size-control-padding-block: .4375rem;",
       "finalTarget": null,
       "approved": false
     },

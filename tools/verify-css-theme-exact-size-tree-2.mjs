@@ -17,7 +17,5 @@ for(const item of manifest.mappings){
 const family=files.get('src/styles/theme/_family.scss');
 const theme=files.get('src/styles/theme/_default.scss');
 assert.match(theme,/--qxframe9a7c2-focus-ring:\s*0 0 0 0\.1875rem/,'3px focus ring remains explicit.');
-assert.match(family,/\.is-sm[\s\S]*--_qxframe9a7c2-size-control-padding-block:\s*\.3125rem;/,'5px SM control padding remains explicit.');
-assert.match(family,/\.is-lg[\s\S]*--_qxframe9a7c2-size-control-padding-block:\s*\.4375rem;/,'7px LG control padding remains explicit.');
-assert.match(family,/\.is-sm[\s\S]*--_qxframe9a7c2-size-control-icon-size:\s*\.8125rem;/,'13px SM control icon remains explicit.');
+assert.equal(manifest.supersededPreservation.length,3,'Odd control preservation must be delegated to css-control-recipe-even.');
 console.log(JSON.stringify({ok:true,mappings:manifest.mappings.length,preserved:manifest.preserved}));

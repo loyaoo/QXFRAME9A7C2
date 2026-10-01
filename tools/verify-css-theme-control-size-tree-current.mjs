@@ -1,3 +1,4 @@
+console.log(JSON.stringify({gate:"css-theme-control-size-tree-current"}));
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';

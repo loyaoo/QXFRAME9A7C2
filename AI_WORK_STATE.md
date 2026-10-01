@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 87%
-Phase: Phase A/B/C DONE; Size Tree + audits DONE; Theme control geometry DONE; second exact Theme Size Tree batch implemented, CI pending
+Task progress: 90%
+Phase: Phase A/B/C DONE; Theme exact Size Tree batch merged; odd Theme control recipe rebased on latest main, exact-head CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -97,6 +97,10 @@ Phase B persisted basis:
 Recent evidence:
 - Main CI #1116 on `da54e4ee70971718a4d342ca902dfa2fe596817a`: SUCCESS; Card skeleton title 15px→16px is merged and verified.
 - Theme control geometry batch maps 14 exact literals to Size Tree nodes without changing physical values; odd 13/5/7px control values remain explicit.
+
+Recent evidence:
+- PR #222 merged as `7f528805ccde31cd42c608ef7deef4f6975d8435` after CI #1124 SUCCESS.
+- Control recipe normalization branch rebased onto that main; exact-head CI must pass before merge.
 
 Next exact step:
 - Main CI #1094 on `e6429c55bbdb2b44ee26d29bd14518159a18b224`: SUCCESS; odd numeric font normalization is verified.

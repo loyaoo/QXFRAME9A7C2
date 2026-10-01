@@ -60,10 +60,12 @@
     }
   ],
   "preserved": [
-    ".is-sm 13px icon-size",
-    ".is-sm 5px padding-block/gap",
-    ".is-lg 7px padding-block",
     "1px border width"
   ],
-  "policy": "Dependency-only exact-value mapping; no physical size changes."
+  "policy": "Exact-value mapping remains immutable; previously deferred odd control values are owned by the later approved css-control-recipe-even batch.",
+  "supersededPreservation": [
+    ".is-sm 13px icon-size -> css-control-recipe-even",
+    ".is-sm 5px padding-block/gap -> css-control-recipe-even",
+    ".is-lg 7px padding-block -> css-control-recipe-even"
+  ]
 }

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "batch": "control-recipe-even-normalization",
+  "mappings": [
+    {
+      "size": "sm",
+      "role": "padding-block",
+      "from": "--_qxframe9a7c2-size-control-padding-block: .3125rem;",
+      "to": "--_qxframe9a7c2-size-control-padding-block: var(--qxframe9a7c2-size-2);",
+      "beforePx": 5,
+      "afterPx": 4,
+      "deltaPx": -1
+    },
+    {
+      "size": "sm",
+      "role": "gap",
+      "from": "--_qxframe9a7c2-size-control-gap: .3125rem;",
+      "to": "--_qxframe9a7c2-size-control-gap: var(--qxframe9a7c2-size-2);",
+      "beforePx": 5,
+      "afterPx": 4,
+      "deltaPx": -1
+    },
+    {
+      "size": "sm",
+      "role": "icon-size",
+      "from": "--_qxframe9a7c2-size-control-icon-size: .8125rem;",
+      "to": "--_qxframe9a7c2-size-control-icon-size: var(--qxframe9a7c2-size-6);",
+      "beforePx": 13,
+      "afterPx": 12,
+      "deltaPx": -1
+    },
+    {
+      "size": "lg",
+      "role": "padding-block",
+      "from": "--_qxframe9a7c2-size-control-padding-block: .4375rem;",
+      "to": "--_qxframe9a7c2-size-control-padding-block: var(--qxframe9a7c2-size-4);",
+      "beforePx": 7,
+      "afterPx": 8,
+      "deltaPx": 1
+    }
+  ],
+  "fixedControlHeightsPx": {
+    "xs": 24,
+    "sm": 28,
+    "md": 32,
+    "lg": 36,
+    "xl": 40
+  },
+  "rationale": {
+    "sm": "SM typography stays 12px; icon follows the 12px node and vertical spacing uses the lighter 4px step.",
+    "lg": "LG uses 16px typography; block padding moves to the 8px step."
+  },
+  "policy": "Semantic ±1px normalization only; control heights, inline paddings, radii and interaction behavior remain unchanged."
+}

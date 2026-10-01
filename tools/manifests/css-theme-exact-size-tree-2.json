@@ -60,10 +60,12 @@
   ],
   "preserved": [
     "3px focus ring visual geometry",
-    "5px SM control padding/gap",
-    "7px LG control padding",
-    "13px SM control icon",
     "date-panel/overflow breakpoint and width contracts"
   ],
-  "policy": "Exact-value dependency mapping only; no physical dimensions are changed."
+  "policy": "Exact-value dependency mapping remains immutable; later approved semantic normalization batches may supersede preserved odd control values.",
+  "supersededPreservation": [
+    "5px SM control padding/gap -> css-control-recipe-even",
+    "7px LG control padding -> css-control-recipe-even",
+    "13px SM control icon -> css-control-recipe-even"
+  ]
 }
