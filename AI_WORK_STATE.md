@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 30%
-Phase: Phase A DONE; Phase B inventory persisted/classified; exact-head closeout CI pending
+Task progress: 34%
+Phase: Phase A DONE; Phase B DONE; Phase C Preset -> Theme -> Component bridge implemented, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -95,8 +95,8 @@ Phase B persisted basis:
 - Temporary CI write permission and self-commit step are removed.
 
 Next exact step:
-- Run exact-head Phase B closeout CI; if green, merge PR #203.
-- Then begin the three-layer Token dependency refactor (Preset -> Theme -> Component) before any approved odd-size normalization.
+- Phase B exact-head closeout CI #1062 passed and PR #203 merged as `40ba304be93753a722a995c9f7fc612e3084a6c5`.
+- Phase C first slice maps every Preset token consumed by component SCSS through an explicit Theme token bridge; verify exact-head CI before expanding Theme/Component semantic classification.
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE

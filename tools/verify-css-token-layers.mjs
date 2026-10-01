@@ -1,0 +1,49 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
+const preset=read('src/styles/preset/_foundation.scss');
+const theme=[read('src/styles/theme/_default.scss'),read('src/styles/theme/_family.scss')].join('\n');
+const component=read('src/styles/components/_components.scss');
+const manifest=JSON.parse(read('tools/manifests/css-token-layer-bridge.json'));
+
+const defs=text=>new Set([...text.matchAll(/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:/ig)].map(m=>m[1]));
+const refs=text=>[...text.matchAll(/var\(\s*(--_?qxframe9a7c2-[a-z0-9-]+)/ig)].map(m=>m[1]);
+const presetDefs=defs(preset),themeDefs=defs(theme),componentDefs=defs(component);
+
+const directPreset=refs(component).filter(name=>presetDefs.has(name)&&!themeDefs.has(name));
+assert.deepEqual([...new Set(directPreset)].sort(),[],'Component SCSS must not read Preset tokens directly.');
+
+for(const mapping of manifest.mappings){
+  assert.ok(presetDefs.has(mapping.source),'Layer bridge source must be defined in Preset: '+mapping.source);
+  assert.ok(themeDefs.has(mapping.theme),'Layer bridge target must be defined in Theme: '+mapping.theme);
+  const sourceEsc=mapping.source.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
+  const themeEsc=mapping.theme.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
+  assert.match(theme,new RegExp(themeEsc+'\\s*:\\s*var\\(\\s*'+sourceEsc+'\\s*\\)'),'Theme bridge must select its declared Preset material: '+mapping.theme);
+}
+
+const declaration=/(--qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]*)(?:;|(?=}))/ig;
+const publicCrossComponent=[];
+let match;
+while((match=declaration.exec(component))){
+  const from=match[1],value=match[2];
+  for(const to of refs(value)){
+    if(to===from) continue;
+    if(componentDefs.has(to)&&to.startsWith('--qxframe9a7c2-')) publicCrossComponent.push({from,to});
+  }
+}
+assert.deepEqual(publicCrossComponent,[],'A public Component token must not read another public Component token.');
+
+const publicComponentPreset=[];
+declaration.lastIndex=0;
+while((match=declaration.exec(component))){
+  for(const to of refs(match[2])) if(presetDefs.has(to)&&!themeDefs.has(to)) publicComponentPreset.push({from:match[1],to});
+}
+assert.deepEqual(publicComponentPreset,[],'Public Component tokens must resolve through Theme, never Preset.');
+
+assert.equal(manifest.bridgeCount,manifest.mappings.length);
+assert.equal(manifest.baseline.directPresetReferencesAfter,0);
+console.log(JSON.stringify({ok:true,bridgeTokens:manifest.bridgeCount,directPresetRefs:0,publicComponentPresetEdges:0,publicCrossComponentEdges:0}));

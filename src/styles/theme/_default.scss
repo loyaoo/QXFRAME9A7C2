@@ -1,3 +1,70 @@
+/* Theme material bridge.
+ * Component CSS consumes Theme tokens only; Theme selects from Preset materials here.
+ * Later Size Tree work may remap the Preset side without changing component consumers.
+ */
+:root,[data-qxframe9a7c2-theme] {
+  --qxframe9a7c2-theme-font-size-10: var(--qxframe9a7c2-font-size-10);
+  --qxframe9a7c2-theme-font-size-11: var(--qxframe9a7c2-font-size-11);
+  --qxframe9a7c2-theme-font-size-24: var(--qxframe9a7c2-font-size-24);
+  --qxframe9a7c2-theme-font-size-9: var(--qxframe9a7c2-font-size-9);
+  --qxframe9a7c2-theme-font-size-lg: var(--qxframe9a7c2-font-size-lg);
+  --qxframe9a7c2-theme-font-size-md: var(--qxframe9a7c2-font-size-md);
+  --qxframe9a7c2-theme-font-size-sm: var(--qxframe9a7c2-font-size-sm);
+  --qxframe9a7c2-theme-font-size-xl: var(--qxframe9a7c2-font-size-xl);
+  --qxframe9a7c2-theme-font-size-xs: var(--qxframe9a7c2-font-size-xs);
+  --qxframe9a7c2-theme-motion-carousel-track-duration: var(--qxframe9a7c2-motion-carousel-track-duration);
+  --qxframe9a7c2-theme-motion-carousel-track-easing: var(--qxframe9a7c2-motion-carousel-track-easing);
+  --qxframe9a7c2-theme-motion-collapse-panel-easing: var(--qxframe9a7c2-motion-collapse-panel-easing);
+  --qxframe9a7c2-theme-motion-collapse-panel-enter-duration: var(--qxframe9a7c2-motion-collapse-panel-enter-duration);
+  --qxframe9a7c2-theme-motion-collapse-panel-leave-duration: var(--qxframe9a7c2-motion-collapse-panel-leave-duration);
+  --qxframe9a7c2-theme-motion-drawer-mask-enter-duration: var(--qxframe9a7c2-motion-drawer-mask-enter-duration);
+  --qxframe9a7c2-theme-motion-drawer-mask-enter-easing: var(--qxframe9a7c2-motion-drawer-mask-enter-easing);
+  --qxframe9a7c2-theme-motion-drawer-mask-leave-duration: var(--qxframe9a7c2-motion-drawer-mask-leave-duration);
+  --qxframe9a7c2-theme-motion-drawer-mask-leave-easing: var(--qxframe9a7c2-motion-drawer-mask-leave-easing);
+  --qxframe9a7c2-theme-motion-duration-1: var(--qxframe9a7c2-motion-duration-1);
+  --qxframe9a7c2-theme-motion-duration-2: var(--qxframe9a7c2-motion-duration-2);
+  --qxframe9a7c2-theme-motion-duration-3: var(--qxframe9a7c2-motion-duration-3);
+  --qxframe9a7c2-theme-motion-duration-5: var(--qxframe9a7c2-motion-duration-5);
+  --qxframe9a7c2-theme-motion-easing-enter: var(--qxframe9a7c2-motion-easing-enter);
+  --qxframe9a7c2-theme-motion-easing-enter-emphasized: var(--qxframe9a7c2-motion-easing-enter-emphasized);
+  --qxframe9a7c2-theme-motion-easing-leave: var(--qxframe9a7c2-motion-easing-leave);
+  --qxframe9a7c2-theme-motion-easing-move-emphasized: var(--qxframe9a7c2-motion-easing-move-emphasized);
+  --qxframe9a7c2-theme-motion-easing-standard: var(--qxframe9a7c2-motion-easing-standard);
+  --qxframe9a7c2-theme-motion-image-preview-mask-enter-duration: var(--qxframe9a7c2-motion-image-preview-mask-enter-duration);
+  --qxframe9a7c2-theme-motion-image-preview-mask-enter-easing: var(--qxframe9a7c2-motion-image-preview-mask-enter-easing);
+  --qxframe9a7c2-theme-motion-image-preview-mask-leave-duration: var(--qxframe9a7c2-motion-image-preview-mask-leave-duration);
+  --qxframe9a7c2-theme-motion-image-preview-mask-leave-easing: var(--qxframe9a7c2-motion-image-preview-mask-leave-easing);
+  --qxframe9a7c2-theme-motion-image-preview-trajectory-easing: var(--qxframe9a7c2-motion-image-preview-trajectory-easing);
+  --qxframe9a7c2-theme-motion-image-preview-trajectory-enter-duration: var(--qxframe9a7c2-motion-image-preview-trajectory-enter-duration);
+  --qxframe9a7c2-theme-motion-image-preview-trajectory-leave-duration: var(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration);
+  --qxframe9a7c2-theme-motion-modal-mask-enter-duration: var(--qxframe9a7c2-motion-modal-mask-enter-duration);
+  --qxframe9a7c2-theme-motion-modal-mask-enter-easing: var(--qxframe9a7c2-motion-modal-mask-enter-easing);
+  --qxframe9a7c2-theme-motion-modal-mask-leave-duration: var(--qxframe9a7c2-motion-modal-mask-leave-duration);
+  --qxframe9a7c2-theme-motion-modal-mask-leave-easing: var(--qxframe9a7c2-motion-modal-mask-leave-easing);
+  --qxframe9a7c2-theme-motion-ripple-inside-enter-duration: var(--qxframe9a7c2-motion-ripple-inside-enter-duration);
+  --qxframe9a7c2-theme-motion-ripple-inside-enter-easing: var(--qxframe9a7c2-motion-ripple-inside-enter-easing);
+  --qxframe9a7c2-theme-motion-ripple-inside-leave-duration: var(--qxframe9a7c2-motion-ripple-inside-leave-duration);
+  --qxframe9a7c2-theme-motion-ripple-inside-leave-easing: var(--qxframe9a7c2-motion-ripple-inside-leave-easing);
+  --qxframe9a7c2-theme-motion-ripple-outside-duration: var(--qxframe9a7c2-motion-ripple-outside-duration);
+  --qxframe9a7c2-theme-motion-ripple-outside-easing: var(--qxframe9a7c2-motion-ripple-outside-easing);
+  --qxframe9a7c2-theme-motion-sort-item-duration: var(--qxframe9a7c2-motion-sort-item-duration);
+  --qxframe9a7c2-theme-motion-sort-item-easing: var(--qxframe9a7c2-motion-sort-item-easing);
+  --qxframe9a7c2-theme-motion-tabs-indicator-duration: var(--qxframe9a7c2-motion-tabs-indicator-duration);
+  --qxframe9a7c2-theme-motion-tabs-indicator-easing: var(--qxframe9a7c2-motion-tabs-indicator-easing);
+  --qxframe9a7c2-theme-radius-circle: var(--qxframe9a7c2-radius-circle);
+  --qxframe9a7c2-theme-radius-lg: var(--qxframe9a7c2-radius-lg);
+  --qxframe9a7c2-theme-radius-pill: var(--qxframe9a7c2-radius-pill);
+  --qxframe9a7c2-theme-radius-sm: var(--qxframe9a7c2-radius-sm);
+  --qxframe9a7c2-theme-space-1: var(--qxframe9a7c2-space-1);
+  --qxframe9a7c2-theme-space-2: var(--qxframe9a7c2-space-2);
+  --qxframe9a7c2-theme-space-3: var(--qxframe9a7c2-space-3);
+  --qxframe9a7c2-theme-space-4: var(--qxframe9a7c2-space-4);
+  --qxframe9a7c2-theme-space-5: var(--qxframe9a7c2-space-5);
+  --qxframe9a7c2-theme-space-6: var(--qxframe9a7c2-space-6);
+  --qxframe9a7c2-theme-space-7: var(--qxframe9a7c2-space-7);
+  --qxframe9a7c2-theme-space-8: var(--qxframe9a7c2-space-8);
+}
+
 /* Canonical theme-mode semantic projection.
  * Legacy public color aliases are output-only adapters; canonical CSS never consumes them.
  */
