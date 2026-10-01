@@ -241,16 +241,16 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1328,
-    "exactNodeCandidates": 938,
-    "needsReview": 155,
+    "totalCandidates": 1323,
+    "exactNodeCandidates": 936,
+    "needsReview": 152,
     "signedOffsets": 66,
     "pillSentinels": 1,
     "protectedBreakpoints": 234,
     "byLayer": {
       "base": 0,
       "preset": 1,
-      "theme": 49,
+      "theme": 44,
       "component": 1278
     },
     "byDomain": {
@@ -258,7 +258,7 @@
       "geometry": 138,
       "pill-radius-sentinel": 1,
       "position": 45,
-      "radius": 137,
+      "radius": 132,
       "shadow": 42,
       "signed-offset": 66,
       "spacing": 511,
@@ -291,7 +291,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 146,
+      "line": 149,
       "raw": "0.75rem",
       "unit": "rem",
       "value": 0.75,
@@ -315,7 +315,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 146,
+      "line": 149,
       "raw": "2rem",
       "unit": "rem",
       "value": 2,
@@ -339,7 +339,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 204,
+      "line": 207,
       "raw": "0.875rem",
       "unit": "rem",
       "value": 0.875,
@@ -363,7 +363,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 204,
+      "line": 207,
       "raw": "2.625rem",
       "unit": "rem",
       "value": 2.625,
@@ -387,7 +387,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 267,
+      "line": 270,
       "raw": "8px",
       "unit": "px",
       "value": 8,
@@ -411,7 +411,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 268,
+      "line": 271,
       "raw": "2px",
       "unit": "px",
       "value": 2,
@@ -435,7 +435,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 283,
+      "line": 286,
       "raw": ".625rem",
       "unit": "rem",
       "value": 0.625,
@@ -459,7 +459,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 286,
+      "line": 289,
       "raw": "0.1875rem",
       "unit": "rem",
       "value": 0.1875,
@@ -483,7 +483,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 524,
+      "line": 527,
       "raw": ".75rem",
       "unit": "rem",
       "value": 0.75,
@@ -507,7 +507,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 524,
+      "line": 527,
       "raw": "2rem",
       "unit": "rem",
       "value": 2,
@@ -531,7 +531,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 622,
+      "line": 625,
       "raw": ".875rem",
       "unit": "rem",
       "value": 0.875,
@@ -555,7 +555,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 622,
+      "line": 625,
       "raw": "2.625rem",
       "unit": "rem",
       "value": 2.625,
@@ -579,7 +579,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 696,
+      "line": 699,
       "raw": "2px",
       "unit": "px",
       "value": 2,
@@ -603,7 +603,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 697,
+      "line": 700,
       "raw": "2px",
       "unit": "px",
       "value": 2,
@@ -627,7 +627,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 704,
+      "line": 707,
       "raw": "1.25rem",
       "unit": "rem",
       "value": 1.25,
@@ -651,7 +651,7 @@
     {
       "module": "src/styles/theme/_default.scss",
       "layer": "theme",
-      "line": 704,
+      "line": 707,
       "raw": "3.75rem",
       "unit": "rem",
       "value": 3.75,
@@ -717,30 +717,6 @@
       },
       "selector": ":root,.is-md",
       "text": "--_qxframe9a7c2-size-control-padding-inline: 10px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 58,
-      "raw": "4px",
-      "unit": "px",
-      "value": 4,
-      "pxEquivalent": 4,
-      "domain": "radius",
-      "status": "exact-node-candidate",
-      "exactNode": "size-2",
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ":root,.is-md",
-      "text": "--_qxframe9a7c2-size-control-radius: 4px;",
       "finalTarget": null,
       "approved": false
     },
@@ -813,30 +789,6 @@
       },
       "selector": ".is-xs",
       "text": "--_qxframe9a7c2-size-control-padding-inline: 6px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 67,
-      "raw": "3px",
-      "unit": "px",
-      "value": 3,
-      "pxEquivalent": 3,
-      "domain": "radius",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".is-xs",
-      "text": "--_qxframe9a7c2-size-control-radius: 3px;",
       "finalTarget": null,
       "approved": false
     },
@@ -963,30 +915,6 @@
     {
       "module": "src/styles/theme/_family.scss",
       "layer": "theme",
-      "line": 76,
-      "raw": "3px",
-      "unit": "px",
-      "value": 3,
-      "pxEquivalent": 3,
-      "domain": "radius",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".is-sm",
-      "text": "--_qxframe9a7c2-size-control-radius: 3px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
       "line": 77,
       "raw": ".8125rem",
       "unit": "rem",
@@ -1083,30 +1011,6 @@
     {
       "module": "src/styles/theme/_family.scss",
       "layer": "theme",
-      "line": 85,
-      "raw": "4px",
-      "unit": "px",
-      "value": 4,
-      "pxEquivalent": 4,
-      "domain": "radius",
-      "status": "exact-node-candidate",
-      "exactNode": "size-2",
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".is-lg",
-      "text": "--_qxframe9a7c2-size-control-radius: 4px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
       "line": 86,
       "raw": "1rem",
       "unit": "rem",
@@ -1173,30 +1077,6 @@
       },
       "selector": ".is-xl",
       "text": "--_qxframe9a7c2-size-control-padding-inline: 14px;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_family.scss",
-      "layer": "theme",
-      "line": 94,
-      "raw": "5px",
-      "unit": "px",
-      "value": 5,
-      "pxEquivalent": 5,
-      "domain": "radius",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": ".is-xl",
-      "text": "--_qxframe9a7c2-size-control-radius: 5px;",
       "finalTarget": null,
       "approved": false
     },
