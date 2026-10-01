@@ -255,7 +255,7 @@
     },
     "byDomain": {
       "breakpoint-boundary": 240,
-      "geometry": 123,
+      "geometry": 120,
       "pill-radius-sentinel": 1,
       "position": 40,
       "radius": 130,
@@ -263,7 +263,7 @@
       "signed-offset": 48,
       "spacing": 497,
       "typography": 122,
-      "visual-geometry": 21
+      "visual-geometry": 24
     }
   },
   "consumers": [
@@ -26522,7 +26522,7 @@
       "unit": "rem",
       "value": 0.75,
       "pxEquivalent": 12,
-      "domain": "geometry",
+      "domain": "visual-geometry",
       "status": "exact-node-candidate",
       "exactNode": "size-6",
       "lowerNode": {
@@ -26534,7 +26534,7 @@
         "px": 12
       },
       "selector": ".qxframe9a7c2-slider.is-xs",
-      "text": ".qxframe9a7c2-slider.is-xs{--_qxframe9a7c2-slider-handle-default:.75rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-size-1)}",
+      "text": ".qxframe9a7c2-slider.is-xs{--_qxframe9a7c2-slider-handle-default:.75rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-theme-slider-rail-xs)}",
       "finalTarget": null,
       "approved": false
     },
@@ -26546,7 +26546,7 @@
       "unit": "rem",
       "value": 0.875,
       "pxEquivalent": 14,
-      "domain": "geometry",
+      "domain": "visual-geometry",
       "status": "exact-node-candidate",
       "exactNode": "size-7",
       "lowerNode": {
@@ -26558,7 +26558,7 @@
         "px": 14
       },
       "selector": ".qxframe9a7c2-slider.is-sm",
-      "text": ".qxframe9a7c2-slider.is-sm{--_qxframe9a7c2-slider-handle-default:.875rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-size-1)}",
+      "text": ".qxframe9a7c2-slider.is-sm{--_qxframe9a7c2-slider-handle-default:.875rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-theme-slider-rail-sm)}",
       "finalTarget": null,
       "approved": false
     },
@@ -26570,7 +26570,7 @@
       "unit": "rem",
       "value": 1.125,
       "pxEquivalent": 18,
-      "domain": "geometry",
+      "domain": "visual-geometry",
       "status": "exact-node-candidate",
       "exactNode": "size-9",
       "lowerNode": {
@@ -26582,7 +26582,7 @@
         "px": 18
       },
       "selector": ".qxframe9a7c2-slider.is-lg",
-      "text": ".qxframe9a7c2-slider.is-lg{--_qxframe9a7c2-slider-handle-default:1.125rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-size-3)}",
+      "text": ".qxframe9a7c2-slider.is-lg{--_qxframe9a7c2-slider-handle-default:1.125rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-theme-slider-rail-lg)}",
       "finalTarget": null,
       "approved": false
     },
