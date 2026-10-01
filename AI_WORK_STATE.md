@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 44%
-Phase: Phase A DONE; Phase B DONE; Phase C DONE on main; Size Tree foundation implemented on branch, CI pending
+Task progress: 54%
+Phase: Phase A/B/C DONE; Size Tree foundation + Grid/vw/JS geometry audits DONE; low-risk odd-font normalization implemented, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -95,8 +95,11 @@ Phase B persisted basis:
 - Temporary CI write permission and self-commit step are removed.
 
 Next exact step:
-- Phase B exact-head closeout CI #1062 passed and PR #203 merged as `40ba304be93753a722a995c9f7fc612e3084a6c5`.
-- Phase C first slice maps generic Preset consumers through Theme and moves 49 component-semantic motion tokens out of Preset into Component ownership with Theme defaults; local Ripple/Motion overrides remain scoped. Verify exact-head CI before expanding Theme/Component semantic classification.
+- Main CI #1086 at `a168305c8291b4b11146f460ba96cb8125251d52`: SUCCESS after Phase C, Size Tree foundation, viewport/Grid audits and JS geometry ownership audit.
+- Odd-font decision audit PR #210 / CI #1087: SUCCESS and merged as `d0773cf39b112994e414a4d8c0e402dfbacc7581`.
+- Verify low-risk odd-font implementation: Badge XS count 9→10, LG Control 15→16, unused 17 removed.
+- Keep 11px/13px unresolved until their semantic typography tiers are reviewed separately.
+
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE

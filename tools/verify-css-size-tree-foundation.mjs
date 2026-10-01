@@ -16,16 +16,15 @@ for(const node of manifest.nodes){
   assert.match(css,new RegExp(esc(token)+'\\s*:\\s*'+esc(String(node.rem))+'rem\\s*;'),'Size Tree node must keep its rem default: '+token);
 }
 for(const group of ['spacing','evenFontSize','radius']){
-  for(const item of manifest.mappings[group]){
-    assert.match(css,new RegExp(esc(item.token)+'\\s*:\\s*var\\(\\s*'+esc(item.node)+'\\s*\\)'),'Preset token must resolve through Size Tree: '+item.token);
-  }
+  for(const item of manifest.mappings[group]) assert.match(css,new RegExp(esc(item.token)+'\\s*:\\s*var\\(\\s*'+esc(item.node)+'\\s*\\)'),'Preset token must resolve through Size Tree: '+item.token);
 }
 for(const px of manifest.preserved.oddFontSizePx){
-  assert.match(css,new RegExp('--qxframe9a7c2-font-size-'+px+'\\s*:\\s*[0-9.]+rem\\s*;'),'Odd font size remains explicit until conversion approval: '+px+'px');
-  assert.doesNotMatch(css,new RegExp('--qxframe9a7c2-font-size-'+px+'\\s*:\\s*var\\(\\s*--qxframe9a7c2-size-'),'Odd font size must not be auto-normalized: '+px+'px');
+  assert.match(css,new RegExp('--qxframe9a7c2-font-size-'+px+'\\s*:\\s*[0-9.]+rem\\s*;'),'Unresolved odd font size must remain explicit: '+px+'px');
+  assert.doesNotMatch(css,new RegExp('--qxframe9a7c2-font-size-'+px+'\\s*:\\s*var\\(\\s*--qxframe9a7c2-size-'),'Unresolved odd font size must not be mechanically normalized: '+px+'px');
 }
+for(const px of [9,15,17]) assert.doesNotMatch(css,new RegExp('--qxframe9a7c2-font-size-'+px+'\\s*:'),'Completed odd preset must not remain: '+px+'px');
 assert.match(css,/--qxframe9a7c2-radius-pill:\s*100rem\s*;/);
 assert.match(css,/--qxframe9a7c2-radius-circle:\s*50%\s*;/);
 assert.doesNotMatch(css,/--qxframe9a7c2-motion-(?:duration|easing)[^:]*:\s*var\(\s*--qxframe9a7c2-size-/);
 assert.equal((css.match(/--qxframe9a7c2-size-\d+\s*:/g)||[]).length,46,'Size Tree must have exactly 46 definitions.');
-console.log(JSON.stringify({ok:true,nodes:46,spacing:manifest.mappings.spacing.length,evenFontSize:manifest.mappings.evenFontSize.length,radius:manifest.mappings.radius.length,oddFontSizesPreserved:manifest.preserved.oddFontSizePx}));
+console.log(JSON.stringify({ok:true,nodes:46,remainingOddFontSizes:manifest.preserved.oddFontSizePx,completedOddFontDecisions:manifest.completedOddFontDecisions.length}));

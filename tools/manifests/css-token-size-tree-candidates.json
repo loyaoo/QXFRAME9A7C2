@@ -6,7 +6,7 @@
     "defaultRootFontSizePx": 16,
     "automaticOddRounding": false,
     "automaticApproval": false,
-    "note": "Candidate table only. Canonical --size-* definitions are excluded; finalTarget and approved remain unset until each consumer/domain decision is reviewed."
+    "note": "Candidate table only. Canonical --size-* definitions and implemented odd-font decisions are excluded; finalTarget and approved remain unset until each remaining consumer/domain decision is reviewed."
   },
   "sizeTree": [
     {
@@ -241,15 +241,15 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1341,
+    "totalCandidates": 1338,
     "exactNodeCandidates": 938,
-    "needsReview": 160,
+    "needsReview": 157,
     "signedOffsets": 66,
     "pillSentinels": 9,
     "protectedBreakpoints": 234,
     "byLayer": {
       "base": 0,
-      "preset": 6,
+      "preset": 3,
       "theme": 50,
       "component": 1285
     },
@@ -262,35 +262,11 @@
       "shadow": 42,
       "signed-offset": 66,
       "spacing": 511,
-      "typography": 127,
+      "typography": 124,
       "visual-geometry": 32
     }
   },
   "consumers": [
-    {
-      "module": "src/styles/preset/_foundation.scss",
-      "layer": "preset",
-      "line": 272,
-      "raw": "0.5625rem",
-      "unit": "rem",
-      "value": 0.5625,
-      "pxEquivalent": 9,
-      "domain": "typography",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-4",
-        "px": 8
-      },
-      "upperNode": {
-        "name": "size-5",
-        "px": 10
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-font-size-9: 0.5625rem;",
-      "finalTarget": null,
-      "approved": false
-    },
     {
       "module": "src/styles/preset/_foundation.scss",
       "layer": "preset",
@@ -336,54 +312,6 @@
       },
       "selector": null,
       "text": "--qxframe9a7c2-font-size-13: 0.8125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/preset/_foundation.scss",
-      "layer": "preset",
-      "line": 278,
-      "raw": "0.9375rem",
-      "unit": "rem",
-      "value": 0.9375,
-      "pxEquivalent": 15,
-      "domain": "typography",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "upperNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-font-size-15: 0.9375rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/preset/_foundation.scss",
-      "layer": "preset",
-      "line": 280,
-      "raw": "1.0625rem",
-      "unit": "rem",
-      "value": 1.0625,
-      "pxEquivalent": 17,
-      "domain": "typography",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "upperNode": {
-        "name": "size-9",
-        "px": 18
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-font-size-17: 1.0625rem;",
       "finalTarget": null,
       "approved": false
     },
