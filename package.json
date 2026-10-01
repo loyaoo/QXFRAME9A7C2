@@ -156,7 +156,8 @@
     "verify:css-grid-lowrisk-closeout-4": "node tools/verify-css-grid-lowrisk-closeout-4.mjs",
     "verify:css-grid-selectgroup-autofit": "node tools/verify-css-grid-selectgroup-autofit.mjs",
     "verify:css-grid-card-meta": "node tools/verify-css-grid-card-meta.mjs",
-    "verify:css-grid-layout-trio": "node tools/verify-css-grid-layout-trio.mjs"
+    "verify:css-grid-layout-trio": "node tools/verify-css-grid-layout-trio.mjs",
+    "verify:css-grid-colorpicker-upload": "node tools/verify-css-grid-colorpicker-upload.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",

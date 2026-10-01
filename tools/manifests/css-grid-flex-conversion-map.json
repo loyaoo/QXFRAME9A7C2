@@ -9,32 +9,29 @@
   },
   "baseline": {
     "phaseBWideCssGridMatches": 436,
-    "actualGridRuleCount": 24,
-    "actualGridDeclarationCount": 46
+    "actualGridRuleCount": 19,
+    "actualGridDeclarationCount": 38
   },
   "summary": {
     "byRisk": {
-      "medium": 11,
-      "high": 10,
-      "low": 3
+      "medium": 10,
+      "high": 8,
+      "low": 1
     },
     "byStrategy": {
-      "manual-flex-span": 10,
+      "manual-flex-span": 8,
       "manual-flex-sizing": 4,
-      "flex-wrap-basis": 3,
-      "flex": 2,
+      "flex-wrap-basis": 2,
       "manual-review": 2,
       "absolute-stack": 1,
-      "flex-center": 1,
+      "flex": 1,
       "flex-label-content": 1
     },
     "byFamily": {
       "form": 8,
       "descriptions": 6,
       "card": 3,
-      "color-picker": 3,
-      "carousel": 2,
-      "upload": 2
+      "carousel": 2
     },
     "protected24ColumnFlexGridRulesMatched": 0
   },
@@ -386,96 +383,6 @@
       ],
       "suggestedStrategy": "manual-flex-span",
       "risk": "high",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-color-picker-gradient",
-      "family": "color-picker",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        },
-        {
-          "kind": "grid-template",
-          "property": "grid-template-columns",
-          "value": "1fr auto auto"
-        },
-        {
-          "kind": "fr-unit",
-          "property": null,
-          "value": "1fr"
-        }
-      ],
-      "suggestedStrategy": "flex-center",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-color-picker-gradient-hint",
-      "family": "color-picker",
-      "declarations": [
-        {
-          "kind": "grid-placement",
-          "property": "grid-column",
-          "value": "1/-1"
-        }
-      ],
-      "suggestedStrategy": "manual-flex-span",
-      "risk": "high",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-color-picker-gradient-track",
-      "family": "color-picker",
-      "declarations": [
-        {
-          "kind": "grid-placement",
-          "property": "grid-column",
-          "value": "1/-1"
-        }
-      ],
-      "suggestedStrategy": "manual-flex-span",
-      "risk": "high",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-upload-list",
-      "family": "upload",
-      "declarations": [
-        {
-          "kind": "display-grid",
-          "property": "display",
-          "value": "grid"
-        }
-      ],
-      "suggestedStrategy": "flex",
-      "risk": "low",
-      "approved": false,
-      "finalStrategy": null
-    },
-    {
-      "selector": ".qxframe9a7c2-upload.is-picture-card .qxframe9a7c2-upload-list,.qxframe9a7c2-upload.is-picture-circle .qxframe9a7c2-upload-list",
-      "family": "upload",
-      "declarations": [
-        {
-          "kind": "grid-template",
-          "property": "grid-template-columns",
-          "value": "repeat(auto-fill,minmax(9rem,1fr))"
-        },
-        {
-          "kind": "fr-unit",
-          "property": null,
-          "value": "1fr"
-        }
-      ],
-      "suggestedStrategy": "flex-wrap-basis",
-      "risk": "medium",
       "approved": false,
       "finalStrategy": null
     },
