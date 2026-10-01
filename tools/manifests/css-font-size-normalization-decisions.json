@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01",
+  "policy": {
+    "scope": "Odd numeric font-size preset decisions only.",
+    "automaticNormalization": false,
+    "approvalRequired": true,
+    "note": "Suggestions are design-review inputs, not migration authority. Consumers sharing the same old numeric token may choose different Size Tree nodes."
+  },
+  "decisions": [
+    {
+      "id": "font-9-badge-xs-count",
+      "sourceToken": "--qxframe9a7c2-font-size-9",
+      "currentPx": 9,
+      "directConsumer": "--qxframe9a7c2-theme-font-size-9",
+      "downstream": [
+        "--qxframe9a7c2-badge-xs-count-font-size"
+      ],
+      "lowerNode": "--qxframe9a7c2-size-4",
+      "lowerPx": 8,
+      "upperNode": "--qxframe9a7c2-size-5",
+      "upperPx": 10,
+      "suggestedTarget": "--qxframe9a7c2-size-5",
+      "suggestedPx": 10,
+      "alternatives": [
+        "--qxframe9a7c2-size-4"
+      ],
+      "visualChange": "+1px",
+      "rationale": "Badge XS count remains very small but avoids an 8px text floor; 10px already exists in the adjacent Badge XS/SM typography scale.",
+      "risk": "low",
+      "approved": false,
+      "finalTarget": null
+    },
+    {
+      "id": "font-11-small-labels",
+      "sourceToken": "--qxframe9a7c2-font-size-11",
+      "currentPx": 11,
+      "directConsumer": "--qxframe9a7c2-theme-font-size-11",
+      "downstream": [
+        "--qxframe9a7c2-badge-sm-font-size",
+        "Descriptions XS label font size"
+      ],
+      "lowerNode": "--qxframe9a7c2-size-5",
+      "lowerPx": 10,
+      "upperNode": "--qxframe9a7c2-size-6",
+      "upperPx": 12,
+      "suggestedTarget": "--qxframe9a7c2-size-5",
+      "suggestedPx": 10,
+      "alternatives": [
+        "--qxframe9a7c2-size-6"
+      ],
+      "visualChange": "-1px",
+      "rationale": "These labels are intentionally subordinate to 12px XS/body text; 10px preserves that hierarchy instead of collapsing upward to 12px.",
+      "risk": "medium",
+      "approved": false,
+      "finalTarget": null
+    },
+    {
+      "id": "font-13-global-sm",
+      "sourceToken": "--qxframe9a7c2-font-size-13",
+      "currentPx": 13,
+      "directConsumer": "--qxframe9a7c2-font-size-sm",
+      "downstream": [
+        "--qxframe9a7c2-theme-font-size-sm",
+        "Card SM",
+        "Descriptions SM/LG labels",
+        "Progress SM/MD",
+        "Loading SM",
+        "Table SM/page info",
+        "Carousel caption",
+        "Badge LG/status",
+        "Empty description"
+      ],
+      "lowerNode": "--qxframe9a7c2-size-6",
+      "lowerPx": 12,
+      "upperNode": "--qxframe9a7c2-size-7",
+      "upperPx": 14,
+      "suggestedTarget": "--qxframe9a7c2-size-7",
+      "suggestedPx": 14,
+      "alternatives": [
+        "--qxframe9a7c2-size-6"
+      ],
+      "visualChange": "+1px",
+      "rationale": "Global small text is broadly used for readable secondary copy. 14px is the safer readability-preserving even node; the tradeoff is that SM and current MD typography become equal unless MD is later re-tiered.",
+      "risk": "high",
+      "approved": false,
+      "finalTarget": null
+    },
+    {
+      "id": "font-13-control-sm",
+      "sourceToken": "--qxframe9a7c2-font-size-13",
+      "currentPx": 13,
+      "directConsumer": ".is-sm --_qxframe9a7c2-size-control-font-size",
+      "downstream": [
+        "SM Control family"
+      ],
+      "lowerNode": "--qxframe9a7c2-size-6",
+      "lowerPx": 12,
+      "upperNode": "--qxframe9a7c2-size-7",
+      "upperPx": 14,
+      "suggestedTarget": "--qxframe9a7c2-size-6",
+      "suggestedPx": 12,
+      "alternatives": [
+        "--qxframe9a7c2-size-7"
+      ],
+      "visualChange": "-1px",
+      "rationale": "Control SM should remain visually below MD 14px. Mapping downward preserves the size hierarchy; XS and SM would share 12px typography while differing by height/padding.",
+      "risk": "medium",
+      "approved": false,
+      "finalTarget": null
+    },
+    {
+      "id": "font-15-control-lg",
+      "sourceToken": "--qxframe9a7c2-font-size-15",
+      "currentPx": 15,
+      "directConsumer": ".is-lg --_qxframe9a7c2-size-control-font-size",
+      "downstream": [
+        "LG Control family"
+      ],
+      "lowerNode": "--qxframe9a7c2-size-7",
+      "lowerPx": 14,
+      "upperNode": "--qxframe9a7c2-size-8",
+      "upperPx": 16,
+      "suggestedTarget": "--qxframe9a7c2-size-8",
+      "suggestedPx": 16,
+      "alternatives": [
+        "--qxframe9a7c2-size-7"
+      ],
+      "visualChange": "+1px",
+      "rationale": "Control LG should remain visually above MD 14px. Mapping upward preserves the hierarchy; LG and XL would share 16px typography while differing by height/padding.",
+      "risk": "medium",
+      "approved": false,
+      "finalTarget": null
+    },
+    {
+      "id": "font-17-unused",
+      "sourceToken": "--qxframe9a7c2-font-size-17",
+      "currentPx": 17,
+      "directConsumer": null,
+      "downstream": [],
+      "lowerNode": "--qxframe9a7c2-size-8",
+      "lowerPx": 16,
+      "upperNode": "--qxframe9a7c2-size-9",
+      "upperPx": 18,
+      "suggestedTarget": null,
+      "suggestedPx": null,
+      "alternatives": [],
+      "suggestedAction": "remove-unused-token",
+      "visualChange": "none if reference audit remains zero",
+      "rationale": "No current canonical SCSS consumer references the numeric 17px preset; retaining it would preserve an odd physical alias with no semantic owner.",
+      "risk": "low",
+      "approved": false,
+      "finalTarget": null
+    }
+  ]
+}
