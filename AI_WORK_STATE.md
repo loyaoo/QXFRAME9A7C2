@@ -14,15 +14,15 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Grid closeout merged; viewport-unit code closeout complete (54 -> 0), exact-head CI pending
+- Current Phase: CSS Grid + viewport closeout merged and verified; small visual-geometry Size Tree batch verified on PR #234 implementation head
 - Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 99%
-Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid final closeout merged; viewport-unit code closeout complete, exact-head CI pending
+Task progress: 99.2%
+Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid + viewport closeout merged; small visual-geometry closeout batch in final checkpoint
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -112,11 +112,24 @@ Recent viewport closeout evidence (2026-10-02):
 - Canonical CSS viewport-unit inventory is now 0; the verifier rejects any future vw/vh/vmin/vmax consumer globally.
 - PR #233 code head `9aa8fa9072baef93f4e2e4ab9eaf1d348d5f3a48` passed QXFRAME CI #1174 / run `36890639622`: Windows tools, Size Tree inventory, Grid map, viewport map, JS geometry map, Full release verification, Phase B inventory generation, npm pack, and standalone dist/docs all succeeded.
 
+Viewport closeout final evidence:
+- PR #233 merged to main as `7773b2a042a196e09f22165ba83ead67ec40f356`.
+- Main QXFRAME CI #1176 / run `36892319564`: SUCCESS, including Full release, Windows tools, npm pack, standalone dist/docs and GitHub Pages deployment.
+- Canonical CSS viewport-unit inventory is 0 and remains verifier-locked.
+
+Small visual-geometry batch (PR #234):
+- Removed the dead public 3px `--qxframe9a7c2-focus-ring` alias; canonical keyboard focus remains the existing 2px Size Tree-backed private focus contract.
+- Switch active press expansion: 3.2px -> Theme geometry token -> Size Tree size-2 (4px).
+- Slider XS/SM rail: 3px -> Theme geometry tokens -> Size Tree size-1 (2px).
+- Slider LG rail: 5px -> Theme geometry token -> Size Tree size-3 (6px).
+- `radius-pill:100rem` is explicitly preserved as a semantic sentinel, not forced into Size Tree.
+- Size Tree candidate inventory: 1259 -> 1254; needs-review: 121 -> 116.
+- PR #234 implementation head `ec4443e96123eb5507f6c4aee75839e96762d492` passed QXFRAME CI #1182 / run `36938028212`: Full release, Windows tools, Size Tree, Grid/viewport/JS geometry gates, npm pack and standalone dist/docs all succeeded.
+
 Next exact step:
-- This checkpoint-only state update must pass exact-head PR #233 QXFRAME CI.
-- Merge PR #233 after that exact-head CI succeeds, then verify main CI.
-- After main is green, mark viewport closeout DONE and continue the final v1.6 CSS token-schema audit/closeout from the next recorded inventory item.
-- Do not reopen completed Grid/Controller work without a demonstrated regression.
+- This checkpoint-only update must pass exact-head PR #234 QXFRAME CI, then merge PR #234 and verify main CI.
+- Continue CSS-TOKEN-SCHEMA-001 in multi-item semantic batches; next low-risk pool is remaining odd/decimal spacing and small geometry, while preserving explicit exceptions (1px hairlines, 100rem pill, 50% circle, protected breakpoints and approved typography exceptions).
+- Do not reopen completed Grid/viewport/Controller work without a demonstrated regression.
 
 
 
