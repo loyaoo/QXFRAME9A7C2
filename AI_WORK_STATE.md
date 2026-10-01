@@ -14,14 +14,14 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Component Semantic API + Motion System migration.
+- Current Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid color-picker/upload batch implemented, CI pending
 - Current Task: `SEMANTIC-MOTION-API-013` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 92%
+Task progress: 95%
 Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid low-risk closeout batch 4 implemented, CI pending
 
 User authority:
@@ -103,10 +103,11 @@ Recent evidence:
 - Control recipe normalization branch rebased onto that main; exact-head CI must pass before merge.
 
 Next exact step:
-- Verify CSS Grid low-risk closeout batch 4 on exact-head CI.
-- This batch converts Card Actions, SelectGroup image, Tree checkbox wrapper, Upload preview panel, and Image wrapper from CSS Grid to Flex/normal positioning.
-- Live CSS Grid set is reduced from 37 to 31 rules; Descriptions/Form span, Card Grid, auto-fit Upload/SelectGroup, Carousel fade and other coupled layouts remain for dedicated structural batches.
+- Verify ColorPicker gradient + Upload list Grid-to-Flex batch on exact-head CI.
+- Live CSS Grid set is reduced from 24 to 19 rules.
+- Remaining structural families are Card Grid/horizontal, Descriptions, Form, Carousel fade.
 - Keep viewport-unit replacement separate and containing-block verified; do not mechanically replace vw/vh.
+
 
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
