@@ -150,7 +150,7 @@
     "verify:css-overlay-arrow": "node tools/verify-css-overlay-arrow.mjs",
     "verify:css-overflow-close-size": "node tools/verify-css-overflow-close-size.mjs",
     "verify:css-card-skeleton-title-size": "node tools/verify-css-card-skeleton-title-size.mjs",
-    "verify:css-theme-control-size-tree": "node tools/verify-css-theme-control-size-tree-current.mjs",
+    "verify:css-theme-control-size-tree": "node tools/verify-css-theme-control-size-tree.mjs",
     "verify:css-theme-exact-size-tree-2": "node tools/verify-css-theme-exact-size-tree-2.mjs",
     "verify:css-control-recipe-even": "node tools/verify-css-control-recipe-even.mjs"
   },
