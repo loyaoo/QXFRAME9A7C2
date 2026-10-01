@@ -27,7 +27,8 @@ const colorPickerSource=read('src/components/color-picker.js');
 const contractsSource=read('src/core/componentContracts.js');
 const baselineCss=read('src/qxframe9a7c2.css');
 const legacyScss=read('src/styles/_legacy.scss');
-const css=compileStyles({root}).css;
+const compiledCss=compileStyles({root}).css;
+const css=baselineCss;
 const postbuild=read('tools/postbuild-release.mjs');
 const tokenDocs=read('docs/assets/qxframe9a7c2-token-reference.js');
 const siteDocs=read('docs/assets/qxframe9a7c2-component-site.js');
@@ -88,7 +89,7 @@ assert.match(css,/\[data-qxframe9a7c2-theme="dark"\]/,'Canonical CSS must contai
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);
 if(!browser){console.log(JSON.stringify({ok:true,structural:true,browserSkipped:true,reason:'chromium not found'}));process.exit(0);}
 const WebSocketClient=await getWebSocketConstructor();
-const safeCss=css.replace(/<\/style/gi,'<\\/style');
+const safeCss=compiledCss.replace(/<\/style/gi,'<\\/style');
 const html=`<!doctype html><meta charset=utf-8><style>${safeCss}</style>
 <div id="light" style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div>
 <div id="lightPopup" class="qxframe9a7c2-popup-surface">light popup</div>
