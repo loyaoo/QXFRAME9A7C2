@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "phase": "drop-indicator-geometry",
+  "themeToken": "--qxframe9a7c2-theme-drop-indicator-size",
+  "presetSource": "--qxframe9a7c2-size-1",
+  "beforePx": 3,
+  "afterPx": 2,
+  "components": [
+    {
+      "component": "Sort",
+      "publicToken": "--qxframe9a7c2-sort-drop-indicator-size",
+      "privateToken": "--_qxframe9a7c2-sort-drop-indicator-size"
+    },
+    {
+      "component": "Upload",
+      "publicToken": "--qxframe9a7c2-upload-drop-indicator-size",
+      "privateToken": "--_qxframe9a7c2-upload-drop-indicator-size"
+    }
+  ],
+  "invariant": "Indicator thickness and negative placement offset are derived from the same owner token."
+}
