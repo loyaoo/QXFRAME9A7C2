@@ -26,7 +26,8 @@ const menuSource=read('src/components/menu.js');
 const colorPickerSource=read('src/components/color-picker.js');
 const contractsSource=read('src/core/componentContracts.js');
 const baselineCss=read('src/qxframe9a7c2.css');
-const legacyScss=read('src/styles/_legacy.scss');
+const phaseAModulePaths=["src/styles/base/_reset.scss","src/styles/preset/_foundation.scss","src/styles/theme/_default.scss","src/styles/theme/_family.scss","src/styles/components/_components.scss"];
+const phaseAModuleScss=phaseAModulePaths.map(read).join('');
 const compiledCss=compileStyles({root}).css;
 const css=baselineCss;
 const postbuild=read('tools/postbuild-release.mjs');
@@ -52,7 +53,8 @@ assert.equal(fs.existsSync(path.join(root,'src/css')),false,'Retired src/css spl
 assert.equal(cssOrder.files.length,1,'CSS order manifest must expose one canonical source entry.');
 assert.equal(cssOrder.files[0].file,'src/styles/qxframe9a7c2.scss','CSS order manifest must point at canonical SCSS entry.');
 assert.equal(cssOrder.migrationBaseline,'src/qxframe9a7c2.css','Phase A must identify the frozen CSS equivalence baseline explicitly.');
-assert.equal(legacyScss,baselineCss,'Phase A legacy SCSS module must be byte-identical to the frozen CSS baseline.');
+assert.deepEqual(cssOrder.migrationModules,phaseAModulePaths,'Phase A migration module order must be explicit and stable.');
+assert.equal(phaseAModuleScss,baselineCss,'Phase A SCSS modules must reconstruct the frozen CSS baseline byte-for-byte.');
 assert.match(postbuild,/compileStyles\(\{\s*root,\s*outputFile:/,'release build must compile canonical SCSS into dist CSS.');
 assert.doesNotMatch(postbuild,/copyFile\(path\.join\(root,\s*['"]src\/qxframe9a7c2\.css['"]/,'release build must not copy the frozen CSS baseline into dist.');
 

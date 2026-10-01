@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 12%
-Phase: Phase 0 complete; Phase A build-authority handoff verified; Phase A source decomposition next
+Task progress: 18%
+Phase: Phase 0 complete; Phase A build-authority handoff verified; Phase A source decomposition implemented, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -45,8 +45,10 @@ Phase A build handoff delivered:
 - Sass is pinned and lockfile-backed at `sass@1.93.2`.
 - `tools/compile-styles.mjs` compiles the SCSS entry into the single `dist/qxframe9a7c2.css` release file.
 - `tools/postbuild-release.mjs` no longer copies `src/qxframe9a7c2.css` into dist.
-- `src/styles/_legacy.scss` is a temporary Phase A migration module and is byte-identical to the frozen CSS baseline.
-- `src/qxframe9a7c2.css` remains temporarily only as the frozen equivalence oracle; it is not a second writable authority and must be removed before Phase A closeout.
+- Phase A source is decomposed into ordered `base / preset / theme / components` SCSS modules at verified top-level boundaries.
+- `theme/_family.scss` is source organization inside the Theme layer; it is not a fourth public Token layer.
+- The temporary `src/styles/_legacy.scss` mirror is removed.
+- `src/qxframe9a7c2.css` remains temporarily only as the frozen read-only equivalence oracle; it does not participate in release builds and must leave `src/` before Phase A closeout.
 - `verify:css-scss-equivalence` proves the migration module is byte-identical to the baseline and that the canonical entry produces the same Sass output as direct baseline compilation.
 - Existing CSS-authority/browser checks execute against compiled SCSS output while structural source assertions still use the frozen baseline during this transition.
 - CI returned to strict `contents: read` + `npm ci`; the one-time lock refresh/write path has been removed.
@@ -74,7 +76,7 @@ Current baseline inventory summary:
 - Inventory values are discovery only; they are not approval for mechanical replacement.
 
 Next exact step:
-- Finish Phase A source decomposition without changing values or cascade: split the temporary legacy module into ordered SCSS source modules while preserving compiled behavior.
+- Verify the decomposed SCSS source with exact-head PR CI, then remove the frozen CSS oracle from `src/` after all remaining hard-coded tool references are redirected to a fixture/compiled output.
 - Then run Phase B and persist the full consumer-level tables for odd/decimal sizes, forbidden units, CSS Grid, and JS geometry coupling.
 - Do not begin Size Tree remapping, odd-size normalization, Grid conversion, or runtime color cleanup until the corresponding inventory/mapping tables are reviewed and gated.
 

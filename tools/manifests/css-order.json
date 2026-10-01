@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "policy": "src/styles/qxframe9a7c2.scss is the production CSS source entry. During Phase A only, src/qxframe9a7c2.css is a frozen equivalence baseline and src/styles/_legacy.scss must remain byte-identical to it. The baseline is not a second writable authority and must be removed before Phase A closeout.",
+  "version": 4,
+  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Phase A is decomposed into ordered SCSS modules. src/qxframe9a7c2.css remains a frozen, read-only equivalence oracle only until Phase A closeout; release output is compiled exclusively from SCSS.",
   "files": [
     {
       "stage": "canonical",
@@ -10,7 +10,18 @@
   ],
   "migrationBaseline": "src/qxframe9a7c2.css",
   "migrationModules": [
-    "src/styles/_legacy.scss"
+    "src/styles/base/_reset.scss",
+    "src/styles/preset/_foundation.scss",
+    "src/styles/theme/_default.scss",
+    "src/styles/theme/_family.scss",
+    "src/styles/components/_components.scss"
+  ],
+  "physicalOrder": [
+    "base",
+    "preset",
+    "theme-default",
+    "theme-family-category",
+    "components"
   ],
   "conceptualOrder": [
     "foundation",
