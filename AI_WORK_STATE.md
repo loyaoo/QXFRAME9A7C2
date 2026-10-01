@@ -19,6 +19,38 @@
 
 ## CURRENT
 
+### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
+Status: IN PROGRESS
+Task progress: 5%
+Phase: Phase 0 complete; Phase A baseline/scaffolding in progress
+
+User authority:
+- Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
+- Preserve interaction/keyboard/value/overlay behavior, icon-font mapping, 24-column Flex Grid math, responsive breakpoints, and Motion lifecycle.
+- Target dependency is Preset -> Theme -> Component -> Private resolved token; Component must not bypass Theme.
+- Size Tree v1 uses 46 sequentially named nodes; scalable visual geometry is rem-based, while exact 1px lines and percentage layout remain allowed.
+- Final framework layout forbids vw/vh/vmin/vmax, fr and CSS Grid; migration requires per-consumer verification, not mechanical replacement.
+- SCSS is source organization/build-time only. Runtime theming remains CSS custom properties; no ThemeController/TokenController.
+
+Baseline / reconciliation (2026-10-01):
+- main HEAD at task start: `fa76cd12729642a8cca9ab1c42b4b9c1e6fbd21a`.
+- Main QXFRAME CI #1039 / run 36803727898: SUCCESS.
+- Open PRs at task start: none.
+- Existing semantic/motion/controller work is frozen and must not be reopened without a demonstrated regression.
+- Current production CSS authority is still `src/qxframe9a7c2.css`; `tools/postbuild-release.mjs` copies it directly to dist.
+- Existing Phase-F verifiers still encode the old single-CSS-source contract and must migrate atomically with the SCSS build handoff.
+
+Delivered in this checkpoint:
+- Added the v1.6 execution guide to the repository.
+- Added `tools/audit-css-token-migration.mjs` for repeatable current-value/unit/Grid/JS-geometry inventory.
+- Added npm script `audit:css-token-migration`.
+- No component style values, selectors, interaction behavior, or dist contract changed in this checkpoint.
+
+Next exact step:
+- Phase A: introduce the SCSS source tree and Sass build seam, then prove compiled CSS visual/cascade equivalence before any Token or size normalization.
+- Update old CSS-authority verifiers in the same atomic change; do not leave CSS and SCSS as dual writable authorities.
+
+
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
 Status: DONE
 Task progress: 100%
