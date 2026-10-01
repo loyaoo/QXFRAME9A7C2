@@ -120,7 +120,9 @@ const report = {
 };
 
 const arg = process.argv.find(x => x.startsWith('--write='));
-if (arg) {
+if (process.argv.includes('--summary')) {
+  console.log(JSON.stringify({ ok:true, baseline:report.baseline, counts:report.counts }));
+} else if (arg) {
   const target = path.resolve(root, arg.slice('--write='.length));
   fs.mkdirSync(path.dirname(target), { recursive:true });
   fs.writeFileSync(target, JSON.stringify(report, null, 2) + '\n');
