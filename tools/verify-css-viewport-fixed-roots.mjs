@@ -34,11 +34,11 @@ assert.match(css,/\.qxframe9a7c2-image-preview-motion\.is-media-image\{max-width
 assert.match(css,/\.qxframe9a7c2-image-preview-motion\.is-media-video\{max-width:min\(94%,112\.5rem\);max-height:82%\}/);
 assert.match(css,/\.qxframe9a7c2-image-preview-motion\.is-media-audio\{width:min\(42rem,calc\(100% - 6rem\)\);min-width:min\(20rem,80%\);max-width:90%\}/);
 
-assert.match(css,/--qxframe9a7c2-notice-viewport-gutter:var\(--qxframe9a7c2-notice-shadow-gutter\)/);
-assert.match(css,/--qxframe9a7c2-notice-available-inline-size:34rem/);
-assert.match(css,/\.qxframe9a7c2-notification-stack\{[\s\S]*?--qxframe9a7c2-notice-viewport-gutter:var\(--qxframe9a7c2-notification-edge-gutter\)/);
+assert.match(css,/--_qxframe9a7c2-notice-viewport-gutter:var\(--qxframe9a7c2-notice-shadow-gutter\)/);
+assert.match(css,/--_qxframe9a7c2-notice-available-inline-size:34rem/);
+assert.match(css,/\.qxframe9a7c2-notification-stack\{[\s\S]*?--_qxframe9a7c2-notice-viewport-gutter:var\(--qxframe9a7c2-notification-edge-gutter\)/);
 assert.match(noticeService,/function syncNoticeAvailableInlineSize\(entry\)/);
-assert.match(noticeService,/--qxframe9a7c2-notice-available-inline-size', available \+ 'px'/);
+assert.match(noticeService,/--_qxframe9a7c2-notice-available-inline-size', available \+ 'px'/);
 assert.match(noticeService,/entry\.layout\.request\('viewport-resize'\)/);
 
 console.log(JSON.stringify({
