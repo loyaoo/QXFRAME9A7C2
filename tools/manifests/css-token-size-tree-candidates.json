@@ -6,7 +6,7 @@
     "defaultRootFontSizePx": 16,
     "automaticOddRounding": false,
     "automaticApproval": false,
-    "note": "Candidate table only. Canonical --size-* definitions and implemented odd-font decisions are excluded; finalTarget and approved remain unset until each remaining consumer/domain decision is reviewed."
+    "note": "Candidate table only. Canonical --size-* definitions and all implemented odd-font decisions are excluded; finalTarget and approved remain unset until each remaining consumer/domain decision is reviewed."
   },
   "sizeTree": [
     {
@@ -241,15 +241,15 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1338,
+    "totalCandidates": 1336,
     "exactNodeCandidates": 938,
-    "needsReview": 157,
+    "needsReview": 155,
     "signedOffsets": 66,
     "pillSentinels": 9,
     "protectedBreakpoints": 234,
     "byLayer": {
       "base": 0,
-      "preset": 3,
+      "preset": 1,
       "theme": 50,
       "component": 1285
     },
@@ -262,59 +262,11 @@
       "shadow": 42,
       "signed-offset": 66,
       "spacing": 511,
-      "typography": 124,
+      "typography": 122,
       "visual-geometry": 32
     }
   },
   "consumers": [
-    {
-      "module": "src/styles/preset/_foundation.scss",
-      "layer": "preset",
-      "line": 274,
-      "raw": "0.6875rem",
-      "unit": "rem",
-      "value": 0.6875,
-      "pxEquivalent": 11,
-      "domain": "typography",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-5",
-        "px": 10
-      },
-      "upperNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-font-size-11: 0.6875rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/preset/_foundation.scss",
-      "layer": "preset",
-      "line": 276,
-      "raw": "0.8125rem",
-      "unit": "rem",
-      "value": 0.8125,
-      "pxEquivalent": 13,
-      "domain": "typography",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "upperNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-font-size-13: 0.8125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
     {
       "module": "src/styles/preset/_foundation.scss",
       "layer": "preset",

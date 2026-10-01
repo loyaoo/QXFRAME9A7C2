@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 54%
-Phase: Phase A/B/C DONE; Size Tree foundation + Grid/vw/JS geometry audits DONE; low-risk odd-font normalization implemented, CI pending
+Task progress: 58%
+Phase: Phase A/B/C DONE; Size Tree foundation + Grid/vw/JS geometry audits DONE; all odd numeric font presets normalized, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -95,10 +95,10 @@ Phase B persisted basis:
 - Temporary CI write permission and self-commit step are removed.
 
 Next exact step:
-- Main CI #1086 at `a168305c8291b4b11146f460ba96cb8125251d52`: SUCCESS after Phase C, Size Tree foundation, viewport/Grid audits and JS geometry ownership audit.
-- Odd-font decision audit PR #210 / CI #1087: SUCCESS and merged as `d0773cf39b112994e414a4d8c0e402dfbacc7581`.
-- Verify low-risk odd-font implementation: Badge XS count 9→10, LG Control 15→16, unused 17 removed.
-- Keep 11px/13px unresolved until their semantic typography tiers are reviewed separately.
+- Low-risk odd-font PR #211 / CI #1090: SUCCESS and merged as `50c8c8d9cc312c5820000fb647ca28f7c02de8b2`.
+- Verify final odd-font semantic batch: 11px small labels -> 12px, 13px global-sm -> 14px, 13px SM Control -> 12px.
+- After this batch, no 9/11/13/15/17 numeric font preset remains.
+- Odd/decimal non-font geometry is tracked separately in PR #212 and must not be mechanically rounded.
 
 
 ### SEMANTIC-MOTION-API-013 — Component Semantic API + Motion System one-track replacement
