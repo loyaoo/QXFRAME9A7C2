@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-01",
+  "generatedAt": "2026-10-02",
   "policy": {
     "source": "QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md §4",
     "defaultRootFontSizePx": 16,
@@ -241,21 +241,21 @@
     }
   ],
   "summary": {
-    "totalCandidates": 1259,
+    "totalCandidates": 1254,
     "exactNodeCandidates": 897,
-    "needsReview": 121,
+    "needsReview": 116,
     "signedOffsets": 48,
     "pillSentinels": 1,
     "protectedBreakpoints": 240,
     "byLayer": {
       "base": 0,
       "preset": 1,
-      "theme": 5,
-      "component": 1253
+      "theme": 4,
+      "component": 1249
     },
     "byDomain": {
       "breakpoint-boundary": 240,
-      "geometry": 120,
+      "geometry": 123,
       "pill-radius-sentinel": 1,
       "position": 40,
       "radius": 130,
@@ -263,7 +263,7 @@
       "signed-offset": 48,
       "spacing": 497,
       "typography": 122,
-      "visual-geometry": 29
+      "visual-geometry": 21
     }
   },
   "consumers": [
@@ -285,30 +285,6 @@
       "upperNode": null,
       "selector": null,
       "text": "--qxframe9a7c2-radius-pill: 100rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/theme/_default.scss",
-      "layer": "theme",
-      "line": 289,
-      "raw": "0.1875rem",
-      "unit": "rem",
-      "value": 0.1875,
-      "pxEquivalent": 3,
-      "domain": "visual-geometry",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-focus-ring: 0 0 0 0.1875rem var(--_qxframe9a7c2-token-focus-ring-color);",
       "finalTarget": null,
       "approved": false
     },
@@ -13515,30 +13491,6 @@
     {
       "module": "src/styles/components/_components.scss",
       "layer": "component",
-      "line": 13688,
-      "raw": ".2rem",
-      "unit": "rem",
-      "value": 0.2,
-      "pxEquivalent": 3.2,
-      "domain": "visual-geometry",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".qxframe9a7c2-switch:active",
-      "text": ".qxframe9a7c2-switch:active{--_qxframe9a7c2-switch-press-offset:.2rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
       "line": 13694,
       "raw": "2px",
       "unit": "px",
@@ -16616,7 +16568,7 @@
       },
       "upperNode": null,
       "selector": ".qxframe9a7c2-notice-stack",
-      "text": "--qxframe9a7c2-notice-available-inline-size:34rem;",
+      "text": "--_qxframe9a7c2-notice-available-inline-size:34rem;",
       "finalTarget": null,
       "approved": false
     },
@@ -16661,7 +16613,7 @@
       },
       "upperNode": null,
       "selector": ".qxframe9a7c2-notification-stack .qxframe9a7c2-notification-root",
-      "text": "min-width:min(18rem,var(--qxframe9a7c2-notice-available-inline-size))",
+      "text": "min-width:min(18rem,var(--_qxframe9a7c2-notice-available-inline-size))",
       "finalTarget": null,
       "approved": false
     },
@@ -16757,7 +16709,7 @@
         "px": 128
       },
       "selector": ".qxframe9a7c2-message-root",
-      "text": "position:relative;box-sizing:border-box;min-width:8rem;max-width:min(34rem,var(--qxframe9a7c2-notice-available-inline-size));",
+      "text": "position:relative;box-sizing:border-box;min-width:8rem;max-width:min(34rem,var(--_qxframe9a7c2-notice-available-inline-size));",
       "finalTarget": null,
       "approved": false
     },
@@ -16778,7 +16730,7 @@
       },
       "upperNode": null,
       "selector": ".qxframe9a7c2-message-root",
-      "text": "position:relative;box-sizing:border-box;min-width:8rem;max-width:min(34rem,var(--qxframe9a7c2-notice-available-inline-size));",
+      "text": "position:relative;box-sizing:border-box;min-width:8rem;max-width:min(34rem,var(--_qxframe9a7c2-notice-available-inline-size));",
       "finalTarget": null,
       "approved": false
     },
@@ -17111,7 +17063,7 @@
       },
       "upperNode": null,
       "selector": ".qxframe9a7c2-notification-root",
-      "text": "position:relative;box-sizing:border-box;min-width:18rem;max-width:min(25rem,var(--qxframe9a7c2-notice-available-inline-size));",
+      "text": "position:relative;box-sizing:border-box;min-width:18rem;max-width:min(25rem,var(--_qxframe9a7c2-notice-available-inline-size));",
       "finalTarget": null,
       "approved": false
     },
@@ -17132,7 +17084,7 @@
       },
       "upperNode": null,
       "selector": ".qxframe9a7c2-notification-root",
-      "text": "position:relative;box-sizing:border-box;min-width:18rem;max-width:min(25rem,var(--qxframe9a7c2-notice-available-inline-size));",
+      "text": "position:relative;box-sizing:border-box;min-width:18rem;max-width:min(25rem,var(--_qxframe9a7c2-notice-available-inline-size));",
       "finalTarget": null,
       "approved": false
     },
@@ -26570,7 +26522,7 @@
       "unit": "rem",
       "value": 0.75,
       "pxEquivalent": 12,
-      "domain": "visual-geometry",
+      "domain": "geometry",
       "status": "exact-node-candidate",
       "exactNode": "size-6",
       "lowerNode": {
@@ -26582,31 +26534,7 @@
         "px": 12
       },
       "selector": ".qxframe9a7c2-slider.is-xs",
-      "text": ".qxframe9a7c2-slider.is-xs{--_qxframe9a7c2-slider-handle-default:.75rem;--_qxframe9a7c2-slider-rail-default:.1875rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15963,
-      "raw": ".1875rem",
-      "unit": "rem",
-      "value": 0.1875,
-      "pxEquivalent": 3,
-      "domain": "visual-geometry",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".qxframe9a7c2-slider.is-xs",
-      "text": ".qxframe9a7c2-slider.is-xs{--_qxframe9a7c2-slider-handle-default:.75rem;--_qxframe9a7c2-slider-rail-default:.1875rem}",
+      "text": ".qxframe9a7c2-slider.is-xs{--_qxframe9a7c2-slider-handle-default:.75rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-size-1)}",
       "finalTarget": null,
       "approved": false
     },
@@ -26618,7 +26546,7 @@
       "unit": "rem",
       "value": 0.875,
       "pxEquivalent": 14,
-      "domain": "visual-geometry",
+      "domain": "geometry",
       "status": "exact-node-candidate",
       "exactNode": "size-7",
       "lowerNode": {
@@ -26630,31 +26558,7 @@
         "px": 14
       },
       "selector": ".qxframe9a7c2-slider.is-sm",
-      "text": ".qxframe9a7c2-slider.is-sm{--_qxframe9a7c2-slider-handle-default:.875rem;--_qxframe9a7c2-slider-rail-default:.1875rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15964,
-      "raw": ".1875rem",
-      "unit": "rem",
-      "value": 0.1875,
-      "pxEquivalent": 3,
-      "domain": "visual-geometry",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-1",
-        "px": 2
-      },
-      "upperNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "selector": ".qxframe9a7c2-slider.is-sm",
-      "text": ".qxframe9a7c2-slider.is-sm{--_qxframe9a7c2-slider-handle-default:.875rem;--_qxframe9a7c2-slider-rail-default:.1875rem}",
+      "text": ".qxframe9a7c2-slider.is-sm{--_qxframe9a7c2-slider-handle-default:.875rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-size-1)}",
       "finalTarget": null,
       "approved": false
     },
@@ -26666,7 +26570,7 @@
       "unit": "rem",
       "value": 1.125,
       "pxEquivalent": 18,
-      "domain": "visual-geometry",
+      "domain": "geometry",
       "status": "exact-node-candidate",
       "exactNode": "size-9",
       "lowerNode": {
@@ -26678,31 +26582,7 @@
         "px": 18
       },
       "selector": ".qxframe9a7c2-slider.is-lg",
-      "text": ".qxframe9a7c2-slider.is-lg{--_qxframe9a7c2-slider-handle-default:1.125rem;--_qxframe9a7c2-slider-rail-default:.3125rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15965,
-      "raw": ".3125rem",
-      "unit": "rem",
-      "value": 0.3125,
-      "pxEquivalent": 5,
-      "domain": "visual-geometry",
-      "status": "needs-review",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-2",
-        "px": 4
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": ".qxframe9a7c2-slider.is-lg",
-      "text": ".qxframe9a7c2-slider.is-lg{--_qxframe9a7c2-slider-handle-default:1.125rem;--_qxframe9a7c2-slider-rail-default:.3125rem}",
+      "text": ".qxframe9a7c2-slider.is-lg{--_qxframe9a7c2-slider-handle-default:1.125rem;--_qxframe9a7c2-slider-rail-default:var(--qxframe9a7c2-size-3)}",
       "finalTarget": null,
       "approved": false
     },
