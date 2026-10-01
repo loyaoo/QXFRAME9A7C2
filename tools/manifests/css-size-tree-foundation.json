@@ -1,0 +1,425 @@
+{
+  "schemaVersion": 1,
+  "phase": "Size Tree foundation",
+  "rootFontSizePx": 16,
+  "nodeCount": 46,
+  "nodes": [
+    {
+      "name": "size-1",
+      "px": 2,
+      "rem": 0.125
+    },
+    {
+      "name": "size-2",
+      "px": 4,
+      "rem": 0.25
+    },
+    {
+      "name": "size-3",
+      "px": 6,
+      "rem": 0.375
+    },
+    {
+      "name": "size-4",
+      "px": 8,
+      "rem": 0.5
+    },
+    {
+      "name": "size-5",
+      "px": 10,
+      "rem": 0.625
+    },
+    {
+      "name": "size-6",
+      "px": 12,
+      "rem": 0.75
+    },
+    {
+      "name": "size-7",
+      "px": 14,
+      "rem": 0.875
+    },
+    {
+      "name": "size-8",
+      "px": 16,
+      "rem": 1
+    },
+    {
+      "name": "size-9",
+      "px": 18,
+      "rem": 1.125
+    },
+    {
+      "name": "size-10",
+      "px": 20,
+      "rem": 1.25
+    },
+    {
+      "name": "size-11",
+      "px": 22,
+      "rem": 1.375
+    },
+    {
+      "name": "size-12",
+      "px": 24,
+      "rem": 1.5
+    },
+    {
+      "name": "size-13",
+      "px": 26,
+      "rem": 1.625
+    },
+    {
+      "name": "size-14",
+      "px": 28,
+      "rem": 1.75
+    },
+    {
+      "name": "size-15",
+      "px": 30,
+      "rem": 1.875
+    },
+    {
+      "name": "size-16",
+      "px": 32,
+      "rem": 2
+    },
+    {
+      "name": "size-17",
+      "px": 34,
+      "rem": 2.125
+    },
+    {
+      "name": "size-18",
+      "px": 36,
+      "rem": 2.25
+    },
+    {
+      "name": "size-19",
+      "px": 38,
+      "rem": 2.375
+    },
+    {
+      "name": "size-20",
+      "px": 40,
+      "rem": 2.5
+    },
+    {
+      "name": "size-21",
+      "px": 42,
+      "rem": 2.625
+    },
+    {
+      "name": "size-22",
+      "px": 44,
+      "rem": 2.75
+    },
+    {
+      "name": "size-23",
+      "px": 46,
+      "rem": 2.875
+    },
+    {
+      "name": "size-24",
+      "px": 48,
+      "rem": 3
+    },
+    {
+      "name": "size-25",
+      "px": 52,
+      "rem": 3.25
+    },
+    {
+      "name": "size-26",
+      "px": 56,
+      "rem": 3.5
+    },
+    {
+      "name": "size-27",
+      "px": 60,
+      "rem": 3.75
+    },
+    {
+      "name": "size-28",
+      "px": 64,
+      "rem": 4
+    },
+    {
+      "name": "size-29",
+      "px": 68,
+      "rem": 4.25
+    },
+    {
+      "name": "size-30",
+      "px": 72,
+      "rem": 4.5
+    },
+    {
+      "name": "size-31",
+      "px": 76,
+      "rem": 4.75
+    },
+    {
+      "name": "size-32",
+      "px": 80,
+      "rem": 5
+    },
+    {
+      "name": "size-33",
+      "px": 88,
+      "rem": 5.5
+    },
+    {
+      "name": "size-34",
+      "px": 96,
+      "rem": 6
+    },
+    {
+      "name": "size-35",
+      "px": 104,
+      "rem": 6.5
+    },
+    {
+      "name": "size-36",
+      "px": 112,
+      "rem": 7
+    },
+    {
+      "name": "size-37",
+      "px": 120,
+      "rem": 7.5
+    },
+    {
+      "name": "size-38",
+      "px": 128,
+      "rem": 8
+    },
+    {
+      "name": "size-39",
+      "px": 144,
+      "rem": 9
+    },
+    {
+      "name": "size-40",
+      "px": 160,
+      "rem": 10
+    },
+    {
+      "name": "size-41",
+      "px": 176,
+      "rem": 11
+    },
+    {
+      "name": "size-42",
+      "px": 192,
+      "rem": 12
+    },
+    {
+      "name": "size-43",
+      "px": 208,
+      "rem": 13
+    },
+    {
+      "name": "size-44",
+      "px": 224,
+      "rem": 14
+    },
+    {
+      "name": "size-45",
+      "px": 240,
+      "rem": 15
+    },
+    {
+      "name": "size-46",
+      "px": 256,
+      "rem": 16
+    }
+  ],
+  "mappings": {
+    "spacing": [
+      {
+        "token": "--qxframe9a7c2-space-1",
+        "px": 2,
+        "node": "--qxframe9a7c2-size-1"
+      },
+      {
+        "token": "--qxframe9a7c2-space-2",
+        "px": 4,
+        "node": "--qxframe9a7c2-size-2"
+      },
+      {
+        "token": "--qxframe9a7c2-space-3",
+        "px": 6,
+        "node": "--qxframe9a7c2-size-3"
+      },
+      {
+        "token": "--qxframe9a7c2-space-4",
+        "px": 8,
+        "node": "--qxframe9a7c2-size-4"
+      },
+      {
+        "token": "--qxframe9a7c2-space-5",
+        "px": 10,
+        "node": "--qxframe9a7c2-size-5"
+      },
+      {
+        "token": "--qxframe9a7c2-space-6",
+        "px": 12,
+        "node": "--qxframe9a7c2-size-6"
+      },
+      {
+        "token": "--qxframe9a7c2-space-7",
+        "px": 14,
+        "node": "--qxframe9a7c2-size-7"
+      },
+      {
+        "token": "--qxframe9a7c2-space-8",
+        "px": 16,
+        "node": "--qxframe9a7c2-size-8"
+      },
+      {
+        "token": "--qxframe9a7c2-space-9",
+        "px": 20,
+        "node": "--qxframe9a7c2-size-10"
+      },
+      {
+        "token": "--qxframe9a7c2-space-10",
+        "px": 24,
+        "node": "--qxframe9a7c2-size-12"
+      },
+      {
+        "token": "--qxframe9a7c2-space-11",
+        "px": 28,
+        "node": "--qxframe9a7c2-size-14"
+      },
+      {
+        "token": "--qxframe9a7c2-space-12",
+        "px": 32,
+        "node": "--qxframe9a7c2-size-16"
+      }
+    ],
+    "evenFontSize": [
+      {
+        "token": "--qxframe9a7c2-font-size-8",
+        "px": 8,
+        "node": "--qxframe9a7c2-size-4"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-10",
+        "px": 10,
+        "node": "--qxframe9a7c2-size-5"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-12",
+        "px": 12,
+        "node": "--qxframe9a7c2-size-6"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-14",
+        "px": 14,
+        "node": "--qxframe9a7c2-size-7"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-16",
+        "px": 16,
+        "node": "--qxframe9a7c2-size-8"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-18",
+        "px": 18,
+        "node": "--qxframe9a7c2-size-9"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-20",
+        "px": 20,
+        "node": "--qxframe9a7c2-size-10"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-22",
+        "px": 22,
+        "node": "--qxframe9a7c2-size-11"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-24",
+        "px": 24,
+        "node": "--qxframe9a7c2-size-12"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-26",
+        "px": 26,
+        "node": "--qxframe9a7c2-size-13"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-28",
+        "px": 28,
+        "node": "--qxframe9a7c2-size-14"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-30",
+        "px": 30,
+        "node": "--qxframe9a7c2-size-15"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-32",
+        "px": 32,
+        "node": "--qxframe9a7c2-size-16"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-34",
+        "px": 34,
+        "node": "--qxframe9a7c2-size-17"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-36",
+        "px": 36,
+        "node": "--qxframe9a7c2-size-18"
+      },
+      {
+        "token": "--qxframe9a7c2-font-size-40",
+        "px": 40,
+        "node": "--qxframe9a7c2-size-20"
+      }
+    ],
+    "radius": [
+      {
+        "token": "--qxframe9a7c2-radius-xs",
+        "px": 2,
+        "node": "--qxframe9a7c2-size-1"
+      },
+      {
+        "token": "--qxframe9a7c2-radius-sm",
+        "px": 4,
+        "node": "--qxframe9a7c2-size-2"
+      },
+      {
+        "token": "--qxframe9a7c2-radius-md",
+        "px": 6,
+        "node": "--qxframe9a7c2-size-3"
+      },
+      {
+        "token": "--qxframe9a7c2-radius-lg",
+        "px": 8,
+        "node": "--qxframe9a7c2-size-4"
+      },
+      {
+        "token": "--qxframe9a7c2-radius-xl",
+        "px": 12,
+        "node": "--qxframe9a7c2-size-6"
+      }
+    ]
+  },
+  "preserved": {
+    "oddFontSizePx": [
+      9,
+      11,
+      13,
+      15,
+      17
+    ],
+    "hairlinePx": 1,
+    "pill": "100rem",
+    "circle": "50%",
+    "motionScales": "not Size Tree consumers"
+  },
+  "policy": "This phase changes dependency only. It does not normalize odd values or alter computed physical defaults."
+}

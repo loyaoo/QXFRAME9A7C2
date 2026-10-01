@@ -21,8 +21,8 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 34%
-Phase: Phase A DONE; Phase B DONE; Phase C layered bridge refined for scoped Component motion overrides, CI pending
+Task progress: 44%
+Phase: Phase A DONE; Phase B DONE; Phase C DONE on main; Size Tree foundation implemented on branch, CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
