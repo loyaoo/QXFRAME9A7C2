@@ -6,7 +6,7 @@
     "Theme": {
       "status": "converged-css-only",
       "canonicalOwner": [
-        "src/qxframe9a7c2.css theme selectors",
+        "src/styles/qxframe9a7c2.scss theme selectors",
         "CSS custom-property inheritance",
         "caller-owned scoped portalContainer"
       ],
@@ -27,7 +27,7 @@
     "Tokens": {
       "status": "converged-css-only",
       "canonicalOwner": [
-        "src/qxframe9a7c2.css canonical --qxframe9a7c2-* / --_qxframe9a7c2-* graph"
+        "src/styles/qxframe9a7c2.scss canonical --qxframe9a7c2-* / --_qxframe9a7c2-* graph"
       ],
       "legacyOwners": [
         "Core.Config tokens/getToken",
