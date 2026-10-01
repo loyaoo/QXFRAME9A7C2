@@ -350,7 +350,7 @@
 /* Shared collapsed/responsive overflow disclosure projection.
  * Popup lifecycle belongs to Components.Popover and scrolling belongs to Components.Scroll;
  * these classes only align list/row/action/close presentation across consumers such as Tags and Tabs. */
-.qxframe9a7c2-overflow-scroll-host{box-sizing:border-box;width:min(22rem,70vw);min-width:12rem;max-width:100%;overflow:hidden}
+.qxframe9a7c2-overflow-scroll-host{box-sizing:border-box;width:22rem;min-width:0;max-width:100%;overflow:hidden}
 .qxframe9a7c2-overflow-list{box-sizing:border-box;display:flex;min-width:0;flex-direction:column;gap:var(--qxframe9a7c2-space-1);padding:var(--qxframe9a7c2-space-1)}
 .qxframe9a7c2-overflow-item{box-sizing:border-box;display:flex;min-width:0;min-height:calc(var(--_qxframe9a7c2-control-height) - var(--qxframe9a7c2-space-2));align-items:center;gap:var(--qxframe9a7c2-space-2);padding:0 var(--qxframe9a7c2-space-2);border-radius:var(--_qxframe9a7c2-navigation-radius);color:var(--_qxframe9a7c2-semantic-text-secondary)}
 .qxframe9a7c2-overflow-item:hover{background:var(--_qxframe9a7c2-navigation-hover-bg);color:var(--_qxframe9a7c2-semantic-text)}

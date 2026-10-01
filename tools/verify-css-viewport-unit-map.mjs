@@ -9,7 +9,7 @@ const persisted=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-v
 const current=generateViewportUnitMap({rootDir:root});
 assert.deepEqual(persisted.summary,current.summary,'Viewport-unit classification summary is stale.');
 assert.deepEqual(persisted.consumers,current.consumers,'Viewport-unit consumer map is stale.');
-assert.equal(current.summary.total,54,'Phase B baseline must expose 54 viewport-unit occurrences before conversion starts.');
+assert.equal(current.summary.total,0,'Viewport closeout requires zero vw/vh/vmin/vmax occurrences in canonical framework CSS.');
 assert.equal(current.policy.automaticReplacementApproved,false);
-assert.ok(current.consumers.every(x=>x.approved===false&&x.finalReplacement===null),'Audit must not pre-approve replacements.');
+assert.deepEqual(current.consumers,[],'Viewport closeout must not retain classified consumers.');
 console.log(JSON.stringify({ok:true,...current.summary}));

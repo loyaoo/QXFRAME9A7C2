@@ -7,22 +7,22 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-09-30
+- Last checkpoint date: 2026-10-02
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid final structural closeout implemented, CI pending
-- Current Task: `SEMANTIC-MOTION-API-013` (IN PROGRESS)
+- Current Phase: CSS Grid closeout merged; viewport-unit code closeout complete (54 -> 0), exact-head CI pending
+- Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 97%
-Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid low-risk closeout batch 4 implemented, CI pending
+Task progress: 99%
+Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid final closeout merged; viewport-unit code closeout complete, exact-head CI pending
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -102,11 +102,21 @@ Recent evidence:
 - PR #222 merged as `7f528805ccde31cd42c608ef7deef4f6975d8435` after CI #1124 SUCCESS.
 - Control recipe normalization branch rebased onto that main; exact-head CI must pass before merge.
 
+Recent viewport closeout evidence (2026-10-02):
+- PR #232 merged to main as `f74409534045d5fdf60dbd281cf72805fd1c7ad7`; CSS Grid/fr live inventory is zero.
+- PR #233 is the active viewport closeout branch.
+- Fixed-root Modal/Drawer/Notice rail batch removed 12 consumers: 54 -> 42.
+- Container-relative popup/overflow/loading/sort batch removed 19 consumers: 42 -> 23.
+- Upload preview and Image preview now derive percentage constraints from their proven fixed `inset:0` preview roots; Image trajectory JS keeps its existing pixel geometry ownership.
+- NoticeService preserves the zero-width list/absolute slot model and now projects measured viewport availability through `--qxframe9a7c2-notice-available-inline-size`; no percentage is resolved against the zero-width list.
+- Canonical CSS viewport-unit inventory is now 0; the verifier rejects any future vw/vh/vmin/vmax consumer globally.
+- PR #233 code head `9aa8fa9072baef93f4e2e4ab9eaf1d348d5f3a48` passed QXFRAME CI #1174 / run `36890639622`: Windows tools, Size Tree inventory, Grid map, viewport map, JS geometry map, Full release verification, Phase B inventory generation, npm pack, and standalone dist/docs all succeeded.
+
 Next exact step:
-- Verify final CSS Grid structural closeout on exact-head CI.
-- Live CSS Grid/fr set is now 0; 24-column QXFRAME Flex Grid remains untouched.
-- After Grid closeout, continue viewport-unit containing-block batches and final v1.6 audit.
-- Do not mechanically replace vw/vh; every replacement must preserve popup/overlay/container geometry.
+- This checkpoint-only state update must pass exact-head PR #233 QXFRAME CI.
+- Merge PR #233 after that exact-head CI succeeds, then verify main CI.
+- After main is green, mark viewport closeout DONE and continue the final v1.6 CSS token-schema audit/closeout from the next recorded inventory item.
+- Do not reopen completed Grid/Controller work without a demonstrated regression.
 
 
 
