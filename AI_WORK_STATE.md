@@ -110,12 +110,13 @@ Recent viewport closeout evidence (2026-10-02):
 - Upload preview and Image preview now derive percentage constraints from their proven fixed `inset:0` preview roots; Image trajectory JS keeps its existing pixel geometry ownership.
 - NoticeService preserves the zero-width list/absolute slot model and now projects measured viewport availability through `--qxframe9a7c2-notice-available-inline-size`; no percentage is resolved against the zero-width list.
 - Canonical CSS viewport-unit inventory is now 0; the verifier rejects any future vw/vh/vmin/vmax consumer globally.
+- PR #233 code head `9aa8fa9072baef93f4e2e4ab9eaf1d348d5f3a48` passed QXFRAME CI #1174 / run `36890639622`: Windows tools, Size Tree inventory, Grid map, viewport map, JS geometry map, Full release verification, Phase B inventory generation, npm pack, and standalone dist/docs all succeeded.
 
 Next exact step:
-- Run exact-head PR #233 QXFRAME CI and inspect any verifier/browser regression.
-- If CI fails, fix only demonstrated viewport-closeout regressions; do not reopen completed Grid/Controller work.
-- Merge PR #233 only after full QXFRAME CI succeeds, then verify main CI.
-- After main is green, continue the final v1.6 CSS token-schema audit/closeout from the next recorded inventory item.
+- This checkpoint-only state update must pass exact-head PR #233 QXFRAME CI.
+- Merge PR #233 after that exact-head CI succeeds, then verify main CI.
+- After main is green, mark viewport closeout DONE and continue the final v1.6 CSS token-schema audit/closeout from the next recorded inventory item.
+- Do not reopen completed Grid/Controller work without a demonstrated regression.
 
 
 
