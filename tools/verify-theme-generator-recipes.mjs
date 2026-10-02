@@ -71,7 +71,7 @@ for(const theme of [stone,primary,customBlue,chart]){
   assert.ok(!theme.css.includes('--_qxframe9a7c2-'));
   assert.ok(!theme.css.includes('!important'));
   assert.ok(!theme.css.includes('.qxframe9a7c2-'));
-  assert.equal((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8056);
+  assert.equal((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8060);
   assert.ok(!/color-mix\(/.test(theme.tokens.light['--qxframe9a7c2-theme-color-token-subtle-selected-1']||''));
 }
 
