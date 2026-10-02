@@ -115,6 +115,14 @@ function applyRoleConfig(tokenMaps,schema,config,changed,neutralChanged){
     }
   }
 }
+function normalizeOnColors(tokenMaps,schema,changed){
+  const primaryName='--qxframe9a7c2-theme-primary';
+  const foregroundName='--qxframe9a7c2-theme-primary-foreground';
+  if(!schema.tokenSet.has(foregroundName))return;
+  const light=chooseOnColor(tokenMaps.light[primaryName]).css;
+  const dark=chooseOnColor(tokenMaps.dark[primaryName]).css;
+  setPublic(tokenMaps,schema,changed,foregroundName,light,dark);
+}
 function applyChartConfig(tokenMaps,schema,config,changed){
   if(config.chart.preset==='balanced')return;
   const anchors={cool:'#2563eb',warm:'#d97706',mixed:'#7c3aed',mono:'#52525b',balanced:'#5b5bd6'};
@@ -301,6 +309,7 @@ function applyColorConfiguration(tokenMaps,schema,recipeData,config){
   const changed={light:new Map(),dark:new Map()};
   const neutralChanged=applyPaletteConfig(tokenMaps,schema,config,changed);
   applyRoleConfig(tokenMaps,schema,config,changed,neutralChanged);
+  normalizeOnColors(tokenMaps,schema,changed);
   applyChartConfig(tokenMaps,schema,config,changed);
   const recipeExpanded=recipeCustomization(config);
   const customized=colorCustomization(config);
