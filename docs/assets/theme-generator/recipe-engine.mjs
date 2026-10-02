@@ -67,7 +67,7 @@ function recipeCustomization(config){
   return false;
 }
 function colorCustomization(config){
-  return recipeCustomization(config)||config.chart.preset!=='balanced';
+  return recipeCustomization(config)||config.chart.color!=='primary';
 }
 function applyScaleTokens(tokenMaps,schema,changed,prefix,scale,tuple){
   scale.forEach((item,index)=>{
@@ -123,12 +123,17 @@ function normalizeOnColors(tokenMaps,schema,changed){
   const dark=chooseOnColor(tokenMaps.dark[primaryName]).css;
   setPublic(tokenMaps,schema,changed,foregroundName,light,dark);
 }
+function chartSeed(tokenMaps,config,mode){
+  const source=config.chart.color;
+  if(source==='primary')return parseColor(tokenMaps[mode]['--qxframe9a7c2-theme-primary']);
+  if(source==='neutral')return parseColor(tokenMaps[mode]['--qxframe9a7c2-theme-neutral-5']);
+  return roleSeed(source,tokenMaps,mode);
+}
 function applyChartConfig(tokenMaps,schema,config,changed){
-  if(config.chart.preset==='balanced')return;
-  const anchors={cool:'#2563eb',warm:'#d97706',mixed:'#7c3aed',mono:'#52525b',balanced:'#5b5bd6'};
-  const seed=anchors[config.chart.preset]||anchors.balanced;
-  const light=chartPalette(config.chart.preset,seed,8,'light');
-  const dark=chartPalette(config.chart.preset,seed,8,'dark');
+  const lightSeed=chartSeed(tokenMaps,config,'light');
+  const darkSeed=chartSeed(tokenMaps,config,'dark');
+  const light=chartPalette('mono',lightSeed,8,'light');
+  const dark=chartPalette('mono',darkSeed,8,'dark');
   for(let i=0;i<8;i+=1)setPublic(tokenMaps,schema,changed,'--qxframe9a7c2-theme-chart-'+(i+1),colorToCss(light[i]),colorToCss(dark[i]));
 }
 function validateRecipeData(data){
