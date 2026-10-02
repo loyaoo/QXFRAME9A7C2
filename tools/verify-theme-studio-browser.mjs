@@ -131,6 +131,15 @@ try{
   const warning=await evaluate(cdp,sessionId,'(function(){var t=window.QXFRAME9A7C2_THEME_STUDIO.getTheme();var audit=document.querySelector(\'[data-studio-audit]\');return {warning:t.reports.readability.warnings.some(function(x){return x.id===\'light-text-secondary\';}),ui:audit.classList.contains(\'is-warning\'),text:audit.textContent};})()');
   assert.equal(warning.warning,true);assert.equal(warning.ui,true);assert.match(warning.text,/light-text-secondary/i);
 
+  await evaluate(cdp,sessionId,'(function(){document.querySelector(\'[data-studio-reset]\').click();return true;})()');
+  await waitFor(cdp,sessionId,'window.QXFRAME9A7C2_THEME_STUDIO.getConfig().style===\'balanced\'&&Object.keys(window.QXFRAME9A7C2_THEME_STUDIO.getConfig().advanced.overrides).length===0',5000);
+  const presetModes=await evaluate(cdp,sessionId,'(async function(){var cases=[\'signal\',\'harbor\',\'ember\',\'graphite\'],out=[];function pause(){return new Promise(function(resolve){setTimeout(resolve,120);});}for(var i=0;i<cases.length;i+=1){var preset=document.querySelector(\'[data-studio-preset]\');preset.value=cases[i];preset.dispatchEvent(new Event(\'change\',{bubbles:true}));await pause();for(var m=0;m<2;m+=1){var mode=m?\'dark\':\'light\';document.querySelector(\'[data-studio-mode="\'+mode+\'"]\').click();await pause();var root=getComputedStyle(document.documentElement),card=document.querySelector(\'.qxframe9a7c2-studio-scene\'),button=document.querySelector(\'.qxframe9a7c2-studio-scene .qxframe9a7c2-button\'),config=window.QXFRAME9A7C2_THEME_STUDIO.getConfig();out.push({preset:cases[i],mode:mode,style:config.style,baseColor:config.baseColor,primary:config.roles.primary,signature:[root.getPropertyValue(\'--qxframe9a7c2-theme-primary\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-menu-background\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-radius-md\').trim(),card?getComputedStyle(card).backgroundColor:\'\',button?getComputedStyle(button).backgroundColor:\'\'].join(\'|\')});}}return out;})()');
+  assert.equal(presetModes.length,8);
+  const expectedPresets={signal:{style:'precision',baseColor:'zinc',primary:'blue'},harbor:{style:'soft',baseColor:'mist',primary:'cyan'},ember:{style:'balanced',baseColor:'stone',primary:'orange'},graphite:{style:'precision',baseColor:'zinc',primary:'#52525b'}};
+  for(const row of presetModes){assert.equal(row.style,expectedPresets[row.preset].style);assert.equal(row.baseColor,expectedPresets[row.preset].baseColor);assert.equal(row.primary,expectedPresets[row.preset].primary);assert.ok(row.signature.split('|').every(Boolean),'Preset/mode computed signature must be complete: '+row.preset+' '+row.mode);}
+  for(const preset of Object.keys(expectedPresets)){const pair=presetModes.filter(row=>row.preset===preset);assert.equal(pair.length,2);assert.notEqual(pair[0].signature,pair[1].signature,'Light/Dark computed preview must differ for '+preset);}
+  assert.ok(new Set(presetModes.map(row=>row.signature)).size>=6,'Representative preset/mode previews must produce materially distinct computed signatures.');
+
   console.log(JSON.stringify({
     phase:'TG-G-studio-browser',
     commercialScenes:initial.scenes,
@@ -141,6 +150,7 @@ try{
     lightDarkPreview:true,
     publicOverrideUi:true,
     readabilityWarningUi:true,
+    representativePresetModes:8,
     rootInlineTheme:false
   }));
 }finally{
