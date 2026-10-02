@@ -134,6 +134,10 @@ function normalizeColorOrPalette(value, path) {
   if (looksLikeColor(value)) return String(value).trim();
   throw new TypeError(path + ' must be a palette id or HEX/RGB/HSL/OKLCH color.');
 }
+function normalizeSeedColor(value,path){
+  if(looksLikeColor(value))return String(value).trim();
+  throw new TypeError(path + ' must be a HEX/RGB/HSL/OKLCH color seed.');
+}
 
 function normalizePalette(input) {
   const source = input == null ? {} : input;
@@ -141,7 +145,7 @@ function normalizePalette(input) {
   const result = {};
   for (const key of PALETTE_KEYS) {
     const value = source[key];
-    result[key] = value == null || value === '' ? null : normalizeColorOrPalette(value, 'palette.' + key);
+    result[key] = value == null || value === '' ? null : normalizeSeedColor(value, 'palette.' + key);
   }
   return result;
 }
