@@ -141,6 +141,10 @@ function applyStyle(tokenMaps,schema,config,changed){
     setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-switch-padding-'+size,rem(p.switchPadding[index]));
     setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-slider-rail-'+size,rem(p.sliderRail[index]));
     setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-slider-handle-'+size,rem(p.sliderHandleHeight[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-width-'+size,rem(p.switchThumbWidth[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-height-'+size,rem(p.switchThumbHeight[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-width-'+size,rem(p.sliderHandleWidth[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-height-'+size,rem(p.sliderHandleHeight[index]));
   });
   const roleTokens={control:'--qxframe9a7c2-family-control-radius',action:'--qxframe9a7c2-family-action-radius',navigation:'--qxframe9a7c2-family-navigation-radius',data:'--qxframe9a7c2-family-data-radius',popup:'--qxframe9a7c2-family-popup-radius',surface:'--qxframe9a7c2-family-surface-radius'};
   for(const [key,name] of Object.entries(roleTokens))setToken(tokenMaps,schema,changed,name,radiusValue(p.radius[key]));
@@ -148,12 +152,15 @@ function applyStyle(tokenMaps,schema,config,changed){
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-radius',radiusValue(p.radius.switchThumb));
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-rail-radius',radiusValue(p.radius.sliderRail));
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-radius',radiusValue(p.radius.sliderHandle));
-  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-width',rem(p.switchThumbWidth[2]));
-  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-height',rem(p.switchThumbHeight[2]));
-  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-width',rem(p.sliderHandleWidth[2]));
-  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-height',rem(p.sliderHandleHeight[2]));
   const cardTokens=['xs','sm','md','lg','xl'];
   cardTokens.forEach((size,index)=>setToken(tokenMaps,schema,changed,'--qxframe9a7c2-card-'+size+'-padding',rem(p.cardPadding[index])));
+  const switchBorder={luma:2,sera:1,rhea:2}[config.style]||0;
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-track-border-width',rem(switchBorder));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-slider-handle-border-width',config.style==='sera'?'0':rem(1));
+  if(config.style==='sera'){
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-background',tokenMaps.light['--qxframe9a7c2-theme-primary'],tokenMaps.dark['--qxframe9a7c2-theme-primary']);
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-border-color','transparent');
+  }
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-button-shadow-blur',rem(p.shadow[0]));
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-shadow-blur-sm',rem(p.shadow[1]));
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-shadow-blur-lg',rem(p.shadow[2]));
