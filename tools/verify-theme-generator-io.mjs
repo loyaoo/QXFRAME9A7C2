@@ -9,17 +9,17 @@ const recipes=JSON.parse(fs.readFileSync(new URL('../docs/generated/theme-color-
 const imported=importConfigJson(JSON.stringify({
   schema:1,
   name:'Acme Theme',
-  style:'soft',
+  style:'luma',
   baseColor:'zinc',
   roles:{primary:'#7c3aed'},
-  chart:{preset:'warm'},
+  chart:{color:'orange'},
   typography:{body:'inter',heading:'humanist',mono:'system-mono',baseSize:16},
   radius:'small',
   density:'compact',
   components:{menu:{color:'primary',appearance:'soft',accent:'balanced'}}
 }));
 assert.equal(imported.name,'Acme Theme');
-assert.equal(imported.style,'soft');
+assert.equal(imported.style,'luma');
 assert.equal(imported.radius,'small');
 assert.equal(imported.density,'compact');
 
@@ -45,6 +45,8 @@ assert.equal(legacy.baseColor,'zinc');
 assert.equal(legacy.typography.body,'inter');
 assert.equal(legacy.radius,'large');
 assert.equal(legacy.density,'default');
+assert.equal(legacy.style,'vega');
+assert.equal(legacy.chart.color,'primary');
 
 assert.equal(safeName(' Hello / Theme '),'hello-theme');
 assert.throws(()=>importConfigJson('not json'),/invalid/);
