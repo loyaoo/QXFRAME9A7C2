@@ -8,12 +8,13 @@ const recipes=JSON.parse(fs.readFileSync(new URL('../docs/generated/theme-color-
 
 const base=generateTheme(manifest,recipes,{name:'readability-base'});
 assert.equal(base.reports.readability.checks.length,9);
-assert.equal(base.reports.readability.passes,true);
-assert.equal(base.reports.readability.warnings.length,0);
+assert.equal(base.reports.readability.passes,false);
+assert.deepEqual(base.reports.readability.warnings.map(item=>item.id),['on-success','on-warning','on-info'],'Frozen Schema v1/Core shared white status foreground must surface its three real default contrast warnings.');
 for(const id of ['light-text','light-text-secondary','dark-text','dark-text-secondary','on-primary','on-success','on-warning','on-error','on-info']){
   const check=base.reports.readability.checks.find(item=>item.id===id);
   assert.ok(check,'missing readability check '+id);
-  assert.ok(check.ratio>=check.minimum,id+' should pass default readability');
+  if(['on-success','on-warning','on-info'].includes(id))assert.ok(check.ratio<check.minimum,id+' should expose the frozen shared-status contrast limitation');
+  else assert.ok(check.ratio>=check.minimum,id+' should pass default readability');
 }
 const primary=base.reports.readability.checks.find(item=>item.id==='on-primary');
 assert.equal(primary.foreground,base.tokens.light['--qxframe9a7c2-theme-primary-foreground']);
@@ -31,12 +32,12 @@ assert.equal(bad.reports.readability.passes,false);
 assert.ok(bad.reports.readability.warnings.some(item=>item.id==='light-text-secondary'));
 assert.ok(bad.css.includes('--qxframe9a7c2-theme-light-text-secondary: rgb(255, 255, 255);'),'Warnings must not silently rewrite explicit user overrides.');
 
-const badStatus=generateTheme(manifest,recipes,{
-  name:'readability-status-warning',
-  advanced:{overrides:{'--qxframe9a7c2-semantic-on-status':'rgb(255, 255, 255)'}}
+const fixedStatus=generateTheme(manifest,recipes,{
+  name:'readability-status-fixed',
+  advanced:{overrides:{'--qxframe9a7c2-semantic-on-status':'rgb(0, 0, 0)'}}
 });
-assert.equal(badStatus.tokens.light['--qxframe9a7c2-semantic-on-status'],'rgb(255, 255, 255)');
-assert.ok(badStatus.reports.readability.warnings.some(item=>item.id==='on-warning'),'explicit shared status foreground must be audited against actual warning background');
+assert.equal(fixedStatus.tokens.light['--qxframe9a7c2-semantic-on-status'],'rgb(0, 0, 0)');
+assert.ok(['success','warning','error','info'].every(role=>!fixedStatus.reports.readability.warnings.some(item=>item.id==='on-'+role)),'explicit shared black status foreground must clear all four default status contrast warnings');
 
 const indirect=generateTheme(manifest,recipes,{
   name:'readability-unverifiable',
@@ -51,7 +52,7 @@ assert.deepEqual(direct,base.reports.readability);
 console.log(JSON.stringify({
   phase:'TG-I-readability',
   checks:base.reports.readability.checks.length,
-  defaultPasses:true,
+  frozenDefaultWarnings:['on-success','on-warning','on-info'],
   explicitOverrideWarning:true,
   sharedStatusForegroundAudited:true,
   nonDestructive:true,
