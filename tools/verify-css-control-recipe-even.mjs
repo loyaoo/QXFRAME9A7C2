@@ -1,9 +1,10 @@
 import fs from 'node:fs';
+import { readEffectiveControlRecipes } from './css-control-recipe-source.mjs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=fs.readFileSync(path.join(root,'src/styles/theme/_family.scss'),'utf8');
+const css=readEffectiveControlRecipes(root);
 const m=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-control-recipe-even.json'),'utf8'));
 for(const item of m.mappings){
   assert.equal(css.includes(item.from),false,'Retired odd control literal remains: '+item.from);

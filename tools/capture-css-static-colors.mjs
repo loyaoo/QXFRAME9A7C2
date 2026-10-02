@@ -7,6 +7,7 @@ import { getCanonicalStyleModulePaths } from './style-source.mjs';
 import { browserProbes } from './audit-css-schema-acceptance.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+export function collectMixEntries() {
 const entries = [];
 for (const file of getCanonicalStyleModulePaths({ root })) {
   const text = fs.readFileSync(path.join(root, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
@@ -26,16 +27,20 @@ for (const file of getCanonicalStyleModulePaths({ root })) {
     entry.consumers.push({ file, line: text.slice(0, match.index).split('\n').length });
   }
 }
-const variants = ['', 'grey', 'gray', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange', 'red', 'pink', 'purple', 'blue', 'azure', 'white', 'black', 'primary', 'success', 'warning', 'error', 'info'];
+return entries;
+}
+const entries = collectMixEntries();
+if (process.argv.includes('--inventory')) { console.log(JSON.stringify(entries)); process.exit(0); }
+const variants = ['', 'default', 'grey', 'gray', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange', 'red', 'pink', 'purple', 'blue', 'azure', 'white', 'black', 'primary', 'success', 'warning', 'error', 'info'];
 const expression = `(() => {
   const entries = ${JSON.stringify(entries)}, variants = ${JSON.stringify(variants)}, result = {};
   const scope = document.getElementById('scope');
-  const probe = document.createElement('div'); scope.appendChild(probe);
+  const probe = document.createElement('div'); probe.style.setProperty('transition', 'none', 'important'); probe.style.setProperty('animation', 'none', 'important'); scope.appendChild(probe);
   for (const mode of ['light', 'dark']) {
     scope.setAttribute('data-qxframe9a7c2-theme', mode); result[mode] = {};
     for (const variant of variants) {
       probe.className = 'qxframe9a7c2-button' + (variant ? ' is-' + variant : '');
-      result[mode][variant || 'default'] = entries.map(entry => {
+      result[mode][variant || 'bare'] = entries.map(entry => {
         probe.style.backgroundColor = ''; probe.style.backgroundColor = entry.expression;
         const value = getComputedStyle(probe).backgroundColor;
         return value;
@@ -49,6 +54,6 @@ fs.mkdirSync(path.join(root, 'artifacts'), { recursive: true });
 fs.writeFileSync(path.join(root, 'artifacts/css-static-color-baseline.json'), JSON.stringify(result, null, 2) + '\n');
 // Chunked log records allow evidence retrieval through the authenticated connector.
 for (const mode of ['light', 'dark']) for (const variant of variants) {
-  console.log('STATIC_COLOR_ROW ' + JSON.stringify({ mode, variant: variant || 'default', values: result.colors[mode][variant || 'default'] }));
+  console.log('STATIC_COLOR_ROW ' + JSON.stringify({ mode, variant: variant || 'bare', values: result.colors[mode][variant || 'bare'] }));
 }
 console.log(JSON.stringify({ ok: true, expressions: entries.length, consumers: entries.reduce((n, e) => n + e.consumers.length, 0), browser: result.browser }));

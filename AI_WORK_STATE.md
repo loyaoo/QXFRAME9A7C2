@@ -21,11 +21,12 @@
 
 ### CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
 Status: IN_PROGRESS
-Progress: remediation task 0%; base controller migration and Size Tree/Grid/SCSS subset remain complete.
+Progress: remediation task 25%; base controller migration and Size Tree/Grid/SCSS subset remain complete.
 Baseline: PR #245 head f60dcfd8ee6cc6eddf64130809f867e1376c722d; main 72663d3530e16b582b8891491fa8f7e8b01ccda9.
 CI reconciled: QXFRAME CI run 36971170983 SUCCESS; strict CSS Schema Acceptance run 36971171051 FAILURE (four computed-style probes and color inventory).
 Scope: implement SCHEMA-ACCEPT-002/004/005/003; keep default visual behavior, explicit ancestor Component overrides and scoped Theme inheritance. Keep strict acceptance and existing release gates.
-Next exact step: add consumed public Theme control recipes; replace early Component aliases with fallback-at-consumer resolution; then staticize color consumers with Light/Dark/color-axis evidence and run GitHub browser/release CI.
+Implemented: 35 Theme control geometry recipes; 66 optional Component fallbacks resolve at consumers. Chromium run 36972877977 / job 110730388835 confirms all 9 probes PASS; only live color-mix remains an acceptance blocker. Full release currently fails an old direct Component-alias assertion; verifiers are being changed to verify the real fallback graph, retaining exact historical normalization mappings. Initial color capture was rejected as evidence because transitions interfered with synchronous sampling.
+Next exact step: obtain transition-free Light/Dark/color-axis baseline including Default; replace all live formulas with static Theme roles, add full browser color comparison and nested/override probes, then rerun strict acceptance/full release.
 
 ### ASTRA-HIGH-FINAL-ACCEPTANCE — CSS Schema acceptance
 Status: REVIEW_COMPLETE / NOT_ACCEPTED / REMEDIATION_REQUIRED
