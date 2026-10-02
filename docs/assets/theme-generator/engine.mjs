@@ -1,3 +1,5 @@
+import {parseColor,colorToCss} from './color-engine.mjs';
+
 const SCHEMA_VERSION = 1;
 const GENERATOR_VERSION = '1.0.0-dev';
 
@@ -259,11 +261,17 @@ function readSchema(manifest) {
   });
 }
 
+function normalizeOutputColorSyntax(value) {
+  const text=String(value == null ? '' : value).trim();
+  if(/^color\(srgb\s/i.test(text))return colorToCss(parseColor(text));
+  return text;
+}
+
 function createTokenMaps(schema) {
   if (!schema || schema.schema !== SCHEMA_VERSION || !Array.isArray(schema.order)) throw new TypeError('A validated Theme Schema v1 contract is required.');
   return {
-    light: Object.fromEntries(schema.order.map(name => [name, schema.defaults.light[name]])),
-    dark: Object.fromEntries(schema.order.map(name => [name, schema.defaults.dark[name]]))
+    light: Object.fromEntries(schema.order.map(name => [name, normalizeOutputColorSyntax(schema.defaults.light[name])])),
+    dark: Object.fromEntries(schema.order.map(name => [name, normalizeOutputColorSyntax(schema.defaults.dark[name])]))
   };
 }
 
@@ -273,8 +281,9 @@ function applyExplicitOverrides(tokenMaps, schema, config) {
     if (!schema.tokenSet.has(name) && !schema.optionalSet.has(name)) {
       throw new TypeError('Unknown public token override: ' + name);
     }
-    tokenMaps.light[name] = value;
-    tokenMaps.dark[name] = value;
+    const normalizedValue = normalizeOutputColorSyntax(value);
+    tokenMaps.light[name] = normalizedValue;
+    tokenMaps.dark[name] = normalizedValue;
   }
   return tokenMaps;
 }
