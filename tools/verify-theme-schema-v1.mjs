@@ -47,13 +47,14 @@ if(process.argv.includes('--browser')){
   // Real popup/overlay components; physical scoped portal ownership, not a
   // copied class/token bridge. Same core UMD build used by canonical docs.
   const umd=fs.readFileSync('dist/qxframe9a7c2.js','utf8');
+  fs.mkdirSync('artifacts',{recursive:true});fs.writeFileSync('artifacts/theme-schema-v1-freeze.json',JSON.stringify({schema:1,menuDefaultCases:before.length,roles,portalStatus:'pending'},null,2)+'\n');
   const portals=await browserProbes({expression:`(async () => {
     (0,eval)(${JSON.stringify(umd)});const C=QXFRAME9A7C2.Components,scope=document.getElementById('scope'),checks=[];
     const add=(name,passed)=>checks.push({name,passed});
     scope.setAttribute('data-qxframe9a7c2-theme','dark');
     const host=()=>{const e=document.createElement('div');scope.appendChild(e);return e;};
     const select=C.Select.create({document,container:host(),portalContainer:scope,items:[{value:'a',label:'Alpha'}],destroyOnClose:false,autoUpdate:false});select.open('schema');
-    const date=C.DatePicker.create({document,container:host(),portalContainer:scope,defaultValue:'2026-10-02',destroyOnClose:false,autoUpdate:false});date.open('schema');
+    const date=C.DatePicker.create({document,container:host(),portalContainer:scope,defaultValue:'2026-10-02',destroyOnClose:false});date.open('schema');
     const modal=C.Modal.create({document,portalContainer:scope,autoOpen:false,animation:false,duration:{dialog:0,mask:0},title:'Scoped Modal',content:'Body'});modal.open('schema');
     const menu=C.Menu.create({document,container:host(),portalContainer:scope,mode:'vertical',items:[{key:'more',label:'More',items:[{key:'leaf',label:'Leaf'}]}]});menu.openSubmenu('more','schema');
     const drawer=C.Drawer.create({document,portalContainer:scope,autoOpen:false,animation:false,duration:0,title:'Scoped Drawer',content:'Body'});drawer.open('schema');
