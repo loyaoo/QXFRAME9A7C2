@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {generateTheme} from '../docs/assets/theme-generator/generator.mjs';
 import {readSchema} from '../docs/assets/theme-generator/engine.mjs';
+import {chooseOnColor} from '../docs/assets/theme-generator/color-engine.mjs';
 
 const manifest=JSON.parse(fs.readFileSync(new URL('../docs/generated/theme-public-schema-v1.json',import.meta.url),'utf8'));
 const recipes=JSON.parse(fs.readFileSync(new URL('../docs/generated/theme-color-recipes-v1.json',import.meta.url),'utf8'));
@@ -39,7 +40,7 @@ const primary=generateTheme(manifest,recipes,{name:'violet-role',roles:{primary:
 assert.equal(primary.reports.color.recipeExpanded,true);
 assert.equal(primary.tokens.light[DEFAULTS.paletteGrey],base.tokens.light[DEFAULTS.paletteGrey],'primary must not rewrite neutral palette');
 assert.notEqual(primary.tokens.light[DEFAULTS.primary],base.tokens.light[DEFAULTS.primary]);
-assert.notEqual(primary.tokens.light['--qxframe9a7c2-theme-primary-foreground'],base.tokens.light['--qxframe9a7c2-theme-primary-foreground'],'custom Primary must regenerate the required foreground token consumed by Core mode-on-accent');
+assert.equal(primary.tokens.light['--qxframe9a7c2-theme-primary-foreground'],chooseOnColor('#7c3aed').css,'custom Primary must resolve the required foreground token with the offline contrast algorithm consumed by Core mode-on-accent');
 assert.equal(Object.prototype.hasOwnProperty.call(primary.tokens.light,'--qxframe9a7c2-semantic-on-accent'),false,'optional semantic override must stay out of default Complete Theme output');
 assert.equal(Object.prototype.hasOwnProperty.call(primary.tokens.light,'--qxframe9a7c2-semantic-on-status'),false,'optional shared status override must stay out of default Complete Theme output');
 assert.equal(primary.tokens.light[DEFAULTS.chart],base.tokens.light[DEFAULTS.chart],'primary must not rewrite chart palette');
