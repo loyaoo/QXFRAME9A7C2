@@ -79,6 +79,10 @@ for(const [slot,node] of Object.entries({xs:6,md:9,lg:11,xl:13})){
   assert.ok(theme.includes(`--qxframe9a7c2-theme-loading-indicator-size-${slot}: var(--qxframe9a7c2-loading-indicator-size-${slot});`));
 }
 assert.match(theme,/--qxframe9a7c2-theme-loading-indicator-size-sm:\s*\.9rem;/,'Loading sm 14.4px indicator is an explicit zero-drift component baseline.');
+for(const [slot,source] of Object.entries({xs:'12',sm:'14',md:'16',xl:'18'})){
+  assert.ok(theme.includes(`--qxframe9a7c2-theme-form-check-font-size-${slot}: var(--qxframe9a7c2-font-size-${source});`));
+}
+assert.match(theme,/--qxframe9a7c2-theme-form-check-font-size-lg:\s*1\.0625rem;/,'FormCheck lg 17px typography remains an explicit zero-drift component baseline.');
 for(const slot of ['xs','sm','md','lg','xl']){
   assert.match(components,new RegExp('\\.qxframe9a7c2-icon\\.is-'+slot+' \\{ --qxframe9a7c2-icon-size: var\\(--qxframe9a7c2-theme-icon-size-'+slot+'\\); \\}'));
   assert.match(components,new RegExp('--qxframe9a7c2-avatar-'+slot+'-size:var\\(--qxframe9a7c2-theme-avatar-size-'+slot+'\\)'));
@@ -88,6 +92,7 @@ for(const slot of ['xs','sm','md','lg','xl']){
   assert.match(components,new RegExp('--qxframe9a7c2-badge-'+slot+'-height:var\\(--qxframe9a7c2-theme-badge-height-'+slot+'\\)'));
   assert.match(components,new RegExp('--qxframe9a7c2-badge-'+slot+'-line-height:var\\(--qxframe9a7c2-theme-badge-line-height-'+slot+'\\)'));
   assert.match(components,new RegExp('\\.qxframe9a7c2-form-check\\.is-'+slot+'\\{--_qxframe9a7c2-form-check-size-default:var\\(--qxframe9a7c2-theme-form-check-size-'+slot+'\\);'));
+  assert.match(components,new RegExp('\\.qxframe9a7c2-form-check\\.is-'+slot+'\\{[^}]*font-size:var\\(--qxframe9a7c2-theme-form-check-font-size-'+slot+'\\)'));
   assert.match(components,new RegExp('\\.qxframe9a7c2-rate\\.is-'+slot+'\\{--_qxframe9a7c2-rate-size-default:var\\(--qxframe9a7c2-theme-rate-size-'+slot+'\\)\\}'));
   if(slot!=='md') assert.match(components,new RegExp('\\.qxframe9a7c2-slider\\.is-'+slot+'\\{--_qxframe9a7c2-slider-handle-default:var\\(--qxframe9a7c2-theme-slider-handle-size-'+slot+'\\);--_qxframe9a7c2-slider-rail-default:var\\(--qxframe9a7c2-theme-slider-rail-size-'+slot+'\\)\\}'));
   assert.match(components,new RegExp('\\.qxframe9a7c2-table\\.is-'+slot+'\\{--_qxframe9a7c2-table-size-cell-py:var\\(--qxframe9a7c2-theme-table-cell-padding-y-'+slot+'\\);--_qxframe9a7c2-table-size-cell-px:var\\(--qxframe9a7c2-theme-table-cell-padding-x-'+slot+'\\);'));
