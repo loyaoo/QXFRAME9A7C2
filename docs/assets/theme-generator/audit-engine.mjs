@@ -10,15 +10,29 @@ function token(tokens,mode,name){
   return value;
 }
 function contrastCheck(id,foreground,background,minimum=MIN_TEXT_CONTRAST){
-  const fg=parseColor(foreground),bg=parseColor(background),ratio=contrastRatio(fg,bg);
-  return Object.freeze({
-    id,
-    foreground:colorToCss(fg),
-    background:colorToCss(bg),
-    ratio:Number(ratio.toFixed(3)),
-    minimum,
-    passes:ratio>=minimum
-  });
+  try{
+    const fg=parseColor(foreground),bg=parseColor(background),ratio=contrastRatio(fg,bg);
+    return Object.freeze({
+      id,
+      foreground:colorToCss(fg),
+      background:colorToCss(bg),
+      ratio:Number(ratio.toFixed(3)),
+      minimum,
+      verifiable:true,
+      passes:ratio>=minimum
+    });
+  }catch(error){
+    return Object.freeze({
+      id,
+      foreground:String(foreground),
+      background:String(background),
+      ratio:null,
+      minimum,
+      verifiable:false,
+      passes:false,
+      detail:error&&error.message||String(error)
+    });
+  }
 }
 function modeTextChecks(tokens,mode){
   const prefix='--qxframe9a7c2-theme-'+mode+'-';
@@ -33,19 +47,36 @@ function roleCheck(tokens,role){
   if(role==='primary'){
     const foreground=token(tokens,'light','--qxframe9a7c2-theme-primary-foreground');
     const checked=contrastCheck('on-primary',foreground,background,MIN_TEXT_CONTRAST);
-    return Object.freeze({...checked,role,recommendedForeground:chooseOnColor(background).css});
+    let recommendedForeground=null;try{recommendedForeground=chooseOnColor(background).css;}catch(_){}
+    return Object.freeze({...checked,role,recommendedForeground});
   }
-  const recommended=chooseOnColor(background,{minimum:MIN_TEXT_CONTRAST});
-  return Object.freeze({
-    id:'on-'+role,
-    role,
-    foreground:recommended.css,
-    recommendedForeground:recommended.css,
-    background:colorToCss(background),
-    ratio:recommended.ratio,
-    minimum:MIN_TEXT_CONTRAST,
-    passes:recommended.passes
-  });
+  try{
+    const recommended=chooseOnColor(background,{minimum:MIN_TEXT_CONTRAST});
+    return Object.freeze({
+      id:'on-'+role,
+      role,
+      foreground:recommended.css,
+      recommendedForeground:recommended.css,
+      background:colorToCss(background),
+      ratio:recommended.ratio,
+      minimum:MIN_TEXT_CONTRAST,
+      verifiable:true,
+      passes:recommended.passes
+    });
+  }catch(error){
+    return Object.freeze({
+      id:'on-'+role,
+      role,
+      foreground:null,
+      recommendedForeground:null,
+      background:String(background),
+      ratio:null,
+      minimum:MIN_TEXT_CONTRAST,
+      verifiable:false,
+      passes:false,
+      detail:error&&error.message||String(error)
+    });
+  }
 }
 function auditReadability(tokens){
   const checks=[
@@ -55,11 +86,13 @@ function auditReadability(tokens){
     ...STATUS_ROLES.map(role=>roleCheck(tokens,role))
   ];
   const warnings=checks.filter(check=>!check.passes).map(check=>Object.freeze({
-    code:'contrast',
+    code:check.verifiable?'contrast':'contrast-unverifiable',
     id:check.id,
     ratio:check.ratio,
     minimum:check.minimum,
-    message:check.id+' contrast '+check.ratio+' is below '+check.minimum+'.'
+    message:check.verifiable
+      ?check.id+' contrast '+check.ratio+' is below '+check.minimum+'.'
+      :check.id+' contrast cannot be verified offline from the explicit CSS expression.'
   }));
   return Object.freeze({
     minimumTextContrast:MIN_TEXT_CONTRAST,
