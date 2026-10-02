@@ -15568,7 +15568,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-time-picker-now:disabled{--_qxframe9a7c2-time-picker-now-bg:transparent;--_qxframe9a7c2-time-picker-now-ring:none;--_qxframe9a7c2-time-picker-now-cursor:not-allowed;--_qxframe9a7c2-time-picker-now-opacity:.45}
 .qxframe9a7c2-time-picker-now.is-footer-action{width:auto;margin-right:auto;border-top:0;min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:left}
 
-.qxframe9a7c2-color-picker-panel{width:max-content;min-width:0;max-width:min(var(--qxframe9a7c2-theme-tooltip-max-width),calc(100% - var(--qxframe9a7c2-theme-tooltip-viewport-inset)))}
+.qxframe9a7c2-color-picker-panel{width:max-content;min-width:0;max-width:min(24rem,calc(100% - 2rem))}
 .qxframe9a7c2-color-picker-panel .qxframe9a7c2-picker-field-body{width:max-content;max-width:100%}
 .qxframe9a7c2-color-picker-panel .qxframe9a7c2-color-panel{border:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-color-picker.is-swatch-only{--_qxframe9a7c2-picker-field-min-width:var(--_qxframe9a7c2-control-height);width:var(--_qxframe9a7c2-control-height);min-width:var(--_qxframe9a7c2-control-height)}
