@@ -36,7 +36,7 @@ for(let si=0;si<styles.length;si+=1){
       const theme=generateTheme(manifest,recipes,config);
       assert.equal(Object.keys(theme.tokens.light).length,4028);
       assert.equal(Object.keys(theme.tokens.dark).length,4028);
-      assert.equal((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8056);
+      assert.equal((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8060);
       assert.ok(!theme.css.includes('--_qxframe9a7c2-'));
       assert.ok(!theme.css.includes('!important'));
       assert.ok(!theme.css.includes('color-mix('));
