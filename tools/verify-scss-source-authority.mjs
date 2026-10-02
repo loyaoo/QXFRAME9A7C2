@@ -41,6 +41,18 @@ assert.ok(fs.existsSync(path.join(root,CANONICAL_STYLE_ENTRY)),'Canonical SCSS e
 const modules=getCanonicalStyleModulePaths({root});
 assert.ok(modules.length>=4,'Canonical SCSS source must remain decomposed into ordered modules.');
 for(const rel of modules) assert.ok(fs.existsSync(path.join(root,rel)),'Missing canonical SCSS module: '+rel);
+const componentModules=modules.filter(rel=>rel.startsWith('src/styles/components/'));
+const retiredHoldingModules=new Set([
+  'src/styles/components/_core.scss',
+  'src/styles/components/_tail.scss',
+  'src/styles/components/_tail-closeout.scss'
+]);
+assert.deepEqual(componentModules.filter(rel=>retiredHoldingModules.has(rel)),[],'Temporary component holding partials must not return after physical modularization closeout.');
+const componentAggregator=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+const expectedComponentAggregator=componentModules
+  .map(rel=>'@use "'+path.basename(rel,'.scss').replace(/^_/,'')+'";')
+  .join('\n')+'\n';
+assert.equal(componentAggregator,expectedComponentAggregator,'Component aggregator @use order must exactly match css-order.json sourceModules.');
 assert.ok(readCanonicalStyleSource({root}).length>0,'Canonical SCSS source must be readable.');
 
-console.log(JSON.stringify({ok:true,entry:CANONICAL_STYLE_ENTRY,moduleCount:modules.length,legacySourceAbsent:true,offenders:0}));
+console.log(JSON.stringify({ok:true,entry:CANONICAL_STYLE_ENTRY,moduleCount:modules.length,componentModuleCount:componentModules.length,legacySourceAbsent:true,temporaryHoldingModules:0,aggregatorOrderLocked:true,offenders:0}));
