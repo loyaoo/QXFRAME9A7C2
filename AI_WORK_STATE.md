@@ -19,10 +19,28 @@
 
 ## CURRENT
 
-### READY-FOR-NEXT-TASK
-Status: IDLE / READY
-Progress: no active implementation task.
-Exact next step: wait for a new user-authorized task. Query current main/PR/CI before starting. Do not reopen Theme Generator v1, CSS Token Schema v1, Controller migration, Size Tree/Grid/viewport, or SCSS modularization without a new regression or explicit new-scope request.
+### THEME-STYLE-RECIPE-002
+Status: IN_PROGRESS
+Progress: ~75%
+Scope: clarify Theme Studio design dimensions using the public shadcn/ui `/create` implementation as the reference model, while mapping the visual recipes onto QXFRAME's frozen public Theme/Component Token system rather than copying component selectors.
+Implemented on `feat/theme-style-recipes-shadcn-aligned`:
+- Replaced the shallow Balanced/Soft/Precision/Compact Style dimension with eight create-derived visual recipes: Vega, Nova, Maia, Lyra, Mira, Luma, Sera, Rhea.
+- Style now owns component visual geometry/treatment: control heights/padding/font sizing, Card spacing/radius, Switch geometry, Slider rail/thumb geometry, Popup/Menu/Tabs radius treatment and shadow profile.
+- Removed standalone Density from the primary Theme Config/Studio UI. Compactness/generosity is Style-owned, matching the create responsibility model.
+- Radius is an independent five-option override: Default / None / Small / Medium / Large. It generates a radius scale; component recipes consume different multiples so Card/Button/Popup/Tabs do not collapse to one radius.
+- Chart Color is now a restrained single-hue family. Eight chart roles vary lightness/chroma inside the selected hue family instead of generating multicolor rainbow palettes. Default Chart follows Primary; explicit Chart Color remains independent.
+- Commercial Preview adds an Environment Controls scene using real QXFRAME Switch + Slider classes so Style geometry changes are directly visible.
+- Previous Theme Studio schema-1 configs are migrated from old Style/Density/chart.preset fields to the new responsibilities.
+- Generator output remains rgb()/rgba(); `color(srgb ...)` is input-parser compatibility only. Legacy Theme Playground `color-mix()` fallbacks were replaced with rgba() so browser serialization does not surface color(srgb) there.
+Verification being updated:
+- 8 Style × 5 Primary × 3 Base representative matrix (120 Complete Themes).
+- Browser-computed Card/Button/Switch/Slider/Input geometry signatures across all eight Styles.
+- Card/control relative-radius checks, five Radius options, monochrome chart hue-family checks, no generated `color(srgb)`.
+Remaining:
+1. Finish stale test/docs references to the old four Style/Density/chart.preset model.
+2. Run exact-head QXFRAME CI + CSS Schema Acceptance; fix defects without weakening frozen Schema v1.
+3. Update this checkpoint to DONE and merge only after exact-head gates are green.
+Guardrails: Theme Schema v1 remains frozen (4,028 required + 462 optional public overrides). Do not add private tokens/selectors or Theme/Token JS runtime. Explicit Advanced public overrides remain last and may override Style recipes.
 
 ## Current authority snapshot — after Phase A
 
