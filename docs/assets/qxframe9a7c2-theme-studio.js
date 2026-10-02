@@ -143,7 +143,7 @@ function studioPanelHtml(){
     field('Preset','preset','<select class="qxframe9a7c2-studio-control" data-studio-preset><option value="">Custom / current</option>'+selectOptions([['signal','Signal'],['ledger','Ledger'],['harbor','Harbor'],['juniper','Juniper'],['ember','Ember'],['orbit','Orbit'],['graphite','Graphite'],['canvas','Canvas']])+'</select>')+
     field('Style','style','<select class="qxframe9a7c2-studio-control" data-studio-input="style">'+selectOptions([['vega','Vega'],['nova','Nova'],['maia','Maia'],['lyra','Lyra'],['mira','Mira'],['luma','Luma'],['sera','Sera'],['rhea','Rhea']])+'</select>','style')+
     field('Base color','baseColor','<select class="qxframe9a7c2-studio-control" data-studio-input="baseColor">'+selectOptions([['neutral','Neutral'],['stone','Stone'],['zinc','Zinc'],['mauve','Mauve'],['olive','Olive'],['mist','Mist'],['taupe','Taupe']])+'</select>','baseColor')+
-    field('Primary','primary','<div class="qxframe9a7c2-studio-color-row"><select class="qxframe9a7c2-studio-control" data-studio-input="primary">'+selectOptions([['blue','Blue'],['purple','Purple'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['orange','Orange'],['red','Red'],['pink','Pink'],['custom','Custom']])+'</select><input class="qxframe9a7c2-studio-color" data-studio-primary-color type="color" value="#5b5bd6"></div>','primary')+
+    field('Theme color','primary','<div class="qxframe9a7c2-studio-color-row"><select class="qxframe9a7c2-studio-control" data-studio-input="primary">'+selectOptions([['blue','Blue'],['purple','Purple'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['orange','Orange'],['red','Red'],['pink','Pink'],['custom','Custom']])+'</select><input class="qxframe9a7c2-studio-color" data-studio-primary-color type="color" value="#5b5bd6"></div>','primary')+
     field('Chart color','chart','<select class="qxframe9a7c2-studio-control" data-studio-input="chart">'+selectOptions([['primary','Primary'],['neutral','Neutral'],['blue','Blue'],['purple','Purple'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['lime','Lime'],['yellow','Yellow'],['orange','Orange'],['red','Red'],['pink','Pink'],['grey','Grey']])+'</select>','chart')+
     field('Radius','radius','<select class="qxframe9a7c2-studio-control" data-studio-input="radius">'+selectOptions([['default','Default'],['none','None'],['small','Small'],['medium','Medium'],['large','Large']])+'</select>','radius')+
   '</div>'+
@@ -337,7 +337,7 @@ function enableStudio(){
   var panel=installPanel();if(!panel)return;
   var saved=load();currentConfig=runtime.engine.normalizeConfig(saved||{});wirePanel(panel);syncControls();generateNow();
   var intro=document.querySelector('.qxframe9a7c2-play-hero h1');if(intro)intro.textContent='Theme Studio · real commercial preview';
-  var copy=document.querySelector('.qxframe9a7c2-play-hero p');if(copy)copy.textContent='高层配置经过冻结 Schema v1 生成完整 Light / Dark 静态 CSS。上方商业场景用于判断 neutral、层级、radius、chart 与 Menu treatment 是否在真实产品组合里成立；下面继续保留全组件矩阵做回归。';
+  var copy=document.querySelector('.qxframe9a7c2-play-hero p');if(copy)copy.textContent='高层配置经过冻结 Schema v1 生成完整 Light / Dark 静态 CSS。上方商业场景用于判断 neutral、Style geometry、radius、monochrome chart 与 Menu treatment 是否在真实产品组合里成立；下面继续保留全组件矩阵做回归。';
   global.QXFRAME9A7C2_THEME_STUDIO=Object.freeze({getConfig:function(){return clone(currentConfig);},getTheme:function(){return currentTheme;},randomize:randomize,reset:reset,regenerate:generateNow});
 }
 function showEngineError(error){
