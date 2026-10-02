@@ -55,7 +55,10 @@ const semanticGeometry={
   'badge-height':{xs:6,sm:7,md:10,lg:12,xl:14},
   'badge-line-height':{xs:6,sm:7,md:9,lg:10,xl:11},
   'form-check-size':{xs:6,sm:7,md:8,lg:9,xl:10},
-  'rate-size':{xs:8,sm:10,md:12,lg:15,xl:18}
+  'rate-size':{xs:8,sm:10,md:12,lg:15,xl:18},
+  'slider-handle-size':{xs:6,sm:7,md:8,lg:9,xl:10},
+  'slider-rail-size':{xs:1,sm:1,md:2,lg:3,xl:3},
+  'table-cell-padding-y':{xs:2,sm:3,md:5,lg:7,xl:8}
 };
 for(const [family,slots] of Object.entries(semanticGeometry)){
   for(const [slot,node] of Object.entries(slots)){
@@ -66,11 +69,30 @@ for(const [family,slots] of Object.entries(semanticGeometry)){
 assert.ok(css.includes('--qxframe9a7c2-badge-dot-diameter: var(--qxframe9a7c2-size-3);'),'Badge dot preset must remain exactly 6px through Size Tree size-3.');
 assert.ok(theme.includes('--qxframe9a7c2-theme-badge-dot-size: var(--qxframe9a7c2-badge-dot-diameter);'),'Theme must bridge the 6px Badge dot preset.');
 assert.match(components,/--_qxframe9a7c2-badge-dot-size:var\(--qxframe9a7c2-badge-dot-size,var\(--qxframe9a7c2-theme-badge-dot-size\)\)/);
+for(const [slot,node] of Object.entries({xs:3,md:6,lg:8,xl:9})){
+  assert.ok(css.includes(`--qxframe9a7c2-table-cell-padding-x-${slot}: var(--qxframe9a7c2-size-${node});`));
+  assert.ok(theme.includes(`--qxframe9a7c2-theme-table-cell-padding-x-${slot}: var(--qxframe9a7c2-table-cell-padding-x-${slot});`));
+}
+assert.match(theme,/--qxframe9a7c2-theme-table-cell-padding-x-sm:\s*\.5625rem;/,'Table sm 9px inline padding is a preserved zero-drift component baseline.');
+for(const [slot,node] of Object.entries({xs:6,md:9,lg:11,xl:13})){
+  assert.ok(css.includes(`--qxframe9a7c2-loading-indicator-size-${slot}: var(--qxframe9a7c2-size-${node});`));
+  assert.ok(theme.includes(`--qxframe9a7c2-theme-loading-indicator-size-${slot}: var(--qxframe9a7c2-loading-indicator-size-${slot});`));
+}
+assert.match(theme,/--qxframe9a7c2-theme-loading-indicator-size-sm:\s*\.9rem;/,'Loading sm 14.4px indicator is an explicit zero-drift component baseline.');
 for(const slot of ['xs','sm','md','lg','xl']){
   assert.match(components,new RegExp('\\.qxframe9a7c2-icon\\.is-'+slot+' \\{ --qxframe9a7c2-icon-size: var\\(--qxframe9a7c2-theme-icon-size-'+slot+'\\); \\}'));
   assert.match(components,new RegExp('--qxframe9a7c2-avatar-'+slot+'-size:var\\(--qxframe9a7c2-theme-avatar-size-'+slot+'\\)'));
   assert.match(components,new RegExp('--qxframe9a7c2-progress-'+slot+'-line-size:var\\(--qxframe9a7c2-theme-progress-line-size-'+slot+'\\)'));
   assert.match(components,new RegExp('--qxframe9a7c2-progress-'+slot+'-circle-size:var\\(--qxframe9a7c2-theme-progress-circle-size-'+slot+'\\)'));
   assert.match(components,new RegExp('\\.qxframe9a7c2-switch\\.is-'+slot+'\\{--_qxframe9a7c2-switch-height-default:var\\(--qxframe9a7c2-theme-switch-height-'+slot+'\\);--_qxframe9a7c2-switch-width-default:var\\(--qxframe9a7c2-theme-switch-width-'+slot+'\\);--_qxframe9a7c2-switch-padding-default:var\\(--qxframe9a7c2-theme-switch-padding-'+slot+'\\)\\}'));
+  assert.match(components,new RegExp('--qxframe9a7c2-badge-'+slot+'-height:var\\(--qxframe9a7c2-theme-badge-height-'+slot+'\\)'));
+  assert.match(components,new RegExp('--qxframe9a7c2-badge-'+slot+'-line-height:var\\(--qxframe9a7c2-theme-badge-line-height-'+slot+'\\)'));
+  assert.match(components,new RegExp('\\.qxframe9a7c2-form-check\\.is-'+slot+'\\{--_qxframe9a7c2-form-check-size-default:var\\(--qxframe9a7c2-theme-form-check-size-'+slot+'\\);'));
+  assert.match(components,new RegExp('\\.qxframe9a7c2-rate\\.is-'+slot+'\\{--_qxframe9a7c2-rate-size-default:var\\(--qxframe9a7c2-theme-rate-size-'+slot+'\\)\\}'));
+  if(slot!=='md') assert.match(components,new RegExp('\\.qxframe9a7c2-slider\\.is-'+slot+'\\{--_qxframe9a7c2-slider-handle-default:var\\(--qxframe9a7c2-theme-slider-handle-size-'+slot+'\\);--_qxframe9a7c2-slider-rail-default:var\\(--qxframe9a7c2-theme-slider-rail-size-'+slot+'\\)\\}'));
+  assert.match(components,new RegExp('\\.qxframe9a7c2-table\\.is-'+slot+'\\{--_qxframe9a7c2-table-size-cell-py:var\\(--qxframe9a7c2-theme-table-cell-padding-y-'+slot+'\\);--_qxframe9a7c2-table-size-cell-px:var\\(--qxframe9a7c2-theme-table-cell-padding-x-'+slot+'\\);'));
+  assert.match(components,new RegExp('qxframe9a7c2-loading-root\\.is-'+slot+' \\.qxframe9a7c2-loading-box\\{--_qxframe9a7c2-loading-indicator-size:var\\(--qxframe9a7c2-theme-loading-indicator-size-'+slot+'\\);'));
 }
+assert.match(components,/\.qxframe9a7c2-slider\{--_qxframe9a7c2-slider-handle-default:var\(--qxframe9a7c2-theme-slider-handle-size-md\);--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-size-md\);/);
+assert.match(components,/--_qxframe9a7c2-table-size-cell-py:var\(--qxframe9a7c2-theme-table-cell-padding-y-md\);\n  --_qxframe9a7c2-table-size-cell-px:var\(--qxframe9a7c2-theme-table-cell-padding-x-md\);/);
 console.log(JSON.stringify({ok:true,nodes:46,oddNumericFontPresetsRemaining:0,completedOddFontDecisions:manifest.completedOddFontDecisions.length}));
