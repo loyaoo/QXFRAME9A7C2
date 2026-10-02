@@ -60,7 +60,7 @@ const STYLE_PROFILES=Object.freeze({
     switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
     switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
     sliderRail:[6,8,12,12,14],sliderHandleWidth:[14,16,16,18,20],sliderHandleHeight:[14,16,16,18,20],
-    radius:{control:'xl',action:'xl',navigation:'xl',data:'xl',popup:'xl',surface:'xl',switchTrack:'pill',switchThumb:'circle',sliderRail:'xl',sliderHandle:'xl'},
+    radius:{control:'xl',action:'pill',navigation:'xl',data:'xl',popup:'xl',surface:'xl',switchTrack:'pill',switchThumb:'circle',sliderRail:'xl',sliderHandle:'xl'},
     shadow:[1,1,12,4]
   }),
   lyra:Object.freeze({
@@ -158,7 +158,7 @@ function applyStyle(tokenMaps,schema,config,changed){
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-track-border-width',rem(switchBorder));
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-slider-handle-border-width',config.style==='sera'?'0':rem(1));
   if(config.style==='sera'){
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-background',tokenMaps.light['--qxframe9a7c2-theme-primary'],tokenMaps.dark['--qxframe9a7c2-theme-primary']);
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-background','var(--qxframe9a7c2-theme-primary)');
     setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-border-color','transparent');
   }
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-button-shadow-blur',rem(p.shadow[0]));
