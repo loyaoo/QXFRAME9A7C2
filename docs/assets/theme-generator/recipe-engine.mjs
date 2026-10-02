@@ -5,6 +5,7 @@ import {
   generateColorScale,
   generateNeutralScale,
   chooseOnColor,
+  contrastRatio,
   mixSrgb,
   mixOklab,
   chartPalette
@@ -122,6 +123,27 @@ function normalizeOnColors(tokenMaps,schema,changed){
   const light=chooseOnColor(tokenMaps.light[primaryName]).css;
   const dark=chooseOnColor(tokenMaps.dark[primaryName]).css;
   setPublic(tokenMaps,schema,changed,foregroundName,light,dark);
+}
+function sharedStatusForeground(tokenMaps,mode){
+  const dark=parseColor('rgb('+tupleToken(tokenMaps,mode,'--qxframe9a7c2-palette-black')+')');
+  const light=parseColor('rgb('+tupleToken(tokenMaps,mode,'--qxframe9a7c2-palette-white')+')');
+  const backgrounds=['success','warning','error','info'].map(role=>parseColor(tokenMaps[mode]['--qxframe9a7c2-theme-'+role]));
+  const score=candidate=>Math.min(...backgrounds.map(background=>contrastRatio(background,candidate)));
+  return colorToCss(score(dark)>=score(light)?dark:light);
+}
+function bindSemanticOnColors(tokenMaps,schema,changed){
+  const accent='--qxframe9a7c2-semantic-on-accent';
+  const status='--qxframe9a7c2-semantic-on-status';
+  if(schema.optionalSet.has(accent)){
+    setPublic(tokenMaps,schema,changed,accent,
+      tokenMaps.light['--qxframe9a7c2-theme-primary-foreground'],
+      tokenMaps.dark['--qxframe9a7c2-theme-primary-foreground']);
+  }
+  if(schema.optionalSet.has(status)){
+    setPublic(tokenMaps,schema,changed,status,
+      sharedStatusForeground(tokenMaps,'light'),
+      sharedStatusForeground(tokenMaps,'dark'));
+  }
 }
 function applyChartConfig(tokenMaps,schema,config,changed){
   if(config.chart.preset==='balanced')return;
@@ -307,6 +329,7 @@ function applyColorConfiguration(tokenMaps,schema,recipeData,config){
   const neutralChanged=applyPaletteConfig(tokenMaps,schema,config,changed);
   applyRoleConfig(tokenMaps,schema,config,changed,neutralChanged);
   normalizeOnColors(tokenMaps,schema,changed);
+  bindSemanticOnColors(tokenMaps,schema,changed);
   applyChartConfig(tokenMaps,schema,config,changed);
   const recipeExpanded=recipeCustomization(config);
   const customized=colorCustomization(config);
