@@ -124,7 +124,7 @@ function applyRadius(tokenMaps,schema,config,changed){
   const base=profileRadiusBase(config,profile);
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-radius',rem(base));
   SIZES.forEach((size,index)=>setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-radius-'+size,rem(base*RADIUS_MULTIPLIERS[index])));
-  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-radius-pill',base===0?'0':'9999px');
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-radius-pill',base===0?'0':'625rem');
   return base;
 }
 function applyStyle(tokenMaps,schema,config,changed,radiusBase){
