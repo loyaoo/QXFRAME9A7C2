@@ -21,13 +21,14 @@
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: post-viewport actionable raw-size migration 91.3% complete (925/1013 closed; 88 remain)
+Task progress: Size Tree actionable raw-size migration complete — 0 actionable consumers remain
 Phase: Phase A/B/C DONE; Grid/viewport closeout DONE; Size Tree bulk source migration active
 
 Current Size Tree bulk checkpoint (2026-10-02):
-- Canonical candidate inventory: 178 total; 76 exact-node candidates; 12 needs-review; 89 protected breakpoints; 1 pill sentinel.
-- Actionable migration count is 88 (76 exact + 12 review), down from the explicit 1013 baseline.
+- Canonical candidate inventory: 37 total preserved/sentinel entries; 0 exact-node candidates; 0 needs-review; 36 protected breakpoints; 1 pill sentinel.
+- Actionable migration count is 0 after correcting the audit so ordinary min/max-width declarations are no longer misclassified as breakpoints.
 - Component-batch execution is now authoritative for closeout; phase-completion percentages must not be used as consumer-migration completion.
+- Size Tree consumer closeout: all ordinary scalable px/rem consumers are Theme/Size-Tree-backed; only true responsive breakpoint conditions and the approved 100rem pill sentinel remain.
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
