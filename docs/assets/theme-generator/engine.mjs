@@ -329,8 +329,7 @@ function orderedNames(tokenMaps, schema) {
 
 function normalizeSerializedColor(value) {
   const text=String(value);
-  const number='[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)(?:e[+-]?\\d+)?';
-  const match=new RegExp('^color\\\\(srgb\\\\s+('+number+')\\\\s+('+number+')\\\\s+('+number+')(?:\\\\s*\\\\/\\\\s*('+number+'%?))?\\\\)
+  const match=/^color\(srgb\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:e[+-]?\d+)?)\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:e[+-]?\d+)?)\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:e[+-]?\d+)?)(?:\s*\/\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:e[+-]?\d+)?%?))?\)$/i.exec(text.trim());
   if(!match)return text;
   const clamp=value=>Math.min(1,Math.max(0,value));
   const channels=match.slice(1,4).map(value=>Math.round(clamp(Number(value))*255));
