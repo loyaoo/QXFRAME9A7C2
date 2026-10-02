@@ -45,18 +45,18 @@ for(const style of styles){
     theme.tokens.light['--qxframe9a7c2-theme-slider-rail-md'],
     theme.tokens.light['--qxframe9a7c2-family-action-radius'],
     theme.tokens.light['--qxframe9a7c2-family-surface-radius'],
-    theme.tokens.light['--qxframe9a7c2-slider-handle-width'],
-    theme.tokens.light['--qxframe9a7c2-slider-handle-height']
+    theme.tokens.light['--qxframe9a7c2-slider-handle-width-md'],
+    theme.tokens.light['--qxframe9a7c2-slider-handle-height-md']
   ].join('|'));
 }
 assert.equal(signatures.size,styles.length,'Every shadcn-derived Style must have a distinct geometry signature.');
 
 const luma=generateTheme(manifest,recipes,{name:'luma',style:'luma'});
 assert.equal(luma.tokens.light['--qxframe9a7c2-theme-switch-width-md'],'2.75rem');
-assert.equal(luma.tokens.light['--qxframe9a7c2-switch-thumb-width'],'1.5rem');
-assert.equal(luma.tokens.light['--qxframe9a7c2-switch-thumb-height'],'1rem');
-assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-width'],'1.5rem');
-assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-height'],'1rem');
+assert.equal(luma.tokens.light['--qxframe9a7c2-switch-thumb-width-md'],'1.5rem');
+assert.equal(luma.tokens.light['--qxframe9a7c2-switch-thumb-height-md'],'1rem');
+assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-width-md'],'1.5rem');
+assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-height-md'],'1rem');
 assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-radius'],'var(--qxframe9a7c2-theme-radius-pill)');
 
 const lyra=generateTheme(manifest,recipes,{name:'lyra',style:'lyra'});
