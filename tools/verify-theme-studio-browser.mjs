@@ -106,6 +106,10 @@ try{
   assert.ok(initial.cards>0,'Canonical all-component gallery must remain mounted.');
   assert.equal(initial.mounts.length,7);
   for(const mount of initial.mounts){assert.ok(mount.children>0,'Runtime mount is empty: '+mount.name);assert.equal(mount.error,false,'Runtime mount failed: '+mount.name);}
+  const semanticOn=await evaluate(cdp,sessionId,'(function(){var root=getComputedStyle(document.documentElement),primary=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-button.is-primary.is-solid\'),badge=document.createElement(\'span\');badge.className=\'qxframe9a7c2-badge is-success is-solid is-sm\';badge.textContent=\'Status\';document.body.appendChild(badge);var out={accent:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-accent\').trim(),status:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-status\').trim(),primaryColor:primary?getComputedStyle(primary).color:\'\',statusColor:getComputedStyle(badge).color};badge.remove();return out;})()');
+  assert.ok(semanticOn.accent&&semanticOn.status,'Generated optional semantic on-color bindings must be present.');
+  assert.equal(semanticOn.primaryColor,semanticOn.accent,'Primary solid component must consume generated semantic-on-accent.');
+  assert.equal(semanticOn.statusColor,semanticOn.status,'Solid status component must consume generated semantic-on-status.');
 
   const before=await evaluate(cdp,sessionId,'(function(){var s=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');return {css:s.textContent,radius:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().radius,density:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().density};})()');
   await evaluate(cdp,sessionId,'(function(){var select=document.querySelector(\'[data-studio-input="primary"]\');select.value=\'purple\';select.dispatchEvent(new Event(\'change\',{bubbles:true}));return true;})()');
@@ -146,6 +150,7 @@ try{
     completeDeclarations:initial.declarations,
     runtimeMounts:initial.mounts.map(x=>x.name),
     canonicalCards:initial.cards,
+    semanticOnColorConsumers:true,
     primaryOrthogonality:true,
     lightDarkPreview:true,
     publicOverrideUi:true,
