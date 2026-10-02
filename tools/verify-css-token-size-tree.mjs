@@ -15,4 +15,7 @@ assert.deepEqual(persisted.summary,current.summary,'Persisted Size Tree candidat
 assert.deepEqual(stableConsumerSemantics(persisted.consumers),stableConsumerSemantics(current.consumers),'Persisted Size Tree dimensional semantics changed; diagnostic line/text drift is ignored.');
 assert.equal(persisted.policy.automaticOddRounding,false);
 assert.ok(persisted.consumers.every(x=>x.approved===false&&x.finalTarget===null),'Audit branch must not pre-approve migration targets.');
+assert.equal(current.summary.exactNodeCandidates,0,'Size Tree closeout must not retain exact-node actionable consumers.');
+assert.equal(current.summary.needsReview,0,'Size Tree closeout must not retain ordinary needs-review consumers.');
+assert.ok(current.consumers.every(x=>x.domain==='breakpoint-boundary'||x.domain==='pill-radius-sentinel'),'Only true responsive breakpoints and the approved pill sentinel may remain after Size Tree closeout.');
 console.log(JSON.stringify({ok:true,nodes:46,lineDriftIgnored:true,...current.summary}));
