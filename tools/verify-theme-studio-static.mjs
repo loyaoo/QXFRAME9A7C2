@@ -41,12 +41,17 @@ assert.match(js,/data-studio-advanced-profile="border"/);
 assert.match(js,/data-studio-advanced-profile="motion"/);
 assert.match(js,/runtime\.advanced\.applyPaletteSeed/);
 assert.match(js,/runtime\.advanced\.applyAdvancedProfile/);
+assert.match(js,/\['vega','nova','maia','lyra','mira','luma','sera','rhea'\]/,'Randomize must expose all eight Style recipes.');
+assert.ok(!/field\('Density'/.test(js),'Density must not remain a second owner of component compactness.');
+assert.match(js,/\['default','none','small','medium','large'\]/,'Radius must expose five create-aligned options.');
+assert.match(js,/staticSlider\(/,'Commercial preview must expose real Slider geometry.');
+assert.match(js,/is-controls/,'Commercial controls scene must be addressable for browser geometry acceptance.');
 
 const scenes=[...js.matchAll(/scene\('([^']+)'/g)].map(match=>match[1]);
 assert.ok(scenes.length>=20,'Commercial Preview requires at least 20 real business scenes; found '+scenes.length);
 for(const expected of [
   'Analytics overview','Transactions','CRM opportunity','Billing plan','Invoice #1048',
-  'Invite teammate','Workspace preferences','Schedule review','Brand assets','Workspace navigation',
+  'Invite teammate','Workspace preferences','Environment controls','Schedule review','Brand assets','Workspace navigation',
   'Project workspace','Notifications','Support inbox','Subscription','Security','Empty state',
   'Error state','Activity','Checkout'
 ]) assert.ok(scenes.includes(expected),'Missing commercial scene: '+expected);
@@ -54,7 +59,7 @@ for(const expected of [
 for(const component of ['Table','Select','Progress','DatePicker','Upload','Menu','Tabs']){
   assert.ok(js.includes('C.'+component),'Commercial preview must mount real QXFRAME '+component+'.');
 }
-for(const className of ['qxframe9a7c2-card','qxframe9a7c2-button','qxframe9a7c2-form-input','qxframe9a7c2-switch','qxframe9a7c2-badge']){
+for(const className of ['qxframe9a7c2-card','qxframe9a7c2-button','qxframe9a7c2-form-input','qxframe9a7c2-switch','qxframe9a7c2-slider','qxframe9a7c2-badge']){
   assert.ok(js.includes(className),'Commercial preview must consume framework class '+className+'.');
 }
 

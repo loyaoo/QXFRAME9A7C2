@@ -67,24 +67,30 @@ assert.ok(chooseOnColor('#5b5bd6').ratio>1);
 assertColor(mixSrgb('#ff0000','#0000ff',0.5));
 assertColor(mixOklab('#ff0000','#0000ff',0.5));
 
-for(const preset of ['balanced','cool','warm','mixed','mono']){
-  const light=chartPalette(preset,'#165dff',8,'light');
-  const dark=chartPalette(preset,'#165dff',8,'dark');
-  assert.equal(light.length,8);assert.equal(dark.length,8);
-  light.concat(dark).forEach(assertColor);
-  assert.notEqual(light.map(colorToHex).join(','),dark.map(colorToHex).join(','),'chart palette must have a distinct dark rendering');
+for(const seed of ['#165dff','#7c3aed','#059669','#d97706','#52525b']){
+  const palette=chartPalette(seed,8,'light');
+  assert.equal(palette.length,8);
+  palette.forEach(assertColor);
+  const seedHue=rgbToOklch(seed).h;
+  for(const item of palette){
+    const lch=rgbToOklch(item);
+    if(lch.c>0.01){
+      const delta=Math.abs(((lch.h-seedHue+540)%360)-180);
+      assert.ok(delta<8,'chart palette must remain in one hue family');
+    }
+  }
+  assert.ok(new Set(palette.map(colorToHex)).size>=7,'chart data needs tonal separation');
 }
 
 assert.throws(()=>parseColor('not-a-color'),/Unsupported color syntax/);
 assert.throws(()=>generateNeutralScale('unknown'),/Unknown neutral preset/);
-assert.throws(()=>chartPalette('unknown'),/Unknown chart preset/);
 
 console.log(JSON.stringify({
   phase:'TG-C-color-foundation',
   colorInputs:['HEX','RGB','HSL','OKLCH','OKLab'],
   coloredScaleSteps:13,
   neutralAlgorithms:7,
-  chartPresets:5,
+  chartModel:'single-hue-tonal-family',
   gamutMapped:true,
   onColorContrast:true
 }));
