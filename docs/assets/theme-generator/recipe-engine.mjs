@@ -60,12 +60,14 @@ function paletteDependsOnConfig(name,config,neutralChanged){
 function neutralCustomization(config){
   return config.baseColor!=='neutral'||config.palette.grey!=null;
 }
-function colorCustomization(config){
+function recipeCustomization(config){
   if(neutralCustomization(config))return true;
   if(Object.values(config.palette).some(value=>value!=null))return true;
   if(ROLE_NAMES.some(name=>config.roles[name]!==DEFAULT_ROLE_VALUES[name]))return true;
-  if(config.chart.preset!=='balanced')return true;
   return false;
+}
+function colorCustomization(config){
+  return recipeCustomization(config)||config.chart.preset!=='balanced';
 }
 function applyScaleTokens(tokenMaps,schema,changed,prefix,scale,tuple){
   scale.forEach((item,index)=>{
@@ -300,11 +302,13 @@ function applyColorConfiguration(tokenMaps,schema,recipeData,config){
   const neutralChanged=applyPaletteConfig(tokenMaps,schema,config,changed);
   applyRoleConfig(tokenMaps,schema,config,changed,neutralChanged);
   applyChartConfig(tokenMaps,schema,config,changed);
+  const recipeExpanded=recipeCustomization(config);
   const customized=colorCustomization(config);
   let produced={light:new Map(),dark:new Map()};
-  if(customized)produced=expandFrozenColorRecipes(tokenMaps,schema,recipeData,changed);
+  if(recipeExpanded)produced=expandFrozenColorRecipes(tokenMaps,schema,recipeData,changed);
   return Object.freeze({
     customized,
+    recipeExpanded,
     changedPublicInputs:Object.freeze({
       light:Object.freeze([...changed.light.keys()]),
       dark:Object.freeze([...changed.dark.keys()])
@@ -321,6 +325,7 @@ export {
   validateRecipeData,
   createEvaluator,
   colorCustomization,
+  recipeCustomization,
   applyColorConfiguration,
   expandFrozenColorRecipes,
   publicToAbstract,
