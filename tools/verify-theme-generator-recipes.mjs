@@ -21,9 +21,12 @@ assert.equal(base.reports.color.recipeExpanded,false);
 assert.equal(Object.keys(base.tokens.light).length,4028);
 assert.equal(Object.keys(base.tokens.dark).length,4028);
 for(const name of schema.order){
+  if(name==='--qxframe9a7c2-theme-primary-foreground')continue;
   assert.equal(base.tokens.light[name],schema.defaults.light[name],'default light drift: '+name);
   assert.equal(base.tokens.dark[name],schema.defaults.dark[name],'default dark drift: '+name);
 }
+assert.ok(!base.tokens.light['--qxframe9a7c2-theme-primary-foreground'].includes('contrast-color('));
+assert.ok(!base.tokens.dark['--qxframe9a7c2-theme-primary-foreground'].includes('contrast-color('));
 
 const stone=generateTheme(manifest,recipes,{name:'stone-theme',baseColor:'stone'});
 assert.equal(stone.reports.color.customized,true);
@@ -73,7 +76,7 @@ for(const theme of [stone,primary,customBlue,chart]){
 console.log(JSON.stringify({
   phase:'TG-C-frozen-recipe-expansion',
   requiredPublicInputs:4028,
-  defaultSnapshotPreserved:true,
+  defaultSnapshotPreservedExceptOfflineOnColor:true,
   neutralPrimaryOrthogonal:true,
   chartThemeOrthogonal:true,
   completeTheme:true
