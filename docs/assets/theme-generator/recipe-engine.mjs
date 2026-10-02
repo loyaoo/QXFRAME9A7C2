@@ -7,7 +7,7 @@ import {
   chooseOnColor,
   mixSrgb,
   mixOklab,
-  chartPalette
+  monochromeChartPalette
 } from './color-engine.mjs';
 
 const ROLE_NAMES=Object.freeze(['primary','success','warning','error','info']);
@@ -67,7 +67,7 @@ function recipeCustomization(config){
   return false;
 }
 function colorCustomization(config){
-  return recipeCustomization(config)||config.chart.preset!=='balanced';
+  return recipeCustomization(config)||config.chart.color!=='primary';
 }
 function applyScaleTokens(tokenMaps,schema,changed,prefix,scale,tuple){
   scale.forEach((item,index)=>{
@@ -123,12 +123,22 @@ function normalizeOnColors(tokenMaps,schema,changed){
   const dark=chooseOnColor(tokenMaps.dark[primaryName]).css;
   setPublic(tokenMaps,schema,changed,foregroundName,light,dark);
 }
+function chartSeed(tokenMaps,mode,colorName){
+  if(colorName==='primary'){
+    const value=tokenMaps[mode]['--qxframe9a7c2-theme-primary'];
+    if(!value)throw new TypeError('Missing primary Theme color for Chart Color.');
+    return parseColor(value);
+  }
+  if(colorName==='neutral'){
+    const value=tokenMaps[mode]['--qxframe9a7c2-theme-neutral-7']||tokenMaps[mode]['--qxframe9a7c2-theme-neutral-6'];
+    if(!value)throw new TypeError('Missing neutral Theme scale for Chart Color.');
+    return parseColor(value);
+  }
+  return seedFromPalette(tokenMaps,mode,colorName);
+}
 function applyChartConfig(tokenMaps,schema,config,changed){
-  if(config.chart.preset==='balanced')return;
-  const anchors={cool:'#2563eb',warm:'#d97706',mixed:'#7c3aed',mono:'#52525b',balanced:'#5b5bd6'};
-  const seed=anchors[config.chart.preset]||anchors.balanced;
-  const light=chartPalette(config.chart.preset,seed,8,'light');
-  const dark=chartPalette(config.chart.preset,seed,8,'dark');
+  const light=monochromeChartPalette(chartSeed(tokenMaps,'light',config.chart.color),8,'light');
+  const dark=monochromeChartPalette(chartSeed(tokenMaps,'dark',config.chart.color),8,'dark');
   for(let i=0;i<8;i+=1)setPublic(tokenMaps,schema,changed,'--qxframe9a7c2-theme-chart-'+(i+1),colorToCss(light[i]),colorToCss(dark[i]));
 }
 function validateRecipeData(data){
