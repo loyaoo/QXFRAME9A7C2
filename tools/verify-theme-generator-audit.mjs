@@ -32,12 +32,17 @@ assert.equal(bad.reports.readability.passes,false);
 assert.ok(bad.reports.readability.warnings.some(item=>item.id==='light-text-secondary'));
 assert.ok(bad.css.includes('--qxframe9a7c2-theme-light-text-secondary: rgb(255, 255, 255);'),'Warnings must not silently rewrite explicit user overrides.');
 
-const fixedStatus=generateTheme(manifest,recipes,{
-  name:'readability-status-fixed',
+const explicitSharedStatus=generateTheme(manifest,recipes,{
+  name:'readability-status-explicit-shared',
   advanced:{overrides:{'--qxframe9a7c2-semantic-on-status':'rgb(0, 0, 0)'}}
 });
-assert.equal(fixedStatus.tokens.light['--qxframe9a7c2-semantic-on-status'],'rgb(0, 0, 0)');
-assert.ok(['success','warning','error','info'].every(role=>!fixedStatus.reports.readability.warnings.some(item=>item.id==='on-'+role)),'explicit shared black status foreground must clear all four default status contrast warnings');
+assert.equal(explicitSharedStatus.tokens.light['--qxframe9a7c2-semantic-on-status'],'rgb(0, 0, 0)');
+assert.deepEqual(explicitSharedStatus.reports.readability.warnings.filter(item=>item.id.startsWith('on-')&&item.id!=='on-primary').map(item=>item.id),['on-success','on-warning','on-info'],'shared optional semantic-on-status must not pretend to override frozen private per-status foregrounds');
+for(const id of ['on-success','on-warning','on-info']){
+  const warning=explicitSharedStatus.reports.readability.warnings.find(item=>item.id===id);
+  assert.equal(warning.ownership,'frozen-core-status-foreground');
+  assert.ok(warning.recommendedForeground,'status limitation warning must retain the offline recommended foreground');
+}
 
 const indirect=generateTheme(manifest,recipes,{
   name:'readability-unverifiable',
@@ -54,7 +59,7 @@ console.log(JSON.stringify({
   checks:base.reports.readability.checks.length,
   frozenDefaultWarnings:['on-success','on-warning','on-info'],
   explicitOverrideWarning:true,
-  sharedStatusForegroundAudited:true,
+  frozenStatusForegroundLimitationAudited:true,
   nonDestructive:true,
   indirectExpressionNonFatal:true
 }));
