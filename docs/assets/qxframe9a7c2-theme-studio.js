@@ -26,6 +26,7 @@ function scene(title,subtitle,body,kind){
 }
 function metric(label,value,change){return '<div class="qxframe9a7c2-studio-metric"><small>'+esc(label)+'</small><strong class="qxframe9a7c2-studio-kpi">'+esc(value)+'</strong>'+(change?'<span class="qxframe9a7c2-studio-change">'+esc(change)+'</span>':'')+'</div>';}
 function listItem(title,meta,end){return '<div class="qxframe9a7c2-studio-list-item"><div class="qxframe9a7c2-studio-list-copy"><strong>'+esc(title)+'</strong><span>'+esc(meta)+'</span></div>'+(end||'')+'</div>';}
+function staticSlider(percent){var p=Math.max(0,Math.min(100,Number(percent)||0));return '<div class="qxframe9a7c2-slider is-md qxframe9a7c2-studio-style-slider"><div class="qxframe9a7c2-slider-rail"></div><div class="qxframe9a7c2-slider-track" style="width:'+p+'%"></div><button type="button" class="qxframe9a7c2-slider-handle" style="left:'+p+'%" tabindex="-1"></button></div>';}
 function swatchRow(label,prefix,count){
   var items='';for(var i=1;i<=count;i+=1)items+='<span class="qxframe9a7c2-studio-swatch" title="'+esc(label)+' '+i+'" style="--swatch:var('+prefix+i+')"></span>';
   return '<div class="qxframe9a7c2-studio-palette-row"><small>'+esc(label)+'</small><div class="qxframe9a7c2-studio-swatches">'+items+'</div></div>';
@@ -75,6 +76,11 @@ function commercialHtml(){
       listItem('Security alerts','Critical events only','<label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox" checked><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label>')+
       listItem('Product updates','Monthly digest','<label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox"><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label>')+
     '</div>');
+  out+=scene('Environment controls','Switch / Slider geometry · live Style recipe',
+    '<div class="qxframe9a7c2-studio-stack">'+
+      '<div class="qxframe9a7c2-studio-row is-between"><div class="qxframe9a7c2-studio-title"><strong>Kitchen Island</strong><small>Hue · Color · Ambient</small></div><label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox" checked><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label></div>'+
+      listItem('Brightness','82%',staticSlider(82))+listItem('Color temp','68%',staticSlider(68))+listItem('Volume','32%',staticSlider(32))+listItem('Fade','6%',staticSlider(6))+
+    '</div>','is-controls');
   out+=scene('Schedule review','DatePicker · business workflow',
     '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-mount" data-studio-mount="schedule"></div><div class="qxframe9a7c2-studio-row">'+badge('45 min','info')+badge('Remote','default')+'</div></div>');
   out+=scene('Brand assets','Upload · content operations',
@@ -107,7 +113,7 @@ function insertCommercial(){
   var section=document.createElement('section');
   section.className='qxframe9a7c2-studio-commercial';
   section.dataset.qxframe9a7c2StudioCommercial='true';
-  section.innerHTML='<div class="qxframe9a7c2-studio-commercial-head"><div><h2>Commercial Preview Canvas</h2><p>真实业务组合场景而不是组件 API 排列。Card、Button、Input、Switch、Badge 直接使用 QXFRAME 样式；Table、Select、DatePicker、Upload、Menu、Tabs、Progress 使用真实 runtime component。</p></div><div class="qxframe9a7c2-studio-commercial-meta">'+badge('20 business scenes','primary')+badge('Live Light / Dark','info')+badge('Complete Theme CSS','success')+'</div></div><div class="qxframe9a7c2-studio-scenes">'+commercialHtml()+'</div>';
+  section.innerHTML='<div class="qxframe9a7c2-studio-commercial-head"><div><h2>Commercial Preview Canvas</h2><p>真实业务组合场景而不是组件 API 排列。Card、Button、Input、Switch、Badge 直接使用 QXFRAME 样式；Table、Select、DatePicker、Upload、Menu、Tabs、Progress 使用真实 runtime component。</p></div><div class="qxframe9a7c2-studio-commercial-meta">'+badge('22 business scenes','primary')+badge('Live Light / Dark','info')+badge('Complete Theme CSS','success')+'</div></div><div class="qxframe9a7c2-studio-scenes">'+commercialHtml()+'</div>';
   all.parentNode.insertBefore(section,all);
 }
 function mount(name,options){
