@@ -12,7 +12,7 @@ import {
   chooseOnColor,
   mixSrgb,
   mixOklab,
-  chartPalette
+  monochromeChartPalette
 } from '../docs/assets/theme-generator/color-engine.mjs';
 
 function approx(a,b,epsilon=0.006){assert.ok(Math.abs(a-b)<=epsilon, String(a)+' ≈ '+String(b));}
@@ -67,24 +67,37 @@ assert.ok(chooseOnColor('#5b5bd6').ratio>1);
 assertColor(mixSrgb('#ff0000','#0000ff',0.5));
 assertColor(mixOklab('#ff0000','#0000ff',0.5));
 
-for(const preset of ['balanced','cool','warm','mixed','mono']){
-  const light=chartPalette(preset,'#165dff',8,'light');
-  const dark=chartPalette(preset,'#165dff',8,'dark');
+for(const seed of ['#165dff','#16a34a','#52525b']){
+  const base=rgbToOklch(seed);
+  const light=monochromeChartPalette(seed,8,'light');
+  const dark=monochromeChartPalette(seed,8,'dark');
   assert.equal(light.length,8);assert.equal(dark.length,8);
   light.concat(dark).forEach(assertColor);
-  assert.notEqual(light.map(colorToHex).join(','),dark.map(colorToHex).join(','),'chart palette must have a distinct dark rendering');
+  assert.notEqual(light.map(colorToHex).join(','),dark.map(colorToHex).join(','),'chart scale must have a distinct dark rendering');
+  for(const series of [light,dark]){
+    const lch=series.map(rgbToOklch);
+    for(let i=1;i<lch.length;i+=1)assert.ok(lch[i].l<lch[i-1].l+0.004,'chart lightness must form one restrained hierarchy');
+    if(base.c>0.02){
+      for(const item of lch.filter(item=>item.c>0.01)){
+        const delta=Math.abs((((item.h-base.h)+540)%360)-180);
+        assert.ok(delta<1,'chart colors must stay on one hue');
+      }
+    }
+  }
 }
 
 assert.throws(()=>parseColor('not-a-color'),/Unsupported color syntax/);
 assert.throws(()=>generateNeutralScale('unknown'),/Unknown neutral preset/);
-assert.throws(()=>chartPalette('unknown'),/Unknown chart preset/);
+assert.throws(()=>monochromeChartPalette('not-a-color'),/Unsupported color syntax/);
 
 console.log(JSON.stringify({
   phase:'TG-C-color-foundation',
   colorInputs:['HEX','RGB','HSL','OKLCH','OKLab'],
   coloredScaleSteps:13,
   neutralAlgorithms:7,
-  chartPresets:5,
+  chartModel:'single-hue',
+  chartSeries:8,
+  generatedCssColorFormat:'rgb/rgba',
   gamutMapped:true,
   onColorContrast:true
 }));
