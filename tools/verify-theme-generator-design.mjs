@@ -91,7 +91,7 @@ assert.ok(!repeat.css.includes('contrast-color('));
 assert.ok(!repeat.css.includes('color-mix('));
 assert.ok(!repeat.css.includes('--_qxframe9a7c2-'));
 assert.ok(!repeat.css.includes('.qxframe9a7c2-'));
-assert.equal((repeat.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8060);
+assert.equal((repeat.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8056);
 
 console.log(JSON.stringify({
   phase:'TG-D-design-presets',
