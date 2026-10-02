@@ -77,10 +77,10 @@ for(const sample of [
   '.qxframe9a7c2-hidden-xxl-only',
   '.qxframe9a7c2-visible-xl-only'
 ]) assert.ok(grid.includes(sample),'Grid contract missing '+sample);
-assert.match(grid,/\.qxframe9a7c2-g-24,[\s\S]*?\.qxframe9a7c2-gx-24\s*\{\s*--qxframe9a7c2-grid-gap-x:\s*3rem/,
-  'g/gx must cover 0..24 using the mature 0.125rem step.');
-assert.match(grid,/\.qxframe9a7c2-g-md-8,[\s\S]*?\.qxframe9a7c2-gy-md-8\s*\{\s*--qxframe9a7c2-grid-gap-y:\s*1rem/,
-  'responsive g/gy must preserve the same 0.125rem step.');
+assert.match(grid,/\.qxframe9a7c2-g-24,[\s\S]*?\.qxframe9a7c2-gx-24\s*\{\s*--qxframe9a7c2-grid-gap-x:\s*var\(--qxframe9a7c2-theme-grid-gap-24\)/,
+  'g/gx must cover 0..24 through the Theme-backed mature 0.125rem step.');
+assert.match(grid,/\.qxframe9a7c2-g-md-8,[\s\S]*?\.qxframe9a7c2-gy-md-8\s*\{\s*--qxframe9a7c2-grid-gap-y:\s*var\(--qxframe9a7c2-theme-grid-gap-8\)/,
+  'responsive g/gy must preserve the same Theme-backed 0.125rem step.');
 assert.match(grid,/@media screen and \(min-width:\s*1600px\)[\s\S]*?\.qxframe9a7c2-col-xxl-24/,
   'xxl Grid breakpoint must start at 1600px.');
 assert.doesNotMatch(grid,/\.qxframe9a7c2-row-(?:[1-9]|1\d|2[0-4])\s*>/,
