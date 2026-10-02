@@ -14,14 +14,14 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Grid + viewport closeout DONE; bulk Size Tree source migration DONE; PR #239 closeout pending merge
-- Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
+- Current Phase: CSS Design Token Schema v1.6 closeout DONE; Grid/viewport/Size Tree migrations are merged and main-verified
+- Current Task: `CSS-TOKEN-SCHEMA-001` (DONE)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
-Status: IN PROGRESS
-Task progress: Size Tree actionable raw-size migration complete — 0 actionable consumers remain
+Status: DONE
+Task progress: 100% — Size Tree actionable raw-size migration complete; 0 actionable consumers remain
 Phase: Phase A/B/C DONE; Grid/viewport closeout DONE; Size Tree bulk source migration DONE
 
 Current Size Tree bulk checkpoint (2026-10-02):
@@ -30,6 +30,7 @@ Current Size Tree bulk checkpoint (2026-10-02):
 - Component-batch execution is now authoritative for closeout; phase-completion percentages must not be used as consumer-migration completion.
 - Size Tree consumer closeout: all ordinary scalable px/rem consumers are Theme/Size-Tree-backed; only true responsive breakpoint conditions and the approved 100rem pill sentinel remain.
 - PR #239 exact implementation head `9e0908933ad727003959efdecb222c89d73df5b0` passed QXFRAME CI #1219 / run 36959249192, including Full release verification, Phase B inventory, npm pack, standalone dist/docs and Windows tools.
+- PR #239 merged to main as `96c09f7861706e44fe5be709b6363821597fdacf`; main QXFRAME CI #1221 / run 36960062587 passed.
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -150,15 +151,16 @@ Bulk Size Tree migration 1 (PR #236):
 Progress accounting:
 - Do not use old Phase-completion percentages as SCSS migration completion.
 - Current authoritative source-migration denominator is the post-viewport actionable inventory: 1013.
-- Closed in bulk migration so far: 497.
-- Remaining actionable consumers: 516.
-- Bulk source-migration completion from this checkpoint: 49.1%.
+- Closed actionable consumers: 1013.
+- Remaining actionable consumers: 0.
+- Size Tree source-migration completion: 100%.
 
 Next exact step:
-- This checkpoint-only update must pass exact-head PR #236 QXFRAME CI, then merge PR #236 and verify main CI.
-- Start bulk migration 2 from the remaining 516 actionable consumers, prioritizing semantic geometry/control scales (Badge, FormCheck, Rate, Loading, Table and other component-owned geometry), then typography/shadow/review items.
+- `CSS-TOKEN-SCHEMA-001` requires no further source migration.
+- Final canonical inventory is 37 preserved/sentinel entries: 36 true responsive breakpoint literals + 1 approved 100rem pill-radius sentinel.
 - Keep 1px hairlines, 100rem pill, 50% circle, percentage layout, Grid span math and true responsive boundaries protected.
-- Do not reopen completed Grid/viewport/Controller work without a demonstrated regression.
+- Do not reopen completed Grid/viewport/Size Tree/Controller work without a demonstrated regression.
+- Resume from the next user-directed framework task.
 
 
 
