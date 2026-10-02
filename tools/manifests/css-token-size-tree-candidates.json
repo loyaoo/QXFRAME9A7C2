@@ -241,20 +241,20 @@
     }
   ],
   "summary": {
-    "totalCandidates": 38,
+    "totalCandidates": 37,
     "exactNodeCandidates": 0,
     "needsReview": 0,
     "signedOffsets": 0,
     "pillSentinels": 1,
-    "protectedBreakpoints": 37,
+    "protectedBreakpoints": 36,
     "byLayer": {
       "base": 0,
       "preset": 1,
       "theme": 0,
-      "component": 37
+      "component": 36
     },
     "byDomain": {
-      "breakpoint-boundary": 37,
+      "breakpoint-boundary": 36,
       "pill-radius-sentinel": 1
     }
   },
@@ -855,27 +855,6 @@
       "unit": "rem",
       "value": 38.75,
       "pxEquivalent": 620,
-      "domain": "breakpoint-boundary",
-      "status": "preserve-breakpoint",
-      "exactNode": null,
-      "lowerNode": {
-        "name": "size-46",
-        "px": 256
-      },
-      "upperNode": null,
-      "selector": "@media (max-width:38.75rem)",
-      "text": "@media (max-width:38.75rem){.qxframe9a7c2-descriptions[data-responsive=\"true\"] .qxframe9a7c2-descriptions-table{min-width:36rem}.qxframe9a7c2-descriptions-grid,.qxframe9a7c2-descriptions[data-responsive=\"true\"]{--_qxframe9a7c2-descriptions-columns:1!important}.qxframe9a7c2-descriptions-item.is-span-2,.qxframe9a7c2-descriptions-item.is-span-3{--_qxframe9a7c2-descriptions-span:1}.qxframe9a7c2-descriptions.is-bordered .qxframe9a7c2-descriptions-item{border-inline-end:0}}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13650,
-      "raw": "36rem",
-      "unit": "rem",
-      "value": 36,
-      "pxEquivalent": 576,
       "domain": "breakpoint-boundary",
       "status": "preserve-breakpoint",
       "exactNode": null,
