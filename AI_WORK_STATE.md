@@ -15,14 +15,30 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: CSS Token System, Theme Schema v1 freeze, Theme Generator v1 and commercial Theme Studio are merged and CI-verified. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `NONE` — await the next user-authorized task. Do not resume `THEME-GENERATOR-001` or Schema v1 work from zero.
+- Current Task: `THEME-STYLE-RECIPE-002` — align Theme Studio Style/Radius/Chart responsibilities with shadcn/create while preserving QXFRAME CSS Theme/Token ownership.
 
 ## CURRENT
 
-### READY-FOR-NEXT-TASK
-Status: IDLE / READY
-Progress: no active implementation task.
-Exact next step: wait for a new user-authorized task. Query current main/PR/CI before starting. Do not reopen Theme Generator v1, CSS Token Schema v1, Controller migration, Size Tree/Grid/viewport, or SCSS modularization without a new regression or explicit new-scope request.
+### THEME-STYLE-RECIPE-002
+Status: IN_PROGRESS
+Progress: ~10%
+Authority/reference: current public shadcn/ui `apps/v4/app/(app)/(create)` and `apps/v4/registry` are the external design-reference source; QXFRAME implementation remains CSS Theme/Token based and does not copy React runtime architecture.
+User decisions:
+- Style duties must be explicit. Replace the shallow Balanced/Soft/Precision/Compact treatment with shadcn/create-derived Style presets (Vega/Nova/Maia/Lyra/Mira/Luma/Sera/Rhea) translated into QXFRAME public Theme tokens.
+- Radius becomes a five-option system and remains independent from Style. It is a radius scale, not one identical radius for every component; surfaces/cards/popups must be able to be rounder than buttons/inputs. Preserve pill/circle primitives.
+- Chart color is restrained and monochromatic: one hue/color family with multiple lightness/chroma steps, not a multi-hue rainbow palette.
+- Style owns component geometry/spacing/treatment; Radius owns corner intensity; Chart Color owns chart hue; Font remains independent; Preset composes independent dimensions.
+- Follow shadcn/create style intent and preset data rather than inventing new QX visual archetypes.
+- Generated Theme CSS continues to output normal rgb()/rgba(); color(srgb ...) may remain input-parser compatibility only, never generated output.
+Reference facts already verified:
+- shadcn/create exposes Style, Base Color, Theme, Chart Color, Heading Font, Font, Icon Library, Radius, Menu Color and Menu Accent as separate parameters.
+- shadcn RADII = Default / None / Small(0.45rem) / Medium(0.625rem) / Large(0.875rem).
+- Lyra and Sera lock Radius=None; Rhea disallows Large.
+- shadcn style intent: Vega clean/neutral/familiar; Nova reduced padding/margins; Maia rounded/generous spacing; Lyra boxy/sharp; Mira compact; Luma rounded/soft/breathable; Sera editorial/typographic/square/underlined; Rhea compact Luma.
+Exact next step:
+1. Implement the eight Style recipes, five-option radius-scale mapping and monochrome chart-color generator.
+2. Update Theme Studio controls/randomization and preset/matrix/browser/static regression gates.
+3. Run exact-head QXFRAME CI + CSS Schema Acceptance, fix defects, then merge.
 
 ## Current authority snapshot — after Phase A
 
