@@ -59,7 +59,7 @@ async function browserProbes() {
     </div>`;
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'qx-schema-acceptance-'));
   const child = spawn(browser, ['--headless=new', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--disable-background-networking', '--no-first-run', '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
-  let endpoint, stderr = '', socket, targetId;
+  let endpoint, stderr = '', socket, targetId, call;
   child.stderr.setEncoding('utf8');
   child.stderr.on('data', data => { stderr += data; endpoint = stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/)?.[1]; });
   try {
@@ -77,7 +77,7 @@ async function browserProbes() {
       pending.delete(message.id); clearTimeout(entry.timer);
       message.error ? entry.reject(new Error(message.error.message)) : entry.resolve(message.result);
     };
-    const call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
+    call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
       const n = ++id, timer = setTimeout(() => { pending.delete(n); reject(new Error('CDP call timed out: ' + method)); }, 30000);
       pending.set(n, { resolve, reject, timer });
       socket.send(JSON.stringify({ id: n, method, params, ...(sessionId ? { sessionId } : {}) }));
@@ -122,10 +122,15 @@ async function browserProbes() {
     await call('Target.closeTarget', { targetId }); targetId = null;
     return result.result.value;
   } finally {
+    // Close the browser itself, including children spawned by a distribution
+    // wrapper. A profile cleanup race must never erase computed-style evidence
+    // or replace the original verification exception.
+    if (call && socket?.readyState === 1) await call('Browser.close').catch(() => {});
     try { socket?.close(); } catch {}
     child.kill('SIGKILL');
     await new Promise(resolve => child.exitCode !== null || child.signalCode !== null ? resolve() : child.once('exit', resolve));
-    fs.rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 50 });
+    try { fs.rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 50 }); }
+    catch (error) { console.error('Schema browser profile cleanup: ' + error.code); }
   }
 }
 
