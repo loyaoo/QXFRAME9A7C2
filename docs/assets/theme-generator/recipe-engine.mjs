@@ -126,7 +126,7 @@ function normalizeOnColors(tokenMaps,schema,changed){
 function chartSeed(tokenMaps,config,mode){
   const source=config.chart.color;
   if(source==='primary')return parseColor(tokenMaps[mode]['--qxframe9a7c2-theme-primary']);
-  if(source==='neutral')return parseColor(tokenMaps[mode]['--qxframe9a7c2-theme-neutral-5']);
+  if(source==='neutral')return seedFromPalette(tokenMaps,mode,'grey');
   return roleSeed(source,tokenMaps,mode);
 }
 function applyChartConfig(tokenMaps,schema,config,changed){
