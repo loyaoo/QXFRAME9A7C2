@@ -46,11 +46,11 @@ export function inspectSchema({ rootDir = root } = {}) {
   return { completeGuide, themeControlHeight, runtimeColorMix, mixByLayer, componentRootPublicDefaults, loadedComponentModules: modules.filter(file => file.includes('/components/')).length };
 }
 
-async function browserProbes() {
+export async function browserProbes({ expression, htmlContent, cssText } = {}) {
   const browser = [process.env.CHROMIUM_BIN, '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable'].filter(Boolean).find(fs.existsSync);
   if (!browser) throw new Error('Schema acceptance browser evidence requires Chromium; it cannot be skipped.');
-  const css = compileStyles({ root }).css.replace(/<\/style/gi, '<\\/style');
-  const html = `<!doctype html><meta charset="utf-8"><style>${css}</style>
+  const css = (cssText || compileStyles({ root }).css).replace(/<\/style/gi, '<\\/style');
+  const html = htmlContent || `<!doctype html><meta charset="utf-8"><style>${css}</style>
     <div id="scope" data-qxframe9a7c2-theme="light">
       <button id="control" class="qxframe9a7c2-button is-md">Control</button>
       <div id="card" class="qxframe9a7c2-card"><div id="cardBody" class="qxframe9a7c2-card-body"><div id="title" class="qxframe9a7c2-card-skeleton-line is-title"></div></div></div>
@@ -87,7 +87,7 @@ async function browserProbes() {
     await call('Page.enable', {}, sessionId);
     const tree = await call('Page.getFrameTree', {}, sessionId);
     await call('Page.setDocumentContent', { frameId: tree.frameTree.frame.id, html }, sessionId);
-    const result = await call('Runtime.evaluate', { returnByValue: true, expression: `(() => {
+    const result = await call('Runtime.evaluate', { returnByValue: true, expression: expression || `(() => {
       const probes = [], el = id => document.getElementById(id), cs = id => getComputedStyle(el(id));
       const scope = el('scope'), root = document.documentElement;
       const measure = (id, property) => parseFloat(cs(id)[property]);

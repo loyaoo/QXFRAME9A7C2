@@ -30,6 +30,8 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Verify acceptance detector
         run: node tools/verify-css-schema-acceptance-audit.mjs
+      - name: Capture offline color migration baseline
+        run: node tools/capture-css-static-colors.mjs
       - name: Enforce Schema acceptance with Chromium evidence
         run: node tools/audit-css-schema-acceptance.mjs --browser --enforce --write=artifacts/css-schema-acceptance.json
       - name: Upload acceptance evidence
@@ -37,6 +39,6 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: css-schema-acceptance-${{ github.sha }}
-          path: artifacts/css-schema-acceptance.json
+          path: artifacts/*.json
           if-no-files-found: error
           retention-days: 30

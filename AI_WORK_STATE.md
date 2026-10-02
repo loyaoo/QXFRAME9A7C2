@@ -15,9 +15,17 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: CSS Schema v1.6 final acceptance NOT_ACCEPTED; confirmed remediation pending. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE` (CSS evidence pass REVIEW_COMPLETE / NOT_ACCEPTED; task label is not the executing model identity)
+- Current Task: `CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001` (implementation in progress)
 
 ## CURRENT
+
+### CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
+Status: IN_PROGRESS
+Progress: remediation task 0%; base controller migration and Size Tree/Grid/SCSS subset remain complete.
+Baseline: PR #245 head f60dcfd8ee6cc6eddf64130809f867e1376c722d; main 72663d3530e16b582b8891491fa8f7e8b01ccda9.
+CI reconciled: QXFRAME CI run 36971170983 SUCCESS; strict CSS Schema Acceptance run 36971171051 FAILURE (four computed-style probes and color inventory).
+Scope: implement SCHEMA-ACCEPT-002/004/005/003; keep default visual behavior, explicit ancestor Component overrides and scoped Theme inheritance. Keep strict acceptance and existing release gates.
+Next exact step: add consumed public Theme control recipes; replace early Component aliases with fallback-at-consumer resolution; then staticize color consumers with Light/Dark/color-axis evidence and run GitHub browser/release CI.
 
 ### ASTRA-HIGH-FINAL-ACCEPTANCE — CSS Schema acceptance
 Status: REVIEW_COMPLETE / NOT_ACCEPTED / REMEDIATION_REQUIRED
