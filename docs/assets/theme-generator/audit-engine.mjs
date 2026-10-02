@@ -44,39 +44,16 @@ function modeTextChecks(tokens,mode){
 }
 function roleCheck(tokens,role){
   const background=token(tokens,'light','--qxframe9a7c2-theme-'+role);
+  let recommendedForeground=null;try{recommendedForeground=chooseOnColor(background,{minimum:MIN_TEXT_CONTRAST}).css;}catch(_){}
   if(role==='primary'){
-    const foreground=token(tokens,'light','--qxframe9a7c2-theme-primary-foreground');
+    const foreground=tokens.light['--qxframe9a7c2-semantic-on-accent']
+      ??token(tokens,'light','--qxframe9a7c2-theme-primary-foreground');
     const checked=contrastCheck('on-primary',foreground,background,MIN_TEXT_CONTRAST);
-    let recommendedForeground=null;try{recommendedForeground=chooseOnColor(background).css;}catch(_){}
     return Object.freeze({...checked,role,recommendedForeground});
   }
-  try{
-    const recommended=chooseOnColor(background,{minimum:MIN_TEXT_CONTRAST});
-    return Object.freeze({
-      id:'on-'+role,
-      role,
-      foreground:recommended.css,
-      recommendedForeground:recommended.css,
-      background:colorToCss(background),
-      ratio:recommended.ratio,
-      minimum:MIN_TEXT_CONTRAST,
-      verifiable:true,
-      passes:recommended.passes
-    });
-  }catch(error){
-    return Object.freeze({
-      id:'on-'+role,
-      role,
-      foreground:null,
-      recommendedForeground:null,
-      background:String(background),
-      ratio:null,
-      minimum:MIN_TEXT_CONTRAST,
-      verifiable:false,
-      passes:false,
-      detail:error&&error.message||String(error)
-    });
-  }
+  const foreground=tokens.light['--qxframe9a7c2-semantic-on-status']??recommendedForeground;
+  const checked=contrastCheck('on-'+role,foreground,background,MIN_TEXT_CONTRAST);
+  return Object.freeze({...checked,role,recommendedForeground});
 }
 function auditReadability(tokens){
   const checks=[
