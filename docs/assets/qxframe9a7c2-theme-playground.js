@@ -76,6 +76,7 @@ function themeCss(){
   if(state.base==='grey') lines.push('  /* Neutral omitted intentionally: canonical Grey 1–13 is the standard default recipe. */');
   else if(selectedBase.palette){for(var step=1;step<=13;step+=1)lines.push('  --qxframe9a7c2-theme-neutral-'+step+': rgb(var(--qxframe9a7c2-palette-'+selectedBase.palette+'-'+step+'));');}
   else {for(var mixedStep=1;mixedStep<=13;mixedStep+=1)lines.push('  --qxframe9a7c2-theme-neutral-'+mixedStep+': var(--_qxframe9a7c2-auxiliary-'+mixedStep+');');}
+  if(docsTheme){var colors=docsTheme.getColorOverrides();Object.keys(colors).forEach(function(key){lines.push('  '+key+': '+colors[key]+';');});}
   lines.push('}');return lines.join('\n');
 }
 
@@ -153,11 +154,11 @@ function updateThemeControls(){
   document.querySelectorAll('[data-preset]').forEach(function(b){var item=PRESETS.find(function(x){return x.key===b.dataset.preset;});b.classList.toggle('is-active',b.dataset.preset===state.preset&&item&&item.seed.toLowerCase()===pv.toLowerCase());if(item)b.style.setProperty('--swatch',item.seed);});
   var presetLabel=document.querySelector('[data-qxframe9a7c2-preset-label]');if(presetLabel)presetLabel.textContent=p.name;
   var pvHost=document.querySelector('[data-qxframe9a7c2-primary-value]');if(pvHost)pvHost.textContent=pv;
-  var familyHost=document.querySelector('[data-qxframe9a7c2-primary-family]');if(familyHost)familyHost.textContent='Seed / optional 13 tones';
-  var seedColor=document.querySelector('[data-qxframe9a7c2-primary-color]');if(seedColor)seedColor.value=pv;
-  var seedText=document.querySelector('[data-qxframe9a7c2-primary-text]');if(seedText)seedText.value=pv;
+  var familyHost=document.querySelector('[data-qxframe9a7c2-primary-family]');if(familyHost)familyHost.textContent='静态 Theme 颜色预设';
+  var seedColor=document.querySelector('[data-qxframe9a7c2-primary-color]');if(seedColor){seedColor.value=pv;seedColor.disabled=true;seedColor.title='选择内置静态预设；自定义主题使用完整 Theme 颜色值。';}
+  var seedText=document.querySelector('[data-qxframe9a7c2-primary-text]');if(seedText){seedText.value=pv;seedText.readOnly=true;}
   var baseSel=document.querySelector('[data-qxframe9a7c2-base]');if(baseSel)baseSel.value=state.base;
-  var mix=document.querySelector('[data-qxframe9a7c2-mix]');if(mix){mix.value=state.mixRatio;mix.disabled=state.base!=='mixed';}var mixLabel=document.querySelector('[data-qxframe9a7c2-mix-label]');if(mixLabel)mixLabel.textContent=state.mixRatio+'%'+(state.mixRatio===100?' · r2':'');
+  var mix=document.querySelector('[data-qxframe9a7c2-mix]');if(mix){mix.value=state.mixRatio;mix.disabled=true;mix.title='内置 MixedGray 保留 r2 静态色阶';}var mixLabel=document.querySelector('[data-qxframe9a7c2-mix-label]');if(mixLabel)mixLabel.textContent=state.mixRatio+'%'+(state.mixRatio===100?' · r2':'');
   var fontSel=document.querySelector('[data-qxframe9a7c2-font]');if(fontSel)fontSel.value=state.font;
   var radius=document.querySelector('[data-qxframe9a7c2-radius]');if(radius)radius.value=state.radius;
   var radiusLabel=document.querySelector('[data-qxframe9a7c2-radius-label]');if(radiusLabel)radiusLabel.textContent=state.radius+'px';
