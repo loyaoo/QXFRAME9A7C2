@@ -51,10 +51,9 @@ function roleCheck(tokens,role){
     const checked=contrastCheck('on-primary',foreground,background,MIN_TEXT_CONTRAST);
     return Object.freeze({...checked,role,recommendedForeground});
   }
-  const foreground=tokens.light['--qxframe9a7c2-semantic-on-status']
-    ??'rgb('+token(tokens,'light','--qxframe9a7c2-palette-white')+')';
+  const foreground='rgb('+token(tokens,'light','--qxframe9a7c2-palette-white')+')';
   const checked=contrastCheck('on-'+role,foreground,background,MIN_TEXT_CONTRAST);
-  return Object.freeze({...checked,role,recommendedForeground});
+  return Object.freeze({...checked,role,recommendedForeground,ownership:'frozen-core-status-foreground'});
 }
 function auditReadability(tokens){
   const checks=[
@@ -68,9 +67,13 @@ function auditReadability(tokens){
     id:check.id,
     ratio:check.ratio,
     minimum:check.minimum,
-    message:check.verifiable
-      ?check.id+' contrast '+check.ratio+' is below '+check.minimum+'.'
-      :check.id+' contrast cannot be verified offline from the explicit CSS expression.'
+    recommendedForeground:check.recommendedForeground||null,
+    ownership:check.ownership||null,
+    message:!check.verifiable
+      ?check.id+' contrast cannot be verified offline from the explicit CSS expression.'
+      :check.ownership==='frozen-core-status-foreground'
+        ?check.id+' contrast '+check.ratio+' is below '+check.minimum+'; Schema v1 semantic status variants use the frozen white foreground. Recommended '+check.recommendedForeground+' requires a future public per-status on-color slot.'
+        :check.id+' contrast '+check.ratio+' is below '+check.minimum+'.'
   }));
   return Object.freeze({
     minimumTextContrast:MIN_TEXT_CONTRAST,
