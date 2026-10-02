@@ -158,7 +158,15 @@ function parseColor(value){
   const text=String(value||'').trim().toLowerCase();
   if(!text)throw new TypeError('Color value is empty.');
   if(text==='transparent')return color(0,0,0,0);
+  if(text==='black')return color(0,0,0,1);
+  if(text==='white')return color(1,1,1,1);
   if(text.startsWith('#'))return parseHex(text);
+  const srgb=/^color\(srgb\s+([^)]*)\)$/.exec(text);
+  if(srgb){
+    const args=splitFunctionArgs(srgb[1]);
+    if(args.parts.length!==3)throw new TypeError('Invalid color(srgb) syntax: '+value);
+    return color(parseFloat(args.parts[0]),parseFloat(args.parts[1]),parseFloat(args.parts[2]),parseAlpha(args.alpha));
+  }
   const match=/^([a-z]+)\((.*)\)$/.exec(text);
   if(!match)throw new TypeError('Unsupported color syntax: '+value);
   const fn=match[1],args=splitFunctionArgs(match[2]);
