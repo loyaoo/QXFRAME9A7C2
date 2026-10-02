@@ -2,13 +2,13 @@ const SCHEMA_VERSION = 1;
 const GENERATOR_VERSION = '1.0.0-dev';
 
 const PALETTE_KEYS = Object.freeze(['red','orange','yellow','lime','green','teal','cyan','blue','purple','pink','grey']);
-const STYLE_IDS = Object.freeze(['balanced','soft','precision','compact']);
+const STYLE_IDS = Object.freeze(['vega','nova','maia','lyra','mira','luma','sera','rhea']);
 const BASE_COLOR_IDS = Object.freeze(['neutral','stone','zinc','mauve','olive','mist','taupe','custom']);
-const CHART_IDS = Object.freeze(['balanced','cool','warm','mixed','mono']);
+const CHART_COLOR_IDS = Object.freeze(['primary','neutral','blue','cyan','teal','green','lime','yellow','orange','red','pink','purple']);
 const BODY_FONT_IDS = Object.freeze(['system-ui','inter','humanist','serif']);
 const HEADING_FONT_IDS = Object.freeze(['inherit','system-ui','inter','humanist','serif','mono']);
 const MONO_FONT_IDS = Object.freeze(['ui-monospace','system-mono']);
-const RADIUS_IDS = Object.freeze(['none','small','medium','large']);
+const RADIUS_IDS = Object.freeze(['default','none','small','medium','large']);
 const DENSITY_IDS = Object.freeze(['compact','default','comfortable']);
 const MENU_COLOR_IDS = Object.freeze(['default','primary','inverted','neutral']);
 const MENU_APPEARANCE_IDS = Object.freeze(['solid','soft','translucent']);
@@ -27,7 +27,7 @@ const DEFAULT_CONFIG = deepFreeze({
     error: 'red',
     info: 'cyan'
   },
-  chart: { preset: 'balanced' },
+  chart: { color: 'primary' },
   typography: {
     body: 'system-ui',
     heading: 'inherit',
@@ -49,27 +49,19 @@ const DEFAULT_CONFIG = deepFreeze({
 });
 
 const STYLE_PRESETS = deepFreeze({
-  balanced: {
-    label: 'Balanced',
-    defaults: { radius: 'medium', density: 'default' }
-  },
-  soft: {
-    label: 'Soft Surface',
-    defaults: { radius: 'large', density: 'comfortable' }
-  },
-  precision: {
-    label: 'Precision',
-    defaults: { radius: 'small', density: 'default' }
-  },
-  compact: {
-    label: 'Compact Workbench',
-    defaults: { radius: 'small', density: 'compact' }
-  }
+  vega: { label:'Vega', description:'Clean, neutral, and familiar.', defaultRadius:'medium' },
+  nova: { label:'Nova', description:'Reduced padding and margins.', defaultRadius:'medium' },
+  maia: { label:'Maia', description:'Rounded, with generous spacing.', defaultRadius:'medium' },
+  lyra: { label:'Lyra', description:'Boxy and sharp. For mono fonts.', defaultRadius:'none', radiusLocked:true },
+  mira: { label:'Mira', description:'Made for compact interfaces.', defaultRadius:'medium' },
+  luma: { label:'Luma', description:'Fluid, luminous, and soft.', defaultRadius:'medium' },
+  sera: { label:'Sera', description:'Editorial and typographic.', defaultRadius:'none', radiusLocked:true },
+  rhea: { label:'Rhea', description:'Like Luma but compact.', defaultRadius:'medium', disallowLargeRadius:true }
 });
 
 const TOP_KEYS = new Set(['schema','name','style','baseColor','palette','roles','chart','typography','radius','density','components','advanced']);
 const ROLE_KEYS = new Set(['primary','success','warning','error','info']);
-const CHART_KEYS = new Set(['preset']);
+const CHART_KEYS = new Set(['color','preset']);
 const TYPE_KEYS = new Set(['body','heading','mono','baseSize']);
 const COMPONENT_KEYS = new Set(['menu']);
 const MENU_KEYS = new Set(['color','appearance','accent']);
@@ -177,11 +169,11 @@ function normalizeOverrides(input) {
   return result;
 }
 
-function applyStyleDefaults(config, provided) {
+function normalizeStyleRadius(config) {
   const preset = STYLE_PRESETS[config.style];
   if (!preset) return config;
-  if (!provided.has('radius')) config.radius = preset.defaults.radius;
-  if (!provided.has('density')) config.density = preset.defaults.density;
+  if (preset.radiusLocked) config.radius = 'none';
+  else if (preset.disallowLargeRadius && config.radius === 'large') config.radius = 'medium';
   return config;
 }
 
@@ -199,7 +191,10 @@ function normalizeConfig(input = {}) {
   config.roles = normalizeRoles(input.roles);
 
   if (input.chart != null) assertKnownKeys(input.chart, CHART_KEYS, 'chart');
-  config.chart.preset = enumValue(input.chart && input.chart.preset, CHART_IDS, DEFAULT_CONFIG.chart.preset, 'chart.preset');
+  const legacyChart = input.chart && input.chart.preset;
+  const legacyMap = { balanced:'primary', cool:'blue', warm:'orange', mixed:'purple', mono:'neutral' };
+  const chartValue = input.chart && input.chart.color != null ? input.chart.color : (legacyChart != null ? (legacyMap[legacyChart] || legacyChart) : DEFAULT_CONFIG.chart.color);
+  config.chart.color = enumValue(chartValue, CHART_COLOR_IDS, DEFAULT_CONFIG.chart.color, 'chart.color');
 
   if (input.typography != null) assertKnownKeys(input.typography, TYPE_KEYS, 'typography');
   config.typography.body = enumValue(input.typography && input.typography.body, BODY_FONT_IDS, DEFAULT_CONFIG.typography.body, 'typography.body');
@@ -221,7 +216,7 @@ function normalizeConfig(input = {}) {
 
   if (input.advanced != null) assertKnownKeys(input.advanced, ADVANCED_KEYS, 'advanced');
   config.advanced.overrides = normalizeOverrides(input.advanced && input.advanced.overrides);
-  applyStyleDefaults(config, provided);
+  normalizeStyleRadius(config);
   return deepFreeze(config);
 }
 
@@ -385,7 +380,7 @@ function configOptions() {
   return deepFreeze({
     styles: STYLE_IDS.slice(),
     baseColors: BASE_COLOR_IDS.slice(),
-    chartPresets: CHART_IDS.slice(),
+    chartColors: CHART_COLOR_IDS.slice(),
     bodyFonts: BODY_FONT_IDS.slice(),
     headingFonts: HEADING_FONT_IDS.slice(),
     monoFonts: MONO_FONT_IDS.slice(),
