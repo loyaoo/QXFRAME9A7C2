@@ -148,7 +148,7 @@ function studioPanelHtml(){
     field('Radius','radius','<select class="qxframe9a7c2-studio-control" data-studio-input="radius">'+selectOptions([['default','Default'],['none','None'],['small','Small'],['medium','Medium'],['large','Large']])+'</select>','radius')+
   '</div>'+
   '<div class="qxframe9a7c2-studio-group"><div class="qxframe9a7c2-studio-group-head"><strong>Typography</strong><small>font resources stay external</small></div>'+
-    field('Body font','body','<select class="qxframe9a7c2-studio-control" data-studio-input="body">'+selectOptions([['system-ui','System UI'],['inter','Inter'],['humanist','Humanist'],['serif','Serif']])+'</select>','body')+
+    field('Body font','body','<select class="qxframe9a7c2-studio-control" data-studio-input="body">'+selectOptions([['system-ui','System UI'],['inter','Inter'],['humanist','Humanist'],['serif','Serif'],['mono','Mono']])+'</select>','body')+
     field('Heading font','heading','<select class="qxframe9a7c2-studio-control" data-studio-input="heading">'+selectOptions([['inherit','Inherit'],['system-ui','System UI'],['inter','Inter'],['humanist','Humanist'],['serif','Serif'],['mono','Mono']])+'</select>','heading')+
     field('Base size','baseSize','<select class="qxframe9a7c2-studio-control" data-studio-input="baseSize">'+selectOptions([['12','12'],['14','14'],['16','16'],['18','18'],['20','20']])+'</select>','body')+
   '</div>'+
