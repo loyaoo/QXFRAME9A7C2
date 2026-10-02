@@ -83,7 +83,6 @@ Semantic Colors
 Chart Color
 Typography
 Radius
-Density
 少量 Component Preset
 ```
 
@@ -96,13 +95,16 @@ Generator 输出完整 public token set。
 可以有：
 
 ```text
-Soft
-Sharp
-Mira-like
-Luma-like
-Enterprise
-Rounded
-Compact
+Vega
+Nova
+Maia
+Lyra
+Mira
+Luma
+Sera
+Rhea
+
+这些是 Style 维度，不是 QXFRAME 商业 Theme Preset 名称。QXFRAME 的 Signal / Ledger / Harbor 等 Preset 只是多个独立维度的组合包。
 ```
 
 但生成 CSS 中不能出现：
@@ -148,7 +150,7 @@ Theme CSS 只能主要包含：
 {
   schema: 1,
 
-  style: "default",
+  style: "nova",
 
   baseColor: "neutral",
 
@@ -175,7 +177,7 @@ Theme CSS 只能主要包含：
   },
 
   chart: {
-    preset: "default"
+    color: "primary"
   },
 
   typography: {
@@ -185,9 +187,7 @@ Theme CSS 只能主要包含：
     baseSize: 14
   },
 
-  radius: "medium",
-
-  density: "default",
+  radius: "default",
 
   components: {
     menu: {
@@ -215,7 +215,6 @@ Chart Color
 Heading Font
 Body Font
 Radius
-Density
 Menu Color
 Menu Appearance
 Menu Accent
@@ -242,24 +241,37 @@ Specific Component Token Override
 
 # 5. Style Preset 的职责
 
-Style 是一组设计决策，不是一个 CSS class。
+Style 是完整的组件视觉 recipe，不是 CSS class，也不是颜色 Theme。
+
+当前 Style 直接以 shadcn/ui `/create` 的公开 Style 体系作为成熟参考数据：
+
+```text
+Vega — clean / familiar
+Nova — reduced spacing
+Maia — rounded / generous
+Lyra — boxy / sharp
+Mira — compact UI
+Luma — fluid / soft
+Sera — editorial / typographic
+Rhea — soft / compact
+```
+
+QXFRAME 不复制 shadcn 的组件 selector；Generator 把这些 recipe 的视觉比例映射到 QXFRAME 已冻结的 public Theme / Component Token。
 
 一个 Style 可以改变：
 
 ```text
-shape
-radius default mapping
-border strength
-surface elevation
-control fill strategy
-density default
-switch geometry
-slider geometry
-state visual strength
-shadow profile
+control height / padding / gap / font sizing
+component-relative radius mapping
+Card spacing / elevation
+Switch geometry
+Slider rail / thumb geometry
+Popup / Menu / Tabs treatment
+border / shadow strength
+compactness / generosity
 ```
 
-不能改变：
+Style 不能改变：
 
 ```text
 DOM structure
@@ -273,75 +285,34 @@ Grid contract
 virtualization contract
 ```
 
-### 示例
-
-```js
-const styles = {
-  soft: {
-    foundation: {
-      shadowProfile: "soft",
-      borderProfile: "subtle"
-    },
-    family: {
-      controlFill: "filled"
-    },
-    components: {
-      switch: {
-        width: 44,
-        height: 22,
-        thumbWidth: 24,
-        thumbHeight: 18
-      },
-      slider: {
-        trackHeight: 8,
-        thumbWidth: 24,
-        thumbHeight: 16
-      }
-    }
-  }
-}
-```
-
-Generator 最终把这些规则解析成标准 token。
+Density 不再作为普通配置的第二 owner。紧凑/宽松属于 Style recipe；否则 `Style=Nova + Density=Comfortable` 之类组合会产生职责冲突。
 
 ---
 
 # 6. 配置维度必须正交
 
-这是 Theme Generator 最重要的规则之一。
-
-不同选项不能互相偷偷重置。
-
-推荐计算优先级：
+不同选项不能互相偷偷重置。当前计算职责：
 
 ```text
-1. Framework Default Config
-2. Style Preset
-3. Base Color
+1. Framework frozen defaults
+2. Style recipe（组件几何/视觉语言）
+3. Base Color（neutral family）
 4. Theme / Semantic Color
-5. Chart Color
+5. Chart Color（单色数据色系）
 6. Typography
-7. Radius
-8. Density
-9. Component Preset
-10. Advanced Explicit Override
+7. Radius（覆盖基础 radius scale；组件仍按 Style 比例消费）
+8. Component Preset
+9. Advanced Explicit Override
 ```
 
 例：
 
 ```text
-Style = Soft
+Style = Nova
+Radius = Large
 ```
 
-给默认 `radius = large`。
-
-用户随后：
-
-```text
-Radius = Small
-```
-
-最终必须 Small。
+最终仍是 Nova 的控件比例、Switch/Slider/Card 语言，只把基础 Radius scale 提升到 Large；Card、Button、Popup 等不会因此获得完全相同的圆角。
 
 切换：
 
@@ -349,17 +320,8 @@ Radius = Small
 Theme Blue → Cyan
 ```
 
-只能改变颜色，不得把 Radius / Slider thickness / Switch geometry 重置。
+只能改变 Theme/role 色；不能重置 Style、Radius、Switch/Slider geometry。Chart Color 若保持 `Primary`，会跟随 Primary；若用户显式选择 Purple/Green 等 Chart Color，则保持独立。
 
-切换：
-
-```text
-Density Default → Compact
-```
-
-不得改变 Theme Color。
-
----
 
 # 7. Base Color
 
@@ -585,30 +547,34 @@ Generator 输出最终 RGB 值；不要依赖 runtime `contrast-color()`。
 
 # 13. Chart Palette
 
-Chart 是独立设计维度。
+Chart Color 是独立设计维度，但配色必须克制：一套图表只使用一个 hue family，通过 lightness / chroma（明度 / 彩度）区分 series，不生成彩虹色。
 
 输入：
 
 ```text
-Chart Color = Lime / Blue / Warm / Cool / Mixed / Custom
+Primary
+Neutral
+Red / Orange / Yellow / Lime / Green / Teal / Cyan / Blue / Purple / Pink / Grey
 ```
 
 输出：
 
 ```css
---qxframe9a7c2-chart-1
---qxframe9a7c2-chart-2
+--qxframe9a7c2-theme-chart-1
+--qxframe9a7c2-theme-chart-2
 ...
+--qxframe9a7c2-theme-chart-8
 ```
 
 要求：
 
-- series 间有可感知区分。
-- Light/Dark 都能辨认。
-- 不依赖 primary/success/error 硬凑。
-- 不能因为 Theme Color 改变而自动覆盖用户显式 Chart preset。
+- 同一 Chart family 的 hue 基本稳定，series 靠明度/彩度形成层级。
+- Light/Dark 都可辨认。
+- 默认 `Chart Color = Primary`，Primary 改变时 Chart 同步跟随。
+- 用户显式选择 Chart Color 后，它与 Primary 独立。
+- 不使用 Warm/Cool/Mixed 这类多 hue 彩色 preset。
+- 最终输出 RGB/RGBA，不输出 `color(srgb ...)`。
 
----
 
 # 14. Typography Generator
 
@@ -641,67 +607,46 @@ body weight
 
 # 15. Radius Generator
 
-用户普通设置：
+普通设置固定为 5 个选项：
 
 ```text
+Default
 None
 Small
 Medium
 Large
 ```
 
-它不是简单把所有 radius 设成同一个值。
+其中 shadcn/create 的参考基准为 None=0、Small≈0.45rem、Medium≈0.625rem、Large≈0.875rem；Default 使用当前 Style 自己的默认基础半径。
 
-Generator 生成 Foundation radius scale：
-
-```text
-xs
-sm
-md
-lg
-xl
-pill
-circle
-```
-
-并可通过 Style Preset 决定 component/family mapping。
-
-显式 `Radius` 配置优先于 Style 默认 radius。
-
----
-
-# 16. Density Generator
-
-建议：
+Radius 绝不能把所有组件设成同一个值。Generator 先生成 Foundation radius scale：
 
 ```text
-Compact
-Default
-Comfortable
+xs ≈ base × 0.6
+sm ≈ base × 0.8
+md = base
+lg ≈ base × 1.4
+xl ≈ base × 1.8
+pill / circle 保留语义
 ```
 
-它通过离散规则修改：
+然后由 Style recipe 决定组件映射。例如 Card 可以消费更大的 radius，Button/Input 消费 control radius，Popup/Tabs 再使用各自映射。因此 `Radius=Large` 是整体圆角尺度变大，而不是“全部组件 14px”。
+
+显式 Radius 配置覆盖 Style 的基础 radius，但不覆盖 Style 的组件相对关系。
+
+# 16. Density / compactness ownership
+
+Theme Studio 不再提供独立 Density 选项。
 
 ```text
-control height
-padding
-gap
-table/list/menu row height
+Nova / Mira / Rhea → 各自拥有紧凑比例
+Maia / Luma → 各自拥有更宽松比例
+Vega → 中性标准
+Lyra / Sera → 各自拥有锐利/编辑型比例
 ```
 
-不修改：
+这样只有一个 geometry owner，避免 Style 与 Density 同时争夺 control height / padding / gap。
 
-```text
-behavioral hit-test contract
-focus outline thickness
-border proportion到不可读
-font size到不可读
-icon stroke
-```
-
-Generator 不做全局比例缩放。
-
----
 
 # 17. Component Preset
 
@@ -882,8 +827,6 @@ applyChart()
 applyTypography()
 ↓
 applyRadius()
-↓
-applyDensity()
 ↓
 applyComponentPresets()
 ↓
@@ -1156,33 +1099,28 @@ Core CSS Token Schema 更新时：
 
 # 31. Generator 测试矩阵
 
-至少：
+当前代表性生成矩阵至少覆盖：
 
 ```text
-4 Style
-× 5 Theme Color
+8 Style
+× 5 Primary
 × 3 Base Color
-× 2 Mode
-× 3 Radius
-× 3 Density
+= 120 Complete Themes
 ```
 
-不要求做全部组合截图，但要：
-
-- token generation property tests。
-- 代表性 visual snapshots。
-- 浏览器页面组合 smoke test。
+每个 Complete Theme 同时生成 Light + Dark；5 个 Radius、Chart Color、Menu 组合在 120 个配置中轮换覆盖。浏览器验收还必须逐个切换 8 Style，读取 Card/Button/Input/Switch/Slider 的 computed geometry，防止“Style 名字变了但组件没变”。
 
 重点检测 orthogonality：
 
 ```text
 改 Theme Color 不应改 geometry。
 改 Radius 不应改 color。
-改 Density 不应改 primary。
 改 Font 不应重置 Style。
+显式 Chart Color 不应被 Primary 覆盖。
+Default Chart=Primary 时应随 Primary。
+Card / Control / Popup 不得被 Radius 拉平成同一圆角。
 ```
 
----
 
 # 32. Generator 性能
 
@@ -1280,21 +1218,16 @@ Config JSON / CSS。
 
 ## Phase TG-H — Preset Library
 
-形成 QXFRAME 自己的 Style presets。
+区分两个概念：
 
-不要直接使用：
+- **Style recipe**：当前明确以 shadcn/create 的 Vega / Nova / Maia / Lyra / Mira / Luma / Sera / Rhea 为参考体系，并映射到 QXFRAME public token。
+- **QX Theme Preset bundle**：继续使用 QXFRAME 自己的 Signal / Ledger / Harbor / Juniper / Ember / Orbit / Graphite / Canvas 名称，只负责组合 Style / Color / Font / Radius / Menu 等独立维度。
 
-```text
-Mira / Nova / Luma / Rhea
-```
-
-作为 QXFRAME 预设名称与复制值。
-
-可以研究其设计差异，再建立自己的预设。
+两者不能混为同一层。
 
 ## Phase TG-I — Regression Matrix
 
-多 Style × Color × Light/Dark × Radius × Density。
+8 Style × Color × Light/Dark × 5 Radius，并轮换 Chart/Menu 维度。
 
 ---
 
@@ -1311,9 +1244,9 @@ Mira / Nova / Luma / Rhea
 - [ ] Role 13 阶可生成。
 - [ ] Light/Dark 独立生成，不是简单 reverse。
 - [ ] on-color 自动计算。
-- [ ] Chart palette 独立。
+- [ ] Chart palette 单 hue、明度/彩度分层；默认随 Primary，显式 Chart Color 独立。
 - [ ] Radius 与 Style 正交。
-- [ ] Density 与 Style 正交。
+- [ ] Compactness / generosity 仅由 Style 拥有，不存在第二个 Density owner。
 - [ ] Typography 不重置其他维度。
 - [ ] Component Preset 不影响非目标组件。
 - [ ] Explicit Override 最后生效。
@@ -1356,7 +1289,7 @@ Radius
 
 ```text
 Seed + algorithm + component token
-Dark/Compact 可组合
+Dark/compact algorithm 可组合（参考架构；QX Theme Studio 的 compactness 归 Style owner）
 ```
 
 但算法只存在 Generator，最终输出静态 CSS。
