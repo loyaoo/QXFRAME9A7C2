@@ -41,7 +41,8 @@ function linearToSrgb(channel){
   return c<=0.0031308?12.92*c:1.055*Math.max(c,0)**(1/2.4)-0.055;
 }
 function rgbToOklab(input){
-  const l=srgbToLinear(input.r),m=srgbToLinear(input.g),s=srgbToLinear(input.b);
+  const source=input&&typeof input==='object'&&['r','g','b'].every(key=>Number.isFinite(input[key]))?input:parseColor(input);
+  const l=srgbToLinear(source.r),m=srgbToLinear(source.g),s=srgbToLinear(source.b);
   const x=0.4122214708*l+0.5363325363*m+0.0514459929*s;
   const y=0.2119034982*l+0.6806995451*m+0.1073969566*s;
   const z=0.0883024619*l+0.2817188376*m+0.6299787005*s;
@@ -50,7 +51,7 @@ function rgbToOklab(input){
     l:0.2104542553*lx+0.793617785*ly-0.0040720468*lz,
     a:1.9779984951*lx-2.428592205*ly+0.4505937099*lz,
     b:0.0259040371*lx+0.7827717662*ly-0.808675766*lz,
-    alpha:input.a
+    alpha:source.a
   });
 }
 function oklabToRgbRaw(lab){
