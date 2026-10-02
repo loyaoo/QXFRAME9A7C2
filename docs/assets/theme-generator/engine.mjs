@@ -113,8 +113,8 @@ function enumValue(value, allowed, fallback, path) {
 
 function normalizeName(value) {
   const next = String(value == null ? DEFAULT_CONFIG.name : value).trim();
-  if (!next || !/^[a-z0-9][a-z0-9._-]{0,63}$/i.test(next)) {
-    throw new TypeError('name must be 1-64 characters using letters, numbers, dot, underscore or hyphen.');
+  if (!next || next.length > 64 || /[\r\n]/.test(next) || next.includes('*/')) {
+    throw new TypeError('name must be 1-64 characters without line breaks or CSS comment terminators.');
   }
   return next;
 }
