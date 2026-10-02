@@ -16,8 +16,13 @@ for(const id of ['light-text','light-text-secondary','dark-text','dark-text-seco
   assert.ok(check.ratio>=check.minimum,id+' should pass default readability');
 }
 const primary=base.reports.readability.checks.find(item=>item.id==='on-primary');
+assert.equal(primary.foreground,base.tokens.light['--qxframe9a7c2-semantic-on-accent']);
 assert.equal(primary.foreground,base.tokens.light['--qxframe9a7c2-theme-primary-foreground']);
 assert.equal(primary.recommendedForeground,primary.foreground);
+for(const role of ['success','warning','error','info']){
+  const check=base.reports.readability.checks.find(item=>item.id==='on-'+role);
+  assert.equal(check.foreground,base.tokens.light['--qxframe9a7c2-semantic-on-status'],'status audit must inspect the shared frozen public on-status consumer');
+}
 
 const bad=generateTheme(manifest,recipes,{
   name:'readability-warning',
@@ -26,6 +31,13 @@ const bad=generateTheme(manifest,recipes,{
 assert.equal(bad.reports.readability.passes,false);
 assert.ok(bad.reports.readability.warnings.some(item=>item.id==='light-text-secondary'));
 assert.ok(bad.css.includes('--qxframe9a7c2-theme-light-text-secondary: rgb(255, 255, 255);'),'Warnings must not silently rewrite explicit user overrides.');
+
+const badStatus=generateTheme(manifest,recipes,{
+  name:'readability-status-warning',
+  advanced:{overrides:{'--qxframe9a7c2-semantic-on-status':'rgb(255, 255, 255)'}}
+});
+assert.equal(badStatus.tokens.light['--qxframe9a7c2-semantic-on-status'],'rgb(255, 255, 255)');
+assert.ok(badStatus.reports.readability.warnings.some(item=>item.id==='on-warning'),'explicit shared status foreground must be audited against actual warning background');
 
 const indirect=generateTheme(manifest,recipes,{
   name:'readability-unverifiable',
@@ -42,6 +54,7 @@ console.log(JSON.stringify({
   checks:base.reports.readability.checks.length,
   defaultPasses:true,
   explicitOverrideWarning:true,
+  sharedStatusForegroundAudited:true,
   nonDestructive:true,
   indirectExpressionNonFatal:true
 }));
