@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
   "files": [
     {
@@ -35,6 +35,11 @@
     "src/styles/theme/_default.scss",
     "src/styles/theme/_family.scss",
     "src/styles/components/_core.scss",
+    "src/styles/components/_tags.scss",
+    "src/styles/components/_ripple.scss",
+    "src/styles/components/_button.scss",
+    "src/styles/components/_icon.scss",
+    "src/styles/components/_grid.scss",
     "src/styles/components/_layout.scss",
     "src/styles/components/_empty.scss",
     "src/styles/components/_badge.scss",
@@ -59,6 +64,15 @@
     "src/styles/components/_progress.scss",
     "src/styles/components/_loading.scss",
     "src/styles/components/_list.scss",
-    "src/styles/components/_tail.scss"
+    "src/styles/components/_tail.scss",
+    "src/styles/components/_upload.scss",
+    "src/styles/components/_rate.scss",
+    "src/styles/components/_slider.scss",
+    "src/styles/components/_result.scss",
+    "src/styles/components/_collapse.scss",
+    "src/styles/components/_carousel.scss",
+    "src/styles/components/_image.scss",
+    "src/styles/components/_json.scss",
+    "src/styles/components/_tail-closeout.scss"
   ]
 }

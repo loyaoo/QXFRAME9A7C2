@@ -1,4 +1,9 @@
 @use "core";
+@use "tags";
+@use "ripple";
+@use "button";
+@use "icon";
+@use "grid";
 @use "layout";
 @use "empty";
 @use "badge";
@@ -24,3 +29,12 @@
 @use "loading";
 @use "list";
 @use "tail";
+@use "upload";
+@use "rate";
+@use "slider";
+@use "result";
+@use "collapse";
+@use "carousel";
+@use "image";
+@use "json";
+@use "tail-closeout";
