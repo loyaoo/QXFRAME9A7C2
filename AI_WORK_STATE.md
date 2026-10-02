@@ -14,21 +14,26 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Schema v1.6 final acceptance IN_PROGRESS; Size Tree/Grid/viewport implementation and physical SCSS modularization remain complete, but full Schema acceptance is not passed.
-- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE` (IN_PROGRESS; task label does not identify the model actually executing this review)
+- Current Phase: CSS Schema v1.6 final acceptance NOT_ACCEPTED; confirmed remediation pending. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
+- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE` (CSS evidence pass REVIEW_COMPLETE / NOT_ACCEPTED; task label is not the executing model identity)
 
 ## CURRENT
 
 ### ASTRA-HIGH-FINAL-ACCEPTANCE — CSS Schema acceptance
-Status: IN_PROGRESS / NOT_ACCEPTED
+Status: REVIEW_COMPLETE / NOT_ACCEPTED / REMEDIATION_REQUIRED
 Baseline: main `72663d3530e16b582b8891491fa8f7e8b01ccda9`; QXFRAME CI #1232 / run `36969105888` SUCCESS.
-Progress: inspection in progress; full Schema completion must not be inferred from zero raw-size candidates.
+Progress: this CSS acceptance evidence pass is 100%; verdict NOT_ACCEPTED. Full Schema completion must not be inferred from zero raw-size candidates. Four remediation groups remain.
 Confirmed findings:
 - The repository v1.6 guide was truncated at §12 (999 lines); the attached complete guide contains §§1–46. Restore the complete authoritative guide before acceptance.
 - Five public `theme-control-height-xs/sm/md/lg/xl` roles are absent; the private control recipes still bind directly to Preset Size Tree nodes.
 - Component and Theme source still contain runtime `color-mix()`; inspect against full guide §§15.2/39 Phase I.
-- Public Component defaults redeclared at component roots must be checked for ancestor override masking (Card skeleton title is a concrete candidate).
-Next exact step: complete independent static and Chromium override probes, write acceptance evidence and confirmed remediation tasks, submit the audit PR and inspect exact-head CI. Do not mark Schema frozen while these acceptance blockers remain.
+- Chromium confirms Card skeleton title ancestor public override is masked: expected 24px, actual 16px.
+- Chromium confirms scoped Theme aliases fail: Card body padding expected 32px/actual 12px; Avatar expected 56px/actual 36px.
+- Control Theme height override expected 52px/actual 32px. Five positive controls pass.
+- Runtime color-mix live count is 205 (Theme 138, Component 67); decisions/staticization are not complete.
+Evidence: PR #245; CSS Schema Acceptance #3 / run 36970814333 correctly FAILS, detector and artifact upload succeed; artifact 11211931251. See CSS_SCHEMA_FINAL_ACCEPTANCE_2026-10-02.md and tools/manifests/css-schema-acceptance-2026-10-02.json.
+The full guide restoration is implemented on this PR; not yet merged.
+Next exact step: inspect PR #245 latest QXFRAME release CI and acceptance evidence. Continue confirmed groups SCHEMA-ACCEPT-002/004/005/003, preserving default visuals/interaction. Keep the strict acceptance gate rejecting real defects; do not merge/freeze merely because the old release gate is green. Current audit PR carries evidence/guide restoration only, not those runtime CSS fixes.
 Guardrails:
 - CSS-SCSS-MODULE-001 remains DONE: 53 ordered component/shared partials; temporary holding modules absent; selector/declaration order locked.
 - Preserve zero live Grid/fr/viewport and zero actionable raw Size Tree consumers; do not restart their migration.

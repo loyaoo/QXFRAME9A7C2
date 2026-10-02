@@ -44,17 +44,17 @@
 
 处置：按颜色 role 与组件族建立消费者决策表。保留已确认 Neutral 默认 RGB、Light/Dark/状态默认视觉；不要机械删除 `color-mix()` 或照抄另一框架颜色，也不要复活 JS Theme/Token runtime。
 
-### SCHEMA-ACCEPT-004 — 公共组件默认值在组件根重新声明（浏览器证据待 CI）
+### SCHEMA-ACCEPT-004 — 公共组件默认值在组件根重新声明（Chromium 已确认）
 
 具体例子：`_card.scss` 的 `.qxframe9a7c2-card` 在组件根直接声明 `--qxframe9a7c2-card-skeleton-title-height`，掩盖祖先同名公共 Token 覆盖，违反 §33。
 
-扫描得到 22 个简单根 selector 下的公共默认值候选。不是全部自动判 bug：Icon 的继承/旋转约定、Motion disabled 和实例几何通道需分类。Card title 用 Chromium 设置祖先 24px 并读取实际高度验证；待 CI 存档。
+扫描得到 22 个简单根 selector 下的公共默认值候选。不是全部自动判 bug：Icon 的继承/旋转约定、Motion disabled 和实例几何通道需分类。Card title 用 Chromium 设置祖先 24px 并读取实际高度验证；已由 GitHub Actions Chromium 存档。
 
-### SCHEMA-ACCEPT-005 — :root 公共 alias 的局部主题重计算（浏览器证据待 CI）
+### SCHEMA-ACCEPT-005 — :root 公共 alias 的局部主题重计算（Chromium 已确认）
 
 Avatar/Card 的部分公共默认 alias 只在 `:root` 绑定 Theme；CSS 自定义属性在声明元素计算后继承，局部 Theme 改值不意味着祖先 alias 重新求值。
 
-浏览器探针分别设置局部 `theme-avatar-size-md:3.5rem` 与 `theme-space-6:2rem`，验证 Avatar 宽度和 Card padding；同时包含祖先公共 Card padding、root font-size 缩放和局部 Popup 明暗的正向对照。待 CI 存档后以实际结果裁定。
+浏览器探针分别设置局部 `theme-avatar-size-md:3.5rem` 与 `theme-space-6:2rem`，验证 Avatar 宽度和 Card padding；同时包含祖先公共 Card padding、root font-size 缩放和局部 Popup 明暗的正向对照。GitHub Actions Chromium 已确认两个局部覆盖均失败。
 
 ## 验收验证工具
 
@@ -68,8 +68,43 @@ Avatar/Card 的部分公共默认 alias 只在 `:root` 绑定 Theme；CSS 自定
 
 - 本轮 Size Tree / Grid / viewport 清理与物理拆分：实施子集 100%，保持完成。
 - 完整 CSS Schema v1.6：NOT_ACCEPTED，不再给未经覆盖证据支撑的 100%。
-- 最终验收：静态检查已完成，新增 Chromium override probe / exact-head CI 待完成后更新本记录。
+- 本轮验收检查：100%，结论 NOT_ACCEPTED；5 类发现中手册已修复，4 类 Schema 修复尚未实施。原完整发行 CI 对新增证据工具的验证另列下方。
 - 广泛 controller/内部构件/安全/跨浏览器人工视觉最终审计不因本 CSS 检查自动完成。
 - 新任务必须从本记录的确认问题继续，不要重开 Phase A、已归零单位清理或 superseded PR #242/#243。
 
 当前改动只有完整手册、验收工具与状态证据，没有改变组件样式、值、键盘、定位、Motion 或发行 API。
+
+## GitHub Chromium 实测证据
+
+测试提交：`0dcfc4e369c0f8511000f5c2a45a72ed8bf782ae`（PR #245）；GitHub PR merge checkout `aa24962cf8bc5e39a0f0df3e09f227a2f27a7ca8`。
+
+CSS Schema Acceptance #3 / run `36970814333`：FAILURE，由 `--enforce` 正确拒绝现有 Schema 缺口；detector 自测 SUCCESS，证据 artifact 上传 SUCCESS，artifact ID `11211931251`。浏览器 HeadlessChrome/154.0.0.0。
+
+| 探针 | 预期 | 实测 | 结果 |
+|---|---:|---:|---|
+| 默认 md control height | 32px | 32px | PASS |
+| 默认 Card body padding | 12px | 12px | PASS |
+| 后加载普通主题 control-height-md | 52px | 32px | FAIL |
+| 祖先公共 Card skeleton title height | 24px | 16px | FAIL |
+| 局部 theme-space-6 → Card body padding | 32px | 12px | FAIL |
+| 局部 theme-avatar-size-md → Avatar | 56px | 36px | FAIL |
+| 祖先公共 Card padding 正向对照 | 20px | 20px | PASS |
+| html font-size 20px → md control height | 40px | 40px | PASS |
+| scoped Popup Light/Dark 配方变化 | 背景不同 | 背景不同 | PASS |
+
+前两次证据工作流分别暴露了工具的浏览器 profile 清理竞争，以及 Card padding 探针应测量 body 而非无 padding 的 root；两者已修正。当前判断仅使用 #3 的有效结果，未将这些工具缺陷算作组件缺陷。
+
+原 QXFRAME CI #1235 / run `36970814254` 正在验证本提交（Windows tooling 已成功）。最终文档提交可能触发新 run；真实最新状态请查询 GitHub，不以本文件固定 run 声称最终 head 已绿。
+
+额外本地结构/合同检查：40 个公开 component profiles 与 authority manifest 对齐；184 源文件、1431 ESM edges 无 cycle、legacy import 或外部 import；Shared Protocol、Value/Focus/Interaction/Capability/Selection、final async/form 生命周期、状态 cascade/specificity/color channels/static closeout 检查通过。这些是既有 gate 的复核，不等价于新的全部业务人工验收。
+
+## 后续修复的收益与风险边界
+
+| 修复组 | 目标与收益 | 默认行为约束 / 风险 |
+|---|---|---|
+| 002 control Theme API | 五档高度由公共 Theme role 决定，外部主题无需改组件 selector | 默认 24/28/32/36/40px 保持；逐项核对所有 `.is-*`、native/managed controls、nested controls，不可只加断开的变量 |
+| 004 public override | Card 骨架标题等祖先公共覆盖真实生效 | 将公共输入作为 override slot；默认材料集中在 Theme，组件根只重置私有最终值；不能修遮蔽却新增 root alias 冻结 |
+| 005 scoped aliases | 局部 Theme 的 Avatar/Card 等消费者重新解析，嵌套主题有效 | 为全部 :root Component aliases 建消费者清单；显式 Component override 必须仍优先，不能机械给 theme container 重声明公共默认值而再次遮蔽祖先 |
+| 003 runtime colors | 与离线主题生成 / 静态默认值协议一致 | 按 role、颜色轴和明暗模式决定静态化/登记保留范围；保留默认 computed color，保护功能性 ColorPanel 颜色，禁止跨层读取或 JS 复制主题 |
+
+修复后的必需复测：9 个探针全部通过，并补充五档/嵌套覆盖、所有受影响状态、实际 scoped portalContainer 里的 Select/DatePicker/Menu、Dialog/Drawer/嵌套 Popup、html font-size 变化时的 JS geometry 合同。通过后再执行全部 release CI；本记录不能提前签收这些尚未完成的组合。
