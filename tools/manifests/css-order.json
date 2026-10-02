@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
   "files": [
     {
@@ -59,6 +59,35 @@
     "src/styles/components/_progress.scss",
     "src/styles/components/_loading.scss",
     "src/styles/components/_list.scss",
-    "src/styles/components/_tail.scss"
+    "src/styles/components/_form-native-choice.scss",
+    "src/styles/components/_tree.scss",
+    "src/styles/components/_calendar.scss",
+    "src/styles/components/_period-panel.scss",
+    "src/styles/components/_wheel-picker.scss",
+    "src/styles/components/_time-panel.scss",
+    "src/styles/components/_color-panel.scss",
+    "src/styles/components/_picker-field.scss",
+    "src/styles/components/_tooltip-popconfirm.scss",
+    "src/styles/components/_dropdown.scss",
+    "src/styles/components/_autocomplete.scss",
+    "src/styles/components/_cascader-tree-select.scss",
+    "src/styles/components/_date-picker.scss",
+    "src/styles/components/_time-picker.scss",
+    "src/styles/components/_color-picker.scss",
+    "src/styles/components/_table.scss",
+    "src/styles/components/_transfer.scss",
+    "src/styles/components/_sort.scss",
+    "src/styles/components/_tag-input.scss",
+    "src/styles/components/_input-otp.scss",
+    "src/styles/components/_input-number.scss",
+    "src/styles/components/_upload.scss",
+    "src/styles/components/_rate.scss",
+    "src/styles/components/_slider.scss",
+    "src/styles/components/_result.scss",
+    "src/styles/components/_collapse.scss",
+    "src/styles/components/_carousel.scss",
+    "src/styles/components/_image.scss",
+    "src/styles/components/_json.scss",
+    "src/styles/components/_state-composition-compat.scss"
   ]
 }

@@ -1,0 +1,9 @@
+.qxframe9a7c2-time-picker-panel{min-width:var(--qxframe9a7c2-theme-time-picker-panel-width)}
+.qxframe9a7c2-time-picker-panel .qxframe9a7c2-time-panel-root{border:0;border-radius:0;box-shadow:none;background:transparent}
+
+.qxframe9a7c2-time-picker-now{--_qxframe9a7c2-time-picker-now-bg:transparent;--_qxframe9a7c2-time-picker-now-text:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-time-picker-now-ring:none;--_qxframe9a7c2-time-picker-now-cursor:pointer;--_qxframe9a7c2-time-picker-now-opacity:1;display:block;width:100%;appearance:none;border:0;border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle);background:var(--_qxframe9a7c2-time-picker-now-bg);color:var(--_qxframe9a7c2-time-picker-now-text);box-shadow:var(--_qxframe9a7c2-time-picker-now-ring);opacity:var(--_qxframe9a7c2-time-picker-now-opacity);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:center;cursor:var(--_qxframe9a7c2-time-picker-now-cursor);outline:0}
+.qxframe9a7c2-time-picker-now:hover:not(:disabled){--_qxframe9a7c2-time-picker-now-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
+.qxframe9a7c2-time-picker-now:focus-visible:not(:disabled){--_qxframe9a7c2-time-picker-now-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-time-picker-now-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
+.qxframe9a7c2-time-picker-now:disabled{--_qxframe9a7c2-time-picker-now-bg:transparent;--_qxframe9a7c2-time-picker-now-ring:none;--_qxframe9a7c2-time-picker-now-cursor:not-allowed;--_qxframe9a7c2-time-picker-now-opacity:.45}
+.qxframe9a7c2-time-picker-now.is-footer-action{width:auto;margin-right:auto;border-top:0;min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:left}
+

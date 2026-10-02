@@ -21,16 +21,17 @@
 
 ### CSS-SCSS-MODULE-001 — Component SCSS physical modularization
 Status: IN PROGRESS
-Task progress: batch 1 prepared — 24 component/shared blocks extracted from the 827KB monolithic component stylesheet
-Baseline: main@33e5cf4ad09bd1b71bc61daa1db716447bbcff0c
-Exact next step: verify the ordered partial split through the existing SCSS entry-vs-module equivalence gate and full release CI, then merge before continuing the remaining component tail.
+Task progress: batch 1 merged; batch 2 prepared — 30 additional component/shared blocks extracted from the former _tail.scss
+Baseline: main@182034cc8af4c440919ac392171484abc749a43d
+Exact next step: verify batch 2 ordered partials after main #1227 completes, then open one PR and run full CI.
 
 Scope / guardrails:
 - Physical source organization only; no intended selector, declaration, token, interaction, layout, value, focus, overlay or Motion semantic changes.
 - Preserve exact source order because QXFRAME does not use @layer.
 - `src/styles/components/_components.scss` is now the ordered @use aggregator; audits read the real ordered partials through `tools/manifests/css-order.json`.
 - Batch 1 extracts 24 component/shared blocks: Layout, Empty, Badge, Avatar, Card, Descriptions, Alert, Switch, Motion, Scroll, Popover/Tooltip, Native Input, Item Surface, Menu, Collection/Select, Pagination, Tabs, Steps, Modal, Drawer, Notice, Progress, Loading and List.
-- `_core.scss` and `_tail.scss` are temporary ordered holding partials for untouched source; later batches continue splitting them without reordering CSS.
+- Batch 2 extracts 30 additional blocks covering Form/native choice, Tree, Calendar/Period/Wheel/Time/Color/Date picker surfaces, Table, Transfer, Sort, TagInput, InputOTP/InputNumber, Upload, Rate, Slider, Result, Collapse, Carousel, Image, JSON, and the final state/composition/compat layer.
+- `_tail.scss` is fully eliminated in batch 2; `_core.scss` remains the only large temporary holding partial for later modularization.
 - CSS-TOKEN-SCHEMA-001 remains DONE: 0 actionable Size Tree consumers, viewport/Grid closeout complete, PR #239/#240 merged and verified.
 
 ## Current authority snapshot — after Phase A

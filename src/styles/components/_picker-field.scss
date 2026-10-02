@@ -1,0 +1,15 @@
+.qxframe9a7c2-picker-field{--_qxframe9a7c2-picker-field-min-width:var(--qxframe9a7c2-picker-field-min-width,0px);min-width:var(--_qxframe9a7c2-picker-field-min-width)}
+.qxframe9a7c2-picker-range-dual{display:flex;align-items:center;gap:var(--qxframe9a7c2-theme-space-2);width:100%;min-width:0}
+.qxframe9a7c2-picker-range-control{display:block;min-width:0;flex:1 1 0}
+.qxframe9a7c2-picker-range-control>.qxframe9a7c2-input{width:100%;min-width:0}
+.qxframe9a7c2-picker-range-separator{color:var(--_qxframe9a7c2-semantic-text-secondary);white-space:nowrap}
+.qxframe9a7c2-picker-field-panel{--_qxframe9a7c2-picker-field-panel-bg:var(--qxframe9a7c2-picker-field-panel-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-picker-field-panel-border:var(--qxframe9a7c2-picker-field-panel-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-picker-field-panel-shadow:var(--qxframe9a7c2-picker-field-panel-shadow,var(--_qxframe9a7c2-popup-shadow));--_qxframe9a7c2-picker-field-panel-radius:var(--qxframe9a7c2-picker-field-panel-radius,var(--_qxframe9a7c2-popup-radius));--_qxframe9a7c2-picker-field-panel-z:var(--qxframe9a7c2-picker-field-panel-z,1000);--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-picker-field-panel-bg);--_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-picker-field-panel-border);--_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-picker-field-panel-shadow);--_qxframe9a7c2-popup-surface-radius:var(--_qxframe9a7c2-picker-field-panel-radius);position:absolute;z-index:var(--_qxframe9a7c2-picker-field-panel-z);padding:var(--qxframe9a7c2-theme-space-3)}
+.qxframe9a7c2-picker-field-panel[hidden]{display:none}
+.qxframe9a7c2-picker-field-body{min-width:0}
+.qxframe9a7c2-picker-field-footer{display:flex;align-items:center;justify-content:flex-end;gap:var(--qxframe9a7c2-theme-space-3);margin-top:var(--qxframe9a7c2-theme-space-3);padding-top:var(--qxframe9a7c2-theme-space-3);border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-picker-field-footer[hidden]{display:none}
+.qxframe9a7c2-picker-field-footer-start{display:flex;align-items:center;gap:var(--qxframe9a7c2-theme-space-2);margin-right:auto;min-width:0}
+.qxframe9a7c2-picker-field-footer-actions{display:flex;width:100%;align-items:center;gap:var(--qxframe9a7c2-theme-space-3)}
+.qxframe9a7c2-picker-field-footer-end{display:flex;align-items:center;gap:var(--qxframe9a7c2-theme-space-2);min-width:0}
+
+

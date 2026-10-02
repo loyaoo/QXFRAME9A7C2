@@ -1,0 +1,19 @@
+.qxframe9a7c2-dropdown-panel,.qxframe9a7c2-dropdown-submenu-panel{--_qxframe9a7c2-dropdown-arrow-size:var(--qxframe9a7c2-dropdown-arrow-size,var(--qxframe9a7c2-theme-overlay-arrow-size));--_qxframe9a7c2-dropdown-arrow-half:calc(var(--_qxframe9a7c2-dropdown-arrow-size) * -.5);--_qxframe9a7c2-dropdown-min-width:var(--qxframe9a7c2-dropdown-min-width,var(--qxframe9a7c2-theme-dropdown-min-width));--_qxframe9a7c2-dropdown-max-width:var(--qxframe9a7c2-dropdown-max-width,min(var(--qxframe9a7c2-theme-dropdown-max-width),calc(100% - var(--qxframe9a7c2-theme-dropdown-viewport-gap))));--_qxframe9a7c2-dropdown-bg:var(--qxframe9a7c2-dropdown-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-dropdown-border:var(--qxframe9a7c2-dropdown-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-dropdown-shadow:var(--qxframe9a7c2-dropdown-shadow,var(--_qxframe9a7c2-popup-shadow));--_qxframe9a7c2-dropdown-z:var(--qxframe9a7c2-dropdown-z,1000);--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-dropdown-bg);--_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-dropdown-border);--_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-dropdown-shadow);position:absolute;min-width:var(--_qxframe9a7c2-dropdown-min-width);max-width:var(--_qxframe9a7c2-dropdown-max-width);z-index:var(--_qxframe9a7c2-dropdown-z)}
+.qxframe9a7c2-dropdown-panel[hidden],.qxframe9a7c2-dropdown-submenu-panel[hidden]{display:none}
+.qxframe9a7c2-dropdown-list-host{position:relative;z-index:var(--qxframe9a7c2-z-local-raised)}
+.qxframe9a7c2-dropdown-list-host>.qxframe9a7c2-item-collection{min-width:inherit;background:transparent}
+/* Scrollable popup viewports must clip content, so keep the 2px keyboard ring fully
+ * inside the focused row rather than letting Chromium trim its outer pixel. */
+.qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-surface.is-keyboard-focus,
+.qxframe9a7c2-dropdown-submenu-panel .qxframe9a7c2-item-surface.is-keyboard-focus{outline-offset:calc(var(--qxframe9a7c2-theme-dropdown-focus-offset) * -1)}
+.qxframe9a7c2-dropdown-action-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.qxframe9a7c2-dropdown-action-label{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-dropdown-action-shortcut{flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em}
+
+.qxframe9a7c2-dropdown-arrow{position:absolute;width:var(--_qxframe9a7c2-dropdown-arrow-size);height:var(--_qxframe9a7c2-dropdown-arrow-size);background:inherit;border:inherit;transform:rotate(45deg);z-index:var(--qxframe9a7c2-z-local-base)}
+.qxframe9a7c2-dropdown-arrow[hidden]{display:none}
+.qxframe9a7c2-dropdown-panel[data-placement^="top"] .qxframe9a7c2-dropdown-arrow{left:50%;bottom:calc(var(--qxframe9a7c2-theme-dropdown-arrow-offset) * -1);margin-left:var(--_qxframe9a7c2-dropdown-arrow-half);border-left:0;border-top:0}
+.qxframe9a7c2-dropdown-panel[data-placement^="bottom"] .qxframe9a7c2-dropdown-arrow{left:50%;top:calc(var(--qxframe9a7c2-theme-dropdown-arrow-offset) * -1);margin-left:var(--_qxframe9a7c2-dropdown-arrow-half);border-right:0;border-bottom:0}
+.qxframe9a7c2-dropdown-panel[data-placement^="left"] .qxframe9a7c2-dropdown-arrow{right:calc(var(--qxframe9a7c2-theme-dropdown-arrow-offset) * -1);top:50%;margin-top:var(--_qxframe9a7c2-dropdown-arrow-half);border-left:0;border-bottom:0}
+.qxframe9a7c2-dropdown-panel[data-placement^="right"] .qxframe9a7c2-dropdown-arrow{left:calc(var(--qxframe9a7c2-theme-dropdown-arrow-offset) * -1);top:50%;margin-top:var(--_qxframe9a7c2-dropdown-arrow-half);border-right:0;border-top:0}
+

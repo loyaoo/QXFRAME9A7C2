@@ -1,0 +1,10 @@
+.qxframe9a7c2-calendar{--_qxframe9a7c2-calendar-ring:none;--_qxframe9a7c2-calendar-opacity:1;--_qxframe9a7c2-date-panel-radius:var(--qxframe9a7c2-calendar-radius,var(--_qxframe9a7c2-data-radius));box-shadow:var(--_qxframe9a7c2-calendar-ring);outline:0 solid transparent;outline-offset:var(--_qxframe9a7c2-focus-visible-offset);opacity:var(--_qxframe9a7c2-calendar-opacity);user-select:none}
+.qxframe9a7c2-calendar:focus-visible{--_qxframe9a7c2-calendar-ring:none;outline:none}
+.qxframe9a7c2-calendar-weekdays,.qxframe9a7c2-calendar-grid{display:flex;flex-wrap:wrap;gap:var(--qxframe9a7c2-theme-space-1)}
+.qxframe9a7c2-calendar-weekday,.qxframe9a7c2-calendar-cell{box-sizing:border-box;flex:0 0 calc((100% - var(--qxframe9a7c2-theme-calendar-weekday-min-size))/7);min-width:0}
+.qxframe9a7c2-calendar-weekday{padding-block:var(--qxframe9a7c2-theme-space-1);text-align:center;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.82em}
+.qxframe9a7c2-calendar-cell{aspect-ratio:1/1}
+.qxframe9a7c2-calendar-cell.is-outside:not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled)}
+.qxframe9a7c2-calendar-cell.is-outside:hover:not(:disabled):not(.is-selected):not(.is-in-range),.qxframe9a7c2-calendar-cell.is-outside.is-hover:not(:disabled):not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled)}
+.qxframe9a7c2-calendar.is-disabled{--_qxframe9a7c2-calendar-ring:none;--_qxframe9a7c2-calendar-opacity:.62}
+
