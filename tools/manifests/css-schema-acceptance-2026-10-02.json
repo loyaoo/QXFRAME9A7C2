@@ -1093,5 +1093,19 @@
     "artifactId": 11211931251,
     "mergeCheckout": "aa24962cf8bc5e39a0f0df3e09f227a2f27a7ca8"
   },
-  "guideRestoredInAuditPR": true
+  "guideRestoredInAuditPR": true,
+  "evidenceState": "HISTORICAL_PRE_REMEDIATION_BASELINE",
+  "remediation": {
+    "task": "CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001",
+    "implementationCommit": "96f2046dae96d5d1f6a1b54184768764ed8c67f2",
+    "schemaRun": 36976428598,
+    "schemaJob": 110741152413,
+    "result": "CONFIRMED_BLOCKERS_RESOLVED",
+    "geometryProbes": 25,
+    "coreColorComparisons": 7484,
+    "docsColorComparisons": 18144,
+    "buttonStateCases": 2160,
+    "failures": 0,
+    "report": "CSS_SCHEMA_FINAL_ACCEPTANCE_2026-10-02.md"
+  }
 }
