@@ -14,15 +14,20 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Grid + viewport closeout DONE; bulk Size Tree source migration active on PR #236
+- Current Phase: CSS Grid + viewport closeout DONE; bulk Size Tree source migration active; PR/CI checkpoint pending
 - Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: post-viewport actionable raw-size migration 49.1% complete (497/1013 closed; 516 remain)
+Task progress: post-viewport actionable raw-size migration 91.3% complete (925/1013 closed; 88 remain)
 Phase: Phase A/B/C DONE; Grid/viewport closeout DONE; Size Tree bulk source migration active
+
+Current Size Tree bulk checkpoint (2026-10-02):
+- Canonical candidate inventory: 178 total; 76 exact-node candidates; 12 needs-review; 89 protected breakpoints; 1 pill sentinel.
+- Actionable migration count is 88 (76 exact + 12 review), down from the explicit 1013 baseline.
+- Component-batch execution is now authoritative for closeout; phase-completion percentages must not be used as consumer-migration completion.
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
