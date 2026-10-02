@@ -34,6 +34,8 @@ jobs:
         run: node tools/verify-css-static-colors.mjs --browser
       - name: Verify docs preset colors and actual Button states
         run: node tools/verify-css-doc-preset-colors.mjs
+      - name: Verify frozen public Theme interface and scoped portal expression
+        run: npm run build && node tools/verify-theme-schema-v1.mjs --browser
       - name: Enforce Schema acceptance with Chromium evidence
         run: node tools/audit-css-schema-acceptance.mjs --browser --enforce --write=artifacts/css-schema-acceptance.json
       - name: Upload acceptance evidence

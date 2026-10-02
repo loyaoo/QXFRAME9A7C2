@@ -14,14 +14,21 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Schema v1.6 confirmed blocker remediation implemented; strict Chromium acceptance passes. Broader manual/freeze gates remain separately scoped. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `NONE` — no pending implementation task; CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001 is merged and its exact implementation head passed both required CI workflows. Resolve current main release / Pages facts from GitHub.
+- Current Phase: CSS Token System and Theme Schema v1 freeze are complete and exact-head CI accepted. Theme Generator implementation is now unblocked. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
+- Current Task: `THEME-GENERATOR-001` — implement the frozen-schema Theme Generator and commercial live Theme Studio after PR #247 merge.
 
 ## CURRENT
 
-### Integration state resolution
+### CSS-THEME-SCHEMA-FREEZE-001
+Status: DONE
+Progress: CSS Token system 100%; Theme Schema v1 freeze 100%; Theme Generator implementation 0%.
+Authorization: user requests shadcn/create-like Theme Studio plus many real commercial composition cards with live preview; Theme Generator Development Guide v1 remains the generator authority.
+Frozen contract: 4,028 required public Palette/Theme inputs with complete Light/Dark defaults, 462 optional public component overrides, interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
+Completed: Menu-owned state slots, heading/mono and chart roles, normalized quoted/unquoted Light/Dark selector discovery, corrected frozen Light/Dark snapshot, and read-only drift artifacts. Verification never auto-accepts future schema drift.
+Final exact-head evidence: PR #247 head `3d40a987828436fe151a915c4420934e9c044c50`; CSS Schema Acceptance run `36992542652` SUCCESS; QXFRAME CI run `36992542656` SUCCESS. Browser contract covers 28 Menu combinations, geometry/isolation probes and actual scoped Select/DatePicker/Modal/Drawer/Menu portals.
+Next exact step: merge PR #247, create a separate Theme Generator branch, then execute TG-A–I. Generator must consume the committed Schema v1 manifest/recipe data, output deterministic complete static Theme CSS, and replace the old all-component-only playground with a substantial commercial preview canvas using real QXFRAME components.
+Guardrails: no framework Theme/Token JS runtime; production remains core CSS + later-loaded generated theme CSS. No generator discovery by scanning runtime CSS. Do not emit private tokens, component selectors or !important. Preserve existing Size Tree and interaction architecture.
 
-No confirmed implementation blocker remains from the CSS Schema acceptance report. PR #245 is merged; all final implementation-head gates passed. On resume, query current main release and Pages status rather than caching transient pending/success state. If they fail, inspect the failing job before reopening implementation. Otherwise the remediation task is complete; broader manual/freeze signoff remains separately scoped.
 
 ## Current authority snapshot — after Phase A
 
