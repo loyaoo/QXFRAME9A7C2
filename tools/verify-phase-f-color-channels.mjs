@@ -1,16 +1,16 @@
-import { readCanonicalStyleSource } from './style-source.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=readCanonicalStyleSource({root});
+const family=fs.readFileSync(path.join(root,'src/styles/theme/_family.scss'),'utf8');
+const components=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+const css=family+'\n'+components;
 const lines=css.split(/\r?\n/);
-const componentStart=1300;
 
 const physical=[];
-for(let i=componentStart;i<lines.length;i++){
+for(let i=0;i<lines.length;i++){
   if(/var\(\s*--qxframe9a7c2-palette-(?:grey|gray|cyan|teal|green|lime|yellow|orange|red|pink|purple|blue|azure|white|black)\b/i.test(lines[i])){
     physical.push({line:i+1,text:lines[i].trim()});
   }
@@ -18,7 +18,7 @@ for(let i=componentStart;i<lines.length;i++){
 assert.deepEqual(physical,[],'Component/family CSS must not consume physical palette variables directly; route color meaning through semantic/family owners.');
 
 const hard=[];
-for(let i=componentStart;i<lines.length;i++){
+for(let i=0;i<lines.length;i++){
   const line=lines[i];
   const scrub=line.replace(/--_?qxframe9a7c2-[a-z0-9-]+\s*:[^;]+;/ig,'');
   if(/#[0-9a-f]{3,8}\b|rgba?\(\s*(?:\d|\.)/i.test(scrub)) hard.push({line:i+1,text:line.trim()});
