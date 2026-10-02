@@ -10,10 +10,16 @@ assert.equal(manifest.schema,1);
 assert.deepEqual(manifest.tokens.map(t=>t.name),publicInterface(),'Public visual interface changed: review and version the manifest first.');
 assert.equal(manifest.interfaceHash,crypto.createHash('sha256').update(publicInterface().join('\n')).digest('hex'));
 const rebuilt=buildSnapshot();
+const candidateRecipes=colorRecipes();
+if(JSON.stringify(manifest.tokens)!==JSON.stringify(rebuilt.tokens)||JSON.stringify(JSON.parse(fs.readFileSync('docs/generated/theme-color-recipes-v1.json','utf8')))!==JSON.stringify(candidateRecipes))console.log('QX_SCHEMA_REVIEW_CANDIDATE='+JSON.stringify({manifest:rebuilt,recipes:candidateRecipes}));
 assert.deepEqual(manifest.optionalComponentOverrides,rebuilt.optionalComponentOverrides,'Optional override contract changed outside schema review.');
 assert.deepEqual(manifest.tokens,rebuilt.tokens,'Frozen defaults changed; the generator cannot infer defaults from current CSS.');
 for(const token of manifest.tokens){assert.ok(token.name.startsWith('--qxframe9a7c2-'));for(const mode of ['light','dark'])assert.ok(token.defaults[mode]&&!/--_qxframe|color-mix\(|[{};]/.test(token.defaults[mode]),token.name+' must have a complete public-only static default.');}
-assert.deepEqual(JSON.parse(fs.readFileSync('docs/generated/theme-color-recipes-v1.json','utf8')),colorRecipes(),'Frozen design recipes changed outside the schema review.');
+const frozenRecipes=JSON.parse(fs.readFileSync('docs/generated/theme-color-recipes-v1.json','utf8'));
+assert.deepEqual(frozenRecipes,candidateRecipes,'Frozen design recipes changed outside the schema review.');
+assert.ok(frozenRecipes.recipes.dark.bare['r.mode-bg'].includes('theme-dark-bg'),'Dark design recipe must resolve the dark boundary.');
+const menuBackground=manifest.tokens.find(t=>t.name==='--qxframe9a7c2-theme-menu-background');
+assert.notEqual(menuBackground.defaults.light,menuBackground.defaults.dark,'Optional Menu defaults must retain the distinct dark surface.');
 console.log(JSON.stringify({schema:1,publicInputs:manifest.tokens.length,optionalComponentOverrides:manifest.optionalComponentOverrides.length,interfaceHash:manifest.interfaceHash,staticDefaults:true}));
 
 if(process.argv.includes('--browser')){

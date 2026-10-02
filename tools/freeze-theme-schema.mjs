@@ -30,8 +30,8 @@ export function buildSnapshot(){
   for(const rule of rules){
     const declarations=[...rule.body.matchAll(/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]+)(?:;|$)/g)].map(m=>[m[1],m[2].trim()]);
     for(const [name,value]of declarations)all.set(name,value);
-    const selectors=rule.selector.split(',').map(s=>s.replace(/\s+/g,''));
-    for(const mode of ['light','dark'])if(selectors.some(s=>s===':root'||s==='[data-qxframe9a7c2-theme]'||s==='[data-qxframe9a7c2-theme="'+mode+'"]'))for(const [name,value]of declarations)modeMaps[mode].set(name,value);
+    const selectors=rule.selector.split(',').map(s=>s.replace(/\s+/g,'').replace(/["']/g,''));
+    for(const mode of ['light','dark'])if(selectors.some(s=>s===':root'||s==='[data-qxframe9a7c2-theme]'||s==='[data-qxframe9a7c2-theme='+mode+']'))for(const [name,value]of declarations)modeMaps[mode].set(name,value);
   }
   const resolve=(value,map,seen=[])=>{
     const cs=calls(value);if(!cs.length)return value;
@@ -74,12 +74,12 @@ export function colorRecipes(){
   const abstract=text=>text.replace(/--_qxframe9a7c2-/g,'r.').replace(/--qxframe9a7c2-/g,'p.');
   const roles=baseline.entries.map((e,i)=>({id:e.id,target:e.themeToken,axisDependent:baseline.dynamicEntries.includes(i),expression:abstract(e.expression)}));
   const axes=baseline.rows.filter(r=>r.mode==='light').map(r=>r.variant),recipes={};
-  const rules=[...original.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(m=>({selectors:m[1].trim().split(',').map(s=>s.replace(/\s+/g,'')),decls:[...m[2].matchAll(/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]+)(?:;|$)/g)].map(d=>[abstract(d[1]),abstract(d[2].trim())])}));
+  const rules=[...original.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(m=>({selectors:m[1].trim().split(',').map(s=>s.replace(/\s+/g,'').replace(/["']/g,'')),decls:[...m[2].matchAll(/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]+)(?:;|$)/g)].map(d=>[abstract(d[1]),abstract(d[2].trim())])}));
   for(const mode of ['light','dark']){
     recipes[mode]={};
     for(const axis of axes){
       const map=new Map();
-      for(const rule of rules)if(rule.selectors.some(s=>s===':root'||s==='[data-qxframe9a7c2-theme]'||s==='[data-qxframe9a7c2-theme="'+mode+'"]'||s==='.qxframe9a7c2-button'||(axis!=='bare'&&s==='.is-'+axis)))for(const [key,value]of rule.decls)map.set(key,value);
+      for(const rule of rules)if(rule.selectors.some(s=>s===':root'||s==='[data-qxframe9a7c2-theme]'||s==='[data-qxframe9a7c2-theme='+mode+']'||s==='.qxframe9a7c2-button'||(axis!=='bare'&&s==='.is-'+axis)))for(const [key,value]of rule.decls)map.set(key,value);
       const reachable=new Map();
       function visit(text){for(const c of calls(text)){if(reachable.has(c.name)||!map.has(c.name))continue;reachable.set(c.name,map.get(c.name));visit(map.get(c.name));}}
       roles.forEach(r=>visit(r.expression));
