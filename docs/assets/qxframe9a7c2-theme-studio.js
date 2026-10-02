@@ -26,6 +26,15 @@ function scene(title,subtitle,body,kind){
 }
 function metric(label,value,change){return '<div class="qxframe9a7c2-studio-metric"><small>'+esc(label)+'</small><strong class="qxframe9a7c2-studio-kpi">'+esc(value)+'</strong>'+(change?'<span class="qxframe9a7c2-studio-change">'+esc(change)+'</span>':'')+'</div>';}
 function listItem(title,meta,end){return '<div class="qxframe9a7c2-studio-list-item"><div class="qxframe9a7c2-studio-list-copy"><strong>'+esc(title)+'</strong><span>'+esc(meta)+'</span></div>'+(end||'')+'</div>';}
+function swatchRow(label,prefix,count){
+  var items='';for(var i=1;i<=count;i+=1)items+='<span class="qxframe9a7c2-studio-swatch" title="'+esc(label)+' '+i+'" style="--swatch:var('+prefix+i+')"></span>';
+  return '<div class="qxframe9a7c2-studio-palette-row"><small>'+esc(label)+'</small><div class="qxframe9a7c2-studio-swatches">'+items+'</div></div>';
+}
+function roleSwatches(){
+  return '<div class="qxframe9a7c2-studio-role-swatches">'+[
+    ['Primary','--qxframe9a7c2-theme-primary'],['Success','--qxframe9a7c2-theme-success'],['Warning','--qxframe9a7c2-theme-warning'],['Error','--qxframe9a7c2-theme-error'],['Info','--qxframe9a7c2-theme-info']
+  ].map(function(item){return '<span class="qxframe9a7c2-studio-role-swatch" style="--swatch:var('+item[1]+')">'+item[0]+'</span>';}).join('')+'</div>';
+}
 function chart(){
   var heights=[46,68,54,82,66,94,74,88,62,98,78,92];
   return '<div class="qxframe9a7c2-studio-chart">'+heights.map(function(h,i){return '<span class="qxframe9a7c2-studio-bar" style="height:'+h+'%;--bar:var(--qxframe9a7c2-theme-chart-'+((i%8)+1)+')"></span>';}).join('')+'</div>'+
@@ -41,6 +50,12 @@ function commercialHtml(){
     '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-metrics">'+
       metric('Monthly revenue','$128,420','+12.4% vs last month')+metric('Active accounts','8,642','+384 this week')+metric('Conversion','7.82%','+0.46 pt')+metric('Net retention','118%','+3.1 pt')+
     '</div>'+chart()+'</div>','is-wide');
+  out+=scene('Theme palette','Generated 13-step Primary / Neutral + semantic roles',
+    '<div class="qxframe9a7c2-studio-palette">'+
+      swatchRow('Primary','--qxframe9a7c2-theme-primary-',13)+
+      swatchRow('Neutral','--qxframe9a7c2-theme-neutral-',13)+
+      swatchRow('Chart','--qxframe9a7c2-theme-chart-',8)+roleSwatches()+
+    '</div>','is-wide');
   out+=scene('Revenue goal','Progress / status / target',
     '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-row is-between"><div class="qxframe9a7c2-studio-title"><strong>$84,600</strong><small>of $100,000 quarterly target</small></div>'+badge('On track','success')+'</div><div class="qxframe9a7c2-studio-mount" data-studio-mount="progress"></div></div>');
   out+=scene('Transactions','Table · finance operations',
