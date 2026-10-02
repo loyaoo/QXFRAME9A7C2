@@ -44,4 +44,26 @@ components.replace(/([-\\w]+)\\s*:\\s*([^;{}]+)(;?)/g,(all,prop,value)=>{
   return all;
 });
 assert.deepEqual(rawSpacing,[],'Component spacing that matches the Preset spacing scale must consume Theme spacing tokens.');
+const semanticGeometry={
+  'icon-size':{xs:6,sm:7,md:8,lg:10,xl:12},
+  'avatar-size':{xs:12,sm:15,md:18,lg:24,xl:28},
+  'progress-line-size':{xs:2,sm:3,md:4,lg:6,xl:8},
+  'progress-circle-size':{xs:28,sm:32,md:37,lg:40,xl:42},
+  'switch-height':{xs:8,sm:9,md:10,lg:12,xl:14},
+  'switch-width':{xs:14,sm:16,md:18,lg:22,xl:25},
+  'switch-padding':{xs:1,sm:1,md:1,lg:1,xl:2}
+};
+for(const [family,slots] of Object.entries(semanticGeometry)){
+  for(const [slot,node] of Object.entries(slots)){
+    assert.ok(css.includes(`--qxframe9a7c2-${family}-${slot}: var(--qxframe9a7c2-size-${node});`),`Preset ${family}-${slot} must resolve through Size Tree node ${node}.`);
+    assert.ok(theme.includes(`--qxframe9a7c2-theme-${family}-${slot}: var(--qxframe9a7c2-${family}-${slot});`),`Theme ${family}-${slot} must bridge the semantic geometry preset.`);
+  }
+}
+for(const slot of ['xs','sm','md','lg','xl']){
+  assert.match(components,new RegExp('\\.qxframe9a7c2-icon\\.is-'+slot+' \\{ --qxframe9a7c2-icon-size: var\\(--qxframe9a7c2-theme-icon-size-'+slot+'\\); \\}'));
+  assert.match(components,new RegExp('--qxframe9a7c2-avatar-'+slot+'-size:var\\(--qxframe9a7c2-theme-avatar-size-'+slot+'\\)'));
+  assert.match(components,new RegExp('--qxframe9a7c2-progress-'+slot+'-line-size:var\\(--qxframe9a7c2-theme-progress-line-size-'+slot+'\\)'));
+  assert.match(components,new RegExp('--qxframe9a7c2-progress-'+slot+'-circle-size:var\\(--qxframe9a7c2-theme-progress-circle-size-'+slot+'\\)'));
+  assert.match(components,new RegExp('\\.qxframe9a7c2-switch\\.is-'+slot+'\\{--_qxframe9a7c2-switch-height-default:var\\(--qxframe9a7c2-theme-switch-height-'+slot+'\\);--_qxframe9a7c2-switch-width-default:var\\(--qxframe9a7c2-theme-switch-width-'+slot+'\\);--_qxframe9a7c2-switch-padding-default:var\\(--qxframe9a7c2-theme-switch-padding-'+slot+'\\)\\}'));
+}
 console.log(JSON.stringify({ok:true,nodes:46,oddNumericFontPresetsRemaining:0,completedOddFontDecisions:manifest.completedOddFontDecisions.length}));
