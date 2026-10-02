@@ -939,7 +939,6 @@ Chart Color
 Heading Font
 Body Font
 Radius
-Density
 Menu Color
 Menu Appearance
 Menu Accent
@@ -1018,7 +1017,7 @@ Upload
 neutral 太脏
 边框层级乱
 radius 失衡
-density 太挤
+spacing / component geometry 太挤
 shadow 太重
 primary 抢层级
 dark mode 刺眼
@@ -1197,9 +1196,8 @@ chart palette
 实现：
 
 ```text
-Style
+Style（含 compactness / generosity）
 Radius
-Density
 Typography
 Component preset
 ```
