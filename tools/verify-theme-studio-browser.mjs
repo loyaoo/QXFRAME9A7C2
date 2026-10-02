@@ -100,16 +100,17 @@ try{
   const initial=await evaluate(cdp,sessionId,'(function(){var style=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');var scenes=document.querySelectorAll(\'.qxframe9a7c2-studio-scene\');var mounts=Array.prototype.slice.call(document.querySelectorAll(\'[data-studio-mount]\')).map(function(host){return {name:host.getAttribute(\'data-studio-mount\'),children:host.children.length,error:!!host.querySelector(\'.qxframe9a7c2-studio-runtime-error\')};});return {scenes:scenes.length,generated:style?style.textContent.length:0,declarations:style?(style.textContent.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length:0,mode:document.documentElement.getAttribute(\'data-qxframe9a7c2-theme\'),inlineTheme:/--_?qxframe9a7c2-/.test(document.documentElement.getAttribute(\'style\')||\'\'),config:window.QXFRAME9A7C2_THEME_STUDIO.getConfig(),mounts:mounts,cards:document.querySelectorAll(\'.qxframe9a7c2-play-card\').length,commercial:!!document.querySelector(\'[data-qxframe9a7c2-studio-commercial]\')};})()');
   assert.ok(initial.commercial);
   assert.ok(initial.scenes>=20,'Expected 20+ commercial scenes.');
-  assert.equal(initial.declarations,8060);
+  assert.equal(initial.declarations,8056);
   assert.ok(initial.generated>100000,'Complete Theme CSS should be substantial.');
   assert.equal(initial.inlineTheme,false,'Generated Theme must not depend on root inline Theme tokens.');
   assert.ok(initial.cards>0,'Canonical all-component gallery must remain mounted.');
   assert.equal(initial.mounts.length,7);
   for(const mount of initial.mounts){assert.ok(mount.children>0,'Runtime mount is empty: '+mount.name);assert.equal(mount.error,false,'Runtime mount failed: '+mount.name);}
-  const semanticOn=await evaluate(cdp,sessionId,'(function(){var root=getComputedStyle(document.documentElement),primary=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-button.is-primary.is-solid\'),badge=document.createElement(\'span\');badge.className=\'qxframe9a7c2-badge is-success is-solid is-sm\';badge.textContent=\'Status\';document.body.appendChild(badge);var out={accent:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-accent\').trim(),status:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-status\').trim(),primaryColor:primary?getComputedStyle(primary).color:\'\',statusColor:getComputedStyle(badge).color};badge.remove();return out;})()');
-  assert.ok(semanticOn.accent&&semanticOn.status,'Generated optional semantic on-color bindings must be present.');
-  assert.equal(semanticOn.primaryColor,semanticOn.accent,'Primary solid component must consume generated semantic-on-accent.');
-  assert.equal(semanticOn.statusColor,semanticOn.status,'Solid status component must consume generated semantic-on-status.');
+  const semanticOn=await evaluate(cdp,sessionId,'(function(){var root=getComputedStyle(document.documentElement),primary=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-button.is-primary.is-solid\'),badge=document.createElement(\'span\'),probe=document.createElement(\'span\');badge.className=\'qxframe9a7c2-badge is-success is-solid is-sm\';badge.textContent=\'Status\';probe.style.color=\'rgb(var(--qxframe9a7c2-palette-white))\';document.body.appendChild(badge);document.body.appendChild(probe);var out={primaryForeground:root.getPropertyValue(\'--qxframe9a7c2-theme-primary-foreground\').trim(),primaryColor:primary?getComputedStyle(primary).color:\'\',statusColor:getComputedStyle(badge).color,paletteWhiteColor:getComputedStyle(probe).color,optionalAccent:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-accent\').trim(),optionalStatus:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-status\').trim()};badge.remove();probe.remove();return out;})()');
+  assert.equal(semanticOn.optionalAccent,'','Default Complete Theme must not author optional semantic-on-accent.');
+  assert.equal(semanticOn.optionalStatus,'','Default Complete Theme must not author optional semantic-on-status.');
+  assert.equal(semanticOn.primaryColor,semanticOn.primaryForeground,'Primary solid component must consume required theme-primary-foreground through Core mode-on-accent.');
+  assert.equal(semanticOn.statusColor,semanticOn.paletteWhiteColor,'Solid status component must keep the frozen shared white status foreground unless an explicit optional override is authored.');
 
   const before=await evaluate(cdp,sessionId,'(function(){var s=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');return {css:s.textContent,radius:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().radius,density:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().density};})()');
   await evaluate(cdp,sessionId,'(function(){var select=document.querySelector(\'[data-studio-input="primary"]\');select.value=\'purple\';select.dispatchEvent(new Event(\'change\',{bubbles:true}));return true;})()');
@@ -150,7 +151,7 @@ try{
     completeDeclarations:initial.declarations,
     runtimeMounts:initial.mounts.map(x=>x.name),
     canonicalCards:initial.cards,
-    semanticOnColorConsumers:true,
+    requiredPrimaryAndFrozenStatusConsumers:true,
     primaryOrthogonality:true,
     lightDarkPreview:true,
     publicOverrideUi:true,
