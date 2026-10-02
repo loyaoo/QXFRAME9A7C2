@@ -19,6 +19,22 @@
 
 ## CURRENT
 
+### THEME-GENERATOR-001
+Status: IN_PROGRESS
+Progress: Theme Generator overall ~8%; TG-A Schema Reader ~70%; TG-B Config Model ~65%; TG-E Complete Theme Serializer foundation ~55%; TG-C/D/F/G/H/I not yet implemented.
+Branch: `feat/theme-generator-v1-studio` from main after merged Schema v1 freeze PR #247.
+Completed in first implementation batch:
+- Added `docs/assets/theme-generator/engine.mjs` as a docs/offline pure generator foundation; it does not enter framework runtime or the 9-Controller architecture.
+- Reads only committed Schema v1 manifest data; no runtime CSS scanning or computed-style discovery.
+- Added strict Config v1 model, unknown-key errors, orthogonal Style defaults vs explicit Radius/Density, public-only advanced overrides and stable Config JSON serialization.
+- Added complete Light/Dark token-map construction for all 4,028 required public inputs plus deterministic low-specificity Complete Theme CSS serialization.
+- Serializer rejects private tokens/values, unknown public outputs, component selectors, unsafe values and !important.
+- Added `tools/verify-theme-generator-foundation.mjs` and wired `verify:theme-generator-foundation` into the main verify chain after `verify:theme-schema-v1`.
+Current evidence: implementation commits `fae8e910`, `279fc08b`, `4dd7c337`; formal PR/CI is the next gate.
+Next exact step: open the Theme Generator PR and run exact-head CI. Fix foundation verifier issues if any, then implement TG-C Color Engine using OKLCH/OKLab gamut-mapped 13-step color curves, a separate neutral algorithm, independent role/on-color/chart generation and frozen recipe expansion. Do not modify CSS Token Schema from the generator branch.
+Commercial Studio target: replace the old all-component-only playground with Config Panel + many real business composition cards using actual QXFRAME components; preview applies one generated stylesheet replacement per update rather than thousands of root inline mutations.
+Guardrails: production remains core CSS + later-loaded generated static theme CSS; no ThemeController/TokenController, private token output, component selector injection, !important, runtime color engine, @layer/:is/:where/Grid/fr/viewport additions, or changes to component interaction semantics.
+
 ### CSS-THEME-SCHEMA-FREEZE-001
 Status: DONE
 Progress: CSS Token system 100%; Theme Schema v1 freeze 100%; Theme Generator implementation 0%.
@@ -26,7 +42,7 @@ Authorization: user requests shadcn/create-like Theme Studio plus many real comm
 Frozen contract: 4,028 required public Palette/Theme inputs with complete Light/Dark defaults, 462 optional public component overrides, interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
 Completed: Menu-owned state slots, heading/mono and chart roles, normalized quoted/unquoted Light/Dark selector discovery, corrected frozen Light/Dark snapshot, and read-only drift artifacts. Verification never auto-accepts future schema drift.
 Final exact-head evidence: PR #247 head `3d40a987828436fe151a915c4420934e9c044c50`; CSS Schema Acceptance run `36992542652` SUCCESS; QXFRAME CI run `36992542656` SUCCESS. Browser contract covers 28 Menu combinations, geometry/isolation probes and actual scoped Select/DatePicker/Modal/Drawer/Menu portals.
-Next exact step: merge PR #247, create a separate Theme Generator branch, then execute TG-A–I. Generator must consume the committed Schema v1 manifest/recipe data, output deterministic complete static Theme CSS, and replace the old all-component-only playground with a substantial commercial preview canvas using real QXFRAME components.
+Merged evidence: PR #247 squash-merged to main as `4d2a7119a7b9790371732dff7d85abfbc4ef8786`. Generator work now continues only under `THEME-GENERATOR-001`.
 Guardrails: no framework Theme/Token JS runtime; production remains core CSS + later-loaded generated theme CSS. No generator discovery by scanning runtime CSS. Do not emit private tokens, component selectors or !important. Preserve existing Size Tree and interaction architecture.
 
 
