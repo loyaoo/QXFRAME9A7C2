@@ -327,11 +327,21 @@ function orderedNames(tokenMaps, schema) {
   return schema.order.concat(Array.from(extras).sort());
 }
 
+function normalizeSerializedColor(value) {
+  const text=String(value);
+  const match=/^color\(srgb\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+))\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+))\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+))(?:\s*\/\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)%?))?\)$/i.exec(text.trim());
+  if(!match)return text;
+  const clamp=value=>Math.min(1,Math.max(0,value));
+  const channels=match.slice(1,4).map(value=>Math.round(clamp(Number(value))*255));
+  const rawAlpha=match[4];
+  const alpha=rawAlpha==null?1:clamp(rawAlpha.endsWith('%')?Number(rawAlpha.slice(0,-1))/100:Number(rawAlpha));
+  return alpha>=0.999999?'rgb('+channels.join(', ')+')':'rgba('+channels.join(', ')+', '+String(Number(alpha.toFixed(4)))+')';
+}
 function cssBlock(selectors, mode, names, tokenMaps) {
   const lines = [selectors + ' {'];
   for (const name of names) {
     if (!Object.prototype.hasOwnProperty.call(tokenMaps[mode], name)) continue;
-    lines.push('  ' + name + ': ' + tokenMaps[mode][name] + ';');
+    lines.push('  ' + name + ': ' + normalizeSerializedColor(tokenMaps[mode][name]) + ';');
   }
   lines.push('}');
   return lines.join('\n');
