@@ -53,6 +53,7 @@ for(const path of [
   'theme-generator/engine.mjs',
   'theme-generator/io.mjs',
   'theme-generator/color-engine.mjs',
+  'theme-generator/presets.mjs',
   '../generated/theme-public-schema-v1.json',
   '../generated/theme-color-recipes-v1.json'
 ]) assert.ok(js.includes(path),'Studio runtime missing frozen-generator dependency '+path);
@@ -60,6 +61,7 @@ for(const path of [
 assert.ok(js.includes("localStorage.setItem(STORAGE_KEY"),'Studio must persist Theme Config source state.');
 assert.ok(js.includes('runtime.io.importConfigJson'),'Studio import must use the Config JSON source-of-truth parser.');
 assert.ok(js.includes('runtime.io.exportArtifacts'),'Studio export must use the generator IO contract.');
+assert.ok(js.includes('runtime.presets.applyThemePreset'),'Studio must expose the QX Theme preset library.');
 assert.ok(js.includes('currentTheme=runtime.generator.generateTheme'),'Studio preview must consume the real generator result.');
 
 console.log(JSON.stringify({
