@@ -21,19 +21,37 @@
 
 ### THEME-GENERATOR-001
 Status: IN_PROGRESS
-Progress: Theme Generator overall ~8%; TG-A Schema Reader ~70%; TG-B Config Model ~65%; TG-E Complete Theme Serializer foundation ~55%; TG-C/D/F/G/H/I not yet implemented.
-Branch: `feat/theme-generator-v1-studio` from main after merged Schema v1 freeze PR #247.
-Completed in first implementation batch:
-- Added `docs/assets/theme-generator/engine.mjs` as a docs/offline pure generator foundation; it does not enter framework runtime or the 9-Controller architecture.
-- Reads only committed Schema v1 manifest data; no runtime CSS scanning or computed-style discovery.
-- Added strict Config v1 model, unknown-key errors, orthogonal Style defaults vs explicit Radius/Density, public-only advanced overrides and stable Config JSON serialization.
-- Added complete Light/Dark token-map construction for all 4,028 required public inputs plus deterministic low-specificity Complete Theme CSS serialization.
-- Serializer rejects private tokens/values, unknown public outputs, component selectors, unsafe values and !important.
-- Added `tools/verify-theme-generator-foundation.mjs` and wired `verify:theme-generator-foundation` into the main verify chain after `verify:theme-schema-v1`.
-Current evidence: implementation commits `fae8e910`, `279fc08b`, `4dd7c337`; formal PR/CI is the next gate.
-Next exact step: open the Theme Generator PR and run exact-head CI. Fix foundation verifier issues if any, then implement TG-C Color Engine using OKLCH/OKLab gamut-mapped 13-step color curves, a separate neutral algorithm, independent role/on-color/chart generation and frozen recipe expansion. Do not modify CSS Token Schema from the generator branch.
-Commercial Studio target: replace the old all-component-only playground with Config Panel + many real business composition cards using actual QXFRAME components; preview applies one generated stylesheet replacement per update rather than thousands of root inline mutations.
-Guardrails: production remains core CSS + later-loaded generated static theme CSS; no ThemeController/TokenController, private token output, component selector injection, !important, runtime color engine, @layer/:is/:where/Grid/fr/viewport additions, or changes to component interaction semantics.
+Progress: Theme Generator overall ~52%; TG-A Schema Reader ~95%; TG-B Config Model ~95%; TG-C Color Engine/recipe expansion ~85%; TG-D Design Presets ~85%; TG-E Complete Theme Serializer ~90%; TG-F Import/Export ~90%; TG-G Commercial Theme Studio ~50%; TG-H QX Preset Library ~75%; TG-I Regression Matrix ~45%.
+Branch / PR: `feat/theme-generator-v1-studio` / PR #248. Always query GitHub for current exact head and CI before resuming.
+Frozen dependency: Schema v1 remains unchanged: 4,028 required public Palette/Theme inputs, 462 optional public overrides, interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
+Implemented:
+- Pure docs/offline generator modules under `docs/assets/theme-generator/`: strict Schema reader/config model, OKLab/OKLCH color engine with gamut mapping, independent neutral/palette/role/chart generation, frozen recipe expansion, design engine, deterministic serializer, import/export, QX preset library and top-level generator pipeline.
+- Frozen recipe expansion never scans runtime CSS or computed styles and no longer invents missing recipe bindings; intentionally unbound axis slots preserve Manifest defaults.
+- Complete Theme output writes all required public tokens for Light and Dark, resolves on-primary offline, blocks private outputs/component selectors/!important and keeps explicit advanced overrides last.
+- Design dimensions are orthogonal: 4 QX styles (Balanced/Soft/Precision/Compact), 4 Radius presets, 3 Density presets using the existing Size Tree, typography stacks/base size, independent Chart palette and Menu Color/Appearance/Accent.
+- Config JSON is source of truth; deterministic CSS/JSON filenames and legacy Playground-state migration exist.
+- 8 QX-owned commercial presets: Signal, Ledger, Harbor, Juniper, Ember, Orbit, Graphite, Canvas. Do not reuse external library preset names/values.
+- Canonical `docs/theme-playground.html` now layers `qxframe9a7c2-theme-studio.css/js` over the existing canonical component gallery. New Studio replaces one generated stylesheet per update instead of thousands of root inline mutations; existing all-component gallery remains below for regression.
+- Commercial Preview Canvas currently contains 20 real business scenes. Static QX classes cover Card/Button/Input/Switch/Badge and real runtime instances mount Table/Select/Progress/DatePicker/Upload/Menu/Tabs.
+- Studio panel includes preset/style/base/primary/chart/radius/density/fonts/menu/semantic roles, Light/Dark/System preview, legal Randomize with dimension locks, Reset, Copy CSS, Export CSS/JSON and Import JSON.
+Regression gates:
+- `verify:theme-generator-foundation`
+- `verify:theme-generator-color`
+- `verify:theme-generator-recipes`
+- `verify:theme-generator-design`
+- `verify:theme-generator-io`
+- `verify:theme-generator-presets`
+- `verify:theme-generator-matrix` (60 representative Complete Themes: 4 Style × 5 Primary × 3 Base with Radius/Density/Chart/Menu coverage)
+- `verify:theme-studio-static` (20+ commercial scenes, real component mounts, Flex-only Studio CSS, no per-token root mutation)
+- `verify:theme-studio-browser` is required by `npm run release` and serves the real docs over HTTP so dynamic import/fetch, generated stylesheet replacement, runtime mounts, Primary orthogonality and Light/Dark are exercised in Chromium.
+Known CI fixes already made in this PR: declaration counting now counts CSS declarations rather than var() references; color conversion accepts normalized string inputs; display Theme names are separate from sanitized export filenames.
+Remaining:
+1. Pass exact-head full QXFRAME CI + CSS Schema Acceptance with every new Generator/Studio gate; fix defects rather than weakening assertions.
+2. Add advanced Studio controls for physical Palette seeds, Shadow/Border/Motion profiles and validated specific public overrides without exposing hundreds of tokens by default.
+3. Add contrast/on-color warnings and richer palette visualization.
+4. Expand/polish commercial compositions and add representative visual/browser regression across presets/modes.
+5. Final docs copy, preset polish, import/export UX, AI_WORK_STATE closeout, merge PR #248 only after exact-head gates pass.
+Guardrails: no framework ThemeController/TokenController/runtime color engine; no runtime CSS scanning; production remains core CSS + later-loaded generated theme CSS. Never output private tokens, component selectors or !important. Do not alter frozen CSS Token Schema from this branch. New Studio layout remains Flex-only and must not add Grid/fr/vw/vh/@layer/:is/:where.
 
 ### CSS-THEME-SCHEMA-FREEZE-001
 Status: DONE
