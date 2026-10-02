@@ -19,6 +19,17 @@
 .qxframe9a7c2-studio-actions{display:flex;flex-wrap:wrap;gap:.4rem}.qxframe9a7c2-studio-actions .qxframe9a7c2-button{flex:1 1 6rem}
 .qxframe9a7c2-studio-status{padding:.5rem .6rem;border:1px solid rgba(255,255,255,.08);border-radius:.5rem;color:#a1a1aa;font-size:.625rem;line-height:1.45}
 .qxframe9a7c2-studio-status strong{color:#f4f4f5}
+.qxframe9a7c2-studio-audit{display:flex;flex-direction:column;gap:.35rem;padding:.5rem .6rem;border:1px solid rgba(255,255,255,.08);border-radius:.5rem;color:#a1a1aa;font-size:.625rem;line-height:1.45}
+.qxframe9a7c2-studio-audit.is-warning{border-color:rgba(245,159,0,.45);color:#fbbf24}
+.qxframe9a7c2-studio-audit strong{color:#f4f4f5}
+.qxframe9a7c2-studio-override-editor{display:flex;gap:.35rem;align-items:flex-end;flex-wrap:wrap}
+.qxframe9a7c2-studio-override-editor .qxframe9a7c2-studio-field{flex:1 1 9rem}
+.qxframe9a7c2-studio-override-editor .qxframe9a7c2-button{flex:0 0 auto}
+.qxframe9a7c2-studio-overrides{display:flex;flex-direction:column;gap:.3rem}
+.qxframe9a7c2-studio-override-item{display:flex;align-items:center;gap:.35rem;min-width:0;padding:.4rem .45rem;border:1px solid rgba(255,255,255,.08);border-radius:.4rem}
+.qxframe9a7c2-studio-override-copy{display:flex;flex:1 1 auto;flex-direction:column;gap:.08rem;min-width:0}
+.qxframe9a7c2-studio-override-copy code,.qxframe9a7c2-studio-override-copy span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-studio-override-copy code{color:#f4f4f5;font-size:.59rem}.qxframe9a7c2-studio-override-copy span{color:#a1a1aa;font-size:.57rem}
 .qxframe9a7c2-studio-import{display:none}
 .qxframe9a7c2-studio-advanced{border-top:1px solid rgba(255,255,255,.08);padding-top:.6rem}.qxframe9a7c2-studio-advanced summary{cursor:pointer;color:#d4d4d8;font-size:.7rem}
 .qxframe9a7c2-studio-advanced-body{display:flex;flex-direction:column;gap:.5rem;padding-top:.55rem}
