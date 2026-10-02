@@ -21,16 +21,16 @@
 
 ### CSS-SCSS-MODULE-001 — Component SCSS physical modularization
 Status: IN PROGRESS
-Task progress: batch 1 prepared — 24 component/shared blocks extracted from the 827KB monolithic component stylesheet
+Task progress: batch 2 prepared — 39 ordered component/shared partials extracted; holding source reduced to ~387KB (53.2% of component stylesheet physically modularized)
 Baseline: main@33e5cf4ad09bd1b71bc61daa1db716447bbcff0c
-Exact next step: verify the ordered partial split through the existing SCSS entry-vs-module equivalence gate and full release CI, then merge before continuing the remaining component tail.
+Exact next step: verify bulk batch 2 through the ordered SCSS entry-vs-module equivalence gate and full release CI, then merge before splitting the remaining _core.scss/shared closeout.
 
 Scope / guardrails:
 - Physical source organization only; no intended selector, declaration, token, interaction, layout, value, focus, overlay or Motion semantic changes.
 - Preserve exact source order because QXFRAME does not use @layer.
 - `src/styles/components/_components.scss` is now the ordered @use aggregator; audits read the real ordered partials through `tools/manifests/css-order.json`.
-- Batch 1 extracts 24 component/shared blocks: Layout, Empty, Badge, Avatar, Card, Descriptions, Alert, Switch, Motion, Scroll, Popover/Tooltip, Native Input, Item Surface, Menu, Collection/Select, Pagination, Tabs, Steps, Modal, Drawer, Notice, Progress, Loading and List.
-- `_core.scss` and `_tail.scss` are temporary ordered holding partials for untouched source; later batches continue splitting them without reordering CSS.
+- Batch 1 extracted 24 component/shared blocks: Layout, Empty, Badge, Avatar, Card, Descriptions, Alert, Switch, Motion, Scroll, Popover/Tooltip, Native Input, Item Surface, Menu, Collection/Select, Pagination, Tabs, Steps, Modal, Drawer, Notice, Progress, Loading and List.\n- Batch 2 extracts the remaining tail families in one order-preserving pass: Form, Tree, Picker family, Table, Transfer, Sort/TagInput, InputNumber, Upload, Rate, Slider, Result, Collapse, Carousel, Image and JSON.
+- `_core.scss` and `_tail.scss` remain temporary ordered holding partials; after batch 2 they contain ~387KB combined, down from ~607KB, with exact source order preserved.
 - CSS-TOKEN-SCHEMA-001 remains DONE: 0 actionable Size Tree consumers, viewport/Grid closeout complete, PR #239/#240 merged and verified.
 
 ## Current authority snapshot — after Phase A

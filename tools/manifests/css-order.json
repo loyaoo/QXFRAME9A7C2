@@ -59,6 +59,21 @@
     "src/styles/components/_progress.scss",
     "src/styles/components/_loading.scss",
     "src/styles/components/_list.scss",
+    "src/styles/components/_form.scss",
+    "src/styles/components/_tree.scss",
+    "src/styles/components/_picker-family.scss",
+    "src/styles/components/_table.scss",
+    "src/styles/components/_transfer.scss",
+    "src/styles/components/_sort-tag-input.scss",
+    "src/styles/components/_input-number.scss",
+    "src/styles/components/_upload.scss",
+    "src/styles/components/_rate.scss",
+    "src/styles/components/_slider.scss",
+    "src/styles/components/_result.scss",
+    "src/styles/components/_collapse.scss",
+    "src/styles/components/_carousel.scss",
+    "src/styles/components/_image.scss",
+    "src/styles/components/_json.scss",
     "src/styles/components/_tail.scss"
   ]
 }
