@@ -8,7 +8,7 @@
   --_qxframe9a7c2-card-divider:var(--qxframe9a7c2-card-divider-color,var(--_qxframe9a7c2-card-border));
   --_qxframe9a7c2-card-bg:var(--qxframe9a7c2-card-surface,var(--_qxframe9a7c2-surface-raised-bg)); --_qxframe9a7c2-card-skeleton-title-height:var(--qxframe9a7c2-card-skeleton-title-height,var(--qxframe9a7c2-theme-card-skeleton-title-height));
   --_qxframe9a7c2-card-muted-bg:var(--qxframe9a7c2-card-muted-surface,var(--_qxframe9a7c2-semantic-subtle));
-  --_qxframe9a7c2-card-shadow:none;
+  --_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,none);
   --_qxframe9a7c2-card-transform:none;
   position:relative;
   display:flex;
