@@ -10,8 +10,8 @@ const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/manifests/css
 const source = readCanonicalStyleSource({ root }).replace(/\/\*[\s\S]*?\*\//g, '');
 assert.doesNotMatch(source, /color-mix\s*\(/, 'Runtime color synthesis must not return.');
 for (const entry of baseline.entries) {
-  assert.ok(source.includes(entry.themeToken + ':'), 'Static Theme role is missing: ' + entry.id);
-  assert.ok(source.includes('var(' + entry.resolvedToken + ')'), 'Static role is disconnected: ' + entry.id);
+  for (const token of Object.values(entry.paletteTokens)) assert.ok(source.includes(token + ':'), 'Static Theme palette role is missing: ' + token);
+  assert.ok(source.includes('var(' + entry.resolvedToken + ')') || source.includes('var(' + entry.resolvedToken + ','), 'Static role is disconnected: ' + entry.id);
   assert.ok(entry.decision && entry.consumers.length, 'Every retired formula needs a consumer decision.');
 }
 if (process.argv.includes('--browser')) {
@@ -27,7 +27,7 @@ if (process.argv.includes('--browser')) {
         // This old formula was undefined without a physical color class and was
         // never consumed there. The static default is Blue; test every real axis.
         if (entry.normalized.includes('accent-seed)') && ['bare','default','primary','success','warning','error','info'].includes(row.variant)) return;
-        probe.style.backgroundColor = 'var(' + entry.resolvedToken + ')';
+        probe.style.backgroundColor = 'var(' + entry.resolvedToken + ',var(' + entry.modeFallback + '))';
         const actual = getComputedStyle(probe).backgroundColor;
         const reference = document.createElement('div'); reference.style.backgroundColor = row.values[index]; document.body.appendChild(reference);
         const expected = getComputedStyle(reference).backgroundColor; reference.remove();
@@ -35,6 +35,15 @@ if (process.argv.includes('--browser')) {
         if (actual !== expected) failures.push({mode:row.mode,axis:row.variant,role:entry.id,actual,expected});
       });
     }
+    const entry = baseline.entries.find(e=>e.normalized.includes('semantic-overlay-base)18%'));
+    document.documentElement.style.setProperty(entry.themeToken,'rgb(17 34 51)');
+    scope.setAttribute('data-qxframe9a7c2-theme','dark');
+    probe.style.backgroundColor='var('+entry.themeToken+',var('+entry.modeFallback+'))';
+    const ancestor=getComputedStyle(probe).backgroundColor;
+    checks++; if(ancestor!=='rgb(17, 34, 51)')failures.push({role:entry.id,test:'ancestor Theme slot crosses mode boundary',actual:ancestor});
+    scope.style.setProperty(entry.themeToken,'rgb(51 34 17)');
+    checks++; const local=getComputedStyle(probe).backgroundColor; if(local!=='rgb(51, 34, 17)')failures.push({role:entry.id,test:'local Theme slot',actual:local});
+    scope.style.removeProperty(entry.themeToken); document.documentElement.style.removeProperty(entry.themeToken);
     return {checks,failures};
   })()`;
   const result = await browserProbes({ expression });

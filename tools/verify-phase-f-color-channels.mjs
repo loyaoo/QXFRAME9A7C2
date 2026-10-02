@@ -36,7 +36,7 @@ const roleFor=(base,weight)=>{
   const normalized='color-mix(insrgb,var(--_qxframe9a7c2-semantic-'+base+')'+weight+'%,transparent)';
   const entry=baseline.entries.find(e=>e.normalized===normalized);
   assert.ok(entry,'Missing retired semantic overlay decision: '+normalized);
-  return 'var('+entry.resolvedToken+')';
+  return 'var('+entry.resolvedToken;
 };
 const required=[
   ['badge ribbon shadow','.qxframe9a7c2-badge-ribbon{','overlay-base',18],

@@ -53,7 +53,7 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:var(--qxfr
 .qxframe9a7c2-input-value-placeholder{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--_qxframe9a7c2-semantic-text-placeholder)}
 .qxframe9a7c2-input-control{box-sizing:border-box;flex:1 1 var(--qxframe9a7c2-theme-input-control-basis);min-width:var(--qxframe9a7c2-theme-input-control-min-width);height:calc(var(--_qxframe9a7c2-control-local-height) - var(--qxframe9a7c2-theme-input-control-height-delta));padding:0;border:0;outline:0;resize:none;background:transparent;color:inherit;font:inherit}
 .qxframe9a7c2-input-control::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}
-.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-control,.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-segments{color:var(--qxframe9a7c2-theme-color-color-1)}
+.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-control,.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-segments{color:var(--qxframe9a7c2-theme-color-color-1,var(--_qxframe9a7c2-mode-color-color-1))}
 .qxframe9a7c2-input:not(.is-clear-visible)>.qxframe9a7c2-input-suffix>.qxframe9a7c2-input-clear{display:none}
 .qxframe9a7c2-text-field>.qxframe9a7c2-input-control{box-sizing:border-box;min-width:var(--qxframe9a7c2-theme-input-control-min-width);flex:1 1 var(--qxframe9a7c2-theme-input-control-basis);height:calc(var(--_qxframe9a7c2-control-local-height) - var(--qxframe9a7c2-theme-input-control-height-delta));margin:0;padding:0;border:0;border-radius:0;outline:0;background:transparent;box-shadow:none;color:inherit;font:inherit}
 .qxframe9a7c2-text-field.is-textarea>.qxframe9a7c2-input-control{height:auto;min-height:var(--qxframe9a7c2-theme-input-textarea-min-height)}

@@ -21,13 +21,14 @@
 
 ### CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
 Status: IN_PROGRESS
-Progress: remediation task 55%; base controller migration and Size Tree/Grid/SCSS subset remain complete.
+Progress: remediation task 65%; base controller migration and Size Tree/Grid/SCSS subset remain complete.
 Baseline: PR #245 head f60dcfd8ee6cc6eddf64130809f867e1376c722d; main 72663d3530e16b582b8891491fa8f7e8b01ccda9.
 CI reconciled: QXFRAME CI run 36971170983 SUCCESS; strict CSS Schema Acceptance run 36971171051 FAILURE (four computed-style probes and color inventory).
 Scope: implement SCHEMA-ACCEPT-002/004/005/003; keep default visual behavior, explicit ancestor Component overrides and scoped Theme inheritance. Keep strict acceptance and existing release gates.
 Implemented: 35 Theme control geometry recipes; 66 optional Component fallbacks resolve at consumers. Chromium run 36972877977 / job 110730388835 confirms all 9 probes PASS; only live color-mix remains an acceptance blocker. Full release currently fails an old direct Component-alias assertion; verifiers are being changed to verify the real fallback graph, retaining exact historical normalization mappings. Initial color capture was rejected as evidence because transitions interfered with synchronous sampling.
 Implemented second batch: transition-free Chromium run 36973215695 / job 110731413088 captures 171 independent expressions / 44 Light-Dark × color-axis rows. All live source formulas now replaced by static Theme roles (runtime color-mix=0); MixedGray r2 defaults retained. Added private color reset and axis palette selection. Icon/Notice/Composition visual root defaults now resolve optional public overrides through private finals. Remaining 12 root public declarations are explicitly classified Motion disabled timing and Notice instance motion projections. Static compilation/layers/source order/Token graph/state cascade/selector/color channels pass locally.
-Next exact step: run expanded 25 geometry/override/nesting probes and static color matrix in GitHub Chromium; fix mismatches and full release gate failures, then record final evidence and merge only exact green head. Seed/weight metadata is offline configuration: custom themes must supply complete static color roles; no theme generator or runtime JS is added.
+CI evidence at 082bb732: strict acceptance run 36974265331 SUCCESS; 25/25 geometry probes and 7,482 color comparisons PASS. Full release run 36974265355 failed only a historical shadow Size Tree assertion requiring old formula text; assertion now follows the static color role while retaining geometry. Added generic color fallback against explicit Light/Dark palettes to avoid new ancestor override freezing.
+Next exact step: verify root/scoped color overrides and preserve existing docs default Nova and built-in presets with offline sampled static data; then finish complete release/browser/package gates and merge exact green head. Seed/weight metadata is offline configuration: custom themes must supply complete static color roles; no theme generator or runtime JS is added.
 
 ### ASTRA-HIGH-FINAL-ACCEPTANCE — CSS Schema acceptance
 Status: REVIEW_COMPLETE / NOT_ACCEPTED / REMEDIATION_REQUIRED
