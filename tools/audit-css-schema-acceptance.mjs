@@ -53,7 +53,7 @@ async function browserProbes() {
   const html = `<!doctype html><meta charset="utf-8"><style>${css}</style>
     <div id="scope" data-qxframe9a7c2-theme="light">
       <button id="control" class="qxframe9a7c2-button is-md">Control</button>
-      <div id="card" class="qxframe9a7c2-card"><div id="title" class="qxframe9a7c2-card-skeleton-line is-title"></div></div>
+      <div id="card" class="qxframe9a7c2-card"><div id="cardBody" class="qxframe9a7c2-card-body"><div id="title" class="qxframe9a7c2-card-skeleton-line is-title"></div></div></div>
       <span id="avatar" class="qxframe9a7c2-avatar is-md">A</span>
       <div id="popup" class="qxframe9a7c2-popup-surface">Popup</div>
     </div>`;
@@ -94,6 +94,7 @@ async function browserProbes() {
       const add = (name, actual, expected) => probes.push({name, actual, expected, passed: typeof expected === 'number' ? Math.abs(actual - expected) < .1 : actual === expected});
       root.style.fontSize = '16px';
       add('default-control-height-md', measure('control', 'minHeight'), 32);
+      add('default-card-body-padding', measure('cardBody', 'paddingLeft'), 12);
       const sheet = document.createElement('style'); sheet.textContent = ':root { --qxframe9a7c2-theme-control-height-md: 3.25rem; }'; document.head.appendChild(sheet);
       add('external-theme-control-height-md', measure('control', 'minHeight'), 52);
       sheet.remove();
@@ -101,13 +102,13 @@ async function browserProbes() {
       add('ancestor-public-card-skeleton-title-height', measure('title', 'height'), 24);
       scope.style.removeProperty('--qxframe9a7c2-card-skeleton-title-height');
       scope.style.setProperty('--qxframe9a7c2-theme-space-6', '2rem');
-      add('scoped-theme-card-padding', measure('card', 'paddingLeft'), 32);
+      add('scoped-theme-card-padding', measure('cardBody', 'paddingLeft'), 32);
       scope.style.removeProperty('--qxframe9a7c2-theme-space-6');
       scope.style.setProperty('--qxframe9a7c2-theme-avatar-size-md', '3.5rem');
       add('scoped-theme-avatar-size-md', measure('avatar', 'width'), 56);
       scope.style.removeProperty('--qxframe9a7c2-theme-avatar-size-md');
       scope.style.setProperty('--qxframe9a7c2-card-padding', '20px');
-      add('ancestor-public-card-padding-positive-control', measure('card', 'paddingLeft'), 20);
+      add('ancestor-public-card-padding-positive-control', measure('cardBody', 'paddingLeft'), 20);
       scope.style.removeProperty('--qxframe9a7c2-card-padding');
       root.style.fontSize = '20px';
       add('root-font-size-scales-control', measure('control', 'minHeight'), 40);
