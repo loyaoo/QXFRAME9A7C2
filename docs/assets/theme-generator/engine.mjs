@@ -202,7 +202,7 @@ function normalizeConfig(input = {}) {
   config.typography.heading = enumValue(input.typography && input.typography.heading, HEADING_FONT_IDS, DEFAULT_CONFIG.typography.heading, 'typography.heading');
   config.typography.mono = enumValue(input.typography && input.typography.mono, MONO_FONT_IDS, DEFAULT_CONFIG.typography.mono, 'typography.mono');
   const size = Number(input.typography && input.typography.baseSize != null ? input.typography.baseSize : DEFAULT_CONFIG.typography.baseSize);
-  if (!Number.isFinite(size) || size < 12 || size > 20) throw new TypeError('typography.baseSize must be between 12 and 20.');
+  if (!Number.isInteger(size) || size < 12 || size > 20 || size % 2 !== 0) throw new TypeError('typography.baseSize must be an even integer between 12 and 20.');
   config.typography.baseSize = size;
 
   config.radius = enumValue(input.radius, RADIUS_IDS, DEFAULT_CONFIG.radius, 'radius');
