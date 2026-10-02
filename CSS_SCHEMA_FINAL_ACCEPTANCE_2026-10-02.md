@@ -2,7 +2,7 @@
 
 **本轮结论：确认的五组问题均已实施修复，严格 Chromium 验收通过。** 原始 main 基线 `72663d3530e16b582b8891491fa8f7e8b01ccda9` 的 NOT_ACCEPTED 结果作为历史证据保留，不再表示当前实现仍有那四组阻塞。
 
-本轮任务为 `CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001`，PR #245。最终合并、main 发行与 Pages 状态以 GitHub 实际结果为准。工具结果保持 `PROBES_PASS_REMAINING_MANUAL_GATES_REQUIRED`：本次确认问题的关闭不等于全部组件人工视觉、独立架构/安全审计或整个 Schema 的冻结签字。
+本轮任务 `CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001` 已完成：PR #245 在最终实现 HEAD 两套 CI 全部成功后，合并为 `0ded4a46d64b5fda46fc101007e0df9bd8aade92`（2026-10-02T07:13:53Z）。当前 main 发行与 Pages 状态查询 GitHub 实际结果。工具结果保持 `PROBES_PASS_REMAINING_MANUAL_GATES_REQUIRED`：本次确认问题的关闭不等于全部组件人工视觉、独立架构/安全审计或整个 Schema 的冻结签字。
 
 ## 修复结果
 
@@ -32,9 +32,11 @@
 | `bfaae28a` / QXFRAME CI run `36975336235` | SUCCESS：完整发行与 Windows tooling |
 | `bfaae28a` / CSS Schema Acceptance run `36975336207` | SUCCESS：25 探针、7,484 核心颜色比对 |
 | `96f2046d` / CSS Schema Acceptance run `36976428598`、job `110741152413` | SUCCESS：25 探针、7,484 核心比对、18,144 docs 比对、2,160 Button 用例 |
+| 最终实现 `9a87bdd4` / QXFRAME CI `36976881748`、Schema Acceptance `36976881857` | 两套 SUCCESS：全部发行验证、Windows、npm 打包、dist/docs 及严格浏览器验收 |
+| 合并后的 main `0ded4a46` / QXFRAME CI `36977479286` | SUCCESS：release、Windows 与 Pages deploy `110745987222` 均成功 |
 | 本地补充检查 | build + 完整 npm verify PASS；仅辅助，最终发行以 GitHub Actions 为准 |
 
-最终文档修订会产生新 HEAD。必须查询 PR #245 对应 HEAD 的完整发行与严格验收结果，不能将上表的历史成功冒充新 HEAD 成功。通过后按已授权流程合并，并复查 main 与 Pages。
+PR #245 已按最终实现 HEAD 的成功结果合并。本次收尾提交仅更新状态记录与不可变证据引用，不修改运行时代码。main 与 Pages 的最新结果始终以 GitHub 为准。
 
 已有 release、浏览器、源 ESM/UMD、package/import、几何耦合、安全依赖与 docs 检查保留。旧 verifier 中依赖已删除 alias/公式文本的断言改为追踪真实 Theme role/fallback；历史 Size Tree 映射与几何目标未放宽。
 
