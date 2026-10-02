@@ -14,59 +14,15 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Token System and Theme Schema v1 freeze are complete and exact-head CI accepted. Theme Generator implementation is now unblocked. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `THEME-GENERATOR-001` — implement the frozen-schema Theme Generator and commercial live Theme Studio after PR #247 merge.
+- Current Phase: CSS Token System, Theme Schema v1 freeze, Theme Generator v1 and commercial Theme Studio are merged and CI-verified. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
+- Current Task: `NONE` — await the next user-authorized task. Do not resume `THEME-GENERATOR-001` or Schema v1 work from zero.
 
 ## CURRENT
 
-### THEME-GENERATOR-001
-Status: IN_PROGRESS
-Progress: Theme Generator overall ~92%; TG-A Schema Reader 100%; TG-B Config Model 100%; TG-C Color Engine/recipe expansion 100% within frozen Schema v1; TG-D Design Presets/advanced profiles 100%; TG-E Complete Theme Serializer 100%; TG-F Import/Export 100%; TG-G Commercial Theme Studio ~90%; TG-H QX Preset Library 100%; TG-I Regression/Browser Acceptance ~95%.
-Branch / PR: `feat/theme-generator-v1-studio` / PR #248. Always query GitHub for current exact head and CI before resuming.
-Frozen dependency: Schema v1 remains unchanged: 4,028 required public Palette/Theme inputs, 462 optional public overrides, interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
-Implemented:
-- Pure docs/offline generator modules under `docs/assets/theme-generator/`: strict Schema reader/config model, OKLab/OKLCH color engine with gamut mapping, independent neutral/palette/role/chart generation, frozen recipe expansion, design engine, deterministic serializer, import/export, QX preset library and top-level generator pipeline.
-- Frozen recipe expansion never scans runtime CSS or computed styles and no longer invents missing recipe bindings; intentionally unbound axis slots preserve Manifest defaults.
-- Complete Theme output writes all required public tokens for Light and Dark, resolves on-primary offline, blocks private outputs/component selectors/!important and keeps explicit advanced overrides last.
-- Design dimensions are orthogonal: 4 QX styles (Balanced/Soft/Precision/Compact), 4 Radius presets, 3 Density presets using the existing Size Tree, typography stacks/base size, independent Chart palette and Menu Color/Appearance/Accent.
-- Config JSON is source of truth; deterministic CSS/JSON filenames and legacy Playground-state migration exist.
-- 8 QX-owned commercial presets: Signal, Ledger, Harbor, Juniper, Ember, Orbit, Graphite, Canvas. Do not reuse external library preset names/values.
-- Canonical `docs/theme-playground.html` now layers `qxframe9a7c2-theme-studio.css/js` over the existing canonical component gallery. New Studio replaces one generated stylesheet per update instead of thousands of root inline mutations; existing all-component gallery remains below for regression.
-- Commercial Preview Canvas contains 21 real business scenes, including generated Primary/Neutral 13-step palette, Chart and semantic-role visualization. Static QX classes cover Card/Button/Input/Switch/Badge and real runtime instances mount Table/Select/Progress/DatePicker/Upload/Menu/Tabs.
-- Studio panel includes preset/style/base/primary/chart/radius/density/fonts/menu/semantic roles, Light/Dark/System preview, legal Randomize with dimension locks, Reset, Copy CSS, Export CSS/JSON and Import JSON.
-- Advanced Studio now adds one-at-a-time physical Palette seed editing, Shadow/Border/Motion profile helpers, validated specific Public Token overrides with add/remove, and final-token readability reporting. Named advanced helpers serialize only through existing `palette` and `advanced.overrides`; Config JSON remains the only source of truth.
-Regression gates:
-- `verify:theme-generator-foundation`
-- `verify:theme-generator-color`
-- `verify:theme-generator-recipes`
-- `verify:theme-generator-design`
-- `verify:theme-generator-advanced` (physical Palette seed + Shadow/Border/Motion helpers, group isolation)
-- `verify:theme-generator-io`
-- `verify:theme-generator-presets`
-- `verify:theme-generator-matrix` (60 representative Complete Themes: 4 Style × 5 Primary × 3 Base with Radius/Density/Chart/Menu coverage)
-- `verify:theme-generator-audit` (final-token text/on-color contrast checks and non-destructive warnings after explicit overrides)
-- `verify:theme-studio-static` (20+ commercial scenes, real component mounts, Flex-only Studio CSS, no per-token root mutation)
-- `verify:theme-studio-browser` is required by `npm run release` and serves the real docs over HTTP so dynamic import/fetch, generated stylesheet replacement, runtime mounts, Primary orthogonality, Public Override/readability UI and 4 representative QX presets × Light/Dark are exercised in Chromium.
-Known CI fixes already made in this PR: declaration counting now counts CSS declarations rather than var() references; color conversion accepts normalized string inputs; display Theme names are separate from sanitized export filenames.
-- On-color ownership is frozen-schema-correct: Primary is generated through required `--qxframe9a7c2-theme-primary-foreground` and reaches Core `mode-on-accent`; default Complete Theme does not emit optional `semantic-on-accent/status` slots.
-- Known Schema v1 limitation (not a Generator bug and not changed on this branch): semantic Success/Warning/Error/Info variants resolve private frozen white `_on-*` foregrounds before the shared public fallback. Schema v1 has no four public per-status on-color slots. Studio therefore audits the actual white foreground, reports default Success/Warning/Info contrast warnings with offline recommended colors, and never emits private tokens/selectors to work around the frozen interface.
-- Verified implementation baseline before the final limitation/checkpoint-only batch: head `b8de6e0eba62d4d983d07f8b7734eb91957c7add`; CSS Schema Acceptance run `37010666742` SUCCESS; QXFRAME CI run `37010666639` SUCCESS including Full Release, Windows tools, npm pack, standalone dist/docs and artifact stages.
-Remaining:
-1. Pass final exact-head QXFRAME CI + CSS Schema Acceptance after the frozen status-foreground limitation/checkpoint batch; fix defects rather than weakening assertions.
-2. If final exact-head is green, PR #248 is merge-ready for Theme Generator / Theme Studio v1 under frozen Schema v1.
-3. Any request for independent per-status on-success/on-warning/on-error/on-info CSS output is a future CSS Schema revision task; do not reopen or mutate Schema v1 from this PR.
-Guardrails: no framework ThemeController/TokenController/runtime color engine; no runtime CSS scanning; production remains core CSS + later-loaded generated theme CSS. Never output private tokens, component selectors or !important. Do not alter frozen CSS Token Schema from this branch. New Studio layout remains Flex-only and must not add Grid/fr/vw/vh/@layer/:is/:where.
-
-### CSS-THEME-SCHEMA-FREEZE-001
-Status: DONE
-Progress: CSS Token system 100%; Theme Schema v1 freeze 100%; Theme Generator implementation 0%.
-Authorization: user requests shadcn/create-like Theme Studio plus many real commercial composition cards with live preview; Theme Generator Development Guide v1 remains the generator authority.
-Frozen contract: 4,028 required public Palette/Theme inputs with complete Light/Dark defaults, 462 optional public component overrides, interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
-Completed: Menu-owned state slots, heading/mono and chart roles, normalized quoted/unquoted Light/Dark selector discovery, corrected frozen Light/Dark snapshot, and read-only drift artifacts. Verification never auto-accepts future schema drift.
-Final exact-head evidence: PR #247 head `3d40a987828436fe151a915c4420934e9c044c50`; CSS Schema Acceptance run `36992542652` SUCCESS; QXFRAME CI run `36992542656` SUCCESS. Browser contract covers 28 Menu combinations, geometry/isolation probes and actual scoped Select/DatePicker/Modal/Drawer/Menu portals.
-Merged evidence: PR #247 squash-merged to main as `4d2a7119a7b9790371732dff7d85abfbc4ef8786`. Generator work now continues only under `THEME-GENERATOR-001`.
-Guardrails: no framework Theme/Token JS runtime; production remains core CSS + later-loaded generated theme CSS. No generator discovery by scanning runtime CSS. Do not emit private tokens, component selectors or !important. Preserve existing Size Tree and interaction architecture.
-
+### READY-FOR-NEXT-TASK
+Status: IDLE / READY
+Progress: no active implementation task.
+Exact next step: wait for a new user-authorized task. Query current main/PR/CI before starting. Do not reopen Theme Generator v1, CSS Token Schema v1, Controller migration, Size Tree/Grid/viewport, or SCSS modularization without a new regression or explicit new-scope request.
 
 ## Current authority snapshot — after Phase A
 
@@ -94,6 +50,42 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE
+
+### THEME-GENERATOR-001 — Frozen-Schema Theme Generator + commercial Theme Studio v1
+Status: DONE_MERGED_CI_VERIFIED
+Progress: 100%
+Merged evidence:
+- PR #248 merged 2026-10-02T13:22:48Z.
+- PR exact implementation head `a84d7bbbaaedd23e2d45236b473c8c50b3e15eeb`.
+- Merge commit on main: `7b12d76606baf6bbcd66a4811da52ba7d37075c3`.
+- CSS Schema Acceptance run `37011768761`: SUCCESS.
+- QXFRAME CI run `37011768663`: SUCCESS, including Full Release verification, Windows tools, npm pack, standalone dist/docs build and artifact stages.
+Frozen dependency retained:
+- Theme Schema v1 remains 4,028 required public Palette/Theme inputs + 462 optional public overrides.
+- Interface hash remains `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
+Delivered:
+- Pure docs/offline generator modules under `docs/assets/theme-generator/`; no ThemeController/TokenController/runtime color engine.
+- Deterministic Complete Theme Light/Dark CSS output with 4,028 required declarations per mode (8,056 total), frozen recipe expansion, OKLab/OKLCH gamut-mapped color generation, independent neutral/palette/role/chart generation, offline primary foreground, public-only overrides and no private tokens/selectors/!important.
+- Orthogonal Style/Radius/Density/Typography/Menu presets, advanced Palette seed + Shadow/Border/Motion helpers, Config JSON source-of-truth, deterministic CSS/JSON export, import and legacy-playground migration.
+- 8 QX-owned commercial presets: Signal, Ledger, Harbor, Juniper, Ember, Orbit, Graphite, Canvas.
+- Canonical `docs/theme-playground.html` now loads the Theme Studio over the retained all-component regression gallery.
+- Commercial Preview Canvas contains 21 business scenes, generated Primary/Neutral 13-step palettes, Chart/semantic role visualization, real QXFRAME runtime mounts for Table/Select/Progress/DatePicker/Upload/Menu/Tabs, Light/Dark/System preview, Randomize + dimension locks, Copy/Export/Import, advanced Public Token overrides and readability warnings.
+- Regression coverage includes foundation/color/recipe/design/advanced/IO/preset/matrix/audit/static Studio gates plus required real HTTP/Chromium Theme Studio acceptance. Representative generator matrix covers 60 Complete Themes and Studio browser coverage includes 4 representative presets × Light/Dark.
+Known frozen Schema v1 limitation:
+- Primary on-color is public and generated through required `--qxframe9a7c2-theme-primary-foreground`.
+- Success/Warning/Error/Info still use the Core shared/private frozen white foreground path; Schema v1 has no four independent public per-status on-color slots. Studio reports the real contrast limitation and recommended colors; it does not invent private tokens or silently mutate Schema v1.
+Resume rule:
+- Do not redo or continue this task. Any independent public `on-success/on-warning/on-error/on-info` output requires a separately authorized future CSS Schema revision.
+
+### CSS-THEME-SCHEMA-FREEZE-001
+Status: DONE_MERGED_CI_VERIFIED
+Progress: 100%
+Evidence:
+- PR #247 merged to main as `4d2a7119a7b9790371732dff7d85abfbc4ef8786`.
+- Frozen contract: 4,028 required public Palette/Theme inputs, 462 optional public overrides, interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
+- Freeze exact-head CSS Schema Acceptance `36992542652` SUCCESS and QXFRAME CI `36992542656` SUCCESS.
+Resume rule: Schema v1 is frozen; future interface changes require an explicitly authorized new Schema revision.
+
 
 ### CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
 Status: DONE_MERGED_CI_VERIFIED
