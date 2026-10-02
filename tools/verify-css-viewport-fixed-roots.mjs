@@ -46,10 +46,10 @@ assert.match(theme,/--qxframe9a7c2-theme-image-preview-audio-viewport-gap:\s*var
 assert.match(theme,/--qxframe9a7c2-theme-image-preview-audio-min-width:\s*calc\(var\(--qxframe9a7c2-size-46\) \+ var\(--qxframe9a7c2-size-28\)\)/);
 assert.match(css,/\.qxframe9a7c2-image-preview-motion\.is-media-audio\{width:min\(var\(--qxframe9a7c2-theme-image-preview-audio-width\),calc\(100% - var\(--qxframe9a7c2-theme-image-preview-audio-viewport-gap\)\)\);min-width:min\(var\(--qxframe9a7c2-theme-image-preview-audio-min-width\),80%\);max-width:90%\}/);
 
-assert.match(css,/--_qxframe9a7c2-notice-viewport-gutter:var\(--qxframe9a7c2-notice-shadow-gutter\)/);
+assert.match(css,/--_qxframe9a7c2-notice-viewport-gutter:var\(--_qxframe9a7c2-notice-shadow-gutter\)/);
 assert.match(theme,/--qxframe9a7c2-theme-notice-available-inline-size:\s*calc\(var\(--qxframe9a7c2-size-46\) \* 2 \+ var\(--qxframe9a7c2-size-16\)\)/);
 assert.match(css,/--_qxframe9a7c2-notice-available-inline-size:var\(--qxframe9a7c2-theme-notice-available-inline-size\)/);
-assert.match(css,/\.qxframe9a7c2-notification-stack\{[\s\S]*?--_qxframe9a7c2-notice-viewport-gutter:var\(--qxframe9a7c2-notification-edge-gutter\)/);
+assert.match(css,/\.qxframe9a7c2-notification-stack\{[\s\S]*?--_qxframe9a7c2-notice-viewport-gutter:var\(--_qxframe9a7c2-notification-edge-gutter\)/);
 assert.match(noticeService,/function syncNoticeAvailableInlineSize\(entry\)/);
 assert.match(noticeService,/--_qxframe9a7c2-notice-available-inline-size', available \+ 'px'/);
 assert.match(noticeService,/entry\.layout\.request\('viewport-resize'\)/);

@@ -5429,14 +5429,14 @@
  * only sizes and aligns the icon box used by framework controls.
  */
 .qxframe9a7c2-icon {
-    --qxframe9a7c2-icon-size: 1em;
-    --qxframe9a7c2-icon-rotate: 0deg;
-    width: var(--qxframe9a7c2-icon-size);
-    height: var(--qxframe9a7c2-icon-size);
-    font-size: var(--qxframe9a7c2-icon-size);
+    --_qxframe9a7c2-icon-size: var(--qxframe9a7c2-icon-size, 1em);
+    --_qxframe9a7c2-icon-rotate: var(--qxframe9a7c2-icon-rotate, 0deg);
+    width: var(--_qxframe9a7c2-icon-size);
+    height: var(--_qxframe9a7c2-icon-size);
+    font-size: var(--_qxframe9a7c2-icon-size);
     color: inherit;
     vertical-align: -0.125em;
-    transform: rotate(var(--qxframe9a7c2-icon-rotate));
+    transform: rotate(var(--_qxframe9a7c2-icon-rotate));
     transform-origin: center;
     flex: none;
 }
@@ -5446,8 +5446,8 @@
 .qxframe9a7c2-icon.is-lg { --qxframe9a7c2-icon-size: var(--qxframe9a7c2-theme-icon-size-lg); }
 .qxframe9a7c2-icon.is-xl { --qxframe9a7c2-icon-size: var(--qxframe9a7c2-theme-icon-size-xl); }
 /* Generic geometry modifiers. Only the Icon DOM box is reduced; the glyph keeps its canonical aspect ratio and stays centered inside the clipped layout box. */
-.qxframe9a7c2-icon.is-half-height{height:calc(var(--qxframe9a7c2-icon-size)*.5);display:inline-flex;align-items:center;justify-content:center}
-.qxframe9a7c2-icon.is-half-width{width:calc(var(--qxframe9a7c2-icon-size)*.5);display:inline-flex;align-items:center;justify-content:center}
+.qxframe9a7c2-icon.is-half-height{height:calc(var(--_qxframe9a7c2-icon-size)*.5);display:inline-flex;align-items:center;justify-content:center}
+.qxframe9a7c2-icon.is-half-width{width:calc(var(--_qxframe9a7c2-icon-size)*.5);display:inline-flex;align-items:center;justify-content:center}
 .qxframe9a7c2-icon.is-half-height::before,.qxframe9a7c2-icon.is-half-width::before{flex:0 0 auto;scale:none}
 
 

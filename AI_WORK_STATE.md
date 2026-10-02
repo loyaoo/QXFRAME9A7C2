@@ -14,25 +14,30 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Design Token Schema v1.6 + Component SCSS physical modularization complete; awaiting final acceptance or a new explicit task
-- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE` (READY / NOT STARTED IN THIS CHECKPOINT)
+- Current Phase: CSS Schema v1.6 confirmed blocker remediation implemented; strict Chromium acceptance passes. Broader manual/freeze gates remain separately scoped. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
+- Current Task: `CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001` (implementation in progress)
 
 ## CURRENT
 
-### ASTRA-HIGH-FINAL-ACCEPTANCE — final acceptance handoff
-Status: READY
-Task progress: implementation closeout complete; no known CSS Token / SCSS modularization implementation backlog remains.
-Verified main checkpoint: `0fbc91b70b9e022945daa3ab97df644456a54a4c`
-Latest verified main CI: QXFRAME CI #1231 / run `36968510652` — SUCCESS.
-Exact next step: start from current `main`, read `AGENTS.md` + this file, then perform only the requested final Astra High acceptance/audit or a newly specified task. Do not restart Phase A, CSS Token migration, viewport/Grid cleanup, or SCSS modularization.
-
-Resume guardrails:
-- `CSS-TOKEN-SCHEMA-001` is DONE: Size Tree actionable consumers are 0; only 36 protected responsive breakpoint literals plus the approved 100rem pill sentinel remain.
-- `CSS-SCSS-MODULE-001` is DONE: 53 ordered component/shared SCSS partials are explicit source modules; temporary `_core.scss`, `_tail.scss` and `_tail-closeout.scss` holding files are absent.
-- PR #244 is the authoritative SCSS modularization closeout and is merged to main.
-- PR #242 and PR #243 were parallel/superseded modularization attempts. They must not be resumed or merged after PR #244.
-- QXFRAME does not use `@layer`; preserve the explicit component source order and existing cascade. Physical module boundaries must not be treated as permission to reorder selectors/declarations.
-- Do not reopen completed Grid/fr, viewport-unit, Size Tree, Controller, Picker-value or focus-origin work without a demonstrated regression.
+### CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
+Status: IMPLEMENTATION_DONE_BROWSER_VERIFIED / INTEGRATION_CLOSEOUT
+Progress: implementation 100%; integration awaits the final exact-head release check and merge. Base controller migration, Size Tree/Grid/viewport and SCSS modularization remain complete.
+Scope: SCHEMA-ACCEPT-001/002/003/004/005; preserve default visual behavior, ancestor public overrides and scoped Theme inheritance. Strict acceptance and existing release gates remain enabled.
+Implemented:
+- Restored the complete 2,750-line v1.6 guide (§§1–46).
+- Added 35 Theme control geometry roles and routed all five size recipes through them.
+- Replaced 66 early Component aliases with optional public override slots plus consumer fallbacks; reset private finals at the correct component/theme boundary.
+- Removed all live canonical color-mix formulas. Preserved static Light/Dark/color-axis defaults and MixedGray r2; custom themes supply complete static roles without a runtime Theme/Token engine or a production generator.
+- Classified the 12 retained public root declarations as disabled Motion timing / Notice instance projections. Unclassified root defaults fail strict acceptance.
+- Preserved Nova plus five other docs presets across grey/mixed/gray bases with static palette data; unsupported seed-only/continuous mixing controls explicitly explain the static theme contract.
+Evidence:
+- Core implementation bfaae28a: QXFRAME CI 36975336235 SUCCESS; strict Schema Acceptance 36975336207 SUCCESS; local build + full npm verify PASS.
+- Docs implementation 96f2046d: Schema Acceptance 36976428598 / job 110741152413 SUCCESS, Chromium 154.
+- 25/25 geometry, ancestor public override, scoped Theme, nested private-reset probes PASS.
+- 7,484 static core color comparisons PASS; 18,144 docs color-role comparisons and 2,160 actual Button variant/state cases against immutable pre-staticization CSS PASS, zero differences.
+- Current integration evidence is GitHub PR #245 and its exact-head workflows. Query GitHub; recorded successful runs are immutable evidence, not a claim about a later HEAD.
+Frozen decisions: preserve 46 Size Tree nodes, protected radius/width geometry, zero Grid/fr/viewport consumers, ordered 53 component/shared files, exactly 9 Runtime Controllers and current correct interactions. Do not resurrect runtime color synthesis or superseded PR #242/#243.
+Next exact step: query PR #245. If open, require both exact-head QXFRAME CI and strict CSS Schema Acceptance green, then merge the authorized PR. If merged, verify the main release and Pages deployment; no implementation rerun is needed unless those checks expose a regression. Full Schema freeze / broader independent architecture-security-manual visual signoff is not implied by this focused fix.
 
 ## Current authority snapshot — after Phase A
 
@@ -61,6 +66,24 @@ No known controller-migration implementation blocker remains in the maintained 4
 
 ## DONE
 
+### ASTRA-HIGH-FINAL-ACCEPTANCE — CSS Schema acceptance
+Status: HISTORICAL_BASELINE / FINDINGS_REMEDIATED_BY_CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
+Baseline: main `72663d3530e16b582b8891491fa8f7e8b01ccda9`; QXFRAME CI #1232 / run `36969105888` SUCCESS.
+Progress: this CSS acceptance evidence pass is 100%; verdict NOT_ACCEPTED. Full Schema completion must not be inferred from zero raw-size candidates. Four remediation groups remain.
+Confirmed findings:
+- The repository v1.6 guide was truncated at §12 (999 lines); the attached complete guide contains §§1–46. Restore the complete authoritative guide before acceptance.
+- Five public `theme-control-height-xs/sm/md/lg/xl` roles are absent; the private control recipes still bind directly to Preset Size Tree nodes.
+- Component and Theme source still contain runtime `color-mix()`; inspect against full guide §§15.2/39 Phase I.
+- Chromium confirms Card skeleton title ancestor public override is masked: expected 24px, actual 16px.
+- Chromium confirms scoped Theme aliases fail: Card body padding expected 32px/actual 12px; Avatar expected 56px/actual 36px.
+- Control Theme height override expected 52px/actual 32px. Five positive controls pass.
+- Runtime color-mix live count is 205 (Theme 138, Component 67); decisions/staticization are not complete.
+Evidence: PR #245; CSS Schema Acceptance #3 / run 36970814333 correctly FAILS, detector and artifact upload succeed; artifact 11211931251. See CSS_SCHEMA_FINAL_ACCEPTANCE_2026-10-02.md and tools/manifests/css-schema-acceptance-2026-10-02.json.
+The full guide restoration is implemented on this PR; not yet merged.
+
+The findings above describe the original baseline only. See the remediation evidence for current behavior.
+
+
 ### CSS-SCSS-MODULE-001 — Component SCSS physical modularization closeout
 Status: DONE_MERGED_VERIFIED
 Task progress: 100%
@@ -75,8 +98,9 @@ Outcome:
 - This was a physical source-organization change only; selector/declaration order and cascade semantics remain verifier-locked.
 - PR #242 / #243 are superseded parallel attempts and are not valid continuation points.
 
-### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 closeout
-Status: DONE
+### CSS-TOKEN-SCHEMA-001 — Size Tree / forbidden-unit implementation closeout
+Status: IMPLEMENTATION_SUBSET_DONE / FULL_SCHEMA_NOT_ACCEPTED
+The earlier DONE label overstated full v1.6 coverage. Size Tree/Grid/viewport closeout evidence below remains valid; Theme/Component/Color/override requirements are reopened only by the newly confirmed final-acceptance findings.
 Evidence:
 - PR #239 merged as `96c09f7861706e44fe5be709b6363821597fdacf`; exact implementation head passed QXFRAME CI #1219 / run 36959249192.
 - Main QXFRAME CI #1221 / run 36960062587 passed after merge.

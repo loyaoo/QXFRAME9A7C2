@@ -1,9 +1,10 @@
 import fs from 'node:fs';
+import { readEffectiveControlRecipes } from './css-control-recipe-source.mjs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=fs.readFileSync(path.join(root,'src/styles/theme/_family.scss'),'utf8');
+const css=readEffectiveControlRecipes(root);
 const m=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-control-recipe-even.json'),'utf8'));
 for(const item of m.mappings){
   assert.equal(css.includes(item.from),false,'Retired odd control literal remains: '+item.from);
@@ -12,7 +13,7 @@ for(const item of m.mappings){
 }
 const heightNodes={xs:12,sm:14,md:16,lg:18,xl:20};
 for(const [size,node] of Object.entries(heightNodes)){
-  const marker=size==='md'?':root,.is-md':'.is-'+size;
+  const marker='.is-'+size;
   const start=css.indexOf(marker);
   assert.ok(start>=0,'Missing control size block: '+size);
   const slice=css.slice(start,start+900);

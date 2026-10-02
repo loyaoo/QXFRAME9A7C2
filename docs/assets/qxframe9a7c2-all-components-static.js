@@ -32,11 +32,11 @@
     var toggle=q('[data-sg-theme-toggle]');
     if(toggle){toggle.dataset.mode=effective;toggle.title=effective==='dark'?'切换到 Light':'切换到 Dark';toggle.setAttribute('aria-label',toggle.title);}
     var primaryValue=q('[data-sg-theme-primary-value]'); if(primaryValue) primaryValue.textContent=state.primarySeed;
-    var color=q('[data-sg-theme-primary-color]'); if(color && document.activeElement!==color) color.value=state.primarySeed;
-    var text=q('[data-sg-theme-primary-text]'); if(text && document.activeElement!==text) text.value=state.primarySeed;
+    var color=q('[data-sg-theme-primary-color]'); if(color){color.disabled=true;color.title='选择内置静态预设；自定义主题通过完整 Theme 颜色值覆盖。';if(document.activeElement!==color)color.value=state.primarySeed;}
+    var text=q('[data-sg-theme-primary-text]'); if(text){text.readOnly=true;text.title='内置静态预设的基色';if(document.activeElement!==text)text.value=state.primarySeed;}
     qa('[data-sg-theme-preset]').forEach(function(button){var entry=theme.presets.find(function(x){return x.key===button.dataset.sgThemePreset;});button.classList.toggle('is-active',!!entry&&entry.seed.toLowerCase()===state.primarySeed.toLowerCase());});
     var base=q('[data-sg-theme-base]'); if(base) base.value=state.base;
-    var mix=q('[data-sg-theme-mix]'); if(mix){mix.value=state.mixRatio;mix.disabled=state.base!=='mixed';}
+    var mix=q('[data-sg-theme-mix]'); if(mix){mix.value=state.mixRatio;mix.disabled=true;mix.title='内置 MixedGray 保留 r2 静态色阶；自定义混色通过完整 Theme 颜色值覆盖。';}
     var mixOutput=q('[data-sg-theme-mix-output]'); if(mixOutput) mixOutput.value=mixOutput.textContent=state.mixRatio+'%';
     var mixValue=q('[data-sg-theme-mix-value]'); if(mixValue) mixValue.textContent=state.mixRatio+'%'+(state.mixRatio===100?' · r2':'');
     var font=q('[data-sg-theme-font]'); if(font) font.value=state.font;
@@ -66,8 +66,9 @@
     if(selectedBase.palette){
       for(var step=1;step<=13;step+=1) lines.push('  --qxframe9a7c2-theme-neutral-'+step+': rgb(var(--qxframe9a7c2-color-'+selectedBase.palette+'-'+step+'));');
     } else {
-      lines.push('  /* Neutral tones are synthesized by the framework from Grey + resolved Primary using the r2 MIX curve × the ratio above. */');
+      lines.push('  /* MixedGray uses the sampled static r2 palette below. */');
     }
+    var colors=theme.getColorOverrides();Object.keys(colors).forEach(function(key){lines.push('  '+key+': '+colors[key]+';');});
     lines.push('}');
     return lines.join('\n');
   }

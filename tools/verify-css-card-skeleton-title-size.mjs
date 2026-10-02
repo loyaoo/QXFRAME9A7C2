@@ -11,10 +11,10 @@ const plan=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-card-s
 
 assert.equal(Math.abs(plan.targetPx-plan.previousPx),1);
 assert.match(theme,/--qxframe9a7c2-theme-card-skeleton-title-height:\s*var\(--qxframe9a7c2-size-8\)/);
-assert.match(css,/--qxframe9a7c2-card-skeleton-title-height:\s*var\(--qxframe9a7c2-theme-card-skeleton-title-height\)/);
+assert.match(css,/--_qxframe9a7c2-card-skeleton-title-height:\s*var\(--qxframe9a7c2-card-skeleton-title-height,var\(--qxframe9a7c2-theme-card-skeleton-title-height\)\)/);
 const line=css.split(/\r?\n/).find(x=>x.includes('.qxframe9a7c2-card-skeleton-line.is-title{'));
 assert.ok(line,'Card skeleton title rule missing.');
-assert.match(line,/height:var\(--qxframe9a7c2-card-skeleton-title-height\)/);
+assert.match(line,/height:var\(--_qxframe9a7c2-card-skeleton-title-height\)/);
 assert.doesNotMatch(line,/\.9375rem|15px/,'15px skeleton title literal must be retired.');
 assert.match(line,/width:42%/,'Existing skeleton title width must remain unchanged.');
 console.log(JSON.stringify({ok:true,previousPx:plan.previousPx,targetPx:plan.targetPx,deltaPx:plan.deltaPx}));

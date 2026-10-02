@@ -1,0 +1,1111 @@
+{
+  "schemaVersion": 1,
+  "scope": "CSS Schema v1.6 acceptance only; not an independent model-specific architecture/security audit",
+  "acceptance": "NOT_ACCEPTED",
+  "blockers": [
+    "SCHEMA-ACCEPT-002: public control-height theme roles absent/unconsumed",
+    "SCHEMA-ACCEPT-003: runtime color-mix cleanup incomplete; per-consumer decisions required",
+    "SCHEMA-ACCEPT-004/005: browser theme/public override probes failed"
+  ],
+  "structural": {
+    "completeGuide": true,
+    "themeControlHeight": [
+      {
+        "size": "xs",
+        "token": "--qxframe9a7c2-theme-control-height-xs",
+        "defined": false,
+        "consumed": false
+      },
+      {
+        "size": "sm",
+        "token": "--qxframe9a7c2-theme-control-height-sm",
+        "defined": false,
+        "consumed": false
+      },
+      {
+        "size": "md",
+        "token": "--qxframe9a7c2-theme-control-height-md",
+        "defined": false,
+        "consumed": false
+      },
+      {
+        "size": "lg",
+        "token": "--qxframe9a7c2-theme-control-height-lg",
+        "defined": false,
+        "consumed": false
+      },
+      {
+        "size": "xl",
+        "token": "--qxframe9a7c2-theme-control-height-xl",
+        "defined": false,
+        "consumed": false
+      }
+    ],
+    "runtimeColorMix": [
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 613
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 618
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 619
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 620
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 621
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 622
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 623
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 626
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 627
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 671
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 676
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 677
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 678
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 679
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 680
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 681
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 684
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 685
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 803
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 804
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 805
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 806
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 807
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 808
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 809
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 810
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 811
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 812
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 813
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 814
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 815
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 826
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 827
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 828
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 829
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 830
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 831
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 832
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 833
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 834
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 835
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 836
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 837
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 838
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 842
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 843
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 844
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 845
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 846
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 847
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 848
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 849
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 850
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 851
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 852
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 853
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 854
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 954
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 955
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 956
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 957
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 958
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 959
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 960
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 961
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 962
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 963
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 964
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 965
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 966
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 967
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 968
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 969
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1002
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1006
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1007
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1008
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1048
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1049
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1050
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1051
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1052
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1053
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1054
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1055
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1056
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1057
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1058
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1059
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1060
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1061
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1062
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1063
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1064
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1065
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1066
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1067
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1100
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1104
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1105
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1106
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1148
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1149
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1156
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1157
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1158
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1159
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1160
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1161
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1171
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1172
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1173
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1174
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1175
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1176
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1184
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1185
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1186
+      },
+      {
+        "file": "src/styles/theme/_default.scss",
+        "line": 1188
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 290
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 290
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 290
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 290
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 290
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 290
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 290
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 293
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 293
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 293
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 294
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 294
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 294
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 295
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 295
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 295
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 296
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 296
+      },
+      {
+        "file": "src/styles/theme/_family.scss",
+        "line": 296
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 30
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 92
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 93
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 98
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 99
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 100
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 128
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 129
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 135
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 136
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 141
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 143
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 144
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 146
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 147
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 149
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 150
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 153
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 154
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 162
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 165
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 168
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 171
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 173
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 180
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 183
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 186
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 191
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 199
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 202
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 205
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 210
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 231
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 236
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 237
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 238
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 241
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 242
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 243
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 246
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 247
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 248
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 251
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 252
+      },
+      {
+        "file": "src/styles/components/_button.scss",
+        "line": 253
+      },
+      {
+        "file": "src/styles/components/_badge.scss",
+        "line": 77
+      },
+      {
+        "file": "src/styles/components/_card.scss",
+        "line": 8
+      },
+      {
+        "file": "src/styles/components/_card.scss",
+        "line": 8
+      },
+      {
+        "file": "src/styles/components/_switch.scss",
+        "line": 5
+      },
+      {
+        "file": "src/styles/components/_native-input.scss",
+        "line": 56
+      },
+      {
+        "file": "src/styles/components/_form-native.scss",
+        "line": 55
+      },
+      {
+        "file": "src/styles/components/_form-native.scss",
+        "line": 58
+      },
+      {
+        "file": "src/styles/components/_table.scss",
+        "line": 4
+      },
+      {
+        "file": "src/styles/components/_table.scss",
+        "line": 4
+      },
+      {
+        "file": "src/styles/components/_table.scss",
+        "line": 84
+      },
+      {
+        "file": "src/styles/components/_table.scss",
+        "line": 85
+      },
+      {
+        "file": "src/styles/components/_upload.scss",
+        "line": 34
+      },
+      {
+        "file": "src/styles/components/_slider.scss",
+        "line": 11
+      },
+      {
+        "file": "src/styles/components/_carousel.scss",
+        "line": 7
+      },
+      {
+        "file": "src/styles/components/_carousel.scss",
+        "line": 8
+      },
+      {
+        "file": "src/styles/components/_carousel.scss",
+        "line": 9
+      },
+      {
+        "file": "src/styles/components/_carousel.scss",
+        "line": 57
+      },
+      {
+        "file": "src/styles/components/_carousel.scss",
+        "line": 58
+      },
+      {
+        "file": "src/styles/components/_image.scss",
+        "line": 2
+      },
+      {
+        "file": "src/styles/components/_image.scss",
+        "line": 41
+      },
+      {
+        "file": "src/styles/components/_image.scss",
+        "line": 45
+      },
+      {
+        "file": "src/styles/components/_image.scss",
+        "line": 51
+      }
+    ],
+    "mixByLayer": {
+      "theme": 138,
+      "component": 67
+    },
+    "componentRootPublicDefaults": [
+      {
+        "file": "src/styles/components/_icon.scss",
+        "line": 5431,
+        "selector": ".qxframe9a7c2-icon",
+        "token": "--qxframe9a7c2-icon-size",
+        "value": "1em"
+      },
+      {
+        "file": "src/styles/components/_icon.scss",
+        "line": 5431,
+        "selector": ".qxframe9a7c2-icon",
+        "token": "--qxframe9a7c2-icon-rotate",
+        "value": "0deg"
+      },
+      {
+        "file": "src/styles/components/_card.scss",
+        "line": 10,
+        "selector": ".qxframe9a7c2-card",
+        "token": "--qxframe9a7c2-card-skeleton-title-height",
+        "value": "var(--qxframe9a7c2-theme-card-skeleton-title-height)"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-duration-1",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-duration-2",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-duration-3",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-duration-4",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-duration-5",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-notice-enter-duration",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-notice-leave-duration",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_motion.scss",
+        "line": 9,
+        "selector": ".qxframe9a7c2-motion-disabled",
+        "token": "--qxframe9a7c2-motion-notice-move-duration",
+        "value": "0ms"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 1,
+        "selector": ".qxframe9a7c2-notice-stack",
+        "token": "--qxframe9a7c2-notice-inset",
+        "value": "var(--qxframe9a7c2-theme-notice-inset)"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 1,
+        "selector": ".qxframe9a7c2-notice-stack",
+        "token": "--qxframe9a7c2-notice-shadow-gutter",
+        "value": "var(--qxframe9a7c2-theme-notice-shadow-gutter)"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 1,
+        "selector": ".qxframe9a7c2-notice-stack",
+        "token": "--qxframe9a7c2-notice-gap",
+        "value": "var(--qxframe9a7c2-theme-space-4)"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 1,
+        "selector": ".qxframe9a7c2-notice-stack",
+        "token": "--qxframe9a7c2-notice-rail-width",
+        "value": "0px"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 25,
+        "selector": ".qxframe9a7c2-notification-stack",
+        "token": "--qxframe9a7c2-notification-edge-gutter",
+        "value": "var(--qxframe9a7c2-theme-notification-edge-gutter)"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 82,
+        "selector": ".qxframe9a7c2-notice-slot",
+        "token": "--qxframe9a7c2-notice-enter-x",
+        "value": "0px"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 82,
+        "selector": ".qxframe9a7c2-notice-slot",
+        "token": "--qxframe9a7c2-notice-enter-y",
+        "value": "calc(var(--qxframe9a7c2-theme-notice-enter-offset) * -1)"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 82,
+        "selector": ".qxframe9a7c2-notice-slot",
+        "token": "--qxframe9a7c2-notice-leave-x",
+        "value": "0px"
+      },
+      {
+        "file": "src/styles/components/_notice.scss",
+        "line": 82,
+        "selector": ".qxframe9a7c2-notice-slot",
+        "token": "--qxframe9a7c2-notice-leave-y",
+        "value": "calc(var(--qxframe9a7c2-theme-notice-leave-offset) * -1)"
+      },
+      {
+        "file": "src/styles/components/_composition.scss",
+        "line": 3,
+        "selector": ".qxframe9a7c2-form-input-group",
+        "token": "--qxframe9a7c2-form-input-group-radius",
+        "value": "var(--_qxframe9a7c2-control-radius)"
+      },
+      {
+        "file": "src/styles/components/_composition.scss",
+        "line": 79,
+        "selector": ".qxframe9a7c2-button-group",
+        "token": "--qxframe9a7c2-button-group-radius",
+        "value": "var(--_qxframe9a7c2-action-radius)"
+      }
+    ],
+    "loadedComponentModules": 52
+  },
+  "browser": {
+    "browserVersion": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "probes": [
+      {
+        "name": "default-control-height-md",
+        "actual": 32,
+        "expected": 32,
+        "passed": true
+      },
+      {
+        "name": "default-card-body-padding",
+        "actual": 12,
+        "expected": 12,
+        "passed": true
+      },
+      {
+        "name": "external-theme-control-height-md",
+        "actual": 32,
+        "expected": 52,
+        "passed": false
+      },
+      {
+        "name": "ancestor-public-card-skeleton-title-height",
+        "actual": 16,
+        "expected": 24,
+        "passed": false
+      },
+      {
+        "name": "scoped-theme-card-padding",
+        "actual": 12,
+        "expected": 32,
+        "passed": false
+      },
+      {
+        "name": "scoped-theme-avatar-size-md",
+        "actual": 36,
+        "expected": 56,
+        "passed": false
+      },
+      {
+        "name": "ancestor-public-card-padding-positive-control",
+        "actual": 20,
+        "expected": 20,
+        "passed": true
+      },
+      {
+        "name": "root-font-size-scales-control",
+        "actual": 40,
+        "expected": 40,
+        "passed": true
+      },
+      {
+        "name": "scoped-popup-light-dark-positive-control",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      }
+    ],
+    "failed": 4
+  },
+  "testedHead": "0dcfc4e369c0f8511000f5c2a45a72ed8bf782ae",
+  "baselineMain": "72663d3530e16b582b8891491fa8f7e8b01ccda9",
+  "githubEvidence": {
+    "runId": 36970814333,
+    "conclusion": "failure",
+    "artifactId": 11211931251,
+    "mergeCheckout": "aa24962cf8bc5e39a0f0df3e09f227a2f27a7ca8"
+  },
+  "guideRestoredInAuditPR": true,
+  "evidenceState": "HISTORICAL_PRE_REMEDIATION_BASELINE",
+  "remediation": {
+    "task": "CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001",
+    "implementationCommit": "96f2046dae96d5d1f6a1b54184768764ed8c67f2",
+    "schemaRun": 36976428598,
+    "schemaJob": 110741152413,
+    "result": "CONFIRMED_BLOCKERS_RESOLVED",
+    "geometryProbes": 25,
+    "coreColorComparisons": 7484,
+    "docsColorComparisons": 18144,
+    "buttonStateCases": 2160,
+    "failures": 0,
+    "report": "CSS_SCHEMA_FINAL_ACCEPTANCE_2026-10-02.md"
+  }
+}
