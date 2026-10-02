@@ -864,7 +864,7 @@
       },
       "upperNode": null,
       "selector": "@media (max-width:38.75rem)",
-      "text": "@media (max-width:38.75rem){.qxframe9a7c2-descriptions[data-responsive=\"true\"] .qxframe9a7c2-descriptions-table{min-width:36rem}.qxframe9a7c2-descriptions-grid,.qxframe9a7c2-descriptions[data-responsive=\"true\"]{--_qxframe9a7c2-descriptions-columns:1!important}.qxframe9a7c2-descriptions-item.is-span-2,.qxframe9a7c2-descriptions-item.is-span-3{--_qxframe9a7c2-descriptions-span:1}.qxframe9a7c2-descriptions.is-bordered .qxframe9a7c2-descriptions-item{border-inline-end:0}}",
+      "text": "@media (max-width:38.75rem){.qxframe9a7c2-descriptions[data-responsive=\"true\"] .qxframe9a7c2-descriptions-table{min-width:var(--qxframe9a7c2-theme-descriptions-table-min-width)}.qxframe9a7c2-descriptions-grid,.qxframe9a7c2-descriptions[data-responsive=\"true\"]{--_qxframe9a7c2-descriptions-columns:1!important}.qxframe9a7c2-descriptions-item.is-span-2,.qxframe9a7c2-descriptions-item.is-span-3{--_qxframe9a7c2-descriptions-span:1}.qxframe9a7c2-descriptions.is-bordered .qxframe9a7c2-descriptions-item{border-inline-end:0}",
       "finalTarget": null,
       "approved": false
     },
