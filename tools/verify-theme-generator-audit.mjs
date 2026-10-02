@@ -27,6 +27,13 @@ assert.equal(bad.reports.readability.passes,false);
 assert.ok(bad.reports.readability.warnings.some(item=>item.id==='light-text-secondary'));
 assert.ok(bad.css.includes('--qxframe9a7c2-theme-light-text-secondary: rgb(255, 255, 255);'),'Warnings must not silently rewrite explicit user overrides.');
 
+const indirect=generateTheme(manifest,recipes,{
+  name:'readability-unverifiable',
+  advanced:{overrides:{'--qxframe9a7c2-theme-light-text-secondary':'var(--qxframe9a7c2-theme-light-text)'}}
+});
+assert.ok(indirect.css.includes('--qxframe9a7c2-theme-light-text-secondary: var(--qxframe9a7c2-theme-light-text);'));
+assert.ok(indirect.reports.readability.warnings.some(item=>item.id==='light-text-secondary'&&item.code==='contrast-unverifiable'));
+
 const direct=auditReadability(base.tokens);
 assert.deepEqual(direct,base.reports.readability);
 
@@ -35,5 +42,6 @@ console.log(JSON.stringify({
   checks:base.reports.readability.checks.length,
   defaultPasses:true,
   explicitOverrideWarning:true,
-  nonDestructive:true
+  nonDestructive:true,
+  indirectExpressionNonFatal:true
 }));
