@@ -41,6 +41,7 @@ assert.equal(primary.tokens.light[DEFAULTS.paletteGrey],base.tokens.light[DEFAUL
 assert.notEqual(primary.tokens.light[DEFAULTS.primary],base.tokens.light[DEFAULTS.primary]);
 assert.equal(primary.tokens.light[DEFAULTS.chart],base.tokens.light[DEFAULTS.chart],'primary must not rewrite chart palette');
 assert.notEqual(primary.tokens.light['--qxframe9a7c2-theme-color-token-subtle-selected-1'],base.tokens.light['--qxframe9a7c2-theme-color-token-subtle-selected-1']);
+assert.equal(primary.tokens.light['--qxframe9a7c2-theme-color-accent-1-primary'],base.tokens.light['--qxframe9a7c2-theme-color-accent-1-primary'],'unbound frozen recipe slots must retain manifest defaults');
 
 const customBlue=generateTheme(manifest,recipes,{name:'custom-blue',palette:{blue:'#0ea5e9'}});
 assert.notEqual(customBlue.tokens.light['--qxframe9a7c2-palette-blue-5'],base.tokens.light['--qxframe9a7c2-palette-blue-5']);
