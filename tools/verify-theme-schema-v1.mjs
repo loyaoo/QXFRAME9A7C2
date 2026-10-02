@@ -11,7 +11,17 @@ assert.deepEqual(manifest.tokens.map(t=>t.name),publicInterface(),'Public visual
 assert.equal(manifest.interfaceHash,crypto.createHash('sha256').update(publicInterface().join('\n')).digest('hex'));
 const rebuilt=buildSnapshot();
 const candidateRecipes=colorRecipes();
-if(JSON.stringify(manifest.tokens)!==JSON.stringify(rebuilt.tokens)||JSON.stringify(JSON.parse(fs.readFileSync('docs/generated/theme-color-recipes-v1.json','utf8')))!==JSON.stringify(candidateRecipes))console.log('QX_SCHEMA_REVIEW_CANDIDATE='+JSON.stringify({manifest:rebuilt,recipes:candidateRecipes}));
+const frozenRecipeText=fs.readFileSync('docs/generated/theme-color-recipes-v1.json','utf8');
+const schemaDrift=JSON.stringify(manifest.tokens)!==JSON.stringify(rebuilt.tokens)||JSON.stringify(JSON.parse(frozenRecipeText))!==JSON.stringify(candidateRecipes);
+if(schemaDrift){
+  const candidate={manifest:rebuilt,recipes:candidateRecipes};
+  fs.mkdirSync('artifacts',{recursive:true});
+  fs.writeFileSync('artifacts/theme-schema-v1-candidate-manifest.json',JSON.stringify(rebuilt,null,2)+'\n');
+  fs.writeFileSync('artifacts/theme-schema-v1-candidate-recipes.json',JSON.stringify(candidateRecipes,null,2)+'\n');
+  const encoded=Buffer.from(JSON.stringify(candidate)).toString('base64');
+  const chunkSize=12000,total=Math.ceil(encoded.length/chunkSize);
+  for(let i=0;i<total;i++)console.log(`QX_SCHEMA_REVIEW_CANDIDATE_CHUNK=${i+1}/${total}:${encoded.slice(i*chunkSize,(i+1)*chunkSize)}`);
+}
 assert.deepEqual(manifest.optionalComponentOverrides,rebuilt.optionalComponentOverrides,'Optional override contract changed outside schema review.');
 assert.deepEqual(manifest.tokens,rebuilt.tokens,'Frozen defaults changed; the generator cannot infer defaults from current CSS.');
 for(const token of manifest.tokens){assert.ok(token.name.startsWith('--qxframe9a7c2-'));for(const mode of ['light','dark'])assert.ok(token.defaults[mode]&&!/--_qxframe|color-mix\(|[{};]/.test(token.defaults[mode]),token.name+' must have a complete public-only static default.');}
