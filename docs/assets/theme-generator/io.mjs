@@ -17,10 +17,10 @@ function safeName(value){
 }
 function legacyRadius(value){
   const px=Number(value);
-  if(!Number.isFinite(px))return 'medium';
+  if(!Number.isFinite(px))return 'default';
   if(px<=0)return 'none';
-  if(px<=3)return 'small';
-  if(px<=6)return 'medium';
+  if(px<=8)return 'small';
+  if(px<=12)return 'medium';
   return 'large';
 }
 function migrateLegacyConfig(value){
@@ -33,13 +33,12 @@ function migrateLegacyConfig(value){
   return normalizeConfig({
     schema:1,
     name:safeName(value.name||'migrated-theme'),
-    style:'balanced',
+    style:'nova',
     baseColor:LEGACY_BASE_MAP[String(value.base||'grey').toLowerCase()]||'neutral',
     roles:{primary:seed},
-    chart:{preset:'balanced'},
+    chart:{color:'primary'},
     typography:{body:LEGACY_FONT_MAP[String(value.font||'system').toLowerCase()]||'system-ui',heading:'inherit',mono:'ui-monospace',baseSize:14},
     radius:legacyRadius(value.radius),
-    density:'default',
     components:{menu:{color:'default',appearance:'solid',accent:'subtle'}}
   });
 }
