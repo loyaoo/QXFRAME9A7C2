@@ -51,7 +51,8 @@ function roleCheck(tokens,role){
     const checked=contrastCheck('on-primary',foreground,background,MIN_TEXT_CONTRAST);
     return Object.freeze({...checked,role,recommendedForeground});
   }
-  const foreground=tokens.light['--qxframe9a7c2-semantic-on-status']??recommendedForeground;
+  const foreground=tokens.light['--qxframe9a7c2-semantic-on-status']
+    ??'rgb('+token(tokens,'light','--qxframe9a7c2-palette-white')+')';
   const checked=contrastCheck('on-'+role,foreground,background,MIN_TEXT_CONTRAST);
   return Object.freeze({...checked,role,recommendedForeground});
 }
