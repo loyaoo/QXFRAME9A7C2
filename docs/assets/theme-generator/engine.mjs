@@ -329,7 +329,99 @@ function orderedNames(tokenMaps, schema) {
 
 function normalizeSerializedColor(value) {
   const text=String(value);
-  const match=/^color\(srgb\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+))\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+))\s+([+-]?(?:\d+(?:\.\d+)?|\.\d+))(?:\s*\/\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)%?))?\)$/i.exec(text.trim());
+  const number='[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)(?:e[+-]?\\d+)?';
+  const match=new RegExp('^color\\\\(srgb\\\\s+('+number+')\\\\s+('+number+')\\\\s+('+number+')(?:\\\\s*\\\\/\\\\s*('+number+'%?))?\\\\)
+  if(!match)return text;
+  const clamp=value=>Math.min(1,Math.max(0,value));
+  const channels=match.slice(1,4).map(value=>Math.round(clamp(Number(value))*255));
+  const rawAlpha=match[4];
+  const alpha=rawAlpha==null?1:clamp(rawAlpha.endsWith('%')?Number(rawAlpha.slice(0,-1))/100:Number(rawAlpha));
+  return alpha>=0.999999?'rgb('+channels.join(', ')+')':'rgba('+channels.join(', ')+', '+String(Number(alpha.toFixed(4)))+')';
+}
+function cssBlock(selectors, mode, names, tokenMaps) {
+  const lines = [selectors + ' {'];
+  for (const name of names) {
+    if (!Object.prototype.hasOwnProperty.call(tokenMaps[mode], name)) continue;
+    lines.push('  ' + name + ': ' + normalizeSerializedColor(tokenMaps[mode][name]) + ';');
+  }
+  lines.push('}');
+  return lines.join('\n');
+}
+
+function serializeCss(tokenMaps, schema, config, options = {}) {
+  validateTokenMaps(tokenMaps, schema);
+  const normalized = normalizeConfig(config);
+  const names = orderedNames(tokenMaps, schema);
+  const header = [
+    '/*',
+    ' * QXFRAME9A7C2 Theme',
+    ' * Theme Schema: ' + SCHEMA_VERSION,
+    ' * Generator Version: ' + GENERATOR_VERSION,
+    ' * Theme Name: ' + normalized.name,
+    ' * Public Interface: ' + schema.interfaceHash,
+    ' * Complete Theme: yes',
+    ' */'
+  ].join('\n');
+  const light = cssBlock(':root,\n[data-qxframe9a7c2-theme="light"]', 'light', names, tokenMaps);
+  const dark = cssBlock('[data-qxframe9a7c2-theme="dark"]', 'dark', names, tokenMaps);
+  const css = header + '\n' + light + '\n\n' + dark + '\n';
+  if (/--_qxframe9a7c2-|!important|\.qxframe9a7c2-|\bhtml:root\b/.test(css)) {
+    throw new TypeError('Serialized Theme CSS violated the public low-specificity output contract.');
+  }
+  return css;
+}
+
+function generateFoundationTheme(manifest, input = {}) {
+  const schema = readSchema(manifest);
+  const config = normalizeConfig(input);
+  const maps = createTokenMaps(schema);
+  applyExplicitOverrides(maps, schema, config);
+  validateTokenMaps(maps, schema);
+  return deepFreeze({
+    schema,
+    config,
+    tokens: {
+      light: deepFreeze({ ...maps.light }),
+      dark: deepFreeze({ ...maps.dark })
+    },
+    css: serializeCss(maps, schema, config)
+  });
+}
+
+function configOptions() {
+  return deepFreeze({
+    styles: STYLE_IDS.slice(),
+    baseColors: BASE_COLOR_IDS.slice(),
+    chartColors: CHART_COLOR_IDS.slice(),
+    bodyFonts: BODY_FONT_IDS.slice(),
+    headingFonts: HEADING_FONT_IDS.slice(),
+    monoFonts: MONO_FONT_IDS.slice(),
+    radii: RADIUS_IDS.slice(),
+    densities: DENSITY_IDS.slice(),
+    menuColors: MENU_COLOR_IDS.slice(),
+    menuAppearances: MENU_APPEARANCE_IDS.slice(),
+    menuAccents: MENU_ACCENT_IDS.slice(),
+    paletteKeys: PALETTE_KEYS.slice()
+  });
+}
+
+export {
+  SCHEMA_VERSION,
+  GENERATOR_VERSION,
+  DEFAULT_CONFIG,
+  STYLE_PRESETS,
+  configOptions,
+  normalizeConfig,
+  parseConfig,
+  serializeConfig,
+  readSchema,
+  createTokenMaps,
+  applyExplicitOverrides,
+  validateTokenMaps,
+  serializeCss,
+  generateFoundationTheme
+};
+,'i').exec(text.trim());
   if(!match)return text;
   const clamp=value=>Math.min(1,Math.max(0,value));
   const channels=match.slice(1,4).map(value=>Math.round(clamp(Number(value))*255));
