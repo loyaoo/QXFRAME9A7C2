@@ -1100,12 +1100,17 @@
     "implementationCommit": "96f2046dae96d5d1f6a1b54184768764ed8c67f2",
     "schemaRun": 36976428598,
     "schemaJob": 110741152413,
-    "result": "CONFIRMED_BLOCKERS_RESOLVED",
+    "result": "DONE_MERGED_CI_VERIFIED",
     "geometryProbes": 25,
     "coreColorComparisons": 7484,
     "docsColorComparisons": 18144,
     "buttonStateCases": 2160,
     "failures": 0,
-    "report": "CSS_SCHEMA_FINAL_ACCEPTANCE_2026-10-02.md"
+    "report": "CSS_SCHEMA_FINAL_ACCEPTANCE_2026-10-02.md",
+    "finalImplementationCommit": "9a87bdd4a057084c4b0f5cca6b9427ac25dd7ec7",
+    "finalReleaseRun": 36976881748,
+    "finalSchemaRun": 36976881857,
+    "mergeCommit": "0ded4a46d64b5fda46fc101007e0df9bd8aade92",
+    "mergedAt": "2026-10-02T07:13:53Z"
   }
 }

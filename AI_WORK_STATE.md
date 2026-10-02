@@ -15,29 +15,13 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: CSS Schema v1.6 confirmed blocker remediation implemented; strict Chromium acceptance passes. Broader manual/freeze gates remain separately scoped. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001` (implementation in progress)
+- Current Task: no pending implementation task; CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001 is merged and its exact implementation head passed both required CI workflows. Resolve current main release / Pages facts from GitHub.
 
 ## CURRENT
 
-### CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
-Status: IMPLEMENTATION_DONE_BROWSER_VERIFIED / INTEGRATION_CLOSEOUT
-Progress: implementation 100%; integration awaits the final exact-head release check and merge. Base controller migration, Size Tree/Grid/viewport and SCSS modularization remain complete.
-Scope: SCHEMA-ACCEPT-001/002/003/004/005; preserve default visual behavior, ancestor public overrides and scoped Theme inheritance. Strict acceptance and existing release gates remain enabled.
-Implemented:
-- Restored the complete 2,750-line v1.6 guide (§§1–46).
-- Added 35 Theme control geometry roles and routed all five size recipes through them.
-- Replaced 66 early Component aliases with optional public override slots plus consumer fallbacks; reset private finals at the correct component/theme boundary.
-- Removed all live canonical color-mix formulas. Preserved static Light/Dark/color-axis defaults and MixedGray r2; custom themes supply complete static roles without a runtime Theme/Token engine or a production generator.
-- Classified the 12 retained public root declarations as disabled Motion timing / Notice instance projections. Unclassified root defaults fail strict acceptance.
-- Preserved Nova plus five other docs presets across grey/mixed/gray bases with static palette data; unsupported seed-only/continuous mixing controls explicitly explain the static theme contract.
-Evidence:
-- Core implementation bfaae28a: QXFRAME CI 36975336235 SUCCESS; strict Schema Acceptance 36975336207 SUCCESS; local build + full npm verify PASS.
-- Docs implementation 96f2046d: Schema Acceptance 36976428598 / job 110741152413 SUCCESS, Chromium 154.
-- 25/25 geometry, ancestor public override, scoped Theme, nested private-reset probes PASS.
-- 7,484 static core color comparisons PASS; 18,144 docs color-role comparisons and 2,160 actual Button variant/state cases against immutable pre-staticization CSS PASS, zero differences.
-- Current integration evidence is GitHub PR #245 and its exact-head workflows. Query GitHub; recorded successful runs are immutable evidence, not a claim about a later HEAD.
-Frozen decisions: preserve 46 Size Tree nodes, protected radius/width geometry, zero Grid/fr/viewport consumers, ordered 53 component/shared files, exactly 9 Runtime Controllers and current correct interactions. Do not resurrect runtime color synthesis or superseded PR #242/#243.
-Next exact step: query PR #245. If open, require both exact-head QXFRAME CI and strict CSS Schema Acceptance green, then merge the authorized PR. If merged, verify the main release and Pages deployment; no implementation rerun is needed unless those checks expose a regression. Full Schema freeze / broader independent architecture-security-manual visual signoff is not implied by this focused fix.
+### Integration state resolution
+
+No confirmed implementation blocker remains from the CSS Schema acceptance report. PR #245 is merged; all final implementation-head gates passed. On resume, query current main release and Pages status rather than caching transient pending/success state. If they fail, inspect the failing job before reopening implementation. Otherwise the remediation task is complete; broader manual/freeze signoff remains separately scoped.
 
 ## Current authority snapshot — after Phase A
 
@@ -65,6 +49,28 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE
+
+### CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
+Status: DONE_MERGED_CI_VERIFIED
+Progress: confirmed blocker remediation task 100%; PR #245 merged after exact-head release and strict acceptance both passed. Base controller migration, Size Tree/Grid/viewport and SCSS modularization remain complete.
+Scope: SCHEMA-ACCEPT-001/002/003/004/005; preserve default visual behavior, ancestor public overrides and scoped Theme inheritance. Strict acceptance and existing release gates remain enabled.
+Implemented:
+- Restored the complete 2,750-line v1.6 guide (§§1–46).
+- Added 35 Theme control geometry roles and routed all five size recipes through them.
+- Replaced 66 early Component aliases with optional public override slots plus consumer fallbacks; reset private finals at the correct component/theme boundary.
+- Removed all live canonical color-mix formulas. Preserved static Light/Dark/color-axis defaults and MixedGray r2; custom themes supply complete static roles without a runtime Theme/Token engine or a production generator.
+- Classified the 12 retained public root declarations as disabled Motion timing / Notice instance projections. Unclassified root defaults fail strict acceptance.
+- Preserved Nova plus five other docs presets across grey/mixed/gray bases with static palette data; unsupported seed-only/continuous mixing controls explicitly explain the static theme contract.
+Evidence:
+- Core implementation bfaae28a: QXFRAME CI 36975336235 SUCCESS; strict Schema Acceptance 36975336207 SUCCESS; local build + full npm verify PASS.
+- Docs implementation 96f2046d: Schema Acceptance 36976428598 / job 110741152413 SUCCESS, Chromium 154.
+- 25/25 geometry, ancestor public override, scoped Theme, nested private-reset probes PASS.
+- 7,484 static core color comparisons PASS; 18,144 docs color-role comparisons and 2,160 actual Button variant/state cases against immutable pre-staticization CSS PASS, zero differences.
+- Final implementation head 9a87bdd4a057084c4b0f5cca6b9427ac25dd7ec7: QXFRAME CI 36976881748 SUCCESS and strict CSS Schema Acceptance 36976881857 SUCCESS. Release verification, Windows tooling, npm pack, standalone dist/docs and artifact upload all passed.
+- PR #245 merged 2026-10-02T07:13:53Z as main commit 0ded4a46d64b5fda46fc101007e0df9bd8aade92.
+Frozen decisions: preserve 46 Size Tree nodes, protected radius/width geometry, zero Grid/fr/viewport consumers, ordered 53 component/shared files, exactly 9 Runtime Controllers and current correct interactions. Do not resurrect runtime color synthesis or superseded PR #242/#243.
+Resume rule: the implementation is merged and must not be repeated. Query current main release and Pages status; act only on a new regression or separately authorized freeze/manual audit. Full Schema freeze is not implied by this focused fix.
+
 
 ### ASTRA-HIGH-FINAL-ACCEPTANCE — CSS Schema acceptance
 Status: HISTORICAL_BASELINE / FINDINGS_REMEDIATED_BY_CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001
