@@ -1,5 +1,21 @@
 # QXFRAME9A7C2 Theme Generator 独立开发手册 v1
 
+
+> ## 2026-10-03 Style Recipe v2 authority addendum
+>
+> This addendum supersedes older examples in this guide where they conflict.
+>
+> - **Style responsibility:** Style owns component geometry/treatment and normal density/spacing. The canonical Style ids are **Vega, Nova, Maia, Lyra, Mira, Luma, Sera, Rhea**, translated from the public shadcn/create Style recipes into QXFRAME public tokens. Do not invent a parallel Balanced/Soft/Precision/Compact vocabulary.
+> - **Density:** Density is no longer a first-class Theme Studio control. Legacy `density` remains readable for old Config/import compatibility only. New Studio output keeps it at `default`; Style owns ordinary density.
+> - **Radius:** expose exactly five choices: **Default / None / Small / Medium / Large**. Default follows the selected Style; explicit Radius changes the shared radius scale. Style maps different families/components to different levels (for example Card/surface and Button/action are not forced to the same radius).
+> - **Chart:** Chart Color selects one hue/source. The eight chart series are restrained monochrome steps of that hue using lightness/chroma variation. Do not expose Mixed/rainbow chart presets in the normal Studio.
+> - **Control separation:** Style = geometry/treatment; Base Color = neutral/surface family; Theme Color = primary/brand semantic color; Chart Color = chart hue; Typography = fonts; Radius = shared radius scale; Menu controls = Menu-only treatment; Advanced = explicit low-level overrides.
+> - **Style fidelity:** use shadcn/create's public `apps/v4/registry/styles/style-*.css` as the data reference for relative control height, spacing, radius, Switch, Slider, Card, Input, Select, Tabs, Popup/Dialog treatment. Translate those decisions through QXFRAME tokens; do not copy Tailwind selectors/classes into QXFRAME output.
+> - **Schema extension rule:** required Palette/Theme inputs remain 4,028 with the existing interface hash. Additive optional Component slots may be registered when an existing component rule hardcodes geometry that blocks a Style expression; fallback behavior must preserve the previous default when those optional slots are absent.
+> - **Color serialization:** production/generated Theme output uses `rgb()` / `rgba()`. `color(srgb ...)` may be parsed only as import compatibility. No live `color-mix()` is required in Core/Studio styling.
+> - **Regression matrix:** cover all 8 Styles, all 5 Radius choices, representative Base/Theme colors, Light/Dark, monochrome Chart Color, and actual Switch/Slider/Card/Button geometry in Chromium.
+>
+
 > 日期：2026-10-01  
 > 仓库：`loyaoo/QXFRAME9A7C2`  
 > 本文只负责 **Theme Generator / Theme Studio / Theme CSS 输出**。  
