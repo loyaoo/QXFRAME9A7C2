@@ -5,7 +5,6 @@ import {
   generateColorScale,
   generateNeutralScale,
   chooseOnColor,
-  contrastRatio,
   mixSrgb,
   mixOklab,
   chartPalette
