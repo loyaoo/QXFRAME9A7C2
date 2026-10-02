@@ -7,7 +7,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const css=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
 
 assert.match(css,/\.qxframe9a7c2-card-actions\{display:flex;/);
-assert.match(css,/\.qxframe9a7c2-card-action\{display:flex;min-width:0;min-height:2\.625rem;flex:1 1 0;/);
+assert.match(css,/\.qxframe9a7c2-card-action\{display:flex;min-width:0;min-height:var\(--qxframe9a7c2-theme-card-action-min-height\);flex:1 1 0;/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-card-actions\{[^}]*display:grid/);
 
 assert.match(css,/\.qxframe9a7c2-form-selectgroup-image\{display:flex;[^}]*flex-direction:column/);
