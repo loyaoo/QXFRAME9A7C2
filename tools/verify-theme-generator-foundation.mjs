@@ -18,20 +18,23 @@ const schema = readSchema(manifest);
 
 assert.equal(schema.schema, 1);
 assert.equal(schema.order.length, 4028);
-assert.equal(schema.optionalSet.size, 462);
+assert.equal(schema.optionalSet.size, 479);
 assert.equal(schema.interfaceHash, '421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c');
 
 const defaults = normalizeConfig({});
 assert.equal(defaults.schema, 1);
-assert.equal(defaults.style, 'balanced');
-assert.equal(defaults.radius, STYLE_PRESETS.balanced.defaults.radius);
-assert.equal(defaults.density, STYLE_PRESETS.balanced.defaults.density);
+assert.equal(defaults.style, 'vega');
+assert.equal(defaults.radius, 'default');
+assert.equal(defaults.density, 'default');
+assert.equal(Object.keys(STYLE_PRESETS).length,8);
 assert.deepEqual(parseConfig(serializeConfig(DEFAULT_CONFIG)), normalizeConfig(DEFAULT_CONFIG));
 
-const soft = normalizeConfig({ style: 'soft' });
-assert.equal(soft.radius, 'large');
-assert.equal(soft.density, 'comfortable');
-const explicit = normalizeConfig({ style: 'soft', radius: 'small', density: 'compact' });
+const legacySoft = normalizeConfig({ style: 'soft' });
+assert.equal(legacySoft.style, 'luma','Legacy Style ids must migrate without remaining in the Studio vocabulary.');
+assert.equal(legacySoft.radius, 'default');
+assert.equal(legacySoft.density, 'default');
+const explicit = normalizeConfig({ style: 'maia', radius: 'small', density: 'compact' });
+assert.equal(explicit.style,'maia');
 assert.equal(explicit.radius, 'small');
 assert.equal(explicit.density, 'compact');
 
