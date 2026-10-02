@@ -38,12 +38,15 @@ export function inspectSchema({ rootDir = root } = {}) {
   });
   const guide = fs.readFileSync(path.join(rootDir, 'QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md'), 'utf8');
   const completeGuide = /^# 46\./m.test(guide);
+  const projectionPath = path.join(rootDir, 'tools/manifests/css-functional-root-projections.json');
+  const projections = fs.existsSync(projectionPath) ? JSON.parse(fs.readFileSync(projectionPath,'utf8')).entries : [];
+  const unclassifiedRootDefaults = componentRootPublicDefaults.filter(entry => !projections.some(p => p.selector === entry.selector && p.token === entry.token && p.value === entry.value));
   const mixByLayer = {};
   for (const entry of runtimeColorMix) {
     const layer = entry.file.includes('/components/') ? 'component' : entry.file.includes('/theme/') ? 'theme' : 'preset';
     mixByLayer[layer] = (mixByLayer[layer] || 0) + 1;
   }
-  return { completeGuide, themeControlHeight, runtimeColorMix, mixByLayer, componentRootPublicDefaults, loadedComponentModules: modules.filter(file => file.includes('/components/')).length };
+  return { completeGuide, themeControlHeight, runtimeColorMix, mixByLayer, componentRootPublicDefaults, unclassifiedRootDefaults, loadedComponentModules: modules.filter(file => file.includes('/components/')).length };
 }
 
 export async function browserProbes({ expression, htmlContent, cssText } = {}) {
@@ -113,6 +116,41 @@ export async function browserProbes({ expression, htmlContent, cssText } = {}) {
       root.style.fontSize = '20px';
       add('root-font-size-scales-control', measure('control', 'minHeight'), 40);
       root.style.fontSize = '16px';
+      for (const [size,height] of Object.entries({xs:24,sm:28,md:32,lg:36,xl:40})) {
+        el('control').className = 'qxframe9a7c2-button is-' + size;
+        add('default-control-height-' + size, measure('control','minHeight'), height);
+        scope.style.setProperty('--qxframe9a7c2-theme-control-height-' + size,'3rem');
+        add('scoped-control-height-' + size,measure('control','minHeight'),48);
+        scope.style.removeProperty('--qxframe9a7c2-theme-control-height-' + size);
+      }
+      el('control').className = 'qxframe9a7c2-button';
+      scope.style.setProperty('--qxframe9a7c2-theme-control-height-md','3rem');
+      add('scoped-default-control-height',measure('control','minHeight'),48);
+      scope.style.removeProperty('--qxframe9a7c2-theme-control-height-md');
+      el('control').className = 'qxframe9a7c2-button is-md';
+      scope.style.setProperty('--qxframe9a7c2-card-md-padding','26px');
+      scope.style.setProperty('--qxframe9a7c2-theme-space-6','2rem');
+      add('ancestor-card-size-slot-wins-over-theme',measure('cardBody','paddingLeft'),26);
+      scope.style.removeProperty('--qxframe9a7c2-card-md-padding');
+      scope.style.removeProperty('--qxframe9a7c2-theme-space-6');
+      scope.style.setProperty('--qxframe9a7c2-avatar-md-size','44px');
+      scope.style.setProperty('--qxframe9a7c2-theme-avatar-size-md','3.5rem');
+      add('ancestor-avatar-size-slot-wins-over-theme',measure('avatar','width'),44);
+      scope.style.removeProperty('--qxframe9a7c2-avatar-md-size');
+      scope.style.removeProperty('--qxframe9a7c2-theme-avatar-size-md');
+      const nested = document.createElement('div');
+      nested.setAttribute('data-qxframe9a7c2-theme','dark');
+      nested.style.setProperty('--qxframe9a7c2-theme-space-6','1.5rem');
+      nested.innerHTML = '<div class="qxframe9a7c2-card"><div id="nestedBody" class="qxframe9a7c2-card-body"></div></div>';
+      el('cardBody').appendChild(nested);
+      scope.style.setProperty('--qxframe9a7c2-card-padding','20px');
+      add('nested-card-inherits-explicit-public-override',measure('nestedBody','paddingLeft'),20);
+      scope.style.removeProperty('--qxframe9a7c2-card-padding');
+      add('nested-card-resolves-local-theme-default',measure('nestedBody','paddingLeft'),24);
+      el('card').classList.add('is-shadow');
+      add('nested-card-private-shadow-reset',getComputedStyle(nested.firstElementChild).boxShadow,'none');
+      el('card').classList.remove('is-shadow');
+      nested.remove();
       const light = cs('popup').backgroundColor;
       scope.setAttribute('data-qxframe9a7c2-theme', 'dark');
       const dark = cs('popup').backgroundColor;
@@ -142,6 +180,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     ...(!structural.completeGuide ? ['SCHEMA-ACCEPT-001: authoritative guide incomplete'] : []),
     ...(structural.themeControlHeight.some(role => !role.defined || !role.consumed) ? ['SCHEMA-ACCEPT-002: public control-height theme roles absent/unconsumed'] : []),
     ...(structural.runtimeColorMix.length ? ['SCHEMA-ACCEPT-003: runtime color-mix cleanup incomplete; per-consumer decisions required'] : []),
+    ...(structural.unclassifiedRootDefaults.length ? ['SCHEMA-ACCEPT-004: unclassified public defaults on component roots'] : []),
     ...(browser?.failed ? ['SCHEMA-ACCEPT-004/005: browser theme/public override probes failed'] : [])
   ];
   const report = { schemaVersion: 1, scope: 'CSS Schema v1.6 acceptance only; not an independent model-specific architecture/security audit', acceptance: blockers.length ? 'NOT_ACCEPTED' : browser ? 'PROBES_PASS_REMAINING_MANUAL_GATES_REQUIRED' : 'BROWSER_EVIDENCE_REQUIRED', blockers, structural, browser };

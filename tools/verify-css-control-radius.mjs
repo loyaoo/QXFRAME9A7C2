@@ -1,11 +1,12 @@
 import fs from 'node:fs';
+import { readEffectiveControlRecipes } from './css-control-recipe-source.mjs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const theme=fs.readFileSync(path.join(root,'src/styles/theme/_default.scss'),'utf8');
-const family=fs.readFileSync(path.join(root,'src/styles/theme/_family.scss'),'utf8');
+const family=readEffectiveControlRecipes(root);
 const plan=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-control-radius-normalization.json'),'utf8'));
 const esc=value=>value.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
 

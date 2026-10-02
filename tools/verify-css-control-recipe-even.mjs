@@ -13,7 +13,7 @@ for(const item of m.mappings){
 }
 const heightNodes={xs:12,sm:14,md:16,lg:18,xl:20};
 for(const [size,node] of Object.entries(heightNodes)){
-  const marker=size==='md'?':root,.is-md':'.is-'+size;
+  const marker='.is-'+size;
   const start=css.indexOf(marker);
   assert.ok(start>=0,'Missing control size block: '+size);
   const slice=css.slice(start,start+900);

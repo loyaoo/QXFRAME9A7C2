@@ -192,7 +192,7 @@ for(let i=0;i<lines.length;i+=1){
 }
 assert.deepEqual(coldGrayConsumerLines,[],
   'Cold Gray is optional palette infrastructure only; standard/component CSS must consume canonical Grey instead.');
-assert.match(css,/\.is-gray\{--_qxframe9a7c2-accent-seed:var\(--_qxframe9a7c2-seed-grey\);--_qxframe9a7c2-accent-on:var\(--_qxframe9a7c2-on-grey,/,
+assert.match(css,/\.is-gray\{[^}]*--_qxframe9a7c2-accent-seed:var\(--_qxframe9a7c2-seed-grey\);--_qxframe9a7c2-accent-on:var\(--_qxframe9a7c2-on-grey,/,
   '.is-gray must remain only as a spelling alias for the canonical Grey component accent.');
 assert.doesNotMatch(css,/\.is-gray\{[^}]*var\(--_qxframe9a7c2-(?:seed|on)-gray\)/,
   'No component gray variant may consume the cold Gray accent seed.');

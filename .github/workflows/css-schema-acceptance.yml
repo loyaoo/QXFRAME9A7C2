@@ -30,8 +30,8 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Verify acceptance detector
         run: node tools/verify-css-schema-acceptance-audit.mjs
-      - name: Capture offline color migration baseline
-        run: node tools/capture-css-static-colors.mjs
+      - name: Verify static colors against offline Chromium baseline
+        run: node tools/verify-css-static-colors.mjs --browser
       - name: Enforce Schema acceptance with Chromium evidence
         run: node tools/audit-css-schema-acceptance.mjs --browser --enforce --write=artifacts/css-schema-acceptance.json
       - name: Upload acceptance evidence

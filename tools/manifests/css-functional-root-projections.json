@@ -1,0 +1,77 @@
+{
+  "policy": "These are functional state/projection channels, not visual public defaults. Keep their CSS/JS protocol and disabled timing intact.",
+  "entries": [
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-duration-1",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-duration-2",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-duration-3",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-duration-4",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-duration-5",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-notice-enter-duration",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-notice-leave-duration",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-motion-disabled",
+      "token": "--qxframe9a7c2-motion-notice-move-duration",
+      "value": "0ms",
+      "reason": "Explicit disabled state must stop Motion regardless of inherited normal timing."
+    },
+    {
+      "selector": ".qxframe9a7c2-notice-slot",
+      "token": "--qxframe9a7c2-notice-enter-x",
+      "value": "0px",
+      "reason": "Placement/motion instance projection; noticeService writes these same instance channels. Not a theme default."
+    },
+    {
+      "selector": ".qxframe9a7c2-notice-slot",
+      "token": "--qxframe9a7c2-notice-enter-y",
+      "value": "calc(var(--qxframe9a7c2-theme-notice-enter-offset) * -1)",
+      "reason": "Placement/motion instance projection; noticeService writes these same instance channels. Not a theme default."
+    },
+    {
+      "selector": ".qxframe9a7c2-notice-slot",
+      "token": "--qxframe9a7c2-notice-leave-x",
+      "value": "0px",
+      "reason": "Placement/motion instance projection; noticeService writes these same instance channels. Not a theme default."
+    },
+    {
+      "selector": ".qxframe9a7c2-notice-slot",
+      "token": "--qxframe9a7c2-notice-leave-y",
+      "value": "calc(var(--qxframe9a7c2-theme-notice-leave-offset) * -1)",
+      "reason": "Placement/motion instance projection; noticeService writes these same instance channels. Not a theme default."
+    }
+  ]
+}

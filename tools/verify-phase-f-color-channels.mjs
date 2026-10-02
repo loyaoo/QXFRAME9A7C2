@@ -31,19 +31,31 @@ const unexpectedHard=hard.filter(entry=>{
 });
 assert.deepEqual(unexpectedHard,[],'Hard-coded component colors must be limited to classified color-model/contrast functional data.');
 
+const baseline=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-static-color-baseline.json'),'utf8'));
+const roleFor=(base,weight)=>{
+  const normalized='color-mix(insrgb,var(--_qxframe9a7c2-semantic-'+base+')'+weight+'%,transparent)';
+  const entry=baseline.entries.find(e=>e.normalized===normalized);
+  assert.ok(entry,'Missing retired semantic overlay decision: '+normalized);
+  return 'var('+entry.resolvedToken+')';
+};
 const required=[
-  ['badge ribbon shadow',/\.qxframe9a7c2-badge-ribbon\{[^}]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-base\) 18%,transparent\)/],
-  ['card elevation',/--qxframe9a7c2-card-shadow:[^;]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-base\) 6%,transparent\)[^;]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-base\) 5%,transparent\)/],
-  ['switch thumb shadow',/\.qxframe9a7c2-switch-thumb\{[^}]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-base\) 24%,transparent\)/],
-  ['table fixed shadow',/\.qxframe9a7c2-table \.is-fixed-start\.is-last::after\{[^}]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-base\) 24%,transparent\)/],
-  ['upload preview mask',/\.qxframe9a7c2-upload-preview-mask\{[^}]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-base\) 58%,transparent\)/],
-  ['carousel caption',/--_qxframe9a7c2-carousel-caption-bg:[^;]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-base\) 46%,transparent\)/],
-  ['carousel inactive dot',/\.qxframe9a7c2-carousel-dot-bar\{[^}]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-text\) 52%,transparent\)/],
-  ['carousel active dot',/\.qxframe9a7c2-carousel-dot\.is-active \.qxframe9a7c2-carousel-dot-bar\{[^}]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-text\) 98%,transparent\)/],
-  ['image preview video backing',/\.qxframe9a7c2-image-preview-video\{[^}]*background:var\(--_qxframe9a7c2-semantic-overlay-base\)/],
-  ['image preview hover chrome',/\.qxframe9a7c2-image-preview-toolbar \.qxframe9a7c2-image-preview-tool:hover\{[^}]*color-mix\(in srgb,var\(--_qxframe9a7c2-semantic-overlay-text\) 14%,transparent\)/]
+  ['badge ribbon shadow','.qxframe9a7c2-badge-ribbon{','overlay-base',18],
+  ['card elevation','.qxframe9a7c2-card.is-shadow{','overlay-base',6],
+  ['card second elevation','.qxframe9a7c2-card.is-shadow{','overlay-base',5],
+  ['switch thumb shadow','.qxframe9a7c2-switch-thumb{','overlay-base',24],
+  ['table fixed shadow','.qxframe9a7c2-table .is-fixed-start.is-last::after{','overlay-base',24],
+  ['upload preview mask','.qxframe9a7c2-upload-preview-mask{','overlay-base',58],
+  ['carousel caption','.qxframe9a7c2-carousel{','overlay-base',46],
+  ['carousel inactive dot','.qxframe9a7c2-carousel-dot-bar{','overlay-text',52],
+  ['carousel active dot','.qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar{','overlay-text',98],
+  ['image preview hover chrome','.qxframe9a7c2-image-preview-toolbar .qxframe9a7c2-image-preview-tool:hover{','overlay-text',14]
 ];
-for(const [name,pattern] of required) assert.match(css,pattern,name+' must remain on the semantic overlay channel.');
+for(const [name,selector,base,weight] of required){
+  const rules=css.split(selector).slice(1).map(body=>body.slice(0,body.indexOf('}')));
+  assert.ok(rules.length,'Missing semantic consumer: '+name);
+  assert.ok(rules.some(rule=>rule.includes(roleFor(base,weight))),name+' must consume the static Theme role for its original semantic overlay channel.');
+}
+assert.match(css,/\.qxframe9a7c2-image-preview-video\{[^}]*background:var\(--_qxframe9a7c2-semantic-overlay-base\)/);
 
 const functionalHard=hard.map(entry=>entry.text);
 assert.ok(functionalHard.some(text=>text.startsWith('.qxframe9a7c2-color-panel-hue{')),'ColorPanel intrinsic hue spectrum classification is missing.');
