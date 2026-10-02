@@ -125,6 +125,7 @@ function studioPanelHtml(){
     field('Theme name','name','<input class="qxframe9a7c2-studio-control" data-studio-input="name" type="text">')+
     '<div class="qxframe9a7c2-studio-mode"><button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-mode="light">Light</button><button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-mode="dark">Dark</button><button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-mode="system">System</button></div></div>'+
   '<div class="qxframe9a7c2-studio-group"><div class="qxframe9a7c2-studio-group-head"><strong>Design</strong><small>orthogonal controls</small></div>'+
+    field('Preset','preset','<select class="qxframe9a7c2-studio-control" data-studio-preset><option value="">Custom / current</option>'+selectOptions([['signal','Signal'],['ledger','Ledger'],['harbor','Harbor'],['juniper','Juniper'],['ember','Ember'],['orbit','Orbit'],['graphite','Graphite'],['canvas','Canvas']])+'</select>')+
     field('Style','style','<select class="qxframe9a7c2-studio-control" data-studio-input="style">'+selectOptions([['balanced','Balanced'],['soft','Soft Surface'],['precision','Precision'],['compact','Compact Workbench']])+'</select>','style')+
     field('Base color','baseColor','<select class="qxframe9a7c2-studio-control" data-studio-input="baseColor">'+selectOptions([['neutral','Neutral'],['stone','Stone'],['zinc','Zinc'],['mauve','Mauve'],['olive','Olive'],['mist','Mist'],['taupe','Taupe']])+'</select>','baseColor')+
     field('Primary','primary','<div class="qxframe9a7c2-studio-color-row"><select class="qxframe9a7c2-studio-control" data-studio-input="primary">'+selectOptions([['blue','Blue'],['purple','Purple'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['orange','Orange'],['red','Red'],['pink','Pink'],['custom','Custom']])+'</select><input class="qxframe9a7c2-studio-color" data-studio-primary-color type="color" value="#5b5bd6"></div>','primary')+
@@ -198,6 +199,7 @@ function syncControls(){
   setControl('body',currentConfig.typography.body);setControl('heading',currentConfig.typography.heading);setControl('baseSize',currentConfig.typography.baseSize);
   setControl('menuColor',currentConfig.components.menu.color);setControl('menuAppearance',currentConfig.components.menu.appearance);setControl('menuAccent',currentConfig.components.menu.accent);
   ['success','warning','error','info'].forEach(function(k){setControl(k,currentConfig.roles[k]);});
+  var presetSelect=document.querySelector('[data-studio-preset]');if(presetSelect)presetSelect.value='';
   var primarySelect=document.querySelector('[data-studio-input="primary"]'),colorInput=document.querySelector('[data-studio-primary-color]');
   if(primarySelect){primarySelect.value=colorLike(currentConfig.roles.primary)?'custom':currentConfig.roles.primary;}
   if(colorInput&&colorLike(currentConfig.roles.primary)){try{colorInput.value=runtime.color.colorToHex(currentConfig.roles.primary);}catch(_){}}
@@ -255,6 +257,7 @@ function download(artifact){
 }
 function wirePanel(panel){
   panel.querySelectorAll('[data-studio-input]').forEach(function(el){el.addEventListener('change',schedule);if(el.tagName==='INPUT')el.addEventListener('input',schedule);});
+  var presetSelect=panel.querySelector('[data-studio-preset]');if(presetSelect)presetSelect.addEventListener('change',function(){if(!this.value)return;currentConfig=runtime.presets.applyThemePreset(this.value,currentConfig);syncControls();generateNow();});
   var color=panel.querySelector('[data-studio-primary-color]');if(color)color.addEventListener('input',function(){var select=panel.querySelector('[data-studio-input="primary"]');if(select)select.value='custom';schedule();});
   panel.querySelectorAll('[data-studio-mode]').forEach(function(b){b.addEventListener('click',function(){previewMode=this.dataset.studioMode;applyMode();save();});});
   panel.querySelectorAll('[data-studio-lock]').forEach(function(b){b.addEventListener('click',function(){var key=this.dataset.studioLock;locks[key]=!locks[key];syncControls();save();});});
@@ -270,10 +273,10 @@ function wirePanel(panel){
 function loadRuntime(){
   var base;
   try{base=new URL('.',scriptUrl);}catch(error){return Promise.reject(error);}
-  var generatorUrl=new URL('theme-generator/generator.mjs',base).href,engineUrl=new URL('theme-generator/engine.mjs',base).href,ioUrl=new URL('theme-generator/io.mjs',base).href,colorUrl=new URL('theme-generator/color-engine.mjs',base).href;
+  var generatorUrl=new URL('theme-generator/generator.mjs',base).href,engineUrl=new URL('theme-generator/engine.mjs',base).href,ioUrl=new URL('theme-generator/io.mjs',base).href,colorUrl=new URL('theme-generator/color-engine.mjs',base).href,presetsUrl=new URL('theme-generator/presets.mjs',base).href;
   var manifestUrl=new URL('../generated/theme-public-schema-v1.json',base).href,recipesUrl=new URL('../generated/theme-color-recipes-v1.json',base).href;
-  return Promise.all([import(generatorUrl),import(engineUrl),import(ioUrl),import(colorUrl),fetch(manifestUrl).then(function(r){if(!r.ok)throw new Error('Theme Schema load failed: '+r.status);return r.json();}),fetch(recipesUrl).then(function(r){if(!r.ok)throw new Error('Theme recipes load failed: '+r.status);return r.json();})]).then(function(parts){
-    return {generator:parts[0],engine:parts[1],io:parts[2],color:parts[3],manifest:parts[4],recipes:parts[5]};
+  return Promise.all([import(generatorUrl),import(engineUrl),import(ioUrl),import(colorUrl),import(presetsUrl),fetch(manifestUrl).then(function(r){if(!r.ok)throw new Error('Theme Schema load failed: '+r.status);return r.json();}),fetch(recipesUrl).then(function(r){if(!r.ok)throw new Error('Theme recipes load failed: '+r.status);return r.json();})]).then(function(parts){
+    return {generator:parts[0],engine:parts[1],io:parts[2],color:parts[3],presets:parts[4],manifest:parts[5],recipes:parts[6]};
   });
 }
 function enableStudio(){
