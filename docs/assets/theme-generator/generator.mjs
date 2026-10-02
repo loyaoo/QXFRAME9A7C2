@@ -9,6 +9,7 @@ import {
   serializeCss
 } from './engine.mjs';
 import { applyColorConfiguration } from './recipe-engine.mjs';
+import { applyDesignConfiguration } from './design-engine.mjs';
 
 function generateTheme(manifest,recipeData,input={}){
   const schema=readSchema(manifest);
@@ -16,10 +17,9 @@ function generateTheme(manifest,recipeData,input={}){
   const tokenMaps=createTokenMaps(schema);
 
   const colorReport=applyColorConfiguration(tokenMaps,schema,recipeData,config);
+  const designReport=applyDesignConfiguration(tokenMaps,schema,config);
 
-  // Later TG-D stages mutate the same public token maps here:
-  // style preset -> typography -> radius -> density -> component presets.
-  // Explicit advanced overrides remain intentionally last.
+  // Advanced explicit overrides remain intentionally last.
   applyExplicitOverrides(tokenMaps,schema,config);
   validateTokenMaps(tokenMaps,schema);
 
@@ -29,7 +29,7 @@ function generateTheme(manifest,recipeData,input={}){
     schema,
     config,
     configJson:serializeConfig(config),
-    reports:Object.freeze({color:colorReport}),
+    reports:Object.freeze({color:colorReport,design:designReport}),
     tokens:Object.freeze({
       light:Object.freeze({...tokenMaps.light}),
       dark:Object.freeze({...tokenMaps.dark})
