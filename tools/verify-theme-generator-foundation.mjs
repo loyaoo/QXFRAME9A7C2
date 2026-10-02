@@ -57,7 +57,7 @@ assert.match(css1, /\[data-qxframe9a7c2-theme="dark"\]/);
 assert.ok(!css1.includes('--_qxframe9a7c2-'));
 assert.ok(!css1.includes('!important'));
 assert.ok(!css1.includes('.qxframe9a7c2-'));
-assert.equal((css1.match(/--qxframe9a7c2-/g) || []).length, 4028 * 2);
+assert.equal((css1.match(/^  --qxframe9a7c2-[^:]+:/gm) || []).length, 4028 * 2);
 
 const publicOverride = manifest.optionalComponentOverrides[0];
 const overridden = generateFoundationTheme(manifest, {
