@@ -33,6 +33,7 @@
 | `bfaae28a` / CSS Schema Acceptance run `36975336207` | SUCCESS：25 探针、7,484 核心颜色比对 |
 | `96f2046d` / CSS Schema Acceptance run `36976428598`、job `110741152413` | SUCCESS：25 探针、7,484 核心比对、18,144 docs 比对、2,160 Button 用例 |
 | 最终实现 `9a87bdd4` / QXFRAME CI `36976881748`、Schema Acceptance `36976881857` | 两套 SUCCESS：全部发行验证、Windows、npm 打包、dist/docs 及严格浏览器验收 |
+| 合并后的 main `0ded4a46` / QXFRAME CI `36977479286` | SUCCESS：release、Windows 与 Pages deploy `110745987222` 均成功 |
 | 本地补充检查 | build + 完整 npm verify PASS；仅辅助，最终发行以 GitHub Actions 为准 |
 
 PR #245 已按最终实现 HEAD 的成功结果合并。本次收尾提交仅更新状态记录与不可变证据引用，不修改运行时代码。main 与 Pages 的最新结果始终以 GitHub 为准。

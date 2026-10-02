@@ -15,7 +15,7 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: CSS Schema v1.6 confirmed blocker remediation implemented; strict Chromium acceptance passes. Broader manual/freeze gates remain separately scoped. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: no pending implementation task; CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001 is merged and its exact implementation head passed both required CI workflows. Resolve current main release / Pages facts from GitHub.
+- Current Task: `NONE` — no pending implementation task; CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001 is merged and its exact implementation head passed both required CI workflows. Resolve current main release / Pages facts from GitHub.
 
 ## CURRENT
 
@@ -68,6 +68,7 @@ Evidence:
 - 7,484 static core color comparisons PASS; 18,144 docs color-role comparisons and 2,160 actual Button variant/state cases against immutable pre-staticization CSS PASS, zero differences.
 - Final implementation head 9a87bdd4a057084c4b0f5cca6b9427ac25dd7ec7: QXFRAME CI 36976881748 SUCCESS and strict CSS Schema Acceptance 36976881857 SUCCESS. Release verification, Windows tooling, npm pack, standalone dist/docs and artifact upload all passed.
 - PR #245 merged 2026-10-02T07:13:53Z as main commit 0ded4a46d64b5fda46fc101007e0df9bd8aade92.
+- Merged implementation main CI 36977479286 SUCCESS, including release job 110744344582, Windows job 110744344773 and Pages deploy job 110745987222.
 Frozen decisions: preserve 46 Size Tree nodes, protected radius/width geometry, zero Grid/fr/viewport consumers, ordered 53 component/shared files, exactly 9 Runtime Controllers and current correct interactions. Do not resurrect runtime color synthesis or superseded PR #242/#243.
 Resume rule: the implementation is merged and must not be repeated. Query current main release and Pages status; act only on a new regression or separately authorized freeze/manual audit. Full Schema freeze is not implied by this focused fix.
 

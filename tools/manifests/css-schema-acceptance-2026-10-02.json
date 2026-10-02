@@ -1111,6 +1111,10 @@
     "finalReleaseRun": 36976881748,
     "finalSchemaRun": 36976881857,
     "mergeCommit": "0ded4a46d64b5fda46fc101007e0df9bd8aade92",
-    "mergedAt": "2026-10-02T07:13:53Z"
+    "mergedAt": "2026-10-02T07:13:53Z",
+    "mergedMainRun": 36977479286,
+    "mergedMainResult": "SUCCESS",
+    "pagesDeployJob": 110745987222,
+    "pagesDeployResult": "SUCCESS"
   }
 }
