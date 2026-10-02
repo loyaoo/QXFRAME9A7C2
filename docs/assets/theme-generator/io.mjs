@@ -23,9 +23,20 @@ function legacyRadius(value){
   if(px<=12)return 'medium';
   return 'large';
 }
+function migrateStudioV1(value){
+  const next=JSON.parse(JSON.stringify(value));
+  const styleMap={balanced:'vega',soft:'luma',precision:'vega',compact:'mira'};
+  if(styleMap[next.style])next.style=styleMap[next.style];
+  if(next.chart&&Object.prototype.hasOwnProperty.call(next.chart,'preset')){
+    const chartMap={balanced:'primary',cool:'blue',warm:'orange',mixed:'primary',mono:'neutral'};
+    next.chart={color:chartMap[next.chart.preset]||'primary'};
+  }
+  delete next.density;
+  return next;
+}
 function migrateLegacyConfig(value){
   if(!value||typeof value!=='object'||Array.isArray(value))throw new TypeError('Imported Theme Config must be an object.');
-  if(value.schema!=null)return normalizeConfig(value);
+  if(value.schema!=null)return normalizeConfig(migrateStudioV1(value));
   const looksLegacy=['primarySeed','customPrimary','preset','base','font','radius','focusRing','mixRatio','mode'].some(key=>Object.prototype.hasOwnProperty.call(value,key));
   if(!looksLegacy)throw new TypeError('Theme Config is missing schema: 1 and does not match the supported legacy Theme Playground state.');
   const preset=String(value.preset||'').toLowerCase();
