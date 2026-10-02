@@ -100,7 +100,7 @@ try{
   const initial=await evaluate(cdp,sessionId,'(function(){var style=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');var scenes=document.querySelectorAll(\'.qxframe9a7c2-studio-scene\');var mounts=Array.prototype.slice.call(document.querySelectorAll(\'[data-studio-mount]\')).map(function(host){return {name:host.getAttribute(\'data-studio-mount\'),children:host.children.length,error:!!host.querySelector(\'.qxframe9a7c2-studio-runtime-error\')};});return {scenes:scenes.length,generated:style?style.textContent.length:0,declarations:style?(style.textContent.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length:0,mode:document.documentElement.getAttribute(\'data-qxframe9a7c2-theme\'),inlineTheme:/--_?qxframe9a7c2-/.test(document.documentElement.getAttribute(\'style\')||\'\'),config:window.QXFRAME9A7C2_THEME_STUDIO.getConfig(),mounts:mounts,cards:document.querySelectorAll(\'.qxframe9a7c2-play-card\').length,commercial:!!document.querySelector(\'[data-qxframe9a7c2-studio-commercial]\')};})()');
   assert.ok(initial.commercial);
   assert.ok(initial.scenes>=20,'Expected 20+ commercial scenes.');
-  assert.equal(initial.declarations,8056);
+  assert.equal(initial.declarations,8060);
   assert.ok(initial.generated>100000,'Complete Theme CSS should be substantial.');
   assert.equal(initial.inlineTheme,false,'Generated Theme must not depend on root inline Theme tokens.');
   assert.ok(initial.cards>0,'Canonical all-component gallery must remain mounted.');
