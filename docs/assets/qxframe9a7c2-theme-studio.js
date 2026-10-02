@@ -141,12 +141,11 @@ function studioPanelHtml(){
     '<div class="qxframe9a7c2-studio-mode"><button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-mode="light">Light</button><button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-mode="dark">Dark</button><button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-mode="system">System</button></div></div>'+
   '<div class="qxframe9a7c2-studio-group"><div class="qxframe9a7c2-studio-group-head"><strong>Design</strong><small>orthogonal controls</small></div>'+
     field('Preset','preset','<select class="qxframe9a7c2-studio-control" data-studio-preset><option value="">Custom / current</option>'+selectOptions([['signal','Signal'],['ledger','Ledger'],['harbor','Harbor'],['juniper','Juniper'],['ember','Ember'],['orbit','Orbit'],['graphite','Graphite'],['canvas','Canvas']])+'</select>')+
-    field('Style','style','<select class="qxframe9a7c2-studio-control" data-studio-input="style">'+selectOptions([['balanced','Balanced'],['soft','Soft Surface'],['precision','Precision'],['compact','Compact Workbench']])+'</select>','style')+
+    field('Style','style','<select class="qxframe9a7c2-studio-control" data-studio-input="style">'+selectOptions([['vega','Vega · clean / familiar'],['nova','Nova · reduced spacing'],['maia','Maia · rounded / generous'],['lyra','Lyra · boxy / sharp'],['mira','Mira · compact UI'],['luma','Luma · fluid / soft'],['sera','Sera · editorial'],['rhea','Rhea · soft / compact']])+'</select>','style')+
     field('Base color','baseColor','<select class="qxframe9a7c2-studio-control" data-studio-input="baseColor">'+selectOptions([['neutral','Neutral'],['stone','Stone'],['zinc','Zinc'],['mauve','Mauve'],['olive','Olive'],['mist','Mist'],['taupe','Taupe']])+'</select>','baseColor')+
     field('Primary','primary','<div class="qxframe9a7c2-studio-color-row"><select class="qxframe9a7c2-studio-control" data-studio-input="primary">'+selectOptions([['blue','Blue'],['purple','Purple'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['orange','Orange'],['red','Red'],['pink','Pink'],['custom','Custom']])+'</select><input class="qxframe9a7c2-studio-color" data-studio-primary-color type="color" value="#5b5bd6"></div>','primary')+
-    field('Chart color','chart','<select class="qxframe9a7c2-studio-control" data-studio-input="chart">'+selectOptions([['balanced','Balanced'],['cool','Cool'],['warm','Warm'],['mixed','Mixed'],['mono','Mono']])+'</select>','chart')+
-    field('Radius','radius','<select class="qxframe9a7c2-studio-control" data-studio-input="radius">'+selectOptions([['none','None'],['small','Small'],['medium','Medium'],['large','Large']])+'</select>','radius')+
-    field('Density','density','<select class="qxframe9a7c2-studio-control" data-studio-input="density">'+selectOptions([['compact','Compact'],['default','Default'],['comfortable','Comfortable']])+'</select>','density')+
+    field('Chart color','chart','<select class="qxframe9a7c2-studio-control" data-studio-input="chart">'+selectOptions([['primary','Primary'],['neutral','Neutral'],['red','Red'],['orange','Orange'],['yellow','Yellow'],['lime','Lime'],['green','Green'],['teal','Teal'],['cyan','Cyan'],['blue','Blue'],['purple','Purple'],['pink','Pink'],['grey','Grey']])+'</select>','chart')+
+    field('Radius','radius','<select class="qxframe9a7c2-studio-control" data-studio-input="radius">'+selectOptions([['default','Default'],['none','None'],['small','Small'],['medium','Medium'],['large','Large']])+'</select>','radius')+
   '</div>'+
   '<div class="qxframe9a7c2-studio-group"><div class="qxframe9a7c2-studio-group-head"><strong>Typography</strong><small>font resources stay external</small></div>'+
     field('Body font','body','<select class="qxframe9a7c2-studio-control" data-studio-input="body">'+selectOptions([['system-ui','System UI'],['inter','Inter'],['humanist','Humanist'],['serif','Serif']])+'</select>','body')+
@@ -239,7 +238,7 @@ function renderAudit(report){
 }
 function syncControls(){
   if(!currentConfig)return;
-  setControl('name',currentConfig.name);setControl('style',currentConfig.style);setControl('baseColor',currentConfig.baseColor);setControl('chart',currentConfig.chart.preset);setControl('radius',currentConfig.radius);setControl('density',currentConfig.density);
+  setControl('name',currentConfig.name);setControl('style',currentConfig.style);setControl('baseColor',currentConfig.baseColor);setControl('chart',currentConfig.chart.color);setControl('radius',currentConfig.radius);
   setControl('body',currentConfig.typography.body);setControl('heading',currentConfig.typography.heading);setControl('baseSize',currentConfig.typography.baseSize);
   setControl('menuColor',currentConfig.components.menu.color);setControl('menuAppearance',currentConfig.components.menu.appearance);setControl('menuAccent',currentConfig.components.menu.accent);
   ['success','warning','error','info'].forEach(function(k){setControl(k,currentConfig.roles[k]);});
@@ -255,7 +254,7 @@ function syncControls(){
 function configFromControls(){
   var next=clone(currentConfig||runtime.engine.DEFAULT_CONFIG);
   function val(key){var el=document.querySelector('[data-studio-input="'+key+'"]');return el?el.value:null;}
-  next.name=val('name')||'qxframe-theme';next.style=val('style');next.baseColor=val('baseColor');next.chart.preset=val('chart');next.radius=val('radius');next.density=val('density');
+  next.name=val('name')||'qxframe-theme';next.style=val('style');next.baseColor=val('baseColor');next.chart.color=val('chart');next.radius=val('radius');
   next.typography.body=val('body');next.typography.heading=val('heading');next.typography.baseSize=Number(val('baseSize')||14);
   next.components.menu.color=val('menuColor');next.components.menu.appearance=val('menuAppearance');next.components.menu.accent=val('menuAccent');
   ['success','warning','error','info'].forEach(function(k){next.roles[k]=val(k);});
@@ -283,14 +282,13 @@ function schedule(){clearTimeout(generateTimer);generateTimer=setTimeout(generat
 function randomItem(items){return items[Math.floor(Math.random()*items.length)];}
 function randomize(){
   var next=clone(currentConfig);
-  if(!locks.style)next.style=randomItem(['balanced','soft','precision','compact']);
+  if(!locks.style)next.style=randomItem(['vega','nova','maia','lyra','mira','luma','sera','rhea']);
   if(!locks.baseColor)next.baseColor=randomItem(['neutral','stone','zinc','mauve','olive','mist','taupe']);
   if(!locks.primary)next.roles.primary=randomItem(['blue','purple','cyan','teal','green','orange','red','pink']);
-  if(!locks.chart)next.chart.preset=randomItem(['balanced','cool','warm','mixed','mono']);
+  if(!locks.chart)next.chart.color=randomItem(['primary','neutral','red','orange','yellow','lime','green','teal','cyan','blue','purple','pink','grey']);
   if(!locks.body){next.typography.body=randomItem(['system-ui','inter','humanist','serif']);next.typography.baseSize=randomItem([12,14,16,18]);}
   if(!locks.heading)next.typography.heading=randomItem(['inherit','system-ui','inter','humanist','serif','mono']);
-  if(!locks.radius)next.radius=randomItem(['none','small','medium','large']);
-  if(!locks.density)next.density=randomItem(['compact','default','comfortable']);
+  if(!locks.radius)next.radius=randomItem(['default','none','small','medium','large']);
   if(!locks.menu){next.components.menu.color=randomItem(['default','primary','inverted','neutral']);next.components.menu.appearance=randomItem(['solid','soft','translucent']);next.components.menu.accent=randomItem(['subtle','balanced','strong']);}
   currentConfig=runtime.engine.normalizeConfig(next);syncControls();generateNow();
 }
@@ -338,7 +336,7 @@ function enableStudio(){
   var panel=installPanel();if(!panel)return;
   var saved=load();currentConfig=runtime.engine.normalizeConfig(saved||{});wirePanel(panel);syncControls();generateNow();
   var intro=document.querySelector('.qxframe9a7c2-play-hero h1');if(intro)intro.textContent='Theme Studio · real commercial preview';
-  var copy=document.querySelector('.qxframe9a7c2-play-hero p');if(copy)copy.textContent='高层配置经过冻结 Schema v1 生成完整 Light / Dark 静态 CSS。上方商业场景用于判断 neutral、层级、radius、density、chart 与 Menu treatment 是否在真实产品组合里成立；下面继续保留全组件矩阵做回归。';
+  var copy=document.querySelector('.qxframe9a7c2-play-hero p');if(copy)copy.textContent='高层配置经过冻结 Schema v1 生成完整 Light / Dark 静态 CSS。上方商业场景用于判断 neutral、层级、Style、radius、chart 与 Menu treatment 是否在真实产品组合里成立；下面继续保留全组件矩阵做回归。';
   global.QXFRAME9A7C2_THEME_STUDIO=Object.freeze({getConfig:function(){return clone(currentConfig);},getTheme:function(){return currentTheme;},randomize:randomize,reset:reset,regenerate:generateNow});
 }
 function showEngineError(error){
