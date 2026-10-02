@@ -14,25 +14,26 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Design Token Schema v1.6 + Component SCSS physical modularization complete; awaiting final acceptance or a new explicit task
-- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE` (READY / NOT STARTED IN THIS CHECKPOINT)
+- Current Phase: CSS Schema v1.6 final acceptance IN_PROGRESS; Size Tree/Grid/viewport implementation and physical SCSS modularization remain complete, but full Schema acceptance is not passed.
+- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE` (IN_PROGRESS; task label does not identify the model actually executing this review)
 
 ## CURRENT
 
-### ASTRA-HIGH-FINAL-ACCEPTANCE — final acceptance handoff
-Status: READY
-Task progress: implementation closeout complete; no known CSS Token / SCSS modularization implementation backlog remains.
-Verified main checkpoint: `0fbc91b70b9e022945daa3ab97df644456a54a4c`
-Latest verified main CI: QXFRAME CI #1231 / run `36968510652` — SUCCESS.
-Exact next step: start from current `main`, read `AGENTS.md` + this file, then perform only the requested final Astra High acceptance/audit or a newly specified task. Do not restart Phase A, CSS Token migration, viewport/Grid cleanup, or SCSS modularization.
-
-Resume guardrails:
-- `CSS-TOKEN-SCHEMA-001` is DONE: Size Tree actionable consumers are 0; only 36 protected responsive breakpoint literals plus the approved 100rem pill sentinel remain.
-- `CSS-SCSS-MODULE-001` is DONE: 53 ordered component/shared SCSS partials are explicit source modules; temporary `_core.scss`, `_tail.scss` and `_tail-closeout.scss` holding files are absent.
-- PR #244 is the authoritative SCSS modularization closeout and is merged to main.
-- PR #242 and PR #243 were parallel/superseded modularization attempts. They must not be resumed or merged after PR #244.
-- QXFRAME does not use `@layer`; preserve the explicit component source order and existing cascade. Physical module boundaries must not be treated as permission to reorder selectors/declarations.
-- Do not reopen completed Grid/fr, viewport-unit, Size Tree, Controller, Picker-value or focus-origin work without a demonstrated regression.
+### ASTRA-HIGH-FINAL-ACCEPTANCE — CSS Schema acceptance
+Status: IN_PROGRESS / NOT_ACCEPTED
+Baseline: main `72663d3530e16b582b8891491fa8f7e8b01ccda9`; QXFRAME CI #1232 / run `36969105888` SUCCESS.
+Progress: inspection in progress; full Schema completion must not be inferred from zero raw-size candidates.
+Confirmed findings:
+- The repository v1.6 guide was truncated at §12 (999 lines); the attached complete guide contains §§1–46. Restore the complete authoritative guide before acceptance.
+- Five public `theme-control-height-xs/sm/md/lg/xl` roles are absent; the private control recipes still bind directly to Preset Size Tree nodes.
+- Component and Theme source still contain runtime `color-mix()`; inspect against full guide §§15.2/39 Phase I.
+- Public Component defaults redeclared at component roots must be checked for ancestor override masking (Card skeleton title is a concrete candidate).
+Next exact step: complete independent static and Chromium override probes, write acceptance evidence and confirmed remediation tasks, submit the audit PR and inspect exact-head CI. Do not mark Schema frozen while these acceptance blockers remain.
+Guardrails:
+- CSS-SCSS-MODULE-001 remains DONE: 53 ordered component/shared partials; temporary holding modules absent; selector/declaration order locked.
+- Preserve zero live Grid/fr/viewport and zero actionable raw Size Tree consumers; do not restart their migration.
+- PR #242/#243 are superseded, not continuation points.
+- No implementation change to Interaction/Value/Focus/Overlay/Motion during this evidence pass.
 
 ## Current authority snapshot — after Phase A
 
@@ -75,8 +76,9 @@ Outcome:
 - This was a physical source-organization change only; selector/declaration order and cascade semantics remain verifier-locked.
 - PR #242 / #243 are superseded parallel attempts and are not valid continuation points.
 
-### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 closeout
-Status: DONE
+### CSS-TOKEN-SCHEMA-001 — Size Tree / forbidden-unit implementation closeout
+Status: IMPLEMENTATION_SUBSET_DONE / FULL_SCHEMA_NOT_ACCEPTED
+The earlier DONE label overstated full v1.6 coverage. Size Tree/Grid/viewport closeout evidence below remains valid; Theme/Component/Color/override requirements are reopened only by the newly confirmed final-acceptance findings.
 Evidence:
 - PR #239 merged as `96c09f7861706e44fe5be709b6363821597fdacf`; exact implementation head passed QXFRAME CI #1219 / run 36959249192.
 - Main QXFRAME CI #1221 / run 36960062587 passed after merge.
