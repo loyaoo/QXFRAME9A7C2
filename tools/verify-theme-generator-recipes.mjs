@@ -22,6 +22,10 @@ assert.equal(Object.keys(base.tokens.light).length,4028);
 assert.equal(Object.keys(base.tokens.dark).length,4028);
 assert.ok(!base.tokens.light['--qxframe9a7c2-theme-primary-foreground'].includes('contrast-color('));
 assert.ok(!base.tokens.dark['--qxframe9a7c2-theme-primary-foreground'].includes('contrast-color('));
+assert.equal(base.tokens.light['--qxframe9a7c2-semantic-on-accent'],base.tokens.light['--qxframe9a7c2-theme-primary-foreground']);
+assert.equal(base.tokens.dark['--qxframe9a7c2-semantic-on-accent'],base.tokens.dark['--qxframe9a7c2-theme-primary-foreground']);
+assert.ok(['rgb(0, 0, 0)','rgb(255, 255, 255)'].includes(base.tokens.light['--qxframe9a7c2-semantic-on-status']));
+assert.ok(['rgb(0, 0, 0)','rgb(255, 255, 255)'].includes(base.tokens.dark['--qxframe9a7c2-semantic-on-status']));
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-font-size-md'],'0.875rem');
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-radius-md'],'0.375rem');
 
@@ -42,6 +46,8 @@ assert.notEqual(primary.tokens.light[DEFAULTS.primary],base.tokens.light[DEFAULT
 assert.equal(primary.tokens.light[DEFAULTS.chart],base.tokens.light[DEFAULTS.chart],'primary must not rewrite chart palette');
 assert.notEqual(primary.tokens.light['--qxframe9a7c2-theme-color-token-subtle-selected-1'],base.tokens.light['--qxframe9a7c2-theme-color-token-subtle-selected-1']);
 assert.equal(primary.tokens.light['--qxframe9a7c2-theme-color-accent-1-primary'],base.tokens.light['--qxframe9a7c2-theme-color-accent-1-primary'],'unbound frozen recipe slots must retain manifest defaults');
+assert.equal(primary.tokens.light['--qxframe9a7c2-semantic-on-accent'],primary.tokens.light['--qxframe9a7c2-theme-primary-foreground']);
+assert.notEqual(primary.tokens.light['--qxframe9a7c2-semantic-on-accent'],base.tokens.light['--qxframe9a7c2-semantic-on-accent'],'custom Primary on-color must reach the existing semantic public consumer slot');
 
 const customBlue=generateTheme(manifest,recipes,{name:'custom-blue',palette:{blue:'#0ea5e9'}});
 assert.notEqual(customBlue.tokens.light['--qxframe9a7c2-palette-blue-5'],base.tokens.light['--qxframe9a7c2-palette-blue-5']);
