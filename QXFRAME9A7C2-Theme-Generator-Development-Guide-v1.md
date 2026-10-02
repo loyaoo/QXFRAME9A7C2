@@ -164,7 +164,7 @@ Theme CSS 只能主要包含：
 {
   schema: 1,
 
-  style: "default",
+  style: "vega",
 
   baseColor: "neutral",
 
@@ -191,7 +191,7 @@ Theme CSS 只能主要包含：
   },
 
   chart: {
-    preset: "default"
+    color: "primary"
   },
 
   typography: {
@@ -201,7 +201,7 @@ Theme CSS 只能主要包含：
     baseSize: 14
   },
 
-  radius: "medium",
+  radius: "default",
 
   density: "default",
 
@@ -599,30 +599,31 @@ Generator 输出最终 RGB 值；不要依赖 runtime `contrast-color()`。
 
 ---
 
-# 13. Chart Palette
+# 13. Chart Color
 
-Chart 是独立设计维度。
+Chart 是独立设计维度，但颜色必须克制：**一套图表只使用一个色相族**，通过 lightness / chroma / saturation 的离散阶梯区分 series，不生成 Warm / Cool / Mixed 等彩虹方案。
 
 输入：
 
 ```text
-Chart Color = Lime / Blue / Warm / Cool / Mixed / Custom
+Chart Color = Primary / Neutral / Blue / Purple / Cyan / Teal / Green / Lime / Yellow / Orange / Red / Pink / Grey
 ```
 
 输出：
 
 ```css
---qxframe9a7c2-chart-1
---qxframe9a7c2-chart-2
+--qxframe9a7c2-theme-chart-1
+--qxframe9a7c2-theme-chart-2
 ...
+--qxframe9a7c2-theme-chart-8
 ```
 
 要求：
 
-- series 间有可感知区分。
-- Light/Dark 都能辨认。
-- 不依赖 primary/success/error 硬凑。
-- 不能因为 Theme Color 改变而自动覆盖用户显式 Chart preset。
+- 同一 Chart Color 的 8 个 series 保持同一 hue family，只改变可感知明暗与 chroma。
+- Light/Dark 分别生成适合各自背景的阶梯。
+- 默认 Chart Color = Primary；用户显式选择其他 Chart Color 后，Theme/Primary 改变不得覆盖它。
+- 不拿 success/error/warning 等语义色拼凑多彩图表。
 
 ---
 
@@ -657,18 +658,19 @@ body weight
 
 # 15. Radius Generator
 
-用户普通设置：
+用户普通设置固定为 shadcn/create 同样的五档：
 
 ```text
+Default
 None
-Small
-Medium
-Large
+Small   = 0.45rem
+Medium  = 0.625rem
+Large   = 0.875rem
 ```
 
-它不是简单把所有 radius 设成同一个值。
+`Default` 表示跟随当前 Style 的默认 radius；其余四档是用户显式覆盖。
 
-Generator 生成 Foundation radius scale：
+Radius **不是把所有组件设成同一个圆角**。Generator 先生成 Foundation radius scale：
 
 ```text
 xs
@@ -680,42 +682,32 @@ pill
 circle
 ```
 
-并可通过 Style Preset 决定 component/family mapping。
+随后由 Style 把组件族映射到不同层级，例如：
 
-显式 `Radius` 配置优先于 Style 默认 radius。
+```text
+Button / Input / Select -> control/action tier
+Tabs / Menu item        -> navigation tier
+Table / Tag / Badge     -> data tier
+Popover / Select popup  -> popup tier
+Card / Modal surface    -> surface tier
+Switch / Slider         -> own track/thumb tier
+```
+
+因此同一个 Medium 主题中，Card/Popup 可以明显比 Button/Input 更圆，这正是 create 的实际做法。显式 `Radius` 只替换 scale 数值，不破坏 Style 的组件层级映射。
 
 ---
 
-# 16. Density Generator
+# 16. Density Compatibility
 
-建议：
+Theme Studio 普通面板不再提供独立 Density 选项。create 风格下，控件高度、padding、gap、Card spacing、Switch/Slider geometry 属于 **Style recipe** 的职责，避免 Style 与 Density 两个入口同时改同一组尺寸而职责重叠。
 
-```text
-Compact
-Default
-Comfortable
-```
-
-它通过离散规则修改：
+Config v1 暂时保留：
 
 ```text
-control height
-padding
-gap
-table/list/menu row height
+compact / default / comfortable
 ```
 
-不修改：
-
-```text
-behavioral hit-test contract
-focus outline thickness
-border proportion到不可读
-font size到不可读
-icon stroke
-```
-
-Generator 不做全局比例缩放。
+仅用于旧 Config/Import 兼容。非 `default` 值作为显式 legacy override，在 Style 之后覆盖共享 control/table spacing；新主题不要依赖它作为常规设计维度。后续 Config schema 大版本可移除。
 
 ---
 
@@ -1002,22 +994,21 @@ Preview 必须使用真正 QXFRAME 组件。
 
 # 26. Theme Studio 配置面板
 
-建议：
+普通面板职责必须互不重叠：
 
 ```text
-Style
-Base Color
-Theme Color
-Chart Color
-Heading Font
-Body Font
-Radius
-Density
-Menu Color
-Menu Appearance
-Menu Accent
-Light/Dark
+Style        -> 整套组件 recipe：尺寸、间距、组件族圆角映射、边框/阴影 treatment、Switch/Slider geometry
+Base Color   -> Neutral/background/surface/text/border 中性色体系
+Theme Color  -> Primary 与语义主题色
+Chart Color  -> 单一色相的 8 阶图表序列
+Heading Font -> 标题字体
+Body Font    -> 正文字体
+Radius       -> 5 档基础圆角 scale；组件仍按 Style 的层级映射消费
+Menu         -> Menu Color / Appearance / Accent
+Light/Dark   -> 预览模式
 ```
+
+Density 不再作为普通面板入口；只保留旧 Config 导入兼容。
 
 高级抽屉：
 
@@ -1175,13 +1166,12 @@ Core CSS Token Schema 更新时：
 至少：
 
 ```text
-4 Style
+8 Style
 × 5 Theme Color
 × 3 Base Color
-× 2 Mode
-× 3 Radius
-× 3 Density
 ```
+
+Generator 代表矩阵为 120 套 Complete Theme，并轮换覆盖 5 档 Radius、Chart Color 与 Menu 组合；浏览器验收再覆盖代表 Style × Light/Dark。
 
 不要求做全部组合截图，但要：
 
@@ -1294,19 +1284,17 @@ Config JSON / CSS。
 
 商业化 Preview。
 
-## Phase TG-H — Preset Library
+## Phase TG-H — Style Recipe Library
 
-形成 QXFRAME 自己的 Style presets。
-
-不要直接使用：
+Style 维度直接采用 shadcn/create 已公开并经过实际产品验证的八套 recipe 作为设计参考与命名：
 
 ```text
-Mira / Nova / Luma / Rhea
+Vega / Nova / Maia / Lyra / Mira / Luma / Sera / Rhea
 ```
 
-作为 QXFRAME 预设名称与复制值。
+QXFRAME **不复制 Tailwind selector/utility 实现**，而是把每套 recipe 的可表达设计决策翻译为已冻结的 Public Theme / Optional Component Token：control height、padding、family radius tier、Card spacing、Switch/Slider geometry、border/shadow treatment 等。
 
-可以研究其设计差异，再建立自己的预设。
+颜色、Base Color、Chart Color、Radius、Typography、Menu 仍是独立维度；Style 不应偷偷重置这些用户显式选择。
 
 ## Phase TG-I — Regression Matrix
 
