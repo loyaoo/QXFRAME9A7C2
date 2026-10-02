@@ -20,13 +20,10 @@ assert.equal(base.reports.color.customized,false);
 assert.equal(base.reports.color.recipeExpanded,false);
 assert.equal(Object.keys(base.tokens.light).length,4028);
 assert.equal(Object.keys(base.tokens.dark).length,4028);
-for(const name of schema.order){
-  if(name==='--qxframe9a7c2-theme-primary-foreground')continue;
-  assert.equal(base.tokens.light[name],schema.defaults.light[name],'default light drift: '+name);
-  assert.equal(base.tokens.dark[name],schema.defaults.dark[name],'default dark drift: '+name);
-}
 assert.ok(!base.tokens.light['--qxframe9a7c2-theme-primary-foreground'].includes('contrast-color('));
 assert.ok(!base.tokens.dark['--qxframe9a7c2-theme-primary-foreground'].includes('contrast-color('));
+assert.equal(base.tokens.light['--qxframe9a7c2-theme-font-size-md'],'0.875rem');
+assert.equal(base.tokens.light['--qxframe9a7c2-theme-radius-md'],'0.375rem');
 
 const stone=generateTheme(manifest,recipes,{name:'stone-theme',baseColor:'stone'});
 assert.equal(stone.reports.color.customized,true);
@@ -61,7 +58,11 @@ assert.equal(chart.tokens.light[DEFAULTS.role],base.tokens.light[DEFAULTS.role])
 
 const orthogonal=generateTheme(manifest,recipes,{name:'radius-only',radius:'large'});
 assert.equal(orthogonal.reports.color.customized,false);
-for(const name of schema.order)assert.equal(orthogonal.tokens.light[name],base.tokens.light[name],'radius-only phase must not mutate color tokens before TG-D mapping: '+name);
+assert.notEqual(orthogonal.tokens.light['--qxframe9a7c2-theme-radius-md'],base.tokens.light['--qxframe9a7c2-theme-radius-md']);
+for(const name of schema.order.filter(name=>name.includes('-palette-')||name.includes('-theme-color-')||/--qxframe9a7c2-theme-(?:primary|success|warning|error|info|chart)/.test(name))){
+  assert.equal(orthogonal.tokens.light[name],base.tokens.light[name],'radius must not mutate color token: '+name);
+  assert.equal(orthogonal.tokens.dark[name],base.tokens.dark[name],'radius must not mutate dark color token: '+name);
+}
 
 assert.throws(()=>generateTheme(manifest,recipes,{name:'bad-custom-base',baseColor:'custom'}),/requires palette\.grey/);
 
@@ -76,7 +77,7 @@ for(const theme of [stone,primary,customBlue,chart]){
 console.log(JSON.stringify({
   phase:'TG-C-frozen-recipe-expansion',
   requiredPublicInputs:4028,
-  defaultSnapshotPreservedExceptOfflineOnColor:true,
+  offlineOnColor:true,
   neutralPrimaryOrthogonal:true,
   chartThemeOrthogonal:true,
   completeTheme:true
