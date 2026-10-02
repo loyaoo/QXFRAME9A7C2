@@ -293,28 +293,29 @@ function interpolateHue(a,b,t){
   const delta=mod(b-a+180,360)-180;
   return mod(a+delta*t,360);
 }
-function chartPalette(preset='balanced',seed='#165dff',count=8,mode='light'){
+function monochromeChartPalette(seed='#52525b',count=8,mode='light'){
   const n=Math.max(1,Math.min(12,Math.trunc(Number(count)||8)));
   const base=rgbToOklch(parseColor(seed));
-  const specs={
-    balanced:{offsets:[0,52,-52,104,-104,156,-156,208],c:0.15},
-    cool:{offsets:[0,28,58,92,126,168,205,242],c:0.13},
-    warm:{offsets:[0,-24,32,-48,58,-72,86,-100],c:0.15},
-    mixed:{offsets:[0,132,-94,48,184,-142,86,224],c:0.16},
-    mono:{offsets:[0,0,0,0,0,0,0,0],c:Math.max(0.07,base.c)}
-  };
-  const spec=specs[preset];
-  if(!spec)throw new TypeError('Unknown chart preset: '+preset);
-  const dark=mode==='dark';
+  const lightL=[0.88,0.78,0.69,0.60,0.52,0.45,0.38,0.31,0.26,0.22,0.18,0.14];
+  const darkL=[0.82,0.73,0.65,0.58,0.51,0.45,0.39,0.34,0.30,0.26,0.22,0.18];
+  const chromaWeight=[0.42,0.60,0.78,1,0.92,0.82,0.70,0.58,0.48,0.38,0.30,0.24];
+  const ls=mode==='dark'?darkL:lightL;
+  const chroma=base.c<EPSILON?0:Math.max(0.025,base.c);
   const result=[];
   for(let i=0;i<n;i+=1){
-    const offset=spec.offsets[i%spec.offsets.length]+Math.floor(i/spec.offsets.length)*17;
-    const hue=interpolateHue(base.h,base.h+offset,1);
-    const lightness=dark?(0.72-(i%4)*0.08):(0.56+(i%4)*0.065);
-    const chroma=preset==='mono'?spec.c*Math.max(0.35,1-i*0.07):spec.c*Math.max(0.65,1-(i%3)*0.1);
-    result.push(gamutMapOklch({l:lightness,c:chroma,h:hue,alpha:1}));
+    const index=i%ls.length;
+    result.push(gamutMapOklch({
+      l:ls[index],
+      c:chroma*chromaWeight[index],
+      h:base.h,
+      alpha:1
+    }));
   }
   return Object.freeze(result);
+}
+// Backward-compatible export name for callers; the implementation is intentionally single-hue.
+function chartPalette(seed='#52525b',count=8,mode='light'){
+  return monochromeChartPalette(seed,count,mode);
 }
 
 function scaleToTuples(scale){return Object.freeze(scale.map(colorToTuple));}
@@ -339,6 +340,7 @@ export {
   mixSrgb,
   mixOklab,
   chartPalette,
+  monochromeChartPalette,
   scaleToTuples,
   scaleToCss
 };
