@@ -293,26 +293,20 @@ function interpolateHue(a,b,t){
   const delta=mod(b-a+180,360)-180;
   return mod(a+delta*t,360);
 }
-function chartPalette(preset='balanced',seed='#165dff',count=8,mode='light'){
+function chartPalette(seed='#165dff',count=8,mode='light'){
   const n=Math.max(1,Math.min(12,Math.trunc(Number(count)||8)));
   const base=rgbToOklch(parseColor(seed));
-  const specs={
-    balanced:{offsets:[0,52,-52,104,-104,156,-156,208],c:0.15},
-    cool:{offsets:[0,28,58,92,126,168,205,242],c:0.13},
-    warm:{offsets:[0,-24,32,-48,58,-72,86,-100],c:0.15},
-    mixed:{offsets:[0,132,-94,48,184,-142,86,224],c:0.16},
-    mono:{offsets:[0,0,0,0,0,0,0,0],c:Math.max(0.07,base.c)}
-  };
-  const spec=specs[preset];
-  if(!spec)throw new TypeError('Unknown chart preset: '+preset);
-  const dark=mode==='dark';
+  const lightness=[0.88,0.78,0.69,0.61,0.54,0.47,0.40,0.33,0.28,0.23,0.18,0.13];
+  const chromaWeight=[0.52,0.72,0.9,1,0.96,0.88,0.78,0.68,0.58,0.48,0.38,0.28];
+  const maxC=Math.max(0.018,base.c);
   const result=[];
   for(let i=0;i<n;i+=1){
-    const offset=spec.offsets[i%spec.offsets.length]+Math.floor(i/spec.offsets.length)*17;
-    const hue=interpolateHue(base.h,base.h+offset,1);
-    const lightness=dark?(0.72-(i%4)*0.08):(0.56+(i%4)*0.065);
-    const chroma=preset==='mono'?spec.c*Math.max(0.35,1-i*0.07):spec.c*Math.max(0.65,1-(i%3)*0.1);
-    result.push(gamutMapOklch({l:lightness,c:chroma,h:hue,alpha:1}));
+    result.push(gamutMapOklch({
+      l:lightness[i],
+      c:maxC*chromaWeight[i],
+      h:base.h,
+      alpha:1
+    }));
   }
   return Object.freeze(result);
 }
