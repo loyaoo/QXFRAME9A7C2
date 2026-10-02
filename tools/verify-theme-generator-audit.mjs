@@ -16,12 +16,11 @@ for(const id of ['light-text','light-text-secondary','dark-text','dark-text-seco
   assert.ok(check.ratio>=check.minimum,id+' should pass default readability');
 }
 const primary=base.reports.readability.checks.find(item=>item.id==='on-primary');
-assert.equal(primary.foreground,base.tokens.light['--qxframe9a7c2-semantic-on-accent']);
 assert.equal(primary.foreground,base.tokens.light['--qxframe9a7c2-theme-primary-foreground']);
 assert.equal(primary.recommendedForeground,primary.foreground);
 for(const role of ['success','warning','error','info']){
   const check=base.reports.readability.checks.find(item=>item.id==='on-'+role);
-  assert.equal(check.foreground,base.tokens.light['--qxframe9a7c2-semantic-on-status'],'status audit must inspect the shared frozen public on-status consumer');
+  assert.equal(check.foreground,'rgb('+base.tokens.light['--qxframe9a7c2-palette-white']+')','status audit must inspect the Core shared white status foreground when no explicit optional override exists');
 }
 
 const bad=generateTheme(manifest,recipes,{
