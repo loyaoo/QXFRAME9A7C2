@@ -39,6 +39,7 @@ assert.equal(reset.advanced.overrides['--qxframe9a7c2-theme-motion-duration-2'],
 assert.equal(reset.advanced.overrides['--qxframe9a7c2-family-control-border-width'],'1px','Resetting one advanced group must preserve other explicit groups.');
 
 assert.throws(()=>applyPaletteSeed(config,'azure','#fff'),/Unknown physical Palette seed/);
+assert.throws(()=>applyPaletteSeed(config,'red','blue'),/must be a HEX\/RGB\/HSL\/OKLCH color seed/);
 assert.throws(()=>applyAdvancedProfile(config,'motion','warp'),/Unknown motion profile/);
 
 console.log(JSON.stringify({
