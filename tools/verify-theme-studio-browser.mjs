@@ -121,6 +121,16 @@ try{
   const dark=await evaluate(cdp,sessionId,'(function(){return {mode:document.documentElement.getAttribute(\'data-qxframe9a7c2-theme\'),generated:document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\').textContent.includes(\'[data-qxframe9a7c2-theme="dark"]\')};})()');
   assert.equal(dark.mode,'dark');assert.equal(dark.generated,true);
 
+  await evaluate(cdp,sessionId,'(function(){var name=document.querySelector(\'[data-studio-override-name]\'),value=document.querySelector(\'[data-studio-override-value]\');name.value=\'--qxframe9a7c2-theme-radius-md\';value.value=\'1rem\';document.querySelector(\'[data-studio-add-override]\').click();return true;})()');
+  await waitFor(cdp,sessionId,'window.QXFRAME9A7C2_THEME_STUDIO.getConfig().advanced.overrides[\'--qxframe9a7c2-theme-radius-md\']===\'1rem\'',5000);
+  const override=await evaluate(cdp,sessionId,'(function(){var t=window.QXFRAME9A7C2_THEME_STUDIO.getTheme(),c=window.QXFRAME9A7C2_THEME_STUDIO.getConfig();return {value:c.advanced.overrides[\'--qxframe9a7c2-theme-radius-md\'],light:t.tokens.light[\'--qxframe9a7c2-theme-radius-md\'],dark:t.tokens.dark[\'--qxframe9a7c2-theme-radius-md\'],rendered:document.querySelectorAll(\'[data-studio-remove-override]\').length};})()');
+  assert.equal(override.value,'1rem');assert.equal(override.light,'1rem');assert.equal(override.dark,'1rem');assert.ok(override.rendered>=1);
+
+  await evaluate(cdp,sessionId,'(function(){var name=document.querySelector(\'[data-studio-override-name]\'),value=document.querySelector(\'[data-studio-override-value]\');name.value=\'--qxframe9a7c2-theme-light-text-secondary\';value.value=\'rgb(255, 255, 255)\';document.querySelector(\'[data-studio-add-override]\').click();return true;})()');
+  await waitFor(cdp,sessionId,'window.QXFRAME9A7C2_THEME_STUDIO.getTheme().reports.readability.warnings.length>0',5000);
+  const warning=await evaluate(cdp,sessionId,'(function(){var t=window.QXFRAME9A7C2_THEME_STUDIO.getTheme();var audit=document.querySelector(\'[data-studio-audit]\');return {warning:t.reports.readability.warnings.some(function(x){return x.id===\'light-text-secondary\';}),ui:audit.classList.contains(\'is-warning\'),text:audit.textContent};})()');
+  assert.equal(warning.warning,true);assert.equal(warning.ui,true);assert.match(warning.text,/light-text-secondary/i);
+
   console.log(JSON.stringify({
     phase:'TG-G-studio-browser',
     commercialScenes:initial.scenes,
@@ -129,6 +139,8 @@ try{
     canonicalCards:initial.cards,
     primaryOrthogonality:true,
     lightDarkPreview:true,
+    publicOverrideUi:true,
+    readabilityWarningUi:true,
     rootInlineTheme:false
   }));
 }finally{
