@@ -255,10 +255,6 @@ function createEvaluator(bindings){
   }
   return Object.freeze({evaluate,resolveSymbol});
 }
-function accentSeedBinding(axis){
-  const map={bare:'r.seed-primary',default:'r.seed-primary',primary:'r.seed-primary',success:'r.seed-success',warning:'r.seed-warning',error:'r.seed-error',info:'r.seed-info'};
-  return map[axis]||null;
-}
 function roleTargetForAxis(role,axis){
   return axis==='bare'?role.target:role.target+'-'+axis;
 }
@@ -283,9 +279,10 @@ function expandFrozenColorRecipes(tokenMaps,schema,recipeData,changed){
         const base=data.recipes[mode][axis];
         if(!base)throw new TypeError('Missing '+mode+'/'+axis+' Theme color recipe map.');
         const bindings={...base,...Object.fromEntries(changed[mode])};
-        if(!Object.prototype.hasOwnProperty.call(bindings,'r.accent-seed')){
-          const fallback=accentSeedBinding(axis);
-          if(fallback)bindings['r.accent-seed']='var('+fallback+')';
+        if(role.expression.includes('var(r.accent-seed)')&&!Object.prototype.hasOwnProperty.call(bindings,'r.accent-seed')){
+          // The frozen recipe intentionally leaves this axis unbound. Preserve the
+          // manifest default instead of inventing a semantic mapping in Generator.
+          continue;
         }
         const evaluator=createEvaluator(bindings);
         const result=evaluator.evaluate(role.expression);
