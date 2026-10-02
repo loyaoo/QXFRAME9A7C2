@@ -2,8 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
+import { readCanonicalComponentStyleSource } from './style-source.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+const css=readCanonicalComponentStyleSource({root});
 
 assert.match(css,/\.qxframe9a7c2-period-panel-grid\{display:flex;flex-wrap:wrap;/);
 assert.match(css,/\.qxframe9a7c2-period-panel-cell\{[^}]*flex:0 0 calc\(25% - \(var\(--qxframe9a7c2-theme-space-2\) \* \.75\)\)/);

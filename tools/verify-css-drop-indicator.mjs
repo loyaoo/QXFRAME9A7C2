@@ -2,10 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
+import { readCanonicalComponentStyleSource } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const theme=fs.readFileSync(path.join(root,'src/styles/theme/_default.scss'),'utf8');
-const css=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+const css=readCanonicalComponentStyleSource({root});
 const plan=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-drop-indicator-geometry.json'),'utf8'));
 
 assert.match(theme,/--qxframe9a7c2-theme-drop-indicator-size:\s*var\(--qxframe9a7c2-size-1\)/);

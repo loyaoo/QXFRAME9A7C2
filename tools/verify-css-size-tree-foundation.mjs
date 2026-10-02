@@ -2,11 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
+import { readCanonicalComponentStyleSource } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const css=fs.readFileSync(path.join(root,'src/styles/preset/_foundation.scss'),'utf8');
 const theme=fs.readFileSync(path.join(root,'src/styles/theme/_default.scss'),'utf8');
-const components=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+const components=readCanonicalComponentStyleSource({root});
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-size-tree-foundation.json'),'utf8'));
 const esc=value=>value.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
 

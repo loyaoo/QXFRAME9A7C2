@@ -2,12 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
+import { readCanonicalComponentStyleSource } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const preset=read('src/styles/preset/_foundation.scss');
 const theme=[read('src/styles/theme/_default.scss'),read('src/styles/theme/_family.scss')].join('\n');
-const component=read('src/styles/components/_components.scss');
+const component=readCanonicalComponentStyleSource({root});
 const manifest=JSON.parse(read('tools/manifests/css-token-layer-bridge.json'));
 
 const defs=text=>new Set([...text.matchAll(/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:/ig)].map(m=>m[1]));

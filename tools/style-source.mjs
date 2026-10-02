@@ -24,6 +24,16 @@ export function readCanonicalStyleSource({root=ownRoot}={}){
     .join('');
 }
 
+export function getCanonicalComponentStyleModulePaths({root=ownRoot}={}){
+  return getCanonicalStyleModulePaths({root}).filter(rel=>rel.startsWith('src/styles/components/'));
+}
+
+export function readCanonicalComponentStyleSource({root=ownRoot}={}){
+  return getCanonicalComponentStyleModulePaths({root})
+    .map(rel=>fs.readFileSync(path.join(root,rel),'utf8'))
+    .join('');
+}
+
 export function getPhaseABaselinePath({root=ownRoot}={}){
   const rel=readOrder(root).migrationBaseline;
   if(!rel) throw new Error('CSS source-order manifest must declare the Phase A baseline fixture.');

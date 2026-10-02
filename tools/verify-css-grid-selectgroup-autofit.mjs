@@ -2,9 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
+import { readCanonicalComponentStyleSource } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+const css=readCanonicalComponentStyleSource({root});
 const theme=fs.readFileSync(path.join(root,'src/styles/theme/_default.scss'),'utf8');
 
 assert.match(css,/\.qxframe9a7c2-form-selectgroup-item\{flex:1 1 var\(--_qxframe9a7c2-form-selectgroup-item-basis,0\);min-width:var\(--_qxframe9a7c2-form-selectgroup-item-min-width,0\)\}/);

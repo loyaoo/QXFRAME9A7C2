@@ -2,13 +2,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
+import { readCanonicalComponentStyleSource } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const preset=read('src/styles/preset/_foundation.scss');
 const themeDefault=read('src/styles/theme/_default.scss');
 const themeFamily=read('src/styles/theme/_family.scss');
-const components=read('src/styles/components/_components.scss');
+const components=readCanonicalComponentStyleSource({root});
 const manifest=JSON.parse(read('tools/manifests/css-font-size-normalization-decisions.json'));
 const all=[preset,themeDefault,themeFamily,components].join('\n');
 const byId=id=>manifest.decisions.find(item=>item.id===id);
