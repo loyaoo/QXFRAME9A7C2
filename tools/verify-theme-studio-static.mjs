@@ -35,6 +35,12 @@ assert.match(js,/data-studio-add-override/);
 assert.match(js,/data-studio-remove-override/);
 assert.match(js,/renderAudit\(currentTheme\.reports\.readability\)/);
 assert.match(js,/allowedOverride\(name\)/);
+assert.match(js,/data-studio-apply-palette/);
+assert.match(js,/data-studio-advanced-profile="shadow"/);
+assert.match(js,/data-studio-advanced-profile="border"/);
+assert.match(js,/data-studio-advanced-profile="motion"/);
+assert.match(js,/runtime\.advanced\.applyPaletteSeed/);
+assert.match(js,/runtime\.advanced\.applyAdvancedProfile/);
 
 const scenes=[...js.matchAll(/scene\('([^']+)'/g)].map(match=>match[1]);
 assert.ok(scenes.length>=20,'Commercial Preview requires at least 20 real business scenes; found '+scenes.length);
@@ -58,6 +64,7 @@ for(const path of [
   'theme-generator/io.mjs',
   'theme-generator/color-engine.mjs',
   'theme-generator/presets.mjs',
+  'theme-generator/advanced-engine.mjs',
   '../generated/theme-public-schema-v1.json',
   '../generated/theme-color-recipes-v1.json'
 ]) assert.ok(js.includes(path),'Studio runtime missing frozen-generator dependency '+path);
