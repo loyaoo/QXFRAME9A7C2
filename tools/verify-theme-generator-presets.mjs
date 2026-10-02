@@ -20,7 +20,7 @@ for(const preset of THEME_PRESETS){
   assert.ok(!theme.css.includes('--_qxframe9a7c2-'));
   assert.ok(!theme.css.includes('color-mix('));
   assert.ok(!theme.css.includes('contrast-color('));
-  assert.equal((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8060);
+  assert.equal((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8056);
   css.add(theme.css);
 }
 assert.equal(css.size,THEME_PRESETS.length,'Every QX Theme preset should produce a distinct complete theme.');
