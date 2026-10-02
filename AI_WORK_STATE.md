@@ -14,23 +14,24 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Component SCSS physical modularization after CSS Design Token Schema v1.6 closeout
-- Current Task: `CSS-SCSS-MODULE-001` (IN PROGRESS)
+- Current Phase: Component SCSS physical modularization closeout after CSS Design Token Schema v1.6
+- Current Task: `CSS-SCSS-MODULE-001` (CI / MERGE VERIFICATION)
 
 ## CURRENT
 
 ### CSS-SCSS-MODULE-001 — Component SCSS physical modularization
-Status: IN PROGRESS
-Task progress: batch 1 prepared — 24 component/shared blocks extracted from the 827KB monolithic component stylesheet
-Baseline: main@33e5cf4ad09bd1b71bc61daa1db716447bbcff0c
-Exact next step: verify the ordered partial split through the existing SCSS entry-vs-module equivalence gate and full release CI, then merge before continuing the remaining component tail.
+Status: CI / MERGE VERIFICATION
+Task progress: implementation 100% — all temporary component holding partials eliminated; 53 ordered component/shared partials are now explicit source modules
+Baseline: main@182034cc8af4c440919ac392171484abc749a43d (#241 merged)
+Implementation branch: refactor/scss-modules-bulk-2
+Exact next step: run the SCSS entry-vs-module equivalence gate and full release CI on the bulk split, fix only demonstrated regressions, then merge and verify main/Pages.
 
 Scope / guardrails:
 - Physical source organization only; no intended selector, declaration, token, interaction, layout, value, focus, overlay or Motion semantic changes.
-- Preserve exact source order because QXFRAME does not use @layer.
-- `src/styles/components/_components.scss` is now the ordered @use aggregator; audits read the real ordered partials through `tools/manifests/css-order.json`.
-- Batch 1 extracts 24 component/shared blocks: Layout, Empty, Badge, Avatar, Card, Descriptions, Alert, Switch, Motion, Scroll, Popover/Tooltip, Native Input, Item Surface, Menu, Collection/Select, Pagination, Tabs, Steps, Modal, Drawer, Notice, Progress, Loading and List.
-- `_core.scss` and `_tail.scss` are temporary ordered holding partials for untouched source; later batches continue splitting them without reordering CSS.
+- Exact original source order is preserved because QXFRAME does not use @layer; each former holding file was sliced into contiguous byte-equivalent blocks before reassembly through the ordered aggregator.
+- `src/styles/components/_components.scss` is the ordered @use aggregator; `tools/manifests/css-order.json` is the matching audit/source concatenation authority.
+- PR #241 extracted the first 24 component/shared blocks. Bulk closeout extracts the remaining Core/Tail families, including Tags, Ripple, Button, Icon, Grid, Form/Native, Tree, Picker family, Table, Transfer, Sort, advanced Input, Upload, Rate, Slider, Result, Collapse, Carousel, Image, JSON, state/composition/focus/compatibility layers.
+- Temporary `_core.scss`, `_tail.scss` and `_tail-closeout.scss` holding partials are removed and verifier-locked against reintroduction.
 - CSS-TOKEN-SCHEMA-001 remains DONE: 0 actionable Size Tree consumers, viewport/Grid closeout complete, PR #239/#240 merged and verified.
 
 ## Current authority snapshot — after Phase A
