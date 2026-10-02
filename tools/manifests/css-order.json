@@ -1,6 +1,6 @@
 {
-  "version": 6,
-  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS modules are the only writable style authority. The Phase A CSS baseline is retained only under tools/fixtures for equivalence testing and is never shipped or consumed by the release build.",
+  "version": 7,
+  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
   "files": [
     {
       "stage": "canonical",
@@ -34,6 +34,31 @@
     "src/styles/preset/_foundation.scss",
     "src/styles/theme/_default.scss",
     "src/styles/theme/_family.scss",
-    "src/styles/components/_components.scss"
+    "src/styles/components/_core.scss",
+    "src/styles/components/_layout.scss",
+    "src/styles/components/_empty.scss",
+    "src/styles/components/_badge.scss",
+    "src/styles/components/_avatar.scss",
+    "src/styles/components/_card.scss",
+    "src/styles/components/_descriptions.scss",
+    "src/styles/components/_alert.scss",
+    "src/styles/components/_switch.scss",
+    "src/styles/components/_motion.scss",
+    "src/styles/components/_scroll.scss",
+    "src/styles/components/_popover-tooltip.scss",
+    "src/styles/components/_native-input.scss",
+    "src/styles/components/_item-surface.scss",
+    "src/styles/components/_menu.scss",
+    "src/styles/components/_collection-select.scss",
+    "src/styles/components/_pagination.scss",
+    "src/styles/components/_tabs.scss",
+    "src/styles/components/_steps.scss",
+    "src/styles/components/_modal.scss",
+    "src/styles/components/_drawer.scss",
+    "src/styles/components/_notice.scss",
+    "src/styles/components/_progress.scss",
+    "src/styles/components/_loading.scss",
+    "src/styles/components/_list.scss",
+    "src/styles/components/_tail.scss"
   ]
 }

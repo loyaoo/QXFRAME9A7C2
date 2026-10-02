@@ -2,10 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
+import { readCanonicalComponentStyleSource } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const family=fs.readFileSync(path.join(root,'src/styles/theme/_family.scss'),'utf8');
-const components=fs.readFileSync(path.join(root,'src/styles/components/_components.scss'),'utf8');
+const components=readCanonicalComponentStyleSource({root});
 const css=family+'\n'+components;
 const lines=css.split(/\r?\n/);
 

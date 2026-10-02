@@ -2,13 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
-import { getCanonicalStyleModulePaths } from './style-source.mjs';
+import { getCanonicalStyleModulePaths, readCanonicalComponentStyleSource } from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const componentPath=path.join(root,'src/styles/components/_components.scss');
 const familyPath=path.join(root,'src/styles/theme/_family.scss');
 const themePath=path.join(root,'src/styles/theme/_default.scss');
-const css=fs.readFileSync(componentPath,'utf8');
+const css=readCanonicalComponentStyleSource({root});
 const family=fs.readFileSync(familyPath,'utf8');
 const theme=fs.readFileSync(themePath,'utf8');
 const noticeService=fs.readFileSync(path.join(root,'src/core/noticeService.js'),'utf8');
