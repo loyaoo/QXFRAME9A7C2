@@ -14,25 +14,25 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Component SCSS physical modularization closeout after CSS Design Token Schema v1.6
-- Current Task: `CSS-SCSS-MODULE-001` (CI / MERGE VERIFICATION)
+- Current Phase: CSS Design Token Schema v1.6 + Component SCSS physical modularization complete; awaiting final acceptance or a new explicit task
+- Current Task: `ASTRA-HIGH-FINAL-ACCEPTANCE` (READY / NOT STARTED IN THIS CHECKPOINT)
 
 ## CURRENT
 
-### CSS-SCSS-MODULE-001 — Component SCSS physical modularization
-Status: CI / MERGE VERIFICATION
-Task progress: implementation 100% — all temporary component holding partials eliminated; 53 ordered component/shared partials are now explicit source modules
-Baseline: main@182034cc8af4c440919ac392171484abc749a43d (#241 merged)
-Implementation branch: refactor/scss-modules-bulk-2
-Exact next step: run the SCSS entry-vs-module equivalence gate and full release CI on the bulk split, fix only demonstrated regressions, then merge and verify main/Pages.
+### ASTRA-HIGH-FINAL-ACCEPTANCE — final acceptance handoff
+Status: READY
+Task progress: implementation closeout complete; no known CSS Token / SCSS modularization implementation backlog remains.
+Verified main checkpoint: `0fbc91b70b9e022945daa3ab97df644456a54a4c`
+Latest verified main CI: QXFRAME CI #1231 / run `36968510652` — SUCCESS.
+Exact next step: start from current `main`, read `AGENTS.md` + this file, then perform only the requested final Astra High acceptance/audit or a newly specified task. Do not restart Phase A, CSS Token migration, viewport/Grid cleanup, or SCSS modularization.
 
-Scope / guardrails:
-- Physical source organization only; no intended selector, declaration, token, interaction, layout, value, focus, overlay or Motion semantic changes.
-- Exact original source order is preserved because QXFRAME does not use @layer; each former holding file was sliced into contiguous byte-equivalent blocks before reassembly through the ordered aggregator.
-- `src/styles/components/_components.scss` is the ordered @use aggregator; `tools/manifests/css-order.json` is the matching audit/source concatenation authority.
-- PR #241 extracted the first 24 component/shared blocks. Bulk closeout extracts the remaining Core/Tail families, including Tags, Ripple, Button, Icon, Grid, Form/Native, Tree, Picker family, Table, Transfer, Sort, advanced Input, Upload, Rate, Slider, Result, Collapse, Carousel, Image, JSON, state/composition/focus/compatibility layers.
-- Temporary `_core.scss`, `_tail.scss` and `_tail-closeout.scss` holding partials are removed and verifier-locked against reintroduction.
-- CSS-TOKEN-SCHEMA-001 remains DONE: 0 actionable Size Tree consumers, viewport/Grid closeout complete, PR #239/#240 merged and verified.
+Resume guardrails:
+- `CSS-TOKEN-SCHEMA-001` is DONE: Size Tree actionable consumers are 0; only 36 protected responsive breakpoint literals plus the approved 100rem pill sentinel remain.
+- `CSS-SCSS-MODULE-001` is DONE: 53 ordered component/shared SCSS partials are explicit source modules; temporary `_core.scss`, `_tail.scss` and `_tail-closeout.scss` holding files are absent.
+- PR #244 is the authoritative SCSS modularization closeout and is merged to main.
+- PR #242 and PR #243 were parallel/superseded modularization attempts. They must not be resumed or merged after PR #244.
+- QXFRAME does not use `@layer`; preserve the explicit component source order and existing cascade. Physical module boundaries must not be treated as permission to reorder selectors/declarations.
+- Do not reopen completed Grid/fr, viewport-unit, Size Tree, Controller, Picker-value or focus-origin work without a demonstrated regression.
 
 ## Current authority snapshot — after Phase A
 
@@ -60,6 +60,20 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE
+
+### CSS-SCSS-MODULE-001 — Component SCSS physical modularization closeout
+Status: DONE_MERGED_VERIFIED
+Task progress: 100%
+Evidence:
+- PR #241 merged as `182034cc8af4c440919ac392171484abc749a43d` and established the first ordered 24 component/shared partials plus canonical style-source verification.
+- PR #244 completed the remaining physical split and merged to main as `0fbc91b70b9e022945daa3ab97df644456a54a4c`.
+- Main QXFRAME CI #1231 / run `36968510652` completed successfully after PR #244 merge.
+Outcome:
+- Component stylesheet source is physically modularized into 53 ordered component/shared SCSS partials under `src/styles/components/`.
+- Temporary holding files `_core.scss`, `_tail.scss` and `_tail-closeout.scss` are eliminated.
+- `_components.scss` remains the ordered aggregator and `tools/manifests/css-order.json` remains the source-order/audit authority.
+- This was a physical source-organization change only; selector/declaration order and cascade semantics remain verifier-locked.
+- PR #242 / #243 are superseded parallel attempts and are not valid continuation points.
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 closeout
 Status: DONE
