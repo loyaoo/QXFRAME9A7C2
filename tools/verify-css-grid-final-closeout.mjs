@@ -13,7 +13,7 @@ for(let i=1;i<=24;i++){
   assert.ok(css.includes(`var(--qxframe9a7c2-theme-grid-gap-${i})`),`Grid gutter utilities must consume Theme Grid gap ${i}.`);
 }
 assert.match(css,/\.qxframe9a7c2-card-grid\{display:flex;flex-wrap:wrap\}/);
-assert.match(css,/\.qxframe9a7c2-card-grid-item,\.qxframe9a7c2-card-grid>\*\{[^}]*min-width:var\(--qxframe9a7c2-card-grid-min,9\.375rem\);[^}]*flex-basis:calc\(100% \/ var\(--qxframe9a7c2-card-grid-columns,999\)\)/);
+assert.match(css,/\.qxframe9a7c2-card-grid-item,\.qxframe9a7c2-card-grid>\*\{[^}]*min-width:var\(--qxframe9a7c2-card-grid-min,var\(--qxframe9a7c2-theme-card-grid-min-width\)\);[^}]*flex-basis:calc\(100% \/ var\(--qxframe9a7c2-card-grid-columns,999\)\)/);
 assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{display:flex;align-items:stretch\}/);
 assert.match(css,/\.qxframe9a7c2-descriptions-grid\{display:flex;flex-wrap:wrap;/);
 assert.match(css,/\.qxframe9a7c2-descriptions-item\{[^}]*flex:0 0 var\(--_qxframe9a7c2-descriptions-item-basis\)/);
