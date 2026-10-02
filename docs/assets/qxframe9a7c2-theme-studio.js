@@ -149,6 +149,14 @@ function studioPanelHtml(){
     field('Error','error','<select class="qxframe9a7c2-studio-control" data-studio-input="error">'+selectOptions([['red','Red'],['orange','Orange'],['pink','Pink']])+'</select>')+
     field('Info','info','<select class="qxframe9a7c2-studio-control" data-studio-input="info">'+selectOptions([['cyan','Cyan'],['blue','Blue'],['teal','Teal']])+'</select>')+
     '<div class="qxframe9a7c2-studio-override-editor">'+
+      field('Palette seed','paletteSeedName','<select class="qxframe9a7c2-studio-control" data-studio-palette-name>'+selectOptions([['blue','Blue'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['lime','Lime'],['yellow','Yellow'],['orange','Orange'],['red','Red'],['pink','Pink'],['purple','Purple'],['grey','Grey']])+'</select>')+
+      field('Seed color','paletteSeedValue','<input class="qxframe9a7c2-studio-color" data-studio-palette-color type="color" value="#165dff">')+
+      '<button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-apply-palette>Apply seed</button>'+
+    '</div>'+
+    field('Shadow profile','shadowProfile','<select class="qxframe9a7c2-studio-control" data-studio-advanced-profile="shadow">'+selectOptions([['default','Style default'],['flat','Flat'],['crisp','Crisp'],['elevated','Elevated'],['custom','Custom overrides']])+'</select>')+
+    field('Border profile','borderProfile','<select class="qxframe9a7c2-studio-control" data-studio-advanced-profile="border">'+selectOptions([['default','Framework default'],['hairline','Hairline 1px'],['standard','Standard 2px'],['strong','Strong 4px'],['custom','Custom overrides']])+'</select>')+
+    field('Motion profile','motionProfile','<select class="qxframe9a7c2-studio-control" data-studio-advanced-profile="motion">'+selectOptions([['default','Framework default'],['none','No motion'],['snappy','Snappy'],['relaxed','Relaxed'],['custom','Custom overrides']])+'</select>')+
+    '<div class="qxframe9a7c2-studio-override-editor">'+
       field('Public token','overrideName','<input class="qxframe9a7c2-studio-control" data-studio-override-name type="text" placeholder="--qxframe9a7c2-theme-…">')+
       field('CSS value','overrideValue','<input class="qxframe9a7c2-studio-control" data-studio-override-value type="text" placeholder="0.5rem / rgb(...)">')+
       '<button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-add-override>Add</button>'+
@@ -225,6 +233,7 @@ function syncControls(){
   if(primarySelect){primarySelect.value=colorLike(currentConfig.roles.primary)?'custom':currentConfig.roles.primary;}
   if(colorInput&&colorLike(currentConfig.roles.primary)){try{colorInput.value=runtime.color.colorToHex(currentConfig.roles.primary);}catch(_){}}
   document.querySelectorAll('[data-studio-lock]').forEach(function(b){var on=!!locks[b.dataset.studioLock];b.classList.toggle('is-locked',on);b.textContent=on?'Locked':'Lock';});
+  document.querySelectorAll('[data-studio-advanced-profile]').forEach(function(el){var inferred=runtime&&runtime.advanced?runtime.advanced.inferAdvancedProfile(currentConfig,el.dataset.studioAdvancedProfile):'default';el.value=inferred||'custom';});
   renderOverrides();
   applyMode();
 }
@@ -285,6 +294,8 @@ function wirePanel(panel){
   panel.querySelectorAll('[data-studio-lock]').forEach(function(b){b.addEventListener('click',function(){var key=this.dataset.studioLock;locks[key]=!locks[key];syncControls();save();});});
   var random=panel.querySelector('[data-studio-randomize]');if(random)random.addEventListener('click',randomize);
   var resetButton=panel.querySelector('[data-studio-reset]');if(resetButton)resetButton.addEventListener('click',reset);
+  var applyPalette=panel.querySelector('[data-studio-apply-palette]');if(applyPalette)applyPalette.addEventListener('click',function(){try{var name=panel.querySelector('[data-studio-palette-name]').value,value=panel.querySelector('[data-studio-palette-color]').value;currentConfig=runtime.advanced.applyPaletteSeed(currentConfig,name,value);syncControls();generateNow();}catch(error){updateStatus(error&&error.message||error,true);}});
+  panel.querySelectorAll('[data-studio-advanced-profile]').forEach(function(el){el.addEventListener('change',function(){if(this.value==='custom')return;try{currentConfig=runtime.advanced.applyAdvancedProfile(currentConfig,this.dataset.studioAdvancedProfile,this.value);syncControls();generateNow();}catch(error){updateStatus(error&&error.message||error,true);}});});
   var addOverride=panel.querySelector('[data-studio-add-override]');if(addOverride)addOverride.addEventListener('click',function(){
     var name=(panel.querySelector('[data-studio-override-name]')||{}).value||'',value=(panel.querySelector('[data-studio-override-value]')||{}).value||'';
     name=name.trim();value=value.trim();
@@ -302,10 +313,10 @@ function wirePanel(panel){
 function loadRuntime(){
   var base;
   try{base=new URL('.',scriptUrl);}catch(error){return Promise.reject(error);}
-  var generatorUrl=new URL('theme-generator/generator.mjs',base).href,engineUrl=new URL('theme-generator/engine.mjs',base).href,ioUrl=new URL('theme-generator/io.mjs',base).href,colorUrl=new URL('theme-generator/color-engine.mjs',base).href,presetsUrl=new URL('theme-generator/presets.mjs',base).href;
+  var generatorUrl=new URL('theme-generator/generator.mjs',base).href,engineUrl=new URL('theme-generator/engine.mjs',base).href,ioUrl=new URL('theme-generator/io.mjs',base).href,colorUrl=new URL('theme-generator/color-engine.mjs',base).href,presetsUrl=new URL('theme-generator/presets.mjs',base).href,advancedUrl=new URL('theme-generator/advanced-engine.mjs',base).href;
   var manifestUrl=new URL('../generated/theme-public-schema-v1.json',base).href,recipesUrl=new URL('../generated/theme-color-recipes-v1.json',base).href;
-  return Promise.all([import(generatorUrl),import(engineUrl),import(ioUrl),import(colorUrl),import(presetsUrl),fetch(manifestUrl).then(function(r){if(!r.ok)throw new Error('Theme Schema load failed: '+r.status);return r.json();}),fetch(recipesUrl).then(function(r){if(!r.ok)throw new Error('Theme recipes load failed: '+r.status);return r.json();})]).then(function(parts){
-    return {generator:parts[0],engine:parts[1],io:parts[2],color:parts[3],presets:parts[4],manifest:parts[5],recipes:parts[6]};
+  return Promise.all([import(generatorUrl),import(engineUrl),import(ioUrl),import(colorUrl),import(presetsUrl),import(advancedUrl),fetch(manifestUrl).then(function(r){if(!r.ok)throw new Error('Theme Schema load failed: '+r.status);return r.json();}),fetch(recipesUrl).then(function(r){if(!r.ok)throw new Error('Theme recipes load failed: '+r.status);return r.json();})]).then(function(parts){
+    return {generator:parts[0],engine:parts[1],io:parts[2],color:parts[3],presets:parts[4],advanced:parts[5],manifest:parts[6],recipes:parts[7]};
   });
 }
 function enableStudio(){
