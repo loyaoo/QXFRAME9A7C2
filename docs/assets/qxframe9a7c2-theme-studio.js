@@ -148,9 +148,15 @@ function studioPanelHtml(){
     field('Warning','warning','<select class="qxframe9a7c2-studio-control" data-studio-input="warning">'+selectOptions([['orange','Orange'],['yellow','Yellow'],['red','Red']])+'</select>')+
     field('Error','error','<select class="qxframe9a7c2-studio-control" data-studio-input="error">'+selectOptions([['red','Red'],['orange','Orange'],['pink','Pink']])+'</select>')+
     field('Info','info','<select class="qxframe9a7c2-studio-control" data-studio-input="info">'+selectOptions([['cyan','Cyan'],['blue','Blue'],['teal','Teal']])+'</select>')+
+    '<div class="qxframe9a7c2-studio-override-editor">'+
+      field('Public token','overrideName','<input class="qxframe9a7c2-studio-control" data-studio-override-name type="text" placeholder="--qxframe9a7c2-theme-…">')+
+      field('CSS value','overrideValue','<input class="qxframe9a7c2-studio-control" data-studio-override-value type="text" placeholder="0.5rem / rgb(...)">')+
+      '<button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-studio-add-override>Add</button>'+
+    '</div><div class="qxframe9a7c2-studio-overrides" data-studio-overrides></div>'+
   '</div></details>'+
   '<div class="qxframe9a7c2-studio-actions"><button class="qxframe9a7c2-button is-default is-outlined is-sm" type="button" data-studio-randomize>Randomize</button><button class="qxframe9a7c2-button is-default is-outlined is-sm" type="button" data-studio-reset>Reset</button></div>'+
   '<div class="qxframe9a7c2-studio-actions"><button class="qxframe9a7c2-button is-primary is-solid is-sm" type="button" data-studio-copy>Copy CSS</button><button class="qxframe9a7c2-button is-default is-outlined is-sm" type="button" data-studio-export-css>Export CSS</button><button class="qxframe9a7c2-button is-default is-outlined is-sm" type="button" data-studio-export-json>Export JSON</button><button class="qxframe9a7c2-button is-default is-outlined is-sm" type="button" data-studio-import>Import JSON</button><input class="qxframe9a7c2-studio-import" data-studio-file type="file" accept="application/json,.json"></div>'+
+  '<div class="qxframe9a7c2-studio-audit" data-studio-audit><strong>Readability</strong><span>Waiting for generated theme…</span></div>'+
   '<div class="qxframe9a7c2-studio-status" data-studio-status>Loading frozen Theme Schema…</div>';
 }
 function installPanel(){
@@ -193,6 +199,21 @@ function load(){
 }
 function setControl(key,value){var el=document.querySelector('[data-studio-input="'+key+'"]');if(el)el.value=String(value);}
 function colorLike(value){return /^#|^rgba?\(|^hsla?\(|^okl/i.test(String(value||''));}
+function allowedOverride(name){
+  if(!runtime||!runtime.manifest)return false;
+  return runtime.manifest.tokens.some(function(token){return token.name===name;})||(runtime.manifest.optionalComponentOverrides||[]).indexOf(name)>=0;
+}
+function renderOverrides(){
+  var host=document.querySelector('[data-studio-overrides]');if(!host||!currentConfig)return;
+  var items=Object.entries(currentConfig.advanced&&currentConfig.advanced.overrides||{});
+  host.innerHTML=items.length?items.map(function(entry){return '<div class="qxframe9a7c2-studio-override-item"><div class="qxframe9a7c2-studio-override-copy"><code>'+esc(entry[0])+'</code><span>'+esc(entry[1])+'</span></div><button type="button" class="qxframe9a7c2-button is-error is-text is-xs" data-studio-remove-override="'+esc(entry[0])+'">Remove</button></div>';}).join(''):'<span class="qxframe9a7c2-studio-label">No explicit overrides. Generator presets own the current theme.</span>';
+}
+function renderAudit(report){
+  var host=document.querySelector('[data-studio-audit]');if(!host||!report)return;
+  var warnings=report.warnings||[],passed=(report.checks||[]).length-warnings.length;
+  host.classList.toggle('is-warning',warnings.length>0);
+  host.innerHTML='<strong>Readability · '+passed+'/'+(report.checks||[]).length+' checks pass</strong>'+(warnings.length?warnings.map(function(item){return '<span>'+esc(item.message)+'</span>';}).join(''):'<span>Text, secondary text and semantic on-color checks pass current thresholds.</span>');
+}
 function syncControls(){
   if(!currentConfig)return;
   setControl('name',currentConfig.name);setControl('style',currentConfig.style);setControl('baseColor',currentConfig.baseColor);setControl('chart',currentConfig.chart.preset);setControl('radius',currentConfig.radius);setControl('density',currentConfig.density);
@@ -204,6 +225,7 @@ function syncControls(){
   if(primarySelect){primarySelect.value=colorLike(currentConfig.roles.primary)?'custom':currentConfig.roles.primary;}
   if(colorInput&&colorLike(currentConfig.roles.primary)){try{colorInput.value=runtime.color.colorToHex(currentConfig.roles.primary);}catch(_){}}
   document.querySelectorAll('[data-studio-lock]').forEach(function(b){var on=!!locks[b.dataset.studioLock];b.classList.toggle('is-locked',on);b.textContent=on?'Locked':'Lock';});
+  renderOverrides();
   applyMode();
 }
 function configFromControls(){
@@ -228,9 +250,9 @@ function generateNow(){
   try{
     currentConfig=configFromControls();
     currentTheme=runtime.generator.generateTheme(runtime.manifest,runtime.recipes,currentConfig);
-    clearLegacyInlineTheme();ensureInlineGuard();ensureThemeStyle().textContent=currentTheme.css;applyMode();save();syncControls();
-    var kb=(currentTheme.css.length/1024).toFixed(1);
-    updateStatus('<strong>'+esc(currentConfig.name)+'</strong><br>4,028 public inputs · Light + Dark · '+kb+' KB complete CSS',false);
+    clearLegacyInlineTheme();ensureInlineGuard();ensureThemeStyle().textContent=currentTheme.css;applyMode();save();syncControls();renderAudit(currentTheme.reports.readability);
+    var kb=(currentTheme.css.length/1024).toFixed(1),warningCount=currentTheme.reports.readability.warnings.length;
+    updateStatus('<strong>'+esc(currentConfig.name)+'</strong><br>4,028 public inputs · Light + Dark · '+kb+' KB complete CSS · '+warningCount+' readability warning'+(warningCount===1?'':'s'),false);
   }catch(error){updateStatus(error&&error.message||String(error),true);}
 }
 function schedule(){clearTimeout(generateTimer);generateTimer=setTimeout(generateNow,80);}
@@ -263,6 +285,13 @@ function wirePanel(panel){
   panel.querySelectorAll('[data-studio-lock]').forEach(function(b){b.addEventListener('click',function(){var key=this.dataset.studioLock;locks[key]=!locks[key];syncControls();save();});});
   var random=panel.querySelector('[data-studio-randomize]');if(random)random.addEventListener('click',randomize);
   var resetButton=panel.querySelector('[data-studio-reset]');if(resetButton)resetButton.addEventListener('click',reset);
+  var addOverride=panel.querySelector('[data-studio-add-override]');if(addOverride)addOverride.addEventListener('click',function(){
+    var name=(panel.querySelector('[data-studio-override-name]')||{}).value||'',value=(panel.querySelector('[data-studio-override-value]')||{}).value||'';
+    name=name.trim();value=value.trim();
+    if(!allowedOverride(name)){updateStatus('Unknown or non-public Theme Schema token: '+name,true);return;}
+    try{var next=clone(currentConfig);next.advanced=next.advanced||{overrides:{}};next.advanced.overrides=Object.assign({},next.advanced.overrides||{});next.advanced.overrides[name]=value;currentConfig=runtime.engine.normalizeConfig(next);syncControls();generateNow();}catch(error){updateStatus(error&&error.message||error,true);}
+  });
+  panel.addEventListener('click',function(event){var button=event.target.closest&&event.target.closest('[data-studio-remove-override]');if(!button)return;var name=button.getAttribute('data-studio-remove-override'),next=clone(currentConfig);if(next.advanced&&next.advanced.overrides)delete next.advanced.overrides[name];currentConfig=runtime.engine.normalizeConfig(next);syncControls();generateNow();});
   var copyButton=panel.querySelector('[data-studio-copy]');if(copyButton)copyButton.addEventListener('click',function(){if(currentTheme)copy(currentTheme.css).then(function(){updateStatus('<strong>CSS copied</strong><br>Complete Light + Dark theme copied to clipboard.',false);});});
   var exportCss=panel.querySelector('[data-studio-export-css]');if(exportCss)exportCss.addEventListener('click',function(){if(currentTheme)download(runtime.io.exportArtifacts(currentTheme).css);});
   var exportJson=panel.querySelector('[data-studio-export-json]');if(exportJson)exportJson.addEventListener('click',function(){if(currentTheme)download(runtime.io.exportArtifacts(currentTheme).config);});
