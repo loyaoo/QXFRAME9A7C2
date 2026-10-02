@@ -14,7 +14,7 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Grid + viewport closeout DONE; bulk Size Tree source migration active; PR/CI checkpoint pending
+- Current Phase: CSS Grid + viewport closeout DONE; bulk Size Tree source migration DONE; PR #239 closeout pending merge
 - Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
 
 ## CURRENT
@@ -22,13 +22,14 @@
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
 Task progress: Size Tree actionable raw-size migration complete — 0 actionable consumers remain
-Phase: Phase A/B/C DONE; Grid/viewport closeout DONE; Size Tree bulk source migration active
+Phase: Phase A/B/C DONE; Grid/viewport closeout DONE; Size Tree bulk source migration DONE
 
 Current Size Tree bulk checkpoint (2026-10-02):
 - Canonical candidate inventory: 37 total preserved/sentinel entries; 0 exact-node candidates; 0 needs-review; 36 protected breakpoints; 1 pill sentinel.
 - Actionable migration count is 0 after correcting the audit so ordinary min/max-width declarations are no longer misclassified as breakpoints.
 - Component-batch execution is now authoritative for closeout; phase-completion percentages must not be used as consumer-migration completion.
 - Size Tree consumer closeout: all ordinary scalable px/rem consumers are Theme/Size-Tree-backed; only true responsive breakpoint conditions and the approved 100rem pill sentinel remain.
+- PR #239 exact implementation head `9e0908933ad727003959efdecb222c89d73df5b0` passed QXFRAME CI #1219 / run 36959249192, including Full release verification, Phase B inventory, npm pack, standalone dist/docs and Windows tools.
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
