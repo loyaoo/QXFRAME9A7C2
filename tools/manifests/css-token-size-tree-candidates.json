@@ -241,28 +241,28 @@
     }
   ],
   "summary": {
-    "totalCandidates": 726,
-    "exactNodeCandidates": 401,
+    "totalCandidates": 702,
+    "exactNodeCandidates": 379,
     "needsReview": 115,
     "signedOffsets": 48,
     "pillSentinels": 1,
-    "protectedBreakpoints": 209,
+    "protectedBreakpoints": 207,
     "byLayer": {
       "base": 0,
       "preset": 1,
       "theme": 4,
-      "component": 721
+      "component": 697
     },
     "byDomain": {
-      "breakpoint-boundary": 209,
-      "geometry": 100,
+      "breakpoint-boundary": 207,
+      "geometry": 85,
       "pill-radius-sentinel": 1,
       "position": 40,
-      "radius": 123,
+      "radius": 122,
       "shadow": 32,
       "signed-offset": 48,
       "spacing": 50,
-      "typography": 99,
+      "typography": 93,
       "visual-geometry": 24
     }
   },
@@ -270,7 +270,7 @@
     {
       "module": "src/styles/preset/_foundation.scss",
       "layer": "preset",
-      "line": 337,
+      "line": 358,
       "raw": "100rem",
       "unit": "rem",
       "value": 100,
@@ -2115,126 +2115,6 @@
     {
       "module": "src/styles/components/_components.scss",
       "layer": "component",
-      "line": 13356,
-      "raw": ".75rem",
-      "unit": "rem",
-      "value": 0.75,
-      "pxEquivalent": 12,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-6",
-      "lowerNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "upperNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "selector": ":root",
-      "text": "--qxframe9a7c2-badge-xs-height:.75rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13357,
-      "raw": ".875rem",
-      "unit": "rem",
-      "value": 0.875,
-      "pxEquivalent": 14,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-7",
-      "lowerNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "upperNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "selector": ":root",
-      "text": "--qxframe9a7c2-badge-sm-height:.875rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13358,
-      "raw": "1.25rem",
-      "unit": "rem",
-      "value": 1.25,
-      "pxEquivalent": 20,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-10",
-      "lowerNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "upperNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "selector": ":root",
-      "text": "--qxframe9a7c2-badge-md-height:1.25rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13359,
-      "raw": "1.5rem",
-      "unit": "rem",
-      "value": 1.5,
-      "pxEquivalent": 24,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-12",
-      "lowerNode": {
-        "name": "size-12",
-        "px": 24
-      },
-      "upperNode": {
-        "name": "size-12",
-        "px": 24
-      },
-      "selector": ":root",
-      "text": "--qxframe9a7c2-badge-lg-height:1.5rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13360,
-      "raw": "1.75rem",
-      "unit": "rem",
-      "value": 1.75,
-      "pxEquivalent": 28,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-14",
-      "lowerNode": {
-        "name": "size-14",
-        "px": 28
-      },
-      "upperNode": {
-        "name": "size-14",
-        "px": 28
-      },
-      "selector": ":root",
-      "text": "--qxframe9a7c2-badge-xl-height:1.75rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
       "line": 13367,
       "raw": ".3125rem",
       "unit": "rem",
@@ -2253,126 +2133,6 @@
       },
       "selector": null,
       "text": "--qxframe9a7c2-badge-sm-padding-x:.3125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13371,
-      "raw": ".75rem",
-      "unit": "rem",
-      "value": 0.75,
-      "pxEquivalent": 12,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-6",
-      "lowerNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "upperNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-xs-line-height:.75rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13372,
-      "raw": ".875rem",
-      "unit": "rem",
-      "value": 0.875,
-      "pxEquivalent": 14,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-7",
-      "lowerNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "upperNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-sm-line-height:.875rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13373,
-      "raw": "1.125rem",
-      "unit": "rem",
-      "value": 1.125,
-      "pxEquivalent": 18,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-9",
-      "lowerNode": {
-        "name": "size-9",
-        "px": 18
-      },
-      "upperNode": {
-        "name": "size-9",
-        "px": 18
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-md-line-height:1.125rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13374,
-      "raw": "1.25rem",
-      "unit": "rem",
-      "value": 1.25,
-      "pxEquivalent": 20,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-10",
-      "lowerNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "upperNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-lg-line-height:1.25rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13375,
-      "raw": "1.375rem",
-      "unit": "rem",
-      "value": 1.375,
-      "pxEquivalent": 22,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-11",
-      "lowerNode": {
-        "name": "size-11",
-        "px": 22
-      },
-      "upperNode": {
-        "name": "size-11",
-        "px": 22
-      },
-      "selector": null,
-      "text": "--qxframe9a7c2-badge-xl-line-height:1.375rem;",
       "finalTarget": null,
       "approved": false
     },
@@ -2490,30 +2250,6 @@
       },
       "selector": null,
       "text": "--qxframe9a7c2-badge-xs-count-padding-x:.1875rem;",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13415,
-      "raw": ".375rem",
-      "unit": "rem",
-      "value": 0.375,
-      "pxEquivalent": 6,
-      "domain": "breakpoint-boundary",
-      "status": "preserve-breakpoint",
-      "exactNode": "size-3",
-      "lowerNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": ".qxframe9a7c2-badge.is-dot",
-      "text": ".qxframe9a7c2-badge.is-dot{--_qxframe9a7c2-badge-dot-size:var(--qxframe9a7c2-badge-dot-size,.375rem);width:var(--_qxframe9a7c2-badge-dot-size);min-width:var(--_qxframe9a7c2-badge-dot-size);height:var(--_qxframe9a7c2-badge-dot-size);min-height:var(--_qxframe9a7c2-badge-dot-size);padding:0;background:currentColor;color:var(--_qxframe9a7c2-semantic-error)}",
       "finalTarget": null,
       "approved": false
     },
@@ -2658,30 +2394,6 @@
       },
       "selector": ".qxframe9a7c2-badge-status",
       "text": ".qxframe9a7c2-badge-status{display:inline-flex;align-items:center;gap:.4375rem;color:var(--_qxframe9a7c2-semantic-text);font-size:var(--qxframe9a7c2-theme-font-size-sm)}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 13423,
-      "raw": ".375rem",
-      "unit": "rem",
-      "value": 0.375,
-      "pxEquivalent": 6,
-      "domain": "radius",
-      "status": "exact-node-candidate",
-      "exactNode": "size-3",
-      "lowerNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "upperNode": {
-        "name": "size-3",
-        "px": 6
-      },
-      "selector": ".qxframe9a7c2-badge-status-dot",
-      "text": ".qxframe9a7c2-badge-status-dot{--_qxframe9a7c2-badge-dot-size:var(--qxframe9a7c2-badge-dot-size,.375rem);width:var(--_qxframe9a7c2-badge-dot-size);height:var(--_qxframe9a7c2-badge-dot-size);border-radius:var(--qxframe9a7c2-theme-radius-circle);background:var(--_qxframe9a7c2-semantic-text-secondary)}",
       "finalTarget": null,
       "approved": false
     },
@@ -7907,31 +7619,7 @@
         "px": 12
       },
       "selector": ".qxframe9a7c2-form-check.is-xs",
-      "text": ".qxframe9a7c2-form-check.is-xs{--_qxframe9a7c2-form-check-size-default:.75rem;font-size:.75rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15028,
-      "raw": ".75rem",
-      "unit": "rem",
-      "value": 0.75,
-      "pxEquivalent": 12,
-      "domain": "typography",
-      "status": "exact-node-candidate",
-      "exactNode": "size-6",
-      "lowerNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "upperNode": {
-        "name": "size-6",
-        "px": 12
-      },
-      "selector": ".qxframe9a7c2-form-check.is-xs",
-      "text": ".qxframe9a7c2-form-check.is-xs{--_qxframe9a7c2-form-check-size-default:.75rem;font-size:.75rem}",
+      "text": ".qxframe9a7c2-form-check.is-xs{--_qxframe9a7c2-form-check-size-default:var(--qxframe9a7c2-theme-form-check-size-xs);font-size:.75rem}",
       "finalTarget": null,
       "approved": false
     },
@@ -7955,31 +7643,7 @@
         "px": 14
       },
       "selector": ".qxframe9a7c2-form-check.is-sm",
-      "text": ".qxframe9a7c2-form-check.is-sm{--_qxframe9a7c2-form-check-size-default:.875rem;font-size:.875rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15029,
-      "raw": ".875rem",
-      "unit": "rem",
-      "value": 0.875,
-      "pxEquivalent": 14,
-      "domain": "typography",
-      "status": "exact-node-candidate",
-      "exactNode": "size-7",
-      "lowerNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "upperNode": {
-        "name": "size-7",
-        "px": 14
-      },
-      "selector": ".qxframe9a7c2-form-check.is-sm",
-      "text": ".qxframe9a7c2-form-check.is-sm{--_qxframe9a7c2-form-check-size-default:.875rem;font-size:.875rem}",
+      "text": ".qxframe9a7c2-form-check.is-sm{--_qxframe9a7c2-form-check-size-default:var(--qxframe9a7c2-theme-form-check-size-sm);font-size:.875rem}",
       "finalTarget": null,
       "approved": false
     },
@@ -8003,55 +7667,7 @@
         "px": 16
       },
       "selector": ".qxframe9a7c2-form-check.is-md",
-      "text": ".qxframe9a7c2-form-check.is-md{--_qxframe9a7c2-form-check-size-default:1rem;font-size:1rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15030,
-      "raw": "1rem",
-      "unit": "rem",
-      "value": 1,
-      "pxEquivalent": 16,
-      "domain": "typography",
-      "status": "exact-node-candidate",
-      "exactNode": "size-8",
-      "lowerNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "upperNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "selector": ".qxframe9a7c2-form-check.is-md",
-      "text": ".qxframe9a7c2-form-check.is-md{--_qxframe9a7c2-form-check-size-default:1rem;font-size:1rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15031,
-      "raw": "1.125rem",
-      "unit": "rem",
-      "value": 1.125,
-      "pxEquivalent": 18,
-      "domain": "typography",
-      "status": "exact-node-candidate",
-      "exactNode": "size-9",
-      "lowerNode": {
-        "name": "size-9",
-        "px": 18
-      },
-      "upperNode": {
-        "name": "size-9",
-        "px": 18
-      },
-      "selector": ".qxframe9a7c2-form-check.is-lg",
-      "text": ".qxframe9a7c2-form-check.is-lg{--_qxframe9a7c2-form-check-size-default:1.125rem;font-size:1.0625rem}",
+      "text": ".qxframe9a7c2-form-check.is-md{--_qxframe9a7c2-form-check-size-default:var(--qxframe9a7c2-theme-form-check-size-md);font-size:1rem}",
       "finalTarget": null,
       "approved": false
     },
@@ -8075,31 +7691,7 @@
         "px": 18
       },
       "selector": ".qxframe9a7c2-form-check.is-lg",
-      "text": ".qxframe9a7c2-form-check.is-lg{--_qxframe9a7c2-form-check-size-default:1.125rem;font-size:1.0625rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15032,
-      "raw": "1.25rem",
-      "unit": "rem",
-      "value": 1.25,
-      "pxEquivalent": 20,
-      "domain": "typography",
-      "status": "exact-node-candidate",
-      "exactNode": "size-10",
-      "lowerNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "upperNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "selector": ".qxframe9a7c2-form-check.is-xl",
-      "text": ".qxframe9a7c2-form-check.is-xl{--_qxframe9a7c2-form-check-size-default:1.25rem;font-size:1.125rem}",
+      "text": ".qxframe9a7c2-form-check.is-lg{--_qxframe9a7c2-form-check-size-default:var(--qxframe9a7c2-theme-form-check-size-lg);font-size:1.0625rem}",
       "finalTarget": null,
       "approved": false
     },
@@ -8123,31 +7715,7 @@
         "px": 18
       },
       "selector": ".qxframe9a7c2-form-check.is-xl",
-      "text": ".qxframe9a7c2-form-check.is-xl{--_qxframe9a7c2-form-check-size-default:1.25rem;font-size:1.125rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15038,
-      "raw": "1rem",
-      "unit": "rem",
-      "value": 1,
-      "pxEquivalent": 16,
-      "domain": "breakpoint-boundary",
-      "status": "preserve-breakpoint",
-      "exactNode": "size-8",
-      "lowerNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "upperNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "selector": ".qxframe9a7c2-form-check",
-      "text": ".qxframe9a7c2-form-check{--_qxframe9a7c2-form-check-size-default:1rem;--_qxframe9a7c2-form-check-size:var(--qxframe9a7c2-form-check-size,var(--_qxframe9a7c2-form-check-size-default));position:relative;display:flex;flex-wrap:wrap;align-items:start;row-gap:var(--qxframe9a7c2-theme-space-1);column-gap:var(--qxframe9a7c2-theme-space-3,var(--qxframe9a7c2-theme-space-3));width:fit-content;max-width:100%;margin:0;color:var(--_qxframe9a7c2-semantic-text);cursor:pointer;user-select:none}",
+      "text": ".qxframe9a7c2-form-check.is-xl{--_qxframe9a7c2-form-check-size-default:var(--qxframe9a7c2-theme-form-check-size-xl);font-size:1.125rem}",
       "finalTarget": null,
       "approved": false
     },
@@ -14126,151 +13694,7 @@
         "px": 4
       },
       "selector": ".qxframe9a7c2-rate",
-      "text": ".qxframe9a7c2-rate{--_qxframe9a7c2-rate-size-default:1.5rem;--_qxframe9a7c2-rate-size:var(--qxframe9a7c2-rate-size,var(--_qxframe9a7c2-rate-size-default));--_qxframe9a7c2-rate-text:var(--_qxframe9a7c2-semantic-border-strong);--_qxframe9a7c2-rate-active:var(--qxframe9a7c2-rate-color,var(--_qxframe9a7c2-semantic-accent));--_qxframe9a7c2-rate-cursor:default;--_qxframe9a7c2-rate-outline:none;--_qxframe9a7c2-rate-opacity:1;display:inline-flex;align-items:center;gap:.18em;color:var(--_qxframe9a7c2-rate-text);font-size:va",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15937,
-      "raw": "1.5rem",
-      "unit": "rem",
-      "value": 1.5,
-      "pxEquivalent": 24,
-      "domain": "typography",
-      "status": "exact-node-candidate",
-      "exactNode": "size-12",
-      "lowerNode": {
-        "name": "size-12",
-        "px": 24
-      },
-      "upperNode": {
-        "name": "size-12",
-        "px": 24
-      },
-      "selector": ".qxframe9a7c2-rate",
-      "text": ".qxframe9a7c2-rate{--_qxframe9a7c2-rate-size-default:1.5rem;--_qxframe9a7c2-rate-size:var(--qxframe9a7c2-rate-size,var(--_qxframe9a7c2-rate-size-default));--_qxframe9a7c2-rate-text:var(--_qxframe9a7c2-semantic-border-strong);--_qxframe9a7c2-rate-active:var(--qxframe9a7c2-rate-color,var(--_qxframe9a7c2-semantic-accent));--_qxframe9a7c2-rate-cursor:default;--_qxframe9a7c2-rate-outline:none;--_qxframe9a7c2-rate-opacity:1;display:inline-flex;align-items:center;gap:.18em;color:var(--_qxframe9a7c2-rate-text);font-size:va",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15938,
-      "raw": "1rem",
-      "unit": "rem",
-      "value": 1,
-      "pxEquivalent": 16,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-8",
-      "lowerNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "upperNode": {
-        "name": "size-8",
-        "px": 16
-      },
-      "selector": ".qxframe9a7c2-rate.is-xs",
-      "text": ".qxframe9a7c2-rate.is-xs{--_qxframe9a7c2-rate-size-default:1rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15939,
-      "raw": "1.25rem",
-      "unit": "rem",
-      "value": 1.25,
-      "pxEquivalent": 20,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-10",
-      "lowerNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "upperNode": {
-        "name": "size-10",
-        "px": 20
-      },
-      "selector": ".qxframe9a7c2-rate.is-sm",
-      "text": ".qxframe9a7c2-rate.is-sm{--_qxframe9a7c2-rate-size-default:1.25rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15940,
-      "raw": "1.5rem",
-      "unit": "rem",
-      "value": 1.5,
-      "pxEquivalent": 24,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-12",
-      "lowerNode": {
-        "name": "size-12",
-        "px": 24
-      },
-      "upperNode": {
-        "name": "size-12",
-        "px": 24
-      },
-      "selector": ".qxframe9a7c2-rate.is-md",
-      "text": ".qxframe9a7c2-rate.is-md{--_qxframe9a7c2-rate-size-default:1.5rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15941,
-      "raw": "1.875rem",
-      "unit": "rem",
-      "value": 1.875,
-      "pxEquivalent": 30,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-15",
-      "lowerNode": {
-        "name": "size-15",
-        "px": 30
-      },
-      "upperNode": {
-        "name": "size-15",
-        "px": 30
-      },
-      "selector": ".qxframe9a7c2-rate.is-lg",
-      "text": ".qxframe9a7c2-rate.is-lg{--_qxframe9a7c2-rate-size-default:1.875rem}",
-      "finalTarget": null,
-      "approved": false
-    },
-    {
-      "module": "src/styles/components/_components.scss",
-      "layer": "component",
-      "line": 15942,
-      "raw": "2.25rem",
-      "unit": "rem",
-      "value": 2.25,
-      "pxEquivalent": 36,
-      "domain": "geometry",
-      "status": "exact-node-candidate",
-      "exactNode": "size-18",
-      "lowerNode": {
-        "name": "size-18",
-        "px": 36
-      },
-      "upperNode": {
-        "name": "size-18",
-        "px": 36
-      },
-      "selector": ".qxframe9a7c2-rate.is-xl",
-      "text": ".qxframe9a7c2-rate.is-xl{--_qxframe9a7c2-rate-size-default:2.25rem}",
+      "text": ".qxframe9a7c2-rate{--_qxframe9a7c2-rate-size-default:var(--qxframe9a7c2-theme-rate-size-md);--_qxframe9a7c2-rate-size:var(--qxframe9a7c2-rate-size,var(--_qxframe9a7c2-rate-size-default));--_qxframe9a7c2-rate-text:var(--_qxframe9a7c2-semantic-border-strong);--_qxframe9a7c2-rate-active:var(--qxframe9a7c2-rate-color,var(--_qxframe9a7c2-semantic-accent));--_qxframe9a7c2-rate-cursor:default;--_qxframe9a7c2-rate-outline:none;--_qxframe9a7c2-rate-opacity:1;display:inline-flex;align-items:center;gap:.18em;color:var(--_qxfr",
       "finalTarget": null,
       "approved": false
     },
