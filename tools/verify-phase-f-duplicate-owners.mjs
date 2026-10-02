@@ -41,8 +41,10 @@ assert.match(css,/\.qxframe9a7c2-list-item\{[^}]*display:flex;align-items:center
 assert.equal(css.includes('.qxframe9a7c2-list-item{gap:var(--qxframe9a7c2-theme-space-2)}'),false,
   'List gap-only selector reopening must not return.');
 
-assert.match(css,/\.qxframe9a7c2-form-selectgroup\.is-image-grid \.qxframe9a7c2-form-selectgroup-label\{width:100%;min-width:8\.25rem;padding:0;align-items:stretch\}/,
-  'SelectGroup image-grid label width must live in the canonical image-grid label owner.');
+assert.match(css,/--qxframe9a7c2-theme-form-selectgroup-image-label-min-width:\s*calc\(var\(--qxframe9a7c2-size-38\) \+ var\(--qxframe9a7c2-size-2\)\)/,
+  'SelectGroup image-grid label width must remain Size Tree-backed at the canonical 132px geometry.');
+assert.match(css,/\.qxframe9a7c2-form-selectgroup\.is-image-grid \.qxframe9a7c2-form-selectgroup-label\{width:100%;min-width:var\(--qxframe9a7c2-theme-form-selectgroup-image-label-min-width\);padding:0;align-items:stretch\}/,
+  'SelectGroup image-grid label width must live in the canonical image-grid label owner and consume Theme geometry.');
 assert.equal(count('.qxframe9a7c2-form-selectgroup.is-image-grid .qxframe9a7c2-form-selectgroup-label{'),1,
   'SelectGroup image-grid label must not be reopened for one property.');
 

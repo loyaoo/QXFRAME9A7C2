@@ -15,7 +15,7 @@ export function sizeTreeNodes(){
 }
 function classify(text,value,unit){
   const absPx=Math.abs(unit==='rem'?value*16:value);
-  if(/@media\b/i.test(text)||/(?:min|max)-width\s*:/i.test(text))return 'breakpoint-boundary';
+  if(/@media\b/i.test(text)||/--qxframe9a7c2-(?:breakpoint|screen)-/i.test(text))return 'breakpoint-boundary';
   if(absPx>=900&&/radius/i.test(text))return 'pill-radius-sentinel';
   if(value<0)return 'signed-offset';
   if(/font-size/i.test(text))return 'typography';
@@ -52,6 +52,8 @@ export function generateSizeTreeAudit({rootDir=root}={}){
     const layer=rel.includes('/preset/')?'preset':rel.includes('/theme/')?'theme':rel.includes('/components/')?'component':'base';
     for(let i=0;i<lines.length;i++){
       const text=lines[i];
+      const trimmed=text.trim();
+      if(trimmed.startsWith('/*')||trimmed.startsWith('*')||trimmed.startsWith('*/'))continue;
       if(/^\s*--qxframe9a7c2-size-\d+\s*:/.test(text))continue;
       const matches=[
         ...[...text.matchAll(/(-?\d*\.?\d+)px\b/g)].map(m=>({unit:'px',value:Number(m[1]),raw:m[0]})),
