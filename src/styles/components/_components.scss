@@ -1,4 +1,6 @@
-@use "core";
+@use "component-foundation";
+@use "choice-visual";
+@use "native-overflow";
 @use "tags";
 @use "ripple";
 @use "button";
@@ -28,7 +30,13 @@
 @use "progress";
 @use "loading";
 @use "list";
-@use "tail";
+@use "form-native";
+@use "tree";
+@use "picker-family";
+@use "table";
+@use "transfer";
+@use "sort";
+@use "input-advanced";
 @use "upload";
 @use "rate";
 @use "slider";
@@ -37,4 +45,8 @@
 @use "carousel";
 @use "image";
 @use "json";
-@use "tail-closeout";
+@use "table-late";
+@use "component-state";
+@use "composition";
+@use "focus-closeout";
+@use "compatibility";

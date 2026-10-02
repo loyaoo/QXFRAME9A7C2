@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
   "files": [
     {
@@ -34,7 +34,9 @@
     "src/styles/preset/_foundation.scss",
     "src/styles/theme/_default.scss",
     "src/styles/theme/_family.scss",
-    "src/styles/components/_core.scss",
+    "src/styles/components/_component-foundation.scss",
+    "src/styles/components/_choice-visual.scss",
+    "src/styles/components/_native-overflow.scss",
     "src/styles/components/_tags.scss",
     "src/styles/components/_ripple.scss",
     "src/styles/components/_button.scss",
@@ -64,7 +66,13 @@
     "src/styles/components/_progress.scss",
     "src/styles/components/_loading.scss",
     "src/styles/components/_list.scss",
-    "src/styles/components/_tail.scss",
+    "src/styles/components/_form-native.scss",
+    "src/styles/components/_tree.scss",
+    "src/styles/components/_picker-family.scss",
+    "src/styles/components/_table.scss",
+    "src/styles/components/_transfer.scss",
+    "src/styles/components/_sort.scss",
+    "src/styles/components/_input-advanced.scss",
     "src/styles/components/_upload.scss",
     "src/styles/components/_rate.scss",
     "src/styles/components/_slider.scss",
@@ -73,6 +81,10 @@
     "src/styles/components/_carousel.scss",
     "src/styles/components/_image.scss",
     "src/styles/components/_json.scss",
-    "src/styles/components/_tail-closeout.scss"
+    "src/styles/components/_table-late.scss",
+    "src/styles/components/_component-state.scss",
+    "src/styles/components/_composition.scss",
+    "src/styles/components/_focus-closeout.scss",
+    "src/styles/components/_compatibility.scss"
   ]
 }
