@@ -15,13 +15,21 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: CSS Schema v1.6 confirmed blocker remediation implemented; strict Chromium acceptance passes. Broader manual/freeze gates remain separately scoped. Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `NONE` — no pending implementation task; CSS-SCHEMA-ACCEPTANCE-REMEDIATION-001 is merged and its exact implementation head passed both required CI workflows. Resolve current main release / Pages facts from GitHub.
+- Current Task: `CSS-THEME-SCHEMA-FREEZE-001` — validate and freeze the public Theme Generator contract before writing generator implementation.
 
 ## CURRENT
 
-### Integration state resolution
+### CSS-THEME-SCHEMA-FREEZE-001
+Status: IN_PROGRESS
+Progress: Theme Generator overall 0%; prerequisite schema freeze 65%. Core 9-controller migration and confirmed CSS blocker remediation remain 100% complete.
+Authorization: user requests shadcn/create-like Theme Studio plus many real commercial composition cards with live preview; uploaded Theme Generator Development Guide v1 is restored as the generator authority.
+Baseline: main 095dcc967344ce38214e876722f444fb55da5e77, QXFRAME CI 36978909412 SUCCESS including Pages.
+Scope: freeze a versioned manifest of all public Theme/Palette inputs plus explicitly optional Component overrides. Generator must never discover keys by scanning CSS at runtime or emit private/component selectors.
+Confirmed expression gap: Menu color/treatment currently shares navigation inputs. Add optional Menu-owned public slots with unchanged semantic fallbacks before freezing; register independent heading font and chart roles. Preserve scoped ancestor overrides and disabled/danger/keyboard state authority.
+Implemented: reviewed 4,028-entry public Palette/Theme manifest with complete Light/Dark defaults, 462 optional public overrides, Menu-owned state slots and chart materials. Static manifest/graph/layer/state gates pass locally; browser evidence and full release remain mandatory.
+Next exact step: inspect freeze PR browser contracts (28 Menu defaults, 8 scoped geometry/isolation probes, real Select/DatePicker/Modal/Drawer/Menu portals) and existing full release. Commit/PR/CI/merge the freeze first; only then implement pure generator phases TG-A–I and a substantial commercial preview gallery in canonical docs/theme-playground.html.
+Guardrails: no framework Theme/Token JS runtime; no new @layer/:is/:where/Grid/fr/viewport; no a11y/ARIA/RTL additions; no reset of earlier Size Tree or interaction fixes. No generator implementation until freeze evidence passes.
 
-No confirmed implementation blocker remains from the CSS Schema acceptance report. PR #245 is merged; all final implementation-head gates passed. On resume, query current main release and Pages status rather than caching transient pending/success state. If they fail, inspect the failing job before reopening implementation. Otherwise the remediation task is complete; broader manual/freeze signoff remains separately scoped.
 
 ## Current authority snapshot — after Phase A
 

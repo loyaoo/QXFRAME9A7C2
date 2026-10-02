@@ -90,7 +90,7 @@ export async function browserProbes({ expression, htmlContent, cssText } = {}) {
     await call('Page.enable', {}, sessionId);
     const tree = await call('Page.getFrameTree', {}, sessionId);
     await call('Page.setDocumentContent', { frameId: tree.frameTree.frame.id, html }, sessionId);
-    const result = await call('Runtime.evaluate', { returnByValue: true, expression: expression || `(() => {
+    const result = await call('Runtime.evaluate', { returnByValue: true, awaitPromise: true, expression: expression || `(() => {
       const probes = [], el = id => document.getElementById(id), cs = id => getComputedStyle(el(id));
       const scope = el('scope'), root = document.documentElement;
       const measure = (id, property) => parseFloat(cs(id)[property]);

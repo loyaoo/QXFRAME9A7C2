@@ -1,3 +1,15 @@
+/* Public studio color materials; defaults work without the generator. Optional
+ * menu/heading overrides resolve only at consumers so ancestors stay effective. */
+:root {
+  --qxframe9a7c2-theme-chart-1: rgb(37, 99, 235);
+  --qxframe9a7c2-theme-chart-2: rgb(5, 150, 105);
+  --qxframe9a7c2-theme-chart-3: rgb(217, 119, 6);
+  --qxframe9a7c2-theme-chart-4: rgb(124, 58, 237);
+  --qxframe9a7c2-theme-chart-5: rgb(225, 29, 72);
+  --qxframe9a7c2-theme-chart-6: rgb(8, 145, 178);
+  --qxframe9a7c2-theme-chart-7: rgb(101, 163, 13);
+  --qxframe9a7c2-theme-chart-8: rgb(234, 88, 12);
+}
 /* Theme material bridge.
  * Theme selects generic Preset materials and owns component-semantic design defaults.
  * Component CSS consumes Theme or Component tokens only; it never reads Preset directly.
@@ -773,7 +785,7 @@
 /* theme */
 
   /* v2.18.56 local seed resolver. Public seed slots are resolved at each theme boundary
-   * so nested themes can override a single base color without regenerating a palette. */
+   * as offline generator metadata. Complete static roles provide the color material. */
   :root,[data-qxframe9a7c2-theme] {
     --_qxframe9a7c2-seed-grey: var(--qxframe9a7c2-theme-grey, var(--qxframe9a7c2-theme-seed-grey));
     --_qxframe9a7c2-seed-gray: var(--qxframe9a7c2-theme-gray, var(--qxframe9a7c2-theme-seed-gray));
@@ -797,7 +809,7 @@
     --_qxframe9a7c2-seed-info: var(--qxframe9a7c2-theme-info, var(--_qxframe9a7c2-seed-cyan));
 
     /* Resolved Primary Palette. Public --theme-primary-N slots are optional, independent
-     * overrides. Missing tones are synthesized from the canonical one-seed contract.
+     * overrides. Missing tones use the captured static Theme role for the active mode.
      * Numbering is stable: 1 darkest -> 13 lightest. The 5/6/7 and 8/9/10 anchors preserve
      * the v2.19.29 Light/Dark active/hover/base transformations exactly. */
     --_qxframe9a7c2-primary-1: var(--qxframe9a7c2-theme-primary-1, var(--qxframe9a7c2-theme-color-primary-1-1,var(--_qxframe9a7c2-mode-color-primary-1-1)));
@@ -817,8 +829,8 @@
     --_qxframe9a7c2-primary-foreground: var(--qxframe9a7c2-theme-primary-foreground, var(--_qxframe9a7c2-primary-foreground-auto));
 
     /* Neutral MIX strength. The v2.19.81-r2 tone curve is the canonical palette:
-     * each Grey tone carries 10–22% of its matching resolved Primary tone. This public
-     * percentage scales that original curve instead of replacing it with one flat tint.
+     * each Grey tone carries 10–22% of its matching resolved Primary tone. The public
+     * percentage is offline generator configuration; core CSS uses static role values.
      * 100% = exact r2 MIX palette; 0% = pure Grey; 50% = half-strength r2 MIX. */
     --_qxframe9a7c2-neutral-mix-ratio: var(--qxframe9a7c2-theme-neutral-mix-ratio, 100%);
 
