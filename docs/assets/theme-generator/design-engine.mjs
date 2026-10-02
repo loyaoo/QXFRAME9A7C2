@@ -1,10 +1,16 @@
 import {parseColor,colorToCss,mixSrgb,mixOklab} from './color-engine.mjs';
 
+/*
+ * Style data is translated from shadcn/create's public Vega/Nova/Maia/Lyra/
+ * Mira/Luma/Sera/Rhea recipes. QXFRAME keeps its own Token architecture:
+ * Style chooses component geometry/treatment; Radius chooses the radius scale;
+ * typography, Theme color, chart color and Menu remain orthogonal dimensions.
+ */
 const DEFAULTS=Object.freeze({
   typography:Object.freeze({body:'system-ui',heading:'inherit',mono:'ui-monospace',baseSize:14}),
-  radius:'medium',
+  radius:'default',
   density:'default',
-  style:'balanced',
+  style:'vega',
   menu:Object.freeze({color:'default',appearance:'solid',accent:'subtle'})
 });
 const FONT_STACKS=Object.freeze({
@@ -20,53 +26,94 @@ const MONO_STACKS=Object.freeze({
 });
 const RADIUS_PROFILES=Object.freeze({
   none:Object.freeze({base:0,scale:[0,0,0,0,0]}),
-  small:Object.freeze({base:2,scale:[2,2,4,4,6]}),
-  medium:Object.freeze({base:4,scale:[2,4,6,8,10]}),
-  large:Object.freeze({base:8,scale:[4,6,8,10,12]})
+  small:Object.freeze({base:7.2,scale:[3.2,5.2,7.2,11.2,15.2]}),
+  medium:Object.freeze({base:10,scale:[6,8,10,14,18]}),
+  large:Object.freeze({base:14,scale:[10,12,14,18,22]})
 });
+const STYLE_DEFAULT_RADIUS=Object.freeze({vega:'medium',nova:'medium',maia:'medium',lyra:'none',mira:'medium',luma:'medium',sera:'none',rhea:'medium'});
 const DENSITY_PROFILES=Object.freeze({
-  compact:Object.freeze({
-    heights:[11,13,15,17,19],
-    paddingInline:[2,3,4,5,6],
-    gaps:[1,2,2,3,4],
-    tablePy:[1,2,3,4,5],
-    tablePx:[3,4,5,6,7]
-  }),
-  comfortable:Object.freeze({
-    heights:[13,15,17,19,21],
-    paddingInline:[4,5,6,7,8],
-    gaps:[3,4,5,6,7],
-    tablePy:[3,4,5,6,7],
-    tablePx:[5,6,7,8,9]
-  })
+  compact:Object.freeze({heights:[22,24,28,32,36],paddingInline:[6,8,8,10,12],gaps:[2,4,4,6,6],tablePy:[2,4,4,6,6],tablePx:[6,8,8,10,12]}),
+  comfortable:Object.freeze({heights:[28,32,36,40,44],paddingInline:[10,12,12,14,16],gaps:[6,6,8,8,10],tablePy:[6,6,8,8,10],tablePx:[10,12,12,14,16]})
 });
 const STYLE_PROFILES=Object.freeze({
-  balanced:Object.freeze({}),
-  soft:Object.freeze({
-    '--qxframe9a7c2-theme-button-shadow-blur':'var(--qxframe9a7c2-size-2)',
-    '--qxframe9a7c2-theme-card-shadow-blur-sm':'var(--qxframe9a7c2-size-2)',
-    '--qxframe9a7c2-theme-card-shadow-blur-lg':'var(--qxframe9a7c2-size-12)',
-    '--qxframe9a7c2-theme-card-shadow-y-lg':'var(--qxframe9a7c2-size-4)'
+  vega:Object.freeze({
+    heights:[24,32,36,40,44],padding:[8,10,10,12,14],gaps:[4,4,6,6,8],fontRole:'md',
+    cardPadding:[12,16,24,28,32],
+    switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
+    switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
+    sliderRail:[2,4,6,6,8],sliderHandleWidth:[12,14,16,18,20],sliderHandleHeight:[12,14,16,18,20],
+    radius:{control:'md',action:'md',navigation:'sm',data:'md',popup:'md',surface:'xl',switchTrack:'pill',switchThumb:'circle',sliderRail:'pill',sliderHandle:'circle'},
+    shadow:[2,2,8,4]
   }),
-  precision:Object.freeze({
-    '--qxframe9a7c2-theme-button-shadow-blur':'var(--qxframe9a7c2-size-1)',
-    '--qxframe9a7c2-theme-card-shadow-blur-sm':'var(--qxframe9a7c2-size-1)',
-    '--qxframe9a7c2-theme-card-shadow-blur-lg':'var(--qxframe9a7c2-size-5)',
-    '--qxframe9a7c2-theme-card-shadow-y-lg':'var(--qxframe9a7c2-size-2)'
+  nova:Object.freeze({
+    heights:[24,28,32,36,40],padding:[8,10,10,12,12],gaps:[4,4,6,6,6],fontRole:'md',
+    cardPadding:[10,12,16,20,24],
+    switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
+    switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
+    sliderRail:[2,2,4,4,6],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
+    radius:{control:'lg',action:'lg',navigation:'md',data:'lg',popup:'lg',surface:'xl',switchTrack:'pill',switchThumb:'circle',sliderRail:'pill',sliderHandle:'circle'},
+    shadow:[1,1,4,2]
   }),
-  compact:Object.freeze({
-    '--qxframe9a7c2-theme-button-shadow-blur':'var(--qxframe9a7c2-size-1)',
-    '--qxframe9a7c2-theme-card-shadow-blur-sm':'var(--qxframe9a7c2-size-1)',
-    '--qxframe9a7c2-theme-card-shadow-blur-lg':'var(--qxframe9a7c2-size-4)',
-    '--qxframe9a7c2-theme-card-shadow-y-lg':'var(--qxframe9a7c2-size-2)'
+  maia:Object.freeze({
+    heights:[28,32,36,40,44],padding:[10,12,12,14,16],gaps:[6,6,8,8,10],fontRole:'md',
+    cardPadding:[12,16,24,28,32],
+    switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
+    switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
+    sliderRail:[6,8,12,12,14],sliderHandleWidth:[14,16,16,18,20],sliderHandleHeight:[14,16,16,18,20],
+    radius:{control:'xl',action:'xl',navigation:'xl',data:'xl',popup:'xl',surface:'xl',switchTrack:'pill',switchThumb:'circle',sliderRail:'xl',sliderHandle:'xl'},
+    shadow:[1,1,12,4]
+  }),
+  lyra:Object.freeze({
+    heights:[24,28,32,36,40],padding:[6,8,10,10,12],gaps:[4,4,6,6,6],fontRole:'xs',
+    cardPadding:[10,12,16,20,24],
+    switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
+    switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
+    sliderRail:[2,2,4,4,4],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
+    radius:{control:'zero',action:'zero',navigation:'zero',data:'zero',popup:'zero',surface:'zero',switchTrack:'pill',switchThumb:'circle',sliderRail:'zero',sliderHandle:'zero'},
+    shadow:[1,1,2,1]
+  }),
+  mira:Object.freeze({
+    heights:[22,24,28,32,36],padding:[6,8,8,10,12],gaps:[2,4,4,6,6],fontRole:'xs',
+    cardPadding:[10,12,16,20,24],
+    switchHeight:[14,14,16,18,20],switchWidth:[24,24,28,32,36],switchPadding:[1,1,1,1,1],
+    switchThumbWidth:[12,12,14,16,18],switchThumbHeight:[12,12,14,16,18],
+    sliderRail:[2,2,4,4,4],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
+    radius:{control:'md',action:'md',navigation:'md',data:'md',popup:'lg',surface:'lg',switchTrack:'pill',switchThumb:'circle',sliderRail:'md',sliderHandle:'md'},
+    shadow:[1,1,4,2]
+  }),
+  luma:Object.freeze({
+    heights:[28,32,36,40,44],padding:[10,12,12,14,16],gaps:[6,6,8,8,10],fontRole:'md',
+    cardPadding:[12,16,24,28,32],
+    switchHeight:[14,16,20,22,24],switchWidth:[24,28,44,48,52],switchPadding:[1,1,2,2,2],
+    switchThumbWidth:[12,16,24,26,28],switchThumbHeight:[12,14,16,18,20],
+    sliderRail:[4,6,8,8,10],sliderHandleWidth:[16,20,24,26,28],sliderHandleHeight:[12,14,16,18,20],
+    radius:{control:'xl',action:'xl',navigation:'pill',data:'xl',popup:'xl',surface:'xl',switchTrack:'pill',switchThumb:'pill',sliderRail:'pill',sliderHandle:'pill'},
+    shadow:[1,2,12,4]
+  }),
+  sera:Object.freeze({
+    heights:[28,36,40,44,48],padding:[10,16,24,24,28],gaps:[4,6,6,8,8],fontRole:'xs',
+    cardPadding:[16,20,32,36,40],
+    switchHeight:[12,14,18,20,22],switchWidth:[22,26,34,38,42],switchPadding:[1,1,2,2,2],
+    switchThumbWidth:[10,12,14,16,18],switchThumbHeight:[10,12,14,16,18],
+    sliderRail:[1,1,2,2,2],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
+    radius:{control:'zero',action:'zero',navigation:'zero',data:'zero',popup:'zero',surface:'zero',switchTrack:'zero',switchThumb:'zero',sliderRail:'zero',sliderHandle:'zero'},
+    shadow:[1,1,6,2]
+  }),
+  rhea:Object.freeze({
+    heights:[24,28,32,36,40],padding:[8,10,12,14,16],gaps:[4,4,6,6,8],fontRole:'md',
+    cardPadding:[12,16,20,24,28],
+    switchHeight:[14,16,20,22,24],switchWidth:[24,28,32,36,40],switchPadding:[1,1,2,2,2],
+    switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
+    sliderRail:[2,2,4,4,6],sliderHandleWidth:[12,14,16,18,20],sliderHandleHeight:[12,14,16,18,20],
+    radius:{control:'lg',action:'lg',navigation:'lg',data:'lg',popup:'xl',surface:'xl',switchTrack:'xl',switchThumb:'xl',sliderRail:'xl',sliderHandle:'xl'},
+    shadow:[1,1,8,3]
   })
 });
 const SIZES=Object.freeze(['xs','sm','md','lg','xl']);
 
 function rem(px){
   if(px===0)return '0';
-  const value=px/16;
-  return String(Number(value.toFixed(4)))+'rem';
+  return String(Number((px/16).toFixed(4)))+'rem';
 }
 function setToken(tokenMaps,schema,changed,name,light,dark=light){
   if(!schema.tokenSet.has(name)&&!schema.optionalSet.has(name))return false;
@@ -75,10 +122,42 @@ function setToken(tokenMaps,schema,changed,name,light,dark=light){
   changed.add(name);
   return true;
 }
+function radiusValue(role){
+  if(role==='zero')return '0';
+  if(role==='pill')return 'var(--qxframe9a7c2-theme-radius-pill)';
+  if(role==='circle')return 'var(--qxframe9a7c2-theme-radius-circle)';
+  return 'var(--qxframe9a7c2-theme-radius-'+role+')';
+}
 function applyStyle(tokenMaps,schema,config,changed){
-  const profile=STYLE_PROFILES[config.style];
-  if(!profile)throw new TypeError('Unknown design style: '+config.style);
-  for(const [name,value] of Object.entries(profile))setToken(tokenMaps,schema,changed,name,value);
+  const p=STYLE_PROFILES[config.style];
+  if(!p)throw new TypeError('Unknown design style: '+config.style);
+  SIZES.forEach((size,index)=>{
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-height-'+size,rem(p.heights[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-padding-inline-'+size,rem(p.padding[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-gap-'+size,rem(p.gaps[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-font-size-'+size,'var(--qxframe9a7c2-theme-font-size-'+p.fontRole+')');
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-switch-height-'+size,rem(p.switchHeight[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-switch-width-'+size,rem(p.switchWidth[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-switch-padding-'+size,rem(p.switchPadding[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-slider-rail-'+size,rem(p.sliderRail[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-slider-handle-'+size,rem(p.sliderHandleHeight[index]));
+  });
+  const roleTokens={control:'--qxframe9a7c2-family-control-radius',action:'--qxframe9a7c2-family-action-radius',navigation:'--qxframe9a7c2-family-navigation-radius',data:'--qxframe9a7c2-family-data-radius',popup:'--qxframe9a7c2-family-popup-radius',surface:'--qxframe9a7c2-family-surface-radius'};
+  for(const [key,name] of Object.entries(roleTokens))setToken(tokenMaps,schema,changed,name,radiusValue(p.radius[key]));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-track-radius',radiusValue(p.radius.switchTrack));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-radius',radiusValue(p.radius.switchThumb));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-rail-radius',radiusValue(p.radius.sliderRail));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-radius',radiusValue(p.radius.sliderHandle));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-width',rem(p.switchThumbWidth[2]));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-thumb-height',rem(p.switchThumbHeight[2]));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-width',rem(p.sliderHandleWidth[2]));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-height',rem(p.sliderHandleHeight[2]));
+  const cardTokens=['xs','sm','md','lg','xl'];
+  cardTokens.forEach((size,index)=>setToken(tokenMaps,schema,changed,'--qxframe9a7c2-card-'+size+'-padding',rem(p.cardPadding[index])));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-button-shadow-blur',rem(p.shadow[0]));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-shadow-blur-sm',rem(p.shadow[1]));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-shadow-blur-lg',rem(p.shadow[2]));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-shadow-y-lg',rem(p.shadow[3]));
 }
 function applyTypography(tokenMaps,schema,config,changed){
   const body=FONT_STACKS[config.typography.body];
@@ -88,16 +167,13 @@ function applyTypography(tokenMaps,schema,config,changed){
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-font-family',body);
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-font-family-heading',heading);
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-font-family-mono',mono);
-
   const base=config.typography.baseSize;
   const px=[Math.max(10,base-2),base,base,base+2,base+4];
-  SIZES.forEach((size,index)=>{
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-font-size-'+size,rem(px[index]));
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-font-size-'+size,'var(--qxframe9a7c2-theme-font-size-'+size+')');
-  });
+  SIZES.forEach((size,index)=>setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-font-size-'+size,rem(px[index])));
 }
 function applyRadius(tokenMaps,schema,config,changed){
-  const profile=RADIUS_PROFILES[config.radius];
+  const resolved=config.radius==='default'?(STYLE_DEFAULT_RADIUS[config.style]||'medium'):config.radius;
+  const profile=RADIUS_PROFILES[resolved];
   if(!profile)throw new TypeError('Unknown radius preset: '+config.radius);
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-radius',rem(profile.base));
   SIZES.forEach((size,index)=>{
@@ -109,13 +185,13 @@ function applyRadius(tokenMaps,schema,config,changed){
 function applyDensity(tokenMaps,schema,config,changed){
   if(config.density==='default')return;
   const profile=DENSITY_PROFILES[config.density];
-  if(!profile)throw new TypeError('Unknown density preset: '+config.density);
+  if(!profile)throw new TypeError('Unknown legacy density preset: '+config.density);
   SIZES.forEach((size,index)=>{
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-height-'+size,'var(--qxframe9a7c2-size-'+profile.heights[index]+')');
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-padding-inline-'+size,'var(--qxframe9a7c2-size-'+profile.paddingInline[index]+')');
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-gap-'+size,'var(--qxframe9a7c2-size-'+profile.gaps[index]+')');
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-table-cell-py-'+size,'var(--qxframe9a7c2-size-'+profile.tablePy[index]+')');
-    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-table-cell-px-'+size,'var(--qxframe9a7c2-size-'+profile.tablePx[index]+')');
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-height-'+size,rem(profile.heights[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-padding-inline-'+size,rem(profile.paddingInline[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-control-gap-'+size,rem(profile.gaps[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-table-cell-py-'+size,rem(profile.tablePy[index]));
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-table-cell-px-'+size,rem(profile.tablePx[index]));
   });
 }
 function asColor(tokenMaps,mode,name){
@@ -200,9 +276,9 @@ function applyMenu(tokenMaps,schema,config,changed){
 }
 function applyDesignConfiguration(tokenMaps,schema,config){
   const changed=new Set();
-  applyStyle(tokenMaps,schema,config,changed);
   applyTypography(tokenMaps,schema,config,changed);
   applyRadius(tokenMaps,schema,config,changed);
+  applyStyle(tokenMaps,schema,config,changed);
   applyDensity(tokenMaps,schema,config,changed);
   applyMenu(tokenMaps,schema,config,changed);
   return Object.freeze({changedTokens:Object.freeze([...changed].sort())});
