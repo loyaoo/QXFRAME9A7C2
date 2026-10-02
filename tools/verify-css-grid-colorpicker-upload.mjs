@@ -15,7 +15,7 @@ assert.doesNotMatch(css,/\.qxframe9a7c2-color-picker-gradient-(?:hint|track)\{[^
 
 assert.match(css,/\.qxframe9a7c2-upload-list\{display:flex;flex-direction:column;/,'Upload list must be a vertical Flex list.');
 assert.match(css,/\.qxframe9a7c2-upload\.is-picture-card \.qxframe9a7c2-upload-list,\.qxframe9a7c2-upload\.is-picture-circle \.qxframe9a7c2-upload-list\{flex-direction:row;flex-wrap:wrap\}/,'Picture upload lists must wrap horizontally.');
-assert.match(css,/\.qxframe9a7c2-upload\.is-picture-card \.qxframe9a7c2-upload-item,\.qxframe9a7c2-upload\.is-picture-circle \.qxframe9a7c2-upload-item\{[^}]*flex:1 1 9rem;/,'Picture upload item must preserve minmax(9rem,1fr) growth semantics.');
+assert.match(css,/\.qxframe9a7c2-upload\.is-picture-card \.qxframe9a7c2-upload-item,\.qxframe9a7c2-upload\.is-picture-circle \.qxframe9a7c2-upload-item\{[^}]*flex:1 1 var\(--qxframe9a7c2-theme-upload-picture-size\);/,'Picture upload item must preserve the Size Tree-backed minmax growth semantics.');
 assert.doesNotMatch(css,/\.qxframe9a7c2-upload-list\{[^}]*display:grid/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-upload\.is-picture-(?:card|circle)[^{]*\{[^}]*grid-template-columns/);
 
