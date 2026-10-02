@@ -103,6 +103,12 @@ function enumValue(value, allowed, fallback, path) {
   return next;
 }
 
+const LEGACY_STYLE_MAP=Object.freeze({balanced:'vega',soft:'luma',precision:'nova',compact:'mira'});
+function normalizeStyle(value){
+  const raw=value==null?DEFAULT_CONFIG.style:String(value);
+  return enumValue(LEGACY_STYLE_MAP[raw]||raw,STYLE_IDS,DEFAULT_CONFIG.style,'style');
+}
+
 function normalizeName(value) {
   const next = String(value == null ? DEFAULT_CONFIG.name : value).trim();
   if (!next || next.length > 64 || /[\r\n]/.test(next) || next.includes('*/')) {
@@ -181,7 +187,7 @@ function normalizeConfig(input = {}) {
   const provided = new Set(Object.keys(input));
   const config = deepClone(DEFAULT_CONFIG);
   config.name = normalizeName(input.name);
-  config.style = enumValue(input.style, STYLE_IDS, DEFAULT_CONFIG.style, 'style');
+  config.style = normalizeStyle(input.style);
   config.baseColor = enumValue(input.baseColor, BASE_COLOR_IDS, DEFAULT_CONFIG.baseColor, 'baseColor');
   config.palette = normalizePalette(input.palette);
   config.roles = normalizeRoles(input.roles);
