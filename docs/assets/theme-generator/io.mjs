@@ -33,10 +33,10 @@ function migrateLegacyConfig(value){
   return normalizeConfig({
     schema:1,
     name:safeName(value.name||'migrated-theme'),
-    style:'balanced',
+    style:'vega',
     baseColor:LEGACY_BASE_MAP[String(value.base||'grey').toLowerCase()]||'neutral',
     roles:{primary:seed},
-    chart:{preset:'balanced'},
+    chart:{color:'primary'},
     typography:{body:LEGACY_FONT_MAP[String(value.font||'system').toLowerCase()]||'system-ui',heading:'inherit',mono:'ui-monospace',baseSize:14},
     radius:legacyRadius(value.radius),
     density:'default',
