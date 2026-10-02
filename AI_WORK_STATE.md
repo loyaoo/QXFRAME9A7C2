@@ -14,15 +14,15 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: CSS Grid + viewport closeout merged and verified; small visual-geometry Size Tree batch verified on PR #234 implementation head
+- Current Phase: CSS Grid + viewport closeout DONE; bulk Size Tree source migration active on PR #236
 - Current Task: `CSS-TOKEN-SCHEMA-001` (IN PROGRESS)
 
 ## CURRENT
 
 ### CSS-TOKEN-SCHEMA-001 — CSS Design Token Schema v1.6 refactor
 Status: IN PROGRESS
-Task progress: 99.2%
-Phase: Phase A/B/C DONE; Size Tree/odd Theme control batches merged; CSS Grid + viewport closeout merged; small visual-geometry closeout batch in final checkpoint
+Task progress: post-viewport actionable raw-size migration 49.1% complete (497/1013 closed; 516 remain)
+Phase: Phase A/B/C DONE; Grid/viewport closeout DONE; Size Tree bulk source migration active
 
 User authority:
 - Execution authority is `QXFRAME9A7C2-CSS-Design-Token-System-Refactor-Execution-Guide-v1.6.md`.
@@ -126,9 +126,31 @@ Small visual-geometry batch (PR #234):
 - Size Tree candidate inventory: 1259 -> 1254; needs-review: 121 -> 116.
 - PR #234 implementation head `ec4443e96123eb5507f6c4aee75839e96762d492` passed QXFRAME CI #1182 / run `36938028212`: Full release, Windows tools, Size Tree, Grid/viewport/JS geometry gates, npm pack and standalone dist/docs all succeeded.
 
+PR #234 final evidence:
+- PR #234 merged to main as `b24cf4ac3703911862a09fd24587ad9aee697567`.
+- Main QXFRAME CI #1184 / run `36938939246`: SUCCESS.
+
+Bulk Size Tree migration 1 (PR #236):
+- Frozen Grid gutter API remains `g/gx/gy 0..24` with the same `0.125rem × n` physical defaults; 336 raw gutter literals now resolve through Theme Grid gap tokens.
+- Existing Preset spacing scale is fully bridged as Theme space-1..12; 161 scalable component spacing literals were migrated without changing their physical values.
+- Added semantic Size Tree-backed Preset -> Theme -> Component geometry scales for Icon, Avatar, Progress line/circle, and Switch height/width/padding.
+- Switch XL padding normalized 3px -> 4px, consistent with the approved even-size rule.
+- Inventory moved from 1254 total / 1013 actionable to 726 total / 516 actionable.
+- Exact-node candidates: 897 -> 401; needs-review: 116 -> 115.
+- PR #236 implementation head `7f308dde9b2639294c16911a6f4065f74ddb545e` passed QXFRAME CI #1189 / run `36947850053`: Full release, Windows tools, Size Tree inventory, Grid/viewport/JS geometry gates, Phase B inventory, npm pack and standalone dist/docs all succeeded.
+- Earlier #1187/#1188 failures were stale verifier expectations for raw Grid/Card spacing; verifiers were updated to validate the Theme-backed contracts instead.
+
+Progress accounting:
+- Do not use old Phase-completion percentages as SCSS migration completion.
+- Current authoritative source-migration denominator is the post-viewport actionable inventory: 1013.
+- Closed in bulk migration so far: 497.
+- Remaining actionable consumers: 516.
+- Bulk source-migration completion from this checkpoint: 49.1%.
+
 Next exact step:
-- This checkpoint-only update must pass exact-head PR #234 QXFRAME CI, then merge PR #234 and verify main CI.
-- Continue CSS-TOKEN-SCHEMA-001 in multi-item semantic batches; next low-risk pool is remaining odd/decimal spacing and small geometry, while preserving explicit exceptions (1px hairlines, 100rem pill, 50% circle, protected breakpoints and approved typography exceptions).
+- This checkpoint-only update must pass exact-head PR #236 QXFRAME CI, then merge PR #236 and verify main CI.
+- Start bulk migration 2 from the remaining 516 actionable consumers, prioritizing semantic geometry/control scales (Badge, FormCheck, Rate, Loading, Table and other component-owned geometry), then typography/shadow/review items.
+- Keep 1px hairlines, 100rem pill, 50% circle, percentage layout, Grid span math and true responsive boundaries protected.
 - Do not reopen completed Grid/viewport/Controller work without a demonstrated regression.
 
 
