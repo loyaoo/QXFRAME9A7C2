@@ -18,7 +18,7 @@ const schema = readSchema(manifest);
 
 assert.equal(schema.schema, 1);
 assert.equal(schema.order.length, 4028);
-assert.equal(schema.optionalSet.size, 479);
+assert.equal(schema.optionalSet.size, 499);
 assert.equal(schema.interfaceHash, '421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c');
 
 const defaults = normalizeConfig({});
