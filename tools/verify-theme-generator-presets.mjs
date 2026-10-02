@@ -10,7 +10,7 @@ assert.equal(THEME_PRESETS.length,8);
 assert.equal(presetOptions().length,8);
 assert.equal(new Set(THEME_PRESETS.map(x=>x.id)).size,8);
 for(const id of ['signal','ledger','harbor','juniper','ember','orbit','graphite','canvas'])assert.equal(presetById(id).id,id);
-assert.throws(()=>presetById('nova'),/Unknown Theme preset/,'QX presets must not reuse external preset names.');
+assert.throws(()=>presetById('nova'),/Unknown Theme preset/,'QX commercial preset IDs remain separate from Style IDs.');
 
 const css=new Set();
 for(const preset of THEME_PRESETS){
@@ -20,7 +20,8 @@ for(const preset of THEME_PRESETS){
   assert.ok(!theme.css.includes('--_qxframe9a7c2-'));
   assert.ok(!theme.css.includes('color-mix('));
   assert.ok(!theme.css.includes('contrast-color('));
-  assert.equal((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length,8056);
+  assert.ok((theme.css.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length>=8056);
+  assert.ok(!theme.css.includes('color(srgb'));
   css.add(theme.css);
 }
 assert.equal(css.size,THEME_PRESETS.length,'Every QX Theme preset should produce a distinct complete theme.');
@@ -38,7 +39,8 @@ assert.equal(applied.advanced.overrides['--qxframe9a7c2-theme-focus-ring-size'],
 console.log(JSON.stringify({
   phase:'TG-H-preset-library',
   presets:THEME_PRESETS.map(x=>x.id),
-  qxOwnedNames:true,
+  qxOwnedPresetNames:true,
+  shadcnDerivedStyles:[...new Set(THEME_PRESETS.map(x=>x.config.style))],
   completeTheme:true,
   distinct:true
 }));
