@@ -31,6 +31,10 @@ assert.match(js,/Export CSS/);
 assert.match(js,/Export JSON/);
 assert.match(js,/Import JSON/);
 assert.match(js,/data-studio-lock/);
+assert.match(js,/data-studio-add-override/);
+assert.match(js,/data-studio-remove-override/);
+assert.match(js,/renderAudit\(currentTheme\.reports\.readability\)/);
+assert.match(js,/allowedOverride\(name\)/);
 
 const scenes=[...js.matchAll(/scene\('([^']+)'/g)].map(match=>match[1]);
 assert.ok(scenes.length>=20,'Commercial Preview requires at least 20 real business scenes; found '+scenes.length);
