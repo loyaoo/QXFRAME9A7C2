@@ -45,7 +45,7 @@
     "build:frozen": "node tools/verify-frozen-production.mjs",
     "verify:final": "node tools/verify-final-cleanroom.mjs",
     "verify:release": "node tools/verify-release-artifacts.mjs",
-    "release": "npm run build && npm run verify && npm run verify:browser && npm run verify:legacy-browser && npm run verify:release && npm run verify:package",
+    "release": "npm run build && npm run verify && npm run verify:browser && npm run verify:theme-studio-browser && npm run verify:legacy-browser && npm run verify:release && npm run verify:package",
     "verify:release-preflight": "node tools/verify-release-preflight.mjs",
     "verify:package": "node tools/verify-package-contents.mjs && npm run verify:package-runtime",
     "prepublishOnly": "npm run release",
@@ -167,7 +167,8 @@
     "verify:theme-generator-recipes": "node tools/verify-theme-generator-recipes.mjs",
     "verify:theme-generator-design": "node tools/verify-theme-generator-design.mjs",
     "verify:theme-generator-io": "node tools/verify-theme-generator-io.mjs",
-    "verify:theme-studio-static": "node tools/verify-theme-studio-static.mjs"
+    "verify:theme-studio-static": "node tools/verify-theme-studio-static.mjs",
+    "verify:theme-studio-browser": "node tools/verify-theme-studio-browser.mjs"
   },
   "devDependencies": {
     "rollup": "4.63.4",
