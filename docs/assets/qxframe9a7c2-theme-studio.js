@@ -19,10 +19,13 @@ function q(){return global.QXFRAME9A7C2||{};}
 function components(){var x=q();return x.Components||x.BuildingBlocks||{};}
 function button(text,color,appearance,size){return '<button type="button" class="qxframe9a7c2-button is-'+(color||'default')+' is-'+(appearance||'outlined')+' is-'+(size||'sm')+'">'+esc(text)+'</button>';}
 function badge(text,type){return '<span class="qxframe9a7c2-badge is-'+(type||'default')+' is-sm">'+esc(text)+'</span>';}
-function scene(title,subtitle,body,kind){
-  return '<article class="qxframe9a7c2-card qxframe9a7c2-studio-scene '+(kind||'')+'">'+
-    '<header class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-title qxframe9a7c2-studio-title"><strong>'+esc(title)+'</strong><small>'+esc(subtitle)+'</small></div></header>'+
-    '<div class="qxframe9a7c2-card-body">'+body+'</div></article>';
+function scene(title,subtitle,body,kind,action,footer){
+  var classes='qxframe9a7c2-card qxframe9a7c2-studio-scene '+(kind||'');
+  var headerless=/(^|\s)is-headerless(?:\s|$)/.test(kind||'');
+  var heading='<div class="qxframe9a7c2-card-heading"><h3 class="qxframe9a7c2-card-title">'+esc(title)+'</h3><p class="qxframe9a7c2-card-description">'+esc(subtitle)+'</p></div>';
+  var header=headerless?'':'<header class="qxframe9a7c2-card-header">'+heading+(action?'<div class="qxframe9a7c2-card-action">'+action+'</div>':'')+'</header>';
+  var intro=headerless?'<div class="qxframe9a7c2-studio-scene-intro">'+heading+(action?'<div class="qxframe9a7c2-card-action">'+action+'</div>':'')+'</div>':'';
+  return '<article class="'+classes+'">'+header+'<div class="qxframe9a7c2-card-content">'+intro+body+'</div>'+(footer?'<footer class="qxframe9a7c2-card-footer">'+footer+'</footer>':'')+'</article>';
 }
 function metric(label,value,change){return '<div class="qxframe9a7c2-studio-metric"><small>'+esc(label)+'</small><strong class="qxframe9a7c2-studio-kpi">'+esc(value)+'</strong>'+(change?'<span class="qxframe9a7c2-studio-change">'+esc(change)+'</span>':'')+'</div>';}
 function listItem(title,meta,end){return '<div class="qxframe9a7c2-studio-list-item"><div class="qxframe9a7c2-studio-list-copy"><strong>'+esc(title)+'</strong><span>'+esc(meta)+'</span></div>'+(end||'')+'</div>';}
@@ -45,69 +48,67 @@ function chart(){
     '</div>';
 }
 function commercialHtml(){
-  var out='';
-  out+=scene('Analytics overview','Executive dashboard · Card / Badge / chart tokens',
+  var columns=[[],[],[]];
+  columns[0].push(scene('Analytics overview','Executive dashboard · revenue and retention',
     '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-metrics">'+
       metric('Monthly revenue','$128,420','+12.4% vs last month')+metric('Active accounts','8,642','+384 this week')+metric('Conversion','7.82%','+0.46 pt')+metric('Net retention','118%','+3.1 pt')+
-    '</div>'+chart()+'</div>','is-wide');
-  out+=scene('Theme palette','Generated 13-step Primary / Neutral + semantic roles',
-    '<div class="qxframe9a7c2-studio-palette">'+
-      swatchRow('Primary','--qxframe9a7c2-theme-primary-',13)+
-      swatchRow('Neutral','--qxframe9a7c2-theme-neutral-',13)+
-      swatchRow('Chart','--qxframe9a7c2-theme-chart-',8)+roleSwatches()+
-    '</div>','is-wide');
-  out+=scene('Revenue goal','Progress / status / target',
-    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-row is-between"><div class="qxframe9a7c2-studio-title"><strong>$84,600</strong><small>of $100,000 quarterly target</small></div>'+badge('On track','success')+'</div><div class="qxframe9a7c2-studio-mount" data-studio-mount="progress"></div></div>');
-  out+=scene('Transactions','Table · finance operations',
-    '<div class="qxframe9a7c2-studio-table-wrap"><div class="qxframe9a7c2-studio-mount" data-studio-mount="transactions"></div></div>','is-wide');
-  out+=scene('CRM opportunity','Profile / tags / actions',
-    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-profile"><div class="qxframe9a7c2-studio-avatar">AC</div><div class="qxframe9a7c2-studio-profile-copy"><strong>Acme Enterprise</strong><span>Expansion · North America</span></div>'+badge('Qualified','success')+'</div>'+
-    '<div class="qxframe9a7c2-studio-metrics">'+metric('Deal value','$48k')+metric('Probability','72%')+'</div><div class="qxframe9a7c2-studio-row">'+button('Open opportunity','primary','solid')+button('Add note','default','outlined')+'</div></div>');
-  out+=scene('Billing plan','Select / pricing / CTA',
-    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-price"><strong>$49</strong><span>/ seat / month</span></div><div class="qxframe9a7c2-studio-mount" data-studio-mount="plan-select"></div><div class="qxframe9a7c2-studio-row">'+button('Update plan','primary','solid')+button('Cancel','default','text')+'</div></div>');
-  out+=scene('Invoice #1048','Descriptions-like billing summary',
-    '<div class="qxframe9a7c2-studio-list">'+listItem('Platform subscription','12 seats × $49','<strong>$588</strong>')+listItem('Usage overage','42 GB','<strong>$36</strong>')+listItem('Tax','8.25%','<strong>$51.48</strong>')+'</div><div class="qxframe9a7c2-studio-invoice-total"><span>Total</span><span>$675.48</span></div>');
-  out+=scene('Invite teammate','Form / Input / role action',
-    '<form class="qxframe9a7c2-studio-form"><label>Email<input class="qxframe9a7c2-form-input is-md" type="email" value="alex@example.com"></label><label>Message<textarea class="qxframe9a7c2-form-textarea is-md" rows="3">Join the product workspace.</textarea></label><div class="qxframe9a7c2-studio-row">'+button('Send invite','primary','solid')+button('Copy link','default','outlined')+'</div></form>');
-  out+=scene('Workspace preferences','Switch / Checkbox states',
+    '</div>'+chart()+'</div>','is-shadow qxframe9a7c2-studio-scene-feature',badge('Live','success')));
+  columns[0].push(scene('Revenue goal','Quarterly operating target',
+    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-row is-between"><div class="qxframe9a7c2-studio-kpi-block"><strong>$84,600</strong><span>of $100,000 target</span></div>'+badge('On track','success')+'</div><div class="qxframe9a7c2-studio-mount" data-studio-mount="progress"></div></div>','is-sm'));
+  columns[0].push(scene('Transactions','Finance operations',
+    '<div class="qxframe9a7c2-studio-table-wrap"><div class="qxframe9a7c2-studio-mount" data-studio-mount="transactions"></div></div>','is-divided'));
+  columns[0].push(scene('Support inbox','Priority and response queue',
+    '<div class="qxframe9a7c2-studio-list">'+listItem('SSO configuration','Enterprise · 12 min',badge('High','error'))+listItem('Export formatting','Growth · 28 min',badge('Open','primary'))+listItem('Seat transfer','Starter · 1 h',badge('Normal','default'))+'</div>','is-sm'));
+  columns[0].push(scene('Activity','Recent workspace events',
+    '<div class="qxframe9a7c2-studio-list">'+listItem('Maya published v2.4','2 minutes ago',badge('Deploy','success'))+listItem('Liam updated billing role','18 minutes ago',badge('Admin','info'))+listItem('Nora exported 482 records','42 minutes ago',badge('Data','default'))+listItem('System rotated API key','1 hour ago',badge('Security','warning'))+'</div>','is-borderless is-shadow'));
+  columns[0].push(scene('Theme palette','13-step generated roles',
+    '<div class="qxframe9a7c2-studio-palette">'+swatchRow('Primary','--qxframe9a7c2-theme-primary-',13)+swatchRow('Neutral','--qxframe9a7c2-theme-neutral-',13)+swatchRow('Chart','--qxframe9a7c2-theme-chart-',8)+roleSwatches()+'</div>','is-headerless is-sm'));
+  columns[0].push(scene('Notifications','Status hierarchy',
+    '<div class="qxframe9a7c2-studio-list">'+listItem('Deployment completed','Production · 4 minutes ago',badge('Success','success'))+listItem('Invoice paid','Acme · $675.48',badge('Paid','info'))+listItem('API usage warning','82% of monthly quota',badge('Review','warning'))+'</div>','is-sm'));
+
+  columns[1].push(scene('CRM opportunity','Enterprise expansion · North America',
+    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-profile"><div class="qxframe9a7c2-studio-avatar">AC</div><div class="qxframe9a7c2-studio-profile-copy"><strong>Acme Enterprise</strong><span>Owner · Maya Chen</span></div>'+badge('Qualified','success')+'</div><div class="qxframe9a7c2-card-section is-muted is-inset"><div class="qxframe9a7c2-studio-metrics">'+metric('Deal value','$48k')+metric('Probability','72%')+'</div></div><div class="qxframe9a7c2-studio-row">'+button('Open opportunity','primary','solid')+button('Add note','default','outlined')+'</div></div>','is-shadow',badge('Q4','default')));
+  columns[1].push(scene('Billing plan','Workspace subscription',
+    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-price"><strong>$49</strong><span>/ seat / month</span></div><div class="qxframe9a7c2-studio-mount" data-studio-mount="plan-select"></div></div>','is-sm','',button('Update plan','primary','solid')+button('Cancel','default','text')));
+  columns[1].push(scene('Invoice #1048','Platform subscription',
+    '<div class="qxframe9a7c2-studio-list">'+listItem('Platform subscription','12 seats × $49','<strong>$588</strong>')+listItem('Usage overage','42 GB','<strong>$36</strong>')+listItem('Tax','8.25%','<strong>$51.48</strong>')+'</div><div class="qxframe9a7c2-studio-invoice-total"><span>Total</span><span>$675.48</span></div>','is-borderless is-shadow'));
+  columns[1].push(scene('Schedule review','Business workflow',
+    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-mount" data-studio-mount="schedule"></div><div class="qxframe9a7c2-studio-row">'+badge('45 min','info')+badge('Remote','default')+'</div></div>','is-sm'));
+  columns[1].push(scene('Workspace navigation','Application navigation',
+    '<div class="qxframe9a7c2-studio-mount" data-studio-mount="menu"></div>','is-divided'));
+  columns[1].push(scene('Project workspace','Application shell tabs',
+    '<div class="qxframe9a7c2-studio-mount" data-studio-mount="tabs"></div>','is-borderless is-shadow'));
+  columns[1].push(scene('Security','Account credentials',
+    '<form class="qxframe9a7c2-studio-form"><label>Current password<input class="qxframe9a7c2-form-input is-md" type="password" value="••••••••"></label><label>New password<input class="qxframe9a7c2-form-input is-md" type="password" placeholder="At least 12 characters"></label><div class="qxframe9a7c2-studio-row">'+button('Update password','primary','solid')+button('Revoke sessions','error','outlined')+'</div></form>','is-sm'));
+
+  columns[2].push(scene('Invite teammate','Product workspace access',
+    '<form class="qxframe9a7c2-studio-form"><label>Email<input class="qxframe9a7c2-form-input is-md" type="email" value="alex@example.com"></label><label>Message<textarea class="qxframe9a7c2-form-textarea is-md" rows="3">Join the product workspace.</textarea></label></form>','is-sm','',button('Send invite','primary','solid')+button('Copy link','default','outlined')));
+  columns[2].push(scene('Workspace preferences','Notification behavior',
     '<div class="qxframe9a7c2-studio-list">'+
       listItem('Weekly summary','Every Monday at 09:00','<label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox" checked><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label>')+
       listItem('Security alerts','Critical events only','<label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox" checked><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label>')+
-      listItem('Product updates','Monthly digest','<label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox"><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label>')+
-    '</div>');
-  out+=scene('Schedule review','DatePicker · business workflow',
-    '<div class="qxframe9a7c2-studio-stack"><div class="qxframe9a7c2-studio-mount" data-studio-mount="schedule"></div><div class="qxframe9a7c2-studio-row">'+badge('45 min','info')+badge('Remote','default')+'</div></div>');
-  out+=scene('Brand assets','Upload · content operations',
-    '<div class="qxframe9a7c2-studio-mount" data-studio-mount="upload"></div>');
-  out+=scene('Workspace navigation','Menu · selected / hover / nested',
-    '<div class="qxframe9a7c2-studio-mount" data-studio-mount="menu"></div>');
-  out+=scene('Project workspace','Tabs · application shell',
-    '<div class="qxframe9a7c2-studio-mount" data-studio-mount="tabs"></div>','is-wide');
-  out+=scene('Notifications','List / Badge / status hierarchy',
-    '<div class="qxframe9a7c2-studio-list">'+listItem('Deployment completed','Production · 4 minutes ago',badge('Success','success'))+listItem('Invoice paid','Acme · $675.48',badge('Paid','info'))+listItem('API usage warning','82% of monthly quota',badge('Review','warning'))+'</div>');
-  out+=scene('Support inbox','Operational list / priority',
-    '<div class="qxframe9a7c2-studio-list">'+listItem('SSO configuration','Enterprise · 12 min',badge('High','error'))+listItem('Export formatting','Growth · 28 min',badge('Open','primary'))+listItem('Seat transfer','Starter · 1 h',badge('Normal','default'))+'</div>');
-  out+=scene('Subscription','Pricing card / hierarchy',
-    '<div class="qxframe9a7c2-studio-stack">'+badge('Current plan','primary')+'<div class="qxframe9a7c2-studio-price"><strong>$199</strong><span>/ month</span></div><div class="qxframe9a7c2-studio-list">'+listItem('Unlimited projects','Included','✓')+listItem('Audit log','180 days','✓')+listItem('Priority support','4 hour SLA','✓')+'</div>'+button('Manage subscription','primary','solid','md')+'</div>');
-  out+=scene('Security','Account form / controls',
-    '<form class="qxframe9a7c2-studio-form"><label>Current password<input class="qxframe9a7c2-form-input is-md" type="password" value="••••••••"></label><label>New password<input class="qxframe9a7c2-form-input is-md" type="password" placeholder="At least 12 characters"></label><div class="qxframe9a7c2-studio-row">'+button('Update password','primary','solid')+button('Revoke sessions','error','outlined')+'</div></form>');
-  out+=scene('Empty state','First-run product surface',
-    '<div class="qxframe9a7c2-studio-empty"><div class="qxframe9a7c2-studio-empty-icon">＋</div><strong>No automations yet</strong><p>Create an automation to connect events, conditions and actions across your workspace.</p>'+button('Create automation','primary','solid')+'</div>');
-  out+=scene('Error state','Result / recovery actions',
-    '<div class="qxframe9a7c2-studio-empty"><div class="qxframe9a7c2-studio-empty-icon">!</div><strong>We could not load this report</strong><p>The underlying dataset changed while the report was running. Refresh the query or return to the dashboard.</p><div class="qxframe9a7c2-studio-row">'+button('Retry','primary','solid')+button('Back','default','outlined')+'</div></div>');
-  out+=scene('Activity','Timeline-like audit feed',
-    '<div class="qxframe9a7c2-studio-list">'+listItem('Maya published v2.4','2 minutes ago',badge('Deploy','success'))+listItem('Liam updated billing role','18 minutes ago',badge('Admin','info'))+listItem('Nora exported 482 records','42 minutes ago',badge('Data','default'))+listItem('System rotated API key','1 hour ago',badge('Security','warning'))+'</div>');
-  out+=scene('Checkout','Commerce form / totals',
-    '<div class="qxframe9a7c2-studio-stack"><form class="qxframe9a7c2-studio-form"><label>Cardholder<input class="qxframe9a7c2-form-input is-md" value="Avery Stone"></label><label>Card number<input class="qxframe9a7c2-form-input is-md" value="4242 4242 4242 4242"></label><div class="qxframe9a7c2-studio-row is-stretch"><input class="qxframe9a7c2-form-input is-md" value="10/29"><input class="qxframe9a7c2-form-input is-md" value="123"></div></form><div class="qxframe9a7c2-studio-invoice-total"><span>Due today</span><span>$199.00</span></div>'+button('Pay $199.00','primary','solid','md')+'</div>');
-  return out;
+      listItem('Product updates','Monthly digest','<label class="qxframe9a7c2-switch is-md"><input class="qxframe9a7c2-switch-input" type="checkbox"><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label>')+'</div>','is-divided'));
+  columns[2].push(scene('Brand assets','Content operations',
+    '<div class="qxframe9a7c2-studio-mount" data-studio-mount="upload"></div>','is-sm'));
+  columns[2].push(scene('Subscription','Scale plan',
+    '<div class="qxframe9a7c2-studio-stack">'+badge('Current plan','primary')+'<div class="qxframe9a7c2-studio-price"><strong>$199</strong><span>/ month</span></div><div class="qxframe9a7c2-card-section is-muted is-inset"><div class="qxframe9a7c2-studio-list">'+listItem('Unlimited projects','Included','✓')+listItem('Audit log','180 days','✓')+listItem('Priority support','4 hour SLA','✓')+'</div></div></div>','is-shadow','',button('Manage subscription','primary','solid','md')));
+  columns[2].push(scene('Empty state','First-run product surface',
+    '<div class="qxframe9a7c2-studio-empty"><div class="qxframe9a7c2-studio-empty-icon">＋</div><strong>No automations yet</strong><p>Create an automation to connect events, conditions and actions across your workspace.</p>'+button('Create automation','primary','solid')+'</div>','is-headerless is-borderless'));
+  columns[2].push(scene('Error state','Recovery actions',
+    '<div class="qxframe9a7c2-studio-empty"><div class="qxframe9a7c2-studio-empty-icon">!</div><strong>We could not load this report</strong><p>The underlying dataset changed while the report was running. Refresh the query or return to the dashboard.</p><div class="qxframe9a7c2-studio-row">'+button('Retry','primary','solid')+button('Back','default','outlined')+'</div></div>','is-headerless is-sm'));
+  columns[2].push(scene('Checkout','Commerce total',
+    '<div class="qxframe9a7c2-studio-stack"><form class="qxframe9a7c2-studio-form"><label>Cardholder<input class="qxframe9a7c2-form-input is-md" value="Avery Stone"></label><label>Card number<input class="qxframe9a7c2-form-input is-md" value="4242 4242 4242 4242"></label><div class="qxframe9a7c2-studio-row is-stretch"><input class="qxframe9a7c2-form-input is-md" value="10/29"><input class="qxframe9a7c2-form-input is-md" value="123"></div></form><div class="qxframe9a7c2-studio-invoice-total"><span>Due today</span><span>$199.00</span></div></div>','is-shadow','',button('Pay $199.00','primary','solid','md')));
+
+  return columns.map(function(items,index){return '<div class="qxframe9a7c2-studio-column is-'+(index+1)+'">'+items.join('')+'</div>';}).join('');
 }
+
 function insertCommercial(){
   if(document.querySelector('[data-qxframe9a7c2-studio-commercial]'))return;
   var all=document.getElementById('all-components');if(!all||!all.parentNode)return;
   var section=document.createElement('section');
   section.className='qxframe9a7c2-studio-commercial';
   section.dataset.qxframe9a7c2StudioCommercial='true';
-  section.innerHTML='<div class="qxframe9a7c2-studio-commercial-head"><div><h2>Commercial Preview Canvas</h2><p>真实业务组合场景而不是组件 API 排列。Card、Button、Input、Switch、Badge 直接使用 QXFRAME 样式；Table、Select、DatePicker、Upload、Menu、Tabs、Progress 使用真实 runtime component。</p></div><div class="qxframe9a7c2-studio-commercial-meta">'+badge('20 business scenes','primary')+badge('Live Light / Dark','info')+badge('Complete Theme CSS','success')+'</div></div><div class="qxframe9a7c2-studio-scenes">'+commercialHtml()+'</div>';
+  section.innerHTML='<div class="qxframe9a7c2-studio-commercial-head"><div><h2>Commercial Preview Canvas</h2><p>真实业务组合场景而不是组件 API 排列。Card、Button、Input、Switch、Badge 直接使用 QXFRAME 样式；Table、Select、DatePicker、Upload、Menu、Tabs、Progress 使用真实 runtime component。</p></div><div class="qxframe9a7c2-studio-commercial-meta">'+badge('21 business scenes','primary')+badge('Live Light / Dark','info')+badge('Complete Theme CSS','success')+'</div></div><div class="qxframe9a7c2-studio-scenes">'+commercialHtml()+'</div>';
   all.parentNode.insertBefore(section,all);
 }
 function mount(name,options){

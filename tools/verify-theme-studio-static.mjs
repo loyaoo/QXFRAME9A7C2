@@ -59,6 +59,11 @@ for(const expected of [
   'Error state','Activity','Checkout'
 ]) assert.ok(scenes.includes(expected),'Missing commercial scene: '+expected);
 
+assert.match(css,/\.qxframe9a7c2-studio-column\{display:flex;/,'Commercial showcase must use Flex columns.');
+for(const slot of ['qxframe9a7c2-card-heading','qxframe9a7c2-card-description','qxframe9a7c2-card-action','qxframe9a7c2-card-content','qxframe9a7c2-card-footer','qxframe9a7c2-card-section is-muted is-inset']) assert.ok(js.includes(slot),'Commercial showcase must exercise Card visual-recipe slot '+slot+'.');
+assert.ok(js.includes('is-headerless'),'Showcase must include content-led Card compositions without a forced header band.');
+assert.ok(js.includes('is-borderless is-shadow'),'Showcase must mix boundary treatments instead of rendering every Card as the same outlined box.');
+
 for(const component of ['Table','Select','Progress','DatePicker','Upload','Menu','Tabs']){
   assert.ok(js.includes('C.'+component),'Commercial preview must mount real QXFRAME '+component+'.');
 }
@@ -84,9 +89,11 @@ assert.ok(js.includes('runtime.presets.applyThemePreset'),'Studio must expose th
 assert.ok(js.includes('currentTheme=runtime.generator.generateTheme'),'Studio preview must consume the real generator result.');
 
 console.log(JSON.stringify({
-  phase:'TG-G-studio-static',
+  phase:'TG-G-studio-static-v2',
   commercialScenes:scenes.length,
   runtimeComponents:7,
+  commercialFlexColumns:3,
+  cardVisualRecipeSlots:true,
   generatedStylesheetReplacement:true,
   rootPerTokenMutation:false,
   flexOnlyStudioCss:true,

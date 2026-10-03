@@ -14,15 +14,31 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Theme Generator v1 and Theme Style Recipe v2 are merged and CI/Pages verified. CSS Token System, Theme Schema required contract, Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `NONE` — await the next user-authorized task. Do not reopen Theme Style Recipe v2 from zero.
+- Current Phase: Theme Generator v1 and Theme Style Recipe v2 remain merged and CI/Pages verified. `VISUAL-RECIPE-CARD-001` is the active additive visual-system task; CSS Token System, Theme Schema required contract, Size Tree/Grid/viewport and SCSS physical modularization remain complete.
+- Current Task: `VISUAL-RECIPE-CARD-001` — Card composition/visual recipe + commercial showcase closeout. Implementation and local regression checks are complete; PR/CI verification is the only remaining gate.
 
 ## CURRENT
 
-### READY-FOR-NEXT-TASK
-Status: IDLE / READY
-Progress: no active implementation task.
-Exact next step: wait for a new user-authorized task. Query current main/PR/CI before starting. Do not redo Theme Generator v1, Theme Style Recipe v2, CSS Token Schema, Controller migration, Size Tree/Grid/viewport, or SCSS modularization without a new regression or explicit new scope.
+### VISUAL-RECIPE-CARD-001
+Status: IMPLEMENTED / PR-CI-PENDING
+Progress: 85% (implementation + local regression complete; GitHub Actions and merge pending).
+
+Completed in the implementation batch:
+- Card is now a composable surface recipe rather than a fixed header/body box: first-class Heading, Title, Description, Action, Content and Section slots; card-extra remains a compatibility alias.
+- Header/Footer dividers are opt-in (is-divided) instead of forced on every Card. CardSection supports muted/inset/flush/bleed hierarchy without Card-in-Card nesting.
+- Horizontal Card now actually projects flex-direction: row and collapses to column on the existing narrow breakpoint.
+- Vega/Nova/Maia/Lyra/Mira/Luma/Sera/Rhea now produce distinct Card visual recipes through existing public Theme/Component tokens (padding, font role, title hierarchy, meta spacing, radius and default shadow treatment). The required Theme Schema stays frozen at 4,028 required entries / existing interface hash; no new required token was introduced.
+- Theme Studio Commercial Preview is reorganized into three Flex columns with 21 unequal business scenes, mixed boundary treatments, headerless content-led surfaces, real Card footer/action/section composition, and reduced box-within-box borders.
+- Card component demos document the new composition model.
+- Regression gates extended for Card recipe distinctness, Flex-only Card structure, opt-in dividers, section slots and Studio showcase structure.
+
+Local evidence before GitHub upload:
+- 120 representative generated themes (8 Style × 5 Radius × 3 Base Color) generated successfully.
+- Theme Schema required count remains 4,028; optional registry remains unchanged at 499.
+- Modified Card/Studio CSS parses with zero syntax errors and contains no display:grid, Grid tracks, vw/vh/vmin/vmax/fr, @layer, :is() or :where().
+- Theme generator design verifier and Theme Studio static verifier pass locally; modified JS files pass syntax checks.
+
+Exact next step: create one implementation PR from current main, run the full repository GitHub Actions matrix, inspect browser/Pages evidence, and merge only if all required checks are green. If CI finds a regression, fix only the failing scope on the same task; do not reopen Theme Generator v1 or Theme Style Recipe v2.
 
 ## Current authority snapshot — after Phase A
 

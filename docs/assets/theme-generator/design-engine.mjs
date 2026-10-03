@@ -38,7 +38,7 @@ const DENSITY_PROFILES=Object.freeze({
 const STYLE_PROFILES=Object.freeze({
   vega:Object.freeze({
     heights:[24,32,36,40,44],padding:[8,10,10,12,14],gaps:[4,4,6,6,8],fontRole:'md',
-    cardPadding:[12,16,24,28,32],
+    cardPadding:[12,16,24,28,32],cardFontRole:'sm',cardTitleDelta:2,cardMetaGap:4,cardShadow:'subtle',
     switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
     switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
     sliderRail:[2,4,6,6,8],sliderHandleWidth:[12,14,16,18,20],sliderHandleHeight:[12,14,16,18,20],
@@ -47,7 +47,7 @@ const STYLE_PROFILES=Object.freeze({
   }),
   nova:Object.freeze({
     heights:[24,28,32,36,40],padding:[8,10,10,12,12],gaps:[4,4,6,6,6],fontRole:'md',
-    cardPadding:[10,12,16,20,24],
+    cardPadding:[10,12,16,20,24],cardFontRole:'sm',cardTitleDelta:2,cardMetaGap:4,cardShadow:'none',
     switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
     switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
     sliderRail:[2,2,4,4,6],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
@@ -56,7 +56,7 @@ const STYLE_PROFILES=Object.freeze({
   }),
   maia:Object.freeze({
     heights:[28,32,36,40,44],padding:[10,12,12,14,16],gaps:[6,6,8,8,10],fontRole:'md',
-    cardPadding:[12,16,24,28,32],
+    cardPadding:[12,16,24,28,32],cardFontRole:'sm',cardTitleDelta:2,cardMetaGap:8,cardShadow:'none',
     switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
     switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
     sliderRail:[6,8,12,12,14],sliderHandleWidth:[14,16,16,18,20],sliderHandleHeight:[14,16,16,18,20],
@@ -65,7 +65,7 @@ const STYLE_PROFILES=Object.freeze({
   }),
   lyra:Object.freeze({
     heights:[24,28,32,36,40],padding:[6,8,10,10,12],gaps:[4,4,6,6,6],fontRole:'xs',
-    cardPadding:[10,12,16,20,24],
+    cardPadding:[10,12,16,20,24],cardFontRole:'xs',cardTitleDelta:2,cardMetaGap:4,cardShadow:'none',
     switchHeight:[14,16,18,20,22],switchWidth:[24,28,32,36,40],switchPadding:[1,1,1,1,1],
     switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
     sliderRail:[2,2,4,4,4],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
@@ -74,7 +74,7 @@ const STYLE_PROFILES=Object.freeze({
   }),
   mira:Object.freeze({
     heights:[22,24,28,32,36],padding:[6,8,8,10,12],gaps:[2,4,4,6,6],fontRole:'xs',
-    cardPadding:[10,12,16,20,24],
+    cardPadding:[10,12,16,20,24],cardFontRole:'xs',cardTitleDelta:2,cardMetaGap:4,cardShadow:'none',
     switchHeight:[14,14,16,18,20],switchWidth:[24,24,28,32,36],switchPadding:[1,1,1,1,1],
     switchThumbWidth:[12,12,14,16,18],switchThumbHeight:[12,12,14,16,18],
     sliderRail:[2,2,4,4,4],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
@@ -83,7 +83,7 @@ const STYLE_PROFILES=Object.freeze({
   }),
   luma:Object.freeze({
     heights:[28,32,36,40,44],padding:[10,12,12,14,16],gaps:[6,6,8,8,10],fontRole:'md',
-    cardPadding:[12,16,24,28,32],
+    cardPadding:[12,16,24,28,32],cardFontRole:'sm',cardTitleDelta:2,cardMetaGap:6,cardShadow:'soft',
     switchHeight:[14,16,20,22,24],switchWidth:[24,28,44,48,52],switchPadding:[1,1,2,2,2],
     switchThumbWidth:[12,16,24,26,28],switchThumbHeight:[12,14,16,18,20],
     sliderRail:[4,6,8,8,10],sliderHandleWidth:[16,20,24,26,28],sliderHandleHeight:[12,14,16,18,20],
@@ -92,7 +92,7 @@ const STYLE_PROFILES=Object.freeze({
   }),
   sera:Object.freeze({
     heights:[28,36,40,44,48],padding:[10,16,24,24,28],gaps:[4,6,6,8,8],fontRole:'xs',
-    cardPadding:[16,20,32,36,40],
+    cardPadding:[16,20,32,36,40],cardFontRole:'sm',cardTitleDelta:4,cardMetaGap:6,cardShadow:'subtle',
     switchHeight:[12,14,18,20,22],switchWidth:[22,26,34,38,42],switchPadding:[1,1,2,2,2],
     switchThumbWidth:[10,12,14,16,18],switchThumbHeight:[10,12,14,16,18],
     sliderRail:[1,1,2,2,2],sliderHandleWidth:[10,12,12,14,16],sliderHandleHeight:[10,12,12,14,16],
@@ -101,7 +101,7 @@ const STYLE_PROFILES=Object.freeze({
   }),
   rhea:Object.freeze({
     heights:[24,28,32,36,40],padding:[8,10,12,14,16],gaps:[4,4,6,6,8],fontRole:'md',
-    cardPadding:[12,16,20,24,28],
+    cardPadding:[12,16,20,24,28],cardFontRole:'sm',cardTitleDelta:2,cardMetaGap:6,cardShadow:'subtle',
     switchHeight:[14,16,20,22,24],switchWidth:[24,28,32,36,40],switchPadding:[1,1,2,2,2],
     switchThumbWidth:[12,14,16,18,20],switchThumbHeight:[12,14,16,18,20],
     sliderRail:[2,2,4,4,6],sliderHandleWidth:[12,14,16,18,20],sliderHandleHeight:[12,14,16,18,20],
@@ -154,6 +154,15 @@ function applyStyle(tokenMaps,schema,config,changed){
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-slider-handle-radius',radiusValue(p.radius.sliderHandle));
   const cardTokens=['xs','sm','md','lg','xl'];
   cardTokens.forEach((size,index)=>setToken(tokenMaps,schema,changed,'--qxframe9a7c2-card-'+size+'-padding',rem(p.cardPadding[index])));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-card-font-size','var(--qxframe9a7c2-theme-font-size-'+p.cardFontRole+')');
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-title-delta',rem(p.cardTitleDelta));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-meta-gap',rem(p.cardMetaGap));
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-header-min-height','0');
+  setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-card-inner-header-min-height','0');
+  if(p.cardShadow!=='none'){
+    const shadow='0 1px var(--qxframe9a7c2-theme-card-shadow-blur-sm) var(--qxframe9a7c2-theme-color-card-shadow-1),0 var(--qxframe9a7c2-theme-card-shadow-y-lg) var(--qxframe9a7c2-theme-card-shadow-blur-lg) var(--qxframe9a7c2-theme-color-card-shadow-2)';
+    setToken(tokenMaps,schema,changed,'--qxframe9a7c2-card-shadow',shadow);
+  }
   const switchBorder={luma:2,sera:1,rhea:2}[config.style]||0;
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-switch-track-border-width',rem(switchBorder));
   setToken(tokenMaps,schema,changed,'--qxframe9a7c2-theme-slider-handle-border-width',config.style==='sera'?'0':rem(1));
