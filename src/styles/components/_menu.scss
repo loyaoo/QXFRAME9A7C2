@@ -6,7 +6,7 @@
   --_qxframe9a7c2-menu-item-radius:var(--qxframe9a7c2-menu-item-radius,var(--_qxframe9a7c2-navigation-radius));
   --_qxframe9a7c2-menu-popup-radius:var(--qxframe9a7c2-menu-popup-radius,var(--_qxframe9a7c2-popup-radius));
   box-sizing:border-box;display:flex;min-width:0;min-height:0;max-width:100%;flex-direction:column;margin:0;
-  color:var(--_qxframe9a7c2-semantic-text);font-size:var(--_qxframe9a7c2-control-font-size);background:var(--qxframe9a7c2-theme-menu-background,var(--_qxframe9a7c2-navigation-bg))
+  color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text));font-size:var(--_qxframe9a7c2-control-font-size);background:var(--qxframe9a7c2-menu-context-background,var(--qxframe9a7c2-theme-menu-background,var(--_qxframe9a7c2-navigation-bg)))
 }
 .qxframe9a7c2-menu-root-scroll{width:100%;min-width:0;min-height:0;max-height:100%;flex:1 1 auto}
 .qxframe9a7c2-menu-root-scroll.qxframe9a7c2-scroll{height:auto;max-height:100%}
@@ -18,7 +18,7 @@
 /* Menu item state resolver: interaction/selection/danger/capability only write private visual channels. */
 .qxframe9a7c2-menu-item{
   --_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-item-background,var(--_qxframe9a7c2-item-bg,transparent));
-  --_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-theme-menu-item-text,var(--_qxframe9a7c2-item-text,inherit));
+  --_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-text,var(--qxframe9a7c2-theme-menu-item-text,var(--_qxframe9a7c2-item-text,inherit)));
   --_qxframe9a7c2-menu-item-ring:var(--_qxframe9a7c2-item-ring,none);
   --_qxframe9a7c2-menu-item-outline:var(--_qxframe9a7c2-item-outline,0 solid transparent);
   --_qxframe9a7c2-menu-item-cursor:var(--_qxframe9a7c2-item-cursor,pointer);
@@ -37,24 +37,22 @@
 .qxframe9a7c2-menu-item.is-keyboard-focus{--_qxframe9a7c2-menu-item-ring:none;--_qxframe9a7c2-menu-item-outline:var(--_qxframe9a7c2-focus-visible-outline)}
 
 .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-hover:not(:disabled),
-.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item:hover:not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-hover-background,var(--_qxframe9a7c2-semantic-subtle-hover));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-theme-menu-hover-text,var(--_qxframe9a7c2-semantic-text))}
+.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item:hover:not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-menu-context-hover,var(--qxframe9a7c2-theme-menu-hover-background,var(--_qxframe9a7c2-semantic-subtle-hover)));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-text,var(--qxframe9a7c2-theme-menu-hover-text,var(--_qxframe9a7c2-semantic-text)))}
 .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-selected:not(:disabled),
-.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-descendant-selected:not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-selected-background,var(--_qxframe9a7c2-semantic-accent-soft));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-theme-menu-selected-text,var(--_qxframe9a7c2-semantic-accent));--_qxframe9a7c2-menu-item-weight:600}
-.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-open:not(.is-selected,.is-descendant-selected,:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-hover-background,var(--_qxframe9a7c2-navigation-hover-bg))}
+.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-descendant-selected:not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-menu-context-selected,var(--qxframe9a7c2-theme-menu-selected-background,var(--_qxframe9a7c2-semantic-accent-soft)));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-selected-text,var(--qxframe9a7c2-theme-menu-selected-text,var(--_qxframe9a7c2-semantic-accent)));--_qxframe9a7c2-menu-item-weight:600}
+.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-open:not(.is-selected,.is-descendant-selected,:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-menu-context-hover,var(--qxframe9a7c2-menu-context-expanded,var(--_qxframe9a7c2-navigation-hover-bg)))}
 .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-selected.is-hover:not(:disabled),
-.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-selected.is-open:not(:disabled),
-.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-descendant-selected.is-open:not(:disabled),
-.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-selected:hover:not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-selected-hover-background,var(--_qxframe9a7c2-semantic-accent-soft-hover))}
+.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-selected:hover:not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-menu-context-selected-hover,var(--qxframe9a7c2-theme-menu-selected-hover-background,var(--_qxframe9a7c2-semantic-accent-soft-hover)))}
 .qxframe9a7c2-menu.is-horizontal>.qxframe9a7c2-menu-root-scroll>.qxframe9a7c2-menu-root-level>.qxframe9a7c2-menu-item-wrap>.qxframe9a7c2-menu-item.is-selected,
-.qxframe9a7c2-menu.is-horizontal>.qxframe9a7c2-menu-root-scroll>.qxframe9a7c2-menu-root-level>.qxframe9a7c2-menu-item-wrap>.qxframe9a7c2-menu-item.is-descendant-selected{--_qxframe9a7c2-menu-item-bg:transparent;--_qxframe9a7c2-menu-item-selection-border:var(--qxframe9a7c2-theme-menu-selected-indicator,var(--_qxframe9a7c2-semantic-accent));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-theme-menu-selected-text,var(--_qxframe9a7c2-semantic-accent));--_qxframe9a7c2-menu-item-weight:600}
+.qxframe9a7c2-menu.is-horizontal>.qxframe9a7c2-menu-root-scroll>.qxframe9a7c2-menu-root-level>.qxframe9a7c2-menu-item-wrap>.qxframe9a7c2-menu-item.is-descendant-selected{--_qxframe9a7c2-menu-item-bg:transparent;--_qxframe9a7c2-menu-item-selection-border:var(--qxframe9a7c2-menu-context-indicator,var(--qxframe9a7c2-theme-menu-selected-indicator,var(--_qxframe9a7c2-semantic-accent)));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-selected-text,var(--qxframe9a7c2-theme-menu-selected-text,var(--_qxframe9a7c2-semantic-accent)));--_qxframe9a7c2-menu-item-weight:600}
 .qxframe9a7c2-menu-item.is-danger:not(:disabled){--_qxframe9a7c2-menu-item-text:var(--_qxframe9a7c2-semantic-error)}
 .qxframe9a7c2-menu-item.is-danger.is-selected:not(:disabled),.qxframe9a7c2-menu-item.is-danger.is-hover:not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--_qxframe9a7c2-semantic-error-soft);--_qxframe9a7c2-menu-item-text:var(--_qxframe9a7c2-semantic-error)}
 /* Capability wins last: disabled suppresses hover/danger/open-focus leakage while preserving selection structure. */
 .qxframe9a7c2-menu-item:disabled,.qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item{--_qxframe9a7c2-menu-item-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-menu-item-cursor:not-allowed;--_qxframe9a7c2-menu-item-bg:transparent;--_qxframe9a7c2-menu-item-ring:none;--_qxframe9a7c2-menu-item-outline:none}
 .qxframe9a7c2-menu-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:1em;line-height:1}
 .qxframe9a7c2-menu-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto}
-.qxframe9a7c2-menu-extra{display:inline-flex;align-items:center;flex:0 0 auto;margin-inline-start:auto;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em}
-.qxframe9a7c2-menu-submenu-arrow{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-inline-start:auto;color:var(--_qxframe9a7c2-semantic-text-secondary);transition:transform var(--qxframe9a7c2-theme-motion-duration-3) var(--qxframe9a7c2-theme-motion-easing-standard)}
+.qxframe9a7c2-menu-extra{display:inline-flex;align-items:center;flex:0 0 auto;margin-inline-start:auto;color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text-secondary));font-size:.875em}
+.qxframe9a7c2-menu-submenu-arrow{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-inline-start:auto;color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text-secondary));transition:transform var(--qxframe9a7c2-theme-motion-duration-3) var(--qxframe9a7c2-theme-motion-easing-standard)}
 .qxframe9a7c2-menu-item.is-open>.qxframe9a7c2-menu-submenu-arrow{transform:rotate(90deg)}
 
 /* Inline hierarchy: collapse/expand stays in the same Menu owner; no Collapse side owner. */
@@ -108,17 +106,61 @@
  * rules retain the existing resolved state when no public override is supplied. */
 .qxframe9a7c2-menu-submenu-panel .qxframe9a7c2-menu-item.is-hover:not(.is-danger):not(:disabled),
 .qxframe9a7c2-menu-overflow-panel .qxframe9a7c2-menu-item.is-hover:not(.is-danger):not(:disabled) {
-  --_qxframe9a7c2-menu-render-background:var(--qxframe9a7c2-theme-menu-hover-background,var(--_qxframe9a7c2-menu-item-bg));
-  --_qxframe9a7c2-menu-render-text:var(--qxframe9a7c2-theme-menu-hover-text,var(--_qxframe9a7c2-menu-item-text));
+  --_qxframe9a7c2-menu-render-background:var(--qxframe9a7c2-menu-context-hover,var(--qxframe9a7c2-theme-menu-hover-background,var(--_qxframe9a7c2-menu-item-bg)));
+  --_qxframe9a7c2-menu-render-text:var(--qxframe9a7c2-menu-context-text,var(--qxframe9a7c2-theme-menu-hover-text,var(--_qxframe9a7c2-menu-item-text)));
 }
 .qxframe9a7c2-menu-submenu-panel .qxframe9a7c2-menu-item.is-selected:not(.is-danger):not(:disabled),
 .qxframe9a7c2-menu-overflow-panel .qxframe9a7c2-menu-item.is-selected:not(.is-danger):not(:disabled),
 .qxframe9a7c2-menu-submenu-panel .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-danger):not(:disabled),
 .qxframe9a7c2-menu-overflow-panel .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-danger):not(:disabled) {
-  --_qxframe9a7c2-menu-render-background:var(--qxframe9a7c2-theme-menu-selected-background,var(--_qxframe9a7c2-menu-item-bg));
-  --_qxframe9a7c2-menu-render-text:var(--qxframe9a7c2-theme-menu-selected-text,var(--_qxframe9a7c2-menu-item-text));
+  --_qxframe9a7c2-menu-render-background:var(--qxframe9a7c2-menu-context-selected,var(--qxframe9a7c2-theme-menu-selected-background,var(--_qxframe9a7c2-menu-item-bg)));
+  --_qxframe9a7c2-menu-render-text:var(--qxframe9a7c2-menu-context-selected-text,var(--qxframe9a7c2-theme-menu-selected-text,var(--_qxframe9a7c2-menu-item-text)));
 }
 .qxframe9a7c2-menu-submenu-panel .qxframe9a7c2-menu-item.is-selected.is-hover:not(.is-danger):not(:disabled),
 .qxframe9a7c2-menu-overflow-panel .qxframe9a7c2-menu-item.is-selected.is-hover:not(.is-danger):not(:disabled) {
-  --_qxframe9a7c2-menu-render-background:var(--qxframe9a7c2-theme-menu-selected-hover-background,var(--_qxframe9a7c2-menu-item-bg));
+  --_qxframe9a7c2-menu-render-background:var(--qxframe9a7c2-menu-context-selected-hover,var(--qxframe9a7c2-theme-menu-selected-hover-background,var(--_qxframe9a7c2-menu-item-bg)));
 }
+
+.qxframe9a7c2-menu-submenu-panel{background:var(--qxframe9a7c2-menu-context-background,var(--qxframe9a7c2-theme-menu-background,var(--_qxframe9a7c2-navigation-bg)));color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text));font-family:var(--qxframe9a7c2-theme-font-family,inherit)}
+.qxframe9a7c2-menu-inline-level{background:var(--qxframe9a7c2-menu-context-group,transparent)}
+.qxframe9a7c2-menu-item.is-open:not(.is-selected):not(.is-descendant-selected):not(:disabled){--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-expanded-text,inherit)}
+.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-selected:not(:disabled){border-inline-start:var(--qxframe9a7c2-theme-menu-selection-indicator-size) solid var(--qxframe9a7c2-menu-context-indicator,transparent)}
+[data-qxframe9a7c2-surface-context="menu"] .qxframe9a7c2-menu-item:hover:not(.is-danger):not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-menu-context-hover,var(--qxframe9a7c2-theme-menu-hover-background));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-text,inherit)}
+[data-qxframe9a7c2-surface-context="menu"] .qxframe9a7c2-menu-item.is-selected:not(.is-danger):not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-menu-context-selected,var(--qxframe9a7c2-theme-menu-selected-background));--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-selected-text,var(--qxframe9a7c2-theme-menu-selected-text))}
+
+.qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item:not(.is-selected){border-inline-start:var(--qxframe9a7c2-theme-menu-selection-indicator-size) solid transparent}
+[data-qxframe9a7c2-surface-context="menu"] .qxframe9a7c2-menu-item.is-selected:hover:not(.is-danger):not(:disabled){--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-menu-context-selected-hover,var(--qxframe9a7c2-theme-menu-selected-hover-background))}
+
+/* CSS inheritance resolves the nearest Light/Dark scope before Menu ownership. */
+[data-qxframe9a7c2-menu-recipe="tree"],
+[data-qxframe9a7c2-menu-recipe="tree"] [data-qxframe9a7c2-surface-context="menu"],
+[data-qxframe9a7c2-menu-recipe="current"] > [data-qxframe9a7c2-surface-context="menu"]{
+  --qxframe9a7c2-menu-context-background:var(--qxframe9a7c2-menu-recipe-background,var(--qxframe9a7c2-theme-menu-background));
+  --qxframe9a7c2-menu-context-text:var(--qxframe9a7c2-menu-recipe-text,var(--qxframe9a7c2-theme-menu-item-text));
+  --qxframe9a7c2-menu-context-hover:var(--qxframe9a7c2-menu-recipe-hover,var(--qxframe9a7c2-theme-menu-hover-background));
+  --qxframe9a7c2-menu-context-selected:var(--qxframe9a7c2-menu-recipe-selected,var(--qxframe9a7c2-theme-menu-selected-background));
+  --qxframe9a7c2-menu-context-selected-text:var(--qxframe9a7c2-menu-recipe-selected-text,var(--qxframe9a7c2-theme-menu-selected-text));
+  --qxframe9a7c2-menu-context-selected-hover:var(--qxframe9a7c2-menu-recipe-selected-hover,var(--qxframe9a7c2-theme-menu-selected-hover-background));
+  --qxframe9a7c2-menu-context-indicator:var(--qxframe9a7c2-menu-recipe-indicator,var(--qxframe9a7c2-theme-menu-selected-indicator));
+  --qxframe9a7c2-menu-context-expanded:var(--qxframe9a7c2-menu-recipe-expanded,var(--qxframe9a7c2-theme-menu-hover-background));
+  --qxframe9a7c2-menu-context-expanded-text:var(--qxframe9a7c2-menu-recipe-expanded-text,var(--qxframe9a7c2-theme-menu-item-text));
+  --qxframe9a7c2-menu-context-group:var(--qxframe9a7c2-menu-recipe-group,var(--qxframe9a7c2-theme-menu-background));
+}
+
+/* Current Menu excludes inline child levels as well as floating siblings. */
+[data-qxframe9a7c2-menu-recipe="current"] > [data-qxframe9a7c2-surface-context="menu"] .qxframe9a7c2-menu-inline-level{
+  background:var(--qxframe9a7c2-theme-menu-background,var(--_qxframe9a7c2-navigation-bg));
+  --qxframe9a7c2-menu-context-background:initial;
+  --qxframe9a7c2-menu-context-text:initial;
+  --qxframe9a7c2-menu-context-hover:initial;
+  --qxframe9a7c2-menu-context-selected:initial;
+  --qxframe9a7c2-menu-context-selected-text:initial;
+  --qxframe9a7c2-menu-context-selected-hover:initial;
+  --qxframe9a7c2-menu-context-indicator:initial;
+  --qxframe9a7c2-menu-context-expanded:initial;
+  --qxframe9a7c2-menu-context-expanded-text:initial;
+  --qxframe9a7c2-menu-context-group:initial;
+}
+
+/* A caller may declare a Popup/Dropdown shell that actually contains Menu. */
+[data-qxframe9a7c2-surface-context="menu"]{background:var(--qxframe9a7c2-menu-context-background,var(--qxframe9a7c2-theme-menu-background,var(--_qxframe9a7c2-navigation-bg)));color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text))}

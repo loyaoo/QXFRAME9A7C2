@@ -28,7 +28,7 @@ import { Item } from './item.js';
 const global=globalThis;
 const blueprint=DOMTemplate.staticHTML`<nav class="qxframe9a7c2-menu" data-qxframe9a7c2-ref="root"><ul class="qxframe9a7c2-menu-level qxframe9a7c2-menu-root-level" data-qxframe9a7c2-ref="level"></ul></nav>`;
 function createDefaultDOM(context){var instance=blueprint.instantiate(context.document);return{root:instance.root,refs:instance.refs};}
-function createSubmenuPanel(context){var panel=context.document.createElement('div');panel.className='qxframe9a7c2-menu-submenu-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset';panel.hidden=true;return panel;}
+function createSubmenuPanel(context){var panel=context.document.createElement('div');panel.className='qxframe9a7c2-menu-submenu-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset';panel.setAttribute('data-qxframe9a7c2-surface-context','menu');panel.hidden=true;return panel;}
 const DOMFactory=Object.freeze({createDefaultDOM,createSubmenuPanel,blueprint});
 
 var MODES = Object.freeze(['vertical', 'horizontal', 'inline']);
@@ -192,6 +192,9 @@ function setupMenu(instance) {
   if (rootLevel.parentNode) rootLevelParent.insertBefore(rootScrollShell, rootLevel);
   else root.appendChild(rootScrollShell);
   rootScrollShell.appendChild(rootLevel);
+  var originalSurfaceContext=root.getAttribute('data-qxframe9a7c2-surface-context');
+  root.setAttribute('data-qxframe9a7c2-surface-context','menu');
+  scope.add(function(){if(originalSurfaceContext===null)root.removeAttribute('data-qxframe9a7c2-surface-context');else root.setAttribute('data-qxframe9a7c2-surface-context',originalSurfaceContext);});
   var rootScroll = null;
   var initialSelection = initialSelected();
   valueController = ValueController.create({ value: initialSelection, normalizeValue: normalizeKeys, copyValue: normalizeKeys });

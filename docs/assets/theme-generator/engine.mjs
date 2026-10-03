@@ -12,6 +12,12 @@ const RADIUS_IDS = Object.freeze(['default','none','small','medium','large']);
 const DENSITY_IDS = Object.freeze(['compact','default','comfortable']);
 const MENU_COLOR_IDS = Object.freeze(['default','primary','inverted','neutral']);
 const MENU_APPEARANCE_IDS = Object.freeze(['solid','soft','translucent']);
+const SHAPE_IDS = Object.freeze(['follow','intrinsic','square']);
+const SHAPE_FAMILIES = Object.freeze(['choice','toggle','range','compact','identity']);
+const MENU_SCHEME_IDS = Object.freeze(['normal','neutral','inverse','brand']);
+const MENU_STYLE_IDS = Object.freeze(['text','soft','solid','indicator','neutral','accent']);
+const MENU_EXPAND_IDS = Object.freeze(['minimal','emphasized','grouped','inherited']);
+const MENU_SCOPE_IDS = Object.freeze(['current-menu','menu-tree','all-menus']);
 const MENU_ACCENT_IDS = Object.freeze(['subtle','balanced','strong']);
 
 const DEFAULT_CONFIG = deepFreeze({
@@ -34,13 +40,17 @@ const DEFAULT_CONFIG = deepFreeze({
     mono: 'ui-monospace',
     baseSize: 14
   },
+  surface:'default',
   radius: 'default',
   density: 'default',
+  foundation: {sizeScale:1,radiusScale:1},
+  shape: {choice:'intrinsic',toggle:'intrinsic',range:'intrinsic',compact:'follow',identity:'intrinsic'},
   components: {
     menu: {
       color: 'default',
       appearance: 'solid',
-      accent: 'subtle'
+      accent: 'subtle',
+      scheme:'normal',accentStyle:'soft',expand:'minimal',scope:'menu-tree'
     }
   },
   advanced: {
@@ -59,12 +69,12 @@ const STYLE_PRESETS = deepFreeze({
   rhea: { label: 'Rhea', description: 'Like Luma but compact.' }
 });
 
-const TOP_KEYS = new Set(['schema','name','style','baseColor','palette','roles','chart','typography','radius','density','components','advanced']);
+const TOP_KEYS = new Set(['schema','name','style','baseColor','palette','roles','chart','typography','radius','density','components','advanced','foundation','shape','surface']);
 const ROLE_KEYS = new Set(['primary','success','warning','error','info']);
 const CHART_KEYS = new Set(['color','preset']);
 const TYPE_KEYS = new Set(['body','heading','mono','baseSize']);
 const COMPONENT_KEYS = new Set(['menu']);
-const MENU_KEYS = new Set(['color','appearance','accent']);
+const MENU_KEYS = new Set(['color','appearance','accent','scheme','accentStyle','expand','scope']);
 const ADVANCED_KEYS = new Set(['overrides']);
 
 function plain(value) {
@@ -205,8 +215,18 @@ function normalizeConfig(input = {}) {
   if (!Number.isInteger(size) || size < 12 || size > 20 || size % 2 !== 0) throw new TypeError('typography.baseSize must be an even integer between 12 and 20.');
   config.typography.baseSize = size;
 
+  config.surface=enumValue(input.surface,['default','outlined','elevated','borderless'],'default','surface');
   config.radius = enumValue(input.radius, RADIUS_IDS, DEFAULT_CONFIG.radius, 'radius');
   config.density = enumValue(input.density, DENSITY_IDS, DEFAULT_CONFIG.density, 'density');
+
+  for(const key of ['sizeScale','radiusScale']){
+    if(input.foundation!=null)assertKnownKeys(input.foundation,new Set(['sizeScale','radiusScale']),'foundation');
+    const value=Number(input.foundation?.[key]??1);
+    if(![0.75,1,1.25,1.5].includes(value))throw new TypeError('foundation.'+key+' must be 0.75, 1, 1.25 or 1.5.');
+    config.foundation[key]=value;
+  }
+  if(input.shape!=null)assertKnownKeys(input.shape,new Set(SHAPE_FAMILIES),'shape');
+  for(const family of SHAPE_FAMILIES)config.shape[family]=enumValue(input.shape?.[family],SHAPE_IDS,DEFAULT_CONFIG.shape[family],'shape.'+family);
 
   if (input.components != null) assertKnownKeys(input.components, COMPONENT_KEYS, 'components');
   const menu = input.components && input.components.menu;
@@ -214,6 +234,13 @@ function normalizeConfig(input = {}) {
   config.components.menu.color = enumValue(menu && menu.color, MENU_COLOR_IDS, DEFAULT_CONFIG.components.menu.color, 'components.menu.color');
   config.components.menu.appearance = enumValue(menu && menu.appearance, MENU_APPEARANCE_IDS, DEFAULT_CONFIG.components.menu.appearance, 'components.menu.appearance');
   config.components.menu.accent = enumValue(menu && menu.accent, MENU_ACCENT_IDS, DEFAULT_CONFIG.components.menu.accent, 'components.menu.accent');
+
+  config.components.menu.scheme=enumValue(menu?.scheme,MENU_SCHEME_IDS,{default:'normal',primary:'brand',inverted:'inverse',neutral:'neutral'}[config.components.menu.color],'components.menu.scheme');
+  config.components.menu.accentStyle=enumValue(menu?.accentStyle,MENU_STYLE_IDS,'soft','components.menu.accentStyle');
+  config.components.menu.expand=enumValue(menu?.expand,MENU_EXPAND_IDS,'minimal','components.menu.expand');
+  config.components.menu.scope=enumValue(menu?.scope,MENU_SCOPE_IDS,'menu-tree','components.menu.scope');
+  // Legacy imports keep the same palette mapping, while the Studio authors semantic strategies.
+  config.components.menu.color={normal:'default',brand:'primary',inverse:'inverted',neutral:'neutral'}[config.components.menu.scheme];
 
   if (input.advanced != null) assertKnownKeys(input.advanced, ADVANCED_KEYS, 'advanced');
   config.advanced.overrides = normalizeOverrides(input.advanced && input.advanced.overrides);
@@ -361,9 +388,12 @@ function serializeCss(tokenMaps, schema, config, options = {}) {
     ' * Complete Theme: yes',
     ' */'
   ].join('\n');
-  const light = cssBlock(':root,\n[data-qxframe9a7c2-theme="light"]', 'light', names, tokenMaps);
-  const dark = cssBlock('[data-qxframe9a7c2-theme="dark"]', 'dark', names, tokenMaps);
-  const css = header + '\n' + light + '\n\n' + dark + '\n';
+  const menuNames=names.filter(name=>name.startsWith('--qxframe9a7c2-menu-recipe-'));
+  const mainNames=names;
+  const scope=normalized.components.menu.scope;
+  const menuSelector=scope==='all-menus'?'[data-qxframe9a7c2-surface-context="menu"]':scope==='menu-tree'?'[data-qxframe9a7c2-menu-recipe="tree"], [data-qxframe9a7c2-menu-recipe="tree"] [data-qxframe9a7c2-surface-context="menu"]':'[data-qxframe9a7c2-menu-recipe="current"] > [data-qxframe9a7c2-surface-context="menu"]';
+  const menuLight=menuSelector+' {\n'+menuNames.map(name=>{const target=name.replace('-menu-recipe-','-menu-context-');return '  '+target+': '+(normalized.advanced.overrides[target]||'var('+name+')')+';';}).join('\n')+'\n}';
+  const css = header + '\n' + cssBlock(':root,\n[data-qxframe9a7c2-theme="light"]','light',mainNames,tokenMaps) + '\n\n' + cssBlock('[data-qxframe9a7c2-theme="dark"]','dark',mainNames,tokenMaps) + '\n\n' + menuLight + '\n';
   if (/--_qxframe9a7c2-|!important|\.qxframe9a7c2-|\bhtml:root\b/.test(css)) {
     throw new TypeError('Serialized Theme CSS violated the public low-specificity output contract.');
   }
@@ -400,6 +430,8 @@ function configOptions() {
     menuColors: MENU_COLOR_IDS.slice(),
     menuAppearances: MENU_APPEARANCE_IDS.slice(),
     menuAccents: MENU_ACCENT_IDS.slice(),
+    shapePolicies:SHAPE_IDS.slice(),shapeFamilies:SHAPE_FAMILIES.slice(),
+    menuSchemes:MENU_SCHEME_IDS.slice(),menuStyles:MENU_STYLE_IDS.slice(),menuExpands:MENU_EXPAND_IDS.slice(),menuScopes:MENU_SCOPE_IDS.slice(),
     paletteKeys: PALETTE_KEYS.slice()
   });
 }

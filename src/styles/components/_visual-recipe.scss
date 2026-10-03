@@ -1,0 +1,14 @@
+/* Post-PR253 semantic typography. CSS remains the production visual authority. */
+body{font-family:var(--qxframe9a7c2-theme-font-family,inherit);font-size:var(--qxframe9a7c2-typography-body-size,var(--qxframe9a7c2-theme-font-size-md));font-weight:var(--qxframe9a7c2-typography-body-weight,400)}
+h1,h2,h3,h4,h5,h6,.qxframe9a7c2-card-title,.qxframe9a7c2-modal-title,.qxframe9a7c2-drawer-title,.qxframe9a7c2-collapse-title,.qxframe9a7c2-result-title{font-family:var(--qxframe9a7c2-theme-font-family-heading,var(--qxframe9a7c2-theme-font-family,inherit));font-weight:600}
+.qxframe9a7c2-modal-title,.qxframe9a7c2-drawer-title,.qxframe9a7c2-collapse-title{font-size:var(--qxframe9a7c2-typography-heading-size,var(--qxframe9a7c2-theme-font-size-lg))}
+.qxframe9a7c2-form-label,.qxframe9a7c2-form-item-label{font-family:var(--qxframe9a7c2-theme-font-family,inherit);font-size:var(--qxframe9a7c2-typography-body-size,var(--qxframe9a7c2-theme-font-size-md));font-weight:var(--qxframe9a7c2-typography-label-weight,500)}
+.qxframe9a7c2-card-description,.qxframe9a7c2-form-help,.qxframe9a7c2-item-collection-meta,.qxframe9a7c2-list-description{font-size:var(--qxframe9a7c2-typography-meta-size,var(--qxframe9a7c2-theme-font-size-xs));color:var(--_qxframe9a7c2-semantic-text-muted)}
+.qxframe9a7c2-input-control,.qxframe9a7c2-input-values,.qxframe9a7c2-tags-input{font-family:var(--qxframe9a7c2-theme-font-family,inherit);font-size:var(--_qxframe9a7c2-control-font-size);font-weight:var(--qxframe9a7c2-typography-body-weight,400);line-height:var(--_qxframe9a7c2-control-line-height);color:inherit}
+.qxframe9a7c2-button,.qxframe9a7c2-menu,.qxframe9a7c2-tabs,.qxframe9a7c2-item-collection,.qxframe9a7c2-list,.qxframe9a7c2-tree,.qxframe9a7c2-table,.qxframe9a7c2-tags,.qxframe9a7c2-pagination,.qxframe9a7c2-tag{font-family:var(--qxframe9a7c2-theme-font-family,inherit)}
+.qxframe9a7c2-tag,.qxframe9a7c2-badge,.qxframe9a7c2-tabs-tab,.qxframe9a7c2-form-segmented-item{border-radius:var(--qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius))}
+.qxframe9a7c2-badge.is-dot{border-radius:var(--qxframe9a7c2-compact-shape-radius,var(--qxframe9a7c2-theme-radius-circle))}
+
+.qxframe9a7c2-typography-kpi{font-size:var(--qxframe9a7c2-typography-kpi-size,var(--qxframe9a7c2-theme-font-size-xl));font-variant-numeric:tabular-nums;font-weight:600}
+
+code,pre,kbd,samp{font-family:var(--qxframe9a7c2-theme-font-family-mono,ui-monospace,monospace)}

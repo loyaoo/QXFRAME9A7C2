@@ -56,7 +56,7 @@ export class Popover extends PopupComponent {
         const portalContainer = opts.portalContainer ? resolveElement(opts.portalContainer, doc, 'portalContainer') : doc.body;
         if (!portalContainer) throw new TypeError('[QXFRAME9A7C2] Popover requires document.body or portalContainer.');
         const panel = doc.createElement('div'), container = doc.createElement('div'), title = doc.createElement('div'), content = doc.createElement('div'), action = doc.createElement('div'), arrow = doc.createElement('div');
-        panel.className = 'qxframe9a7c2-popover-root'; panel.hidden = true;
+        panel.className = 'qxframe9a7c2-popover-root'; panel.setAttribute('data-qxframe9a7c2-surface-context','overlay'); panel.hidden = true;
         container.className = 'qxframe9a7c2-popover-container qxframe9a7c2-popup-surface';
         title.className = 'qxframe9a7c2-popover-title'; content.className = 'qxframe9a7c2-popover-content'; action.className = 'qxframe9a7c2-popover-action'; arrow.className = 'qxframe9a7c2-popover-arrow'; panel.appendChild(container);
         const record = { doc, reference, portalContainer, panel, container, title, content, action, arrow };

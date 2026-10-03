@@ -372,7 +372,7 @@
 .qxframe9a7c2-button-indicator>svg,
 .qxframe9a7c2-button-indicator>img{display:block;width:1em;height:1em;max-width:1em;max-height:1em}
 .qxframe9a7c2-button-spinner{
-  display:block;width:1em;height:1em;box-sizing:border-box;
+  display:block;width:var(--_qxframe9a7c2-control-icon-size);height:var(--_qxframe9a7c2-control-icon-size);box-sizing:border-box;
   border:var(--qxframe9a7c2-theme-button-spinner-border) solid currentColor;border-inline-end-color:transparent;border-radius:50%;
   animation:qxframe9a7c2-button-spin .7s linear infinite
 }
