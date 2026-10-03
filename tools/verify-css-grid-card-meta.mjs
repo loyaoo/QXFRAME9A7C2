@@ -16,7 +16,8 @@ assert.match(css,/\.qxframe9a7c2-card-footer\.is-divided,[^{]+\{[^}]*border-top-
 assert.match(css,/\.qxframe9a7c2-card-section\.is-muted\{background:/);
 assert.match(css,/\.qxframe9a7c2-card-section\.is-inset\{/);
 assert.match(css,/\.qxframe9a7c2-card-body>\.qxframe9a7c2-card-section\.is-bleed-inline/);
-assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{flex-direction:row;align-items:stretch\}/,'Horizontal Card must actually project a row layout.');
+assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{display:flex;align-items:stretch\}/,'Horizontal Card must preserve its established Flex surface contract.');
+assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{flex-direction:row\}/,'Horizontal Card must actually project a row layout.');
 assert.match(css,/@media \(max-width:38\.75rem\)\{\.qxframe9a7c2-card\.is-horizontal\{flex-direction:column\}/,'Horizontal Card must collapse to column on narrow viewports.');
 assert.doesNotMatch(css,/\.qxframe9a7c2-card(?:[-\w.:>, ]*)?\{[^}]*(?:display:grid|grid-template-columns)/,'Card visual recipes must remain Flex-only.');
 console.log(JSON.stringify({ok:true,batch:'card-meta-and-visual-recipe-flex',cardVisualRecipe:true,horizontalFixed:true,convertedRules:2}));

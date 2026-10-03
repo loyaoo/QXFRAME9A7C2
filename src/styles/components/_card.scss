@@ -97,7 +97,8 @@
 .qxframe9a7c2-card-tab{position:relative;z-index:var(--qxframe9a7c2-z-local-raised);display:inline-flex;min-height:var(--qxframe9a7c2-theme-card-action-min-height);align-items:center;border:0;background:transparent;color:var(--_qxframe9a7c2-semantic-text-secondary);font:inherit;cursor:pointer;white-space:nowrap}
 .qxframe9a7c2-card-tab.is-active{color:var(--_qxframe9a7c2-semantic-accent)}
 .qxframe9a7c2-card-tab.is-active::after{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0;bottom:0;height:var(--qxframe9a7c2-theme-tabs-indicator-size);background:var(--_qxframe9a7c2-semantic-accent)}
-.qxframe9a7c2-card.is-horizontal{flex-direction:row;align-items:stretch}
+.qxframe9a7c2-card.is-horizontal{display:flex;align-items:stretch}
+.qxframe9a7c2-card.is-horizontal{flex-direction:row}
 .qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover{height:100%;flex:0 0 max(var(--qxframe9a7c2-theme-card-media-min-width),var(--qxframe9a7c2-card-media-width,36%));border-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px) 0 0 calc(var(--_qxframe9a7c2-card-radius) - 1px)}
 .qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover>img{height:100%}
 .qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-main{min-width:0;flex:1 1 0}
