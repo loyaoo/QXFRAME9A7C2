@@ -77,3 +77,10 @@
 - build/Studio 生成器完整配置往返；导出仅有必要完整颜色和 md 输入，没有 size/state/component 结果矩阵。576 个 Style×密度×半径×留白配置通过静态序列化检查；浏览器测量五档几何、嵌套、连体、多行、局部 md 覆盖和删除回退。
 - Schema 1 Size Tree 门禁仅排除版本化 v2 模块，排除前必须通过新 v2 md/even/fixed-rule 检查；原 37 个受保护候选与零 actionable/review 不变。
 - 初次第二批 CI 暴露 Badge dark hover、Sera transparent/hover text70、Table 选择器优先级、disabled danger Menu 与 Maia generic Popup border，已按锁定来源修复，零字节颜色容差保持。
+
+### 原生 Choice 与 Studio v2 预览，等待 CI 验收
+
+- Native Checkbox/Radio 和投影视觉选择器复用 source checked/unchecked 分配；补齐 Sera Radio 透明底＋foreground 点、Luma/Rhea input90 与透明边界。Switch thumb 按亮暗、checked 正确读 background/foreground/Type foreground。Slider 保留 source 的各 Style rail/thumb/border 差异。
+- canonical Theme Playground 增加隔离的 v2 Studio：八 Style 解析为真实密度/圆角/留白档位；五档组件、亮暗、语义反馈和 Native Choice 预览；完整颜色编辑、可选覆盖删除、JSON 校验导入、CSS/JSON 下载和持久设置。旧 Studio 保留至 H。
+- 新 Studio 的实际 UI 联动、Sera follow 半径、独立容器留白、无半径全五档、配置往返、覆盖消费/删除和无效导入不破坏当前配置加入 mandatory Chromium CI。
+- 初次几何浏览器 fixture 错误地将 Progress line 与 ring 放在同一个 flex root，造成圆环 flex shrink；已按实际组件 DOM 拆开。颜色等价没有新增容差。

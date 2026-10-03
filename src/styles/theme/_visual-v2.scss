@@ -347,6 +347,18 @@
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-v2-error); }
   .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-v2-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 20%, transparent)); }
   .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-v2-navigation-bg: transparent; --_qxframe9a7c2-v2-navigation-text: inherit; opacity: .5; }
+  /* Shared native/projected choice; state source and QX focus protocol unchanged. */
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-form-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: light-dark(transparent, color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); --_qxframe9a7c2-v2-choice-border: var(--qxframe9a7c2-theme-v2-input); background-color: var(--_qxframe9a7c2-v2-choice-bg); border-color: var(--_qxframe9a7c2-v2-choice-border); color: var(--qxframe9a7c2-theme-v2-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio { background-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-v2-primary)); border-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-v2-primary)); color: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-v2-primary-foreground)); }
+  .qxframe9a7c2-native-form input[type="radio"]:checked::before, .qxframe9a7c2-form-check-input[type="radio"]:checked::before, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio::before { background-color: currentColor; }
+  .qxframe9a7c2-form-check-input[type="checkbox"] { border-radius: var(--_qxframe9a7c2-choice-radius); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-v2-choice-bg); border-color: var(--_qxframe9a7c2-v2-choice-border); color: var(--qxframe9a7c2-theme-v2-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:checked:disabled, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:checked:disabled, .qxframe9a7c2-native-form input[type="radio"]:checked:disabled, .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled { background-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-v2-primary)); border-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-v2-primary)); color: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-v2-primary-foreground)); }
+  .qxframe9a7c2-switch-track { background-color: light-dark(var(--qxframe9a7c2-theme-v2-input), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); border-color: transparent; }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-v2-type); border-color: transparent; }
+  .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-v2-background), var(--qxframe9a7c2-theme-v2-foreground)); }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track .qxframe9a7c2-switch-thumb, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-v2-background), var(--_qxframe9a7c2-v2-type-foreground)); }
+
   /* GEOMETRY qx-md-1: public md lengths -> local fixed CSS rules.
      Every independent root owns index zero; connected groups explicitly share it. */
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-text-field[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class], .qxframe9a7c2-form-selectgroup[class], .qxframe9a7c2-form-check[class], .qxframe9a7c2-form-check-input[class], .qxframe9a7c2-form-segmented[class], .qxframe9a7c2-button-group[class], .qxframe9a7c2-input-group[class], .qxframe9a7c2-form-group[class], .qxframe9a7c2-tags[class], .qxframe9a7c2-tag[class], .qxframe9a7c2-badge[class], .qxframe9a7c2-input-otp[class], .qxframe9a7c2-switch[class], .qxframe9a7c2-slider[class], .qxframe9a7c2-progress[class], .qxframe9a7c2-rate[class], .qxframe9a7c2-card[class], .qxframe9a7c2-collapse[class], .qxframe9a7c2-descriptions[class], .qxframe9a7c2-avatar[class], .qxframe9a7c2-empty[class], .qxframe9a7c2-result[class], .qxframe9a7c2-list[class], .qxframe9a7c2-tree[class], .qxframe9a7c2-transfer[class], .qxframe9a7c2-table[class], .qxframe9a7c2-menu[class], .qxframe9a7c2-tabs[class], .qxframe9a7c2-steps[class], .qxframe9a7c2-pagination[class], .qxframe9a7c2-upload[class], .qxframe9a7c2-alert-root[class], .qxframe9a7c2-message[class], .qxframe9a7c2-notification[class], .qxframe9a7c2-popup-surface[class], .qxframe9a7c2-popover-root[class], .qxframe9a7c2-modal-root[class], .qxframe9a7c2-drawer-root[class], .qxframe9a7c2-calendar[class], .qxframe9a7c2-period-panel[class], .qxframe9a7c2-time-panel[class], .qxframe9a7c2-wheel-panel[class], .qxframe9a7c2-color-panel[class] {
@@ -463,6 +475,8 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) {
+  .qxframe9a7c2-slider-handle { border-color: transparent; }
+
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 1.75rem;
@@ -495,6 +509,13 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]) {
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-form-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); --_qxframe9a7c2-v2-choice-border: transparent; }
+  .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio { border-color: transparent; }
+  .qxframe9a7c2-switch-track { background-color: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-v2-type); border-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-slider-rail { background-color: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); }
+  .qxframe9a7c2-slider-handle { border-color: transparent; }
+
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 2.25rem;
@@ -530,6 +551,14 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]) {
+  .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled, .qxframe9a7c2-native-form input[type="radio"]:checked:disabled { background-color: transparent; border-color: var(--qxframe9a7c2-theme-v2-foreground); color: var(--qxframe9a7c2-theme-v2-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-form-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: transparent; }
+  .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio { background-color: transparent; border-color: var(--qxframe9a7c2-theme-v2-foreground); color: var(--qxframe9a7c2-theme-v2-foreground); }
+  .qxframe9a7c2-switch-track { background-color: var(--qxframe9a7c2-theme-v2-input); border-color: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent); }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-v2-type); border-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-slider-rail { background-color: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent); }
+  .qxframe9a7c2-slider-handle { background-color: var(--_qxframe9a7c2-v2-type); border-color: transparent; }
+
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 2.25rem;
@@ -567,6 +596,8 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) {
+  .qxframe9a7c2-slider-handle { border-color: transparent; }
+
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 2rem;
@@ -596,6 +627,8 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]) {
+  .qxframe9a7c2-slider-handle { border-color: transparent; }
+
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 2.25rem;
@@ -625,6 +658,13 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]) {
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-form-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); --_qxframe9a7c2-v2-choice-border: transparent; }
+  .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio { border-color: transparent; }
+  .qxframe9a7c2-switch-track { background-color: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-v2-type); border-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-slider-rail { background-color: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); }
+  .qxframe9a7c2-slider-handle { border-color: transparent; }
+
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 2.25rem;
