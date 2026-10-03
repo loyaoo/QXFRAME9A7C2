@@ -122,7 +122,7 @@ for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark']){
 const css=compileStyles().css;
 const report={schema:2,stage:'A/B/C representative chain',sourceSha:fixture.sha,sourceRules:verified.expressions.length,inputs:generated.statistics,themeBytes:Buffer.byteLength(generated.css),themeGzipBytes:zlib.gzipSync(generated.css).length,frameworkBytes:Buffer.byteLength(css),pilotSourceBytes:Buffer.byteLength(verified.source),geometry:{...geometryVerified,configurations:geometryConfigs.length},defaultReplaced:false,allComponentMigration:false,browser:null};
 if(process.argv.includes('--browser')){
-  report.browser=await browserProbes({cssText:css,expression:`(() => {
+  report.browser=await browserProbes({cssText:css,evaluationTimeoutMs:60000,expression:`(() => {
     const cases=${JSON.stringify(cases)},scope=document.getElementById('scope'),failures=[];
     const stable=document.createElement('style');stable.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(stable);
     scope.setAttribute('data-qxframe9a7c2-visual','2');

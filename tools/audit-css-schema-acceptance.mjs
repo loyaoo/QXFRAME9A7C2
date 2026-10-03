@@ -51,7 +51,8 @@ export function inspectSchema({ rootDir = root } = {}) {
   return { completeGuide, themeControlHeight, runtimeColorMix, mixByLayer, componentRootPublicDefaults, unclassifiedRootDefaults, loadedComponentModules: modules.filter(file => file.includes('/components/')).length };
 }
 
-export async function browserProbes({ expression, htmlContent, cssText } = {}) {
+export async function browserProbes({ expression, htmlContent, cssText, evaluationTimeoutMs = 30000 } = {}) {
+  if(!Number.isInteger(evaluationTimeoutMs)||evaluationTimeoutMs<1000||evaluationTimeoutMs>60000)throw new RangeError('Browser evaluation timeout must be bounded to at most 60 seconds');
   const browser = [process.env.CHROMIUM_BIN, '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable'].filter(Boolean).find(fs.existsSync);
   if (!browser) throw new Error('Schema acceptance browser evidence requires Chromium; it cannot be skipped.');
   const css = (cssText || compileStyles({ root }).css).replace(/<\/style/gi, '<\\/style');
@@ -83,7 +84,7 @@ export async function browserProbes({ expression, htmlContent, cssText } = {}) {
       message.error ? entry.reject(new Error(message.error.message)) : entry.resolve(message.result);
     };
     call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
-      const n = ++id, timer = setTimeout(() => { pending.delete(n); reject(new Error('CDP call timed out: ' + method)); }, 30000);
+      const n = ++id, timer = setTimeout(() => { pending.delete(n); reject(new Error('CDP call timed out: ' + method)); }, method === 'Runtime.evaluate' ? evaluationTimeoutMs : 30000);
       pending.set(n, { resolve, reject, timer });
       socket.send(JSON.stringify({ id: n, method, params, ...(sessionId ? { sessionId } : {}) }));
     });
