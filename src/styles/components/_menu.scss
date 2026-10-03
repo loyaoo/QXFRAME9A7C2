@@ -121,7 +121,7 @@
   --_qxframe9a7c2-menu-render-background:var(--qxframe9a7c2-menu-context-selected-hover,var(--qxframe9a7c2-theme-menu-selected-hover-background,var(--_qxframe9a7c2-menu-item-bg)));
 }
 
-.qxframe9a7c2-menu-submenu-panel{background:var(--qxframe9a7c2-menu-context-background,var(--qxframe9a7c2-theme-menu-background));color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text));font-family:var(--qxframe9a7c2-theme-font-family,inherit)}
+.qxframe9a7c2-menu-submenu-panel{background:var(--qxframe9a7c2-menu-context-background,var(--qxframe9a7c2-theme-menu-background,var(--_qxframe9a7c2-navigation-bg)));color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text));font-family:var(--qxframe9a7c2-theme-font-family,inherit)}
 .qxframe9a7c2-menu-inline-level{background:var(--qxframe9a7c2-menu-context-group,transparent)}
 .qxframe9a7c2-menu-item.is-open:not(.is-selected):not(.is-descendant-selected):not(:disabled){--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-menu-context-expanded-text,inherit)}
 .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-selected:not(:disabled){border-inline-start:var(--qxframe9a7c2-theme-menu-selection-indicator-size) solid var(--qxframe9a7c2-menu-context-indicator,transparent)}
@@ -133,6 +133,7 @@
 
 /* CSS inheritance resolves the nearest Light/Dark scope before Menu ownership. */
 [data-qxframe9a7c2-menu-recipe="tree"],
+[data-qxframe9a7c2-menu-recipe="tree"] [data-qxframe9a7c2-surface-context="menu"],
 [data-qxframe9a7c2-menu-recipe="current"] > [data-qxframe9a7c2-surface-context="menu"]{
   --qxframe9a7c2-menu-context-background:var(--qxframe9a7c2-menu-recipe-background,var(--qxframe9a7c2-theme-menu-background));
   --qxframe9a7c2-menu-context-text:var(--qxframe9a7c2-menu-recipe-text,var(--qxframe9a7c2-theme-menu-item-text));

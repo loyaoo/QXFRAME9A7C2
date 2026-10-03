@@ -391,7 +391,7 @@ function serializeCss(tokenMaps, schema, config, options = {}) {
   const menuNames=names.filter(name=>name.startsWith('--qxframe9a7c2-menu-recipe-'));
   const mainNames=names;
   const scope=normalized.components.menu.scope;
-  const menuSelector=scope==='all-menus'?'[data-qxframe9a7c2-surface-context="menu"]':scope==='menu-tree'?'[data-qxframe9a7c2-menu-recipe="tree"]':'[data-qxframe9a7c2-menu-recipe="current"] > [data-qxframe9a7c2-surface-context="menu"]';
+  const menuSelector=scope==='all-menus'?'[data-qxframe9a7c2-surface-context="menu"]':scope==='menu-tree'?'[data-qxframe9a7c2-menu-recipe="tree"], [data-qxframe9a7c2-menu-recipe="tree"] [data-qxframe9a7c2-surface-context="menu"]':'[data-qxframe9a7c2-menu-recipe="current"] > [data-qxframe9a7c2-surface-context="menu"]';
   const menuLight=menuSelector+' {\n'+menuNames.map(name=>{const target=name.replace('-menu-recipe-','-menu-context-');return '  '+target+': '+(normalized.advanced.overrides[target]||'var('+name+')')+';';}).join('\n')+'\n}';
   const css = header + '\n' + cssBlock(':root,\n[data-qxframe9a7c2-theme="light"]','light',mainNames,tokenMaps) + '\n\n' + cssBlock('[data-qxframe9a7c2-theme="dark"]','dark',mainNames,tokenMaps) + '\n\n' + menuLight + '\n';
   if (/--_qxframe9a7c2-|!important|\.qxframe9a7c2-|\bhtml:root\b/.test(css)) {

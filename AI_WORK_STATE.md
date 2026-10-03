@@ -29,7 +29,8 @@ Frozen: required Schema v1 4,028 entries and existing interface hash, pure CSS a
 Completed: Foundation/Surface scales, Body/Heading/Label/Meta/KPI/Code, Shape families, Control/Compound typography and geometry, Spinner scale, Switch unit-safe border geometry, Card surface recipes, Menu combination resolver/scope/mode ownership, initial closed Workspace Menu, Studio controls.
 Evidence: 120 Shape + 288 Menu offline cases; build and full verify passed before final additive scope/Neutral checks; five-layer Chromium suite passed; Final Studio computed geometry passed including five Control sizes, eight Switch Styles, Menu scope, nearest Light-in-Dark, Default Disabled Neutral and Picker isolation. Required Schema 4,028/hash unchanged; optional slots 532.
 Change documentation: QXFRAME9A7C2-Visual-Recipe-System-001-Changes.md.
-Exact next step: upload the locally verified implementation commit to feat/visual-recipe-system-post253, create PR, inspect full exact-head Actions and merge only on green. Do not redo CSS Token or PR #253 Card composition.
+PR #254 created at 32472405a642517420a32e6820253b78d92cac2c. Initial Schema run 37095988539 found a missing ungenerated Menu popup background fallback; implementation corrected and nested Root/Popup Light ownership cases added.
+Exact next step: verify this regression locally, update PR #254, inspect all new exact-head Actions and merge only on green. Do not redo CSS Token or PR #253 Card composition.
 
 ## Current authority snapshot — after Phase A
 

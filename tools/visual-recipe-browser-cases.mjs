@@ -93,6 +93,11 @@ export async function runVisualRecipeCases(){
     menuHost.setAttribute('data-qxframe9a7c2-theme','light');await pause();
     check(getComputedStyle(menu.getRootElement()).backgroundColor===studio.getTheme().tokens.light['--qxframe9a7c2-menu-recipe-background'],'Menu follows nearest explicit Light scope inside Dark');
     menuHost.removeAttribute('data-qxframe9a7c2-theme');
+    menu.getRootElement().setAttribute('data-qxframe9a7c2-theme','light');await pause();
+    check(getComputedStyle(menu.getRootElement()).backgroundColor===studio.getTheme().tokens.light['--qxframe9a7c2-menu-recipe-background'],'Menu Root Light overrides a Dark recipe owner');
+    popup.setAttribute('data-qxframe9a7c2-theme','light');await pause();
+    check(getComputedStyle(popup).backgroundColor===studio.getTheme().tokens.light['--qxframe9a7c2-menu-recipe-background'],'Menu popup Light overrides a Dark recipe owner');
+    menu.getRootElement().removeAttribute('data-qxframe9a7c2-theme');popup.removeAttribute('data-qxframe9a7c2-theme');
     check(popup.getAttribute('data-qxframe9a7c2-surface-context')==='menu','Popup declares Menu ownership');
     return {shapeCases,switchCases,menuCases,controlTypography:true,compoundAnchor:true,pickerIsolation:true,popupInitiallyClosed:true};
   }finally{
