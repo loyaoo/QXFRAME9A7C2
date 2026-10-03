@@ -14,31 +14,15 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Theme Generator v1 remains merged/verified. A user-authorized Style Recipe v2 enhancement is active; it extends only optional component visual slots while preserving the 4,028 required Theme/Palette contract and interface hash.
-- Current Task: `THEME-STYLE-RECIPE-002` — align Theme Studio responsibilities and Style recipes with the public shadcn/create design model.
+- Current Phase: Theme Generator v1 and Theme Style Recipe v2 are merged and CI/Pages verified. CSS Token System, Theme Schema required contract, Size Tree/Grid/viewport and SCSS physical modularization remain complete.
+- Current Task: `NONE` — await the next user-authorized task. Do not reopen Theme Style Recipe v2 from zero.
 
 ## CURRENT
 
-### THEME-STYLE-RECIPE-002
-Status: IN_PROGRESS
-Progress: ~78%
-Authorization: user requested five Radius choices, component-specific radius hierarchy, monochrome chart series, direct shadcn/create Style preset data/behavior, clearer option responsibilities, and removal of live docs color-mix that DevTools serialized as color(srgb).
-Public reference: shadcn-ui/ui `apps/v4/app/(app)/(create)`, `apps/v4/registry/styles.tsx`, and `apps/v4/registry/styles/style-{vega,nova,maia,lyra,mira,luma,sera,rhea}.css`.
-Implemented on branch `feat/theme-style-recipes-shadcn`:
-- Style vocabulary is now Vega/Nova/Maia/Lyra/Mira/Luma/Sera/Rhea; legacy balanced/soft/precision/compact Config values migrate to Vega/Luma/Nova/Mira.
-- Style owns component geometry/treatment/density. Density is removed from the normal Studio panel but retained as legacy Config/import compatibility.
-- Radius exposes five choices: Default/None/Small/Medium/Large. Default follows Style; explicit Radius owns the shared scale. Style maps control/action/navigation/data/popup/surface to different radius tiers so components do not all share one radius.
-- Chart is one selected color/hue with eight lightness/chroma steps; Mixed/rainbow chart presets are removed from Studio.
-- Existing QX commercial presets remain QX-owned names but map to the eight create-style geometries.
-- Switch/Slider CSS no longer hardcodes every track/thumb to pill/50%; optional public geometry/treatment slots allow square, round, and wide-pill recipes while preserving five component sizes.
-- Required public Theme/Palette contract remains 4,028 and interface hash remains `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`. Additive optional Component slots are now 499.
-- Theme Playground live `color-mix()` fallbacks were replaced by explicit rgba(); Generator continues to serialize rgb()/rgba() only. color(srgb) remains input-parser compatibility only.
-- Regression tests are being migrated from the old four Style / multicolor Chart model to eight Style / five Radius / monochrome Chart coverage; matrix target is 120 representative themes.
-Remaining:
-1. Finish browser/static regression updates and authoritative guide addendum.
-2. Run exact-head CSS Schema Acceptance + QXFRAME release CI; fix defects without weakening assertions.
-3. Update this checkpoint with final CI evidence, merge the PR, then mark this task DONE.
-Guardrails: do not reopen Theme Generator v1 from zero; do not add Theme/Token JS runtime; no runtime CSS scanning; no private token output or component selectors in generated CSS; preserve existing JS interaction behavior.
+### READY-FOR-NEXT-TASK
+Status: IDLE / READY
+Progress: no active implementation task.
+Exact next step: wait for a new user-authorized task. Query current main/PR/CI before starting. Do not redo Theme Generator v1, Theme Style Recipe v2, CSS Token Schema, Controller migration, Size Tree/Grid/viewport, or SCSS modularization without a new regression or explicit new scope.
 
 ## Current authority snapshot — after Phase A
 
@@ -66,6 +50,31 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE
+
+### THEME-STYLE-RECIPE-002 — shadcn/create-aligned Style Recipe v2
+Status: DONE_MERGED_CI_PAGES_VERIFIED
+Progress: 100%
+Authorization implemented:
+- five Radius choices: Default / None / Small / Medium / Large;
+- component/family-specific radius hierarchy rather than one radius for every element;
+- restrained single-hue Chart Color with eight lightness/chroma steps;
+- Style recipes translated directly from the public shadcn/create Vega/Nova/Maia/Lyra/Mira/Luma/Sera/Rhea design decisions;
+- clearer Studio control responsibilities and removal of Density as a first-class normal control;
+- generated Theme colors serialize as rgb()/rgba(); color(srgb ...) remains import-parser compatibility only; live docs color-mix fallbacks were removed.
+Merged evidence:
+- PR #251 merged 2026-10-03T00:01:46Z.
+- Exact implementation head: `bd1ef2ca67ed4baf86f70d98a527cdb50a4900ce`.
+- Main merge commit: `f5f24acde7e9fdfe9688f3f956db524026521212`.
+- CSS Schema Acceptance run `37079719752`: SUCCESS.
+- QXFRAME CI run `37079719768`: SUCCESS.
+- Main push QXFRAME CI run `37080278998`: SUCCESS; Full release verification, Windows tools, npm pack, standalone dist/docs build, GitHub Pages artifact upload and Pages deploy all succeeded.
+Contract:
+- Required public Theme/Palette inputs remain exactly 4,028 and keep interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`.
+- Optional public Component override slots are additive and now 499, enabling size-aware Switch/Slider Style geometry without private tokens or generated component selectors.
+- Style owns normal geometry/treatment/density. Radius remains an explicit five-choice scale override and Style maps component families to different radius tiers.
+- QXFRAME does not copy Tailwind selectors/classes from shadcn; it translates public recipe decisions into QXFRAME public tokens.
+Resume rule: do not redo this task. Reopen only for a reproducible regression or a separately authorized new Style/Theme scope.
+
 
 ### THEME-GENERATOR-001 — Frozen-Schema Theme Generator + commercial Theme Studio v1
 Status: DONE_MERGED_CI_VERIFIED
