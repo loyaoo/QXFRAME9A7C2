@@ -18,6 +18,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     assert.match(get('.cn-card'),/bg-card text-card-foreground/);
     assert.match(get('.cn-dialog-content'),/bg-popover text-popover-foreground/);
   }
+  for(const style of ['nova','mira','lyra'])assert.match(fixture.styles[style].entries.find(e=>e.selector==='.cn-slider-thumb').apply,/border-ring/);
   assert.match(fixture.styles.luma.entries.find(e=>e.selector==='.cn-checkbox').apply, /bg-input\/90/);
   assert.match(fixture.styles.sera.entries.find(e=>e.selector==='.cn-badge-variant-destructive').apply, /hover:text-destructive\/70/);
   const p='--qxframe9a7c2-theme-v2-',t='--_qxframe9a7c2-v2-type';

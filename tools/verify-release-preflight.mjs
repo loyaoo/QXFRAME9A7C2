@@ -109,8 +109,8 @@ for (const name of supersededFocusChecks) {
 }
 assert.equal(
     pkg.scripts.release,
-    'npm run build && npm run verify && npm run verify:browser && npm run verify:theme-studio-browser && npm run verify:theme-visual-v2-browser && npm run verify:legacy-browser && npm run verify:release && npm run verify:package',
-    'Release must run current browser verification, Theme Studio HTTP/Chromium acceptance, and the strict HOTFIX6-derived Phase C compatibility smoke before artifact/package gates.'
+    'npm run build && npm run verify && npm run verify:browser && npm run verify:theme-studio-browser && npm run verify:theme-visual-v2-browser && npm run verify:theme-studio-v2-browser && npm run verify:legacy-browser && npm run verify:release && npm run verify:package',
+    'Release must run current browser verification, Theme Studio HTTP/Chromium acceptance, v2 Studio user-flow acceptance, and the strict HOTFIX6-derived Phase C compatibility smoke before artifact/package gates.'
 );
 assert.equal(pkg.exports['.'].import, './dist/esm/index.js');
 assert.equal(pkg.exports['.'].default, './dist/esm/index.js');
