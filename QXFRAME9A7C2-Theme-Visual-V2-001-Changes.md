@@ -48,8 +48,14 @@
 
 接力时读 AGENTS.md → AI_WORK_STATE.md → 本 v1.5 文档，查询真实 PR/CI；不要重新启动旧 CSS 重构。
 
-## PR #255 首轮 CI 修正
+## PR #255 验收与合并
 
-旧 Schema/portal/Windows 通过。v2 等价检查发现 Nova 禁用 Input 源规则为 input50/light、input80/dark，Mira mask 源为 black80，已按原比例补齐；错误边框参考绑定从误用 Primary 改为 source destructive→QX error。透明颜色同时检查原 alpha 和实际模式表面合成，不用白色底板掩盖暗色透明差异。实现 head `0fb323e65c54fa31b916dd001b4619d29e98414a` 的 CSS Schema Acceptance `37133855534` 已通过，包含 4,176 个 Chromium 场景、13,062 项检查、零失败。QXFRAME CI `37133855537` 的 Full release verification 与 Windows 已通过，检查点写入时仍在打包产物。最终 PR head、合并与 Pages 状态以实时 GitHub 为准。
+首轮等价检查发现 Nova 禁用 Input 源规则为 input50/light、input80/dark，Mira mask 源为 black80，均按原比例补齐；错误边框参考绑定从误用 Primary 改为 source destructive→QX error。透明颜色同时检查原 alpha 和实际模式表面合成，不用白色底板掩盖暗色透明差异。
 
-合并前覆盖复查：Card 标题改为继承当前表面文字，使显式 surface-foreground 覆盖真正作用于标题；新增父容器／标题覆盖、描述 muted 隔离、删除回退的五项浏览器检查。最终提交须重新通过 CI。
+合并前覆盖复查：Card 标题继承当前表面文字，使显式 surface-foreground 覆盖作用于标题；父容器／标题覆盖、描述 muted 隔离、删除回退的五项浏览器检查通过。
+
+- 最终实现 head：`b08f105866bf7434d8efa9d1e31d2e4a06fe0ca8`。
+- CSS Schema Acceptance `37134518212`：SUCCESS，4,176 个 Chromium 场景、13,067 项检查、零失败。
+- QXFRAME CI `37134518247`：SUCCESS，包括完整 release、Windows、npm 包、独立 dist／演示与 Pages 产物。
+- PR #255 已合并，main 合并提交：`a59c2d4664125d72f1950c4c6faff10b4fe2adf3`。主分支 CI／Pages 部署以实时 GitHub 为准。
+- 本批交付完成，整个 THEME-VISUAL-V2-001 仍约 30%，继续剩余 B/C 后进入 D；没有替换生产默认主题。
