@@ -32,7 +32,9 @@ Change documentation: QXFRAME9A7C2-Visual-Recipe-System-001-Changes.md.
 PR #254 created at 32472405a642517420a32e6820253b78d92cac2c. Initial Schema run 37095988539 found a missing ungenerated Menu popup background fallback; implementation corrected and nested Root/Popup Light ownership cases added.
 Current PR head d320399fba071e3273fbaeded48fec5320202552; Schema Acceptance 37096202695 SUCCESS and Windows tools SUCCESS. Local Schema/Studio browser regression and sequential clean-pack passed. Full release 37096202668 SUCCESS. Final Menu Dropdown addition passed real Studio Chromium, required Schema and token graph; new exact-head CI is required.
 Final acceptance addition: explicit Menu-owned Dropdown shells consume the Menu surface; a real Dropdown + Menu probe covers all 24 combinations without reclassifying Picker.
-Exact next step: verify this final semantic Dropdown case, update PR #254, await all new exact-head CI green, merge and verify main CI/Pages; then persist final DONE evidence. Do not redo CSS Token or PR #253 Card composition.
+Final PR head 5650c25ce60003eb898bf54220cbc51e9791e061; Schema Acceptance 37096755543 and Windows SUCCESS; QXFRAME CI 37096755581 full release running. Full static verify and all five browser layers passed in run 37096755581; Studio exact-color assertion sampled a CSS transition frame. Browser harness now waits for bounded CSS transition settlement while retaining exact assertions; production code unchanged.
+Local Studio browser with shared bounded paint-settlement helper SUCCESS, including the existing eight Style geometry checks. Exact assertions retained.
+Exact next step: push this harness correction to PR #254, await all exact-head CI green, merge and verify main CI/Pages; then persist final DONE evidence. Do not redo CSS Token or PR #253 Card composition.
 
 ## Current authority snapshot — after Phase A
 

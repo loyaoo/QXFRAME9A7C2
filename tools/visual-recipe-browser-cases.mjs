@@ -1,8 +1,21 @@
+export async function settleVisualRecipePaint(){
+    await new Promise(resolve=>setTimeout(resolve,350));
+    // Generator debounce + stylesheet parsing + CSS transitions can exceed a
+    // fixed sleep on CI. Measure only settled paint, retaining exact assertions.
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const deadline=performance.now()+3500;
+    while(document.getAnimations().some(a=>a instanceof CSSTransition&&a.playState==='running')){
+      if(performance.now()>=deadline)throw new Error('CSS transitions did not settle before measurement');
+      await new Promise(resolve=>setTimeout(resolve,50));
+    }
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+}
+
 // Executed in the real Theme Studio page by verify-theme-studio-browser.mjs.
 export async function runVisualRecipeCases(){
   const studio=window.QXFRAME9A7C2_THEME_STUDIO,C=window.QXFRAME9A7C2.Components,B=window.QXFRAME9A7C2.BuildingBlocks;
   const check=(ok,label)=>{if(!ok)throw new Error('Visual Recipe: '+label);};
-  const pause=()=>new Promise(resolve=>setTimeout(resolve,350));
+  const pause=window.__qxframeVisualRecipePaint;
   const set=(key,value)=>{const el=document.querySelector('[data-studio-input="'+key+'"]');check(el,'missing control '+key);el.value=value;el.dispatchEvent(new Event('change',{bubbles:true}));};
   const root=document.querySelector('[data-studio-mount="menu"]');
   check(!root.querySelector('.qxframe9a7c2-menu-item.is-open'),'Workspace navigation initial closed');
