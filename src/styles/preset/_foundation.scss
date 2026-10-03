@@ -179,10 +179,11 @@
   --qxframe9a7c2-palette-azure-12: 242, 248, 255;
   --qxframe9a7c2-palette-azure-13: 247, 251, 255;
   /* Historical role-palette compatibility aliases. These remain read-only palette data;
-   * runtime interaction colors are still synthesized from the one-seed v2.18.55 contract. */
+   * runtime interaction colors consume the static Theme role output frozen from the seed recipe contract. */
   /* v2.18.55 seed-first color contract.
    * Each visual/semantic color owns exactly one base seed. Interaction, soft, border,
-   * ring and Dark-mode tones are synthesized by the theme/Accent recipes with color-mix().
+   * ring and Dark-mode tones are precomputed by the offline Theme recipe/generator path.
+   * Core CSS consumes static rgb()/rgba() Theme values and performs no live color mixing.
    * The original 13-step physical palettes remain read-only source data and are no longer
    * state selectors. Public theme inputs are --qxframe9a7c2-theme-<color>.
    */

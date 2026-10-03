@@ -42,6 +42,14 @@ assert.match(js,/data-studio-advanced-profile="motion"/);
 assert.match(js,/runtime\.advanced\.applyPaletteSeed/);
 assert.match(js,/runtime\.advanced\.applyAdvancedProfile/);
 
+for(const style of ['Vega','Nova','Maia','Lyra','Mira','Luma','Sera','Rhea'])assert.ok(js.includes("['"+style.toLowerCase()+"','"+style+"']"),'Studio missing Style '+style);
+assert.match(js,/\['default','Default'\],\['none','None'\],\['small','Small'\],\['medium','Medium'\],\['large','Large'\]/,'Radius must expose five choices.');
+assert.ok(!/data-studio-input="density"/.test(js),'Density must not remain a first-class Studio control; Style owns density.');
+assert.match(js,/field\('Chart color'/);
+assert.match(js,/\['primary','Primary'\]/);
+assert.ok(!/\['mixed','Mixed'\]/.test(js),'Chart color must not expose rainbow/mixed palettes.');
+
+
 const scenes=[...js.matchAll(/scene\('([^']+)'/g)].map(match=>match[1]);
 assert.ok(scenes.length>=20,'Commercial Preview requires at least 20 real business scenes; found '+scenes.length);
 for(const expected of [

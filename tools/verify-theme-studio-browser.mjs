@@ -100,25 +100,39 @@ try{
   const initial=await evaluate(cdp,sessionId,'(function(){var style=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');var scenes=document.querySelectorAll(\'.qxframe9a7c2-studio-scene\');var mounts=Array.prototype.slice.call(document.querySelectorAll(\'[data-studio-mount]\')).map(function(host){return {name:host.getAttribute(\'data-studio-mount\'),children:host.children.length,error:!!host.querySelector(\'.qxframe9a7c2-studio-runtime-error\')};});return {scenes:scenes.length,generated:style?style.textContent.length:0,declarations:style?(style.textContent.match(/^  --qxframe9a7c2-[^:]+:/gm)||[]).length:0,mode:document.documentElement.getAttribute(\'data-qxframe9a7c2-theme\'),inlineTheme:/--_?qxframe9a7c2-/.test(document.documentElement.getAttribute(\'style\')||\'\'),config:window.QXFRAME9A7C2_THEME_STUDIO.getConfig(),mounts:mounts,cards:document.querySelectorAll(\'.qxframe9a7c2-play-card\').length,commercial:!!document.querySelector(\'[data-qxframe9a7c2-studio-commercial]\')};})()');
   assert.ok(initial.commercial);
   assert.ok(initial.scenes>=20,'Expected 20+ commercial scenes.');
-  assert.equal(initial.declarations,8056);
+  assert.ok(initial.declarations>=8056,'Complete Theme must include all 8,056 required Light/Dark declarations plus intentional Style optional slots.');
   assert.ok(initial.generated>100000,'Complete Theme CSS should be substantial.');
   assert.equal(initial.inlineTheme,false,'Generated Theme must not depend on root inline Theme tokens.');
   assert.ok(initial.cards>0,'Canonical all-component gallery must remain mounted.');
   assert.equal(initial.mounts.length,7);
   for(const mount of initial.mounts){assert.ok(mount.children>0,'Runtime mount is empty: '+mount.name);assert.equal(mount.error,false,'Runtime mount failed: '+mount.name);}
+  const styleGeometry=await evaluate(cdp,sessionId,'(async function(){var names=[\'vega\',\'nova\',\'maia\',\'lyra\',\'mira\',\'luma\',\'sera\',\'rhea\'],out=[];function pause(){return new Promise(function(resolve){setTimeout(resolve,120);});}for(var i=0;i<names.length;i+=1){var select=document.querySelector(\'[data-studio-input="style"]\');select.value=names[i];select.dispatchEvent(new Event(\'change\',{bubbles:true}));await pause();var root=getComputedStyle(document.documentElement),card=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-card\'),button=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-button\'),track=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-switch-track\'),thumb=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-switch-thumb\');out.push({style:names[i],signature:[root.getPropertyValue(\'--qxframe9a7c2-theme-control-height-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-switch-width-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-slider-rail-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-family-action-radius\').trim(),root.getPropertyValue(\'--qxframe9a7c2-family-surface-radius\').trim(),root.getPropertyValue(\'--qxframe9a7c2-slider-handle-width-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-slider-handle-height-md\').trim()].join(\'|\'),cardRadius:card?getComputedStyle(card).borderRadius:\'\',buttonRadius:button?getComputedStyle(button).borderRadius:\'\',switchWidth:track?getComputedStyle(track).minWidth:\'\',switchRadius:track?getComputedStyle(track).borderRadius:\'\',thumbWidth:thumb?getComputedStyle(thumb).width:\'\',thumbHeight:thumb?getComputedStyle(thumb).height:\'\'});}return out;})()');
+  assert.equal(styleGeometry.length,8);
+  assert.equal(new Set(styleGeometry.map(x=>x.signature)).size,8,'All eight Style recipes need distinct geometry.');
+  const vegaGeometry=styleGeometry.find(x=>x.style==='vega');
+  assert.ok(parseFloat(vegaGeometry.cardRadius)>parseFloat(vegaGeometry.buttonRadius),'Default Vega surface/Card radius must exceed action/Button radius.');
+  const lumaGeometry=styleGeometry.find(x=>x.style==='luma');
+  assert.ok(parseFloat(lumaGeometry.thumbWidth)>parseFloat(lumaGeometry.thumbHeight),'Luma Switch must expose its wide pill thumb.');
+  const lyraGeometry=styleGeometry.find(x=>x.style==='lyra');
+  assert.equal(parseFloat(lyraGeometry.cardRadius),0,'Lyra surface geometry must be square.');
+  assert.equal(parseFloat(lyraGeometry.buttonRadius),0,'Lyra action geometry must be square.');
+  assert.equal(await evaluate(cdp,sessionId,'Boolean(document.querySelector(\'[data-studio-input="density"]\'))'),false,'Density must not remain a first-class Studio control.');
+  await evaluate(cdp,sessionId,'(function(){var select=document.querySelector(\'[data-studio-input="style"]\');select.value=\'vega\';select.dispatchEvent(new Event(\'change\',{bubbles:true}));return true;})()');
+  await waitFor(cdp,sessionId,'window.QXFRAME9A7C2_THEME_STUDIO.getConfig().style===\'vega\'',5000);
+
   const semanticOn=await evaluate(cdp,sessionId,'(function(){var root=getComputedStyle(document.documentElement),primary=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-button.is-primary.is-solid\'),badge=document.createElement(\'span\'),probe=document.createElement(\'span\');badge.className=\'qxframe9a7c2-badge is-success is-solid is-sm\';badge.textContent=\'Status\';probe.style.color=\'rgb(var(--qxframe9a7c2-palette-white))\';document.body.appendChild(badge);document.body.appendChild(probe);var out={primaryForeground:root.getPropertyValue(\'--qxframe9a7c2-theme-primary-foreground\').trim(),primaryColor:primary?getComputedStyle(primary).color:\'\',statusColor:getComputedStyle(badge).color,paletteWhiteColor:getComputedStyle(probe).color,optionalAccent:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-accent\').trim(),optionalStatus:root.getPropertyValue(\'--qxframe9a7c2-semantic-on-status\').trim()};badge.remove();probe.remove();return out;})()');
   assert.equal(semanticOn.optionalAccent,'','Default Complete Theme must not author optional semantic-on-accent.');
   assert.equal(semanticOn.optionalStatus,'','Default Complete Theme must not author optional semantic-on-status.');
   assert.equal(semanticOn.primaryColor,semanticOn.primaryForeground,'Primary solid component must consume required theme-primary-foreground through Core mode-on-accent.');
   assert.equal(semanticOn.statusColor,semanticOn.paletteWhiteColor,'Solid status component must keep the frozen shared white status foreground unless an explicit optional override is authored.');
 
-  const before=await evaluate(cdp,sessionId,'(function(){var s=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');return {css:s.textContent,radius:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().radius,density:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().density};})()');
+  const before=await evaluate(cdp,sessionId,'(function(){var s=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');return {css:s.textContent,radius:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().radius,style:window.QXFRAME9A7C2_THEME_STUDIO.getConfig().style};})()');
   await evaluate(cdp,sessionId,'(function(){var select=document.querySelector(\'[data-studio-input="primary"]\');select.value=\'purple\';select.dispatchEvent(new Event(\'change\',{bubbles:true}));return true;})()');
   await waitFor(cdp,sessionId,'window.QXFRAME9A7C2_THEME_STUDIO.getConfig().roles.primary===\'purple\'',5000);
-  const after=await evaluate(cdp,sessionId,'(function(){var s=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');var c=window.QXFRAME9A7C2_THEME_STUDIO.getConfig();return {css:s.textContent,radius:c.radius,density:c.density,primary:c.roles.primary};})()');
+  const after=await evaluate(cdp,sessionId,'(function(){var s=document.querySelector(\'style[data-qxframe9a7c2-generated-theme]\');var c=window.QXFRAME9A7C2_THEME_STUDIO.getConfig();return {css:s.textContent,radius:c.radius,style:c.style,primary:c.roles.primary};})()');
   assert.notEqual(after.css,before.css,'Primary change must replace generated stylesheet content.');
   assert.equal(after.radius,before.radius,'Primary change must not reset Radius.');
-  assert.equal(after.density,before.density,'Primary change must not reset Density.');
+  assert.equal(after.style,before.style,'Primary change must not reset Style.');
   assert.equal(after.primary,'purple');
 
   await evaluate(cdp,sessionId,'(function(){document.querySelector(\'[data-studio-mode="dark"]\').click();return true;})()');
@@ -137,10 +151,10 @@ try{
   assert.equal(warning.warning,true);assert.equal(warning.ui,true);assert.match(warning.text,/light-text-secondary/i);
 
   await evaluate(cdp,sessionId,'(function(){document.querySelector(\'[data-studio-reset]\').click();return true;})()');
-  await waitFor(cdp,sessionId,'window.QXFRAME9A7C2_THEME_STUDIO.getConfig().style===\'balanced\'&&Object.keys(window.QXFRAME9A7C2_THEME_STUDIO.getConfig().advanced.overrides).length===0',5000);
+  await waitFor(cdp,sessionId,'window.QXFRAME9A7C2_THEME_STUDIO.getConfig().style===\'vega\'&&Object.keys(window.QXFRAME9A7C2_THEME_STUDIO.getConfig().advanced.overrides).length===0',5000);
   const presetModes=await evaluate(cdp,sessionId,'(async function(){var cases=[\'signal\',\'harbor\',\'ember\',\'graphite\'],out=[];function pause(){return new Promise(function(resolve){setTimeout(resolve,120);});}for(var i=0;i<cases.length;i+=1){var preset=document.querySelector(\'[data-studio-preset]\');preset.value=cases[i];preset.dispatchEvent(new Event(\'change\',{bubbles:true}));await pause();for(var m=0;m<2;m+=1){var mode=m?\'dark\':\'light\';document.querySelector(\'[data-studio-mode="\'+mode+\'"]\').click();await pause();var root=getComputedStyle(document.documentElement),card=document.querySelector(\'.qxframe9a7c2-studio-scene\'),button=document.querySelector(\'.qxframe9a7c2-studio-scene .qxframe9a7c2-button\'),config=window.QXFRAME9A7C2_THEME_STUDIO.getConfig();out.push({preset:cases[i],mode:mode,style:config.style,baseColor:config.baseColor,primary:config.roles.primary,signature:[root.getPropertyValue(\'--qxframe9a7c2-theme-primary\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-menu-background\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-radius-md\').trim(),card?getComputedStyle(card).backgroundColor:\'\',button?getComputedStyle(button).backgroundColor:\'\'].join(\'|\')});}}return out;})()');
   assert.equal(presetModes.length,8);
-  const expectedPresets={signal:{style:'precision',baseColor:'zinc',primary:'blue'},harbor:{style:'soft',baseColor:'mist',primary:'cyan'},ember:{style:'balanced',baseColor:'stone',primary:'orange'},graphite:{style:'precision',baseColor:'zinc',primary:'#52525b'}};
+  const expectedPresets={signal:{style:'vega',baseColor:'zinc',primary:'blue'},harbor:{style:'luma',baseColor:'mist',primary:'cyan'},ember:{style:'nova',baseColor:'stone',primary:'orange'},graphite:{style:'lyra',baseColor:'zinc',primary:'#52525b'}};
   for(const row of presetModes){assert.equal(row.style,expectedPresets[row.preset].style);assert.equal(row.baseColor,expectedPresets[row.preset].baseColor);assert.equal(row.primary,expectedPresets[row.preset].primary);assert.ok(row.signature.split('|').every(Boolean),'Preset/mode computed signature must be complete: '+row.preset+' '+row.mode);}
   for(const preset of Object.keys(expectedPresets)){const pair=presetModes.filter(row=>row.preset===preset);assert.equal(pair.length,2);assert.notEqual(pair[0].signature,pair[1].signature,'Light/Dark computed preview must differ for '+preset);}
   assert.ok(new Set(presetModes.map(row=>row.signature)).size>=6,'Representative preset/mode previews must produce materially distinct computed signatures.');
@@ -152,11 +166,14 @@ try{
     runtimeMounts:initial.mounts.map(x=>x.name),
     canonicalCards:initial.cards,
     requiredPrimaryAndFrozenStatusConsumers:true,
-    primaryOrthogonality:true,
+    primaryGeometryOrthogonality:true,
     lightDarkPreview:true,
     publicOverrideUi:true,
     readabilityWarningUi:true,
     representativePresetModes:8,
+    createStyleGeometry:styleGeometry.map(x=>x.style),
+    fiveRadiusChoices:true,
+    densityOwnedByStyle:true,
     rootInlineTheme:false
   }));
 }finally{

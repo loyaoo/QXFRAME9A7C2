@@ -65,6 +65,6 @@ for(const slot of ['xs','sm','md','lg','xl']){
   assert.match(components,new RegExp('var\\(--qxframe9a7c2-avatar-'+slot+'-size,var\\(--qxframe9a7c2-theme-avatar-size-'+slot+'\\)\\)'));
   assert.match(components,new RegExp('var\\(--qxframe9a7c2-progress-'+slot+'-line-size,var\\(--qxframe9a7c2-theme-progress-line-size-'+slot+'\\)\\)'));
   assert.match(components,new RegExp('var\\(--qxframe9a7c2-progress-'+slot+'-circle-size,var\\(--qxframe9a7c2-theme-progress-circle-size-'+slot+'\\)\\)'));
-  assert.match(components,new RegExp('\\.qxframe9a7c2-switch\\.is-'+slot+'\\{--_qxframe9a7c2-switch-height-default:var\\(--qxframe9a7c2-theme-switch-height-'+slot+'\\);--_qxframe9a7c2-switch-width-default:var\\(--qxframe9a7c2-theme-switch-width-'+slot+'\\);--_qxframe9a7c2-switch-padding-default:var\\(--qxframe9a7c2-theme-switch-padding-'+slot+'\\)\\}'));
+  assert.match(components,new RegExp('\\.qxframe9a7c2-switch\\.is-'+slot+'\\{--_qxframe9a7c2-switch-height-default:var\\(--qxframe9a7c2-theme-switch-height-'+slot+'\\);--_qxframe9a7c2-switch-width-default:var\\(--qxframe9a7c2-theme-switch-width-'+slot+'\\);--_qxframe9a7c2-switch-padding-default:var\\(--qxframe9a7c2-theme-switch-padding-'+slot+'\\);'));
 }
 console.log(JSON.stringify({ok:true,nodes:46,oddNumericFontPresetsRemaining:0,completedOddFontDecisions:manifest.completedOddFontDecisions.length}));

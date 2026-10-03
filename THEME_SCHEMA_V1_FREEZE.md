@@ -1,5 +1,7 @@
 # Theme Schema v1 — Public Generator Contract
 
+> **2026-10-03 compatible Style-recipe extension:** the required Palette/Theme interface remains exactly 4,028 entries and keeps interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c`. The optional Component override registry grows from the original 462 frozen slots to 499 additive slots so Switch/Slider can express the user-authorized Vega/Nova/Maia/Lyra/Mira/Luma/Sera/Rhea geometry without private tokens or generated component selectors. Existing themes remain valid because these slots are optional and preserve the previous fallback geometry when absent.
+
 This freeze is the prerequisite for the user's Theme Generator / commercial Theme Studio request. It locks the public visual interface, not independent architecture/security signoff. The version becomes usable by the generator only after this PR's full release and strict Chromium freeze checks pass and merge.
 
 Authority: `QXFRAME9A7C2-Theme-Generator-Development-Guide-v1.md`. Previous Size Tree, SCSS/source order, static colors and 9-controller migration remain completed; this task does not restart them.
