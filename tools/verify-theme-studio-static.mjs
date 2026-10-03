@@ -60,7 +60,7 @@ for(const expected of [
 ]) assert.ok(scenes.includes(expected),'Missing commercial scene: '+expected);
 
 assert.match(css,/\.qxframe9a7c2-studio-column\{display:flex;/,'Commercial showcase must use Flex columns.');
-for(const slot of ['qxframe9a7c2-card-heading','qxframe9a7c2-card-description','qxframe9a7c2-card-action','qxframe9a7c2-card-content','qxframe9a7c2-card-footer','qxframe9a7c2-card-section is-muted is-inset']) assert.ok(js.includes(slot),'Commercial showcase must exercise Card visual-recipe slot '+slot+'.');
+for(const slot of ['qxframe9a7c2-card-heading','qxframe9a7c2-card-description','qxframe9a7c2-card-header-action','qxframe9a7c2-card-content','qxframe9a7c2-card-footer','qxframe9a7c2-card-section is-muted is-inset']) assert.ok(js.includes(slot),'Commercial showcase must exercise Card visual-recipe slot '+slot+'.');
 assert.ok(js.includes('is-headerless'),'Showcase must include content-led Card compositions without a forced header band.');
 assert.ok(js.includes('is-borderless is-shadow'),'Showcase must mix boundary treatments instead of rendering every Card as the same outlined box.');
 

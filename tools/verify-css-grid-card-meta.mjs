@@ -10,7 +10,7 @@ assert.match(css,/\.qxframe9a7c2-card-meta>\*:last-child\{min-width:0;flex:1 1 a
 assert.match(css,/\.qxframe9a7c2-card-meta\.is-block\{flex-direction:column;align-items:stretch\}/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-card-meta(?:\.is-block)?\{[^}]*(?:display:grid|grid-template-columns)/);
 
-for(const selector of ['qxframe9a7c2-card-heading','qxframe9a7c2-card-description','qxframe9a7c2-card-action','qxframe9a7c2-card-content','qxframe9a7c2-card-section']) assert.ok(css.includes('.'+selector),'missing Card visual-recipe slot '+selector);
+for(const selector of ['qxframe9a7c2-card-heading','qxframe9a7c2-card-description','qxframe9a7c2-card-header-action','qxframe9a7c2-card-content','qxframe9a7c2-card-section']) assert.ok(css.includes('.'+selector),'missing Card visual-recipe slot '+selector);
 assert.match(css,/\.qxframe9a7c2-card-header\.is-divided,[^{]+\{[^}]*border-bottom-width:1px/,'Card header divider must be opt-in.');
 assert.match(css,/\.qxframe9a7c2-card-footer\.is-divided,[^{]+\{[^}]*border-top-width:1px/,'Card footer divider must be opt-in.');
 assert.match(css,/\.qxframe9a7c2-card-section\.is-muted\{background:/);

@@ -23,8 +23,8 @@ function scene(title,subtitle,body,kind,action,footer){
   var classes='qxframe9a7c2-card qxframe9a7c2-studio-scene '+(kind||'');
   var headerless=/(^|\s)is-headerless(?:\s|$)/.test(kind||'');
   var heading='<div class="qxframe9a7c2-card-heading"><h3 class="qxframe9a7c2-card-title">'+esc(title)+'</h3><p class="qxframe9a7c2-card-description">'+esc(subtitle)+'</p></div>';
-  var header=headerless?'':'<header class="qxframe9a7c2-card-header">'+heading+(action?'<div class="qxframe9a7c2-card-action">'+action+'</div>':'')+'</header>';
-  var intro=headerless?'<div class="qxframe9a7c2-studio-scene-intro">'+heading+(action?'<div class="qxframe9a7c2-card-action">'+action+'</div>':'')+'</div>':'';
+  var header=headerless?'':'<header class="qxframe9a7c2-card-header">'+heading+(action?'<div class="qxframe9a7c2-card-header-action">'+action+'</div>':'')+'</header>';
+  var intro=headerless?'<div class="qxframe9a7c2-studio-scene-intro">'+heading+(action?'<div class="qxframe9a7c2-card-header-action">'+action+'</div>':'')+'</div>':'';
   return '<article class="'+classes+'">'+header+'<div class="qxframe9a7c2-card-content">'+intro+body+'</div>'+(footer?'<footer class="qxframe9a7c2-card-footer">'+footer+'</footer>':'')+'</article>';
 }
 function metric(label,value,change){return '<div class="qxframe9a7c2-studio-metric"><small>'+esc(label)+'</small><strong class="qxframe9a7c2-studio-kpi">'+esc(value)+'</strong>'+(change?'<span class="qxframe9a7c2-studio-change">'+esc(change)+'</span>':'')+'</div>';}
