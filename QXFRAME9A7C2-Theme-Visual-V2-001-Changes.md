@@ -68,3 +68,12 @@
 - 源摘录扩展至 464 条；共享规则沿现有消费槽位接入 Tag/Badge、反馈、Table、List/Tree/Transfer、Progress、Slider、Scroll、Tooltip。新增代表组合等待 Chromium CI。
 - 危险 Menu normal/hover/selected/open/descendant-selected/disabled 的源等价用例已登记。
 - 接下来继续 md 固定派生与剩余颜色端；生产默认不在本批提前切换。
+
+### md 固定派生实现，等待 CI 验收
+
+- 21 个完整 md rem 输入；有限四档密度、六档半径、三档独立容器留白，数值仍为候选标定。五档指数由组件自己初始化，连体组显式共享；普通嵌套控件回到 md。
+- 控件最小尺寸固定 4px 步长，padding/gap/icon 固定 2px；字号/行盒限档增长；follow 半径与表面留白固定温和比例、统一偶数舍入。纵向 padding 从内容盒和边框计算，多行允许增长。
+- Switch/Slider/Progress 专用 md 输入独立派生；Switch 按实际边框盒校准内缩和有效行程。旧五档几何接口不作为 v2 隐藏覆盖入口。
+- build/Studio 生成器完整配置往返；导出仅有必要完整颜色和 md 输入，没有 size/state/component 结果矩阵。576 个 Style×密度×半径×留白配置通过静态序列化检查；浏览器测量五档几何、嵌套、连体、多行、局部 md 覆盖和删除回退。
+- Schema 1 Size Tree 门禁仅排除版本化 v2 模块，排除前必须通过新 v2 md/even/fixed-rule 检查；原 37 个受保护候选与零 actionable/review 不变。
+- 初次第二批 CI 暴露 Badge dark hover、Sera transparent/hover text70、Table 选择器优先级、disabled danger Menu 与 Maia generic Popup border，已按锁定来源修复，零字节颜色容差保持。

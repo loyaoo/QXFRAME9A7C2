@@ -18,10 +18,11 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     assert.match(get('.cn-card'),/bg-card text-card-foreground/);
     assert.match(get('.cn-dialog-content'),/bg-popover text-popover-foreground/);
   }
+  assert.match(fixture.styles.sera.entries.find(e=>e.selector==='.cn-badge-variant-destructive').apply, /hover:text-destructive\/70/);
   const p='--qxframe9a7c2-theme-v2-',t='--_qxframe9a7c2-v2-type';
   const allowed=new Set();
   const alpha=(name,weights)=>weights.forEach(n=>allowed.add('color-mix(inoklab,var('+name+')'+n+'%,transparent)'));
-  alpha(t,[10,20,30,40,80,90]);alpha('--_qxframe9a7c2-v2-shadow-color',[10,25]);alpha(p+'input',[20,30,50,80]);alpha(p+'muted',[50]);alpha(p+'foreground',[5,10]);alpha(p+'error',[10,20,50]);
+  alpha(t,[10,20,30,40,70,80,90]);alpha('--_qxframe9a7c2-v2-shadow-color',[10,25]);alpha(p+'input',[20,30,50,80]);alpha(p+'muted',[50]);alpha(p+'foreground',[5,10]);alpha(p+'error',[10,20,50]);
   allowed.add('color-mix(inoklch,var('+p+'secondary)95%,var('+p+'foreground)5%)');
   const expressions=[];
   for(let start=source.indexOf('color-mix(');start>=0;start=source.indexOf('color-mix(',start+1)){

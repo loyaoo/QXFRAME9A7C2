@@ -4,6 +4,10 @@ import assert from 'node:assert/strict';
 import zlib from 'node:zlib';
 import {fileURLToPath} from 'node:url';
 import {generateSemanticTheme,normalizeSemanticConfig,migrateLegacySemanticColors,CORE_ROLES,OPTIONAL_ROLES,OVERRIDE_ROLES,SEMANTIC_STYLES} from '../docs/assets/theme-generator/semantic-engine.mjs';
+import {generateThemeV2,serializeThemeV2,parseThemeV2} from '../docs/assets/theme-generator/engine-v2.mjs';
+import {DENSITIES,RADII,SPACINGS,GEOMETRY_ROLES} from '../docs/assets/theme-generator/geometry-engine-v2.mjs';
+import {verifyGeometryRuleSource} from './theme-v2-geometry-contract.mjs';
+import {geometryBrowserProbe} from './theme-v2-geometry-probes.mjs';
 import {verifySemanticRuleSource,V2_STYLE_MODULE} from './theme-v2-contract.mjs';
 import {compileStyles} from './compile-styles.mjs';
 import {browserProbes} from './audit-css-schema-acceptance.mjs';
@@ -66,6 +70,16 @@ function sourceColor(style,selector,property,mode,state='normal'){
   candidates.sort((a,b)=>a.weight-b.weight);
   return candidates.at(-1)?.expression??(property==='bg'?'transparent':property==='text'?'var(--source-foreground)':'transparent');
 }
+const geometryVerified=verifyGeometryRuleSource(root),geometryConfigs=[];
+assert.deepEqual(schema.geometryInputs.map(x=>x.role),GEOMETRY_ROLES);
+for(const style of SEMANTIC_STYLES)for(const density of DENSITIES)for(const radius of RADII)for(const spacing of SPACINGS){
+  const result=generateThemeV2({style,options:{density,radius,spacing}});geometryConfigs.push(result.config);
+  assert.equal(result.statistics.geometryNames,21);
+  assert.deepEqual(parseThemeV2(serializeThemeV2(result.config)),result);
+  assert.doesNotMatch(result.css,/--_qxframe|calc\(|round\(|-(?:xs|sm|lg|xl):/);
+}
+for(const input of [{geometry:{'control-height-xs':'1rem'}},{options:{density:'made-up'}},{options:{step:4}},{geometryRules:'another'},{geometry:{'control-min-block-md':'.25rem'}},{geometry:{'switch-inset-md':'0rem'}},{geometry:{'slider-thumb-md':'.8125rem'}}])assert.throws(()=>generateThemeV2(input));
+assert.throws(()=>verifyGeometryRuleSource(root,{sourceText:verified.source.replace('size-index) * .25rem','size-index) * .1875rem')}));
 const cases=[];
 for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark']){
   for(const type of ['default','primary','secondary','success','warning','error','info'])for(const variant of ['solid','filled','outlined','plain','text','link'])for(const state of ['normal','hover','active','hover-active','loading-hover','disabled-hover']){
@@ -95,7 +109,7 @@ for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark']){
 
 }
 const css=compileStyles().css;
-const report={schema:2,stage:'A/B/C representative chain',sourceSha:fixture.sha,sourceRules:verified.expressions.length,inputs:generated.statistics,themeBytes:Buffer.byteLength(generated.css),themeGzipBytes:zlib.gzipSync(generated.css).length,frameworkBytes:Buffer.byteLength(css),pilotSourceBytes:Buffer.byteLength(verified.source),defaultReplaced:false,allComponentMigration:false,browser:null};
+const report={schema:2,stage:'A/B/C representative chain',sourceSha:fixture.sha,sourceRules:verified.expressions.length,inputs:generated.statistics,themeBytes:Buffer.byteLength(generated.css),themeGzipBytes:zlib.gzipSync(generated.css).length,frameworkBytes:Buffer.byteLength(css),pilotSourceBytes:Buffer.byteLength(verified.source),geometry:{...geometryVerified,configurations:geometryConfigs.length},defaultReplaced:false,allComponentMigration:false,browser:null};
 if(process.argv.includes('--browser')){
   report.browser=await browserProbes({cssText:css,expression:`(() => {
     const cases=${JSON.stringify(cases)},scope=document.getElementById('scope'),failures=[];
@@ -154,7 +168,9 @@ if(process.argv.includes('--browser')){
     compare('card-description-keeps-muted-role',measure(description,'color'),descriptionBefore);checks++;
     neutral.style.removeProperty(p+'override-surface-foreground');
     for(const node of [neutral,title]){compare('delete-card-surface-foreground-restores-role',measure(node,'color'),'rgb(12, 34, 56)');checks++;}
-    return {cases:cases.length,checks,failures,renderTolerance:'0 RGBA byte difference both on transparent canvas and after actual mode-surface composition; exact strings retained'};
+    const geometry=(${geometryBrowserProbe.toString()})(scope,host,${JSON.stringify(geometryConfigs)});
+    failures.push(...geometry.failures);
+    return {cases:cases.length,checks,geometry,failures,renderTolerance:'0 RGBA byte difference both on transparent canvas and after actual mode-surface composition; exact strings retained'};
   })()`});
   fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-visual-v2.json'),JSON.stringify(report,null,2)+'\n');
   assert.deepEqual(report.browser.failures,[],'Source colors and QX consumer colors differ; details in artifacts/theme-visual-v2.json');
