@@ -109,6 +109,9 @@ export class PopupFieldComponent extends FieldComponent {
         if (record.popupFrame) return record.popupFrame;
         const panel = options.panel || options.popup || record.popup;
         if (!panel) throw new TypeError('[QXFRAME9A7C2] PopupFieldComponent setupPopupFrame requires a popup panel.');
+        const previousContext=panel.getAttribute('data-qxframe9a7c2-surface-context');
+        panel.setAttribute('data-qxframe9a7c2-surface-context','picker');
+        this.own(()=>{if(previousContext===null)panel.removeAttribute('data-qxframe9a7c2-surface-context');else panel.setAttribute('data-qxframe9a7c2-surface-context',previousContext);});
         if (!record.popup) record.popup = panel;
         record.popupFrame = this.own(PopupFrame.create({ ...options, panel }));
         return record.popupFrame;

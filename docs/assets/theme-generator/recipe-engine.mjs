@@ -284,6 +284,9 @@ function expandFrozenColorRecipes(tokenMaps,schema,recipeData,changed){
         const base=data.recipes[mode][axis];
         if(!base)throw new TypeError('Missing '+mode+'/'+axis+' Theme color recipe map.');
         const bindings={...base,...Object.fromEntries(changed[mode])};
+        // Default Button is a Neutral action. The frozen shared accent binding
+        // cannot substitute Primary for its component-specific semantic text.
+        if(axis==='default')bindings['r.button-accent']='var(r.semantic-text)';
         if(role.expression.includes('var(r.accent-seed)')&&!Object.prototype.hasOwnProperty.call(bindings,'r.accent-seed')){
           // The frozen recipe intentionally leaves this axis unbound. Preserve the
           // manifest default instead of inventing a semantic mapping in Generator.

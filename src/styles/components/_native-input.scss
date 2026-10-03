@@ -87,3 +87,8 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:var(--qxfr
 .qxframe9a7c2-input>.qxframe9a7c2-input-form-field{display:none}
 
 
+
+/* Compound control geometry: the same owner serves TagInput and Multiple Select. */
+.qxframe9a7c2-input.is-tags{--_qxframe9a7c2-compound-inset:var(--qxframe9a7c2-compound-control-inset,var(--qxframe9a7c2-theme-space-1));padding-inline:var(--_qxframe9a7c2-compound-inset);padding-block:var(--_qxframe9a7c2-compound-inset)}
+.qxframe9a7c2-input.is-tags .qxframe9a7c2-tags.is-hosted{--_qxframe9a7c2-compound-item-height:calc(var(--_qxframe9a7c2-control-local-height) - var(--_qxframe9a7c2-compound-inset)*2 - var(--_qxframe9a7c2-control-border-width)*2);--_qxframe9a7c2-compound-item-inset:calc(var(--_qxframe9a7c2-control-padding-inline) - var(--_qxframe9a7c2-compound-inset) - 1px)}
+.qxframe9a7c2-input.is-tags:not(.has-value) .qxframe9a7c2-tags-input{padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) - var(--_qxframe9a7c2-compound-inset))}

@@ -85,6 +85,7 @@
     "src/styles/components/_component-state.scss",
     "src/styles/components/_composition.scss",
     "src/styles/components/_focus-closeout.scss",
-    "src/styles/components/_compatibility.scss"
+    "src/styles/components/_compatibility.scss",
+    "src/styles/components/_visual-recipe.scss"
   ]
 }

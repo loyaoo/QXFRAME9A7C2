@@ -32,7 +32,7 @@ assert.equal(base.tokens.light['--qxframe9a7c2-theme-control-height-md'],'2.25re
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-switch-width-md'],'2rem');
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-switch-height-md'],'1.125rem');
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-slider-rail-md'],'0.375rem');
-assert.equal(base.tokens.light['--qxframe9a7c2-card-font-size'],'var(--qxframe9a7c2-theme-font-size-sm)');
+assert.equal(base.tokens.light['--qxframe9a7c2-card-font-size'],'var(--qxframe9a7c2-typography-body-size)');
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-card-title-delta'],'0.125rem');
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-card-meta-gap'],'0.25rem');
 assert.ok(base.tokens.light['--qxframe9a7c2-card-shadow'],'Vega Card recipe should author its subtle default shadow.');
@@ -78,7 +78,7 @@ assert.equal(lyra.tokens.light['--qxframe9a7c2-family-action-radius'],'0');
 assert.equal(lyra.tokens.light['--qxframe9a7c2-family-surface-radius'],'0');
 assert.equal(lyra.tokens.light['--qxframe9a7c2-slider-rail-radius'],'0');
 assert.equal(lyra.tokens.light['--qxframe9a7c2-slider-handle-radius'],'0');
-assert.equal(lyra.tokens.light['--qxframe9a7c2-card-font-size'],'var(--qxframe9a7c2-theme-font-size-xs)');
+assert.equal(lyra.tokens.light['--qxframe9a7c2-card-font-size'],'var(--qxframe9a7c2-typography-body-size)');
 assert.equal(lyra.tokens.light['--qxframe9a7c2-card-shadow'],undefined,'Lyra Card recipe remains flat by default.');
 
 const sera=generateTheme(manifest,recipes,{name:'sera',style:'sera'});
@@ -87,7 +87,7 @@ assert.equal(sera.tokens.light['--qxframe9a7c2-switch-track-radius'],'0');
 assert.equal(sera.tokens.light['--qxframe9a7c2-slider-rail-radius'],'0');
 assert.equal(sera.tokens.light['--qxframe9a7c2-theme-card-title-delta'],'0.25rem','Sera must carry an editorial Card title hierarchy.');
 
-const radiusValues={none:'0',small:'0.45rem',medium:'0.625rem',large:'0.875rem'};
+const radiusValues={none:'0',small:'0.5rem',medium:'0.625rem',large:'0.875rem'};
 for(const [radius,expected] of Object.entries(radiusValues)){
   const theme=generateTheme(manifest,recipes,{name:'radius-'+radius,radius});
   assert.equal(theme.tokens.light['--qxframe9a7c2-theme-radius'],expected);
@@ -100,7 +100,7 @@ assert.equal(legacyDensity.config.density,'compact','Legacy/import Density remai
 assert.notEqual(legacyDensity.tokens.light['--qxframe9a7c2-theme-control-height-md'],base.tokens.light['--qxframe9a7c2-theme-control-height-md']);
 
 const menu=generateTheme(manifest,recipes,{name:'menu',components:{menu:{color:'primary',appearance:'soft',accent:'balanced'}}});
-assert.notEqual(menu.tokens.light['--qxframe9a7c2-theme-menu-background'],base.tokens.light['--qxframe9a7c2-theme-menu-background']);
+assert.notEqual(menu.tokens.light['--qxframe9a7c2-menu-recipe-background'],base.tokens.light['--qxframe9a7c2-menu-recipe-background']);
 assert.equal(menu.tokens.light['--qxframe9a7c2-theme-radius-md'],base.tokens.light['--qxframe9a7c2-theme-radius-md']);
 
 const override=generateTheme(manifest,recipes,{name:'override-last',style:'maia',advanced:{overrides:{'--qxframe9a7c2-family-action-radius':'0.125rem'}}});

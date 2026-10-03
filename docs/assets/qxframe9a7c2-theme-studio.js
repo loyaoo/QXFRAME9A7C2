@@ -125,11 +125,12 @@ function mount(name,options){
     else if(name==='progress'&&C.Progress)instance=C.Progress.create({container:host,type:'line',percent:84,status:'active',success:{percent:62}});
     else if(name==='schedule'&&C.DatePicker)instance=C.DatePicker.create({container:host,value:'2026-10-12',clearable:true});
     else if(name==='upload'&&C.Upload)instance=C.Upload.create({container:host,multiple:true,drag:true,autoUpload:false,listType:'text'});
-    else if(name==='menu'&&C.Menu)instance=C.Menu.create({container:host,mode:'vertical',selectedKey:'analytics',openKeys:['workspace'],items:[{key:'workspace',label:'Workspace',items:[{key:'overview',label:'Overview'},{key:'analytics',label:'Analytics'},{key:'customers',label:'Customers'}]},{key:'billing',label:'Billing'},{key:'settings',label:'Settings'}]});
+    else if(name==='menu'&&C.Menu)instance=C.Menu.create({container:host,portalContainer:host,mode:'vertical',selectedKey:'analytics',defaultOpenKeys:[],items:[{key:'workspace',label:'Workspace',items:[{key:'overview',label:'Overview'},{key:'analytics',label:'Analytics'},{key:'customers',label:'Customers'}]},{key:'billing',label:'Billing'},{key:'settings',label:'Settings'}]});
     else if(name==='tabs'&&C.Tabs)instance=C.Tabs.create({container:host,defaultActiveKey:'overview',items:[{key:'overview',label:'Overview',content:'Project health · 84% complete · 12 open tasks'},{key:'activity',label:'Activity',content:'18 updates across design, engineering and go-to-market.'},{key:'settings',label:'Settings',content:'Workspace defaults, permissions and integrations.'}]});
     if(instance)instances.push(instance);else if(host)host.innerHTML='<div class="qxframe9a7c2-studio-runtime-error">Runtime component unavailable: '+esc(name)+'</div>';
   }catch(error){host.innerHTML='<div class="qxframe9a7c2-studio-runtime-error">'+esc(error&&error.message||error)+'</div>';}
 }
+function syncMenuScope(){var host=document.querySelector('[data-studio-mount="menu"]');if(host&&currentConfig)host.setAttribute('data-qxframe9a7c2-menu-recipe',currentConfig.components.menu.scope==='current-menu'?'current':'tree');}
 function mountCommercial(){['transactions','plan-select','progress','schedule','upload','menu','tabs'].forEach(mount);}
 
 function option(value,label){return '<option value="'+esc(value)+'">'+esc(label||value)+'</option>';}
@@ -146,7 +147,13 @@ function studioPanelHtml(){
     field('Base color','baseColor','<select class="qxframe9a7c2-studio-control" data-studio-input="baseColor">'+selectOptions([['neutral','Neutral'],['stone','Stone'],['zinc','Zinc'],['mauve','Mauve'],['olive','Olive'],['mist','Mist'],['taupe','Taupe']])+'</select>','baseColor')+
     field('Theme color','primary','<div class="qxframe9a7c2-studio-color-row"><select class="qxframe9a7c2-studio-control" data-studio-input="primary">'+selectOptions([['blue','Blue'],['purple','Purple'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['orange','Orange'],['red','Red'],['pink','Pink'],['custom','Custom']])+'</select><input class="qxframe9a7c2-studio-color" data-studio-primary-color type="color" value="#5b5bd6"></div>','primary')+
     field('Chart color','chart','<select class="qxframe9a7c2-studio-control" data-studio-input="chart">'+selectOptions([['primary','Primary'],['neutral','Neutral'],['blue','Blue'],['purple','Purple'],['cyan','Cyan'],['teal','Teal'],['green','Green'],['lime','Lime'],['yellow','Yellow'],['orange','Orange'],['red','Red'],['pink','Pink'],['grey','Grey']])+'</select>','chart')+
+    field('Surface recipe','surface','<select class="qxframe9a7c2-studio-control" data-studio-input="surface">'+selectOptions([['default','Default'],['outlined','Outlined'],['elevated','Elevated'],['borderless','Borderless']])+'</select>','surface')+
+    field('Size scale','sizeScale','<select class="qxframe9a7c2-studio-control" data-studio-input="sizeScale">'+selectOptions([['0.75','75%'],['1','100%'],['1.25','125%'],['1.5','150%']])+'</select>','foundation')+
+    field('Radius scale','radiusScale','<select class="qxframe9a7c2-studio-control" data-studio-input="radiusScale">'+selectOptions([['0.75','75%'],['1','100%'],['1.25','125%'],['1.5','150%']])+'</select>','foundation')+
     field('Radius','radius','<select class="qxframe9a7c2-studio-control" data-studio-input="radius">'+selectOptions([['default','Default'],['none','None'],['small','Small'],['medium','Medium'],['large','Large']])+'</select>','radius')+
+  '</div>'+
+  '<div class="qxframe9a7c2-studio-group"><div class="qxframe9a7c2-studio-group-head"><strong>Shape Policy</strong><small>family semantics</small></div>'+
+    ['choice','toggle','range','compact','identity'].map(function(family){return field(family.charAt(0).toUpperCase()+family.slice(1),'shape-'+family,'<select class="qxframe9a7c2-studio-control" data-studio-input="shape-'+family+'">'+selectOptions([['follow','Follow Radius'],['intrinsic','Intrinsic'],['square','Square']])+'</select>','shape');}).join('')+
   '</div>'+
   '<div class="qxframe9a7c2-studio-group"><div class="qxframe9a7c2-studio-group-head"><strong>Typography</strong><small>font resources stay external</small></div>'+
     field('Body font','body','<select class="qxframe9a7c2-studio-control" data-studio-input="body">'+selectOptions([['system-ui','System UI'],['inter','Inter'],['humanist','Humanist'],['serif','Serif'],['mono','Mono']])+'</select>','body')+
@@ -154,9 +161,11 @@ function studioPanelHtml(){
     field('Base size','baseSize','<select class="qxframe9a7c2-studio-control" data-studio-input="baseSize">'+selectOptions([['12','12'],['14','14'],['16','16'],['18','18'],['20','20']])+'</select>','body')+
   '</div>'+
   '<div class="qxframe9a7c2-studio-group"><div class="qxframe9a7c2-studio-group-head"><strong>Menu</strong><small>component preset</small></div>'+
-    field('Color','menuColor','<select class="qxframe9a7c2-studio-control" data-studio-input="menuColor">'+selectOptions([['default','Default'],['primary','Primary'],['inverted','Inverted'],['neutral','Neutral']])+'</select>','menu')+
-    field('Appearance','menuAppearance','<select class="qxframe9a7c2-studio-control" data-studio-input="menuAppearance">'+selectOptions([['solid','Solid'],['soft','Soft'],['translucent','Translucent']])+'</select>','menu')+
-    field('Accent','menuAccent','<select class="qxframe9a7c2-studio-control" data-studio-input="menuAccent">'+selectOptions([['subtle','Subtle'],['balanced','Balanced'],['strong','Strong']])+'</select>','menu')+
+    field('Surface scheme','menuScheme','<select class="qxframe9a7c2-studio-control" data-studio-input="menuScheme">'+selectOptions([['normal','Normal'],['neutral','Neutral'],['inverse','Inverse'],['brand','Brand']])+'</select>','menu')+
+    field('Accent style','menuStyle','<select class="qxframe9a7c2-studio-control" data-studio-input="menuStyle">'+selectOptions([['text','Text'],['soft','Soft'],['solid','Solid'],['indicator','Indicator'],['neutral','Neutral'],['accent','Accent']])+'</select>','menu')+
+    field('Expand treatment','menuExpand','<select class="qxframe9a7c2-studio-control" data-studio-input="menuExpand">'+selectOptions([['minimal','Minimal'],['emphasized','Emphasized'],['grouped','Grouped'],['inherited','Inherited']])+'</select>','menu')+
+    field('Apply scope','menuScope','<select class="qxframe9a7c2-studio-control" data-studio-input="menuScope">'+selectOptions([['current-menu','Current Menu'],['menu-tree','Menu Tree'],['all-menus','All Menus']])+'</select>','menu')+
+    '<p class="qxframe9a7c2-studio-label">All Menus applies to Menu surfaces. Pickers keep their own surface.</p>'+
   '</div>'+
   '<details class="qxframe9a7c2-studio-advanced"><summary>Advanced semantic roles</summary><div class="qxframe9a7c2-studio-advanced-body">'+
     field('Success','success','<select class="qxframe9a7c2-studio-control" data-studio-input="success">'+selectOptions([['green','Green'],['teal','Teal'],['blue','Blue']])+'</select>')+
@@ -239,9 +248,11 @@ function renderAudit(report){
 }
 function syncControls(){
   if(!currentConfig)return;
-  setControl('name',currentConfig.name);setControl('style',currentConfig.style);setControl('baseColor',currentConfig.baseColor);setControl('chart',currentConfig.chart.color);setControl('radius',currentConfig.radius);
+  setControl('name',currentConfig.name);setControl('style',currentConfig.style);setControl('baseColor',currentConfig.baseColor);setControl('chart',currentConfig.chart.color);setControl('radius',currentConfig.radius);setControl('surface',currentConfig.surface);
   setControl('body',currentConfig.typography.body);setControl('heading',currentConfig.typography.heading);setControl('baseSize',currentConfig.typography.baseSize);
-  setControl('menuColor',currentConfig.components.menu.color);setControl('menuAppearance',currentConfig.components.menu.appearance);setControl('menuAccent',currentConfig.components.menu.accent);
+  setControl('sizeScale',currentConfig.foundation.sizeScale);setControl('radiusScale',currentConfig.foundation.radiusScale);
+  ['choice','toggle','range','compact','identity'].forEach(function(family){setControl('shape-'+family,currentConfig.shape[family]);});
+  setControl('menuScheme',currentConfig.components.menu.scheme);setControl('menuStyle',currentConfig.components.menu.accentStyle);setControl('menuExpand',currentConfig.components.menu.expand);setControl('menuScope',currentConfig.components.menu.scope);
   ['success','warning','error','info'].forEach(function(k){setControl(k,currentConfig.roles[k]);});
   var presetSelect=document.querySelector('[data-studio-preset]');if(presetSelect)presetSelect.value='';
   var primarySelect=document.querySelector('[data-studio-input="primary"]'),colorInput=document.querySelector('[data-studio-primary-color]');
@@ -255,9 +266,11 @@ function syncControls(){
 function configFromControls(){
   var next=clone(currentConfig||runtime.engine.DEFAULT_CONFIG);
   function val(key){var el=document.querySelector('[data-studio-input="'+key+'"]');return el?el.value:null;}
-  next.name=val('name')||'qxframe-theme';next.style=val('style');next.baseColor=val('baseColor');next.chart={color:val('chart')};next.radius=val('radius');next.density='default';
+  next.name=val('name')||'qxframe-theme';next.style=val('style');next.baseColor=val('baseColor');next.chart={color:val('chart')};next.radius=val('radius');next.surface=val('surface');next.density='default';
   next.typography.body=val('body');next.typography.heading=val('heading');next.typography.baseSize=Number(val('baseSize')||14);
-  next.components.menu.color=val('menuColor');next.components.menu.appearance=val('menuAppearance');next.components.menu.accent=val('menuAccent');
+  next.foundation={sizeScale:Number(val('sizeScale')),radiusScale:Number(val('radiusScale'))};
+  ['choice','toggle','range','compact','identity'].forEach(function(family){next.shape[family]=val('shape-'+family);});
+  next.components.menu.scheme=val('menuScheme');next.components.menu.accentStyle=val('menuStyle');next.components.menu.expand=val('menuExpand');next.components.menu.scope=val('menuScope');
   ['success','warning','error','info'].forEach(function(k){next.roles[k]=val(k);});
   var primary=val('primary');next.roles.primary=primary==='custom'?(document.querySelector('[data-studio-primary-color]')||{}).value||'#5b5bd6':primary;
   return runtime.engine.normalizeConfig(next);
@@ -274,7 +287,7 @@ function generateNow(){
   try{
     currentConfig=configFromControls();
     currentTheme=runtime.generator.generateTheme(runtime.manifest,runtime.recipes,currentConfig);
-    clearLegacyInlineTheme();ensureInlineGuard();ensureThemeStyle().textContent=currentTheme.css;applyMode();save();syncControls();renderAudit(currentTheme.reports.readability);
+    clearLegacyInlineTheme();ensureInlineGuard();ensureThemeStyle().textContent=currentTheme.css;syncMenuScope();applyMode();save();syncControls();renderAudit(currentTheme.reports.readability);
     var kb=(currentTheme.css.length/1024).toFixed(1),warningCount=currentTheme.reports.readability.warnings.length;
     updateStatus('<strong>'+esc(currentConfig.name)+'</strong><br>4,028 public inputs · Light + Dark · '+kb+' KB complete CSS · '+warningCount+' readability warning'+(warningCount===1?'':'s'),false);
   }catch(error){updateStatus(error&&error.message||String(error),true);}
@@ -291,7 +304,7 @@ function randomize(){
   if(!locks.heading)next.typography.heading=randomItem(['inherit','system-ui','inter','humanist','serif','mono']);
   if(!locks.radius)next.radius=randomItem(['default','none','small','medium','large']);
   next.density='default';
-  if(!locks.menu){next.components.menu.color=randomItem(['default','primary','inverted','neutral']);next.components.menu.appearance=randomItem(['solid','soft','translucent']);next.components.menu.accent=randomItem(['subtle','balanced','strong']);}
+  if(!locks.menu){next.components.menu.scheme=randomItem(['normal','neutral','inverse','brand']);next.components.menu.accentStyle=randomItem(['text','soft','solid','indicator','neutral','accent']);next.components.menu.expand=randomItem(['minimal','emphasized','grouped','inherited']);}
   currentConfig=runtime.engine.normalizeConfig(next);syncControls();generateNow();
 }
 function reset(){

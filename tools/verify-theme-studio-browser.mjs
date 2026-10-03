@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {runVisualRecipeCases} from './visual-recipe-browser-cases.mjs';
 import path from 'node:path';
 import os from 'node:os';
 import http from 'node:http';
@@ -83,7 +84,7 @@ async function waitFor(cdp,sessionId,expression,timeout=30000){
 }
 async function evaluate(cdp,sessionId,expression){
   const result=await cdp.call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true},sessionId);
-  if(result.exceptionDetails)throw new Error(result.exceptionDetails.text||'Browser evaluation failed');
+  if(result.exceptionDetails)throw new Error(result.exceptionDetails.exception?.description||result.exceptionDetails.text||'Browser evaluation failed');
   return result.result&&result.result.value;
 }
 
@@ -106,6 +107,8 @@ try{
   assert.ok(initial.cards>0,'Canonical all-component gallery must remain mounted.');
   assert.equal(initial.mounts.length,7);
   for(const mount of initial.mounts){assert.ok(mount.children>0,'Runtime mount is empty: '+mount.name);assert.equal(mount.error,false,'Runtime mount failed: '+mount.name);}
+  const visualRecipe=await evaluate(cdp,sessionId,'('+runVisualRecipeCases.toString()+')()');
+  assert.equal(visualRecipe.controlTypography,true);
   const styleGeometry=await evaluate(cdp,sessionId,'(async function(){var names=[\'vega\',\'nova\',\'maia\',\'lyra\',\'mira\',\'luma\',\'sera\',\'rhea\'],out=[];function pause(){return new Promise(function(resolve){setTimeout(resolve,120);});}for(var i=0;i<names.length;i+=1){var select=document.querySelector(\'[data-studio-input="style"]\');select.value=names[i];select.dispatchEvent(new Event(\'change\',{bubbles:true}));await pause();var root=getComputedStyle(document.documentElement),card=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-card\'),button=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-button\'),track=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-switch-track\'),thumb=document.querySelector(\'[data-qxframe9a7c2-studio-commercial] .qxframe9a7c2-switch-thumb\');out.push({style:names[i],signature:[root.getPropertyValue(\'--qxframe9a7c2-theme-control-height-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-switch-width-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-theme-slider-rail-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-family-action-radius\').trim(),root.getPropertyValue(\'--qxframe9a7c2-family-surface-radius\').trim(),root.getPropertyValue(\'--qxframe9a7c2-slider-handle-width-md\').trim(),root.getPropertyValue(\'--qxframe9a7c2-slider-handle-height-md\').trim()].join(\'|\'),cardRadius:card?getComputedStyle(card).borderRadius:\'\',buttonRadius:button?getComputedStyle(button).borderRadius:\'\',switchWidth:track?getComputedStyle(track).minWidth:\'\',switchRadius:track?getComputedStyle(track).borderRadius:\'\',thumbWidth:thumb?getComputedStyle(thumb).width:\'\',thumbHeight:thumb?getComputedStyle(thumb).height:\'\'});}return out;})()');
   assert.equal(styleGeometry.length,8);
   assert.equal(new Set(styleGeometry.map(x=>x.signature)).size,8,'All eight Style recipes need distinct geometry.');
@@ -161,6 +164,7 @@ try{
 
   console.log(JSON.stringify({
     phase:'TG-G-studio-browser',
+    visualRecipe,
     commercialScenes:initial.scenes,
     completeDeclarations:initial.declarations,
     runtimeMounts:initial.mounts.map(x=>x.name),
