@@ -32,6 +32,8 @@
     --qxframe9a7c2-theme-v2-mask: light-dark(rgb(0 0 0 / .1), rgb(0 0 0 / .1));
     --qxframe9a7c2-theme-v2-inverse: light-dark(oklch(.205 0 0), oklch(.985 0 0));
     --qxframe9a7c2-theme-v2-inverse-foreground: light-dark(oklch(.985 0 0), oklch(.205 0 0));
+    --qxframe9a7c2-theme-v2-shadow: rgb(0 0 0);
+    --qxframe9a7c2-theme-v2-thumb: rgb(255 255 255);
     color-scheme: light;
     background-color: var(--qxframe9a7c2-theme-v2-background);
     color: var(--qxframe9a7c2-theme-v2-foreground);
@@ -39,13 +41,136 @@
   :scope[data-qxframe9a7c2-theme="dark"], [data-qxframe9a7c2-theme="dark"] { color-scheme: dark; }
   :scope[data-qxframe9a7c2-theme="light"], [data-qxframe9a7c2-theme="light"] { color-scheme: light; }
 
-  /* action: current Type is an input binding, not a separate formula per Type. */
-  .qxframe9a7c2-button {
+  /* Existing semantic/family consumer slots remain the component-facing contract.
+     Bind only real shared roles, at each consumer so local Theme changes resolve here.
+     This is not a legacy Palette/state-token translation table. */
+  * {
+    --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-v2-background);
+    --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-v2-background);
+    --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-v2-popover);
+    --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-theme-v2-muted);
+    --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-theme-v2-muted);
+    --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-theme-v2-muted);
+    --_qxframe9a7c2-semantic-subtle-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-muted) 50%, transparent);
+    --_qxframe9a7c2-semantic-subtle-active: var(--qxframe9a7c2-theme-v2-muted);
+    --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-v2-foreground);
+    --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-v2-muted-foreground);
+    --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-v2-muted-foreground);
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-theme-v2-muted-foreground);
+    --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-theme-v2-muted-foreground);
+    --_qxframe9a7c2-semantic-text-inverse: var(--qxframe9a7c2-theme-v2-inverse-foreground);
+    --_qxframe9a7c2-semantic-overlay-text: var(--qxframe9a7c2-theme-v2-popover-foreground);
+    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-v2-border);
+    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-v2-border);
+    --_qxframe9a7c2-semantic-border-strong: var(--qxframe9a7c2-theme-v2-input);
+    --_qxframe9a7c2-semantic-border-hover: var(--qxframe9a7c2-theme-v2-input);
+    --_qxframe9a7c2-semantic-border-disabled: var(--qxframe9a7c2-theme-v2-input);
+    --_qxframe9a7c2-semantic-input-border: var(--qxframe9a7c2-theme-v2-input);
+    --_qxframe9a7c2-semantic-focus: var(--qxframe9a7c2-theme-v2-ring);
+    --_qxframe9a7c2-semantic-mask: var(--qxframe9a7c2-theme-v2-mask);
+    --_qxframe9a7c2-semantic-bg-readonly: var(--qxframe9a7c2-theme-v2-background);
+    --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-v2-background);
+    --_qxframe9a7c2-semantic-success: var(--qxframe9a7c2-theme-v2-success);
+    --_qxframe9a7c2-semantic-warning: var(--qxframe9a7c2-theme-v2-warning);
+    --_qxframe9a7c2-semantic-error: var(--qxframe9a7c2-theme-v2-error);
+    --_qxframe9a7c2-semantic-info: var(--qxframe9a7c2-theme-v2-info);
+    --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-v2-error-foreground));
+    --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-v2-primary));
+    --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-v2-primary-foreground));
+    --_qxframe9a7c2-accent: var(--_qxframe9a7c2-semantic-accent);
+    --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-semantic-on-accent);
+  }
+  .qxframe9a7c2-button, .qxframe9a7c2-tag, .qxframe9a7c2-badge, .qxframe9a7c2-badge-count, .qxframe9a7c2-badge-ribbon, .qxframe9a7c2-badge-status, .qxframe9a7c2-alert-root, .qxframe9a7c2-message, .qxframe9a7c2-notification, .qxframe9a7c2-result, .qxframe9a7c2-progress, .qxframe9a7c2-slider, .qxframe9a7c2-rate, .qxframe9a7c2-switch, .qxframe9a7c2-form-selectgroup, .qxframe9a7c2-form-check-input, .qxframe9a7c2-native-form, .qxframe9a7c2-table, .qxframe9a7c2-item-surface, .qxframe9a7c2-menu, .qxframe9a7c2-tags, .qxframe9a7c2-input, .qxframe9a7c2-loading, .qxframe9a7c2-steps, .qxframe9a7c2-upload, .qxframe9a7c2-pagination, .qxframe9a7c2-tabs, .qxframe9a7c2-tree, .qxframe9a7c2-list, .qxframe9a7c2-transfer, .qxframe9a7c2-avatar, .qxframe9a7c2-card, .qxframe9a7c2-collapse, .qxframe9a7c2-descriptions, .qxframe9a7c2-empty, .qxframe9a7c2-drawer, .qxframe9a7c2-modal-container, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-form-segmented, .qxframe9a7c2-input-otp, .qxframe9a7c2-wheel-panel, .qxframe9a7c2-calendar, .qxframe9a7c2-period-panel, .qxframe9a7c2-time-panel, .qxframe9a7c2-color-panel {
     --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-primary);
     --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-primary-foreground);
     --_qxframe9a7c2-v2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 80%, transparent);
     --_qxframe9a7c2-v2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent));
     --_qxframe9a7c2-v2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 30%, transparent));
+    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-v2-solid-hover);
+    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-v2-type);
+    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-v2-soft);
+    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-v2-soft);
+    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
+    --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-v2-foreground);
+    --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-v2-muted-foreground);
+    --_qxframe9a7c2-control-text-disabled: var(--qxframe9a7c2-theme-v2-muted-foreground);
+    --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-v2-input);
+    --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-v2-input);
+    --_qxframe9a7c2-control-border-disabled: var(--qxframe9a7c2-theme-v2-input);
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-v2-background);
+    --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-v2-background);
+    --_qxframe9a7c2-control-bg-readonly: var(--qxframe9a7c2-theme-v2-background);
+  }
+  .qxframe9a7c2-tags .qxframe9a7c2-tag { --_qxframe9a7c2-v2-type: inherit; --_qxframe9a7c2-v2-type-foreground: inherit; }
+  [class*="qxframe9a7c2-"].is-success { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-success); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-success-foreground); }
+  [class*="qxframe9a7c2-"].is-warning { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-warning); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-warning-foreground); }
+  [class*="qxframe9a7c2-"].is-error { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-error); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-error-foreground); }
+  [class*="qxframe9a7c2-"].is-info { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-info); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-info-foreground); }
+  [class*="qxframe9a7c2-"].is-secondary { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-secondary); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-secondary-foreground); }
+  [class*="qxframe9a7c2-"].is-danger, [class*="qxframe9a7c2-"].is-exception { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-error); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-error-foreground); }
+
+  /* Badge/Tag reuse action paint, with their own source secondary/80 hover. */
+  .qxframe9a7c2-tag, .qxframe9a7c2-badge {
+    background-color: var(--qxframe9a7c2-theme-v2-secondary);
+    color: var(--qxframe9a7c2-theme-v2-secondary-foreground);
+    border-color: transparent;
+  }
+  .qxframe9a7c2-tag.is-colored, .qxframe9a7c2-tag.is-processing,
+  .qxframe9a7c2-badge.is-filled { background-color: var(--_qxframe9a7c2-v2-soft); color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-solid {
+    background-color: var(--_qxframe9a7c2-v2-type); color: var(--_qxframe9a7c2-v2-type-foreground);
+  }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-outlined {
+    background-color: transparent; color: var(--qxframe9a7c2-theme-v2-foreground); border-color: var(--qxframe9a7c2-theme-v2-border);
+  }
+  .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover, .qxframe9a7c2-badge.is-filled:hover, .qxframe9a7c2-badge.is-filled.is-hover { background-color: var(--_qxframe9a7c2-v2-soft-hover); }
+  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover, .qxframe9a7c2-badge.is-solid:hover { background-color: var(--_qxframe9a7c2-v2-solid-hover); }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover, .qxframe9a7c2-badge.is-outlined:hover { background-color: var(--qxframe9a7c2-theme-v2-muted); color: var(--qxframe9a7c2-theme-v2-muted-foreground); }
+  .qxframe9a7c2-tag.is-disabled, .qxframe9a7c2-tags.is-disabled .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-disabled { background-color: var(--qxframe9a7c2-theme-v2-secondary); color: var(--qxframe9a7c2-theme-v2-secondary-foreground); opacity: .5; }
+  .qxframe9a7c2-badge-count { background-color: var(--qxframe9a7c2-theme-v2-error); color: var(--qxframe9a7c2-theme-v2-error-foreground); }
+
+  .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-info); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-info-foreground); }
+
+  /* Feedback uses source Alert card/type text, not a per-status background matrix. */
+  .qxframe9a7c2-alert-root, .qxframe9a7c2-message, .qxframe9a7c2-notification {
+    background-color: var(--qxframe9a7c2-theme-v2-card); color: var(--_qxframe9a7c2-v2-type);
+    border-color: var(--qxframe9a7c2-theme-v2-border);
+  }
+  .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-v2-card-foreground); }
+  .qxframe9a7c2-alert-description { color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 90%, transparent); }
+  .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-v2-muted-foreground); }
+  .qxframe9a7c2-alert-icon, .qxframe9a7c2-message-icon, .qxframe9a7c2-notification-icon { color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-message-content, .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-v2-card-foreground); }
+
+  /* Table is a data surface. Its selected background is muted, not Primary. */
+  .qxframe9a7c2-table, .qxframe9a7c2-table-wrap { background-color: var(--qxframe9a7c2-theme-v2-background); color: var(--qxframe9a7c2-theme-v2-foreground); border-color: var(--qxframe9a7c2-theme-v2-border); }
+  .qxframe9a7c2-table tr { --_qxframe9a7c2-table-row-bg: transparent; --_qxframe9a7c2-table-row-text: var(--qxframe9a7c2-theme-v2-foreground); background-color: var(--_qxframe9a7c2-table-row-bg); }
+  .qxframe9a7c2-table tr:hover, .qxframe9a7c2-table tr.is-hover { --_qxframe9a7c2-table-row-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-muted) 50%, transparent); }
+  .qxframe9a7c2-table tr.is-selected, .qxframe9a7c2-table tr.is-transfer-selected { --_qxframe9a7c2-table-row-bg: var(--qxframe9a7c2-theme-v2-muted); }
+  .qxframe9a7c2-table th, .qxframe9a7c2-table td { border-color: var(--qxframe9a7c2-theme-v2-border); color: var(--qxframe9a7c2-theme-v2-foreground); }
+  .qxframe9a7c2-table th { background-color: var(--qxframe9a7c2-theme-v2-background); }
+  .qxframe9a7c2-table tr.is-disabled { opacity: .5; }
+
+  /* Selection item paint is source Command/Select highlight, not feedback soft. */
+  .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-v2-foreground); background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
+  .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected, .qxframe9a7c2-item-surface.is-selected.is-hover { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-v2-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-v2-foreground); }
+  .qxframe9a7c2-item-surface.is-disabled, .qxframe9a7c2-item-surface:disabled, .qxframe9a7c2-list.is-disabled .qxframe9a7c2-item-surface, .qxframe9a7c2-tree.is-disabled .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; opacity: .5; }
+  .qxframe9a7c2-list, .qxframe9a7c2-tree, .qxframe9a7c2-transfer-panel { background-color: var(--qxframe9a7c2-theme-v2-background); color: var(--qxframe9a7c2-theme-v2-foreground); border-color: var(--qxframe9a7c2-theme-v2-border); }
+
+  .qxframe9a7c2-progress { --_qxframe9a7c2-progress-rail: var(--qxframe9a7c2-theme-v2-muted); --_qxframe9a7c2-progress-primary: var(--_qxframe9a7c2-v2-type); --_qxframe9a7c2-progress-success: var(--qxframe9a7c2-theme-v2-success); }
+  .qxframe9a7c2-slider-rail { background-color: var(--qxframe9a7c2-theme-v2-muted); }
+  .qxframe9a7c2-slider-track { background-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-slider-handle { background-color: var(--qxframe9a7c2-theme-v2-thumb); border-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-scroll { --_qxframe9a7c2-scroll-track-bg: transparent; --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-theme-v2-border); --_qxframe9a7c2-scroll-edge-shadow: transparent; }
+  .qxframe9a7c2-scroll-thumb:hover { background-color: var(--qxframe9a7c2-theme-v2-border); }
+  .qxframe9a7c2-tooltip-container, .qxframe9a7c2-tooltip-arrow, .qxframe9a7c2-slider-tooltip { background-color: var(--qxframe9a7c2-theme-v2-foreground); color: var(--qxframe9a7c2-theme-v2-background); }
+  .qxframe9a7c2-avatar { background-color: var(--qxframe9a7c2-theme-v2-muted); color: var(--qxframe9a7c2-theme-v2-muted-foreground); }
+
+  /* action: current Type is an input binding, not a separate formula per Type. */
+  .qxframe9a7c2-button {
+    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-primary);
+    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-primary-foreground);
     --_qxframe9a7c2-v2-outline: light-dark(var(--qxframe9a7c2-theme-v2-background), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent));
     --_qxframe9a7c2-v2-outline-hover: light-dark(var(--qxframe9a7c2-theme-v2-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent));
     --_qxframe9a7c2-v2-outline-border: light-dark(var(--qxframe9a7c2-theme-v2-border), var(--qxframe9a7c2-theme-v2-input));
@@ -137,19 +262,48 @@
   .qxframe9a7c2-card-title { color: inherit; }
   .qxframe9a7c2-card-description { color: var(--qxframe9a7c2-theme-v2-muted-foreground); }
 
-  /* popup: one surface chain for Popup, submenu and Dialog; no private Picker surface. */
-  .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root {
+  /* popup: public Popup, popover, submenu and Dialog consume one local role chain.
+     The real border uses the source ring color; QX geometry stays QX-owned. */
+  .qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
     --_qxframe9a7c2-v2-popup-bg: var(--qxframe9a7c2-theme-v2-override-popup-background, var(--qxframe9a7c2-theme-v2-popover));
     --_qxframe9a7c2-v2-popup-text: var(--qxframe9a7c2-theme-v2-override-popup-foreground, var(--qxframe9a7c2-theme-v2-popover-foreground));
+    --_qxframe9a7c2-v2-popup-border: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 10%, transparent);
+    --_qxframe9a7c2-v2-shadow-color: var(--qxframe9a7c2-theme-v2-shadow-color, var(--qxframe9a7c2-theme-v2-shadow));
+    --_qxframe9a7c2-v2-shadow-tint: color-mix(in oklab, var(--_qxframe9a7c2-v2-shadow-color) 10%, transparent);
+    --_qxframe9a7c2-v2-popup-shadow: 0 .25rem .5rem -.125rem var(--_qxframe9a7c2-v2-shadow-tint), 0 .125rem .25rem -.125rem var(--_qxframe9a7c2-v2-shadow-tint);
+    --_qxframe9a7c2-v2-dialog-shadow: none;
     --_qxframe9a7c2-popup-bg: var(--_qxframe9a7c2-v2-popup-bg);
     --_qxframe9a7c2-popup-text: var(--_qxframe9a7c2-v2-popup-text);
-    --_qxframe9a7c2-popup-border: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 10%, transparent);
+    --_qxframe9a7c2-popup-border: var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-popup-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
+    --_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg);
+    --_qxframe9a7c2-popup-surface-border: var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-popup-surface-text: var(--_qxframe9a7c2-v2-popup-text);
+    --_qxframe9a7c2-popup-surface-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
+    --_qxframe9a7c2-popover-bg: var(--_qxframe9a7c2-v2-popup-bg);
+    --_qxframe9a7c2-popover-text: var(--_qxframe9a7c2-v2-popup-text);
+    --_qxframe9a7c2-popover-border: var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-v2-popup-bg);
+    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
+    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-v2-popup-bg);
+    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
     color: var(--_qxframe9a7c2-v2-popup-text);
   }
-  .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel { background-color: var(--_qxframe9a7c2-v2-popup-bg); }
-  .qxframe9a7c2-modal-container { background-color: var(--qxframe9a7c2-theme-v2-override-popup-background, var(--qxframe9a7c2-theme-v2-popover)); color: var(--qxframe9a7c2-theme-v2-override-popup-foreground, var(--qxframe9a7c2-theme-v2-popover-foreground)); }
-  .qxframe9a7c2-modal-mask { background-color: var(--qxframe9a7c2-theme-v2-mask); }
-  .qxframe9a7c2-modal-mask.is-maskless { background-color: transparent; }
+  .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
+    background-color: var(--_qxframe9a7c2-v2-popup-bg);
+    border-color: var(--_qxframe9a7c2-v2-popup-border);
+    box-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
+  }
+  .qxframe9a7c2-modal-container, .qxframe9a7c2-drawer {
+    background-color: var(--qxframe9a7c2-theme-v2-override-popup-background, var(--qxframe9a7c2-theme-v2-popover));
+    color: var(--qxframe9a7c2-theme-v2-override-popup-foreground, var(--qxframe9a7c2-theme-v2-popover-foreground));
+    border: 1px solid var(--_qxframe9a7c2-v2-popup-border);
+    box-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
+  }
+  .qxframe9a7c2-modal-mask, .qxframe9a7c2-drawer-mask { background-color: var(--qxframe9a7c2-theme-v2-mask); }
+  .qxframe9a7c2-modal-mask.is-maskless, .qxframe9a7c2-drawer-mask.is-maskless { background-color: transparent; }
 
   /* navigation: shadcn item highlighting uses accent, not primary. */
   .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-v2-sidebar, var(--qxframe9a7c2-theme-v2-background)); color: var(--qxframe9a7c2-theme-v2-sidebar-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
@@ -165,7 +319,7 @@
     --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-v2-override-navigation-highlight-foreground, var(--qxframe9a7c2-theme-v2-accent-foreground));
   }
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-v2-error); }
-  .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected { --_qxframe9a7c2-v2-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 20%, transparent)); }
+  .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-v2-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 20%, transparent)); }
   .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-v2-navigation-bg: transparent; --_qxframe9a7c2-v2-navigation-text: inherit; opacity: .5; }
 }
 
@@ -174,6 +328,9 @@
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline-border: var(--qxframe9a7c2-theme-v2-border); }
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent); --_qxframe9a7c2-v2-outline-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent); }
 .qxframe9a7c2-input { --_qxframe9a7c2-v2-control-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent); }
+.qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root { --_qxframe9a7c2-v2-popup-border: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent); --_qxframe9a7c2-v2-shadow-tint: color-mix(in oklab, var(--_qxframe9a7c2-v2-shadow-color) 25%, transparent); --_qxframe9a7c2-v2-popup-shadow: 0 1.5rem 3rem -.75rem var(--_qxframe9a7c2-v2-shadow-tint); }
+.qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel { --_qxframe9a7c2-v2-popup-border: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 10%, transparent)); }
+
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) {
@@ -189,6 +346,8 @@
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline: light-dark(var(--qxframe9a7c2-theme-v2-background), transparent); --_qxframe9a7c2-v2-outline-hover: light-dark(var(--qxframe9a7c2-theme-v2-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); }
 .qxframe9a7c2-input { --_qxframe9a7c2-v2-control-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent); --_qxframe9a7c2-v2-control-border: transparent; }
 .qxframe9a7c2-card { --_qxframe9a7c2-card-border: var(--qxframe9a7c2-card-border-color, light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 10%, transparent))); }
+.qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root { --_qxframe9a7c2-v2-popup-border: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 10%, transparent)); --_qxframe9a7c2-v2-popup-shadow: 0 .625rem 1rem -.25rem var(--_qxframe9a7c2-v2-shadow-tint), 0 .25rem .375rem -.25rem var(--_qxframe9a7c2-v2-shadow-tint); --_qxframe9a7c2-v2-dialog-shadow: 0 1.25rem 1.5rem -.25rem var(--_qxframe9a7c2-v2-shadow-tint), 0 .5rem .625rem -.375rem var(--_qxframe9a7c2-v2-shadow-tint); }
+
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]) {
@@ -197,6 +356,8 @@
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline: transparent; --_qxframe9a7c2-v2-outline-hover: light-dark(var(--qxframe9a7c2-theme-v2-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); }
 .qxframe9a7c2-input { --_qxframe9a7c2-v2-control-bg: transparent; border-color: transparent; border-bottom-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); }
 .qxframe9a7c2-card { --_qxframe9a7c2-card-border: var(--qxframe9a7c2-card-border-color, color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent)); }
+.qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root { --_qxframe9a7c2-v2-dialog-shadow: var(--_qxframe9a7c2-v2-popup-shadow); }
+
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) {
@@ -213,4 +374,6 @@
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline: light-dark(var(--qxframe9a7c2-theme-v2-background), transparent); --_qxframe9a7c2-v2-outline-hover: light-dark(var(--qxframe9a7c2-theme-v2-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); }
 .qxframe9a7c2-input { --_qxframe9a7c2-v2-control-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent); --_qxframe9a7c2-v2-control-border: transparent; }
 .qxframe9a7c2-card { --_qxframe9a7c2-card-border: var(--qxframe9a7c2-card-border-color, light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 10%, transparent))); }
+.qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root { --_qxframe9a7c2-v2-popup-border: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 10%, transparent)); --_qxframe9a7c2-v2-popup-shadow: 0 .625rem 1rem -.25rem var(--_qxframe9a7c2-v2-shadow-tint), 0 .25rem .375rem -.25rem var(--_qxframe9a7c2-v2-shadow-tint); --_qxframe9a7c2-v2-dialog-shadow: 0 1.25rem 1.5rem -.25rem var(--_qxframe9a7c2-v2-shadow-tint), 0 .5rem .625rem -.375rem var(--_qxframe9a7c2-v2-shadow-tint); }
+
 }

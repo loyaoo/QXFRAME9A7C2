@@ -15,12 +15,12 @@ const verified=verifySemanticRuleSource(root),generated=generateSemanticTheme();
 assert.deepEqual(schema.inputs.map(x=>x.role),CORE_ROLES);
 assert.deepEqual(schema.optionalInputs.map(x=>x.role),OPTIONAL_ROLES);
 assert.deepEqual(schema.overrides.map(x=>x.role),OVERRIDE_ROLES);
-assert.equal(generated.statistics.colorNames,28);
-assert.equal(generated.statistics.colorDeclarations,56);
+assert.equal(generated.statistics.colorNames,30);
+assert.equal(generated.statistics.colorDeclarations,60);
 assert.equal(generated.statistics.overrideDeclarations,0);
 assert.doesNotMatch(generated.css,/palette-|--_qxframe|color-mix|qxframe9a7c2-button|-(?:xs|sm|lg|xl):/);
 assert.deepEqual(generateSemanticTheme(JSON.parse(JSON.stringify(generated.config))),generated);
-assert.equal(generateSemanticTheme({colors:{light:{'chart-1':'rgb(1 2 3)'}}}).statistics.colorNames,29);
+assert.equal(generateSemanticTheme({colors:{light:{'chart-1':'rgb(1 2 3)'}}}).statistics.colorNames,31);
 assert.equal(generateSemanticTheme({overrides:{light:{'action-hover-background':'rgb(4 5 6)'}}}).statistics.overrideDeclarations,1);
 for(const invalid of [{schema:1},{rules:'unknown'},{style:'unknown'},{colors:{light:{typo:'red'}}},{colors:{light:{primary:'var(--old-palette)'}}},{colors:{light:{primary:'rgb(1 2 3); display:none'}}},{overrides:{light:{'control-height-xs':'2rem'}}}])assert.throws(()=>generateSemanticTheme(invalid));
 const migrated=migrateLegacySemanticColors({'light.primary':'1, 2, 3','light.control-height-xs':'2rem','dark.primary':'oklch(.5 .1 20)'});
@@ -37,26 +37,28 @@ assert.throws(()=>verifySemanticRuleSource(root,{sourceText:verified.source.repl
 // This fixture compiler does not implement layout, Tailwind, ARIA or interaction.
 function sourceColor(style,selector,property,mode,state='normal'){
   const apply=fixture.styles[style].entries.find(e=>e.selector===selector).apply;
+  const states=new Set(state.split('+'));
   const candidates=[];
   for(const utility of apply.split(/\s+/)){
     const segments=utility.split(/:(?![^\[]*\])/),atom=segments.pop();
     const match=atom.match(new RegExp('^'+property+'-(.+)$'));if(!match)continue;
     const conditions=segments;
-    if(conditions.some(c=>!['dark','hover','focus','focus-visible','aria-invalid','aria-expanded','disabled','data-[variant=destructive]'].includes(c)))continue;
+    if(conditions.some(c=>!['dark','hover','focus','focus-visible','aria-invalid','aria-expanded','disabled','data-[variant=destructive]','data-[state=selected]','[a]'].includes(c)))continue;
     if(conditions.includes('dark')&&mode!=='dark')continue;
-    if(conditions.includes('hover')&&state!=='hover')continue;
-    if(conditions.includes('focus')&&!['hover','selected'].includes(state))continue;
+    if(conditions.includes('hover')&&!states.has('hover'))continue;
+    if(conditions.includes('focus')&&!states.has('hover')&&!states.has('selected'))continue;
     if(conditions.includes('focus-visible')&&state!=='focus')continue;
     if(conditions.includes('aria-invalid')&&state!=='invalid')continue;
     if(conditions.includes('aria-expanded')&&state!=='expanded')continue;
     if(conditions.includes('disabled')&&state!=='disabled')continue;
-    if(conditions.includes('data-[variant=destructive]')&&state!=='danger')continue;
+    if(conditions.includes('data-[variant=destructive]')&&!states.has('danger'))continue;
+    if(conditions.includes('data-[state=selected]')&&!states.has('selected'))continue;
     const value=match[1];let expression;
     if(value.startsWith('[color-mix('))expression=value.slice(1,-1).replaceAll('_',' ').replaceAll('var(--','var(--source-');
     else{
-      const m=value.match(/^(background|foreground|primary|primary-foreground|secondary|secondary-foreground|card|card-foreground|popover|popover-foreground|muted|muted-foreground|accent|accent-foreground|destructive|input|border|ring|black|transparent)(?:\/(\d+))?$/);
+      const m=value.match(/^(background|foreground|primary|primary-foreground|secondary|secondary-foreground|card|card-foreground|popover|popover-foreground|muted|muted-foreground|accent|accent-foreground|destructive|input|border|ring|white|black|transparent)(?:\/(\d+))?$/);
       if(!m)continue;
-      expression=['black','transparent'].includes(m[1])?m[1]:'var(--source-'+m[1]+')';
+      expression=['white','black','transparent'].includes(m[1])?m[1]:'var(--source-'+m[1]+')';
       if(m[2])expression='color-mix(in oklab, '+expression+' '+m[2]+'%, transparent)';
     }
     candidates.push({expression,weight:(conditions.includes('dark')?1:0)+(conditions.length-(conditions.includes('dark')?1:0))*2});
@@ -73,9 +75,24 @@ for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark']){
   }
   for(const state of ['normal','invalid','disabled'])cases.push({style,mode,state,kind:'input',expected:{backgroundColor:sourceColor(style,'.cn-input','bg',mode,state),borderBottomColor:sourceColor(style,'.cn-input',style==='sera'?'border-b':'border',mode,state)},selector:'.cn-input'});
   cases.push({style,mode,kind:'card',expected:{backgroundColor:sourceColor(style,'.cn-card','bg',mode),color:sourceColor(style,'.cn-card','text',mode),borderColor:sourceColor(style,'.cn-card','ring',mode)},selector:'.cn-card'});
-  cases.push({style,mode,kind:'dialog',expected:{backgroundColor:sourceColor(style,'.cn-dialog-content','bg',mode),color:sourceColor(style,'.cn-dialog-content','text',mode)},selector:'.cn-dialog-content'});
+  cases.push({style,mode,kind:'dialog',expected:{backgroundColor:sourceColor(style,'.cn-dialog-content','bg',mode),color:sourceColor(style,'.cn-dialog-content','text',mode),borderColor:sourceColor(style,'.cn-dialog-content','ring',mode)},selector:'.cn-dialog-content'});
   cases.push({style,mode,kind:'mask',expected:{backgroundColor:sourceColor(style,'.cn-dialog-overlay','bg',mode)},selector:'.cn-dialog-overlay'});
   for(const state of ['normal','hover','selected'])cases.push({style,mode,state,kind:'menu',expected:{backgroundColor:sourceColor(style,'.cn-dropdown-menu-item','bg',mode,state),color:sourceColor(style,'.cn-dropdown-menu-item','text',mode,state)},selector:'.cn-dropdown-menu-item'});
+  for(const state of ['danger','danger+hover','danger+selected','danger+open','danger+descendant-selected','danger+hover+disabled']){
+    const sourceState=state.includes('disabled')?'normal':state==='danger'?'danger':'danger+hover';
+    cases.push({style,mode,state,kind:'menu-danger',expected:{backgroundColor:sourceColor(style,'.cn-dropdown-menu-item','bg',mode,sourceState),color:sourceColor(style,'.cn-dropdown-menu-item','text',mode,sourceState)}});
+  }
+  for(const kind of ['popup','popover','submenu','drawer']){
+    const source=kind==='drawer'?'.cn-dialog-content':kind==='popover'?'.cn-popover-content':'.cn-dropdown-menu-content';
+    cases.push({style,mode,kind,expected:{backgroundColor:sourceColor(style,source,'bg',mode),color:sourceColor(style,source,'text',mode),borderColor:sourceColor(style,source,'ring',mode)}});
+  }
+  for(const state of ['normal','hover','selected','selected+hover'])cases.push({style,mode,state,kind:'table-row',expected:{backgroundColor:sourceColor(style,'.cn-table-row','bg',mode,state)}});
+  for(const type of ['primary','success','warning','error','info']){
+    for(const kind of ['tag','badge'])for(const state of ['normal','hover'])cases.push({style,mode,type,state,kind,expected:{backgroundColor:sourceColor(style,'.cn-badge-variant-destructive','bg',mode,state),color:sourceColor(style,'.cn-badge-variant-destructive','text',mode,state)}});
+    cases.push({style,mode,type,kind:'alert',expected:{backgroundColor:sourceColor(style,'.cn-alert-variant-destructive','bg',mode),color:sourceColor(style,'.cn-alert-variant-destructive','text',mode)}});
+    cases.push({style,mode,type,kind:'progress',expected:{backgroundColor:sourceColor(style,'.cn-progress-indicator','bg',mode)}});
+  }
+
 }
 const css=compileStyles().css;
 const report={schema:2,stage:'A/B/C representative chain',sourceSha:fixture.sha,sourceRules:verified.expressions.length,inputs:generated.statistics,themeBytes:Buffer.byteLength(generated.css),themeGzipBytes:zlib.gzipSync(generated.css).length,frameworkBytes:Buffer.byteLength(css),pilotSourceBytes:Buffer.byteLength(verified.source),defaultReplaced:false,allComponentMigration:false,browser:null};
@@ -93,14 +110,26 @@ if(process.argv.includes('--browser')){
     let checks=0;
     for(const test of cases){
       scope.setAttribute('data-qxframe9a7c2-theme',test.mode);scope.setAttribute('data-qxframe9a7c2-style',test.style);
-      const type=test.type??'primary';reference.style.setProperty('--source-primary',sourceRole(type==='default'?'foreground':type));reference.style.setProperty('--source-primary-foreground',sourceRole(type==='default'?'background':type+'-foreground'));reference.style.setProperty('--source-destructive',sourceRole(test.kind==='button'?(type==='default'?'foreground':type):'error'));
+      const type=test.type??'primary';reference.style.setProperty('--source-primary',sourceRole(type==='default'?'foreground':type));reference.style.setProperty('--source-primary-foreground',sourceRole(type==='default'?'background':type+'-foreground'));reference.style.setProperty('--source-destructive',sourceRole(['button','badge','tag','alert'].includes(test.kind)?(type==='default'?'foreground':type):'error'));
       if(test.kind==='button')host.innerHTML='<button class="qxframe9a7c2-button is-'+type+' is-'+test.variant+' '+(test.state==='hover-active'?'is-hover is-active':test.state==='loading-hover'?'is-loading is-hover':test.state==='disabled-hover'?'is-disabled is-hover':test.state==='normal'?'':'is-'+test.state)+'">QX</button>';
       if(test.kind==='input')host.innerHTML='<div class="qxframe9a7c2-input '+(test.state==='invalid'?'is-invalid':test.state==='disabled'?'is-disabled':'')+'"><input class="qxframe9a7c2-input-control"></div>';
       if(test.kind==='card')host.innerHTML='<div class="qxframe9a7c2-card">QX</div>';
       if(test.kind==='dialog')host.innerHTML='<div class="qxframe9a7c2-modal-root"><div class="qxframe9a7c2-modal-container">QX</div></div>';
       if(test.kind==='mask')host.innerHTML='<div class="qxframe9a7c2-modal-root"><div class="qxframe9a7c2-modal-mask"></div></div>';
       if(test.kind==='menu')host.innerHTML='<div class="qxframe9a7c2-menu"><button class="qxframe9a7c2-menu-item '+(test.state==='normal'?'':'is-'+test.state)+'">QX</button></div>';
-      const node=host.querySelector(test.kind==='dialog'?'.qxframe9a7c2-modal-container':test.kind==='mask'?'.qxframe9a7c2-modal-mask':test.kind==='menu'?'.qxframe9a7c2-menu-item':':first-child');
+      if(test.kind==='menu-danger')host.innerHTML='<div class="qxframe9a7c2-menu"><button class="qxframe9a7c2-menu-item is-danger '+test.state.split('+').filter(s=>s!=='danger').map(s=>'is-'+s).join(' ')+'">Danger</button></div>';
+      if(test.kind==='popup')host.innerHTML='<div class="qxframe9a7c2-popup-surface">Popup</div>';
+      if(test.kind==='popover')host.innerHTML='<div class="qxframe9a7c2-popover-root"><div class="qxframe9a7c2-popover-container qxframe9a7c2-popup-surface">Popover</div></div>';
+      if(test.kind==='submenu')host.innerHTML='<div class="qxframe9a7c2-menu-submenu-panel qxframe9a7c2-popup-surface">Submenu</div>';
+      if(test.kind==='drawer')host.innerHTML='<div class="qxframe9a7c2-drawer-root"><div class="qxframe9a7c2-drawer">Drawer</div></div>';
+      if(test.kind==='table-row')host.innerHTML='<table class="qxframe9a7c2-table"><tbody><tr class="'+test.state.split('+').filter(s=>s!=='normal').map(s=>'is-'+s).join(' ')+'"><td>Data</td></tr></tbody></table>';
+      if(test.kind==='tag')host.innerHTML='<span class="qxframe9a7c2-tag is-colored is-'+type+' '+(test.state==='hover'?'is-hover':'')+'">Tag</span>';
+      if(test.kind==='badge')host.innerHTML='<span class="qxframe9a7c2-badge is-filled is-'+type+' '+(test.state==='hover'?'is-hover':'')+'">Badge</span>';
+      if(test.kind==='alert')host.innerHTML='<div class="qxframe9a7c2-alert-root is-'+type+'">Alert</div>';
+      if(test.kind==='progress')host.innerHTML='<div class="qxframe9a7c2-progress is-'+type+'"><div class="qxframe9a7c2-progress-primary">Progress</div></div>';
+
+      const target={dialog:'.qxframe9a7c2-modal-container',mask:'.qxframe9a7c2-modal-mask',menu:'.qxframe9a7c2-menu-item','menu-danger':'.qxframe9a7c2-menu-item',popover:'.qxframe9a7c2-popover-container',drawer:'.qxframe9a7c2-drawer','table-row':'tr',progress:'.qxframe9a7c2-progress-primary'};
+      const node=host.querySelector(target[test.kind]??':first-child');
       for(const [property,expression]of Object.entries(test.expected)){
         reference.style[property]=expression;const expected=measure(reference,property),actual=measure(node,property);
         compare(test.style+'/'+test.mode+'/'+test.kind+'/'+type+'/'+test.variant+'/'+test.state+'/'+property,actual,expected);checks++;

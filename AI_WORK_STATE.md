@@ -7,7 +7,7 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-10-03
+- Last checkpoint date: 2026-10-04
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
@@ -21,13 +21,14 @@
 
 Task: THEME-VISUAL-V2-001 — Theme input → shared rules → Component, per QXFRAME9A7C2-Theme-Visual-System-v1.5.md.
 Baseline: main@54d118c8f303094c27bc957bf16f630ae2efaa88. PR #254 is merged; unrelated stale PR #250 is not the work branch.
-First delivery: PR #255 merged as a59c2d4664125d72f1950c4c6faff10b4fe2adf3. Final implementation head b08f105866bf7434d8efa9d1e31d2e4a06fe0ca8. No active implementation branch for the next batch: query live Git/PR state and branch from current main. Scope: A/B/C representative color chain; D–H migration/geometry/Studio/roundtrip/full visual/default replacement remains pending.
+First delivery: PR #255 merged as a59c2d4664125d72f1950c4c6faff10b4fe2adf3. Final implementation head b08f105866bf7434d8efa9d1e31d2e4a06fe0ca8. Second batch started from main@cc57d3804b4b2ef696c707a97b14913c38f6c79d on feat/theme-visual-v2-consumers; no PR yet. Scope: A/B/C representative color chain; D–H migration/geometry/Studio/roundtrip/full visual/default replacement remains pending.
 Progress: overall v1.5 approximately 30%; A 100%; B 80%; C 90% representative browser equivalence passed; D–H 0%. This estimate does not re-count old completed work.
-Next exact step: complete remaining B/C mapping gaps (danger Menu combinations, Popup/Dialog boundary/shadow, final input inventory) before D full consumer and md migration. Query current main CI/Pages status on resume; recover any newly observed failure first. Do not reopen PR #255 or rerun passed representative implementation checks without a new change or failure.
+Resume evidence: main CI / release / Windows / deploy-pages 37135123424 SUCCESS. PR #250 is unrelated and remains untouched.
+Next exact step: run expanded source/browser equivalence for the second batch while implementing md-only fixed geometry. Popup/Dialog/Popover/Submenu boundaries and source shadow alpha/distribution are wired; danger Menu open/ancestor/disabled combinations added; shared consumer roles now cover Tag/Badge/feedback/data/list/progress/slider/scroll/tooltip. Source fixture expanded to 464 Style excerpts plus base classes and locked Tailwind 4.3.0 shadow evidence. This batch is not accepted until browser and full CI pass. Query current main CI/Pages status on resume; recover any newly observed failure first. Do not reopen PR #255 or rerun passed representative implementation checks without a new change or failure.
 CI evidence: final PR head b08f105866bf7434d8efa9d1e31d2e4a06fe0ca8; CSS Schema Acceptance 37134518212 SUCCESS, including 4,176 Chromium cases / 13,067 checks / zero failures; QXFRAME CI 37134518247 SUCCESS, including full release, Windows, npm package, standalone/docs and Pages artifact build. Main deployment facts must be queried live rather than caching a self-invalidating latest SHA/run ID here.
 Corrected and accepted: source-exact Nova disabled Input and Mira mask; invalid reference binds destructive to QX error; transparent RGBA and mode-surface composition both remain exact (0-byte difference). Card title inherits actual surface foreground; explicit override applies to parent/title, muted description stays independent, and deleting the override restores the role.
-Implemented: 28 core + 14 optional full-color roles; sparse color exporter; pinned eight-Style source excerpts; shared rule bindings and canonical Playground samples. See QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md and tools/manifests/theme-visual-v2-rules.json.
-Validation: local build/full npm verify/legacy Schema freeze/v2 source and serialization passed. Local browser cannot start because native socket() is denied by the execution environment; GitHub Actions Chromium passed the representative matrix. Full Studio/default replacement is NOT done.
+Implemented: 30 core + 14 optional full-color roles; sparse color exporter; pinned eight-Style source excerpts; shared rule bindings and canonical Playground samples. See QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md and tools/manifests/theme-visual-v2-rules.json.
+Validation: local build/full npm verify/legacy Schema freeze/v2 source and serialization passed. Local TCP sockets work, but Chromium native process socket() is still denied; GitHub Actions Chromium passed the representative matrix. Full Studio/default replacement is NOT done.
 Frozen: source SHA 295a1f114a138f23b5dfee0e0c6812394dfeb90c; copy alpha/OKLCH/role assignment exactly; no invented pressed intensity; local consumption; pure CSS runtime; no a11y/ARIA/RTL scope; final default replacement only at H.
 Legacy schema/defaults remain during the representative pilot. Versioned v1 gates and v2 equivalence gates must both pass. No default switch is authorized by a partial gate result.
 

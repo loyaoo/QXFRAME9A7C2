@@ -287,6 +287,26 @@
         "light": "oklch(.985 0 0)",
         "dark": "oklch(.205 0 0)"
       }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-shadow",
+      "role": "shadow",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(0 0 0)",
+        "dark": "rgb(0 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-thumb",
+      "role": "thumb",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      }
     }
   ],
   "optionalInputs": [

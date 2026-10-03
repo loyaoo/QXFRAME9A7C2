@@ -28,6 +28,8 @@
   --qxframe9a7c2-theme-v2-mask: rgb(0 0 0 / 0.1);
   --qxframe9a7c2-theme-v2-inverse: oklch(.205 0 0);
   --qxframe9a7c2-theme-v2-inverse-foreground: oklch(.985 0 0);
+  --qxframe9a7c2-theme-v2-shadow: rgb(0 0 0);
+  --qxframe9a7c2-theme-v2-thumb: rgb(255 255 255);
 }
 [data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-theme="dark"] {
   --qxframe9a7c2-theme-v2-background: oklch(.145 0 0);
@@ -58,4 +60,6 @@
   --qxframe9a7c2-theme-v2-mask: rgb(0 0 0 / 0.1);
   --qxframe9a7c2-theme-v2-inverse: oklch(.985 0 0);
   --qxframe9a7c2-theme-v2-inverse-foreground: oklch(.205 0 0);
+  --qxframe9a7c2-theme-v2-shadow: rgb(0 0 0);
+  --qxframe9a7c2-theme-v2-thumb: rgb(255 255 255);
 }

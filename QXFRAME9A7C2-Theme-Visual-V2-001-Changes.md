@@ -59,3 +59,12 @@
 - QXFRAME CI `37134518247`：SUCCESS，包括完整 release、Windows、npm 包、独立 dist／演示与 Pages 产物。
 - PR #255 已合并，main 合并提交：`a59c2d4664125d72f1950c4c6faff10b4fe2adf3`。主分支 CI／Pages 部署以实时 GitHub 为准。
 - 本批交付完成，整个 THEME-VISUAL-V2-001 仍约 30%，继续剩余 B/C 后进入 D；没有替换生产默认主题。
+
+## 第二批进行中（2026-10-04）
+
+- 公共 Popup/Popover/Submenu/Modal/Drawer 的完整表面、原 ring 色边界和 Style 投影分布；原生物理 ownership 不变。
+- 必要输入增加 shadow（黑色投影基色）与 thumb（源 Slider 白色手柄），共 30 个核心完整颜色。用于关闭硬编码业务颜色端点；不是状态展开。
+- shadcn 锁文件确认 Tailwind 4.3.0；保留其阴影颜色原 alpha（10%/25%）及 Style 级别分配。QX 阴影几何使用偶数 rem，未声称复制外部每个几何像素。
+- 源摘录扩展至 464 条；共享规则沿现有消费槽位接入 Tag/Badge、反馈、Table、List/Tree/Transfer、Progress、Slider、Scroll、Tooltip。新增代表组合等待 Chromium CI。
+- 危险 Menu normal/hover/selected/open/descendant-selected/disabled 的源等价用例已登记。
+- 接下来继续 md 固定派生与剩余颜色端；生产默认不在本批提前切换。
