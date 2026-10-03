@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 10,
   "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
   "files": [
     {
@@ -14,7 +14,8 @@
     "preset",
     "theme-default",
     "theme-family-category",
-    "components"
+    "components",
+    "semantic-v2-opt-in"
   ],
   "conceptualOrder": [
     "foundation",
@@ -86,6 +87,7 @@
     "src/styles/components/_composition.scss",
     "src/styles/components/_focus-closeout.scss",
     "src/styles/components/_compatibility.scss",
-    "src/styles/components/_visual-recipe.scss"
+    "src/styles/components/_visual-recipe.scss",
+    "src/styles/theme/_visual-v2.scss"
   ]
 }

@@ -14,13 +14,20 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: VISUAL-RECIPE-SYSTEM-001 Phase A–H is 100%, merged through PR #254 and CI/Pages verified. Theme Generator, Style Recipe, CSS Token System, required Theme Schema, Size Tree/Grid/viewport and SCSS modularization remain complete.
-- Current Task: `VISUAL-RECIPE-SYSTEM-001` — DONE_MERGED_CI_PAGES_VERIFIED; 100%.
+- Current Phase: THEME-VISUAL-V2-001 A complete; B/C in progress. Previous VISUAL-RECIPE-SYSTEM-001 remains complete through PR #254; v1.5 explicitly supersedes its color/output architecture only.
+- Current Task: `THEME-VISUAL-V2-001` — IMPLEMENTING; approximately 25% of v1.5 A–H.
 
 ## CURRENT
 
-No active implementation work remains for VISUAL-RECIPE-SYSTEM-001. PR #254 and main CI/Pages are verified; the evidence is recorded under DONE.
-Next exact step: query live Git/PR/CI on a new request, reconcile this checkpoint, and start only the newly requested task. Do not redo Controller migration, CSS Token System, PR #253 Card composition or the completed visual recipe phases without a real regression or new architecture requirement.
+Task: THEME-VISUAL-V2-001 — Theme input → shared rules → Component, per QXFRAME9A7C2-Theme-Visual-System-v1.5.md.
+Baseline: main@54d118c8f303094c27bc957bf16f630ae2efaa88. PR #254 is merged; unrelated stale PR #250 is not the work branch.
+Branch: feat/theme-visual-v2-foundation. Scope: A/B/C representative color chain, then D–H migration/geometry/Studio/roundtrip/full visual/default replacement.
+Progress: overall v1.5 approximately 25%; A 100%; B 80%; C 80% pending GitHub browser equivalence; D–H 0%. This estimate does not re-count old completed work.
+Next exact step: submit this representative-chain batch and inspect exact-head GitHub CI (including v2 browser equivalence); fix any failing case without changing source ratios. Then complete remaining B/C mapping gaps before D full consumer and md migration.
+Implemented: 28 core + 14 optional full-color roles; sparse color exporter; pinned eight-Style source excerpts; shared rule bindings and canonical Playground samples. See QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md and tools/manifests/theme-visual-v2-rules.json.
+Validation: local build/full npm verify/legacy Schema freeze/v2 source and serialization passed. Local browser cannot start because native socket() is denied by the execution environment; Chromium evidence must come from GitHub Actions. Full Studio/default replacement is NOT done.
+Frozen: source SHA 295a1f114a138f23b5dfee0e0c6812394dfeb90c; copy alpha/OKLCH/role assignment exactly; no invented pressed intensity; local consumption; pure CSS runtime; no a11y/ARIA/RTL scope; final default replacement only at H.
+Legacy schema/defaults remain during the representative pilot. Versioned v1 gates and v2 equivalence gates must both pass. No default switch is authorized by a partial gate result.
 
 ## Current authority snapshot — after Phase A
 

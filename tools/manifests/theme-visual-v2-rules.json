@@ -1,0 +1,301 @@
+{
+  "schema": 2,
+  "sourceSha": "295a1f114a138f23b5dfee0e0c6812394dfeb90c",
+  "sourceFixtures": "tools/fixtures/theme-v2/shadcn-source.json",
+  "implementation": "src/styles/theme/_visual-v2.scss",
+  "rules": [
+    {
+      "id": "action.solid",
+      "family": "action",
+      "sourceSelector": ".cn-button-variant-default",
+      "sourceExpression": "primary / primary-foreground; hover primary/80",
+      "qxMapping": "Button solid; each semantic Type substitutes input and foreground",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "action.secondary",
+      "family": "action",
+      "sourceSelector": ".cn-button-variant-secondary",
+      "sourceExpression": "secondary / secondary-foreground; hover OKLCH secondary95 + foreground5",
+      "qxMapping": "Button secondary uses neutral secondary, not an auxiliary brand Type",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "action.soft",
+      "family": "action/feedback",
+      "sourceSelector": ".cn-button-variant-destructive",
+      "sourceExpression": "destructive10/20 light;20/30 dark; text destructive",
+      "qxMapping": "Button filled semantic Type maps same soft feedback expression; no extra pressed color",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "action.outline",
+      "family": "action",
+      "sourceSelector": ".cn-button-variant-outline",
+      "sourceExpression": "source Style background/input/muted assignments; style-specific alpha",
+      "qxMapping": "Button outlined/dashed; source differences kept by Style",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "action.ghost",
+      "family": "action",
+      "sourceSelector": ".cn-button-variant-ghost",
+      "sourceExpression": "transparent;hover muted light, muted50 dark; foreground",
+      "qxMapping": "Button plain/text",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "action.link",
+      "family": "action",
+      "sourceSelector": ".cn-button-variant-link",
+      "sourceExpression": "primary text;no background",
+      "qxMapping": "Button link",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "control.surface",
+      "family": "control",
+      "sourceSelector": ".cn-input",
+      "sourceExpression": "source Style background/input alpha and border roles",
+      "qxMapping": "Input including Picker Control via existing Input owner",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "control.invalid",
+      "family": "control",
+      "sourceSelector": ".cn-input",
+      "sourceExpression": "destructive border;dark destructive50 except source Style parts",
+      "qxMapping": "Input is-error/is-invalid;QX keyboard outline retained",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "surface.content",
+      "family": "surface",
+      "sourceSelector": ".cn-card",
+      "sourceExpression": "card / card-foreground",
+      "qxMapping": "Card preserves existing header/content/footer composition",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "surface.boundary",
+      "family": "surface",
+      "sourceSelector": ".cn-card",
+      "sourceExpression": "ring foreground10;Luma/Rhea5 light/10 dark;Sera5",
+      "qxMapping": "source ring color maps QX frame border color; geometry not copied",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "surface.description",
+      "family": "surface",
+      "sourceSelector": ".cn-card-description",
+      "sourceExpression": "muted-foreground",
+      "qxMapping": "Card description",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "popup.content",
+      "family": "popup",
+      "sourceSelector": ".cn-dialog-content",
+      "sourceExpression": "popover / popover-foreground",
+      "qxMapping": "Dialog/Popup/submenu/overflow follow existing Popup and physical scoped portal",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "popup.mask",
+      "family": "popup",
+      "sourceSelector": ".cn-dialog-overlay",
+      "sourceExpression": "black alpha from source Style;Theme mask is a complete color",
+      "qxMapping": "one complete Theme mask input;Style default only, explicit mask wins",
+      "resolutionScope": "theme input",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "navigation.highlight",
+      "family": "navigation",
+      "sourceSelector": ".cn-dropdown-menu-item",
+      "sourceExpression": "accent / accent-foreground",
+      "qxMapping": "Menu visual hover/selected use same source highlight purpose, QX interaction retained",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "navigation.danger",
+      "family": "navigation/feedback",
+      "sourceSelector": ".cn-dropdown-menu-item",
+      "sourceExpression": "destructive10 light/20 dark, destructive text",
+      "qxMapping": "Menu danger; no Menu-specific private palette",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    }
+  ],
+  "specializations": [
+    {
+      "part": "Card frame",
+      "reason": "QX keeps a real frame border rather than adding the source ring box-shadow; color is equal, geometry is QX-owned"
+    },
+    {
+      "part": "Dialog mask",
+      "reason": "Theme owns a complete translucent mask; Style source alpha selects only its default"
+    },
+    {
+      "part": "Keyboard outline",
+      "reason": "QX focus policy remains 2px black/white; source ARIA/focus runtime is not transplanted"
+    }
+  ],
+  "gaps": [
+    "physical palette Type axes are not migrated in the representative pilot",
+    "Menu scheme and ownership contexts beyond normal scope require Phase D",
+    "Dialog and Popup boundary/shadow roles not fully ported",
+    "other component consumers pending",
+    "all md-only geometry and non-color Style mapping pending",
+    "legacy full theme configuration mapping is not supported by the role-only migration helper",
+    "cross-browser and user-confirmed visual baselines pending"
+  ]
+}

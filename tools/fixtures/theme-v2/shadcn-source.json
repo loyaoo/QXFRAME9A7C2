@@ -1,0 +1,702 @@
+{
+  "repository": "shadcn-ui/ui",
+  "sha": "295a1f114a138f23b5dfee0e0c6812394dfeb90c",
+  "license": "MIT",
+  "styles": {
+    "vega": {
+      "path": "apps/v4/registry/styles/style-vega.css",
+      "sha256": "7b0dc3a9d2245ab6ce3d17653fa74a07f0ce2541e480bef36d2600fe38f1281b",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 145,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-md border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 149,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 157,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 153,
+          "apply": "border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 161,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 165,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 169,
+          "apply": "text-primary underline-offset-4 hover:underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 677,
+          "apply": "dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-9 rounded-md border bg-transparent px-2.5 py-1 text-base shadow-xs transition-[color,box-shadow] file:h-7 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 240,
+          "apply": "ring-foreground/10 bg-card text-card-foreground gap-(--card-spacing) overflow-hidden rounded-xl py-(--card-spacing) text-sm shadow-xs ring-1 [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 248,
+          "apply": "text-base leading-normal font-medium group-data-[size=sm]/card:text-sm"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 252,
+          "apply": "text-muted-foreground text-sm"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 467,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-6 rounded-xl p-6 text-sm ring-1 duration-100 sm:max-w-md"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 463,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 545,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-sm px-2 py-1.5 text-sm data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 537,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-md p-1 shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1287,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    },
+    "nova": {
+      "path": "apps/v4/registry/styles/style-nova.css",
+      "sha256": "5d5751579c015b61e77cf0822862a43ac79f3e6fed236a17624be8e6d1ebea1d",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 149,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 153,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 161,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 157,
+          "apply": "border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 165,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 169,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 173,
+          "apply": "text-primary underline-offset-4 hover:underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 677,
+          "apply": "dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 244,
+          "apply": "ring-foreground/10 bg-card text-card-foreground gap-(--card-spacing) overflow-hidden rounded-xl py-(--card-spacing) text-sm ring-1 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 252,
+          "apply": "text-base leading-snug font-medium group-data-[size=sm]/card:text-sm"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 256,
+          "apply": "text-muted-foreground text-sm"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 467,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-1 duration-100 sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 463,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 545,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 537,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-lg p-1 shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1287,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    },
+    "maia": {
+      "path": "apps/v4/registry/styles/style-maia.css",
+      "sha256": "0a1e5a658ea601ee7a9427b91ea567c6fc915a385d7466bea19f42ec726added",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 149,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-4xl border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 153,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 161,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 157,
+          "apply": "border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 165,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 169,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 173,
+          "apply": "text-primary underline-offset-4 hover:underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 678,
+          "apply": "bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-9 rounded-4xl border px-3 py-1 text-base transition-colors file:h-7 file:text-sm file:font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] md:text-sm"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 244,
+          "apply": "ring-foreground/10 bg-card text-card-foreground gap-(--card-spacing) overflow-hidden rounded-2xl py-(--card-spacing) text-sm ring-1 [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 252,
+          "apply": "text-base font-medium"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 256,
+          "apply": "text-muted-foreground text-sm"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 467,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/5 grid max-w-[calc(100%-2rem)] gap-6 rounded-4xl p-6 text-sm ring-1 duration-100 sm:max-w-md"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 463,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/80 duration-100 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 546,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2.5 rounded-xl px-3 py-2 text-sm data-inset:pl-9.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 538,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 bg-popover text-popover-foreground min-w-48 rounded-2xl p-1 shadow-2xl ring-1 duration-100 dark:ring-foreground/10"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1288,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    },
+    "lyra": {
+      "path": "apps/v4/registry/styles/style-lyra.css",
+      "sha256": "7d75035683a22e61f5dace0b115e97f9e9b643500c1f4bfe2b31ad4dcdaa0c4a",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 145,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-none border border-transparent bg-clip-padding text-xs font-medium focus-visible:ring-1 aria-invalid:ring-1 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 149,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 157,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 153,
+          "apply": "border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 161,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 165,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 169,
+          "apply": "text-primary underline-offset-4 hover:underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 652,
+          "apply": "dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-none border bg-transparent px-2.5 py-1 text-xs transition-colors file:h-6 file:text-xs file:font-medium focus-visible:ring-1 aria-invalid:ring-1 md:text-xs"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 232,
+          "apply": "ring-foreground/10 bg-card text-card-foreground gap-(--card-spacing) overflow-hidden rounded-none py-(--card-spacing) text-xs/relaxed ring-1 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-none *:[img:last-child]:rounded-none"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 240,
+          "apply": "text-sm font-medium group-data-[size=sm]/card:text-sm"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 244,
+          "apply": "text-muted-foreground text-xs/relaxed"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 446,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-none p-4 text-xs/relaxed ring-1 duration-100 sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 442,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 520,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-none px-2 py-2 text-xs data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 512,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-none shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1262,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    },
+    "mira": {
+      "path": "apps/v4/registry/styles/style-mira.css",
+      "sha256": "025f54a060adeb60489d17eb3eb935e1118ee091ba5c618d5463eb27f2b1d003",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 149,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-md border border-transparent bg-clip-padding text-xs/relaxed font-medium focus-visible:ring-2 aria-invalid:ring-2 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 153,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 161,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 157,
+          "apply": "border-border dark:bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 165,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 169,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 173,
+          "apply": "text-primary underline-offset-4 hover:underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 677,
+          "apply": "bg-input/20 dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-7 rounded-md border px-2 py-0.5 text-sm transition-colors file:h-6 file:text-xs/relaxed file:font-medium focus-visible:ring-2 aria-invalid:ring-2 md:text-xs/relaxed"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 244,
+          "apply": "ring-foreground/10 bg-card text-card-foreground gap-(--card-spacing) overflow-hidden rounded-lg py-(--card-spacing) text-xs/relaxed ring-1 [--card-spacing:--spacing(4)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] *:[img:first-child]:rounded-t-lg *:[img:last-child]:rounded-b-lg"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 252,
+          "apply": "text-sm font-medium"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 256,
+          "apply": "text-muted-foreground text-xs/relaxed"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 467,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-xs/relaxed ring-1 duration-100 sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 463,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/80 duration-100 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 545,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground min-h-7 gap-2 rounded-md px-2 py-1 text-xs/relaxed data-inset:pl-7.5 [&_svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 537,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-lg p-1 shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1289,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    },
+    "luma": {
+      "path": "apps/v4/registry/styles/style-luma.css",
+      "sha256": "a698210162ca2d3385142a47334f22985831b1e91716c2d3175828d928a59707",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 71,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-4xl border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 75,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 83,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 79,
+          "apply": "border-border bg-background dark:bg-transparent hover:bg-muted hover:text-foreground dark:hover:bg-input/30 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 87,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 91,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 95,
+          "apply": "text-primary underline-offset-4 hover:underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 153,
+          "apply": "bg-input/50 border-transparent focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-9 rounded-3xl border px-3 py-1 text-base transition-[color,box-shadow,background-color] file:h-7 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 438,
+          "apply": "bg-card text-card-foreground ring-foreground/5 dark:ring-foreground/10 gap-(--card-spacing) overflow-hidden rounded-4xl py-(--card-spacing) text-sm shadow-md ring-1 [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-4xl *:[img:last-child]:rounded-b-4xl"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 446,
+          "apply": "text-base font-medium"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 450,
+          "apply": "text-muted-foreground text-sm"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 719,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/5 dark:ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-6 rounded-4xl p-6 text-sm shadow-xl ring-1 duration-100 sm:max-w-md"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 715,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/30 duration-100 supports-backdrop-filter:backdrop-blur-sm"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 797,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2.5 rounded-2xl px-3 py-2 text-sm font-medium data-inset:pl-9.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 789,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 dark:ring-foreground/10 bg-popover text-popover-foreground min-w-48 rounded-3xl p-1.5 shadow-lg ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1293,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    },
+    "sera": {
+      "path": "apps/v4/registry/styles/style-sera.css",
+      "sha256": "eda71a39ba86625eb81b25f2e5824579952ced0cf0451be16be3f4dd70bf9876",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 145,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-none border border-transparent bg-clip-padding text-xs font-semibold uppercase tracking-widest focus-visible:ring-2 aria-invalid:ring-2 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 149,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 157,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 153,
+          "apply": "border-border bg-transparent hover:bg-muted hover:text-foreground dark:hover:bg-input/30 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 161,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 165,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 169,
+          "apply": "text-primary underline-offset-4 hover:underline underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 668,
+          "apply": "border-transparent border-b-input bg-transparent focus-visible:border-b-ring aria-invalid:border-b-destructive dark:aria-invalid:border-b-destructive/50 h-10 border px-0 py-1 text-base transition-[color,border-color] file:h-7 file:text-sm file:font-medium md:text-sm"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 244,
+          "apply": "bg-card text-card-foreground ring-foreground/5 gap-(--card-spacing) overflow-hidden py-(--card-spacing) text-sm shadow-sm ring-1 [--card-spacing:--spacing(8)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(5)] *:[img:first-child]:rounded-none *:[img:last-child]:rounded-none"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 252,
+          "apply": "text-lg font-semibold tracking-wider uppercase"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 256,
+          "apply": "text-muted-foreground text-sm leading-relaxed"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 458,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-6 rounded-none p-6 text-sm shadow-md ring-1 duration-100 sm:max-w-md"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 454,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/20 duration-100 supports-backdrop-filter:backdrop-blur-sm"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 536,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2.5 rounded-none px-3 py-2 text-xs font-medium uppercase tracking-wider data-inset:pl-9.5 [&_svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 528,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-48 rounded-none p-1.5 shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1278,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    },
+    "rhea": {
+      "path": "apps/v4/registry/styles/style-rhea.css",
+      "sha256": "bcb242a7845316f93b0562345dd5c32a46a2988b506a8e8d7df1c836a1637b49",
+      "entries": [
+        {
+          "selector": ".cn-button",
+          "line": 71,
+          "apply": "focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-2xl border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-button-variant-default",
+          "line": 75,
+          "apply": "bg-primary text-primary-foreground hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-button-variant-secondary",
+          "line": 83,
+          "apply": "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-outline",
+          "line": 79,
+          "apply": "border-border bg-background dark:bg-transparent hover:bg-muted hover:text-foreground dark:hover:bg-input/30 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-ghost",
+          "line": 87,
+          "apply": "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground"
+        },
+        {
+          "selector": ".cn-button-variant-destructive",
+          "line": 91,
+          "apply": "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30"
+        },
+        {
+          "selector": ".cn-button-variant-link",
+          "line": 95,
+          "apply": "text-primary underline-offset-4 hover:underline"
+        },
+        {
+          "selector": ".cn-input",
+          "line": 153,
+          "apply": "bg-input/50 border-transparent focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-8 rounded-2xl border px-2.5 py-1 text-base transition-[color,box-shadow] duration-200 file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm"
+        },
+        {
+          "selector": ".cn-card",
+          "line": 438,
+          "apply": "bg-card text-card-foreground ring-foreground/5 dark:ring-foreground/10 gap-(--card-spacing) overflow-hidden rounded-[min(var(--radius-4xl),24px)] py-(--card-spacing) text-sm shadow-sm ring-1 [--card-spacing:--spacing(5)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-[min(var(--radius-4xl),24px)] *:[img:last-child]:rounded-b-[min(var(--radius-4xl),24px)]"
+        },
+        {
+          "selector": ".cn-card-title",
+          "line": 446,
+          "apply": "text-base font-medium"
+        },
+        {
+          "selector": ".cn-card-description",
+          "line": 450,
+          "apply": "text-muted-foreground text-sm"
+        },
+        {
+          "selector": ".cn-dialog-content",
+          "line": 719,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/5 dark:ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-6 rounded-[min(var(--radius-4xl),24px)] p-6 text-sm shadow-xl ring-1 duration-100 sm:max-w-md"
+        },
+        {
+          "selector": ".cn-dialog-overlay",
+          "line": 715,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/30 duration-100 supports-backdrop-filter:backdrop-blur-sm"
+        },
+        {
+          "selector": ".cn-dropdown-menu-item",
+          "line": 797,
+          "apply": "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 min-h-7 rounded-xl px-2 py-1.5 text-sm data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-dropdown-menu-content",
+          "line": 789,
+          "apply": "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 dark:ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-2xl p-1 shadow-lg ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-table-row",
+          "line": 1293,
+          "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        }
+      ]
+    }
+  },
+  "bases": {
+    "button": {
+      "path": "apps/v4/registry/bases/radix/ui/button.tsx",
+      "sha256": "76c6abdf94fae4085fd6c50c97c7a99ec21240af187c63ea4b2e71551d33495f",
+      "class": "cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+    }
+  }
+}

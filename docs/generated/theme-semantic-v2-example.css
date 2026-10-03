@@ -1,0 +1,61 @@
+/* QXFRAME semantic schema 2; shadcn-295a1f11-qx-1 */
+[data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-theme="light"] {
+  --qxframe9a7c2-theme-v2-background: oklch(1 0 0);
+  --qxframe9a7c2-theme-v2-foreground: oklch(.145 0 0);
+  --qxframe9a7c2-theme-v2-card: oklch(1 0 0);
+  --qxframe9a7c2-theme-v2-card-foreground: oklch(.145 0 0);
+  --qxframe9a7c2-theme-v2-popover: oklch(1 0 0);
+  --qxframe9a7c2-theme-v2-popover-foreground: oklch(.145 0 0);
+  --qxframe9a7c2-theme-v2-primary: rgb(37 99 235);
+  --qxframe9a7c2-theme-v2-primary-foreground: rgb(255 255 255);
+  --qxframe9a7c2-theme-v2-secondary: oklch(.97 0 0);
+  --qxframe9a7c2-theme-v2-secondary-foreground: oklch(.205 0 0);
+  --qxframe9a7c2-theme-v2-muted: oklch(.97 0 0);
+  --qxframe9a7c2-theme-v2-muted-foreground: oklch(.556 0 0);
+  --qxframe9a7c2-theme-v2-accent: oklch(.97 0 0);
+  --qxframe9a7c2-theme-v2-accent-foreground: oklch(.205 0 0);
+  --qxframe9a7c2-theme-v2-success: rgb(22 163 74);
+  --qxframe9a7c2-theme-v2-success-foreground: rgb(255 255 255);
+  --qxframe9a7c2-theme-v2-warning: rgb(245 158 11);
+  --qxframe9a7c2-theme-v2-warning-foreground: rgb(23 23 23);
+  --qxframe9a7c2-theme-v2-error: oklch(.577 .245 27.325);
+  --qxframe9a7c2-theme-v2-error-foreground: rgb(255 255 255);
+  --qxframe9a7c2-theme-v2-info: rgb(8 145 178);
+  --qxframe9a7c2-theme-v2-info-foreground: rgb(255 255 255);
+  --qxframe9a7c2-theme-v2-border: oklch(.922 0 0);
+  --qxframe9a7c2-theme-v2-input: oklch(.922 0 0);
+  --qxframe9a7c2-theme-v2-ring: oklch(.708 0 0);
+  --qxframe9a7c2-theme-v2-mask: rgb(0 0 0 / 0.1);
+  --qxframe9a7c2-theme-v2-inverse: oklch(.205 0 0);
+  --qxframe9a7c2-theme-v2-inverse-foreground: oklch(.985 0 0);
+}
+[data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-theme="dark"] {
+  --qxframe9a7c2-theme-v2-background: oklch(.145 0 0);
+  --qxframe9a7c2-theme-v2-foreground: oklch(.985 0 0);
+  --qxframe9a7c2-theme-v2-card: oklch(.205 0 0);
+  --qxframe9a7c2-theme-v2-card-foreground: oklch(.985 0 0);
+  --qxframe9a7c2-theme-v2-popover: oklch(.205 0 0);
+  --qxframe9a7c2-theme-v2-popover-foreground: oklch(.985 0 0);
+  --qxframe9a7c2-theme-v2-primary: rgb(96 165 250);
+  --qxframe9a7c2-theme-v2-primary-foreground: rgb(23 23 23);
+  --qxframe9a7c2-theme-v2-secondary: oklch(.269 0 0);
+  --qxframe9a7c2-theme-v2-secondary-foreground: oklch(.985 0 0);
+  --qxframe9a7c2-theme-v2-muted: oklch(.269 0 0);
+  --qxframe9a7c2-theme-v2-muted-foreground: oklch(.708 0 0);
+  --qxframe9a7c2-theme-v2-accent: oklch(.269 0 0);
+  --qxframe9a7c2-theme-v2-accent-foreground: oklch(.985 0 0);
+  --qxframe9a7c2-theme-v2-success: rgb(74 222 128);
+  --qxframe9a7c2-theme-v2-success-foreground: rgb(23 23 23);
+  --qxframe9a7c2-theme-v2-warning: rgb(251 191 36);
+  --qxframe9a7c2-theme-v2-warning-foreground: rgb(23 23 23);
+  --qxframe9a7c2-theme-v2-error: oklch(.704 .191 22.216);
+  --qxframe9a7c2-theme-v2-error-foreground: rgb(23 23 23);
+  --qxframe9a7c2-theme-v2-info: rgb(34 211 238);
+  --qxframe9a7c2-theme-v2-info-foreground: rgb(23 23 23);
+  --qxframe9a7c2-theme-v2-border: rgb(255 255 255 / .1);
+  --qxframe9a7c2-theme-v2-input: rgb(255 255 255 / .15);
+  --qxframe9a7c2-theme-v2-ring: oklch(.556 0 0);
+  --qxframe9a7c2-theme-v2-mask: rgb(0 0 0 / 0.1);
+  --qxframe9a7c2-theme-v2-inverse: oklch(.985 0 0);
+  --qxframe9a7c2-theme-v2-inverse-foreground: oklch(.205 0 0);
+}

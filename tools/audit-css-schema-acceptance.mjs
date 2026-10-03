@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { compileStyles } from './compile-styles.mjs';
 import { getCanonicalStyleModulePaths } from './style-source.mjs';
 import { getWebSocketConstructor } from './websocket-client.mjs';
+import {V2_STYLE_MODULE,verifySemanticRuleSource} from './theme-v2-contract.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const stripComments = text => text.replace(/\/\*[\s\S]*?\*\//g, match => match.replace(/[^\n]/g, ' '));
@@ -18,8 +19,9 @@ export function inspectSchema({ rootDir = root } = {}) {
   const componentRootPublicDefaults = [];
   const definitions = new Set();
   for (const { file, text } of sources) {
+    if(file===V2_STYLE_MODULE) verifySemanticRuleSource(rootDir);
     for (const match of text.matchAll(/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:/gi)) definitions.add(match[1]);
-    for (const match of text.matchAll(/\bcolor-mix\s*\(/gi)) runtimeColorMix.push({ file, line: lineAt(text, match.index) });
+    for (const match of text.matchAll(/\bcolor-mix\s*\(/gi)) if(file!==V2_STYLE_MODULE) runtimeColorMix.push({ file, line: lineAt(text, match.index) });
     if (!file.includes('/components/')) continue;
     // Candidates, not automatically violations: explicit size/variant overrides
     // and dynamic functional channels require their own ownership decisions.

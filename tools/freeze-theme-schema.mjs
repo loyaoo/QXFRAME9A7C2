@@ -11,7 +11,7 @@ export const extraSlots={
   '--qxframe9a7c2-theme-font-family-mono':'ui-monospace, SFMono-Regular, Menlo, monospace'
 };
 export function publicInterface(){
-  const source=readCanonicalStyleSource().replace(/\/\*[\s\S]*?\*\//g,'');
+  const source=readCanonicalStyleSource({schema:1}).replace(/\/\*[\s\S]*?\*\//g,'');
   return [...new Set([...source.matchAll(/--qxframe9a7c2-(?:theme-[a-z0-9-]+|palette-[a-z0-9-]+)/g)].map(m=>m[0]).concat(Object.keys(extraSlots)))].sort();
 }
 function calls(text){
@@ -62,7 +62,7 @@ export function buildSnapshot(){
     if(values.light!=null&&values.dark!=null)tokens.push({name,layer:name.includes('-palette-')?'palette':'theme',defaults:values});
   }
   if(unbound.length)throw Error('Review '+new Set(unbound).size+' missing public defaults: '+JSON.stringify([...new Set(unbound)].slice(0,25)));
-  const source=readCanonicalStyleSource().replace(/\/\*[\s\S]*?\*\//g,'');
+  const source=readCanonicalStyleSource({schema:1}).replace(/\/\*[\s\S]*?\*\//g,'');
   const optionalComponentOverrides=[...new Set([...source.matchAll(/var\((--qxframe9a7c2-[a-z0-9-]+)\s*,/g)].map(m=>m[1]).filter(n=>!n.includes('-theme-')&&!n.includes('-palette-')&&!/-motion-height$|-stop-offset$|-step-percent$/.test(n)))].sort();
   return {schema:1,state:'FROZEN',scope:'Versioned public visual interface; independent architecture/security signoff is separate.',authority:'QXFRAME9A7C2-Theme-Generator-Development-Guide-v1.md',colorRecipes:'theme-color-recipes-v1.json',interfaceHash:crypto.createHash('sha256').update(publicInterface().join('\n')).digest('hex'),tokens,optionalComponentOverrides,policy:{privateOutput:false,componentSelectors:false,runtimeDiscovery:false,mandatory:'Every Palette/Theme entry in tokens; Component overrides remain optional so default exports do not mask ancestor overrides.'}};
 }
