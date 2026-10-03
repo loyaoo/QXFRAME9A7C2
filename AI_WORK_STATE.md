@@ -14,27 +14,13 @@
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: Theme Generator v1 and Theme Style Recipe v2 remain merged and CI/Pages verified. `VISUAL-RECIPE-SYSTEM-001` is the active additive visual-system task; CSS Token System, Theme Schema required contract, Size Tree/Grid/viewport and SCSS physical modularization remain complete.
-- Current Task: `VISUAL-RECIPE-SYSTEM-001` — uploaded Post-PR253 visual-system plan, implementation started.
+- Current Phase: VISUAL-RECIPE-SYSTEM-001 Phase A–H is 100%, merged through PR #254 and CI/Pages verified. Theme Generator, Style Recipe, CSS Token System, required Theme Schema, Size Tree/Grid/viewport and SCSS modularization remain complete.
+- Current Task: `VISUAL-RECIPE-SYSTEM-001` — DONE_MERGED_CI_PAGES_VERIFIED; 100%.
 
 ## CURRENT
 
-### VISUAL-RECIPE-SYSTEM-001
-Status: IMPLEMENTED / PR-CI-PENDING
-Progress: 95% of the Post-PR253 plan; Phase A–H implementation complete, final acceptance/PR/CI/merge pending.
-Baseline: main 9e64e56de86860b67298a2fcd9b5f6f8a363e31c; PR #253 and main CI/Pages 37088473988 verified SUCCESS.
-Authority: QXFRAME9A7C2-Theme-Visual-Recipe-System-Post-PR253-Plan-2026-10-03.md.
-Scope: Foundation scales, Typography roles, Shape families, control/compound geometry, Card polish, Menu scheme/accent/expand/scope and Studio acceptance.
-Frozen: required Schema v1 4,028 entries and existing interface hash, pure CSS authority, Flex, current keyboard/value/overlay behavior.
-Completed: Foundation/Surface scales, Body/Heading/Label/Meta/KPI/Code, Shape families, Control/Compound typography and geometry, Spinner scale, Switch unit-safe border geometry, Card surface recipes, Menu combination resolver/scope/mode ownership, initial closed Workspace Menu, Studio controls.
-Evidence: 120 Shape + 288 Menu offline cases; build and full verify passed before final additive scope/Neutral checks; five-layer Chromium suite passed; Final Studio computed geometry passed including five Control sizes, eight Switch Styles, Menu scope, nearest Light-in-Dark, Default Disabled Neutral and Picker isolation. Required Schema 4,028/hash unchanged; optional slots 532.
-Change documentation: QXFRAME9A7C2-Visual-Recipe-System-001-Changes.md.
-PR #254 created at 32472405a642517420a32e6820253b78d92cac2c. Initial Schema run 37095988539 found a missing ungenerated Menu popup background fallback; implementation corrected and nested Root/Popup Light ownership cases added.
-Current PR head d320399fba071e3273fbaeded48fec5320202552; Schema Acceptance 37096202695 SUCCESS and Windows tools SUCCESS. Local Schema/Studio browser regression and sequential clean-pack passed. Full release 37096202668 SUCCESS. Final Menu Dropdown addition passed real Studio Chromium, required Schema and token graph; new exact-head CI is required.
-Final acceptance addition: explicit Menu-owned Dropdown shells consume the Menu surface; a real Dropdown + Menu probe covers all 24 combinations without reclassifying Picker.
-Final PR head 5650c25ce60003eb898bf54220cbc51e9791e061; Schema Acceptance 37096755543 and Windows SUCCESS; QXFRAME CI 37096755581 full release running. Full static verify and all five browser layers passed in run 37096755581; Studio exact-color assertion sampled a CSS transition frame. Browser harness now waits for bounded CSS transition settlement while retaining exact assertions; production code unchanged.
-Local Studio browser with shared bounded paint-settlement helper SUCCESS, including the existing eight Style geometry checks. Exact assertions retained.
-Exact next step: push this harness correction to PR #254, await all exact-head CI green, merge and verify main CI/Pages; then persist final DONE evidence. Do not redo CSS Token or PR #253 Card composition.
+No active implementation work remains for VISUAL-RECIPE-SYSTEM-001. PR #254 and main CI/Pages are verified; the evidence is recorded under DONE.
+Next exact step: query live Git/PR/CI on a new request, reconcile this checkpoint, and start only the newly requested task. Do not redo Controller migration, CSS Token System, PR #253 Card composition or the completed visual recipe phases without a real regression or new architecture requirement.
 
 ## Current authority snapshot — after Phase A
 
@@ -62,6 +48,21 @@ This section is current-state truth. Do not treat earlier Phase A gap findings a
 No known controller-migration implementation blocker remains in the maintained 40-component public surface. Broad final architecture/internal-target/security/release audit is intentionally reserved for GPT-6 Astra High and may still produce follow-up findings before final acceptance.
 
 ## DONE
+
+### VISUAL-RECIPE-SYSTEM-001
+Status: DONE_MERGED_CI_PAGES_VERIFIED
+Progress: 100%; Post-PR253 plan Phase A–H complete.
+Baseline: PR #253 / main 9e64e56de86860b67298a2fcd9b5f6f8a363e31c.
+Authority: QXFRAME9A7C2-Theme-Visual-Recipe-System-Post-PR253-Plan-2026-10-03.md.
+Merge: PR #254, final head 5dec1a48f5e87a65861be7eed0cd157ae05c1428, squash merge 965d0af5a55f8adea1f3afa3e0692c604f4cde2f.
+CI: final PR QXFRAME CI 37097337170 SUCCESS; CSS Schema Acceptance 37097337176 SUCCESS; merged main QXFRAME CI / release / Windows / deploy-pages 37097797737 SUCCESS.
+Pages: https://loyaoo.github.io/QXFRAME9A7C2/ (deploy-pages job 111132072517 SUCCESS).
+Completed: Foundation Size/Radius scales, Surface recipes, Body/Heading/Label/Meta/KPI/Code roles, five Shape families, Control/Compound typography and geometry, Spinner scale, unit-safe Switch geometry, Default Disabled Neutral generation, Card polish, Menu Scheme/Accent/Expand/Scope, semantic Menu/Picker/Tooltip/Overlay ownership, explicit Menu-owned Dropdown surfaces, nearest scoped CSS mode and initially closed Workspace submenu, Studio configuration and acceptance.
+Evidence: 120 Shape + 288 Menu configurations in both modes; full local verify; all five Chromium browser layers; real Studio five Control sizes, eight Switch Styles, 24 Menu and Menu Dropdown combinations, Picker isolation, Current/Tree/All scope and nested Root/Popup Light-in-Dark. Exact color/geometry assertions remain; test measurements wait for bounded CSS transition settlement.
+Frozen: required Schema 4,028 entries / hash 421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c unchanged; optional slots 499→532; production pure CSS authority, Flex, currentColor and existing runtime protocols preserved.
+Regression closeout: ungenerated Menu popup fallback restored and verified by the existing scoped portal gate; source and generated Menu contexts resolve nearest nested mode; explicit Menu Dropdown surface coverage added. No gate was weakened.
+Change documentation: QXFRAME9A7C2-Visual-Recipe-System-001-Changes.md.
+Next: no implementation follow-up for this Task ID. Always query current Git/CI rather than treating these release snapshot IDs as the latest repository head.
 
 ### VISUAL-RECIPE-CARD-001
 Status: DONE_MERGED_CI_PAGES_VERIFIED

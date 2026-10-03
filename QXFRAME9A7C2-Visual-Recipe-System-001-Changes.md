@@ -41,4 +41,7 @@
 - 可选视觉槽位：532（原 499，新增 Typography / Shape / Compound / Card / Menu 输入与 context 消费）。
 - 离线矩阵：120 Shape 配置 + 288 Menu 配置，覆盖 Light/Dark、可重复 JSON/CSS 输出、Picker Token 隔离和 Surface Recipe。真实浏览器另验 24 组显式 Menu-owned Dropdown 表面与内层 Menu。
 - 本地：build、仓库 verify、五层真实 Chromium 回归与 Theme Studio 浏览器专项；最终证据以 PR 精确 head 的 GitHub Actions 为准。
-- 实现清单已完成；PR / GitHub Actions / 合并与 Pages 是最后门槛。具体结果记录于 `AI_WORK_STATE.md`。
+- Phase A–H：100%。PR #254 已合并，最终 PR head `5dec1a48f5e87a65861be7eed0cd157ae05c1428`；合并 commit `965d0af5a55f8adea1f3afa3e0692c604f4cde2f`。
+- GitHub Actions：PR QXFRAME CI `37097337170`、Schema Acceptance `37097337176`、main CI / Pages `37097797737` 均 SUCCESS。验收包含完整 verify、五层浏览器、Studio、legacy、release、package、standalone demo、Windows 与 Pages。
+- 浏览器验收保留精确颜色/几何断言；以有上限的 CSS transition settlement 等待取代易抖动的固定帧等待。
+- 已发布：https://loyaoo.github.io/QXFRAME9A7C2/ 。最终证据与下一步见 `AI_WORK_STATE.md`。
