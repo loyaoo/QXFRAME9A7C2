@@ -87,13 +87,13 @@ if(process.argv.includes('--browser')){
     const host=document.createElement('div'),reference=document.createElement('div');scope.append(host,reference);
     const p='--qxframe9a7c2-theme-v2-',sourceRole=role=>'var('+p+role+')';
     for(const role of ${JSON.stringify(CORE_ROLES)})reference.style.setProperty('--source-'+role,sourceRole(role));
-    const pixel=(color,surface='rgb(255 255 255)')=>{const c=document.createElement('canvas');c.width=c.height=1;const ctx=c.getContext('2d');ctx.fillStyle=surface;ctx.fillRect(0,0,1,1);ctx.fillStyle=color;ctx.fillRect(0,0,1,1);return [...ctx.getImageData(0,0,1,1).data];};
-    const compare=(id,actual,expected)=>{if(actual!==expected&&JSON.stringify(pixel(actual))!==JSON.stringify(pixel(expected)))failures.push({id,actual,expected});};
+    const pixel=(color,surface=null)=>{const c=document.createElement('canvas');c.width=c.height=1;const ctx=c.getContext('2d');if(surface){ctx.fillStyle=surface;ctx.fillRect(0,0,1,1);}ctx.fillStyle=color;ctx.fillRect(0,0,1,1);return [...ctx.getImageData(0,0,1,1).data];};
+    const compare=(id,actual,expected)=>{const surface=getComputedStyle(scope).backgroundColor;if(actual!==expected&&(JSON.stringify(pixel(actual))!==JSON.stringify(pixel(expected))||JSON.stringify(pixel(actual,surface))!==JSON.stringify(pixel(expected,surface))))failures.push({id,actual,expected,surface,actualRGBA:pixel(actual),expectedRGBA:pixel(expected)});};
     const measure=(node,property)=>getComputedStyle(node)[property];
     let checks=0;
     for(const test of cases){
       scope.setAttribute('data-qxframe9a7c2-theme',test.mode);scope.setAttribute('data-qxframe9a7c2-style',test.style);
-      const type=test.type??'primary';reference.style.setProperty('--source-primary',sourceRole(type==='default'?'foreground':type));reference.style.setProperty('--source-primary-foreground',sourceRole(type==='default'?'background':type+'-foreground'));reference.style.setProperty('--source-destructive',sourceRole(type==='default'?'foreground':type));
+      const type=test.type??'primary';reference.style.setProperty('--source-primary',sourceRole(type==='default'?'foreground':type));reference.style.setProperty('--source-primary-foreground',sourceRole(type==='default'?'background':type+'-foreground'));reference.style.setProperty('--source-destructive',sourceRole(test.kind==='button'?(type==='default'?'foreground':type):'error'));
       if(test.kind==='button')host.innerHTML='<button class="qxframe9a7c2-button is-'+type+' is-'+test.variant+' '+(test.state==='hover-active'?'is-hover is-active':test.state==='loading-hover'?'is-loading is-hover':test.state==='disabled-hover'?'is-disabled is-hover':test.state==='normal'?'':'is-'+test.state)+'">QX</button>';
       if(test.kind==='input')host.innerHTML='<div class="qxframe9a7c2-input '+(test.state==='invalid'?'is-invalid':test.state==='disabled'?'is-disabled':'')+'"><input class="qxframe9a7c2-input-control"></div>';
       if(test.kind==='card')host.innerHTML='<div class="qxframe9a7c2-card">QX</div>';
@@ -118,7 +118,7 @@ if(process.argv.includes('--browser')){
     local.style.removeProperty(p+'override-action-hover-background');compare('delete-override-restores-alpha',measure(local,'backgroundColor'),measure(reference,'backgroundColor'));checks++;
     compare('primary-does-not-dye-card',measure(neutral,'backgroundColor'),before);checks++;
     for(const property of ['backgroundColor','color']){neutral.style.setProperty(p+(property==='color'?'card-foreground':'card'),'rgb(12 34 56)');compare('local-card-'+property,measure(neutral,property),'rgb(12, 34, 56)');checks++;}
-    return {cases:cases.length,checks,failures,renderTolerance:'0 RGBA byte difference after browser canvas composition; exact strings retained'};
+    return {cases:cases.length,checks,failures,renderTolerance:'0 RGBA byte difference both on transparent canvas and after actual mode-surface composition; exact strings retained'};
   })()`});
   fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-visual-v2.json'),JSON.stringify(report,null,2)+'\n');
   assert.deepEqual(report.browser.failures,[],'Source colors and QX consumer colors differ; details in artifacts/theme-visual-v2.json');

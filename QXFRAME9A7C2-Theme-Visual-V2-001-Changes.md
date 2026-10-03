@@ -34,7 +34,7 @@
 - 本地 canonical 构建、Schema 1 冻结、v2 来源/公式/输出/往返和既有完整 `npm run verify` 已通过。
 - 本地浏览器被执行环境的 socket 权限阻止，因此不记录本地浏览器通过。GitHub Actions 的 Chromium 是本批实际浏览器证据来源。
 - v2 浏览器门禁独立从源摘录翻译 COLOR 工具表达式，与实际 QX 计算样式对比；包含 Type/variant/state/mode、alpha 的最终合成、局部变更、嵌套 mode、覆盖删除和无关 Card 隔离。
-- 数值容差：优先精确计算字符串；不同颜色序列化允许浏览器 Canvas 合成后的 RGBA 四通道 **0 byte** 差。未新增色值容差，也未将测试输出设置为人工已确认视觉基准。
+- 数值容差：优先精确计算字符串；不同颜色序列化允许浏览器 Canvas 透明画布 RGBA 与实际模式表面合成后的 RGBA 四通道均 **0 byte** 差。未新增色值容差，也未将测试输出设置为人工已确认视觉基准。
 
 ## 未完成清单与下一步
 
@@ -47,3 +47,7 @@
 7. H：全部必要检查通过后才替换正式默认 CSS，删除旧主链并实测框架＋主题总量。
 
 接力时读 AGENTS.md → AI_WORK_STATE.md → 本 v1.5 文档，查询真实 PR/CI；不要重新启动旧 CSS 重构。
+
+## PR #255 首轮 CI 修正
+
+旧 Schema/portal/Windows 通过。v2 等价检查发现 Nova 禁用 Input 源规则为 input50/light、input80/dark，Mira mask 源为 black80，已按原比例补齐；错误边框参考绑定从误用 Primary 改为 source destructive→QX error。透明颜色同时检查原 alpha 和实际模式表面合成，不用白色底板掩盖暗色透明差异。精确 head CI 仍需重跑。

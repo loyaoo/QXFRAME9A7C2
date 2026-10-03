@@ -177,6 +177,7 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) {
+:scope { --qxframe9a7c2-theme-v2-mask: rgb(0 0 0 / .8); }
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline-border: var(--qxframe9a7c2-theme-v2-border); }
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline: light-dark(transparent, color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); --_qxframe9a7c2-v2-outline-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent); }
 .qxframe9a7c2-input { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 20%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); }
@@ -199,6 +200,10 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) {
+.qxframe9a7c2-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
+}
+
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]) {
 .qxframe9a7c2-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
 }
 

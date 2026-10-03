@@ -21,9 +21,9 @@
 
 Task: THEME-VISUAL-V2-001 — Theme input → shared rules → Component, per QXFRAME9A7C2-Theme-Visual-System-v1.5.md.
 Baseline: main@54d118c8f303094c27bc957bf16f630ae2efaa88. PR #254 is merged; unrelated stale PR #250 is not the work branch.
-Branch: feat/theme-visual-v2-foundation. Scope: A/B/C representative color chain, then D–H migration/geometry/Studio/roundtrip/full visual/default replacement.
+Branch: feat/theme-visual-v2-foundation; PR #255; initial implementation head 6cc650b0e2c1283e1ab8249fa44aef6b1ce6a5a3. Scope: A/B/C representative color chain, then D–H migration/geometry/Studio/roundtrip/full visual/default replacement.
 Progress: overall v1.5 approximately 25%; A 100%; B 80%; C 80% pending GitHub browser equivalence; D–H 0%. This estimate does not re-count old completed work.
-Next exact step: submit this representative-chain batch and inspect exact-head GitHub CI (including v2 browser equivalence); fix any failing case without changing source ratios. Then complete remaining B/C mapping gaps before D full consumer and md migration.
+Next exact step: push source-exact Nova disabled Input / Mira mask corrections and the fixed invalid reference binding; rerun exact-head CI. Initial Schema run 37133584475 failed v2 equivalence while legacy Schema/portal and Windows passed. Transparent RGBA plus actual mode-surface composition now both checked (no tolerance relaxation). Then complete remaining B/C mapping gaps before D full consumer and md migration.
 Implemented: 28 core + 14 optional full-color roles; sparse color exporter; pinned eight-Style source excerpts; shared rule bindings and canonical Playground samples. See QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md and tools/manifests/theme-visual-v2-rules.json.
 Validation: local build/full npm verify/legacy Schema freeze/v2 source and serialization passed. Local browser cannot start because native socket() is denied by the execution environment; Chromium evidence must come from GitHub Actions. Full Studio/default replacement is NOT done.
 Frozen: source SHA 295a1f114a138f23b5dfee0e0c6812394dfeb90c; copy alpha/OKLCH/role assignment exactly; no invented pressed intensity; local consumption; pure CSS runtime; no a11y/ARIA/RTL scope; final default replacement only at H.
