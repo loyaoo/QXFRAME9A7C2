@@ -15,17 +15,18 @@
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
 - Current Phase: THEME-VISUAL-V2-001 A complete; B/C in progress. Previous VISUAL-RECIPE-SYSTEM-001 remains complete through PR #254; v1.5 explicitly supersedes its color/output architecture only.
-- Current Task: `THEME-VISUAL-V2-001` — IMPLEMENTING; approximately 25% of v1.5 A–H.
+- Current Task: `THEME-VISUAL-V2-001` — IMPLEMENTING; approximately 30% of v1.5 A–H.
 
 ## CURRENT
 
 Task: THEME-VISUAL-V2-001 — Theme input → shared rules → Component, per QXFRAME9A7C2-Theme-Visual-System-v1.5.md.
 Baseline: main@54d118c8f303094c27bc957bf16f630ae2efaa88. PR #254 is merged; unrelated stale PR #250 is not the work branch.
 Branch: feat/theme-visual-v2-foundation; PR #255; initial implementation head 6cc650b0e2c1283e1ab8249fa44aef6b1ce6a5a3. Scope: A/B/C representative color chain, then D–H migration/geometry/Studio/roundtrip/full visual/default replacement.
-Progress: overall v1.5 approximately 25%; A 100%; B 80%; C 80% pending GitHub browser equivalence; D–H 0%. This estimate does not re-count old completed work.
-Next exact step: push source-exact Nova disabled Input / Mira mask corrections and the fixed invalid reference binding; rerun exact-head CI. Initial Schema run 37133584475 failed v2 equivalence while legacy Schema/portal and Windows passed. Transparent RGBA plus actual mode-surface composition now both checked (no tolerance relaxation). Then complete remaining B/C mapping gaps before D full consumer and md migration.
+Progress: overall v1.5 approximately 30%; A 100%; B 80%; C 90% representative browser equivalence passed; D–H 0%. This estimate does not re-count old completed work.
+Next exact step: query live PR #255 head and both CI workflows, finish this representative foundation PR through merge/Pages if still open, then complete remaining B/C mapping gaps (danger Menu combinations, Popup/Dialog boundary/shadow, final input inventory) before D full consumer and md migration. Do not rerun passed implementation checks without a new change or failure.
+CI evidence: implementation head 0fb323e65c54fa31b916dd001b4619d29e98414a; CSS Schema Acceptance 37133855534 SUCCESS, including 4,176 Chromium cases / 13,062 checks / zero failures; QXFRAME CI 37133855537 Full release verification and Windows passed, artifact stages were still running at checkpoint. Metadata-only checkpoint commits still require their own exact-head CI before merge. Query live GitHub facts rather than treating these evidence IDs as latest. Initial Nova Input / Mira mask and invalid-reference failures are corrected; transparent RGBA and mode-surface composition both remain exact (0-byte difference).
 Implemented: 28 core + 14 optional full-color roles; sparse color exporter; pinned eight-Style source excerpts; shared rule bindings and canonical Playground samples. See QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md and tools/manifests/theme-visual-v2-rules.json.
-Validation: local build/full npm verify/legacy Schema freeze/v2 source and serialization passed. Local browser cannot start because native socket() is denied by the execution environment; Chromium evidence must come from GitHub Actions. Full Studio/default replacement is NOT done.
+Validation: local build/full npm verify/legacy Schema freeze/v2 source and serialization passed. Local browser cannot start because native socket() is denied by the execution environment; GitHub Actions Chromium passed the representative matrix. Full Studio/default replacement is NOT done.
 Frozen: source SHA 295a1f114a138f23b5dfee0e0c6812394dfeb90c; copy alpha/OKLCH/role assignment exactly; no invented pressed intensity; local consumption; pure CSS runtime; no a11y/ARIA/RTL scope; final default replacement only at H.
 Legacy schema/defaults remain during the representative pilot. Versioned v1 gates and v2 equivalence gates must both pass. No default switch is authorized by a partial gate result.
 
