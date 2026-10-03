@@ -118,6 +118,13 @@ if(process.argv.includes('--browser')){
     local.style.removeProperty(p+'override-action-hover-background');compare('delete-override-restores-alpha',measure(local,'backgroundColor'),measure(reference,'backgroundColor'));checks++;
     compare('primary-does-not-dye-card',measure(neutral,'backgroundColor'),before);checks++;
     for(const property of ['backgroundColor','color']){neutral.style.setProperty(p+(property==='color'?'card-foreground':'card'),'rgb(12 34 56)');compare('local-card-'+property,measure(neutral,property),'rgb(12, 34, 56)');checks++;}
+    neutral.innerHTML='<div class="qxframe9a7c2-card-title">Title</div><div class="qxframe9a7c2-card-description">Description</div>';
+    const title=neutral.querySelector('.qxframe9a7c2-card-title'),description=neutral.querySelector('.qxframe9a7c2-card-description'),descriptionBefore=measure(description,'color');
+    neutral.style.setProperty(p+'override-surface-foreground','rgb(61 82 103)');
+    for(const node of [neutral,title]){compare('card-surface-foreground-override',measure(node,'color'),'rgb(61, 82, 103)');checks++;}
+    compare('card-description-keeps-muted-role',measure(description,'color'),descriptionBefore);checks++;
+    neutral.style.removeProperty(p+'override-surface-foreground');
+    for(const node of [neutral,title]){compare('delete-card-surface-foreground-restores-role',measure(node,'color'),'rgb(12, 34, 56)');checks++;}
     return {cases:cases.length,checks,failures,renderTolerance:'0 RGBA byte difference both on transparent canvas and after actual mode-surface composition; exact strings retained'};
   })()`});
   fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-visual-v2.json'),JSON.stringify(report,null,2)+'\n');

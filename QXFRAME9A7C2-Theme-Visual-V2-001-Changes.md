@@ -51,3 +51,5 @@
 ## PR #255 首轮 CI 修正
 
 旧 Schema/portal/Windows 通过。v2 等价检查发现 Nova 禁用 Input 源规则为 input50/light、input80/dark，Mira mask 源为 black80，已按原比例补齐；错误边框参考绑定从误用 Primary 改为 source destructive→QX error。透明颜色同时检查原 alpha 和实际模式表面合成，不用白色底板掩盖暗色透明差异。实现 head `0fb323e65c54fa31b916dd001b4619d29e98414a` 的 CSS Schema Acceptance `37133855534` 已通过，包含 4,176 个 Chromium 场景、13,062 项检查、零失败。QXFRAME CI `37133855537` 的 Full release verification 与 Windows 已通过，检查点写入时仍在打包产物。最终 PR head、合并与 Pages 状态以实时 GitHub 为准。
+
+合并前覆盖复查：Card 标题改为继承当前表面文字，使显式 surface-foreground 覆盖真正作用于标题；新增父容器／标题覆盖、描述 muted 隔离、删除回退的五项浏览器检查。最终提交须重新通过 CI。

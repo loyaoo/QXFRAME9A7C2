@@ -134,7 +134,7 @@
     --_qxframe9a7c2-card-muted-bg: var(--qxframe9a7c2-theme-v2-muted);
     color: var(--qxframe9a7c2-theme-v2-override-surface-foreground, var(--qxframe9a7c2-theme-v2-card-foreground));
   }
-  .qxframe9a7c2-card-title { color: var(--qxframe9a7c2-theme-v2-card-foreground); }
+  .qxframe9a7c2-card-title { color: inherit; }
   .qxframe9a7c2-card-description { color: var(--qxframe9a7c2-theme-v2-muted-foreground); }
 
   /* popup: one surface chain for Popup, submenu and Dialog; no private Picker surface. */
