@@ -161,3 +161,6 @@
   --qxframe9a7c2-menu-context-expanded-text:initial;
   --qxframe9a7c2-menu-context-group:initial;
 }
+
+/* A caller may declare a Popup/Dropdown shell that actually contains Menu. */
+[data-qxframe9a7c2-surface-context="menu"]{background:var(--qxframe9a7c2-menu-context-background,var(--qxframe9a7c2-theme-menu-background,var(--_qxframe9a7c2-navigation-bg)));color:var(--qxframe9a7c2-menu-context-text,var(--_qxframe9a7c2-semantic-text))}

@@ -30,7 +30,9 @@ Completed: Foundation/Surface scales, Body/Heading/Label/Meta/KPI/Code, Shape fa
 Evidence: 120 Shape + 288 Menu offline cases; build and full verify passed before final additive scope/Neutral checks; five-layer Chromium suite passed; Final Studio computed geometry passed including five Control sizes, eight Switch Styles, Menu scope, nearest Light-in-Dark, Default Disabled Neutral and Picker isolation. Required Schema 4,028/hash unchanged; optional slots 532.
 Change documentation: QXFRAME9A7C2-Visual-Recipe-System-001-Changes.md.
 PR #254 created at 32472405a642517420a32e6820253b78d92cac2c. Initial Schema run 37095988539 found a missing ungenerated Menu popup background fallback; implementation corrected and nested Root/Popup Light ownership cases added.
-Exact next step: verify this regression locally, update PR #254, inspect all new exact-head Actions and merge only on green. Do not redo CSS Token or PR #253 Card composition.
+Current PR head d320399fba071e3273fbaeded48fec5320202552; Schema Acceptance 37096202695 SUCCESS and Windows tools SUCCESS. Local Schema/Studio browser regression and sequential clean-pack passed. Full release 37096202668 SUCCESS. Final Menu Dropdown addition passed real Studio Chromium, required Schema and token graph; new exact-head CI is required.
+Final acceptance addition: explicit Menu-owned Dropdown shells consume the Menu surface; a real Dropdown + Menu probe covers all 24 combinations without reclassifying Picker.
+Exact next step: verify this final semantic Dropdown case, update PR #254, await all new exact-head CI green, merge and verify main CI/Pages; then persist final DONE evidence. Do not redo CSS Token or PR #253 Card composition.
 
 ## Current authority snapshot — after Phase A
 

@@ -13,7 +13,7 @@
 | D Compound Controls | TagInput 与 Multiple Select 共用等距 inset、Tag 高度与文字锚点；移除 hosted Tag .9em 缩小 | 文字锚点、上下间隙、五种尺寸高度一致 |
 | E Card | 清晰外边缘、Divider fallback 保留；Default / Outlined / Elevated / Borderless Surface Recipe；沿用 PR #253 composition / spacing | Recipe 输出、现有 Card 合约 |
 | F Shape | Choice / Toggle / Range / Compact / Identity 的 Follow / Intrinsic / Square | 120 组 Style × Radius × Shape，Light/Dark |
-| G Menu | Normal / Neutral / Inverse / Brand × 6 Accent × 4 Expand；Current Menu / Menu Tree / All Menus；展开与选中分离；静态 surface-context 由调用方语义声明 | 288 组 Menu 组合；真实 popup、picker 隔离与局部模式 |
+| G Menu | Normal / Neutral / Inverse / Brand × 6 Accent × 4 Expand；Current Menu / Menu Tree / All Menus；展开与选中分离；静态 surface-context 由调用方语义声明 | 288 组 Menu 组合；真实 popup、Menu Dropdown、picker 隔离与局部模式 |
 | H Studio | 新配置入口、克制文字角色、baseColor canvas；Workspace submenu 初始关闭；保留 21 商业场景和 66 组件回归 | 实际 Studio 与原五层浏览器 suite |
 
 ## 配置与作用域
@@ -39,6 +39,6 @@
 
 - Required Schema：4,028；interface hash `421bad21f47d6c90555b994664ef399051f1bf69fad4119f3dcee44c790c399c` 保持不变。
 - 可选视觉槽位：532（原 499，新增 Typography / Shape / Compound / Card / Menu 输入与 context 消费）。
-- 离线矩阵：120 Shape 配置 + 288 Menu 配置，覆盖 Light/Dark、可重复 JSON/CSS 输出、Picker Token 隔离和 Surface Recipe。
+- 离线矩阵：120 Shape 配置 + 288 Menu 配置，覆盖 Light/Dark、可重复 JSON/CSS 输出、Picker Token 隔离和 Surface Recipe。真实浏览器另验 24 组显式 Menu-owned Dropdown 表面与内层 Menu。
 - 本地：build、仓库 verify、五层真实 Chromium 回归与 Theme Studio 浏览器专项；最终证据以 PR 精确 head 的 GitHub Actions 为准。
 - 实现清单已完成；PR / GitHub Actions / 合并与 Pages 是最后门槛。具体结果记录于 `AI_WORK_STATE.md`。

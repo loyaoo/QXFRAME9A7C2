@@ -16,6 +16,10 @@ export async function runVisualRecipeCases(){
   const tags=C.TagInput.create({container:sub(),defaultValue:[{key:'a',value:'a',label:'Anchor'}],size:'md'});live.push(tags);
   const multi=C.Select.create({container:sub(),multiple:true,searchable:true,value:['a'],items:[{key:'a',value:'a',label:'Anchor'}],size:'md'});live.push(multi);
   const menuHost=sub(),menu=C.Menu.create({container:menuHost,portalContainer:menuHost,mode:'vertical',selectedKey:'b',items:[{key:'a',label:'Branch',items:[{key:'c',label:'Child'}]},{key:'b',label:'Current'}]});live.push(menu);menuHost.setAttribute('data-qxframe9a7c2-menu-recipe','tree');
+  const dropdownReference=document.createElement('button');dropdownReference.textContent='Menu dropdown';host.appendChild(dropdownReference);
+  const dropdown=C.Dropdown.create({reference:dropdownReference,portalContainer:host,items:[]});live.push(dropdown);
+  const dropdownPanel=dropdown.getPopupElement();dropdownPanel.setAttribute('data-qxframe9a7c2-surface-context','menu');
+  const dropdownMenu=C.Menu.create({container:dropdownPanel,portalContainer:dropdownPanel,selectedKey:'action',items:[{key:'action',label:'Menu action'}]});live.push(dropdownMenu);
   const picker=C.Select.create({container:sub(),items:[{key:'x',value:'x',label:'Option'}]});live.push(picker);
   const marker=document.createElement('div');marker.innerHTML='<label class="qxframe9a7c2-native-form"><input type="radio"><input type="checkbox"></label><span class="qxframe9a7c2-avatar">A</span><span class="qxframe9a7c2-tag">Tag</span><button class="qxframe9a7c2-button is-default is-outlined is-md">Action</button><button class="qxframe9a7c2-button is-default is-outlined is-md is-loading"><span class="qxframe9a7c2-button-spinner"></span>Action</button>';host.appendChild(marker);
   let shapeCases=0,switchCases=0,menuCases=0;
@@ -72,18 +76,20 @@ export async function runVisualRecipeCases(){
       paint(state);thumb.style.transition='';track.style.transition='';switchCases++;
     }
     set('style','vega');set('menuScope','all-menus');await pause();
-    picker.open();await pause();
+    picker.open();dropdown.open();await pause();
     const pickerSurface=picker.getPopupElement(),pickerBackground=pickerSurface&&getComputedStyle(pickerSurface).backgroundColor;
     check(pickerSurface,'Select popup available for ownership check');
     for(const scheme of ['normal','neutral','inverse','brand'])for(const accent of ['text','soft','solid','indicator','neutral','accent']){
       set('menuScheme',scheme);set('menuStyle',accent);await pause();
       const r=menu.getRootElement(),selected=r.querySelector('.is-selected');
       check(getComputedStyle(selected).color===studio.getTheme().tokens[document.documentElement.getAttribute('data-qxframe9a7c2-theme')]['--qxframe9a7c2-menu-recipe-selected-text'],'Menu resolved selected text '+scheme+'/'+accent+' actual='+getComputedStyle(selected).color+' expected='+studio.getTheme().tokens[document.documentElement.getAttribute('data-qxframe9a7c2-theme')]['--qxframe9a7c2-menu-recipe-selected-text']);
+      check(getComputedStyle(dropdownPanel).backgroundColor===studio.getTheme().tokens[document.documentElement.getAttribute('data-qxframe9a7c2-theme')]['--qxframe9a7c2-menu-recipe-background'],'Declared Menu Dropdown shell follows '+scheme+'/'+accent);
+      check(getComputedStyle(dropdownMenu.getRootElement().querySelector('.is-selected')).color===getComputedStyle(selected).color,'Menu Dropdown selected content follows '+scheme+'/'+accent);
       check(getComputedStyle(pickerSurface).backgroundColor===pickerBackground,'Picker isolated from Menu '+scheme+'/'+accent);
       menuCases++;
     }
     check(pickerSurface.getAttribute('data-qxframe9a7c2-surface-context')==='picker','Picker declares its own ownership');
-    picker.close();
+    picker.close();dropdown.close();
     set('menuScheme','brand');set('menuScope','current-menu');await pause();menuHost.setAttribute('data-qxframe9a7c2-menu-recipe','current');
     const branch=menu.getRootElement().querySelector('.qxframe9a7c2-menu-item');branch.click();await pause();
     const popup=menuHost.querySelector('.qxframe9a7c2-menu-submenu-panel:not([hidden])');check(popup,'Menu click opens popup');
@@ -99,7 +105,7 @@ export async function runVisualRecipeCases(){
     check(getComputedStyle(popup).backgroundColor===studio.getTheme().tokens.light['--qxframe9a7c2-menu-recipe-background'],'Menu popup Light overrides a Dark recipe owner');
     menu.getRootElement().removeAttribute('data-qxframe9a7c2-theme');popup.removeAttribute('data-qxframe9a7c2-theme');
     check(popup.getAttribute('data-qxframe9a7c2-surface-context')==='menu','Popup declares Menu ownership');
-    return {shapeCases,switchCases,menuCases,controlTypography:true,compoundAnchor:true,pickerIsolation:true,popupInitiallyClosed:true};
+    return {shapeCases,switchCases,menuCases,controlTypography:true,compoundAnchor:true,pickerIsolation:true,menuDropdown:true,popupInitiallyClosed:true};
   }finally{
     live.reverse().forEach(instance=>instance.destroy());host.remove();studio.reset();await pause();
   }
