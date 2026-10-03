@@ -32,9 +32,13 @@ assert.equal(base.tokens.light['--qxframe9a7c2-theme-control-height-md'],'2.25re
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-switch-width-md'],'2rem');
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-switch-height-md'],'1.125rem');
 assert.equal(base.tokens.light['--qxframe9a7c2-theme-slider-rail-md'],'0.375rem');
+assert.equal(base.tokens.light['--qxframe9a7c2-card-font-size'],'var(--qxframe9a7c2-theme-font-size-sm)');
+assert.equal(base.tokens.light['--qxframe9a7c2-theme-card-title-delta'],'0.125rem');
+assert.equal(base.tokens.light['--qxframe9a7c2-theme-card-meta-gap'],'0.25rem');
+assert.ok(base.tokens.light['--qxframe9a7c2-card-shadow'],'Vega Card recipe should author its subtle default shadow.');
 assertComplete(base);
 
-const signatures=new Set();
+const signatures=new Set(),cardSignatures=new Set();
 for(const style of styles){
   const theme=generateTheme(manifest,recipes,{name:'style-'+style,style});
   assert.equal(theme.config.style,style);
@@ -48,8 +52,17 @@ for(const style of styles){
     theme.tokens.light['--qxframe9a7c2-slider-handle-width-md'],
     theme.tokens.light['--qxframe9a7c2-slider-handle-height-md']
   ].join('|'));
+  cardSignatures.add([
+    theme.tokens.light['--qxframe9a7c2-card-md-padding'],
+    theme.tokens.light['--qxframe9a7c2-card-font-size'],
+    theme.tokens.light['--qxframe9a7c2-theme-card-title-delta'],
+    theme.tokens.light['--qxframe9a7c2-theme-card-meta-gap'],
+    theme.tokens.light['--qxframe9a7c2-family-surface-radius'],
+    theme.tokens.light['--qxframe9a7c2-card-shadow']||'none'
+  ].join('|'));
 }
 assert.equal(signatures.size,styles.length,'Every shadcn-derived Style must have a distinct geometry signature.');
+assert.equal(cardSignatures.size,styles.length,'Every Style must expose a distinct Card visual recipe, not only generic control geometry.');
 
 const luma=generateTheme(manifest,recipes,{name:'luma',style:'luma'});
 assert.equal(luma.tokens.light['--qxframe9a7c2-theme-switch-width-md'],'2.75rem');
@@ -58,17 +71,21 @@ assert.equal(luma.tokens.light['--qxframe9a7c2-switch-thumb-height-md'],'1rem');
 assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-width-md'],'1.5rem');
 assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-height-md'],'1rem');
 assert.equal(luma.tokens.light['--qxframe9a7c2-slider-handle-radius'],'var(--qxframe9a7c2-theme-radius-pill)');
+assert.ok(luma.tokens.light['--qxframe9a7c2-card-shadow'],'Luma Card recipe should carry a soft default shadow.');
 
 const lyra=generateTheme(manifest,recipes,{name:'lyra',style:'lyra'});
 assert.equal(lyra.tokens.light['--qxframe9a7c2-family-action-radius'],'0');
 assert.equal(lyra.tokens.light['--qxframe9a7c2-family-surface-radius'],'0');
 assert.equal(lyra.tokens.light['--qxframe9a7c2-slider-rail-radius'],'0');
 assert.equal(lyra.tokens.light['--qxframe9a7c2-slider-handle-radius'],'0');
+assert.equal(lyra.tokens.light['--qxframe9a7c2-card-font-size'],'var(--qxframe9a7c2-theme-font-size-xs)');
+assert.equal(lyra.tokens.light['--qxframe9a7c2-card-shadow'],undefined,'Lyra Card recipe remains flat by default.');
 
 const sera=generateTheme(manifest,recipes,{name:'sera',style:'sera'});
 assert.equal(sera.tokens.light['--qxframe9a7c2-family-control-radius'],'0');
 assert.equal(sera.tokens.light['--qxframe9a7c2-switch-track-radius'],'0');
 assert.equal(sera.tokens.light['--qxframe9a7c2-slider-rail-radius'],'0');
+assert.equal(sera.tokens.light['--qxframe9a7c2-theme-card-title-delta'],'0.25rem','Sera must carry an editorial Card title hierarchy.');
 
 const radiusValues={none:'0',small:'0.45rem',medium:'0.625rem',large:'0.875rem'};
 for(const [radius,expected] of Object.entries(radiusValues)){
@@ -96,11 +113,12 @@ assert.equal(repeat.css,repeat2.css);
 assertComplete(repeat);
 
 console.log(JSON.stringify({
-  phase:'TG-D-design-presets-v2',
+  phase:'TG-D-design-presets-v3',
   styles:styles.length,
   styleNames:styles,
   radiusChoices:5,
   componentRadiusHierarchy:true,
+  cardVisualRecipes:true,
   densityOwnedByStyle:true,
   legacyDensityImportCompatible:true,
   explicitOverrideLast:true,

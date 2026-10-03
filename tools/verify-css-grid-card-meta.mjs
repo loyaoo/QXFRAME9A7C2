@@ -9,4 +9,15 @@ assert.match(css,/\.qxframe9a7c2-card-meta\{display:flex;gap:var\(--qxframe9a7c2
 assert.match(css,/\.qxframe9a7c2-card-meta>\*:last-child\{min-width:0;flex:1 1 auto\}/);
 assert.match(css,/\.qxframe9a7c2-card-meta\.is-block\{flex-direction:column;align-items:stretch\}/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-card-meta(?:\.is-block)?\{[^}]*(?:display:grid|grid-template-columns)/);
-console.log(JSON.stringify({ok:true,batch:'card-meta-grid-to-flex',convertedRules:2}));
+
+for(const selector of ['qxframe9a7c2-card-heading','qxframe9a7c2-card-description','qxframe9a7c2-card-header-action','qxframe9a7c2-card-content','qxframe9a7c2-card-section']) assert.ok(css.includes('.'+selector),'missing Card visual-recipe slot '+selector);
+assert.match(css,/\.qxframe9a7c2-card-header\.is-divided,[^{]+\{[^}]*border-bottom-width:1px/,'Card header divider must be opt-in.');
+assert.match(css,/\.qxframe9a7c2-card-footer\.is-divided,[^{]+\{[^}]*border-top-width:1px/,'Card footer divider must be opt-in.');
+assert.match(css,/\.qxframe9a7c2-card-section\.is-muted\{background:/);
+assert.match(css,/\.qxframe9a7c2-card-section\.is-inset\{/);
+assert.match(css,/\.qxframe9a7c2-card-body>\.qxframe9a7c2-card-section\.is-bleed-inline/);
+assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{display:flex;align-items:stretch\}/,'Horizontal Card must preserve its established Flex surface contract.');
+assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{flex-direction:row\}/,'Horizontal Card must actually project a row layout.');
+assert.match(css,/@media \(max-width:38\.75rem\)\{\.qxframe9a7c2-card\.is-horizontal\{flex-direction:column\}/,'Horizontal Card must collapse to column on narrow viewports.');
+assert.doesNotMatch(css,/\.qxframe9a7c2-card(?:[-\w.:>, ]*)?\{[^}]*(?:display:grid|grid-template-columns)/,'Card visual recipes must remain Flex-only.');
+console.log(JSON.stringify({ok:true,batch:'card-meta-and-visual-recipe-flex',cardVisualRecipe:true,horizontalFixed:true,convertedRules:2}));
