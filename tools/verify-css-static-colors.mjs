@@ -4,11 +4,13 @@ import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { readCanonicalStyleSource } from './style-source.mjs';
 import { browserProbes } from './audit-css-schema-acceptance.mjs';
+import {verifySemanticRuleSource} from './theme-v2-contract.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/manifests/css-static-color-baseline.json'), 'utf8'));
-const source = readCanonicalStyleSource({ root }).replace(/\/\*[\s\S]*?\*\//g, '');
-assert.doesNotMatch(source, /color-mix\s*\(/, 'Runtime color synthesis must not return.');
+const source = readCanonicalStyleSource({ root, schema:1 }).replace(/\/\*[\s\S]*?\*\//g, '');
+assert.doesNotMatch(source, /color-mix\s*\(/, 'Schema 1 runtime color synthesis must not return.');
+verifySemanticRuleSource(root); // v2 has a separate, mandatory source-equivalence contract.
 for (const entry of baseline.entries) {
   for (const token of Object.values(entry.paletteTokens)) assert.ok(source.includes(token + ':'), 'Static Theme palette role is missing: ' + token);
   assert.ok(source.includes('var(' + entry.resolvedToken + ')') || source.includes('var(' + entry.resolvedToken + ','), 'Static role is disconnected: ' + entry.id);

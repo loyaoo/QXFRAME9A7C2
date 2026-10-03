@@ -10,6 +10,14 @@ This repository is maintained as a long-running AI-assisted framework project.
 4. Current source, manifests, tests and canonical docs define already-shipped behavior unless the master handbook explicitly changes it.
 5. Chat history is never a substitute for the repository checkpoint.
 
+For `THEME-VISUAL-V2-001`, `QXFRAME9A7C2-Theme-Visual-System-v1.5.md`
+supersedes historical Preset/complete-matrix/Schema-v1 visual contracts in the
+handbook and older guides. Runtime Controller, focus, overlay/portal and build
+authority stay in force. Follow its A–H sequence; do not replace the production
+default before H. Source color formulas use the pinned shadcn expressions and
+QX shared responsibilities; versioned v1 regression and v2 equivalence gates
+must both pass during the representative pilot.
+
 Do not resurrect deleted historical plans, migration logs or stage documents from Git history unless a regression investigation specifically requires evidence from them.
 
 ## Resume protocol — mandatory on every start/continue

@@ -1265,6 +1265,12 @@ Scoped theme 依赖标准 CSS inheritance / selector ancestry。
 
 ## 14.1 唯一 truth 与层级
 
+2026-10-03 主题视觉 v1.5 更新：`QXFRAME9A7C2-Theme-Visual-System-v1.5.md`
+是新任务 THEME-VISUAL-V2-001 的视觉契约，取代本节历史的预设层与完整矩阵要求。
+新主链为 Theme 完整颜色／md 默认输入 → 公共派生规则 → Component；颜色公式
+采用锁定 shadcn 原规则并按 QX 家族共性抽取。以下旧图只描述尚未退役的 Schema 1。
+生产默认主题仅在 v1.5 阶段 H 替换，纯 CSS authority、焦点和 Popup/Scroll 协议保持有效。
+
 不存在 `TokenController`。
 
 Token 的唯一 truth 是 CSS Custom Properties，按固定层级分发：
@@ -2407,4 +2413,3 @@ CSS Theme/Token 规范缺口？
 ```
 
 只有确实无法落入上述层次时，才考虑新增框架概念。禁止因为一个组件特殊就继续扩张 Runtime Controller 数量；禁止把纯视觉 Theme/Token 问题重新包装成 JS Controller。
-

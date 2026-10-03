@@ -1,0 +1,473 @@
+{
+  "schema": 2,
+  "rules": "shadcn-295a1f11-qx-1",
+  "status": "REPRESENTATIVE_PILOT",
+  "authority": "QXFRAME9A7C2-Theme-Visual-System-v1.5.md",
+  "source": {
+    "repository": "shadcn-ui/ui",
+    "sha": "295a1f114a138f23b5dfee0e0c6812394dfeb90c"
+  },
+  "inputs": [
+    {
+      "name": "--qxframe9a7c2-theme-v2-background",
+      "role": "background",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(1 0 0)",
+        "dark": "oklch(.145 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-foreground",
+      "role": "foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.145 0 0)",
+        "dark": "oklch(.985 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-card",
+      "role": "card",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(1 0 0)",
+        "dark": "oklch(.205 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-card-foreground",
+      "role": "card-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.145 0 0)",
+        "dark": "oklch(.985 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-popover",
+      "role": "popover",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(1 0 0)",
+        "dark": "oklch(.205 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-popover-foreground",
+      "role": "popover-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.145 0 0)",
+        "dark": "oklch(.985 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-primary",
+      "role": "primary",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(37 99 235)",
+        "dark": "rgb(96 165 250)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-primary-foreground",
+      "role": "primary-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(23 23 23)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-secondary",
+      "role": "secondary",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.97 0 0)",
+        "dark": "oklch(.269 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-secondary-foreground",
+      "role": "secondary-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.205 0 0)",
+        "dark": "oklch(.985 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-muted",
+      "role": "muted",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.97 0 0)",
+        "dark": "oklch(.269 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-muted-foreground",
+      "role": "muted-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.556 0 0)",
+        "dark": "oklch(.708 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-accent",
+      "role": "accent",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.97 0 0)",
+        "dark": "oklch(.269 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-accent-foreground",
+      "role": "accent-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.205 0 0)",
+        "dark": "oklch(.985 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-success",
+      "role": "success",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(22 163 74)",
+        "dark": "rgb(74 222 128)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-success-foreground",
+      "role": "success-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(23 23 23)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-warning",
+      "role": "warning",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(245 158 11)",
+        "dark": "rgb(251 191 36)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-warning-foreground",
+      "role": "warning-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(23 23 23)",
+        "dark": "rgb(23 23 23)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-error",
+      "role": "error",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.577 .245 27.325)",
+        "dark": "oklch(.704 .191 22.216)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-error-foreground",
+      "role": "error-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(23 23 23)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-info",
+      "role": "info",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(8 145 178)",
+        "dark": "rgb(34 211 238)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-info-foreground",
+      "role": "info-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(23 23 23)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-border",
+      "role": "border",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.922 0 0)",
+        "dark": "rgb(255 255 255 / .1)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-input",
+      "role": "input",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.922 0 0)",
+        "dark": "rgb(255 255 255 / .15)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-ring",
+      "role": "ring",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.708 0 0)",
+        "dark": "oklch(.556 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-mask",
+      "role": "mask",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(0 0 0 / .1)",
+        "dark": "rgb(0 0 0 / .1)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-inverse",
+      "role": "inverse",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.205 0 0)",
+        "dark": "oklch(.985 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-inverse-foreground",
+      "role": "inverse-foreground",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "oklch(.985 0 0)",
+        "dark": "oklch(.205 0 0)"
+      }
+    }
+  ],
+  "optionalInputs": [
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar",
+      "role": "sidebar",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar-foreground",
+      "role": "sidebar-foreground",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar-primary",
+      "role": "sidebar-primary",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar-primary-foreground",
+      "role": "sidebar-primary-foreground",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar-accent",
+      "role": "sidebar-accent",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar-accent-foreground",
+      "role": "sidebar-accent-foreground",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar-border",
+      "role": "sidebar-border",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-sidebar-ring",
+      "role": "sidebar-ring",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-chart-1",
+      "role": "chart-1",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-chart-2",
+      "role": "chart-2",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-chart-3",
+      "role": "chart-3",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-chart-4",
+      "role": "chart-4",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-chart-5",
+      "role": "chart-5",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-shadow-color",
+      "role": "shadow-color",
+      "type": "complete-color",
+      "required": false
+    }
+  ],
+  "overrides": [
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-action-background",
+      "role": "action-background",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-action-hover-background",
+      "role": "action-hover-background",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-action-foreground",
+      "role": "action-foreground",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-control-background",
+      "role": "control-background",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-control-border",
+      "role": "control-border",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-control-foreground",
+      "role": "control-foreground",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-surface-background",
+      "role": "surface-background",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-surface-foreground",
+      "role": "surface-foreground",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-popup-background",
+      "role": "popup-background",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-popup-foreground",
+      "role": "popup-foreground",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-navigation-highlight-background",
+      "role": "navigation-highlight-background",
+      "type": "complete-color",
+      "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-override-navigation-highlight-foreground",
+      "role": "navigation-highlight-foreground",
+      "type": "complete-color",
+      "required": false
+    }
+  ],
+  "mode": "nearest CSS color-scheme, complete Theme inputs; results computed at consumers",
+  "stage": {
+    "migrated": [
+      "Button",
+      "Input/Picker Control",
+      "Card",
+      "Popup surface",
+      "Menu items",
+      "Dialog surface/mask"
+    ],
+    "pending": [
+      "physical color Type axes",
+      "Menu context schemes",
+      "remaining components",
+      "all md geometry",
+      "Studio switch",
+      "full configuration migration",
+      "visual signoff",
+      "default replacement"
+    ]
+  }
+}
