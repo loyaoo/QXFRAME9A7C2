@@ -5,6 +5,7 @@
 @use "theme/default";
 @use "theme/family";
 @use "components/components";
-// Versioned v1.5 representative pilot. Removed/reordered only at final migration.
+// Versioned v1.5 opt-in chain. Removed/reordered only at final migration.
 @use "theme/visual-v2";
 @use "theme/visual-v2-consumers";
+@use "theme/visual-v2-style";
