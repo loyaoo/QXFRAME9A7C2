@@ -1,0 +1,25 @@
+name: Patch Theme Self Cycles
+on:
+  push:
+    branches: [feat/theme-visual-v2-style]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: feat/theme-visual-v2-style
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - run: node tools/patch-theme-self-cycles.mjs
+      - run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/styles/components/_item-surface.scss src/styles/components/_card.scss src/styles/components/_switch.scss src/styles/components/_menu.scss src/styles/components/_slider.scss
+          git diff --cached --quiet && exit 0
+          git commit -m "fix(theme): remove private custom-property self cycles"
+          git push origin HEAD:feat/theme-visual-v2-style
