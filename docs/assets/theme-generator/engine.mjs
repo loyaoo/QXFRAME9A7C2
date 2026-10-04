@@ -43,7 +43,6 @@ const DEFAULT_CONFIG = deepFreeze({
   surface:'default',
   radius: 'default',
   density: 'default',
-  foundation: {sizeScale:1,radiusScale:1},
   shape: {choice:'intrinsic',toggle:'intrinsic',range:'intrinsic',compact:'follow',identity:'intrinsic'},
   components: {
     menu: {
@@ -69,7 +68,7 @@ const STYLE_PRESETS = deepFreeze({
   rhea: { label: 'Rhea', description: 'Like Luma but compact.' }
 });
 
-const TOP_KEYS = new Set(['schema','name','style','baseColor','palette','roles','chart','typography','radius','density','components','advanced','foundation','shape','surface']);
+const TOP_KEYS = new Set(['schema','name','style','baseColor','palette','roles','chart','typography','radius','density','components','advanced','shape','surface']);
 const ROLE_KEYS = new Set(['primary','success','warning','error','info']);
 const CHART_KEYS = new Set(['color','preset']);
 const TYPE_KEYS = new Set(['body','heading','mono','baseSize']);
@@ -194,7 +193,6 @@ function normalizeConfig(input = {}) {
   if (input.schema != null && Number(input.schema) !== SCHEMA_VERSION) {
     throw new TypeError('Unsupported Theme Config schema: ' + input.schema + '. Expected ' + SCHEMA_VERSION + '.');
   }
-  const provided = new Set(Object.keys(input));
   const config = deepClone(DEFAULT_CONFIG);
   config.name = normalizeName(input.name);
   config.style = normalizeStyle(input.style);
@@ -219,12 +217,6 @@ function normalizeConfig(input = {}) {
   config.radius = enumValue(input.radius, RADIUS_IDS, DEFAULT_CONFIG.radius, 'radius');
   config.density = enumValue(input.density, DENSITY_IDS, DEFAULT_CONFIG.density, 'density');
 
-  for(const key of ['sizeScale','radiusScale']){
-    if(input.foundation!=null)assertKnownKeys(input.foundation,new Set(['sizeScale','radiusScale']),'foundation');
-    const value=Number(input.foundation?.[key]??1);
-    if(![0.75,1,1.25,1.5].includes(value))throw new TypeError('foundation.'+key+' must be 0.75, 1, 1.25 or 1.5.');
-    config.foundation[key]=value;
-  }
   if(input.shape!=null)assertKnownKeys(input.shape,new Set(SHAPE_FAMILIES),'shape');
   for(const family of SHAPE_FAMILIES)config.shape[family]=enumValue(input.shape?.[family],SHAPE_IDS,DEFAULT_CONFIG.shape[family],'shape.'+family);
 
