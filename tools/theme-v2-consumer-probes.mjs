@@ -7,12 +7,8 @@ import path from 'node:path';
 export function consumerProbeInventory(root){
   const source=fs.readFileSync(path.join(root,'src/styles/internal/_fixed-values.scss'),'utf8');
   const names=new Set();
-  for(const match of source.matchAll(/(--_qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;]+);/gi)){
-    const name=match[1],value=match[2];
-    const paintName=/(?:color|chart|mode|neutral|primary|success|warning|error|info|surface|text|border|shadow|mask|thumb)/.test(name);
-    const paintValue=/(?:#(?:[0-9a-f]{3,8})\b|rgba?\(|oklab\(|oklch\(|color\(|transparent\b)/i.test(value);
-    if(paintName||paintValue)names.add(name);
-  }
+  const retiredPaint=/^--_qxframe9a7c2-(?:fixed-chart-\d+|fixed-color-|mode-color-|fixed-primary(?:-\d+|-foreground)?$|fixed-neutral-\d+$|mode-(?:bg(?:-|$)|surface(?:-|$)|text(?:-|$)|border(?:-|$)|accent(?:-|$)|success(?:-|$)|warning(?:-|$)|error(?:-|$)|info(?:-|$)|mask(?:-|$)|overlay(?:-|$)|tooltip(?:-|$)|loading-mask$|code-bg$|focus(?:-|$)|default-solid(?:-|$)|on-accent$)|semantic-(?:bg|surface|text|border|accent|success|warning|error|info|mask|overlay|tooltip|loading|code|focus|on-)|token-(?:subtle|text|bg|border|primary|success|warning|error|info|loading|code|json|focus|scroll))/;
+  for(const match of source.matchAll(/(--_qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;]+);/gi))if(retiredPaint.test(match[1]))names.add(match[1]);
   const declarations=[...names].sort().map(name=>name+': rgb(251 0 251) !important;').join('\n');
   const classes=new Set();
   for(const dir of ['src/styles/components','src/styles/theme'])for(const file of fs.readdirSync(path.join(root,dir))){
