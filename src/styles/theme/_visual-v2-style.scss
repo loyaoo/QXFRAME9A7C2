@@ -1,0 +1,79 @@
+/* THEME-VISUAL-V2-001 Phase E non-color Style contract.
+ * Finite Theme inputs only; components keep their existing CSS ownership. */
+@scope ([data-qxframe9a7c2-visual="2"]) {
+  :scope {
+    /* Public shadow recipes share the already accepted v2 shadow color input. */
+    --qxframe9a7c2-theme-v2-shadow-subtle:0 .125rem .25rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .125rem .125rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
+    --qxframe9a7c2-theme-v2-shadow-soft:0 .25rem .5rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .125rem .25rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
+    --qxframe9a7c2-theme-v2-shadow-elevated:0 .5rem 1rem -.25rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .25rem .5rem -.25rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
+
+    /* Vega/default resolved values. Generated Theme CSS can override these. */
+    --qxframe9a7c2-theme-v2-font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --qxframe9a7c2-theme-v2-font-family-heading:var(--qxframe9a7c2-theme-v2-font-family);
+    --qxframe9a7c2-theme-v2-font-family-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    --qxframe9a7c2-theme-v2-typography-body-size:.875rem;
+    --qxframe9a7c2-theme-v2-typography-meta-size:.75rem;
+    --qxframe9a7c2-theme-v2-typography-heading-size:1rem;
+    --qxframe9a7c2-theme-v2-typography-kpi-size:2.25rem;
+    --qxframe9a7c2-theme-v2-typography-body-weight:400;
+    --qxframe9a7c2-theme-v2-typography-label-weight:500;
+    --qxframe9a7c2-theme-v2-border-width:1px;
+    --qxframe9a7c2-theme-v2-card-border-width:1px;
+    --qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-subtle);
+    --qxframe9a7c2-theme-v2-card-font-size:.875rem;
+    --qxframe9a7c2-theme-v2-card-title-delta:.125rem;
+    --qxframe9a7c2-theme-v2-card-meta-gap:.25rem;
+    --qxframe9a7c2-theme-v2-motion-duration-1:100ms;
+    --qxframe9a7c2-theme-v2-motion-duration-2:150ms;
+    --qxframe9a7c2-theme-v2-motion-duration-3:200ms;
+    --qxframe9a7c2-theme-v2-motion-duration-5:300ms;
+    --qxframe9a7c2-theme-v2-shape-choice-radio-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-choice-checkbox-radius:var(--qxframe9a7c2-theme-v2-radius-choice-md);
+    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;
+    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-compact-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+    --qxframe9a7c2-theme-v2-shape-identity-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-progress-radius:100rem;
+
+    /* Existing component-facing slots remain the only runtime visual API. */
+    --qxframe9a7c2-theme-font-family:var(--qxframe9a7c2-theme-v2-font-family);
+    --qxframe9a7c2-theme-font-family-heading:var(--qxframe9a7c2-theme-v2-font-family-heading);
+    --qxframe9a7c2-theme-font-family-mono:var(--qxframe9a7c2-theme-v2-font-family-mono);
+    --qxframe9a7c2-typography-body-size:var(--qxframe9a7c2-theme-v2-typography-body-size);
+    --qxframe9a7c2-typography-meta-size:var(--qxframe9a7c2-theme-v2-typography-meta-size);
+    --qxframe9a7c2-typography-heading-size:var(--qxframe9a7c2-theme-v2-typography-heading-size);
+    --qxframe9a7c2-typography-kpi-size:var(--qxframe9a7c2-theme-v2-typography-kpi-size);
+    --qxframe9a7c2-typography-body-weight:var(--qxframe9a7c2-theme-v2-typography-body-weight);
+    --qxframe9a7c2-typography-label-weight:var(--qxframe9a7c2-theme-v2-typography-label-weight);
+    --qxframe9a7c2-family-control-border-width:var(--qxframe9a7c2-theme-v2-border-width);
+    --qxframe9a7c2-card-border-width:var(--qxframe9a7c2-theme-v2-card-border-width);
+    --qxframe9a7c2-card-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
+    --qxframe9a7c2-card-font-size:var(--qxframe9a7c2-theme-v2-card-font-size);
+    --qxframe9a7c2-theme-card-title-delta:var(--qxframe9a7c2-theme-v2-card-title-delta);
+    --qxframe9a7c2-theme-card-meta-gap:var(--qxframe9a7c2-theme-v2-card-meta-gap);
+    --qxframe9a7c2-theme-motion-duration-1:var(--qxframe9a7c2-theme-v2-motion-duration-1);
+    --qxframe9a7c2-theme-motion-duration-2:var(--qxframe9a7c2-theme-v2-motion-duration-2);
+    --qxframe9a7c2-theme-motion-duration-3:var(--qxframe9a7c2-theme-v2-motion-duration-3);
+    --qxframe9a7c2-theme-motion-duration-5:var(--qxframe9a7c2-theme-v2-motion-duration-5);
+    --qxframe9a7c2-choice-radio-radius:var(--qxframe9a7c2-theme-v2-shape-choice-radio-radius);
+    --qxframe9a7c2-choice-checkbox-radius:var(--qxframe9a7c2-theme-v2-shape-choice-checkbox-radius);
+    --qxframe9a7c2-switch-track-radius:var(--qxframe9a7c2-theme-v2-shape-toggle-track-radius);
+    --qxframe9a7c2-switch-thumb-radius:var(--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius);
+    --qxframe9a7c2-slider-rail-radius:var(--qxframe9a7c2-theme-v2-shape-range-track-radius);
+    --qxframe9a7c2-slider-handle-radius:var(--qxframe9a7c2-theme-v2-shape-range-thumb-radius);
+    --qxframe9a7c2-range-progress-radius:var(--qxframe9a7c2-theme-v2-shape-progress-radius);
+    --qxframe9a7c2-compact-shape-radius:var(--qxframe9a7c2-theme-v2-shape-compact-radius);
+    --qxframe9a7c2-identity-shape-radius:var(--qxframe9a7c2-theme-v2-shape-identity-radius);
+  }
+}
+
+/* Canonical no-generator previews receive the same concrete Style defaults. */
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]) { :scope { --qxframe9a7c2-theme-v2-card-shadow:none; } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]) { :scope { --qxframe9a7c2-theme-v2-card-shadow:none;--qxframe9a7c2-theme-v2-card-meta-gap:.5rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-shadow:none;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;--qxframe9a7c2-theme-v2-shape-range-track-radius:0;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:0; } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-shadow:none;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]) { :scope { --qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-soft);--qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:100rem; } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-title-delta:.25rem;--qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;--qxframe9a7c2-theme-v2-shape-range-track-radius:0;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:0; } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]) { :scope { --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
