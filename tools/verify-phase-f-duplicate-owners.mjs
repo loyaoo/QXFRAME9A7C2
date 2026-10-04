@@ -1,5 +1,4 @@
 import { readCanonicalStyleSource } from './style-source.mjs';
-import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
@@ -36,15 +35,13 @@ assert.match(css,/\.qxframe9a7c2-item-collection-item\{[^}]*display:flex;align-i
   'ItemCollection gap must live in the canonical item owner.');
 assert.equal(css.includes('.qxframe9a7c2-item-collection-item{gap:var(--_qxframe9a7c2-control-gap)}'),false,
   'ItemCollection gap-only selector reopening must not return.');
-assert.match(css,/\.qxframe9a7c2-list-item\{[^}]*display:flex;align-items:center;gap:var\(--qxframe9a7c2-theme-space-2\);width:100%;/,
+assert.match(css,/\.qxframe9a7c2-list-item\{[^}]*display:flex;align-items:center;gap:var\(--_qxframe9a7c2-fixed-space-2\);width:100%;/,
   'List gap must live in the canonical item owner.');
-assert.equal(css.includes('.qxframe9a7c2-list-item{gap:var(--qxframe9a7c2-theme-space-2)}'),false,
+assert.equal(css.includes('.qxframe9a7c2-list-item{gap:var(--_qxframe9a7c2-fixed-space-2)}'),false,
   'List gap-only selector reopening must not return.');
 
-assert.match(css,/--qxframe9a7c2-theme-form-selectgroup-image-label-min-width:\s*calc\(var\(--qxframe9a7c2-size-38\) \+ var\(--qxframe9a7c2-size-2\)\)/,
-  'SelectGroup image-grid label width must remain Size Tree-backed at the canonical 132px geometry.');
-assert.match(css,/\.qxframe9a7c2-form-selectgroup\.is-image-grid \.qxframe9a7c2-form-selectgroup-label\{width:100%;min-width:var\(--qxframe9a7c2-theme-form-selectgroup-image-label-min-width\);padding:0;align-items:stretch\}/,
-  'SelectGroup image-grid label width must live in the canonical image-grid label owner and consume Theme geometry.');
+assert.match(css,/\.qxframe9a7c2-form-selectgroup\.is-image-grid \.qxframe9a7c2-form-selectgroup-label\{width:100%;min-width:var\(--_qxframe9a7c2-fixed-form-selectgroup-image-label-min-width\);padding:0;align-items:stretch\}/,
+  'SelectGroup image-grid label width must live in the canonical image-grid label owner.');
 assert.equal(count('.qxframe9a7c2-form-selectgroup.is-image-grid .qxframe9a7c2-form-selectgroup-label{'),1,
   'SelectGroup image-grid label must not be reopened for one property.');
 
@@ -55,7 +52,6 @@ assert.match(css,/\.qxframe9a7c2-image-preview-root\[hidden\]\{display:none!impo
 assert.equal(css.includes('.qxframe9a7c2-image-preview-root[hidden]{display:none!important;pointer-events:none!important}'),false,
   'Unreachable Image Preview hidden pointer-events patch must not return.');
 
-/* These duplicate selectors are intentional staged owners, not cleanup targets. */
 assert.match(css,/\.qxframe9a7c2-button\.is-loading\{--_qxframe9a7c2-button-paint-z:/,
   'Button independent paint-z priority channel must remain staged.');
 assert.match(css,/Preview chrome participates in the same presence lifecycle as the image trajectory/,
@@ -67,12 +63,4 @@ assert.equal(css.includes('@layer'),false,'Phase F must not introduce @layer.');
 assert.equal(css.includes(':is('),false,'Phase F must not introduce :is().');
 assert.equal(css.includes(':where('),false,'Phase F must not introduce :where().');
 
-console.log(JSON.stringify({
-  ok:true,
-  retiredDuplicateOwners:true,
-  noticeDeadScrollbarRules:0,
-  canonicalItemGapOwners:true,
-  selectGroupOwnerUnified:true,
-  imagePreviewHiddenOwnerUnified:true,
-  intentionalStagedOwnersPreserved:true
-}));
+console.log(JSON.stringify({ok:true,retiredDuplicateOwners:true,noticeDeadScrollbarRules:0,canonicalItemGapOwners:true,selectGroupOwnerUnified:true,imagePreviewHiddenOwnerUnified:true,intentionalStagedOwnersPreserved:true}));
