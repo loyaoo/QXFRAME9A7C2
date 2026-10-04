@@ -36,12 +36,12 @@
   .qxframe9a7c2-form-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-v2-shape-choice-radio-radius)}
 }
 
-/* Static canonical previews keep the source-exact Card shadow level. Generated
-   CSS overrides these public inputs with the selected appearance. */
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]),
-       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]),
-       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]),
-       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:none}}
+/* Static canonical previews keep source-exact Card shadow levels. Generated
+   Theme CSS later overrides the same public input. */
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:none}}
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:none}}
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:none}}
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:none}}
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-md)}}
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]),
-       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-sm)}}
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-sm)}}
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-sm)}}
