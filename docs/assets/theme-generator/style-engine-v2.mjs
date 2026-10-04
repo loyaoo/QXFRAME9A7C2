@@ -35,9 +35,9 @@ const MOTION=Object.freeze({
 });
 const SHADOW=Object.freeze({
   none:'none',
-  subtle:'var(--_qxframe9a7c2-v2-shadow-sm)',
-  soft:'var(--_qxframe9a7c2-v2-shadow-md)',
-  elevated:'0 .5rem 1rem -.25rem var(--_qxframe9a7c2-v2-decoration-tint), 0 .25rem .5rem -.25rem var(--_qxframe9a7c2-v2-decoration-tint)'
+  subtle:'var(--qxframe9a7c2-theme-v2-shadow-subtle)',
+  soft:'var(--qxframe9a7c2-theme-v2-shadow-soft)',
+  elevated:'var(--qxframe9a7c2-theme-v2-shadow-elevated)'
 });
 const DEFAULT_SHAPE=Object.freeze({choice:'intrinsic',toggle:'intrinsic',range:'intrinsic',compact:'follow',identity:'intrinsic'});
 
