@@ -1,11 +1,13 @@
 name: Patch Theme Self Cycles
 on:
-  push:
-    branches: [feat/theme-visual-v2-style]
+  pull_request:
+    branches: [main]
+    types: [synchronize]
 permissions:
   contents: write
 jobs:
   patch:
+    if: github.event.pull_request.head.ref == 'feat/theme-visual-v2-style'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
