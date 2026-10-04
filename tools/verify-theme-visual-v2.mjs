@@ -116,6 +116,7 @@ for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark']){
     cases.push({style,mode,type,variant,state,kind:'button',expected:{backgroundColor:sourceColor(style,selector,'bg',mode,sourceState),color:sourceColor(style,selector,'text',mode,sourceState),borderColor:sourceColor(style,selector,'border',mode,sourceState)},selector});
   }
   for(const state of ['normal','invalid','disabled'])cases.push({style,mode,state,kind:'input',expected:{backgroundColor:sourceColor(style,'.cn-input','bg',mode,state),borderBottomColor:sourceColor(style,'.cn-input',style==='sera'?'border-b':'border',mode,state)},selector:'.cn-input'});
+  for(const part of ["form-input", "form-select", "form-textarea", "input-otp-segment", "color-panel-input", "pagination-input"])for(const state of ['normal','invalid','disabled'])cases.push({style,mode,state,part,kind:'native-control',expected:{backgroundColor:sourceColor(style,'.cn-input','bg',mode,state),borderBottomColor:sourceColor(style,'.cn-input',style==='sera'?'border-b':'border',mode,state)}});
   cases.push({style,mode,kind:'card',expected:{backgroundColor:sourceColor(style,'.cn-card','bg',mode),color:sourceColor(style,'.cn-card','text',mode),borderColor:sourceColor(style,'.cn-card','ring',mode)},selector:'.cn-card'});
   cases.push({style,mode,kind:'dialog',expected:{backgroundColor:sourceColor(style,'.cn-dialog-content','bg',mode),color:sourceColor(style,'.cn-dialog-content','text',mode),borderColor:sourceColor(style,'.cn-dialog-content','ring',mode)},selector:'.cn-dialog-content'});
   cases.push({style,mode,kind:'mask',expected:{backgroundColor:sourceColor(style,'.cn-dialog-overlay','bg',mode)},selector:'.cn-dialog-overlay'});
@@ -176,6 +177,7 @@ const expression=(probeCases,includeGeometry)=>`(() => {
       if(['switch-track','switch-thumb'].includes(test.kind))host.innerHTML='<span class="qxframe9a7c2-switch '+(test.state.includes('disabled')?'is-disabled':'')+'"><input class="qxframe9a7c2-switch-input" type="checkbox" '+(test.state.includes('checked')?'checked':'')+'><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></span>';
       if(['slider-rail','slider-handle'].includes(test.kind))host.innerHTML='<div class="qxframe9a7c2-slider"><div class="qxframe9a7c2-slider-rail"></div><button class="qxframe9a7c2-slider-handle"></button></div>';
       if(test.kind==='button')host.innerHTML='<button class="qxframe9a7c2-button is-'+type+' is-'+test.variant+' '+(test.state==='hover-active'?'is-hover is-active':test.state==='loading-hover'?'is-loading is-hover':test.state==='disabled-hover'?'is-disabled is-hover':test.state==='normal'?'':'is-'+test.state)+'">QX</button>';
+      if(test.kind==='native-control')host.innerHTML='<input class="qxframe9a7c2-'+test.part+' '+(test.state==='invalid'?'is-invalid':test.state==='disabled'?'is-disabled':'')+'" '+(test.state==='disabled'?'disabled':'')+'>';
       if(test.kind==='input')host.innerHTML='<div class="qxframe9a7c2-input '+(test.state==='invalid'?'is-invalid':test.state==='disabled'?'is-disabled':'')+'"><input class="qxframe9a7c2-input-control"></div>';
       if(test.kind==='card')host.innerHTML='<div class="qxframe9a7c2-card">QX</div>';
       if(test.kind==='dialog')host.innerHTML='<div class="qxframe9a7c2-modal-root"><div class="qxframe9a7c2-modal-container">QX</div></div>';
@@ -196,7 +198,7 @@ const expression=(probeCases,includeGeometry)=>`(() => {
       const node=host.querySelector(target[test.kind]??':first-child');
       for(const [property,expression]of Object.entries(test.expected)){
         reference.style[property]=expression;const expected=measure(reference,property),actual=measure(node,property);
-        compare(test.style+'/'+test.mode+'/'+test.kind+'/'+type+'/'+test.variant+'/'+test.state+'/'+property,actual,expected);checks++;
+        compare(test.style+'/'+test.mode+'/'+test.kind+'/'+(test.part??type)+'/'+test.variant+'/'+test.state+'/'+property,actual,expected);checks++;
       }
       if(test.state?.includes('disabled')&&['checkbox','radio','switch-track'].includes(test.kind)){if(Number(measure(node,'opacity'))!==.5)failures.push({id:test.style+'/'+test.mode+'/'+test.kind+'/disabled-opacity',actual:measure(node,'opacity'),expected:'.5'});checks++;}
       if(test.state==='disabled-hover'){if(Number(measure(node,'opacity'))!==.5)failures.push({id:test.style+'/'+test.mode+'/disabled-opacity',actual:measure(node,'opacity'),expected:'.5'});checks++;}

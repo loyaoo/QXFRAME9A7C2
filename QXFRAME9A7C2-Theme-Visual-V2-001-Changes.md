@@ -116,3 +116,9 @@
 - Studio 增加全部物理 Type 预览；实际 UI 验证完整色、配套前景、primary 独立、JSON 往返、删除恢复及稀疏导出。
 - 原 Schema-1 Playground smoke 完成后，真实 canonical demo DOM 在八 Style×亮暗下毒化旧 palette/Theme color/derived mode 输入，测量普通部位与伪元素的 paint；任何变化令 CI 失败，覆盖和未挂载部位均记录，不能据此宣称完整 G。
 - 当前本地静态门禁通过，浏览器和完整 release 尚待 CI；总体进度仍以 CURRENT 记录为准，生产默认保留至 H。
+
+### 第三批中间验收与继续迁移
+
+- 初始 head `456df680c49643f581efedefd1c6daad97946c77`：Schema `37167570477` SUCCESS，9,200 颜色场景／26,150 检查、51,855 几何检查、30 Studio 操作检查，零失败。完整 release `37167570441` 在新增真实 DOM 旧色毒化检查失败；旧 canonical demos 全部挂载且无运行错误。未合并。
+- Suite 失败摘要原先遗漏新增 consumer 数据，现转发具体部位／属性并保存失败时的验收报告。毒化探针遇到真实失败即可中止当前批报告，成功必须完整运行全部 16 个配置；不改变通过条件。
+- 补齐六类原生 Control 的共享可选覆盖、invalid/focus/disabled 与 Sera 下划线责任；新增 288 个来源等价场景。

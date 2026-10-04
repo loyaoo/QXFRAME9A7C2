@@ -267,20 +267,20 @@
 
   /* Remaining QX consumers enter existing source responsibilities. Geometry,
      value ownership, native events, focus and popup mounting remain unchanged. */
-  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--qxframe9a7c2-theme-v2-input); color: var(--qxframe9a7c2-theme-v2-foreground); }
-  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--qxframe9a7c2-theme-v2-input); color: var(--qxframe9a7c2-theme-v2-foreground); }
-  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--qxframe9a7c2-theme-v2-input); color: var(--qxframe9a7c2-theme-v2-foreground); }
-  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--qxframe9a7c2-theme-v2-input); color: var(--qxframe9a7c2-theme-v2-foreground); }
-  .qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--qxframe9a7c2-theme-v2-input); color: var(--qxframe9a7c2-theme-v2-foreground); }
-  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--qxframe9a7c2-theme-v2-input); color: var(--qxframe9a7c2-theme-v2-foreground); }
-  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { border-color: var(--qxframe9a7c2-theme-v2-ring); }
-  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { border-color: var(--qxframe9a7c2-theme-v2-ring); }
-  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { border-color: var(--qxframe9a7c2-theme-v2-ring); }
-  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { border-color: var(--qxframe9a7c2-theme-v2-ring); }
-  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { border-color: var(--qxframe9a7c2-theme-v2-ring); }
-  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { border-color: var(--qxframe9a7c2-theme-v2-ring); }
-  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid { border-color: light-dark(var(--qxframe9a7c2-theme-v2-error), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 50%, transparent)); }
-  .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-textarea:disabled { opacity: .5; }
+  .qxframe9a7c2-form-input[class] { background-color: var(--qxframe9a7c2-theme-v2-override-control-background, var(--_qxframe9a7c2-v2-control-bg)); border-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); color: var(--qxframe9a7c2-theme-v2-override-control-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
+  .qxframe9a7c2-form-select[class] { background-color: var(--qxframe9a7c2-theme-v2-override-control-background, var(--_qxframe9a7c2-v2-control-bg)); border-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); color: var(--qxframe9a7c2-theme-v2-override-control-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
+  .qxframe9a7c2-form-textarea[class] { background-color: var(--qxframe9a7c2-theme-v2-override-control-background, var(--_qxframe9a7c2-v2-control-bg)); border-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); color: var(--qxframe9a7c2-theme-v2-override-control-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
+  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--qxframe9a7c2-theme-v2-override-control-background, var(--_qxframe9a7c2-v2-control-bg)); border-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); color: var(--qxframe9a7c2-theme-v2-override-control-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
+  .qxframe9a7c2-color-panel-input[class] { background-color: var(--qxframe9a7c2-theme-v2-override-control-background, var(--_qxframe9a7c2-v2-control-bg)); border-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); color: var(--qxframe9a7c2-theme-v2-override-control-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
+  .qxframe9a7c2-pagination-input[class] { background-color: var(--qxframe9a7c2-theme-v2-override-control-background, var(--_qxframe9a7c2-v2-control-bg)); border-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); color: var(--qxframe9a7c2-theme-v2-override-control-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
+  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-v2-ring); }
+  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-v2-ring); }
+  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-v2-ring); }
+  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-v2-ring); }
+  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-v2-ring); }
+  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-v2-ring); }
+  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-v2-control-border: light-dark(var(--qxframe9a7c2-theme-v2-error), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 50%, transparent)); }
+  .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
   .qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg: var(--_qxframe9a7c2-v2-popup-bg); --_qxframe9a7c2-popover-text: var(--_qxframe9a7c2-v2-popup-text); }
   .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-v2-type); color: var(--_qxframe9a7c2-v2-type-foreground); }
   .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-v2-type); }
@@ -692,7 +692,7 @@
 :scope { --qxframe9a7c2-theme-v2-mask: rgb(0 0 0 / .2); }
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline-border: var(--qxframe9a7c2-theme-v2-border); }
 .qxframe9a7c2-button { --_qxframe9a7c2-v2-outline: transparent; --_qxframe9a7c2-v2-outline-hover: light-dark(var(--qxframe9a7c2-theme-v2-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); }
-.qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-color-panel-input, .qxframe9a7c2-pagination-input { --_qxframe9a7c2-v2-control-bg: transparent; border-color: transparent; border-bottom-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); }
+.qxframe9a7c2-input, .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class], .qxframe9a7c2-input-otp-segment[class], .qxframe9a7c2-color-panel-input[class], .qxframe9a7c2-pagination-input[class] { --_qxframe9a7c2-v2-control-bg: transparent; border-color: transparent; border-bottom-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); }
 .qxframe9a7c2-card { --_qxframe9a7c2-card-border: var(--qxframe9a7c2-card-border-color, color-mix(in oklab, var(--qxframe9a7c2-theme-v2-foreground) 5%, transparent)); }
 .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root { --_qxframe9a7c2-v2-dialog-shadow: var(--_qxframe9a7c2-v2-popup-shadow); }
 
@@ -726,7 +726,7 @@
     --qxframe9a7c2-theme-v2-choice-size-md: 1rem;
   }
 
-.qxframe9a7c2-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
+.qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]) {
@@ -757,7 +757,7 @@
     --qxframe9a7c2-theme-v2-choice-size-md: 1rem;
   }
 
-.qxframe9a7c2-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
+.qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]) {

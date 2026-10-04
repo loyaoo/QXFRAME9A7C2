@@ -417,6 +417,42 @@
         "sera",
         "rhea"
       ]
+    },
+    {
+      "id": "control.native",
+      "family": "control",
+      "sourceSelector": ".cn-input",
+      "sourceExpression": "same complete input/foreground/ring/error roles and exact Style alpha; Sera underline",
+      "qxMapping": "Native Input/Select/Textarea, OTP segment, ColorPanel input, Pagination input; optional control override is shared",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "feedback.actual-roots",
+      "family": "feedback",
+      "sourceSelector": ".cn-alert-variant-destructive",
+      "sourceExpression": "Type foreground/background allocation",
+      "qxMapping": "actual Message/Notification/Alert roots; shared Type input, unchanged notice runtime",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
     }
   ],
   "specializations": [

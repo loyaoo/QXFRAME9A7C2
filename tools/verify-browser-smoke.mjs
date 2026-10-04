@@ -286,12 +286,13 @@ async function runDocsPlayground(cdp) {
         if (error) throw error;
         const value = result && result.result && result.result.value || {};
         const inventory=consumerProbeInventory(root),consumers=[];
-        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const mode of ['light','dark']){
+        consumerConfigurations: for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const mode of ['light','dark']){
             const probe=await cdp.call('Runtime.evaluate',{expression:`(${consumerPoisonBrowserProbe.toString()})(${JSON.stringify(inventory)},${JSON.stringify(style)},${JSON.stringify(mode)})`,returnByValue:true},sessionId);
             const probeError=exceptionMessage(probe,'Theme v2 consumer poison');if(probeError)throw probeError;
             const measured=probe?.result?.value;
             if(!measured||!measured.nodes||!measured.checks)throw new Error('Theme v2 consumer poison mounted no canonical consumers');
             consumers.push(measured);
+            if(measured.mismatchCount)break consumerConfigurations;
         }
         fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-consumers-v2.json'),JSON.stringify({schema:2,consumers},null,2)+'\n');
         value.v2Consumers={configurations:consumers.length,checks:consumers.reduce((n,x)=>n+x.checks,0),nodes:consumers.map(x=>x.nodes),coveredClasses:consumers[0].coveredClasses.length,unmountedClasses:consumers[0].unmountedClasses.length,poisonedInputs:inventory.names.length,mismatchCount:consumers.reduce((n,x)=>n+x.mismatchCount,0),failures:consumers.flatMap(x=>x.failures).slice(0,60)};
