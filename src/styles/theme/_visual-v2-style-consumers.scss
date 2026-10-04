@@ -1,0 +1,47 @@
+/* Phase E specificity bridge: public v2 non-color inputs -> actual paint/geometry owners. */
+@scope ([data-qxframe9a7c2-visual="2"]) {
+  :scope {
+    /* Same geometry/color formulas as the accepted v2 private shadow levels. */
+    --qxframe9a7c2-theme-v2-shadow-xs:0 .125rem .125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 5%,transparent);
+    --qxframe9a7c2-theme-v2-shadow-sm:0 .125rem .25rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .125rem .125rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
+    --qxframe9a7c2-theme-v2-shadow-md:0 .25rem .5rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .125rem .25rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
+    --qxframe9a7c2-theme-v2-shadow-elevated:0 .5rem 1rem -.25rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .25rem .5rem -.25rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
+    /* Vega source default. */
+    --qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-xs);
+  }
+
+  /* Geometry v2 initializes this private slot locally, so a family token alone
+     cannot change the real border. Rebind only control-family consumers. */
+  .qxframe9a7c2-button[class],.qxframe9a7c2-input[class],.qxframe9a7c2-text-field[class],
+  .qxframe9a7c2-form-input[class],.qxframe9a7c2-form-select[class],.qxframe9a7c2-form-textarea[class],
+  .qxframe9a7c2-input-otp-segment[class],.qxframe9a7c2-color-panel-input[class],.qxframe9a7c2-pagination-input[class]{
+    --_qxframe9a7c2-control-border-width:var(--qxframe9a7c2-theme-v2-border-width);
+  }
+
+  /* Source color layer owns Card shadow directly. The Style layer owns its
+     non-color level while reusing the same shadow color input/formulas. */
+  .qxframe9a7c2-card[class]{
+    --_qxframe9a7c2-v2-card-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
+    --_qxframe9a7c2-v2-card-explicit-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
+    box-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
+  }
+  .qxframe9a7c2-card.is-shadow,.qxframe9a7c2-card.is-hover-shadow:hover,.qxframe9a7c2-card.is-hoverable:hover{box-shadow:var(--qxframe9a7c2-theme-v2-card-shadow)}
+
+  /* Choice v2 color rules used the local geometry radius directly. Shape is an
+     orthogonal policy and therefore owns the final checkbox/radio radius. */
+  .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],
+  .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
+  .qxframe9a7c2-form-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-v2-shape-choice-checkbox-radius)}
+  .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
+  .qxframe9a7c2-form-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-v2-shape-choice-radio-radius)}
+}
+
+/* Static canonical previews keep the source-exact Card shadow level. Generated
+   CSS overrides these public inputs with the selected appearance. */
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]),
+       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]),
+       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]),
+       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:none}}
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-md)}}
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]),
+       ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]){:scope{--qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-sm)}}
