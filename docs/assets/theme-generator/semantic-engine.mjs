@@ -54,8 +54,8 @@ export function generateSemanticTheme(input={}){
   // Complete colors are declared at mode boundaries. The framework owns Style
   // rule branches, so the export contains no component or private result matrix.
   const css='/* QXFRAME semantic schema 2; '+RULE_VERSION+' */\n'+
-    '[data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-theme="light"] {\n'+declarations('light')+'\n}\n'+
-    '[data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-theme="dark"] {\n'+declarations('dark')+'\n}\n';
+    '[data-qxframe9a7c2-theme="light"] {\n'+declarations('light')+'\n}\n'+
+    '[data-qxframe9a7c2-theme="dark"] {\n'+declarations('dark')+'\n}\n';
   return {config,css,statistics:{colorNames:new Set(Object.values(config.colors).flatMap(v=>Object.keys(v))).size,colorDeclarations:Object.values(config.colors).reduce((n,v)=>n+Object.keys(v).length,0),overrideDeclarations:Object.values(config.overrides).reduce((n,v)=>n+Object.keys(v).length,0)}};
 }
 export function migrateLegacySemanticColors(legacy){

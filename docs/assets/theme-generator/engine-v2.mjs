@@ -9,7 +9,7 @@ export function generateThemeV2(input={}){
   if(styleRules!==undefined&&styleRules!==STYLE_RULE_VERSION)throw new TypeError('Unsupported style rules');
   const colors=generateSemanticTheme(semantic),md=normalizeGeometryConfig({style:colors.config.style,options,geometry}),visual=normalizeStyleConfig({style:colors.config.style,appearance});
   // Explicit Theme inputs outrank :scope Style defaults even inside a preview scope.
-  const selector='[data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-theme]';
+  const selector=':root, [data-qxframe9a7c2-theme]';
   const css=colors.css+
     '/* Fixed CSS geometry '+GEOMETRY_RULE_VERSION+'; defaults only */\n'+selector+' {\n'+GEOMETRY_ROLES.map(role=>'  --qxframe9a7c2-theme-v2-'+role+': '+md.geometry[role]+';').join('\n')+'\n}\n'+
     '/* Finite non-color Style '+STYLE_RULE_VERSION+'; no size/state matrix */\n'+selector+' {\n'+STYLE_ROLES.map(role=>'  --qxframe9a7c2-theme-v2-'+role+': '+visual.style[role]+';').join('\n')+'\n}\n';

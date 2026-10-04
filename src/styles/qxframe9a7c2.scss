@@ -2,10 +2,8 @@
 // Phase A decomposition only: no token/value/state changes are allowed in this commit.
 @use "base/reset";
 @use "preset/foundation";
-@use "theme/default";
-@use "theme/family";
 @use "components/components";
-// Versioned v1.5 opt-in chain. Removed/reordered only at final migration.
+// Canonical v1.5 Theme chain. Legacy Theme/default and Theme/family are retired.
 @use "theme/visual-v2";
 @use "theme/visual-v2-consumers";
 @use "theme/visual-v2-style";

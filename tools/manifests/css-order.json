@@ -1,17 +1,39 @@
 {
-  "version": 13,
-  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
+  "version": 14,
+  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Theme v1.5 is the only public Theme token system; retired Schema1 theme/default and theme/family are not compiled.",
   "files": [
-    {"stage":"canonical","name":"scss-entry","file":"src/styles/qxframe9a7c2.scss"}
+    {
+      "stage": "canonical",
+      "name": "scss-entry",
+      "file": "src/styles/qxframe9a7c2.scss"
+    }
   ],
   "migrationBaseline": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
-  "physicalOrder": ["base","preset","theme-default","theme-family-category","components","semantic-v2-opt-in","semantic-v2-consumers","semantic-v2-style","semantic-v2-style-consumers"],
-  "conceptualOrder": ["foundation","theme","semantic","family","shared-roles","component-base","component-variant","component-state","composite-relation","utilities","compatibility"],
+  "physicalOrder": [
+    "base",
+    "preset",
+    "components",
+    "semantic-v2-opt-in",
+    "semantic-v2-consumers",
+    "semantic-v2-style",
+    "semantic-v2-style-consumers"
+  ],
+  "conceptualOrder": [
+    "foundation",
+    "theme",
+    "semantic",
+    "family",
+    "shared-roles",
+    "component-base",
+    "component-variant",
+    "component-state",
+    "composite-relation",
+    "utilities",
+    "compatibility"
+  ],
   "sourceModules": [
     "src/styles/base/_reset.scss",
     "src/styles/preset/_foundation.scss",
-    "src/styles/theme/_default.scss",
-    "src/styles/theme/_family.scss",
     "src/styles/components/_component-foundation.scss",
     "src/styles/components/_choice-visual.scss",
     "src/styles/components/_native-overflow.scss",
