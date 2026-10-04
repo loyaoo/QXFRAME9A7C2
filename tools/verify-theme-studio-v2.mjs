@@ -15,7 +15,8 @@ assert.equal(output.output.length,1);const code=output.output[0].code,theme=gene
 assert.doesNotMatch(theme.css,/palette-|--_qxframe|color-mix|-(?:xs|sm|lg|xl):/);
 const report={schema:2,stage:'E/F opt-in editor',bundleBytes:Buffer.byteLength(code),themeBytes:Buffer.byteLength(theme.css),inputs:theme.statistics,defaultReplaced:false,browser:null};
 if(process.argv.includes('--browser')){
-  report.browser=await browserProbes({htmlContent:'<!doctype html><html><head><style>'+compileStyles().css+'\n'+fs.readFileSync(path.join(root,'docs/assets/theme-studio-v2.css'),'utf8')+'</style></head><body><section data-theme-studio-v2></section><script>'+code+'</script></body></html>',expression:`(() => {
+  report.browser=await browserProbes({htmlContent:'<!doctype html><html><head><style>'+compileStyles().css+'\n'+fs.readFileSync(path.join(root,'docs/assets/theme-studio-v2.css'),'utf8')+'</style></head><body><section data-theme-studio-v2></section></body></html>',expression:`(() => {
+    ${code}
     const api=window.QXFRAME9A7C2_THEME_STUDIO_V2,panel=document.querySelector('[data-theme-studio-v2]'),failures=[];let checks=0;
     const eq=(name,actual,expected)=>{checks++;if(JSON.stringify(actual)!==JSON.stringify(expected))failures.push({name,actual,expected});};
     const choose=(name,value)=>{const node=panel.querySelector('[data-v2-option="'+name+'"]');node.value=value;node.dispatchEvent(new Event('change',{bubbles:true}));};
@@ -24,7 +25,7 @@ if(process.argv.includes('--browser')){
     eq('boot',!!api,true);eq('default options',api.getTheme().config.options,{density:'standard',radius:'sm',spacing:'normal'});eq('default five heights',heights(),[28,32,36,40,44]);
     choose('style','mira');eq('Style populates concrete options',api.getTheme().config.options,{density:'tight',radius:'xs',spacing:'compact'});eq('Style density visibly changes five heights',heights(),[20,24,28,32,36]);
     choose('density','compact');choose('spacing','roomy');eq('independent control density',heights(),[24,28,32,36,40]);
-    const body=panel.querySelector('[data-qxframe9a7c2-theme="light"] .qxframe9a7c2-card-body');eq('independent roomy surface',parseFloat(getComputedStyle(body).paddingLeft),28);
+    const body=panel.querySelector('[data-qxframe9a7c2-theme="light"] .qxframe9a7c2-card-body');eq('independent roomy surface',parseFloat(getComputedStyle(body).paddingLeft),28);eq('control density does not change Card body typography',parseFloat(getComputedStyle(body).fontSize),16);
     choose('radius','none');eq('none across five sizes',radius(),[0,0,0,0,0]);
     choose('style','sera');choose('radius','lg');eq('Sera follow radius can change',radius(),[10,12,14,16,18]);
     const json=panel.querySelector('[data-v2-json]'),snapshot=api.getTheme().config;json.value=JSON.stringify(snapshot);panel.querySelector('[data-v2-action="apply-json"]').click();eq('JSON roundtrip options',api.getTheme().config.options,snapshot.options);eq('JSON roundtrip geometry',api.getTheme().config.geometry,snapshot.geometry);

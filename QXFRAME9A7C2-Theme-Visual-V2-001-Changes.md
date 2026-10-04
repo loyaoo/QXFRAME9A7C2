@@ -84,3 +84,10 @@
 - canonical Theme Playground 增加隔离的 v2 Studio：八 Style 解析为真实密度/圆角/留白档位；五档组件、亮暗、语义反馈和 Native Choice 预览；完整颜色编辑、可选覆盖删除、JSON 校验导入、CSS/JSON 下载和持久设置。旧 Studio 保留至 H。
 - 新 Studio 的实际 UI 联动、Sera follow 半径、独立容器留白、无半径全五档、配置往返、覆盖消费/删除和无效导入不破坏当前配置加入 mandatory Chromium CI。
 - 初次几何浏览器 fixture 错误地将 Progress line 与 ring 放在同一个 flex root，造成圆环 flex shrink；已按实际组件 DOM 拆开。颜色等价没有新增容差。
+
+### 当前验收事实与收尾修正
+
+- head `4ae35349cf96f9b71f5533129cf71a85afd21efd` 的 Chromium 颜色矩阵：5,168 场景、15,035 检查；几何：51,855 检查；全部零失败。Studio 和完整发布仍未验收通过。
+- 专用 Studio 探针显式执行真实 Rollup 模块；旧 Playground smoke 按 module 类型打包入口及依赖，保持原脚本顺序，不跳过新 Studio。CDP 异常保留实际描述。
+- Card Body 字号保持自身排版职责，不随 Control 密度改变；增加浏览器回归。原生 disabled Checkbox/Radio/Switch opacity 加入精确来源检查。
+- 当前完整 v2 默认主题为 30 个核心颜色＋21 个 md 输入，4,690 bytes / gzip 810 bytes；框架同时包含旧链，整体压缩尚未完成。

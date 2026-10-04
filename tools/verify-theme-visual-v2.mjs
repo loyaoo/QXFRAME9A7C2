@@ -162,6 +162,7 @@ if(process.argv.includes('--browser')){
         reference.style[property]=expression;const expected=measure(reference,property),actual=measure(node,property);
         compare(test.style+'/'+test.mode+'/'+test.kind+'/'+type+'/'+test.variant+'/'+test.state+'/'+property,actual,expected);checks++;
       }
+      if(test.state?.includes('disabled')&&['checkbox','radio','switch-track'].includes(test.kind)){if(Number(measure(node,'opacity'))!==.5)failures.push({id:test.style+'/'+test.mode+'/'+test.kind+'/disabled-opacity',actual:measure(node,'opacity'),expected:'.5'});checks++;}
       if(test.state==='disabled-hover'){if(Number(measure(node,'opacity'))!==.5)failures.push({id:test.style+'/'+test.mode+'/disabled-opacity',actual:measure(node,'opacity'),expected:'.5'});checks++;}
     }
     // Same consumer, locally changed input: detects aliases pre-resolved at root.

@@ -160,7 +160,7 @@ export async function browserProbes({ expression, htmlContent, cssText, evaluati
       add('scoped-popup-light-dark-positive-control', dark !== light, true);
       return { browserVersion: navigator.userAgent, probes, failed: probes.filter(probe => !probe.passed).length };
     })()` }, sessionId);
-    if (result.exceptionDetails) throw new Error(result.exceptionDetails.text);
+    if (result.exceptionDetails) throw new Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text);
     await call('Target.closeTarget', { targetId }); targetId = null;
     return result.result.value;
   } finally {
