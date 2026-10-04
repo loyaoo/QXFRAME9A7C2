@@ -7,7 +7,7 @@ export function mountThemeStudioV2(panel){
   if(!panel||panel.dataset.v2Mounted)return null;panel.dataset.v2Mounted='true';
   const key='qxframe9a7c2-theme-studio-v2';let input={},result;
   try{const saved=localStorage.getItem(key);if(saved){generateThemeV2(JSON.parse(saved));input=JSON.parse(saved);}}catch{}
-  const sheet=document.createElement('style');sheet.dataset.themeStudioV2='';document.head.appendChild(sheet);
+  const sheet=document.createElement('style');sheet.dataset.themeStudioV2Sheet='';document.head.appendChild(sheet);
   const labels={tight:'极紧凑',compact:'紧凑',standard:'标准',roomy:'宽松',normal:'正常',none:'无圆角'};
   const options=values=>values.map(v=>'<option value="'+v+'">'+(labels[v]??v)+'</option>').join('');
   panel.innerHTML=`<header><h2>Theme v2 Studio</h2><p>选择风格、控件密度、圆角和容器留白，预览五档组件。当前为验证版。</p></header>

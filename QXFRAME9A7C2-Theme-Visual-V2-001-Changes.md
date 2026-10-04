@@ -91,3 +91,5 @@
 - 专用 Studio 探针显式执行真实 Rollup 模块；旧 Playground smoke 按 module 类型打包入口及依赖，保持原脚本顺序，不跳过新 Studio。CDP 异常保留实际描述。
 - Card Body 字号保持自身排版职责，不随 Control 密度改变；增加浏览器回归。原生 disabled Checkbox/Radio/Switch opacity 加入精确来源检查。
 - 当前完整 v2 默认主题为 30 个核心颜色＋21 个 md 输入，4,690 bytes / gzip 810 bytes；框架同时包含旧链，整体压缩尚未完成。
+
+- 后续 head `d17b64d` 的 15,131 颜色＋51,855 几何检查全部通过。Studio 样式标签原先与根节点共用标记，已拆分并增加唯一根节点断言；字号隔离验证比较密度修改前后，沿用实际 Body 排版。

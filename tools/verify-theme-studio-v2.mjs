@@ -22,10 +22,11 @@ if(process.argv.includes('--browser')){
     const choose=(name,value)=>{const node=panel.querySelector('[data-v2-option="'+name+'"]');node.value=value;node.dispatchEvent(new Event('change',{bubbles:true}));};
     const heights=()=>[...panel.querySelectorAll('[data-qxframe9a7c2-theme="light"] .qxframe9a7c2-v2-preview-row>.qxframe9a7c2-button')].map(node=>parseFloat(getComputedStyle(node).minHeight));
     const radius=()=>[...panel.querySelectorAll('[data-qxframe9a7c2-theme="light"] .qxframe9a7c2-v2-preview-row>.qxframe9a7c2-button')].map(node=>parseFloat(getComputedStyle(node).borderTopLeftRadius));
-    eq('boot',!!api,true);eq('default options',api.getTheme().config.options,{density:'standard',radius:'sm',spacing:'normal'});eq('default five heights',heights(),[28,32,36,40,44]);
+    eq('boot',!!api,true);eq('unique editor marker',document.querySelectorAll('[data-theme-studio-v2]').length,1);eq('default options',api.getTheme().config.options,{density:'standard',radius:'sm',spacing:'normal'});eq('default five heights',heights(),[28,32,36,40,44]);
     choose('style','mira');eq('Style populates concrete options',api.getTheme().config.options,{density:'tight',radius:'xs',spacing:'compact'});eq('Style density visibly changes five heights',heights(),[20,24,28,32,36]);
+    const bodyFontBeforeDensity=getComputedStyle(panel.querySelector('[data-qxframe9a7c2-theme="light"] .qxframe9a7c2-card-body')).fontSize;
     choose('density','compact');choose('spacing','roomy');eq('independent control density',heights(),[24,28,32,36,40]);
-    const body=panel.querySelector('[data-qxframe9a7c2-theme="light"] .qxframe9a7c2-card-body');eq('independent roomy surface',parseFloat(getComputedStyle(body).paddingLeft),28);eq('control density does not change Card body typography',parseFloat(getComputedStyle(body).fontSize),16);
+    const body=panel.querySelector('[data-qxframe9a7c2-theme="light"] .qxframe9a7c2-card-body');eq('independent roomy surface',parseFloat(getComputedStyle(body).paddingLeft),28);eq('control density does not change Card body typography',getComputedStyle(body).fontSize,bodyFontBeforeDensity);
     choose('radius','none');eq('none across five sizes',radius(),[0,0,0,0,0]);
     choose('style','sera');choose('radius','lg');eq('Sera follow radius can change',radius(),[10,12,14,16,18]);
     const json=panel.querySelector('[data-v2-json]'),snapshot=api.getTheme().config;json.value=JSON.stringify(snapshot);panel.querySelector('[data-v2-action="apply-json"]').click();eq('JSON roundtrip options',api.getTheme().config.options,snapshot.options);eq('JSON roundtrip geometry',api.getTheme().config.geometry,snapshot.geometry);
