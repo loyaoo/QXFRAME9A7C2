@@ -2,7 +2,7 @@ import {generateThemeV2,serializeThemeV2,parseThemeV2} from './engine-v2.mjs';
 import {SEMANTIC_STYLES,CORE_ROLES,OPTIONAL_ROLES,OVERRIDE_ROLES} from './semantic-engine.mjs';
 import {PHYSICAL_TYPES} from './type-colors-v2.mjs';
 import {DENSITIES,RADII,SPACINGS} from './geometry-engine-v2.mjs';
-import {TYPOGRAPHY_PROFILES,TEXT_STYLE_PROFILES,BODY_FONTS,HEADING_FONTS,MONO_FONTS,BORDER_PROFILES,SHADOW_PROFILES,MOTION_PROFILES,SURFACE_PROFILES,SHAPE_POLICIES,SHAPE_FAMILIES} from './style-engine-v2.mjs';
+import {TYPOGRAPHY_PROFILES,TEXT_STYLE_PROFILES,CONTROL_APPEARANCE_PROFILES,BODY_FONTS,HEADING_FONTS,MONO_FONTS,BORDER_PROFILES,SHADOW_PROFILES,MOTION_PROFILES,SURFACE_PROFILES,SHAPE_POLICIES,SHAPE_FAMILIES} from './style-engine-v2.mjs';
 
 const STYLE_LABELS=Object.freeze({vega:'Vega（均衡）',nova:'Nova（紧凑）',maia:'Maia（圆润宽松）',lyra:'Lyra（方正等宽）',mira:'Mira（高密度）',luma:'Luma（柔和抬升）',sera:'Sera（编辑风格）',rhea:'Rhea（圆润紧凑）'});
 const ROLE_LABELS=Object.freeze({
@@ -24,7 +24,7 @@ export function mountThemeStudioV2(panel){
   const key='qxframe9a7c2-theme-studio-v2';let input={},result;
   try{const saved=localStorage.getItem(key);if(saved){generateThemeV2(JSON.parse(saved));input=JSON.parse(saved);}}catch{}
   const sheet=document.createElement('style');sheet.dataset.themeStudioV2Sheet='';document.head.appendChild(sheet);
-  const labels={tight:'极紧凑',compact:'紧凑',standard:'标准',roomy:'宽松',editorial:'编辑式',normal:'正常',none:'无',hairline:'细线（1px）',strong:'强调',subtle:'轻微',soft:'柔和',elevated:'抬升',snappy:'快速',relaxed:'舒缓',default:'默认',outlined:'描边',borderless:'无边界',follow:'跟随主题圆角',intrinsic:'固有语义形态',square:'直角','system-ui':'系统无衬线',inter:'Inter 字体',humanist:'人文无衬线',serif:'衬线字体',inherit:'跟随正文','ui-monospace':'系统等宽','system-mono':'系统代码字体'};
+  const labels={tight:'极紧凑',compact:'紧凑',standard:'标准',roomy:'宽松',editorial:'编辑式',outline:'描边',tinted:'着色描边','tinted-subtle':'轻着色描边',soft:'柔和填充',underline:'下划线',normal:'正常',none:'无',hairline:'细线（1px）',strong:'强调',subtle:'轻微',soft:'柔和',elevated:'抬升',snappy:'快速',relaxed:'舒缓',default:'默认',outlined:'描边',borderless:'无边界',follow:'跟随主题圆角',intrinsic:'固有语义形态',square:'直角','system-ui':'系统无衬线',inter:'Inter 字体',humanist:'人文无衬线',serif:'衬线字体',inherit:'跟随正文','ui-monospace':'系统等宽','system-mono':'系统代码字体'};
   const labelFor=value=>STYLE_LABELS[value]??TYPE_LABELS[value]??labels[value]??value;
   const options=values=>values.map(v=>'<option value="'+v+'">'+labelFor(v)+'</option>').join('');
   const roleOptions=()=>[...CORE_ROLES,...OPTIONAL_ROLES,...OVERRIDE_ROLES.map(v=>'override-'+v)].map(value=>{const raw=value.startsWith('override-')?value.slice(9):value;const prefix=value.startsWith('override-')?'高级覆盖 · ':'';let label=ROLE_LABELS[raw];if(!label&&raw.startsWith('type-')){const physical=raw.replace(/^type-/,'').replace(/-foreground$/,'');label=(TYPE_LABELS[physical]??physical)+(raw.endsWith('-foreground')?'前景文字':'实体色');}return '<option value="'+value+'">'+prefix+(label??raw)+'</option>';}).join('');
@@ -38,6 +38,7 @@ export function mountThemeStudioV2(panel){
     <details open><summary>非颜色外观</summary><div class="qxframe9a7c2-v2-editor-options">
       <label>排版密度<select data-v2-appearance="typography">${options(TYPOGRAPHY_PROFILES)}</select></label>
       <label>文字风格<select data-v2-appearance="textStyle">${options(TEXT_STYLE_PROFILES)}</select></label>
+      <label>控件外观<select data-v2-appearance="controlAppearance">${options(CONTROL_APPEARANCE_PROFILES)}</select></label>
       <label>正文字体<select data-v2-appearance="fontBody">${options(BODY_FONTS)}</select></label>
       <label>标题字体<select data-v2-appearance="fontHeading">${options(HEADING_FONTS)}</select></label>
       <label>等宽字体<select data-v2-appearance="fontMono">${options(MONO_FONTS)}</select></label>
