@@ -1,33 +1,38 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Only the old input/derived-mode layer is poisoned. Current shared semantic
-// purposes, v2 complete inputs and every geometry/motion input stay intact.
+// The old public Theme inputs no longer exist. Poison only retired/private paint
+// fallbacks that survived as implementation constants. Canonical Theme v2 paint
+// must remain unchanged; geometry/motion/private structural values stay intact.
 export function consumerProbeInventory(root){
-  const source=fs.readFileSync(path.join(root,'src/styles/theme/_default.scss'),'utf8');
-  const schema=JSON.parse(fs.readFileSync(path.join(root,'docs/generated/theme-public-schema-v1.json')));
-  const names=new Set(schema.tokens.filter(t=>t.layer==='palette'||(/^--qxframe9a7c2-theme-(?:(?:light|dark)-)?color-/.test(t.name)&&Object.values(t.defaults).every(value=>/^(?:#|rgba?\(|oklab\(|oklch\(|color\(|transparent$)/.test(value)))).map(t=>t.name));
-  for(const match of source.matchAll(/(--_qxframe9a7c2-(?:mode-[a-z0-9-]+|on-[a-z0-9-]+|neutral-\d+|primary(?:-foreground)?))\s*:/g)){if(match[1]!=='--_qxframe9a7c2-mode-popup-shadow')names.add(match[1]);}
-  const declarations=[...names].sort().map(name=>name+': '+(name.startsWith('--qxframe9a7c2-palette-')?'17, 239, 71':'rgb(251 0 251)')+' !important;').join('\n');
+  const source=fs.readFileSync(path.join(root,'src/styles/internal/_fixed-values.scss'),'utf8');
+  const names=new Set();
+  for(const match of source.matchAll(/(--_qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;]+);/gi)){
+    const name=match[1],value=match[2];
+    const paintName=/(?:color|chart|mode|neutral|primary|success|warning|error|info|surface|text|border|shadow|mask|thumb)/.test(name);
+    const paintValue=/(?:#(?:[0-9a-f]{3,8})\b|rgba?\(|oklab\(|oklch\(|color\(|transparent\b)/i.test(value);
+    if(paintName||paintValue)names.add(name);
+  }
+  const declarations=[...names].sort().map(name=>name+': rgb(251 0 251) !important;').join('\n');
   const classes=new Set();
   for(const dir of ['src/styles/components','src/styles/theme'])for(const file of fs.readdirSync(path.join(root,dir))){
-    if(!file.endsWith('.scss')||file==='_visual-v2.scss')continue;
+    if(!file.endsWith('.scss'))continue;
     const text=fs.readFileSync(path.join(root,dir,file),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
     for(const match of text.matchAll(/\.(qxframe9a7c2-[a-z0-9-]+)/g))classes.add(match[1]);
   }
   return {names:[...names].sort(),classes:[...classes].sort(),css:':root,[data-qxframe9a7c2-theme]{'+declarations+'}'};
 }
 
-// Run on the real canonical demo DOM, after the unmodified Schema-1 smoke.
-// One Style/mode per CDP evaluation keeps each measurement bounded.
+// Run on the real canonical demo DOM. One Style/mode per CDP evaluation keeps
+// each measurement bounded while proving private retired paint fallbacks cannot
+// leak into current component rendering.
 export function consumerPoisonBrowserProbe(inventory,style,mode){
   const body=document.body,known=new Set(inventory.classes),failures=[];
-  body.setAttribute('data-qxframe9a7c2-visual','2');
   body.setAttribute('data-qxframe9a7c2-theme',mode);
   body.setAttribute('data-qxframe9a7c2-style',style);
   // Existing explicit nested modes remain boundaries. Apply the tested Style
-  // to all v2 roots so the Studio is not an accidental different-style sample.
-  document.querySelectorAll('[data-qxframe9a7c2-visual="2"]').forEach(node=>node.setAttribute('data-qxframe9a7c2-style',style));
+  // to every Theme root so the Studio is not an accidental different-style sample.
+  document.querySelectorAll('[data-qxframe9a7c2-theme]').forEach(node=>node.setAttribute('data-qxframe9a7c2-style',style));
   if(!document.getElementById('qx-v2-probe-stable')){
     const stable=document.createElement('style');stable.id='qx-v2-probe-stable';stable.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(stable);
   }
@@ -60,10 +65,9 @@ export function consumerPoisonBrowserProbe(inventory,style,mode){
     prior.values.forEach((entry,i)=>{
       const next=after.values[i];
       if(entry.value==null&&next?.value==null)return;
-      // Do not attribute a parent's legacy color dependency to every child that
-      // merely inherits currentColor. The owner is measured at its own node.
+      // Do not attribute a parent's paint dependency to every child that merely
+      // inherits currentColor. The real owner is measured at its own node.
       if(entry.property==='color'&&!entry.pseudo&&prior.parentColor!=null&&entry.value===prior.parentColor&&next?.value===after.parentColor)return;
-      // Pseudo glyphs using host currentColor are likewise one dependency, not two.
       if(entry.property==='color'&&entry.pseudo&&entry.value===prior.hostColor&&next?.value===after.hostColor)return;
       checks++;
       if(entry.value!==next?.value){
