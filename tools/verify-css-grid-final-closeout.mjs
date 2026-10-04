@@ -14,7 +14,9 @@ for(let i=1;i<=24;i++){
   assert.ok(css.includes('--qxframe9a7c2-grid-gap-y:var('+owner+')'),'Grid gy/g gutter '+i+' must consume '+owner+'.');
 }
 assert.match(css,/\.qxframe9a7c2-card-grid\{display:flex;flex-wrap:wrap\}/);
-assert.match(css,/\.qxframe9a7c2-card-grid-item,\.qxframe9a7c2-card-grid>\*\{[^}]*min-width:var\(--[^)]+(?:,[^)]+)?\);[^}]*flex-basis:calc\(100% \/ var\(--qxframe9a7c2-card-grid-columns,999\)\)/,'Card grid items must preserve token-owned minimum width and percentage Flex basis.');
+const cardGridItems=css.match(/\.qxframe9a7c2-card-grid-item,\.qxframe9a7c2-card-grid>\*\{([^}]*)\}/)?.[1]||'';
+assert.match(cardGridItems,/min-width:var\(--qxframe9a7c2-card-grid-min,var\(--_qxframe9a7c2-fixed-card-grid-min-width\)\)/,'Card grid items must preserve public override to private fixed minimum-width ownership.');
+assert.match(cardGridItems,/flex-basis:calc\(100% \/ var\(--qxframe9a7c2-card-grid-columns,999\)\)/,'Card grid items must preserve percentage Flex basis.');
 assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{display:flex;align-items:stretch\}/);
 assert.match(css,/\.qxframe9a7c2-descriptions-grid\{display:flex;flex-wrap:wrap;/);
 assert.match(css,/\.qxframe9a7c2-descriptions-item\{[^}]*flex:0 0 var\(--_qxframe9a7c2-descriptions-item-basis\)/);
