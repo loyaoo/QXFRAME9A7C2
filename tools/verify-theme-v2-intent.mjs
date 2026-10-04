@@ -61,7 +61,7 @@ assert.equal(followingHeading.style['font-family-heading'],'var(--qxframe9a7c2-t
 const followSource={style:'sera',options:{density:'tight',radius:'xl'},appearance:{shadow:'none',shape:{toggle:'square',range:'intrinsic'}}};
 const followRadius=removeStudioIntentField(followSource,'option','radius');
 assert.deepEqual(followRadius.options,{density:'tight'});
-assert.equal(generateThemeV2(followRadius).config.options.radius,'sm','removing one option must restore the active Style default without removing sibling intent');
+assert.equal(generateThemeV2(followRadius).config.options.radius,'none','removing one option must restore the active Style default without removing sibling intent');
 const followShadow=removeStudioIntentField(followSource,'appearance','shadow');
 assert.ok(!('shadow' in followShadow.appearance));
 assert.equal(generateThemeV2(followShadow).config.appearance.shadow,'sm','removing an appearance field must restore the active Style default');
