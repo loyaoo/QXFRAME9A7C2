@@ -17,6 +17,31 @@ const ROLE_LABELS=Object.freeze({
 const TYPE_LABELS=Object.freeze({grey:'灰色',cyan:'青色',teal:'蓝绿色',green:'绿色',lime:'青柠色',yellow:'黄色',orange:'橙色',red:'红色',pink:'粉色',purple:'紫色',blue:'蓝色',azure:'天蓝色',white:'白色',black:'黑色'});
 const SHAPE_LABELS=Object.freeze({choice:'选择控件',toggle:'开关',range:'范围控件',compact:'紧凑形态',identity:'身份/头像'});
 const SIZE_LABELS=Object.freeze({xs:'超小',sm:'小',md:'中',lg:'大',xl:'超大'});
+const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
+const empty=value=>!value||Object.keys(value).length===0;
+
+export function removeStudioIntentField(source={},kind,key){
+  const next=structuredClone(source);
+  if(kind==='option'){
+    if(next.options){delete next.options[key];if(empty(next.options))delete next.options;}
+    return next;
+  }
+  if(kind==='appearance'){
+    if(next.appearance){delete next.appearance[key];if(empty(next.appearance))delete next.appearance;}
+    return next;
+  }
+  if(kind==='shape'){
+    if(next.appearance?.shape){delete next.appearance.shape[key];if(empty(next.appearance.shape))delete next.appearance.shape;if(empty(next.appearance))delete next.appearance;}
+    return next;
+  }
+  throw new TypeError('Unknown Studio intent field kind: '+kind);
+}
+function hasStudioIntentField(source,kind,key){
+  if(kind==='option')return own(source.options??{},key);
+  if(kind==='appearance')return own(source.appearance??{},key);
+  if(kind==='shape')return own(source.appearance?.shape??{},key);
+  return false;
+}
 
 // Documentation editor only. Production components do not import the generator.
 export function mountThemeStudioV2(panel){
@@ -67,9 +92,18 @@ export function mountThemeStudioV2(panel){
     <div id="theme-v2-studio-preview" class="qxframe9a7c2-v2-preview"></div>`;
   const get=selector=>panel.querySelector(selector),status=(text,error=false)=>{get('[data-v2-status]').textContent=text;get('[data-v2-status]').dataset.error=String(error);};
   const value=selector=>get(selector).value;
+  const addFollow=(control,kind,keyName)=>{
+    const button=document.createElement('button');button.type='button';button.className='qxframe9a7c2-button is-outlined is-sm';button.dataset.v2FollowKind=kind;button.dataset.v2FollowKey=keyName;button.textContent='跟随 Style';button.title='删除当前显式设置，重新跟随当前 Style / 框架默认';control.insertAdjacentElement('afterend',button);
+  };
+  panel.querySelectorAll('[data-v2-option]').forEach(control=>{if(control.dataset.v2Option!=='style')addFollow(control,'option',control.dataset.v2Option);});
+  panel.querySelectorAll('[data-v2-appearance]').forEach(control=>addFollow(control,'appearance',control.dataset.v2Appearance));
+  panel.querySelectorAll('[data-v2-shape]').forEach(control=>addFollow(control,'shape',control.dataset.v2Shape));
   function colorField(){
     const mode=value('[data-v2-color-mode]'),role=value('[data-v2-color-role]'),override=role.startsWith('override-');
     get('[data-v2-color-value]').value=(override?result.config.overrides[mode][role.slice(9)]:result.config.colors[mode][role])??'';
+  }
+  function syncFollowControls(){
+    panel.querySelectorAll('[data-v2-follow-kind]').forEach(button=>{button.disabled=!hasStudioIntentField(input,button.dataset.v2FollowKind,button.dataset.v2FollowKey);});
   }
   const switchHtml=size=>'<label class="qxframe9a7c2-switch is-'+size+'"><input class="qxframe9a7c2-switch-input" type="checkbox"><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></label>';
   function render(next=input){
@@ -79,6 +113,7 @@ export function mountThemeStudioV2(panel){
     for(const [option,selected]of Object.entries(result.config.options))get('[data-v2-option="'+option+'"]').value=selected;
     for(const [option,selected]of Object.entries(result.config.appearance)){if(option==='shape')continue;get('[data-v2-appearance="'+option+'"]').value=selected;}
     for(const [family,selected]of Object.entries(result.config.appearance.shape))get('[data-v2-shape="'+family+'"]').value=selected;
+    syncFollowControls();
     const stats=result.statistics;get('[data-v2-statistics]').textContent=stats.colorNames+' 个完整颜色 · '+stats.geometryNames+' 个默认尺寸输入 · '+stats.styleNames+' 个非颜色输入 · '+stats.overrideDeclarations+' 个高级覆盖 · CSS '+new TextEncoder().encode(result.css).length+' 字节';
     get('[data-v2-json]').value=serializeThemeV2(input);colorField();
     get('#theme-v2-studio-preview').innerHTML=['light','dark'].map(mode=>'<section data-qxframe9a7c2-theme="'+mode+'" data-qxframe9a7c2-style="'+result.config.style+'"><h3>'+(mode==='light'?'浅色模式':'深色模式')+'</h3><div class="qxframe9a7c2-card"><div class="qxframe9a7c2-card-body"><h4 class="qxframe9a7c2-card-title">工作区</h4><p class="qxframe9a7c2-card-description">风格默认值与手动调整值使用同一条 CSS 消费链。</p><div class="qxframe9a7c2-typography-kpi">128.4k</div><code>QXFRAME / 代码字体</code>'+['xs','sm','md','lg','xl'].map(size=>'<div class="qxframe9a7c2-v2-preview-row"><button class="qxframe9a7c2-button is-primary is-solid is-'+size+'">'+SIZE_LABELS[size]+'</button><div class="qxframe9a7c2-input is-'+size+'"><input class="qxframe9a7c2-input-control" placeholder="输入文字"></div>'+switchHtml(size)+'</div>').join('')+'<div class="qxframe9a7c2-v2-preview-row">'+[['success','成功'],['warning','警告'],['error','错误'],['info','信息']].map(pair=>'<span class="qxframe9a7c2-tag is-colored is-'+pair[0]+'">'+pair[1]+'</span>').join('')+'</div><div class="qxframe9a7c2-v2-preview-row">'+PHYSICAL_TYPES.map(type=>'<span class="qxframe9a7c2-badge is-solid is-'+type+'" data-v2-physical-type="'+type+'">'+(TYPE_LABELS[type]??type)+'</span>').join('')+'</div><div class="qxframe9a7c2-v2-preview-row"><input class="qxframe9a7c2-form-check-input" type="checkbox" checked><input class="qxframe9a7c2-form-check-input" type="radio" checked><span>原生选择控件</span></div><button class="qxframe9a7c2-button is-outlined"><span>多行内容<br>随内容自然增长</span></button></div></div><div class="qxframe9a7c2-popup-surface">公共浮层表面</div></section>').join('');
@@ -97,17 +132,22 @@ export function mountThemeStudioV2(panel){
   function colorChange(remove){
     const next=structuredClone(input),mode=value('[data-v2-color-mode]'),role=value('[data-v2-color-role]'),override=role.startsWith('override-'),section=override?'overrides':'colors',name=override?role.slice(9):role;
     next[section]??={};next[section][mode]??={};
-    if(remove)delete next[section][mode][name];else next[section][mode][name]=value('[data-v2-color-value]');
+    if(remove){delete next[section][mode][name];if(empty(next[section][mode]))delete next[section][mode];if(empty(next[section]))delete next[section];}
+    else next[section][mode][name]=value('[data-v2-color-value]');
     render(next);
   }
   function download(text,type,name){const url=URL.createObjectURL(new Blob([text],{type})),link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),0);}
-  panel.addEventListener('click',event=>{const action=event.target.closest('[data-v2-action]')?.dataset.v2Action;if(!action)return;run(()=>{
-    if(action==='reset')render({});
-    if(action==='color'||action==='remove-color')colorChange(action==='remove-color');
-    if(action==='apply-json')render(parseThemeV2(value('[data-v2-json]')).intent);
-    if(action==='css')download(result.css,'text/css','qxframe-theme.css');
-    if(action==='json')download(serializeThemeV2(input),'application/json','qxframe-theme.json');
-  });});
+  panel.addEventListener('click',event=>{
+    const follow=event.target.closest('[data-v2-follow-kind]');
+    if(follow){run(()=>render(removeStudioIntentField(input,follow.dataset.v2FollowKind,follow.dataset.v2FollowKey)));return;}
+    const action=event.target.closest('[data-v2-action]')?.dataset.v2Action;if(!action)return;run(()=>{
+      if(action==='reset')render({});
+      if(action==='color'||action==='remove-color')colorChange(action==='remove-color');
+      if(action==='apply-json')render(parseThemeV2(value('[data-v2-json]')).intent);
+      if(action==='css')download(result.css,'text/css','qxframe-theme.css');
+      if(action==='json')download(serializeThemeV2(input),'application/json','qxframe-theme.json');
+    });
+  });
   get('[data-v2-import]').addEventListener('change',async event=>{const file=event.target.files?.[0];if(!file)return;try{render(parseThemeV2(await file.text()).intent);}catch(error){status(error.message,true);}event.target.value='';});
   for(const selector of ['[data-v2-color-mode]','[data-v2-color-role]'])get(selector).addEventListener('change',colorField);
   render(input);
