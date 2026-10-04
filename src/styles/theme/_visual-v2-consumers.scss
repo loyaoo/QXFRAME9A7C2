@@ -1,7 +1,7 @@
 /* THEME-VISUAL-V2-001 consumer closeout.
  * Same public-rule layer as visual-v2; split only for maintainability.
  * No legacy palette/state inputs are consumed here. */
-@scope ([data-qxframe9a7c2-visual="2"]) {
+@scope (:root) {
   /* Keyboard focus remains the framework-wide 2px light/dark black-white
      rule. Re-resolve it inside the v2 scope so no inherited legacy color is
      captured before a local theme boundary is applied. */

@@ -1,8 +1,8 @@
-/* THEME-VISUAL-V2-001 representative chain. Opt-in until Phase H.
+/* THEME-VISUAL-V2-001 canonical chain.
  * Theme inputs are full colors. Shared rules resolve in each consumer.
  * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT.
  * This versioned module is NOT a legacy token bridge or an expanded state matrix. */
-@scope ([data-qxframe9a7c2-visual="2"]) {
+@scope (:root) {
   :scope { background-color: var(--qxframe9a7c2-theme-v2-background); color: var(--qxframe9a7c2-theme-v2-foreground); }
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
@@ -563,7 +563,7 @@
 
 }
 
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]) {
+@scope ([data-qxframe9a7c2-style="maia"]) {
   .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
 
@@ -601,7 +601,7 @@
 
 }
 
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) {
+@scope ([data-qxframe9a7c2-style="mira"]) {
   .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
 
@@ -638,7 +638,7 @@
 .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-color-panel-input, .qxframe9a7c2-pagination-input { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 20%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 30%, transparent)); }
 }
 
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]) {
+@scope ([data-qxframe9a7c2-style="luma"]) {
   .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--_qxframe9a7c2-v2-shadow-md); --_qxframe9a7c2-v2-card-explicit-shadow: var(--_qxframe9a7c2-v2-shadow-md); }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--_qxframe9a7c2-v2-shadow-md); }
   .qxframe9a7c2-switch-thumb { box-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
@@ -685,7 +685,7 @@
 
 }
 
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]) {
+@scope ([data-qxframe9a7c2-style="sera"]) {
   .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--_qxframe9a7c2-v2-shadow-sm); --_qxframe9a7c2-v2-card-explicit-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
 
@@ -733,7 +733,7 @@
 
 }
 
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) {
+@scope ([data-qxframe9a7c2-style="lyra"]) {
   .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
 
@@ -767,7 +767,7 @@
 .qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
 }
 
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]) {
+@scope ([data-qxframe9a7c2-style="nova"]) {
   .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
 
@@ -801,7 +801,7 @@
 .qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-v2-control-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 50%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 80%, transparent)); }
 }
 
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]) {
+@scope ([data-qxframe9a7c2-style="rhea"]) {
   .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--_qxframe9a7c2-v2-shadow-sm); --_qxframe9a7c2-v2-card-explicit-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--_qxframe9a7c2-v2-shadow-md); }
   .qxframe9a7c2-switch-thumb { box-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }

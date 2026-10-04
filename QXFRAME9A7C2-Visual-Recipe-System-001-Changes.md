@@ -7,7 +7,7 @@
 
 | 阶段 | 实现 | 验收 |
 | --- | --- | --- |
-| A Foundation / Recipe | Size Scale、Radius Scale、Shape Family、Surface Recipe；继续消费原有索引 Size Tree；required Schema 不变 | 离线矩阵、规模及单位检查 |
+| A Foundation / Recipe | Radius / Density 直接选择语义档位，Shape Family、Surface Recipe 继续消费原有索引 Size Tree；取消 `sizeScale / radiusScale` 二次倍率层；required Schema 不变 | 离线矩阵、规模及单位检查 |
 | B Typography | Body / Heading / Label / Meta / KPI / Code；同尺寸 Input、Textarea、Select、TagInput 编辑器使用统一 Body；Heading Font 与 Body Font 全局入口 | 真实 Control 字体与 input type 一致性 |
 | C Control Geometry | 文字与普通图标/Spinner 共用尺度，Spinner 1px 线宽；Default Disabled 的离线 Button accent 绑定回 Neutral；Switch 的零边框值采用长度单位；Body 行高为 Control 提供最小几何预算 | Loading 高度/图标尺寸、8 Style Switch 对称检查 |
 | D Compound Controls | TagInput 与 Multiple Select 共用等距 inset、Tag 高度与文字锚点；移除 hosted Tag .9em 缩小 | 文字锚点、上下间隙、五种尺寸高度一致 |
@@ -18,7 +18,7 @@
 
 ## 配置与作用域
 
-- `foundation: { sizeScale: 1, radiusScale: 1 }`，可选 0.75 / 1 / 1.25 / 1.5。Typography 不被尺寸缩放隐式改写；Control 最小高度按 Body 行高、双边框和 Compound inset 保底，避免小尺寸内容溢出。
+- `sizeScale / radiusScale` 已移除，`foundation` 不再是 Theme Config 的合法顶层字段。尺寸由 Density / md 几何输入决定，圆角由 Radius / md 圆角输入决定；不再对已解析尺寸做二次乘法。
 - `shape: { choice, toggle, range, compact, identity }`，每类选择 `follow / intrinsic / square`。None + Follow 归零；Intrinsic 保留语义形态；Square 无条件归零。
 - `surface: default / outlined / elevated / borderless`，通过共享 Surface Recipe 生成 Card 的边缘和空间关系。
 - `components.menu: { scheme, accentStyle, expand, scope }`。旧 Config 的 color / appearance / accent 可导入；新的 Studio 使用上述语义策略，旧 Color 枚举映射为对应 Scheme。
@@ -31,7 +31,7 @@
 
 ## 收益与交互影响
 
-本批改动统一视觉消费层，保留 Value / Focus / Interaction / Overlay / Motion 的现有业务协议。唯一业务场景的初始状态变化是 Workspace Navigation 现在默认关闭，需要 hover / click / keyboard 触发。字体与最小 Control 高度会改变旧 Style 的视觉密度，这是当前方案要求的 Typography 收敛与几何预算，避免 Input value 被当作 Meta。旧 Config 可以解析，但新的 Menu Recipe 使用组合语义重新生成视觉。
+本批改动统一视觉消费层，保留 Value / Focus / Interaction / Overlay / Motion 的现有业务协议。唯一业务场景的初始状态变化是 Workspace Navigation 现在默认关闭，需要 hover / click / keyboard 触发。字体与最小 Control 高度会改变旧 Style 的视觉密度，这是当前方案要求的 Typography 收敛与几何预算，避免 Input value 被当作 Meta。旧 Config 可以解析，但已移除的 `foundation.sizeScale / foundation.radiusScale` 不再兼容；新的 Menu Recipe 使用组合语义重新生成视觉。
 
 保留 `@layer / :is() / :where()` 禁用、Flex 布局、无 Grid/fr/vw/vh、currentColor 图标、既有 Theme Schema hash；未重新执行 Controller 或 CSS Token 已完成阶段。
 

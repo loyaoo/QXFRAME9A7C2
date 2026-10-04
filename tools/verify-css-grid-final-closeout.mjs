@@ -1,21 +1,22 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { fileURLToPath } from 'node:url';
-import { readCanonicalComponentStyleSource } from './style-source.mjs';
+import {fileURLToPath} from 'node:url';
+import {readCanonicalComponentStyleSource} from './style-source.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const css=readCanonicalComponentStyleSource({root});
-const theme=fs.readFileSync(path.join(root,'src/styles/theme/_default.scss'),'utf8');
+
 assert.doesNotMatch(css,/\bdisplay\s*:\s*(?:inline-)?grid\b|\bgrid-(?:template|column|row|area|auto-(?:columns|rows|flow))\s*:/i,'Component CSS must not retain CSS Grid declarations.');
 assert.doesNotMatch(css,/(^|[^a-z0-9.-])-?\d*\.?\d+fr\b/i,'Component CSS must not retain fr units.');
-assert.doesNotMatch(css,/--qxframe9a7c2-grid-gap-[xy]:\s*\d*\.?\d+rem\s*;/,'Grid gutter utilities must consume Theme Grid gap tokens, not raw rem literals.');
+assert.doesNotMatch(css,/--qxframe9a7c2-grid-gap-[xy]:\s*\d*\.?\d+rem\s*;/,'Grid gutter utilities must consume shared fixed gap owners, not raw rem literals.');
 for(let i=1;i<=24;i++){
-  assert.ok(theme.includes(`--qxframe9a7c2-theme-grid-gap-${i}: var(--qxframe9a7c2-size-${i});`),`Theme Grid gap ${i} must map to Size Tree node ${i}.`);
-  assert.ok(css.includes(`var(--qxframe9a7c2-theme-grid-gap-${i})`),`Grid gutter utilities must consume Theme Grid gap ${i}.`);
+  const owner='--_qxframe9a7c2-fixed-grid-gap-'+i;
+  assert.ok(css.includes('--qxframe9a7c2-grid-gap-x:var('+owner+')'),'Grid gx/g gutter '+i+' must consume '+owner+'.');
+  assert.ok(css.includes('--qxframe9a7c2-grid-gap-y:var('+owner+')'),'Grid gy/g gutter '+i+' must consume '+owner+'.');
 }
 assert.match(css,/\.qxframe9a7c2-card-grid\{display:flex;flex-wrap:wrap\}/);
-assert.match(theme,/--qxframe9a7c2-theme-card-grid-min-width:\s*calc\(var\(--qxframe9a7c2-size-39\) \+ var\(--qxframe9a7c2-size-3\)\)/);
-assert.match(css,/\.qxframe9a7c2-card-grid-item,\.qxframe9a7c2-card-grid>\*\{[^}]*min-width:var\(--qxframe9a7c2-card-grid-min,var\(--qxframe9a7c2-theme-card-grid-min-width\)\);[^}]*flex-basis:calc\(100% \/ var\(--qxframe9a7c2-card-grid-columns,999\)\)/);
+const cardGridItems=css.match(/\.qxframe9a7c2-card-grid-item,\.qxframe9a7c2-card-grid>\*\{([^}]*)\}/)?.[1]||'';
+assert.match(cardGridItems,/min-width:var\(--qxframe9a7c2-card-grid-min,var\(--_qxframe9a7c2-fixed-card-grid-min-width\)\)/,'Card grid items must preserve public override to private fixed minimum-width ownership.');
+assert.match(cardGridItems,/flex-basis:calc\(100% \/ var\(--qxframe9a7c2-card-grid-columns,999\)\)/,'Card grid items must preserve percentage Flex basis.');
 assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{display:flex;align-items:stretch\}/);
 assert.match(css,/\.qxframe9a7c2-descriptions-grid\{display:flex;flex-wrap:wrap;/);
 assert.match(css,/\.qxframe9a7c2-descriptions-item\{[^}]*flex:0 0 var\(--_qxframe9a7c2-descriptions-item-basis\)/);
@@ -24,4 +25,5 @@ assert.match(css,/\.qxframe9a7c2-form\.is-layout-horizontal \.qxframe9a7c2-form-
 assert.match(css,/\.qxframe9a7c2-form-check\{[^}]*display:flex;flex-wrap:wrap;/);
 assert.match(css,/\.qxframe9a7c2-carousel\.is-fade \.qxframe9a7c2-carousel-track\{position:relative;display:flex;flex-direction:row;/);
 assert.match(css,/\.qxframe9a7c2-carousel\.is-fade \.qxframe9a7c2-carousel-slide:not\(:first-child\)\{margin-inline-start:-100%\}/);
-console.log(JSON.stringify({ok:true,actualGridRuleCount:0,actualGridDeclarationCount:0,families:['Card','Descriptions','Form','Carousel']}));
+
+console.log(JSON.stringify({ok:true,actualGridRuleCount:0,actualGridDeclarationCount:0,gapAuthority:'private-fixed-grid-gap-1..24',families:['Grid','Card','Descriptions','Form','Carousel']}));

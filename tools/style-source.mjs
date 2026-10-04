@@ -5,6 +5,12 @@ import { fileURLToPath } from 'node:url';
 const ownRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 
 export const CANONICAL_STYLE_ENTRY='src/styles/qxframe9a7c2.scss';
+const V2_STYLE_MODULES=Object.freeze([
+  'src/styles/theme/_visual-v2.scss',
+  'src/styles/theme/_visual-v2-consumers.scss',
+  'src/styles/theme/_visual-v2-style.scss',
+  'src/styles/theme/_visual-v2-style-consumers.scss'
+]);
 
 function readOrder(root){
   return JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-order.json'),'utf8'));
@@ -20,7 +26,7 @@ export function getCanonicalStyleModulePaths({root=ownRoot}={}){
 
 export function readCanonicalStyleSource({root=ownRoot,schema=null}={}){
   return getCanonicalStyleModulePaths({root})
-    .filter(rel=>schema!==1||!['src/styles/theme/_visual-v2.scss','src/styles/theme/_visual-v2-consumers.scss'].includes(rel))
+    .filter(rel=>schema!==1||!V2_STYLE_MODULES.includes(rel))
     .map(rel=>fs.readFileSync(path.join(root,rel),'utf8'))
     .join('');
 }

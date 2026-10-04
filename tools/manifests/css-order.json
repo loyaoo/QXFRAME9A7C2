@@ -1,6 +1,6 @@
 {
-  "version": 11,
-  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
+  "version": 15,
+  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Theme v1.5 is the only public Theme input system. Foundation and retired Theme fallback values are private framework implementation constants.",
   "files": [
     {
       "stage": "canonical",
@@ -11,12 +11,13 @@
   "migrationBaseline": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
   "physicalOrder": [
     "base",
-    "preset",
-    "theme-default",
-    "theme-family-category",
+    "internal-foundation",
+    "internal-fixed-values",
     "components",
     "semantic-v2-opt-in",
-    "semantic-v2-consumers"
+    "semantic-v2-consumers",
+    "semantic-v2-style",
+    "semantic-v2-style-consumers"
   ],
   "conceptualOrder": [
     "foundation",
@@ -33,9 +34,8 @@
   ],
   "sourceModules": [
     "src/styles/base/_reset.scss",
-    "src/styles/preset/_foundation.scss",
-    "src/styles/theme/_default.scss",
-    "src/styles/theme/_family.scss",
+    "src/styles/internal/_foundation.scss",
+    "src/styles/internal/_fixed-values.scss",
     "src/styles/components/_component-foundation.scss",
     "src/styles/components/_choice-visual.scss",
     "src/styles/components/_native-overflow.scss",
@@ -90,6 +90,8 @@
     "src/styles/components/_compatibility.scss",
     "src/styles/components/_visual-recipe.scss",
     "src/styles/theme/_visual-v2.scss",
-    "src/styles/theme/_visual-v2-consumers.scss"
+    "src/styles/theme/_visual-v2-consumers.scss",
+    "src/styles/theme/_visual-v2-style.scss",
+    "src/styles/theme/_visual-v2-style-consumers.scss"
   ]
 }

@@ -1,13 +1,12 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { fileURLToPath } from 'node:url';
-import { readCanonicalComponentStyleSource } from './style-source.mjs';
+import {fileURLToPath} from 'node:url';
+import {readCanonicalComponentStyleSource} from './style-source.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const css=readCanonicalComponentStyleSource({root});
 
 assert.match(css,/\.qxframe9a7c2-period-panel-grid\{display:flex;flex-wrap:wrap;/);
-assert.match(css,/\.qxframe9a7c2-period-panel-cell\{[^}]*flex:0 0 calc\(25% - \(var\(--qxframe9a7c2-theme-space-2\) \* \.75\)\)/);
+assert.match(css,/\.qxframe9a7c2-period-panel-cell\{[^}]*flex:0 0 calc\(25% - \(var\(--_qxframe9a7c2-fixed-space-2\) \* \.75\)\)/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-period-panel-grid\{[^}]*(?:display:grid|grid-template-columns)/);
 
 assert.match(css,/\.qxframe9a7c2-color-panel-fields\{display:flex;align-items:stretch;/);
@@ -18,4 +17,4 @@ assert.match(css,/\.qxframe9a7c2-picker-range-dual\{display:flex;align-items:cen
 assert.match(css,/\.qxframe9a7c2-picker-range-control\{display:block;min-width:0;flex:1 1 0\}/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-picker-range-dual\{[^}]*(?:display:grid|grid-template-columns)/);
 
-console.log(JSON.stringify({ok:true,batch:'period-color-range-grid-to-flex',convertedRules:3}));
+console.log(JSON.stringify({ok:true,batch:'period-color-range-grid-to-flex',convertedRules:3,retiredThemeSpacingDependency:false}));

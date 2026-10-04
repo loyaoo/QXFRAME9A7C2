@@ -1,26 +1,32 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { fileURLToPath } from 'node:url';
-import { readCanonicalComponentStyleSource } from './style-source.mjs';
+import {fileURLToPath} from 'node:url';
+import {verifyGeometryRuleSource} from './theme-v2-geometry-contract.mjs';
+import {readCanonicalStyleSource} from './style-source.mjs';
+
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const phase=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-token-phase-b-inventory.json'),'utf8'));
-const map=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-odd-decimal-geometry-map.json'),'utf8'));
-const theme=fs.readFileSync(path.join(root,'src/styles/theme/_default.scss'),'utf8');
-const components=readCanonicalComponentStyleSource({root});
-const preset=fs.readFileSync(path.join(root,'src/styles/preset/_foundation.scss'),'utf8');
-assert.equal(map.summary.odd,phase.tables.oddPx.length);
-assert.equal(map.summary.decimal,phase.tables.decimalPx.length);
-assert.equal(map.summary.total,phase.tables.oddPx.length+phase.tables.decimalPx.length);
-assert.equal(map.policy.automaticReplacementApproved,false);
-assert.ok(map.consumers.every(x=>x.approved===false&&x.finalAction===null),'Audit must not pre-approve geometry changes.');
-assert.equal(map.consumers.filter(x=>x.category==='responsive-boundary').length,10);
-assert.equal(map.consumers.filter(x=>x.category==='choice-glyph-stroke').length,2);
-assert.equal(map.consumers.filter(x=>x.category==='hairline-centering').length,2);
-assert.doesNotMatch(theme,/--qxframe9a7c2-focus-ring\s*:/,'Retired public 3px focus-ring alias must not return; canonical focus geometry is the private 2px Size Tree-backed focus contract.');
-assert.match(components,/\.qxframe9a7c2-switch:active\{--_qxframe9a7c2-switch-press-offset:var\(--qxframe9a7c2-theme-switch-press-offset\)\}/);
-assert.match(components,/\.qxframe9a7c2-slider\.is-xs\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-xs\)\}/);
-assert.match(components,/\.qxframe9a7c2-slider\.is-sm\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-sm\)\}/);
-assert.match(components,/\.qxframe9a7c2-slider\.is-lg\{[^}]*--_qxframe9a7c2-slider-rail-default:var\(--qxframe9a7c2-theme-slider-rail-lg\)\}/);
-assert.match(preset,/--qxframe9a7c2-radius-pill:\s*100rem;/,'Pill radius is an intentional semantic sentinel, not a scalable Size Tree dimension.');
-console.log(JSON.stringify({ok:true,...map.summary}));
+const theme=fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8');
+const fixed=fs.readFileSync(path.join(root,'src/styles/internal/_fixed-values.scss'),'utf8');
+const foundation=fs.readFileSync(path.join(root,'src/styles/internal/_foundation.scss'),'utf8');
+const css=readCanonicalStyleSource({root});
+const contract=verifyGeometryRuleSource(root,{sourceText:theme});
+
+assert.equal(contract.evenLengths,true);
+assert.equal(contract.legacyFiveSizeOverrides,false);
+assert.equal(contract.canonicalScopes,true);
+
+// 1px is the only odd visible length exception. Focus geometry is a private
+// framework contract rather than a Theme input: keyboard focus is 2px with a
+// -1px offset, while pointer styling continues to use border/background/shadow.
+assert.match(foundation,/--_qxframe9a7c2-size-1:\s*0?\.125rem\s*;/,'Private size-1 must remain the 2px reference.');
+assert.match(fixed,/--_qxframe9a7c2-focus-visible-width:\s*var\(--qxframe9a7c2-focus-visible-width,\s*var\(--_qxframe9a7c2-size-1\)\)\s*;/,'Keyboard focus width must resolve from the 2px private reference.');
+assert.match(fixed,/--_qxframe9a7c2-focus-visible-offset:\s*var\(--qxframe9a7c2-focus-visible-offset,\s*-1px\)\s*;/,'Keyboard focus offset must remain -1px.');
+assert.match(css,/--_qxframe9a7c2-focus-visible-outline:\s*var\(--_qxframe9a7c2-focus-visible-width\) solid var\(--_qxframe9a7c2-semantic-focus-visible\)/,'Canonical focus outline must consume the shared private focus geometry.');
+assert.doesNotMatch(theme,/--qxframe9a7c2-focus-ring\s*:/,'Retired public focus-ring alias must not return in Theme.');
+
+for(const retired of ['src/styles/preset/_foundation.scss','src/styles/theme/_default.scss','src/styles/theme/_family.scss']){
+  assert.equal(fs.existsSync(path.join(root,retired)),false,'Retired geometry source must stay deleted: '+retired);
+}
+
+console.log(JSON.stringify({ok:true,geometryAuthority:'theme-v2-md-fixed-rules',focusAuthority:'private-framework-contract',evenReferenceLengths:true,hairlineExceptionPx:1,focusRingPx:2,focusOffsetPx:-1}));

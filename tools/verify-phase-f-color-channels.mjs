@@ -1,71 +1,37 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { fileURLToPath } from 'node:url';
-import { readCanonicalComponentStyleSource } from './style-source.mjs';
+import {fileURLToPath} from 'node:url';
+import {readCanonicalComponentStyleSource} from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const family=fs.readFileSync(path.join(root,'src/styles/theme/_family.scss'),'utf8');
+const theme=fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8');
 const components=readCanonicalComponentStyleSource({root});
-const css=family+'\n'+components;
-const lines=css.split(/\r?\n/);
+const lines=components.split(/\r?\n/);
 
+// v1.5 public color inputs are complete CSS <color> values. Component CSS must
+// not consume the retired physical Palette API or wrap full colors as channels.
 const physical=[];
-for(let i=0;i<lines.length;i++){
-  if(/var\(\s*--qxframe9a7c2-palette-(?:grey|gray|cyan|teal|green|lime|yellow|orange|red|pink|purple|blue|azure|white|black)\b/i.test(lines[i])){
-    physical.push({line:i+1,text:lines[i].trim()});
-  }
-}
-assert.deepEqual(physical,[],'Component/family CSS must not consume physical palette variables directly; route color meaning through semantic/family owners.');
+for(let i=0;i<lines.length;i++)if(/var\(\s*--qxframe9a7c2-palette-/i.test(lines[i]))physical.push({line:i+1,text:lines[i].trim()});
+assert.deepEqual(physical,[],'Components must not consume retired physical Palette variables.');
+assert.doesNotMatch(theme,/--qxframe9a7c2-palette-/,'Canonical Theme must not recreate a public Palette layer.');
+assert.doesNotMatch(theme,/rgb\(\s*var\(\s*--qxframe9a7c2-theme-v2-/,'Full-color Theme inputs must not be wrapped as RGB channels.');
+assert.doesNotMatch(components,/rgb\(\s*var\(\s*--qxframe9a7c2-theme-v2-/,'Components must consume full-color Theme values directly.');
 
+// Hard-coded component paint is limited to intrinsic color-model UI (the
+// ColorPanel spectra / ColorPicker gradient handles). Business/status colors
+// must resolve through semantic/shared roles.
 const hard=[];
 for(let i=0;i<lines.length;i++){
-  const line=lines[i];
-  const scrub=line.replace(/--_?qxframe9a7c2-[a-z0-9-]+\s*:[^;]+;/ig,'');
-  if(/#[0-9a-f]{3,8}\b|rgba?\(\s*(?:\d|\.)/i.test(scrub)) hard.push({line:i+1,text:line.trim()});
+  const line=lines[i],scrub=line.replace(/--_?qxframe9a7c2-[a-z0-9-]+\s*:[^;]+;/ig,'');
+  if(/#[0-9a-f]{3,8}\b|rgba?\(\s*(?:\d|\.)/i.test(scrub))hard.push({line:i+1,text:line.trim()});
 }
-const unexpectedHard=hard.filter(entry=>{
-  const text=entry.text;
-  return !/^\.qxframe9a7c2-color-panel(?:-|\b)/.test(text)
-    && !/^\.qxframe9a7c2-color-picker-gradient-stop(?:\b|\.)/.test(text);
-});
-assert.deepEqual(unexpectedHard,[],'Hard-coded component colors must be limited to classified color-model/contrast functional data.');
+const unexpectedHard=hard.filter(({text})=>!/^\.qxframe9a7c2-color-panel(?:-|\b)/.test(text)&&!/^\.qxframe9a7c2-color-picker-gradient-stop(?:\b|\.)/.test(text));
+assert.deepEqual(unexpectedHard,[],'Hard-coded component colors must be limited to intrinsic color-model/contrast data.');
 
-const baseline=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-static-color-baseline.json'),'utf8'));
-const roleFor=(base,weight)=>{
-  const normalized='color-mix(insrgb,var(--_qxframe9a7c2-semantic-'+base+')'+weight+'%,transparent)';
-  const entry=baseline.entries.find(e=>e.normalized===normalized);
-  assert.ok(entry,'Missing retired semantic overlay decision: '+normalized);
-  return 'var('+entry.resolvedToken;
-};
-const required=[
-  ['badge ribbon shadow','.qxframe9a7c2-badge-ribbon{','overlay-base',18],
-  ['card elevation','.qxframe9a7c2-card.is-shadow{','overlay-base',6],
-  ['card second elevation','.qxframe9a7c2-card.is-shadow{','overlay-base',5],
-  ['switch thumb shadow','.qxframe9a7c2-switch-thumb{','overlay-base',24],
-  ['table fixed shadow','.qxframe9a7c2-table .is-fixed-start.is-last::after{','overlay-base',24],
-  ['upload preview mask','.qxframe9a7c2-upload-preview-mask{','overlay-base',58],
-  ['carousel caption','.qxframe9a7c2-carousel{','overlay-base',46],
-  ['carousel inactive dot','.qxframe9a7c2-carousel-dot-bar{','overlay-text',52],
-  ['carousel active dot','.qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar{','overlay-text',98],
-  ['image preview hover chrome','.qxframe9a7c2-image-preview-toolbar .qxframe9a7c2-image-preview-tool:hover{','overlay-text',14]
-];
-for(const [name,selector,base,weight] of required){
-  const rules=css.split(selector).slice(1).map(body=>body.slice(0,body.indexOf('}')));
-  assert.ok(rules.length,'Missing semantic consumer: '+name);
-  assert.ok(rules.some(rule=>rule.includes(roleFor(base,weight))),name+' must consume the static Theme role for its original semantic overlay channel.');
-}
-assert.match(css,/\.qxframe9a7c2-image-preview-video\{[^}]*background:var\(--_qxframe9a7c2-semantic-overlay-base\)/);
+for(const role of ['--_qxframe9a7c2-semantic-overlay-base','--_qxframe9a7c2-semantic-overlay-text','--_qxframe9a7c2-semantic-focus'])assert.ok(theme.includes(role+':'),'Canonical Theme must own shared semantic paint role '+role);
+assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-panel-hue{')),'ColorPanel intrinsic hue spectrum classification is missing.');
+assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-panel-saturation{')),'ColorPanel intrinsic saturation surface classification is missing.');
+assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-picker-gradient-stop{')),'ColorPicker gradient-stop contrast affordance classification is missing.');
 
-const functionalHard=hard.map(entry=>entry.text);
-assert.ok(functionalHard.some(text=>text.startsWith('.qxframe9a7c2-color-panel-hue{')),'ColorPanel intrinsic hue spectrum classification is missing.');
-assert.ok(functionalHard.some(text=>text.startsWith('.qxframe9a7c2-color-panel-saturation{')),'ColorPanel intrinsic saturation surface classification is missing.');
-assert.ok(functionalHard.some(text=>text.startsWith('.qxframe9a7c2-color-picker-gradient-stop{')),'ColorPicker gradient-stop contrast affordance classification is missing.');
-
-console.log(JSON.stringify({
-  ok:true,
-  directPhysicalPaletteConsumers:physical.length,
-  classifiedFunctionalHardColorLines:hard.length,
-  unexpectedHardColorLines:unexpectedHard.length,
-  semanticOverlayChannels:true
-}));
+console.log(JSON.stringify({ok:true,publicColorModel:'complete-css-color',directPhysicalPaletteConsumers:0,classifiedFunctionalHardColorLines:hard.length,unexpectedHardColorLines:0}));

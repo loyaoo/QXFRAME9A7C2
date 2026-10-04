@@ -1,36 +1,33 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { fileURLToPath } from 'node:url';
-import { readCanonicalComponentStyleSource } from './style-source.mjs';
+import {fileURLToPath} from 'node:url';
+import {readCanonicalComponentStyleSource} from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
-const preset=read('src/styles/preset/_foundation.scss');
-const theme=[read('src/styles/theme/_default.scss'),read('src/styles/theme/_family.scss')].join('\n');
+const exists=rel=>fs.existsSync(path.join(root,rel));
 const component=readCanonicalComponentStyleSource({root});
-const manifest=JSON.parse(read('tools/manifests/css-token-layer-bridge.json'));
+const theme=[read('src/styles/theme/_visual-v2.scss'),read('src/styles/theme/_visual-v2-style.scss'),read('src/styles/theme/_visual-v2-style-consumers.scss')].join('\n');
+const fixed=read('src/styles/internal/_fixed-values.scss');
+
+for(const retired of ['src/styles/preset/_foundation.scss','src/styles/theme/_default.scss','src/styles/theme/_family.scss'])assert.equal(exists(retired),false,'Retired public Theme layer must stay deleted: '+retired);
+assert.equal(exists('tools/manifests/css-token-layer-bridge.json'),false,'Retired Preset→Theme bridge manifest must stay deleted.');
 
 const defs=text=>new Set([...text.matchAll(/(--_?qxframe9a7c2-[a-z0-9-]+)\s*:/ig)].map(m=>m[1]));
 const refs=text=>[...text.matchAll(/var\(\s*(--_?qxframe9a7c2-[a-z0-9-]+)/ig)].map(m=>m[1]);
-const escapeRegExp=value=>value.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
-const presetDefs=defs(preset),themeDefs=defs(theme),componentDefs=defs(component);
+const themeDefs=defs(theme),componentDefs=defs(component),fixedDefs=defs(fixed);
+const publicTheme=[...themeDefs].filter(name=>name.startsWith('--qxframe9a7c2-theme-'));
+assert.ok(publicTheme.length>0,'Canonical Theme must expose public Theme inputs.');
+assert.deepEqual(publicTheme.filter(name=>!name.startsWith('--qxframe9a7c2-theme-v2-')),[],'Only Theme v2 public inputs may exist.');
+assert.deepEqual([...fixedDefs].filter(name=>name.startsWith('--qxframe9a7c2-theme-')),[],'Private fixed implementation constants must not expose a second public Theme layer.');
 
-const directPreset=refs(component).filter(name=>presetDefs.has(name)&&!themeDefs.has(name));
-assert.deepEqual([...new Set(directPreset)].sort(),[],'Component SCSS must not read Preset tokens directly.');
-
-for(const mapping of manifest.genericPresetMappings){
-  assert.ok(presetDefs.has(mapping.source),'Generic bridge source must remain in Preset: '+mapping.source);
-  assert.ok(themeDefs.has(mapping.theme),'Generic bridge target must exist in Theme: '+mapping.theme);
-  assert.match(theme,new RegExp(escapeRegExp(mapping.theme)+'\\s*:\\s*var\\(\\s*'+escapeRegExp(mapping.source)+'\\s*\\)'),'Theme must select the declared Preset material: '+mapping.theme);
-}
-
-for(const mapping of manifest.componentMotionMappings){
-  assert.equal(presetDefs.has(mapping.component),false,'Component-semantic motion token must not remain owned by Preset: '+mapping.component);
-  assert.ok(themeDefs.has(mapping.theme),'Component-semantic motion default must exist in Theme: '+mapping.theme);
-  assert.ok(componentDefs.has(mapping.component),'Component-semantic public token must be owned by Component: '+mapping.component);
-  assert.match(component,new RegExp(escapeRegExp(mapping.component)+'\\s*:\\s*var\\(\\s*'+escapeRegExp(mapping.theme)+'\\s*\\)'),'Component token must default from Theme: '+mapping.component);
-}
+const legacyThemeRef=/^--qxframe9a7c2-theme-(?!v2-)/;
+const paletteRef=/^--qxframe9a7c2-palette-/;
+const componentLegacyRefs=[...new Set(refs(component).filter(name=>legacyThemeRef.test(name)||paletteRef.test(name)))].sort();
+assert.deepEqual(componentLegacyRefs,[],'Component CSS must not consume retired public Theme/Palette inputs.');
+const themeLegacyRefs=[...new Set(refs(theme).filter(name=>legacyThemeRef.test(name)||paletteRef.test(name)))].sort();
+assert.deepEqual(themeLegacyRefs,[],'Canonical Theme modules must not bridge through retired Theme/Palette inputs.');
 
 const declaration=/(--qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]*)(?:;|(?=}))/ig;
 const publicCrossComponent=[];
@@ -38,13 +35,14 @@ let match;
 while((match=declaration.exec(component))){
   const from=match[1],value=match[2];
   for(const to of refs(value)){
-    if(to===from)continue;
+    if(to===from||to.startsWith('--qxframe9a7c2-theme-v2-'))continue;
     if(componentDefs.has(to)&&to.startsWith('--qxframe9a7c2-'))publicCrossComponent.push({from,to});
   }
 }
 assert.deepEqual(publicCrossComponent,[],'A public Component token must not read another public Component token.');
 
-assert.equal(manifest.genericPresetBridgeCount,manifest.genericPresetMappings.length);
-assert.equal(manifest.componentMotionTokenCount,49);
-assert.equal(manifest.baseline.directPresetReferencesAfter,0);
-console.log(JSON.stringify({ok:true,genericThemeBridgeTokens:manifest.genericPresetBridgeCount,componentMotionTokens:manifest.componentMotionTokenCount,directPresetRefs:0,publicCrossComponentEdges:0}));
+const componentThemeRefs=[...new Set(refs(component).filter(name=>name.startsWith('--qxframe9a7c2-theme-v2-'))) ].sort();
+const componentPrivateRefs=[...new Set(refs(component).filter(name=>name.startsWith('--_qxframe9a7c2-'))) ].sort();
+assert.ok(componentPrivateRefs.length>0,'Components must still have private implementation roles while migration proceeds.');
+
+console.log(JSON.stringify({ok:true,publicThemeSystem:'v2-only',publicThemeInputs:publicTheme.length,componentThemeRefs:componentThemeRefs.length,componentPrivateRefs:componentPrivateRefs.length,retiredPresetBridge:true,legacyPublicRefs:0,publicCrossComponentEdges:0}));

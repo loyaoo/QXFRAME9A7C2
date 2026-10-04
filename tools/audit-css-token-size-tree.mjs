@@ -47,11 +47,12 @@ function selectorHint(lines,lineIndex){
 }
 export function generateSizeTreeAudit({rootDir=root}={}){
   // Schema 1 Size Tree stays frozen; v1.5 replaces it with direct md inputs.
-  // The excluded v2 source is validated first, never exempt from geometry gates.
+  // All versioned v2 sources are excluded from this legacy inventory and are
+  // validated by their own source/geometry/Studio gates instead.
   verifyGeometryRuleSource(rootDir);
   const nodes=sizeTreeNodes();
   const consumers=[];
-  for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>rel!=='src/styles/theme/_visual-v2.scss')){
+  for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>!rel.startsWith('src/styles/theme/_visual-v2'))){
     const lines=fs.readFileSync(path.join(rootDir,rel),'utf8').split(/\r?\n/);
     const layer=rel.includes('/preset/')?'preset':rel.includes('/theme/')?'theme':rel.includes('/components/')?'component':'base';
     for(let i=0;i<lines.length;i++){

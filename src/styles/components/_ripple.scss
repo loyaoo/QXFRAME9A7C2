@@ -7,6 +7,6 @@
 .qxframe9a7c2-ripple-host>:not(.qxframe9a7c2-ripple-wave){position:relative;z-index:var(--qxframe9a7c2-z-local-above)}
 @keyframes qxframe9a7c2-ripple-inside-enter{0%{opacity:0;transform:scale(.01)}28%{opacity:var(--qxframe9a7c2-ripple-opacity,1)}100%{opacity:var(--qxframe9a7c2-ripple-opacity,1);transform:scale(1)}}
 @keyframes qxframe9a7c2-ripple-inside-leave{from{opacity:var(--qxframe9a7c2-ripple-opacity,1)}to{opacity:0}}
-@keyframes qxframe9a7c2-ripple-outside-enter{0%{box-shadow:0 0 0 0 var(--qxframe9a7c2-ripple-outside-color,var(--qxframe9a7c2-ripple-color));opacity:var(--qxframe9a7c2-ripple-outside-opacity,.78)}35%{box-shadow:0 0 0 var(--qxframe9a7c2-ripple-outside-size,var(--qxframe9a7c2-theme-ripple-outside-size)) var(--qxframe9a7c2-ripple-outside-color,var(--qxframe9a7c2-ripple-color))}100%{opacity:0;box-shadow:0 0 0 var(--qxframe9a7c2-ripple-outside-size,var(--qxframe9a7c2-theme-ripple-outside-size)) var(--qxframe9a7c2-ripple-outside-color,var(--qxframe9a7c2-ripple-color))}}
+@keyframes qxframe9a7c2-ripple-outside-enter{0%{box-shadow:0 0 0 0 var(--qxframe9a7c2-ripple-outside-color,var(--qxframe9a7c2-ripple-color));opacity:var(--qxframe9a7c2-ripple-outside-opacity,.78)}35%{box-shadow:0 0 0 var(--qxframe9a7c2-ripple-outside-size,var(--_qxframe9a7c2-fixed-ripple-outside-size)) var(--qxframe9a7c2-ripple-outside-color,var(--qxframe9a7c2-ripple-color))}100%{opacity:0;box-shadow:0 0 0 var(--qxframe9a7c2-ripple-outside-size,var(--_qxframe9a7c2-fixed-ripple-outside-size)) var(--qxframe9a7c2-ripple-outside-color,var(--qxframe9a7c2-ripple-color))}}
 
 
