@@ -5,95 +5,65 @@ export const BODY_FONTS=Object.freeze(['system-ui','inter','humanist','serif']);
 export const HEADING_FONTS=Object.freeze(['inherit','system-ui','inter','humanist','serif']);
 export const MONO_FONTS=Object.freeze(['ui-monospace','system-mono']);
 export const BORDER_PROFILES=Object.freeze(['hairline','standard','strong']);
-export const SHADOW_PROFILES=Object.freeze(['none','subtle','soft','elevated']);
+export const SHADOW_PROFILES=Object.freeze(['none','xs','sm','md','elevated']);
 export const MOTION_PROFILES=Object.freeze(['none','snappy','standard','relaxed']);
 export const SURFACE_PROFILES=Object.freeze(['default','outlined','elevated','borderless']);
 export const SHAPE_POLICIES=Object.freeze(['follow','intrinsic','square']);
 export const SHAPE_FAMILIES=Object.freeze(['choice','toggle','range','compact','identity']);
 
-const FONT_STACKS=Object.freeze({
+const FONT=Object.freeze({
   'system-ui':'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   inter:'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   humanist:'"Trebuchet MS", "Segoe UI", ui-sans-serif, system-ui, sans-serif',
   serif:'Georgia, "Times New Roman", serif'
 });
-const MONO_STACKS=Object.freeze({
-  'ui-monospace':'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-  'system-mono':'ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Monaco, Consolas, monospace'
-});
-const TYPOGRAPHY=Object.freeze({
-  compact:Object.freeze({body:'.75rem',meta:'.75rem',heading:'.875rem',kpi:'1.75rem'}),
-  standard:Object.freeze({body:'.875rem',meta:'.75rem',heading:'1rem',kpi:'2.25rem'}),
-  roomy:Object.freeze({body:'1rem',meta:'.875rem',heading:'1.125rem',kpi:'2.5rem'})
-});
+const MONO=Object.freeze({'ui-monospace':'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace','system-mono':'ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Monaco, Consolas, monospace'});
+const TYPE=Object.freeze({compact:['.75rem','.75rem','.875rem','1.75rem'],standard:['.875rem','.75rem','1rem','2.25rem'],roomy:['1rem','.875rem','1.125rem','2.5rem']});
 const BORDER=Object.freeze({hairline:'1px',standard:'.125rem',strong:'.25rem'});
-const MOTION=Object.freeze({
-  none:Object.freeze(['0ms','0ms','0ms','0ms']),
-  snappy:Object.freeze(['90ms','140ms','180ms','280ms']),
-  standard:Object.freeze(['100ms','150ms','200ms','300ms']),
-  relaxed:Object.freeze(['180ms','240ms','320ms','480ms'])
-});
-const SHADOW=Object.freeze({
-  none:'none',
-  subtle:'var(--qxframe9a7c2-theme-v2-shadow-subtle)',
-  soft:'var(--qxframe9a7c2-theme-v2-shadow-soft)',
-  elevated:'var(--qxframe9a7c2-theme-v2-shadow-elevated)'
-});
+const MOTION=Object.freeze({none:['0ms','0ms','0ms','0ms'],snappy:['90ms','140ms','180ms','280ms'],standard:['100ms','150ms','200ms','300ms'],relaxed:['180ms','240ms','320ms','480ms']});
+const SHADOW=Object.freeze({none:'none',xs:'var(--qxframe9a7c2-theme-v2-shadow-xs)',sm:'var(--qxframe9a7c2-theme-v2-shadow-sm)',md:'var(--qxframe9a7c2-theme-v2-shadow-md)',elevated:'var(--qxframe9a7c2-theme-v2-shadow-elevated)'});
 const DEFAULT_SHAPE=Object.freeze({choice:'intrinsic',toggle:'intrinsic',range:'intrinsic',compact:'follow',identity:'intrinsic'});
+const R='var(--qxframe9a7c2-theme-v2-radius-control-md)';
 
-// Defaults port the already-accepted Visual Recipe character; v1.5 owns the output contract.
+// These defaults preserve the accepted v2/source decoration levels and the
+// already accepted Visual Recipe typography/shape character.
 export const STYLE_APPEARANCE=Object.freeze({
-  vega:Object.freeze({typography:'standard',border:'hairline',shadow:'subtle',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['100rem','50%'],range:['100rem','50%']}),
-  nova:Object.freeze({typography:'standard',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['100rem','50%'],range:['100rem','50%']}),
-  maia:Object.freeze({typography:'standard',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.5rem',toggle:['100rem','50%'],range:['var(--qxframe9a7c2-theme-v2-radius-control-md)','var(--qxframe9a7c2-theme-v2-radius-control-md)']}),
-  lyra:Object.freeze({typography:'compact',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.75rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['0','0'],range:['0','0']}),
-  mira:Object.freeze({typography:'compact',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.75rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['100rem','50%'],range:['var(--qxframe9a7c2-theme-v2-radius-control-md)','var(--qxframe9a7c2-theme-v2-radius-control-md)']}),
-  luma:Object.freeze({typography:'standard',border:'hairline',shadow:'soft',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.375rem',toggle:['100rem','100rem'],range:['100rem','100rem']}),
-  sera:Object.freeze({typography:'compact',border:'hairline',shadow:'subtle',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.25rem',cardMetaGap:'.375rem',toggle:['0','0'],range:['0','0']}),
-  rhea:Object.freeze({typography:'standard',border:'hairline',shadow:'subtle',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.375rem',toggle:['var(--qxframe9a7c2-theme-v2-radius-control-md)','var(--qxframe9a7c2-theme-v2-radius-control-md)'],range:['var(--qxframe9a7c2-theme-v2-radius-control-md)','var(--qxframe9a7c2-theme-v2-radius-control-md)']})
+  vega:{typography:'standard',border:'hairline',shadow:'xs',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['100rem','50%'],range:['100rem','50%']},
+  nova:{typography:'standard',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['100rem','50%'],range:['100rem','50%']},
+  maia:{typography:'standard',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.5rem',toggle:['100rem','50%'],range:[R,R]},
+  lyra:{typography:'compact',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.75rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['0','0'],range:['0','0']},
+  mira:{typography:'compact',border:'hairline',shadow:'none',motion:'standard',surface:'default',cardFont:'.75rem',cardTitleDelta:'.125rem',cardMetaGap:'.25rem',toggle:['100rem','50%'],range:[R,R]},
+  luma:{typography:'standard',border:'hairline',shadow:'md',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.375rem',toggle:['100rem','100rem'],range:['100rem','100rem']},
+  sera:{typography:'compact',border:'hairline',shadow:'sm',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.25rem',cardMetaGap:'.375rem',toggle:['0','0'],range:['0','0']},
+  rhea:{typography:'standard',border:'hairline',shadow:'sm',motion:'standard',surface:'default',cardFont:'.875rem',cardTitleDelta:'.125rem',cardMetaGap:'.375rem',toggle:[R,R],range:[R,R]}
 });
+for(const profile of Object.values(STYLE_APPEARANCE))Object.freeze(profile);
 
 export const STYLE_ROLES=Object.freeze([
   'font-family','font-family-heading','font-family-mono','typography-body-size','typography-meta-size','typography-heading-size','typography-kpi-size','typography-body-weight','typography-label-weight',
-  'border-width','card-border-width','card-shadow','card-font-size','card-title-delta','card-meta-gap',
-  'motion-duration-1','motion-duration-2','motion-duration-3','motion-duration-5',
+  'border-width','card-border-width','card-shadow','card-font-size','card-title-delta','card-meta-gap','motion-duration-1','motion-duration-2','motion-duration-3','motion-duration-5',
   'shape-choice-radio-radius','shape-choice-checkbox-radius','shape-toggle-track-radius','shape-toggle-thumb-radius','shape-range-track-radius','shape-range-thumb-radius','shape-compact-radius','shape-identity-radius','shape-progress-radius'
 ]);
+function plain(v,n){if(!v||typeof v!=='object'||Array.isArray(v)||![Object.prototype,null].includes(Object.getPrototypeOf(v)))throw new TypeError(n+' must be a plain object');}
+function pick(v,a,n){if(!a.includes(v))throw new TypeError('Unknown '+n+': '+v);return v;}
+function shape(p,intrinsic,follow){return p==='square'?'0':p==='follow'?follow:intrinsic;}
 
-function plain(value,label){if(!value||typeof value!=='object'||Array.isArray(value)||![Object.prototype,null].includes(Object.getPrototypeOf(value)))throw new TypeError(label+' must be a plain object');}
-function pick(value,choices,label){if(!choices.includes(value))throw new TypeError('Unknown '+label+': '+value);return value;}
-function shapeValue(policy,intrinsic,follow){return policy==='square'?'0':policy==='follow'?follow:intrinsic;}
 export function normalizeStyleConfig({style='vega',appearance={}}={}){
-  const profile=STYLE_APPEARANCE[style];if(!profile)throw new TypeError('Unknown Style');plain(appearance,'appearance');
-  const known=new Set(['typography','fontBody','fontHeading','fontMono','border','shadow','motion','surface','shape']);for(const key of Object.keys(appearance))if(!known.has(key))throw new TypeError('Unknown appearance option: '+key);
-  const selected={
-    typography:pick(appearance.typography??profile.typography,TYPOGRAPHY_PROFILES,'typography'),
-    fontBody:pick(appearance.fontBody??'system-ui',BODY_FONTS,'body font'),
-    fontHeading:pick(appearance.fontHeading??'inherit',HEADING_FONTS,'heading font'),
-    fontMono:pick(appearance.fontMono??'ui-monospace',MONO_FONTS,'mono font'),
-    border:pick(appearance.border??profile.border,BORDER_PROFILES,'border'),
-    shadow:pick(appearance.shadow??profile.shadow,SHADOW_PROFILES,'shadow'),
-    motion:pick(appearance.motion??profile.motion,MOTION_PROFILES,'motion'),
-    surface:pick(appearance.surface??profile.surface,SURFACE_PROFILES,'surface'),
-    shape:{...DEFAULT_SHAPE,...(appearance.shape??{})}
-  };
-  plain(selected.shape,'appearance.shape');for(const family of Object.keys(selected.shape))if(!SHAPE_FAMILIES.includes(family))throw new TypeError('Unknown shape family: '+family);for(const family of SHAPE_FAMILIES)pick(selected.shape[family],SHAPE_POLICIES,'shape.'+family);
-  const typography=TYPOGRAPHY[selected.typography],motion=MOTION[selected.motion],body=FONT_STACKS[selected.fontBody],heading=selected.fontHeading==='inherit'?body:FONT_STACKS[selected.fontHeading];
-  const border=BORDER[selected.border],surfaceBorder=['elevated','borderless'].includes(selected.surface)?'0':border,cardShadow=['outlined','borderless'].includes(selected.surface)?'none':selected.surface==='elevated'?SHADOW.elevated:SHADOW[selected.shadow];
-  const values={
-    'font-family':body,'font-family-heading':heading,'font-family-mono':MONO_STACKS[selected.fontMono],
-    'typography-body-size':typography.body,'typography-meta-size':typography.meta,'typography-heading-size':typography.heading,'typography-kpi-size':typography.kpi,'typography-body-weight':'400','typography-label-weight':'500',
-    'border-width':border,'card-border-width':surfaceBorder,'card-shadow':cardShadow,'card-font-size':profile.cardFont,'card-title-delta':profile.cardTitleDelta,'card-meta-gap':profile.cardMetaGap,
-    'motion-duration-1':motion[0],'motion-duration-2':motion[1],'motion-duration-3':motion[2],'motion-duration-5':motion[3],
-    'shape-choice-radio-radius':shapeValue(selected.shape.choice,'50%','var(--qxframe9a7c2-theme-v2-radius-choice-md)'),
-    'shape-choice-checkbox-radius':shapeValue(selected.shape.choice,'var(--qxframe9a7c2-theme-v2-radius-choice-md)','var(--qxframe9a7c2-theme-v2-radius-choice-md)'),
-    'shape-toggle-track-radius':shapeValue(selected.shape.toggle,profile.toggle[0],'var(--qxframe9a7c2-theme-v2-radius-control-md)'),
-    'shape-toggle-thumb-radius':shapeValue(selected.shape.toggle,profile.toggle[1],'var(--qxframe9a7c2-theme-v2-radius-control-md)'),
-    'shape-range-track-radius':shapeValue(selected.shape.range,profile.range[0],'var(--qxframe9a7c2-theme-v2-radius-control-md)'),
-    'shape-range-thumb-radius':shapeValue(selected.shape.range,profile.range[1],'var(--qxframe9a7c2-theme-v2-radius-control-md)'),
-    'shape-compact-radius':shapeValue(selected.shape.compact,'100rem','var(--qxframe9a7c2-theme-v2-radius-control-md)'),
-    'shape-identity-radius':shapeValue(selected.shape.identity,'50%','var(--qxframe9a7c2-theme-v2-radius-control-md)'),
-    'shape-progress-radius':shapeValue(selected.shape.range,'100rem','var(--qxframe9a7c2-theme-v2-radius-control-md)')
-  };
-  return {appearance:selected,style:values};
+  const p=STYLE_APPEARANCE[style];if(!p)throw new TypeError('Unknown Style');plain(appearance,'appearance');
+  const known=new Set(['typography','fontBody','fontHeading','fontMono','border','shadow','motion','surface','shape']);for(const k of Object.keys(appearance))if(!known.has(k))throw new TypeError('Unknown appearance option: '+k);
+  const a={typography:pick(appearance.typography??p.typography,TYPOGRAPHY_PROFILES,'typography'),fontBody:pick(appearance.fontBody??'system-ui',BODY_FONTS,'body font'),fontHeading:pick(appearance.fontHeading??'inherit',HEADING_FONTS,'heading font'),fontMono:pick(appearance.fontMono??'ui-monospace',MONO_FONTS,'mono font'),border:pick(appearance.border??p.border,BORDER_PROFILES,'border'),shadow:pick(appearance.shadow??p.shadow,SHADOW_PROFILES,'shadow'),motion:pick(appearance.motion??p.motion,MOTION_PROFILES,'motion'),surface:pick(appearance.surface??p.surface,SURFACE_PROFILES,'surface'),shape:{...DEFAULT_SHAPE,...(appearance.shape??{})}};
+  plain(a.shape,'appearance.shape');for(const k of Object.keys(a.shape))if(!SHAPE_FAMILIES.includes(k))throw new TypeError('Unknown shape family: '+k);for(const k of SHAPE_FAMILIES)pick(a.shape[k],SHAPE_POLICIES,'shape.'+k);
+  const t=TYPE[a.typography],m=MOTION[a.motion],body=FONT[a.fontBody],heading=a.fontHeading==='inherit'?body:FONT[a.fontHeading],border=BORDER[a.border];
+  const cardBorder=['elevated','borderless'].includes(a.surface)?'0':border,cardShadow=['outlined','borderless'].includes(a.surface)?'none':a.surface==='elevated'?SHADOW.elevated:SHADOW[a.shadow];
+  return {appearance:a,style:{
+    'font-family':body,'font-family-heading':heading,'font-family-mono':MONO[a.fontMono],
+    'typography-body-size':t[0],'typography-meta-size':t[1],'typography-heading-size':t[2],'typography-kpi-size':t[3],'typography-body-weight':'400','typography-label-weight':'500',
+    'border-width':border,'card-border-width':cardBorder,'card-shadow':cardShadow,'card-font-size':p.cardFont,'card-title-delta':p.cardTitleDelta,'card-meta-gap':p.cardMetaGap,
+    'motion-duration-1':m[0],'motion-duration-2':m[1],'motion-duration-3':m[2],'motion-duration-5':m[3],
+    'shape-choice-radio-radius':shape(a.shape.choice,'50%','var(--qxframe9a7c2-theme-v2-radius-choice-md)'),
+    'shape-choice-checkbox-radius':shape(a.shape.choice,'var(--qxframe9a7c2-theme-v2-radius-choice-md)','var(--qxframe9a7c2-theme-v2-radius-choice-md)'),
+    'shape-toggle-track-radius':shape(a.shape.toggle,p.toggle[0],R),'shape-toggle-thumb-radius':shape(a.shape.toggle,p.toggle[1],R),
+    'shape-range-track-radius':shape(a.shape.range,p.range[0],R),'shape-range-thumb-radius':shape(a.shape.range,p.range[1],R),
+    'shape-compact-radius':shape(a.shape.compact,'100rem',R),'shape-identity-radius':shape(a.shape.identity,'50%',R),'shape-progress-radius':shape(a.shape.range,'100rem',R)
+  }};
 }
