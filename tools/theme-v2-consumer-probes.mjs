@@ -1,14 +1,33 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-// The old public Theme inputs no longer exist. Poison only retired/private paint
-// fallbacks that survived as implementation constants. Canonical Theme v2 paint
-// must remain unchanged; geometry/motion/private structural values stay intact.
+// The old public Theme inputs no longer exist. Poison only private variables that
+// are actually CSS <color> values (or aliases to one). Names are intentionally
+// NOT used as the type system: e.g. fixed-color-panel-control-border is a length.
+// Geometry, shadow geometry, gradients and motion values must stay untouched.
 export function consumerProbeInventory(root){
   const source=fs.readFileSync(path.join(root,'src/styles/internal/_fixed-values.scss'),'utf8');
-  const names=new Set();
-  const retiredPaint=/^--_qxframe9a7c2-(?:fixed-chart-\d+|fixed-color-|mode-color-|fixed-primary(?:-\d+|-foreground)?$|fixed-neutral-\d+$|mode-(?:bg(?:-|$)|surface(?:-|$)|text(?:-|$)|border(?:-|$)|accent(?:-|$)|success(?:-|$)|warning(?:-|$)|error(?:-|$)|info(?:-|$)|mask(?:-|$)|overlay(?:-|$)|tooltip(?:-|$)|loading-mask$|code-bg$|focus(?:-|$)|default-solid(?:-|$)|on-accent$)|semantic-(?:bg|surface|text|border|accent|success|warning|error|info|mask|overlay|tooltip|loading|code|focus|on-)|token-(?:subtle|text|bg|border|primary|success|warning|error|info|loading|code|json|focus|scroll))/;
-  for(const match of source.matchAll(/(--_qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;]+);/gi))if(retiredPaint.test(match[1]))names.add(match[1]);
+  const values=new Map();
+  for(const match of source.matchAll(/(--_qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;]+);/gi))values.set(match[1],match[2].trim());
+
+  const directColor=value=>/^(?:#[0-9a-f]{3,8}\b|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color|color-mix|light-dark)\(|transparent\b|currentcolor\b)/i.test(value);
+  const soleVar=value=>{
+    const match=value.match(/^var\(\s*(--_qxframe9a7c2-[a-z0-9-]+)\s*\)$/i);
+    return match?.[1]??null;
+  };
+  const names=new Set([...values].filter(([,value])=>directColor(value)).map(([name])=>name));
+  // Resolve pure aliases transitively. Composite shadow/gradient/length values are
+  // deliberately excluded even when one operand happens to be a color.
+  let changed=true;
+  while(changed){
+    changed=false;
+    for(const [name,value]of values){
+      if(names.has(name))continue;
+      const target=soleVar(value);
+      if(target&&names.has(target)){names.add(name);changed=true;}
+    }
+  }
+
   const declarations=[...names].sort().map(name=>name+': rgb(251 0 251) !important;').join('\n');
   const classes=new Set();
   for(const dir of ['src/styles/components','src/styles/theme'])for(const file of fs.readdirSync(path.join(root,dir))){
@@ -16,18 +35,16 @@ export function consumerProbeInventory(root){
     const text=fs.readFileSync(path.join(root,dir,file),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
     for(const match of text.matchAll(/\.(qxframe9a7c2-[a-z0-9-]+)/g))classes.add(match[1]);
   }
-  return {names:[...names].sort(),classes:[...classes].sort(),css:':root,[data-qxframe9a7c2-theme]{'+declarations+'}'};
+  return {names:[...names].sort(),classes:[...classes].sort(),css:':root,[data-qxframe9a7c2-theme]{'+declarations+'}',classification:'css-color-value+pure-alias'};
 }
 
 // Run on the real canonical demo DOM. One Style/mode per CDP evaluation keeps
-// each measurement bounded while proving private retired paint fallbacks cannot
+// each measurement bounded while proving retired private paint fallbacks cannot
 // leak into current component rendering.
 export function consumerPoisonBrowserProbe(inventory,style,mode){
   const body=document.body,known=new Set(inventory.classes),failures=[];
   body.setAttribute('data-qxframe9a7c2-theme',mode);
   body.setAttribute('data-qxframe9a7c2-style',style);
-  // Existing explicit nested modes remain boundaries. Apply the tested Style
-  // to every Theme root so the Studio is not an accidental different-style sample.
   document.querySelectorAll('[data-qxframe9a7c2-theme]').forEach(node=>node.setAttribute('data-qxframe9a7c2-style',style));
   if(!document.getElementById('qx-v2-probe-stable')){
     const stable=document.createElement('style');stable.id='qx-v2-probe-stable';stable.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(stable);
@@ -61,8 +78,6 @@ export function consumerPoisonBrowserProbe(inventory,style,mode){
     prior.values.forEach((entry,i)=>{
       const next=after.values[i];
       if(entry.value==null&&next?.value==null)return;
-      // Do not attribute a parent's paint dependency to every child that merely
-      // inherits currentColor. The real owner is measured at its own node.
       if(entry.property==='color'&&!entry.pseudo&&prior.parentColor!=null&&entry.value===prior.parentColor&&next?.value===after.parentColor)return;
       if(entry.property==='color'&&entry.pseudo&&entry.value===prior.hostColor&&next?.value===after.hostColor)return;
       checks++;
@@ -75,5 +90,5 @@ export function consumerPoisonBrowserProbe(inventory,style,mode){
   });
   poison.remove();
   const covered=[...new Set(nodes.flatMap(node=>[...node.classList].filter(cls=>known.has(cls))))].sort();
-  return {style,mode,nodes:nodes.length,checks,poisonedInputs:inventory.names.length,coveredClasses:covered,unmountedClasses:inventory.classes.filter(cls=>!covered.includes(cls)),mismatchCount,failures};
+  return {style,mode,nodes:nodes.length,checks,poisonedInputs:inventory.names.length,classification:inventory.classification,coveredClasses:covered,unmountedClasses:inventory.classes.filter(cls=>!covered.includes(cls)),mismatchCount,failures};
 }
