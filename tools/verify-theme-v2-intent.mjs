@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {generateThemeV2,serializeThemeV2,parseThemeV2,INTENT_SCHEMA_VERSION} from '../docs/assets/theme-generator/engine-v2.mjs';
 import {normalizeStyleConfig,STYLE_RULE_VERSION} from '../docs/assets/theme-generator/style-engine-v2.mjs';
 import {GEOMETRY_RULE_VERSION} from '../docs/assets/theme-generator/geometry-engine-v2.mjs';
@@ -55,6 +56,14 @@ const borderlessStrong=normalizeStyleConfig({style:'vega',appearance:{surface:'b
 assert.equal(borderlessStrong.style['card-border-width'],'.25rem','explicit border must override Surface default');
 const followingHeading=normalizeStyleConfig({appearance:{fontBody:'serif',fontHeading:'inherit'}});
 assert.equal(followingHeading.style['font-family-heading'],'var(--qxframe9a7c2-theme-v2-font-family)','heading inherit must stay a live CSS dependency');
+
+const styleConsumers=await readFile(new URL('../src/styles/theme/_visual-v2-style-consumers.scss',import.meta.url),'utf8');
+const cardBlock=styleConsumers.match(/\.qxframe9a7c2-card\[class\]\{([\s\S]*?)\n  \}/)?.[1]??'';
+assert.match(cardBlock,/--_qxframe9a7c2-card-padding:var\(--qxframe9a7c2-card-md-padding,var\(--qxframe9a7c2-card-padding,var\(--_qxframe9a7c2-v2-surface-padding\)\)\)/,'Card default padding must keep public Detail ahead of Theme common padding');
+assert.match(cardBlock,/--_qxframe9a7c2-card-radius:var\(--qxframe9a7c2-card-radius,var\(--_qxframe9a7c2-surface-radius\)\)/,'Card radius must keep public Detail ahead of Theme common radius');
+assert.match(cardBlock,/--_qxframe9a7c2-card-shadow:var\(--qxframe9a7c2-card-shadow,var\(--qxframe9a7c2-theme-v2-card-shadow\)\)/,'Card shadow must keep public Detail ahead of Theme default');
+assert.doesNotMatch(cardBlock,/\bbox-shadow\s*:/,'Style consumer must not directly paint Card box-shadow');
+for(const size of ['xs','sm','md','lg','xl'])assert.match(styleConsumers,new RegExp('\\.qxframe9a7c2-card\\.is-'+size+'\\[class\\]\\{--_qxframe9a7c2-card-padding:var\\(--qxframe9a7c2-card-'+size+'-padding,var\\(--qxframe9a7c2-card-padding,'),'Card '+size+' padding must retain its existing public compatibility endpoint');
 
 assert.throws(()=>parseThemeV2(JSON.stringify({intentSchema:'future-schema',style:'vega'})),/Unsupported intent schema/);
 console.log('Theme v2.8 intent and precedence verification passed.');
