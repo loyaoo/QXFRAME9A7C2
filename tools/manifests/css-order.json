@@ -1,36 +1,12 @@
 {
-  "version": 11,
+  "version": 12,
   "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Ordered SCSS partials are the writable style authority; components/_components.scss is the ordered component aggregator. The Phase A CSS baseline is retained only under tools/fixtures and is never shipped or consumed by the release build.",
   "files": [
-    {
-      "stage": "canonical",
-      "name": "scss-entry",
-      "file": "src/styles/qxframe9a7c2.scss"
-    }
+    {"stage":"canonical","name":"scss-entry","file":"src/styles/qxframe9a7c2.scss"}
   ],
   "migrationBaseline": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
-  "physicalOrder": [
-    "base",
-    "preset",
-    "theme-default",
-    "theme-family-category",
-    "components",
-    "semantic-v2-opt-in",
-    "semantic-v2-consumers"
-  ],
-  "conceptualOrder": [
-    "foundation",
-    "theme",
-    "semantic",
-    "family",
-    "shared-roles",
-    "component-base",
-    "component-variant",
-    "component-state",
-    "composite-relation",
-    "utilities",
-    "compatibility"
-  ],
+  "physicalOrder": ["base","preset","theme-default","theme-family-category","components","semantic-v2-opt-in","semantic-v2-consumers","semantic-v2-style"],
+  "conceptualOrder": ["foundation","theme","semantic","family","shared-roles","component-base","component-variant","component-state","composite-relation","utilities","compatibility"],
   "sourceModules": [
     "src/styles/base/_reset.scss",
     "src/styles/preset/_foundation.scss",
@@ -90,6 +66,7 @@
     "src/styles/components/_compatibility.scss",
     "src/styles/components/_visual-recipe.scss",
     "src/styles/theme/_visual-v2.scss",
-    "src/styles/theme/_visual-v2-consumers.scss"
+    "src/styles/theme/_visual-v2-consumers.scss",
+    "src/styles/theme/_visual-v2-style.scss"
   ]
 }
