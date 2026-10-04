@@ -37,18 +37,18 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.ok(expressions.length>0);
   assert.doesNotMatch(source,/var\(\s*--qxframe9a7c2-palette-|rgb\(\s*var\(|--qxframe9a7c2-theme-v2-[a-z-]+-(?:xs|sm|lg|xl)\b|@layer|:is\(|:where\(|display\s*:\s*grid|\d(?:vw|vh|fr)\b/);
-  assert.equal((source.match(/@scope \(/g)||[]).length,8,'Every v2 rule must remain within a reviewed opt-in scope');
-  assert.match(source,/^\s*@scope \(\[data-qxframe9a7c2-visual="2"\]\)\s*\{/);
+  assert.equal((source.match(/@scope \(/g)||[]).length,8,'Every Theme rule must remain within one of the eight reviewed Style scopes');
+  assert.match(source,/^\s*@scope \(:root\)\s*\{/,'Canonical Vega/default Theme scope is missing');
   let cursor=0,scopes=0;
   while(cursor<source.length){
     while(/\s/.test(source[cursor]??'')&&cursor<source.length)cursor++;
     if(cursor===source.length)break;
     const open=source.indexOf('{',cursor);assert.ok(open>cursor);
-    assert.match(source.slice(cursor,open).trim(),/^@scope \(\[data-qxframe9a7c2-visual="2"\](?:\[data-qxframe9a7c2-style="(?:maia|mira|luma|sera|lyra|rhea|nova)"\])?\)$/,'No ungated top-level rules in the v2 pilot');
+    assert.match(source.slice(cursor,open).trim(),/^@scope \((?::root|\[data-qxframe9a7c2-style="(?:maia|mira|luma|sera|lyra|rhea|nova)"\])\)$/,'No ungated top-level rules in the canonical Theme system');
     let depth=1,end=open+1;for(;end<source.length&&depth;end++){if(source[end]==='{')depth++;if(source[end]==='}')depth--;}
     assert.equal(depth,0);cursor=end;scopes++;
   }
   assert.equal(scopes,8);
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');
-  return {source,expressions,sourceSha:fixture.sha};
+  return {source,expressions,sourceSha:fixture.sha,canonical:true};
 }
