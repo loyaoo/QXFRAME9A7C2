@@ -8,7 +8,8 @@ export const CANONICAL_STYLE_ENTRY='src/styles/qxframe9a7c2.scss';
 const V2_STYLE_MODULES=Object.freeze([
   'src/styles/theme/_visual-v2.scss',
   'src/styles/theme/_visual-v2-consumers.scss',
-  'src/styles/theme/_visual-v2-style.scss'
+  'src/styles/theme/_visual-v2-style.scss',
+  'src/styles/theme/_visual-v2-style-consumers.scss'
 ]);
 
 function readOrder(root){
