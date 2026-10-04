@@ -83,7 +83,7 @@
 - 新 Studio 的实际 UI 联动、Sera follow 半径、独立容器留白、无半径全五档、配置往返、覆盖消费/删除和无效导入不破坏当前配置加入 mandatory Chromium CI。
 - 初次几何浏览器 fixture 错误地将 Progress line 与 ring 放在同一个 flex root，造成圆环 flex shrink；已按实际组件 DOM 拆开。颜色等价没有新增容差。
 
-### 当前验收事实与收尾修正
+### 中间验收发现与收尾修正（历史记录）
 
 - head `4ae35349cf96f9b71f5533129cf71a85afd21efd` 的 Chromium 颜色矩阵：5,168 场景、15,035 检查；几何：51,855 检查；全部零失败。Studio 和完整发布仍未验收通过。
 - 专用 Studio 探针显式执行真实 Rollup 模块；旧 Playground smoke 按 module 类型打包入口及依赖，保持原脚本顺序，不跳过新 Studio。CDP 异常保留实际描述。
@@ -99,3 +99,10 @@
 - 实现 head：`10587b2862455d9d60e5fd7e058b8b495b9e20c2`；CSS Schema Acceptance `37164122219` SUCCESS。
 - 5,168 颜色场景 / 15,131 检查；576 配置×五档 / 51,855 几何检查；Studio 23 个实际 UI 断言；全部零失败。完整 release 与合并后 main／Pages 以实时 CI 为准，不能用单个 Schema 成功代替发布验收。
 - 当前 v1.5 总体约 45%；A 100%、B 80%、C 95%、D 35%、E 40%、F 45%、G/H 0%。当前交付覆盖代表链和新增用途，保留 opt-in；未完成清单在前文列明。
+
+## PR #256 合并与主分支发布
+
+- 最终 head：`e6d63a8097413a08a02bfa46a0ee1b793cc1e478`。CSS Schema Acceptance `37164297428` 与 QXFRAME CI `37164297455` 均 SUCCESS。
+- PR #256 已合并为 `e7bbf6b7800a2a82db1bd04ac115e0ba5ff62ea4`。主分支 QXFRAME CI `37164806216` SUCCESS，release / Windows / npm 包 /独立演示 / docs / Pages 部署均通过，deploy-pages job `111326754850` SUCCESS。
+- 主分支再次通过 15,131 颜色、51,855 几何和 23 Studio UI 检查，零失败。
+- 本批交付 100%；整个 v1.5 约 45%。下一步为 B/D 物理颜色 Type 与完整消费上下文迁移。生产默认保留至 H；主分支发布与代表浏览器矩阵不代替全组件、跨浏览器及人工视觉 G。
