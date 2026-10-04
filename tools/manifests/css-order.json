@@ -1,6 +1,6 @@
 {
-  "version": 14,
-  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Theme v1.5 is the only public Theme token system; retired Schema1 theme/default and theme/family are not compiled.",
+  "version": 15,
+  "policy": "src/styles/qxframe9a7c2.scss is the sole production CSS source entry. Theme v1.5 is the only public Theme input system. Foundation and retired Theme fallback values are private framework implementation constants.",
   "files": [
     {
       "stage": "canonical",
@@ -11,7 +11,8 @@
   "migrationBaseline": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
   "physicalOrder": [
     "base",
-    "preset",
+    "internal-foundation",
+    "internal-fixed-values",
     "components",
     "semantic-v2-opt-in",
     "semantic-v2-consumers",
@@ -33,7 +34,8 @@
   ],
   "sourceModules": [
     "src/styles/base/_reset.scss",
-    "src/styles/preset/_foundation.scss",
+    "src/styles/internal/_foundation.scss",
+    "src/styles/internal/_fixed-values.scss",
     "src/styles/components/_component-foundation.scss",
     "src/styles/components/_choice-visual.scss",
     "src/styles/components/_native-overflow.scss",

@@ -22,7 +22,7 @@
   --_qxframe9a7c2-item-ring:none;
   --_qxframe9a7c2-item-outline:0 solid transparent;
   --_qxframe9a7c2-item-cursor:pointer;
-  --_qxframe9a7c2-item-radius:var(--qxframe9a7c2-item-radius,var(--_qxframe9a7c2-navigation-radius));
+  --_qxframe9a7c2-item-radius:var(--_qxframe9a7c2-item-radius,var(--_qxframe9a7c2-navigation-radius));
   box-sizing:border-box;display:flex;min-height:var(--_qxframe9a7c2-control-height);align-items:center;gap:var(--_qxframe9a7c2-control-gap);padding-inline:var(--_qxframe9a7c2-control-padding-inline);border-radius:var(--_qxframe9a7c2-item-radius);
   background:var(--_qxframe9a7c2-item-bg);color:var(--_qxframe9a7c2-item-text);box-shadow:var(--_qxframe9a7c2-item-ring);outline:var(--_qxframe9a7c2-item-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);cursor:var(--_qxframe9a7c2-item-cursor)
 }

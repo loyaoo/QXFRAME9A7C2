@@ -1,7 +1,8 @@
 // Canonical SCSS source order. Keep this order stable because QXFRAME does not use @layer.
 // Phase A decomposition only: no token/value/state changes are allowed in this commit.
 @use "base/reset";
-@use "preset/foundation";
+@use "internal/foundation";
+@use "internal/fixed-values";
 @use "components/components";
 // Canonical v1.5 Theme chain. Legacy Theme/default and Theme/family are retired.
 @use "theme/visual-v2";

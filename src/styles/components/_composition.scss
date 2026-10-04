@@ -4,8 +4,8 @@
   --_qxframe9a7c2-form-input-group-radius:var(--qxframe9a7c2-form-input-group-radius,var(--_qxframe9a7c2-control-radius));
   box-sizing:border-box;display:flex;align-items:stretch;width:100%;min-width:0;isolation:isolate
 }
-.qxframe9a7c2-form-input-group.is-rounded{--_qxframe9a7c2-form-input-group-radius:var(--qxframe9a7c2-form-input-group-radius,var(--qxframe9a7c2-theme-radius-pill))}
-.qxframe9a7c2-form-input-group.is-separated{gap:var(--qxframe9a7c2-theme-space-2,var(--qxframe9a7c2-theme-space-4))}
+.qxframe9a7c2-form-input-group.is-rounded{--_qxframe9a7c2-form-input-group-radius:var(--qxframe9a7c2-form-input-group-radius,var(--_qxframe9a7c2-fixed-radius-pill))}
+.qxframe9a7c2-form-input-group.is-separated{gap:var(--_qxframe9a7c2-fixed-space-2,var(--_qxframe9a7c2-fixed-space-4))}
 .qxframe9a7c2-form-input-group.is-vertical{flex-direction:column}
 /* Connected composition is the size owner by default. Child size classes are ignored in this layer; `.is-mixed-size` is the explicit escape hatch. */
 .qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-group-control,.qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{--_qxframe9a7c2-control-height:inherit;--_qxframe9a7c2-control-font-size:inherit;--_qxframe9a7c2-control-padding-inline:inherit;--_qxframe9a7c2-control-padding-block:inherit;--_qxframe9a7c2-control-gap:inherit;--_qxframe9a7c2-control-radius:inherit;--_qxframe9a7c2-control-border-width:inherit;--_qxframe9a7c2-control-icon-size:inherit;--_qxframe9a7c2-control-line-height:inherit}
@@ -20,7 +20,7 @@
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-button.is-square,.qxframe9a7c2-form-input-group>.qxframe9a7c2-button.is-circle{min-width:var(--_qxframe9a7c2-control-height);flex-shrink:0}
 .qxframe9a7c2-form-input-group-addon{
   box-sizing:border-box;display:inline-flex;min-width:0;min-height:var(--_qxframe9a7c2-control-height);align-items:center;justify-content:center;
-  gap:var(--qxframe9a7c2-theme-space-2,var(--qxframe9a7c2-theme-space-4));padding:0 var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
+  gap:var(--_qxframe9a7c2-fixed-space-2,var(--_qxframe9a7c2-fixed-space-4));padding:0 var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
   border-radius:var(--_qxframe9a7c2-form-input-group-radius);background:var(--_qxframe9a7c2-semantic-surface-muted);color:var(--_qxframe9a7c2-semantic-text-secondary);
   font:inherit;font-size:var(--_qxframe9a7c2-control-font-size);line-height:1;white-space:nowrap
 }
@@ -28,7 +28,7 @@ button.qxframe9a7c2-form-input-group-addon,a.qxframe9a7c2-form-input-group-addon
 button.qxframe9a7c2-form-input-group-addon:hover,a.qxframe9a7c2-form-input-group-addon:hover,.qxframe9a7c2-form-input-group-addon.is-action:hover{background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text)}
 button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-input-group-addon:focus-visible,.qxframe9a7c2-form-input-group-addon.is-action:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);border-color:var(--_qxframe9a7c2-semantic-focus);box-shadow:none;z-index:var(--qxframe9a7c2-z-local-focus)}
 .qxframe9a7c2-form-input-group-addon>.qxframe9a7c2-form-check-input{--_qxframe9a7c2-form-check-size:calc(var(--_qxframe9a7c2-control-height) * .5);margin:0}
-.qxframe9a7c2-form-input-group-kbd{display:inline-flex;align-items:center;gap:.2em;padding:var(--qxframe9a7c2-theme-space-1) var(--qxframe9a7c2-theme-form-kbd-padding-inline);border:1px solid var(--_qxframe9a7c2-semantic-border);border-bottom-width:var(--qxframe9a7c2-theme-form-kbd-border-bottom);border-radius:var(--qxframe9a7c2-theme-radius-sm);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font:600 .78em/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.qxframe9a7c2-form-input-group-kbd{display:inline-flex;align-items:center;gap:.2em;padding:var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-fixed-form-kbd-padding-inline);border:1px solid var(--_qxframe9a7c2-semantic-border);border-bottom-width:var(--_qxframe9a7c2-fixed-form-kbd-border-bottom);border-radius:var(--_qxframe9a7c2-fixed-radius-sm);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font:600 .78em/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .qxframe9a7c2-form-input-group-link{color:var(--_qxframe9a7c2-semantic-accent);text-decoration:none}
 .qxframe9a7c2-form-input-group-link:hover{text-decoration:underline;text-underline-offset:.16em}
 
@@ -84,8 +84,8 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   min-width:0;
   isolation:isolate
 }
-.qxframe9a7c2-button-group.is-rounded{--_qxframe9a7c2-button-group-radius:var(--qxframe9a7c2-button-group-radius,var(--qxframe9a7c2-theme-radius-pill))}
-.qxframe9a7c2-button-group.is-separated{gap:var(--qxframe9a7c2-theme-space-2,var(--qxframe9a7c2-theme-space-4))}
+.qxframe9a7c2-button-group.is-rounded{--_qxframe9a7c2-button-group-radius:var(--qxframe9a7c2-button-group-radius,var(--_qxframe9a7c2-fixed-radius-pill))}
+.qxframe9a7c2-button-group.is-separated{gap:var(--_qxframe9a7c2-fixed-space-2,var(--_qxframe9a7c2-fixed-space-4))}
 .qxframe9a7c2-button-group.is-vertical{flex-direction:column}
 .qxframe9a7c2-button-group:not(.is-mixed-size)>.qxframe9a7c2-button{
   --_qxframe9a7c2-control-height:inherit;
