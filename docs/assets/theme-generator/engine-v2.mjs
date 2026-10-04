@@ -29,7 +29,7 @@ export function generateThemeV2(input={}){
   if(styleRules!==undefined&&styleRules!==STYLE_RULE_VERSION)throw new TypeError('Unsupported style rules');
   const colors=generateSemanticTheme(semantic);
   const visual=normalizeStyleConfig({style:colors.config.style,appearance});
-  const md=normalizeGeometryConfig({style:colors.config.style,options,geometry,textStyle:visual.appearance.textStyle});
+  const md=normalizeGeometryConfig({style:colors.config.style,options,geometry,textStyle:visual.appearance.textStyle,borderWidth:visual.style['border-width']});
   // Static Style recipes are defaults. Explicit generated Theme inputs must win
   // when the same element is also the Style scope root. Keep the ordinary
   // [data-theme] selector for nested mode boundaries, and add a stronger same-root
@@ -41,7 +41,7 @@ export function generateThemeV2(input={}){
   const config={...colors.config,geometryRules:GEOMETRY_RULE_VERSION,styleRules:STYLE_RULE_VERSION,...md,appearance:visual.appearance};
   const intent=normalizeIntent(input,colors.config.style);
   intentByResolvedConfig.set(config,intent);
-  return {config,intent,css,statistics:{...colors.statistics,geometryNames:GEOMETRY_ROLES.length,geometryDeclarations:GEOMETRY_ROLES.length,styleNames:STYLE_ROLES.length,styleDeclarations:STYLE_ROLES.length},rules:{color:RULE_VERSION,geometry:GEOMETRY_RULE_VERSION,style:STYLE_RULE_VERSION}};
+  return {config,intent,css,statistics:{...colors.statistics,geometryNames:GEOMETRY_ROLES.length,geometryDeclarations:GEOMETRY_ROLES.length,styleNames:STYLE_ROLES.length,styleDeclarations:STYLE_ROLES.length,geometryAdjustments:md.constraints.adjustments.length},rules:{color:RULE_VERSION,geometry:GEOMETRY_RULE_VERSION,style:STYLE_RULE_VERSION}};
 }
 export function serializeThemeV2(input={}){
   const known=input&&typeof input==='object'&&!Array.isArray(input)?intentByResolvedConfig.get(input):undefined;
