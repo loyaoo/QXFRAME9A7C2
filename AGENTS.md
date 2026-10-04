@@ -10,13 +10,17 @@ This repository is maintained as a long-running AI-assisted framework project.
 4. Current source, manifests, tests and canonical docs define already-shipped behavior unless the master handbook explicitly changes it.
 5. Chat history is never a substitute for the repository checkpoint.
 
-For `THEME-VISUAL-V2-001`, `QXFRAME9A7C2-Theme-Visual-System-v1.5.md`
-supersedes historical Preset/complete-matrix/Schema-v1 visual contracts in the
-handbook and older guides. Runtime Controller, focus, overlay/portal and build
-authority stay in force. Follow its A–H sequence; do not replace the production
-default before H. Source color formulas use the pinned shadcn expressions and
-QX shared responsibilities; versioned v1 regression and v2 equivalence gates
-must both pass during the representative pilot.
+For `THEME-VISUAL-V2-001`, `QXFRAME9A7C2-Theme-System-Unified-Execution-Guide-v2.8-2026-10-04.md`
+is the sole Theme visual implementation target. It supersedes the parallel use of
+`QXFRAME9A7C2-Theme-Visual-System-v1.5.md`, the v2.7 Canonical Map and the
+2026-10-04 implementation/source audit. Those older documents remain provenance
+only. Runtime Controller, focus-origin, overlay/portal and build authority stay in
+force. Follow the v2.8 M0-M8 sequence; preserve accepted source-backed color
+formulas and existing Controller behavior; do not restore Preset/Palette/Schema1
+Theme chains; do not replace the production default before M8. Existing JS owns
+focus and keyboard focus-visible recognition. Theme work only changes the CSS
+visual properties attached to those states and must not introduce a QX canonical
+`ring` Theme semantic as a substitute for the real CSS properties.
 
 Do not resurrect deleted historical plans, migration logs or stage documents from Git history unless a regression investigation specifically requires evidence from them.
 
@@ -87,6 +91,8 @@ Before starting or resuming every Task ID / meaningful subtask, report a short p
 - what is already complete and must not be repeated;
 - the exact work about to be performed;
 - current branch / PR / CI state when relevant.
+
+For the v2.8 Theme program, do not recycle the historical v1.5 `70%` figure. Until the v2.8 applicable registry/task denominator is established, report progress as `baseline pending` rather than inventing a new percentage. Once established, report mapping, implementation and acceptance progress separately as required by v2.8.
 
 Progress percentages are engineering estimates based on completed handbook phases, migrated consumers, required regression coverage and remaining gates. Do not inflate progress merely because files were created.
 
