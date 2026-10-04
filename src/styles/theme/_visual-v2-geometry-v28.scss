@@ -1,0 +1,14 @@
+/* v2.8 geometry resolver.
+ * Loaded after Style consumers so final Control geometry consumes the actual
+ * resolved border width. This is a migration owner; component paint remains in
+ * the existing component styles. */
+@scope (:root) {
+  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-text-field[class],
+  .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class] {
+    --_qxframe9a7c2-control-padding-block: round(down, max(0rem, calc((var(--_qxframe9a7c2-control-height) - max(var(--_qxframe9a7c2-control-line-height), var(--_qxframe9a7c2-control-icon-size)) - var(--_qxframe9a7c2-control-border-width) * 2) / 2)), .125rem);
+  }
+
+  .qxframe9a7c2-input.is-textarea > .qxframe9a7c2-input-control {
+    min-height: max(var(--_qxframe9a7c2-control-line-height), calc(var(--_qxframe9a7c2-control-height) - var(--_qxframe9a7c2-control-border-width) * 2));
+  }
+}
