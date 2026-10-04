@@ -9,7 +9,8 @@ const V2_STYLE_MODULES=Object.freeze([
   'src/styles/theme/_visual-v2.scss',
   'src/styles/theme/_visual-v2-consumers.scss',
   'src/styles/theme/_visual-v2-style.scss',
-  'src/styles/theme/_visual-v2-style-consumers.scss'
+  'src/styles/theme/_visual-v2-style-consumers.scss',
+  'src/styles/theme/_visual-v2-geometry-v28.scss'
 ]);
 
 function readOrder(root){
