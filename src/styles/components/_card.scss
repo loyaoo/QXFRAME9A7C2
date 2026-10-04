@@ -2,13 +2,13 @@
 
 .qxframe9a7c2-card{
   --_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-padding,var(--qxframe9a7c2-card-md-padding,var(--_qxframe9a7c2-fixed-space-6)));
-  --_qxframe9a7c2-card-font-size:var(--_qxframe9a7c2-card-font-size,var(--_qxframe9a7c2-fixed-font-size-md));
+  --_qxframe9a7c2-card-font-size:var(--qxframe9a7c2-card-font-size,var(--_qxframe9a7c2-fixed-font-size-md));
   --_qxframe9a7c2-card-radius:var(--qxframe9a7c2-card-radius,var(--_qxframe9a7c2-surface-radius));
   --_qxframe9a7c2-card-border:var(--qxframe9a7c2-card-border-color,var(--_qxframe9a7c2-surface-border));
   --_qxframe9a7c2-card-divider:var(--qxframe9a7c2-card-divider-color,var(--_qxframe9a7c2-card-border));
   --_qxframe9a7c2-card-bg:var(--qxframe9a7c2-card-surface,var(--_qxframe9a7c2-surface-raised-bg));
   --_qxframe9a7c2-card-muted-bg:var(--qxframe9a7c2-card-muted-surface,var(--_qxframe9a7c2-semantic-subtle));
-  --_qxframe9a7c2-card-shadow:var(--_qxframe9a7c2-card-shadow,none);
+  --_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,none);
   --_qxframe9a7c2-card-transform:none;
   --_qxframe9a7c2-card-heading-gap:var(--_qxframe9a7c2-fixed-card-meta-gap,var(--_qxframe9a7c2-fixed-space-2));
   --_qxframe9a7c2-card-section-radius:max(0px,calc(var(--_qxframe9a7c2-card-radius) - var(--_qxframe9a7c2-fixed-space-2)));
@@ -33,11 +33,11 @@
 .qxframe9a7c2-card.is-lg{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-lg-padding,var(--_qxframe9a7c2-fixed-space-7));--_qxframe9a7c2-card-font-size:var(--_qxframe9a7c2-fixed-font-size-lg)}
 .qxframe9a7c2-card.is-xl{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-xl-padding,var(--_qxframe9a7c2-fixed-space-8));--_qxframe9a7c2-card-font-size:var(--_qxframe9a7c2-fixed-font-size-xl)}
 .qxframe9a7c2-card.is-borderless{border-color:transparent}
-.qxframe9a7c2-card.is-shadow{--_qxframe9a7c2-card-shadow:var(--_qxframe9a7c2-card-shadow,0 1px var(--_qxframe9a7c2-fixed-card-shadow-blur-sm) var(--_qxframe9a7c2-fixed-color-card-shadow-1,var(--_qxframe9a7c2-mode-color-card-shadow-1)),0 var(--_qxframe9a7c2-fixed-card-shadow-y-lg) var(--_qxframe9a7c2-fixed-card-shadow-blur-lg) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
+.qxframe9a7c2-card.is-shadow{--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,0 1px var(--_qxframe9a7c2-fixed-card-shadow-blur-sm) var(--_qxframe9a7c2-fixed-color-card-shadow-1,var(--_qxframe9a7c2-mode-color-card-shadow-1)),0 var(--_qxframe9a7c2-fixed-card-shadow-y-lg) var(--_qxframe9a7c2-fixed-card-shadow-blur-lg) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
 .qxframe9a7c2-card.is-hoverable,.qxframe9a7c2-card.is-hover-shadow{transition:box-shadow var(--_qxframe9a7c2-fixed-motion-duration-3) var(--_qxframe9a7c2-fixed-motion-easing-standard),transform var(--_qxframe9a7c2-fixed-motion-duration-3) var(--_qxframe9a7c2-fixed-motion-easing-standard),border-color var(--_qxframe9a7c2-fixed-motion-duration-3) var(--_qxframe9a7c2-fixed-motion-easing-standard)}
-.qxframe9a7c2-card.is-hoverable:not(.is-loading):hover{--_qxframe9a7c2-card-transform:translateY(-1px);--_qxframe9a7c2-card-shadow:var(--_qxframe9a7c2-card-shadow,0 1px var(--_qxframe9a7c2-fixed-card-shadow-blur-sm) var(--_qxframe9a7c2-fixed-color-card-shadow-1,var(--_qxframe9a7c2-mode-color-card-shadow-1)),0 var(--_qxframe9a7c2-fixed-card-shadow-y-lg) var(--_qxframe9a7c2-fixed-card-shadow-blur-lg) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
+.qxframe9a7c2-card.is-hoverable:not(.is-loading):hover{--_qxframe9a7c2-card-transform:translateY(-1px);--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,0 1px var(--_qxframe9a7c2-fixed-card-shadow-blur-sm) var(--_qxframe9a7c2-fixed-color-card-shadow-1,var(--_qxframe9a7c2-mode-color-card-shadow-1)),0 var(--_qxframe9a7c2-fixed-card-shadow-y-lg) var(--_qxframe9a7c2-fixed-card-shadow-blur-lg) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
 .qxframe9a7c2-card.is-hoverable:not(.is-loading):not(.is-selected):hover{border-color:var(--_qxframe9a7c2-semantic-accent-border)}
-.qxframe9a7c2-card.is-hover-shadow:not(.is-loading):hover{--_qxframe9a7c2-card-shadow:var(--_qxframe9a7c2-card-shadow,0 1px var(--_qxframe9a7c2-fixed-card-shadow-blur-sm) var(--_qxframe9a7c2-fixed-color-card-shadow-1,var(--_qxframe9a7c2-mode-color-card-shadow-1)),0 var(--_qxframe9a7c2-fixed-card-shadow-y-lg) var(--_qxframe9a7c2-fixed-card-shadow-blur-lg) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
+.qxframe9a7c2-card.is-hover-shadow:not(.is-loading):hover{--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,0 1px var(--_qxframe9a7c2-fixed-card-shadow-blur-sm) var(--_qxframe9a7c2-fixed-color-card-shadow-1,var(--_qxframe9a7c2-mode-color-card-shadow-1)),0 var(--_qxframe9a7c2-fixed-card-shadow-y-lg) var(--_qxframe9a7c2-fixed-card-shadow-blur-lg) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
 .qxframe9a7c2-card.is-clickable{cursor:pointer}
 .qxframe9a7c2-card.is-selected{border-color:var(--_qxframe9a7c2-semantic-accent)}
 
@@ -113,4 +113,4 @@
 @media (max-width:38.75rem){.qxframe9a7c2-card.is-horizontal{flex-direction:column}.qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover{height:auto;flex-basis:auto;border-radius:calc(var(--_qxframe9a7c2-card-radius) - 1px) calc(var(--_qxframe9a7c2-card-radius) - 1px) 0 0}}
 
 .qxframe9a7c2-card.is-outlined{border-width:1px;--_qxframe9a7c2-card-shadow:none}
-.qxframe9a7c2-card.is-elevated{border-width:0;--_qxframe9a7c2-card-shadow:var(--_qxframe9a7c2-card-shadow,0 var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-fixed-space-6) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
+.qxframe9a7c2-card.is-elevated{border-width:0;--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,0 var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-fixed-space-6) var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)))}
