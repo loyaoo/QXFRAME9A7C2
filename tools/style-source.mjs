@@ -20,7 +20,7 @@ export function getCanonicalStyleModulePaths({root=ownRoot}={}){
 
 export function readCanonicalStyleSource({root=ownRoot,schema=null}={}){
   return getCanonicalStyleModulePaths({root})
-    .filter(rel=>schema!==1||rel!=='src/styles/theme/_visual-v2.scss')
+    .filter(rel=>schema!==1||!['src/styles/theme/_visual-v2.scss','src/styles/theme/_visual-v2-consumers.scss'].includes(rel))
     .map(rel=>fs.readFileSync(path.join(root,rel),'utf8'))
     .join('');
 }
