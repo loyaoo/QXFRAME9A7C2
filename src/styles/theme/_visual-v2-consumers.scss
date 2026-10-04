@@ -21,6 +21,10 @@
       color-mix(in oklab, var(--qxframe9a7c2-theme-v2-info) 10%, transparent),
       color-mix(in oklab, var(--qxframe9a7c2-theme-v2-info) 20%, transparent)
     );
+    /* Keyboard focus remains the framework-wide 2px light/dark black-white
+       rule. Re-resolve it inside the v2 scope so no inherited legacy color is
+       captured before a local theme boundary is applied. */
+    --_qxframe9a7c2-focus-visible-outline: var(--_qxframe9a7c2-focus-visible-width) solid var(--_qxframe9a7c2-semantic-focus-visible);
   }
 
   /* Inline image masks belong to the same mask role as preview/upload masks. */
