@@ -10,6 +10,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cliArgs = process.argv.slice(2);
 const smokeArg = cliArgs.find(arg => arg.startsWith('--smoke='));
 const smokePath = smokeArg ? path.resolve(root, smokeArg.slice('--smoke='.length)) : path.join(root, 'tools', 'verify-browser-smoke.html');
+const docsOnly = cliArgs.includes('--docs-only');
 const skipDocs = cliArgs.includes('--skip-docs') || process.env.QX_BROWSER_SKIP_DOCS === '1';
 const required = cliArgs.includes('--required') || process.env.QX_BROWSER_REQUIRED === '1';
 const candidates = [
@@ -295,7 +296,7 @@ async function runDocsPlayground(cdp) {
             if(measured.mismatchCount)break consumerConfigurations;
         }
         fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-consumers-v2.json'),JSON.stringify({schema:2,consumers},null,2)+'\n');
-        value.v2Consumers={configurations:consumers.length,checks:consumers.reduce((n,x)=>n+x.checks,0),nodes:consumers.map(x=>x.nodes),coveredClasses:consumers[0].coveredClasses.length,unmountedClasses:consumers[0].unmountedClasses.length,poisonedInputs:inventory.names.length,mismatchCount:consumers.reduce((n,x)=>n+x.mismatchCount,0),failures:consumers.flatMap(x=>x.failures).slice(0,60)};
+        value.v2Consumers={configurations:consumers.length,checks:consumers.reduce((n,x)=>n+x.checks,0),nodes:consumers.map(x=>x.nodes),coveredClasses:consumers[0].coveredClasses.length,unmountedClasses:consumers[0].unmountedClasses.length,poisonedInputs:inventory.names.length,mismatchCount:consumers.reduce((n,x)=>n+x.mismatchCount,0),failures:consumers.flatMap(x=>x.failures).slice(0,120)};
         return { ok: value.v2Consumers.mismatchCount===0 && Number(value.cards) > 0 && Array.isArray(value.failures) && value.failures.length === 0 && Array.isArray(value.unmounted) && value.unmounted.length === 0 && Array.isArray(value.windowErrors) && value.windowErrors.length === 0, ...value };
     } finally {
         await cdp.call('Target.closeTarget', { targetId }).catch(() => {});
@@ -309,7 +310,7 @@ async function main() {
     try {
         launched = await launchBrowser();
         cdp = await connectCDP(launched.endpoint);
-        const payload = await runSmoke(cdp);
+        const payload = docsOnly ? {ok:true,checks:[],docsOnly:true} : await runSmoke(cdp);
         const docs = skipDocs ? { ok:true, skipped:true } : await runDocsPlayground(cdp);
         payload.docs = docs;
         payload.ok = payload.ok && docs.ok;

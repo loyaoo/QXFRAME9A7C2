@@ -51,7 +51,7 @@ export function consumerPoisonBrowserProbe(inventory,style,mode){
       if(entry.value!==after[i]?.value){
         mismatchCount++;
         const key=node.getAttribute('class')+'/'+entry.pseudo+'/'+entry.property;
-        if(failures.length<60&&!reported.has(key)){reported.add(key);failures.push({style,mode,classes:node.getAttribute('class'),tag:node.tagName,pseudo:entry.pseudo,property:entry.property,before:entry.value,after:after[i]?.value});}
+        if(failures.length<120&&!reported.has(key)){reported.add(key);failures.push({style,mode,classes:node.getAttribute('class'),tag:node.tagName,inlineStyle:node.getAttribute('style'),demo:node.closest('[data-slug]')?.dataset.slug,pseudo:entry.pseudo,property:entry.property,before:entry.value,after:after[i]?.value});}
       }
     });
   });

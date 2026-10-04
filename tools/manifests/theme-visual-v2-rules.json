@@ -453,6 +453,24 @@
         "sera",
         "rhea"
       ]
+    },
+    {
+      "id": "decoration.source-distribution",
+      "family": "surface/control",
+      "sourceSelector": "Card, Slider thumb, Switch thumb; Tailwind 4.3.0 theme.css",
+      "sourceExpression": "source shadow xs black5%, sm/md black10%; Style allocation from pinned excerpts",
+      "qxMapping": "QX even shadow geometry; is-shadow requests decoration; inline Alert has no popup shadow",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
     }
   ],
   "specializations": [

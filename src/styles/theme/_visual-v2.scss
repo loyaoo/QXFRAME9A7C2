@@ -3,6 +3,7 @@
  * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT.
  * This versioned module is NOT a legacy token bridge or an expanded state matrix. */
 @scope ([data-qxframe9a7c2-visual="2"]) {
+  :scope { background-color: var(--qxframe9a7c2-theme-v2-background); color: var(--qxframe9a7c2-theme-v2-foreground); }
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 2.25rem;
@@ -142,6 +143,15 @@
     --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-v2-border);
     --_qxframe9a7c2-surface-bg: var(--qxframe9a7c2-theme-v2-background);
     --_qxframe9a7c2-surface-raised-bg: var(--qxframe9a7c2-theme-v2-card);
+    --_qxframe9a7c2-surface-border: var(--qxframe9a7c2-theme-v2-border);
+    --_qxframe9a7c2-data-border: var(--qxframe9a7c2-theme-v2-border);
+    --_qxframe9a7c2-data-header-bg: var(--qxframe9a7c2-theme-v2-muted);
+    --_qxframe9a7c2-semantic-focus-visible: light-dark(black, white);
+    --_qxframe9a7c2-v2-shadow-color: var(--qxframe9a7c2-theme-v2-shadow-color, var(--qxframe9a7c2-theme-v2-shadow));
+    --_qxframe9a7c2-v2-decoration-tint: color-mix(in oklab, var(--_qxframe9a7c2-v2-shadow-color) 10%, transparent);
+    --_qxframe9a7c2-v2-shadow-xs: 0 .125rem .125rem color-mix(in oklab, var(--_qxframe9a7c2-v2-shadow-color) 5%, transparent);
+    --_qxframe9a7c2-v2-shadow-sm: 0 .125rem .25rem -.125rem var(--_qxframe9a7c2-v2-decoration-tint), 0 .125rem .125rem -.125rem var(--_qxframe9a7c2-v2-decoration-tint);
+    --_qxframe9a7c2-v2-shadow-md: 0 .25rem .5rem -.125rem var(--_qxframe9a7c2-v2-decoration-tint), 0 .125rem .25rem -.125rem var(--_qxframe9a7c2-v2-decoration-tint);
     --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-v2-error-foreground));
     --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-v2-primary));
     --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-v2-primary-foreground));
@@ -160,6 +170,8 @@
     --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
     --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-v2-soft);
     --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-v2-solid-hover);
+    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-v2-type);
     --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-v2-foreground);
     --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-v2-muted-foreground);
     --_qxframe9a7c2-control-text-disabled: var(--qxframe9a7c2-theme-v2-muted-foreground);
@@ -184,6 +196,8 @@
     --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
     --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-v2-soft);
     --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-v2-solid-hover);
+    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-v2-type);
   }
   .qxframe9a7c2-tags .qxframe9a7c2-tag { --_qxframe9a7c2-v2-type: inherit; --_qxframe9a7c2-v2-type-foreground: inherit; }
   [class*="qxframe9a7c2-"].is-success { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-success); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-success-foreground); }
@@ -265,6 +279,14 @@
   .qxframe9a7c2-tooltip-container, .qxframe9a7c2-tooltip-arrow, .qxframe9a7c2-slider-tooltip { background-color: var(--qxframe9a7c2-theme-v2-foreground); color: var(--qxframe9a7c2-theme-v2-background); }
   .qxframe9a7c2-avatar { background-color: var(--qxframe9a7c2-theme-v2-muted); color: var(--qxframe9a7c2-theme-v2-muted-foreground); }
 
+  /* Source decoration distribution; inline feedback has no popup shadow. */
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--_qxframe9a7c2-v2-shadow-xs); --_qxframe9a7c2-v2-card-explicit-shadow: var(--_qxframe9a7c2-v2-shadow-xs); box-shadow: var(--_qxframe9a7c2-v2-card-shadow); }
+  .qxframe9a7c2-card.is-shadow, .qxframe9a7c2-card.is-hover-shadow:hover, .qxframe9a7c2-card.is-hoverable:hover { box-shadow: var(--_qxframe9a7c2-v2-card-explicit-shadow); }
+  .qxframe9a7c2-card-grid-item:hover { box-shadow: var(--_qxframe9a7c2-v2-shadow-xs); }
+  .qxframe9a7c2-switch-thumb { box-shadow: none; }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
+  .qxframe9a7c2-form-selectgroup-indicator.is-overlay { box-shadow: none; }
+  .qxframe9a7c2-alert-root { box-shadow: none; }
   /* Remaining QX consumers enter existing source responsibilities. Geometry,
      value ownership, native events, focus and popup mounting remain unchanged. */
   .qxframe9a7c2-form-input[class] { background-color: var(--qxframe9a7c2-theme-v2-override-control-background, var(--_qxframe9a7c2-v2-control-bg)); border-color: var(--qxframe9a7c2-theme-v2-override-control-border, var(--_qxframe9a7c2-v2-control-border)); color: var(--qxframe9a7c2-theme-v2-override-control-foreground, var(--qxframe9a7c2-theme-v2-foreground)); }
@@ -542,6 +564,9 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]) {
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
+
   /* md inputs only; Style defaults remain candidate calibration. */
   :scope {
     --qxframe9a7c2-theme-v2-control-min-block-md: 2.5rem;
@@ -577,6 +602,9 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) {
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
+
   .qxframe9a7c2-slider-handle { border-color: var(--qxframe9a7c2-theme-v2-ring); }
 
   /* md inputs only; Style defaults remain candidate calibration. */
@@ -611,6 +639,10 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]) {
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--_qxframe9a7c2-v2-shadow-md); --_qxframe9a7c2-v2-card-explicit-shadow: var(--_qxframe9a7c2-v2-shadow-md); }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--_qxframe9a7c2-v2-shadow-md); }
+  .qxframe9a7c2-switch-thumb { box-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
+
   .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled, .qxframe9a7c2-native-form input[type="radio"]:checked:disabled { border-color: transparent; }
   .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-form-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); --_qxframe9a7c2-v2-choice-border: transparent; }
   .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio { border-color: transparent; }
@@ -654,6 +686,9 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]) {
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--_qxframe9a7c2-v2-shadow-sm); --_qxframe9a7c2-v2-card-explicit-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
+
   .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled, .qxframe9a7c2-native-form input[type="radio"]:checked:disabled { background-color: transparent; border-color: var(--qxframe9a7c2-theme-v2-foreground); color: var(--qxframe9a7c2-theme-v2-foreground); }
   .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-form-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: transparent; }
   .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio { background-color: transparent; border-color: var(--qxframe9a7c2-theme-v2-foreground); color: var(--qxframe9a7c2-theme-v2-foreground); }
@@ -699,6 +734,9 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) {
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
+
   .qxframe9a7c2-slider-handle { border-color: var(--qxframe9a7c2-theme-v2-ring); }
 
   /* md inputs only; Style defaults remain candidate calibration. */
@@ -730,6 +768,9 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]) {
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: none; }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: none; }
+
   .qxframe9a7c2-slider-handle { border-color: var(--qxframe9a7c2-theme-v2-ring); }
 
   /* md inputs only; Style defaults remain candidate calibration. */
@@ -761,6 +802,10 @@
 }
 
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]) {
+  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--_qxframe9a7c2-v2-shadow-sm); --_qxframe9a7c2-v2-card-explicit-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
+  .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--_qxframe9a7c2-v2-shadow-md); }
+  .qxframe9a7c2-switch-thumb { box-shadow: var(--_qxframe9a7c2-v2-shadow-sm); }
+
   .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled, .qxframe9a7c2-native-form input[type="radio"]:checked:disabled { border-color: transparent; }
   .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-form-selectgroup-indicator.is-checkbox, .qxframe9a7c2-form-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-v2-input) 90%, transparent); --_qxframe9a7c2-v2-choice-border: transparent; }
   .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio { border-color: transparent; }

@@ -122,3 +122,5 @@
 - 初始 head `456df680c49643f581efedefd1c6daad97946c77`：Schema `37167570477` SUCCESS，9,200 颜色场景／26,150 检查、51,855 几何检查、30 Studio 操作检查，零失败。完整 release `37167570441` 在新增真实 DOM 旧色毒化检查失败；旧 canonical demos 全部挂载且无运行错误。未合并。
 - Suite 失败摘要原先遗漏新增 consumer 数据，现转发具体部位／属性并保存失败时的验收报告。毒化探针遇到真实失败即可中止当前批报告，成功必须完整运行全部 16 个配置；不改变通过条件。
 - 补齐六类原生 Control 的共享可选覆盖、invalid/focus/disabled 与 Sera 下划线责任；新增 288 个来源等价场景。
+
+- 第二次 Schema `37168952190` SUCCESS：9,488 场景／26,726 颜色检查。真实 Playground 为 9,406 节点／744 已挂载类；首个配置 126,444 paint 检查暴露 180 个旧输入变化，正在修复 shared surface/data、日期 selected-active、Focus 可见色和装饰投影职责。Vega/Luma/Sera/Rhea Card、各 Style Slider/Switch 的投影有锁定来源分配；inline Alert 去掉浮层阴影。投影几何保留 QX 偶数规则，颜色使用锁定 Tailwind xs 5%、sm/md 10% alpha，未调比例。
