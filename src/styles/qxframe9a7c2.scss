@@ -4,8 +4,9 @@
 @use "internal/foundation";
 @use "internal/fixed-values";
 @use "components/components";
-// Canonical v1.5 Theme chain. Legacy Theme/default and Theme/family are retired.
+// Canonical v2.8 Theme chain. Legacy Theme/default and Theme/family are retired.
 @use "theme/visual-v2";
 @use "theme/visual-v2-consumers";
 @use "theme/visual-v2-style";
 @use "theme/visual-v2-style-consumers";
+@use "theme/visual-v2-geometry-v28";
