@@ -34,6 +34,8 @@ jobs:
         run: npm run verify:theme-single-system
       - name: Verify the sole Theme Studio surface
         run: npm run verify:theme-studio-static
+      - name: Verify Theme intent and explicit precedence
+        run: node tools/verify-theme-v2-intent.mjs
       - name: Verify canonical component consumers
         run: node tools/verify-browser-smoke.mjs --required --docs-only
       - name: Verify Theme source equivalence and sparse output
