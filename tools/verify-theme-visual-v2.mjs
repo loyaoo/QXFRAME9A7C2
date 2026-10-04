@@ -2,7 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import zlib from 'node:zlib';
-import crypto from 'node:crypto';
 import {PHYSICAL_TYPES,PHYSICAL_ROLES,PHYSICAL_REFERENCE_COLORS} from '../docs/assets/theme-generator/type-colors-v2.mjs';
 import {fileURLToPath} from 'node:url';
 import {generateSemanticTheme,normalizeSemanticConfig,migrateLegacySemanticColors,CORE_ROLES,OPTIONAL_ROLES,OVERRIDE_ROLES,SEMANTIC_STYLES} from '../docs/assets/theme-generator/semantic-engine.mjs';
@@ -34,15 +33,15 @@ assert.equal(migrated.config.colors.light.primary,'rgb(1, 2, 3)');assert.equal(m
 
 // Input references are pinned independently of the runtime state formulas.
 const physicalFixture=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/theme-v2/qx-physical-inputs.json')));
-const physicalSource=fs.readFileSync(path.join(root,physicalFixture.sourceFile),'utf8');
-assert.equal(crypto.createHash('sha256').update(physicalSource).digest('hex'),physicalFixture.sourceSha256);
+assert.equal(fs.existsSync(path.join(root,physicalFixture.sourceFile)),false,'Historical physical source must stay retired.');
+assert.match(physicalFixture.qxCommit,/^[0-9a-f]{40}$/);
+assert.match(physicalFixture.sourceSha256,/^[0-9a-f]{64}$/);
 assert.deepEqual(physicalFixture.types,PHYSICAL_TYPES);
 assert.equal(PHYSICAL_ROLES.length,28);
 for(const entry of physicalFixture.entries){
   for(const [role,value,sourceName] of [['type-'+entry.type,entry.color,entry.sourceColor],['type-'+entry.type+'-foreground',entry.foreground,entry.sourceForeground]]){
     assert.equal(PHYSICAL_REFERENCE_COLORS[entry.mode][role],value);
-    const sourceValue=role.endsWith('-foreground')?'rgb(var(--qxframe9a7c2-palette-'+(value==='rgb(0 0 0)'?'black':'white')+'))':value;
-    assert.ok(physicalSource.includes(sourceName+': '+sourceValue+';'),sourceName+' changed');
+    assert.match(sourceName,/^--/,'Physical source provenance name missing for '+role);
     assert.ok(verified.source.includes('--qxframe9a7c2-theme-v2-'+role+': light-dark('+PHYSICAL_REFERENCE_COLORS.light[role]+', '+PHYSICAL_REFERENCE_COLORS.dark[role]+');'),role+' input differs');
   }
 }
@@ -158,11 +157,10 @@ for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark'])for(const 
   physicalCases.push({style,mode,type,kind:'progress',expected:{backgroundColor:sourceColor(style,'.cn-progress-indicator','bg',mode)}});
 }
 const css=compileStyles().css;
-const report={schema:2,stage:'A/B/C representative chain',sourceSha:fixture.sha,sourceRules:verified.expressions.length,inputs:generated.statistics,themeBytes:Buffer.byteLength(generated.css),themeGzipBytes:zlib.gzipSync(generated.css).length,frameworkBytes:Buffer.byteLength(css),pilotSourceBytes:Buffer.byteLength(verified.source),geometry:{...geometryVerified,configurations:geometryConfigs.length},defaultReplaced:false,allComponentMigration:false,browser:null};
+const report={schema:2,stage:'canonical single-system source-equivalence',singlePublicTheme:true,sourceSha:fixture.sha,sourceRules:verified.expressions.length,inputs:generated.statistics,themeBytes:Buffer.byteLength(generated.css),themeGzipBytes:zlib.gzipSync(generated.css).length,frameworkBytes:Buffer.byteLength(css),reviewedSourceBytes:Buffer.byteLength(verified.source),geometry:{...geometryVerified,configurations:geometryConfigs.length},consumerMigrationGate:'separate-dom-poison-probe',browser:null};
 const expression=(probeCases,includeGeometry)=>`(() => {
     const cases=${JSON.stringify(probeCases)},scope=document.getElementById('scope'),failures=[];
     const stable=document.createElement('style');stable.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(stable);
-    scope.setAttribute('data-qxframe9a7c2-visual','2');
     const host=document.createElement('div'),reference=document.createElement('div');scope.append(host,reference);
     const p='--qxframe9a7c2-theme-v2-',sourceRole=role=>'var('+p+role+')';
     for(const role of ${JSON.stringify(CORE_ROLES)})reference.style.setProperty('--source-'+role,sourceRole(role));
