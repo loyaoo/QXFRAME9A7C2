@@ -56,7 +56,6 @@ assert.match(docsTheme,/setAttribute\(['"]data-qxframe9a7c2-theme['"],\s*mode\)/
 assert.doesNotMatch(docsTheme,/style\.setProperty\([^\n]*--_qxframe9a7c2-/,
   'Docs theme mode helper must not mirror private semantic/family/component CSS variables.');
 
-
 const gridStart=css.indexOf('/* QXFRAME9A7C2 Static Grid');
 const gridEnd=css.indexOf('/* Layout · CSS-only structural surface',gridStart);
 assert.ok(gridStart>=0&&gridEnd>gridStart,'Canonical Grid block must exist before Layout.');
@@ -77,10 +76,10 @@ for(const sample of [
   '.qxframe9a7c2-hidden-xxl-only',
   '.qxframe9a7c2-visible-xl-only'
 ]) assert.ok(grid.includes(sample),'Grid contract missing '+sample);
-assert.match(grid,/\.qxframe9a7c2-g-24,[\s\S]*?\.qxframe9a7c2-gx-24\s*\{\s*--qxframe9a7c2-grid-gap-x:\s*var\(--qxframe9a7c2-theme-grid-gap-24\)/,
-  'g/gx must cover 0..24 through the Theme-backed mature 0.125rem step.');
-assert.match(grid,/\.qxframe9a7c2-g-md-8,[\s\S]*?\.qxframe9a7c2-gy-md-8\s*\{\s*--qxframe9a7c2-grid-gap-y:\s*var\(--qxframe9a7c2-theme-grid-gap-8\)/,
-  'responsive g/gy must preserve the same Theme-backed 0.125rem step.');
+assert.match(grid,/\.qxframe9a7c2-g-24,[\s\S]*?\.qxframe9a7c2-gx-24\s*\{\s*--qxframe9a7c2-grid-gap-x:\s*var\(--_qxframe9a7c2-fixed-grid-gap-24\)/,
+  'g/gx must cover 0..24 through the canonical fixed gap owner.');
+assert.match(grid,/\.qxframe9a7c2-g-md-8,[\s\S]*?\.qxframe9a7c2-gy-md-8\s*\{\s*--qxframe9a7c2-grid-gap-y:\s*var\(--_qxframe9a7c2-fixed-grid-gap-8\)/,
+  'responsive g/gy must preserve the same canonical fixed gap owner.');
 assert.match(grid,/@media screen and \(min-width:\s*1600px\)[\s\S]*?\.qxframe9a7c2-col-xxl-24/,
   'xxl Grid breakpoint must start at 1600px.');
 assert.doesNotMatch(grid,/\.qxframe9a7c2-row-(?:[1-9]|1\d|2[0-4])\s*>/,
@@ -96,5 +95,6 @@ console.log(JSON.stringify({
   docsOnlyScripts:scriptTags.length,
   staticStateMatrix:true,
   componentStateSynthesis:false,
-  canonicalDistCss:true
+  canonicalDistCss:true,
+  gridGapAuthority:'private-fixed'
 }));
