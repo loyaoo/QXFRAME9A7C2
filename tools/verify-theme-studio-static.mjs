@@ -11,7 +11,7 @@ assert.equal(fs.existsSync(new URL('../docs/assets/qxframe9a7c2-theme-studio.css
 assert.doesNotMatch(html,/qxframe9a7c2-theme-studio\.(?:js|css)/,'Playground must not load legacy Studio assets.');
 assert.match(html,/data-theme-studio-v2/);
 assert.match(html,/assets\/theme-generator\/studio-v2\.mjs/);
-assert.match(html,/data-qxframe9a7c2-visual="2"/,'Canonical playground must use the new visual chain.');
+assert.doesNotMatch(html,/data-qxframe9a7c2-visual=/,'Canonical Theme must not require a retired visual opt-in marker.');
 
 assert.doesNotMatch(playground,/qxframe9a7c2-play-settings/,'Legacy .qxframe9a7c2-play-settings control area must be removed.');
 for(const retired of ['PRESETS','BASES','FONTS','primarySeed','mixRatio','focusRing','themeCss','applyTheme','setPublic','data-qxframe9a7c2-reset','data-qxframe9a7c2-shuffle','data-qxframe9a7c2-export']){
@@ -33,11 +33,4 @@ for(const forbidden of [/display\s*:\s*grid/i,/grid-template/i,/\b\d+(?:\.\d+)?f
   assert.equal(forbidden.test(css),false,'Theme Studio docs CSS contains forbidden layout/syntax: '+forbidden);
 }
 
-console.log(JSON.stringify({
-  task:'THEME-VISUAL-V2-001',
-  legacyStudioDeleted:true,
-  legacyPlaySettingsDeleted:true,
-  soleStudio:'theme-generator/studio-v2.mjs',
-  chineseConfiguration:true,
-  canonicalGalleryPreserved:/id="qxframe9a7c2-theme-playground-app"/.test(html)
-}));
+console.log(JSON.stringify({task:'THEME-VISUAL-V2-001',legacyStudioDeleted:true,legacyPlaySettingsDeleted:true,soleStudio:'theme-generator/studio-v2.mjs',chineseConfiguration:true,visualOptInRetired:true,canonicalGalleryPreserved:/id="qxframe9a7c2-theme-playground-app"/.test(html)}));
