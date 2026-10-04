@@ -2,11 +2,6 @@
  * Finite Theme inputs only; components keep their existing CSS ownership. */
 @scope ([data-qxframe9a7c2-visual="2"]) {
   :scope {
-    /* Public shadow recipes share the already accepted v2 shadow color input. */
-    --qxframe9a7c2-theme-v2-shadow-subtle:0 .125rem .25rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .125rem .125rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
-    --qxframe9a7c2-theme-v2-shadow-soft:0 .25rem .5rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .125rem .25rem -.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
-    --qxframe9a7c2-theme-v2-shadow-elevated:0 .5rem 1rem -.25rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent),0 .25rem .5rem -.25rem color-mix(in oklab,var(--qxframe9a7c2-theme-v2-shadow) 10%,transparent);
-
     /* Vega/default resolved values. Generated Theme CSS can override these. */
     --qxframe9a7c2-theme-v2-font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     --qxframe9a7c2-theme-v2-font-family-heading:var(--qxframe9a7c2-theme-v2-font-family);
@@ -19,7 +14,7 @@
     --qxframe9a7c2-theme-v2-typography-label-weight:500;
     --qxframe9a7c2-theme-v2-border-width:1px;
     --qxframe9a7c2-theme-v2-card-border-width:1px;
-    --qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-subtle);
+    --qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-xs);
     --qxframe9a7c2-theme-v2-card-font-size:.875rem;
     --qxframe9a7c2-theme-v2-card-title-delta:.125rem;
     --qxframe9a7c2-theme-v2-card-meta-gap:.25rem;
@@ -69,11 +64,11 @@
   }
 }
 
-/* Canonical no-generator previews receive the same concrete Style defaults. */
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="nova"]) { :scope { --qxframe9a7c2-theme-v2-card-shadow:none; } }
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]) { :scope { --qxframe9a7c2-theme-v2-card-shadow:none;--qxframe9a7c2-theme-v2-card-meta-gap:.5rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-shadow:none;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;--qxframe9a7c2-theme-v2-shape-range-track-radius:0;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:0; } }
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-shadow:none;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
-@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]) { :scope { --qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-soft);--qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:100rem; } }
+/* Canonical no-generator previews receive the same concrete Style defaults.
+ * Generated Theme CSS writes the same public inputs later and therefore wins. */
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="maia"]) { :scope { --qxframe9a7c2-theme-v2-card-meta-gap:.5rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="lyra"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;--qxframe9a7c2-theme-v2-shape-range-track-radius:0;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:0; } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="mira"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
+@scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="luma"]) { :scope { --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:100rem; } }
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="sera"]) { :scope { --qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-title-delta:.25rem;--qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;--qxframe9a7c2-theme-v2-shape-range-track-radius:0;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:0; } }
 @scope ([data-qxframe9a7c2-visual="2"][data-qxframe9a7c2-style="rhea"]) { :scope { --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md); } }
