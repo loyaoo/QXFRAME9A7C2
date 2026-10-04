@@ -10,15 +10,6 @@ function write(maps,schema,changed,name,value,dark=value){
 function shape(config,family,intrinsic,follow='var(--qxframe9a7c2-theme-radius-sm)'){
   return config.shape[family]==='square'?'0':config.shape[family]==='follow'?follow:intrinsic;
 }
-function scaleDimensions(maps,schema,config){
-  for(const mode of ['light','dark'])for(const [key,value] of Object.entries(maps[mode])){
-    if(/font|line-height|motion|shadow|border-width|spinner-border|indicator-size/.test(key))continue;
-    const factor=/radius/.test(key)?config.foundation.radiusScale:config.foundation.sizeScale;
-    if(factor===1||!schema.tokenSet.has(key)&&!schema.optionalSet.has(key))continue;
-    // Scale upstream geometry references, never scan runtime CSS or infer component names.
-    if(/^(?:\d+(?:\.\d+)?rem|var\(--qxframe9a7c2-(?:size|space)-\d+\))$/.test(value))maps[mode][key]='calc('+value+' * '+factor+')';
-  }
-}
 function applyVisualFoundation(maps,schema,config,changed){
   // Body and Control values share one role. Meta stays a separate small tier.
   for(const size of sizes){
@@ -44,20 +35,19 @@ function applyVisualFoundation(maps,schema,config,changed){
     const names=family==='toggle'?['switch-track-radius','switch-thumb-radius']:['slider-rail-radius','slider-handle-radius'];
     if(config.shape[family]!=='intrinsic')for(const name of names)write(maps,schema,changed,name,shape(config,family,'0'));
   }
-  // Ordinary rectangular options always follow the scale, even in a pill Style.
+  // Ordinary rectangular options always follow the chosen radius role.
   write(maps,schema,changed,'menu-item-radius','var(--qxframe9a7c2-theme-radius-sm)');
   write(maps,schema,changed,'item-radius','var(--qxframe9a7c2-theme-radius-sm)');
   write(maps,schema,changed,'card-font-size','var(--qxframe9a7c2-typography-body-size)');
   write(maps,schema,changed,'card-border-width',['elevated','borderless'].includes(config.surface)?'0':'1px');
   if(['outlined','borderless'].includes(config.surface))write(maps,schema,changed,'card-shadow','none');
   if(config.surface==='elevated')write(maps,schema,changed,'card-shadow','0 var(--qxframe9a7c2-theme-space-2) var(--qxframe9a7c2-theme-space-6) var(--qxframe9a7c2-theme-color-card-shadow-2)');
-  scaleDimensions(maps,schema,config);
   // A compound control needs two borders plus equal insets around Body line height.
-  const minimum=Math.ceil((config.typography.baseSize*1.35+4+4*config.foundation.sizeScale)/2)*2;
+  const minimum=Math.ceil((config.typography.baseSize*1.35+8)/2)*2;
   for(const mode of ['light','dark'])for(const size of sizes){
     const key=prefix+'theme-control-height-'+size,value=maps[mode][key];
-    const match=/^(?:calc\()?([0-9.]+)rem(?: \* ([0-9.]+)\))?$/.exec(value);
-    if(match&&Number(match[1])*16*Number(match[2]||1)<minimum)maps[mode][key]=String(minimum/16)+'rem';
+    const match=/^([0-9.]+)rem$/.exec(value);
+    if(match&&Number(match[1])*16<minimum)maps[mode][key]=String(minimum/16)+'rem';
   }
 }
 function resolveMenu(maps,mode,menu){
