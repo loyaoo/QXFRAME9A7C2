@@ -33,25 +33,43 @@ export function consumerPoisonBrowserProbe(inventory,style,mode){
   }
   const nodes=[...body.querySelectorAll('*')].filter(node=>[...node.classList].some(cls=>known.has(cls)));
   const properties=['backgroundColor','color','borderTopColor','borderRightColor','borderBottomColor','borderLeftColor','outlineColor','fill','stroke','boxShadow','textShadow','backgroundImage'];
+  const painted=(computed,property)=>{
+    if(property==='borderTopColor')return parseFloat(computed.borderTopWidth)>0&&!['none','hidden'].includes(computed.borderTopStyle);
+    if(property==='borderRightColor')return parseFloat(computed.borderRightWidth)>0&&!['none','hidden'].includes(computed.borderRightStyle);
+    if(property==='borderBottomColor')return parseFloat(computed.borderBottomWidth)>0&&!['none','hidden'].includes(computed.borderBottomStyle);
+    if(property==='borderLeftColor')return parseFloat(computed.borderLeftWidth)>0&&!['none','hidden'].includes(computed.borderLeftStyle);
+    if(property==='outlineColor')return parseFloat(computed.outlineWidth)>0&&!['none','hidden'].includes(computed.outlineStyle);
+    if(property==='boxShadow')return computed.boxShadow!=='none';
+    if(property==='textShadow')return computed.textShadow!=='none';
+    if(property==='backgroundImage')return computed.backgroundImage!=='none';
+    return true;
+  };
   const sample=node=>{
-    const values=[];
+    const values=[],host=getComputedStyle(node),parent=node.parentElement?getComputedStyle(node.parentElement):null;
     for(const pseudo of [null,'::before','::after']){
-      const computed=getComputedStyle(node,pseudo);
-      if(pseudo&&(computed.content==='none'||computed.content==='normal'))continue;
-      for(const property of properties)values.push({pseudo,property,value:computed[property]});
+      const computed=pseudo?getComputedStyle(node,pseudo):host;
+      const pseudoPainted=!pseudo||!(computed.content==='none'||computed.content==='normal');
+      for(const property of properties)values.push({pseudo,property,value:pseudoPainted&&painted(computed,property)?computed[property]:null});
     }
-    return values;
+    return {values,hostColor:host.color,parentColor:parent?.color??null};
   };
   const before=nodes.map(sample),poison=document.createElement('style');poison.textContent=inventory.css;document.head.appendChild(poison);
   let checks=0,mismatchCount=0;const reported=new Set();
   nodes.forEach((node,index)=>{
-    const after=sample(node);
-    before[index].forEach((entry,i)=>{
+    const after=sample(node),prior=before[index];
+    prior.values.forEach((entry,i)=>{
+      const next=after.values[i];
+      if(entry.value==null&&next?.value==null)return;
+      // Do not attribute a parent's legacy color dependency to every child that
+      // merely inherits currentColor. The owner is measured at its own node.
+      if(entry.property==='color'&&!entry.pseudo&&prior.parentColor!=null&&entry.value===prior.parentColor&&next?.value===after.parentColor)return;
+      // Pseudo glyphs using host currentColor are likewise one dependency, not two.
+      if(entry.property==='color'&&entry.pseudo&&entry.value===prior.hostColor&&next?.value===after.hostColor)return;
       checks++;
-      if(entry.value!==after[i]?.value){
+      if(entry.value!==next?.value){
         mismatchCount++;
         const key=node.getAttribute('class')+'/'+entry.pseudo+'/'+entry.property;
-        if(failures.length<120&&!reported.has(key)){reported.add(key);failures.push({style,mode,classes:node.getAttribute('class'),tag:node.tagName,inlineStyle:node.getAttribute('style'),demo:node.closest('[data-slug]')?.dataset.slug,pseudo:entry.pseudo,property:entry.property,before:entry.value,after:after[i]?.value});}
+        if(failures.length<120&&!reported.has(key)){reported.add(key);failures.push({style,mode,classes:node.getAttribute('class'),tag:node.tagName,inlineStyle:node.getAttribute('style'),demo:node.closest('[data-slug]')?.dataset.slug,pseudo:entry.pseudo,property:entry.property,before:entry.value,after:next?.value});}
       }
     });
   });
