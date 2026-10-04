@@ -29,8 +29,6 @@ assert.deepEqual(componentLegacyRefs,[],'Component CSS must not consume retired 
 const themeLegacyRefs=[...new Set(refs(theme).filter(name=>legacyThemeRef.test(name)||paletteRef.test(name)))].sort();
 assert.deepEqual(themeLegacyRefs,[],'Canonical Theme modules must not bridge through retired Theme/Palette inputs.');
 
-// Public Component tokens may default from canonical Theme/private implementation
-// roles, but one public Component token may not alias another public Component token.
 const declaration=/(--qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;{}]*)(?:;|(?=}))/ig;
 const publicCrossComponent=[];
 let match;
@@ -43,11 +41,8 @@ while((match=declaration.exec(component))){
 }
 assert.deepEqual(publicCrossComponent,[],'A public Component token must not read another public Component token.');
 
-// The canonical layer is intentionally asymmetric: Theme is public, the
-// framework's fixed algorithms are private, Component consumes both. No
-// Preset→Theme compatibility bridge is permitted.
-const componentThemeRefs=[...new Set(refs(component).filter(name=>name.startsWith('--qxframe9a7c2-theme-v2-'))].sort();
-const componentPrivateRefs=[...new Set(refs(component).filter(name=>name.startsWith('--_qxframe9a7c2-'))].sort();
+const componentThemeRefs=[...new Set(refs(component).filter(name=>name.startsWith('--qxframe9a7c2-theme-v2-'))) ].sort();
+const componentPrivateRefs=[...new Set(refs(component).filter(name=>name.startsWith('--_qxframe9a7c2-'))) ].sort();
 assert.ok(componentPrivateRefs.length>0,'Components must still have private implementation roles while migration proceeds.');
 
 console.log(JSON.stringify({ok:true,publicThemeSystem:'v2-only',publicThemeInputs:publicTheme.length,componentThemeRefs:componentThemeRefs.length,componentPrivateRefs:componentPrivateRefs.length,retiredPresetBridge:true,legacyPublicRefs:0,publicCrossComponentEdges:0}));
