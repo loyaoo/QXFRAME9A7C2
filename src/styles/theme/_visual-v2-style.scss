@@ -44,8 +44,14 @@
     --qxframe9a7c2-theme-v2-shape-compact-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
     --qxframe9a7c2-theme-v2-shape-identity-radius:50%;
     --qxframe9a7c2-theme-v2-shape-progress-radius:100rem;
+  }
 
-    /* Private component-facing adapters; not a second public Theme layer. */
+  /* Rebind component-facing adapters at every local Theme boundary. Custom
+     properties declared only on document :root capture that root's resolved
+     value before inheritance, which would make nested Theme/Studio overrides
+     unable to change typography, borders, motion and Shape. These adapters are
+     private implementation glue, not a second public Theme layer. */
+  :scope,[data-qxframe9a7c2-theme] {
     --_qxframe9a7c2-fixed-font-family:var(--qxframe9a7c2-theme-v2-font-family);
     --_qxframe9a7c2-fixed-font-family-heading:var(--qxframe9a7c2-theme-v2-font-family-heading);
     --_qxframe9a7c2-fixed-font-family-mono:var(--qxframe9a7c2-theme-v2-font-family-mono);
@@ -67,8 +73,6 @@
     --_qxframe9a7c2-fixed-motion-duration-5:var(--qxframe9a7c2-theme-v2-motion-duration-5);
     --_qxframe9a7c2-choice-radio-radius:var(--qxframe9a7c2-theme-v2-shape-choice-radio-radius);
     --_qxframe9a7c2-choice-checkbox-radius:var(--qxframe9a7c2-theme-v2-shape-choice-checkbox-radius);
-    --_qxframe9a7c2-switch-track-radius:var(--qxframe9a7c2-theme-v2-shape-toggle-track-radius);
-    --_qxframe9a7c2-switch-thumb-radius:var(--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius);
     --_qxframe9a7c2-slider-rail-radius:var(--qxframe9a7c2-theme-v2-shape-range-track-radius);
     --_qxframe9a7c2-slider-handle-radius:var(--qxframe9a7c2-theme-v2-shape-range-thumb-radius);
     --_qxframe9a7c2-range-progress-radius:var(--qxframe9a7c2-theme-v2-shape-progress-radius);
