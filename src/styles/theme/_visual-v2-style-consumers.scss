@@ -40,6 +40,23 @@
     border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-override-control-border,var(--_qxframe9a7c2-v2-control-border)) var(--qxframe9a7c2-theme-v2-control-state-border-block-start-weight),transparent);
     border-block-end-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-override-control-border,var(--_qxframe9a7c2-v2-control-border)) var(--qxframe9a7c2-theme-v2-control-state-border-block-end-weight),transparent);
   }
+  /* Focus is a ring role plus the selected Control Appearance topology. Resolve
+     the role directly here so a component-local normal-border owner cannot keep
+     a soft profile transparent. Validation states are excluded and retain their
+     existing error/warning color chain above. */
+  .qxframe9a7c2-input:focus-within:not(.is-error):not(.is-invalid):not(.is-warning),
+  .qxframe9a7c2-input.is-focused:not(.is-error):not(.is-invalid):not(.is-warning),
+  .qxframe9a7c2-input.is-expanded:not(.is-error):not(.is-invalid):not(.is-warning),
+  .qxframe9a7c2-form-input:focus:not(.is-invalid),.qxframe9a7c2-form-input.is-focused:not(.is-invalid),
+  .qxframe9a7c2-form-select:focus:not(.is-invalid),.qxframe9a7c2-form-select.is-focused:not(.is-invalid),
+  .qxframe9a7c2-form-textarea:focus:not(.is-invalid),.qxframe9a7c2-form-textarea.is-focused:not(.is-invalid),
+  .qxframe9a7c2-input-otp-segment:focus:not(.is-invalid),.qxframe9a7c2-input-otp-segment.is-focused:not(.is-invalid),
+  .qxframe9a7c2-color-panel-input:focus:not(.is-invalid),.qxframe9a7c2-color-panel-input.is-focused:not(.is-invalid),
+  .qxframe9a7c2-pagination-input:focus:not(.is-invalid),.qxframe9a7c2-pagination-input.is-focused:not(.is-invalid){
+    border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-ring) var(--qxframe9a7c2-theme-v2-control-state-border-inline-weight),transparent);
+    border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-ring) var(--qxframe9a7c2-theme-v2-control-state-border-block-start-weight),transparent);
+    border-block-end-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-ring) var(--qxframe9a7c2-theme-v2-control-state-border-block-end-weight),transparent);
+  }
   /* Source-specific disabled fills stay authoritative; appearance still owns the
      border topology. This preserves disabled contrast instead of treating it as
      another ordinary background profile. */
