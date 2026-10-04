@@ -20,9 +20,10 @@ export function verifyGeometryRuleSource(root,{sourceText=null}={}){
     for(const [role,value]of Object.entries(normalizeGeometryConfig({style}).geometry))assert.ok(section.includes('--qxframe9a7c2-theme-v2-'+role+': '+value+';'),'Base Style/md default drift: '+style+'/'+role);
   }
   assert.match(source,/control-height: calc\(var\(--qxframe9a7c2-theme-v2-control-min-block-md\) \+ var\(--_qxframe9a7c2-v2-size-index\) \* \.25rem\)/);
-  assert.match(source,/v2-size-ratio: calc\(1 \+ var\(--_qxframe9a7c2-v2-size-index\) \* \.125\)/);
   assert.match(source,/control-padding-block: round\(down, max\(0rem,/);
+  assert.match(source,/control-border-width\) \* 2/,'Control block padding must consume the actual resolved border width');
+  assert.doesNotMatch(source,/control-height\)[^;]*- 2px/,'Control geometry must not assume a fixed 1px border on both sides');
   assert.match(source,/v2-font-step: clamp\(-1, var\(--_qxframe9a7c2-v2-size-index\), 1\)/);
   for(const [size,index]of [['xs',-2],['sm',-1],['md',0],['lg',1],['xl',2]])assert.match(source,new RegExp('\\.qxframe9a7c2-button\\.is-'+size+'[^{}]+\\{ --_qxframe9a7c2-v2-size-index: '+index+'; \\}'));
-  return {schema:2,rules:'qx-md-2',inputNames:GEOMETRY_ROLES.length,evenLengths:true,legacyFiveSizeOverrides:false,canonicalScopes:true};
+  return {schema:2,rules:'qx-md-2',inputNames:GEOMETRY_ROLES.length,evenLengths:true,legacyFiveSizeOverrides:false,canonicalScopes:true,borderAware:true};
 }
