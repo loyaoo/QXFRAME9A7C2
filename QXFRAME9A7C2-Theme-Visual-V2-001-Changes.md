@@ -124,3 +124,42 @@
 - 补齐六类原生 Control 的共享可选覆盖、invalid/focus/disabled 与 Sera 下划线责任；新增 288 个来源等价场景。
 
 - 第二次 Schema `37168952190` SUCCESS：9,488 场景／26,726 颜色检查。真实 Playground 为 9,406 节点／744 已挂载类；首个配置 126,444 paint 检查暴露 180 个旧输入变化，正在修复 shared surface/data、日期 selected-active、Focus 可见色和装饰投影职责。Vega/Luma/Sera/Rhea Card、各 Style Slider/Switch 的投影有锁定来源分配；inline Alert 去掉浮层阴影。投影几何保留 QX 偶数规则，颜色使用锁定 Tailwind xs 5%、sm/md 10% alpha，未调比例。
+
+## PR #258 第三批 canonical single-system 收尾（2026-10-04）
+
+本节覆盖并更新上文“待 CI”的第三批状态；历史记录保留用于解释迁移过程，但恢复工作时以本节和 `AI_WORK_STATE.md` 为当前真相。
+
+### 单一 Theme 与消费链
+
+- Theme v2 已成为唯一公开 Theme 系统；旧 `.qxframe9a7c2-play-settings`、旧 Theme Studio / generator / Schema1 Theme contract、旧 theme/default/family public chain 与 `data-qxframe9a7c2-visual="2"` opt-in 均已退休，并有 reverse gate 防止回归。
+- 公共颜色权威保持 30 个完整颜色输入；14 个物理 Type 及前景作为按需完整输入，不展开 palette/state/component 结果矩阵。锁定 shadcn source SHA 仍为 `295a1f114a138f23b5dfee0e0c6812394dfeb90c`。
+- `qx-md-2` 是唯一公开几何权威：21 个 md 输入，xs/sm/md/lg/xl 由固定 CSS 规则派生；控件最小尺寸每档 4px，文本/多选/多行允许内容盒自然增长。旧 family-control-height / 五档覆盖接口不再是 Theme API。
+- `qx-style-3` 继续承载来源支持的非颜色有限轴：typography density、text style、body/heading/mono fonts、Control Appearance、border、shadow、motion pace、surface 与 Shape family。Style 只提供默认值，用户显式配置最终优先。
+- Theme boundary 明确投影继承型 body font；Control focus border/ring 走共享 state topology，underline 仍只亮底边，invalid/warning 优先级不被普通 focus 覆盖。
+
+### 实际 DOM 与浏览器验收
+
+- canonical Theme Playground 的真实 DOM poison 只毒化已退休 private paint roles，不再破坏 geometry/motion 常量。16 个配置共检查 **660,143** 个 paint 结果；覆盖 739 个已挂载 class，记录 2,158 个未挂载 class、3,206 个 poisoned inputs；**mismatchCount=0**。
+- source-equivalence 浏览器矩阵：5,456 cases / **15,714** checks；物理 Type 两个分片合计 4,032 cases / **11,012** checks；所有颜色比较保持透明画布和实际 mode surface 合成后 **0 RGBA byte** 差。
+- 几何：576 配置 × 5 sizes，共 **51,855** checks，失败 0；容差仍为 `1e-6 CSS px`，保留 1px border 例外与偶数参考几何规则。
+- Studio 浏览器门禁扩大到 **73** 个实际 UI checks，失败 0；覆盖完整颜色、物理 Type、21 md 输入、41 个 Style declarations、中文配置、字体/文字风格/Control Appearance、JSON/CSS 往返与 visible computed-style。
+- Studio 最后一项 soft focused border 失败被确认是 `border-color` transition 起点同 tick 读取；verifier 改为 async 并等待有界 transition settle 后再读 computed style。组件 CSS、颜色容差与几何容差均未放宽。
+
+### 历史 smoke 契约迁移
+
+- Full release 曾暴露两条旧 browser smoke 仍写已退休的 `--qxframe9a7c2-family-control-height` / `--qxframe9a7c2-family-control-font-size`，并错误要求 Select single/multiple 固定等高、Collapse xs/md/xl 全等高。
+- 未恢复旧 token，也未把失败加入白名单。`verify-browser-suite.mjs` 在严格 release runner 内对这两条历史用例生成临时 canonical smoke：把 md min-block 覆盖到 40px，Select 要求 single≈40px、multiple≥40px 且允许 intrinsic growth；Collapse 要求 xs/md/xl 精确派生为 32/40/48px，仍使用 `<0.75px` 的原浏览器几何容差。
+- 任何原历史片段漂移会在适配前直接 assert 失败；临时 smoke 执行完成即删除。其余 browser smoke、source ESM/UMD、高风险与 preserve-subpath 层不跳过。
+
+### PR #258 合并前证据
+
+- 已验证实现 head：`c34aa95c95c8cba0dc1f997771618a5c7c50d028`。
+- CSS Schema Acceptance #277 / run `37190097101`：**SUCCESS**；single-system、sole Studio、660,143 consumer poison、15,714 source/color checks、11,012 physical-Type checks、51,855 geometry checks、73 Studio UI checks 全部通过。
+- QXFRAME CI #1523 / run `37190097110`：**SUCCESS**；Full release verification、Windows tools、npm pack、standalone dist/docs build、verification/dist/demo artifacts 全部通过。PR run 不执行 deploy-pages，Pages 必须在合并 main 后单独确认。
+- 本次文档提交之后仍必须以新的 exact head 再跑同一 required gates；不能用 `c34aa95c` 的实现证据代替最终 PR head。
+
+### 当前进度与未完成项
+
+- PR #258 本批实现范围约 **100%**；整个 THEME-VISUAL-V2-001 / v1.5 按 A–H 范围保守估计约 **70%**。
+- 仍未完成：G 的全组件窄容器、真实外挂 Popup、原生输入、图表/halo、更多浏览器与人工视觉确认；剩余非颜色 source-backed consumer 收口；最终 private paint 清理、总量/压缩统计与 H 的最终主分支发布验收。
+- 合并前最后动作：文档后 exact-head Schema + QXFRAME CI 全绿；合并后确认 main release / Windows / deploy-pages。不要重新执行已完成的单一 Theme、物理 Type、qx-md-2、qx-style-3 或 Studio 基础迁移。
