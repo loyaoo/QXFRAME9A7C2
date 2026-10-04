@@ -13,6 +13,7 @@
 - Theme authority: `QXFRAME9A7C2-Theme-Visual-System-v1.5.md` plus its 2026-10-04 single-system implementation decision.
 - Theme change evidence: `QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md`.
 - Runtime Controller migration: accepted 40/40 public components; do not restart it.
+- Current Phase: THEME-VISUAL-V2-001 — single public Theme canonicalization and current source-backed migration are implemented; broad G/H visual acceptance and final release closeout remain.
 - Current Task: `THEME-VISUAL-V2-001` — IMPLEMENTING, approximately 70% of v1.5 A–H scope after PR #258 implementation closeout.
 
 ## CURRENT
@@ -107,6 +108,11 @@ This checkpoint/change-doc commit is documentation-only and therefore creates a 
 - Main QXFRAME CI `37164806216`: SUCCESS including Pages.
 - Accepted evidence: 15,131 color checks, 51,855 geometry checks, 23 Studio checks.
 - Delivered shared consumer expansion, 21 md inputs/fixed derivation, native choices and Studio-v2 foundation.
+
+### PHASE-I-001 — release-integrity + Astra High handoff
+Status: DONE
+- Phase H public surface remains accepted 40/40 and the release-integrity gate remains required while the current Theme lifecycle advances independently.
+- This compact checkpoint preserves the machine-readable completion evidence; detailed historical investigation remains in Git history.
 
 ### VISUAL-RECIPE / CSS THEME BASELINE
 - PR #254 merged `965d0af5a55f8adea1f3afa3e0692c604f4cde2f`; Post-PR253 visual recipe plan completed before THEME-VISUAL-V2-001 superseded the old public Theme interface.
