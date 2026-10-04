@@ -10,8 +10,11 @@ export function generateThemeV2(input={}){
   const colors=generateSemanticTheme(semantic);
   const visual=normalizeStyleConfig({style:colors.config.style,appearance});
   const md=normalizeGeometryConfig({style:colors.config.style,options,geometry,textStyle:visual.appearance.textStyle});
-  // Explicit Theme inputs outrank static Style defaults even inside a preview scope.
-  const selector=':root, [data-qxframe9a7c2-theme]';
+  // Static Style recipes are defaults. Explicit generated Theme inputs must win
+  // when the same element is also the Style scope root. Keep the ordinary
+  // [data-theme] selector for nested mode boundaries, and add a stronger same-root
+  // selector for Style roots instead of relying on source order/scoping proximity.
+  const selector='html:root, :root[data-qxframe9a7c2-style], [data-qxframe9a7c2-theme], [data-qxframe9a7c2-theme][data-qxframe9a7c2-style]';
   const css=colors.css+
     '/* Fixed CSS geometry '+GEOMETRY_RULE_VERSION+'; md inputs only */\n'+selector+' {\n'+GEOMETRY_ROLES.map(role=>'  --qxframe9a7c2-theme-v2-'+role+': '+md.geometry[role]+';').join('\n')+'\n}\n'+
     '/* Finite non-color Style '+STYLE_RULE_VERSION+'; no size/state matrix */\n'+selector+' {\n'+STYLE_ROLES.map(role=>'  --qxframe9a7c2-theme-v2-'+role+': '+visual.style[role]+';').join('\n')+'\n}\n';
