@@ -44,8 +44,8 @@ assert.match(carousel,/slide\.tabIndex = active && opts\.keyboard !== false && o
 assert.match(carousel,/dot\.tabIndex = -1;/,'Carousel dots must stay out of Tab order.');
 assert.match(carousel,/prev\.tabIndex = -1;[\s\S]*next\.tabIndex = -1;/,'Carousel arrow controls must stay out of Tab order.');
 assert.match(carousel,/focusActiveSlide\('carousel-keyboard-switch'\)/,'Carousel keyboard switching must move real focus to the new active slide.');
-assert.match(css,/--qxframe9a7c2-theme-carousel-focus-offset:\s*var\(--qxframe9a7c2-size-1\)/,'Carousel clipped focus offset must remain Size Tree-backed at 2px.');
-assert.match(css,/\.qxframe9a7c2-carousel-slide:focus-visible\{outline:var\(--_qxframe9a7c2-focus-visible-outline\);outline-offset:calc\(var\(--qxframe9a7c2-theme-carousel-focus-offset\) \* -1\)\}/,'Carousel active-slide focus ring must remain visible inside the clipped viewport through Theme geometry.');
+assert.match(css,/--_qxframe9a7c2-fixed-carousel-focus-offset:\s*var\(--_qxframe9a7c2-size-1\)/,'Carousel clipped focus offset must remain private Size-1 backed at 2px.');
+assert.match(css,/\.qxframe9a7c2-carousel-slide:focus-visible\{outline:var\(--_qxframe9a7c2-focus-visible-outline\);outline-offset:calc\(var\(--_qxframe9a7c2-fixed-carousel-focus-offset\) \* -1\)\}/,'Carousel active-slide focus ring must remain visible inside the clipped viewport through its private fixed geometry owner.');
 assert.doesNotMatch(carousel,/transitionDelay/,'Carousel must not retain a second transition-completion timer.');
 assert.doesNotMatch(carousel,/addEventListener\(['"]transitionend|DOM\.listen\([^\n]*['"]transitionend/,'Carousel transition completion must stay under MotionController.');
 assert.doesNotMatch(carousel,/current\s*=\s*resolved/,'Carousel runtime current writes must enter ValueController.');
