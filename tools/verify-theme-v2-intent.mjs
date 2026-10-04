@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {generateThemeV2,serializeThemeV2,parseThemeV2,INTENT_SCHEMA_VERSION} from '../docs/assets/theme-generator/engine-v2.mjs';
+import {removeStudioIntentField} from '../docs/assets/theme-generator/studio-v2.mjs';
 import {normalizeStyleConfig,STYLE_RULE_VERSION} from '../docs/assets/theme-generator/style-engine-v2.mjs';
 import {GEOMETRY_RULE_VERSION} from '../docs/assets/theme-generator/geometry-engine-v2.mjs';
 import {RULE_VERSION,SEMANTIC_SCHEMA} from '../docs/assets/theme-generator/semantic-engine.mjs';
@@ -56,6 +57,20 @@ const borderlessStrong=normalizeStyleConfig({style:'vega',appearance:{surface:'b
 assert.equal(borderlessStrong.style['card-border-width'],'.25rem','explicit border must override Surface default');
 const followingHeading=normalizeStyleConfig({appearance:{fontBody:'serif',fontHeading:'inherit'}});
 assert.equal(followingHeading.style['font-family-heading'],'var(--qxframe9a7c2-theme-v2-font-family)','heading inherit must stay a live CSS dependency');
+
+const followSource={style:'sera',options:{density:'tight',radius:'xl'},appearance:{shadow:'none',shape:{toggle:'square',range:'intrinsic'}}};
+const followRadius=removeStudioIntentField(followSource,'option','radius');
+assert.deepEqual(followRadius.options,{density:'tight'});
+assert.equal(generateThemeV2(followRadius).config.options.radius,'sm','removing one option must restore the active Style default without removing sibling intent');
+const followShadow=removeStudioIntentField(followSource,'appearance','shadow');
+assert.ok(!('shadow' in followShadow.appearance));
+assert.equal(generateThemeV2(followShadow).config.appearance.shadow,'sm','removing an appearance field must restore the active Style default');
+const followToggle=removeStudioIntentField(followSource,'shape','toggle');
+assert.deepEqual(followToggle.appearance.shape,{range:'intrinsic'});
+assert.equal(generateThemeV2(followToggle).config.appearance.shape.toggle,'intrinsic','removing one shape field must restore the Style/framework shape default');
+const noAppearance=removeStudioIntentField({appearance:{shadow:'none'}},'appearance','shadow');
+assert.ok(!('appearance' in noAppearance),'empty intent containers must be pruned instead of serialized as resolved intent');
+assert.throws(()=>removeStudioIntentField({},'unknown','x'),/Unknown Studio intent field kind/);
 
 const styleConsumers=await readFile(new URL('../src/styles/theme/_visual-v2-style-consumers.scss',import.meta.url),'utf8');
 const cardBlock=styleConsumers.match(/\.qxframe9a7c2-card\[class\]\{([\s\S]*?)\n  \}/)?.[1]??'';
