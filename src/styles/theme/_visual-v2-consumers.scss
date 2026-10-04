@@ -1,0 +1,37 @@
+/* THEME-VISUAL-V2-001 consumer closeout.
+ * Same public-rule layer as visual-v2; split only for maintainability.
+ * No legacy palette/state inputs are consumed here. */
+@scope ([data-qxframe9a7c2-visual="2"]) {
+  /* Feedback/result soft roles reuse the same shadcn soft formula as the
+     current Type resolver. Result owns status-specific SVG strokes. */
+  * {
+    --_qxframe9a7c2-semantic-success-soft: light-dark(
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-success) 10%, transparent),
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-success) 20%, transparent)
+    );
+    --_qxframe9a7c2-semantic-warning-soft: light-dark(
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-warning) 10%, transparent),
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-warning) 20%, transparent)
+    );
+    --_qxframe9a7c2-semantic-error-soft: light-dark(
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 10%, transparent),
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-error) 20%, transparent)
+    );
+    --_qxframe9a7c2-semantic-info-soft: light-dark(
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-info) 10%, transparent),
+      color-mix(in oklab, var(--qxframe9a7c2-theme-v2-info) 20%, transparent)
+    );
+  }
+
+  /* Inline image masks belong to the same mask role as preview/upload masks. */
+  .qxframe9a7c2-image {
+    --_qxframe9a7c2-image-mask-bg: var(--qxframe9a7c2-theme-v2-mask);
+  }
+
+  /* Overlay choice indicators must not retain the legacy overlay-shadow color.
+     Match the legacy selector specificity instead of using priority flags. */
+  .qxframe9a7c2-form-selectgroup-indicator.is-checkbox.is-overlay,
+  .qxframe9a7c2-form-selectgroup-indicator.is-radio.is-overlay {
+    box-shadow: none;
+  }
+}
