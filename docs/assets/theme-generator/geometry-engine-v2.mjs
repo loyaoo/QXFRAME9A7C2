@@ -63,9 +63,8 @@ export function normalizeGeometryConfig({style='vega',options={},geometry={},tex
   let n=Object.fromEntries(Object.entries(values).map(([role,value])=>[role,number(value,role)]));
 
   // Resolve the alignment-group minimum against the real two-sided border.
-  // Padding may reach zero, but content or border may never be clipped to force
-  // the requested outer height. If any xs..xl member cannot fit, increase the
-  // shared md anchor once and expose the adjustment to the Inspector/config.
+  // Style/default recipes may be raised to the nearest valid even anchor, but
+  // an explicit impossible user value is rejected rather than silently changed.
   let requiredMd=n['control-min-block-md'];
   for(const t of [-2,-1,0,1,2]){
     const font=Math.max(12,n['control-font-size-md']+Math.max(-1,Math.min(1,t))*2);
@@ -75,6 +74,7 @@ export function normalizeGeometryConfig({style='vega',options={},geometry={},tex
   }
   requiredMd=evenCeil(requiredMd);
   if(requiredMd!==n['control-min-block-md']){
+    if(Object.prototype.hasOwnProperty.call(geometry,'control-min-block-md'))throw new TypeError('Explicit control-min-block-md leaves insufficient content/actual-border space');
     const requested=values['control-min-block-md'];
     values['control-min-block-md']=rem(requiredMd);
     adjustments.push(adjustment('control-min-block-md',requested,values['control-min-block-md'],'alignment-group-content-plus-actual-border'));
