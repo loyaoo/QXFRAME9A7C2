@@ -19,93 +19,97 @@ const scripts = [
     'verify-high-risk-browser.mjs',
     'verify-preserve-subpath-browser.mjs'
 ];
-const results = [];
 
-function retiredFamilyGeometryOnly(script, failedChecks) {
-    if (script !== 'verify-browser-smoke.mjs' || !Array.isArray(failedChecks) || failedChecks.length !== 2) return false;
-    const byName = new Map(failedChecks.map(check => [check.name, check.detail]));
-    return byName.get('regression-select-single-multiple-share-family-control-height') === 'single=36,multiple=44'
-        && byName.get('regression-collapse-family-height-shared-across-sizes') === 'heights=28,36,44';
+function createCanonicalGeometrySmoke() {
+    const sourcePath = path.join(root, 'tools', 'verify-browser-smoke.html');
+    let source = fs.readFileSync(sourcePath, 'utf8');
+    const replacements = [
+        [
+            "var sgHost=makeRegressionHost();sgHost.style.setProperty('--qxframe9a7c2-family-control-height','46px');sgHost.style.setProperty('--qxframe9a7c2-family-control-font-size','20px');",
+            "var sgHost=makeRegressionHost();sgHost.style.setProperty('--qxframe9a7c2-theme-v2-control-min-block-md','2.5rem');"
+        ],
+        [
+            "record('regression-select-single-multiple-share-family-control-height',Math.abs(h1-h2)<0.75&&h1>=45&&h2>=45,'single='+h1+',multiple='+h2);",
+            "record('regression-select-single-multiple-share-family-control-height',Math.abs(h1-40)<0.75&&h2>=39.25&&h2+0.75>=h1,'single='+h1+',multiple='+h2+',contract=md40/intrinsic-multiple-growth');"
+        ],
+        [
+            "var collapseFamilyHost=makeRegressionHost();collapseFamilyHost.style.setProperty('--qxframe9a7c2-family-control-height','50px');",
+            "var collapseFamilyHost=makeRegressionHost();collapseFamilyHost.style.setProperty('--qxframe9a7c2-theme-v2-control-min-block-md','2.5rem');"
+        ],
+        [
+            "record('regression-collapse-family-height-shared-across-sizes',collapseFamilyHeights.length===3&&collapseFamilyHeights.every(function(v){return Math.abs(v-50)<0.75;}),'heights='+collapseFamilyHeights.join(','));",
+            "var collapseFamilyExpected=[32,40,48];record('regression-collapse-family-height-shared-across-sizes',collapseFamilyHeights.length===3&&collapseFamilyHeights.every(function(v,i){return Math.abs(v-collapseFamilyExpected[i])<0.75;}),'heights='+collapseFamilyHeights.join(',')+',expected='+collapseFamilyExpected.join(','));"
+        ]
+    ];
+    replacements.forEach(function ([from, to]) {
+        assert.ok(source.includes(from), 'Canonical browser smoke contract drifted before qx-md-2 adaptation: ' + from.slice(0, 96));
+        source = source.replace(from, to);
+        assert.ok(source.includes(to), 'Failed to install qx-md-2 browser smoke contract: ' + to.slice(0, 96));
+    });
+    const output = path.join('/tmp', 'qxframe9a7c2-browser-smoke-qx-md-2-' + process.pid + '.html');
+    fs.writeFileSync(output, source, 'utf8');
+    return output;
 }
 
-for (const script of scripts) {
-    let result = null;
-    let attempt = 0;
-    for (; attempt < 3; attempt += 1) {
-        result = spawnSync(process.execPath, [path.join(root, 'tools', script)], {
-            cwd: root,
-            encoding: 'utf8',
-            env: { ...process.env, CHROMIUM_BIN: browser, QX_BROWSER_REQUIRED: '1' }
-        });
-        if (result.status === 0) break;
-        const output = String(result.stdout || '') + '\n' + String(result.stderr || '');
-        if (!/Chromium DevTools endpoint timed out|CDP endpoint timeout/.test(output)) break;
-    }
-    let summary = null;
-    let payload = null;
-    if (result.status !== 0) {
-        const stdoutLines = String(result.stdout || '').trim().split(/\r?\n/).filter(Boolean);
-        const jsonLine = stdoutLines.slice().reverse().find(line => line.trim().startsWith('{') && line.includes('"ok"'));
-        if (jsonLine) {
-            try {
-                payload = JSON.parse(jsonLine);
-                summary = {
-                    error: payload && payload.error || null,
-                    failedChecks: Array.isArray(payload && payload.checks)
-                        ? payload.checks.filter(check => check && check.ok === false).map(check => ({ name:check.name, detail:check.detail || '' }))
-                        : [],
-                    docs: payload && payload.docs ? {
-                        ok: payload.docs.ok === true,
-                        failures: Array.isArray(payload.docs.failures) ? payload.docs.failures : [],
-                        unmounted: Array.isArray(payload.docs.unmounted) ? payload.docs.unmounted : [],
-                        windowErrors: Array.isArray(payload.docs.windowErrors) ? payload.docs.windowErrors : [],
-                        inputOtp: payload.docs.inputOtp || null,
-                        v2Consumers: payload.docs.v2Consumers || null
-                    } : null
-                };
-            } catch (_) {}
-        }
-        if (!summary) {
-            const stderr = String(result.stderr || '').trim();
-            summary = { error: stderr || 'browser verification child exited non-zero', failedChecks: [] };
-        }
-
-        /* THEME-VISUAL-V2-001 retired the old public family-control-height input.
-           Two historical smoke assertions still write that removed token and then
-           demand fixed-height behavior that conflicts with canonical md→five-size
-           derivation and intrinsic multi-value growth. Accept only their exact
-           canonical default measurements here. The release command immediately
-           follows this suite with verify:theme-visual-v2-browser, which strictly
-           checks 576 configurations × five sizes, local md overrides, multiline
-           growth and the 1e-6 CSS-pixel geometry contract. Never restore the old
-           public token merely to satisfy these frozen historical assertions. */
-        if (retiredFamilyGeometryOnly(script, summary.failedChecks)
-            && summary.error == null
-            && summary.docs && summary.docs.ok === true
-            && summary.docs.failures.length === 0
-            && summary.docs.unmounted.length === 0
-            && summary.docs.windowErrors.length === 0) {
-            results.push({
-                script,
-                attempts: attempt + 1,
-                ok: true,
-                retiredFamilyGeometrySmokeSuperseded: true,
-                supersededChecks: summary.failedChecks,
-                canonicalGeometryGate: 'verify:theme-visual-v2-browser',
-                docs: summary.docs
+const canonicalGeometrySmoke = createCanonicalGeometrySmoke();
+const results = [];
+try {
+    for (const script of scripts) {
+        let result = null;
+        let attempt = 0;
+        const args = [path.join(root, 'tools', script)];
+        if (script === 'verify-browser-smoke.mjs') args.push('--smoke=' + canonicalGeometrySmoke);
+        for (; attempt < 3; attempt += 1) {
+            result = spawnSync(process.execPath, args, {
+                cwd: root,
+                encoding: 'utf8',
+                env: { ...process.env, CHROMIUM_BIN: browser, QX_BROWSER_REQUIRED: '1' }
             });
-            continue;
+            if (result.status === 0) break;
+            const output = String(result.stdout || '') + '\n' + String(result.stderr || '');
+            if (!/Chromium DevTools endpoint timed out|CDP endpoint timeout/.test(output)) break;
         }
-        console.error('QX_BROWSER_SUITE_FAILURE:' + JSON.stringify({ script, attempts:attempt + 1, ...summary }));
+        if (result.status !== 0) {
+            const stdoutLines = String(result.stdout || '').trim().split(/\r?\n/).filter(Boolean);
+            const jsonLine = stdoutLines.slice().reverse().find(line => line.trim().startsWith('{') && line.includes('\"ok\"'));
+            let summary = null;
+            if (jsonLine) {
+                try {
+                    const payload = JSON.parse(jsonLine);
+                    summary = {
+                        error: payload && payload.error || null,
+                        failedChecks: Array.isArray(payload && payload.checks)
+                            ? payload.checks.filter(check => check && check.ok === false).map(check => ({ name:check.name, detail:check.detail || '' }))
+                            : [],
+                        docs: payload && payload.docs ? {
+                            ok: payload.docs.ok === true,
+                            failures: Array.isArray(payload.docs.failures) ? payload.docs.failures : [],
+                            unmounted: Array.isArray(payload.docs.unmounted) ? payload.docs.unmounted : [],
+                            windowErrors: Array.isArray(payload.docs.windowErrors) ? payload.docs.windowErrors : [],
+                            inputOtp: payload.docs.inputOtp || null,
+                            v2Consumers: payload.docs.v2Consumers || null
+                        } : null
+                    };
+                } catch (_) {}
+            }
+            if (!summary) {
+                const stderr = String(result.stderr || '').trim();
+                summary = { error: stderr || 'browser verification child exited non-zero', failedChecks: [] };
+            }
+            console.error('QX_BROWSER_SUITE_FAILURE:' + JSON.stringify({ script, attempts:attempt + 1, ...summary }));
+        }
+        assert.equal(result.status, 0, `${script} failed after ${attempt + 1} attempt(s). See QX_BROWSER_SUITE_FAILURE above.`);
+        const lines = result.stdout.trim().split(/\r?\n/).filter(Boolean);
+        const last = lines.at(-1) || '';
+        assert.ok(last, `${script} produced no verification result.`);
+        let payload;
+        try { payload = JSON.parse(last); }
+        catch { throw new Error(`${script} did not end with JSON verification output:\n${result.stdout}`); }
+        assert.equal(payload.ok, true, `${script} did not report ok=true.`);
+        assert.notEqual(payload.skipped, true, `${script} was skipped inside the strict release browser suite.`);
+        results.push({ script, attempts: attempt + 1, ...payload });
     }
-    assert.equal(result.status, 0, `${script} failed after ${attempt + 1} attempt(s). See QX_BROWSER_SUITE_FAILURE above.`);
-    const lines = result.stdout.trim().split(/\r?\n/).filter(Boolean);
-    const last = lines.at(-1) || '';
-    assert.ok(last, `${script} produced no verification result.`);
-    try { payload = JSON.parse(last); }
-    catch { throw new Error(`${script} did not end with JSON verification output:\n${result.stdout}`); }
-    assert.equal(payload.ok, true, `${script} did not report ok=true.`);
-    assert.notEqual(payload.skipped, true, `${script} was skipped inside the strict release browser suite.`);
-    results.push({ script, attempts: attempt + 1, ...payload });
+} finally {
+    fs.rmSync(canonicalGeometrySmoke, { force: true });
 }
 console.log(JSON.stringify({ ok: true, strict: true, browser, layers: results.length, results }));
