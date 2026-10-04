@@ -36,6 +36,9 @@
     --_qxframe9a7c2-v2-control-border-inline-current:var(--qxframe9a7c2-theme-v2-control-state-border-inline-weight);
     --_qxframe9a7c2-v2-control-border-block-start-current:var(--qxframe9a7c2-theme-v2-control-state-border-block-start-weight);
     --_qxframe9a7c2-v2-control-border-block-end-current:var(--qxframe9a7c2-theme-v2-control-state-border-block-end-weight);
+    border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-override-control-border,var(--_qxframe9a7c2-v2-control-border)) var(--qxframe9a7c2-theme-v2-control-state-border-inline-weight),transparent);
+    border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-override-control-border,var(--_qxframe9a7c2-v2-control-border)) var(--qxframe9a7c2-theme-v2-control-state-border-block-start-weight),transparent);
+    border-block-end-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-override-control-border,var(--_qxframe9a7c2-v2-control-border)) var(--qxframe9a7c2-theme-v2-control-state-border-block-end-weight),transparent);
   }
   /* Source-specific disabled fills stay authoritative; appearance still owns the
      border topology. This preserves disabled contrast instead of treating it as
@@ -61,11 +64,23 @@
   }
 
   .qxframe9a7c2-card[class]{
+    --_qxframe9a7c2-card-font-size:var(--qxframe9a7c2-card-font-size,var(--qxframe9a7c2-theme-v2-card-font-size));
     --_qxframe9a7c2-v2-card-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
     --_qxframe9a7c2-v2-card-explicit-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
     box-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
   }
   .qxframe9a7c2-card.is-shadow,.qxframe9a7c2-card.is-hover-shadow:hover,.qxframe9a7c2-card.is-hoverable:hover{box-shadow:var(--qxframe9a7c2-theme-v2-card-shadow)}
+
+  /* Component roots own these private radii, so bind the Style Shape roles at
+     the component root while preserving explicit public component overrides. */
+  .qxframe9a7c2-switch[class]{
+    --_qxframe9a7c2-switch-track-radius:var(--qxframe9a7c2-switch-track-radius,var(--qxframe9a7c2-theme-v2-shape-toggle-track-radius));
+    --_qxframe9a7c2-switch-thumb-radius:var(--qxframe9a7c2-switch-thumb-radius,var(--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius));
+  }
+  .qxframe9a7c2-slider[class]{
+    --_qxframe9a7c2-slider-rail-radius:var(--qxframe9a7c2-slider-rail-radius,var(--qxframe9a7c2-theme-v2-shape-range-track-radius));
+    --_qxframe9a7c2-slider-handle-radius:var(--qxframe9a7c2-slider-handle-radius,var(--qxframe9a7c2-theme-v2-shape-range-thumb-radius));
+  }
 
   .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],
   .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
