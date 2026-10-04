@@ -1,22 +1,20 @@
-import fs from 'node:fs';
-import { readEffectiveControlRecipes } from './css-control-recipe-source.mjs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { fileURLToPath } from 'node:url';
+import {fileURLToPath} from 'node:url';
+import {verifyGeometryRuleSource} from './theme-v2-geometry-contract.mjs';
+import {DENSITIES,normalizeGeometryConfig} from '../docs/assets/theme-generator/geometry-engine-v2.mjs';
+
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=readEffectiveControlRecipes(root);
-const m=JSON.parse(fs.readFileSync(path.join(root,'tools/manifests/css-control-recipe-even.json'),'utf8'));
-for(const item of m.mappings){
-  assert.equal(css.includes(item.from),false,'Retired odd control literal remains: '+item.from);
-  assert.ok(css.includes(item.to),'Expected even Size Tree control mapping missing: '+item.to);
-  assert.ok(Math.abs(item.deltaPx)<=1,'Control normalization delta must be <=1px.');
+const contract=verifyGeometryRuleSource(root);
+assert.equal(contract.evenLengths,true);
+assert.equal(contract.legacyFiveSizeOverrides,false);
+
+for(const density of DENSITIES){
+  const {geometry}=normalizeGeometryConfig({style:'vega',options:{density}});
+  for(const role of ['control-min-block-md','control-font-size-md','control-line-box-md','control-padding-inline-md','control-gap-md','control-icon-md']){
+    const px=Number(geometry[role].slice(0,-3))*16;
+    assert.ok(Number.isInteger(px/2),'Control md geometry must resolve to an even reference length: '+density+'/'+role+'/'+geometry[role]);
+  }
 }
-const heightNodes={xs:12,sm:14,md:16,lg:18,xl:20};
-for(const [size,node] of Object.entries(heightNodes)){
-  const marker='.is-'+size;
-  const start=css.indexOf(marker);
-  assert.ok(start>=0,'Missing control size block: '+size);
-  const slice=css.slice(start,start+900);
-  assert.ok(slice.includes('--_qxframe9a7c2-size-control-height: var(--qxframe9a7c2-size-'+node+');'),'Control height changed for '+size);
-}
-console.log(JSON.stringify({ok:true,mappings:m.mappings,fixedControlHeightsPx:m.fixedControlHeightsPx}));
+
+console.log(JSON.stringify({ok:true,densities:DENSITIES,geometryAuthority:'qx-md-2',evenControlInputs:true,fiveSizeThemeTable:false}));
