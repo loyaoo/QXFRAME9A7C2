@@ -431,7 +431,7 @@ Switch 轨道、Slider 手柄、Progress 圆环等使用专用默认几何与固
 - Style 和有限密度档位选择默认属性，不选择尺寸曲线或独立 xs 例外。
 - 组件专属 md 覆盖若保留，设置后四个其他档位一起派生；删除后恢复共享默认关联。
 - 颜色、状态与非几何可选覆盖按本文件的三层契约处理，不因尺寸收敛而全部删除。
-- 旧逐尺寸几何接口进入版本化兼容处理，不能作为新主题的隐藏覆盖入口重新导出。
+- 旧逐尺寸几何接口已退休，不再提供兼容输出；不得作为新主题的隐藏覆盖入口重新导出。
 
 生成器内部可以展开五档结果用于验证或预览，但只序列化默认输入。框架 CSS 在正确作用域计算最终值；主题数量增加时不重复携带算法。
 
@@ -787,13 +787,13 @@ Carousel 圆点、Tag close 等分开可见尺寸与交互范围。讨论记录�
 
 需要 rgba 等透明度表达时，可使用完整颜色的透明混色或相应 CSS 方法；不为保持旧通道写法重新导出一套 RGB 三元组与同义完整颜色。
 
-### 10.4 旧配置与兼容范围
+### 10.4 旧配置退休边界
 
-本轮不以维护所有旧内部 Token 为目标，不因兼容要求保留巨型预设层。若已有需要导入的用户主题，提供版本化转换和明确差异报告；无法归纳的旧逐尺寸／状态值不能静默丢弃，也不能永久加入新默认输出。
+框架尚未投入生产，本轮不保留旧 Theme／生成器配置兼容层。旧 Schema1、旧逐尺寸／状态配置、旧 RGB 通道串、旧 Style default／密度名称和旧公开 Token 均不再作为可导入或可输出接口。
 
-旧固定色可转换为 Theme 参考值；旧色阶／状态矩阵按新角色归纳。旧 RGB 通道串需明确转换为完整颜色。无法自动对应的内容列入迁移报告，额外兼容路径仅在确有需求时保留。
+旧数据只作为迁移审计和视觉比对材料：能归纳为新 Theme 参考值、共享规则或私有固定几何的内容直接迁入新职责；无法归纳的旧值记录在修改说明中后删除，不为其长期保留运行时桥。
 
-Style 旧 default 或密度旧名称按配置版本迁移，不能在下次加载时猜测。高级手写覆盖若保留，其优先级和允许范围应登记；正常界面仍使用有限档位，不要求用户手填数值。
+新版 JSON 仅接受当前 Schema、当前规则版本与登记的有限高级覆盖；无效旧配置明确报错且保持当前配置不变，不能猜测、静默转换或重新输出第二套 Token。
 
 ### 10.5 同步调整检查工具
 
@@ -803,9 +803,9 @@ Style 旧 default 或密度旧名称按配置版本迁移，不能在下次加�
 
 ## 11. 实施顺序、阶段与交付物
 
-### 11.1 先改颜色主干，最后替换正式默认主题
+### 11.1 先改颜色主干，再完成 canonical Theme 全量验收
 
-不建议把颜色派生留到全部 Style 和组件调好之后：若后改基础取色方式，前面的视觉标定可能需要重做。正确顺序是先固定 shadcn 颜色来源和分配映射，做代表组件等价验证，接通全部消费端，再完成非颜色 Style 标定，最后替换默认主题。
+不建议把颜色派生留到全部 Style 和组件调好之后：若后改基础取色方式，前面的视觉标定可能需要重做。正确顺序是先固定 shadcn 颜色来源和分配映射，做代表组件等价验证，接通全部消费端，再完成非颜色 Style 标定，最后完成 canonical Theme 的全量视觉与发布验收。旧默认 Theme 已按 2026-10-04 决策提前退休，不存在最终再切一次双轨默认的步骤。
 
 采用小范围可运行验证，不是先删除全部旧值。Schema、公共规则、组件消费和导出必须配套修改；小范围验收通过后扩展。现有完成的 CSS Token／交互工作不重新审计或重做。
 
@@ -818,7 +818,7 @@ Style 旧 default 或密度旧名称按配置版本迁移，不能在下次加�
 | E：生成器与 Style 联动 | 取消预设输出，接通有限档位、独立留白、八种 Style 和真实预览 | 选项显示真实值，Style 不隐藏组件最终值 |
 | F：稀疏导出与配置往返 | 必要输入、按需覆盖、旧数据转换；统计总量 | 导出／导入可复现；颜色规模与总体体积有实测结果 |
 | G：完整视觉回归 | 全组件、反馈、图表、边圈、原生输入、窄容器与组合状态 | 固定样例、计算样式、截图和差异报告 |
-| H：替换默认主题 | 生成选定正式主题，更新默认 CSS、文档、状态与 CI | 全部必要检查通过后替换；不提前宣布完成 |
+| H：canonical 收尾与发布 | 清零旧 private paint 消费，冻结选定正式默认配置，更新默认 CSS、文档、状态与 CI | 全部必要检查、跨浏览器与 Pages 通过；仓库只剩一套公开 Theme，方可宣布完成 |
 
 每次仓库交付附修改文档、完成／未完成清单、当前阶段和可核实进度，更新 AI_WORK_STATE.md。进度按本轮任务范围统计，不把此前已完成工作重复计入或重新实施。
 
@@ -828,15 +828,16 @@ Style 旧 default 或密度旧名称按配置版本迁移，不能在下次加�
 
 | 路径／区域 | 本轮处理职责 |
 |---|---|
-| src/styles/preset/_foundation.scss | 旧基础预设退役；必要非颜色常量迁入公共规则，不能整体换名搬迁 |
-| src/styles/theme/_default.scss | 少量完整参考色与默认属性；停止状态矩阵 |
-| src/styles/theme/_family.scss | 从源分配关系抽取颜色角色／Type／variant 规则，保留 QX size 算法、覆盖和局部计算 |
-| src/styles/components/ | 实际消费、状态优先级、专用几何与退役色阶依赖 |
-| docs/assets/theme-generator/engine.mjs、design-engine.mjs | 配置解析、md 输入和有限档位，取消完整输出 |
-| advanced-engine.mjs、recipe-engine.mjs、color-engine.mjs | 公共选项与参考色挑选，避免状态预展开 |
-| audit-engine.mjs、tools/verify-theme-generator-audit.mjs | 真实前景／合成色、模式表面和规则联动验收 |
-| presets.mjs、theme-studio.js／css | Style 与颜色独立、真实预览、导出往返，避免 Studio 私有修色 |
-| THEME_SCHEMA_V1_FREEZE.md、inventory、verifier | 按新完整颜色与三层契约同步调整，不继续冻结旧预设依赖 |
+| `src/styles/preset/_foundation.scss`、`theme/_default.scss`、`theme/_family.scss` | **已删除并由反向门禁禁止恢复**；不得作为后续实现入口 |
+| `src/styles/theme/_visual-v2.scss` | canonical 颜色、Type、共享状态与 21 个 md 默认输入；运行时 CSS 权威 |
+| `src/styles/theme/_visual-v2-style.scss`、`_visual-v2-style-consumers.scss` | 非颜色 Style 公共输入、有限配方与实际消费桥；不能再造组件私有 Theme 链 |
+| `src/styles/internal/_fixed-values.scss` | 暂存仍需的私有固定几何／实现常量；不是公开 Theme。旧 paint fallback 持续通过 poison gate 清零 |
+| `src/styles/components/` | 实际消费、状态优先级、专用几何与剩余旧 paint 依赖迁移 |
+| `docs/assets/theme-generator/engine-v2.mjs`、`semantic-engine.mjs` | 当前 Schema 配置、完整颜色、稀疏覆盖与 CSS 导出 |
+| `geometry-engine-v2.mjs`、`style-engine-v2.mjs` | 21 个 md 输入、固定五档算法对应配置、有限中文可见 Style 选项 |
+| `studio-v2.mjs`、`theme-studio-v2.css` | 唯一生成器 UI、真实预览、JSON/CSS 往返；用户可见配置中文化 |
+| `color-engine.mjs` | 仅保留新版仍复用的颜色解析能力；不得恢复旧 generator 主链 |
+| `verify-theme-single-system.mjs`、v2 geometry/source/Studio/browser gates | 单系统反向检查、源等价、真实 CSS 与 consumer paint 验收 |
 | AGENTS.md、AI_WORK_STATE.md、现行开发协议 | 新旧任务边界、当前阶段、通过项与未完成项 |
 
 ## 12. 内部派生验收与完成定义
