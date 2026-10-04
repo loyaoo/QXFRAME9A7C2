@@ -6,7 +6,7 @@ const patches=[
   ]],
   ['src/styles/components/_card.scss',[
     ['--_qxframe9a7c2-card-font-size:var(--_qxframe9a7c2-card-font-size,','--_qxframe9a7c2-card-font-size:var(--qxframe9a7c2-card-font-size,',1],
-    ['--_qxframe9a7c2-card-shadow:var(--_qxframe9a7c2-card-shadow,','--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,',4]
+    ['--_qxframe9a7c2-card-shadow:var(--_qxframe9a7c2-card-shadow,','--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,',5]
   ]],
   ['src/styles/components/_switch.scss',[
     ['--_qxframe9a7c2-switch-track-radius:var(--_qxframe9a7c2-switch-track-radius,','--_qxframe9a7c2-switch-track-radius:var(--qxframe9a7c2-switch-track-radius,',1],
