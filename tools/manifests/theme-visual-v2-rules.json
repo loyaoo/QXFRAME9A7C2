@@ -417,6 +417,60 @@
         "sera",
         "rhea"
       ]
+    },
+    {
+      "id": "control.native",
+      "family": "control",
+      "sourceSelector": ".cn-input",
+      "sourceExpression": "same complete input/foreground/ring/error roles and exact Style alpha; Sera underline",
+      "qxMapping": "Native Input/Select/Textarea, OTP segment, ColorPanel input, Pagination input; optional control override is shared",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "feedback.actual-roots",
+      "family": "feedback",
+      "sourceSelector": ".cn-alert-variant-destructive",
+      "sourceExpression": "Type foreground/background allocation",
+      "qxMapping": "actual Message/Notification/Alert roots; shared Type input, unchanged notice runtime",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "decoration.source-distribution",
+      "family": "surface/control",
+      "sourceSelector": "Card, Slider thumb, Switch thumb; Tailwind 4.3.0 theme.css",
+      "sourceExpression": "source shadow xs black5%, sm/md black10%; Style allocation from pinned excerpts",
+      "qxMapping": "QX even shadow geometry; is-shadow requests decoration; inline Alert has no popup shadow",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
     }
   ],
   "specializations": [
@@ -434,7 +488,6 @@
     }
   ],
   "gaps": [
-    "physical palette Type axes are not migrated",
     "Menu scheme and external ownership contexts beyond normal scope require further Phase D/G coverage",
     "component consumers beyond registered purposes need complete inventory/old-color poison checks",
     "non-color Style axes (typography roles, shadow selection, border emphasis, motion, Shape) pending",
@@ -452,5 +505,30 @@
     },
     "normalThemeOutput": "md only; CSS derives other four sizes",
     "status": "candidate calibration, opt-in, mandatory 576-config browser gate"
+  },
+  "physicalTypes": {
+    "names": [
+      "grey",
+      "cyan",
+      "teal",
+      "green",
+      "lime",
+      "yellow",
+      "orange",
+      "red",
+      "pink",
+      "purple",
+      "blue",
+      "azure",
+      "white",
+      "black"
+    ],
+    "aliases": {
+      "gray": "grey"
+    },
+    "formulas": "same reviewed current Type rules; no Type/state matrix",
+    "normalExportNames": 30,
+    "inputFixture": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+    "roles": 28
   }
 }

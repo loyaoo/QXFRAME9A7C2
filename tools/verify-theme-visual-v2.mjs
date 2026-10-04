@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import zlib from 'node:zlib';
+import crypto from 'node:crypto';
+import {PHYSICAL_TYPES,PHYSICAL_ROLES,PHYSICAL_REFERENCE_COLORS} from '../docs/assets/theme-generator/type-colors-v2.mjs';
 import {fileURLToPath} from 'node:url';
 import {generateSemanticTheme,normalizeSemanticConfig,migrateLegacySemanticColors,CORE_ROLES,OPTIONAL_ROLES,OVERRIDE_ROLES,SEMANTIC_STYLES} from '../docs/assets/theme-generator/semantic-engine.mjs';
 import {generateThemeV2,serializeThemeV2,parseThemeV2} from '../docs/assets/theme-generator/engine-v2.mjs';
@@ -29,6 +31,30 @@ assert.equal(generateSemanticTheme({overrides:{light:{'action-hover-background':
 for(const invalid of [{schema:1},{rules:'unknown'},{style:'unknown'},{colors:{light:{typo:'red'}}},{colors:{light:{primary:'var(--old-palette)'}}},{colors:{light:{primary:'rgb(1 2 3); display:none'}}},{overrides:{light:{'control-height-xs':'2rem'}}}])assert.throws(()=>generateSemanticTheme(invalid));
 const migrated=migrateLegacySemanticColors({'light.primary':'1, 2, 3','light.control-height-xs':'2rem','dark.primary':'oklch(.5 .1 20)'});
 assert.equal(migrated.config.colors.light.primary,'rgb(1, 2, 3)');assert.equal(migrated.unmapped.length,1);
+
+// Input references are pinned independently of the runtime state formulas.
+const physicalFixture=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/theme-v2/qx-physical-inputs.json')));
+const physicalSource=fs.readFileSync(path.join(root,physicalFixture.sourceFile),'utf8');
+assert.equal(crypto.createHash('sha256').update(physicalSource).digest('hex'),physicalFixture.sourceSha256);
+assert.deepEqual(physicalFixture.types,PHYSICAL_TYPES);
+assert.equal(PHYSICAL_ROLES.length,28);
+for(const entry of physicalFixture.entries){
+  for(const [role,value,sourceName] of [['type-'+entry.type,entry.color,entry.sourceColor],['type-'+entry.type+'-foreground',entry.foreground,entry.sourceForeground]]){
+    assert.equal(PHYSICAL_REFERENCE_COLORS[entry.mode][role],value);
+    const sourceValue=role.endsWith('-foreground')?'rgb(var(--qxframe9a7c2-palette-'+(value==='rgb(0 0 0)'?'black':'white')+'))':value;
+    assert.ok(physicalSource.includes(sourceName+': '+sourceValue+';'),sourceName+' changed');
+    assert.ok(verified.source.includes('--qxframe9a7c2-theme-v2-'+role+': light-dark('+PHYSICAL_REFERENCE_COLORS.light[role]+', '+PHYSICAL_REFERENCE_COLORS.dark[role]+');'),role+' input differs');
+  }
+}
+for(const type of PHYSICAL_TYPES){
+  const config={colors:{light:{['type-'+type]:'rgb(11 37 91 / .5)',['type-'+type+'-foreground']:'rgb(241 239 233)'}}};
+  const theme=generateThemeV2(config);
+  assert.equal(theme.statistics.colorNames,32);
+  assert.deepEqual(parseThemeV2(serializeThemeV2(theme.config)),theme);
+  assert.equal(theme.statistics.overrideDeclarations,0);
+}
+assert.doesNotMatch(generated.css,/theme-v2-type-/);
+assert.throws(()=>generateThemeV2({colors:{light:{'type-gray':'red'}}}));
 
 // Test the detector itself. A changed ratio, space or ungated module cannot pass
 // simply because the legacy audit allows the versioned module path.
@@ -90,6 +116,7 @@ for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark']){
     cases.push({style,mode,type,variant,state,kind:'button',expected:{backgroundColor:sourceColor(style,selector,'bg',mode,sourceState),color:sourceColor(style,selector,'text',mode,sourceState),borderColor:sourceColor(style,selector,'border',mode,sourceState)},selector});
   }
   for(const state of ['normal','invalid','disabled'])cases.push({style,mode,state,kind:'input',expected:{backgroundColor:sourceColor(style,'.cn-input','bg',mode,state),borderBottomColor:sourceColor(style,'.cn-input',style==='sera'?'border-b':'border',mode,state)},selector:'.cn-input'});
+  for(const part of ["form-input", "form-select", "form-textarea", "input-otp-segment", "color-panel-input", "pagination-input"])for(const state of ['normal','invalid','disabled'])cases.push({style,mode,state,part,kind:'native-control',expected:{backgroundColor:sourceColor(style,'.cn-input','bg',mode,state),borderBottomColor:sourceColor(style,'.cn-input',style==='sera'?'border-b':'border',mode,state)}});
   cases.push({style,mode,kind:'card',expected:{backgroundColor:sourceColor(style,'.cn-card','bg',mode),color:sourceColor(style,'.cn-card','text',mode),borderColor:sourceColor(style,'.cn-card','ring',mode)},selector:'.cn-card'});
   cases.push({style,mode,kind:'dialog',expected:{backgroundColor:sourceColor(style,'.cn-dialog-content','bg',mode),color:sourceColor(style,'.cn-dialog-content','text',mode),borderColor:sourceColor(style,'.cn-dialog-content','ring',mode)},selector:'.cn-dialog-content'});
   cases.push({style,mode,kind:'mask',expected:{backgroundColor:sourceColor(style,'.cn-dialog-overlay','bg',mode)},selector:'.cn-dialog-overlay'});
@@ -119,11 +146,21 @@ for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark']){
   }
 
 }
+const physicalCases=[];
+for(const style of SEMANTIC_STYLES)for(const mode of ['light','dark'])for(const type of PHYSICAL_TYPES){
+  for(const variant of ['solid','filled'])for(const state of ['normal','hover','active','hover-active','loading-hover','disabled-hover']){
+    const selector='.cn-button-variant-'+(variant==='solid'?'default':'destructive');
+    const sourceState=['hover','hover-active'].includes(state)?'hover':'normal';
+    physicalCases.push({style,mode,type,variant,state,kind:'button',expected:{backgroundColor:sourceColor(style,selector,'bg',mode,sourceState),color:sourceColor(style,selector,'text',mode,sourceState),borderColor:sourceColor(style,selector,'border',mode,sourceState)}});
+  }
+  for(const kind of ['tag','badge'])for(const state of ['normal','hover'])physicalCases.push({style,mode,type,state,kind,expected:{backgroundColor:sourceColor(style,'.cn-badge-variant-destructive','bg',mode,state),color:sourceColor(style,'.cn-badge-variant-destructive','text',mode,state)}});
+  physicalCases.push({style,mode,type,kind:'alert',expected:{backgroundColor:sourceColor(style,'.cn-alert-variant-destructive','bg',mode),color:sourceColor(style,'.cn-alert-variant-destructive','text',mode)}});
+  physicalCases.push({style,mode,type,kind:'progress',expected:{backgroundColor:sourceColor(style,'.cn-progress-indicator','bg',mode)}});
+}
 const css=compileStyles().css;
 const report={schema:2,stage:'A/B/C representative chain',sourceSha:fixture.sha,sourceRules:verified.expressions.length,inputs:generated.statistics,themeBytes:Buffer.byteLength(generated.css),themeGzipBytes:zlib.gzipSync(generated.css).length,frameworkBytes:Buffer.byteLength(css),pilotSourceBytes:Buffer.byteLength(verified.source),geometry:{...geometryVerified,configurations:geometryConfigs.length},defaultReplaced:false,allComponentMigration:false,browser:null};
-if(process.argv.includes('--browser')){
-  report.browser=await browserProbes({cssText:css,evaluationTimeoutMs:60000,expression:`(() => {
-    const cases=${JSON.stringify(cases)},scope=document.getElementById('scope'),failures=[];
+const expression=(probeCases,includeGeometry)=>`(() => {
+    const cases=${JSON.stringify(probeCases)},scope=document.getElementById('scope'),failures=[];
     const stable=document.createElement('style');stable.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(stable);
     scope.setAttribute('data-qxframe9a7c2-visual','2');
     const host=document.createElement('div'),reference=document.createElement('div');scope.append(host,reference);
@@ -135,11 +172,12 @@ if(process.argv.includes('--browser')){
     let checks=0;
     for(const test of cases){
       scope.setAttribute('data-qxframe9a7c2-theme',test.mode);scope.setAttribute('data-qxframe9a7c2-style',test.style);
-      const type=test.type??'primary';reference.style.setProperty('--source-primary',sourceRole(type==='default'?'foreground':type));reference.style.setProperty('--source-primary-foreground',sourceRole(type==='default'?'background':type+'-foreground'));reference.style.setProperty('--source-destructive',sourceRole(['button','badge','tag','alert'].includes(test.kind)?(type==='default'?'foreground':type):'error'));
+      const type=test.type??'primary',typeRole=${JSON.stringify(PHYSICAL_TYPES)}.includes(type)?'type-'+type:type;reference.style.setProperty('--source-primary',sourceRole(type==='default'?'foreground':typeRole));reference.style.setProperty('--source-primary-foreground',sourceRole(type==='default'?'background':typeRole+'-foreground'));reference.style.setProperty('--source-destructive',sourceRole(['button','badge','tag','alert'].includes(test.kind)?(type==='default'?'foreground':typeRole):'error'));
       if(['checkbox','radio'].includes(test.kind))host.innerHTML='<input class="qxframe9a7c2-form-check-input" type="'+test.kind+'" '+(test.state.includes('checked')?'checked':'')+' '+(test.state.includes('disabled')?'disabled':'')+'>';
       if(['switch-track','switch-thumb'].includes(test.kind))host.innerHTML='<span class="qxframe9a7c2-switch '+(test.state.includes('disabled')?'is-disabled':'')+'"><input class="qxframe9a7c2-switch-input" type="checkbox" '+(test.state.includes('checked')?'checked':'')+'><span class="qxframe9a7c2-switch-track"><span class="qxframe9a7c2-switch-thumb"></span></span></span>';
       if(['slider-rail','slider-handle'].includes(test.kind))host.innerHTML='<div class="qxframe9a7c2-slider"><div class="qxframe9a7c2-slider-rail"></div><button class="qxframe9a7c2-slider-handle"></button></div>';
       if(test.kind==='button')host.innerHTML='<button class="qxframe9a7c2-button is-'+type+' is-'+test.variant+' '+(test.state==='hover-active'?'is-hover is-active':test.state==='loading-hover'?'is-loading is-hover':test.state==='disabled-hover'?'is-disabled is-hover':test.state==='normal'?'':'is-'+test.state)+'">QX</button>';
+      if(test.kind==='native-control')host.innerHTML='<input class="qxframe9a7c2-'+test.part+' '+(test.state==='invalid'?'is-invalid':test.state==='disabled'?'is-disabled':'')+'" '+(test.state==='disabled'?'disabled':'')+'>';
       if(test.kind==='input')host.innerHTML='<div class="qxframe9a7c2-input '+(test.state==='invalid'?'is-invalid':test.state==='disabled'?'is-disabled':'')+'"><input class="qxframe9a7c2-input-control"></div>';
       if(test.kind==='card')host.innerHTML='<div class="qxframe9a7c2-card">QX</div>';
       if(test.kind==='dialog')host.innerHTML='<div class="qxframe9a7c2-modal-root"><div class="qxframe9a7c2-modal-container">QX</div></div>';
@@ -160,7 +198,7 @@ if(process.argv.includes('--browser')){
       const node=host.querySelector(target[test.kind]??':first-child');
       for(const [property,expression]of Object.entries(test.expected)){
         reference.style[property]=expression;const expected=measure(reference,property),actual=measure(node,property);
-        compare(test.style+'/'+test.mode+'/'+test.kind+'/'+type+'/'+test.variant+'/'+test.state+'/'+property,actual,expected);checks++;
+        compare(test.style+'/'+test.mode+'/'+test.kind+'/'+(test.part??type)+'/'+test.variant+'/'+test.state+'/'+property,actual,expected);checks++;
       }
       if(test.state?.includes('disabled')&&['checkbox','radio','switch-track'].includes(test.kind)){if(Number(measure(node,'opacity'))!==.5)failures.push({id:test.style+'/'+test.mode+'/'+test.kind+'/disabled-opacity',actual:measure(node,'opacity'),expected:'.5'});checks++;}
       if(test.state==='disabled-hover'){if(Number(measure(node,'opacity'))!==.5)failures.push({id:test.style+'/'+test.mode+'/disabled-opacity',actual:measure(node,'opacity'),expected:'.5'});checks++;}
@@ -183,10 +221,25 @@ if(process.argv.includes('--browser')){
     compare('card-description-keeps-muted-role',measure(description,'color'),descriptionBefore);checks++;
     neutral.style.removeProperty(p+'override-surface-foreground');
     for(const node of [neutral,title]){compare('delete-card-surface-foreground-restores-role',measure(node,'color'),'rgb(12, 34, 56)');checks++;}
-    const geometry=(${geometryBrowserProbe.toString()})(scope,host,${JSON.stringify(geometryConfigs)});
+    host.innerHTML='<div class="qxframe9a7c2-tags is-blue is-variant-solid"><span class="qxframe9a7c2-tag inherited">Inherited</span><span class="qxframe9a7c2-tag is-red explicit">Red</span><span class="qxframe9a7c2-tag is-primary primary">Primary</span></div><button class="qxframe9a7c2-button is-grey is-solid">Grey</button><button class="qxframe9a7c2-button is-gray is-solid">Gray</button><div data-qxframe9a7c2-theme="dark"><div data-qxframe9a7c2-theme="light"><button class="qxframe9a7c2-button is-blue is-solid is-hover nested">Nested</button></div></div>';
+    for(const [selector,role]of [['.inherited','type-blue'],['.explicit','type-red'],['.primary','primary']]){reference.style.backgroundColor=sourceRole(role);compare('Tags-Type-'+selector,measure(host.querySelector(selector),'backgroundColor'),measure(reference,'backgroundColor'));checks++;}
+    compare('gray-alias',measure(host.querySelector('.is-gray'),'backgroundColor'),measure(host.querySelector('.is-grey'),'backgroundColor'));checks++;
+    const physical=host.querySelector('.nested');physical.style.setProperty(p+'type-blue','rgb(41 73 109 / .5)');reference.style.backgroundColor='color-mix(in oklab, rgb(41 73 109 / .5) 80%, transparent)';compare('local-physical-alpha-Light-in-Dark',measure(physical,'backgroundColor'),measure(reference,'backgroundColor'));checks++;
+    physical.style.setProperty(p+'primary','rgb(217 13 29)');compare('local-primary-preserves-physical',measure(physical,'backgroundColor'),measure(reference,'backgroundColor'));checks++;
+    physical.style.removeProperty(p+'type-blue');reference.style.backgroundColor='color-mix(in oklab, '+sourceRole('type-blue')+' 80%, transparent)';compare('delete-local-physical-restores-reference',measure(physical,'backgroundColor'),measure(reference,'backgroundColor'));checks++;
+    const geometry=${includeGeometry}?(${geometryBrowserProbe.toString()})(scope,host,${JSON.stringify(geometryConfigs)}):{checks:0,failures:[]};
     failures.push(...geometry.failures);
     return {cases:cases.length,checks,geometry,failures,renderTolerance:'0 RGBA byte difference both on transparent canvas and after actual mode-surface composition; exact strings retained'};
-  })()`});
+  })()`;
+assert.doesNotThrow(()=>new Function(expression(cases,false)),'Serialized browser probe must parse');
+if(process.argv.includes('--browser')){
+  report.browser=await browserProbes({cssText:css,evaluationTimeoutMs:60000,expression:expression(cases,true)});
+  report.physicalBrowser=[];
+  for(const styles of [SEMANTIC_STYLES.slice(0,4),SEMANTIC_STYLES.slice(4)]){
+    const result=await browserProbes({cssText:css,evaluationTimeoutMs:60000,expression:expression(physicalCases.filter(test=>styles.includes(test.style)),false)});
+    report.physicalBrowser.push(result);
+    report.browser.failures.push(...result.failures);
+  }
   fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-visual-v2.json'),JSON.stringify(report,null,2)+'\n');
   assert.deepEqual(report.browser.failures.slice(0,40),[],'Source colors and QX consumer colors differ; details in artifacts/theme-visual-v2.json');
 }

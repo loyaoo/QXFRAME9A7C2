@@ -393,6 +393,342 @@
       "role": "shadow-color",
       "type": "complete-color",
       "required": false
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-grey",
+      "role": "type-grey",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.438602 0.0000199676 0.00000876188)",
+        "dark": "oklab(0.528425 0.0000240636 0.0000105739)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-grey-foreground",
+      "role": "type-grey-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(0 0 0)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-cyan",
+      "role": "type-cyan",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.655225 -0.0934884 -0.058802)",
+        "dark": "oklab(0.710388 -0.0785229 -0.0493905)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-cyan-foreground",
+      "role": "type-cyan-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-teal",
+      "role": "type-teal",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.657266 -0.132336 0.0370336)",
+        "dark": "oklab(0.712103 -0.111155 0.0311115)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-teal-foreground",
+      "role": "type-teal-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-green",
+      "role": "type-green",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.673776 -0.155199 0.106992)",
+        "dark": "oklab(0.725971 -0.13036 0.0898764)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-green-foreground",
+      "role": "type-green-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-lime",
+      "role": "type-lime",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.737125 -0.11868 0.151889)",
+        "dark": "oklab(0.779184 -0.0996837 0.12759)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-lime-foreground",
+      "role": "type-lime-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-yellow",
+      "role": "type-yellow",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.770196 0.0539634 0.156825)",
+        "dark": "oklab(0.806964 0.0453365 0.131736)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-yellow-foreground",
+      "role": "type-yellow-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-orange",
+      "role": "type-orange",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.685099 0.139212 0.137142)",
+        "dark": "oklab(0.735482 0.116945 0.115202)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-orange-foreground",
+      "role": "type-orange-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-red",
+      "role": "type-red",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.582902 0.175049 0.0838445)",
+        "dark": "oklab(0.649637 0.147049 0.0704326)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-red-foreground",
+      "role": "type-red-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-pink",
+      "role": "type-pink",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.588112 0.200188 0.0184014)",
+        "dark": "oklab(0.654014 0.168165 0.0154604)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-pink-foreground",
+      "role": "type-pink-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-purple",
+      "role": "type-purple",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.578335 0.165378 -0.142988)",
+        "dark": "oklab(0.6458 0.138925 -0.120107)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-purple-foreground",
+      "role": "type-purple-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-blue",
+      "role": "type-blue",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.549381 -0.0301264 -0.247168)",
+        "dark": "oklab(0.621479 -0.0252989 -0.207618)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-blue-foreground",
+      "role": "type-blue-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-azure",
+      "role": "type-azure",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.651187 -0.0565023 -0.182395)",
+        "dark": "oklab(0.706996 -0.0474546 -0.153209)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-azure-foreground",
+      "role": "type-azure-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-white",
+      "role": "type-white",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0.999994 0.0000455678 0.0000200868)",
+        "dark": "oklab(0.999994 0.0000455678 0.0000200868)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-white-foreground",
+      "role": "type-white-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(0 0 0)",
+        "dark": "rgb(0 0 0)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-black",
+      "role": "type-black",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "oklab(0 0 0)",
+        "dark": "oklab(0.159999 0.00000729084 0.00000321388)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-type-black-foreground",
+      "role": "type-black-foreground",
+      "type": "complete-color",
+      "required": false,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      },
+      "source": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+      "output": "only explicit custom input; removing restores local Theme default"
     }
   ],
   "overrides": [
@@ -660,5 +996,28 @@
       "normal",
       "roomy"
     ]
+  },
+  "physicalTypes": {
+    "names": [
+      "grey",
+      "cyan",
+      "teal",
+      "green",
+      "lime",
+      "yellow",
+      "orange",
+      "red",
+      "pink",
+      "purple",
+      "blue",
+      "azure",
+      "white",
+      "black"
+    ],
+    "aliases": {
+      "gray": "grey"
+    },
+    "formulas": "same reviewed current Type rules; no Type/state matrix",
+    "normalExportNames": 30
   }
 }

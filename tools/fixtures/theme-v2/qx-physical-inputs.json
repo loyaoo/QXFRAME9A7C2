@@ -1,0 +1,251 @@
+{
+  "purpose": "Preserve current QX physical input references; state/variant formulas come exclusively from pinned shadcn. No palette/state export.",
+  "qxCommit": "e7bbf6b7800a2a82db1bd04ac115e0ba5ff62ea4",
+  "sourceFile": "src/styles/theme/_default.scss",
+  "sourceSha256": "df6f52cd24e2504f9fff3de77928daf2ac96ebf9a5cfe200295cff684017eedc",
+  "types": [
+    "grey",
+    "cyan",
+    "teal",
+    "green",
+    "lime",
+    "yellow",
+    "orange",
+    "red",
+    "pink",
+    "purple",
+    "blue",
+    "azure",
+    "white",
+    "black"
+  ],
+  "aliases": {
+    "gray": "grey"
+  },
+  "entries": [
+    {
+      "type": "grey",
+      "mode": "light",
+      "color": "oklab(0.438602 0.0000199676 0.00000876188)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-grey",
+      "sourceForeground": "--_qxframe9a7c2-on-grey"
+    },
+    {
+      "type": "grey",
+      "mode": "dark",
+      "color": "oklab(0.528425 0.0000240636 0.0000105739)",
+      "foreground": "rgb(0 0 0)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-grey",
+      "sourceForeground": "--_qxframe9a7c2-on-grey"
+    },
+    {
+      "type": "cyan",
+      "mode": "light",
+      "color": "oklab(0.655225 -0.0934884 -0.058802)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-cyan",
+      "sourceForeground": "--_qxframe9a7c2-on-cyan"
+    },
+    {
+      "type": "cyan",
+      "mode": "dark",
+      "color": "oklab(0.710388 -0.0785229 -0.0493905)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-cyan",
+      "sourceForeground": "--_qxframe9a7c2-on-cyan"
+    },
+    {
+      "type": "teal",
+      "mode": "light",
+      "color": "oklab(0.657266 -0.132336 0.0370336)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-teal",
+      "sourceForeground": "--_qxframe9a7c2-on-teal"
+    },
+    {
+      "type": "teal",
+      "mode": "dark",
+      "color": "oklab(0.712103 -0.111155 0.0311115)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-teal",
+      "sourceForeground": "--_qxframe9a7c2-on-teal"
+    },
+    {
+      "type": "green",
+      "mode": "light",
+      "color": "oklab(0.673776 -0.155199 0.106992)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-green",
+      "sourceForeground": "--_qxframe9a7c2-on-green"
+    },
+    {
+      "type": "green",
+      "mode": "dark",
+      "color": "oklab(0.725971 -0.13036 0.0898764)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-green",
+      "sourceForeground": "--_qxframe9a7c2-on-green"
+    },
+    {
+      "type": "lime",
+      "mode": "light",
+      "color": "oklab(0.737125 -0.11868 0.151889)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-lime",
+      "sourceForeground": "--_qxframe9a7c2-on-lime"
+    },
+    {
+      "type": "lime",
+      "mode": "dark",
+      "color": "oklab(0.779184 -0.0996837 0.12759)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-lime",
+      "sourceForeground": "--_qxframe9a7c2-on-lime"
+    },
+    {
+      "type": "yellow",
+      "mode": "light",
+      "color": "oklab(0.770196 0.0539634 0.156825)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-yellow",
+      "sourceForeground": "--_qxframe9a7c2-on-yellow"
+    },
+    {
+      "type": "yellow",
+      "mode": "dark",
+      "color": "oklab(0.806964 0.0453365 0.131736)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-yellow",
+      "sourceForeground": "--_qxframe9a7c2-on-yellow"
+    },
+    {
+      "type": "orange",
+      "mode": "light",
+      "color": "oklab(0.685099 0.139212 0.137142)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-orange",
+      "sourceForeground": "--_qxframe9a7c2-on-orange"
+    },
+    {
+      "type": "orange",
+      "mode": "dark",
+      "color": "oklab(0.735482 0.116945 0.115202)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-orange",
+      "sourceForeground": "--_qxframe9a7c2-on-orange"
+    },
+    {
+      "type": "red",
+      "mode": "light",
+      "color": "oklab(0.582902 0.175049 0.0838445)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-red",
+      "sourceForeground": "--_qxframe9a7c2-on-red"
+    },
+    {
+      "type": "red",
+      "mode": "dark",
+      "color": "oklab(0.649637 0.147049 0.0704326)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-red",
+      "sourceForeground": "--_qxframe9a7c2-on-red"
+    },
+    {
+      "type": "pink",
+      "mode": "light",
+      "color": "oklab(0.588112 0.200188 0.0184014)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-pink",
+      "sourceForeground": "--_qxframe9a7c2-on-pink"
+    },
+    {
+      "type": "pink",
+      "mode": "dark",
+      "color": "oklab(0.654014 0.168165 0.0154604)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-pink",
+      "sourceForeground": "--_qxframe9a7c2-on-pink"
+    },
+    {
+      "type": "purple",
+      "mode": "light",
+      "color": "oklab(0.578335 0.165378 -0.142988)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-purple",
+      "sourceForeground": "--_qxframe9a7c2-on-purple"
+    },
+    {
+      "type": "purple",
+      "mode": "dark",
+      "color": "oklab(0.6458 0.138925 -0.120107)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-purple",
+      "sourceForeground": "--_qxframe9a7c2-on-purple"
+    },
+    {
+      "type": "blue",
+      "mode": "light",
+      "color": "oklab(0.549381 -0.0301264 -0.247168)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-blue",
+      "sourceForeground": "--_qxframe9a7c2-on-blue"
+    },
+    {
+      "type": "blue",
+      "mode": "dark",
+      "color": "oklab(0.621479 -0.0252989 -0.207618)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-blue",
+      "sourceForeground": "--_qxframe9a7c2-on-blue"
+    },
+    {
+      "type": "azure",
+      "mode": "light",
+      "color": "oklab(0.651187 -0.0565023 -0.182395)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-azure",
+      "sourceForeground": "--_qxframe9a7c2-on-azure"
+    },
+    {
+      "type": "azure",
+      "mode": "dark",
+      "color": "oklab(0.706996 -0.0474546 -0.153209)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-azure",
+      "sourceForeground": "--_qxframe9a7c2-on-azure"
+    },
+    {
+      "type": "white",
+      "mode": "light",
+      "color": "oklab(0.999994 0.0000455678 0.0000200868)",
+      "foreground": "rgb(0 0 0)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-white",
+      "sourceForeground": "--_qxframe9a7c2-on-white"
+    },
+    {
+      "type": "white",
+      "mode": "dark",
+      "color": "oklab(0.999994 0.0000455678 0.0000200868)",
+      "foreground": "rgb(0 0 0)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-white",
+      "sourceForeground": "--_qxframe9a7c2-on-white"
+    },
+    {
+      "type": "black",
+      "mode": "light",
+      "color": "oklab(0 0 0)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-light-color-accent-1-black",
+      "sourceForeground": "--_qxframe9a7c2-on-black"
+    },
+    {
+      "type": "black",
+      "mode": "dark",
+      "color": "oklab(0.159999 0.00000729084 0.00000321388)",
+      "foreground": "rgb(255 255 255)",
+      "sourceColor": "--qxframe9a7c2-theme-dark-color-accent-1-black",
+      "sourceForeground": "--_qxframe9a7c2-on-black"
+    }
+  ]
+}

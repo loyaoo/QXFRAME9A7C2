@@ -36,6 +36,8 @@ jobs:
         run: node tools/verify-css-doc-preset-colors.mjs
       - name: Verify frozen public Theme interface and scoped portal expression
         run: npm run build && node tools/verify-theme-schema-v1.mjs --browser
+      - name: Verify canonical v2 consumers have no old color dependency
+        run: node tools/verify-browser-smoke.mjs --required --docs-only
       - name: Verify semantic v2 source equivalence and sparse output
         run: node tools/verify-theme-visual-v2.mjs --browser
       - name: Verify v2 Studio selections and configuration roundtrip

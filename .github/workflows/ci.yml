@@ -124,6 +124,15 @@ jobs:
 
           (cd demo-package && zip -qr ../artifacts/qxframe9a7c2-dist-docs-demo.zip .)
 
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: verification-evidence-${{ github.sha }}
+          path: artifacts/*.json
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: Upload dist and npm package
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:

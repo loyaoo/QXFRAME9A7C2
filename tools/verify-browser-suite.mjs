@@ -50,7 +50,8 @@ for (const script of scripts) {
                         failures: Array.isArray(payload.docs.failures) ? payload.docs.failures : [],
                         unmounted: Array.isArray(payload.docs.unmounted) ? payload.docs.unmounted : [],
                         windowErrors: Array.isArray(payload.docs.windowErrors) ? payload.docs.windowErrors : [],
-                        inputOtp: payload.docs.inputOtp || null
+                        inputOtp: payload.docs.inputOtp || null,
+                        v2Consumers: payload.docs.v2Consumers || null
                     } : null
                 };
             } catch (_) {}

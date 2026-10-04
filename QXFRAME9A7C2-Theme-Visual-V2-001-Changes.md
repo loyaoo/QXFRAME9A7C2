@@ -83,7 +83,7 @@
 - 新 Studio 的实际 UI 联动、Sera follow 半径、独立容器留白、无半径全五档、配置往返、覆盖消费/删除和无效导入不破坏当前配置加入 mandatory Chromium CI。
 - 初次几何浏览器 fixture 错误地将 Progress line 与 ring 放在同一个 flex root，造成圆环 flex shrink；已按实际组件 DOM 拆开。颜色等价没有新增容差。
 
-### 当前验收事实与收尾修正
+### 中间验收发现与收尾修正（历史记录）
 
 - head `4ae35349cf96f9b71f5533129cf71a85afd21efd` 的 Chromium 颜色矩阵：5,168 场景、15,035 检查；几何：51,855 检查；全部零失败。Studio 和完整发布仍未验收通过。
 - 专用 Studio 探针显式执行真实 Rollup 模块；旧 Playground smoke 按 module 类型打包入口及依赖，保持原脚本顺序，不跳过新 Studio。CDP 异常保留实际描述。
@@ -99,3 +99,28 @@
 - 实现 head：`10587b2862455d9d60e5fd7e058b8b495b9e20c2`；CSS Schema Acceptance `37164122219` SUCCESS。
 - 5,168 颜色场景 / 15,131 检查；576 配置×五档 / 51,855 几何检查；Studio 23 个实际 UI 断言；全部零失败。完整 release 与合并后 main／Pages 以实时 CI 为准，不能用单个 Schema 成功代替发布验收。
 - 当前 v1.5 总体约 45%；A 100%、B 80%、C 95%、D 35%、E 40%、F 45%、G/H 0%。当前交付覆盖代表链和新增用途，保留 opt-in；未完成清单在前文列明。
+
+## PR #256 合并与主分支发布
+
+- 最终 head：`e6d63a8097413a08a02bfa46a0ee1b793cc1e478`。CSS Schema Acceptance `37164297428` 与 QXFRAME CI `37164297455` 均 SUCCESS。
+- PR #256 已合并为 `e7bbf6b7800a2a82db1bd04ac115e0ba5ff62ea4`。主分支 QXFRAME CI `37164806216` SUCCESS，release / Windows / npm 包 /独立演示 / docs / Pages 部署均通过，deploy-pages job `111326754850` SUCCESS。
+- 主分支再次通过 15,131 颜色、51,855 几何和 23 Studio UI 检查，零失败。
+- 本批交付 100%；整个 v1.5 约 45%。下一步为 B/D 物理颜色 Type 与完整消费上下文迁移。生产默认保留至 H；主分支发布与代表浏览器矩阵不代替全组件、跨浏览器及人工视觉 G。
+
+## 第三批实现：完整物理 Type 与剩余颜色消费（2026-10-04，待 CI）
+
+- 14 个既有物理颜色 Type 与 gray→grey 别名；完整参考色和配套前景来自已验收 QX 输入并锁定源文件哈希，复用固定 shadcn 公式。新增 28 个按需公开输入，正常导出仍为 30 核心颜色＋21 md 输入；不生成色阶、Type/state 或组件结果矩阵。
+- Type 绑定在消费处解析，修正旧 `.is-blue` 等选择器抢占共享角色以及 Tags 显式子 Type 的继承优先级；物理输入修改与 primary 独立。
+- 实际 Message/Notification root、Badge count/ribbon/status、Carousel、Image/Upload mask 和 toolbar、native input/OTP/ColorPanel/Pagination input 的剩余直接颜色用途接入完整 Theme 输入。Popover arrow 复用当前 popup 表面。
+- 浏览器门禁扩展 4,032 物理 Type 来源等价场景，独立分片保持每次测量有界；保留零 RGBA 字节容差，验证局部透明输入、嵌套 Light/Dark、别名、Tags 继承与删除回退。
+- Studio 增加全部物理 Type 预览；实际 UI 验证完整色、配套前景、primary 独立、JSON 往返、删除恢复及稀疏导出。
+- 原 Schema-1 Playground smoke 完成后，真实 canonical demo DOM 在八 Style×亮暗下毒化旧 palette/Theme color/derived mode 输入，测量普通部位与伪元素的 paint；任何变化令 CI 失败，覆盖和未挂载部位均记录，不能据此宣称完整 G。
+- 当前本地静态门禁通过，浏览器和完整 release 尚待 CI；总体进度仍以 CURRENT 记录为准，生产默认保留至 H。
+
+### 第三批中间验收与继续迁移
+
+- 初始 head `456df680c49643f581efedefd1c6daad97946c77`：Schema `37167570477` SUCCESS，9,200 颜色场景／26,150 检查、51,855 几何检查、30 Studio 操作检查，零失败。完整 release `37167570441` 在新增真实 DOM 旧色毒化检查失败；旧 canonical demos 全部挂载且无运行错误。未合并。
+- Suite 失败摘要原先遗漏新增 consumer 数据，现转发具体部位／属性并保存失败时的验收报告。毒化探针遇到真实失败即可中止当前批报告，成功必须完整运行全部 16 个配置；不改变通过条件。
+- 补齐六类原生 Control 的共享可选覆盖、invalid/focus/disabled 与 Sera 下划线责任；新增 288 个来源等价场景。
+
+- 第二次 Schema `37168952190` SUCCESS：9,488 场景／26,726 颜色检查。真实 Playground 为 9,406 节点／744 已挂载类；首个配置 126,444 paint 检查暴露 180 个旧输入变化，正在修复 shared surface/data、日期 selected-active、Focus 可见色和装饰投影职责。Vega/Luma/Sera/Rhea Card、各 Style Slider/Switch 的投影有锁定来源分配；inline Alert 去掉浮层阴影。投影几何保留 QX 偶数规则，颜色使用锁定 Tailwind xs 5%、sm/md 10% alpha，未调比例。
