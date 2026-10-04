@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as cp from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { rollup } from 'rollup';
 import { getWebSocketConstructor } from './websocket-client.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -193,7 +194,7 @@ async function runSmoke(cdp) {
 }
 
 
-function themePlaygroundArtifacts() {
+async function themePlaygroundArtifacts() {
     const pagePath = path.join(root, 'docs', 'theme-playground.html');
     const baseDir = path.dirname(pagePath);
     let html = fs.readFileSync(pagePath, 'utf8');
@@ -208,13 +209,28 @@ function themePlaygroundArtifacts() {
     });
     html = html.replace(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi, function (_, attrs, inlineCode) {
         const src = attrs.match(/\bsrc=["']([^"']+)["']/i);
+        const isModule = /\btype=["']module["']/i.test(attrs);
         if (src) {
             const file = path.resolve(baseDir, src[1]);
             if (!file.startsWith(root + path.sep) || !fs.existsSync(file)) throw new Error('Missing Theme Playground script: ' + src[1]);
-            scripts.push({ label: src[1], code: fs.readFileSync(file, 'utf8') });
-        } else if (inlineCode.trim()) scripts.push({ label: 'theme-playground-inline-' + scripts.length, code: inlineCode });
+            scripts.push({ label: src[1], code: isModule ? null : fs.readFileSync(file, 'utf8'), modulePath: isModule ? file : null });
+        } else if (inlineCode.trim()) {
+            if (isModule) throw new Error('Inline Theme Playground modules require an explicit bundle entry');
+            scripts.push({ label: 'theme-playground-inline-' + scripts.length, code: inlineCode });
+        }
         return '';
     });
+    // about:blank has no module origin. Bundle each real module entry and its
+    // imports before evaluating it, preserving document script order.
+    for (let index = 0; index < scripts.length; index += 1) {
+        if (!scripts[index].modulePath) continue;
+        const bundle = await rollup({ input: scripts[index].modulePath });
+        try {
+            const { output } = await bundle.generate({ format: 'iife', name: 'QXDocsModule' + index, inlineDynamicImports: true });
+            if (output.length !== 1 || output[0].type !== 'chunk') throw new Error('Unexpected Theme Playground module output: ' + scripts[index].label);
+            scripts[index].code = output[0].code;
+        } finally { await bundle.close(); }
+    }
     return { html, scripts };
 }
 
@@ -226,7 +242,7 @@ async function runDocsPlayground(cdp) {
         await cdp.call('Runtime.enable', {}, sessionId);
         const frameTree = await cdp.call('Page.getFrameTree', {}, sessionId);
         const frameId = frameTree.frameTree.frame.id;
-        const artifacts = themePlaygroundArtifacts();
+        const artifacts = await themePlaygroundArtifacts();
         await cdp.call('Page.setDocumentContent', { frameId, html: artifacts.html }, sessionId);
         await cdp.call('Runtime.evaluate', { expression: `(function(){window.__QX_DOC_ERRORS=[];window.addEventListener('error',function(e){window.__QX_DOC_ERRORS.push(String(e.message||e.error||e));});window.addEventListener('unhandledrejection',function(e){window.__QX_DOC_ERRORS.push(String(e.reason&&e.reason.stack||e.reason||e));});})();` }, sessionId);
         for (let index = 0; index < artifacts.scripts.length; index += 1) {

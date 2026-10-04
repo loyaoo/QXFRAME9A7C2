@@ -273,6 +273,150 @@
         "sera",
         "rhea"
       ]
+    },
+    {
+      "id": "badge.soft",
+      "family": "feedback/action",
+      "sourceSelector": ".cn-badge-variant-destructive",
+      "sourceExpression": "Type10 light/20 dark; hover Type20 in both; Sera transparent and hover Type70",
+      "qxMapping": "Tag colored + Badge filled; separate purpose from Button soft hover",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "feedback.alert",
+      "family": "feedback",
+      "sourceSelector": ".cn-alert-variant-destructive",
+      "sourceExpression": "card background; Type text; description Type90",
+      "qxMapping": "Alert/Message/Notification; default card/card-foreground",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "data.row",
+      "family": "data",
+      "sourceSelector": ".cn-table-row",
+      "sourceExpression": "normal transparent; hover muted50; selected muted",
+      "qxMapping": "Table actual row and cell paint; list/tree neutral highlight uses same input role",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "choice.native",
+      "family": "choice",
+      "sourceSelector": ".cn-checkbox / .cn-radio-group-item",
+      "sourceExpression": "input frame; transparent light/input30 dark; checked Type/on-Type; Luma/Rhea input90; Sera Radio transparent/foreground",
+      "qxMapping": "Native Form and canonical projected Choice surfaces",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "switch.track-thumb",
+      "family": "choice",
+      "sourceSelector": ".cn-switch / .cn-switch-thumb",
+      "sourceExpression": "unchecked input/input80 dark; Luma/Rhea input90; Sera input with input50 frame; checked Type; thumb background/light or foreground/Type foreground dark",
+      "qxMapping": "Existing native Switch checked owner; no runtime changes",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "range.track-thumb",
+      "family": "range",
+      "sourceSelector": ".cn-slider-track / .cn-slider-range / .cn-slider-thumb",
+      "sourceExpression": "muted rail, Type range, white thumb; Nova/Mira/Lyra ring frame; Luma/Rhea input90 rail; Sera input50 rail and Type thumb",
+      "qxMapping": "Slider actual rail/track/handle",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "range.progress",
+      "family": "range",
+      "sourceSelector": ".cn-progress-indicator",
+      "sourceExpression": "primary directly",
+      "qxMapping": "Progress rail muted; current Type indicator and existing semantic success slice",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
+    },
+    {
+      "id": "popup.frame-shadow",
+      "family": "popup/surface",
+      "sourceSelector": ".cn-dropdown-menu-content / .cn-popover-content / .cn-dialog-content",
+      "sourceExpression": "popover/foreground; source foreground5 or10 ring by Style/part/mode; source md/lg/2xl or Dialog none/md/xl shadow distribution",
+      "qxMapping": "Popup/Popover/Submenu/Modal/Drawer; QX even rem shadow geometry, locked Tailwind alpha10/25",
+      "resolutionScope": "current consumer",
+      "styles": [
+        "vega",
+        "nova",
+        "maia",
+        "lyra",
+        "mira",
+        "luma",
+        "sera",
+        "rhea"
+      ]
     }
   ],
   "specializations": [
@@ -290,12 +434,23 @@
     }
   ],
   "gaps": [
-    "physical palette Type axes are not migrated in the representative pilot",
-    "Menu scheme and ownership contexts beyond normal scope require Phase D",
-    "Dialog and Popup boundary/shadow roles not fully ported",
-    "other component consumers pending",
-    "all md-only geometry and non-color Style mapping pending",
-    "legacy full theme configuration mapping is not supported by the role-only migration helper",
-    "cross-browser and user-confirmed visual baselines pending"
-  ]
+    "physical palette Type axes are not migrated",
+    "Menu scheme and external ownership contexts beyond normal scope require further Phase D/G coverage",
+    "component consumers beyond registered purposes need complete inventory/old-color poison checks",
+    "non-color Style axes (typography roles, shadow selection, border emphasis, motion, Shape) pending",
+    "legacy full theme migration is not supported by the role-only migration helper",
+    "cross-browser and user-confirmed visual baselines pending; default remains Schema1 until H"
+  ],
+  "geometry": {
+    "rules": "qx-md-1",
+    "implementation": "src/styles/theme/_visual-v2.scss",
+    "inputs": 21,
+    "options": {
+      "density": 4,
+      "radius": 6,
+      "spacing": 3
+    },
+    "normalThemeOutput": "md only; CSS derives other four sizes",
+    "status": "candidate calibration, opt-in, mandatory 576-config browser gate"
+  }
 }

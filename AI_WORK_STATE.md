@@ -7,29 +7,29 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-10-03
+- Last checkpoint date: 2026-10-04
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Repository HEAD: always query Git on resume; do not cache a self-invalidating HEAD in this file.
 - Active branch / PR / CI: always query GitHub on resume; do not cache transient branch names, PR states or “latest” run IDs here.
 - Package version: `2.19.81`
 - Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename retained; body defines 9 Runtime Controllers + pure CSS Theme/Token).
 - Overall handbook implementation progress: base 9-controller migration is 100%; final-audit remediation, focus follow-ups and the Picker/Autocomplete/Notification/Table/Image UX closeout are implemented with regression coverage.
-- Current Phase: THEME-VISUAL-V2-001 A complete; B/C in progress. Previous VISUAL-RECIPE-SYSTEM-001 remains complete through PR #254; v1.5 explicitly supersedes its color/output architecture only.
-- Current Task: `THEME-VISUAL-V2-001` — IMPLEMENTING; approximately 30% of v1.5 A–H.
+- Current Phase: THEME-VISUAL-V2-001 A complete; B/C expanded equivalence and D md geometry accepted for this representative batch; D/E/F partial implementations continue. Previous VISUAL-RECIPE-SYSTEM-001 remains complete through PR #254; v1.5 explicitly supersedes its color/output architecture only.
+- Current Task: `THEME-VISUAL-V2-001` — IMPLEMENTING; approximately 45% of v1.5 A–H.
 
 ## CURRENT
 
 Task: THEME-VISUAL-V2-001 — Theme input → shared rules → Component, per QXFRAME9A7C2-Theme-Visual-System-v1.5.md.
-Baseline: main@54d118c8f303094c27bc957bf16f630ae2efaa88. PR #254 is merged; unrelated stale PR #250 is not the work branch.
-First delivery: PR #255 merged as a59c2d4664125d72f1950c4c6faff10b4fe2adf3. Final implementation head b08f105866bf7434d8efa9d1e31d2e4a06fe0ca8. No active implementation branch for the next batch: query live Git/PR state and branch from current main. Scope: A/B/C representative color chain; D–H migration/geometry/Studio/roundtrip/full visual/default replacement remains pending.
-Progress: overall v1.5 approximately 30%; A 100%; B 80%; C 90% representative browser equivalence passed; D–H 0%. This estimate does not re-count old completed work.
-Next exact step: complete remaining B/C mapping gaps (danger Menu combinations, Popup/Dialog boundary/shadow, final input inventory) before D full consumer and md migration. Query current main CI/Pages status on resume; recover any newly observed failure first. Do not reopen PR #255 or rerun passed representative implementation checks without a new change or failure.
-CI evidence: final PR head b08f105866bf7434d8efa9d1e31d2e4a06fe0ca8; CSS Schema Acceptance 37134518212 SUCCESS, including 4,176 Chromium cases / 13,067 checks / zero failures; QXFRAME CI 37134518247 SUCCESS, including full release, Windows, npm package, standalone/docs and Pages artifact build. Main deployment facts must be queried live rather than caching a self-invalidating latest SHA/run ID here.
-Corrected and accepted: source-exact Nova disabled Input and Mira mask; invalid reference binds destructive to QX error; transparent RGBA and mode-surface composition both remain exact (0-byte difference). Card title inherits actual surface foreground; explicit override applies to parent/title, muted description stays independent, and deleting the override restores the role.
-Implemented: 28 core + 14 optional full-color roles; sparse color exporter; pinned eight-Style source excerpts; shared rule bindings and canonical Playground samples. See QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md and tools/manifests/theme-visual-v2-rules.json.
-Validation: local build/full npm verify/legacy Schema freeze/v2 source and serialization passed. Local browser cannot start because native socket() is denied by the execution environment; GitHub Actions Chromium passed the representative matrix. Full Studio/default replacement is NOT done.
-Frozen: source SHA 295a1f114a138f23b5dfee0e0c6812394dfeb90c; copy alpha/OKLCH/role assignment exactly; no invented pressed intensity; local consumption; pure CSS runtime; no a11y/ARIA/RTL scope; final default replacement only at H.
-Legacy schema/defaults remain during the representative pilot. Versioned v1 gates and v2 equivalence gates must both pass. No default switch is authorized by a partial gate result.
+Status: IMPLEMENTING; second opt-in delivery is PR #256. Query its actual state/head and current CI; a merged PR takes precedence over this checkpoint's last observed acceptance snapshot.
+Progress: overall approximately 45%; A 100%, B 80%, C 95% representative colors, D 35% partial consumers/md geometry, E 40% opt-in editor, F 45% v2 roundtrip, G/H 0%. Phase percentages are scope estimates, not equal-weight arithmetic. Second-batch implementation and Schema/Studio acceptance are complete; full release/main deployment must be confirmed live.
+Baseline: second batch main@cc57d3804b4b2ef696c707a97b14913c38f6c79d. PR #255 merged as a59c2d4664125d72f1950c4c6faff10b4fe2adf3; its implementation and Pages release remain accepted. PR #250 is unrelated; do not touch it.
+Accepted browser snapshot: implementation head 10587b2862455d9d60e5fd7e058b8b495b9e20c2; CSS Schema Acceptance 37164122219 SUCCESS. Chromium: 5,168 cases / 15,131 exact color checks, 51,855 geometry checks across 576 configurations × five sizes, and 23 actual Studio UI checks, all zero failures. Its Windows job passed; full release was still running when this acceptance checkpoint was written. Final head full CI and merged main release/Pages must be queried rather than assumed from this snapshot.
+Implemented: 30 complete core colors + 14 optional roles + 12 sparse overrides; pinned 464 Style source excerpts and Tailwind 4.3.0 evidence; source-exact shared color responsibilities; Popup/Dialog boundaries and source shadow alpha/distribution; Tag/Badge/feedback/data/list/progress/slider/scroll/tooltip/Native Choice/Switch; 21 md inputs and fixed five-size rules; independent density/radius/spacing; local index zero, connected groups, multiline, specialized geometry; canonical isolated opt-in Studio with actual options, color editing/deletion, JSON import/export and CSS download.
+Accepted corrections: source Slider ring and checked+disabled Radio assignments; source disabled opacity; Card Body typography independent of Control density; unique editor marker distinct from preview stylesheet; exported md selector visual+theme attributes outrank :scope Style defaults inside isolated previews; synthetic Playground smoke bundles/executes real module entries/imports in document order; CDP reports actual exception descriptions. Do not repeat these resolved investigations without a new regression.
+Validation: local full npm run verify passed; subsequent exporter/marker changes passed source/geometry/serialization/Studio bundle checks and mandatory Chromium Schema/UI acceptance. Schema 1 remains 4,028 required / 532 optional, Size Tree 37 protected candidates and zero actionable/review. Default v2 CSS is 4,715 bytes / gzip 810 (30 core colors +21 md inputs); full framework retains the old chain, so total compression is not accepted. Local Chromium native sockets are denied; do not repeat local browser workarounds.
+Next exact step: query PR #256 and exact-head CI. If open, finish full release acceptance, resolve any failure, then merge using expected head. If merged, verify main release / Windows / deploy-pages. Once this batch is accepted and deployed, proceed with remaining B/D physical color Type and exhaustive consumer/context mapping, keeping the accepted representative chain and md/Studio implementations.
+Remaining: physical color Type axis and exhaustive consumers/contexts; full non-color Style typography/border/shadow/motion/shape calibration and Studio inputs; complete legacy migration / total-output statistics; full external Popup and cross-browser/manual visual acceptance G; default replacement/old-chain removal H. No claim of full v1.5 completion.
+Frozen: shadcn SHA 295a1f114a138f23b5dfee0e0c6812394dfeb90c; exact role/alpha/OKLab/OKLCH, no invented pressed intensity; pure CSS runtime; no ThemeController/TokenController; Flex and existing ownership/focus/portal protocols. Exact 0-byte RGBA and 1e-6 CSSpx checks remain. Default replacement only at H. Both versioned v1 and v2 mandatory gates must pass.
 
 ## Current authority snapshot — after Phase A
 

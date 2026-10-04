@@ -287,6 +287,26 @@
         "light": "oklch(.985 0 0)",
         "dark": "oklch(.205 0 0)"
       }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-shadow",
+      "role": "shadow",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(0 0 0)",
+        "dark": "rgb(0 0 0)"
+      }
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-thumb",
+      "role": "thumb",
+      "type": "complete-color",
+      "required": true,
+      "defaults": {
+        "light": "rgb(255 255 255)",
+        "dark": "rgb(255 255 255)"
+      }
     }
   ],
   "optionalInputs": [
@@ -468,6 +488,177 @@
       "full configuration migration",
       "visual signoff",
       "default replacement"
+    ]
+  },
+  "geometryRules": "qx-md-1",
+  "geometryInputs": [
+    {
+      "name": "--qxframe9a7c2-theme-v2-control-min-block-md",
+      "role": "control-min-block-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "2.25rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-control-font-size-md",
+      "role": "control-font-size-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.875rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-control-line-box-md",
+      "role": "control-line-box-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "1.25rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-control-padding-inline-md",
+      "role": "control-padding-inline-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "1rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-control-gap-md",
+      "role": "control-gap-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-control-icon-md",
+      "role": "control-icon-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "1rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-radius-control-md",
+      "role": "radius-control-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-radius-action-md",
+      "role": "radius-action-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-radius-choice-md",
+      "role": "radius-choice-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-radius-surface-md",
+      "role": "radius-surface-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-radius-popup-md",
+      "role": "radius-popup-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-surface-padding-md",
+      "role": "surface-padding-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "1.25rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-surface-gap-md",
+      "role": "surface-gap-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "0.75rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-switch-height-md",
+      "role": "switch-height-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "1.25rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-switch-width-md",
+      "role": "switch-width-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "2.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-switch-inset-md",
+      "role": "switch-inset-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": ".125rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-slider-track-md",
+      "role": "slider-track-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": ".25rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-slider-thumb-md",
+      "role": "slider-thumb-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "1rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-progress-track-md",
+      "role": "progress-track-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": ".5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-progress-ring-md",
+      "role": "progress-ring-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "7.5rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-v2-choice-size-md",
+      "role": "choice-size-md",
+      "type": "complete-even-rem-md-length",
+      "required": true,
+      "default": "1rem"
+    }
+  ],
+  "options": {
+    "density": [
+      "tight",
+      "compact",
+      "standard",
+      "roomy"
+    ],
+    "radius": [
+      "none",
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl"
+    ],
+    "spacing": [
+      "compact",
+      "normal",
+      "roomy"
     ]
   }
 }

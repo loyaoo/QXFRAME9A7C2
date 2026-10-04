@@ -38,6 +38,8 @@ jobs:
         run: npm run build && node tools/verify-theme-schema-v1.mjs --browser
       - name: Verify semantic v2 source equivalence and sparse output
         run: node tools/verify-theme-visual-v2.mjs --browser
+      - name: Verify v2 Studio selections and configuration roundtrip
+        run: node tools/verify-theme-studio-v2.mjs --browser
       - name: Enforce Schema acceptance with Chromium evidence
         run: node tools/audit-css-schema-acceptance.mjs --browser --enforce --write=artifacts/css-schema-acceptance.json
       - name: Upload acceptance evidence

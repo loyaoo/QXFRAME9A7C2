@@ -86,6 +86,216 @@
           "selector": ".cn-table-row",
           "line": 1287,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 926,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-4 rounded-md p-4 text-sm shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 45,
+          "apply": "grid gap-0.5 rounded-lg border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 49,
+          "apply": "bg-card text-card-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 53,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 61,
+          "apply": "text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 95,
+          "apply": "bg-primary text-primary-foreground [a]:hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 99,
+          "apply": "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 107,
+          "apply": "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 103,
+          "apply": "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 283,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[4px] border shadow-xs transition-shadow group-has-disabled/field:opacity-50 focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 972,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 1250,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 dark:data-unchecked:bg-input/80 shrink-0 rounded-full border border-transparent shadow-xs focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:border-transparent data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px]"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 1258,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 1232,
+          "apply": "bg-muted rounded-full data-horizontal:h-1.5 data-horizontal:w-full data-vertical:h-full data-vertical:w-1.5"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 1236,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 1240,
+          "apply": "border-primary ring-ring/50 size-4 rounded-full border bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 947,
+          "apply": "bg-muted h-1.5 rounded-full"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 955,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 74,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 82,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 397,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:**:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 385,
+          "apply": "py-6 text-center text-sm"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1295,
+          "apply": "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1303,
+          "apply": "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1068,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1223,
+          "apply": "bg-muted rounded-md"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 1320,
+          "apply": "rounded-lg p-[3px] group-data-horizontal/tabs:h-9 data-[variant=line]:rounded-none"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 1324,
+          "apply": "gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg:not([class*='size-'])]:size-4 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 690,
+          "apply": "dark:bg-input/30 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive size-9 border-y border-r text-sm shadow-xs transition-all outline-none first:rounded-l-md first:border-l last:rounded-r-md data-[active=true]:ring-3"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 1003,
+          "apply": "border-input data-placeholder:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-md border bg-transparent py-2 pr-2 pl-2.5 text-sm shadow-xs transition-[color,box-shadow] focus-visible:ring-3 aria-invalid:ring-3 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 1019,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-md shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 1031,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1380,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 998,
+          "apply": "rounded-full"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1085,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col gap-4 bg-clip-padding text-sm shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1081,
+          "apply": "bg-black/10 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 703,
+          "apply": "[a]:hover:bg-muted rounded-md border text-sm"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 707,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 711,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 715,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 751,
+          "apply": "gap-2 text-sm leading-snug font-medium underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 755,
+          "apply": "text-muted-foreground text-left text-sm leading-normal group-data-[size=xs]/item:text-xs"
         }
       ]
     },
@@ -172,6 +382,216 @@
           "selector": ".cn-table-row",
           "line": 1287,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 926,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 20,
+          "apply": "grid gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 24,
+          "apply": "bg-card text-card-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 28,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 36,
+          "apply": "text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 99,
+          "apply": "bg-primary text-primary-foreground [a]:hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 103,
+          "apply": "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 111,
+          "apply": "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 107,
+          "apply": "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 283,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[4px] border transition-colors group-has-disabled/field:opacity-50 focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 972,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 1250,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 dark:data-unchecked:bg-input/80 shrink-0 rounded-full border border-transparent focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:border-transparent data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px]"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 1258,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 1232,
+          "apply": "bg-muted rounded-full data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 1236,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 1240,
+          "apply": "border-ring ring-ring/50 relative size-3 rounded-full border bg-white transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 947,
+          "apply": "bg-muted h-1 rounded-full"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 955,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 78,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 86,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 397,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 385,
+          "apply": "py-6 text-center text-sm"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1295,
+          "apply": "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1303,
+          "apply": "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1068,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1223,
+          "apply": "bg-muted rounded-md"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 1320,
+          "apply": "rounded-lg p-[3px] group-data-horizontal/tabs:h-8 data-[variant=line]:rounded-none"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 1324,
+          "apply": "gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg:not([class*='size-'])]:size-4 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 690,
+          "apply": "dark:bg-input/30 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive size-8 border-y border-r text-sm transition-all outline-none first:rounded-l-lg first:border-l last:rounded-r-lg data-[active=true]:ring-3"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 1003,
+          "apply": "border-input data-placeholder:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-lg border bg-transparent py-2 pr-2 pl-2.5 text-sm transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 1019,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 1031,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1380,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 998,
+          "apply": "rounded-full"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1085,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col gap-4 bg-clip-padding text-sm shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1081,
+          "apply": "bg-black/10 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 703,
+          "apply": "[a]:hover:bg-muted rounded-lg border text-sm"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 707,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 711,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 715,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 751,
+          "apply": "gap-2 text-sm leading-snug font-medium underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 755,
+          "apply": "text-muted-foreground text-left text-sm leading-normal group-data-[size=xs]/item:text-xs"
         }
       ]
     },
@@ -258,6 +678,216 @@
           "selector": ".cn-table-row",
           "line": 1288,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 927,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 flex flex-col gap-4 rounded-2xl p-4 text-sm shadow-2xl ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 49,
+          "apply": "grid gap-0.5 rounded-lg border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 53,
+          "apply": "bg-card text-card-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 57,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 65,
+          "apply": "text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 99,
+          "apply": "bg-primary text-primary-foreground [a]:hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 103,
+          "apply": "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 111,
+          "apply": "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 107,
+          "apply": "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground bg-input/30"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 283,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[6px] border transition-shadow group-has-disabled/field:opacity-50 focus-visible:ring-[3px] aria-invalid:ring-[3px] group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 973,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 1251,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 dark:data-unchecked:bg-input/80 shrink-0 rounded-full border border-transparent focus-visible:ring-[3px] aria-invalid:ring-[3px] group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:border-transparent data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px]"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 1259,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 1233,
+          "apply": "bg-muted rounded-4xl data-horizontal:h-3 data-horizontal:w-full data-vertical:h-full data-vertical:w-3"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 1237,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 1241,
+          "apply": "border-primary ring-ring/50 size-4 rounded-4xl border bg-white shadow-sm transition-colors hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 948,
+          "apply": "bg-muted h-3 rounded-4xl"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 956,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 78,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 86,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 397,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-lg px-3 py-2 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-2xl [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 385,
+          "apply": "py-6 text-center text-sm"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1296,
+          "apply": "text-foreground h-12 px-3 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1304,
+          "apply": "p-3 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1069,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1224,
+          "apply": "bg-muted rounded-xl"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 1321,
+          "apply": "rounded-4xl p-[3px] group-data-horizontal/tabs:h-9 group-data-vertical/tabs:rounded-2xl data-[variant=line]:rounded-none"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 1325,
+          "apply": "gap-1.5 rounded-xl border border-transparent px-2 py-1 text-sm font-medium group-data-vertical/tabs:px-2.5 group-data-vertical/tabs:py-1.5 [&_svg:not([class*='size-'])]:size-4 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 691,
+          "apply": "bg-input/30 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive size-9 border-y border-r text-sm transition-all outline-none first:rounded-l-4xl first:border-l last:rounded-r-4xl data-[active=true]:ring-[3px]"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 1004,
+          "apply": "border-input data-placeholder:text-muted-foreground bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-4xl border px-3 py-2 text-sm transition-colors focus-visible:ring-[3px] aria-invalid:ring-[3px] data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 1020,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 min-w-36 rounded-2xl shadow-2xl ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 1032,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2.5 rounded-xl py-2 pr-8 pl-3 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1377,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-2xl px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-4xl"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 999,
+          "apply": "rounded-full"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1086,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col bg-clip-padding text-sm shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1082,
+          "apply": "bg-black/80 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 704,
+          "apply": "[a]:hover:bg-muted rounded-2xl border text-sm"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 708,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 712,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 716,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 752,
+          "apply": "gap-2 text-sm leading-snug font-medium underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 756,
+          "apply": "text-muted-foreground text-left text-sm"
         }
       ]
     },
@@ -344,6 +974,216 @@
           "selector": ".cn-table-row",
           "line": 1262,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 901,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-none p-2.5 text-xs shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 20,
+          "apply": "grid gap-0.5 rounded-none border px-2.5 py-2 text-left text-xs has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 24,
+          "apply": "bg-card text-card-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 28,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 36,
+          "apply": "text-muted-foreground text-xs/relaxed text-balance md:text-pretty [&_p:not(:last-child)]:mb-2"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 95,
+          "apply": "bg-primary text-primary-foreground [a]:hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 99,
+          "apply": "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 107,
+          "apply": "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 103,
+          "apply": "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 262,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-none border transition-colors group-has-disabled/field:opacity-50 focus-visible:ring-1 aria-invalid:ring-1 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 947,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 1225,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 dark:data-unchecked:bg-input/80 shrink-0 rounded-full border border-transparent focus-visible:ring-1 aria-invalid:ring-1 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:border-transparent data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px]"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 1233,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 1207,
+          "apply": "bg-muted rounded-none data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 1211,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 1215,
+          "apply": "border-ring ring-ring/50 relative size-3 rounded-none border bg-white transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-1 focus-visible:ring-1 focus-visible:outline-hidden active:ring-1"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 922,
+          "apply": "bg-muted h-1 rounded-none"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 930,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 74,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 82,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 376,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-none px-2 py-2 text-xs outline-hidden select-none in-data-[slot=dialog-content]:rounded-none! [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 364,
+          "apply": "py-6 text-center text-xs"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1270,
+          "apply": "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1278,
+          "apply": "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1043,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1198,
+          "apply": "bg-muted rounded-none"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 1295,
+          "apply": "rounded-none p-[3px] group-data-horizontal/tabs:h-8 data-[variant=line]:rounded-none"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 1299,
+          "apply": "gap-1.5 rounded-none border border-transparent px-1.5 py-0.5 text-xs font-medium group-data-vertical/tabs:py-[calc(--spacing(1.25))] [&_svg:not([class*='size-'])]:size-4 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 665,
+          "apply": "dark:bg-input/30 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive size-8 border-y border-r text-xs transition-all outline-none first:rounded-none first:border-l last:rounded-none data-[active=true]:ring-1"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 978,
+          "apply": "border-input data-placeholder:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-none border bg-transparent py-2 pr-2 pl-2.5 text-xs transition-colors select-none focus-visible:ring-1 aria-invalid:ring-1 data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-none *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 994,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-none shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 1006,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-none py-2 pr-8 pl-2 text-xs [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1351,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-none px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-none"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 973,
+          "apply": "rounded-none"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1060,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col bg-clip-padding text-xs/relaxed shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1056,
+          "apply": "bg-black/10 text-xs/relaxed supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 678,
+          "apply": "[a]:hover:bg-muted rounded-none border text-xs"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 682,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 686,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 690,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 726,
+          "apply": "gap-2 text-xs font-medium underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 730,
+          "apply": "text-muted-foreground text-left text-xs/relaxed group-data-[size=xs]/item:text-xs/relaxed"
         }
       ]
     },
@@ -430,6 +1270,216 @@
           "selector": ".cn-table-row",
           "line": 1289,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 926,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-4 rounded-lg p-2.5 text-xs shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 49,
+          "apply": "grid gap-0.5 rounded-lg border px-2 py-1.5 text-left text-xs/relaxed has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-1.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 53,
+          "apply": "bg-card text-card-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 57,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 65,
+          "apply": "text-muted-foreground text-xs/relaxed text-balance md:text-pretty [&_p:not(:last-child)]:mb-4"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 99,
+          "apply": "bg-primary text-primary-foreground [a]:hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 103,
+          "apply": "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 111,
+          "apply": "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 107,
+          "apply": "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground bg-input/20 dark:bg-input/30"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 283,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[4px] border transition-shadow group-has-disabled/field:opacity-50 focus-visible:ring-2 aria-invalid:ring-2 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 972,
+          "apply": "border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 1252,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 dark:data-unchecked:bg-input/80 shrink-0 rounded-full border border-transparent focus-visible:ring-2 aria-invalid:ring-2 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:border-transparent data-[size=default]:h-[16.6px] data-[size=default]:w-[28px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px]"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 1260,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full group-data-[size=default]/switch:size-3.5 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 1234,
+          "apply": "bg-muted rounded-md data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 1238,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 1242,
+          "apply": "border-ring ring-ring/30 relative size-3 rounded-md border bg-white transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-2 focus-visible:ring-2 focus-visible:outline-hidden active:ring-2"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 947,
+          "apply": "bg-muted h-1 rounded-md"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 955,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 78,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 86,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 397,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex min-h-7 cursor-default items-center gap-2 rounded-md px-2.5 py-1.5 text-xs/relaxed outline-hidden select-none in-data-[slot=dialog-content]:rounded-md [&_svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 385,
+          "apply": "py-6 text-center text-xs/relaxed"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1297,
+          "apply": "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1305,
+          "apply": "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1068,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1225,
+          "apply": "bg-muted rounded-md"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 1322,
+          "apply": "rounded-lg p-[3px] group-data-horizontal/tabs:h-8 data-[variant=line]:rounded-none"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 1326,
+          "apply": "gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-xs font-medium group-data-vertical/tabs:py-[calc(--spacing(1.25))] [&_svg:not([class*='size-'])]:size-3.5 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 690,
+          "apply": "bg-input/20 dark:bg-input/30 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/30 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive size-7 border-y border-r text-xs/relaxed transition-all outline-none first:rounded-l-md first:border-l last:rounded-r-md data-[active=true]:ring-2"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 1003,
+          "apply": "border-input data-placeholder:text-muted-foreground bg-input/20 dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-md border px-2 py-1.5 text-xs/relaxed transition-colors focus-visible:ring-2 aria-invalid:ring-2 data-[size=default]:h-7 data-[size=sm]:h-6 *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 1019,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-32 rounded-lg shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 1031,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground min-h-7 gap-2 rounded-md px-2 py-1 text-xs/relaxed [&_svg:not([class*='size-'])]:size-3.5 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1378,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 998,
+          "apply": "rounded-full"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1085,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col bg-clip-padding text-xs/relaxed shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1081,
+          "apply": "bg-black/80 supports-backdrop-filter:backdrop-blur-xs"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 703,
+          "apply": "[a]:hover:bg-muted rounded-md border text-xs/relaxed"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 707,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 711,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 715,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 751,
+          "apply": "gap-2 text-xs/relaxed leading-snug font-medium underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 755,
+          "apply": "text-muted-foreground text-left text-xs/relaxed"
         }
       ]
     },
@@ -516,6 +1566,216 @@
           "selector": ".cn-table-row",
           "line": 1293,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 1165,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 dark:ring-foreground/10 flex flex-col gap-4 rounded-3xl p-4 text-sm shadow-lg ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 509,
+          "apply": "grid gap-0.5 rounded-2xl border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 513,
+          "apply": "bg-card text-card-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 517,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 525,
+          "apply": "text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 559,
+          "apply": "bg-primary text-primary-foreground [a]:hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 563,
+          "apply": "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 571,
+          "apply": "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 567,
+          "apply": "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 58,
+          "apply": "bg-input/90 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary border-transparent aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[5px] border transition-shadow group-has-disabled/field:opacity-50 focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-transparent group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 41,
+          "apply": "bg-input/90 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary border-transparent aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full border focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:border-transparent"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 20,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input/90 data-checked:border-primary border-2 data-unchecked:border-transparent focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 shrink-0 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:data-unchecked:border-transparent group-has-[:focus-visible]/field-label:data-checked:border-primary data-[size=default]:h-5 data-[size=default]:w-11 data-[size=sm]:h-4 data-[size=sm]:w-7"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 28,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full shadow-sm group-data-[size=default]/switch:h-4 group-data-[size=default]/switch:w-6 group-data-[size=sm]/switch:h-3 group-data-[size=sm]/switch:w-4 data-checked:translate-x-[calc(100%-8px)] data-unchecked:translate-x-0 not-dark:bg-clip-padding"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 7,
+          "apply": "bg-input/90 rounded-full data-horizontal:h-2 data-horizontal:w-full data-vertical:h-full data-vertical:w-2"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 11,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 15,
+          "apply": "ring-black/10 not-dark:bg-clip-padding ring-1 h-4 w-6 rounded-full bg-white shadow-md transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30 focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-hidden data-vertical:h-6 data-vertical:w-4"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 1186,
+          "apply": "bg-muted h-3 rounded-full"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 1194,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 538,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 546,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 649,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-2xl px-3 py-2 text-sm font-medium outline-hidden select-none in-data-[slot=dialog-content]:rounded-3xl [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 637,
+          "apply": "py-6 text-center text-sm"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1301,
+          "apply": "text-foreground h-12 px-3 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1309,
+          "apply": "p-3 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1221,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1263,
+          "apply": "bg-muted rounded-2xl"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 425,
+          "apply": "rounded-full p-1 group-data-horizontal/tabs:h-9 group-data-vertical/tabs:rounded-2xl data-[variant=line]:rounded-none"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 429,
+          "apply": "gap-2 rounded-full border border-transparent! px-3 py-1 text-sm font-medium group-data-vertical/tabs:px-3 group-data-vertical/tabs:py-1.5 group-data-vertical/tabs:rounded-2xl [&_svg:not([class*='size-'])]:size-4 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 359,
+          "apply": "bg-input/50 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/30 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-9 border-y border-r text-sm transition-all outline-none first:rounded-l-3xl first:border-l last:rounded-r-3xl data-[active=true]:ring-3"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 163,
+          "apply": "bg-input/50 border-transparent data-placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-3xl border py-2 px-3 text-sm transition-[color,box-shadow,background-color] focus-visible:ring-3 aria-invalid:ring-3 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 179,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 dark:ring-foreground/10 min-w-36 rounded-3xl shadow-lg ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 191,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2.5 rounded-2xl py-2 pr-8 pl-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1360,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-lg"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 1216,
+          "apply": "rounded-full"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1238,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col bg-clip-padding text-sm shadow-xl transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1234,
+          "apply": "bg-black/30 supports-backdrop-filter:backdrop-blur-sm"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 838,
+          "apply": "[a]:hover:bg-muted rounded-2xl border text-sm"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 842,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 846,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 850,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 886,
+          "apply": "gap-2 text-sm leading-snug font-medium underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 890,
+          "apply": "text-muted-foreground text-left text-sm"
         }
       ]
     },
@@ -602,6 +1862,216 @@
           "selector": ".cn-table-row",
           "line": 1278,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 917,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-4 rounded-none p-4 text-sm shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 20,
+          "apply": "grid gap-1 bg-background border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 relative after:-inset-y-px after:-left-px after:w-0.5 after:absolute"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 24,
+          "apply": "bg-card text-card-foreground after:bg-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 28,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current after:bg-destructive"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 36,
+          "apply": "text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 95,
+          "apply": "text-foreground [a]:hover:text-foreground/70"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 99,
+          "apply": "text-muted-foreground [a]:hover:text-foreground"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 107,
+          "apply": "text-destructive [a]:hover:text-destructive/70 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 103,
+          "apply": "text-foreground [a]:hover:text-foreground/70"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 274,
+          "apply": "border-input bg-transparent data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4.5 items-center justify-center rounded-none border transition-shadow group-has-disabled/field:opacity-50 focus-visible:ring-2 aria-invalid:ring-2 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 963,
+          "apply": "border-input bg-transparent data-checked:border-foreground aria-invalid:aria-checked:border-foreground aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4.5 rounded-full border focus-visible:ring-2 aria-invalid:ring-2 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-input group-has-[:focus-visible]/field-label:data-checked:border-foreground"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 1241,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input data-checked:border-primary border data-unchecked:border-input/50 focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 shrink-0 rounded-none focus-visible:ring-2 aria-invalid:ring-2 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:data-unchecked:border-input/50 group-has-[:focus-visible]/field-label:data-checked:border-primary data-[size=default]:h-4.5 data-[size=default]:w-8.25 data-[size=sm]:h-3.5 data-[size=sm]:w-6.25"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 1249,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground group-data-[size=default]/switch:size-3.5 group-data-[size=sm]/switch:size-2.5 data-checked:translate-x-[calc(100%+2px)] data-unchecked:translate-x-0.25"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 1223,
+          "apply": "bg-input/50 data-horizontal:h-0.5 data-horizontal:w-full data-vertical:h-full data-vertical:w-0.5"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 1227,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 1231,
+          "apply": "size-3 border-none bg-primary transition-colors hover:ring-2 hover:ring-ring/30 focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-hidden"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 938,
+          "apply": "bg-muted h-0.5 rounded-none"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 946,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 74,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 82,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 388,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-none px-3 py-2 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-none [&_svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 376,
+          "apply": "py-6 text-center text-sm"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1286,
+          "apply": "text-muted-foreground h-12 px-3 text-left align-middle text-xs font-medium uppercase tracking-wider whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1294,
+          "apply": "p-3 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1059,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1214,
+          "apply": "bg-muted"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 1311,
+          "apply": "p-1 group-data-horizontal/tabs:h-10"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 1315,
+          "apply": "gap-2 border border-transparent px-4 py-1.5 text-xs font-semibold group-data-vertical/tabs:px-4 group-data-vertical/tabs:py-2 [&_svg:not([class*='size-'])]:size-3.5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 uppercase tracking-wider"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 681,
+          "apply": "border-transparent border-b-input bg-transparent data-[active=true]:border-b-ring aria-invalid:border-b-destructive dark:aria-invalid:border-b-destructive/50 size-10 border text-sm transition-[color,border-color] outline-none first:rounded-none last:rounded-none"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 994,
+          "apply": "border-transparent border-b-input bg-transparent data-placeholder:text-muted-foreground focus-visible:border-b-ring aria-invalid:border-b-destructive dark:aria-invalid:border-b-destructive/50 gap-1.5 rounded-none border py-2 px-0 text-sm transition-[color,border-color] data-[size=default]:h-10 data-[size=sm]:h-9 *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-3.5"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 1010,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-none shadow-md ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 1022,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2.5 rounded-none py-2 pr-8 pl-3 text-sm [&_svg:not([class*='size-'])]:size-3.5 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1367,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-none px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-none"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 989,
+          "apply": "rounded-none"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1076,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col bg-clip-padding text-sm shadow-md transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1072,
+          "apply": "bg-black/20 supports-backdrop-filter:backdrop-blur-sm"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 694,
+          "apply": "[a]:hover:bg-muted rounded-none border text-sm"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 698,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 702,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 706,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 742,
+          "apply": "gap-2 text-xs leading-snug font-semibold uppercase underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 746,
+          "apply": "text-muted-foreground text-left text-sm leading-relaxed"
         }
       ]
     },
@@ -688,6 +2158,216 @@
           "selector": ".cn-table-row",
           "line": 1293,
           "apply": "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
+        },
+        {
+          "selector": ".cn-popover-content",
+          "line": 1165,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 dark:ring-foreground/10 flex flex-col gap-4 rounded-3xl p-4 text-sm shadow-lg ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-alert",
+          "line": 509,
+          "apply": "grid gap-0.5 rounded-2xl border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-alert-variant-default",
+          "line": 513,
+          "apply": "bg-card text-card-foreground"
+        },
+        {
+          "selector": ".cn-alert-variant-destructive",
+          "line": 517,
+          "apply": "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current"
+        },
+        {
+          "selector": ".cn-alert-description",
+          "line": 525,
+          "apply": "text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4"
+        },
+        {
+          "selector": ".cn-badge-variant-default",
+          "line": 559,
+          "apply": "bg-primary text-primary-foreground [a]:hover:bg-primary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-secondary",
+          "line": 563,
+          "apply": "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80"
+        },
+        {
+          "selector": ".cn-badge-variant-destructive",
+          "line": 571,
+          "apply": "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20"
+        },
+        {
+          "selector": ".cn-badge-variant-outline",
+          "line": 567,
+          "apply": "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground"
+        },
+        {
+          "selector": ".cn-checkbox",
+          "line": 58,
+          "apply": "bg-input/90 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary border-transparent aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[5px] border transition-shadow group-has-disabled/field:opacity-50 focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:not-data-checked:border-transparent group-has-[:focus-visible]/field-label:data-checked:border-primary"
+        },
+        {
+          "selector": ".cn-radio-group-item",
+          "line": 41,
+          "apply": "bg-input/90 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary border-transparent aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-2xl border focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:border-transparent"
+        },
+        {
+          "selector": ".cn-switch",
+          "line": 20,
+          "apply": "data-checked:bg-primary data-unchecked:bg-input/90 data-checked:border-primary border-2 data-unchecked:border-transparent focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 shrink-0 rounded-2xl focus-visible:ring-3 aria-invalid:ring-3 group-has-[:focus-visible]/field-label:ring-0 group-has-[:focus-visible]/field-label:data-unchecked:border-transparent group-has-[:focus-visible]/field-label:data-checked:border-primary data-[size=default]:h-5 data-[size=default]:w-8 data-[size=sm]:h-4 data-[size=sm]:w-6"
+        },
+        {
+          "selector": ".cn-switch-thumb",
+          "line": 28,
+          "apply": "bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-2xl shadow-sm group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 data-checked:translate-x-[calc(100%-4px)] data-unchecked:translate-x-0 not-dark:bg-clip-padding"
+        },
+        {
+          "selector": ".cn-slider-track",
+          "line": 7,
+          "apply": "bg-input/90 rounded-2xl data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1"
+        },
+        {
+          "selector": ".cn-slider-range",
+          "line": 11,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-slider-thumb",
+          "line": 15,
+          "apply": "ring-black/10 not-dark:bg-clip-padding ring-1 size-4 rounded-2xl bg-white shadow-md transition-[color,box-shadow] duration-200 hover:ring-4 hover:ring-ring/30 focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-hidden"
+        },
+        {
+          "selector": ".cn-progress",
+          "line": 1186,
+          "apply": "bg-muted h-2 rounded-2xl"
+        },
+        {
+          "selector": ".cn-progress-indicator",
+          "line": 1194,
+          "apply": "bg-primary"
+        },
+        {
+          "selector": ".cn-avatar-fallback",
+          "line": 538,
+          "apply": "bg-muted text-muted-foreground rounded-full"
+        },
+        {
+          "selector": ".cn-avatar-badge",
+          "line": 546,
+          "apply": "bg-primary text-primary-foreground ring-background"
+        },
+        {
+          "selector": ".cn-command-item",
+          "line": 649,
+          "apply": "data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 min-h-7 rounded-xl px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-2xl [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-command-empty",
+          "line": 637,
+          "apply": "py-6 text-center text-sm"
+        },
+        {
+          "selector": ".cn-table-head",
+          "line": 1301,
+          "apply": "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-table-cell",
+          "line": 1309,
+          "apply": "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+        },
+        {
+          "selector": ".cn-separator",
+          "line": 1221,
+          "apply": "bg-border shrink-0"
+        },
+        {
+          "selector": ".cn-skeleton",
+          "line": 1263,
+          "apply": "bg-muted rounded-2xl"
+        },
+        {
+          "selector": ".cn-tabs-list",
+          "line": 425,
+          "apply": "rounded-2xl p-[3px] group-data-horizontal/tabs:h-8 data-[variant=line]:rounded-none group-data-vertical/tabs:p-1"
+        },
+        {
+          "selector": ".cn-tabs-trigger",
+          "line": 429,
+          "apply": "gap-1.5 rounded-2xl border border-transparent! px-1.5 py-0.5 text-sm font-medium group-data-vertical/tabs:px-3 group-data-vertical/tabs:py-0.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-input-otp-slot",
+          "line": 359,
+          "apply": "bg-input/50 border-input data-[active=true]:border-ring data-[active=true]:ring-ring/30 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-8 border-y border-r text-sm transition-[color,box-shadow] duration-200 outline-none first:rounded-l-2xl first:border-l last:rounded-r-2xl data-[active=true]:ring-3"
+        },
+        {
+          "selector": ".cn-select-trigger",
+          "line": 163,
+          "apply": "bg-input/50 border-transparent data-placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-2xl border py-2 px-3 text-sm transition-[color,box-shadow] duration-200 focus-visible:ring-3 aria-invalid:ring-3 data-[size=default]:h-8 data-[size=sm]:h-7 *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4"
+        },
+        {
+          "selector": ".cn-select-content",
+          "line": 179,
+          "apply": "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/5 dark:ring-foreground/10 min-w-36 rounded-2xl shadow-lg ring-1 duration-100"
+        },
+        {
+          "selector": ".cn-select-item",
+          "line": 191,
+          "apply": "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 min-h-7 rounded-xl py-1.5 pr-8 pl-2 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+        },
+        {
+          "selector": ".cn-tooltip-content",
+          "line": 1360,
+          "apply": "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-lg"
+        },
+        {
+          "selector": ".cn-scroll-area-thumb",
+          "line": 1216,
+          "apply": "rounded-full"
+        },
+        {
+          "selector": ".cn-sheet-content",
+          "line": 1238,
+          "apply": "bg-popover text-popover-foreground fixed z-50 flex flex-col bg-clip-padding text-sm shadow-xl transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm"
+        },
+        {
+          "selector": ".cn-sheet-overlay",
+          "line": 1234,
+          "apply": "bg-black/30 supports-backdrop-filter:backdrop-blur-sm"
+        },
+        {
+          "selector": ".cn-item",
+          "line": 838,
+          "apply": "[a]:hover:bg-muted rounded-2xl border text-sm"
+        },
+        {
+          "selector": ".cn-item-variant-default",
+          "line": 842,
+          "apply": "border-transparent"
+        },
+        {
+          "selector": ".cn-item-variant-outline",
+          "line": 846,
+          "apply": "border-border"
+        },
+        {
+          "selector": ".cn-item-variant-muted",
+          "line": 850,
+          "apply": "bg-muted/50 border-transparent"
+        },
+        {
+          "selector": ".cn-item-title",
+          "line": 886,
+          "apply": "gap-2 text-sm leading-snug font-medium underline-offset-4"
+        },
+        {
+          "selector": ".cn-item-description",
+          "line": 890,
+          "apply": "text-muted-foreground text-left text-sm"
         }
       ]
     }
@@ -697,6 +2377,79 @@
       "path": "apps/v4/registry/bases/radix/ui/button.tsx",
       "sha256": "76c6abdf94fae4085fd6c50c97c7a99ec21240af187c63ea4b2e71551d33495f",
       "class": "cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+    },
+    "tooltip": {
+      "path": "apps/v4/registry/bases/radix/ui/tooltip.tsx",
+      "sha256": "25b33cd3bfd6046067259e476c3b5137b9f018c394d6ea51926accb8d6d5134a",
+      "classes": [
+        "cn-tooltip-content z-50 w-fit max-w-xs origin-(--radix-tooltip-content-transform-origin) bg-foreground text-background",
+        "cn-tooltip-arrow z-50 translate-y-[calc(-50%_-_2px)] bg-foreground fill-foreground"
+      ]
+    },
+    "scroll-area": {
+      "path": "apps/v4/registry/bases/radix/ui/scroll-area.tsx",
+      "sha256": "088a0379c48cf5c856b7e182ebabd7ecc41b0dd298fc9cf794b34f718c765f74",
+      "classes": [
+        "cn-scroll-area relative",
+        "cn-scroll-area-viewport size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1",
+        "cn-scroll-area-scrollbar flex touch-none p-px transition-colors select-none",
+        "cn-scroll-area-thumb relative flex-1 bg-border"
+      ]
+    },
+    "tabs": {
+      "path": "apps/v4/registry/bases/radix/ui/tabs.tsx",
+      "sha256": "96ad5bec050c42dc755c8254c9d7408a04969df29ce5230d29196d1c64bff497",
+      "classes": [
+        "cn-tabs group/tabs flex data-horizontal:flex-col",
+        "cn-tabs-list group/tabs-list inline-flex w-fit items-center justify-center text-muted-foreground group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
+        "cn-tabs-list-variant-default bg-muted",
+        "cn-tabs-list-variant-line gap-1 bg-transparent",
+        "cn-tabs-trigger relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
+        "data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground",
+        "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
+        "cn-tabs-content flex-1 outline-none"
+      ]
+    },
+    "slider": {
+      "path": "apps/v4/registry/bases/radix/ui/slider.tsx",
+      "sha256": "2d11a86268cf55a555c6e0ba490c9161159527e35a3966cf9d0d459fbfbb3b68",
+      "classes": [
+        "cn-slider relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col",
+        "cn-slider-track relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full",
+        "cn-slider-range absolute select-none data-horizontal:h-full data-vertical:w-full",
+        "cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
+      ]
+    },
+    "checkbox": {
+      "path": "apps/v4/registry/bases/radix/ui/checkbox.tsx",
+      "sha256": "4dd2b8d1181fe7851a45e6f786413cf16565fcde9dc4e7caea5818d63f2fc415",
+      "classes": [
+        "cn-checkbox peer relative shrink-0 outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "cn-checkbox-indicator grid place-content-center text-current transition-none"
+      ]
+    },
+    "switch": {
+      "path": "apps/v4/registry/bases/radix/ui/switch.tsx",
+      "sha256": "b664dba8da5024488799fb472e964d98c3b03be40b0224b33697caa34d09b198",
+      "classes": [
+        "cn-switch peer group/switch relative inline-flex items-center transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 data-disabled:cursor-not-allowed data-disabled:opacity-50",
+        "cn-switch-thumb pointer-events-none block ring-0 transition-transform"
+      ]
+    }
+  },
+  "tailwind": {
+    "version": "4.3.0",
+    "path": "packages/tailwindcss/theme.css",
+    "sha256": "ce91efc0ca2e741e56fe263662e5282dc0a16f19a8647f0c38b60fcc4e2119b1",
+    "source": "https://github.com/tailwindlabs/tailwindcss/blob/v4.3.0/packages/tailwindcss/theme.css",
+    "shadows": {
+      "xs": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+      "sm": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+      "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+      "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+      "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)"
     }
   }
 }

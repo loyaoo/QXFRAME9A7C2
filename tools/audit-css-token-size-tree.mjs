@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getCanonicalStyleModulePaths } from './style-source.mjs';
+import { verifyGeometryRuleSource } from './theme-v2-geometry-contract.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 
@@ -45,9 +46,12 @@ function selectorHint(lines,lineIndex){
   return null;
 }
 export function generateSizeTreeAudit({rootDir=root}={}){
+  // Schema 1 Size Tree stays frozen; v1.5 replaces it with direct md inputs.
+  // The excluded v2 source is validated first, never exempt from geometry gates.
+  verifyGeometryRuleSource(rootDir);
   const nodes=sizeTreeNodes();
   const consumers=[];
-  for(const rel of getCanonicalStyleModulePaths({root:rootDir})){
+  for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>rel!=='src/styles/theme/_visual-v2.scss')){
     const lines=fs.readFileSync(path.join(rootDir,rel),'utf8').split(/\r?\n/);
     const layer=rel.includes('/preset/')?'preset':rel.includes('/theme/')?'theme':rel.includes('/components/')?'component':'base';
     for(let i=0;i<lines.length;i++){
