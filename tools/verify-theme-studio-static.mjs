@@ -18,7 +18,7 @@ for(const retired of ['PRESETS','BASES','FONTS','primarySeed','mixRatio','focusR
   assert.equal(playground.includes(retired),false,'Legacy playground theme configurator remains: '+retired);
 }
 assert.match(playground,/主题配置已统一/);
-assert.match(playground,/只负责组件目录、筛选和 Demo 挂载/);
+assert.match(playground,/只负责组件目录、筛选和(?: canonical)? Demo 挂载/);
 
 for(const text of ['主题生成器','视觉风格','控件密度','圆角程度','容器留白','非颜色外观','排版密度','正文字体','标题字体','等宽字体','边界强度','投影强度','动效节奏','表面形态','颜色与可选覆盖','明暗模式','颜色用途','完整颜色值','恢复默认关联','浅色','深色']){
   assert.ok(studio.includes(text),'New Studio user-facing configuration must include Chinese label: '+text);
