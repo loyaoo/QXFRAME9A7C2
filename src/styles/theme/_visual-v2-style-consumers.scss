@@ -80,13 +80,21 @@
     text-transform:var(--qxframe9a7c2-theme-v2-heading-text-transform);
   }
 
+  /* Card remains the paint owner. Theme/Style only feeds its existing private
+     component contract, with public Detail ahead of the common Theme default. */
   .qxframe9a7c2-card[class]{
+    --_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-md-padding,var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding)));
+    --_qxframe9a7c2-card-radius:var(--qxframe9a7c2-card-radius,var(--_qxframe9a7c2-surface-radius));
     --_qxframe9a7c2-card-font-size:var(--qxframe9a7c2-card-font-size,var(--qxframe9a7c2-theme-v2-card-font-size));
-    --_qxframe9a7c2-v2-card-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
-    --_qxframe9a7c2-v2-card-explicit-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
-    box-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
+    --_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,var(--qxframe9a7c2-theme-v2-card-shadow));
+    --_qxframe9a7c2-v2-card-shadow:var(--_qxframe9a7c2-card-shadow);
+    --_qxframe9a7c2-v2-card-explicit-shadow:var(--_qxframe9a7c2-card-shadow);
   }
-  .qxframe9a7c2-card.is-shadow,.qxframe9a7c2-card.is-hover-shadow:hover,.qxframe9a7c2-card.is-hoverable:hover{box-shadow:var(--qxframe9a7c2-theme-v2-card-shadow)}
+  .qxframe9a7c2-card.is-xs[class]{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-xs-padding,var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding)))}
+  .qxframe9a7c2-card.is-sm[class]{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-sm-padding,var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding)))}
+  .qxframe9a7c2-card.is-md[class]{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-md-padding,var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding)))}
+  .qxframe9a7c2-card.is-lg[class]{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-lg-padding,var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding)))}
+  .qxframe9a7c2-card.is-xl[class]{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-xl-padding,var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding)))}
 
   /* Component roots own these private radii, so bind the Style Shape roles at
      the component root while preserving explicit public component overrides. */
