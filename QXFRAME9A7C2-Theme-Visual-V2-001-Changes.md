@@ -58,16 +58,16 @@
 - PR #255 已合并，main 合并提交：`a59c2d4664125d72f1950c4c6faff10b4fe2adf3`。主分支 CI／Pages 部署以实时 GitHub 为准。
 - 本批交付完成，整个 THEME-VISUAL-V2-001 仍约 30%，继续剩余 B/C 后进入 D；没有替换生产默认主题。
 
-## 第二批进行中（2026-10-04）
+## 第二批交付：共享消费端、md 固定派生与 Studio（2026-10-04）
 
 - 公共 Popup/Popover/Submenu/Modal/Drawer 的完整表面、原 ring 色边界和 Style 投影分布；原生物理 ownership 不变。
 - 必要输入增加 shadow（黑色投影基色）与 thumb（源 Slider 白色手柄），共 30 个核心完整颜色。用于关闭硬编码业务颜色端点；不是状态展开。
 - shadcn 锁文件确认 Tailwind 4.3.0；保留其阴影颜色原 alpha（10%/25%）及 Style 级别分配。QX 阴影几何使用偶数 rem，未声称复制外部每个几何像素。
-- 源摘录扩展至 464 条；共享规则沿现有消费槽位接入 Tag/Badge、反馈、Table、List/Tree/Transfer、Progress、Slider、Scroll、Tooltip。新增代表组合等待 Chromium CI。
+- 源摘录扩展至 464 条；共享规则沿现有消费槽位接入 Tag/Badge、反馈、Table、List/Tree/Transfer、Progress、Slider、Scroll、Tooltip。新增代表组合已通过 Chromium 来源等价 CI。
 - 危险 Menu normal/hover/selected/open/descendant-selected/disabled 的源等价用例已登记。
 - 接下来继续 md 固定派生与剩余颜色端；生产默认不在本批提前切换。
 
-### md 固定派生实现，等待 CI 验收
+### md 固定派生实现与 Chromium 验收
 
 - 21 个完整 md rem 输入；有限四档密度、六档半径、三档独立容器留白，数值仍为候选标定。五档指数由组件自己初始化，连体组显式共享；普通嵌套控件回到 md。
 - 控件最小尺寸固定 4px 步长，padding/gap/icon 固定 2px；字号/行盒限档增长；follow 半径与表面留白固定温和比例、统一偶数舍入。纵向 padding 从内容盒和边框计算，多行允许增长。
@@ -76,7 +76,7 @@
 - Schema 1 Size Tree 门禁仅排除版本化 v2 模块，排除前必须通过新 v2 md/even/fixed-rule 检查；原 37 个受保护候选与零 actionable/review 不变。
 - 初次第二批 CI 暴露 Badge dark hover、Sera transparent/hover text70、Table 选择器优先级、disabled danger Menu 与 Maia generic Popup border，已按锁定来源修复，零字节颜色容差保持。
 
-### 原生 Choice 与 Studio v2 预览，等待 CI 验收
+### 原生 Choice 与 Studio v2 预览和验收
 
 - Native Checkbox/Radio 和投影视觉选择器复用 source checked/unchecked 分配；补齐 Sera Radio 透明底＋foreground 点、Luma/Rhea input90 与透明边界。Switch thumb 按亮暗、checked 正确读 background/foreground/Type foreground。Slider 保留 source 的各 Style rail/thumb/border 差异。
 - canonical Theme Playground 增加隔离的 v2 Studio：八 Style 解析为真实密度/圆角/留白档位；五档组件、亮暗、语义反馈和 Native Choice 预览；完整颜色编辑、可选覆盖删除、JSON 校验导入、CSS/JSON 下载和持久设置。旧 Studio 保留至 H。
@@ -93,3 +93,9 @@
 - 后续 head `d17b64d` 的 15,131 颜色＋51,855 几何检查全部通过。Studio 样式标签原先与根节点共用标记，已拆分并增加唯一根节点断言；字号隔离验证比较密度修改前后，沿用实际 Body 排版。
 
 - Studio 验收继续发现实际导出级联问题：md 选择器与框架 :scope 默认同优先级，在隔离预览内被较近的默认 scope 压过。导出采用 canonical visual＋theme 双属性选择器，确保完整 Theme 输入覆盖 Style 默认；UI 门禁同时断言配置提交和实际五档几何。
+
+## 第二批浏览器验收证据
+
+- 实现 head：`10587b2862455d9d60e5fd7e058b8b495b9e20c2`；CSS Schema Acceptance `37164122219` SUCCESS。
+- 5,168 颜色场景 / 15,131 检查；576 配置×五档 / 51,855 几何检查；Studio 23 个实际 UI 断言；全部零失败。完整 release 与合并后 main／Pages 以实时 CI 为准，不能用单个 Schema 成功代替发布验收。
+- 当前 v1.5 总体约 45%；A 100%、B 80%、C 95%、D 35%、E 40%、F 45%、G/H 0%。当前交付覆盖代表链和新增用途，保留 opt-in；未完成清单在前文列明。
