@@ -13,10 +13,10 @@ assert.match(html,/data-theme-studio-v2/);assert.match(html,/type="module" src="
 const built=await rollup({input:entry}),output=await built.generate({format:'iife',name:'QXThemeV2Editor'});await built.close();
 assert.equal(output.output.length,1);const code=output.output[0].code,theme=generateThemeV2();
 assert.doesNotMatch(theme.css,/palette-|--_qxframe|color-mix|-(?:xs|sm|lg|xl):/);
-assert.equal(Object.hasOwn(theme.config,'foundation'),false,'v2 config must not expose legacy scale foundation');
-assert.equal(theme.config.styleRules,'qx-style-1');
-assert.equal(theme.statistics.styleNames>20,true);
-const report={schema:2,stage:'E/F opt-in editor',bundleBytes:Buffer.byteLength(code),themeBytes:Buffer.byteLength(theme.css),inputs:theme.statistics,defaultReplaced:false,browser:null};
+assert.equal(Object.hasOwn(theme.config,'foundation'),false,'Theme config must not expose legacy scale foundation');
+assert.equal(theme.config.styleRules,'qx-style-2');
+assert.equal(theme.statistics.styleNames>25,true);
+const report={schema:2,stage:'E/F canonical editor',bundleBytes:Buffer.byteLength(code),themeBytes:Buffer.byteLength(theme.css),inputs:theme.statistics,defaultReplaced:true,browser:null};
 if(process.argv.includes('--browser')){
   report.browser=await browserProbes({htmlContent:'<!doctype html><html><head><style>'+compileStyles().css+'\n'+fs.readFileSync(path.join(root,'docs/assets/theme-studio-v2.css'),'utf8')+'</style></head><body><section data-theme-studio-v2></section></body></html>',expression:`(() => {
     ${code}
@@ -29,7 +29,7 @@ if(process.argv.includes('--browser')){
     const light=()=>panel.querySelector('[data-qxframe9a7c2-theme="light"]');
     const heights=()=>[...light().querySelectorAll('.qxframe9a7c2-v2-preview-row>.qxframe9a7c2-button')].map(node=>parseFloat(getComputedStyle(node).minHeight));
     const radius=()=>[...light().querySelectorAll('.qxframe9a7c2-v2-preview-row>.qxframe9a7c2-button')].map(node=>parseFloat(getComputedStyle(node).borderTopLeftRadius));
-    const defaultAppearance={typography:'standard',fontBody:'system-ui',fontHeading:'inherit',fontMono:'ui-monospace',border:'hairline',shadow:'xs',motion:'standard',surface:'default',shape:{choice:'intrinsic',toggle:'intrinsic',range:'intrinsic',compact:'follow',identity:'intrinsic'}};
+    const defaultAppearance={typography:'standard',textStyle:'standard',fontBody:'system-ui',fontHeading:'inherit',fontMono:'ui-monospace',border:'hairline',shadow:'xs',motion:'standard',surface:'default',shape:{choice:'intrinsic',toggle:'intrinsic',range:'intrinsic',compact:'follow',identity:'intrinsic'}};
     eq('boot',!!api,true);eq('unique editor marker',document.querySelectorAll('[data-theme-studio-v2]').length,1);eq('default options',api.getTheme().config.options,{density:'standard',radius:'sm',spacing:'normal'});eq('default appearance',api.getTheme().config.appearance,defaultAppearance);eq('default five heights',heights(),[28,32,36,40,44]);
     choose('style','mira');eq('Style populates concrete options',api.getTheme().config.options,{density:'tight',radius:'xs',spacing:'compact'});eq('Style populates typography',api.getTheme().config.appearance.typography,'compact');eq('Style populates shadow',api.getTheme().config.appearance.shadow,'none');eq('Style density visibly changes five heights',heights(),[20,24,28,32,36]);
     const bodyFontBeforeDensity=getComputedStyle(light().querySelector('.qxframe9a7c2-card-body')).fontSize;
@@ -37,6 +37,10 @@ if(process.argv.includes('--browser')){
     const body=light().querySelector('.qxframe9a7c2-card-body');eq('independent roomy surface',parseFloat(getComputedStyle(body).paddingLeft),28);eq('control density does not change Card body typography',getComputedStyle(body).fontSize,bodyFontBeforeDensity);
     choose('radius','none');eq('radius option committed',api.getTheme().config.options.radius,'none');eq('none across five sizes',radius(),[0,0,0,0,0]);
     choose('style','sera');choose('radius','lg');eq('Sera follow radius can change',radius(),[10,12,14,16,18]);
+    eq('Sera visible text recipe',api.getTheme().config.appearance.textStyle,'editorial');eq('Sera heading font default',api.getTheme().config.appearance.fontHeading,'serif');
+    let seraButton=light().querySelector('.qxframe9a7c2-v2-preview-row>.qxframe9a7c2-button'),seraTitle=light().querySelector('.qxframe9a7c2-card-title');
+    eq('Sera button semibold',getComputedStyle(seraButton).fontWeight,'600');eq('Sera button uppercase',getComputedStyle(seraButton).textTransform,'uppercase');yes('Sera button wide tracking',parseFloat(getComputedStyle(seraButton).letterSpacing)>0);yes('Sera title serif',getComputedStyle(seraTitle).fontFamily.includes('Georgia'));eq('Chinese text remains source text',seraButton.textContent,'超小');
+    appearance('textStyle','standard');eq('editorial recipe can be reset',api.getTheme().config.appearance.textStyle,'standard');eq('standard text transform paints',getComputedStyle(light().querySelector('.qxframe9a7c2-v2-preview-row>.qxframe9a7c2-button')).textTransform,'none');
 
     appearance('typography','roomy');eq('typography option committed',api.getTheme().config.appearance.typography,'roomy');eq('KPI typography paints',getComputedStyle(light().querySelector('.qxframe9a7c2-typography-kpi')).fontSize,'40px');
     appearance('fontBody','humanist');yes('Body font paints',getComputedStyle(light().querySelector('.qxframe9a7c2-button')).fontFamily.includes('Trebuchet'));
@@ -65,6 +69,6 @@ if(process.argv.includes('--browser')){
     return {checks,failures};
   })()`});
   fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-studio-v2.json'),JSON.stringify(report,null,2)+'\n');
-  assert.deepEqual(report.browser.failures,[],'Studio v2 user flows differ from their visible configuration');
+  assert.deepEqual(report.browser.failures,[],'Studio user flows differ from their visible configuration');
 }
 console.log(JSON.stringify(report));
