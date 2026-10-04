@@ -2,100 +2,42 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
 const html=fs.readFileSync(new URL('../docs/theme-playground.html',import.meta.url),'utf8');
-const css=fs.readFileSync(new URL('../docs/assets/qxframe9a7c2-theme-studio.css',import.meta.url),'utf8');
-const js=fs.readFileSync(new URL('../docs/assets/qxframe9a7c2-theme-studio.js',import.meta.url),'utf8');
+const studio=fs.readFileSync(new URL('../docs/assets/theme-generator/studio-v2.mjs',import.meta.url),'utf8');
+const playground=fs.readFileSync(new URL('../docs/assets/qxframe9a7c2-theme-playground.js',import.meta.url),'utf8');
+const css=fs.readFileSync(new URL('../docs/assets/theme-studio-v2.css',import.meta.url),'utf8');
 
-assert.match(html,/qxframe9a7c2-theme-studio\.css/);
-assert.match(html,/qxframe9a7c2-theme-studio\.js/);
-assert.ok(html.indexOf('qxframe9a7c2-theme-playground.css')<html.indexOf('qxframe9a7c2-theme-studio.css'),'Studio CSS must load after the legacy docs playground CSS.');
-assert.ok(html.indexOf('qxframe9a7c2-theme-playground.js')<html.indexOf('qxframe9a7c2-theme-studio.js'),'Studio JS must load after the canonical playground runtime.');
+assert.equal(fs.existsSync(new URL('../docs/assets/qxframe9a7c2-theme-studio.js',import.meta.url)),false,'Legacy Theme Studio JS must be deleted.');
+assert.equal(fs.existsSync(new URL('../docs/assets/qxframe9a7c2-theme-studio.css',import.meta.url)),false,'Legacy Theme Studio CSS must be deleted.');
+assert.doesNotMatch(html,/qxframe9a7c2-theme-studio\.(?:js|css)/,'Playground must not load legacy Studio assets.');
+assert.match(html,/data-theme-studio-v2/);
+assert.match(html,/assets\/theme-generator\/studio-v2\.mjs/);
+assert.match(html,/data-qxframe9a7c2-visual="2"/,'Canonical playground must use the new visual chain.');
 
-new Function(js);
-
-for(const forbidden of [
-  /display\s*:\s*grid/i,
-  /grid-template/i,
-  /\b\d+(?:\.\d+)?fr\b/i,
-  /\b\d+(?:\.\d+)?v[wh]\b/i,
-  /@layer\b/i,
-  /:is\(/i,
-  /:where\(/i
-]) assert.ok(!forbidden.test(css),'Theme Studio docs CSS contains forbidden layout/syntax: '+forbidden);
-
-assert.ok(!/document\.documentElement\.style\.setProperty\s*\(/.test(js),'Studio must not update Theme tokens one by one with root inline setProperty.');
-assert.match(js,/data-qxframe9a7c2-generated-theme/);
-assert.match(js,/ensureThemeStyle\(\)\.textContent=currentTheme\.css/);
-assert.match(js,/setTimeout\(generateNow,80\)/);
-assert.match(js,/Randomize/);
-assert.match(js,/Export CSS/);
-assert.match(js,/Export JSON/);
-assert.match(js,/Import JSON/);
-assert.match(js,/data-studio-lock/);
-assert.match(js,/data-studio-add-override/);
-assert.match(js,/data-studio-remove-override/);
-assert.match(js,/renderAudit\(currentTheme\.reports\.readability\)/);
-assert.match(js,/allowedOverride\(name\)/);
-assert.match(js,/data-studio-apply-palette/);
-assert.match(js,/data-studio-advanced-profile="shadow"/);
-assert.match(js,/data-studio-advanced-profile="border"/);
-assert.match(js,/data-studio-advanced-profile="motion"/);
-assert.match(js,/runtime\.advanced\.applyPaletteSeed/);
-assert.match(js,/runtime\.advanced\.applyAdvancedProfile/);
-
-for(const style of ['Vega','Nova','Maia','Lyra','Mira','Luma','Sera','Rhea'])assert.ok(js.includes("['"+style.toLowerCase()+"','"+style+"']"),'Studio missing Style '+style);
-assert.match(js,/\['default','Default'\],\['none','None'\],\['small','Small'\],\['medium','Medium'\],\['large','Large'\]/,'Radius must expose five choices.');
-assert.ok(!/data-studio-input="density"/.test(js),'Density must not remain a first-class Studio control; Style owns density.');
-assert.match(js,/field\('Chart color'/);
-assert.match(js,/\['primary','Primary'\]/);
-assert.ok(!/\['mixed','Mixed'\]/.test(js),'Chart color must not expose rainbow/mixed palettes.');
-
-
-const scenes=[...js.matchAll(/scene\('([^']+)'/g)].map(match=>match[1]);
-assert.ok(scenes.length>=20,'Commercial Preview requires at least 20 real business scenes; found '+scenes.length);
-for(const expected of [
-  'Analytics overview','Transactions','CRM opportunity','Billing plan','Invoice #1048',
-  'Invite teammate','Workspace preferences','Schedule review','Brand assets','Workspace navigation',
-  'Project workspace','Notifications','Support inbox','Subscription','Security','Empty state',
-  'Error state','Activity','Checkout'
-]) assert.ok(scenes.includes(expected),'Missing commercial scene: '+expected);
-
-assert.match(css,/\.qxframe9a7c2-studio-column\{display:flex;/,'Commercial showcase must use Flex columns.');
-for(const slot of ['qxframe9a7c2-card-heading','qxframe9a7c2-card-description','qxframe9a7c2-card-header-action','qxframe9a7c2-card-content','qxframe9a7c2-card-footer','qxframe9a7c2-card-section is-muted is-inset']) assert.ok(js.includes(slot),'Commercial showcase must exercise Card visual-recipe slot '+slot+'.');
-assert.ok(js.includes('is-headerless'),'Showcase must include content-led Card compositions without a forced header band.');
-assert.ok(js.includes('is-borderless is-shadow'),'Showcase must mix boundary treatments instead of rendering every Card as the same outlined box.');
-
-for(const component of ['Table','Select','Progress','DatePicker','Upload','Menu','Tabs']){
-  assert.ok(js.includes('C.'+component),'Commercial preview must mount real QXFRAME '+component+'.');
+assert.doesNotMatch(playground,/qxframe9a7c2-play-settings/,'Legacy .qxframe9a7c2-play-settings control area must be removed.');
+for(const retired of ['PRESETS','BASES','FONTS','primarySeed','mixRatio','focusRing','themeCss','applyTheme','setPublic','data-qxframe9a7c2-reset','data-qxframe9a7c2-shuffle','data-qxframe9a7c2-export']){
+  assert.equal(playground.includes(retired),false,'Legacy playground theme configurator remains: '+retired);
 }
-for(const className of ['qxframe9a7c2-card','qxframe9a7c2-button','qxframe9a7c2-form-input','qxframe9a7c2-switch','qxframe9a7c2-badge']){
-  assert.ok(js.includes(className),'Commercial preview must consume framework class '+className+'.');
+assert.match(playground,/主题配置已统一/);
+assert.match(playground,/只负责组件目录、筛选和 Demo 挂载/);
+
+for(const text of ['主题生成器','视觉风格','控件密度','圆角程度','容器留白','非颜色外观','排版密度','正文字体','标题字体','等宽字体','边界强度','投影强度','动效节奏','表面形态','颜色与可选覆盖','明暗模式','颜色用途','完整颜色值','恢复默认关联','浅色','深色']){
+  assert.ok(studio.includes(text),'New Studio user-facing configuration must include Chinese label: '+text);
 }
+for(const englishLabel of ['>Style<','>Shape ','>light<','>dark<','Theme v2 Studio','Primary Seed','Neutral Palette','Focus Ring']){
+  assert.equal(studio.includes(englishLabel),false,'User-facing legacy/English configuration label remains: '+englishLabel);
+}
+for(const style of ['Vega（均衡）','Nova（紧凑）','Maia（圆润宽松）','Lyra（方正等宽）','Mira（高密度）','Luma（柔和抬升）','Sera（编辑风格）','Rhea（圆润紧凑）'])assert.ok(studio.includes(style),'Missing Chinese Style explanation: '+style);
+for(const type of ['灰色','青色','蓝绿色','绿色','青柠色','黄色','橙色','红色','粉色','紫色','蓝色','天蓝色','白色','黑色'])assert.ok(studio.includes(type),'Missing physical Type Chinese label: '+type);
 
-for(const path of [
-  'theme-generator/generator.mjs',
-  'theme-generator/engine.mjs',
-  'theme-generator/io.mjs',
-  'theme-generator/color-engine.mjs',
-  'theme-generator/presets.mjs',
-  'theme-generator/advanced-engine.mjs',
-  '../generated/theme-public-schema-v1.json',
-  '../generated/theme-color-recipes-v1.json'
-]) assert.ok(js.includes(path),'Studio runtime missing frozen-generator dependency '+path);
-
-assert.ok(js.includes("localStorage.setItem(STORAGE_KEY"),'Studio must persist Theme Config source state.');
-assert.ok(js.includes('runtime.io.importConfigJson'),'Studio import must use the Config JSON source-of-truth parser.');
-assert.ok(js.includes('runtime.io.exportArtifacts'),'Studio export must use the generator IO contract.');
-assert.ok(js.includes('runtime.presets.applyThemePreset'),'Studio must expose the QX Theme preset library.');
-assert.ok(js.includes('currentTheme=runtime.generator.generateTheme'),'Studio preview must consume the real generator result.');
+for(const forbidden of [/display\s*:\s*grid/i,/grid-template/i,/\b\d+(?:\.\d+)?fr\b/i,/\b\d+(?:\.\d+)?v[wh]\b/i,/@layer\b/i,/:is\(/i,/:where\(/i]){
+  assert.equal(forbidden.test(css),false,'Theme Studio docs CSS contains forbidden layout/syntax: '+forbidden);
+}
 
 console.log(JSON.stringify({
-  phase:'TG-G-studio-static-v2',
-  commercialScenes:scenes.length,
-  runtimeComponents:7,
-  commercialFlexColumns:3,
-  cardVisualRecipeSlots:true,
-  generatedStylesheetReplacement:true,
-  rootPerTokenMutation:false,
-  flexOnlyStudioCss:true,
-  canonicalGalleryPreserved:/id="all-components"/.test(html)
+  task:'THEME-VISUAL-V2-001',
+  legacyStudioDeleted:true,
+  legacyPlaySettingsDeleted:true,
+  soleStudio:'theme-generator/studio-v2.mjs',
+  chineseConfiguration:true,
+  canonicalGalleryPreserved:/id="qxframe9a7c2-theme-playground-app"/.test(html)
 }));
