@@ -44,11 +44,8 @@ for(const surface of ['default','outlined','elevated','borderless']){
 }
 const purple=generateTheme(manifest,recipes,{roles:{primary:'purple'}});
 for(const mode of ['light','dark'])for(const slot of ['bg','border']){const name=token('theme-color-button-disabled-'+slot+'-1-default'),a=parseColor(purple.tokens[mode][name]),b=parseColor(base.tokens[mode][name]);for(const channel of ['r','g','b'])assert.ok(Math.abs(a[channel]-b[channel])<=1/255,'Default Disabled '+slot+' remains Neutral');}
-const scaled=generateTheme(manifest,recipes,{foundation:{sizeScale:1.25,radiusScale:1.5}});
-assert.equal(scaled.tokens.light[token('theme-control-height-md')],'calc(2.25rem * 1.25)');
-assert.equal(scaled.tokens.light[token('theme-radius-md')],'calc(0.625rem * 1.5)');
-assert.equal(scaled.tokens.light[token('theme-font-size-md')],'0.875rem');
 assert.equal(normalizeConfig({components:{menu:{color:'primary'}}}).components.menu.scheme,'brand');
 assert.throws(()=>normalizeConfig({shape:{choice:'round'}}),/shape.choice/);
-assert.throws(()=>normalizeConfig({foundation:{sizeScale:0}}),/sizeScale/);
-console.log(JSON.stringify({task:'VISUAL-RECIPE-SYSTEM-001',shapeCases,menuCases,lightDark:true,requiredInputs:manifest.tokens.length,scopedOwnership:true,deterministic:true}));
+assert.throws(()=>normalizeConfig({foundation:{sizeScale:1.25}}),/Unknown config key: config.foundation/);
+assert.equal(Object.hasOwn(normalizeConfig({}),'foundation'),false,'Foundation scale layer must not remain in normalized config.');
+console.log(JSON.stringify({task:'VISUAL-RECIPE-SYSTEM-001',shapeCases,menuCases,lightDark:true,requiredInputs:manifest.tokens.length,scopedOwnership:true,deterministic:true,noScaleLayer:true}));
