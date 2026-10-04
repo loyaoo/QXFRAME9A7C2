@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import * as cp from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { rollup } from 'rollup';
+import {consumerProbeInventory,consumerPoisonBrowserProbe} from './theme-v2-consumer-probes.mjs';
 import { getWebSocketConstructor } from './websocket-client.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -284,7 +285,17 @@ async function runDocsPlayground(cdp) {
         const error = exceptionMessage(result, 'Theme Playground browser smoke');
         if (error) throw error;
         const value = result && result.result && result.result.value || {};
-        return { ok: Number(value.cards) > 0 && Array.isArray(value.failures) && value.failures.length === 0 && Array.isArray(value.unmounted) && value.unmounted.length === 0 && Array.isArray(value.windowErrors) && value.windowErrors.length === 0, ...value };
+        const inventory=consumerProbeInventory(root),consumers=[];
+        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const mode of ['light','dark']){
+            const probe=await cdp.call('Runtime.evaluate',{expression:`(${consumerPoisonBrowserProbe.toString()})(${JSON.stringify(inventory)},${JSON.stringify(style)},${JSON.stringify(mode)})`,returnByValue:true},sessionId);
+            const probeError=exceptionMessage(probe,'Theme v2 consumer poison');if(probeError)throw probeError;
+            const measured=probe?.result?.value;
+            if(!measured||!measured.nodes||!measured.checks)throw new Error('Theme v2 consumer poison mounted no canonical consumers');
+            consumers.push(measured);
+        }
+        fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});fs.writeFileSync(path.join(root,'artifacts/theme-consumers-v2.json'),JSON.stringify({schema:2,consumers},null,2)+'\n');
+        value.v2Consumers={configurations:consumers.length,checks:consumers.reduce((n,x)=>n+x.checks,0),nodes:consumers.map(x=>x.nodes),coveredClasses:consumers[0].coveredClasses.length,unmountedClasses:consumers[0].unmountedClasses.length,poisonedInputs:inventory.names.length,mismatchCount:consumers.reduce((n,x)=>n+x.mismatchCount,0),failures:consumers.flatMap(x=>x.failures).slice(0,60)};
+        return { ok: value.v2Consumers.mismatchCount===0 && Number(value.cards) > 0 && Array.isArray(value.failures) && value.failures.length === 0 && Array.isArray(value.unmounted) && value.unmounted.length === 0 && Array.isArray(value.windowErrors) && value.windowErrors.length === 0, ...value };
     } finally {
         await cdp.call('Target.closeTarget', { targetId }).catch(() => {});
     }

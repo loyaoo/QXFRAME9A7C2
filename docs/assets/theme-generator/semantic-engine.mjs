@@ -1,11 +1,12 @@
 // Build/Studio tooling only. Production components never import this module.
 import {parseColor} from './color-engine.mjs';
+import {PHYSICAL_ROLES} from './type-colors-v2.mjs';
 
 export const SEMANTIC_SCHEMA = 2;
 export const RULE_VERSION = 'shadcn-295a1f11-qx-1';
 export const SEMANTIC_STYLES = Object.freeze(['vega','nova','maia','lyra','mira','luma','sera','rhea']);
 export const CORE_ROLES = Object.freeze(['background','foreground','card','card-foreground','popover','popover-foreground','primary','primary-foreground','secondary','secondary-foreground','muted','muted-foreground','accent','accent-foreground','success','success-foreground','warning','warning-foreground','error','error-foreground','info','info-foreground','border','input','ring','mask','inverse','inverse-foreground','shadow','thumb']);
-export const OPTIONAL_ROLES = Object.freeze(['sidebar','sidebar-foreground','sidebar-primary','sidebar-primary-foreground','sidebar-accent','sidebar-accent-foreground','sidebar-border','sidebar-ring','chart-1','chart-2','chart-3','chart-4','chart-5','shadow-color']);
+export const OPTIONAL_ROLES = Object.freeze(['sidebar','sidebar-foreground','sidebar-primary','sidebar-primary-foreground','sidebar-accent','sidebar-accent-foreground','sidebar-border','sidebar-ring','chart-1','chart-2','chart-3','chart-4','chart-5','shadow-color',...PHYSICAL_ROLES]);
 export const OVERRIDE_ROLES = Object.freeze(['action-background','action-hover-background','action-foreground','control-background','control-border','control-foreground','surface-background','surface-foreground','popup-background','popup-foreground','navigation-highlight-background','navigation-highlight-foreground']);
 const prefix = '--qxframe9a7c2-theme-v2-';
 const plain = value => value !== null && typeof value === 'object' && !Array.isArray(value) && [Object.prototype,null].includes(Object.getPrototypeOf(value));
@@ -62,7 +63,7 @@ export function migrateLegacySemanticColors(legacy){
   const colors={light:{},dark:{}},unmapped=[];
   for(const [name,value]of Object.entries(legacy)){
     const match=name.match(/^(light|dark)\.(.+)$/);
-    if(!match||!CORE_ROLES.includes(match[2])){unmapped.push({name,value,reason:'No reviewed semantic mapping; size/state/palette matrices are not silently imported'});continue;}
+    if(!match||![...CORE_ROLES,...OPTIONAL_ROLES].includes(match[2])){unmapped.push({name,value,reason:'No reviewed semantic mapping; size/state/palette matrices are not silently imported'});continue;}
     colors[match[1]][match[2]]=color(typeof value==='string'&&/^\s*\d+(?:\.\d+)?\s*,\s*\d+(?:\.\d+)?\s*,\s*\d+(?:\.\d+)?\s*$/.test(value)?'rgb('+value+')':value,name);
   }
   return {config:normalizeSemanticConfig({colors}),unmapped};

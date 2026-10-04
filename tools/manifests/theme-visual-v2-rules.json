@@ -434,7 +434,6 @@
     }
   ],
   "gaps": [
-    "physical palette Type axes are not migrated",
     "Menu scheme and external ownership contexts beyond normal scope require further Phase D/G coverage",
     "component consumers beyond registered purposes need complete inventory/old-color poison checks",
     "non-color Style axes (typography roles, shadow selection, border emphasis, motion, Shape) pending",
@@ -452,5 +451,30 @@
     },
     "normalThemeOutput": "md only; CSS derives other four sizes",
     "status": "candidate calibration, opt-in, mandatory 576-config browser gate"
+  },
+  "physicalTypes": {
+    "names": [
+      "grey",
+      "cyan",
+      "teal",
+      "green",
+      "lime",
+      "yellow",
+      "orange",
+      "red",
+      "pink",
+      "purple",
+      "blue",
+      "azure",
+      "white",
+      "black"
+    ],
+    "aliases": {
+      "gray": "grey"
+    },
+    "formulas": "same reviewed current Type rules; no Type/state matrix",
+    "normalExportNames": 30,
+    "inputFixture": "tools/fixtures/theme-v2/qx-physical-inputs.json",
+    "roles": 28
   }
 }

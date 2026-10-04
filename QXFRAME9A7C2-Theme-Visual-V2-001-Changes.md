@@ -106,3 +106,13 @@
 - PR #256 已合并为 `e7bbf6b7800a2a82db1bd04ac115e0ba5ff62ea4`。主分支 QXFRAME CI `37164806216` SUCCESS，release / Windows / npm 包 /独立演示 / docs / Pages 部署均通过，deploy-pages job `111326754850` SUCCESS。
 - 主分支再次通过 15,131 颜色、51,855 几何和 23 Studio UI 检查，零失败。
 - 本批交付 100%；整个 v1.5 约 45%。下一步为 B/D 物理颜色 Type 与完整消费上下文迁移。生产默认保留至 H；主分支发布与代表浏览器矩阵不代替全组件、跨浏览器及人工视觉 G。
+
+## 第三批实现：完整物理 Type 与剩余颜色消费（2026-10-04，待 CI）
+
+- 14 个既有物理颜色 Type 与 gray→grey 别名；完整参考色和配套前景来自已验收 QX 输入并锁定源文件哈希，复用固定 shadcn 公式。新增 28 个按需公开输入，正常导出仍为 30 核心颜色＋21 md 输入；不生成色阶、Type/state 或组件结果矩阵。
+- Type 绑定在消费处解析，修正旧 `.is-blue` 等选择器抢占共享角色以及 Tags 显式子 Type 的继承优先级；物理输入修改与 primary 独立。
+- 实际 Message/Notification root、Badge count/ribbon/status、Carousel、Image/Upload mask 和 toolbar、native input/OTP/ColorPanel/Pagination input 的剩余直接颜色用途接入完整 Theme 输入。Popover arrow 复用当前 popup 表面。
+- 浏览器门禁扩展 4,032 物理 Type 来源等价场景，独立分片保持每次测量有界；保留零 RGBA 字节容差，验证局部透明输入、嵌套 Light/Dark、别名、Tags 继承与删除回退。
+- Studio 增加全部物理 Type 预览；实际 UI 验证完整色、配套前景、primary 独立、JSON 往返、删除恢复及稀疏导出。
+- 原 Schema-1 Playground smoke 完成后，真实 canonical demo DOM 在八 Style×亮暗下毒化旧 palette/Theme color/derived mode 输入，测量普通部位与伪元素的 paint；任何变化令 CI 失败，覆盖和未挂载部位均记录，不能据此宣称完整 G。
+- 当前本地静态门禁通过，浏览器和完整 release 尚待 CI；总体进度仍以 CURRENT 记录为准，生产默认保留至 H。
