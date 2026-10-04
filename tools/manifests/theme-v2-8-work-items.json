@@ -1,0 +1,39 @@
+{
+  "schema": "qx-theme-v2-8-work-items-1",
+  "task": "THEME-VISUAL-V2-001",
+  "authority": "QXFRAME9A7C2-Theme-System-Unified-Execution-Guide-v2.8-2026-10-04.md",
+  "baselineCommit": "1072127d36f9b653de7284f246e4e480f1f969f7",
+  "note": "Planning/progress denominator only. This is not the canonical component/slot/property Mapping Registry and must not be used as a substitute for exact source rows.",
+  "milestones": [
+    {"id":"M0","status":"in-progress","title":"Recovery, authority and denominator"},
+    {"id":"M1","status":"in-progress","title":"Intent, reset and existing override precedence"},
+    {"id":"M2","status":"not-started","title":"Representative component/state chain and unique paint ownership"},
+    {"id":"M3","status":"not-started","title":"Geometry, typography and border-aware sizing"},
+    {"id":"M4","status":"not-started","title":"Shadow, surfaces, menu and cross-surface relationships"},
+    {"id":"M5","status":"not-started","title":"Scope, export, migration and reset semantics"},
+    {"id":"M6","status":"not-started","title":"Broaden component coverage and machine registry"},
+    {"id":"M7","status":"not-started","title":"Full visual/gate acceptance and inherited G/H closeout"},
+    {"id":"M8","status":"not-started","title":"Final default Theme publication"}
+  ],
+  "confirmedGaps": [
+    {"id":"I01","status":"in-progress","title":"Card public padding/radius fallback bypass and Theme shadow paint"},
+    {"id":"I02","status":"not-started","title":"Theme/Style direct paint of final component properties"},
+    {"id":"I03","status":"implemented-pending-ci","title":"Resolved config persisted as intent and Style handler deleting explicit groups"},
+    {"id":"I04","status":"implemented-pending-ci","title":"Vega import then Sera keeps stale Style-owned mask default"},
+    {"id":"I05","status":"implemented-pending-ci","title":"Explicit radius/font lost on Style switch"},
+    {"id":"I06","status":"not-started","title":"Sera editorial over-couples Action and Control typography"},
+    {"id":"I07","status":"not-started","title":"Geometry subtracts fixed 2px while border supports 1/2/4px"},
+    {"id":"I08","status":"not-started","title":"Focus-like CSS branch mixes expanded and limits independent state style properties"},
+    {"id":"I09","status":"not-started","title":"Shadow/Surface is Card-centric while Popup uses separate chain"},
+    {"id":"I10","status":"implemented-pending-ci","title":"Surface profile silently overrides explicit Shadow/Border intent"},
+    {"id":"I11","status":"not-started","title":"Typography consumer scope and fixed Card font role require explicit contract"},
+    {"id":"I12","status":"implemented-pending-ci","title":"Heading inherit flattened to copied font string"},
+    {"id":"I13","status":"not-started","title":"Theme name does not create export scope; multiple exports compete"},
+    {"id":"I14","status":"not-started","title":"Nested non-default Style delta/reset inheritance risk"},
+    {"id":"I15","status":"not-started","title":"Private palette declarations remain and require reachable/dead classification"},
+    {"id":"I16","status":"not-started","title":"Card and Popup shadow-color inputs are semantically split"},
+    {"id":"I17","status":"not-started","title":"tight plus strong border violates minimum geometry"},
+    {"id":"I18","status":"not-started","title":"Slider zero track input differs from effective 2px clamp"},
+    {"id":"I19","status":"not-started","title":"Badge count and Avatar group ring consume page background instead of surface context"}
+  ]
+}
