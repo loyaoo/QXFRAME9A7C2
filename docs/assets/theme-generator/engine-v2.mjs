@@ -2,6 +2,47 @@ import {generateSemanticTheme,RULE_VERSION} from './semantic-engine.mjs';
 import {normalizeGeometryConfig,GEOMETRY_RULE_VERSION,GEOMETRY_ROLES} from './geometry-engine-v2.mjs';
 import {normalizeStyleConfig,STYLE_RULE_VERSION,STYLE_ROLES} from './style-engine-v2.mjs';
 
+const PREFIX='--qxframe9a7c2-theme-v2-';
+const has=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
+const clone=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
+
+function sparseSection(source,resolved){
+  if(!source||typeof source!=='object'||Array.isArray(source))return undefined;
+  const result={};
+  for(const key of Object.keys(source))if(has(resolved,key))result[key]=resolved[key];
+  return Object.keys(result).length?result:undefined;
+}
+
+function normalizeIntent(input,resolved){
+  const intent={schema:2,rules:RULE_VERSION,geometryRules:GEOMETRY_RULE_VERSION,styleRules:STYLE_RULE_VERSION,style:resolved.style};
+  if(has(input,'name'))intent.name=resolved.name;
+  for(const mode of ['light','dark']){
+    const colors=sparseSection(input.colors?.[mode],resolved.colors[mode]);
+    const overrides=sparseSection(input.overrides?.[mode],resolved.overrides[mode]);
+    if(colors)(intent.colors??={})[mode]=colors;
+    if(overrides)(intent.overrides??={})[mode]=overrides;
+  }
+  const options=sparseSection(input.options,resolved.options);if(options)intent.options=options;
+  const geometry=sparseSection(input.geometry,resolved.geometry);if(geometry)intent.geometry=geometry;
+  if(input.appearance&&typeof input.appearance==='object'&&!Array.isArray(input.appearance)){
+    const appearance={};
+    for(const key of Object.keys(input.appearance)){
+      if(key==='shape'){
+        const shape=sparseSection(input.appearance.shape,resolved.appearance.shape);if(shape)appearance.shape=shape;
+      }else if(has(resolved.appearance,key))appearance[key]=resolved.appearance[key];
+    }
+    if(Object.keys(appearance).length)intent.appearance=appearance;
+  }
+  return intent;
+}
+
+function declarations(values){
+  return Object.entries(values).map(([key,value])=>'  '+PREFIX+key+': '+value+';').join('\n');
+}
+function modeValues(config,mode){
+  return Object.fromEntries(Object.entries(config.colors[mode]).concat(Object.entries(config.overrides[mode]).map(([key,value])=>['override-'+key,value])));
+}
+
 export function generateThemeV2(input={}){
   if(!input||typeof input!=='object'||Array.isArray(input))throw new TypeError('Configuration must be an object');
   const {options,geometry,geometryRules,appearance,styleRules,...semantic}=input;
@@ -10,15 +51,14 @@ export function generateThemeV2(input={}){
   const colors=generateSemanticTheme(semantic);
   const visual=normalizeStyleConfig({style:colors.config.style,appearance});
   const md=normalizeGeometryConfig({style:colors.config.style,options,geometry,textStyle:visual.appearance.textStyle});
-  // Static Style recipes are defaults. Explicit generated Theme inputs must win
-  // when the same element is also the Style scope root. Keep the ordinary
-  // [data-theme] selector for nested mode boundaries, and add a stronger same-root
-  // selector for Style roots instead of relying on source order/scoping proximity.
-  const selector='html:root, :root[data-qxframe9a7c2-style], [data-qxframe9a7c2-theme], [data-qxframe9a7c2-theme][data-qxframe9a7c2-style]';
-  const css=colors.css+
-    '/* Fixed CSS geometry '+GEOMETRY_RULE_VERSION+'; md inputs only */\n'+selector+' {\n'+GEOMETRY_ROLES.map(role=>'  --qxframe9a7c2-theme-v2-'+role+': '+md.geometry[role]+';').join('\n')+'\n}\n'+
-    '/* Finite non-color Style '+STYLE_RULE_VERSION+'; no size/state matrix */\n'+selector+' {\n'+STYLE_ROLES.map(role=>'  --qxframe9a7c2-theme-v2-'+role+': '+visual.style[role]+';').join('\n')+'\n}\n';
-  return {config:{...colors.config,geometryRules:GEOMETRY_RULE_VERSION,styleRules:STYLE_RULE_VERSION,...md,appearance:visual.appearance},css,statistics:{...colors.statistics,geometryNames:GEOMETRY_ROLES.length,geometryDeclarations:GEOMETRY_ROLES.length,styleNames:STYLE_ROLES.length,styleDeclarations:STYLE_ROLES.length},rules:{color:RULE_VERSION,geometry:GEOMETRY_RULE_VERSION,style:STYLE_RULE_VERSION}};
+  const resolved={...colors.config,geometryRules:GEOMETRY_RULE_VERSION,styleRules:STYLE_RULE_VERSION,...md,appearance:visual.appearance};
+  const root={...modeValues(colors.config,'light'),...md.geometry,...visual.style};
+  const dark=modeValues(colors.config,'dark');
+  const css='/* QXFRAME Theme; Style is compile-time recipe metadata only. */\n'+
+    ':root {\n'+declarations(root)+'\n}\n'+
+    '.dark {\n'+declarations(dark)+'\n}\n';
+  const intent=normalizeIntent(input,resolved);
+  return {intent,config:resolved,css,statistics:{...colors.statistics,geometryNames:GEOMETRY_ROLES.length,geometryDeclarations:GEOMETRY_ROLES.length,styleNames:STYLE_ROLES.length,styleDeclarations:STYLE_ROLES.length},rules:{color:RULE_VERSION,geometry:GEOMETRY_RULE_VERSION,style:STYLE_RULE_VERSION}};
 }
-export function serializeThemeV2(input={}){return JSON.stringify(generateThemeV2(input).config,null,2)+'\n';}
+export function serializeThemeV2(input={}){return JSON.stringify(generateThemeV2(input).intent,null,2)+'\n';}
 export function parseThemeV2(text){if(typeof text!=='string'||text.length>1000000)throw new TypeError('Invalid configuration text');return generateThemeV2(JSON.parse(text));}
