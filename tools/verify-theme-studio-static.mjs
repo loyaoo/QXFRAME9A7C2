@@ -24,6 +24,22 @@ for(const englishLabel of ['>Style<','>Shape ','>light<','>dark<','Theme v2 Stud
 for(const style of ['Vega（均衡）','Nova（紧凑）','Maia（圆润宽松）','Lyra（方正等宽）','Mira（高密度）','Luma（柔和抬升）','Sera（编辑风格）','Rhea（圆润紧凑）'])assert.ok(studio.includes(style),'Missing Chinese Style explanation: '+style);
 for(const type of ['灰色','青色','蓝绿色','绿色','青柠色','黄色','橙色','红色','粉色','紫色','蓝色','天蓝色','白色','黑色'])assert.ok(studio.includes(type),'Missing physical Type Chinese label: '+type);
 
+// Style is a compile-time recipe. Studio state stores sparse user intent: changing
+// Style must not delete explicit axes and changing one axis must not materialize
+// every resolved Style default as an explicit override.
+assert.doesNotMatch(studio,/delete\s+next\.(?:options|geometry|appearance)/,'Style changes must preserve explicit configuration.');
+assert.match(studio,/next\.options=\{\.\.\.\(next\.options\?\?\{\}\),\[option\]:control\.value\}/,'Options must update sparse intent, not resolved config.');
+assert.match(studio,/next\.appearance=\{\.\.\.\(next\.appearance\?\?\{\}\),\[control\.dataset\.v2Appearance\]:control\.value\}/,'Appearance must update sparse intent.');
+assert.match(studio,/generated\.intent/,'Studio must retain compiler-normalized intent separately from resolved config.');
+
+// :root/.dark Theme CSS cannot represent two independent generated themes in one
+// document. Studio therefore previews light/dark in separate documents and injects
+// the compiler bytes without selector rewriting.
+assert.match(studio,/createElement\('iframe'\)/,'Studio preview must use isolated documents.');
+assert.match(studio,/theme\.textContent=result\.css/,'Preview must inject the exact compiler CSS bytes.');
+assert.doesNotMatch(studio,/sheet\.textContent\s*=\s*['"]@scope/,'Studio must not rewrite root/dark Theme CSS into a private scope.');
+assert.match(css,/\.qxframe9a7c2-v2-preview-frame/,'Isolated preview frame style is missing.');
+
 for(const forbidden of [/display\s*:\s*grid/i,/grid-template/i,/\b\d+(?:\.\d+)?fr\b/i,/\b\d+(?:\.\d+)?v[wh]\b/i,/@layer\b/i,/:is\(/i,/:where\(/i])assert.equal(forbidden.test(css),false,'Theme Studio docs CSS contains forbidden layout/syntax: '+forbidden);
 
-console.log(JSON.stringify({task:'THEME-VISUAL-V2-001',legacyStudioDeleted:true,legacyPlaySettingsDeleted:true,soleStudio:'theme-generator/studio-v2.mjs',chineseConfiguration:true,editorialControl:true,controlAppearance:true,visualOptInRetired:true,canonicalGalleryPreserved:/id="qxframe9a7c2-theme-playground-app"/.test(html)}));
+console.log(JSON.stringify({task:'THEME-VISUAL-V2-001',legacyStudioDeleted:true,legacyPlaySettingsDeleted:true,soleStudio:'theme-generator/studio-v2.mjs',chineseConfiguration:true,editorialControl:true,controlAppearance:true,visualOptInRetired:true,sparseIntent:true,isolatedPreview:true,canonicalGalleryPreserved:/id="qxframe9a7c2-theme-playground-app"/.test(html)}));
