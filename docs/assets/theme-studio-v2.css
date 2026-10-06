@@ -5,7 +5,7 @@
 [data-v2-json]{width:100%;box-sizing:border-box;font-family:monospace}
 [data-v2-status][data-error="true"]{color:var(--_qxframe9a7c2-semantic-error)}
 .qxframe9a7c2-v2-preview{display:flex;flex-wrap:wrap;gap:1rem;margin-block:1.5rem}
-.qxframe9a7c2-v2-preview>section{flex:1 1 22rem;min-width:0;padding:1rem;border-radius:.5rem}
+.qxframe9a7c2-v2-preview-frame{display:block;flex:1 1 28rem;width:100%;min-width:0;min-height:42rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:.5rem;background:transparent}
 .qxframe9a7c2-v2-preview-row{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-block:.75rem}
 .qxframe9a7c2-v2-preview-row>.qxframe9a7c2-input{flex:1 1 10rem;min-width:0}
 .qxframe9a7c2-v2-preview .qxframe9a7c2-popup-surface{position:relative;margin-block-start:1rem;padding:1rem}
