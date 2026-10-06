@@ -1,0 +1,127 @@
+/* Compile-time Style recipe inputs -> fixed framework paint owners.
+ * No Style name or runtime appearance selector is consumed here. */
+@scope (:root) {
+  /* Neutral Action appearance. The generator supplies only finite source
+     weights; all colors are recomputed at the Button owner. */
+  .qxframe9a7c2-button[class] {
+    --_qxframe9a7c2-v2-action-outline-light:
+      color-mix(in oklab,
+        var(--qxframe9a7c2-theme-v2-background) var(--qxframe9a7c2-theme-v2-action-outline-light-background-weight),
+        color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-action-outline-light-input-weight),transparent));
+    --_qxframe9a7c2-v2-action-outline-dark:
+      color-mix(in oklab,
+        var(--qxframe9a7c2-theme-v2-background) var(--qxframe9a7c2-theme-v2-action-outline-dark-background-weight),
+        color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-action-outline-dark-input-weight),transparent));
+    --_qxframe9a7c2-v2-action-outline-hover-light:
+      color-mix(in oklab,
+        var(--qxframe9a7c2-theme-v2-muted) var(--qxframe9a7c2-theme-v2-action-outline-hover-light-muted-weight),
+        color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-action-outline-hover-light-input-weight),transparent));
+    --_qxframe9a7c2-v2-action-outline-hover-dark:
+      color-mix(in oklab,
+        var(--qxframe9a7c2-theme-v2-muted) var(--qxframe9a7c2-theme-v2-action-outline-hover-dark-muted-weight),
+        color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-action-outline-hover-dark-input-weight),transparent));
+    --_qxframe9a7c2-v2-outline:light-dark(var(--_qxframe9a7c2-v2-action-outline-light),var(--_qxframe9a7c2-v2-action-outline-dark));
+    --_qxframe9a7c2-v2-outline-hover:light-dark(var(--_qxframe9a7c2-v2-action-outline-hover-light),var(--_qxframe9a7c2-v2-action-outline-hover-dark));
+    --_qxframe9a7c2-v2-outline-border:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-border) var(--qxframe9a7c2-theme-v2-action-outline-border-weight),transparent);
+  }
+
+  /* Disabled controls preserve their state ownership but resolve the selected
+     Style/source fill from Theme inputs instead of a Style scope. */
+  .qxframe9a7c2-input.is-disabled,
+  .qxframe9a7c2-form-input:disabled,.qxframe9a7c2-form-input.is-disabled,
+  .qxframe9a7c2-form-select:disabled,.qxframe9a7c2-form-select.is-disabled,
+  .qxframe9a7c2-form-textarea:disabled,.qxframe9a7c2-form-textarea.is-disabled,
+  .qxframe9a7c2-input-otp-segment:disabled,.qxframe9a7c2-input-otp-segment.is-disabled,
+  .qxframe9a7c2-color-panel-input:disabled,.qxframe9a7c2-color-panel-input.is-disabled,
+  .qxframe9a7c2-pagination-input:disabled,.qxframe9a7c2-pagination-input.is-disabled {
+    --_qxframe9a7c2-v2-control-bg:light-dark(
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-control-disabled-fill-light-weight),transparent),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-control-disabled-fill-dark-weight),transparent));
+  }
+
+  /* Surface/overlay Style differences are finite role inputs. Public component
+     Detail stays in front of the private fallback. */
+  .qxframe9a7c2-card[class] {
+    --_qxframe9a7c2-card-border:var(--qxframe9a7c2-card-border-color,
+      light-dark(
+        color-mix(in oklab,var(--qxframe9a7c2-theme-v2-foreground) var(--qxframe9a7c2-theme-v2-card-border-light-weight),transparent),
+        color-mix(in oklab,var(--qxframe9a7c2-theme-v2-foreground) var(--qxframe9a7c2-theme-v2-card-border-dark-weight),transparent)));
+  }
+  .qxframe9a7c2-popup-surface,.qxframe9a7c2-popover-root,.qxframe9a7c2-menu-submenu-panel,.qxframe9a7c2-menu-overflow-panel,.qxframe9a7c2-modal-root,.qxframe9a7c2-drawer-root {
+    --_qxframe9a7c2-v2-popup-border:light-dark(
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-foreground) var(--qxframe9a7c2-theme-v2-popup-border-light-weight),transparent),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-foreground) var(--qxframe9a7c2-theme-v2-popup-border-dark-weight),transparent));
+    --_qxframe9a7c2-v2-popup-shadow:var(--qxframe9a7c2-theme-v2-popup-shadow);
+    --_qxframe9a7c2-v2-dialog-shadow:var(--qxframe9a7c2-theme-v2-dialog-shadow);
+    --_qxframe9a7c2-popup-border:var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-popup-shadow:var(--_qxframe9a7c2-v2-popup-shadow);
+    --_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-v2-popup-shadow);
+    --_qxframe9a7c2-popover-border:var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-modal-border:var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-modal-shadow:var(--_qxframe9a7c2-v2-dialog-shadow);
+    --_qxframe9a7c2-drawer-border:var(--_qxframe9a7c2-v2-popup-border);
+    --_qxframe9a7c2-drawer-shadow:var(--_qxframe9a7c2-v2-dialog-shadow);
+  }
+
+  /* Choice/Radio. Checkbox checked paint continues through the existing Type
+     chain; Radio's source recipe can independently use transparent/foreground. */
+  .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-native-form input[type="radio"],
+  .qxframe9a7c2-form-check-input[type="checkbox"],.qxframe9a7c2-form-check-input[type="radio"],
+  .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
+  .qxframe9a7c2-form-selectgroup-indicator.is-checkbox,.qxframe9a7c2-form-selectgroup-indicator.is-radio {
+    --_qxframe9a7c2-v2-choice-bg:light-dark(
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-choice-fill-light-weight),transparent),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-choice-fill-dark-weight),transparent));
+    --_qxframe9a7c2-v2-choice-border:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-choice-border-weight),transparent);
+  }
+  .qxframe9a7c2-native-form input[type="radio"]:checked,
+  .qxframe9a7c2-form-check-input[type="radio"]:checked,
+  .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio,
+  .qxframe9a7c2-native-form input[type="radio"]:checked:disabled,
+  .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled {
+    background-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-radio-checked-bg-type-weight),transparent);
+    border-color:color-mix(in oklab,
+      var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-radio-checked-border-type-weight),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-foreground) var(--qxframe9a7c2-theme-v2-radio-checked-border-foreground-weight),transparent));
+    color:color-mix(in oklab,
+      var(--_qxframe9a7c2-v2-type-foreground) var(--qxframe9a7c2-theme-v2-radio-checked-text-type-weight),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-foreground) var(--qxframe9a7c2-theme-v2-radio-checked-text-foreground-weight),transparent));
+  }
+
+  /* Toggle and Range. */
+  .qxframe9a7c2-switch-track {
+    background-color:light-dark(
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-switch-track-fill-light-weight),transparent),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-switch-track-fill-dark-weight),transparent));
+    border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-switch-track-border-weight),transparent);
+  }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track,.qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track {
+    border-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-switch-checked-border-type-weight),transparent);
+  }
+  .qxframe9a7c2-switch-thumb { box-shadow:var(--qxframe9a7c2-theme-v2-switch-thumb-shadow); }
+  .qxframe9a7c2-slider-rail {
+    background-color:color-mix(in oklab,
+      var(--qxframe9a7c2-theme-v2-muted) var(--qxframe9a7c2-theme-v2-slider-rail-muted-weight),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-input) var(--qxframe9a7c2-theme-v2-slider-rail-input-weight),transparent));
+  }
+  .qxframe9a7c2-slider-handle {
+    background-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-slider-thumb-fill-type-weight),var(--qxframe9a7c2-theme-v2-thumb));
+    border-color:color-mix(in oklab,
+      var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-slider-thumb-border-type-weight),
+      color-mix(in oklab,var(--qxframe9a7c2-theme-v2-ring) var(--qxframe9a7c2-theme-v2-slider-thumb-border-ring-weight),transparent));
+    --_qxframe9a7c2-slider-handle-shadow:var(--qxframe9a7c2-theme-v2-slider-thumb-shadow);
+  }
+
+  /* Filled status Tag/Badge are a compact identity/status role, not a new
+     per-status palette matrix. */
+  .qxframe9a7c2-tag.is-colored,.qxframe9a7c2-tag.is-processing,.qxframe9a7c2-badge.is-filled {
+    background-color:light-dark(
+      color-mix(in oklab,var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-status-filled-light-weight),transparent),
+      color-mix(in oklab,var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-status-filled-dark-weight),transparent));
+  }
+  .qxframe9a7c2-tag.is-colored:hover,.qxframe9a7c2-tag.is-colored.is-hover,.qxframe9a7c2-badge.is-filled:hover,.qxframe9a7c2-badge.is-filled.is-hover {
+    background-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-status-filled-hover-weight),transparent);
+    color:color-mix(in oklab,var(--_qxframe9a7c2-v2-type) var(--qxframe9a7c2-theme-v2-status-filled-hover-text-weight),transparent);
+  }
+}
