@@ -3,8 +3,8 @@ import {normalizeGeometryConfig,GEOMETRY_RULE_VERSION,GEOMETRY_ROLES} from './ge
 import {normalizeStyleConfig,STYLE_RULE_VERSION,STYLE_ROLES} from './style-engine-v2.mjs';
 
 const PREFIX='--qxframe9a7c2-theme-v2-';
+const CONFIG_INTENTS=new WeakMap();
 const has=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
-const clone=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 
 function sparseSection(source,resolved){
   if(!source||typeof source!=='object'||Array.isArray(source))return undefined;
@@ -57,8 +57,11 @@ export function generateThemeV2(input={}){
   const css='/* QXFRAME Theme; Style is compile-time recipe metadata only. */\n'+
     ':root {\n'+declarations(root)+'\n}\n'+
     '.dark {\n'+declarations(dark)+'\n}\n';
-  const intent=normalizeIntent(input,resolved);
+  const intent=normalizeIntent(input,resolved);CONFIG_INTENTS.set(resolved,intent);
   return {intent,config:resolved,css,statistics:{...colors.statistics,geometryNames:GEOMETRY_ROLES.length,geometryDeclarations:GEOMETRY_ROLES.length,styleNames:STYLE_ROLES.length,styleDeclarations:STYLE_ROLES.length},rules:{color:RULE_VERSION,geometry:GEOMETRY_RULE_VERSION,style:STYLE_RULE_VERSION}};
 }
-export function serializeThemeV2(input={}){return JSON.stringify(generateThemeV2(input).intent,null,2)+'\n';}
+export function serializeThemeV2(input={}){
+  const remembered=input&&typeof input==='object'?CONFIG_INTENTS.get(input):undefined;
+  return JSON.stringify(remembered??generateThemeV2(input).intent,null,2)+'\n';
+}
 export function parseThemeV2(text){if(typeof text!=='string'||text.length>1000000)throw new TypeError('Invalid configuration text');return generateThemeV2(JSON.parse(text));}
