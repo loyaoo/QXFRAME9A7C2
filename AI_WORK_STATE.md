@@ -14,8 +14,8 @@
 - Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
-- Current Phase: CREATEAPP-V3 stage 2a — closed theme-token list, compiler, default theme, preview components.
-- Current Task: `CREATEAPP-V3-S2A` — merged (PR #263 → main `c39e89f`); awaiting owner acceptance on Pages before 2b.
+- Current Phase: CREATEAPP-V3 stage 2b — acceptance fixes + remaining components + dissolve :root component tokens.
+- Current Task: `CREATEAPP-V3-S2B` — started. Owner: 2a findings are fixed inside 2b (no separate PR).
 
 ## CURRENT
 
@@ -66,7 +66,7 @@ Done:
 Gates adapted to v3 and passing locally (commits 9a2ee97..HEAD): phase-f-css-authority, theme-single-system, css-concat-build, geometry family (theme-v2-geometry-contract now async + 7 callers), css-token-layers, phase-f-token-graph, css-static-colors(+browser), theme-visual-v2(+browser; rewritten as createApp compiler/consumer contract), phase-f-static-closeout, canonical docs, final-focus-origin, theme-studio-v2/-static (now delegate to createApp gates).
 Local evidence (after npm run build): every `npm run verify` step passes; verify:browser, verify:theme-visual-v2-browser (compiled theme per style resolves in consumers, light+dark), verify:theme-studio-v2-browser (= createApp browser gate, 9 steps), verify:legacy-browser, verify:release, verify:package pass; canonical docs browser gate on demo package passes. theme-playground keeps the all-component canvas (needed by browser smoke) with a createApp entry card. Ratchet re-measured (728b6ee).
 
-### Stage 2a acceptance findings (owner asked 2026-10-07; follow-up PR pending owner go-ahead)
+### Stage 2a acceptance findings → fixed in 2b (owner decision 2026-10-07)
 
 - BUG: 边界清晰度 thin/clear makes compileTheme throw (alpha() cannot parse the color-mix() hairline value) → app breaks. Fix: compute hairline by oklch lightness interpolation toward background/foreground.
 - Tokens compiled but not consumed by qxframe.css yet: radius-badge, radius-tabs, radius-dialog, card-section, card-section-border (badge/tag, tabs, modal/drawer radius and card footer band need consumer rules). chart-1..5 only used by createApp preview.
@@ -76,7 +76,9 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
 
 ## NEXT EXACT STEPS
 
-1. Owner acceptance of 2a on Pages (docs/create/, docs/tokens.html, docs pages light/dark). 2b starts only after the owner says 继续: migrate remaining components, dissolve fixed-values :root palettes/component tokens (root-non-theme 4618, hardcoded-color 2244, public-component-token 581 → 0).
+1. 2b-A (acceptance fixes): hairline crash; consumers for radius-badge / radius-tabs / radius-dialog / card-section(-border); new tokens radius-select + slider-thumb-width (Luma 24×16 capsule thumb); verify-create-app check that every option of every ext axis changes at least one token consumed by dist CSS.
+2. 2b-B: migrate remaining components; dissolve fixed-values :root component tokens / legacy palettes (ratchet rows → 0), commit per component group.
+3. Stage-2b PR → CI green → merge → Pages URL → stop for acceptance.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
