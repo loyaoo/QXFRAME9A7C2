@@ -63,11 +63,12 @@ Done:
 - Gate refinements (tell owner): css-gates registry = tokens.js; theme block = :root/.dark rule declaring theme tokens; root-non-theme counts custom properties only; theme files must be complete. Corrected definition exposes 2,211 legacy color literals in fixed-values :root palettes (previously exempt) → needs documented re-baseline.
 - `verify:theme-single-system` adapted to v3 closed list.
 
-Still failing locally (after `npm run build`): phase-f-css-authority (expects data-qxframe9a7c2-theme selectors), css-concat-build (protected contract), theme-tokens (re-baseline), css-token-layers, six size-tree gates (shared "Legacy five-size inputs" assertion), phase-f-token-graph / css-static-colors / theme-visual-v2 (v2 source formula maps), phase-f-static-closeout (docs helper attribute), docs-canonical (re-run), final-focus-origin (re-run after fix). Release-only browser gates (verify:browser, theme-visual-v2-browser, theme-studio-v2-browser) not yet run.
+Gates adapted to v3 and passing locally (commits 9a2ee97..HEAD): phase-f-css-authority, theme-single-system, css-concat-build, geometry family (theme-v2-geometry-contract now async + 7 callers), css-token-layers, phase-f-token-graph, css-static-colors(+browser), theme-visual-v2(+browser; rewritten as createApp compiler/consumer contract), phase-f-static-closeout, canonical docs, final-focus-origin, theme-studio-v2/-static (now delegate to createApp gates).
+Remaining: theme-tokens re-baseline (documented), full verify re-run, createApp browser gate, verify:browser suite + canonical docs browser, release-only gates.
 
 ## NEXT EXACT STEPS
 
-1. Adapt each failing gate above to the v3 contract (`.dark`, closed list) or retire v2-only gates superseded by v3 §8.4, listing every change in the PR; re-baseline theme-tokens with the corrected definition.
+1. Re-baseline theme-tokens (`node tools/verify-theme-tokens.mjs --write-baseline --allow-increase`), then `npm run build` + run scratchpad/runall.sh equivalent (each verify step) and the release browser gates; fix what fails.
 2. Run createApp browser gate + docs browser gates; visually check docs pages light/dark.
 3. Open stage-2a PR, CI green, merge, give owner the Pages URL; then 2b.
 
