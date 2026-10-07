@@ -103,6 +103,7 @@
   --qxframe9a7c2-theme-radius: 0.625rem;
   --qxframe9a7c2-theme-radius-button: 0.625rem;
   --qxframe9a7c2-theme-radius-field: 0.625rem;
+  --qxframe9a7c2-theme-radius-select: 0.625rem;
   --qxframe9a7c2-theme-radius-badge: 1.625rem;
   --qxframe9a7c2-theme-radius-tabs: 0.625rem;
   --qxframe9a7c2-theme-radius-item: 0.5rem;
@@ -121,6 +122,7 @@
   --qxframe9a7c2-theme-switch-inset: 0.125rem;
   --qxframe9a7c2-theme-slider-track: 0.25rem;
   --qxframe9a7c2-theme-slider-thumb: 0.75rem;
+  --qxframe9a7c2-theme-slider-thumb-width: 0.75rem;
   --qxframe9a7c2-theme-progress-track: 0.25rem;
   --qxframe9a7c2-theme-progress-ring: 7.5rem;
   --qxframe9a7c2-theme-choice-size: 1rem;

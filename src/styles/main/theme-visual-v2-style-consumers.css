@@ -91,4 +91,17 @@
   .qxframe9a7c2-form-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
   .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
   .qxframe9a7c2-form-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
+
+  /* Category radii (createApp v3 §4.5): badges/tags, tabs, dialogs follow their own theme roles. */
+  .qxframe9a7c2-badge[class]:not(.is-dot),.qxframe9a7c2-tag[class]{border-radius:var(--qxframe9a7c2-theme-radius-badge)}
+  .qxframe9a7c2-tabs[class]{
+    --_qxframe9a7c2-tabs-radius:var(--qxframe9a7c2-tabs-radius,var(--qxframe9a7c2-theme-radius-tabs));
+    --_qxframe9a7c2-tabs-item-radius:var(--qxframe9a7c2-tabs-item-radius,max(0rem,calc(var(--_qxframe9a7c2-tabs-radius) - .125rem)));
+  }
+  .qxframe9a7c2-tabs-tab[class]{border-radius:var(--_qxframe9a7c2-tabs-item-radius)}
+  .qxframe9a7c2-modal-container[class]{border-radius:var(--qxframe9a7c2-modal-radius,var(--qxframe9a7c2-theme-radius-dialog))}
+  .qxframe9a7c2-form-select[class],.qxframe9a7c2-input.qxframe9a7c2-select[class]{border-radius:round(nearest,calc(var(--qxframe9a7c2-theme-radius-select) * var(--_qxframe9a7c2-v2-size-ratio,1)),.125rem)}
+
+  /* Surface partition (theme input): footer band background and divider. */
+  .qxframe9a7c2-card-footer[class]{background-color:var(--qxframe9a7c2-theme-card-section);border-top:1px solid var(--qxframe9a7c2-theme-card-section-border)}
 }

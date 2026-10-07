@@ -479,8 +479,8 @@
   .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(100% - var(--_qxframe9a7c2-switch-thumb-width) - var(--_qxframe9a7c2-switch-padding) + var(--_qxframe9a7c2-switch-track-border-width) - var(--_qxframe9a7c2-switch-press-offset)); }
   .qxframe9a7c2-slider[class] {
     --_qxframe9a7c2-slider-rail: max(.125rem, calc(var(--qxframe9a7c2-theme-slider-track) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
-    --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
-    --_qxframe9a7c2-slider-handle-height: var(--_qxframe9a7c2-slider-handle-width);
+    --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb-width) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
+    --_qxframe9a7c2-slider-handle-height: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
   }
   .qxframe9a7c2-slider-handle { box-sizing: border-box; }
   .qxframe9a7c2-progress[class] {
