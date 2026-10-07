@@ -1,7 +1,7 @@
 /* Token Reference page layout (docs only). Cards, tables and buttons are framework primitives. */
 body[data-qxframe9a7c2-token-reference]{margin:0;font-family:var(--qxframe9a7c2-theme-font-sans);background:var(--qxframe9a7c2-theme-background);color:var(--qxframe9a7c2-theme-foreground)}
 .qxframe9a7c2-token-page{display:flex;flex-direction:column;gap:1.5rem;max-width:72rem;margin:0 auto;padding:2rem 1rem 4rem}
-.qxframe9a7c2-token-control-card{display:flex;flex-wrap:wrap;gap:.5rem}
+.qxframe9a7c2-token-actions{display:flex;flex-wrap:wrap;gap:.5rem}
 .qxframe9a7c2-token-section .qxframe9a7c2-table-wrap{overflow-x:auto}
 .qxframe9a7c2-token-section td{vertical-align:middle}
 .qxframe9a7c2-token-section code{font-family:var(--qxframe9a7c2-theme-font-mono);font-size:.75rem;word-break:break-all}
