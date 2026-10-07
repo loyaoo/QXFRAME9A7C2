@@ -2,13 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
+const {THEME_TOKEN_NAMES}=await import(new URL('../docs/create/tokens.js',import.meta.url).href);
+const registered=new Set(THEME_TOKEN_NAMES);
 import {readCanonicalComponentStyleSource} from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const exists=rel=>fs.existsSync(path.join(root,rel));
 const component=readCanonicalComponentStyleSource({root});
-const theme=[read('src/styles/main/theme-visual-v2.css'),read('src/styles/main/theme-visual-v2-style.css'),read('src/styles/main/theme-visual-v2-style-consumers.css')].join('\n');
+const theme=[read('src/styles/main/theme.css'),read('src/styles/main/theme-visual-v2.css'),read('src/styles/main/theme-visual-v2-style.css'),read('src/styles/main/theme-visual-v2-style-consumers.css')].join('\n');
 const fixed=read('src/styles/main/fixed-values.css');
 
 for(const retired of ['src/styles/preset/_foundation.scss','src/styles/theme/_default.scss','src/styles/theme/_family.scss'])assert.equal(exists(retired),false,'Retired public Theme layer must stay deleted: '+retired);
@@ -19,10 +21,11 @@ const refs=text=>[...text.matchAll(/var\(\s*(--_?qxframe9a7c2-[a-z0-9-]+)/ig)].m
 const themeDefs=defs(theme),componentDefs=defs(component),fixedDefs=defs(fixed);
 const publicTheme=[...themeDefs].filter(name=>name.startsWith('--qxframe9a7c2-theme-'));
 assert.ok(publicTheme.length>0,'Canonical Theme must expose public Theme inputs.');
-assert.deepEqual(publicTheme.filter(name=>!name.startsWith('--qxframe9a7c2-theme-v2-')),[],'Only Theme v2 public inputs may exist.');
+// createApp v3 §5: only the registered closed list may exist.
+assert.deepEqual(publicTheme.filter(name=>!registered.has(name)),[],'Only registered --qxframe9a7c2-theme-* inputs may exist.');
 assert.deepEqual([...fixedDefs].filter(name=>name.startsWith('--qxframe9a7c2-theme-')),[],'Private fixed implementation constants must not expose a second public Theme layer.');
 
-const legacyThemeRef=/^--qxframe9a7c2-theme-(?!v2-)/;
+const legacyThemeRef={test:name=>name.startsWith('--qxframe9a7c2-theme-')&&!registered.has(name)};
 const paletteRef=/^--qxframe9a7c2-palette-/;
 const componentLegacyRefs=[...new Set(refs(component).filter(name=>legacyThemeRef.test(name)||paletteRef.test(name)))].sort();
 assert.deepEqual(componentLegacyRefs,[],'Component CSS must not consume retired public Theme/Palette inputs.');
@@ -35,14 +38,14 @@ let match;
 while((match=declaration.exec(component))){
   const from=match[1],value=match[2];
   for(const to of refs(value)){
-    if(to===from||to.startsWith('--qxframe9a7c2-theme-v2-'))continue;
+    if(to===from||registered.has(to))continue;
     if(componentDefs.has(to)&&to.startsWith('--qxframe9a7c2-'))publicCrossComponent.push({from,to});
   }
 }
 assert.deepEqual(publicCrossComponent,[],'A public Component token must not read another public Component token.');
 
-const componentThemeRefs=[...new Set(refs(component).filter(name=>name.startsWith('--qxframe9a7c2-theme-v2-'))) ].sort();
+const componentThemeRefs=[...new Set(refs(component).filter(name=>registered.has(name))) ].sort();
 const componentPrivateRefs=[...new Set(refs(component).filter(name=>name.startsWith('--_qxframe9a7c2-'))) ].sort();
 assert.ok(componentPrivateRefs.length>0,'Components must still have private implementation roles while migration proceeds.');
 
-console.log(JSON.stringify({ok:true,publicThemeSystem:'v2-only',publicThemeInputs:publicTheme.length,componentThemeRefs:componentThemeRefs.length,componentPrivateRefs:componentPrivateRefs.length,retiredPresetBridge:true,legacyPublicRefs:0,publicCrossComponentEdges:0}));
+console.log(JSON.stringify({ok:true,publicThemeSystem:'createapp-v3-closed-list',publicThemeInputs:publicTheme.length,componentThemeRefs:componentThemeRefs.length,componentPrivateRefs:componentPrivateRefs.length,retiredPresetBridge:true,legacyPublicRefs:0,publicCrossComponentEdges:0}));
