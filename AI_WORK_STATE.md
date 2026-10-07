@@ -15,7 +15,7 @@
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
 - Current Phase: CREATEAPP-V3 stage 2a — closed theme-token list, compiler, default theme, preview components.
-- Current Task: `CREATEAPP-V3-S2A` — started (audit).
+- Current Task: `CREATEAPP-V3-S2A` — WIP (~60%): token list, compiler, consumer rewrite, docs mode-only done; legacy v2 gates being adapted.
 
 ## CURRENT
 
@@ -53,9 +53,23 @@ Status: MERGED — PR #262 → main `36d2360` (CI on head `bda6492`: release ✅
 - Gates: `verify:create-app` (13 static/model checks, in `verify` chain), `verify:create-app-browser` (9 CDP interaction steps, own CI step).
 - Known gaps (later stages): extension axes only partly mapped by the interim compiler (stage 2 compiler); `.pv-*` private primitives to be promoted into qxframe.css (stages 3/4); tables/accordion static; old theme-generator deleted in stage 5.
 
+### Stage 2a progress (WIP on redesign/create, not yet a PR)
+
+Done:
+- `docs/create/tokens.js` closed list (~130 tokens, registry used by gates); `docs/create/compiler.js` emits full :root + .dark; `tools/build-theme.mjs` generates `src/styles/main/theme.css` (Nova + neutral, ~11.5KB; `--check` mode).
+- v2 consumer modules rewritten onto new tokens; all `@scope([data-qxframe9a7c2-style])` blocks removed; `[data-qxframe9a7c2-theme*]` → `:root` / `.dark`; light-dark() kept only for shared mode formulas.
+- Focus: keyboard via focus-width/opacity/offset tokens; pointer focus only via :focus-visible under pointer origin (FocusOrigin gate forbids bare :focus outlines; buttons not covered — tell owner).
+- Docs: docs-theme-state.js light/dark only (`.dark` class); tokens.html renders the closed list; theme-playground.html = card linking to create/ (playground assets deleted; canonical gate adapted); all-components-static theme panel → createApp link.
+- Gate refinements (tell owner): css-gates registry = tokens.js; theme block = :root/.dark rule declaring theme tokens; root-non-theme counts custom properties only; theme files must be complete. Corrected definition exposes 2,211 legacy color literals in fixed-values :root palettes (previously exempt) → needs documented re-baseline.
+- `verify:theme-single-system` adapted to v3 closed list.
+
+Still failing locally (after `npm run build`): phase-f-css-authority (expects data-qxframe9a7c2-theme selectors), css-concat-build (protected contract), theme-tokens (re-baseline), css-token-layers, six size-tree gates (shared "Legacy five-size inputs" assertion), phase-f-token-graph / css-static-colors / theme-visual-v2 (v2 source formula maps), phase-f-static-closeout (docs helper attribute), docs-canonical (re-run), final-focus-origin (re-run after fix). Release-only browser gates (verify:browser, theme-visual-v2-browser, theme-studio-v2-browser) not yet run.
+
 ## NEXT EXACT STEPS
 
-1. Owner acceptance on `https://loyaoo.github.io/QXFRAME9A7C2/docs/create/` ; fix reported problems in follow-up PRs. Stage 2 (new theme compiler, token-chain rewrite) starts only after the owner says 继续.
+1. Adapt each failing gate above to the v3 contract (`.dark`, closed list) or retire v2-only gates superseded by v3 §8.4, listing every change in the PR; re-baseline theme-tokens with the corrected definition.
+2. Run createApp browser gate + docs browser gates; visually check docs pages light/dark.
+3. Open stage-2a PR, CI green, merge, give owner the Pages URL; then 2b.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 

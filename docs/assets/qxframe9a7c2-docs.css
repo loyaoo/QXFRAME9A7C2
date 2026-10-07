@@ -29,7 +29,7 @@ html[data-theme="dark"] {
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: var(--qxframe9a7c2-theme-font-family, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  font-family: var(--qxframe9a7c2-theme-font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
   background: var(--qxframe9a7c2-docs-bg);
   color: var(--qxframe9a7c2-docs-text);
   line-height: 1.6;

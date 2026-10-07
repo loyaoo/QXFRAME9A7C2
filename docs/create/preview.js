@@ -10,8 +10,8 @@
 
   function apply(data) {
     styleEl.textContent = data.css || '';
-    root.setAttribute('data-qxframe9a7c2-style', data.style || 'nova');
-    root.setAttribute('data-qxframe9a7c2-theme', data.mode === 'dark' ? 'dark' : 'light');
+    root.setAttribute('data-create-style', data.style || 'nova');
+    root.classList.toggle('dark', data.mode === 'dark');
     root.toggleAttribute('data-create-menu-inverted', Boolean(data.menuInverted));
     root.toggleAttribute('data-create-menu-translucent', Boolean(data.menuTranslucent));
     var labels = data.labels || {};

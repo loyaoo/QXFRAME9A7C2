@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" data-qxframe9a7c2-style="nova">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -11,7 +11,7 @@
     try {
       var mode = localStorage.getItem('qxframe9a7c2-create-mode');
       if (!mode) mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-qxframe9a7c2-theme', mode === 'dark' ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', mode === 'dark');
     } catch (error) {}
   </script>
 </head>
@@ -37,7 +37,7 @@
   </header>
 
   <main class="create-designer">
-    <aside class="create-customizer" data-qxframe9a7c2-theme="dark" aria-label="主题定制">
+    <aside class="create-customizer dark" aria-label="主题定制">
       <div class="create-customizer-header">
         <button type="button" class="create-menu-trigger" data-create-main-menu>
           <span>菜单</span>
@@ -58,7 +58,7 @@
     <section class="create-preview" aria-label="预览">
       <div class="create-preview-backdrop"></div>
       <iframe class="create-preview-frame" title="预览" data-create-frame></iframe>
-      <div class="create-preview-switcher" data-qxframe9a7c2-theme="dark" role="group" aria-label="切换预览">
+      <div class="create-preview-switcher dark" role="group" aria-label="切换预览">
         <button type="button" data-create-item="01">01</button>
         <button type="button" data-create-item="02">02</button>
       </div>

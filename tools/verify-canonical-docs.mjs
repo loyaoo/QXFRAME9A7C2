@@ -63,11 +63,12 @@ for(const rel of canonical){
   report.push({page:rel,refs:refs.length});
 }
 
+// Theme customisation lives in createApp (v3 stage 2 owner decision); the playground page is an entry card.
+const playgroundHtml=fs.readFileSync(path.join(docsRoot,'theme-playground.html'),'utf8');
+assert(/href=["']create\/["']/.test(playgroundHtml)&&/qxframe9a7c2-card/.test(playgroundHtml),'theme-playground.html must be a framework Card entry linking to createApp (create/).');
 // Canonical docs dogfood the framework instead of rebuilding parallel visual primitives.
 const componentSiteJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-site.js'),'utf8');
 const componentSiteCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-site.css'),'utf8');
-const playgroundJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-theme-playground.js'),'utf8');
-const playgroundCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-theme-playground.css'),'utf8');
 const enhancementsJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-enhancements.js'),'utf8');
 const tokenJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.js'),'utf8');
 const tokenCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-token-reference.css'),'utf8');
@@ -97,13 +98,6 @@ for(const [label,source,patterns] of [
     /qxframe9a7c2-form-input is-md/,
     /qxframe9a7c2-tag/
   ]],
-  ['Theme Playground',playgroundJs,[
-    /qxframe9a7c2-card qxframe9a7c2-play-card/,
-    /qxframe9a7c2-card-header qxframe9a7c2-play-card-head/,
-    /qxframe9a7c2-card-body qxframe9a7c2-play-card-body/,
-    /qxframe9a7c2-card-footer qxframe9a7c2-play-card-foot/,
-    /qxframe9a7c2-card qxframe9a7c2-play-setting/
-  ]],
   ['Token Reference',tokenJs,[
     /qxframe9a7c2-card qxframe9a7c2-token-hero-copy/,
     /qxframe9a7c2-card qxframe9a7c2-token-control-card/,
@@ -118,8 +112,6 @@ for(const [label,source,pattern] of [
   ['component observe Card',componentSiteCss,/\.qxframe9a7c2-docs-observe-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
   ['component API Table wrap',componentSiteCss,/\.qxframe9a7c2-docs-api-table-wrap\{[^}]*\b(?:border|background|border-radius)\s*:/],
   ['component API Table',componentSiteCss,/\.qxframe9a7c2-docs-api-table\{[^}]*\b(?:background|border-collapse)\s*:/],
-  ['Theme Playground Card',playgroundCss,/\.qxframe9a7c2-play-card\{[^}]*\b(?:border|background|border-radius)\s*:/],
-  ['Theme Playground setting Card',playgroundCss,/\.qxframe9a7c2-play-setting\{[^}]*(?:^|[;{])\s*(?:border|background|border-radius)\s*:/],
   ['Token Reference shared Card',tokenCss,/\.qxframe9a7c2-token-(?:hero-copy|control-card|section)\{[^}]*\b(?:border|background|border-radius)\s*:/]
 ]){
   assert(!pattern.test(source),label+' must not recreate the framework Card visual shell.');

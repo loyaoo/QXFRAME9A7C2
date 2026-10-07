@@ -11,7 +11,7 @@
   "migrationBaseline": "tools/fixtures/css-token-phase-a/qxframe9a7c2-baseline.css",
   "physicalOrder": [
     "main-reset",
-    "main-theme-default",
+    "main-theme",
     "main-foundation",
     "main-fixed-values",
     "components",
@@ -35,7 +35,7 @@
   ],
   "sourceModules": [
     "src/styles/main/reset.css",
-    "src/styles/main/theme-default.css",
+    "src/styles/main/theme.css",
     "src/styles/main/foundation.css",
     "src/styles/main/fixed-values.css",
     "src/styles/components/component-foundation.css",

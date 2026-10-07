@@ -1,6 +1,6 @@
 *{box-sizing:border-box}
 html,body{height:100%}
-body.qx-admin-template{margin:0;overflow:hidden;background:var(--_qxframe9a7c2-semantic-bg);color:var(--_qxframe9a7c2-semantic-text);font-family:var(--qxframe9a7c2-theme-font-family,var(--qxframe9a7c2-font-family,Inter,ui-sans-serif,system-ui,sans-serif))}
+body.qx-admin-template{margin:0;overflow:hidden;background:var(--_qxframe9a7c2-semantic-bg);color:var(--_qxframe9a7c2-semantic-text);font-family:var(--qxframe9a7c2-theme-font-sans,var(--qxframe9a7c2-font-family,Inter,ui-sans-serif,system-ui,sans-serif))}
 button,input{font:inherit}
 .qx-admin-shell{display:grid;grid-template-columns:232px minmax(0,1fr);height:100vh;min-height:0;background:var(--_qxframe9a7c2-semantic-bg)}
 .qx-admin-shell.is-collapsed{grid-template-columns:72px minmax(0,1fr)}

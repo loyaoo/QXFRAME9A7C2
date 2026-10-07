@@ -21,7 +21,7 @@
 
 /* Static inspection chrome follows the exact same public theme contract as components. */
 html.qxframe9a7c2-theme-light{color-scheme:light}html.qxframe9a7c2-theme-dark{color-scheme:dark}
-body{background:var(--_qxframe9a7c2-semantic-bg,#f5f7fb);color:var(--_qxframe9a7c2-semantic-text,#1f2937);font-family:var(--qxframe9a7c2-theme-font-family,Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif)}
+body{background:var(--_qxframe9a7c2-semantic-bg,#f5f7fb);color:var(--_qxframe9a7c2-semantic-text,#1f2937);font-family:var(--qxframe9a7c2-theme-font-sans,Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif)}
 .sg-hero,.sg-component,.sg-status-row,.sg-demo-surface{background:var(--_qxframe9a7c2-semantic-surface,#fff);color:var(--_qxframe9a7c2-semantic-text,#1f2937);border-color:var(--_qxframe9a7c2-semantic-border,#e5e7eb)}
 .sg-hero{border:1px solid var(--_qxframe9a7c2-semantic-border,#e5e7eb);box-shadow:var(--_qxframe9a7c2-shadow-sm,0 1px 2px rgba(0,0,0,.05))}.sg-hero p,.sg-component-intro,.sg-example>p,.sg-interaction-note{color:var(--_qxframe9a7c2-semantic-text-secondary,#667085)}.sg-meta span{background:var(--_qxframe9a7c2-semantic-subtle,#f2f4f7);color:var(--_qxframe9a7c2-semantic-text-secondary,#475467)}
 .sg-note{background:var(--_qxframe9a7c2-semantic-info-soft,#eff6ff);border-color:color-mix(in srgb,var(--_qxframe9a7c2-semantic-info,#2563eb) 36%,transparent);color:var(--_qxframe9a7c2-semantic-text,#1f2937)}
@@ -41,7 +41,7 @@ body{background:var(--_qxframe9a7c2-semantic-bg,#f5f7fb);color:var(--_qxframe9a7
 .sg-icon-catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:7px}.sg-icon-catalog-item{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 8px;border:1px solid var(--_qxframe9a7c2-semantic-border-subtle,#e5e7eb);border-radius:7px;background:var(--_qxframe9a7c2-semantic-surface,#fff)}.sg-icon-catalog-item>.qxframe9a7c2-icon{flex:0 0 auto;font-size:18px}.sg-icon-catalog-item code{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--_qxframe9a7c2-semantic-text-secondary,#475467);font-size:10px}
 </style><script defer src="assets/qxframe9a7c2-all-components-static.js"></script></head>
 <body><main class="sg-page">
-<section class="sg-hero"><h1>QXFRAME9A7C2 · CSS 实际场景静态检查页</h1><p>组件 specimen 保持静态 DOM，不加载组件 runtime JS；仅 Theme Inspector 使用轻量文档脚本修改 public theme token。所有可交互控件保留 pointer events，可直接检查 hover / focus / active。</p><p>共享 CSS 直接作用在所属组件 DOM；隐藏/浮动结构在原组件位置局部展示；全局 fixed root 在本页统一收进局部 absolute 容器。</p><div class="sg-meta"><span>62 visual sections</span><span>362 real scenarios</span><span>0 component runtime JS</span><span>0 selector matrix</span><span>viewport fixed specimens = 0</span></div></section>
+<section class="sg-hero"><h1>QXFRAME9A7C2 · CSS 实际场景静态检查页</h1><p>组件 specimen 保持静态 DOM，不加载组件 runtime JS；仅明暗切换使用轻量文档脚本。所有可交互控件保留 pointer events，可直接检查 hover / focus / active。</p><p>共享 CSS 直接作用在所属组件 DOM；隐藏/浮动结构在原组件位置局部展示；全局 fixed root 在本页统一收进局部 absolute 容器。</p><div class="sg-meta"><span>62 visual sections</span><span>362 real scenarios</span><span>0 component runtime JS</span><span>0 selector matrix</span><span>viewport fixed specimens = 0</span></div></section>
 <div class="sg-floating-tools" data-sg-floating-tools>
   <button class="sg-tool-icon sg-theme-mode-toggle" type="button" data-sg-theme-toggle data-mode="light" aria-label="切换明亮/黑暗主题" title="切换到 Dark">
     <svg class="sg-theme-icon sg-theme-icon-light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
@@ -52,15 +52,7 @@ body{background:var(--_qxframe9a7c2-semantic-bg,#f5f7fb);color:var(--_qxframe9a7
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h7M15 18h5"></path><circle cx="16" cy="6" r="2"></circle><circle cx="8" cy="12" r="2"></circle><circle cx="13" cy="18" r="2"></circle></svg>
     </button>
     <section class="sg-theme-panel" data-sg-theme-bar>
-      <div class="sg-theme-bar-head"><div class="sg-theme-bar-title"><strong>Theme Inspector</strong><span>Public theme token · 连续参数使用 120ms 防抖</span></div><div class="sg-theme-actions"><button class="sg-theme-action" type="button" data-sg-theme-export>导出 CSS</button><button class="sg-theme-action" type="button" data-sg-theme-reset>Reset</button></div></div>
-      <div class="sg-theme-controls">
-        <div class="sg-theme-control is-wide"><div class="sg-theme-control-head"><span>Primary Seed</span><span class="sg-theme-control-value" data-sg-theme-primary-value>#5b5bd6</span></div><div class="sg-theme-primary-row"><input class="sg-theme-seed-color" type="color" data-sg-theme-primary-color value="#5b5bd6" title="Primary Seed"><input class="sg-theme-seed-text" type="text" data-sg-theme-primary-text value="#5b5bd6" spellcheck="false"><div class="sg-theme-presets" data-sg-theme-presets></div></div></div>
-        <label class="sg-theme-control"><div class="sg-theme-control-head"><span>辅助色</span><span class="sg-theme-control-value">Neutral Palette</span></div><select class="sg-theme-select" data-sg-theme-base></select></label>
-        <label class="sg-theme-control"><div class="sg-theme-control-head"><span>MIX 强度</span><span class="sg-theme-control-value" data-sg-theme-mix-value>100% · r2</span></div><div class="sg-theme-range-row"><input class="sg-theme-range" type="range" min="0" max="100" step="1" data-sg-theme-mix><output class="sg-theme-range-output" data-sg-theme-mix-output>100%</output></div></label>
-        <label class="sg-theme-control"><div class="sg-theme-control-head"><span>字体</span><span class="sg-theme-control-value">Theme Font</span></div><select class="sg-theme-select" data-sg-theme-font></select></label>
-        <label class="sg-theme-control"><div class="sg-theme-control-head"><span>圆角</span><span class="sg-theme-control-value" data-sg-theme-radius-value>8px</span></div><div class="sg-theme-range-row"><input class="sg-theme-range" type="range" min="0" max="24" step="1" data-sg-theme-radius><output class="sg-theme-range-output" data-sg-theme-radius-output>8px</output></div></label>
-        <label class="sg-theme-control"><div class="sg-theme-control-head"><span>Focus Ring</span><span class="sg-theme-control-value" data-sg-theme-focus-value>2px</span></div><div class="sg-theme-range-row"><input class="sg-theme-range" type="range" min="1" max="4" step="1" data-sg-theme-focus><output class="sg-theme-range-output" data-sg-theme-focus-output>2px</output></div></label>
-      </div>
+      <div class="sg-theme-bar-head"><div class="sg-theme-bar-title"><strong>Theme</strong><span>本页使用 qxframe.css 内置默认主题（Nova + neutral）。风格、颜色、字体、圆角等在 createApp 中定制并导出主题 CSS。</span></div><div class="sg-theme-actions"><a class="sg-theme-action" href="create/">打开 createApp</a></div></div>
     </section>
   </div>
 </div>

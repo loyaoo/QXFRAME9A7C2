@@ -20,15 +20,20 @@ const manifest=JSON.parse(read('tools/manifests/css-order.json'));
 for(const rel of manifest.sourceModules)assert.doesNotMatch(rel,/(?:^|\/)_?(?:theme-)?(?:default|family)\.s?css$/,'Legacy Theme module remains canonical: '+rel);
 for(const rel of ['src/styles/theme/_default.scss','src/styles/theme/_family.scss','src/styles/main/theme-default.css','src/styles/main/theme-family.css'])assert.equal(exists(rel),false,'Legacy Theme module must not exist: '+rel);
 
+// createApp v3 §5: the sole public Theme inputs are the registered --qxframe9a7c2-theme-* closed list
+// (docs/create/tokens.js); the retired THEME-VISUAL-V2 names (--qxframe9a7c2-theme-v2-*) and any
+// unregistered theme name are legacy.
+const {THEME_TOKEN_NAMES}=await import(new URL('../docs/create/tokens.js',import.meta.url).href);
+const registered=new Set(THEME_TOKEN_NAMES);
 const modules=getCanonicalStyleModulePaths({root});
 const legacyPublic=[];
 const visualOptIn=[];
 for(const rel of modules){
   const text=read(rel);
-  for(const match of text.matchAll(/--qxframe9a7c2-theme-(?!v2-)[a-z0-9-]+/gi))legacyPublic.push(rel+': '+match[0]);
+  for(const match of text.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+/gi))if(!registered.has(match[0]))legacyPublic.push(rel+': '+match[0]);
   if(/data-qxframe9a7c2-visual=["']2["']/.test(text))visualOptIn.push(rel);
 }
-assert.deepEqual(legacyPublic.slice(0,50),[],`Old public Theme tokens remain in canonical CSS (${legacyPublic.length} occurrences):\n${legacyPublic.slice(0,50).join('\n')}`);
+assert.deepEqual(legacyPublic.slice(0,50),[],`Unregistered / retired public Theme tokens remain in canonical CSS (${legacyPublic.length} occurrences):\n${legacyPublic.slice(0,50).join('\n')}`);
 assert.deepEqual(visualOptIn,[],'The sole Theme system must not require the retired visual=2 opt-in: '+visualOptIn.join(', '));
 
 const foundation='src/styles/preset/_foundation.scss';
@@ -37,10 +42,9 @@ if(exists(foundation)){
   assert.deepEqual(publicFoundation.slice(0,50),[],`Preset/Foundation public token layer remains (${publicFoundation.length} definitions). v1.5 permits private framework constants, not a second public token system.`);
 }
 
-const semantic=read('docs/assets/theme-generator/semantic-engine.mjs');
-const engine=read('docs/assets/theme-generator/engine-v2.mjs');
-assert.doesNotMatch(semantic,/data-qxframe9a7c2-visual/,'Generated color CSS must be canonical, not opt-in.');
-assert.doesNotMatch(engine,/data-qxframe9a7c2-visual/,'Generated geometry/style CSS must be canonical, not opt-in.');
-assert.match(semantic,/--qxframe9a7c2-theme-v2-/,'Canonical Theme generator must emit the new public Theme inputs.');
+// The canonical generator is the createApp compiler; it writes only registered names.
+const compiler=read('docs/create/compiler.js');
+assert.doesNotMatch(compiler,/data-qxframe9a7c2-visual|--qxframe9a7c2-theme-v2-/,'createApp compiler must emit the closed --qxframe9a7c2-theme-* list only.');
+assert.match(compiler,/THEME_TOKENS/,'createApp compiler must emit every registered token.');
 
-console.log(JSON.stringify({task:'THEME-VISUAL-V2-001',singlePublicTheme:true,retiredGeneratorFiles:retiredGenerator.length,canonicalModules:modules.length,legacyThemeOccurrences:legacyPublic.length,visualOptInModules:visualOptIn.length}));
+console.log(JSON.stringify({task:'CREATEAPP-V3-S2A',singlePublicTheme:true,retiredGeneratorFiles:retiredGenerator.length,canonicalModules:modules.length,legacyThemeOccurrences:legacyPublic.length,visualOptInModules:visualOptIn.length}));

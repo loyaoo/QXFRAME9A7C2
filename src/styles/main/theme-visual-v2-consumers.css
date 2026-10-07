@@ -10,12 +10,12 @@
     --_qxframe9a7c2-focus-visible-offset: var(--qxframe9a7c2-focus-visible-offset, var(--qxframe9a7c2-theme-focus-offset));
     --_qxframe9a7c2-focus-visible-outline: var(--_qxframe9a7c2-focus-visible-width) solid color-mix(in oklab, var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-focus-opacity), transparent);
   }
-  /* Pointer focus style (theme input): QX default width 0 keeps the existing border/background feedback. */
-  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus,
-  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input:focus-within,
-  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus,
-  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus,
-  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus {
+  /* Pointer focus style (theme input). FocusOrigin protocol: pointer focus is drawn only through
+     :focus-visible under a non-keyboard origin (text fields), never through bare :focus. QX default
+     width 0 keeps the existing border/background feedback. */
+  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus-visible,
+  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus-visible,
+  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus-visible {
     outline: var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab, var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity), transparent);
     outline-offset: var(--qxframe9a7c2-theme-pointer-offset);
   }

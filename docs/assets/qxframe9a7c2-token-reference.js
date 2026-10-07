@@ -1,93 +1,88 @@
-(function(global,document){
-'use strict';
-var app=document.getElementById('qxframe9a7c2-token-reference-app');if(!app)return;
-var docsTheme=global.QXFRAME9A7C2_DOCS_THEME||null;
-var RELEASE='v2.19.79';
-var PRESETS=[
-  {key:'nova',name:'Nova',seed:'#5b5bd6'},
-  {key:'ocean',name:'Ocean',seed:'#2563eb'},
-  {key:'violet',name:'Violet',seed:'#7c3aed'},
-  {key:'emerald',name:'Emerald',seed:'#059669'},
-  {key:'amber',name:'Amber',seed:'#d97706'},
-  {key:'rose',name:'Rose',seed:'#e11d48'}
+// Token Reference: the closed --qxframe9a7c2-theme-* list (createApp v3 §5) with the values the
+// default theme built into qxframe.css resolves to in light and dark mode. Customise themes in
+// createApp (docs/create/), which exports the same list.
+import { THEME_TOKENS, TOKEN_PREFIX } from '../create/tokens.js';
+
+const app = document.getElementById('qxframe9a7c2-token-reference-app');
+const docsTheme = window.QXFRAME9A7C2_DOCS_THEME || null;
+
+const GROUPS = [
+  { title: '颜色', test: token => token.mode === 'color' },
+  { title: '字体与文字', test: token => token.kind === 'font' || /^(text|control-weight|control-tracking|control-transform|heading)/.test(token.name) },
+  { title: '控件尺寸', test: token => /^(control-|field-sides|radio-fill|border-width)/.test(token.name) },
+  { title: '容器', test: token => token.name.startsWith('card-') },
+  { title: '圆角', test: token => token.name.startsWith('radius') },
+  { title: '部件', test: token => /^(switch|slider|progress|choice)/.test(token.name) },
+  { title: '阴影', test: token => token.kind === 'shadow' || token.name === 'menu-blur' },
+  { title: '焦点', test: token => /^(focus|pointer)/.test(token.name) },
+  { title: '动效', test: token => token.kind === 'time' }
 ];
-var PALETTES=['grey','gray','cyan','teal','green','lime','yellow','orange','red','pink','purple','blue','azure'];
-var PRIMARY_BLEND=['36% seed + black','48% seed + black','60% seed + black','70% seed + black','80% seed + black','88% seed + black','100% seed','92% seed + white','84% seed + white','72% seed + white','56% seed + white','36% seed + white','16% seed + white'];
-var SEMANTIC=['bg','surface','surface-raised','surface-muted','surface-hover','text','text-secondary','text-muted','text-placeholder','text-inverse','text-disabled','border','input-border','border-subtle','border-strong','border-hover','border-disabled','accent','accent-hover','accent-active','accent-border','accent-ring-color','accent-soft','accent-soft-hover','on-accent','success','success-hover','success-active','success-soft','warning','warning-hover','warning-active','warning-soft','error','error-hover','error-active','error-soft','info','info-hover','info-active','info-soft','subtle','subtle-hover','subtle-active','bg-disabled','bg-readonly','overlay-base','overlay-text','overlay-control','overlay-control-hover','overlay-divider','mask','mask-strong','tooltip-bg','loading-mask','code-bg','focus','on-status'];
-var PUBLIC_SEEDS=['grey','gray','cyan','teal','green','lime','yellow','orange','red','pink','purple','blue','azure','white','black','primary','success','warning','error','info'];
-var sharedInitial=docsTheme?docsTheme.getState():null;
-var state={mode:sharedInitial?(sharedInitial.mode==='system'?sharedInitial.effectiveMode:sharedInitial.mode):'light',preset:sharedInitial?sharedInitial.preset:'nova',primary:sharedInitial?sharedInitial.primarySeed:'#5b5bd6',neutral:sharedInitial?sharedInitial.base:'grey',mixRatio:sharedInitial?sharedInitial.mixRatio:100};
-var toastTimer=0;
-function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
-function root(){return document.documentElement;}
-function setVar(name,value){if(value==null||value==='')root().style.removeProperty(name);else root().style.setProperty(name,value);}
-function computedVar(name){return getComputedStyle(root()).getPropertyValue(name).trim();}
-function resolveColor(expression){var el=document.createElement('i');el.style.cssText='position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;background:'+expression+';';document.body.appendChild(el);var value=getComputedStyle(el).backgroundColor;el.remove();return value||expression;}
-function copy(text){var value=String(text||'');if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(value).catch(function(){return fallbackCopy(value);});return fallbackCopy(value);}
-function fallbackCopy(text){var area=document.createElement('textarea');area.value=text;area.style.cssText='position:fixed;opacity:0;pointer-events:none';document.body.appendChild(area);area.select();try{document.execCommand('copy');}catch(_){}area.remove();return Promise.resolve();}
-function toast(message){var host=document.querySelector('[data-token-toast]');if(!host)return;host.textContent=message;host.classList.add('is-visible');clearTimeout(toastTimer);toastTimer=setTimeout(function(){host.classList.remove('is-visible');},1400);}
-function tokenCard(name,expression){var resolved=resolveColor(expression||('var('+name+')'));return '<button type="button" class="qxframe9a7c2-card qxframe9a7c2-token-card" data-copy="'+esc(name)+'" title="复制 '+esc(name)+'"><span class="qxframe9a7c2-token-chip" style="--token-color:'+esc(expression||('var('+name+')'))+'"></span><span><code>'+esc(name)+'</code><small>'+esc(resolved)+'</small></span></button>';}
-function swatch(token,step,label,expression){var exp=expression||('var('+token+')');return '<button type="button" class="qxframe9a7c2-token-swatch is-copyable" data-copy="'+esc(token)+'" title="复制 '+esc(token)+'"><span class="qxframe9a7c2-token-swatch-color" style="--swatch:'+esc(exp)+'"></span><span class="qxframe9a7c2-token-swatch-meta"><strong>'+esc(label||String(step))+'</strong><code>'+esc(token)+'</code><small>'+esc(resolveColor(exp))+'</small></span></button>';}
-function renderShell(){
- app.innerHTML='<div class="qxframe9a7c2-token-shell">'+
- '<header class="qxframe9a7c2-token-topbar"><a class="qxframe9a7c2-token-brand" href="index.html"><span class="qxframe9a7c2-token-brand-mark">QX</span><span>Tokens & Theme</span><span class="qxframe9a7c2-token-version">'+RELEASE+'</span></a><nav class="qxframe9a7c2-token-nav"><a href="index.html">Components</a><a href="theme-playground.html">Theme Playground</a><a href="stage-08.html">Runtime Lab</a></nav></header>'+
- '<main class="qxframe9a7c2-token-main">'+
- '<section class="qxframe9a7c2-token-hero"><div class="qxframe9a7c2-card qxframe9a7c2-token-hero-copy"><div class="qxframe9a7c2-token-eyebrow">DESIGN TOKENS · THEME OWNERSHIP · LIVE COMPUTED VALUES</div><h1>Token System Reference</h1><p>这页直接读取浏览器当前计算后的 canonical CSS custom properties。主题链路固定为：Grey 13-tone 默认 Neutral + 独立 Primary → Light/Dark semantic recipe → component-local aliases；MixedGray/Auxiliary 作为显式可选 recipe 保留。组件层只消费 semantic/family token，不直接选择 Grey 档位。</p><div class="qxframe9a7c2-token-owner-chain"><code>Grey 1–13 + Primary</code><span>→</span><code>independent Light / Dark recipe</code><span>→</span><code>semantic Neutral</code><span>→</span><code>semantic</code><span>→</span><code>component owner</code></div></div><aside class="qxframe9a7c2-card qxframe9a7c2-token-control-card"><h2>Live Theme Input</h2><div class="qxframe9a7c2-token-form"><label class="qxframe9a7c2-token-field"><span>Mode</span><select class="qxframe9a7c2-form-select is-sm" data-token-mode><option value="light">Light</option><option value="dark">Dark</option></select></label><label class="qxframe9a7c2-token-field"><span>Primary preset / seed</span><select class="qxframe9a7c2-form-select is-sm" data-token-preset>'+PRESETS.map(function(x){return '<option value="'+x.key+'">'+esc(x.name)+' · '+x.seed+'</option>';}).join('')+'<option value="custom">Custom</option></select><span class="qxframe9a7c2-token-color-row"><input type="color" data-token-color value="'+state.primary+'"><input class="qxframe9a7c2-form-input is-sm" type="text" data-token-color-text value="'+state.primary+'" spellcheck="false"></span></label><label class="qxframe9a7c2-token-field"><span>Neutral policy</span><select class="qxframe9a7c2-form-select is-sm" data-token-neutral><option value="grey">Grey · Default Tailwind Neutral</option><option value="mixed">MixedGray · Optional Grey + Primary</option><option value="gray">Gray · Optional Cold Neutral</option></select></label><label class="qxframe9a7c2-token-field"><span>MixedGray strength · 100% = r2</span><input type="range" min="0" max="100" step="1" data-token-mix><strong data-token-mix-label>100%</strong></label><div class="qxframe9a7c2-token-actions"><button class="qxframe9a7c2-button is-primary is-solid is-sm qxframe9a7c2-token-button" type="button" data-token-copy-css>复制 Theme CSS</button><button class="qxframe9a7c2-button is-default is-outlined is-sm qxframe9a7c2-token-button" type="button" data-token-reset>Reset</button></div></div></aside></section>'+
- '<nav class="qxframe9a7c2-token-jump"><a href="#primary">Primary 13</a><a href="#auxiliary">MIX Auxiliary 13</a><a href="#neutral">Resolved Neutral 13</a><a href="#palettes">Preset Palettes</a><a href="#seeds">Theme Seeds</a><a href="#semantic">Semantic</a><a href="#foundation">Foundation</a><a href="#theme-api">Theme API</a><a href="#config">Behavior Config</a></nav>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="primary"><div class="qxframe9a7c2-token-section-head"><div><h2>Resolved Primary · 13 colorTokens</h2><p>公开入口是 <code>--qxframe9a7c2-theme-primary</code> seed，以及可选的 <code>--qxframe9a7c2-theme-primary-1…13</code> partial/full override。编号稳定为 1 最深 → 13 最浅。</p></div><span class="qxframe9a7c2-token-badge">public override → private resolved</span></div><div class="qxframe9a7c2-token-swatch-grid" data-token-primary></div><div class="qxframe9a7c2-token-callout"><strong>Fallback synthesis：</strong><span data-token-primary-formula></span></div></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="auxiliary"><div class="qxframe9a7c2-token-section-head"><div><h2>MixedGray Auxiliary · 13 colorTokens</h2><p>这条 Grey + resolved Primary 的 OKLab 混色链作为显式可选 Neutral recipe 保留；标准 Light/Dark 不再经过它。这里展示 <code>--_qxframe9a7c2-auxiliary-1…13</code>。</p></div><span class="qxframe9a7c2-token-badge">optional recipe</span></div><div class="qxframe9a7c2-token-swatch-grid" data-token-auxiliary></div><div class="qxframe9a7c2-token-callout"><strong>禁止二次混色：</strong>组件层不得再对 Grey + Primary 做 <code>color-mix()</code>；组件只消费 resolved Neutral / semantic token。</div></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="neutral"><div class="qxframe9a7c2-token-section-head"><div><h2>Resolved Neutral · 13 colorTokens</h2><p><code>--_qxframe9a7c2-neutral-1…13</code> 优先读取 public <code>--qxframe9a7c2-theme-neutral-N</code>；未覆盖时直接回退到 canonical Grey 1–13。MixedGray 与 cold Gray 只在显式选择时覆盖。</p></div><span class="qxframe9a7c2-token-badge" data-token-neutral-badge>Grey default</span></div><div class="qxframe9a7c2-token-swatch-grid" data-token-neutral-grid></div></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="palettes"><div class="qxframe9a7c2-token-section-head"><div><h2>Preset Physical Palettes</h2><p>Foundation 中现有的 13 个 palette families，每个 family 展示 13 阶物理 color token。主题可以拿这些物理色作为 seed / neutral override，但语义组件不应直接绑定某一套物理 palette。</p></div><span class="qxframe9a7c2-token-badge">13 families × 13 tones</span></div><div class="qxframe9a7c2-token-palette-list" data-token-palettes></div></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="seeds"><div class="qxframe9a7c2-token-section-head"><div><h2>Public Theme Seeds</h2><p>公开 seed slots 允许重定向物理 palette 和状态角色；Primary 是整个主题色链路的主入口，success / warning / error / info 是状态色入口。</p></div><span class="qxframe9a7c2-token-badge">public contract</span></div><div class="qxframe9a7c2-token-grid" data-token-seeds></div></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="semantic"><div class="qxframe9a7c2-token-section-head"><div><h2>Semantic Tokens</h2><p>组件层优先消费 semantic，而不是物理色。下面显示当前 Light / Dark + Primary + Neutral 组合下真实计算结果。</p></div><span class="qxframe9a7c2-token-badge">component-facing</span></div><div class="qxframe9a7c2-token-grid" data-token-semantic></div></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="foundation"><div class="qxframe9a7c2-token-section-head"><div><h2>Foundation / Preset Tokens</h2><p>空间、字号、圆角、motion duration/easing 与 overlay z-band 都集中列在这里，避免 demo 自行制造 magic number。</p></div><span class="qxframe9a7c2-token-badge">preset tokens</span></div><div class="qxframe9a7c2-token-foundation" data-token-foundation></div></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="theme-api"><div class="qxframe9a7c2-token-section-head"><div><h2>Theme Override API</h2><p>可复制的 CSS 展示 seed、Primary 13-tone partial/full override、Neutral 13-tone override、foreground、字体、圆角、Focus Ring 等公共入口。Private <code>--_qxframe9a7c2-*</code> 只用于观察，不应由业务设置。</p></div><span class="qxframe9a7c2-token-badge">copy-ready</span></div><pre class="qxframe9a7c2-token-code" data-token-theme-code></pre></section>'+
- '<section class="qxframe9a7c2-card qxframe9a7c2-token-section" id="config"><div class="qxframe9a7c2-token-section-head"><div><h2>Behavior Config</h2><p>Core.Config 只处理 size / variant / focusOutline / motion / trigger delays 等运行时行为配置。Theme 与 Token 完全由 CSS selectors / custom properties 管理，不进入 Config。</p></div><span class="qxframe9a7c2-token-badge">Core.Config · no theme/token state</span></div><div class="qxframe9a7c2-token-foundation" data-token-config></div><pre class="qxframe9a7c2-token-code" data-token-config-code></pre></section>'+
- '</main><div class="qxframe9a7c2-token-toast" data-token-toast></div></div>';
+
+const esc = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+// Read a token's value as resolved inside a light or dark probe element.
+function probeValues() {
+  const make = dark => {
+    const el = document.createElement('div');
+    el.className = dark ? 'dark' : '';
+    el.style.cssText = 'position:absolute;left:-9999px;top:0;';
+    document.body.appendChild(el);
+    return el;
+  };
+  const light = make(false), dark = make(true);
+  const read = (el, name) => getComputedStyle(el).getPropertyValue(TOKEN_PREFIX + name).trim();
+  const values = {};
+  for (const token of THEME_TOKENS) values[token.name] = { light: read(light, token.name), dark: token.mode === 'color' ? read(dark, token.name) : '' };
+  light.remove(); dark.remove();
+  return values;
 }
-function applyState(){
- if(docsTheme){
-   var shared=docsTheme.setState({mode:state.mode,preset:state.preset,primarySeed:state.primary,base:state.neutral,mixRatio:state.mixRatio});
-   state.mode=shared.mode==='system'?shared.effectiveMode:shared.mode;state.preset=shared.preset;state.primary=shared.primarySeed;state.neutral=shared.base;state.mixRatio=shared.mixRatio;
- }else{
-   var dark=state.mode==='dark';root().classList.toggle('qxframe9a7c2-theme-dark',dark);root().classList.toggle('qxframe9a7c2-theme-light',!dark);root().setAttribute('data-theme',dark?'dark':'light');root().setAttribute('data-qxframe9a7c2-theme',dark?'dark':'light');
-   setVar('--qxframe9a7c2-theme-primary',state.primary);setVar('--qxframe9a7c2-theme-neutral-mix-ratio',state.mixRatio+'%');
-   for(var i=1;i<=13;i+=1){
-     setVar('--qxframe9a7c2-theme-primary-'+i,null);
-     var neutralValue=state.neutral==='grey'?null:state.neutral==='mixed'?'var(--_qxframe9a7c2-auxiliary-'+i+')':'rgb(var(--qxframe9a7c2-palette-'+state.neutral+'-'+i+'))';
-     setVar('--qxframe9a7c2-theme-neutral-'+i,neutralValue);
-   }
- }
- renderComputed();
+
+function swatch(value) {
+  return `<span class="qxframe9a7c2-token-swatch" style="background:${esc(value)}"></span>`;
 }
-function renderComputed(){
- var primary=document.querySelector('[data-token-primary]');if(primary)primary.innerHTML=Array.from({length:13},function(_,idx){var i=idx+1;return swatch('--_qxframe9a7c2-primary-'+i,i,'P'+i);}).join('');
- var formula=document.querySelector('[data-token-primary-formula]');if(formula)formula.textContent=PRIMARY_BLEND.map(function(x,i){return 'P'+(i+1)+' = '+x;}).join(' · ');
- var aux=document.querySelector('[data-token-auxiliary]');if(aux)aux.innerHTML=Array.from({length:13},function(_,idx){var i=idx+1;return swatch('--_qxframe9a7c2-auxiliary-'+i,i,'M'+i+' · r2 curve × '+state.mixRatio+'%');}).join('');
- var neutral=document.querySelector('[data-token-neutral-grid]');if(neutral)neutral.innerHTML=Array.from({length:13},function(_,idx){var i=idx+1;return swatch('--_qxframe9a7c2-neutral-'+i,i,'N'+i);}).join('');
- var nb=document.querySelector('[data-token-neutral-badge]');if(nb)nb.textContent=state.neutral==='grey'?'Grey default':state.neutral==='mixed'?'MixedGray explicit':'Cold Gray explicit';
- var palettes=document.querySelector('[data-token-palettes]');if(palettes)palettes.innerHTML=PALETTES.map(function(p){return '<div class="qxframe9a7c2-token-palette-row"><div class="qxframe9a7c2-token-palette-label"><strong>'+p[0].toUpperCase()+p.slice(1)+'</strong><code>--color-'+p+'-N</code></div><div class="qxframe9a7c2-token-swatch-grid">'+Array.from({length:13},function(_,idx){var i=idx+1;var token='--qxframe9a7c2-palette-'+p+'-'+i;return swatch(token,i,String(i),'rgb(var('+token+'))');}).join('')+'</div></div>';}).join('');
- var seeds=document.querySelector('[data-token-seeds]');if(seeds)seeds.innerHTML=PUBLIC_SEEDS.map(function(name){var token='--qxframe9a7c2-theme-'+name;var raw=computedVar(token);var expression=raw||('var(--_qxframe9a7c2-seed-'+name+', transparent)');return tokenCard(token,expression);}).join('');
- var semantic=document.querySelector('[data-token-semantic]');if(semantic)semantic.innerHTML=SEMANTIC.map(function(name){var token='--_qxframe9a7c2-semantic-'+name;return tokenCard(token,'var('+token+')');}).join('');
- renderFoundation();renderThemeCode();renderConfig();
+
+function render() {
+  const values = probeValues();
+  const used = new Set();
+  const sections = GROUPS.map(group => {
+    const tokens = THEME_TOKENS.filter(token => !used.has(token.name) && group.test(token));
+    tokens.forEach(token => used.add(token.name));
+    const rows = tokens.map(token => {
+      const v = values[token.name];
+      const color = token.mode === 'color';
+      return `<tr>
+        <td><code>${esc(TOKEN_PREFIX + token.name)}</code></td>
+        <td>${esc(token.note)}</td>
+        <td>${color ? swatch(v.light) : ''}<code>${esc(v.light)}</code></td>
+        <td>${color ? swatch(v.dark) + `<code>${esc(v.dark)}</code>` : '<span class="qxframe9a7c2-token-muted">同亮色</span>'}</td>
+      </tr>`;
+    }).join('');
+    return `<section class="qxframe9a7c2-card qxframe9a7c2-token-section">
+      <div class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-heading"><div class="qxframe9a7c2-card-title">${esc(group.title)}</div><div class="qxframe9a7c2-card-description">${tokens.length} 个</div></div></div>
+      <div class="qxframe9a7c2-card-content"><div class="qxframe9a7c2-table-wrap"><table class="qxframe9a7c2-table is-sm">
+        <thead><tr><th>Token</th><th>用途</th><th>亮色</th><th>暗色</th></tr></thead><tbody>${rows}</tbody>
+      </table></div></div>
+    </section>`;
+  }).join('');
+  const mode = docsTheme ? docsTheme.getState().effectiveMode : 'light';
+  app.innerHTML = `<main class="qxframe9a7c2-token-page">
+    <header class="qxframe9a7c2-card qxframe9a7c2-token-hero-copy">
+      <div class="qxframe9a7c2-card-header"><div class="qxframe9a7c2-card-heading">
+        <div class="qxframe9a7c2-card-title">主题 Token 清单</div>
+        <div class="qxframe9a7c2-card-description">qxframe.css 的全部主题输入：共 ${THEME_TOKENS.length} 个 <code>${TOKEN_PREFIX}*</code>，只写在 <code>:root</code> 与 <code>.dark</code>。下表为内置默认主题（Nova + neutral）的取值。</div>
+      </div></div>
+      <div class="qxframe9a7c2-card-footer qxframe9a7c2-token-control-card">
+        <a class="qxframe9a7c2-button is-primary is-solid is-sm qxframe9a7c2-token-button" href="create/"><span class="qxframe9a7c2-button-label">在 createApp 中定制主题</span></a>
+        <button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-token-mode><span class="qxframe9a7c2-button-label">${mode === 'dark' ? '切换为亮色' : '切换为暗色'}</span></button>
+      </div>
+    </header>
+    ${sections}
+  </main>`;
+  const toggle = app.querySelector('[data-token-mode]');
+  if (toggle && docsTheme) toggle.addEventListener('click', () => docsTheme.setState({ mode: docsTheme.getState().effectiveMode === 'dark' ? 'light' : 'dark' }));
 }
-function foundationGroup(title,names,kind){return '<section class="qxframe9a7c2-card qxframe9a7c2-token-foundation-group"><h3>'+esc(title)+'</h3><div class="qxframe9a7c2-token-foundation-items">'+names.map(function(name){var token='--qxframe9a7c2-'+name;var raw=computedVar(token);var preview='';if(kind==='space')preview='<span class="qxframe9a7c2-token-space-preview" style="width:var('+token+')"></span>';return '<button type="button" class="qxframe9a7c2-token-foundation-item" data-copy="'+esc(token)+'"><code>'+esc(token)+'</code><span>'+esc(raw||'—')+'</span>'+preview+'</button>';}).join('')+'</div></section>';}
-function renderFoundation(){var host=document.querySelector('[data-token-foundation]');if(!host)return;var spaces=Array.from({length:12},function(_,i){return 'space-'+(i+1);});var fonts=['font-size-8','font-size-9','font-size-10','font-size-11','font-size-12','font-size-13','font-size-14','font-size-15','font-size-16','font-size-17','font-size-18','font-size-20','font-size-22','font-size-24','font-size-26','font-size-28','font-size-30','font-size-32','font-size-34','font-size-36','font-size-40','font-size-xs','font-size-sm','font-size-md','font-size-lg','font-size-xl'];var radius=['radius-xs','radius-sm','radius-md','radius-lg','radius-xl','radius-pill','radius-circle'];var motion=['duration-fast','duration-base','duration-moderate','duration-slow','easing-standard','easing-out','easing-in'];var z=['z-overlay-base','z-popup-base','z-modal-base','z-notice-base','z-tooltip-base','z-blocking-base'];host.innerHTML=foundationGroup('Spacing · space-1…12',spaces,'space')+foundationGroup('Typography · font-size presets',fonts)+foundationGroup('Radius',radius)+foundationGroup('Motion',motion)+foundationGroup('Overlay z-bands',z);}
-function themeCss(){var lines=[':root {','  --qxframe9a7c2-theme-primary: '+state.primary+';','  --qxframe9a7c2-theme-neutral-mix-ratio: '+state.mixRatio+'%;','  /* Optional partial/full Primary overrides: */','  /* --qxframe9a7c2-theme-primary-1: ...; */','  /* ... through --qxframe9a7c2-theme-primary-13 */'];if(state.neutral==='grey')lines.push('  /* Neutral omitted: canonical Grey 1–13 is the standard default. */');else if(state.neutral==='mixed'){for(var i=1;i<=13;i+=1)lines.push('  --qxframe9a7c2-theme-neutral-'+i+': var(--_qxframe9a7c2-auxiliary-'+i+');');}else for(var i=1;i<=13;i+=1)lines.push('  --qxframe9a7c2-theme-neutral-'+i+': rgb(var(--qxframe9a7c2-palette-'+state.neutral+'-'+i+'));');lines.push('  /* Optional theme-wide surface/config slots: */','  /* --qxframe9a7c2-theme-primary-foreground: #fff; */','  /* --qxframe9a7c2-theme-font-family: Inter, ui-sans-serif, system-ui; */','  /* --qxframe9a7c2-theme-radius: 8px; */','  /* --qxframe9a7c2-theme-focus-ring-size: 2px; */','}');return lines.join('\n');}
-function renderThemeCode(){var host=document.querySelector('[data-token-theme-code]');if(host)host.textContent=themeCss();}
-function renderConfig(){var q=global.QXFRAME9A7C2||{};var Config=q.Config||(q.Core&&q.Core.Config)||null;var defaults=Config&&Config.defaults?Config.defaults:{size:'md',variant:'outlined',focusOutline:true,motion:true,triggerOpenDelay:0,triggerCloseDelay:80};var host=document.querySelector('[data-token-config]');if(host){var rows=[['size',defaults.size,'xs | sm | md | lg | xl'],['variant',defaults.variant,'outlined | filled | borderless | underlined'],['focusOutline',String(defaults.focusOutline),'boolean'],['motion',String(defaults.motion),'boolean'],['triggerOpenDelay',String(defaults.triggerOpenDelay),'milliseconds ≥ 0'],['triggerCloseDelay',String(defaults.triggerCloseDelay),'milliseconds ≥ 0']];host.innerHTML=rows.map(function(r){return '<section class="qxframe9a7c2-card qxframe9a7c2-token-foundation-group"><h3><code>'+esc(r[0])+'</code></h3><div class="qxframe9a7c2-token-foundation-items"><div class="qxframe9a7c2-token-foundation-item"><code>default</code><span>'+esc(r[1])+'</span></div><div class="qxframe9a7c2-token-foundation-item"><code>accepted</code><span>'+esc(r[2])+'</span></div></div></section>';}).join('');}var code=document.querySelector('[data-token-config-code]');if(code)code.textContent="QXFRAME9A7C2.Config.configure({\n  size: 'md',\n  variant: 'outlined',\n  focusOutline: true,\n  motion: true,\n  triggerOpenDelay: 0,\n  triggerCloseDelay: 80\n});\n\n// Theme/Token: set CSS selectors/custom properties directly; Core.Config does not own them.";}
-function bind(){
- var mode=document.querySelector('[data-token-mode]'),preset=document.querySelector('[data-token-preset]'),color=document.querySelector('[data-token-color]'),text=document.querySelector('[data-token-color-text]'),neutral=document.querySelector('[data-token-neutral]'),mix=document.querySelector('[data-token-mix]'),mixLabel=document.querySelector('[data-token-mix-label]');
- mode.value=state.mode;preset.value=state.preset;color.value=state.primary;text.value=state.primary;neutral.value=state.neutral;if(mix)mix.value=state.mixRatio;if(mixLabel)mixLabel.textContent=state.mixRatio+'%'+(state.mixRatio===100?' · r2':'');
- mode.addEventListener('change',function(){state.mode=this.value;applyState();});
- preset.addEventListener('change',function(){var found=PRESETS.find(function(x){return x.key===preset.value;});state.preset=this.value;if(found){state.primary=found.seed;color.value=state.primary;text.value=state.primary;}applyState();});
- function commit(value){if(!/^#[0-9a-f]{6}$/i.test(value))return;state.primary=value;state.preset='custom';preset.value='custom';color.value=value;text.value=value;applyState();}
- color.addEventListener('input',function(){commit(this.value);});text.addEventListener('change',function(){commit(this.value.trim());});
- neutral.addEventListener('change',function(){state.neutral=this.value;applyState();});if(mix)mix.addEventListener('input',function(){state.mixRatio=Math.max(0,Math.min(100,Number(this.value)||0));if(mixLabel)mixLabel.textContent=state.mixRatio+'%'+(state.mixRatio===100?' · r2':'');applyState();});
- document.querySelector('[data-token-copy-css]').addEventListener('click',function(){copy(themeCss()).then(function(){toast('Theme CSS 已复制');});});
- document.querySelector('[data-token-reset]').addEventListener('click',function(){if(docsTheme){var reset=docsTheme.reset();state={mode:reset.mode==='system'?reset.effectiveMode:reset.mode,preset:reset.preset,primary:reset.primarySeed,neutral:reset.base,mixRatio:reset.mixRatio};}else state={mode:'light',preset:'nova',primary:'#5b5bd6',neutral:'grey',mixRatio:100};mode.value=state.mode;preset.value=state.preset;color.value=state.primary;text.value=state.primary;neutral.value=state.neutral;if(mix)mix.value=state.mixRatio;if(mixLabel)mixLabel.textContent=state.mixRatio+'%'+(state.mixRatio===100?' · r2':'');applyState();toast('已恢复默认');});
- document.addEventListener('click',function(event){var target=event.target.closest('[data-copy]');if(!target)return;var token=target.getAttribute('data-copy');copy(token).then(function(){toast(token+' 已复制');});});
+
+if (app) {
+  render();
+  window.addEventListener('qxframe9a7c2:docs-theme-change', render);
 }
-function boot(){renderShell();bind();applyState();}
-if(!global.QXFRAME9A7C2)throw new Error('QXFRAME9A7C2 dist runtime is required');if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})(window,document);
