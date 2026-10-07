@@ -79,7 +79,8 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
 1. DONE 2b-A (9a74c7d): hairline fix, badge/tabs/dialog/select radius + card-section consumers, radius-select + slider-thumb-width tokens (Luma 24×16 verified in browser), verify-create-app check #14 (every axis level reaches a consumer).
 2. NOW 2b-B: dissolve fixed-values :root custom properties.
    - Step 1 DONE (aee6c0b): tools/qa/migrations/inline-consts.mjs removed 561 dead root vars and inlined 2578 root-only constants (3530 uses). root-non-theme 4618→1478, CSS 1.72MB→1.33MB. Equivalence run (scratchpad eq-2b1, baseline before-inline.css vs after-inline.css) in progress — must be 0 diffs before continuing.
-   - Next: second inline pass (112 more resolvable), then legacy mode palettes (`--_qxframe9a7c2-mode-color-*` ~493 names light+dark, ~63 direct component refs): repoint consumers to semantic/theme roles, delete palettes; poison probe already shows 0 visible effect of legacy colors on 736 mounted classes. Verify each batch with tools/qa/css-equivalence.mjs (needs QX_PLAYWRIGHT_ROOT=/opt/node-tools/node_modules/).
+   - Step 2 committed (pass 2, shadowed dead names). Step 3 UNCOMMITTED in working tree: deleted all `--_qxframe9a7c2-mode-color-*` declarations (1952) → root-non-theme 427, hardcoded 81. Verifying with tools/qa/css-style-equivalence.mjs (baseline scratchpad/before-inline.css vs after-mode.css); if diffs, repoint those consumers to theme roles, else commit.
+   - (old plan) legacy mode palettes (`--_qxframe9a7c2-mode-color-*` ~493 names light+dark, ~63 direct component refs): repoint consumers to semantic/theme roles, delete palettes; poison probe already shows 0 visible effect of legacy colors on 736 mounted classes. Verify each batch with tools/qa/css-equivalence.mjs (needs QX_PLAYWRIGHT_ROOT=/opt/node-tools/node_modules/).
 3. Stage-2b PR → CI green → merge → Pages URL → stop for acceptance.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
