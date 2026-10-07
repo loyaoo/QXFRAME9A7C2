@@ -15,12 +15,12 @@
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 1 of 0–5 (stage 0 merged).
 - Current Phase: CREATEAPP-V3 stage 1 — createApp shell, panel and interactions.
-- Current Task: `CREATEAPP-V3-S1` — implementation complete; stage-1 PR open, merge on green CI, then owner acceptance on Pages.
+- Current Task: `CREATEAPP-V3-S1` — merged (PR #262 → main `36d2360`); awaiting owner acceptance on Pages.
 
 ## CURRENT
 
 Task: CREATEAPP-V3-S1 — `docs/create/` shell, customization panel and all interaction logic.
-Status: PR OPEN (redesign/create → main). Stage 0 merged: PR #261 → main `912400e`.
+Status: MERGED — PR #262 → main `36d2360` (CI on head `bda6492`: release ✅, windows-tools ✅, schema-acceptance ✅). Awaiting owner acceptance. Stage 0 merged: PR #261 → main `912400e`.
 
 ### Owner decisions (2026-10-07) — frozen
 
@@ -53,8 +53,7 @@ Status: PR OPEN (redesign/create → main). Stage 0 merged: PR #261 → main `91
 
 ## NEXT EXACT STEPS
 
-1. Drive the stage-1 PR CI green, merge into main, confirm the Pages deploy.
-2. Give the owner `https://loyaoo.github.io/QXFRAME9A7C2/docs/create/` and stop for acceptance; stage 2 starts only after the owner says 继续.
+1. Owner acceptance on `https://loyaoo.github.io/QXFRAME9A7C2/docs/create/` ; fix reported problems in follow-up PRs. Stage 2 (new theme compiler, token-chain rewrite) starts only after the owner says 继续.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
