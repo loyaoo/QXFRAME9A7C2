@@ -65,6 +65,9 @@ jobs:
       - name: No UI framework dependency (Floating UI vendored only)
         run: npm run verify:no-framework-deps
 
+      - name: createApp interactions (browser)
+        run: npm run verify:create-app-browser
+
       - name: Checkout main for qxframe.js comparison
         if: github.event_name == 'pull_request'
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
