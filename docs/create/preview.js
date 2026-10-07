@@ -14,6 +14,11 @@
     root.setAttribute('data-qxframe9a7c2-theme', data.mode === 'dark' ? 'dark' : 'light');
     root.toggleAttribute('data-create-menu-inverted', Boolean(data.menuInverted));
     root.toggleAttribute('data-create-menu-translucent', Boolean(data.menuTranslucent));
+    var labels = data.labels || {};
+    document.querySelectorAll('[data-pv-text]').forEach(function (el) {
+      var text = labels[el.getAttribute('data-pv-text')];
+      if (text) el.textContent = text;
+    });
   }
 
   window.addEventListener('message', function (event) {

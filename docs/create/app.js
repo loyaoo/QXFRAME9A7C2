@@ -929,6 +929,15 @@ function previewPayload() {
     css: compileTheme(config, { version: state.version, generatedAt: '' }).body,
     style: config.style,
     mode: state.mode,
+    labels: (() => {
+      const style = STYLES.find(item => item.value === config.style).label;
+      const body = FONTS.find(item => item.value === config.font).label;
+      const heading = config.fontHeading === 'inherit' ? null : HEADING_FONTS.find(item => item.value === config.fontHeading).label;
+      return {
+        'style-font': `${style} - ${heading && heading !== body ? heading : body}`,
+        'heading-body': `${heading && heading !== body ? heading : 'Inherit'} - ${body}`
+      };
+    })(),
     menuInverted: isInvertedMenu(config.menuColor),
     menuTranslucent: isTranslucentMenu(config.menuColor)
   };
