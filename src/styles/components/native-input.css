@@ -53,7 +53,7 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-input-value-placeholder{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--_qxframe9a7c2-semantic-text-placeholder)}
 .qxframe9a7c2-input-control{box-sizing:border-box;flex:1 1 3rem;min-width:1.5rem;height:calc(var(--_qxframe9a7c2-control-local-height) - 0.375rem);padding:0;border:0;outline:0;resize:none;background:transparent;color:inherit;font:inherit}
 .qxframe9a7c2-input-control::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}
-.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-control,.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-segments{color:var(--_qxframe9a7c2-fixed-color-color-1,var(--_qxframe9a7c2-mode-color-color-1))}
+.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-control,.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-segments{color:color-mix(in srgb, var(--qxframe9a7c2-theme-foreground) 58%, transparent)}
 .qxframe9a7c2-input:not(.is-clear-visible)>.qxframe9a7c2-input-suffix>.qxframe9a7c2-input-clear{display:none}
 .qxframe9a7c2-text-field>.qxframe9a7c2-input-control{box-sizing:border-box;min-width:1.5rem;flex:1 1 3rem;height:calc(var(--_qxframe9a7c2-control-local-height) - 0.375rem);margin:0;padding:0;border:0;border-radius:0;outline:0;background:transparent;box-shadow:none;color:inherit;font:inherit}
 .qxframe9a7c2-text-field.is-textarea>.qxframe9a7c2-input-control{height:auto;min-height:5.5rem}

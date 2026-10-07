@@ -37,7 +37,7 @@ body {
 a { color: var(--qxframe9a7c2-docs-accent); }
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  background: var(--qxframe9a7c2-color-primary-soft, var(--qxframe9a7c2-docs-surface));
+  background: color-mix(in srgb, var(--qxframe9a7c2-docs-accent) 12%, transparent);
   padding: .08rem .34rem;
   border-radius: .3rem;
 }

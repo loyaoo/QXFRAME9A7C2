@@ -1,7 +1,7 @@
 .qxframe9a7c2-table-wrap{
   --_qxframe9a7c2-table-head-bg:var(--qxframe9a7c2-table-head-bg,var(--_qxframe9a7c2-data-header-bg));
   --_qxframe9a7c2-table-row-hover:var(--qxframe9a7c2-table-row-hover,var(--_qxframe9a7c2-semantic-subtle-hover));
-  --_qxframe9a7c2-table-shadow:var(--qxframe9a7c2-table-shadow,0 1px var(--_qxframe9a7c2-fixed-table-shadow-blur-sm) var(--_qxframe9a7c2-fixed-color-card-shadow-1,var(--_qxframe9a7c2-mode-color-card-shadow-1)),0 0.375rem 1.125rem var(--_qxframe9a7c2-fixed-color-card-shadow-2,var(--_qxframe9a7c2-mode-color-card-shadow-2)));
+  --_qxframe9a7c2-table-shadow:var(--qxframe9a7c2-table-shadow,0 1px var(--_qxframe9a7c2-fixed-table-shadow-blur-sm) rgb(0 0 0 / .06),0 0.375rem 1.125rem rgb(0 0 0 / .05));
   --_qxframe9a7c2-table-wrap-opacity:1;
   --_qxframe9a7c2-table-radius:var(--qxframe9a7c2-table-radius,var(--_qxframe9a7c2-data-radius));
   --_qxframe9a7c2-table-fixed-head-z:calc(var(--qxframe9a7c2-z-local-active) + 1);
@@ -81,8 +81,8 @@
 .qxframe9a7c2-table .is-fixed-start{inset-inline-start:var(--qxframe9a7c2-table-fixed-start,0)}
 .qxframe9a7c2-table .is-fixed-end{inset-inline-end:var(--qxframe9a7c2-table-fixed-end,0)}
 .qxframe9a7c2-table .is-fixed-start.is-last::after,.qxframe9a7c2-table .is-fixed-end.is-first::before{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-raised);top:0;bottom:0;width:0.625rem;opacity:0;pointer-events:none;transition:opacity var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)}
-.qxframe9a7c2-table .is-fixed-start.is-last::after{inset-inline-end:calc(0.625rem * -1);box-shadow:inset 0.5rem 0 0.5rem calc(0.5rem * -1) var(--_qxframe9a7c2-fixed-color-box-shadow-2,var(--_qxframe9a7c2-mode-color-box-shadow-2))}
-.qxframe9a7c2-table .is-fixed-end.is-first::before{inset-inline-start:calc(0.625rem * -1);box-shadow:inset calc(0.5rem * -1) 0 0.5rem calc(0.5rem * -1) var(--_qxframe9a7c2-fixed-color-box-shadow-2,var(--_qxframe9a7c2-mode-color-box-shadow-2))}
+.qxframe9a7c2-table .is-fixed-start.is-last::after{inset-inline-end:calc(0.625rem * -1);box-shadow:inset 0.5rem 0 0.5rem calc(0.5rem * -1) rgb(0 0 0 / .24)}
+.qxframe9a7c2-table .is-fixed-end.is-first::before{inset-inline-start:calc(0.625rem * -1);box-shadow:inset calc(0.5rem * -1) 0 0.5rem calc(0.5rem * -1) rgb(0 0 0 / .24)}
 .qxframe9a7c2-table-wrap.can-scroll-start .qxframe9a7c2-table .is-fixed-start.is-last::after{opacity:1}
 .qxframe9a7c2-table-wrap.can-scroll-end .qxframe9a7c2-table .is-fixed-end.is-first::before{opacity:1}
 .qxframe9a7c2-table .qxframe9a7c2-table-cell-check{width:1%;white-space:nowrap;text-align:center!important}
