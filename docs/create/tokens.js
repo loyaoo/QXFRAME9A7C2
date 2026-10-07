@@ -122,6 +122,11 @@ export const THEME_TOKENS = [
   L('card-title-delta', 'Card title size step'),
   L('card-font-size', 'Card body size'),
   L('card-border-width', 'Card ring width'),
+  L('card-section-inset', 'Footer block inset (partition axis; source Nova / Lyra)'),
+  L('card-section-width', 'Footer divider width (partition axis)'),
+  L('text-leading', 'Body line height (source compact / standard)', 'number'),
+  L('heading-leading', 'Heading line height (source style typography)', 'number'),
+  L('description-leading', 'Description line height (source editorial / compact)', 'number'),
 
   // Radius (base × allocation multiplier, shape axes, caps resolved by the compiler).
   L('radius', 'Radius base'),

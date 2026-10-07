@@ -484,9 +484,9 @@
   .qxframe9a7c2-button.is-circle { border-radius: 50%; }
   .qxframe9a7c2-button.is-square { border-radius: 0; }
   .qxframe9a7c2-card[class] {
-    --_qxframe9a7c2-card-padding: var(--_qxframe9a7c2-v2-surface-padding);
-    --_qxframe9a7c2-card-radius: var(--_qxframe9a7c2-surface-radius);
-    --_qxframe9a7c2-card-heading-gap: var(--_qxframe9a7c2-v2-surface-gap);
+    --_qxframe9a7c2-card-padding: var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding));
+    --_qxframe9a7c2-card-radius: var(--qxframe9a7c2-card-radius,var(--qxframe9a7c2-theme-radius-card));
+    --_qxframe9a7c2-card-heading-gap: var(--qxframe9a7c2-theme-card-meta-gap);
   }
   .qxframe9a7c2-switch[class] {
     --_qxframe9a7c2-switch-height: calc(var(--qxframe9a7c2-theme-switch-height) + var(--_qxframe9a7c2-v2-size-index) * .125rem);

@@ -103,5 +103,5 @@
   .qxframe9a7c2-form-select[class],.qxframe9a7c2-input.qxframe9a7c2-select[class]{border-radius:round(nearest,calc(var(--qxframe9a7c2-theme-radius-select) * var(--_qxframe9a7c2-v2-size-ratio,1)),.125rem)}
 
   /* Surface partition (theme input): footer band background and divider. */
-  .qxframe9a7c2-card-footer[class]{background-color:var(--qxframe9a7c2-theme-card-section);border-top:1px solid var(--qxframe9a7c2-theme-card-section-border)}
+  /* Card footer partition paint is owned by components/card.css. */
 }

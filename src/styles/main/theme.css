@@ -100,6 +100,11 @@
   --qxframe9a7c2-theme-card-title-delta: 0.125rem;
   --qxframe9a7c2-theme-card-font-size: 0.875rem;
   --qxframe9a7c2-theme-card-border-width: 1px;
+  --qxframe9a7c2-theme-card-section-inset: 1rem;
+  --qxframe9a7c2-theme-card-section-width: 1px;
+  --qxframe9a7c2-theme-text-leading: 1.4285714285714286;
+  --qxframe9a7c2-theme-heading-leading: 1.375;
+  --qxframe9a7c2-theme-description-leading: 1.4285714285714286;
   --qxframe9a7c2-theme-radius: 0.625rem;
   --qxframe9a7c2-theme-radius-button: 0.625rem;
   --qxframe9a7c2-theme-radius-field: 0.625rem;

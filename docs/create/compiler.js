@@ -345,6 +345,11 @@ export function themeTokens(resolved) {
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
   root['card-font-size'] = rem(cardSize);
   root['card-border-width'] = '1px';
+  root['card-section-inset'] = ext.sections === 'none' ? '0' : rem(PADDING[ext.padding]);
+  root['card-section-width'] = ext.sections === 'none' ? '0' : '1px';
+  root['text-leading'] = ext.typography === 'compact' ? '1.625' : String(20 / 14);
+  root['heading-leading'] = editorial ? String(28 / 18) : ext.typography === 'compact' ? String(20 / 14) : style === 'nova' ? '1.375' : '1.5';
+  root['description-leading'] = editorial || ext.typography === 'compact' ? '1.625' : String(20 / 14);
 
   // Radius.
   const radius = RADII.find(r => r.value === resolved.radiusValue);

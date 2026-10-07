@@ -6,21 +6,26 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-10-07
+- Last checkpoint date: 2026-10-08
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Package version: `2.19.81`
 - **Top authority: `QXFRAME9A7C2-createApp-重做任务要求-v3.md`** (createApp redesign). It overrides this file's older Theme plans, the master handbook and v1.5 wherever they conflict.
 - Measured shadcn reference data: `tools/qa/spec.json` (shadcn create SHA `295a1f114a138f23b5dfee0e0c6812394dfeb90c`).
 - Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
-- Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
-- Current Phase: CREATEAPP-V3 stage 2b — acceptance fixes + remaining components + dissolve :root component tokens.
-- Current Task: `CREATEAPP-V3-S2B` — started. Owner: 2a findings are fixed inside 2b (no separate PR).
+- Current Program: CREATEAPP-V3 — stage 3 of 0–5 (stages 0, 1, 2a, 2b merged).
+- Current Phase: CREATEAPP-V3 stage 3 — Preview 01 geometry alignment.
+- Current Task: `CREATEAPP-V3-S3` — resumed on owner instruction, 2026-10-07.
 
 ## CURRENT
 
-Task: CREATEAPP-V3-S1 — `docs/create/` shell, customization panel and all interaction logic.
-Status: MERGED — PR #262 → main `36d2360` (CI on head `bda6492`: release ✅, windows-tools ✅, schema-acceptance ✅). Awaiting owner acceptance. Stage 0 merged: PR #261 → main `912400e`.
+Task: CREATEAPP-V3-S3 — Preview 01 (shadcn preview-02).
+Status: IN PROGRESS on `redesign/create`, based on main `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+Reconciled evidence: PR #264 merged; main Actions run `37608238589` succeeded. No open PR at resume. Remote redesign/create is 5f9e786 (post-merge checkpoint only); preserve it as a commit parent along with current main.
+Engineering estimate: program 53%, stage 3 / task S3 15%. Shared Card repair is implemented; per-card acceptance is incomplete.
+Next exact step: publish stage-3 draft PR with the completed local evidence, inspect CI, then align Preview 01 internal form/list/empty components within that PR. Do not merge until the stage is complete.
+
+Current edits: shared Card title/description/gaps/partitions, border geometry and public overrides; preview box sizing and QR top inset; portable reference renderer with 159 source hashes and locked tool dependencies. Runtime source is unchanged. Browser Card geometry/state suite: 624 checks passed with enforced system font. Preview inventory: 33 examples × 16 themes, first Card per example only; nested cards and full height/section parity remain pending. Static verify chain completed with npm 10 after regenerating a CRLF-sensitive docs block (no content diff) and updating the Card outer-ring assertion. createApp browser 9/9 and theme browser 8 styles passed. CSS/token ratchet passed; duplicate-owner 141→136. Preview subset 528/528 matched (radius/title size/title offsets), but 410 height differences remain diagnostic, not accepted. Earlier optional Modal/Drawer timing check failed on Windows Chrome; runtime baseline investigation remains needed if reproduced in CI.
 
 ### Owner decisions (2026-10-07) — frozen
 
@@ -82,7 +87,8 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
    - Equivalence (scratchpad/eq3e.json, baseline after-inline.css): 111 pages × light/dark, 335 diffs, all reviewed and accepted: same color in other notation (color(srgb) ↔ rgba), status soft tints 12%/22% → 10%/20%, login/result tints follow theme primary/status, message + image-preview video shadow → theme shadow-popup, color-picker active mode button gets primary soft tint, result info icon uses theme-info; element-count rows are async-demo noise.
    - Ratchet re-baselined: root-non-theme 4618→383, hardcoded-color 2244→126, public-component-token-declared 503→492 (per-segment hardcoded-color rose where constants moved into their only consumer; documented in baseline note).
    - Remaining for stages 3–5: public-component-token-declared 492, root-non-theme 383, duplicate-owner 141, hardcoded-color 126 (color picker spectrum needs documented exception).
-3. DONE 2b-C: PR https://github.com/loyaoo/QXFRAME9A7C2/pull/264 CI green (release, windows-tools, schema-acceptance), merged as fe209ab; main CI run 37608238589 deploys Pages. NOW: STOP — waiting for owner acceptance of stage 2b on Pages. Stage 3 starts only after owner says 继续.
+3. DONE 2b-C: PR #264 merged; main fe209ab and Actions 37608238589 green. Owner requested continuation.
+4. NOW S3: follow CURRENT above. Stage-3 internal card alignment and full per-card evidence are not complete.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 

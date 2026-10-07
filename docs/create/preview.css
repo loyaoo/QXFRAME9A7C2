@@ -1,6 +1,7 @@
 /* Preview-page private layout (shadcn preview / preview-02 canvas, MIT). Card internals that
  * qxframe components cannot express live here; reusable rules belong in qxframe.css. */
 html, body.create-preview-body { margin: 0; min-height: 100%; }
+body.create-preview-body *, body.create-preview-body *::before, body.create-preview-body *::after { box-sizing: border-box; }
 html:root { background: var(--qxframe9a7c2-theme-muted); }
 html:root.dark { background: var(--qxframe9a7c2-theme-background); }
 body.create-preview-body {
@@ -149,7 +150,7 @@ body.create-preview-body {
 
 /* utilities used by the stage-1 card markup */
 .pv-bg-muted.qxframe9a7c2-button { background: var(--qxframe9a7c2-theme-muted); }
-.pv-pt-6 { padding-top: 1.5rem; }
+.qxframe9a7c2-card > .qxframe9a7c2-card-content.pv-pt-6:first-child { padding-top: calc(var(--qxframe9a7c2-theme-card-padding) + 1.5rem); }
 .pv-mt-3 { margin-top: 0.75rem; }
 .pv-py-3 { padding-block: 0.75rem; }
 .pv-p-0.qxframe9a7c2-card-content { padding: 0; }
