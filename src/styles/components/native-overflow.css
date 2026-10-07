@@ -1,28 +1,11 @@
 /* Native overflow is a fallback/low-level surface. Runtime components prefer Components.Scroll.
    When native chrome is visible, it consumes the same Scroll geometry/color contract. */
-.qxframe9a7c2-native-scrollbar, [class^=qxframe9a7c2-], [class*=" qxframe9a7c2-"] {
-  scrollbar-width: thin;
-  scrollbar-color: var(--qxframe9a7c2-scroll-thumb-color) var(--qxframe9a7c2-scroll-track-color);
+.qxframe9a7c2-native-scrollbar,[class^="qxframe9a7c2-"],[class*=" qxframe9a7c2-"]{
+  scrollbar-width:thin;
+  scrollbar-color:var(--qxframe9a7c2-scroll-thumb-color) var(--qxframe9a7c2-scroll-track-color)
 }
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar,[class^="qxframe9a7c2-"]::-webkit-scrollbar,[class*=" qxframe9a7c2-"]::-webkit-scrollbar{width:var(--qxframe9a7c2-native-scrollbar-size);height:var(--qxframe9a7c2-native-scrollbar-size)}
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-track,[class^="qxframe9a7c2-"]::-webkit-scrollbar-track,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-track{background:var(--qxframe9a7c2-native-scrollbar-track);border-radius:var(--qxframe9a7c2-native-scrollbar-radius)}
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb,[class^="qxframe9a7c2-"]::-webkit-scrollbar-thumb,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb{background:var(--qxframe9a7c2-native-scrollbar-thumb);border:var(--qxframe9a7c2-native-scrollbar-thumb-inset) solid transparent;background-clip:padding-box;border-radius:var(--qxframe9a7c2-native-scrollbar-radius)}
+.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb:hover,[class^="qxframe9a7c2-"]::-webkit-scrollbar-thumb:hover,[class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb:hover{background:var(--qxframe9a7c2-native-scrollbar-thumb-hover);background-clip:padding-box}
 
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar, [class^=qxframe9a7c2-]::-webkit-scrollbar, [class*=" qxframe9a7c2-"]::-webkit-scrollbar {
-  width: var(--qxframe9a7c2-native-scrollbar-size);
-  height: var(--qxframe9a7c2-native-scrollbar-size);
-}
-
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-track, [class^=qxframe9a7c2-]::-webkit-scrollbar-track, [class*=" qxframe9a7c2-"]::-webkit-scrollbar-track {
-  background: var(--qxframe9a7c2-native-scrollbar-track);
-  border-radius: var(--qxframe9a7c2-native-scrollbar-radius);
-}
-
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb, [class^=qxframe9a7c2-]::-webkit-scrollbar-thumb, [class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb {
-  background: var(--qxframe9a7c2-native-scrollbar-thumb);
-  border: var(--qxframe9a7c2-native-scrollbar-thumb-inset) solid transparent;
-  background-clip: padding-box;
-  border-radius: var(--qxframe9a7c2-native-scrollbar-radius);
-}
-
-.qxframe9a7c2-native-scrollbar::-webkit-scrollbar-thumb:hover, [class^=qxframe9a7c2-]::-webkit-scrollbar-thumb:hover, [class*=" qxframe9a7c2-"]::-webkit-scrollbar-thumb:hover {
-  background: var(--qxframe9a7c2-native-scrollbar-thumb-hover);
-  background-clip: padding-box;
-}

@@ -58,7 +58,7 @@
 
 .qxframe9a7c2-scroll-track {
   position: absolute;
-  z-index: var(--qxframe9a7c2-z-local-overlay);
+  z-index:var(--qxframe9a7c2-z-local-overlay);
   border-radius: var(--_qxframe9a7c2-scroll-track-radius);
   opacity: 0;
   visibility: hidden;
@@ -101,10 +101,7 @@
   left: 0;
   min-width: var(--_qxframe9a7c2-fixed-scroll-thumb-min-size);
 }
-
-.qxframe9a7c2-scroll-thumb:hover {
-  background: var(--qxframe9a7c2-scroll-thumb-hover-color);
-}
+.qxframe9a7c2-scroll-thumb:hover{background:var(--qxframe9a7c2-scroll-thumb-hover-color)}
 
 .qxframe9a7c2-scroll.is-scrollbar-auto:not(.is-scrollbar-active):not(.is-scrollbar-manual-show) .qxframe9a7c2-scroll-track {
   opacity: 0;
@@ -137,7 +134,7 @@
 
 .qxframe9a7c2-scroll-edge-shadow {
   position: absolute;
-  z-index: var(--qxframe9a7c2-z-local-above);
+  z-index:var(--qxframe9a7c2-z-local-above);
   display: none;
   pointer-events: none;
 }
@@ -194,3 +191,6 @@
 .qxframe9a7c2-scroll.is-disabled {
   cursor: not-allowed;
 }
+
+
+

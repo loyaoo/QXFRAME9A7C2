@@ -1,9 +1,11 @@
 /* Private framework constants. Not Theme inputs and not generator configuration. */
 /* primitive */
+
 /* QXFRAME9A7C2 Foundation Token Contract.
  * This file is the sole production CSS authority. Physical palette data is the read-only
  * source; CSS theme/semantic/family/component/state layers resolve all visual meaning. Physical palette forwarding aliases are intentionally omitted.
  */
+
 :root {
   /* Physical color palettes. Canonical Grey is the Tailwind-derived 13-step Neutral scale. */
   --_qxframe9a7c2-palette-white: 255, 255, 255;
@@ -254,6 +256,7 @@
   --_qxframe9a7c2-size-44: 14rem;
   --_qxframe9a7c2-size-45: 15rem;
   --_qxframe9a7c2-size-46: 16rem;
+
   --_qxframe9a7c2-space-1: var(--_qxframe9a7c2-size-1);
   --_qxframe9a7c2-space-2: var(--_qxframe9a7c2-size-2);
   --_qxframe9a7c2-space-3: var(--_qxframe9a7c2-size-3);
@@ -268,11 +271,11 @@
   --_qxframe9a7c2-space-12: var(--_qxframe9a7c2-size-16);
   /* Original UIKit exact font-size scale, named by actual px value. */
   --_qxframe9a7c2-font-size-8: var(--_qxframe9a7c2-size-4);
-  --_qxframe9a7c2-font-size-10: var(--_qxframe9a7c2-size-5);
-  --_qxframe9a7c2-font-size-12: var(--_qxframe9a7c2-size-6);
-  --_qxframe9a7c2-font-size-14: var(--_qxframe9a7c2-size-7);
-  --_qxframe9a7c2-font-size-16: var(--_qxframe9a7c2-size-8);
-  --_qxframe9a7c2-font-size-18: var(--_qxframe9a7c2-size-9);
+--_qxframe9a7c2-font-size-10: var(--_qxframe9a7c2-size-5);
+--_qxframe9a7c2-font-size-12: var(--_qxframe9a7c2-size-6);
+--_qxframe9a7c2-font-size-14: var(--_qxframe9a7c2-size-7);
+--_qxframe9a7c2-font-size-16: var(--_qxframe9a7c2-size-8);
+--_qxframe9a7c2-font-size-18: var(--_qxframe9a7c2-size-9);
   --_qxframe9a7c2-font-size-20: var(--_qxframe9a7c2-size-10);
   --_qxframe9a7c2-font-size-22: var(--_qxframe9a7c2-size-11);
   --_qxframe9a7c2-font-size-24: var(--_qxframe9a7c2-size-12);
@@ -283,12 +286,14 @@
   --_qxframe9a7c2-font-size-34: var(--_qxframe9a7c2-size-17);
   --_qxframe9a7c2-font-size-36: var(--_qxframe9a7c2-size-18);
   --_qxframe9a7c2-font-size-40: var(--_qxframe9a7c2-size-20);
+
   /* Original UIKit common global font-size aliases. */
   --_qxframe9a7c2-font-size-xs: var(--_qxframe9a7c2-font-size-12);
   --_qxframe9a7c2-font-size-sm: var(--_qxframe9a7c2-font-size-14);
   --_qxframe9a7c2-font-size-md: var(--_qxframe9a7c2-font-size-14);
   --_qxframe9a7c2-font-size-lg: var(--_qxframe9a7c2-font-size-16);
   --_qxframe9a7c2-font-size-xl: var(--_qxframe9a7c2-font-size-18);
+
   /* Semantic geometry presets: physical defaults are Size Tree-backed; themes choose slot mappings. */
   --_qxframe9a7c2-icon-size-xs: var(--_qxframe9a7c2-size-6);
   --_qxframe9a7c2-icon-size-sm: var(--_qxframe9a7c2-size-7);
@@ -325,6 +330,7 @@
   --_qxframe9a7c2-switch-padding-md: var(--_qxframe9a7c2-size-1);
   --_qxframe9a7c2-switch-padding-lg: var(--_qxframe9a7c2-size-1);
   --_qxframe9a7c2-switch-padding-xl: var(--_qxframe9a7c2-size-2);
+
   --_qxframe9a7c2-radius-xs: var(--_qxframe9a7c2-size-1);
   --_qxframe9a7c2-radius-sm: var(--_qxframe9a7c2-size-2);
   --_qxframe9a7c2-radius-md: var(--_qxframe9a7c2-size-3);
@@ -337,11 +343,18 @@
   --_qxframe9a7c2-motion-duration-3: 200ms;
   --_qxframe9a7c2-motion-duration-4: 250ms;
   --_qxframe9a7c2-motion-duration-5: 300ms;
+
   --_qxframe9a7c2-motion-easing-standard: cubic-bezier(.2, 0, 0, 1);
   --_qxframe9a7c2-motion-easing-enter: cubic-bezier(.23, 1, .32, 1);
   --_qxframe9a7c2-motion-easing-leave: cubic-bezier(.755, .05, .855, .06);
   --_qxframe9a7c2-motion-easing-move: cubic-bezier(.645, .045, .355, 1);
   --_qxframe9a7c2-motion-easing-enter-emphasized: cubic-bezier(.08, .82, .17, 1);
   --_qxframe9a7c2-motion-easing-move-emphasized: cubic-bezier(.78, .14, .15, .86);
+
   /* Component semantic finite-motion tokens. */
+
+
+
+
 }
+

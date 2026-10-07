@@ -45,12 +45,13 @@
     --qxframe9a7c2-theme-v2-shape-identity-radius:50%;
     --qxframe9a7c2-theme-v2-shape-progress-radius:100rem;
   }
+
   /* Rebind component-facing adapters at every local Theme boundary. Custom
      properties declared only on document :root capture that root's resolved
      value before inheritance, which would make nested Theme/Studio overrides
      unable to change typography, borders, motion and Shape. These adapters are
      private implementation glue, not a second public Theme layer. */
-  :scope, [data-qxframe9a7c2-theme] {
+  :scope,[data-qxframe9a7c2-theme] {
     --_qxframe9a7c2-fixed-font-family:var(--qxframe9a7c2-theme-v2-font-family);
     --_qxframe9a7c2-fixed-font-family-heading:var(--qxframe9a7c2-theme-v2-font-family-heading);
     --_qxframe9a7c2-fixed-font-family-mono:var(--qxframe9a7c2-theme-v2-font-family-mono);
@@ -78,98 +79,18 @@
     --_qxframe9a7c2-compact-shape-radius:var(--qxframe9a7c2-theme-v2-shape-compact-radius);
     --_qxframe9a7c2-identity-shape-radius:var(--qxframe9a7c2-theme-v2-shape-identity-radius);
   }
+
   /* Body typography is inherited from an explicit Theme boundary. Keep the
      document root neutral so the framework never rewrites the host page font. */
   [data-qxframe9a7c2-theme] {
-    font-family: var(--qxframe9a7c2-theme-v2-font-family);
+    font-family:var(--qxframe9a7c2-theme-v2-font-family);
   }
 }
+
 /* Static canonical Style defaults; generated Theme CSS later writes the same inputs. */
-@scope ([data-qxframe9a7c2-style="maia"]) {
-  :scope {
-    --qxframe9a7c2-theme-v2-control-fill-light-weight:30%;
-    --qxframe9a7c2-theme-v2-control-fill-dark-weight:30%;
-    --qxframe9a7c2-theme-v2-card-meta-gap:.5rem;
-    --qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-  }
-}
-@scope ([data-qxframe9a7c2-style="lyra"]) {
-  :scope {
-    --qxframe9a7c2-theme-v2-typography-body-size:.75rem;
-    --qxframe9a7c2-theme-v2-typography-heading-size:.875rem;
-    --qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;
-    --qxframe9a7c2-theme-v2-card-font-size:.75rem;
-    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;
-    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;
-    --qxframe9a7c2-theme-v2-shape-range-track-radius:0;
-    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:0;
-  }
-}
-@scope ([data-qxframe9a7c2-style="mira"]) {
-  :scope {
-    --qxframe9a7c2-theme-v2-control-fill-light-weight:20%;
-    --qxframe9a7c2-theme-v2-control-fill-dark-weight:30%;
-    --qxframe9a7c2-theme-v2-typography-body-size:.75rem;
-    --qxframe9a7c2-theme-v2-typography-heading-size:.875rem;
-    --qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;
-    --qxframe9a7c2-theme-v2-card-font-size:.75rem;
-    --qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-  }
-}
-@scope ([data-qxframe9a7c2-style="luma"]) {
-  :scope {
-    --qxframe9a7c2-theme-v2-control-fill-light-weight:50%;
-    --qxframe9a7c2-theme-v2-control-fill-dark-weight:50%;
-    --qxframe9a7c2-theme-v2-control-border-inline-weight:0%;
-    --qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;
-    --qxframe9a7c2-theme-v2-control-border-block-end-weight:0%;
-    --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;
-    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;
-    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:100rem;
-    --qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;
-    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:100rem;
-  }
-}
-@scope ([data-qxframe9a7c2-style="sera"]) {
-  :scope {
-    --qxframe9a7c2-theme-v2-font-family-heading:Georgia,"Times New Roman",serif;
-    --qxframe9a7c2-theme-v2-typography-body-size:.75rem;
-    --qxframe9a7c2-theme-v2-typography-heading-size:.875rem;
-    --qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;
-    --qxframe9a7c2-theme-v2-control-font-weight:600;
-    --qxframe9a7c2-theme-v2-control-letter-spacing:.1em;
-    --qxframe9a7c2-theme-v2-control-text-transform:uppercase;
-    --qxframe9a7c2-theme-v2-heading-letter-spacing:.05em;
-    --qxframe9a7c2-theme-v2-heading-text-transform:uppercase;
-    --qxframe9a7c2-theme-v2-control-fill-light-weight:0%;
-    --qxframe9a7c2-theme-v2-control-fill-dark-weight:0%;
-    --qxframe9a7c2-theme-v2-control-border-inline-weight:0%;
-    --qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;
-    --qxframe9a7c2-theme-v2-control-border-block-end-weight:100%;
-    --qxframe9a7c2-theme-v2-control-state-border-inline-weight:0%;
-    --qxframe9a7c2-theme-v2-control-state-border-block-start-weight:0%;
-    --qxframe9a7c2-theme-v2-control-state-border-block-end-weight:100%;
-    --qxframe9a7c2-theme-v2-card-title-delta:.25rem;
-    --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;
-    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;
-    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;
-    --qxframe9a7c2-theme-v2-shape-range-track-radius:0;
-    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:0;
-  }
-}
-@scope ([data-qxframe9a7c2-style="rhea"]) {
-  :scope {
-    --qxframe9a7c2-theme-v2-control-fill-light-weight:50%;
-    --qxframe9a7c2-theme-v2-control-fill-dark-weight:50%;
-    --qxframe9a7c2-theme-v2-control-border-inline-weight:0%;
-    --qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;
-    --qxframe9a7c2-theme-v2-control-border-block-end-weight:0%;
-    --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;
-    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-    --qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
-  }
-}
+@scope ([data-qxframe9a7c2-style="maia"]){:scope{--qxframe9a7c2-theme-v2-control-fill-light-weight:30%;--qxframe9a7c2-theme-v2-control-fill-dark-weight:30%;--qxframe9a7c2-theme-v2-card-meta-gap:.5rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md)}}
+@scope ([data-qxframe9a7c2-style="lyra"]){:scope{--qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;--qxframe9a7c2-theme-v2-shape-range-track-radius:0;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:0}}
+@scope ([data-qxframe9a7c2-style="mira"]){:scope{--qxframe9a7c2-theme-v2-control-fill-light-weight:20%;--qxframe9a7c2-theme-v2-control-fill-dark-weight:30%;--qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-card-font-size:.75rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md)}}
+@scope ([data-qxframe9a7c2-style="luma"]){:scope{--qxframe9a7c2-theme-v2-control-fill-light-weight:50%;--qxframe9a7c2-theme-v2-control-fill-dark-weight:50%;--qxframe9a7c2-theme-v2-control-border-inline-weight:0%;--qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;--qxframe9a7c2-theme-v2-control-border-block-end-weight:0%;--qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:100rem}}
+@scope ([data-qxframe9a7c2-style="sera"]){:scope{--qxframe9a7c2-theme-v2-font-family-heading:Georgia,"Times New Roman",serif;--qxframe9a7c2-theme-v2-typography-body-size:.75rem;--qxframe9a7c2-theme-v2-typography-heading-size:.875rem;--qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;--qxframe9a7c2-theme-v2-control-font-weight:600;--qxframe9a7c2-theme-v2-control-letter-spacing:.1em;--qxframe9a7c2-theme-v2-control-text-transform:uppercase;--qxframe9a7c2-theme-v2-heading-letter-spacing:.05em;--qxframe9a7c2-theme-v2-heading-text-transform:uppercase;--qxframe9a7c2-theme-v2-control-fill-light-weight:0%;--qxframe9a7c2-theme-v2-control-fill-dark-weight:0%;--qxframe9a7c2-theme-v2-control-border-inline-weight:0%;--qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;--qxframe9a7c2-theme-v2-control-border-block-end-weight:100%;--qxframe9a7c2-theme-v2-control-state-border-inline-weight:0%;--qxframe9a7c2-theme-v2-control-state-border-block-start-weight:0%;--qxframe9a7c2-theme-v2-control-state-border-block-end-weight:100%;--qxframe9a7c2-theme-v2-card-title-delta:.25rem;--qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;--qxframe9a7c2-theme-v2-shape-range-track-radius:0;--qxframe9a7c2-theme-v2-shape-range-thumb-radius:0}}
+@scope ([data-qxframe9a7c2-style="rhea"]){:scope{--qxframe9a7c2-theme-v2-control-fill-light-weight:50%;--qxframe9a7c2-theme-v2-control-fill-dark-weight:50%;--qxframe9a7c2-theme-v2-control-border-inline-weight:0%;--qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;--qxframe9a7c2-theme-v2-control-border-block-end-weight:0%;--qxframe9a7c2-theme-v2-card-meta-gap:.375rem;--qxframe9a7c2-theme-v2-shape-toggle-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);--qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md)}}

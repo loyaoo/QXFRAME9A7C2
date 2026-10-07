@@ -8,6 +8,7 @@
   * {
     --_qxframe9a7c2-focus-visible-outline: var(--_qxframe9a7c2-focus-visible-width) solid var(--_qxframe9a7c2-semantic-focus-visible);
   }
+
   /* Result's legacy status class names are not the framework-wide is-* Type
      aliases. Bind them to the already-shared v2 current-Type resolver instead
      of duplicating the shadcn soft formula in a second module. */
@@ -35,10 +36,12 @@
     --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type);
     --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-v2-soft);
   }
+
   /* Inline image masks belong to the same mask role as preview/upload masks. */
   .qxframe9a7c2-image {
     --_qxframe9a7c2-image-mask-bg: var(--qxframe9a7c2-theme-v2-mask);
   }
+
   /* Overlay choice indicators must not retain the legacy overlay-shadow color.
      Match the legacy selector specificity instead of using priority flags. */
   .qxframe9a7c2-form-selectgroup-indicator.is-checkbox.is-overlay,

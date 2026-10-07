@@ -1,221 +1,48 @@
-.qxframe9a7c2-transfer {
+.qxframe9a7c2-transfer{
   --_qxframe9a7c2-transfer-panel-width:var(--qxframe9a7c2-transfer-panel-width,var(--_qxframe9a7c2-fixed-transfer-panel-width));
   --_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-border);
   --_qxframe9a7c2-transfer-panel-bg:var(--_qxframe9a7c2-semantic-surface);
   --_qxframe9a7c2-transfer-header-bg:var(--_qxframe9a7c2-semantic-surface-muted);
   --_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-secondary);
   --_qxframe9a7c2-transfer-panel-radius:var(--qxframe9a7c2-transfer-panel-radius,var(--_qxframe9a7c2-surface-radius));
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: var(--_qxframe9a7c2-control-gap);
-  max-width: 100%;
-  color: var(--_qxframe9a7c2-semantic-text);
-  font-size: var(--_qxframe9a7c2-control-font-size);
+  box-sizing:border-box;display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);max-width:100%;color:var(--_qxframe9a7c2-semantic-text);font-size:var(--_qxframe9a7c2-control-font-size)
 }
-
-.qxframe9a7c2-transfer-panel {
-  box-sizing: border-box;
-  display: flex;
-  flex: 1 1 var(--_qxframe9a7c2-transfer-panel-width);
-  min-width: 0;
-  max-width: var(--_qxframe9a7c2-transfer-panel-width);
-  height: var(--_qxframe9a7c2-fixed-transfer-panel-height);
-  flex-direction: column;
-  border: 1px solid var(--_qxframe9a7c2-transfer-panel-border);
-  border-radius: var(--_qxframe9a7c2-transfer-panel-radius);
-  background: var(--_qxframe9a7c2-transfer-panel-bg);
-  overflow: hidden;
-}
-
-.qxframe9a7c2-transfer-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--_qxframe9a7c2-control-gap);
-  min-height: var(--_qxframe9a7c2-control-height);
-  padding: 0 var(--_qxframe9a7c2-control-padding-inline);
-  border-bottom: 1px solid var(--_qxframe9a7c2-semantic-border-subtle);
-  background: var(--_qxframe9a7c2-transfer-header-bg);
-}
-
-.qxframe9a7c2-transfer-header-main {
-  display: inline-flex;
-  align-items: center;
-  min-width: 0;
-  gap: var(--_qxframe9a7c2-control-gap);
-}
-
-.qxframe9a7c2-transfer-header-main.qxframe9a7c2-form-check {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--_qxframe9a7c2-control-gap);
-  margin: 0;
-}
-
-.qxframe9a7c2-transfer-select-all.qxframe9a7c2-form-check-input {
-  flex: 0 0 auto;
-}
-
-.qxframe9a7c2-transfer-title {
-  overflow: hidden;
-  font-size: var(--_qxframe9a7c2-control-font-size);
-  line-height: var(--_qxframe9a7c2-control-line-height);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.qxframe9a7c2-transfer-count {
-  color: var(--_qxframe9a7c2-transfer-muted-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.qxframe9a7c2-transfer-list-host {
-  min-height: 0;
-  flex: 1 1 auto;
-}
-
-.qxframe9a7c2-transfer-footer {
-  box-sizing: border-box;
-  flex: 0 0 auto;
-  padding: var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-control-padding-inline);
-  border-top: 1px solid var(--_qxframe9a7c2-semantic-border-subtle);
-  color: var(--_qxframe9a7c2-transfer-muted-text);
-}
-
-.qxframe9a7c2-transfer-footer[hidden] {
-  display: none;
-}
-
-.qxframe9a7c2-transfer-pagination.qxframe9a7c2-scroll {
-  box-sizing: border-box;
-  width: 100%;
-  height: auto;
-  flex: 0 0 auto;
-  padding: var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-control-padding-inline);
-  border-top: 1px solid var(--_qxframe9a7c2-semantic-border-subtle);
-}
-
-.qxframe9a7c2-transfer-pagination-viewport {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.qxframe9a7c2-transfer-pagination > .qxframe9a7c2-transfer-pagination-viewport.qxframe9a7c2-scroll-viewport {
-  width: 100%;
-  height: auto;
-}
-
-.qxframe9a7c2-transfer-pagination[hidden] {
-  display: none;
-}
-
-.qxframe9a7c2-transfer-pagination .qxframe9a7c2-pagination {
-  display: flex;
-  width: max-content;
-  min-width: 100%;
-  justify-content: center;
-}
-
-.qxframe9a7c2-transfer.is-status-error {
-  --_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-error);
-}
-
-.qxframe9a7c2-transfer.is-status-warning {
-  --_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-warning);
-}
-
-.qxframe9a7c2-transfer.is-disabled {
-  --_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-border-disabled);
-  --_qxframe9a7c2-transfer-panel-bg:var(--_qxframe9a7c2-semantic-bg-disabled);
-  --_qxframe9a7c2-transfer-header-bg:var(--_qxframe9a7c2-semantic-bg-disabled);
-  --_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-disabled);
-}
-
-.qxframe9a7c2-transfer-list-host > .qxframe9a7c2-item-collection {
-  height: 100%;
-}
-
-.qxframe9a7c2-item-collection.qxframe9a7c2-transfer-root {
-  min-width: 0;
-}
-
-.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-body {
-  min-height: 0;
-}
-
-.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-viewport {
-  max-height: none;
-  height: 100%;
-}
-
-.qxframe9a7c2-transfer-operations {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: var(--_qxframe9a7c2-control-gap);
-}
-
+.qxframe9a7c2-transfer-panel{box-sizing:border-box;display:flex;flex:1 1 var(--_qxframe9a7c2-transfer-panel-width);min-width:0;max-width:var(--_qxframe9a7c2-transfer-panel-width);height:var(--_qxframe9a7c2-fixed-transfer-panel-height);flex-direction:column;border:1px solid var(--_qxframe9a7c2-transfer-panel-border);border-radius:var(--_qxframe9a7c2-transfer-panel-radius);background:var(--_qxframe9a7c2-transfer-panel-bg);overflow:hidden}
+.qxframe9a7c2-transfer-header{display:flex;align-items:center;justify-content:space-between;gap:var(--_qxframe9a7c2-control-gap);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);border-bottom:1px solid var(--_qxframe9a7c2-semantic-border-subtle);background:var(--_qxframe9a7c2-transfer-header-bg)}
+.qxframe9a7c2-transfer-header-main{display:inline-flex;align-items:center;min-width:0;gap:var(--_qxframe9a7c2-control-gap)}
+.qxframe9a7c2-transfer-header-main.qxframe9a7c2-form-check{position:relative;display:inline-flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);margin:0}
+.qxframe9a7c2-transfer-select-all.qxframe9a7c2-form-check-input{flex:0 0 auto}
+.qxframe9a7c2-transfer-title{overflow:hidden;font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height);text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-transfer-count{color:var(--_qxframe9a7c2-transfer-muted-text);font-variant-numeric:tabular-nums}
+.qxframe9a7c2-transfer-list-host{min-height:0;flex:1 1 auto}
+.qxframe9a7c2-transfer-footer{box-sizing:border-box;flex:0 0 auto;padding:var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-control-padding-inline);border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle);color:var(--_qxframe9a7c2-transfer-muted-text)}
+.qxframe9a7c2-transfer-footer[hidden]{display:none}
+.qxframe9a7c2-transfer-pagination.qxframe9a7c2-scroll{box-sizing:border-box;width:100%;height:auto;flex:0 0 auto;padding:var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-control-padding-inline);border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-transfer-pagination-viewport{overflow-x:auto;overflow-y:hidden}
+.qxframe9a7c2-transfer-pagination>.qxframe9a7c2-transfer-pagination-viewport.qxframe9a7c2-scroll-viewport{width:100%;height:auto}
+.qxframe9a7c2-transfer-pagination[hidden]{display:none}
+.qxframe9a7c2-transfer-pagination .qxframe9a7c2-pagination{display:flex;width:max-content;min-width:100%;justify-content:center}
+.qxframe9a7c2-transfer.is-status-error{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-error)}
+.qxframe9a7c2-transfer.is-status-warning{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-warning)}
+.qxframe9a7c2-transfer.is-disabled{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-border-disabled);--_qxframe9a7c2-transfer-panel-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-transfer-header-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-disabled)}
+.qxframe9a7c2-transfer-list-host>.qxframe9a7c2-item-collection{height:100%}
+.qxframe9a7c2-item-collection.qxframe9a7c2-transfer-root{min-width:0}
+.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-body{min-height:0}
+.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-viewport{max-height:none;height:100%}
+.qxframe9a7c2-transfer-operations{display:flex;flex:0 0 auto;flex-direction:column;gap:var(--_qxframe9a7c2-control-gap)}
 /* Operation controls are real framework Buttons; Transfer only owns their placement. */
-.qxframe9a7c2-transfer-operation {
-  flex: 0 0 auto;
-}
+.qxframe9a7c2-transfer-operation{flex:0 0 auto}
+.qxframe9a7c2-transfer.is-one-way .qxframe9a7c2-transfer-operation[data-qxframe9a7c2-ref="left"]{display:none}
+@media (max-width:720px){.qxframe9a7c2-transfer{align-items:stretch;flex-direction:column}.qxframe9a7c2-transfer-panel{width:100%;max-width:none}.qxframe9a7c2-transfer-operations{flex-direction:row;justify-content:center}}
+.qxframe9a7c2-transfer-table-host{box-sizing:border-box;min-height:0;flex:1 1 auto;overflow:hidden}
+.qxframe9a7c2-transfer-table-host[hidden]{display:none}
+.qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host{min-height:auto;flex:0 0 auto}
+.qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host>.qxframe9a7c2-item-collection{height:auto}
+.qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-header,
+.qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-body,
+.qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-status,
+.qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-load-more,
+.qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-footer{display:none}
+.qxframe9a7c2-transfer-table-host>.qxframe9a7c2-table-wrap{height:100%;max-height:none;border:0;border-radius:0}
+.qxframe9a7c2-transfer-table-host .qxframe9a7c2-table tr.is-transfer-selected{--_qxframe9a7c2-transfer-table-row-bg:var(--_qxframe9a7c2-semantic-accent-soft);background:var(--_qxframe9a7c2-transfer-table-row-bg)}
 
-.qxframe9a7c2-transfer.is-one-way .qxframe9a7c2-transfer-operation[data-qxframe9a7c2-ref=left] {
-  display: none;
-}
-
-@media (max-width: 720px) {
-  .qxframe9a7c2-transfer {
-    align-items: stretch;
-    flex-direction: column;
-  }
-  .qxframe9a7c2-transfer-panel {
-    width: 100%;
-    max-width: none;
-  }
-  .qxframe9a7c2-transfer-operations {
-    flex-direction: row;
-    justify-content: center;
-  }
-}
-.qxframe9a7c2-transfer-table-host {
-  box-sizing: border-box;
-  min-height: 0;
-  flex: 1 1 auto;
-  overflow: hidden;
-}
-
-.qxframe9a7c2-transfer-table-host[hidden] {
-  display: none;
-}
-
-.qxframe9a7c2-transfer-panel.is-table-projection > .qxframe9a7c2-transfer-list-host {
-  min-height: auto;
-  flex: 0 0 auto;
-}
-
-.qxframe9a7c2-transfer-panel.is-table-projection > .qxframe9a7c2-transfer-list-host > .qxframe9a7c2-item-collection {
-  height: auto;
-}
-
-.qxframe9a7c2-transfer-panel.is-table-projection > .qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-header,
-.qxframe9a7c2-transfer-panel.is-table-projection > .qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-body,
-.qxframe9a7c2-transfer-panel.is-table-projection > .qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-status,
-.qxframe9a7c2-transfer-panel.is-table-projection > .qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-load-more,
-.qxframe9a7c2-transfer-panel.is-table-projection > .qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-footer {
-  display: none;
-}
-
-.qxframe9a7c2-transfer-table-host > .qxframe9a7c2-table-wrap {
-  height: 100%;
-  max-height: none;
-  border: 0;
-  border-radius: 0;
-}
-
-.qxframe9a7c2-transfer-table-host .qxframe9a7c2-table tr.is-transfer-selected {
-  --_qxframe9a7c2-transfer-table-row-bg:var(--_qxframe9a7c2-semantic-accent-soft);
-  background: var(--_qxframe9a7c2-transfer-table-row-bg);
-}
