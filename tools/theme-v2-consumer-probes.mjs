@@ -30,8 +30,8 @@ export function consumerProbeInventory(root){
 
   const declarations=[...names].sort().map(name=>name+': rgb(251 0 251) !important;').join('\n');
   const classes=new Set();
-  for(const dir of ['src/styles/components','src/styles/theme'])for(const file of fs.readdirSync(path.join(root,dir))){
-    if(!file.endsWith('.scss'))continue;
+  for(const dir of ['src/styles/components','src/styles/main'])for(const file of fs.readdirSync(path.join(root,dir))){
+    if(!file.endsWith('.css')||(dir==='src/styles/main'&&!file.startsWith('theme-')))continue;
     const text=fs.readFileSync(path.join(root,dir,file),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
     for(const match of text.matchAll(/\.(qxframe9a7c2-[a-z0-9-]+)/g))classes.add(match[1]);
   }

@@ -52,9 +52,9 @@ export function generateSizeTreeAudit({rootDir=root}={}){
   verifyGeometryRuleSource(rootDir);
   const nodes=sizeTreeNodes();
   const consumers=[];
-  for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>!rel.startsWith('src/styles/theme/_visual-v2'))){
+  for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>!rel.startsWith('src/styles/main/theme-visual-v2'))){
     const lines=fs.readFileSync(path.join(rootDir,rel),'utf8').split(/\r?\n/);
-    const layer=rel.includes('/preset/')?'preset':rel.includes('/theme/')?'theme':rel.includes('/components/')?'component':'base';
+    const layer=rel.includes('/preset/')?'preset':rel.includes('/main/theme-')?'theme':rel.includes('/components/')?'component':'base';
     for(let i=0;i<lines.length;i++){
       const text=lines[i];
       const trimmed=text.trim();
