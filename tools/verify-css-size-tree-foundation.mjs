@@ -18,12 +18,11 @@ for(const retired of [
   'tools/manifests/css-size-tree-foundation.json'
 ]) assert.equal(exists(retired),false,'Retired Size Tree artifact must stay deleted: '+retired);
 
-const contract=verifyGeometryRuleSource(root,{sourceText:source});
-assert.equal(contract.schema,2);
-assert.equal(contract.rules,'qx-md-2');
+const contract=await verifyGeometryRuleSource(root,{sourceText:source});
+assert.equal(contract.schema,3);
 assert.equal(contract.evenLengths,true);
 assert.equal(contract.legacyFiveSizeOverrides,false);
-assert.equal(contract.canonicalScopes,true);
+assert.equal(contract.styleSelectors,false);
 
 // Guard against silently recreating the retired public preset tree under its
 // old names. Private implementation constants are allowed while component

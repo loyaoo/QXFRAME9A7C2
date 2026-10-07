@@ -49,7 +49,7 @@ export function generateSizeTreeAudit({rootDir=root}={}){
   // Schema 1 Size Tree stays frozen; v1.5 replaces it with direct md inputs.
   // All versioned v2 sources are excluded from this legacy inventory and are
   // validated by their own source/geometry/Studio gates instead.
-  verifyGeometryRuleSource(rootDir);
+  // Geometry contract is verified by verify:css-token-size-tree (async createApp compiler check).
   const nodes=sizeTreeNodes();
   const consumers=[];
   for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>!rel.startsWith('src/styles/main/theme-visual-v2'))){
