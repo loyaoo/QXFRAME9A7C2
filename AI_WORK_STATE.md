@@ -66,6 +66,14 @@ Done:
 Gates adapted to v3 and passing locally (commits 9a2ee97..HEAD): phase-f-css-authority, theme-single-system, css-concat-build, geometry family (theme-v2-geometry-contract now async + 7 callers), css-token-layers, phase-f-token-graph, css-static-colors(+browser), theme-visual-v2(+browser; rewritten as createApp compiler/consumer contract), phase-f-static-closeout, canonical docs, final-focus-origin, theme-studio-v2/-static (now delegate to createApp gates).
 Local evidence (after npm run build): every `npm run verify` step passes; verify:browser, verify:theme-visual-v2-browser (compiled theme per style resolves in consumers, light+dark), verify:theme-studio-v2-browser (= createApp browser gate, 9 steps), verify:legacy-browser, verify:release, verify:package pass; canonical docs browser gate on demo package passes. theme-playground keeps the all-component canvas (needed by browser smoke) with a createApp entry card. Ratchet re-measured (728b6ee).
 
+### Stage 2a acceptance findings (owner asked 2026-10-07; follow-up PR pending owner go-ahead)
+
+- BUG: 边界清晰度 thin/clear makes compileTheme throw (alpha() cannot parse the color-mix() hairline value) → app breaks. Fix: compute hairline by oklch lightness interpolation toward background/foreground.
+- Tokens compiled but not consumed by qxframe.css yet: radius-badge, radius-tabs, radius-dialog, card-section, card-section-border (badge/tag, tabs, modal/drawer radius and card footer band need consumer rules). chart-1..5 only used by createApp preview.
+- 选择器 shape axis has no effect (selects share radius-field) — needs its own token or removal.
+- Luma slider thumb (shadcn w-6 h-4 long capsule) not modelled: single slider-thumb size token; need slider-thumb-width token.
+- Docs/default look: Nova defaults are thin (slider 4px rail, 12px thumb; switch 32×18.4) vs the old QX look; capsule options exist (滑块 胶囊12, 开关 宽体) but defaults follow Nova.
+
 ## NEXT EXACT STEPS
 
 1. Owner acceptance of 2a on Pages (docs/create/, docs/tokens.html, docs pages light/dark). 2b starts only after the owner says 继续: migrate remaining components, dissolve fixed-values :root palettes/component tokens (root-non-theme 4618, hardcoded-color 2244, public-component-token 581 → 0).
