@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN" data-qxframe9a7c2-style="nova">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>QXFRAME9A7C2 Create · 主题定制</title>
+  <link rel="stylesheet" href="../../dist/qxframe9a7c2.css">
+  <link rel="stylesheet" href="./app.css">
+  <script>
+    // Apply the remembered light/dark mode before first paint.
+    try {
+      var mode = localStorage.getItem('qxframe9a7c2-create-mode');
+      if (!mode) mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-qxframe9a7c2-theme', mode === 'dark' ? 'dark' : 'light');
+    } catch (error) {}
+  </script>
+</head>
+<body class="create-body">
+  <header class="create-topbar">
+    <a class="create-brand" href="../index.html" title="返回文档首页">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>QXFRAME9A7C2</span>
+    </a>
+    <span class="create-topbar-title">Create</span>
+    <div class="create-topbar-actions">
+      <button type="button" class="qxframe9a7c2-button is-default is-text is-sm is-square" data-create-action="undo" title="撤销 (⌘Z / Ctrl+Z)" aria-label="撤销" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="qxframe9a7c2-button is-default is-text is-sm is-square" data-create-action="redo" title="重做 (⇧⌘Z / Ctrl+Shift+Z)" aria-label="重做" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="qxframe9a7c2-button is-default is-text is-sm is-square" data-create-action="mode" title="明暗切换 (D)" aria-label="明暗切换">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3v18M12 9l4.65-4.65M12 14.3l7.37-7.37M12 19.6l8.85-8.85" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <a class="qxframe9a7c2-button is-default is-text is-sm" href="../index.html"><span class="qxframe9a7c2-button-label">文档</span></a>
+    </div>
+  </header>
+
+  <main class="create-designer">
+    <aside class="create-customizer" data-qxframe9a7c2-theme="dark" aria-label="主题定制">
+      <div class="create-customizer-header">
+        <button type="button" class="create-menu-trigger" data-create-main-menu>
+          <span>菜单</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="create-customizer-content" data-create-pickers></div>
+      <div class="create-customizer-footer">
+        <div class="create-footer-row">
+          <button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-create-action="random" title="随机 (R)"><span class="qxframe9a7c2-button-label">随机</span></button>
+          <button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-create-action="import" title="导入 (O)"><span class="qxframe9a7c2-button-label">导入</span></button>
+          <button type="button" class="qxframe9a7c2-button is-default is-outlined is-sm" data-create-action="reset" title="重置 (⇧R)"><span class="qxframe9a7c2-button-label">重置</span></button>
+        </div>
+        <button type="button" class="qxframe9a7c2-button is-primary is-solid is-sm create-get-code" data-create-action="code"><span class="qxframe9a7c2-button-label">获取代码</span></button>
+      </div>
+    </aside>
+
+    <section class="create-preview" aria-label="预览">
+      <div class="create-preview-backdrop"></div>
+      <iframe class="create-preview-frame" title="预览" data-create-frame></iframe>
+      <div class="create-preview-switcher" data-qxframe9a7c2-theme="dark" role="group" aria-label="切换预览">
+        <button type="button" data-create-item="01">01</button>
+        <button type="button" data-create-item="02">02</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

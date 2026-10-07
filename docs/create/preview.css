@@ -1,0 +1,30 @@
+/* Preview-page private layout (shadcn preview / preview-02 canvas, MIT). Card internals that
+ * qxframe components cannot express live here; reusable rules belong in qxframe.css. */
+html, body.create-preview-body { margin: 0; min-height: 100%; }
+html:root { background: var(--qxframe9a7c2-theme-v2-muted); }
+html:root[data-qxframe9a7c2-theme="dark"] { background: var(--qxframe9a7c2-theme-v2-background); }
+body.create-preview-body {
+  background: var(--qxframe9a7c2-theme-v2-muted);
+  color: var(--qxframe9a7c2-theme-v2-foreground);
+  font-family: var(--qxframe9a7c2-theme-v2-font-family, system-ui, sans-serif);
+  --create-gap: 2.5rem;
+  --create-canvas: 187.5rem;
+}
+:root[data-qxframe9a7c2-theme="dark"] body.create-preview-body { background: var(--qxframe9a7c2-theme-v2-background); }
+:root[data-qxframe9a7c2-style="lyra"] body.create-preview-body,
+:root[data-qxframe9a7c2-style="mira"] body.create-preview-body { --create-gap: 1.5rem; --create-canvas: 162.5rem; }
+.create-canvas { overflow-x: auto; overflow-y: hidden; }
+.create-grid {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--create-gap);
+  width: var(--create-canvas);
+  margin: 0 auto;
+  padding: var(--create-gap);
+  --create-col: calc((var(--create-canvas) - 8 * var(--create-gap)) / 7);
+}
+.create-col { display: flex; flex-direction: column; gap: var(--create-gap); flex: 0 0 var(--create-col); width: var(--create-col); min-width: 0; padding: 0.25rem; box-sizing: border-box; }
+.create-col.is-span-2 { flex-basis: calc(2 * var(--create-col) + var(--create-gap)); width: calc(2 * var(--create-col) + var(--create-gap)); }
+.create-pair { display: flex; align-items: flex-start; gap: var(--create-gap); }
+.create-pair > .create-col { flex: 1 1 0; width: auto; padding: 0; }
