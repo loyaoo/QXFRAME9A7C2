@@ -15,7 +15,7 @@
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
 - Current Phase: CREATEAPP-V3 stage 2a — closed theme-token list, compiler, default theme, preview components.
-- Current Task: `CREATEAPP-V3-S2A` — implementation + local verification complete; PR next.
+- Current Task: `CREATEAPP-V3-S2A` — merged (PR #263 → main `c39e89f`); awaiting owner acceptance on Pages before 2b.
 
 ## CURRENT
 
@@ -68,7 +68,7 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
 
 ## NEXT EXACT STEPS
 
-1. PR #263 (stage 2a) open: drive CI green, merge, give owner the Pages URL; then 2b.
+1. Owner acceptance of 2a on Pages (docs/create/, docs/tokens.html, docs pages light/dark). 2b starts only after the owner says 继续: migrate remaining components, dissolve fixed-values :root palettes/component tokens (root-non-theme 4618, hardcoded-color 2244, public-component-token 581 → 0).
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
