@@ -6,7 +6,7 @@ import {verifyGeometryRuleSource} from './theme-v2-geometry-contract.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const exists=rel=>fs.existsSync(path.join(root,rel));
-const source=fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8');
+const source=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
 
 // The v1.5 canonical system no longer has a public 46-node Size Tree or
 // Preset -> Theme geometry bridge. Geometry is authored as a small set of md

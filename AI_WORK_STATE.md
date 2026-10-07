@@ -6,84 +6,56 @@
 
 ## Repository checkpoint
 
-- Last checkpoint date: 2026-10-04
+- Last checkpoint date: 2026-10-07
 - Repository: `loyaoo/QXFRAME9A7C2`
 - Package version: `2.19.81`
-- Master architecture spec: `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` (historical filename; body defines 9 Runtime Controllers + pure CSS Theme/Token authority).
-- Theme authority: `QXFRAME9A7C2-Theme-Visual-System-v1.5.md` plus its 2026-10-04 single-system implementation decision.
-- Theme change evidence: `QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md`.
-- Runtime Controller migration: accepted 40/40 public components; do not restart it.
-- Current Phase: THEME-VISUAL-V2-001 — single public Theme canonicalization and current source-backed migration are implemented; broad G/H visual acceptance and final release closeout remain.
-- Current Task: `THEME-VISUAL-V2-001` — IMPLEMENTING, approximately 70% of v1.5 A–H scope after PR #258 implementation closeout.
+- **Top authority: `QXFRAME9A7C2-createApp-重做任务要求-v3.md`** (createApp redesign). It overrides this file's older Theme plans, the master handbook and v1.5 wherever they conflict.
+- Measured shadcn reference data: `tools/qa/spec.json` (shadcn create SHA `295a1f114a138f23b5dfee0e0c6812394dfeb90c`).
+- Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
+- Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
+- Current Program: CREATEAPP-V3 — stage 0 of 0–5.
+- Current Phase: CREATEAPP-V3 stage 0 — plain CSS source, concat build and v3 §5/§6 CI gates.
+- Current Task: `CREATEAPP-V3-S0` — implemented; PR #261 awaiting owner acceptance.
 
 ## CURRENT
 
-Task: THEME-VISUAL-V2-001 — Theme input → shared rules → Component.
-Status: IMPLEMENTING. PR #258 implementation is ready for final documentation-head CI; query GitHub for the actual head/run state instead of reusing IDs below.
+Task: CREATEAPP-V3-S0 — SCSS → plain CSS source, concat build, v3 §5/§6 CI gates.
+Status: IMPLEMENTED on `redesign/create`; PR pending owner acceptance.
 
-### Current architecture truth
+### Owner decisions (2026-10-07) — frozen
 
-- There is exactly one public CSS Theme system. Old `.qxframe9a7c2-play-settings`, old Theme Studio/generator, Schema1 Theme contract, old theme/default/family public chain and the `data-qxframe9a7c2-visual="2"` opt-in marker are retired and reverse-gated.
-- Theme is pure CSS runtime authority. Do not introduce ThemeController, TokenController, ThemeRuntime, TokenRuntime or JS-generated runtime Theme state.
-- Studio v2 is the sole generator/editor surface. User-facing configuration labels are Chinese; internal enum/JSON keys may remain English.
-- Color authority is source-locked to shadcn SHA `295a1f114a138f23b5dfee0e0c6812394dfeb90c`: 30 complete semantic colors plus sparse physical Type inputs. Do not recreate palette/state/component result matrices or invent pressed intensity.
-- Physical Type axis is implemented for the existing 14 Types plus foregrounds; gray→grey compatibility is handled without restoring an independent old gray palette chain.
-- Geometry authority is `qx-md-2`: 21 md inputs only; xs/sm/md/lg/xl are fixed CSS derivations. Control min-block changes by 4px per size step. Multiple/multiline controls may grow intrinsically; do not force all five sizes or single/multiple forms to equal height.
-- Non-color authority is `qx-style-3`: typography density, text style, body/heading/mono font, Control Appearance, border, shadow, motion pace, surface and Shape families. Style supplies defaults; explicit user selections must win.
-- Control Appearance shared values: outline / tinted / tinted-subtle / soft / underline. Focus/invalid/warning topology is shared; Sera underline keeps focus on the bottom edge only.
-- Body font is an inherited Theme-boundary projection, not a Button-local font override.
-- Popup/Popover/Dropdown/Menu submenu remain shared Overlay/Popup/Scroll consumers. Do not recreate picker/menu-local popup or scroll implementations.
-- Existing keyboard-vs-pointer focus-origin rules remain frozen: keyboard visual focus uses the shared outline contract; pointer focus does not manufacture keyboard outline.
+- §5/§6 gates run as a **ratchet**: current violations are frozen in `tools/manifests/css-gate-baseline.json`; any increase fails CI, counts may only fall; token-class violations clear in stage 2, every count must be zero by stage 5.
+- **Framework zero React / zero UI-framework dependency**; Floating UI (vendored) is the only third-party runtime code. `tools/qa/ref/` (React-based shadcn reference renderer) is kept as a measurement tool only and never ships; `verify:no-framework-deps` enforces this in CI.
+- Answer the owner in Chinese.
+- Stage 0 keeps the **existing 60 module boundaries** (no cascade-order change). True per-component re-split happens in stage 2 together with the token-chain rewrite.
 
-### PR #258 implemented scope — do not redo
+### Stage 0 delivered
 
-- Destructive single-public-Theme cutover and legacy Theme/generator retirement.
-- Physical Type editing, sparse delete/restore, JSON import/export and CSS export.
-- Shared color consumer migration including remaining native/control/notice/media/badge/carousel/popup paint roles reached by the current real-DOM probe.
-- `qx-md-2` 21-input geometry and fixed five-size derivation.
-- `qx-style-3` typography/text/font/Control Appearance/border/shadow/motion/surface/Shape work currently source-supported.
-- Theme boundary rebinding for inherited body font and shared shape/state consumers.
-- Studio computed-style verification, including bounded transition settlement rather than same-tick reads.
-- Legacy browser geometry smoke migration from retired family-control tokens to strict current qx-md-2 expectations. No failed-check whitelist remains.
+- `src/styles/main/*.css` (reset, foundation, fixed-values, theme-visual-v2*) + `src/styles/components/*.css` (53 files); source text is the former SCSS module text verbatim (only a leading `@charset` removed). No SCSS, no `@import`, `sass` dependency removed.
+- `tools/compile-styles.mjs` concatenates `tools/manifests/css-order.json` `sourceModules` in order, wrapping each in `/* @qxframe9a7c2-begin <seg> */ … /* @qxframe9a7c2-end <seg> */`.
+- New gates: `verify:css-source-authority`, `verify:css-concat-build`, `verify:css-constraints` (§6), `verify:theme-tokens` (§5, includes theme-file 16KB warning and duplicate-owner count), `verify:js-build-matches-main` (CI, pull_request), `theme:chain` printer.
+- `tools/qa/`: handoff `spec.json`, reference renderer `ref/`, handoff scripts `scripts/`, `css-equivalence.mjs`, reports in `tools/qa/reports/` (uploaded by CI as `qa-reports-<sha>`).
 
-### Latest verified implementation evidence before this checkpoint commit
+### Stage 0 evidence
 
-Implementation head: `c34aa95c95c8cba0dc1f997771618a5c7c50d028`.
-
-- CSS Schema Acceptance #277 / run `37190097101`: SUCCESS.
-- QXFRAME CI #1523 / run `37190097110`: SUCCESS; release and Windows both passed, including npm pack and standalone dist/docs artifacts.
-- Canonical real-DOM consumer poison: 16 configurations, 660,143 paint checks, 739 covered classes, 2,158 unmounted classes, 3,206 poisoned inputs, mismatchCount 0.
-- Source/color browser: 5,456 cases / 15,714 checks, zero failures.
-- Physical Type browser shards: 4,032 cases / 11,012 checks, zero failures.
-- Geometry: 576 configurations × five sizes / 51,855 checks, zero failures; `1e-6 CSS px` tolerance, existing 1px border exception only.
-- Studio: 73 actual browser UI checks, zero failures.
-- Color rendering tolerance remains exact: 0 RGBA byte difference on transparent canvas and after real mode-surface composition.
-
-This checkpoint/change-doc commit is documentation-only and therefore creates a newer PR head. Required Schema + QXFRAME CI must pass again on that newer head before merge. PR Pages deploy is expected to be skipped; actual Pages must be verified after merge to main.
+- Visual equivalence (`tools/qa/reports/stage-0/`): 222/222 renders (111 canonical pages × light/dark) pixel-identical and computed-style-identical, 314,798 elements; CSSOM 4,610 rules, 0 unequal.
+- qxframe.js: 553 non-CSS build files byte-identical to main.
+- CI on PR #261 head `25e8cf4`: release ✅, windows-tools ✅, schema-acceptance ✅ (deploy-pages skipped on PR).
 
 ## NEXT EXACT STEPS
 
-1. Query PR #258 current head and both required workflows after this documentation checkpoint.
-2. If either gate fails, fix the exact failure without weakening color/geometry/browser tolerances or adding accepted-failure lists.
-3. When final PR head has Schema + QXFRAME CI green, merge PR #258.
-4. Verify merged `main`: QXFRAME release, Windows and `deploy-pages` all SUCCESS. Record/report actual merge commit and main run; do not create a documentation-only follow-up merely to cache volatile run IDs.
-5. Continue THEME-VISUAL-V2-001 from the remaining G/H scope only:
-   - broad all-component + narrow-container visual acceptance;
-   - physical external Popup/portal cases and native inputs;
-   - chart/halo and remaining source-backed non-color consumer cases;
-   - additional browser/manual visual confirmation;
-   - final retired private-paint cleanup;
-   - final framework + Theme byte/gzip totals and H release closeout.
+1. Owner accepts stage-0 PR (or requests changes). Do not start stage 1 before the owner says 继续.
+2. Stage 1: sync `redesign/create` with main, then build `docs/create/` shell, customization panel and all interaction logic per v3 §3–§4.
+
+## SUPERSEDED — THEME-VISUAL-V2-001
+
+PR #258 merged into main (`1072127`). The remaining v1.5 G/H scope is superseded by the v3 createApp redesign; its token chain (`--qxframe9a7c2-theme-v2-*`, `@scope([data-qxframe9a7c2-style])`) is rebuilt in v3 stage 2. Accepted evidence for PR #255–#258 stays in Git history and `QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md`.
 
 ## DO NOT REDO
 
-- Do not restore or re-audit the old Schema1 Theme/generator/public token chain.
-- Do not reintroduce `data-qxframe9a7c2-visual="2"` as a Theme switch.
-- Do not recreate five-size public Theme tables; qx-md-2 owns geometry.
-- Do not redo physical Type foundation, 30-color authority, qx-style-3 foundation or sole Studio-v2 setup.
-- Do not make historical smoke pass by restoring `--qxframe9a7c2-family-control-height` / `--qxframe9a7c2-family-control-font-size`.
-- Do not redo the 9-controller migration, FocusOrigin unification, Popup/Scroll unification, Picker draft/value unification, CSS Grid/viewport cleanup or SCSS modularization unless a new reproducible regression directly contradicts their accepted gates.
-- Do not treat unmounted classes from the real-DOM poison inventory as proof of G completion; they are explicit remaining coverage inventory.
+- Do not redo the 9-controller migration, FocusOrigin unification, Popup/Scroll unification, Picker draft/value unification or CSS Grid/viewport cleanup.
+- Do not reintroduce SCSS, `@import` or `sass` into the CSS build.
+- Do not raise `tools/manifests/css-gate-baseline.json` counts to make CI pass.
 
 ## Frozen framework constraints
 
@@ -130,4 +102,4 @@ Status: DONE
 
 ## Recovery rule
 
-On a new conversation: read `AGENTS.md` → this file → `QXFRAME9A7C2-Theme-Visual-System-v1.5.md` → `QXFRAME9A7C2-Theme-Visual-V2-001-Changes.md`, then query current GitHub PR/CI. Continue from NEXT EXACT STEPS. Do not start a repository-wide audit from zero.
+On a new conversation: read `AGENTS.md` → this file → `QXFRAME9A7C2-createApp-重做任务要求-v3.md`, then query the `redesign/create` branch, its open PR and CI. Continue from NEXT EXACT STEPS. Do not start a repository-wide audit from zero.

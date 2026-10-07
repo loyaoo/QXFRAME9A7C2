@@ -1,0 +1,110 @@
+{
+  "section5": {
+    "theme-token-outside-root": {
+      "main/theme-visual-v2": 231,
+      "main/theme-visual-v2-style": 105,
+      "main/theme-visual-v2-style-consumers": 13
+    },
+    "public-component-token-declared": {
+      "components/component-foundation": 49,
+      "components/grid": 350,
+      "components/icon": 5,
+      "components/motion": 8,
+      "components/notice": 4,
+      "components/pagination": 1,
+      "components/steps": 1,
+      "main/fixed-values": 163
+    },
+    "root-non-theme-declaration": {
+      "components/component-foundation": 49,
+      "components/motion": 10,
+      "main/fixed-values": 4212,
+      "main/foundation": 323,
+      "main/theme-visual-v2": 5,
+      "main/theme-visual-v2-style": 26
+    },
+    "hardcoded-color": {
+      "components/picker-family": 18,
+      "main/fixed-values": 97,
+      "main/theme-visual-v2": 64
+    },
+    "duplicate-owner": {
+      "components/alert": 1,
+      "components/badge": 3,
+      "components/card": 1,
+      "components/descriptions": 4,
+      "components/form-native": 7,
+      "components/image": 11,
+      "components/json": 3,
+      "components/motion": 4,
+      "components/native-input": 2,
+      "components/notice": 8,
+      "components/picker-family": 3,
+      "components/table": 1,
+      "components/upload": 1,
+      "components/visual-recipe": 16,
+      "main/fixed-values": 31,
+      "main/theme-visual-v2": 38,
+      "main/theme-visual-v2-style-consumers": 18
+    },
+    "unregistered-theme-token": {
+      "(none)": 139
+    }
+  },
+  "section6": {
+    "import": {},
+    "layer": {},
+    "is-where": {},
+    "grid": {},
+    "fr-unit": {},
+    "viewport-unit": {},
+    "non-rem-length": {
+      "components/button": 5,
+      "components/collection-select": 10,
+      "components/composition": 4,
+      "components/form-native": 6,
+      "components/grid": 24,
+      "components/icon": 2,
+      "components/input-advanced": 2,
+      "components/json": 4,
+      "components/list": 3,
+      "components/loading": 1,
+      "components/menu": 4,
+      "components/native-input": 3,
+      "components/pagination": 2,
+      "components/picker-family": 4,
+      "components/rate": 8,
+      "components/sort": 1,
+      "components/steps": 3,
+      "components/tabs": 1,
+      "components/transfer": 1,
+      "components/tree": 2,
+      "components/upload": 4,
+      "main/fixed-values": 1,
+      "main/theme-visual-v2": 2,
+      "main/theme-visual-v2-style": 2
+    },
+    "important": {
+      "components/carousel": 2,
+      "components/descriptions": 2,
+      "components/drawer": 1,
+      "components/form-native": 10,
+      "components/grid": 28,
+      "components/icon": 1,
+      "components/image": 3,
+      "components/loading": 1,
+      "components/modal": 2,
+      "components/motion": 6,
+      "components/picker-family": 1,
+      "components/ripple": 2,
+      "components/scroll": 3,
+      "components/slider": 1,
+      "components/table": 17,
+      "components/tags": 1,
+      "components/upload": 7,
+      "main/fixed-values": 3
+    },
+    "outside-segment": {}
+  },
+  "note": "Ratchet baseline for the v3 createApp redesign CSS gates. Counts may only fall; every rule must reach zero by stage 5."
+}

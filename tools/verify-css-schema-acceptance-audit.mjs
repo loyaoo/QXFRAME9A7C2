@@ -5,7 +5,7 @@ import path from 'node:path';
 import { inspectSchema } from './audit-css-schema-acceptance.mjs';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'qx-schema-audit-test-'));
-const paths = ['src/styles/theme/_default.scss', 'src/styles/theme/_family.scss', 'src/styles/components/_card.scss'];
+const paths = ['src/styles/theme/_default.scss', 'src/styles/theme/_family.scss', 'src/styles/components/card.css'];
 const write = (file, text) => { const target = path.join(root, file); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, text); };
 try {
   write('tools/manifests/css-order.json', JSON.stringify({ sourceModules: paths }));

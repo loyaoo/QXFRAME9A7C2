@@ -6,9 +6,9 @@ import {verifyGeometryRuleSource} from './theme-v2-geometry-contract.mjs';
 import {readCanonicalStyleSource} from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const theme=fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8');
-const fixed=fs.readFileSync(path.join(root,'src/styles/internal/_fixed-values.scss'),'utf8');
-const foundation=fs.readFileSync(path.join(root,'src/styles/internal/_foundation.scss'),'utf8');
+const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+const fixed=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+const foundation=fs.readFileSync(path.join(root,'src/styles/main/foundation.css'),'utf8');
 const css=readCanonicalStyleSource({root});
 const contract=verifyGeometryRuleSource(root,{sourceText:theme});
 

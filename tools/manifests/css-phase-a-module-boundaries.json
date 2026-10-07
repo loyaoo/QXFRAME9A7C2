@@ -9,7 +9,7 @@
       "startLine": 1,
       "endLine": 7,
       "category": "base",
-      "file": "src/styles/base/_reset.scss",
+      "file": "src/styles/main/reset.css",
       "blob": "363696d7e216d976b1152c155263f7995a8ea034"
     },
     {

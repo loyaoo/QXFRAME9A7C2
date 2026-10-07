@@ -5,5 +5,5 @@ import path from 'node:path';
 // appearance and state recipes are all authored in the canonical Theme v2
 // source; there is no Preset -> Theme bridge to resolve in test code.
 export function readEffectiveControlRecipes(root) {
-  return fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8');
+  return fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
 }

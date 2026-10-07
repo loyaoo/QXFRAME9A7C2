@@ -16,10 +16,9 @@ const retiredGenerator=[
 ];
 for(const rel of retiredGenerator)assert.equal(exists(rel),false,'Retired Theme system file must not exist: '+rel);
 
-const entry=read('src/styles/qxframe9a7c2.scss');
-assert.doesNotMatch(entry,/@use\s+["']theme\/(?:default|family)["']/,'Legacy Theme modules must not compile.');
 const manifest=JSON.parse(read('tools/manifests/css-order.json'));
-for(const rel of ['src/styles/theme/_default.scss','src/styles/theme/_family.scss'])assert.equal(manifest.sourceModules.includes(rel),false,'Legacy Theme module remains canonical: '+rel);
+for(const rel of manifest.sourceModules)assert.doesNotMatch(rel,/(?:^|\/)_?(?:theme-)?(?:default|family)\.s?css$/,'Legacy Theme module remains canonical: '+rel);
+for(const rel of ['src/styles/theme/_default.scss','src/styles/theme/_family.scss','src/styles/main/theme-default.css','src/styles/main/theme-family.css'])assert.equal(exists(rel),false,'Legacy Theme module must not exist: '+rel);
 
 const modules=getCanonicalStyleModulePaths({root});
 const legacyPublic=[];

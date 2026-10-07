@@ -6,7 +6,7 @@ import path from 'node:path';
 // NOT used as the type system: e.g. fixed-color-panel-control-border is a length.
 // Geometry, shadow geometry, gradients and motion values must stay untouched.
 export function consumerProbeInventory(root){
-  const source=fs.readFileSync(path.join(root,'src/styles/internal/_fixed-values.scss'),'utf8');
+  const source=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
   const values=new Map();
   for(const match of source.matchAll(/(--_qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;]+);/gi))values.set(match[1],match[2].trim());
 
@@ -30,8 +30,8 @@ export function consumerProbeInventory(root){
 
   const declarations=[...names].sort().map(name=>name+': rgb(251 0 251) !important;').join('\n');
   const classes=new Set();
-  for(const dir of ['src/styles/components','src/styles/theme'])for(const file of fs.readdirSync(path.join(root,dir))){
-    if(!file.endsWith('.scss'))continue;
+  for(const dir of ['src/styles/components','src/styles/main'])for(const file of fs.readdirSync(path.join(root,dir))){
+    if(!file.endsWith('.css')||(dir==='src/styles/main'&&!file.startsWith('theme-')))continue;
     const text=fs.readFileSync(path.join(root,dir,file),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
     for(const match of text.matchAll(/\.(qxframe9a7c2-[a-z0-9-]+)/g))classes.add(match[1]);
   }

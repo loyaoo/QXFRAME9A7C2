@@ -4,6 +4,14 @@ This repository is maintained as a long-running AI-assisted framework project.
 
 ## Authority order
 
+**Current program (2026-10-07): createApp redesign.**
+`QXFRAME9A7C2-createApp-重做任务要求-v3.md` has the highest priority. Where
+this file, the master handbook, `QXFRAME9A7C2-Theme-Visual-System-v1.5.md` or
+any other guide conflicts with it, v3 wins. Develop on `redesign/create`,
+one PR per v3 stage (0–5), and stop for owner acceptance after each stage PR.
+Measured shadcn values come from `tools/qa/spec.json`. Questions v3 does not
+cover go to the owner; do not decide them unilaterally.
+
 1. The checked-out Git repository, current branch, PR and CI are the factual state.
 2. `AI_WORK_STATE.md` is the persistent cross-session checkpoint and progress ledger.
 3. `QXFRAME-11-Controller-Shared-Protocol-全组件迁移开发手册-v3.md` is the sole target architecture and migration specification for the 9-Runtime-Controller + pure-CSS Theme/Token + Shared-Protocol program. The filename is retained for historical link stability; the document body is authoritative.
