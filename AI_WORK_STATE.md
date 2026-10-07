@@ -13,9 +13,9 @@
 - Measured shadcn reference data: `tools/qa/spec.json` (shadcn create SHA `295a1f114a138f23b5dfee0e0c6812394dfeb90c`).
 - Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
-- Current Program: CREATEAPP-V3 — stage 1 of 0–5 (stage 0 merged).
-- Current Phase: CREATEAPP-V3 stage 1 — createApp shell, panel and interactions.
-- Current Task: `CREATEAPP-V3-S1` — merged (PR #262 → main `36d2360`); awaiting owner acceptance on Pages.
+- Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
+- Current Phase: CREATEAPP-V3 stage 2a — closed theme-token list, compiler, default theme, preview components.
+- Current Task: `CREATEAPP-V3-S2A` — started (audit).
 
 ## CURRENT
 
@@ -23,6 +23,8 @@ Task: CREATEAPP-V3-S1 — `docs/create/` shell, customization panel and all inte
 Status: MERGED — PR #262 → main `36d2360` (CI on head `bda6492`: release ✅, windows-tools ✅, schema-acceptance ✅). Awaiting owner acceptance. Stage 0 merged: PR #261 → main `912400e`.
 
 ### Owner decisions (2026-10-07) — frozen
+
+- Stage 2 decisions: dark mode selector is **`.dark` only** (no `[data-qxframe9a7c2-theme="dark"]` alias; repo docs/createApp switch to class="dark"); docs-site theme/style switchers **simplified to light/dark only** (style/theme customization lives in createApp; tokens.html shows the new token list; theme-playground redirects to createApp); **Claude drafts the ~100-token closed list** (registered under tools/manifests) and migrates directly, owner accepts on Pages; stage 2 split into **2a** (list + compiler + default theme + preview-used core components) and **2b** (all remaining components, :root component tokens cleared), each merged on green CI.
 
 - §5/§6 gates run as a **ratchet**: current violations are frozen in `tools/manifests/css-gate-baseline.json`; any increase fails CI, counts may only fall; token-class violations clear in stage 2, every count must be zero by stage 5.
 - **Framework zero React / zero UI-framework dependency**; Floating UI (vendored) is the only third-party runtime code. `tools/qa/ref/` (React-based shadcn reference renderer) is kept as a measurement tool only and never ships; `verify:no-framework-deps` enforces this in CI.
