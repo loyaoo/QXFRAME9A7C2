@@ -1,7 +1,7 @@
 // createApp configuration model and theme compiler (v3 §3–§5). Pure functions only (no DOM),
 // shared by app.js and tools/verify-create-app.mjs.
-// Stage 1: compileTheme() maps the configuration onto the existing v2 theme inputs as a
-// temporary bridge; stage 2 replaces it with the closed --qxframe9a7c2-theme-* list.
+// compileTheme() writes the closed --qxframe9a7c2-theme-* list (tokens.js) via compiler.js.
+import { buildPalette, themeBody } from './compiler.js';
 import {
   THEMES, STYLES, BASE_COLORS, themesForBaseColor, CHART_COLOR_PAIRINGS, FONTS, HEADING_FONTS, RADII,
   MENU_COLORS, MENU_ACCENTS, isTranslucentMenu, isInvertedMenu, STYLE_PRESETS, STYLE_RADIUS, MAIN_DEFAULTS,
@@ -99,91 +99,10 @@ export function parseConfig(query) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Theme compiler (stage-1 bridge onto the existing v2 theme inputs)   */
+/* Theme export                                                        */
 /* ------------------------------------------------------------------ */
 
-const V2 = '--qxframe9a7c2-theme-v2-';
-const COLOR_ROLE_MAP = {
-  background: 'background', foreground: 'foreground', card: 'card', 'card-foreground': 'card-foreground',
-  popover: 'popover', 'popover-foreground': 'popover-foreground', primary: 'primary', 'primary-foreground': 'primary-foreground',
-  secondary: 'secondary', 'secondary-foreground': 'secondary-foreground', muted: 'muted', 'muted-foreground': 'muted-foreground',
-  accent: 'accent', 'accent-foreground': 'accent-foreground', destructive: 'error', border: 'border', input: 'input', ring: 'ring',
-  sidebar: 'sidebar', 'sidebar-foreground': 'sidebar-foreground',
-  'chart-1': 'chart-1', 'chart-2': 'chart-2', 'chart-3': 'chart-3', 'chart-4': 'chart-4', 'chart-5': 'chart-5'
-};
-
-// shadcn buildRegistryTheme: base color + theme overrides + chart colors + menu accent.
-export function buildPalette(config) {
-  const base = THEMES[config.baseColor];
-  const theme = THEMES[config.theme];
-  const chart = THEMES[config.chartColor];
-  const light = { ...base.light, ...theme.light };
-  const dark = { ...base.dark, ...theme.dark };
-  for (let i = 1; i <= 5; i++) {
-    if (chart.light['chart-' + i]) light['chart-' + i] = chart.light['chart-' + i];
-    if (chart.dark['chart-' + i]) dark['chart-' + i] = chart.dark['chart-' + i];
-  }
-  if (config.menuAccent === 'bold') {
-    light.accent = light.primary; light['accent-foreground'] = light['primary-foreground'];
-    dark.accent = dark.primary; dark['accent-foreground'] = dark['primary-foreground'];
-  }
-  return { light, dark };
-}
-
-const DENSITY_REM = { dense: 1.75, compact: 2, standard: 2.25, loose: 2.5, touch: 2.75 };
-const PADDING_REM = { p12: 0.75, p16: 1, p20: 1.25, p24: 1.5, p28: 1.75, p32: 2 };
-const TYPE_REM = { compact: [0.75, 0.875], standard: [0.875, 1], roomy: [1, 1.125] };
-const SWITCH_REM = { standard: [2, 1.15], compact: [1.75, 1.0375], wide: [2.75, 1.25], tall: [2, 1.25], square: [2.0625, 1.125] };
-const SLIDER_REM = { t2: 0.125, t4: 0.25, t6: 0.375, t8: 0.5, t12: 0.75 };
-const SHADOW_CARD = { none: 'none', light: 'var(--qxframe9a7c2-theme-v2-shadow-xs)', medium: 'var(--qxframe9a7c2-theme-v2-shadow-sm)', strong: 'var(--qxframe9a7c2-theme-v2-shadow-md)', heavy: 'var(--qxframe9a7c2-theme-v2-shadow-elevated)' };
-const rem = value => (Math.round(value * 10000) / 10000) + 'rem';
-
-function themeDeclarations(config) {
-  const resolved = resolveConfig(config);
-  const palette = buildPalette(config);
-  const decl = [];
-  for (const [role, token] of Object.entries(COLOR_ROLE_MAP)) {
-    const light = palette.light[role], dark = palette.dark[role];
-    if (light && dark) decl.push([V2 + token, `light-dark(${light}, ${dark})`]);
-  }
-  if (isInvertedMenu(config.menuColor)) {
-    decl.push([V2 + 'override-popup-background', `light-dark(${palette.dark.popover}, ${palette.dark.popover})`]);
-    decl.push([V2 + 'override-popup-foreground', `light-dark(${palette.dark['popover-foreground']}, ${palette.dark['popover-foreground']})`]);
-  }
-  if (isTranslucentMenu(config.menuColor)) {
-    const source = isInvertedMenu(config.menuColor) ? `light-dark(${palette.dark.popover}, ${palette.dark.popover})` : `light-dark(${palette.light.popover}, ${palette.dark.popover})`;
-    decl.push([V2 + 'override-popup-background', `color-mix(in oklab, ${source} 80%, transparent)`]);
-  }
-  const body = FONTS.find(f => f.value === config.font).stack;
-  const heading = config.fontHeading === 'inherit' ? body : HEADING_FONTS.find(f => f.value === config.fontHeading).stack;
-  decl.push([V2 + 'font-family', body], [V2 + 'font-family-heading', heading]);
-  if (config.radius !== 'default') {
-    const radius = RADII.find(r => r.value === resolved.radiusValue);
-    const r = parseFloat(radius.rem);
-    decl.push([V2 + 'radius-control-md', rem(r * 0.8)], [V2 + 'radius-action-md', rem(r * 0.8)], [V2 + 'radius-choice-md', rem(r * 0.6)],
-      [V2 + 'radius-surface-md', rem(r * 1.4)], [V2 + 'radius-popup-md', rem(r * 1.4)]);
-  }
-  const ext = config.ext;
-  if (ext.density) decl.push([V2 + 'control-min-block-md', rem(DENSITY_REM[ext.density])]);
-  if (ext.padding) decl.push([V2 + 'surface-padding-md', rem(PADDING_REM[ext.padding])]);
-  if (ext.typography) {
-    const [bodySize, headingSize] = TYPE_REM[ext.typography];
-    decl.push([V2 + 'typography-body-size', rem(bodySize)], [V2 + 'card-font-size', rem(bodySize)], [V2 + 'typography-heading-size', rem(headingSize)]);
-  }
-  if (ext.textStyle === 'editorial') {
-    decl.push([V2 + 'control-text-transform', 'uppercase'], [V2 + 'control-letter-spacing', '0.1em'], [V2 + 'control-font-weight', '600'],
-      [V2 + 'heading-text-transform', 'uppercase'], [V2 + 'heading-letter-spacing', '0.05em']);
-  } else if (ext.textStyle === 'regular') {
-    decl.push([V2 + 'control-text-transform', 'none'], [V2 + 'control-letter-spacing', 'normal'], [V2 + 'heading-text-transform', 'none'], [V2 + 'heading-letter-spacing', 'normal']);
-  }
-  if (ext.switchLook) {
-    const [width, height] = SWITCH_REM[ext.switchLook];
-    decl.push([V2 + 'switch-width-md', rem(width)], [V2 + 'switch-height-md', rem(height)]);
-  }
-  if (ext.sliderLook) decl.push([V2 + 'slider-track-md', rem(SLIDER_REM[ext.sliderLook])]);
-  if (ext.shadow) decl.push([V2 + 'card-shadow', SHADOW_CARD[ext.shadow]]);
-  return decl;
-}
+export { buildPalette };
 
 function configSummary(config) {
   const resolved = resolveConfig(config);
@@ -213,7 +132,7 @@ function configSummary(config) {
 export const HEADER_MARK = 'QXFRAME9A7C2 THEME';
 
 export function compileTheme(config, { version = 'unknown', generatedAt = new Date().toISOString() } = {}) {
-  const decl = themeDeclarations(config);
+  const body = themeBody({ ...resolveConfig(config), explicit: config.ext });
   const header = [
     '/*!',
     ` * ${HEADER_MARK}`,
@@ -222,10 +141,9 @@ export function compileTheme(config, { version = 'unknown', generatedAt = new Da
     ' * 生成工具: QXFRAME9A7C2 Create (docs/create)',
     ' * 配置:',
     ...configSummary(config).map(line => ' *   ' + line),
-    ' * 注意: 第 1 阶段临时输出，映射到现有 v2 主题输入；第 2 阶段改为 --qxframe9a7c2-theme-* 封闭清单。',
+    ' * 内容: --qxframe9a7c2-theme-* 封闭清单全量输出（:root 全部、.dark 全部颜色）。',
     ' */'
   ].join('\n');
-  const body = `@scope (:root) {\n  :scope {\n${decl.map(([prop, value]) => `    ${prop}: ${value};`).join('\n')}\n  }\n}\n`;
   return { css: `${header}\n${body}`, body, header };
 }
 
