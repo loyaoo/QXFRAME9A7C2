@@ -111,17 +111,17 @@ try {
 
   await s('Page.navigate', { url: origin + '/docs/create/index.html' });
   await waitFor('!!(window.QXFRAME9A7C2_CREATE && document.querySelectorAll("[data-create-picker]").length > 30)', 'createApp boot');
-  await waitFor(`${frameAttr('data-qxframe9a7c2-style')} === 'nova'`, 'preview ready');
+  await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
   await step('hover previews a style without committing; leaving reverts', async () => {
     await click('document.querySelector(\'[data-create-picker="style"]\')');
     await waitFor(`!!(${menuItem('Luma')})`, 'style menu');
     await hover(menuItem('Luma'));
-    await waitFor(`${frameAttr('data-qxframe9a7c2-style')} === 'luma'`, 'hover preview');
+    await waitFor(`${frameAttr('data-create-style')} === 'luma'`, 'hover preview');
     assert.equal((await state()).config.style, 'nova');
     await mouse('mouseMoved', 1300, 850);
-    await waitFor(`${frameAttr('data-qxframe9a7c2-style')} === 'nova'`, 'revert on leave');
+    await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'revert on leave');
   });
 
   await step('click commits, keeps the menu open and updates the URL', async () => {
@@ -156,11 +156,11 @@ try {
   });
 
   await step('D toggles light/dark for the page and the preview', async () => {
-    const before = await evaluate('document.documentElement.getAttribute("data-qxframe9a7c2-theme")');
+    const before = await evaluate('document.documentElement.classList.contains("dark") ? "dark" : "light"');
     await key('d');
     const expected = before === 'dark' ? 'light' : 'dark';
-    await waitFor(`document.documentElement.getAttribute("data-qxframe9a7c2-theme") === "${expected}"`, 'host mode');
-    await waitFor(`${frameAttr('data-qxframe9a7c2-theme')} === "${expected}"`, 'preview mode');
+    await waitFor(`document.documentElement.classList.contains("dark") === ${expected === 'dark'}`, 'host mode');
+    await waitFor(`!!(document.querySelector('[data-create-frame]').contentDocument.documentElement.classList.contains("dark")) === ${expected === 'dark'}`, 'preview mode');
   });
 
   await step('01/02 switch maps to preview-02 / preview pages', async () => {
@@ -196,7 +196,7 @@ try {
     const restored = await state();
     assert.equal(restored.config.theme, 'teal');
     assert.equal(restored.config.ext.density, 'loose');
-    await waitFor(`${frameAttr('data-qxframe9a7c2-style')} === 'rhea'`, 'preview follows URL');
+    await waitFor(`${frameAttr('data-create-style')} === 'rhea'`, 'preview follows URL');
   });
 
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));

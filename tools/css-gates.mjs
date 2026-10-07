@@ -4,12 +4,14 @@
 // fall but never rise. The baseline must reach zero by the end of the redesign.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseCss, splitSelectors } from './css-ast.mjs';
 
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const BASELINE_FILE = path.join(root, 'tools/manifests/css-gate-baseline.json');
-export const REGISTRY_FILE = path.join(root, 'tools/manifests/theme-tokens.json');
+// The closed token list is registered in docs/create/tokens.js (shared with the createApp compiler).
+export const REGISTRY_FILE = path.join(root, 'docs/create/tokens.js');
+const registryModule = await import(pathToFileURL(REGISTRY_FILE).href);
 export const THEME_FILE_WARN_BYTES = 16 * 1024;
 
 export const THEME_PREFIX = '--qxframe9a7c2-theme-';
@@ -31,8 +33,9 @@ export function readDistCss() {
 }
 
 export function readRegistry() {
-  if (!fs.existsSync(REGISTRY_FILE)) return null;
-  return JSON.parse(fs.readFileSync(REGISTRY_FILE, 'utf8'));
+  return {
+    tokens: registryModule.THEME_TOKENS.map(t => ({ name: registryModule.TOKEN_PREFIX + t.name, mode: t.mode })),
+  };
 }
 
 function isRootSelector(sel, context) {
@@ -40,8 +43,11 @@ function isRootSelector(sel, context) {
   return sel === ':scope' && context.some(c => /^@scope\s*\(\s*:root\s*\)/.test(c));
 }
 
+// A theme block is a top-level :root / .dark rule that declares theme tokens. Other :root /
+// .dark rules are ordinary framework rules (e.g. legacy dark palettes still to be removed).
 export function isThemeBlock(rule) {
-  return rule.context.length === 0 && rule.selectors.length > 0 && rule.selectors.every(s => THEME_SELECTORS.has(s));
+  return rule.context.length === 0 && rule.selectors.length > 0 && rule.selectors.every(s => THEME_SELECTORS.has(s))
+    && rule.declarations.some(d => d.prop.startsWith(THEME_PREFIX));
 }
 
 function stripVarNames(value) {
@@ -123,7 +129,7 @@ export function collectSection5(css, { registry = readRegistry() } = {}) {
       } else if (d.prop.startsWith('--qxframe9a7c2-')) {
         add('public-component-token-declared', r.segment, where);
       }
-      if ((themeBlock || rootish) && !d.prop.startsWith(THEME_PREFIX)) add('root-non-theme-declaration', r.segment, where);
+      if ((themeBlock || rootish) && d.prop.startsWith('--') && !d.prop.startsWith(THEME_PREFIX)) add('root-non-theme-declaration', r.segment, where);
       if (!themeBlock && hasColorLiteral(d.prop, d.value)) add('hardcoded-color', r.segment, `${where}: ${d.value}`);
       for (const m of d.value.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+/g)) seenTheme.add(m[0]);
       if (!r.atBlock) {
@@ -152,6 +158,15 @@ export function checkThemeFile(css, { registry = readRegistry() } = {}) {
     for (const d of r.declarations) {
       if (!d.prop.startsWith(THEME_PREFIX)) errors.push(`${r.selector}: only ${THEME_PREFIX}* is allowed, found ${d.prop}`);
       else if (registered && !registered.has(d.prop)) errors.push(`${r.selector}: unregistered theme token ${d.prop}`);
+    }
+  }
+  // v3 §5.2: every theme writes the whole list — all tokens in :root, all color tokens in .dark.
+  if (registry) {
+    const declared = sel => new Set(rules.filter(r => r.selectors.includes(sel)).flatMap(r => r.declarations.map(d => d.prop)));
+    const rootSet = declared(':root'), darkSet = declared('.dark');
+    for (const t of registry.tokens) {
+      if (!rootSet.has(t.name)) errors.push(`:root is missing ${t.name}`);
+      if (t.mode === 'color' && !darkSet.has(t.name)) errors.push(`.dark is missing ${t.name}`);
     }
   }
   const bytes = Buffer.byteLength(css);

@@ -1,10 +1,6 @@
 {
   "section5": {
-    "theme-token-outside-root": {
-      "main/theme-visual-v2": 231,
-      "main/theme-visual-v2-style": 105,
-      "main/theme-visual-v2-style-consumers": 13
-    },
+    "theme-token-outside-root": {},
     "public-component-token-declared": {
       "components/component-foundation": 49,
       "components/grid": 350,
@@ -18,15 +14,14 @@
     "root-non-theme-declaration": {
       "components/component-foundation": 49,
       "components/motion": 10,
-      "main/fixed-values": 4212,
+      "main/fixed-values": 4210,
       "main/foundation": 323,
-      "main/theme-visual-v2": 5,
       "main/theme-visual-v2-style": 26
     },
     "hardcoded-color": {
       "components/picker-family": 18,
-      "main/fixed-values": 97,
-      "main/theme-visual-v2": 64
+      "main/fixed-values": 2211,
+      "main/foundation": 15
     },
     "duplicate-owner": {
       "components/alert": 1,
@@ -43,13 +38,11 @@
       "components/table": 1,
       "components/upload": 1,
       "components/visual-recipe": 16,
-      "main/fixed-values": 31,
-      "main/theme-visual-v2": 38,
-      "main/theme-visual-v2-style-consumers": 18
+      "main/fixed-values": 26,
+      "main/theme-visual-v2": 34,
+      "main/theme-visual-v2-style-consumers": 16
     },
-    "unregistered-theme-token": {
-      "(none)": 139
-    }
+    "unregistered-theme-token": {}
   },
   "section6": {
     "import": {},
@@ -81,8 +74,7 @@
       "components/tree": 2,
       "components/upload": 4,
       "main/fixed-values": 1,
-      "main/theme-visual-v2": 2,
-      "main/theme-visual-v2-style": 2
+      "main/theme-visual-v2": 2
     },
     "important": {
       "components/carousel": 2,

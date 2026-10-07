@@ -27,10 +27,10 @@ function renderShell(){
         '<button class="qxframe9a7c2-button is-default is-text is-sm qxframe9a7c2-play-icon-button" type="button" data-qxframe9a7c2-play-collapse><span class="qxframe9a7c2-icon qxframe9a7c2-icon-menu is-line is-round is-stroke-3 is-sm"></span></button>'+
       '</div>'+
       '<nav class="qxframe9a7c2-play-rail-actions">'+
-        '<a class="qxframe9a7c2-button is-primary is-solid is-sm" href="#theme-v2-studio">打开主题配置</a>'+
+        '<a class="qxframe9a7c2-button is-primary is-solid is-sm" href="create/">在 createApp 中定制主题</a>'+
         '<a class="qxframe9a7c2-button is-default is-outlined is-sm" href="tokens.html">查看 Token</a>'+
       '</nav>'+
-      '<div class="qxframe9a7c2-card qxframe9a7c2-play-setting"><div class="qxframe9a7c2-card-body"><strong>主题配置已统一</strong><p>旧版模式、Primary Seed、Neutral、字体、圆角、Focus Ring、随机主题和旧 CSS 导出入口已删除。主题只由新版配置区管理。</p></div></div>'+
+      '<div class="qxframe9a7c2-card qxframe9a7c2-play-setting"><div class="qxframe9a7c2-card-body"><strong>主题配置已统一</strong><p>风格、颜色、字体、圆角等全部在 createApp 中定制并导出主题 CSS；本页只负责组件目录、筛选和 Demo 挂载。</p></div></div>'+
     '</aside>'+
     '<main class="qxframe9a7c2-play-main">'+
       '<header class="qxframe9a7c2-play-toolbar">'+

@@ -83,9 +83,13 @@ assert.deepEqual(cycles,[],'Canonical custom-property dependency graph must be a
 
 verifySemanticRuleSource(root);
 assert.doesNotMatch(css,/--qxframe9a7c2-palette-/,'Retired public Palette graph must not return.');
-assert.doesNotMatch(css,/--qxframe9a7c2-theme-(?!v2-)[a-z0-9-]+\s*:/i,'Retired public Theme graph must not return.');
-assert.match(theme,/\[data-qxframe9a7c2-theme="dark"\][^{]*\{\s*color-scheme:\s*dark\s*;/,'Dark mode boundary must remain explicit.');
-assert.match(theme,/\[data-qxframe9a7c2-theme="light"\][^{]*\{\s*color-scheme:\s*light\s*;/,'Light mode boundary must remain explicit.');
+// createApp v3 §5: only registered closed-list tokens may be declared; dark mode is the .dark class.
+const {THEME_TOKEN_NAMES}=await import(new URL('../docs/create/tokens.js',import.meta.url).href);
+const registeredTheme=new Set(THEME_TOKEN_NAMES);
+const retiredThemeDecls=[...css.matchAll(/(--qxframe9a7c2-theme-[a-z0-9-]+)\s*:/gi)].map(m=>m[1]).filter(name=>!registeredTheme.has(name));
+assert.deepEqual([...new Set(retiredThemeDecls)],[],'Retired public Theme graph must not return.');
+assert.match(css,/(?:^|[},\s])\.dark\s*\{[^}]*color-scheme:\s*dark\s*;/,'Dark mode boundary must remain explicit.');
+assert.match(css,/(?:^|[},\s]):root\s*\{[^}]*color-scheme:\s*light\s*;/,'Light mode boundary must remain explicit.');
 for(const role of ['--_qxframe9a7c2-semantic-bg','--_qxframe9a7c2-semantic-surface','--_qxframe9a7c2-semantic-text','--_qxframe9a7c2-semantic-border','--_qxframe9a7c2-semantic-focus'])assert.ok(definitions.has(role),'Shared semantic graph role missing: '+role);
 
-console.log(JSON.stringify({ok:true,definitions:definitions.size,edges:[...graph.values()].reduce((n,set)=>n+set.size,0),cycles:0,dynamicOwners:dynamicOwners.size,publicThemeSystem:'v2-only',paletteLayer:false,modeAuthority:'color-scheme+light-dark'}));
+console.log(JSON.stringify({ok:true,definitions:definitions.size,edges:[...graph.values()].reduce((n,set)=>n+set.size,0),cycles:0,dynamicOwners:dynamicOwners.size,publicThemeSystem:'createapp-v3-closed-list',paletteLayer:false,modeAuthority:'color-scheme+light-dark'}));

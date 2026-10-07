@@ -63,6 +63,10 @@ for(const rel of canonical){
   report.push({page:rel,refs:refs.length});
 }
 
+// Theme customisation lives in createApp (v3 stage 2 owner decision); the playground keeps the
+// all-component canvas and links to createApp.
+const playgroundHtml=fs.readFileSync(path.join(docsRoot,'theme-playground.html'),'utf8');
+assert(/href=["']create\/["']/.test(playgroundHtml)&&!/theme-generator\//.test(playgroundHtml),'theme-playground.html must link to createApp and not load the retired Studio.');
 // Canonical docs dogfood the framework instead of rebuilding parallel visual primitives.
 const componentSiteJs=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-site.js'),'utf8');
 const componentSiteCss=fs.readFileSync(path.join(docsRoot,'assets','qxframe9a7c2-component-site.css'),'utf8');

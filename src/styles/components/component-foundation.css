@@ -2,7 +2,7 @@
  * Public component motion tokens resolve from Theme defaults so local component overrides
  * remain scoped and continue to participate in the Motion lifecycle.
  */
-:root,[data-qxframe9a7c2-theme] {
+:root,.dark {
   --qxframe9a7c2-motion-tooltip-enter-duration: var(--_qxframe9a7c2-fixed-motion-tooltip-enter-duration);
   --qxframe9a7c2-motion-tooltip-leave-duration: var(--_qxframe9a7c2-fixed-motion-tooltip-leave-duration);
   --qxframe9a7c2-motion-popup-enter-duration: var(--_qxframe9a7c2-fixed-motion-popup-enter-duration);

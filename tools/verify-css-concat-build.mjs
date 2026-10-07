@@ -37,8 +37,8 @@ if(fs.existsSync(dist)) assert.equal(fs.readFileSync(dist,'utf8'),canonical,'dis
 for(const protectedPattern of [
   /@font-face\b/,
   /\.qxframe9a7c2-row\b/,
-  /\[data-qxframe9a7c2-theme=(?:"?light"?)\]/,
-  /\[data-qxframe9a7c2-theme=(?:"?dark"?)\]/,
+  /:root\s*\{\s*--qxframe9a7c2-theme-background:/,
+  /\.dark\s*\{\s*--qxframe9a7c2-theme-background:/,
   /\.is-keyboard-focus\b/
 ]) {
   assert.match(canonical,protectedPattern,'Release CSS lost a protected contract.');

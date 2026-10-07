@@ -10,11 +10,11 @@ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'
 const fixed=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
 const foundation=fs.readFileSync(path.join(root,'src/styles/main/foundation.css'),'utf8');
 const css=readCanonicalStyleSource({root});
-const contract=verifyGeometryRuleSource(root,{sourceText:theme});
+const contract=await verifyGeometryRuleSource(root,{sourceText:theme});
 
 assert.equal(contract.evenLengths,true);
 assert.equal(contract.legacyFiveSizeOverrides,false);
-assert.equal(contract.canonicalScopes,true);
+assert.equal(contract.styleSelectors,false);
 
 // 1px is the only odd visible length exception. Focus geometry is a private
 // framework contract rather than a Theme input: keyboard focus is 2px with a

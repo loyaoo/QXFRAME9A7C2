@@ -169,8 +169,9 @@ export const SHAPE_AXES = [
   { key: 'shapeBadge', param: 'shape-badge', label: '徽章', options: CONTROL_SHAPES, defaults: S(...Array(8).fill('control')) },
   { key: 'shapeTabs', param: 'shape-tabs', label: '标签页', options: CONTROL_SHAPES, defaults: S(...Array(8).fill('control')) },
   { key: 'shapeSwitch', param: 'shape-switch', label: '开关', options: CONTROL_SHAPES, defaults: S('pill', 'pill', 'pill', 'pill', 'pill', 'pill', 'square', 'radius') },
-  { key: 'shapeRadio', param: 'shape-radio', label: '单选框', options: ROUND_SHAPES, defaults: S(...Array(8).fill('circle')) },
-  { key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄', options: ROUND_SHAPES, defaults: S(...Array(8).fill('circle')) },
+  // shadcn: Rhea radio is rounded-2xl; Maia / Lyra / Mira / Rhea thumbs follow the radius, Sera's is square.
+  { key: 'shapeRadio', param: 'shape-radio', label: '单选框', options: ROUND_SHAPES, defaults: S('circle', 'circle', 'circle', 'circle', 'circle', 'circle', 'circle', 'radius') },
+  { key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄', options: ROUND_SHAPES, defaults: S('circle', 'circle', 'radius', 'radius', 'radius', 'circle', 'square', 'radius') },
   { key: 'shapeAvatar', param: 'shape-avatar', label: '头像', options: ROUND_SHAPES, defaults: S(...Array(8).fill('circle')) },
   { key: 'shapeContainer', param: 'shape-container', label: '容器', options: [{ value: 'radius', label: '跟随圆角' }, { value: 'square', label: '直角' }], defaults: S(...Array(8).fill('radius')) }
 ];

@@ -13,16 +13,18 @@
 - Measured shadcn reference data: `tools/qa/spec.json` (shadcn create SHA `295a1f114a138f23b5dfee0e0c6812394dfeb90c`).
 - Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
-- Current Program: CREATEAPP-V3 — stage 1 of 0–5 (stage 0 merged).
-- Current Phase: CREATEAPP-V3 stage 1 — createApp shell, panel and interactions.
-- Current Task: `CREATEAPP-V3-S1` — implementation complete; stage-1 PR open, merge on green CI, then owner acceptance on Pages.
+- Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
+- Current Phase: CREATEAPP-V3 stage 2a — closed theme-token list, compiler, default theme, preview components.
+- Current Task: `CREATEAPP-V3-S2A` — implementation + local verification complete; PR next.
 
 ## CURRENT
 
 Task: CREATEAPP-V3-S1 — `docs/create/` shell, customization panel and all interaction logic.
-Status: PR OPEN (redesign/create → main). Stage 0 merged: PR #261 → main `912400e`.
+Status: MERGED — PR #262 → main `36d2360` (CI on head `bda6492`: release ✅, windows-tools ✅, schema-acceptance ✅). Awaiting owner acceptance. Stage 0 merged: PR #261 → main `912400e`.
 
 ### Owner decisions (2026-10-07) — frozen
+
+- Stage 2 decisions: dark mode selector is **`.dark` only** (no `[data-qxframe9a7c2-theme="dark"]` alias; repo docs/createApp switch to class="dark"); docs-site theme/style switchers **simplified to light/dark only** (style/theme customization lives in createApp; tokens.html shows the new token list; theme-playground redirects to createApp); **Claude drafts the ~100-token closed list** (registered under tools/manifests) and migrates directly, owner accepts on Pages; stage 2 split into **2a** (list + compiler + default theme + preview-used core components) and **2b** (all remaining components, :root component tokens cleared), each merged on green CI.
 
 - §5/§6 gates run as a **ratchet**: current violations are frozen in `tools/manifests/css-gate-baseline.json`; any increase fails CI, counts may only fall; token-class violations clear in stage 2, every count must be zero by stage 5.
 - **Framework zero React / zero UI-framework dependency**; Floating UI (vendored) is the only third-party runtime code. `tools/qa/ref/` (React-based shadcn reference renderer) is kept as a measurement tool only and never ships; `verify:no-framework-deps` enforces this in CI.
@@ -51,10 +53,22 @@ Status: PR OPEN (redesign/create → main). Stage 0 merged: PR #261 → main `91
 - Gates: `verify:create-app` (13 static/model checks, in `verify` chain), `verify:create-app-browser` (9 CDP interaction steps, own CI step).
 - Known gaps (later stages): extension axes only partly mapped by the interim compiler (stage 2 compiler); `.pv-*` private primitives to be promoted into qxframe.css (stages 3/4); tables/accordion static; old theme-generator deleted in stage 5.
 
+### Stage 2a progress (WIP on redesign/create, not yet a PR)
+
+Done:
+- `docs/create/tokens.js` closed list (~130 tokens, registry used by gates); `docs/create/compiler.js` emits full :root + .dark; `tools/build-theme.mjs` generates `src/styles/main/theme.css` (Nova + neutral, ~11.5KB; `--check` mode).
+- v2 consumer modules rewritten onto new tokens; all `@scope([data-qxframe9a7c2-style])` blocks removed; `[data-qxframe9a7c2-theme*]` → `:root` / `.dark`; light-dark() kept only for shared mode formulas.
+- Focus: keyboard via focus-width/opacity/offset tokens; pointer focus only via :focus-visible under pointer origin (FocusOrigin gate forbids bare :focus outlines; buttons not covered — tell owner).
+- Docs: docs-theme-state.js light/dark only (`.dark` class); tokens.html renders the closed list; theme-playground.html = card linking to create/ (playground assets deleted; canonical gate adapted); all-components-static theme panel → createApp link.
+- Gate refinements (tell owner): css-gates registry = tokens.js; theme block = :root/.dark rule declaring theme tokens; root-non-theme counts custom properties only; theme files must be complete. Corrected definition exposes 2,211 legacy color literals in fixed-values :root palettes (previously exempt) → needs documented re-baseline.
+- `verify:theme-single-system` adapted to v3 closed list.
+
+Gates adapted to v3 and passing locally (commits 9a2ee97..HEAD): phase-f-css-authority, theme-single-system, css-concat-build, geometry family (theme-v2-geometry-contract now async + 7 callers), css-token-layers, phase-f-token-graph, css-static-colors(+browser), theme-visual-v2(+browser; rewritten as createApp compiler/consumer contract), phase-f-static-closeout, canonical docs, final-focus-origin, theme-studio-v2/-static (now delegate to createApp gates).
+Local evidence (after npm run build): every `npm run verify` step passes; verify:browser, verify:theme-visual-v2-browser (compiled theme per style resolves in consumers, light+dark), verify:theme-studio-v2-browser (= createApp browser gate, 9 steps), verify:legacy-browser, verify:release, verify:package pass; canonical docs browser gate on demo package passes. theme-playground keeps the all-component canvas (needed by browser smoke) with a createApp entry card. Ratchet re-measured (728b6ee).
+
 ## NEXT EXACT STEPS
 
-1. Drive the stage-1 PR CI green, merge into main, confirm the Pages deploy.
-2. Give the owner `https://loyaoo.github.io/QXFRAME9A7C2/docs/create/` and stop for acceptance; stage 2 starts only after the owner says 继续.
+1. PR #263 (stage 2a) open: drive CI green, merge, give owner the Pages URL; then 2b.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 

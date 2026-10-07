@@ -31,6 +31,7 @@ for (const file of args.filter(a => a.startsWith('--theme-file=')).map(a => a.sl
 }
 const defaultTheme = extractDefaultThemeBlocks(css);
 const defaultBytes = Buffer.byteLength(defaultTheme);
+for (const error of checkThemeFile(defaultTheme).errors) { console.error(`[default-theme] ${error}`); failed = true; }
 if (defaultBytes > THEME_FILE_WARN_BYTES) warnings.push(`default theme block is ${defaultBytes} bytes (> ${THEME_FILE_WARN_BYTES})`);
 for (const w of warnings) console.log(`::warning::theme file size: ${w}`);
 

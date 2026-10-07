@@ -35,17 +35,19 @@ export function consumerProbeInventory(root){
     const text=fs.readFileSync(path.join(root,dir,file),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
     for(const match of text.matchAll(/\.(qxframe9a7c2-[a-z0-9-]+)/g))classes.add(match[1]);
   }
-  return {names:[...names].sort(),classes:[...classes].sort(),css:':root,[data-qxframe9a7c2-theme]{'+declarations+'}',classification:'css-color-value+pure-alias'};
+  return {names:[...names].sort(),classes:[...classes].sort(),css:':root,.dark{'+declarations+'}',classification:'css-color-value+pure-alias'};
 }
 
 // Run on the real canonical demo DOM. One Style/mode per CDP evaluation keeps
 // each measurement bounded while proving retired private paint fallbacks cannot
 // leak into current component rendering.
-export function consumerPoisonBrowserProbe(inventory,style,mode){
+export function consumerPoisonBrowserProbe(inventory,style,mode,themeCss){
+  // createApp v3: a style is a compiled theme (closed token list); dark is the .dark class.
   const body=document.body,known=new Set(inventory.classes),failures=[];
-  body.setAttribute('data-qxframe9a7c2-theme',mode);
-  body.setAttribute('data-qxframe9a7c2-style',style);
-  document.querySelectorAll('[data-qxframe9a7c2-theme]').forEach(node=>node.setAttribute('data-qxframe9a7c2-style',style));
+  let themeEl=document.getElementById('qx-v3-probe-theme');
+  if(!themeEl){themeEl=document.createElement('style');themeEl.id='qx-v3-probe-theme';document.head.appendChild(themeEl);}
+  themeEl.textContent=themeCss||'';
+  document.documentElement.classList.toggle('dark',mode==='dark');
   if(!document.getElementById('qx-v2-probe-stable')){
     const stable=document.createElement('style');stable.id='qx-v2-probe-stable';stable.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(stable);
   }

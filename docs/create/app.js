@@ -28,7 +28,7 @@ const state = {
   history: [],
   index: -1,
   item: '01',
-  mode: document.documentElement.getAttribute('data-qxframe9a7c2-theme') === 'dark' ? 'dark' : 'light',
+  mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
   version: 'unknown'
 };
 const listeners = new Set();
@@ -103,7 +103,7 @@ function toggleLock(key) {
 }
 function setMode(mode) {
   state.mode = mode;
-  document.documentElement.setAttribute('data-qxframe9a7c2-theme', mode);
+  document.documentElement.classList.toggle('dark', mode === 'dark');
   writeStorage(STORAGE_MODE, mode);
   emit();
 }
@@ -254,7 +254,7 @@ function decoratePopup(dropdown, onPreview, getItems) {
   const popup = dropdown.getPopupElement && dropdown.getPopupElement();
   if (!popup) return;
   popup.classList.add('create-picker-menu');
-  popup.setAttribute('data-qxframe9a7c2-theme', 'dark');
+  popup.classList.add('dark');
   popup.__createPreview = onPreview;
   popup.__createItems = getItems;
   if (popup.__createWired) return;

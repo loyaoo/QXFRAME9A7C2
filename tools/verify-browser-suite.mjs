@@ -26,7 +26,7 @@ function createCanonicalGeometrySmoke() {
     const replacements = [
         [
             "var sgHost=makeRegressionHost();sgHost.style.setProperty('--qxframe9a7c2-family-control-height','46px');sgHost.style.setProperty('--qxframe9a7c2-family-control-font-size','20px');",
-            "var sgHost=makeRegressionHost();sgHost.style.setProperty('--qxframe9a7c2-theme-v2-control-min-block-md','2.5rem');"
+            "var sgHost=makeRegressionHost();sgHost.style.setProperty('--qxframe9a7c2-theme-control-height','2.5rem');"
         ],
         [
             "record('regression-select-single-multiple-share-family-control-height',Math.abs(h1-h2)<0.75&&h1>=45&&h2>=45,'single='+h1+',multiple='+h2);",
@@ -34,7 +34,7 @@ function createCanonicalGeometrySmoke() {
         ],
         [
             "var collapseFamilyHost=makeRegressionHost();collapseFamilyHost.style.setProperty('--qxframe9a7c2-family-control-height','50px');",
-            "var collapseFamilyHost=makeRegressionHost();collapseFamilyHost.style.setProperty('--qxframe9a7c2-theme-v2-control-min-block-md','2.5rem');"
+            "var collapseFamilyHost=makeRegressionHost();collapseFamilyHost.style.setProperty('--qxframe9a7c2-theme-control-height','2.5rem');"
         ],
         [
             "record('regression-collapse-family-height-shared-across-sizes',collapseFamilyHeights.length===3&&collapseFamilyHeights.every(function(v){return Math.abs(v-50)<0.75;}),'heights='+collapseFamilyHeights.join(','));",

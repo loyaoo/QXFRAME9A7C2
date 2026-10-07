@@ -87,18 +87,19 @@ assert.doesNotMatch(tokenDocs,/Config\.configure\(\{\s*\\n\s*theme:|\['theme'|\[
 assert.doesNotMatch(siteDocs,/menu\.updateOptions\(\{\s*theme:|theme:\s*theme\(\)/,'Docs Menu must inherit CSS theme instead of runtime theme options.');
 
 assert.doesNotMatch(css,/@layer\b|:is\(|:where\(/,'Canonical CSS must not use forbidden @layer/:is()/:where().');
-assert.match(css,/\[data-qxframe9a7c2-theme="light"\]/,'Canonical CSS must contain light theme selector.');
-assert.match(css,/\[data-qxframe9a7c2-theme="dark"\]/,'Canonical CSS must contain dark theme selector.');
+// createApp v3 §5: light is :root, dark is the .dark class (no theme attribute).
+assert.match(css,/(^|[},\s]):root\s*\{[^}]*--qxframe9a7c2-theme-background/,'Canonical CSS must contain the :root default theme block.');
+assert.match(css,/(^|[},\s])\.dark\s*\{[^}]*--qxframe9a7c2-theme-background/,'Canonical CSS must contain the .dark theme block.');
 
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);
 if(!browser){console.log(JSON.stringify({ok:true,structural:true,browserSkipped:true,reason:'chromium not found'}));process.exit(0);}
 const WebSocketClient=await getWebSocketConstructor();
 const safeCss=compiledCss.replace(/<\/style/gi,'<\\/style');
 const html=`<!doctype html><meta charset=utf-8><style>${safeCss}</style>
-<div id="light" style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div>
+<div id="light" style="background:var(--qxframe9a7c2-theme-background);color:var(--qxframe9a7c2-theme-foreground)"></div>
 <div id="lightPopup" class="qxframe9a7c2-popup-surface">light popup</div>
-<div id="scope" data-qxframe9a7c2-theme="dark">
-  <div id="dark" style="background:var(--qxframe9a7c2-color-bg);color:var(--qxframe9a7c2-color-text)"></div>
+<div id="scope" class="dark">
+  <div id="dark" style="background:var(--qxframe9a7c2-theme-background);color:var(--qxframe9a7c2-theme-foreground)"></div>
   <div id="portalPopup" class="qxframe9a7c2-popup-surface">scoped portal popup</div>
 </div>
 <input id="stateProbe" class="qxframe9a7c2-form-input is-selected" value="alpha" data-open="true" data-selected-key="alpha">
@@ -112,7 +113,7 @@ try{
   const portalPopup=document.getElementById('portalPopup');
   const probe=document.getElementById('stateProbe');
   const cs=e=>getComputedStyle(e);
-  document.documentElement.setAttribute('data-qxframe9a7c2-theme','light');
+  document.documentElement.classList.remove('dark');
   probe.focus();
   const before={value:probe.value,className:probe.className,open:probe.dataset.open,selectedKey:probe.dataset.selectedKey,focused:document.activeElement===probe};
   const l={bg:cs(light).backgroundColor,color:cs(light).color,scheme:cs(document.documentElement).colorScheme};
@@ -122,13 +123,13 @@ try{
   if(!l.bg||!d.bg||l.bg===d.bg)throw new Error('light/dark background must differ through CSS only: '+JSON.stringify({l,d}));
   if(l.scheme!=='light'||d.scheme!=='dark')throw new Error('scoped color-scheme mismatch: '+JSON.stringify({l,d}));
   if(!popupLight||!popupDark||popupLight===popupDark)throw new Error('scoped portal popup must inherit the physical theme container: '+JSON.stringify({popupLight,popupDark}));
-  scope.setAttribute('data-qxframe9a7c2-theme','light');
+  scope.classList.remove('dark');
   const popupScopedLight=cs(portalPopup).backgroundColor;
   if(popupScopedLight!==popupLight)throw new Error('scoped portal light projection mismatch: '+JSON.stringify({popupLight,popupScopedLight}));
-  scope.setAttribute('data-qxframe9a7c2-theme','dark');
+  scope.classList.add('dark');
   const popupDarkAgain=cs(portalPopup).backgroundColor;
   if(popupDarkAgain!==popupDark)throw new Error('scoped portal dark projection did not restore: '+JSON.stringify({popupDark,popupDarkAgain}));
-  document.documentElement.setAttribute('data-qxframe9a7c2-theme','dark');
+  document.documentElement.classList.add('dark');
   const rootDark=cs(light).backgroundColor;
   if(rootDark!==d.bg)throw new Error('root dark selector must resolve same CSS theme as scoped dark');
   const after={value:probe.value,className:probe.className,open:probe.dataset.open,selectedKey:probe.dataset.selectedKey,focused:document.activeElement===probe};
