@@ -1,0 +1,306 @@
+.qxframe9a7c2-list {
+  --_qxframe9a7c2-list-row-height:var(--qxframe9a7c2-list-row-height,var(--_qxframe9a7c2-control-height));
+  --_qxframe9a7c2-list-padding-x:var(--qxframe9a7c2-list-padding-x,var(--_qxframe9a7c2-control-padding-inline));
+  --_qxframe9a7c2-list-indent:var(--qxframe9a7c2-list-indent,var(--_qxframe9a7c2-fixed-space-8));
+  --_qxframe9a7c2-list-max-height:var(--qxframe9a7c2-list-max-height,var(--_qxframe9a7c2-fixed-list-max-height));
+  --_qxframe9a7c2-list-bg:var(--qxframe9a7c2-list-bg,var(--_qxframe9a7c2-navigation-bg));
+  --_qxframe9a7c2-list-border:var(--qxframe9a7c2-list-border,var(--_qxframe9a7c2-semantic-border));
+  --_qxframe9a7c2-list-radius:var(--qxframe9a7c2-list-radius,var(--_qxframe9a7c2-navigation-radius));
+  --_qxframe9a7c2-list-group-bg:var(--qxframe9a7c2-list-group-bg,var(--_qxframe9a7c2-semantic-surface-muted));
+  --_qxframe9a7c2-list-group-text:var(--qxframe9a7c2-list-group-text,var(--_qxframe9a7c2-semantic-text-secondary));
+  --_qxframe9a7c2-list-group-radius:var(--qxframe9a7c2-list-group-radius,var(--_qxframe9a7c2-navigation-radius));
+  --_qxframe9a7c2-list-ring:none;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  color: var(--_qxframe9a7c2-semantic-text);
+  background: var(--_qxframe9a7c2-list-bg);
+  border: 1px solid var(--_qxframe9a7c2-list-border);
+  border-radius: var(--_qxframe9a7c2-list-radius);
+  font-size: var(--_qxframe9a7c2-control-font-size);
+  line-height: 1.4;
+  box-shadow: var(--_qxframe9a7c2-list-ring);
+  overflow: hidden;
+}
+
+.qxframe9a7c2-list-body {
+  position: relative;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.qxframe9a7c2-list-viewport {
+  box-sizing: border-box;
+  position: relative;
+  max-height: var(--_qxframe9a7c2-list-max-height);
+  min-height: 0;
+  overflow: auto;
+  outline: none;
+  overscroll-behavior: auto;
+}
+
+.qxframe9a7c2-list:focus-visible {
+  --_qxframe9a7c2-list-ring:none;
+  outline: var(--_qxframe9a7c2-focus-visible-outline);
+  outline-offset: var(--_qxframe9a7c2-focus-visible-offset);
+}
+
+.qxframe9a7c2-list.is-virtual-focus-owner:focus-visible {
+  outline: none;
+}
+
+.qxframe9a7c2-list-content {
+  position: relative;
+  min-width: 100%;
+}
+
+.qxframe9a7c2-list-search {
+  padding: var(--_qxframe9a7c2-fixed-space-2);
+  border-bottom: 1px solid var(--_qxframe9a7c2-semantic-border-subtle);
+}
+
+.qxframe9a7c2-list-search[hidden] {
+  display: none;
+}
+
+.qxframe9a7c2-list-search-input {
+  --_qxframe9a7c2-list-search-bg:var(--_qxframe9a7c2-control-bg);
+  --_qxframe9a7c2-list-search-border:var(--_qxframe9a7c2-control-border);
+  --_qxframe9a7c2-list-search-text:var(--_qxframe9a7c2-control-text);
+  --_qxframe9a7c2-list-search-ring:none;
+  --_qxframe9a7c2-list-search-cursor:text;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--_qxframe9a7c2-control-height);
+  padding: 0 var(--_qxframe9a7c2-control-padding-inline);
+  border: var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-list-search-border);
+  border-radius: var(--_qxframe9a7c2-control-radius);
+  outline: none;
+  color: var(--_qxframe9a7c2-list-search-text);
+  background: var(--_qxframe9a7c2-list-search-bg);
+  box-shadow: var(--_qxframe9a7c2-list-search-ring);
+  cursor: var(--_qxframe9a7c2-list-search-cursor);
+  font: inherit;
+}
+
+.qxframe9a7c2-list-search-input::placeholder {
+  color: var(--_qxframe9a7c2-semantic-text-placeholder);
+}
+
+.qxframe9a7c2-list-search-input:focus {
+  --_qxframe9a7c2-list-search-border:var(--_qxframe9a7c2-semantic-focus);
+  --_qxframe9a7c2-list-search-ring:none;
+}
+
+.qxframe9a7c2-list-search-input:focus-visible {
+  outline: var(--_qxframe9a7c2-focus-visible-outline);
+  outline-offset: var(--_qxframe9a7c2-focus-visible-offset);
+}
+
+.qxframe9a7c2-list-item {
+  --_qxframe9a7c2-list-item-bg:var(--_qxframe9a7c2-item-bg,transparent);
+  --_qxframe9a7c2-list-item-text:var(--_qxframe9a7c2-item-text,inherit);
+  --_qxframe9a7c2-list-item-ring:var(--_qxframe9a7c2-item-ring,none);
+  --_qxframe9a7c2-list-item-cursor:var(--_qxframe9a7c2-item-cursor,pointer);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--_qxframe9a7c2-fixed-space-2);
+  width: 100%;
+  min-height: var(--_qxframe9a7c2-list-row-height);
+  padding-inline: calc(var(--_qxframe9a7c2-list-padding-x) + var(--qxframe9a7c2-list-depth, 0) * var(--_qxframe9a7c2-list-indent)) var(--_qxframe9a7c2-list-padding-x);
+  color: var(--_qxframe9a7c2-list-item-text);
+  background: var(--_qxframe9a7c2-list-item-bg);
+  box-shadow: var(--_qxframe9a7c2-list-item-ring);
+  cursor: var(--_qxframe9a7c2-list-item-cursor);
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qxframe9a7c2-list-item.is-readonly {
+  --_qxframe9a7c2-list-item-cursor:var(--_qxframe9a7c2-item-cursor,default);
+}
+
+.qxframe9a7c2-list-item.is-disabled {
+  --_qxframe9a7c2-list-item-cursor:var(--_qxframe9a7c2-item-cursor,not-allowed);
+}
+
+.qxframe9a7c2-list-group {
+  box-sizing: border-box;
+  min-height: var(--_qxframe9a7c2-list-row-height);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--_qxframe9a7c2-list-padding-x);
+  border-radius: var(--_qxframe9a7c2-list-group-radius);
+  color: var(--_qxframe9a7c2-list-group-text);
+  background: var(--_qxframe9a7c2-list-group-bg);
+  font-weight: 600;
+  user-select: none;
+}
+
+.qxframe9a7c2-list-status {
+  padding: var(--_qxframe9a7c2-fixed-space-4) var(--_qxframe9a7c2-list-padding-x);
+  text-align: center;
+  color: var(--_qxframe9a7c2-semantic-text-muted);
+}
+
+.qxframe9a7c2-list-status[hidden] {
+  display: none;
+}
+
+.qxframe9a7c2-list.is-disabled {
+  color: var(--_qxframe9a7c2-semantic-text-disabled);
+  --_qxframe9a7c2-list-ring:none;
+}
+
+.qxframe9a7c2-list.is-disabled .qxframe9a7c2-list-search-input {
+  --_qxframe9a7c2-list-search-bg:var(--_qxframe9a7c2-control-bg-disabled);
+  --_qxframe9a7c2-list-search-border:var(--_qxframe9a7c2-control-border-disabled);
+  --_qxframe9a7c2-list-search-text:var(--_qxframe9a7c2-control-text-disabled);
+  --_qxframe9a7c2-list-search-ring:none;
+  --_qxframe9a7c2-list-search-cursor:not-allowed;
+}
+
+.qxframe9a7c2-list .qxframe9a7c2-virtual-list {
+  height: var(--_qxframe9a7c2-fixed-virtual-list-height);
+}
+
+/* Original List parity projection */
+.qxframe9a7c2-list-divider {
+  height: 1px;
+  margin: var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-list-padding-x);
+  background: var(--_qxframe9a7c2-semantic-border-subtle);
+}
+
+.qxframe9a7c2-list-title {
+  box-sizing: border-box;
+  min-height: var(--_qxframe9a7c2-list-row-height);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--_qxframe9a7c2-list-padding-x);
+  color: var(--_qxframe9a7c2-semantic-text-muted);
+  font-size: 0.875em;
+  font-weight: 600;
+}
+
+.qxframe9a7c2-list-content-slot {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qxframe9a7c2-list-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qxframe9a7c2-list-icon {
+  display: inline-flex;
+  width: var(--_qxframe9a7c2-fixed-list-icon-size);
+  height: var(--_qxframe9a7c2-fixed-list-icon-size);
+  flex: 0 0 var(--_qxframe9a7c2-fixed-list-icon-size);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.qxframe9a7c2-list-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.qxframe9a7c2-list-shortcut, .qxframe9a7c2-list-extra {
+  flex: 0 0 auto;
+  color: var(--_qxframe9a7c2-semantic-text-muted);
+  font-size: 0.875em;
+}
+
+.qxframe9a7c2-list-arrow {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: var(--_qxframe9a7c2-semantic-text-muted);
+  font-size: var(--_qxframe9a7c2-control-icon-size, var(--_qxframe9a7c2-fixed-icon-size-sm));
+  line-height: 1;
+}
+
+.qxframe9a7c2-list-custom-content {
+  display: flex;
+  align-items: center;
+  gap: var(--_qxframe9a7c2-fixed-space-2);
+}
+
+.qxframe9a7c2-list.is-borderless {
+  border-color: transparent;
+  border-radius: 0;
+}
+
+.qxframe9a7c2-list-header, .qxframe9a7c2-list-footer, .qxframe9a7c2-list-load-more {
+  box-sizing: border-box;
+  padding: var(--_qxframe9a7c2-fixed-space-3) var(--_qxframe9a7c2-list-padding-x);
+}
+
+.qxframe9a7c2-list-header {
+  border-bottom: 1px solid var(--_qxframe9a7c2-semantic-border-subtle);
+  font-weight: 600;
+}
+
+.qxframe9a7c2-list-footer, .qxframe9a7c2-list-load-more {
+  border-top: 1px solid var(--_qxframe9a7c2-semantic-border-subtle);
+}
+
+.qxframe9a7c2-list-header[hidden], .qxframe9a7c2-list-footer[hidden], .qxframe9a7c2-list-load-more[hidden] {
+  display: none;
+}
+
+.qxframe9a7c2-list.is-split .qxframe9a7c2-list-item + .qxframe9a7c2-list-item {
+  border-top: 1px solid var(--_qxframe9a7c2-semantic-border-subtle);
+}
+
+.qxframe9a7c2-list-meta {
+  display: block;
+  margin-top: var(--_qxframe9a7c2-fixed-space-1);
+  color: var(--_qxframe9a7c2-semantic-text-muted);
+  font-size: 0.875em;
+  white-space: normal;
+}
+
+.qxframe9a7c2-list-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--_qxframe9a7c2-fixed-space-1);
+}
+
+.qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-item {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding-block: var(--_qxframe9a7c2-fixed-space-2);
+  white-space: normal;
+}
+
+.qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-content-slot {
+  flex-basis: calc(100% - var(--_qxframe9a7c2-fixed-list-content-slot-delta));
+  white-space: normal;
+}
+
+.qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-label {
+  white-space: normal;
+}
+
+.qxframe9a7c2-list.is-sticky-groups .qxframe9a7c2-list-group {
+  position: sticky;
+  top: 0;
+  z-index: var(--qxframe9a7c2-z-local-raised);
+}

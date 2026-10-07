@@ -4,12 +4,12 @@ import { fileURLToPath } from 'node:url';
 
 const ownRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 
-export const CANONICAL_STYLE_ENTRY='src/styles/qxframe9a7c2.scss';
+export const CANONICAL_STYLE_ENTRY='tools/manifests/css-order.json';
 const V2_STYLE_MODULES=Object.freeze([
-  'src/styles/theme/_visual-v2.scss',
-  'src/styles/theme/_visual-v2-consumers.scss',
-  'src/styles/theme/_visual-v2-style.scss',
-  'src/styles/theme/_visual-v2-style-consumers.scss'
+  'src/styles/main/theme-visual-v2.css',
+  'src/styles/main/theme-visual-v2-consumers.css',
+  'src/styles/main/theme-visual-v2-style.css',
+  'src/styles/main/theme-visual-v2-style-consumers.css'
 ]);
 
 function readOrder(root){

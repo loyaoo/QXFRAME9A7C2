@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {GEOMETRY_ROLES,normalizeGeometryConfig,STYLE_GEOMETRY} from '../docs/assets/theme-generator/geometry-engine-v2.mjs';
 
 export function verifyGeometryRuleSource(root,{sourceText=null}={}){
-  const source=(sourceText??fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8')).replace(/\/\*[\s\S]*?\*\//g,'');
+  const source=(sourceText??fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8')).replace(/\/\*[\s\S]*?\*\//g,'');
   for(const match of source.matchAll(/(-?\d*\.?\d+)(rem|px)\b/g)){
     const px=Math.abs(Number(match[1]))*(match[2]==='rem'?16:1);
     assert.ok(px===1||Number.isInteger(px/2),'v2 geometry must use even reference lengths or 1px borders: '+match[0]);

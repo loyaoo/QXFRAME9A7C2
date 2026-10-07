@@ -1,0 +1,91 @@
+/* Empty · shared stateless projection + authored HTML/CSS surface */
+.qxframe9a7c2-empty {
+  --_qxframe9a7c2-empty-visual-size:var(--qxframe9a7c2-empty-visual-size,var(--_qxframe9a7c2-fixed-empty-visual-size));
+  box-sizing: border-box;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--_qxframe9a7c2-fixed-space-4);
+  padding: var(--_qxframe9a7c2-fixed-space-10) var(--_qxframe9a7c2-fixed-space-8);
+  color: var(--_qxframe9a7c2-semantic-text-secondary);
+  text-align: center;
+}
+
+.qxframe9a7c2-empty.is-simple {
+  --_qxframe9a7c2-empty-visual-size:var(--_qxframe9a7c2-fixed-empty-visual-size-simple);
+  padding: var(--_qxframe9a7c2-fixed-space-8) var(--_qxframe9a7c2-fixed-space-6);
+  gap: var(--_qxframe9a7c2-fixed-space-3);
+}
+
+.qxframe9a7c2-empty-image {
+  position: relative;
+  width: var(--_qxframe9a7c2-empty-visual-size);
+  height: calc(var(--_qxframe9a7c2-empty-visual-size) * 0.72);
+  flex: 0 0 auto;
+  color: var(--_qxframe9a7c2-semantic-text-disabled);
+}
+
+.qxframe9a7c2-empty-image.is-default::before {
+  content: "";
+  position: absolute;
+  inset: 18% 10% 9%;
+  box-sizing: border-box;
+  border: 1px solid var(--_qxframe9a7c2-semantic-border);
+  border-radius: 45% 45% 28% 28%/58% 58% 32% 32%;
+  background: linear-gradient(180deg, var(--_qxframe9a7c2-semantic-surface), var(--_qxframe9a7c2-semantic-subtle));
+  box-shadow: inset 0 calc(var(--_qxframe9a7c2-fixed-empty-shadow-offset) * -1) 0 var(--_qxframe9a7c2-semantic-subtle-hover);
+}
+
+.qxframe9a7c2-empty-image.is-default::after {
+  content: "";
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  bottom: 18%;
+  height: var(--_qxframe9a7c2-fixed-empty-bar-height);
+  border-radius: var(--_qxframe9a7c2-fixed-radius-pill);
+  background: var(--_qxframe9a7c2-semantic-border);
+}
+
+.qxframe9a7c2-empty.is-simple .qxframe9a7c2-empty-image.is-default::before {
+  inset: 22% 12% 10%;
+  border-radius: var(--_qxframe9a7c2-fixed-radius-lg);
+}
+
+.qxframe9a7c2-empty-image > img, .qxframe9a7c2-empty-image > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.qxframe9a7c2-empty-description {
+  max-width: var(--_qxframe9a7c2-fixed-empty-description-max-width);
+  color: var(--_qxframe9a7c2-semantic-text-secondary);
+  font-size: var(--_qxframe9a7c2-fixed-font-size-sm);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.qxframe9a7c2-empty-extra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--_qxframe9a7c2-fixed-space-4);
+  margin-top: var(--_qxframe9a7c2-fixed-space-2);
+}
+
+.qxframe9a7c2-empty-extra:empty {
+  display: none;
+}
+
+.qxframe9a7c2-table-empty > td > .qxframe9a7c2-empty {
+  padding-block: var(--_qxframe9a7c2-fixed-table-empty-padding-block);
+}
+
+.qxframe9a7c2-list-status > .qxframe9a7c2-empty {
+  padding-block: var(--_qxframe9a7c2-fixed-space-8);
+}

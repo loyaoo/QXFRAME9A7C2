@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {STYLE_RULE_VERSION,STYLE_ROLES,STYLE_APPEARANCE,normalizeStyleConfig} from '../docs/assets/theme-generator/style-engine-v2.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const source=fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8');
+const source=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
 
 assert.equal(STYLE_RULE_VERSION,'qx-style-3');
 for(const role of ['font-family','font-family-heading','font-family-mono','typography-body-size','typography-meta-size','typography-heading-size','typography-kpi-size','typography-body-weight','typography-label-weight','control-font-weight','control-letter-spacing','control-text-transform','heading-letter-spacing','heading-text-transform']){

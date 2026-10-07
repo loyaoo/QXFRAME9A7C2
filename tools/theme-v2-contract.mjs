@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 
-export const V2_STYLE_MODULE = 'src/styles/theme/_visual-v2.scss';
+export const V2_STYLE_MODULE = 'src/styles/main/theme-visual-v2.css';
 export function verifySemanticRuleSource(root,{sourceText=null}={}){
   const source=(sourceText??fs.readFileSync(path.join(root,V2_STYLE_MODULE),'utf8')).replace(/\/\*[\s\S]*?\*\//g,'');
   const fixture=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/theme-v2/shadcn-source.json'),'utf8'));

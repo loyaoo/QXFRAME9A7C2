@@ -1,0 +1,175 @@
+/* THEME-VISUAL-V2-001 Phase E non-color Style contract.
+ * Finite Theme inputs only; components keep their existing CSS ownership. */
+@scope (:root) {
+  :scope {
+    /* Vega/default resolved values. Generated Theme CSS can override these. */
+    --qxframe9a7c2-theme-v2-font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --qxframe9a7c2-theme-v2-font-family-heading:var(--qxframe9a7c2-theme-v2-font-family);
+    --qxframe9a7c2-theme-v2-font-family-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    --qxframe9a7c2-theme-v2-typography-body-size:.875rem;
+    --qxframe9a7c2-theme-v2-typography-meta-size:.75rem;
+    --qxframe9a7c2-theme-v2-typography-heading-size:1rem;
+    --qxframe9a7c2-theme-v2-typography-kpi-size:2.25rem;
+    --qxframe9a7c2-theme-v2-typography-body-weight:400;
+    --qxframe9a7c2-theme-v2-typography-label-weight:500;
+    --qxframe9a7c2-theme-v2-control-font-weight:500;
+    --qxframe9a7c2-theme-v2-control-letter-spacing:normal;
+    --qxframe9a7c2-theme-v2-control-text-transform:none;
+    --qxframe9a7c2-theme-v2-heading-letter-spacing:normal;
+    --qxframe9a7c2-theme-v2-heading-text-transform:none;
+    --qxframe9a7c2-theme-v2-control-fill-light-weight:0%;
+    --qxframe9a7c2-theme-v2-control-fill-dark-weight:30%;
+    --qxframe9a7c2-theme-v2-control-border-inline-weight:100%;
+    --qxframe9a7c2-theme-v2-control-border-block-start-weight:100%;
+    --qxframe9a7c2-theme-v2-control-border-block-end-weight:100%;
+    --qxframe9a7c2-theme-v2-control-state-border-inline-weight:100%;
+    --qxframe9a7c2-theme-v2-control-state-border-block-start-weight:100%;
+    --qxframe9a7c2-theme-v2-control-state-border-block-end-weight:100%;
+    --qxframe9a7c2-theme-v2-border-width:1px;
+    --qxframe9a7c2-theme-v2-card-border-width:1px;
+    --qxframe9a7c2-theme-v2-card-shadow:var(--qxframe9a7c2-theme-v2-shadow-xs);
+    --qxframe9a7c2-theme-v2-card-font-size:.875rem;
+    --qxframe9a7c2-theme-v2-card-title-delta:.125rem;
+    --qxframe9a7c2-theme-v2-card-meta-gap:.25rem;
+    --qxframe9a7c2-theme-v2-motion-duration-1:100ms;
+    --qxframe9a7c2-theme-v2-motion-duration-2:150ms;
+    --qxframe9a7c2-theme-v2-motion-duration-3:200ms;
+    --qxframe9a7c2-theme-v2-motion-duration-5:300ms;
+    --qxframe9a7c2-theme-v2-shape-choice-radio-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-choice-checkbox-radius:var(--qxframe9a7c2-theme-v2-radius-choice-md);
+    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;
+    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-compact-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+    --qxframe9a7c2-theme-v2-shape-identity-radius:50%;
+    --qxframe9a7c2-theme-v2-shape-progress-radius:100rem;
+  }
+  /* Rebind component-facing adapters at every local Theme boundary. Custom
+     properties declared only on document :root capture that root's resolved
+     value before inheritance, which would make nested Theme/Studio overrides
+     unable to change typography, borders, motion and Shape. These adapters are
+     private implementation glue, not a second public Theme layer. */
+  :scope, [data-qxframe9a7c2-theme] {
+    --_qxframe9a7c2-fixed-font-family:var(--qxframe9a7c2-theme-v2-font-family);
+    --_qxframe9a7c2-fixed-font-family-heading:var(--qxframe9a7c2-theme-v2-font-family-heading);
+    --_qxframe9a7c2-fixed-font-family-mono:var(--qxframe9a7c2-theme-v2-font-family-mono);
+    --_qxframe9a7c2-typography-body-size:var(--qxframe9a7c2-theme-v2-typography-body-size);
+    --_qxframe9a7c2-typography-meta-size:var(--qxframe9a7c2-theme-v2-typography-meta-size);
+    --_qxframe9a7c2-typography-heading-size:var(--qxframe9a7c2-theme-v2-typography-heading-size);
+    --_qxframe9a7c2-typography-kpi-size:var(--qxframe9a7c2-theme-v2-typography-kpi-size);
+    --_qxframe9a7c2-typography-body-weight:var(--qxframe9a7c2-theme-v2-typography-body-weight);
+    --_qxframe9a7c2-typography-label-weight:var(--qxframe9a7c2-theme-v2-typography-label-weight);
+    --_qxframe9a7c2-family-control-border-width:var(--qxframe9a7c2-theme-v2-border-width);
+    --_qxframe9a7c2-card-border-width:var(--qxframe9a7c2-theme-v2-card-border-width);
+    --_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-theme-v2-card-shadow);
+    --_qxframe9a7c2-card-font-size:var(--qxframe9a7c2-theme-v2-card-font-size);
+    --_qxframe9a7c2-fixed-card-title-delta:var(--qxframe9a7c2-theme-v2-card-title-delta);
+    --_qxframe9a7c2-fixed-card-meta-gap:var(--qxframe9a7c2-theme-v2-card-meta-gap);
+    --_qxframe9a7c2-fixed-motion-duration-1:var(--qxframe9a7c2-theme-v2-motion-duration-1);
+    --_qxframe9a7c2-fixed-motion-duration-2:var(--qxframe9a7c2-theme-v2-motion-duration-2);
+    --_qxframe9a7c2-fixed-motion-duration-3:var(--qxframe9a7c2-theme-v2-motion-duration-3);
+    --_qxframe9a7c2-fixed-motion-duration-5:var(--qxframe9a7c2-theme-v2-motion-duration-5);
+    --_qxframe9a7c2-choice-radio-radius:var(--qxframe9a7c2-theme-v2-shape-choice-radio-radius);
+    --_qxframe9a7c2-choice-checkbox-radius:var(--qxframe9a7c2-theme-v2-shape-choice-checkbox-radius);
+    --_qxframe9a7c2-slider-rail-radius:var(--qxframe9a7c2-theme-v2-shape-range-track-radius);
+    --_qxframe9a7c2-slider-handle-radius:var(--qxframe9a7c2-theme-v2-shape-range-thumb-radius);
+    --_qxframe9a7c2-range-progress-radius:var(--qxframe9a7c2-theme-v2-shape-progress-radius);
+    --_qxframe9a7c2-compact-shape-radius:var(--qxframe9a7c2-theme-v2-shape-compact-radius);
+    --_qxframe9a7c2-identity-shape-radius:var(--qxframe9a7c2-theme-v2-shape-identity-radius);
+  }
+  /* Body typography is inherited from an explicit Theme boundary. Keep the
+     document root neutral so the framework never rewrites the host page font. */
+  [data-qxframe9a7c2-theme] {
+    font-family: var(--qxframe9a7c2-theme-v2-font-family);
+  }
+}
+/* Static canonical Style defaults; generated Theme CSS later writes the same inputs. */
+@scope ([data-qxframe9a7c2-style="maia"]) {
+  :scope {
+    --qxframe9a7c2-theme-v2-control-fill-light-weight:30%;
+    --qxframe9a7c2-theme-v2-control-fill-dark-weight:30%;
+    --qxframe9a7c2-theme-v2-card-meta-gap:.5rem;
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+  }
+}
+@scope ([data-qxframe9a7c2-style="lyra"]) {
+  :scope {
+    --qxframe9a7c2-theme-v2-typography-body-size:.75rem;
+    --qxframe9a7c2-theme-v2-typography-heading-size:.875rem;
+    --qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;
+    --qxframe9a7c2-theme-v2-card-font-size:.75rem;
+    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;
+    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:0;
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:0;
+  }
+}
+@scope ([data-qxframe9a7c2-style="mira"]) {
+  :scope {
+    --qxframe9a7c2-theme-v2-control-fill-light-weight:20%;
+    --qxframe9a7c2-theme-v2-control-fill-dark-weight:30%;
+    --qxframe9a7c2-theme-v2-typography-body-size:.75rem;
+    --qxframe9a7c2-theme-v2-typography-heading-size:.875rem;
+    --qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;
+    --qxframe9a7c2-theme-v2-card-font-size:.75rem;
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+  }
+}
+@scope ([data-qxframe9a7c2-style="luma"]) {
+  :scope {
+    --qxframe9a7c2-theme-v2-control-fill-light-weight:50%;
+    --qxframe9a7c2-theme-v2-control-fill-dark-weight:50%;
+    --qxframe9a7c2-theme-v2-control-border-inline-weight:0%;
+    --qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;
+    --qxframe9a7c2-theme-v2-control-border-block-end-weight:0%;
+    --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;
+    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:100rem;
+    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:100rem;
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:100rem;
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:100rem;
+  }
+}
+@scope ([data-qxframe9a7c2-style="sera"]) {
+  :scope {
+    --qxframe9a7c2-theme-v2-font-family-heading:Georgia,"Times New Roman",serif;
+    --qxframe9a7c2-theme-v2-typography-body-size:.75rem;
+    --qxframe9a7c2-theme-v2-typography-heading-size:.875rem;
+    --qxframe9a7c2-theme-v2-typography-kpi-size:1.75rem;
+    --qxframe9a7c2-theme-v2-control-font-weight:600;
+    --qxframe9a7c2-theme-v2-control-letter-spacing:.1em;
+    --qxframe9a7c2-theme-v2-control-text-transform:uppercase;
+    --qxframe9a7c2-theme-v2-heading-letter-spacing:.05em;
+    --qxframe9a7c2-theme-v2-heading-text-transform:uppercase;
+    --qxframe9a7c2-theme-v2-control-fill-light-weight:0%;
+    --qxframe9a7c2-theme-v2-control-fill-dark-weight:0%;
+    --qxframe9a7c2-theme-v2-control-border-inline-weight:0%;
+    --qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;
+    --qxframe9a7c2-theme-v2-control-border-block-end-weight:100%;
+    --qxframe9a7c2-theme-v2-control-state-border-inline-weight:0%;
+    --qxframe9a7c2-theme-v2-control-state-border-block-start-weight:0%;
+    --qxframe9a7c2-theme-v2-control-state-border-block-end-weight:100%;
+    --qxframe9a7c2-theme-v2-card-title-delta:.25rem;
+    --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;
+    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:0;
+    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:0;
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:0;
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:0;
+  }
+}
+@scope ([data-qxframe9a7c2-style="rhea"]) {
+  :scope {
+    --qxframe9a7c2-theme-v2-control-fill-light-weight:50%;
+    --qxframe9a7c2-theme-v2-control-fill-dark-weight:50%;
+    --qxframe9a7c2-theme-v2-control-border-inline-weight:0%;
+    --qxframe9a7c2-theme-v2-control-border-block-start-weight:0%;
+    --qxframe9a7c2-theme-v2-control-border-block-end-weight:0%;
+    --qxframe9a7c2-theme-v2-card-meta-gap:.375rem;
+    --qxframe9a7c2-theme-v2-shape-toggle-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+    --qxframe9a7c2-theme-v2-shape-toggle-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+    --qxframe9a7c2-theme-v2-shape-range-track-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+    --qxframe9a7c2-theme-v2-shape-range-thumb-radius:var(--qxframe9a7c2-theme-v2-radius-control-md);
+  }
+}

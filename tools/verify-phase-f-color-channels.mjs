@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {readCanonicalComponentStyleSource} from './style-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const theme=fs.readFileSync(path.join(root,'src/styles/theme/_visual-v2.scss'),'utf8');
+const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
 const components=readCanonicalComponentStyleSource({root});
 const lines=components.split(/\r?\n/);
 

@@ -4,7 +4,7 @@
   "source": {
     "entry": "src/styles/qxframe9a7c2.scss",
     "modules": [
-      "src/styles/base/_reset.scss",
+      "src/styles/main/reset.css",
       "src/styles/preset/_foundation.scss",
       "src/styles/theme/_default.scss",
       "src/styles/theme/_family.scss",

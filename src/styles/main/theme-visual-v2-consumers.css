@@ -1,0 +1,48 @@
+/* THEME-VISUAL-V2-001 consumer closeout.
+ * Same public-rule layer as visual-v2; split only for maintainability.
+ * No legacy palette/state inputs are consumed here. */
+@scope (:root) {
+  /* Keyboard focus remains the framework-wide 2px light/dark black-white
+     rule. Re-resolve it inside the v2 scope so no inherited legacy color is
+     captured before a local theme boundary is applied. */
+  * {
+    --_qxframe9a7c2-focus-visible-outline: var(--_qxframe9a7c2-focus-visible-width) solid var(--_qxframe9a7c2-semantic-focus-visible);
+  }
+  /* Result's legacy status class names are not the framework-wide is-* Type
+     aliases. Bind them to the already-shared v2 current-Type resolver instead
+     of duplicating the shadcn soft formula in a second module. */
+  .qxframe9a7c2-result-success {
+    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-success);
+    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-success-foreground);
+    --_qxframe9a7c2-semantic-success: var(--_qxframe9a7c2-v2-type);
+    --_qxframe9a7c2-semantic-success-soft: var(--_qxframe9a7c2-v2-soft);
+  }
+  .qxframe9a7c2-result-warning {
+    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-warning);
+    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-warning-foreground);
+    --_qxframe9a7c2-semantic-warning: var(--_qxframe9a7c2-v2-type);
+    --_qxframe9a7c2-semantic-warning-soft: var(--_qxframe9a7c2-v2-soft);
+  }
+  .qxframe9a7c2-result-error {
+    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-error);
+    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-error-foreground);
+    --_qxframe9a7c2-semantic-error: var(--_qxframe9a7c2-v2-type);
+    --_qxframe9a7c2-semantic-error-soft: var(--_qxframe9a7c2-v2-soft);
+  }
+  .qxframe9a7c2-result-info {
+    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-v2-info);
+    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-v2-info-foreground);
+    --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-v2-soft);
+  }
+  /* Inline image masks belong to the same mask role as preview/upload masks. */
+  .qxframe9a7c2-image {
+    --_qxframe9a7c2-image-mask-bg: var(--qxframe9a7c2-theme-v2-mask);
+  }
+  /* Overlay choice indicators must not retain the legacy overlay-shadow color.
+     Match the legacy selector specificity instead of using priority flags. */
+  .qxframe9a7c2-form-selectgroup-indicator.is-checkbox.is-overlay,
+  .qxframe9a7c2-form-selectgroup-indicator.is-radio.is-overlay {
+    box-shadow: none;
+  }
+}

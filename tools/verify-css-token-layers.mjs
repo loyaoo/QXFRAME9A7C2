@@ -8,8 +8,8 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const exists=rel=>fs.existsSync(path.join(root,rel));
 const component=readCanonicalComponentStyleSource({root});
-const theme=[read('src/styles/theme/_visual-v2.scss'),read('src/styles/theme/_visual-v2-style.scss'),read('src/styles/theme/_visual-v2-style-consumers.scss')].join('\n');
-const fixed=read('src/styles/internal/_fixed-values.scss');
+const theme=[read('src/styles/main/theme-visual-v2.css'),read('src/styles/main/theme-visual-v2-style.css'),read('src/styles/main/theme-visual-v2-style-consumers.css')].join('\n');
+const fixed=read('src/styles/main/fixed-values.css');
 
 for(const retired of ['src/styles/preset/_foundation.scss','src/styles/theme/_default.scss','src/styles/theme/_family.scss'])assert.equal(exists(retired),false,'Retired public Theme layer must stay deleted: '+retired);
 assert.equal(exists('tools/manifests/css-token-layer-bridge.json'),false,'Retired Preset→Theme bridge manifest must stay deleted.');

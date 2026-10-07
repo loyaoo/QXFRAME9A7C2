@@ -1,0 +1,15 @@
+/* QXFRAME9A7C2 unified CSS: canonical physical source order without CSS layer syntax. */
+/* reset */
+/* Framework-scoped normalize only. Never reset the host page. */
+[class^=qxframe9a7c2-], [class*=" qxframe9a7c2-"], [class^=qxframe9a7c2-]::before, [class*=" qxframe9a7c2-"]::before, [class^=qxframe9a7c2-]::after, [class*=" qxframe9a7c2-"]::after {
+  box-sizing: border-box;
+}
+
+button[class^=qxframe9a7c2-], input[class^=qxframe9a7c2-], select[class^=qxframe9a7c2-], textarea[class^=qxframe9a7c2-], button[class*=" qxframe9a7c2-"], input[class*=" qxframe9a7c2-"], select[class*=" qxframe9a7c2-"], textarea[class*=" qxframe9a7c2-"] {
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  font-variant: inherit;
+  font-stretch: inherit;
+}

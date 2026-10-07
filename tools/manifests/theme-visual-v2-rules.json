@@ -2,7 +2,7 @@
   "schema": 2,
   "sourceSha": "295a1f114a138f23b5dfee0e0c6812394dfeb90c",
   "sourceFixtures": "tools/fixtures/theme-v2/shadcn-source.json",
-  "implementation": "src/styles/theme/_visual-v2.scss",
+  "implementation": "src/styles/main/theme-visual-v2.css",
   "rules": [
     {
       "id": "action.solid",
@@ -496,7 +496,7 @@
   ],
   "geometry": {
     "rules": "qx-md-1",
-    "implementation": "src/styles/theme/_visual-v2.scss",
+    "implementation": "src/styles/main/theme-visual-v2.css",
     "inputs": 21,
     "options": {
       "density": 4,

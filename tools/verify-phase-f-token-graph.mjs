@@ -8,7 +8,7 @@ import {verifySemanticRuleSource} from './theme-v2-contract.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const css=readCanonicalStyleSource({root});
-const theme=read('src/styles/theme/_visual-v2.scss');
+const theme=read('src/styles/main/theme-visual-v2.css');
 
 const dynamicOwners=new Map([
   ['--qxframe9a7c2-collapse-motion-height',{file:'src/components/collapse.js',set:/setProperty\(['"]--qxframe9a7c2-collapse-motion-height['"]/}],

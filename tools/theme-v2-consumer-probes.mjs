@@ -6,7 +6,7 @@ import path from 'node:path';
 // NOT used as the type system: e.g. fixed-color-panel-control-border is a length.
 // Geometry, shadow geometry, gradients and motion values must stay untouched.
 export function consumerProbeInventory(root){
-  const source=fs.readFileSync(path.join(root,'src/styles/internal/_fixed-values.scss'),'utf8');
+  const source=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
   const values=new Map();
   for(const match of source.matchAll(/(--_qxframe9a7c2-[a-z0-9-]+)\s*:\s*([^;]+);/gi))values.set(match[1],match[2].trim());
 

@@ -1,0 +1,179 @@
+.qxframe9a7c2-sort {
+  --_qxframe9a7c2-sort-drop-indicator-size:var(--qxframe9a7c2-sort-drop-indicator-size,var(--_qxframe9a7c2-fixed-drop-indicator-size));
+  --_qxframe9a7c2-sort-item-radius:var(--qxframe9a7c2-sort-item-radius,var(--_qxframe9a7c2-navigation-radius));
+  display: block;
+  min-width: 0;
+  color: var(--_qxframe9a7c2-semantic-text);
+}
+
+.qxframe9a7c2-sort-scroll.qxframe9a7c2-scroll {
+  width: 100%;
+  height: auto;
+  min-width: 0;
+}
+
+.qxframe9a7c2-sort-scroll-content {
+  display: flex;
+  min-width: 100%;
+  flex-direction: column;
+  gap: var(--_qxframe9a7c2-fixed-space-2);
+}
+
+.qxframe9a7c2-sort.is-horizontal .qxframe9a7c2-sort-scroll-content {
+  width: max-content;
+  min-width: 100%;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.qxframe9a7c2-sort-item {
+  --_qxframe9a7c2-sort-item-border:var(--_qxframe9a7c2-semantic-border);
+  --_qxframe9a7c2-sort-item-bg:var(--_qxframe9a7c2-item-bg,var(--_qxframe9a7c2-semantic-surface));
+  --_qxframe9a7c2-sort-item-ring:var(--_qxframe9a7c2-item-ring,none);
+  --_qxframe9a7c2-sort-item-opacity:1;
+  --_qxframe9a7c2-sort-item-cursor:var(--_qxframe9a7c2-item-cursor,default);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--_qxframe9a7c2-fixed-space-2);
+  min-width: 0;
+  min-height: var(--_qxframe9a7c2-control-height);
+  padding: var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-fixed-space-3);
+  border: 1px solid var(--_qxframe9a7c2-sort-item-border);
+  border-radius: var(--_qxframe9a7c2-sort-item-radius);
+  background: var(--_qxframe9a7c2-sort-item-bg);
+  box-shadow: var(--_qxframe9a7c2-sort-item-ring);
+  outline: none;
+  opacity: var(--_qxframe9a7c2-sort-item-opacity);
+  cursor: var(--_qxframe9a7c2-sort-item-cursor);
+  transition: border-color var(--_qxframe9a7c2-fixed-motion-duration-2) var(--_qxframe9a7c2-fixed-motion-easing-standard), box-shadow var(--_qxframe9a7c2-fixed-motion-duration-2) var(--_qxframe9a7c2-fixed-motion-easing-standard), opacity var(--_qxframe9a7c2-fixed-motion-duration-2) var(--_qxframe9a7c2-fixed-motion-easing-standard), transform var(--_qxframe9a7c2-fixed-motion-duration-2) var(--_qxframe9a7c2-fixed-motion-easing-standard);
+}
+
+.qxframe9a7c2-sort-move-active {
+  transition-property: transform;
+  transition-duration: var(--qxframe9a7c2-motion-sort-item-duration);
+  transition-timing-function: var(--qxframe9a7c2-motion-sort-item-easing);
+}
+
+.qxframe9a7c2-sort-item:focus-visible {
+  --_qxframe9a7c2-sort-item-border:var(--_qxframe9a7c2-semantic-focus);
+  --_qxframe9a7c2-sort-item-ring:none;
+  outline: var(--_qxframe9a7c2-focus-visible-outline);
+  outline-offset: var(--_qxframe9a7c2-focus-visible-offset);
+}
+
+.qxframe9a7c2-sort-item.is-readonly {
+  --_qxframe9a7c2-sort-item-bg:var(--_qxframe9a7c2-semantic-surface-muted);
+  --_qxframe9a7c2-sort-item-cursor:default;
+}
+
+.qxframe9a7c2-sort-item.is-dragging {
+  --_qxframe9a7c2-sort-item-ring:var(--_qxframe9a7c2-popup-shadow);
+  --_qxframe9a7c2-sort-item-opacity:.55;
+  --_qxframe9a7c2-sort-item-cursor:grabbing;
+}
+
+.qxframe9a7c2-sort-item.is-disabled {
+  --_qxframe9a7c2-sort-item-border:var(--_qxframe9a7c2-semantic-border-disabled);
+  --_qxframe9a7c2-sort-item-bg:var(--_qxframe9a7c2-semantic-bg-disabled);
+  --_qxframe9a7c2-sort-item-ring:none;
+  --_qxframe9a7c2-sort-item-opacity:.55;
+  --_qxframe9a7c2-sort-item-cursor:not-allowed;
+}
+
+.qxframe9a7c2-sort-handle {
+  --_qxframe9a7c2-sort-handle-cursor:grab;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--_qxframe9a7c2-fixed-sort-handle-size);
+  min-height: var(--_qxframe9a7c2-fixed-sort-handle-size);
+  border-radius: var(--_qxframe9a7c2-action-radius);
+  color: var(--_qxframe9a7c2-semantic-text-secondary);
+  font-size: var(--_qxframe9a7c2-fixed-font-size-lg);
+  line-height: 1;
+  letter-spacing: -0.18em;
+  cursor: var(--_qxframe9a7c2-sort-handle-cursor);
+  user-select: none;
+}
+
+.qxframe9a7c2-sort-handle[draggable=false], .qxframe9a7c2-sort-item.is-readonly .qxframe9a7c2-sort-handle {
+  --_qxframe9a7c2-sort-handle-cursor:default;
+}
+
+.qxframe9a7c2-sort-item.is-dragging .qxframe9a7c2-sort-handle {
+  --_qxframe9a7c2-sort-handle-cursor:grabbing;
+}
+
+.qxframe9a7c2-sort-item.is-disabled .qxframe9a7c2-sort-handle {
+  --_qxframe9a7c2-sort-handle-cursor:not-allowed;
+}
+
+.qxframe9a7c2-sort-label {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qxframe9a7c2-sort-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: var(--_qxframe9a7c2-fixed-space-1);
+}
+
+.qxframe9a7c2-sort-action {
+  flex: 0 0 auto;
+}
+
+.qxframe9a7c2-sort-item.is-drag-before::before, .qxframe9a7c2-sort-item.is-drag-after::after {
+  content: "";
+  position: absolute;
+  z-index: var(--qxframe9a7c2-z-local-above);
+  inset-inline: 0;
+  height: var(--_qxframe9a7c2-sort-drop-indicator-size);
+  background: var(--_qxframe9a7c2-semantic-accent);
+  pointer-events: none;
+}
+
+.qxframe9a7c2-sort-item.is-drag-before::before {
+  top: calc(var(--_qxframe9a7c2-sort-drop-indicator-size) * -1);
+}
+
+.qxframe9a7c2-sort-item.is-drag-after::after {
+  bottom: calc(var(--_qxframe9a7c2-sort-drop-indicator-size) * -1);
+}
+
+.qxframe9a7c2-sort.is-horizontal .qxframe9a7c2-sort-item {
+  flex: 0 0 min(var(--_qxframe9a7c2-fixed-sort-item-max-width), 72%);
+}
+
+.qxframe9a7c2-sort.is-horizontal .qxframe9a7c2-sort-item.is-drag-before::before, .qxframe9a7c2-sort.is-horizontal .qxframe9a7c2-sort-item.is-drag-after::after {
+  top: 0;
+  bottom: 0;
+  width: var(--_qxframe9a7c2-sort-drop-indicator-size);
+  height: auto;
+}
+
+.qxframe9a7c2-sort.is-horizontal .qxframe9a7c2-sort-item.is-drag-before::before {
+  inset-inline-start: calc(var(--_qxframe9a7c2-sort-drop-indicator-size) * -1);
+  inset-inline-end: auto;
+}
+
+.qxframe9a7c2-sort.is-horizontal .qxframe9a7c2-sort-item.is-drag-after::after {
+  inset-inline-start: auto;
+  inset-inline-end: calc(var(--_qxframe9a7c2-sort-drop-indicator-size) * -1);
+}
+
+.qxframe9a7c2-sort-overlay {
+  position: fixed;
+  z-index: var(--qxframe9a7c2-z-tooltip-base);
+  box-sizing: border-box;
+  margin: 0;
+  pointer-events: none;
+  opacity: 0.9;
+  box-shadow: var(--_qxframe9a7c2-popup-shadow);
+  transform: rotate(0.35deg);
+  will-change: left, top;
+}
