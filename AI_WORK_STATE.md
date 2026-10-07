@@ -76,8 +76,8 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
 
 ## NEXT EXACT STEPS
 
-1. 2b-A (acceptance fixes): hairline crash; consumers for radius-badge / radius-tabs / radius-dialog / card-section(-border); new tokens radius-select + slider-thumb-width (Luma 24×16 capsule thumb); verify-create-app check that every option of every ext axis changes at least one token consumed by dist CSS.
-2. 2b-B: migrate remaining components; dissolve fixed-values :root component tokens / legacy palettes (ratchet rows → 0), commit per component group.
+1. DONE 2b-A (9a74c7d): hairline fix, badge/tabs/dialog/select radius + card-section consumers, radius-select + slider-thumb-width tokens (Luma 24×16 verified in browser), verify-create-app check #14 (every axis level reaches a consumer).
+2. NOW 2b-B: migrate remaining components; dissolve fixed-values :root component tokens / legacy palettes (ratchet rows → 0), commit per component group.
 3. Stage-2b PR → CI green → merge → Pages URL → stop for acceptance.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
