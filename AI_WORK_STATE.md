@@ -82,7 +82,7 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
    - Equivalence (scratchpad/eq3e.json, baseline after-inline.css): 111 pages × light/dark, 335 diffs, all reviewed and accepted: same color in other notation (color(srgb) ↔ rgba), status soft tints 12%/22% → 10%/20%, login/result tints follow theme primary/status, message + image-preview video shadow → theme shadow-popup, color-picker active mode button gets primary soft tint, result info icon uses theme-info; element-count rows are async-demo noise.
    - Ratchet re-baselined: root-non-theme 4618→383, hardcoded-color 2244→126, public-component-token-declared 503→492 (per-segment hardcoded-color rose where constants moved into their only consumer; documented in baseline note).
    - Remaining for stages 3–5: public-component-token-declared 492, root-non-theme 383, duplicate-owner 141, hardcoded-color 126 (color picker spectrum needs documented exception).
-3. NOW 2b-C: local full verify + browser/release/package gates all green (d03cbaf). PR https://github.com/loyaoo/QXFRAME9A7C2/pull/264 opened; waiting for CI → merge when green → confirm Pages deploy → give owner URL → stop for acceptance.
+3. DONE 2b-C: PR https://github.com/loyaoo/QXFRAME9A7C2/pull/264 CI green (release, windows-tools, schema-acceptance), merged as fe209ab; main CI run 37608238589 deploys Pages. NOW: STOP — waiting for owner acceptance of stage 2b on Pages. Stage 3 starts only after owner says 继续.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
