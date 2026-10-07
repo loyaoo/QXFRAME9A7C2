@@ -51,8 +51,8 @@ const activeMutationLines=staticTool.split(/\r?\n/).filter(line=>/classList\.(?:
 assert.ok(activeMutationLines.every(line=>line.includes('data-sg-theme-preset')),
   'Any docs-tool is-active mutation must be limited to the Theme Inspector preset UI.');
 
-assert.match(docsTheme,/setAttribute\(['"]data-qxframe9a7c2-theme['"],\s*mode\)/,
-  'Docs theme helper must project mode through the canonical CSS theme selector.');
+assert.match(docsTheme,/classList\.toggle\(['"]dark['"],\s*mode === ['"]dark['"]\)/,
+  'Docs theme helper must project mode through the canonical CSS theme selector (.dark, createApp v3 §5).');
 assert.doesNotMatch(docsTheme,/style\.setProperty\([^\n]*--_qxframe9a7c2-/,
   'Docs theme mode helper must not mirror private semantic/family/component CSS variables.');
 
