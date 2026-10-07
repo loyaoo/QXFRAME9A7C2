@@ -13,20 +13,21 @@
 - Measured shadcn reference data: `tools/qa/spec.json` (shadcn create SHA `295a1f114a138f23b5dfee0e0c6812394dfeb90c`).
 - Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
-- Current Program: CREATEAPP-V3 — stage 0 of 0–5.
-- Current Phase: CREATEAPP-V3 stage 0 — plain CSS source, concat build and v3 §5/§6 CI gates.
-- Current Task: `CREATEAPP-V3-S0` — implemented; PR #261 awaiting owner acceptance.
+- Current Program: CREATEAPP-V3 — stage 1 of 0–5 (stage 0 merged).
+- Current Phase: CREATEAPP-V3 stage 1 — createApp shell, panel and interactions.
+- Current Task: `CREATEAPP-V3-S1` — started.
 
 ## CURRENT
 
-Task: CREATEAPP-V3-S0 — SCSS → plain CSS source, concat build, v3 §5/§6 CI gates.
-Status: IMPLEMENTED on `redesign/create`; PR pending owner acceptance.
+Task: CREATEAPP-V3-S1 — `docs/create/` shell, customization panel and all interaction logic.
+Status: STARTED. Stage 0 merged: PR #261 → main `912400e`.
 
 ### Owner decisions (2026-10-07) — frozen
 
 - §5/§6 gates run as a **ratchet**: current violations are frozen in `tools/manifests/css-gate-baseline.json`; any increase fails CI, counts may only fall; token-class violations clear in stage 2, every count must be zero by stage 5.
 - **Framework zero React / zero UI-framework dependency**; Floating UI (vendored) is the only third-party runtime code. `tools/qa/ref/` (React-based shadcn reference renderer) is kept as a measurement tool only and never ships; `verify:no-framework-deps` enforces this in CI.
 - Answer the owner in Chinese.
+- **Acceptance via GitHub Pages**: when a stage PR's CI is fully green, Claude merges it into main; Pages publishes and the owner accepts on the live site (`https://loyaoo.github.io/QXFRAME9A7C2/…`). Problems are fixed in a follow-up PR.
 - Stage 0 keeps the **existing 60 module boundaries** (no cascade-order change). True per-component re-split happens in stage 2 together with the token-chain rewrite.
 
 ### Stage 0 delivered
@@ -44,8 +45,8 @@ Status: IMPLEMENTED on `redesign/create`; PR pending owner acceptance.
 
 ## NEXT EXACT STEPS
 
-1. Owner accepts stage-0 PR (or requests changes). Do not start stage 1 before the owner says 继续.
-2. Stage 1: sync `redesign/create` with main, then build `docs/create/` shell, customization panel and all interaction logic per v3 §3–§4.
+1. Stage 1: build `docs/create/` shell, customization panel and all interaction logic per v3 §3–§4, using shadcn create source at the locked SHA as reference.
+2. Open stage-1 PR; when CI is green, merge and give the owner the Pages URL `https://loyaoo.github.io/QXFRAME9A7C2/docs/create/`.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
