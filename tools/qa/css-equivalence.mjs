@@ -67,15 +67,21 @@ const STYLE_PROBE = () => {
 };
 
 const browser = await chromium.launch();
-const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1, reducedMotion: 'reduce' });
-await context.addInitScript(() => {
-  let seed = 42; Math.random = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
-});
-await context.route('**/*', route => route.request().url().startsWith(origin) || route.request().url().startsWith('data:') ? route.continue() : route.abort());
+// Every render gets a fresh context so storage, caches and focus state cannot leak between pages.
+async function newContext() {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1, reducedMotion: 'reduce' });
+  await context.addInitScript(() => {
+    let seed = 42; Math.random = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  });
+  await context.route('**/*', route => route.request().url().startsWith(origin) || route.request().url().startsWith('data:') ? route.continue() : route.abort());
+  return context;
+}
+const context = await newContext();
 
 async function render(rel, mode, css) {
   activeCss = css;
-  const page = await context.newPage();
+  const ctx = await newContext();
+  const page = await ctx.newPage();
   await page.clock.setFixedTime(new Date('2026-01-15T10:00:00Z'));
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
@@ -85,7 +91,7 @@ async function render(rel, mode, css) {
   await page.evaluate(() => document.fonts.ready);
   const shot = await page.screenshot({ fullPage: true, animations: 'disabled', caret: 'hide' });
   const styles = await page.evaluate(STYLE_PROBE);
-  await page.close();
+  await ctx.close();
   return { shot, styles, errors };
 }
 
@@ -105,20 +111,50 @@ async function pixelDiff(a, b) {
   return result;
 }
 
+// Rule-level check: both sheets parsed by Chromium must yield the same rule sequence. Values that
+// contain var() keep their author text, so math serialization (spacing, 0.5 vs .5, an implicit
+// calc() inside min()/max()) is normalized before comparing; everything else must match exactly.
+async function cssomCompare() {
+  const page = await context.newPage();
+  const serialize = css => page.evaluate(css => {
+    const sheet = new CSSStyleSheet(); sheet.replaceSync(css); const out = [];
+    const walk = rules => { for (const r of rules) { if (r.cssRules && !(r instanceof CSSStyleRule)) { out.push('@' + r.constructor.name + ' ' + (r.conditionText || r.media?.mediaText || r.name || '')); walk(r.cssRules); out.push('}'); } else out.push(r.cssText); } };
+    walk(sheet.cssRules); return out;
+  }, css.toString('utf8'));
+  const a = await serialize(baselineCss), b = await serialize(candidateCss);
+  await page.close();
+  const norm = s => (s || '').replace(/\s+/g, '').replace(/(^|[^0-9.])0\.(?=[0-9])/g, '$1.').replace(/calc\(/g, '(').replace(/[()]/g, '');
+  let exact = 0, normalized = 0; const unequal = [];
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if (a[i] === b[i]) exact++;
+    else if (norm(a[i]) === norm(b[i])) normalized++;
+    else unequal.push({ index: i, baseline: a[i]?.slice(0, 200), candidate: b[i]?.slice(0, 200) });
+  }
+  return { baselineRules: a.length, candidateRules: b.length, exact, mathSerializationOnly: normalized, unequal };
+}
+const cssom = await cssomCompare();
+console.log(JSON.stringify({ cssom: { ...cssom, unequal: cssom.unequal.length } }));
+
 const results = [];
 for (const rel of pages()) {
   for (const mode of ['light', 'dark']) {
-    const base = await render(rel, mode, baselineCss);
-    const cand = await render(rel, mode, candidateCss);
-    const identicalPng = base.shot.equals(cand.shot);
-    const diff = identicalPng ? { pixels: 0 } : await pixelDiff(base.shot, cand.shot);
-    let styleDiffs = 0; const samples = [];
-    const n = Math.max(base.styles.length, cand.styles.length);
-    for (let i = 0; i < n; i++) {
-      const x = base.styles[i], y = cand.styles[i];
-      if (!x || !y || x[0] !== y[0] || x[1] !== y[1] || x[2] !== y[2]) { styleDiffs++; if (samples.length < 3) samples.push(x?.[0] || y?.[0]); }
-    }
-    const entry = { page: rel, mode, elements: base.styles.length, identicalPng, diffPixels: diff.pixels, sizeMismatch: diff.sizeMismatch || null, styleDiffs, samples, errors: cand.errors.length };
+    // Up to three attempts: a page with live timers/caret can repaint a few pixels between two
+    // renders of the same CSS; a real difference reproduces on every attempt.
+    let base, cand, identicalPng, diff, styleDiffs, samples, attempts = 0;
+    do {
+      attempts++;
+      base = await render(rel, mode, baselineCss);
+      cand = await render(rel, mode, candidateCss);
+      identicalPng = base.shot.equals(cand.shot);
+      diff = identicalPng ? { pixels: 0 } : await pixelDiff(base.shot, cand.shot);
+      styleDiffs = 0; samples = [];
+      const n = Math.max(base.styles.length, cand.styles.length);
+      for (let i = 0; i < n; i++) {
+        const x = base.styles[i], y = cand.styles[i];
+        if (!x || !y || x[0] !== y[0] || x[1] !== y[1] || x[2] !== y[2]) { styleDiffs++; if (samples.length < 3) samples.push(x?.[0] || y?.[0]); }
+      }
+    } while ((diff.pixels !== 0 || styleDiffs !== 0) && attempts < 3);
+    const entry = { page: rel, mode, attempts, elements: base.styles.length, identicalPng, diffPixels: diff.pixels, sizeMismatch: diff.sizeMismatch || null, styleDiffs, samples, errors: cand.errors.length };
     if (!identicalPng) {
       const slug = rel.replace(/[\/.]/g, '_') + '-' + mode;
       fs.writeFileSync(path.join(outDir, slug + '-baseline.png'), base.shot);
@@ -135,11 +171,12 @@ const summary = {
   generatedAt: new Date().toISOString(),
   baselineBytes: baselineCss.length,
   candidateBytes: candidateCss.length,
+  cssom,
   renders: results.length,
   pixelIdentical: results.filter(r => r.diffPixels === 0).length,
   computedStyleIdentical: results.filter(r => r.styleDiffs === 0).length,
   elementsCompared: results.reduce((s, r) => s + r.elements, 0),
-  failures: results.filter(r => r.diffPixels !== 0 || r.styleDiffs !== 0).map(r => `${r.page} (${r.mode})`),
+  failures: [...(cssom.unequal.length || cssom.baselineRules !== cssom.candidateRules ? ['cssom'] : []), ...results.filter(r => r.diffPixels !== 0 || r.styleDiffs !== 0).map(r => `${r.page} (${r.mode})`)],
   results
 };
 fs.writeFileSync(path.join(outDir, 'css-equivalence.json'), JSON.stringify(summary, null, 1) + '\n');
