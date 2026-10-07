@@ -84,7 +84,8 @@ async function run(rel) {
     current = which;
     await page.goto(`${origin}/${rel}`, { waitUntil: 'load' });
     await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' });
-    await page.waitForTimeout(600);
+    // Wait until async demos settle (element count stable for 600ms, at most 8s).
+    await page.evaluate(() => new Promise(res => { let last = -1, stable = 0; const start = Date.now(); const tick = () => { const n = document.getElementsByTagName('*').length; stable = n === last ? stable + 1 : 0; last = n; if (stable >= 6 || Date.now() - start > 8000) res(); else setTimeout(tick, 100); }; tick(); }));
     const out = {};
     for (const mode of ['light', 'dark']) {
       await page.evaluate(m => document.documentElement.classList.toggle('dark', m === 'dark'), mode);
