@@ -26,41 +26,41 @@
     --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-foreground);
     --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-muted-foreground);
     --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-muted-foreground);
-    
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-theme-muted-foreground);
     --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-theme-muted-foreground);
-    
+    --_qxframe9a7c2-semantic-text-inverse: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-semantic-overlay-text: var(--qxframe9a7c2-theme-popover-foreground);
     --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-border);
     --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-border);
     --_qxframe9a7c2-semantic-border-strong: var(--qxframe9a7c2-theme-input);
-    
-    
-    
+    --_qxframe9a7c2-semantic-border-hover: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-semantic-border-disabled: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-semantic-input-border: var(--qxframe9a7c2-theme-input);
     --_qxframe9a7c2-semantic-focus: var(--qxframe9a7c2-theme-ring);
-    
-    
-    
+    --_qxframe9a7c2-semantic-mask: var(--qxframe9a7c2-theme-overlay);
+    --_qxframe9a7c2-semantic-bg-readonly: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-semantic-success: var(--qxframe9a7c2-theme-success);
     --_qxframe9a7c2-semantic-warning: var(--qxframe9a7c2-theme-warning);
     --_qxframe9a7c2-semantic-error: var(--qxframe9a7c2-theme-destructive);
     --_qxframe9a7c2-semantic-info: var(--qxframe9a7c2-theme-info);
-    
+    --_qxframe9a7c2-semantic-loading-mask: var(--qxframe9a7c2-theme-overlay);
     --_qxframe9a7c2-semantic-overlay-base: var(--qxframe9a7c2-theme-foreground);
     --_qxframe9a7c2-semantic-overlay-control-hover: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-accent-border: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));
-    
+    --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-navigation-hover-bg: var(--qxframe9a7c2-theme-muted);
-    
-    
-    
-    
+    --_qxframe9a7c2-navigation-selected-bg: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-popover);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-popover-foreground);
+    --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-border);
     --_qxframe9a7c2-surface-bg: var(--qxframe9a7c2-theme-background);
-    
-    
-    
-    
+    --_qxframe9a7c2-surface-raised-bg: var(--qxframe9a7c2-theme-card);
+    --_qxframe9a7c2-surface-border: var(--qxframe9a7c2-theme-border);
+    --_qxframe9a7c2-data-border: var(--qxframe9a7c2-theme-border);
+    --_qxframe9a7c2-data-header-bg: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-focus);
-    
+    --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-destructive-foreground));
     --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));
     --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground));
     --_qxframe9a7c2-accent: var(--_qxframe9a7c2-semantic-accent);
@@ -343,9 +343,9 @@
     --_qxframe9a7c2-v2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
     --_qxframe9a7c2-v2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
     --_qxframe9a7c2-v2-dialog-shadow: var(--qxframe9a7c2-theme-shadow-dialog);
-    
-    
-    
+    --_qxframe9a7c2-popup-bg: var(--_qxframe9a7c2-v2-popup-bg);
+    --_qxframe9a7c2-popup-text: var(--_qxframe9a7c2-v2-popup-text);
+    --_qxframe9a7c2-popup-border: var(--_qxframe9a7c2-v2-popup-border);
     --_qxframe9a7c2-popup-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
     --_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg);
     --_qxframe9a7c2-popup-surface-border: var(--_qxframe9a7c2-v2-popup-border);
