@@ -15,12 +15,12 @@
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 1 of 0–5 (stage 0 merged).
 - Current Phase: CREATEAPP-V3 stage 1 — createApp shell, panel and interactions.
-- Current Task: `CREATEAPP-V3-S1` — started.
+- Current Task: `CREATEAPP-V3-S1` — implementation complete; stage-1 PR open, merge on green CI, then owner acceptance on Pages.
 
 ## CURRENT
 
 Task: CREATEAPP-V3-S1 — `docs/create/` shell, customization panel and all interaction logic.
-Status: STARTED. Stage 0 merged: PR #261 → main `912400e`.
+Status: PR OPEN (redesign/create → main). Stage 0 merged: PR #261 → main `912400e`.
 
 ### Owner decisions (2026-10-07) — frozen
 
@@ -45,10 +45,16 @@ Status: STARTED. Stage 0 merged: PR #261 → main `912400e`.
 - qxframe.js: 553 non-CSS build files byte-identical to main.
 - CI on PR #261 head `25e8cf4`: release ✅, windows-tools ✅, schema-acceptance ✅ (deploy-pages skipped on PR).
 
+### Stage 1 delivered
+
+- `docs/create/`: `index.html` (shell), `app.css`, `app.js` (panel, pickers, hover preview, undo/redo, locks, shuffle, reset, import/export, shortcuts, URL + localStorage), `model.js` (pure config model + interim compiler onto v2 tokens), `data.js` / `themes.js` (v3 §4 option tables, 24 shadcn themes), `preview-01.html` (shadcn preview-02, 32 cards), `preview-02.html` (shadcn preview, 31 cards), `preview.css` / `preview.js` / `preview-cards.js`.
+- Gates: `verify:create-app` (13 static/model checks, in `verify` chain), `verify:create-app-browser` (9 CDP interaction steps, own CI step).
+- Known gaps (later stages): extension axes only partly mapped by the interim compiler (stage 2 compiler); `.pv-*` private primitives to be promoted into qxframe.css (stages 3/4); tables/accordion static; old theme-generator deleted in stage 5.
+
 ## NEXT EXACT STEPS
 
-1. Stage 1: build `docs/create/` shell, customization panel and all interaction logic per v3 §3–§4, using shadcn create source at the locked SHA as reference.
-2. Open stage-1 PR; when CI is green, merge and give the owner the Pages URL `https://loyaoo.github.io/QXFRAME9A7C2/docs/create/`.
+1. Drive the stage-1 PR CI green, merge into main, confirm the Pages deploy.
+2. Give the owner `https://loyaoo.github.io/QXFRAME9A7C2/docs/create/` and stop for acceptance; stage 2 starts only after the owner says 继续.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
