@@ -25,6 +25,8 @@ Status: IMPLEMENTED on `redesign/create`; PR pending owner acceptance.
 ### Owner decisions (2026-10-07) — frozen
 
 - §5/§6 gates run as a **ratchet**: current violations are frozen in `tools/manifests/css-gate-baseline.json`; any increase fails CI, counts may only fall; token-class violations clear in stage 2, every count must be zero by stage 5.
+- **Framework zero React / zero UI-framework dependency**; Floating UI (vendored) is the only third-party runtime code. `tools/qa/ref/` (React-based shadcn reference renderer) is kept as a measurement tool only and never ships; `verify:no-framework-deps` enforces this in CI.
+- Answer the owner in Chinese.
 - Stage 0 keeps the **existing 60 module boundaries** (no cascade-order change). True per-component re-split happens in stage 2 together with the token-chain rewrite.
 
 ### Stage 0 delivered

@@ -10,4 +10,6 @@
 | `css-equivalence.mjs` | 第 0 阶段：同一批文档页分别加载基线 CSS 与候选 CSS，逐像素比较整页截图并逐元素比较计算样式。 |
 | `reports/` | 各阶段对比报告。CI 把整个目录作为 `qa-reports-<sha>` 附件上传。 |
 
+**依赖边界**：`ref/` 是唯一含 React（shadcn 原版组件）的代码，只用于渲染 shadcn 参照图做测量，不参与框架、文档或 createApp 的构建，也不随 npm 包发布。框架本身零 UI 框架依赖（仅内置 Floating UI），由 `npm run verify:no-framework-deps` 在 CI 中强制检查：`src/`、`docs/`、`dist/` 中出现 react / vue / radix 等模块引用即失败。
+
 视觉对比在开发会话中运行（需要 Playwright + Chromium），CI 只跑快检查。
