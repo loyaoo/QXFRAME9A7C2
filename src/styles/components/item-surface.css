@@ -9,7 +9,7 @@
 .qxframe9a7c2-item-selection-indicator.is-end{order:10;margin-inline-start:auto}
 .qxframe9a7c2-item-selection-icon{pointer-events:none}
 /* Checkbox paint/state glyph is canonical in the choice section of src/qxframe9a7c2.css. */
-.qxframe9a7c2-item-selection-indicator.is-check{border-color:transparent;background:transparent;color:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-item-selection-indicator.is-check{border-color:transparent;background:transparent;color:var(--qxframe9a7c2-theme-primary)}
 
 
 /*
@@ -29,21 +29,21 @@
 /* Disclosure is a structural state, not a permanent hover/selection fill. */
 .qxframe9a7c2-item-surface.is-open:not(.is-selected):not(.is-descendant-selected):not(.is-indeterminate){--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle)}
 .qxframe9a7c2-item-surface.is-descendant-selected:not(.is-selected),
-.qxframe9a7c2-item-surface.is-indeterminate:not(.is-selected){--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle);--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-item-surface.is-indeterminate:not(.is-selected){--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle);--_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-item-surface.is-hover:not(.is-selected){--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
 .qxframe9a7c2-item-surface.is-descendant-selected.is-hover:not(.is-selected),
-.qxframe9a7c2-item-surface.is-indeterminate.is-hover:not(.is-selected){--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-accent-soft)}
-.qxframe9a7c2-item-surface.is-selected{--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-accent-soft);--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-item-surface.is-indeterminate.is-hover:not(.is-selected){--_qxframe9a7c2-item-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}
+.qxframe9a7c2-item-surface.is-selected{--_qxframe9a7c2-item-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent);--_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-item-surface.is-selected.is-hover,
 .qxframe9a7c2-item-surface.is-selected.is-open,
-.qxframe9a7c2-item-surface.is-selected.is-active{--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-accent-soft-hover)}
+.qxframe9a7c2-item-surface.is-selected.is-active{--_qxframe9a7c2-item-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent)}
 .qxframe9a7c2-item-surface.is-keyboard-focus{--_qxframe9a7c2-item-ring:none;--_qxframe9a7c2-item-outline:var(--_qxframe9a7c2-focus-visible-outline);position:relative;z-index:var(--qxframe9a7c2-z-local-raised)}
 .qxframe9a7c2-item-surface.is-readonly{--_qxframe9a7c2-item-cursor:default}
 /* Capability resolves last so disabled cannot leak pointer/open/active visuals. Selection identity is intentionally removed from the disabled skin. */
 .qxframe9a7c2-item-surface.is-disabled{--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-item-bg:transparent;--_qxframe9a7c2-item-ring:none;--_qxframe9a7c2-item-outline:none;--_qxframe9a7c2-item-cursor:not-allowed}
 
 /* check-start marks selection with the leading check instead of a permanent selected fill. */
-.qxframe9a7c2-item-surface.is-selection-check-start.is-selected{--_qxframe9a7c2-item-bg:transparent;--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-item-surface.is-selection-check-start.is-selected{--_qxframe9a7c2-item-bg:transparent;--_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-item-surface.is-selection-check-start.is-selected.is-hover,
 .qxframe9a7c2-item-surface.is-selection-check-start.is-selected.is-open,
 .qxframe9a7c2-item-surface.is-selection-check-start.is-selected.is-active{--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}

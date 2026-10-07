@@ -7,7 +7,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const css=readCanonicalComponentStyleSource({root});
 
 assert.match(css,/\.qxframe9a7c2-card-actions\{display:flex;/);
-assert.match(css,/\.qxframe9a7c2-card-action\{display:flex;min-width:0;min-height:var\(--[^)]+\);flex:1 1 0;/);
+assert.match(css,/\.qxframe9a7c2-card-action\{display:flex;min-width:0;min-height:(?:var\(--[^)]+\)|calc\([^;{}]+\)|-?\d*\.?\d+rem);flex:1 1 0;/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-card-actions\{[^}]*display:grid/);
 
 assert.match(css,/\.qxframe9a7c2-form-selectgroup-image\{display:flex;[^}]*flex-direction:column/);

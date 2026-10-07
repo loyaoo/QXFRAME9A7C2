@@ -1,5 +1,5 @@
 .qxframe9a7c2-transfer{
-  --_qxframe9a7c2-transfer-panel-width:var(--qxframe9a7c2-transfer-panel-width,var(--_qxframe9a7c2-fixed-transfer-panel-width));
+  --_qxframe9a7c2-transfer-panel-width:var(--qxframe9a7c2-transfer-panel-width,calc(16rem + 2rem));
   --_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-border);
   --_qxframe9a7c2-transfer-panel-bg:var(--_qxframe9a7c2-semantic-surface);
   --_qxframe9a7c2-transfer-header-bg:var(--_qxframe9a7c2-semantic-surface-muted);
@@ -7,7 +7,7 @@
   --_qxframe9a7c2-transfer-panel-radius:var(--qxframe9a7c2-transfer-panel-radius,var(--_qxframe9a7c2-surface-radius));
   box-sizing:border-box;display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);max-width:100%;color:var(--_qxframe9a7c2-semantic-text);font-size:var(--_qxframe9a7c2-control-font-size)
 }
-.qxframe9a7c2-transfer-panel{box-sizing:border-box;display:flex;flex:1 1 var(--_qxframe9a7c2-transfer-panel-width);min-width:0;max-width:var(--_qxframe9a7c2-transfer-panel-width);height:var(--_qxframe9a7c2-fixed-transfer-panel-height);flex-direction:column;border:1px solid var(--_qxframe9a7c2-transfer-panel-border);border-radius:var(--_qxframe9a7c2-transfer-panel-radius);background:var(--_qxframe9a7c2-transfer-panel-bg);overflow:hidden}
+.qxframe9a7c2-transfer-panel{box-sizing:border-box;display:flex;flex:1 1 var(--_qxframe9a7c2-transfer-panel-width);min-width:0;max-width:var(--_qxframe9a7c2-transfer-panel-width);height:calc(16rem + 4rem);flex-direction:column;border:1px solid var(--_qxframe9a7c2-transfer-panel-border);border-radius:var(--_qxframe9a7c2-transfer-panel-radius);background:var(--_qxframe9a7c2-transfer-panel-bg);overflow:hidden}
 .qxframe9a7c2-transfer-header{display:flex;align-items:center;justify-content:space-between;gap:var(--_qxframe9a7c2-control-gap);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);border-bottom:1px solid var(--_qxframe9a7c2-semantic-border-subtle);background:var(--_qxframe9a7c2-transfer-header-bg)}
 .qxframe9a7c2-transfer-header-main{display:inline-flex;align-items:center;min-width:0;gap:var(--_qxframe9a7c2-control-gap)}
 .qxframe9a7c2-transfer-header-main.qxframe9a7c2-form-check{position:relative;display:inline-flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);margin:0}
@@ -22,8 +22,8 @@
 .qxframe9a7c2-transfer-pagination>.qxframe9a7c2-transfer-pagination-viewport.qxframe9a7c2-scroll-viewport{width:100%;height:auto}
 .qxframe9a7c2-transfer-pagination[hidden]{display:none}
 .qxframe9a7c2-transfer-pagination .qxframe9a7c2-pagination{display:flex;width:max-content;min-width:100%;justify-content:center}
-.qxframe9a7c2-transfer.is-status-error{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-error)}
-.qxframe9a7c2-transfer.is-status-warning{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-warning)}
+.qxframe9a7c2-transfer.is-status-error{--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-transfer.is-status-warning{--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-theme-warning)}
 .qxframe9a7c2-transfer.is-disabled{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-border-disabled);--_qxframe9a7c2-transfer-panel-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-transfer-header-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-transfer-list-host>.qxframe9a7c2-item-collection{height:100%}
 .qxframe9a7c2-item-collection.qxframe9a7c2-transfer-root{min-width:0}
@@ -44,5 +44,5 @@
 .qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-load-more,
 .qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-footer{display:none}
 .qxframe9a7c2-transfer-table-host>.qxframe9a7c2-table-wrap{height:100%;max-height:none;border:0;border-radius:0}
-.qxframe9a7c2-transfer-table-host .qxframe9a7c2-table tr.is-transfer-selected{--_qxframe9a7c2-transfer-table-row-bg:var(--_qxframe9a7c2-semantic-accent-soft);background:var(--_qxframe9a7c2-transfer-table-row-bg)}
+.qxframe9a7c2-transfer-table-host .qxframe9a7c2-table tr.is-transfer-selected{--_qxframe9a7c2-transfer-table-row-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent);background:var(--_qxframe9a7c2-transfer-table-row-bg)}
 

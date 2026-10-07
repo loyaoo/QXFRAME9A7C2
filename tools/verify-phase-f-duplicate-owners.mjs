@@ -13,7 +13,7 @@ assert.equal(count('.qxframe9a7c2-control-contract.is-danger'),1,
   'Control Contract danger accent must have one canonical shared Color Variant owner.');
 assert.match(css,/\.qxframe9a7c2-control-contract\.is-secondary\{--_qxframe9a7c2-accent:var\(--_qxframe9a7c2-semantic-text-secondary\);/,
   'Shared Color Variant contract must remain the secondary accent owner.');
-assert.match(css,/\.qxframe9a7c2-control-contract\.is-danger,\.qxframe9a7c2-progress\.is-exception\{--_qxframe9a7c2-accent:var\(--_qxframe9a7c2-semantic-error\);/,
+assert.match(css,/\.qxframe9a7c2-control-contract\.is-danger,\.qxframe9a7c2-progress\.is-exception\{--_qxframe9a7c2-accent:var\(--qxframe9a7c2-theme-destructive\);/,
   'Shared Color Variant contract must remain the danger accent owner.');
 
 assert.equal(css.includes('Notice rails keep the slimmer passive treatment.'),false,

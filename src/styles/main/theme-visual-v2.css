@@ -60,10 +60,22 @@
     --_qxframe9a7c2-data-border: var(--qxframe9a7c2-theme-border);
     --_qxframe9a7c2-data-header-bg: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-focus);
+    /* Shared roles that the retired legacy palette used to feed at :root (docs and plain hosts read them). */
+    --_qxframe9a7c2-semantic-accent-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);
+    --_qxframe9a7c2-semantic-accent-ring-color: color-mix(in oklab, var(--qxframe9a7c2-theme-ring) 50%, transparent);
+    --_qxframe9a7c2-semantic-accent-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent));
+    --_qxframe9a7c2-semantic-accent-soft-hover: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 30%, transparent));
+    --_qxframe9a7c2-semantic-success-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-success) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-success) 20%, transparent));
+    --_qxframe9a7c2-semantic-error-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent));
+    --_qxframe9a7c2-semantic-info-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-info) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-info) 20%, transparent));
+    --_qxframe9a7c2-focus-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-ring) 50%, transparent);
+    --_qxframe9a7c2-validation-error-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent);
+    --_qxframe9a7c2-validation-warning-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-warning) 20%, transparent);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
     --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-destructive-foreground));
     --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));
     --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground));
-    --_qxframe9a7c2-accent: var(--_qxframe9a7c2-semantic-accent);
+    --_qxframe9a7c2-accent: var(--qxframe9a7c2-theme-primary);
     --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-semantic-on-accent);
   }
   .qxframe9a7c2-button, .qxframe9a7c2-tag, .qxframe9a7c2-badge, .qxframe9a7c2-badge-count, .qxframe9a7c2-badge-ribbon, .qxframe9a7c2-badge-status, .qxframe9a7c2-alert-root, .qxframe9a7c2-message, .qxframe9a7c2-message-root, .qxframe9a7c2-notification, .qxframe9a7c2-notification-root, .qxframe9a7c2-carousel, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root, .qxframe9a7c2-result, .qxframe9a7c2-progress, .qxframe9a7c2-slider, .qxframe9a7c2-rate, .qxframe9a7c2-switch, .qxframe9a7c2-form-selectgroup, .qxframe9a7c2-form-check-input, .qxframe9a7c2-native-form, .qxframe9a7c2-table, .qxframe9a7c2-item-surface, .qxframe9a7c2-menu, .qxframe9a7c2-tags, .qxframe9a7c2-input, .qxframe9a7c2-loading, .qxframe9a7c2-steps, .qxframe9a7c2-upload, .qxframe9a7c2-pagination, .qxframe9a7c2-tabs, .qxframe9a7c2-tree, .qxframe9a7c2-list, .qxframe9a7c2-transfer, .qxframe9a7c2-avatar, .qxframe9a7c2-card, .qxframe9a7c2-collapse, .qxframe9a7c2-descriptions, .qxframe9a7c2-empty, .qxframe9a7c2-drawer, .qxframe9a7c2-modal-container, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-form-segmented, .qxframe9a7c2-input-otp, .qxframe9a7c2-wheel-panel, .qxframe9a7c2-calendar, .qxframe9a7c2-period-panel, .qxframe9a7c2-time-panel, .qxframe9a7c2-color-panel {
@@ -240,6 +252,16 @@
     --_qxframe9a7c2-v2-action-border: var(--_qxframe9a7c2-v2-outline-border);
     --_qxframe9a7c2-v2-action-current: var(--_qxframe9a7c2-v2-action-bg);
     --_qxframe9a7c2-v2-action-shadow: var(--qxframe9a7c2-theme-shadow-control);
+    /* Component-facing state slots read by button.css (dashed / legacy appearances). */
+    --_qxframe9a7c2-button-border: var(--_qxframe9a7c2-v2-action-border);
+    --_qxframe9a7c2-button-hover-border: var(--_qxframe9a7c2-v2-action-border);
+    --_qxframe9a7c2-button-active-border: var(--_qxframe9a7c2-v2-action-border);
+    --_qxframe9a7c2-button-disabled-border: var(--_qxframe9a7c2-v2-action-border);
+    --_qxframe9a7c2-button-focus-border: var(--qxframe9a7c2-theme-ring);
+    --_qxframe9a7c2-button-hover-bg: var(--_qxframe9a7c2-v2-action-hover);
+    --_qxframe9a7c2-button-active-bg: var(--_qxframe9a7c2-v2-action-hover);
+    --_qxframe9a7c2-button-focus-bg: var(--_qxframe9a7c2-v2-action-bg);
+    --_qxframe9a7c2-button-disabled-text: var(--_qxframe9a7c2-v2-action-text);
     background-color: var(--_qxframe9a7c2-v2-action-current);
     border-color: var(--_qxframe9a7c2-v2-action-border);
     color: var(--_qxframe9a7c2-v2-action-text);
@@ -479,8 +501,8 @@
   .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(100% - var(--_qxframe9a7c2-switch-thumb-width) - var(--_qxframe9a7c2-switch-padding) + var(--_qxframe9a7c2-switch-track-border-width) - var(--_qxframe9a7c2-switch-press-offset)); }
   .qxframe9a7c2-slider[class] {
     --_qxframe9a7c2-slider-rail: max(.125rem, calc(var(--qxframe9a7c2-theme-slider-track) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
-    --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
-    --_qxframe9a7c2-slider-handle-height: var(--_qxframe9a7c2-slider-handle-width);
+    --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb-width) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
+    --_qxframe9a7c2-slider-handle-height: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
   }
   .qxframe9a7c2-slider-handle { box-sizing: border-box; }
   .qxframe9a7c2-progress[class] {

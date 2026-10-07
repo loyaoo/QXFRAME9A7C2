@@ -18,16 +18,16 @@
 .qxframe9a7c2-collapse-header{display:flex;align-items:center;gap:var(--_qxframe9a7c2-fixed-space-2);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);outline:0;background:var(--_qxframe9a7c2-collapse-header-bg)}
 .qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-item{--_qxframe9a7c2-collapse-header-bg:transparent}
 .qxframe9a7c2-collapse-main{display:flex;min-width:0;min-height:inherit;flex:1 1 auto;align-items:center;padding:0;border:0;outline:0;background:transparent;color:var(--_qxframe9a7c2-collapse-main-text);box-shadow:var(--_qxframe9a7c2-collapse-main-ring);font:inherit;text-align:start;cursor:var(--_qxframe9a7c2-collapse-main-cursor)}
-.qxframe9a7c2-collapse-indicator{display:inline-flex;width:max(var(--_qxframe9a7c2-fixed-collapse-indicator-min),calc(var(--_qxframe9a7c2-control-height) - var(--_qxframe9a7c2-fixed-collapse-indicator-delta)));height:max(var(--_qxframe9a7c2-fixed-collapse-indicator-min),calc(var(--_qxframe9a7c2-control-height) - var(--_qxframe9a7c2-fixed-collapse-indicator-delta)));flex:0 0 max(var(--_qxframe9a7c2-fixed-collapse-indicator-min),calc(var(--_qxframe9a7c2-control-height) - var(--_qxframe9a7c2-fixed-collapse-indicator-delta)));align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--_qxframe9a7c2-collapse-action-radius);outline:0;background:var(--_qxframe9a7c2-collapse-indicator-bg);color:var(--_qxframe9a7c2-collapse-indicator-text);box-shadow:var(--_qxframe9a7c2-collapse-indicator-ring);font:inherit;cursor:var(--_qxframe9a7c2-collapse-indicator-cursor)}
-.qxframe9a7c2-collapse-indicator:hover:not(:disabled){--_qxframe9a7c2-collapse-indicator-bg:var(--_qxframe9a7c2-semantic-surface-hover);--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-collapse-indicator{display:inline-flex;width:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));height:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));flex:0 0 max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--_qxframe9a7c2-collapse-action-radius);outline:0;background:var(--_qxframe9a7c2-collapse-indicator-bg);color:var(--_qxframe9a7c2-collapse-indicator-text);box-shadow:var(--_qxframe9a7c2-collapse-indicator-ring);font:inherit;cursor:var(--_qxframe9a7c2-collapse-indicator-cursor)}
+.qxframe9a7c2-collapse-indicator:hover:not(:disabled){--_qxframe9a7c2-collapse-indicator-bg:var(--_qxframe9a7c2-semantic-surface-hover);--_qxframe9a7c2-collapse-indicator-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-collapse-header:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 /* Disclosure state is visual-only here; Collapse JS remains the sole open/close owner. */
-.qxframe9a7c2-collapse-item.is-open{--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-collapse-item.is-open{--_qxframe9a7c2-collapse-indicator-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-collapse-title{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .qxframe9a7c2-collapse-extra{flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 .qxframe9a7c2-collapse-panel{overflow:hidden;background:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-panel{background:transparent}
-.qxframe9a7c2-collapse-content{padding:var(--_qxframe9a7c2-fixed-space-3) var(--_qxframe9a7c2-control-padding-inline);color:var(--_qxframe9a7c2-semantic-text-secondary)}
+.qxframe9a7c2-collapse-content{padding:0.375rem var(--_qxframe9a7c2-control-padding-inline);color:var(--_qxframe9a7c2-semantic-text-secondary)}
 /* Capability resolves last and suppresses hover/focus disclosure decoration without changing Collapse behavior. */
 .qxframe9a7c2-collapse-item.is-disabled{--_qxframe9a7c2-collapse-main-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed;--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-indicator-ring:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed;--_qxframe9a7c2-collapse-item-opacity:.55}
 .qxframe9a7c2-collapse-main:disabled{--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed}
@@ -38,7 +38,7 @@
 .qxframe9a7c2-collapse-transition-leave-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-collapse-panel-leave-duration) var(--qxframe9a7c2-motion-collapse-panel-easing),opacity var(--qxframe9a7c2-motion-collapse-panel-leave-duration) var(--qxframe9a7c2-motion-collapse-panel-easing)}
 /* Collapse size classes inherit the shared control-height family/size resolver.
    Keep only the component-specific compact inline-padding deltas. */
-.qxframe9a7c2-collapse.is-xs{--_qxframe9a7c2-control-padding-inline:var(--_qxframe9a7c2-fixed-space-4)}
+.qxframe9a7c2-collapse.is-xs{--_qxframe9a7c2-control-padding-inline:0.5rem}
 .qxframe9a7c2-collapse.is-sm{--_qxframe9a7c2-control-padding-inline:var(--_qxframe9a7c2-fixed-space-5)}
 
 

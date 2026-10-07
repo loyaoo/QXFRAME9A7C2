@@ -14,8 +14,8 @@
 - Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
-- Current Phase: CREATEAPP-V3 stage 2a — closed theme-token list, compiler, default theme, preview components.
-- Current Task: `CREATEAPP-V3-S2A` — implementation + local verification complete; PR next.
+- Current Phase: CREATEAPP-V3 stage 2b — acceptance fixes + remaining components + dissolve :root component tokens.
+- Current Task: `CREATEAPP-V3-S2B` — started. Owner: 2a findings are fixed inside 2b (no separate PR).
 
 ## CURRENT
 
@@ -66,9 +66,23 @@ Done:
 Gates adapted to v3 and passing locally (commits 9a2ee97..HEAD): phase-f-css-authority, theme-single-system, css-concat-build, geometry family (theme-v2-geometry-contract now async + 7 callers), css-token-layers, phase-f-token-graph, css-static-colors(+browser), theme-visual-v2(+browser; rewritten as createApp compiler/consumer contract), phase-f-static-closeout, canonical docs, final-focus-origin, theme-studio-v2/-static (now delegate to createApp gates).
 Local evidence (after npm run build): every `npm run verify` step passes; verify:browser, verify:theme-visual-v2-browser (compiled theme per style resolves in consumers, light+dark), verify:theme-studio-v2-browser (= createApp browser gate, 9 steps), verify:legacy-browser, verify:release, verify:package pass; canonical docs browser gate on demo package passes. theme-playground keeps the all-component canvas (needed by browser smoke) with a createApp entry card. Ratchet re-measured (728b6ee).
 
+### Stage 2a acceptance findings → fixed in 2b (owner decision 2026-10-07)
+
+- BUG: 边界清晰度 thin/clear makes compileTheme throw (alpha() cannot parse the color-mix() hairline value) → app breaks. Fix: compute hairline by oklch lightness interpolation toward background/foreground.
+- Tokens compiled but not consumed by qxframe.css yet: radius-badge, radius-tabs, radius-dialog, card-section, card-section-border (badge/tag, tabs, modal/drawer radius and card footer band need consumer rules). chart-1..5 only used by createApp preview.
+- 选择器 shape axis has no effect (selects share radius-field) — needs its own token or removal.
+- Luma slider thumb (shadcn w-6 h-4 long capsule) not modelled: single slider-thumb size token; need slider-thumb-width token.
+- Docs/default look: Nova defaults are thin (slider 4px rail, 12px thumb; switch 32×18.4) vs the old QX look; capsule options exist (滑块 胶囊12, 开关 宽体) but defaults follow Nova.
+
 ## NEXT EXACT STEPS
 
-1. PR #263 (stage 2a) open: drive CI green, merge, give owner the Pages URL; then 2b.
+1. DONE 2b-A (9a74c7d): hairline fix, badge/tabs/dialog/select radius + card-section consumers, radius-select + slider-thumb-width tokens (Luma 24×16 verified in browser), verify-create-app check #14 (every axis level reaches a consumer).
+2. DONE 2b-B (dissolve fixed-values :root custom properties), commits aee6c0b..HEAD:
+   - step 1 inline/dead (proven 0 diffs), step 3 mode-color palettes removed, 3b repoint legacy roles → theme tokens (tools/qa/migrations/repoint-legacy-palette.mjs, drop-broken-decls.mjs), 3c inlined 14 mode-independent media-overlay/shadow constants + dead `.is-default` button palette block removed + docs legacy `--qxframe9a7c2-color-*` → theme tokens / docs-accent, 3d removed 3 `*`-shadowed root defs.
+   - Equivalence (scratchpad/eq3e.json, baseline after-inline.css): 111 pages × light/dark, 335 diffs, all reviewed and accepted: same color in other notation (color(srgb) ↔ rgba), status soft tints 12%/22% → 10%/20%, login/result tints follow theme primary/status, message + image-preview video shadow → theme shadow-popup, color-picker active mode button gets primary soft tint, result info icon uses theme-info; element-count rows are async-demo noise.
+   - Ratchet re-baselined: root-non-theme 4618→383, hardcoded-color 2244→126, public-component-token-declared 503→492 (per-segment hardcoded-color rose where constants moved into their only consumer; documented in baseline note).
+   - Remaining for stages 3–5: public-component-token-declared 492, root-non-theme 383, duplicate-owner 141, hardcoded-color 126 (color picker spectrum needs documented exception).
+3. NOW 2b-C: local full verify + browser/release/package gates all green (d03cbaf). PR https://github.com/loyaoo/QXFRAME9A7C2/pull/264 opened; waiting for CI → merge when green → confirm Pages deploy → give owner URL → stop for acceptance.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 

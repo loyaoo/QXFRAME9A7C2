@@ -142,4 +142,31 @@ check('reset: style preset + follow-style axes; locks kept', () => {
   assert.deepEqual(r.ext, { motion: 'none' }, 'unlocked axes return to follow-style, locked ones stay');
 });
 
+
+check('every option of every extension axis changes a theme token that qxframe.css or the preview consumes', () => {
+  const dist = path.join(root, 'dist/qxframe9a7c2.css');
+  const consumers = (fs.existsSync(dist) ? fs.readFileSync(dist, 'utf8') : '') + read('preview.css');
+  const tokens = body => {
+    const [rootBlock, darkBlock = ''] = body.split('.dark {');
+    const pick = (text, prefix) => [...text.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+): ([^;]+);/g)].map(m => [prefix + m[1], m[2]]);
+    return Object.fromEntries([...pick(rootBlock, ''), ...pick(darkBlock, 'dark:')]);
+  };
+  const consumed = key => { const name = key.replace(/^dark:/, ''); return consumers.includes('var(--qxframe9a7c2-theme-' + name + ')') || consumers.includes('var(--qxframe9a7c2-theme-' + name + ','); };
+  const dead = [];
+  for (const style of data.STYLES.map(s => s.value)) {
+    const base = tokens(model.compileTheme(model.normalizeConfig({ style })).body);
+    for (const axis of data.ALL_EXT_AXES) {
+      for (const option of axis.options) {
+        const next = tokens(model.compileTheme(model.normalizeConfig({ style, ext: { [axis.key]: option.value } })).body);
+        const changed = Object.keys(next).filter(k => next[k] !== base[k]);
+        const resolved = model.resolveConfig(model.normalizeConfig({ style })).ext[axis.key];
+        if (resolved === option.value) continue; // same as the style's own level
+        // Identical tokens = this level equals the style's own geometry (e.g. pill on an already-pill part).
+        if (changed.length && !changed.some(consumed)) dead.push(`${style}/${axis.key}=${option.value}`);
+      }
+    }
+  }
+  assert.deepEqual(dead, [], 'extension levels whose tokens no consumer reads');
+});
+
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

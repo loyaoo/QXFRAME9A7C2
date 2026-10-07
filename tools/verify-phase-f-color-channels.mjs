@@ -23,7 +23,9 @@ assert.doesNotMatch(components,/rgb\(\s*var\(\s*--qxframe9a7c2-theme-v2-/,'Compo
 // must resolve through semantic/shared roles.
 const hard=[];
 for(let i=0;i<lines.length;i++){
-  const line=lines[i],scrub=line.replace(/--_?qxframe9a7c2-[a-z0-9-]+\s*:[^;]+;/ig,'');
+  // Neutral ink (pure black / white with alpha: shadow ink, media scrims) is mode-independent and not a
+  // business color; v3 stage 2b inlined it from the retired :root palettes into its single consumer.
+  const line=lines[i],scrub=line.replace(/--_?qxframe9a7c2-[a-z0-9-]+\s*:[^;]+;/ig,'').replace(/rgb\((?:0 0 0|255 255 255) \/ \.\d+\)/g,'');
   if(/#[0-9a-f]{3,8}\b|rgba?\(\s*(?:\d|\.)/i.test(scrub))hard.push({line:i+1,text:line.trim()});
 }
 const unexpectedHard=hard.filter(({text})=>!/^\.qxframe9a7c2-color-panel(?:-|\b)/.test(text)&&!/^\.qxframe9a7c2-color-picker-gradient-stop(?:\b|\.)/.test(text));
@@ -34,4 +36,4 @@ assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-panel-hue{'))
 assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-panel-saturation{')),'ColorPanel intrinsic saturation surface classification is missing.');
 assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-picker-gradient-stop{')),'ColorPicker gradient-stop contrast affordance classification is missing.');
 
-console.log(JSON.stringify({ok:true,publicColorModel:'complete-css-color',directPhysicalPaletteConsumers:0,classifiedFunctionalHardColorLines:hard.length,unexpectedHardColorLines:0}));
+console.log(JSON.stringify({ok:true,publicColorModel:'complete-css-color',directPhysicalPaletteConsumers:0,classifiedFunctionalHardColorLines:hard.length,neutralInkAllowed:true,unexpectedHardColorLines:0}));

@@ -12,7 +12,7 @@
   --_qxframe9a7c2-tree-toggle-ring:none;
   --_qxframe9a7c2-tree-toggle-cursor:pointer;
   --_qxframe9a7c2-tree-toggle-opacity:1;
-  display:inline-flex;align-items:center;justify-content:center;flex:0 0 max(var(--_qxframe9a7c2-fixed-tree-toggle-min-size),var(--_qxframe9a7c2-control-icon-size));width:max(var(--_qxframe9a7c2-fixed-tree-toggle-min-size),var(--_qxframe9a7c2-control-icon-size));height:max(var(--_qxframe9a7c2-fixed-tree-toggle-min-size),var(--_qxframe9a7c2-control-icon-size));margin:0 var(--_qxframe9a7c2-fixed-space-1) 0 0;padding:0;
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 max(1rem,var(--_qxframe9a7c2-control-icon-size));width:max(1rem,var(--_qxframe9a7c2-control-icon-size));height:max(1rem,var(--_qxframe9a7c2-control-icon-size));margin:0 var(--_qxframe9a7c2-fixed-space-1) 0 0;padding:0;
   border:0;border-radius:50%;outline:0;background:var(--_qxframe9a7c2-tree-toggle-bg);color:var(--_qxframe9a7c2-tree-toggle-text);box-shadow:var(--_qxframe9a7c2-tree-toggle-ring);opacity:var(--_qxframe9a7c2-tree-toggle-opacity);font:inherit;cursor:var(--_qxframe9a7c2-tree-toggle-cursor);transition:background-color .15s ease,color .15s ease,box-shadow .15s ease
 }
 .qxframe9a7c2-tree .qxframe9a7c2-tree-toggle:hover:not(:disabled){--_qxframe9a7c2-tree-toggle-bg:var(--_qxframe9a7c2-semantic-surface-hover);--_qxframe9a7c2-tree-toggle-text:var(--_qxframe9a7c2-semantic-text)}
@@ -36,17 +36,17 @@
 .qxframe9a7c2-tree .qxframe9a7c2-tree-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .qxframe9a7c2-tree.is-draggable .qxframe9a7c2-tree-item[draggable="true"]{cursor:grab}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-dragging{opacity:.45;cursor:grabbing}
-.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:var(--_qxframe9a7c2-fixed-tree-drop-inset);height:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size);border-radius:var(--_qxframe9a7c2-fixed-radius-pill);background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0.5rem;height:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size);border-radius:100rem;background:var(--qxframe9a7c2-theme-primary);pointer-events:none}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before{inset-block-start:-1px}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{inset-block-end:-1px}
-.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-inside{outline:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size) solid var(--_qxframe9a7c2-semantic-accent);outline-offset:-1px}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-inside{outline:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size) solid var(--qxframe9a7c2-theme-primary);outline-offset:-1px}
 
 .qxframe9a7c2-tree .qxframe9a7c2-tree-lines{position:absolute;inset-block:0;inset-inline-start:0;overflow:visible;pointer-events:none}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-line-unit{position:absolute;inset-block:0}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-line-unit::before{content:"";position:absolute;inset-block:0;inset-inline-start:50%;border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle);transform:translateX(-.5px)}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-line-unit.is-ancestor:not(.is-continuation)::before{content:none}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-line-unit.is-current.is-last::before{inset-block-end:50%}
-.qxframe9a7c2-tree .qxframe9a7c2-tree-line-unit.is-current::after{content:"";position:absolute;inset-block-start:50%;inset-inline-start:50%;width:calc(50% + var(--_qxframe9a7c2-fixed-tree-line-branch-extension));border-block-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle);transform:translateY(-.5px)}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-line-unit.is-current::after{content:"";position:absolute;inset-block-start:50%;inset-inline-start:50%;width:calc(50% + 0.625rem);border-block-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle);transform:translateY(-.5px)}
 @keyframes qxframe9a7c2-tree-spin{to{transform:rotate(360deg)}}
 .qxframe9a7c2-tree.is-block-node .qxframe9a7c2-tree-item{width:100%}
 .qxframe9a7c2-tree.is-block-node .qxframe9a7c2-tree-row-content{width:100%;flex:1 1 auto}

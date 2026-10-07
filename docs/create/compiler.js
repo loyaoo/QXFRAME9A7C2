@@ -232,14 +232,21 @@ export function themeTokens(resolved) {
   dark['destructive-foreground'] = 'oklch(1 0 0)';
   for (const [name, value] of Object.entries(QX_COLORS)) { light[name] = value.light; dark[name] = value.dark; }
 
-  // Border clarity (QX): thin pulls hairlines toward the page, clear toward the text.
+  // Border clarity (QX): thin pulls hairlines toward the page, clear toward the text. Literal
+  // oklch only: opaque hairlines move their lightness, translucent ones scale their alpha.
   if (ext.hairline !== 'standard') {
+    const thin = ext.hairline === 'thin';
     for (const role of ['border', 'input']) {
       for (const [target, mode] of [[light, 'light'], [dark, 'dark']]) {
-        const page = palette[mode].background, text = palette[mode].foreground;
-        target[role] = ext.hairline === 'thin'
-          ? `color-mix(in oklab, ${target[role]} 60%, ${page})`
-          : `color-mix(in oklab, ${target[role]} 80%, ${text})`;
+        const c = parseOklch(target[role]);
+        if (c.a < 1) {
+          target[role] = alpha(target[role], thin ? 60 : 150);
+        } else {
+          const goal = parseOklch(palette[mode][thin ? 'background' : 'foreground']);
+          const w = thin ? 0.4 : 0.2;
+          const l = Number(c.l) + (Number(goal.l) - Number(c.l)) * w;
+          target[role] = `oklch(${round(l)} ${c.c} ${c.h})`;
+        }
       }
     }
   }
@@ -350,8 +357,8 @@ export function themeTokens(resolved) {
   });
   const controlShape = ext.controlShape;
   root['radius-button'] = shapeRadius(ext.shapeButton, alloc.button, controlShape);
-  // Selects share the field radius (their shape axis is kept for the URL / header contract).
   root['radius-field'] = shapeRadius(ext.shapeInput, alloc.field, controlShape);
+  root['radius-select'] = shapeRadius(ext.shapeSelect, alloc.field, controlShape);
   root['radius-badge'] = shapeRadius(ext.shapeBadge, alloc.badge, controlShape);
   root['radius-tabs'] = shapeRadius(ext.shapeTabs, alloc.tabs, controlShape);
   root['radius-item'] = alloc.item;
@@ -376,6 +383,8 @@ export function themeTokens(resolved) {
   root['radius-switch-thumb'] = switchRadius === PILL ? PILL : rem(Math.max(0, parseFloat(switchRadius) - 0.125));
   root['slider-track'] = rem(SLIDER[ext.sliderLook]);
   root['slider-thumb'] = rem(SLIDER_THUMB[style]);
+  // shadcn Luma thumb is h-4 w-6 (a horizontal capsule); other styles are square.
+  root['slider-thumb-width'] = rem(style === 'luma' ? 1.5 : SLIDER_THUMB[style]);
   root['progress-track'] = resolved.explicit && resolved.explicit.sliderLook ? rem(SLIDER[ext.sliderLook]) : rem(looks.progress);
   root['progress-ring'] = '7.5rem';
   root['choice-size'] = style === 'sera' ? '1.125rem' : '1rem';
