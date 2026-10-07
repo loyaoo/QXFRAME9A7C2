@@ -14,6 +14,9 @@ assert.match(css,/\.qxframe9a7c2-popover-arrow\{width:var\(--_qxframe9a7c2-popov
 assert.match(css,/\.qxframe9a7c2-dropdown-arrow\{position:absolute;width:var\(--_qxframe9a7c2-dropdown-arrow-size\);height:var\(--_qxframe9a7c2-dropdown-arrow-size\)/,'Dropdown arrow dimensions must share one owner.');
 const placementLines=css.split(/\r?\n/).filter(line=>line.includes('dropdown-panel[data-placement')&&line.includes('dropdown-arrow'));
 assert.equal(placementLines.length,4,'Dropdown must retain four arrow placement rules.');
-for(const line of placementLines)assert.match(line,/(?:top|bottom|left|right):calc\(var\(--[^)]+\) \* -1\)/,'Dropdown placement depth must stay token-owned.');
+// v3 stage 2b inlined the root depth constant; all four placements must share one negated depth.
+const depths=placementLines.map(line=>line.match(/(?:top|bottom|left|right):calc\(((?:var\(--[^)]+\))|-?\d*\.?\d+rem) \* -1\)/)?.[1]);
+assert.ok(depths.every(Boolean),'Dropdown placement depth must be a negated shared depth.');
+assert.equal(new Set(depths).size,1,'Dropdown placement rules must share one depth owner.');
 
 console.log(JSON.stringify({ok:true,retiredTenPx:false,popoverOwner:'--_qxframe9a7c2-popover-arrow-size',dropdownOwner:'--_qxframe9a7c2-dropdown-arrow-size',placementRules:4}));

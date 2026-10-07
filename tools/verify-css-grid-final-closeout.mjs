@@ -7,11 +7,12 @@ const css=readCanonicalComponentStyleSource({root});
 
 assert.doesNotMatch(css,/\bdisplay\s*:\s*(?:inline-)?grid\b|\bgrid-(?:template|column|row|area|auto-(?:columns|rows|flow))\s*:/i,'Component CSS must not retain CSS Grid declarations.');
 assert.doesNotMatch(css,/(^|[^a-z0-9.-])-?\d*\.?\d+fr\b/i,'Component CSS must not retain fr units.');
-assert.doesNotMatch(css,/--qxframe9a7c2-grid-gap-[xy]:\s*\d*\.?\d+rem\s*;/,'Grid gutter utilities must consume shared fixed gap owners, not raw rem literals.');
+// v3 stage 2b inlined the root gap constants: each step's gx and gy must share one value.
 for(let i=1;i<=24;i++){
-  const owner='--_qxframe9a7c2-fixed-grid-gap-'+i;
-  assert.ok(css.includes('--qxframe9a7c2-grid-gap-x:var('+owner+')'),'Grid gx/g gutter '+i+' must consume '+owner+'.');
-  assert.ok(css.includes('--qxframe9a7c2-grid-gap-y:var('+owner+')'),'Grid gy/g gutter '+i+' must consume '+owner+'.');
+  const read=axis=>css.match(new RegExp('\\.qxframe9a7c2-g-'+i+',\\s*\\.qxframe9a7c2-g'+axis+'-'+i+'\\s*\\{\\s*--qxframe9a7c2-grid-gap-'+axis+':([^;]+);'))?.[1];
+  const x=read('x'),y=read('y');
+  assert.ok(x&&/^(?:var\(--[^)]+\)|-?\d*\.?\d+rem)$/.test(x),'Grid gx/g gutter '+i+' must have one shared gap value.');
+  assert.equal(y,x,'Grid gy/g gutter '+i+' must share the gx value.');
 }
 assert.match(css,/\.qxframe9a7c2-card-grid\{display:flex;flex-wrap:wrap\}/);
 const cardGridItems=css.match(/\.qxframe9a7c2-card-grid-item,\.qxframe9a7c2-card-grid>\*\{([^}]*)\}/)?.[1]||'';
@@ -26,4 +27,4 @@ assert.match(css,/\.qxframe9a7c2-form-check\{[^}]*display:flex;flex-wrap:wrap;/)
 assert.match(css,/\.qxframe9a7c2-carousel\.is-fade \.qxframe9a7c2-carousel-track\{position:relative;display:flex;flex-direction:row;/);
 assert.match(css,/\.qxframe9a7c2-carousel\.is-fade \.qxframe9a7c2-carousel-slide:not\(:first-child\)\{margin-inline-start:-100%\}/);
 
-console.log(JSON.stringify({ok:true,actualGridRuleCount:0,actualGridDeclarationCount:0,gapAuthority:'private-fixed-grid-gap-1..24',families:['Grid','Card','Descriptions','Form','Carousel']}));
+console.log(JSON.stringify({ok:true,actualGridRuleCount:0,actualGridDeclarationCount:0,gapAuthority:"shared-gx-gy-value-1..24",families:['Grid','Card','Descriptions','Form','Carousel']}));

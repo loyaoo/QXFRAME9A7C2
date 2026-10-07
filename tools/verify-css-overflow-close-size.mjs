@@ -10,9 +10,11 @@ assert.ok(line,'Overflow close rule missing.');
 assert.doesNotMatch(line,/1\.0625rem|17px/,'Retired 17px close geometry must not return.');
 assert.match(line,/border-radius:50%/,'Overflow close remains an intrinsic circle.');
 
-const width=line.match(/width:var\((--[^)]+)\)/)?.[1];
-const height=line.match(/height:var\((--[^)]+)\)/)?.[1];
-const basis=line.match(/flex:0 0 var\((--[^)]+)\)/)?.[1];
+// v3 stage 2b inlined root geometry constants: the owner is one shared value (var or rem literal).
+const VALUE='(var\\(--[^)]+\\)|-?\\d*\\.?\\d+rem)';
+const width=line.match(new RegExp('[{;]width:'+VALUE))?.[1];
+const height=line.match(new RegExp('[{;]height:'+VALUE))?.[1];
+const basis=line.match(new RegExp('flex:0 0 '+VALUE))?.[1];
 assert.ok(width&&height&&basis,'Overflow close width/height/flex-basis must use one geometry owner.');
 assert.equal(height,width,'Overflow close height must share width owner.');
 assert.equal(basis,width,'Overflow close flex-basis must share width owner.');
