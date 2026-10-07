@@ -15,7 +15,7 @@
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 2 of 0–5 (stages 0, 1 merged; stage 1 accepted).
 - Current Phase: CREATEAPP-V3 stage 2a — closed theme-token list, compiler, default theme, preview components.
-- Current Task: `CREATEAPP-V3-S2A` — WIP (~60%): token list, compiler, consumer rewrite, docs mode-only done; legacy v2 gates being adapted.
+- Current Task: `CREATEAPP-V3-S2A` — implementation + local verification complete; PR next.
 
 ## CURRENT
 
@@ -64,13 +64,11 @@ Done:
 - `verify:theme-single-system` adapted to v3 closed list.
 
 Gates adapted to v3 and passing locally (commits 9a2ee97..HEAD): phase-f-css-authority, theme-single-system, css-concat-build, geometry family (theme-v2-geometry-contract now async + 7 callers), css-token-layers, phase-f-token-graph, css-static-colors(+browser), theme-visual-v2(+browser; rewritten as createApp compiler/consumer contract), phase-f-static-closeout, canonical docs, final-focus-origin, theme-studio-v2/-static (now delegate to createApp gates).
-Remaining: theme-tokens re-baseline (documented), full verify re-run, createApp browser gate, verify:browser suite + canonical docs browser, release-only gates.
+Local evidence (after npm run build): every `npm run verify` step passes; verify:browser, verify:theme-visual-v2-browser (compiled theme per style resolves in consumers, light+dark), verify:theme-studio-v2-browser (= createApp browser gate, 9 steps), verify:legacy-browser, verify:release, verify:package pass; canonical docs browser gate on demo package passes. theme-playground keeps the all-component canvas (needed by browser smoke) with a createApp entry card. Ratchet re-measured (728b6ee).
 
 ## NEXT EXACT STEPS
 
-1. Re-baseline theme-tokens (`node tools/verify-theme-tokens.mjs --write-baseline --allow-increase`), then `npm run build` + run scratchpad/runall.sh equivalent (each verify step) and the release browser gates; fix what fails.
-2. Run createApp browser gate + docs browser gates; visually check docs pages light/dark.
-3. Open stage-2a PR, CI green, merge, give owner the Pages URL; then 2b.
+1. Open stage-2a PR (redesign/create → main), CI green, merge, give owner the Pages URL; then 2b.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
