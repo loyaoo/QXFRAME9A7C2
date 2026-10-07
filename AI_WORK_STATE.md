@@ -68,7 +68,7 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
 
 ## NEXT EXACT STEPS
 
-1. Open stage-2a PR (redesign/create → main), CI green, merge, give owner the Pages URL; then 2b.
+1. PR #263 (stage 2a) open: drive CI green, merge, give owner the Pages URL; then 2b.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 
