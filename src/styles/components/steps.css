@@ -21,7 +21,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-steps-title{min-width:0;flex:0 1 auto;font-weight:600;line-height:1.45}
 .qxframe9a7c2-steps-subtitle{min-width:0;flex:0 1 auto;white-space:nowrap}
 .qxframe9a7c2-steps-subtitle,.qxframe9a7c2-steps-description{color:var(--_qxframe9a7c2-steps-text-muted);font-size:.9em}
-.qxframe9a7c2-steps-description{max-width:var(--_qxframe9a7c2-fixed-steps-description-max-width);line-height:1.6}
+.qxframe9a7c2-steps-description{max-width:14rem;line-height:1.6}
 .qxframe9a7c2-steps-connector,.qxframe9a7c2-steps-item-rail{box-sizing:border-box;position:static;display:block;min-width:var(--_qxframe9a7c2-steps-gap);height:0;flex:1 1 auto;margin-inline-start:var(--_qxframe9a7c2-steps-gap);border:0;border-block-start:1px solid var(--_qxframe9a7c2-steps-border);background:none;pointer-events:none}
 .qxframe9a7c2-steps.is-horizontal:not(.is-label-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-connector{position:absolute;top:calc(var(--_qxframe9a7c2-steps-height) / 2);right:0;left:calc(var(--_qxframe9a7c2-steps-height) + var(--_qxframe9a7c2-steps-gap));width:auto;min-width:0;margin:0}
 .qxframe9a7c2-steps-item.is-finish .qxframe9a7c2-steps-icon{border-color:var(--_qxframe9a7c2-steps-accent);color:var(--_qxframe9a7c2-steps-accent)}
@@ -46,18 +46,18 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 /* Label-vertical / progress-dot: rail sits behind icons, never behind title/description. */
 .qxframe9a7c2-steps.is-label-vertical:not(.is-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-main{align-items:center;flex-direction:column;text-align:center}
 .qxframe9a7c2-steps.is-label-vertical:not(.is-vertical) .qxframe9a7c2-steps-icon{width:calc(var(--_qxframe9a7c2-steps-height) * .625);height:calc(var(--_qxframe9a7c2-steps-height) * .625);flex-basis:calc(var(--_qxframe9a7c2-steps-height) * .625);border:0;background:transparent}
-.qxframe9a7c2-steps.is-label-vertical:not(.is-vertical) .qxframe9a7c2-steps-content{width:100%;max-width:100%;padding:var(--_qxframe9a7c2-fixed-space-3) var(--_qxframe9a7c2-fixed-space-3) 0;text-align:center}
+.qxframe9a7c2-steps.is-label-vertical:not(.is-vertical) .qxframe9a7c2-steps-content{width:100%;max-width:100%;padding:0.375rem 0.375rem 0;text-align:center}
 .qxframe9a7c2-steps.is-label-vertical:not(.is-vertical) .qxframe9a7c2-steps-heading{justify-content:center}
 .qxframe9a7c2-steps.is-label-vertical:not(.is-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-connector{position:absolute;z-index:var(--qxframe9a7c2-z-local-base);top:calc(var(--_qxframe9a7c2-steps-height) * .3125);right:calc(-50% + (var(--_qxframe9a7c2-steps-height) * .3125));left:calc(50% + (var(--_qxframe9a7c2-steps-height) * .3125));width:auto;min-width:0;height:0;margin:0;border-block-start:1px solid var(--_qxframe9a7c2-steps-border)}
 
 /* Navigation is a tab-like step mode; no generic selected background is involved. */
 .qxframe9a7c2-steps.is-navigation{gap:0;border-bottom:1px solid var(--_qxframe9a7c2-semantic-border)}
-.qxframe9a7c2-steps.is-navigation .qxframe9a7c2-steps-item{padding:var(--_qxframe9a7c2-fixed-space-3) var(--_qxframe9a7c2-fixed-space-4)}
+.qxframe9a7c2-steps.is-navigation .qxframe9a7c2-steps-item{padding:0.375rem 0.5rem}
 .qxframe9a7c2-steps.is-navigation .qxframe9a7c2-steps-item.is-current{box-shadow:inset 0 calc(var(--_qxframe9a7c2-fixed-steps-indicator-size) * -1) 0 var(--_qxframe9a7c2-steps-accent)}
 .qxframe9a7c2-steps.is-navigation .qxframe9a7c2-steps-connector{display:none}
 .qxframe9a7c2-steps.is-navigation .qxframe9a7c2-steps-main{height:100%}
 
-.qxframe9a7c2-steps.is-inline{gap:var(--_qxframe9a7c2-fixed-space-3)}
+.qxframe9a7c2-steps.is-inline{gap:0.375rem}
 .qxframe9a7c2-steps.is-inline .qxframe9a7c2-steps-item{flex:none}
 .qxframe9a7c2-steps.is-inline .qxframe9a7c2-steps-icon{width:calc(var(--_qxframe9a7c2-steps-height) * .625);height:calc(var(--_qxframe9a7c2-steps-height) * .625);flex-basis:calc(var(--_qxframe9a7c2-steps-height) * .625);font-size:.8em}
 .qxframe9a7c2-steps.is-inline .qxframe9a7c2-steps-description,.qxframe9a7c2-steps.is-inline .qxframe9a7c2-steps-connector{display:none}

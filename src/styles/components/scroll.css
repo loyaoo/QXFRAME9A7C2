@@ -1,7 +1,7 @@
 .qxframe9a7c2-scroll {
-  --_qxframe9a7c2-scroll-track-size: var(--qxframe9a7c2-scroll-track-size, var(--_qxframe9a7c2-fixed-scroll-track-size));
+  --_qxframe9a7c2-scroll-track-size: var(--qxframe9a7c2-scroll-track-size, 0.5rem);
   --_qxframe9a7c2-scroll-track-inset: var(--qxframe9a7c2-scroll-track-inset, var(--_qxframe9a7c2-fixed-scroll-track-inset));
-  --_qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-scroll-track-radius, var(--_qxframe9a7c2-fixed-radius-pill));
+  --_qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-scroll-track-radius, 100rem);
   --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-bg, var(--qxframe9a7c2-scroll-track-color));
   --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, var(--qxframe9a7c2-scroll-thumb-color));
   --_qxframe9a7c2-scroll-thumb-inset: var(--qxframe9a7c2-scroll-thumb-inset, 1px);
@@ -92,14 +92,14 @@
   left: var(--_qxframe9a7c2-scroll-thumb-inset);
   right: var(--_qxframe9a7c2-scroll-thumb-inset);
   top: 0;
-  min-height: var(--_qxframe9a7c2-fixed-scroll-thumb-min-size);
+  min-height: 1.125rem;
 }
 
 .qxframe9a7c2-scroll-thumb-x {
   top: var(--_qxframe9a7c2-scroll-thumb-inset);
   bottom: var(--_qxframe9a7c2-scroll-thumb-inset);
   left: 0;
-  min-width: var(--_qxframe9a7c2-fixed-scroll-thumb-min-size);
+  min-width: 1.125rem;
 }
 .qxframe9a7c2-scroll-thumb:hover{background:var(--qxframe9a7c2-scroll-thumb-hover-color)}
 
