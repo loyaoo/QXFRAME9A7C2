@@ -27,10 +27,10 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-input.is-hovered{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-hover);--_qxframe9a7c2-state-z:2}
 .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly),.qxframe9a7c2-input.is-focused,.qxframe9a7c2-input.is-expanded{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:4}
 .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled){--_qxframe9a7c2-state-outline:var(--_qxframe9a7c2-focus-visible-outline);--_qxframe9a7c2-state-z:6}
-.qxframe9a7c2-input.is-error,.qxframe9a7c2-input.is-invalid{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-error);--_qxframe9a7c2-state-z:3}
-.qxframe9a7c2-input.is-error:focus-within,.qxframe9a7c2-input.is-error.is-focused,.qxframe9a7c2-input.is-error.is-expanded,.qxframe9a7c2-input.is-invalid:focus-within,.qxframe9a7c2-input.is-invalid.is-focused,.qxframe9a7c2-input.is-invalid.is-expanded{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-error);--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
-.qxframe9a7c2-input.is-warning{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-warning);--_qxframe9a7c2-state-z:3}
-.qxframe9a7c2-input.is-warning:focus-within,.qxframe9a7c2-input.is-warning.is-focused,.qxframe9a7c2-input.is-warning.is-expanded{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-warning);--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
+.qxframe9a7c2-input.is-error,.qxframe9a7c2-input.is-invalid{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-state-z:3}
+.qxframe9a7c2-input.is-error:focus-within,.qxframe9a7c2-input.is-error.is-focused,.qxframe9a7c2-input.is-error.is-expanded,.qxframe9a7c2-input.is-invalid:focus-within,.qxframe9a7c2-input.is-invalid.is-focused,.qxframe9a7c2-input.is-invalid.is-expanded{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
+.qxframe9a7c2-input.is-warning{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-state-z:3}
+.qxframe9a7c2-input.is-warning:focus-within,.qxframe9a7c2-input.is-warning.is-focused,.qxframe9a7c2-input.is-warning.is-expanded{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
 .qxframe9a7c2-input.is-readonly{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-control-bg-readonly);--_qxframe9a7c2-state-cursor:default}
 .qxframe9a7c2-input.is-disabled{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-control-bg-disabled);--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-disabled);--_qxframe9a7c2-state-text:var(--_qxframe9a7c2-control-text-disabled);--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:none;--_qxframe9a7c2-state-cursor:not-allowed;--_qxframe9a7c2-state-z:0}
 .qxframe9a7c2-input.is-focus-outline-disabled{--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:none}
@@ -46,7 +46,7 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-input-suffix>.qxframe9a7c2-input-toggle{order:10}
 .qxframe9a7c2-input-suffix>.qxframe9a7c2-input-loading{order:20}
 .qxframe9a7c2-input-suffix>.qxframe9a7c2-input-count{order:0;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.875em}
-.qxframe9a7c2-input-suffix>.qxframe9a7c2-input-count.is-over-limit{color:var(--_qxframe9a7c2-semantic-error)}
+.qxframe9a7c2-input-suffix>.qxframe9a7c2-input-count.is-over-limit{color:var(--qxframe9a7c2-theme-destructive)}
 
 .qxframe9a7c2-input-values{display:flex;align-items:center;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-1);min-width:0}.qxframe9a7c2-input-values:empty{display:none}
 .qxframe9a7c2-input.is-value>.qxframe9a7c2-input-values{display:flex;flex:1 1 auto;min-width:0;overflow:hidden}.qxframe9a7c2-input.is-value>.qxframe9a7c2-input-control{display:none}

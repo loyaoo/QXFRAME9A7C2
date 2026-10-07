@@ -36,10 +36,10 @@
 .qxframe9a7c2-tree .qxframe9a7c2-tree-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .qxframe9a7c2-tree.is-draggable .qxframe9a7c2-tree-item[draggable="true"]{cursor:grab}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-dragging{opacity:.45;cursor:grabbing}
-.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0.5rem;height:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size);border-radius:100rem;background:var(--_qxframe9a7c2-semantic-accent);pointer-events:none}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0.5rem;height:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size);border-radius:100rem;background:var(--qxframe9a7c2-theme-primary);pointer-events:none}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-before::before{inset-block-start:-1px}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-after::after{inset-block-end:-1px}
-.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-inside{outline:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size) solid var(--_qxframe9a7c2-semantic-accent);outline-offset:-1px}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-drop-inside{outline:var(--_qxframe9a7c2-fixed-tree-drop-indicator-size) solid var(--qxframe9a7c2-theme-primary);outline-offset:-1px}
 
 .qxframe9a7c2-tree .qxframe9a7c2-tree-lines{position:absolute;inset-block:0;inset-inline-start:0;overflow:visible;pointer-events:none}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-line-unit{position:absolute;inset-block:0}

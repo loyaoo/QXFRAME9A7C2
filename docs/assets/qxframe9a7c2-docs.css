@@ -8,7 +8,7 @@
   --qxframe9a7c2-docs-text: var(--_qxframe9a7c2-semantic-text, #18202a);
   --qxframe9a7c2-docs-muted: var(--_qxframe9a7c2-semantic-text-secondary, #667180);
   --qxframe9a7c2-docs-border: var(--_qxframe9a7c2-semantic-border-subtle, #d9dee5);
-  --qxframe9a7c2-docs-accent: var(--_qxframe9a7c2-semantic-accent, #2563eb);
+  --qxframe9a7c2-docs-accent: var(--qxframe9a7c2-theme-palette-blue, #2563eb);
   --qxframe9a7c2-docs-ok: #147a50;
   --qxframe9a7c2-docs-warn: #9a6500;
   --qxframe9a7c2-docs-danger: #a73535;
@@ -21,7 +21,7 @@ html[data-theme="dark"] {
   --qxframe9a7c2-docs-text: var(--_qxframe9a7c2-semantic-text, #edf2f7);
   --qxframe9a7c2-docs-muted: var(--_qxframe9a7c2-semantic-text-secondary, #9aa7b6);
   --qxframe9a7c2-docs-border: var(--_qxframe9a7c2-semantic-border-subtle, #303844);
-  --qxframe9a7c2-docs-accent: var(--_qxframe9a7c2-semantic-accent, #60a5fa);
+  --qxframe9a7c2-docs-accent: var(--qxframe9a7c2-theme-palette-blue, #60a5fa);
   --qxframe9a7c2-docs-ok: #63d6a3;
   --qxframe9a7c2-docs-warn: #f0bd62;
   --qxframe9a7c2-docs-danger: #ff8c8c;

@@ -10,8 +10,8 @@
 .qxframe9a7c2-input-otp .qxframe9a7c2-input-segment-field:focus-within{--_qxframe9a7c2-input-otp-segment-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-input-otp-segment-ring:none}
 .qxframe9a7c2-input-otp .qxframe9a7c2-input-segment-input:focus-visible{outline:none}
 .qxframe9a7c2-input-otp .qxframe9a7c2-input-segment-field.qxframe9a7c2-segment-keyboard-focus{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
-.qxframe9a7c2-input-otp.is-error .qxframe9a7c2-input-segment-field{--_qxframe9a7c2-input-otp-segment-border:var(--_qxframe9a7c2-semantic-error)}
-.qxframe9a7c2-input-otp.is-warning .qxframe9a7c2-input-segment-field{--_qxframe9a7c2-input-otp-segment-border:var(--_qxframe9a7c2-semantic-warning)}
+.qxframe9a7c2-input-otp.is-error .qxframe9a7c2-input-segment-field{--_qxframe9a7c2-input-otp-segment-border:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-input-otp.is-warning .qxframe9a7c2-input-segment-field{--_qxframe9a7c2-input-otp-segment-border:var(--qxframe9a7c2-theme-warning)}
 .qxframe9a7c2-input-otp.is-disabled .qxframe9a7c2-input-segment-field{--_qxframe9a7c2-input-otp-segment-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-input-otp-segment-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-input-otp-segment-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-input-otp-segment-ring:none;--_qxframe9a7c2-input-otp-segment-cursor:not-allowed}
 .qxframe9a7c2-input-otp .qxframe9a7c2-input-segment-input{box-sizing:border-box;min-width:0;width:100%;height:100%;padding:0;text-align:center;font-variant-numeric:tabular-nums;color:inherit;cursor:inherit}
 .qxframe9a7c2-input-otp .qxframe9a7c2-input-segment-separator{flex:0 0 auto;opacity:.6}
@@ -30,8 +30,8 @@
 .qxframe9a7c2-input-number.is-variant-underlined .qxframe9a7c2-input-number-action{border-radius:0;background:transparent}
 .qxframe9a7c2-input-number.is-variant-underlined .qxframe9a7c2-input-number-action+.qxframe9a7c2-input-number-action{border-top-color:var(--_qxframe9a7c2-semantic-border-subtle)}
 .qxframe9a7c2-input-number.is-variant-underlined .qxframe9a7c2-input-number-action:hover:not(:disabled),.qxframe9a7c2-input-number.is-variant-underlined .qxframe9a7c2-input-number-action:focus-visible:not(:disabled){--_qxframe9a7c2-input-number-action-bg:transparent}
-.qxframe9a7c2-input-number-action:hover:not(:disabled){--_qxframe9a7c2-input-number-action-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-input-number-action-text:var(--_qxframe9a7c2-semantic-accent)}
-.qxframe9a7c2-input-number-action:focus-visible:not(:disabled){--_qxframe9a7c2-input-number-action-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-input-number-action-text:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-input-number-action-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
+.qxframe9a7c2-input-number-action:hover:not(:disabled){--_qxframe9a7c2-input-number-action-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-input-number-action-text:var(--qxframe9a7c2-theme-primary)}
+.qxframe9a7c2-input-number-action:focus-visible:not(:disabled){--_qxframe9a7c2-input-number-action-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-input-number-action-text:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-input-number-action-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-input-number-action:disabled{--_qxframe9a7c2-input-number-action-bg:transparent;--_qxframe9a7c2-input-number-action-text:var(--_qxframe9a7c2-control-text-disabled);--_qxframe9a7c2-input-number-action-ring:none;--_qxframe9a7c2-input-number-action-cursor:not-allowed}
 .qxframe9a7c2-input-number:not(.is-focused):not(:hover) .qxframe9a7c2-input-number-actions:not(.is-sides){--_qxframe9a7c2-input-number-actions-opacity:.72}
 .qxframe9a7c2-input-number-frame.has-side-controls,.qxframe9a7c2-input-number.has-side-controls .qxframe9a7c2-input-number-frame{padding-inline:calc(var(--_qxframe9a7c2-control-local-height)*.95)}

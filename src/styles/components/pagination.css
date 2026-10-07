@@ -38,13 +38,13 @@
   cursor:var(--_qxframe9a7c2-pagination-cursor)
 }
 .qxframe9a7c2-pagination-control>.qxframe9a7c2-icon{--qxframe9a7c2-icon-size:var(--_qxframe9a7c2-control-icon-size);width:var(--_qxframe9a7c2-control-icon-size);height:var(--_qxframe9a7c2-control-icon-size);flex:0 0 var(--_qxframe9a7c2-control-icon-size);font-size:var(--_qxframe9a7c2-control-icon-size)}
-.qxframe9a7c2-pagination-control:hover:not(:disabled){--_qxframe9a7c2-pagination-text:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-pagination-border:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-pagination-control:hover:not(:disabled){--_qxframe9a7c2-pagination-text:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-pagination-border:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-pagination-control:focus-visible{--_qxframe9a7c2-pagination-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-pagination-ring:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
-.qxframe9a7c2-pagination-item.is-current .qxframe9a7c2-pagination-control{--_qxframe9a7c2-pagination-text:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-pagination-border:var(--_qxframe9a7c2-semantic-accent);font-weight:700}
-.qxframe9a7c2-pagination-item.is-current .qxframe9a7c2-pagination-control:hover:not(:disabled){--_qxframe9a7c2-pagination-text:var(--_qxframe9a7c2-semantic-accent-hover);--_qxframe9a7c2-pagination-border:var(--_qxframe9a7c2-semantic-accent-hover)}
+.qxframe9a7c2-pagination-item.is-current .qxframe9a7c2-pagination-control{--_qxframe9a7c2-pagination-text:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-pagination-border:var(--qxframe9a7c2-theme-primary);font-weight:700}
+.qxframe9a7c2-pagination-item.is-current .qxframe9a7c2-pagination-control:hover:not(:disabled){--_qxframe9a7c2-pagination-text:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);--_qxframe9a7c2-pagination-border:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent)}
 .qxframe9a7c2-pagination-ellipsis .qxframe9a7c2-pagination-control{--_qxframe9a7c2-pagination-border:transparent;--_qxframe9a7c2-pagination-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-pagination-cursor:default;letter-spacing:.06em}
 .qxframe9a7c2-pagination-control:disabled{--_qxframe9a7c2-pagination-text:var(--_qxframe9a7c2-control-text-disabled);--_qxframe9a7c2-pagination-border:var(--_qxframe9a7c2-control-border-disabled);--_qxframe9a7c2-pagination-bg:transparent;--_qxframe9a7c2-pagination-ring:none;--_qxframe9a7c2-pagination-cursor:not-allowed;pointer-events:none}
-.qxframe9a7c2-pagination.is-background .qxframe9a7c2-pagination-item.is-current .qxframe9a7c2-pagination-control:not(:disabled){--_qxframe9a7c2-pagination-bg:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-pagination-border:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-pagination-text:var(--_qxframe9a7c2-semantic-on-accent)}
+.qxframe9a7c2-pagination.is-background .qxframe9a7c2-pagination-item.is-current .qxframe9a7c2-pagination-control:not(:disabled){--_qxframe9a7c2-pagination-bg:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-pagination-border:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-pagination-text:var(--_qxframe9a7c2-semantic-on-accent)}
 .qxframe9a7c2-pagination-count,
 .qxframe9a7c2-pagination-text{padding-inline:var(--_qxframe9a7c2-control-padding-inline);white-space:nowrap;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 .qxframe9a7c2-pagination-limits{flex:0 1 6rem;width:6rem;min-width:0;max-width:6rem}

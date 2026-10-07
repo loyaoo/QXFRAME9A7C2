@@ -1,4 +1,4 @@
-.qxframe9a7c2-drawer-root{--_qxframe9a7c2-drawer-bg:var(--qxframe9a7c2-drawer-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-drawer-border:var(--qxframe9a7c2-drawer-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-drawer-shadow:var(--qxframe9a7c2-drawer-shadow,var(--_qxframe9a7c2-overlay-shadow));position:fixed;inset:0;box-sizing:border-box;pointer-events:none;isolation:isolate}
+.qxframe9a7c2-drawer-root{--_qxframe9a7c2-drawer-bg:var(--qxframe9a7c2-drawer-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-drawer-border:var(--qxframe9a7c2-drawer-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-drawer-shadow:var(--qxframe9a7c2-drawer-shadow,var(--qxframe9a7c2-theme-shadow-popup));position:fixed;inset:0;box-sizing:border-box;pointer-events:none;isolation:isolate}
 .qxframe9a7c2-drawer-root[hidden]{display:none!important}
 .qxframe9a7c2-drawer-mask{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-base);box-sizing:border-box;background:var(--_qxframe9a7c2-semantic-mask);pointer-events:auto}
 .qxframe9a7c2-drawer-mask.is-maskless{background:transparent;pointer-events:none}

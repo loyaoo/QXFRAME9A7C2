@@ -1,10 +1,10 @@
 /* Alert · static semantic feedback surface. Dev CSS stays component-local; marked base rules are merged only in production. */
 .qxframe9a7c2-alert-root{
-  --_qxframe9a7c2-alert-accent:var(--qxframe9a7c2-alert-accent,var(--_qxframe9a7c2-accent,var(--_qxframe9a7c2-feedback-info)));
+  --_qxframe9a7c2-alert-accent:var(--qxframe9a7c2-alert-accent,var(--_qxframe9a7c2-accent,var(--qxframe9a7c2-theme-info)));
   --_qxframe9a7c2-alert-bg:var(--qxframe9a7c2-alert-bg,var(--_qxframe9a7c2-semantic-surface-raised));
   position:relative;box-sizing:border-box;min-width:0;padding:0.75rem 0.875rem;
   border:0;border-radius:var(--qxframe9a7c2-alert-radius,var(--_qxframe9a7c2-surface-radius));
-  background:var(--_qxframe9a7c2-alert-bg);color:var(--_qxframe9a7c2-semantic-text);box-shadow:var(--_qxframe9a7c2-popup-shadow);font-size:0.875rem;line-height:1.5
+  background:var(--_qxframe9a7c2-alert-bg);color:var(--_qxframe9a7c2-semantic-text);box-shadow:var(--qxframe9a7c2-theme-shadow-popup);font-size:0.875rem;line-height:1.5
 }
 .qxframe9a7c2-alert-root.is-banner{border-radius:0}
 .qxframe9a7c2-alert-root.is-filled{background:var(--_qxframe9a7c2-alert-bg);color:var(--_qxframe9a7c2-semantic-text)}

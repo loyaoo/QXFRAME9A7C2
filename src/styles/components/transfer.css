@@ -22,8 +22,8 @@
 .qxframe9a7c2-transfer-pagination>.qxframe9a7c2-transfer-pagination-viewport.qxframe9a7c2-scroll-viewport{width:100%;height:auto}
 .qxframe9a7c2-transfer-pagination[hidden]{display:none}
 .qxframe9a7c2-transfer-pagination .qxframe9a7c2-pagination{display:flex;width:max-content;min-width:100%;justify-content:center}
-.qxframe9a7c2-transfer.is-status-error{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-error)}
-.qxframe9a7c2-transfer.is-status-warning{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-warning)}
+.qxframe9a7c2-transfer.is-status-error{--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-transfer.is-status-warning{--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-theme-warning)}
 .qxframe9a7c2-transfer.is-disabled{--_qxframe9a7c2-transfer-panel-border:var(--_qxframe9a7c2-semantic-border-disabled);--_qxframe9a7c2-transfer-panel-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-transfer-header-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-transfer-list-host>.qxframe9a7c2-item-collection{height:100%}
 .qxframe9a7c2-item-collection.qxframe9a7c2-transfer-root{min-width:0}
@@ -44,5 +44,5 @@
 .qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-load-more,
 .qxframe9a7c2-transfer-panel.is-table-projection>.qxframe9a7c2-transfer-list-host .qxframe9a7c2-transfer-footer{display:none}
 .qxframe9a7c2-transfer-table-host>.qxframe9a7c2-table-wrap{height:100%;max-height:none;border:0;border-radius:0}
-.qxframe9a7c2-transfer-table-host .qxframe9a7c2-table tr.is-transfer-selected{--_qxframe9a7c2-transfer-table-row-bg:var(--_qxframe9a7c2-semantic-accent-soft);background:var(--_qxframe9a7c2-transfer-table-row-bg)}
+.qxframe9a7c2-transfer-table-host .qxframe9a7c2-table tr.is-transfer-selected{--_qxframe9a7c2-transfer-table-row-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent);background:var(--_qxframe9a7c2-transfer-table-row-bg)}
 

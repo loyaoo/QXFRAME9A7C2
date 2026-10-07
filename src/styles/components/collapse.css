@@ -19,10 +19,10 @@
 .qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-item{--_qxframe9a7c2-collapse-header-bg:transparent}
 .qxframe9a7c2-collapse-main{display:flex;min-width:0;min-height:inherit;flex:1 1 auto;align-items:center;padding:0;border:0;outline:0;background:transparent;color:var(--_qxframe9a7c2-collapse-main-text);box-shadow:var(--_qxframe9a7c2-collapse-main-ring);font:inherit;text-align:start;cursor:var(--_qxframe9a7c2-collapse-main-cursor)}
 .qxframe9a7c2-collapse-indicator{display:inline-flex;width:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));height:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));flex:0 0 max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--_qxframe9a7c2-collapse-action-radius);outline:0;background:var(--_qxframe9a7c2-collapse-indicator-bg);color:var(--_qxframe9a7c2-collapse-indicator-text);box-shadow:var(--_qxframe9a7c2-collapse-indicator-ring);font:inherit;cursor:var(--_qxframe9a7c2-collapse-indicator-cursor)}
-.qxframe9a7c2-collapse-indicator:hover:not(:disabled){--_qxframe9a7c2-collapse-indicator-bg:var(--_qxframe9a7c2-semantic-surface-hover);--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-collapse-indicator:hover:not(:disabled){--_qxframe9a7c2-collapse-indicator-bg:var(--_qxframe9a7c2-semantic-surface-hover);--_qxframe9a7c2-collapse-indicator-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-collapse-header:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 /* Disclosure state is visual-only here; Collapse JS remains the sole open/close owner. */
-.qxframe9a7c2-collapse-item.is-open{--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-collapse-item.is-open{--_qxframe9a7c2-collapse-indicator-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-collapse-title{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .qxframe9a7c2-collapse-extra{flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 .qxframe9a7c2-collapse-panel{overflow:hidden;background:var(--_qxframe9a7c2-semantic-surface)}

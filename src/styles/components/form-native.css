@@ -1,7 +1,7 @@
 .qxframe9a7c2-form{--_qxframe9a7c2-form-gap:var(--qxframe9a7c2-form-gap,0.375rem);display:flex;flex-direction:column;gap:var(--_qxframe9a7c2-form-gap)}
 .qxframe9a7c2-form-field{--_qxframe9a7c2-form-field-gap:var(--qxframe9a7c2-form-field-gap,var(--_qxframe9a7c2-fixed-space-1,var(--_qxframe9a7c2-fixed-space-2)));display:flex;flex-direction:column;gap:var(--_qxframe9a7c2-form-field-gap);min-width:0}
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-input,.qxframe9a7c2-form-field.is-invalid input:not([type="hidden"]),.qxframe9a7c2-form-field.is-invalid textarea,.qxframe9a7c2-form-field.is-invalid select{border-color:var(--_qxframe9a7c2-semantic-error)}
-.qxframe9a7c2-form-feedback{--_qxframe9a7c2-form-feedback-size:var(--qxframe9a7c2-form-feedback-size,.875em);--_qxframe9a7c2-form-feedback-line-height:var(--qxframe9a7c2-form-feedback-line-height,1.35);font-size:var(--_qxframe9a7c2-form-feedback-size);line-height:var(--_qxframe9a7c2-form-feedback-line-height);color:var(--_qxframe9a7c2-semantic-error)}
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-input,.qxframe9a7c2-form-field.is-invalid input:not([type="hidden"]),.qxframe9a7c2-form-field.is-invalid textarea,.qxframe9a7c2-form-field.is-invalid select{border-color:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-form-feedback{--_qxframe9a7c2-form-feedback-size:var(--qxframe9a7c2-form-feedback-size,.875em);--_qxframe9a7c2-form-feedback-line-height:var(--qxframe9a7c2-form-feedback-line-height,1.35);font-size:var(--_qxframe9a7c2-form-feedback-size);line-height:var(--_qxframe9a7c2-form-feedback-line-height);color:var(--qxframe9a7c2-theme-destructive)}
 .qxframe9a7c2-form-feedback[hidden]{display:none}
 .qxframe9a7c2-form.is-xs{--_qxframe9a7c2-form-gap:var(--qxframe9a7c2-form-xs-gap,0.375rem)}.qxframe9a7c2-form.is-sm{--_qxframe9a7c2-form-gap:var(--qxframe9a7c2-form-sm-gap,0.5rem)}.qxframe9a7c2-form.is-md{--_qxframe9a7c2-form-gap:var(--qxframe9a7c2-form-md-gap,0.75rem)}.qxframe9a7c2-form.is-lg{--_qxframe9a7c2-form-gap:var(--qxframe9a7c2-form-lg-gap,0.875rem)}.qxframe9a7c2-form.is-xl{--_qxframe9a7c2-form-gap:var(--qxframe9a7c2-form-xl-gap,1rem)}
 
@@ -13,8 +13,8 @@
 .qxframe9a7c2-form.is-layout-inline{flex-flow:row wrap;align-items:start}
 .qxframe9a7c2-form.is-layout-inline .qxframe9a7c2-form-field{display:inline-flex;flex-direction:row;align-items:center;gap:var(--_qxframe9a7c2-fixed-space-2,0.5rem)}
 .qxframe9a7c2-form.is-layout-inline .qxframe9a7c2-form-feedback{flex-basis:100%;margin-inline-start:auto}
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-input,.qxframe9a7c2-form-field.is-warning input:not([type="hidden"]),.qxframe9a7c2-form-field.is-warning textarea,.qxframe9a7c2-form-field.is-warning select{border-color:var(--_qxframe9a7c2-semantic-warning)}
-.qxframe9a7c2-form-feedback.is-warning{color:var(--_qxframe9a7c2-semantic-warning)}
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-input,.qxframe9a7c2-form-field.is-warning input:not([type="hidden"]),.qxframe9a7c2-form-field.is-warning textarea,.qxframe9a7c2-form-field.is-warning select{border-color:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-form-feedback.is-warning{color:var(--qxframe9a7c2-theme-warning)}
 
 /* v1.95 P2-A native Choice parity — native inputs remain the only checked/exclusivity owner. */
 .qxframe9a7c2-form-check.is-xs{--_qxframe9a7c2-form-check-size-default:0.75rem;font-size:0.75rem}
@@ -44,8 +44,8 @@
 .qxframe9a7c2-form-selectgroup-input{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
 /* Choice surface consumes orthogonal resolved channels; native input remains the checked/focus/disabled owner. */
 .qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-choice-text:var(--_qxframe9a7c2-semantic-text);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:0 solid transparent;--_qxframe9a7c2-choice-opacity:1;--_qxframe9a7c2-choice-cursor:pointer;position:relative;box-sizing:border-box;display:flex;min-height:var(--_qxframe9a7c2-control-height);align-items:center;justify-content:center;gap:var(--_qxframe9a7c2-fixed-space-2,0.5rem);padding:0 var(--_qxframe9a7c2-control-padding-inline);overflow:hidden;border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-choice-border);border-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius));background:var(--_qxframe9a7c2-choice-bg);color:var(--_qxframe9a7c2-choice-text);outline:var(--_qxframe9a7c2-choice-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);box-shadow:var(--_qxframe9a7c2-choice-ring);opacity:var(--_qxframe9a7c2-choice-opacity);cursor:var(--_qxframe9a7c2-choice-cursor);line-height:1.35;transition:border-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),background-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),box-shadow var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)}
-.qxframe9a7c2-form-selectgroup-item:hover>.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-accent-hover)}
-.qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-accent);--_qxframe9a7c2-choice-bg:var(--_qxframe9a7c2-semantic-accent-soft);--_qxframe9a7c2-choice-text:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-form-selectgroup-item:hover>.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent)}
+.qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-choice-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent);--_qxframe9a7c2-choice-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:disabled+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-border-disabled);--_qxframe9a7c2-choice-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:none;--_qxframe9a7c2-choice-opacity:.72;--_qxframe9a7c2-choice-cursor:not-allowed;transform:none}
 .qxframe9a7c2-form-selectgroup-input:disabled+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-color{transform:none}
@@ -56,7 +56,7 @@
 
 .qxframe9a7c2-form-selectgroup-switch{--_qxframe9a7c2-choice-switch-height:var(--qxframe9a7c2-choice-switch-height,var(--qxframe9a7c2-switch-height,calc(var(--_qxframe9a7c2-control-height)*.625)));--_qxframe9a7c2-choice-switch-width:var(--qxframe9a7c2-choice-switch-width,var(--qxframe9a7c2-switch-width,calc(var(--_qxframe9a7c2-control-height)*1.25)));--_qxframe9a7c2-choice-switch-padding:var(--qxframe9a7c2-choice-switch-padding,var(--qxframe9a7c2-switch-padding,var(--_qxframe9a7c2-fixed-space-1)));--_qxframe9a7c2-choice-switch-thumb-bg:var(--_qxframe9a7c2-semantic-overlay-text);position:relative;display:block;width:var(--_qxframe9a7c2-choice-switch-width);height:var(--_qxframe9a7c2-choice-switch-height);flex:0 0 var(--_qxframe9a7c2-choice-switch-width);border-radius:100rem;background:var(--_qxframe9a7c2-semantic-border-strong);transition:background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-form-selectgroup-switch-thumb{position:absolute;top:var(--_qxframe9a7c2-choice-switch-padding);inset-inline-start:var(--_qxframe9a7c2-choice-switch-padding);width:calc(var(--_qxframe9a7c2-choice-switch-height) - var(--_qxframe9a7c2-choice-switch-padding)*2);height:calc(var(--_qxframe9a7c2-choice-switch-height) - var(--_qxframe9a7c2-choice-switch-padding)*2);border-radius:50%;background:var(--_qxframe9a7c2-choice-switch-thumb-bg);box-shadow:0 1px 0.25rem var(--_qxframe9a7c2-fixed-color-box-shadow-2,var(--_qxframe9a7c2-mode-color-box-shadow-2));transition:inset-inline-start var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),background-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)}
-.qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-switch{--_qxframe9a7c2-choice-switch-thumb-bg:var(--_qxframe9a7c2-semantic-on-accent);background:var(--_qxframe9a7c2-semantic-accent)}
+.qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-switch{--_qxframe9a7c2-choice-switch-thumb-bg:var(--_qxframe9a7c2-semantic-on-accent);background:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-switch-thumb{inset-inline-start:calc(var(--_qxframe9a7c2-choice-switch-padding) + var(--_qxframe9a7c2-choice-switch-width) - var(--_qxframe9a7c2-choice-switch-height))}
 
 .qxframe9a7c2-form-selectgroup-image{display:flex;width:100%;min-width:0;flex-direction:column;overflow:hidden;background:var(--_qxframe9a7c2-semantic-subtle)}
@@ -65,10 +65,10 @@
 .qxframe9a7c2-form-selectgroup-image-caption{display:block;padding:0.5rem var(--_qxframe9a7c2-fixed-space-5);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em}
 .qxframe9a7c2-form-selectgroup.is-image-grid .qxframe9a7c2-form-selectgroup-label{width:100%;min-width:var(--_qxframe9a7c2-fixed-form-selectgroup-image-label-min-width);padding:0;align-items:stretch}
 .qxframe9a7c2-form-selectgroup.is-image-grid .qxframe9a7c2-form-selectgroup-item:hover>.qxframe9a7c2-form-selectgroup-label{transform:translateY(-1px)}
-.qxframe9a7c2-form-selectgroup-color{display:block;width:1.75rem;height:1.75rem;flex:0 0 1.75rem;border:var(--_qxframe9a7c2-fixed-form-selectgroup-border-width) solid var(--_qxframe9a7c2-semantic-border);border-radius:50%;background:var(--qxframe9a7c2-form-selectgroup-color,var(--_qxframe9a7c2-semantic-accent));box-shadow:none;transition:border-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)}
+.qxframe9a7c2-form-selectgroup-color{display:block;width:1.75rem;height:1.75rem;flex:0 0 1.75rem;border:var(--_qxframe9a7c2-fixed-form-selectgroup-border-width) solid var(--_qxframe9a7c2-semantic-border);border-radius:50%;background:var(--qxframe9a7c2-form-selectgroup-color,var(--qxframe9a7c2-theme-primary));box-shadow:none;transition:border-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-form-selectgroup.is-color-grid .qxframe9a7c2-form-selectgroup-label{min-height:var(--_qxframe9a7c2-control-height);padding:0.25rem;border-radius:100rem}
 .qxframe9a7c2-form-selectgroup.is-color-grid .qxframe9a7c2-form-selectgroup-item:hover .qxframe9a7c2-form-selectgroup-color{transform:scale(1.06)}
-.qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-color{border-color:var(--_qxframe9a7c2-semantic-accent);box-shadow:none}
+.qxframe9a7c2-form-selectgroup .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-color{border-color:var(--qxframe9a7c2-theme-primary);box-shadow:none}
 
 
 /* Rich static choice patterns: same hidden native input, richer label projection. */
@@ -96,13 +96,13 @@
 .qxframe9a7c2-form-selectgroup.is-toolbar .qxframe9a7c2-form-selectgroup-label{min-width:var(--_qxframe9a7c2-control-height);padding-inline:0.625rem}
 .qxframe9a7c2-form-selectgroup.is-pill .qxframe9a7c2-form-selectgroup-label{border-radius:100rem}
 .qxframe9a7c2-form-selectgroup.is-filled .qxframe9a7c2-form-selectgroup-label{border-color:transparent;background:var(--_qxframe9a7c2-semantic-subtle)}
-.qxframe9a7c2-form-selectgroup.is-filled .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label{background:var(--_qxframe9a7c2-semantic-accent);color:var(--_qxframe9a7c2-semantic-on-accent)}
+.qxframe9a7c2-form-selectgroup.is-filled .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label{background:var(--qxframe9a7c2-theme-primary);color:var(--_qxframe9a7c2-semantic-on-accent)}
 
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-selectgroup-input+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-error)}
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-error);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-selectgroup-input+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-warning)}
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-warning);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
-.qxframe9a7c2-form-field.is-valid .qxframe9a7c2-form-selectgroup-input+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-semantic-success)}
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-selectgroup-input+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-selectgroup-input+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
+.qxframe9a7c2-form-field.is-valid .qxframe9a7c2-form-selectgroup-input+.qxframe9a7c2-form-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-success)}
 
 /* Canonical native/text field surface. QX form classes are canonical; plain authored HTML is
  * a scoped compatibility skin enabled only inside .qxframe9a7c2-native-form. */
@@ -231,11 +231,11 @@
 .qxframe9a7c2-native-form input[type="month"]:user-invalid,
 .qxframe9a7c2-native-form input[type="week"]:user-invalid,
 .qxframe9a7c2-native-form select:user-invalid,
-.qxframe9a7c2-native-form textarea:user-invalid{--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-semantic-error)}
+.qxframe9a7c2-native-form textarea:user-invalid{--_qxframe9a7c2-native-field-border:var(--qxframe9a7c2-theme-destructive)}
 .qxframe9a7c2-form-input.is-warning,
 .qxframe9a7c2-form-select.is-warning,
 .qxframe9a7c2-form-textarea.is-warning,
-.qxframe9a7c2-native-form .qxframe9a7c2-native-field.is-warning{--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-semantic-warning)}
+.qxframe9a7c2-native-form .qxframe9a7c2-native-field.is-warning{--_qxframe9a7c2-native-field-border:var(--qxframe9a7c2-theme-warning)}
 .qxframe9a7c2-form-input.is-variant-filled,
 .qxframe9a7c2-form-select.is-variant-filled,
 .qxframe9a7c2-form-textarea.is-variant-filled,
@@ -251,9 +251,9 @@
 
 .qxframe9a7c2-native-form input[type="range"]{width:100%;height:var(--_qxframe9a7c2-control-height);margin:0;padding:0;appearance:none;border-radius:100rem;background:transparent;cursor:pointer}
 .qxframe9a7c2-native-form input[type="range"]::-webkit-slider-runnable-track{height:0.25rem;border-radius:100rem;background:var(--_qxframe9a7c2-semantic-border-strong)}
-.qxframe9a7c2-native-form input[type="range"]::-webkit-slider-thumb{width:1rem;height:1rem;margin-top:calc(0.375rem * -1);appearance:none;border:var(--_qxframe9a7c2-fixed-native-range-thumb-border) solid var(--_qxframe9a7c2-semantic-accent);border-radius:50%;background:var(--_qxframe9a7c2-semantic-surface)}
+.qxframe9a7c2-native-form input[type="range"]::-webkit-slider-thumb{width:1rem;height:1rem;margin-top:calc(0.375rem * -1);appearance:none;border:var(--_qxframe9a7c2-fixed-native-range-thumb-border) solid var(--qxframe9a7c2-theme-primary);border-radius:50%;background:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-native-form input[type="range"]::-moz-range-track{height:0.25rem;border:0;border-radius:100rem;background:var(--_qxframe9a7c2-semantic-border-strong)}
-.qxframe9a7c2-native-form input[type="range"]::-moz-range-thumb{width:1rem;height:1rem;border:var(--_qxframe9a7c2-fixed-native-range-thumb-border) solid var(--_qxframe9a7c2-semantic-accent);border-radius:50%;background:var(--_qxframe9a7c2-semantic-surface)}
+.qxframe9a7c2-native-form input[type="range"]::-moz-range-thumb{width:1rem;height:1rem;border:var(--_qxframe9a7c2-fixed-native-range-thumb-border) solid var(--qxframe9a7c2-theme-primary);border-radius:50%;background:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-native-form input[type="range"]:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-native-form input[type="range"]:disabled{opacity:.5;cursor:not-allowed}
 
@@ -275,9 +275,9 @@
 .qxframe9a7c2-native-form input[type="reset"],
 .qxframe9a7c2-native-form input[type="submit"],
 .qxframe9a7c2-native-form .qxframe9a7c2-native-button{box-sizing:border-box;min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-action-radius);outline:0;background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text);line-height:1;cursor:pointer}
-.qxframe9a7c2-native-form input[type="submit"]{border-color:var(--_qxframe9a7c2-semantic-accent);background:var(--_qxframe9a7c2-semantic-accent);color:var(--_qxframe9a7c2-semantic-on-accent)}
-.qxframe9a7c2-native-form button:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form input[type="button"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form input[type="reset"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form .qxframe9a7c2-native-button:hover:not(:disabled):not(:focus){border-color:var(--_qxframe9a7c2-semantic-accent);color:var(--_qxframe9a7c2-semantic-accent)}
-.qxframe9a7c2-native-form input[type="submit"]:hover:not(:disabled):not(:focus){border-color:var(--_qxframe9a7c2-semantic-accent-hover);background:var(--_qxframe9a7c2-semantic-accent-hover)}
+.qxframe9a7c2-native-form input[type="submit"]{border-color:var(--qxframe9a7c2-theme-primary);background:var(--qxframe9a7c2-theme-primary);color:var(--_qxframe9a7c2-semantic-on-accent)}
+.qxframe9a7c2-native-form button:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form input[type="button"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form input[type="reset"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form .qxframe9a7c2-native-button:hover:not(:disabled):not(:focus){border-color:var(--qxframe9a7c2-theme-primary);color:var(--qxframe9a7c2-theme-primary)}
+.qxframe9a7c2-native-form input[type="submit"]:hover:not(:disabled):not(:focus){border-color:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);background:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent)}
 .qxframe9a7c2-native-form button:focus-visible,.qxframe9a7c2-native-form input[type="button"]:focus-visible,.qxframe9a7c2-native-form input[type="reset"]:focus-visible,.qxframe9a7c2-native-form input[type="submit"]:focus-visible,.qxframe9a7c2-native-form .qxframe9a7c2-native-button:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-native-form button:disabled,.qxframe9a7c2-native-form input[type="button"]:disabled,.qxframe9a7c2-native-form input[type="reset"]:disabled,.qxframe9a7c2-native-form input[type="submit"]:disabled,.qxframe9a7c2-native-form .qxframe9a7c2-native-button:disabled{border-color:var(--_qxframe9a7c2-control-border-disabled);background:var(--_qxframe9a7c2-control-bg-disabled);color:var(--_qxframe9a7c2-control-text-disabled);cursor:not-allowed}
 

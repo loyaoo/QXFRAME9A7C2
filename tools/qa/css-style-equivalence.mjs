@@ -112,7 +112,7 @@ async function run(rel) {
     }
   }
   await ctx.close();
-  results.push({ page: rel, diffs: diffs.length, samples: diffs.slice(0, 8) });
+  results.push({ page: rel, diffs: diffs.length, samples: diffs.slice(0, Number(process.env.QX_EQ_SAMPLES || 8)) });
   console.log(JSON.stringify(results.at(-1)));
 }
 const queue = [...pages];

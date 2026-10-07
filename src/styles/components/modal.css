@@ -1,4 +1,4 @@
-.qxframe9a7c2-modal-root{--_qxframe9a7c2-modal-bg:var(--qxframe9a7c2-modal-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-modal-border:var(--qxframe9a7c2-modal-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-modal-shadow:var(--qxframe9a7c2-modal-shadow,var(--_qxframe9a7c2-overlay-shadow));position:fixed;inset:0;box-sizing:border-box;pointer-events:none;isolation:isolate}
+.qxframe9a7c2-modal-root{--_qxframe9a7c2-modal-bg:var(--qxframe9a7c2-modal-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-modal-border:var(--qxframe9a7c2-modal-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-modal-shadow:var(--qxframe9a7c2-modal-shadow,var(--qxframe9a7c2-theme-shadow-popup));position:fixed;inset:0;box-sizing:border-box;pointer-events:none;isolation:isolate}
 .qxframe9a7c2-modal-root[hidden]{display:none!important}
 .qxframe9a7c2-modal-mask{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-base);box-sizing:border-box;background:var(--_qxframe9a7c2-semantic-mask);pointer-events:auto}
 .qxframe9a7c2-modal-mask.is-maskless{background:transparent;pointer-events:none}
