@@ -77,13 +77,12 @@ Local evidence (after npm run build): every `npm run verify` step passes; verify
 ## NEXT EXACT STEPS
 
 1. DONE 2b-A (9a74c7d): hairline fix, badge/tabs/dialog/select radius + card-section consumers, radius-select + slider-thumb-width tokens (Luma 24×16 verified in browser), verify-create-app check #14 (every axis level reaches a consumer).
-2. NOW 2b-B: dissolve fixed-values :root custom properties.
-   - Step 1 DONE (aee6c0b): tools/qa/migrations/inline-consts.mjs removed 561 dead root vars and inlined 2578 root-only constants (3530 uses). root-non-theme 4618→1478, CSS 1.72MB→1.33MB. Equivalence run (scratchpad eq-2b1, baseline before-inline.css vs after-inline.css) in progress — must be 0 diffs before continuing.
-   - Step 2 (shadowed-name pass) was WRONG (removed `*`-block declarations too) → reverted (05d9cbe). Fix inline-consts dead removal to root blocks only before reusing.
-   - Equivalence tool rewritten (5cf43cd): two clean navigations per page; JS-driven layout made hot-swap noisy. Step 1 PROVEN equivalent: 111 pages × light/dark, 0 computed-style/geometry diffs (after settle-wait fix 9 noisy pages rechecked = 0).
-   - Step 3 COMMITTED c00c8f0 (equivalence vs after-inline.css running: scratchpad/seq-step3.log): all `--_qxframe9a7c2-mode-color-*` declarations removed (1972) on top of step 1 (scratchpad/step3.css). Known break: docs bodies use root private semantic vars (e.g. login body `--_qxframe9a7c2-semantic-accent-soft`) that chained to mode-color → plan: bind every semantic slot used outside components in the v2 `*` block from theme tokens; iterate with equivalence (baseline after-inline.css vs step3).
-   - (old plan) legacy mode palettes (`--_qxframe9a7c2-mode-color-*` ~493 names light+dark, ~63 direct component refs): repoint consumers to semantic/theme roles, delete palettes; poison probe already shows 0 visible effect of legacy colors on 736 mounted classes. Verify each batch with tools/qa/css-equivalence.mjs (needs QX_PLAYWRIGHT_ROOT=/opt/node-tools/node_modules/).
-3. Stage-2b PR → CI green → merge → Pages URL → stop for acceptance.
+2. DONE 2b-B (dissolve fixed-values :root custom properties), commits aee6c0b..HEAD:
+   - step 1 inline/dead (proven 0 diffs), step 3 mode-color palettes removed, 3b repoint legacy roles → theme tokens (tools/qa/migrations/repoint-legacy-palette.mjs, drop-broken-decls.mjs), 3c inlined 14 mode-independent media-overlay/shadow constants + dead `.is-default` button palette block removed + docs legacy `--qxframe9a7c2-color-*` → theme tokens / docs-accent, 3d removed 3 `*`-shadowed root defs.
+   - Equivalence (scratchpad/eq3e.json, baseline after-inline.css): 111 pages × light/dark, 335 diffs, all reviewed and accepted: same color in other notation (color(srgb) ↔ rgba), status soft tints 12%/22% → 10%/20%, login/result tints follow theme primary/status, message + image-preview video shadow → theme shadow-popup, color-picker active mode button gets primary soft tint, result info icon uses theme-info; element-count rows are async-demo noise.
+   - Ratchet re-baselined: root-non-theme 4618→383, hardcoded-color 2244→126, public-component-token-declared 503→492 (per-segment hardcoded-color rose where constants moved into their only consumer; documented in baseline note).
+   - Remaining for stages 3–5: public-component-token-declared 492, root-non-theme 383, duplicate-owner 141, hardcoded-color 126 (color picker spectrum needs documented exception).
+3. NOW 2b-C: npm run build + full `npm run verify` chain + verify:browser, theme-visual-v2-browser, theme-studio-v2-browser, legacy-browser, release, package, canonical docs browser gate → stage-2b PR (Chinese description) → CI green → merge → Pages URL → stop for acceptance.
 
 ## SUPERSEDED — THEME-VISUAL-V2-001
 

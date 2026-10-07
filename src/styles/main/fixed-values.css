@@ -1142,7 +1142,6 @@
     
     
     
-    --_qxframe9a7c2-semantic-focus: var(--qxframe9a7c2-semantic-focus, var(--qxframe9a7c2-theme-primary));
     --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-semantic-focus-visible, var(--_qxframe9a7c2-mode-focus-visible));
     
     
@@ -1185,7 +1184,6 @@
     
     
     
-    --_qxframe9a7c2-semantic-loading-mask: var(--qxframe9a7c2-semantic-loading-mask, var(--qxframe9a7c2-theme-overlay));
     
 
     --_qxframe9a7c2-focus-ring-size: var(--_qxframe9a7c2-fixed-focus-ring-size, var(--_qxframe9a7c2-size-1));
@@ -5506,7 +5504,6 @@
 
     --_qxframe9a7c2-navigation-bg: var(--_qxframe9a7c2-family-navigation-bg, var(--_qxframe9a7c2-semantic-surface));
     --_qxframe9a7c2-navigation-hover-bg: var(--_qxframe9a7c2-family-navigation-hover-bg, var(--_qxframe9a7c2-semantic-surface-hover));
-    --_qxframe9a7c2-navigation-selected-bg: var(--_qxframe9a7c2-family-navigation-selected-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent));
     --_qxframe9a7c2-navigation-radius: var(--_qxframe9a7c2-family-navigation-radius, var(--_qxframe9a7c2-control-radius));
 
     
