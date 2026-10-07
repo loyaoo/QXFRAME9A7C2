@@ -36,6 +36,12 @@ Status: IMPLEMENTED on `redesign/create`; PR pending owner acceptance.
 - New gates: `verify:css-source-authority`, `verify:css-concat-build`, `verify:css-constraints` (§6), `verify:theme-tokens` (§5, includes theme-file 16KB warning and duplicate-owner count), `verify:js-build-matches-main` (CI, pull_request), `theme:chain` printer.
 - `tools/qa/`: handoff `spec.json`, reference renderer `ref/`, handoff scripts `scripts/`, `css-equivalence.mjs`, reports in `tools/qa/reports/` (uploaded by CI as `qa-reports-<sha>`).
 
+### Stage 0 evidence
+
+- Visual equivalence (`tools/qa/reports/stage-0/`): 222/222 renders (111 canonical pages × light/dark) pixel-identical and computed-style-identical, 314,798 elements; CSSOM 4,610 rules, 0 unequal.
+- qxframe.js: 553 non-CSS build files byte-identical to main.
+- CI on PR #261 head `25e8cf4`: release ✅, windows-tools ✅, schema-acceptance ✅ (deploy-pages skipped on PR).
+
 ## NEXT EXACT STEPS
 
 1. Owner accepts stage-0 PR (or requests changes). Do not start stage 1 before the owner says 继续.
