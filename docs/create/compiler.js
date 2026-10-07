@@ -281,6 +281,9 @@ export function themeTokens(resolved) {
   const input = INPUT_LOOK[ext.inputLook];
   look('field', input.bg[0], input.bg[1]);
   look('field-border', input.border);
+  // Nova / Lyra source: disabled:bg-input/50 dark:disabled:bg-input/80; other styles keep the field.
+  if (style === 'nova' || style === 'lyra') look('field-disabled', 'input/50', 'input/80');
+  else look('field-disabled', input.bg[0], input.bg[1]);
   root['field-sides'] = input.sides + '%';
 
   // Choice, switch, slider (style looks).
@@ -323,8 +326,9 @@ export function themeTokens(resolved) {
   root['control-padding'] = rem(padding + (roundAllocation && padding < 1 ? 0.125 : 0));
   root['control-gap'] = rem(gap);
   root['control-icon'] = rem(icon);
-  root['control-font-size'] = rem(controlFont);
-  root['control-line-height'] = rem(controlLine);
+  // Editorial (Sera) controls use text-xs uppercase labels.
+  root['control-font-size'] = rem(editorial ? Math.min(controlFont, 0.75) : controlFont);
+  root['control-line-height'] = rem(editorial ? Math.min(controlLine, 1) : controlLine);
   root['border-width'] = '1px';
 
   // Containers.
@@ -385,14 +389,13 @@ export function themeTokens(resolved) {
   root['shadow-thumb'] = SHADOWS[looks.thumbShadow];
   root['shadow-switch-thumb'] = SHADOWS[looks.switchShadow];
 
-  // Focus (v3 §4.6): "qx" = the existing QX look (2px keyboard outline, no pointer ring).
-  const focusWidths = value => (value === 'ring' ? ['0', '3px'] : value === 'outline' ? ['2px', '0'] : null);
-  const [kOutline, kRing] = focusWidths(ext.keyboardFocus) || ['2px', '0'];
-  const [pOutline, pRing] = focusWidths(ext.pointerFocus) || ['0', '0'];
-  root['focus-outline-width'] = kOutline;
-  root['focus-ring-width'] = kRing;
-  root['pointer-outline-width'] = pOutline;
-  root['pointer-ring-width'] = pRing;
+  // Focus (v3 §4.6): outline = 2px / 100% / -1px (QX keyboard default), ring = 3px / 40% / 0;
+  // pointer "follow" keeps the QX pointer look (no outline).
+  const FOCUS = { outline: ['0.125rem', '100%', '-0.0625rem'], ring: ['0.1875rem', '40%', '0'], none: ['0', '100%', '0'] };
+  const [kWidth, kOpacity, kOffset] = FOCUS[ext.keyboardFocus === 'ring' ? 'ring' : 'outline'];
+  const [pWidth, pOpacity, pOffset] = FOCUS[ext.pointerFocus === 'qx' ? 'none' : ext.pointerFocus];
+  root['focus-width'] = kWidth; root['focus-opacity'] = kOpacity; root['focus-offset'] = kOffset;
+  root['pointer-width'] = pWidth; root['pointer-opacity'] = pOpacity; root['pointer-offset'] = pOffset;
 
   // Motion.
   const motion = MOTION[ext.motion];

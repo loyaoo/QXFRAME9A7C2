@@ -16,7 +16,7 @@
  * Theme selects generic Preset materials and owns component-semantic design defaults.
  * Component CSS consumes Theme or Component tokens only; it never reads Preset directly.
  */
-:root,[data-qxframe9a7c2-theme] {
+:root,.dark {
   --_qxframe9a7c2-fixed-font-size-10: var(--_qxframe9a7c2-font-size-10);
 --_qxframe9a7c2-fixed-font-size-24: var(--_qxframe9a7c2-font-size-24);
 --_qxframe9a7c2-fixed-font-size-lg: var(--_qxframe9a7c2-font-size-lg);
@@ -586,8 +586,7 @@
 /* Canonical theme-mode semantic projection.
  * Legacy public color aliases are output-only adapters; canonical CSS never consumes them.
  */
-:root,
-[data-qxframe9a7c2-theme="light"] {
+:root {
   color-scheme: light;
 
   --qxframe9a7c2-color-static-white: var(--_qxframe9a7c2-semantic-overlay-text);
@@ -645,7 +644,7 @@
   --qxframe9a7c2-shadow-popup: 0 var(--_qxframe9a7c2-size-6) var(--_qxframe9a7c2-size-16) rgba(var(--_qxframe9a7c2-palette-grey-3), .18);
 }
 
-[data-qxframe9a7c2-theme="dark"] {
+.dark {
   color-scheme: dark;
 
   --qxframe9a7c2-color-static-white: var(--_qxframe9a7c2-semantic-overlay-text);
@@ -704,7 +703,7 @@
 }
 
 @supports (color: contrast-color(red)) {
-  :root, [data-qxframe9a7c2-theme="light"], [data-qxframe9a7c2-theme="dark"] {
+  :root, .dark {
     --qxframe9a7c2-color-on-primary: var(--_qxframe9a7c2-semantic-on-accent);
   }
 }
@@ -712,9 +711,7 @@
 /* Complete Original global semantic color contract.
  * Includes compatibility aliases retained by the Original project.
  */
-:root,
-[data-qxframe9a7c2-theme="light"],
-[data-qxframe9a7c2-theme="dark"] {
+:root,.dark {
   /* Normal low-emphasis surfaces. */
   --qxframe9a7c2-color-subtle: var(--_qxframe9a7c2-semantic-subtle);
   --qxframe9a7c2-color-subtle-hover: var(--_qxframe9a7c2-semantic-subtle-hover);
@@ -788,7 +785,7 @@
 
   /* v2.18.56 local seed resolver. Public seed slots are resolved at each theme boundary
    * as offline generator metadata. Complete static roles provide the color material. */
-  :root,[data-qxframe9a7c2-theme] {
+  :root,.dark {
     --_qxframe9a7c2-seed-grey: var(--_qxframe9a7c2-fixed-grey, var(--_qxframe9a7c2-theme-seed-grey));
     --_qxframe9a7c2-seed-gray: var(--_qxframe9a7c2-fixed-gray, var(--_qxframe9a7c2-theme-seed-gray));
     --_qxframe9a7c2-seed-cyan: var(--_qxframe9a7c2-fixed-cyan, var(--_qxframe9a7c2-theme-seed-cyan));
@@ -904,12 +901,12 @@
    * selects black for light seeds and white for dark seeds. Public foreground override remains
    * authoritative, and older engines retain the historical white fallback. */
   @supports (color: oklch(from white l c h)) {
-    :root,[data-qxframe9a7c2-theme] {
+    :root,.dark {
       --_qxframe9a7c2-primary-foreground-auto: oklch(from var(--_qxframe9a7c2-seed-primary) clamp(0, calc((0.62 - l) * 1000), 1) 0 h);
     }
   }
   @supports (color: contrast-color(red)) {
-    :root,[data-qxframe9a7c2-theme] {
+    :root,.dark {
       --_qxframe9a7c2-primary-foreground-auto: contrast-color(var(--_qxframe9a7c2-seed-primary));
     }
   }
@@ -918,7 +915,7 @@
    * Standard Light/Dark Neutral resolves directly from canonical Grey. MixedGray/Auxiliary
    * remains available as an explicit public theme-neutral override recipe, never as the
    * mandatory default path. */
-  :root,[data-qxframe9a7c2-theme] {
+  :root,.dark {
     --_qxframe9a7c2-standard-light-bg: rgb(var(--_qxframe9a7c2-palette-white));
     --_qxframe9a7c2-standard-light-surface: rgb(var(--_qxframe9a7c2-palette-white));
     --_qxframe9a7c2-standard-light-surface-raised: rgb(var(--_qxframe9a7c2-palette-white));
@@ -930,7 +927,7 @@
   /* Mode recipe: solid tones use perceptual OKLab mixing; translucent channels mix with
    * transparent in sRGB. Neutral base inputs are stored as paired Light/Dark slots so a
    * global mode switch never leaks one mode's public semantic values into a nested boundary. */
-  :root,[data-qxframe9a7c2-theme="light"] {
+  :root {
     color-scheme: light;
     --_qxframe9a7c2-accent-tone-target: black;
     --_qxframe9a7c2-accent-base-weight: 100%;
@@ -1028,7 +1025,7 @@
     --qxframe9a7c2-ripple-outside-opacity: 1;
   }
 
-  [data-qxframe9a7c2-theme="dark"] {
+  .dark {
     color-scheme: dark;
     --_qxframe9a7c2-accent-tone-target: white;
     --_qxframe9a7c2-accent-base-weight: 84%;
@@ -1128,7 +1125,7 @@
 
 
   /* Theme Boundary resolver. Public slots are intentionally never assigned here. */
-  :root,[data-qxframe9a7c2-theme] {
+  :root,.dark {
     --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-semantic-bg, var(--_qxframe9a7c2-fixed-base, var(--_qxframe9a7c2-mode-bg)));
     --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-semantic-surface, var(--_qxframe9a7c2-mode-surface));
     --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-semantic-surface-raised, var(--_qxframe9a7c2-mode-surface-raised));
@@ -3354,8 +3351,7 @@
   --_qxframe9a7c2-fixed-dark-color-filter-1: color(srgb 0 0 0 / 0.28);
   --_qxframe9a7c2-fixed-dark-color-background-4: color(srgb 1 1 1 / 0.14);
 }
-:root,
-[data-qxframe9a7c2-theme="light"] {
+:root {
   --_qxframe9a7c2-mode-color-token-subtle-selected-1: var(--_qxframe9a7c2-fixed-light-color-token-subtle-selected-1);
   --_qxframe9a7c2-mode-color-token-primary-soft-hover-1: var(--_qxframe9a7c2-fixed-light-color-token-primary-soft-hover-1);
   --_qxframe9a7c2-mode-color-token-success-soft-1: var(--_qxframe9a7c2-fixed-light-color-token-success-soft-1);
@@ -4410,7 +4406,7 @@
   --_qxframe9a7c2-mode-color-filter-1: var(--_qxframe9a7c2-fixed-light-color-filter-1);
   --_qxframe9a7c2-mode-color-background-4: var(--_qxframe9a7c2-fixed-light-color-background-4);
 }
-[data-qxframe9a7c2-theme="dark"] {
+.dark {
   --_qxframe9a7c2-mode-color-token-subtle-selected-1: var(--_qxframe9a7c2-fixed-dark-color-token-subtle-selected-1);
   --_qxframe9a7c2-mode-color-token-primary-soft-hover-1: var(--_qxframe9a7c2-fixed-dark-color-token-primary-soft-hover-1);
   --_qxframe9a7c2-mode-color-token-success-soft-1: var(--_qxframe9a7c2-fixed-dark-color-token-success-soft-1);
@@ -5471,7 +5467,7 @@
 /* family */
 
   /* Public expert family slots feed private resolved values. */
-  :root,[data-qxframe9a7c2-theme] {
+  :root,.dark {
     --_qxframe9a7c2-color-accent-1:var(--_qxframe9a7c2-fixed-color-accent-1,var(--_qxframe9a7c2-mode-color-accent-1));--_qxframe9a7c2-color-accent-hover-1:var(--_qxframe9a7c2-fixed-color-accent-hover-1,var(--_qxframe9a7c2-mode-color-accent-hover-1));--_qxframe9a7c2-color-accent-active-1:var(--_qxframe9a7c2-fixed-color-accent-active-1,var(--_qxframe9a7c2-mode-color-accent-active-1));--_qxframe9a7c2-color-accent-soft-1:var(--_qxframe9a7c2-fixed-color-accent-soft-1,var(--_qxframe9a7c2-mode-color-accent-soft-1));--_qxframe9a7c2-color-accent-soft-hover-1:var(--_qxframe9a7c2-fixed-color-accent-soft-hover-1,var(--_qxframe9a7c2-mode-color-accent-soft-hover-1));--_qxframe9a7c2-color-accent-border-1:var(--_qxframe9a7c2-fixed-color-accent-border-1,var(--_qxframe9a7c2-mode-color-accent-border-1));--_qxframe9a7c2-color-accent-ring-1:var(--_qxframe9a7c2-fixed-color-accent-ring-1,var(--_qxframe9a7c2-mode-color-accent-ring-1));--_qxframe9a7c2-color-button-disabled-text-1:var(--_qxframe9a7c2-fixed-color-button-disabled-text-1,var(--_qxframe9a7c2-mode-color-button-disabled-text-1));--_qxframe9a7c2-color-button-focus-bg-1:var(--_qxframe9a7c2-fixed-color-button-focus-bg-1,var(--_qxframe9a7c2-mode-color-button-focus-bg-1));--_qxframe9a7c2-color-button-focus-border-1:var(--_qxframe9a7c2-fixed-color-button-focus-border-1,var(--_qxframe9a7c2-mode-color-button-focus-border-1));--_qxframe9a7c2-color-button-disabled-bg-1:var(--_qxframe9a7c2-fixed-color-button-disabled-bg-1,var(--_qxframe9a7c2-mode-color-button-disabled-bg-1));--_qxframe9a7c2-color-button-disabled-border-1:var(--_qxframe9a7c2-fixed-color-button-disabled-border-1,var(--_qxframe9a7c2-mode-color-button-disabled-border-1));--_qxframe9a7c2-color-button-disabled-text-2:var(--_qxframe9a7c2-fixed-color-button-disabled-text-2,var(--_qxframe9a7c2-mode-color-button-disabled-text-2));--_qxframe9a7c2-color-button-focus-bg-2:var(--_qxframe9a7c2-fixed-color-button-focus-bg-2,var(--_qxframe9a7c2-mode-color-button-focus-bg-2));--_qxframe9a7c2-color-button-disabled-border-2:var(--_qxframe9a7c2-fixed-color-button-disabled-border-2,var(--_qxframe9a7c2-mode-color-button-disabled-border-2));--_qxframe9a7c2-color-button-disabled-text-3:var(--_qxframe9a7c2-fixed-color-button-disabled-text-3,var(--_qxframe9a7c2-mode-color-button-disabled-text-3));--_qxframe9a7c2-color-button-border-1:var(--_qxframe9a7c2-fixed-color-button-border-1,var(--_qxframe9a7c2-mode-color-button-border-1));--_qxframe9a7c2-color-button-hover-bg-1:var(--_qxframe9a7c2-fixed-color-button-hover-bg-1,var(--_qxframe9a7c2-mode-color-button-hover-bg-1));--_qxframe9a7c2-color-button-hover-border-1:var(--_qxframe9a7c2-fixed-color-button-hover-border-1,var(--_qxframe9a7c2-mode-color-button-hover-border-1));--_qxframe9a7c2-color-button-focus-bg-3:var(--_qxframe9a7c2-fixed-color-button-focus-bg-3,var(--_qxframe9a7c2-mode-color-button-focus-bg-3));--_qxframe9a7c2-color-button-focus-border-2:var(--_qxframe9a7c2-fixed-color-button-focus-border-2,var(--_qxframe9a7c2-mode-color-button-focus-border-2));--_qxframe9a7c2-color-button-active-bg-1:var(--_qxframe9a7c2-fixed-color-button-active-bg-1,var(--_qxframe9a7c2-mode-color-button-active-bg-1));--_qxframe9a7c2-color-button-active-border-1:var(--_qxframe9a7c2-fixed-color-button-active-border-1,var(--_qxframe9a7c2-mode-color-button-active-border-1));--_qxframe9a7c2-color-button-hover-bg-2:var(--_qxframe9a7c2-fixed-color-button-hover-bg-2,var(--_qxframe9a7c2-mode-color-button-hover-bg-2));--_qxframe9a7c2-color-button-focus-bg-4:var(--_qxframe9a7c2-fixed-color-button-focus-bg-4,var(--_qxframe9a7c2-mode-color-button-focus-bg-4));--_qxframe9a7c2-color-button-active-bg-2:var(--_qxframe9a7c2-fixed-color-button-active-bg-2,var(--_qxframe9a7c2-mode-color-button-active-bg-2));--_qxframe9a7c2-color-button-disabled-bg-2:var(--_qxframe9a7c2-fixed-color-button-disabled-bg-2,var(--_qxframe9a7c2-mode-color-button-disabled-bg-2));--_qxframe9a7c2-color-button-hover-bg-3:var(--_qxframe9a7c2-fixed-color-button-hover-bg-3,var(--_qxframe9a7c2-mode-color-button-hover-bg-3));--_qxframe9a7c2-color-button-active-bg-3:var(--_qxframe9a7c2-fixed-color-button-active-bg-3,var(--_qxframe9a7c2-mode-color-button-active-bg-3));--_qxframe9a7c2-color-button-hover-bg-4:var(--_qxframe9a7c2-fixed-color-button-hover-bg-4,var(--_qxframe9a7c2-mode-color-button-hover-bg-4));--_qxframe9a7c2-color-button-active-bg-4:var(--_qxframe9a7c2-fixed-color-button-active-bg-4,var(--_qxframe9a7c2-mode-color-button-active-bg-4));--_qxframe9a7c2-color-button-shadow-1:var(--_qxframe9a7c2-fixed-color-button-shadow-1,var(--_qxframe9a7c2-mode-color-button-shadow-1));--_qxframe9a7c2-color-button-hover-shadow-1:var(--_qxframe9a7c2-fixed-color-button-hover-shadow-1,var(--_qxframe9a7c2-mode-color-button-hover-shadow-1));--_qxframe9a7c2-color-button-active-shadow-1:var(--_qxframe9a7c2-fixed-color-button-active-shadow-1,var(--_qxframe9a7c2-mode-color-button-active-shadow-1));--_qxframe9a7c2-color-button-shadow-2:var(--_qxframe9a7c2-fixed-color-button-shadow-2,var(--_qxframe9a7c2-mode-color-button-shadow-2));--_qxframe9a7c2-color-button-hover-shadow-2:var(--_qxframe9a7c2-fixed-color-button-hover-shadow-2,var(--_qxframe9a7c2-mode-color-button-hover-shadow-2));--_qxframe9a7c2-color-button-active-shadow-2:var(--_qxframe9a7c2-fixed-color-button-active-shadow-2,var(--_qxframe9a7c2-mode-color-button-active-shadow-2));--_qxframe9a7c2-color-button-shadow-3:var(--_qxframe9a7c2-fixed-color-button-shadow-3,var(--_qxframe9a7c2-mode-color-button-shadow-3));--_qxframe9a7c2-color-button-hover-shadow-3:var(--_qxframe9a7c2-fixed-color-button-hover-shadow-3,var(--_qxframe9a7c2-mode-color-button-hover-shadow-3));--_qxframe9a7c2-color-button-active-shadow-3:var(--_qxframe9a7c2-fixed-color-button-active-shadow-3,var(--_qxframe9a7c2-mode-color-button-active-shadow-3));--_qxframe9a7c2-color-button-hover-shadow-4:var(--_qxframe9a7c2-fixed-color-button-hover-shadow-4,var(--_qxframe9a7c2-mode-color-button-hover-shadow-4));--_qxframe9a7c2-color-button-active-shadow-4:var(--_qxframe9a7c2-fixed-color-button-active-shadow-4,var(--_qxframe9a7c2-mode-color-button-active-shadow-4));
 
     --_qxframe9a7c2-control-bg: var(--_qxframe9a7c2-family-control-bg, var(--_qxframe9a7c2-semantic-surface));
@@ -5519,7 +5515,7 @@
     --_qxframe9a7c2-feedback-error: var(--_qxframe9a7c2-family-feedback-error, var(--_qxframe9a7c2-semantic-error));
   }
 /* QXFRAME9A7C2 unified size recipe + family geometry resolver. */
-  :root,[data-qxframe9a7c2-theme],.is-md {
+  :root,.dark,.is-md {
     --_qxframe9a7c2-size-control-height: var(--_qxframe9a7c2-fixed-control-height-md);
     --_qxframe9a7c2-size-control-font-size: var(--_qxframe9a7c2-fixed-control-font-size-md);
     --_qxframe9a7c2-size-control-padding-inline: var(--_qxframe9a7c2-fixed-control-padding-inline-md);
@@ -5565,7 +5561,7 @@
     --_qxframe9a7c2-size-control-icon-size: var(--_qxframe9a7c2-fixed-control-icon-size-xl);
   }
 
-  :root,[data-qxframe9a7c2-theme],.is-xs,.is-sm,.is-md,.is-lg,.is-xl {
+  :root,.dark,.is-xs,.is-sm,.is-md,.is-lg,.is-xl {
     --_qxframe9a7c2-control-height: var(--_qxframe9a7c2-family-control-height, var(--_qxframe9a7c2-size-control-height));
     --_qxframe9a7c2-control-font-size: var(--_qxframe9a7c2-family-control-font-size, var(--_qxframe9a7c2-size-control-font-size));
     --_qxframe9a7c2-control-padding-inline: var(--_qxframe9a7c2-family-control-padding-inline, var(--_qxframe9a7c2-size-control-padding-inline));

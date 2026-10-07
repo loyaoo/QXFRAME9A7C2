@@ -78,6 +78,7 @@ export const THEME_TOKENS = [
   C('outline-border', 'Outline button border'),
   C('field', 'Input background (input look axis)'),
   C('field-border', 'Input border at rest'),
+  C('field-disabled', 'Disabled input background'),
   C('choice', 'Checkbox / radio unchecked background'),
   C('choice-border', 'Checkbox / radio unchecked border'),
   C('switch-track', 'Switch unchecked track'),
@@ -159,11 +160,13 @@ export const THEME_TOKENS = [
   L('shadow-switch-thumb', 'Switch thumb', 'shadow'),
   L('menu-blur', 'Translucent menu backdrop blur'),
 
-  // Focus (v3 §4.6).
-  L('focus-outline-width', 'Keyboard focus outline width (0 = none)'),
-  L('focus-ring-width', 'Keyboard focus ring width (0 = none)'),
-  L('pointer-outline-width', 'Pointer focus outline width (0 = none)'),
-  L('pointer-ring-width', 'Pointer focus ring width (0 = none)'),
+  // Focus (v3 §4.6). Outline-drawn so component shadows survive; ring = wide translucent outline.
+  L('focus-width', 'Keyboard focus width (outline 2px, ring 3px)'),
+  L('focus-opacity', 'Keyboard focus color strength (ring 40%)', 'percent'),
+  L('focus-offset', 'Keyboard focus offset (outline -1px inset, ring 0)'),
+  L('pointer-width', 'Pointer focus width (0 = QX default: no outline)'),
+  L('pointer-opacity', 'Pointer focus color strength', 'percent'),
+  L('pointer-offset', 'Pointer focus offset'),
 
   // Motion.
   L('duration-xs', 'Motion 1', 'time'),
