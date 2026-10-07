@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as cp from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { rollup } from 'rollup';
 import {consumerProbeInventory,consumerPoisonBrowserProbe} from './theme-v2-consumer-probes.mjs';
 import { getWebSocketConstructor } from './websocket-client.mjs';
@@ -287,8 +287,9 @@ async function runDocsPlayground(cdp) {
         if (error) throw error;
         const value = result && result.result && result.result.value || {};
         const inventory=consumerProbeInventory(root),consumers=[];
+        const createModel=await import(pathToFileURL(path.join(root,'docs/create/model.js')).href);
         consumerConfigurations: for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const mode of ['light','dark']){
-            const probe=await cdp.call('Runtime.evaluate',{expression:`(${consumerPoisonBrowserProbe.toString()})(${JSON.stringify(inventory)},${JSON.stringify(style)},${JSON.stringify(mode)})`,returnByValue:true},sessionId);
+            const probe=await cdp.call('Runtime.evaluate',{expression:`(${consumerPoisonBrowserProbe.toString()})(${JSON.stringify(inventory)},${JSON.stringify(style)},${JSON.stringify(mode)},${JSON.stringify(createModel.compileTheme(createModel.normalizeConfig({style})).body)})`,returnByValue:true},sessionId);
             const probeError=exceptionMessage(probe,'Theme v2 consumer poison');if(probeError)throw probeError;
             const measured=probe?.result?.value;
             if(!measured||!measured.nodes||!measured.checks)throw new Error('Theme v2 consumer poison mounted no canonical consumers');
