@@ -14,6 +14,8 @@
 - Runtime Controller migration: accepted 40/40 public components; do not restart it. qxframe.js is not modified in this program.
 - Workflow: branch `redesign/create`, one PR per v3 stage, stop for owner acceptance after each stage PR. Ask the owner on anything v3 does not cover.
 - Current Program: CREATEAPP-V3 — stage 0 of 0–5.
+- Current Phase: CREATEAPP-V3 stage 0 — plain CSS source, concat build and v3 §5/§6 CI gates.
+- Current Task: `CREATEAPP-V3-S0` — implemented; PR #261 awaiting owner acceptance.
 
 ## CURRENT
 
