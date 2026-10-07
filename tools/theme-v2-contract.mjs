@@ -29,6 +29,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   const allowed=new Set();
   const alpha=(name,weights)=>weights.forEach(n=>allowed.add('color-mix(inoklab,var('+name+')'+n+'%,transparent)'));
   alpha(t,[10,20,30,40,70,80,90]);alpha(p+'muted',[50]);alpha(p+'destructive',[10,20,50]);
+  alpha(p+'primary',[10,20,30,80]);alpha(p+'ring',[50]);alpha(p+'success',[10,20]);alpha(p+'info',[10,20]);alpha(p+'warning',[20]);
   allowed.add('color-mix(inoklch,var('+p+'secondary)95%,var('+p+'foreground)5%)');
   const fill='var('+p+'radio-fill)';
   allowed.add('color-mix(inoklab,var('+t+',var('+p+'primary))'+fill+',transparent)');

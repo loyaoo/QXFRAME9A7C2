@@ -60,6 +60,18 @@
     --_qxframe9a7c2-data-border: var(--qxframe9a7c2-theme-border);
     --_qxframe9a7c2-data-header-bg: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-focus);
+    /* Shared roles that the retired legacy palette used to feed at :root (docs and plain hosts read them). */
+    --_qxframe9a7c2-semantic-accent-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);
+    --_qxframe9a7c2-semantic-accent-ring-color: color-mix(in oklab, var(--qxframe9a7c2-theme-ring) 50%, transparent);
+    --_qxframe9a7c2-semantic-accent-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent));
+    --_qxframe9a7c2-semantic-accent-soft-hover: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 30%, transparent));
+    --_qxframe9a7c2-semantic-success-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-success) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-success) 20%, transparent));
+    --_qxframe9a7c2-semantic-error-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent));
+    --_qxframe9a7c2-semantic-info-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-info) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-info) 20%, transparent));
+    --_qxframe9a7c2-focus-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-ring) 50%, transparent);
+    --_qxframe9a7c2-validation-error-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent);
+    --_qxframe9a7c2-validation-warning-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-warning) 20%, transparent);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
     --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-destructive-foreground));
     --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));
     --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground));
