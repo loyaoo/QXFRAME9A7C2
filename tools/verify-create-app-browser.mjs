@@ -459,6 +459,36 @@ try {
     }
   });
 
+  await step('Kitchen Island uses 16px unboxed ItemMedia and 10px compact group gaps', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")', 'Kitchen Island');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Kitchen Island');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const card=doc.querySelector('[data-card="kitchen-island"]');
+        const group=card.querySelector('.qxframe9a7c2-item-group');
+        const css=e=>doc.defaultView.getComputedStyle(e),n=v=>parseFloat(v);
+        return { gap:n(css(group).rowGap),
+          media:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
+            const icon=el.querySelector('.qxframe9a7c2-item-media.is-icon');
+            return {count:el.querySelectorAll('.qxframe9a7c2-item-media').length,
+              width:n(css(icon).width),height:n(css(icon).height),
+              border:n(css(icon).borderTopWidth)};
+          })};
+      })()`);
+      assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');
+      assert.ok(Math.abs(actual.gap-10)<.5,style+' compact ItemGroup gap');
+      for(const media of actual.media){
+        assert.equal(media.count,1,style+' must not duplicate ItemMedia DOM');
+        assert.equal(media.width,16,style+' unboxed ItemMedia width');
+        assert.equal(media.height,16,style+' unboxed ItemMedia height');
+        assert.equal(media.border,0,style+' unboxed ItemMedia border');
+      }
+    }
+  });
+
   await step('Preview 01 refreshed first-Card height diagnostic against pinned source', async () => {
     const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/qa/reports/stage-3/preview-01/report.json'), 'utf8'));
     assert.equal(baseline.source, '295a1f114a138f23b5dfee0e0c6812394dfeb90c');
