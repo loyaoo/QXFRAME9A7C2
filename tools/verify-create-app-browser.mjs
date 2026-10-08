@@ -302,6 +302,62 @@ try {
 
   });
 
+  await step('Empty geometry: source-locked 8 styles x light/dark', async () => {
+    const expected = {
+      vega: [48,40,18,28,10,10], nova: [24,32,14,20,14,10],
+      maia: [48,40,18,28,10,10], lyra: [24,32,14,20,0,0],
+      mira: [24,32,14,20,14,8], luma: [48,40,18,28,18,14],
+      sera: [48,40,18,28,0,0], rhea: [48,40,18,28,22,14]
+    };
+    const approx = (actual, expectedValue, description) =>
+      assert.ok(Number.isFinite(actual) && Math.abs(actual - expectedValue) <= 0.5,
+        description + ': expected ' + expectedValue + 'px, got ' + actual);
+    for (const [style, [inset, mediaSize, titleSize, titleLine, outerRadius, mediaRadius]] of Object.entries(expected)) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "' + style + '", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style') + ' === "' + style + '"', style + ' Empty style');
+      for (const mode of ['light','dark']) {
+        const actual = await evaluate(`(() => {
+          const doc = document.querySelector('[data-create-frame]').contentDocument;
+          const root = doc.documentElement, previous = root.classList.contains('dark');
+          root.classList.toggle('dark', ${mode === 'dark'});
+          const empty = doc.querySelector('.qxframe9a7c2-empty.is-composed:has(> .qxframe9a7c2-empty-media.is-icon)');
+          if (!empty) { root.classList.toggle('dark', previous); return null; }
+          const media = empty.querySelector('.qxframe9a7c2-empty-media.is-icon');
+          const title = empty.querySelector('.qxframe9a7c2-empty-title');
+          const desc = empty.querySelector('.qxframe9a7c2-empty-description');
+          const fixture = doc.createElement('div');
+          fixture.className = 'qxframe9a7c2-empty is-composed is-bordered';
+          doc.body.append(fixture);
+          const css = el => doc.defaultView.getComputedStyle(el);
+          const read = value => parseFloat(value);
+          const result = {
+            inset: read(css(empty).paddingTop), gap: read(css(empty).rowGap),
+            media: read(css(media).width), mediaRadius: read(css(media).borderTopLeftRadius),
+            titleSize: read(css(title).fontSize), titleLine: read(css(title).lineHeight),
+            titleWeight: read(css(title).fontWeight), descSize: read(css(desc).fontSize),
+            descLine: read(css(desc).lineHeight),
+            outerRadius: read(css(fixture).borderTopLeftRadius)
+          };
+          fixture.remove();
+          root.classList.toggle('dark', previous);
+          return result;
+        })()`);
+        assert.ok(actual, style + '/' + mode + ' missing Empty specimen');
+        const label = style + '/' + mode + ' Empty';
+        approx(actual.inset, inset, label + ' inset');
+        approx(actual.gap, 16, label + ' gap');
+        approx(actual.media, mediaSize, label + ' media');
+        approx(actual.mediaRadius, mediaRadius, label + ' media radius');
+        approx(actual.titleSize, titleSize, label + ' title size');
+        approx(actual.titleLine, titleLine, label + ' title line');
+        approx(actual.outerRadius, outerRadius, label + ' outer radius');
+        approx(actual.descSize, ['lyra','mira'].includes(style) ? 12 : 14, label + ' description size');
+        approx(actual.descLine, ['lyra','mira'].includes(style) ? 19.5 : 22.75, label + ' description line');
+        assert.equal(actual.titleWeight, style === 'sera' ? 600 : 500, label + ' title weight');
+      }
+    }
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {
