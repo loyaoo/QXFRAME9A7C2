@@ -358,6 +358,7 @@ export function themeTokens(resolved) {
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
   root['field-content-gap'] = rem(fieldSpace <= .5 ? .125 : .25);
+  root['field-separator-display'] = ext.textStyle === 'editorial' ? 'none' : 'block';
   root['field-label-line-height'] = editorial ? '1.21875rem' : rem(Math.min(textSize, controlFont));
   // Source Accordion recipes: default py-2.5, dense compact p-2,
   // spacious/rounded p-4. This is the only style family projection.
