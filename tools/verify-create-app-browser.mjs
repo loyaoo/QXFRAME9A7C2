@@ -679,6 +679,33 @@ try {
           : ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.qxframe9a7c2-field-group','.qxframe9a7c2-check-field','.qxframe9a7c2-form-description','.qxframe9a7c2-card-footer'];
         for(const selector of selectors){const el=card.querySelector(selector);samples.push({selector,metrics:get(el)});}
         result[name]={root:get(card),samples};
+        // Preserve per-row text-wrap evidence for Payments/FAQ before changing
+        // fonts, glyph widths or the shared Item roles.
+        if(name==='payments'){
+          result[name].rows=[...card.querySelectorAll('.qxframe9a7c2-item')].map((row,i)=>{
+            const content=row.querySelector('.qxframe9a7c2-item-content');
+            const title=row.querySelector('.qxframe9a7c2-item-title');
+            const desc=row.querySelector('.qxframe9a7c2-item-desc');
+            const media=row.querySelector('.qxframe9a7c2-item-media');
+            const glyph=row.lastElementChild, st=doc.defaultView.getComputedStyle(desc);
+            return {index:i,row:get(row),content:get(content),title:get(title),
+              desc:get(desc),media:get(media),glyph:get(glyph),
+              descText:desc.textContent,fontSize:st.fontSize,fontWeight:st.fontWeight,
+              letterSpacing:st.letterSpacing,whiteSpace:st.whiteSpace,
+              descLines:+(desc.getBoundingClientRect().height/parseFloat(st.lineHeight)).toFixed(2),
+              glyphStyle:doc.defaultView.getComputedStyle(glyph).flexShrink};
+          });
+        }
+        if(name==='faq'){
+          result[name].details=[...card.querySelectorAll('.pv-accordion-item')].map((row,i)=>{
+            const summary=row.querySelector('summary'),content=row.querySelector('.pv-accordion-content');
+            const st=doc.defaultView.getComputedStyle(content);
+            return {index:i,open:row.open,row:get(row),summary:get(summary),content:get(content),
+              text:content.textContent,whiteSpace:st.whiteSpace,fontSize:st.fontSize,
+              fontWeight:st.fontWeight,letterSpacing:st.letterSpacing,
+              contentLines:+(content.getBoundingClientRect().height/parseFloat(st.lineHeight)).toFixed(2)};
+          });
+        }
       }
       style.remove();return result;
     })()`);
