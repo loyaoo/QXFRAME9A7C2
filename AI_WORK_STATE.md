@@ -51,6 +51,17 @@ NEW IMPLEMENTATION BATCH (latest CI pending):
   setting it only on the Roller Shades preview instance to
   `var(--qxframe9a7c2-theme-slider-thumb)`. The same
   technique already aligned Kitchen Island exact height.
+- Source Receiving Method contained two invented `pv-choice-card`
+  boxed 16px-top/20px-bottom labels. Pinned upstream uses
+  `Field orientation=horizontal pb-2.5` (10px bottom
+  only). Converted both to shared `qxframe9a7c2-check-field`
+  + `qxframe9a7c2-field-content` and tiny
+  `pv-choice-field` instance modifier; deleted the custom
+  bordered/selected Card rules. Shared Field token
+  overrides and native checked radio preserved. Added
+  static and 8 styles × light/dark computed-style gates.
+  Pinned Sera-specific one-column radio layout is still
+  outstanding; do not claim exact Sera parity.
 - Added static source check and merged Roller computed
   height vs thumb check into existing eight-style Kitchen
   Chromium geometry gate. Does not change shared Slider
@@ -63,7 +74,7 @@ NEW IMPLEMENTATION BATCH (latest CI pending):
 - Detailed evidence and QA: `tools/qa/reports/stage-3/README.md`.
 
 Engineering estimate overall CREATEAPP-V3 **61%**,
-Stage3/Task **52%** (provisional). Earlier 624/624
+Stage3/Task **54%** (provisional). Earlier 624/624
 shared Card subset and frozen 40/40 Controller are done.
 Nested Cards, comprehensive Preview01/02 style parity,
 hundreds of >0.5px height mismatches and Stages4/5 remain open.
@@ -72,7 +83,7 @@ NEXT EXACT STEP:
 1. Inspect HEAD PR #265 latest Actions, fix any failed
    test or generated file discrepancy without weakening
    Source/Schema ratchets. Obtain new 528-record summary;
-   confirm Roller Shades height before claiming improvement.
+   confirm Roller Shades and Receiving Method heights before claiming improvement.
 2. Continue source-backed Payments +42px, FAQ +14px,
    Receiving Method +24.75px. Compare actual text glyph
    widths and line wraps; do not set fixed Card heights.
