@@ -363,7 +363,7 @@ export function themeTokens(resolved) {
   const controlShape = ext.controlShape;
   // The global zero-radius shortcut wins over style FOLLOW defaults; explicit
   // per-category shape selections remain authoritative (v3 §4.5).
-  const roundShape = key => basePx === 0 && resolved.explicit?.[key] === undefined ? 'radius' : ext[key];
+  const roundShape = key => basePx === 0 && resolved.radius === 'none' && resolved.explicit?.[key] === undefined ? 'radius' : ext[key];
   root['radius-button'] = shapeRadius(ext.shapeButton, alloc.button, controlShape);
   root['radius-field'] = shapeRadius(ext.shapeInput, alloc.field, controlShape);
   root['radius-select'] = shapeRadius(ext.shapeSelect, alloc.field, controlShape);
