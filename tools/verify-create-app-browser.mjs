@@ -494,6 +494,42 @@ try {
     }
   });
 
+  await step('SidebarNav follows pinned 8-style menu and group gaps', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=sidebar-nav]")','SidebarNav fixture');
+    const gaps={vega:4,nova:0,maia:4,lyra:0,mira:1,luma:2,sera:2,rhea:2};
+    const approx=(actual,expected,desc)=>assert.ok(Number.isFinite(actual)&&Math.abs(actual-expected)<=.5,
+      desc+': expected '+expected+'px, observed '+actual+'px');
+    for(const [style,gap] of Object.entries(gaps)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','SidebarNav '+style);
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,old=root.classList.contains('dark');
+          root.classList.toggle('dark',${mode==='dark'});
+          const style=el=>doc.defaultView.getComputedStyle(el),n=x=>parseFloat(x);
+          const cards=[...doc.querySelectorAll('[data-card="sidebar-nav"] .pv-nav-card')];
+          const out=cards.map(card=>{
+            const group=card.querySelectorAll('.pv-nav-group'),lists=card.querySelectorAll('.pv-nav');
+            return {gap:[...lists].map(x=>n(style(x).rowGap)),
+              firstTop:n(style(group[0]).paddingTop),firstBottom:n(style(group[0]).paddingBottom),
+              lastTop:n(style(group[1]).paddingTop),lastBottom:n(style(group[1]).paddingBottom)};
+          });
+          root.classList.toggle('dark',old);return out;
+        })()`);
+        assert.equal(actual.length,2,style+'/'+mode+' Sidebar cards');
+        for(const card of actual){
+          for(const val of card.gap)approx(val,gap,style+'/'+mode+' menu item gap');
+          approx(card.firstTop,style==='mira'?4:8,style+'/'+mode+' top group');
+          approx(card.firstBottom,4,style+'/'+mode+' pb-1 source');
+          approx(card.lastTop,4,style+'/'+mode+' pt-1 source');
+          approx(card.lastBottom,style==='mira'?4:8,style+'/'+mode+' last group');
+        }
+      }
+    }
+  });
+
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
