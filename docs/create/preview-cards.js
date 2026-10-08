@@ -45,7 +45,7 @@
       };
     }
     var tabs = C.Tabs.create(options);
-    if (panels.length) options.onChange(tabs.getActiveKey ? tabs.getActiveKey() : options.defaultActiveKey);
+    if (panels.length) options.onChange(tabs.activeKey || options.defaultActiveKey);
   });
   var Calendar = C.Calendar || (Q.BuildingBlocks && Q.BuildingBlocks.Calendar);
   document.querySelectorAll('[data-pv-calendar]').forEach(function (host) {
