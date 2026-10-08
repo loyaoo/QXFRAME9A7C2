@@ -437,8 +437,15 @@ try {
             trigger: px(css(faq.querySelector('.pv-accordion-item > summary')).paddingTop),
             content: px(css(faq.querySelector('.pv-accordion-content')).paddingBottom),
             separatorCount: separators.length,
-            separator: separators.map(el=>[px(css(el).marginTop),px(css(el).marginBottom),
-              px(css(el).height),css(el).backgroundColor]),
+            separator: separators.map(el=>{
+              const before=css(el);
+              const values=[px(before.marginTop),px(before.marginBottom),px(before.height),
+                before.backgroundColor,before.display,el.getBoundingClientRect().height];
+              el.style.setProperty('--qxframe9a7c2-field-separator-display','block');
+              values.push(css(el).display);
+              el.style.removeProperty('--qxframe9a7c2-field-separator-display');
+              return values;
+            }),
             emptyPadding: px(css(empty).paddingTop),
             emptyMedia: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).width),
             emptyMediaBottom: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).marginBottom),
@@ -457,6 +464,10 @@ try {
           approx(pair[2],20,label+' source 20px separator slot');
           assert.ok(pair[3]==='rgba(0, 0, 0, 0)'||pair[3]==='transparent',
             label+' separator slot must be transparent except 1px center line');
+          assert.equal(pair[4],style==='sera'?'none':'block',
+            label+' source editorial FieldSeparator hidden only in Sera');
+          approx(pair[5],style==='sera'?0:20,label+' displayed separator layout box');
+          assert.equal(pair[6],'block',label+' local author override wins over Theme visibility');
         }
         approx(actual.emptyPadding,16,label+' Card Empty p-4');
         approx(actual.emptyMedia,(['nova','lyra','mira'].includes(style)?32:40),label+' media retains theme size');
