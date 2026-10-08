@@ -762,6 +762,54 @@ try {
       }
     }
   });
+  await step('Audit InputGroup border/size/appearance and Item accent pairs in 16 modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','audit visual fixtures');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' audit themes');
+      for(const mode of ['light','dark']) {
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          doc.documentElement.classList.toggle('dark', ${mode === 'dark'});
+          const host=doc.createElement('div');host.style.cssText='position:absolute;width:320px;visibility:hidden';
+          host.innerHTML='<input class="qxframe9a7c2-form-input is-md" value="normal">'+
+            '<div class="qxframe9a7c2-form-input-group is-md" data-case="flat"><span class="qxframe9a7c2-form-input-group-addon">$</span><input class="qxframe9a7c2-form-input is-md is-invalid" value="invalid"></div>'+
+            '<div class="qxframe9a7c2-form-input-group is-md" data-case="mixed"><span class="qxframe9a7c2-form-input-group-prefix">$</span><div class="qxframe9a7c2-form-input-group-field"><span class="qxframe9a7c2-form-input-group-addon">@</span><input class="qxframe9a7c2-form-input is-md is-invalid" value="invalid"></div><span class="qxframe9a7c2-form-input-group-suffix">USD</span></div>'+
+            '<div class="qxframe9a7c2-form-input-group is-separated is-md" data-case="separated"><span class="qxframe9a7c2-form-input-group-addon">$</span><input class="qxframe9a7c2-form-input" value="separate"></div>'+
+            '<div class="qxframe9a7c2-form-input-group is-vertical is-md" data-case="vertical"><span class="qxframe9a7c2-form-input-group-addon">$</span><input class="qxframe9a7c2-form-input" value="vertical"></div>';
+          doc.body.append(host);
+          const cs=el=>doc.defaultView.getComputedStyle(el),rect=el=>el.getBoundingClientRect();
+          const plain=host.firstElementChild,flat=host.querySelector('[data-case=flat]'),mixed=host.querySelector('[data-case=mixed]');
+          const field=mixed.querySelector('.qxframe9a7c2-form-input-group-field');
+          const sep=host.querySelector('[data-case=separated] .qxframe9a7c2-form-input-group-addon');
+          const vert=host.querySelector('[data-case=vertical] .qxframe9a7c2-form-input-group-addon');
+          const link=doc.querySelector('[data-card=payments] .qxframe9a7c2-item-link').cloneNode(true);
+          link.classList.add('is-active');host.append(link);
+          const desc=link.querySelector('.qxframe9a7c2-item-desc');
+          const sample=doc.createElement('span');sample.style.color='var(--qxframe9a7c2-theme-accent-foreground)';
+          sample.style.borderColor='var(--qxframe9a7c2-theme-destructive)';host.append(sample);
+          const out={plainHeight:rect(plain).height,flatHeight:rect(flat).height,mixedHeight:rect(mixed).height,
+            plainBg:cs(plain).backgroundColor,flatBg:cs(flat).backgroundColor,fieldBg:cs(field).backgroundColor,
+            flatBorder:cs(flat).borderTopColor,fieldBorder:cs(field).borderTopColor,invalidBorder:cs(sample).borderTopColor,
+            separatedWidth:cs(sep).borderTopWidth,verticalWidth:cs(vert).borderTopWidth,
+            linkColor:cs(link).color,descColor:cs(desc).color,accentText:cs(sample).color};
+          host.remove();return out;
+        })()`);
+        const label=style+'/'+mode;
+        assert.ok(Math.abs(actual.flatHeight-actual.plainHeight)<=.5,label+' flat group same control height');
+        assert.ok(Math.abs(actual.mixedHeight-actual.plainHeight)<=.5,label+' mixed group same control height');
+        assert.equal(actual.flatBorder,actual.invalidBorder,label+' invalid flat border owner');
+        assert.equal(actual.fieldBorder,actual.invalidBorder,label+' invalid inner field border owner');
+        assert.equal(actual.flatBg,actual.plainBg,label+' group uses same input look surface');
+        assert.equal(actual.fieldBg,actual.plainBg,label+' mixed field uses same input look surface');
+        assert.equal(actual.separatedWidth,'1px',label+' separated addon still owns border');
+        assert.equal(actual.verticalWidth,'1px',label+' vertical addon still owns border');
+        assert.equal(actual.linkColor,actual.accentText,label+' Item accent foreground follows background');
+        assert.equal(actual.descColor,actual.accentText,label+' Item muted description uses paired accent foreground');
+      }
+    }
+  });
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
