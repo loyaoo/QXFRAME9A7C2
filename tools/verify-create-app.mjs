@@ -195,6 +195,9 @@ check('Payments Item flex basis and Kitchen Slider intrinsic footprint are sourc
   const kitchen=html.slice(html.indexOf('data-card="kitchen-island"'),html.indexOf('<!-- @end kitchen-island -->'));
   assert.equal((kitchen.match(/style="--qxframe9a7c2-slider-height:var\(--qxframe9a7c2-theme-slider-thumb\)"/g)||[]).length,4,
     'All four Kitchen sliders must use the theme thumb height, not control button height');
+  const roller=html.slice(html.indexOf('data-card="roller-shades"'),html.indexOf('<!-- @end roller-shades -->'));
+  assert.equal((roller.match(/class="pv-slider pv-grow" style="--qxframe9a7c2-slider-height:var\(--qxframe9a7c2-theme-slider-thumb\)"/g)||[]).length,1,
+    'Roller Shades must use theme thumb height like Kitchen without modifying shared Slider defaults');
 });
 
 check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', () => {
