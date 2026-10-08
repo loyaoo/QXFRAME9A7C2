@@ -458,6 +458,9 @@ export function themeTokens(resolved) {
   // Motion.
   const motion = MOTION[ext.motion];
   ['xs', 'sm', 'md', 'lg'].forEach((step, index) => { root['duration-' + step] = motion[index] + 'ms'; });
+  root['skeleton-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-skeleton-pulse';
+  root['spinner-icon-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-spinner-icon-spin';
+  root['loading-spin-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-loading-spin';
 
   // The exported theme is self-contained in each mode: both blocks declare the closed list.
   const rootBlock = {}, darkBlock = {};
