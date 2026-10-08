@@ -410,3 +410,45 @@ The fallback keeps all existing Slider demos and author overrides
 unchanged. No component pixel acceptance is declared until
 the newly generated 528-row report shows the net effect.
 Nested-card/full visual acceptance and other cards remain open.
+
+
+## 2026-10-08 — FAQ and FieldContent label closeout
+
+Verified head `dc6a9fa7ad855a156b8a3710f6127ee1bb31660f` passed
+QXFRAME CI `37745480286` and CSS Schema Acceptance `37745480393`.
+Browser interaction suite passed **20** steps and the refreshed 528-row
+first Card diagnostics measured **330/528 >0.5px** compared with
+362/528 on the preceding build and 410/528 in the initial report.
+268 first Card records improved vs original and 124 worsened.
+Nova Kitchen Island is now exactly **337px** versus frozen source 337px.
+The remaining largest Nova height residuals are FAQ +45px,
+Payments +42px, Notification Settings +28px,
+Preferences −26px, Receiving Method +24.75px.
+
+This new source-driven batch repairs two more composition mismatches:
+1. Upstream `AccordionTrigger` in
+   `apps/v4/registry/bases/radix/ui/accordion.tsx` uses a flex
+   justify-between row **without** an added 16px gap. The QX
+   Preview FAQ `.pv-accordion-item>summary` had `gap:1rem`;
+   it now sets `gap:0` so the label has the full available
+   width and avoids unintended line wraps. All earlier
+   theme-controlled trigger/content insets remain unchanged.
+2. In the source, `FieldContent` is independently composable
+   alongside `Field`; it is not a child of `FormField.is-composed`.
+   The QX `.qxframe9a7c2-field-content` previously provided
+   only layout/gap, while label typography matched the theme
+   **only** under `.qxframe9a7c2-form-field.is-composed`.
+   Explicit `.qxframe9a7c2-field-content>.qxframe9a7c2-form-label`
+   now consumes the already-registered shared Label font,
+   line-height, and weight roles, with no new Theme inputs.
+   This applies to Notification Settings and Preferences
+   while preserving direct consumer style overrides.
+3. The source-locked 8-style static and browser 8×light/dark
+   checks assert FAQ gap zero and all five notification
+   Label computed line heights match `theme-field-label-line-height`.
+   Existing 528-row Card report remains diagnostic only.
+
+No runtime qxframe.js changes, no loosening of QA constraints,
+no private style selectors. **This batch's effect on 528
+height differences must be measured by its latest CI**;
+FAQ/Card height parity is not claimed yet. PR #265 remains Draft.
