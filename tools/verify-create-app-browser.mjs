@@ -304,15 +304,15 @@ try {
 
   await step('Empty geometry: source-locked 8 styles x light/dark', async () => {
     const expected = {
-      vega: [48,40,18,28,10,10], nova: [24,32,14,20,14,10],
-      maia: [48,40,18,28,10,10], lyra: [24,32,14,20,0,0],
-      mira: [24,32,14,20,14,8], luma: [48,40,18,28,18,14],
-      sera: [48,40,18,28,0,0], rhea: [48,40,18,28,22,14]
+      vega: [48,40,18,28,10,10,24,16], nova: [24,32,14,20,14,10,16,10],
+      maia: [48,40,18,28,10,10,24,16], lyra: [24,32,14,20,0,0,16,10],
+      mira: [24,32,14,20,14,8,16,8], luma: [48,40,18,28,18,14,20,16],
+      sera: [48,40,18,28,0,0,20,16], rhea: [48,40,18,28,22,14,20,16]
     };
     const approx = (actual, expectedValue, description) =>
       assert.ok(Number.isFinite(actual) && Math.abs(actual - expectedValue) <= 0.5,
         description + ': expected ' + expectedValue + 'px, got ' + actual);
-    for (const [style, [inset, mediaSize, titleSize, titleLine, outerRadius, mediaRadius]] of Object.entries(expected)) {
+    for (const [style, [inset, mediaSize, titleSize, titleLine, outerRadius, mediaRadius, glyphSize, contentGap]] of Object.entries(expected)) {
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "' + style + '", radius: "default", ext: {} })');
       await waitFor(frameAttr('data-create-style') + ' === "' + style + '"', style + ' Empty style');
       for (const mode of ['light','dark']) {
@@ -327,12 +327,14 @@ try {
           const desc = empty.querySelector('.qxframe9a7c2-empty-description');
           const fixture = doc.createElement('div');
           fixture.className = 'qxframe9a7c2-empty is-composed is-bordered';
+          fixture.innerHTML = '<div class="qxframe9a7c2-empty-content"><span>Alpha</span><span>Beta</span></div>';
           doc.body.append(fixture);
           const css = el => doc.defaultView.getComputedStyle(el);
           const read = value => parseFloat(value);
           const result = {
             inset: read(css(empty).paddingTop), gap: read(css(empty).rowGap),
             media: read(css(media).width), mediaRadius: read(css(media).borderTopLeftRadius),
+            glyph: read(css(media.querySelector('svg')).width), contentGap: read(css(fixture.firstElementChild).rowGap),
             titleSize: read(css(title).fontSize), titleLine: read(css(title).lineHeight),
             titleWeight: read(css(title).fontWeight), descSize: read(css(desc).fontSize),
             descLine: read(css(desc).lineHeight),
@@ -347,6 +349,8 @@ try {
         approx(actual.inset, inset, label + ' inset');
         approx(actual.gap, 16, label + ' gap');
         approx(actual.media, mediaSize, label + ' media');
+        approx(actual.glyph, glyphSize, label + ' inner SVG (not media box)');
+        approx(actual.contentGap, contentGap, label + ' EmptyContent children gap');
         approx(actual.mediaRadius, mediaRadius, label + ' media radius');
         approx(actual.titleSize, titleSize, label + ' title size');
         approx(actual.titleLine, titleLine, label + ' title line');
