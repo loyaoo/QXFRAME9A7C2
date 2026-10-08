@@ -570,15 +570,15 @@ try {
       // Source contract: pinned ui/item.tsx + style-nova.css (Item/default,
       // ItemContent flex-1, ItemDescription line-clamp-2, ItemGroup gap-4).
       // Run in the SAME browser, using the SAME system-ui font as the QX rows.
-      css.textContent=`
-        .qx-source-payments{box-sizing:border-box;display:flex;flex-direction:column;gap:16px;width:${width}px;font-family:system-ui,sans-serif}
-        .qx-source-payments .src-item{box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;width:100%;gap:10px;padding:10px 12px;border:1px solid transparent;font-size:14px}
-        .qx-source-payments .src-media{display:flex;width:16px;height:16px;flex:0 0 auto;align-self:flex-start;transform:translateY(2px)}
-        .qx-source-payments .src-content{display:flex;flex:1 1 0%;min-width:0;flex-direction:column;gap:4px}
-        .qx-source-payments .src-title{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;width:fit-content;max-width:100%;font-size:14px;font-weight:500;line-height:1.375}
-        .qx-source-payments .src-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:14px;font-weight:400;line-height:1.5}
-        .qx-source-payments .src-chevron{width:16px;height:16px;flex:0 0 16px}
-      `;
+      css.textContent=[
+        '.qx-source-payments{box-sizing:border-box;display:flex;flex-direction:column;gap:16px;width:'+width+'px;font-family:system-ui,sans-serif}',
+        '.qx-source-payments .src-item{box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;width:100%;gap:10px;padding:10px 12px;border:1px solid transparent;font-size:14px}',
+        '.qx-source-payments .src-media{display:flex;width:16px;height:16px;flex:0 0 auto;align-self:flex-start;transform:translateY(2px)}',
+        '.qx-source-payments .src-content{display:flex;flex:1 1 0%;min-width:0;flex-direction:column;gap:4px}',
+        '.qx-source-payments .src-title{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;width:fit-content;max-width:100%;font-size:14px;font-weight:500;line-height:1.375}',
+        '.qx-source-payments .src-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:14px;font-weight:400;line-height:1.5}',
+        '.qx-source-payments .src-chevron{width:16px;height:16px;flex:0 0 16px}'
+      ].join('');
       const host=doc.createElement('div');
       host.style.cssText='position:absolute;left:0;top:0;visibility:hidden;z-index:-1';
       host.innerHTML='<div class="qx-source-payments">'+rows.map(row=>
