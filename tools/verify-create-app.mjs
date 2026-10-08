@@ -127,6 +127,31 @@ check('Item and Field match the pinned 8-style spacing and typography recipes', 
   assert.match(layoutCSS, /theme-field-group-gap/);
 });
 
+check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry', () => {
+  const html = read('preview-01.html');
+  for (const id of ['empty-distribute-track','empty-connect-bank','empty-explore-catalog']) {
+    const entry = html.slice(html.indexOf('data-card="' + id + '"'), html.indexOf('<!-- @end ' + id + ' -->'));
+    assert.match(entry, /class="qxframe9a7c2-empty is-composed" style="--qxframe9a7c2-empty-padding:1rem"/, id + ' needs source p-4 override');
+  }
+  const prefs = html.slice(html.indexOf('data-card="preferences"'), html.indexOf('<!-- @end preferences -->'));
+  assert.equal((prefs.match(/class="qxframe9a7c2-divider pv-field-separator"/g) || []).length, 2,
+    'Preferences must have two source -my-4 field separators');
+  const empty = fs.readFileSync(path.join(root,'src/styles/components/empty.css'),'utf8');
+  assert.match(empty, /padding:var\(--qxframe9a7c2-empty-padding,var\(--_qxframe9a7c2-empty-inset\)\)/,
+    'local Empty padding must not affect structural media/title size');
+  assert.match(empty, /margin-block-end:\.5rem;/);
+  const css = read('preview.css');
+  assert.match(css, /\.pv-field-separator\s*\{\s*margin-block:\s*-1rem;/);
+  assert.match(css, /\.pv-accordion-item\s*>\s*summary\s*\{[^}]*padding:\s*var\(--qxframe9a7c2-theme-accordion-padding\)/);
+  const levels = {vega:16,nova:10,maia:16,lyra:10,mira:8,luma:16,sera:16,rhea:16};
+  for (const [style,px] of Object.entries(levels)) {
+    const compiled = model.compileTheme(model.normalizeConfig({style})).body;
+    const m=compiled.match(/--qxframe9a7c2-theme-accordion-padding:\s*([^;]+);/);
+    assert.ok(m,style+' missing Accordion inset');
+    assert.equal(parseFloat(m[1])*16,px,style+' Accordion inset');
+  }
+});
+
 check('QX shape, Luma switch and shared layout contracts', () => {
   const file = p => fs.readFileSync(path.join(root, p), 'utf8');
   const defaultCss = model.compileTheme(model.defaultConfig()).body;
