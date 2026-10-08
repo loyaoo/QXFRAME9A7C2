@@ -217,6 +217,17 @@ check('Checkbox Field uses the shared horizontal Field gap role', () => {
   }
 });
 
+check('FAQ Accordion description line uses the shared text-leading role', () => {
+  const css=read('preview.css');
+  assert.match(css,/\.pv-accordion-content\s*\{[^}]*line-height:\s*var\(--qxframe9a7c2-theme-text-leading\)/,
+    'Accordion content text-sm line box must not hardcode 1.5');
+  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+    const theme=model.compileTheme(model.normalizeConfig({style})).body;
+    assert.match(theme,/--qxframe9a7c2-theme-text-leading:\s*[^;]+;/,
+      style+' must provide the source text line-height role');
+  }
+});
+
 check('FieldContent labels consume shared Theme lines and FAQ trigger has no non-source gap', () => {
   const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const preview=read('preview.css');
