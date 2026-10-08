@@ -41,6 +41,23 @@ check('createApp private styles never enter qxframe.css', () => {
   assert.doesNotMatch(source, /\.(?:create|pv)-[a-z]/, 'qxframe.css must not contain createApp-private .create-* / .pv-* rules (v3 §2)');
 });
 
+check('Empty: shared QX composition replaces preview-private geometry', () => {
+  const shared = fs.readFileSync(path.join(root, 'src/styles/components/empty.css'), 'utf8');
+  assert.match(shared, /\\.qxframe9a7c2-empty\\.is-composed\\s*\\{/);
+  assert.match(shared, /\\.qxframe9a7c2-empty-media\\.is-icon\\s*\\{/);
+  assert.match(shared, /width:\\s*2rem;/);
+  assert.match(shared, /font-size:\\s*0\\.875rem;/);
+  for (const page of ['preview-01.html', 'preview-02.html']) {
+    const html = read(page);
+    const count = (html.match(/class="qxframe9a7c2-empty is-composed/g) || []).length;
+    assert.ok(count >= 4, page + ' must use QX Empty in its example cards');
+    assert.equal((html.match(/class="qxframe9a7c2-empty-header"/g) || []).length, count, page + ' missing Empty header');
+    assert.equal((html.match(/class="qxframe9a7c2-empty-title"/g) || []).length, count, page + ' missing Empty title');
+    assert.doesNotMatch(html, /class="pv-empty/, page + ' still uses the preview-private Empty');
+  }
+  assert.match(read('preview-01.html'), /class="qxframe9a7c2-empty is-composed"><div class="qxframe9a7c2-empty-media is-icon">/);
+});
+
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
 
