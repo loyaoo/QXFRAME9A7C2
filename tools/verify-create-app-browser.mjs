@@ -437,7 +437,8 @@ try {
             trigger: px(css(faq.querySelector('.pv-accordion-item > summary')).paddingTop),
             content: px(css(faq.querySelector('.pv-accordion-content')).paddingBottom),
             separatorCount: separators.length,
-            separator: separators.map(el=>[px(css(el).marginTop),px(css(el).marginBottom)]),
+            separator: separators.map(el=>[px(css(el).marginTop),px(css(el).marginBottom),
+              px(css(el).height),css(el).backgroundColor]),
             emptyPadding: px(css(empty).paddingTop),
             emptyMedia: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).width),
             emptyMediaBottom: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).marginBottom),
@@ -450,7 +451,13 @@ try {
         approx(actual.trigger,inset,label+' Accordion trigger inset');
         approx(actual.content,inset,label+' Accordion content inset');
         assert.equal(actual.separatorCount,2,label+' field separators');
-        for(const pair of actual.separator)for(const value of pair)approx(value,-16,label+' separator margin');
+        for(const pair of actual.separator){
+          approx(pair[0],-16,label+' separator top margin');
+          approx(pair[1],-16,label+' separator bottom margin');
+          approx(pair[2],20,label+' source 20px separator slot');
+          assert.ok(pair[3]==='rgba(0, 0, 0, 0)'||pair[3]==='transparent',
+            label+' separator slot must be transparent except 1px center line');
+        }
         approx(actual.emptyPadding,16,label+' Card Empty p-4');
         approx(actual.emptyMedia,(['nova','lyra','mira'].includes(style)?32:40),label+' media retains theme size');
         approx(actual.emptyMediaBottom,8,label+' media bottom gap');
