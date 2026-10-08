@@ -228,3 +228,52 @@ It is **diagnostic only**. All 528 reference cards must be found, but the
 height mismatches intentionally do not cause a green gate or false parity
 claim. The pinned original reference is never modified by this diagnostic.
 Nested Cards remain uncovered by this first-Card audit.
+
+
+## 2026-10-08 — Pinned card-source targeted corrections
+
+Source verification: `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`:
+`apps/v4/registry/bases/radix/blocks/preview-02/cards/empty-distribute-track.tsx`
+(and other two Empty blocks), `faq.tsx`, `preferences.tsx`, and the
+eight pinned `apps/v4/registry/styles/style-*.css` component recipes.
+
+**Fresh 528-row CI baseline (head `3f633e206a51dc43e7c82255afac18940873c0b2`)**:
+previous height differences above 0.5px 410/528, new 400/528,
+186 improved, 172 worsened. Largest Nova current differences: FAQ +87px,
+Kitchen Island +45px, Preferences +42px, Sidebar Nav +36px,
+Notification Settings +36px, Empty-distribute +28.75px, Empty-connect +28.75px.
+This is a partial improvement, not total-card acceptance; see
+`preview-01/current-report.json` in that run's QA artifact.
+
+**This follow-up changes three source-proven component composition cases:**
+1. Each Empty preview-02 source card uses `<Empty className="p-4">`
+   (16px local padding) despite the style's default root padding 24/48px.
+   QX Empty now provides a local public CSS override
+   `--qxframe9a7c2-empty-padding`, independent of the semantic
+   `empty-inset` role that sizes the icon and title. The three Preview 01
+   instances set local 16px, preserving media size.
+   Reference `cn-empty-media` also adds margin-bottom 8px; header gaps
+   are 8px except dense Mira (4px). QX uses the existing density scale to
+   project these, not `data-create-style` selectors.
+2. Preferences source uses exactly two
+   `<FieldSeparator className="-my-4 style-sera:hidden" />` instances.
+   QX applies the `-my-4` margins to those two authored separators,
+   retaining the shared QX Divider styling. The source-only Sera hidden
+   modifier remains a known unmatched case.
+3. FAQ source Accordion trigger and opened content padding across pinned
+   styles: Vega16/Nova10/Maia16/Lyra10/Mira8/Luma16/Sera16/Rhea16 px.
+   One registered `theme-accordion-padding` role derives from existing
+   typography, density and container axes; preview CSS consumes it for both
+   trigger and content, and uses theme font/weight/corner radius.
+
+New checks: 8-style static contracts for all three cards and Accordion role;
+16-mode browser computed inset/padding/margins/media/header geometry, retaining
+0.5px tolerance. `verify-create-app-browser` continues remeasuring all
+528 first-Card heights with the pinned reference, reporting both improvements
+and regressions. None of this turns diagnostic height differences into a pass.
+
+**Still open:** Accordion contained variants (Maia/Mira/Luma/Rhea) have
+additional source-specific shell/border/inset treatment. The reference
+`style-sera:hidden` FieldSeparator remains unmatched. Exact Empty text
+wrapping, nested cards and per-card full-height parity require further QA.
+No changes to runtime qxframe.js / Controller. PR #265 remains Draft.
