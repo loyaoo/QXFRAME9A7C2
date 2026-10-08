@@ -494,6 +494,44 @@ try {
     }
   });
 
+  await step('High-difference first-Card structural diagnostics (Nova)', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
+    await waitFor(frameAttr('data-create-style')+' === "nova"','Nova diagnostic');
+    const structure = await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const style=doc.createElement('style');
+      style.textContent='body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none;content-visibility:visible!important}';
+      doc.head.appendChild(style);
+      const number=n=>+n.toFixed(2),get=el=>{
+        if(!el)return null;
+        const st=doc.defaultView.getComputedStyle(el),r=el.getBoundingClientRect();
+        return {h:number(r.height),w:number(r.width),gap:st.rowGap,pt:st.paddingTop,pb:st.paddingBottom,
+          mt:st.marginTop,mb:st.marginBottom,lh:st.lineHeight,children:el.children.length};
+      };
+      const result={};
+      for(const name of ['faq','kitchen-island','payments','sidebar-nav','notification-settings']){
+        const card=doc.querySelector('[data-card="'+name+'"]');
+        if(!card)continue;
+        const samples=[];
+        const selectors=name==='faq'
+          ? ['.qxframe9a7c2-card-content','.pv-tabs','.qxframe9a7c2-tabs','.qxframe9a7c2-tabs-list','.pv-accordion','.pv-accordion-item','summary','.pv-accordion-content','.qxframe9a7c2-card-footer']
+          : name==='kitchen-island'
+          ? ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.pv-toggle-group','.qxframe9a7c2-item-group','.pv-slider-item','.qxframe9a7c2-item-content','.qxframe9a7c2-item-title','.qxframe9a7c2-item-actions','.pv-slider']
+          : name==='payments'
+          ? ['.qxframe9a7c2-card-header','.pv-breadcrumb','.qxframe9a7c2-card-content','.qxframe9a7c2-item-group','.qxframe9a7c2-item','.qxframe9a7c2-item-content','.qxframe9a7c2-item-title','.qxframe9a7c2-item-desc']
+          : name==='sidebar-nav'
+          ? ['.qxframe9a7c2-card','.pv-nav-group','.pv-nav-label','.pv-nav','.pv-nav-button','.qxframe9a7c2-divider']
+          : ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.qxframe9a7c2-field-group','.qxframe9a7c2-check-field','.qxframe9a7c2-form-description','.qxframe9a7c2-card-footer'];
+        for(const selector of selectors){const el=card.querySelector(selector);samples.push({selector,metrics:get(el)});}
+        result[name]={root:get(card),samples};
+      }
+      style.remove();return result;
+    })()`);
+    console.log('[preview-01-structure-nova] '+JSON.stringify(structure));
+  });
+
   await step('Preview 01 refreshed first-Card height diagnostic against pinned source', async () => {
     const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/qa/reports/stage-3/preview-01/report.json'), 'utf8'));
     assert.equal(baseline.source, '295a1f114a138f23b5dfee0e0c6812394dfeb90c');
