@@ -42,6 +42,12 @@ These are diagnostics, NOT stage 3 final visual acceptance.
   AccordionTrigger has no fixed horizontal `gap:1rem`.
   FAQ Preview summary previously had the extra 16px spacing,
   causing premature trigger text wrapping; corrected to gap zero.
+- Checkbox Field horizontal gap also corrected from fixed 12px to
+  source-locked 8px (Nova/Lyra/Mira) or 12px (other five styles),
+  consuming existing `theme-field-gap` with public
+  `--qxframe9a7c2-check-field-gap` taking precedence.
+  Eight-style static + 16-mode five-row computed-style checks added;
+  no new Theme token or runtime change.
 - The shared QX `.qxframe9a7c2-field-content` now supplies
   direct-child label font size, line height, and weight from
   existing Theme roles. Formerly only `.form-field.is-composed`
