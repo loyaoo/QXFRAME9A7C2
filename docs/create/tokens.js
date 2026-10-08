@@ -151,6 +151,7 @@ export const THEME_TOKENS = [
   L('switch-width', 'Switch width (switch look axis)'),
   L('switch-height', 'Switch height'),
   L('switch-inset', 'Switch thumb inset'),
+  L('switch-thumb-extra', 'Switch thumb width extension; Luma long capsule'),
   L('slider-track', 'Slider track thickness (slider look axis)'),
   L('slider-thumb', 'Slider thumb height'),
   L('slider-thumb-width', 'Slider thumb width (Luma: long capsule)'),
