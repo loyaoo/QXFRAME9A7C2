@@ -26,7 +26,9 @@
   --_qxframe9a7c2-empty-title-size:calc(.625rem + var(--_qxframe9a7c2-empty-inset) / 6);
   --_qxframe9a7c2-empty-title-line:calc(.75rem + var(--_qxframe9a7c2-empty-inset) / 3);
   gap:1rem;
-  padding:var(--_qxframe9a7c2-empty-inset);
+  /* Instance-specific inset (such as the pinned cards' p-4) must not
+   * mutate the structural media/title density tier. */
+  padding:var(--qxframe9a7c2-empty-padding,var(--_qxframe9a7c2-empty-inset));
   color:var(--qxframe9a7c2-theme-foreground);
 }
 .qxframe9a7c2-empty.is-composed.is-bordered{
