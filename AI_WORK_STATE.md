@@ -34,6 +34,8 @@ DONE on current PR:
 
 Estimate: CREATEAPP-V3 overall 57%, Stage 3 / Task S3 36%, pending current batch CI. Shared Card 624/624 checks and previous Empty checks are already done; DO NOT redo. Previously 410 first-Card height differences remain historical diagnostics, NOT current passes. Item sm/xs source exactness, nested Card geometry and all remaining Form/Item case variants remain open.
 
+New first-Card diagnostic harness: `tools/verify-create-app-browser.mjs` now remeasures 33 × 8 × 2 = 528 QX first Cards against the frozen reference half of `preview-01/report.json`, writing `preview-01/current-report.json` to CI QA artifacts. Its height differences remain non-gating; missing cards fail the harness. The result count and impact are pending latest CI.
+
 NEXT EXACT STEP: read latest PR CI jobs, resolve static/browser/theme-token failures without relaxing ratchet; then rerun pinned Preview 01 audit with current CSS and resolve remaining per-Card heights. Do not merge PR before owner approval, and old browser fallbacks are out of scope.
 
 
