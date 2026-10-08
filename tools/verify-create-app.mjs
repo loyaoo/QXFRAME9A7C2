@@ -168,6 +168,19 @@ check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources',
     'Kitchen previously rendered a duplicated media wrapper in each slider row');
 });
 
+check('Payments Item flex basis and Kitchen Slider intrinsic footprint are source-aligned', () => {
+  const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  const slider=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');
+  const html=read('preview-01.html');
+  assert.match(item,/\.qxframe9a7c2-item-content\{display:flex;flex:1 1 0;/,
+    'ItemContent uses pinned flex-1 zero basis and avoids wrapping trailing icons');
+  assert.match(slider,/height:var\(--qxframe9a7c2-slider-height,var\(--_qxframe9a7c2-control-height\)\)/,
+    'Slider root height accepts an inherited local variable while preserving default control footprint');
+  const kitchen=html.slice(html.indexOf('data-card="kitchen-island"'),html.indexOf('<!-- @end kitchen-island -->'));
+  assert.equal((kitchen.match(/style="--qxframe9a7c2-slider-height:var\(--qxframe9a7c2-theme-slider-thumb\)"/g)||[]).length,4,
+    'All four Kitchen sliders must use the theme thumb height, not control button height');
+});
+
 check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', () => {
   const styles={vega:4,nova:2,maia:4,lyra:2,mira:2,luma:4,sera:4,rhea:4};
   for(const [style,pixels] of Object.entries(styles)){
