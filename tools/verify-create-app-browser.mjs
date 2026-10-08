@@ -557,6 +557,59 @@ try {
     }
   });
 
+  await step('Payments source-locked Nova Item rows match same-browser geometry', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payments comparison fixture');
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
+    await waitFor(frameAttr('data-create-style')+' === "nova"', 'Nova same-browser Payments fixture');
+    const geometry=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const rows=[...doc.querySelectorAll('[data-card="payments"] .qxframe9a7c2-item')];
+      const width=rows[0].parentNode.getBoundingClientRect().width;
+      const css=doc.createElement('style');
+      // Source contract: pinned ui/item.tsx + style-nova.css (Item/default,
+      // ItemContent flex-1, ItemDescription line-clamp-2, ItemGroup gap-4).
+      // Run in the SAME browser, using the SAME system-ui font as the QX rows.
+      css.textContent=`
+        .qx-source-payments{box-sizing:border-box;display:flex;flex-direction:column;gap:16px;width:${width}px;font-family:system-ui,sans-serif}
+        .qx-source-payments .src-item{box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;width:100%;gap:10px;padding:10px 12px;border:1px solid transparent;font-size:14px}
+        .qx-source-payments .src-media{display:flex;width:16px;height:16px;flex:0 0 auto;align-self:flex-start;transform:translateY(2px)}
+        .qx-source-payments .src-content{display:flex;flex:1 1 0%;min-width:0;flex-direction:column;gap:4px}
+        .qx-source-payments .src-title{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;width:fit-content;max-width:100%;font-size:14px;font-weight:500;line-height:1.375}
+        .qx-source-payments .src-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:14px;font-weight:400;line-height:1.5}
+        .qx-source-payments .src-chevron{width:16px;height:16px;flex:0 0 16px}
+      `;
+      const host=doc.createElement('div');
+      host.style.cssText='position:absolute;left:0;top:0;visibility:hidden;z-index:-1';
+      host.innerHTML='<div class="qx-source-payments">'+rows.map(row=>
+        '<div class="src-item"><div class="src-media"></div><div class="src-content"><div class="src-title">'+
+        row.querySelector('.qxframe9a7c2-item-title').textContent+'</div><p class="src-desc">'+
+        row.querySelector('.qxframe9a7c2-item-desc').textContent+'</p></div><div class="src-chevron"></div></div>'
+      ).join('')+'</div>';
+      doc.head.append(css);doc.body.append(host);
+      const n=x=>+x.toFixed(3),measure=selector=>[...doc.querySelectorAll(selector)].map(row=>{
+        const content=row.querySelector('.qxframe9a7c2-item-content,.src-content');
+        const description=row.querySelector('.qxframe9a7c2-item-desc,.src-desc');
+        const box=row.getBoundingClientRect(),c=content.getBoundingClientRect(),p=description.getBoundingClientRect();
+        const st=doc.defaultView.getComputedStyle(description);
+        return {height:n(box.height),width:n(box.width),contentWidth:n(c.width),descWidth:n(p.width),
+          descHeight:n(p.height),line:n(parseFloat(st.lineHeight)),font:st.fontFamily,
+          descLines:n(p.height/parseFloat(st.lineHeight))};
+      });
+      const actual=measure('[data-card="payments"] .qxframe9a7c2-item');
+      const source=measure('.qx-source-payments .src-item');
+      const systemFont=doc.defaultView.getComputedStyle(doc.body).fontFamily;
+      const browser=doc.defaultView.navigator.userAgent;
+      host.remove();css.remove();return {actual,source,width,systemFont,browser};
+    })()`);
+    assert.equal(geometry.actual.length,4);assert.equal(geometry.source.length,4);
+    for(let i=0;i<4;i++){
+      const actual=geometry.actual[i],expected=geometry.source[i];
+      for(const k of ['height','width','contentWidth','descWidth','descHeight','line','descLines'])
+        assert.ok(Math.abs(actual[k]-expected[k])<=.5, 'Nova Payments source geometry row '+i+' '+k+': '+JSON.stringify({actual,expected}));
+    }
+    console.log('[payments-same-browser-source] '+JSON.stringify(geometry));
+  });
   await step('SidebarNav follows pinned 8-style menu and group gaps', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=sidebar-nav]")','SidebarNav fixture');
