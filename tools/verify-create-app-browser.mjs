@@ -689,7 +689,16 @@ try {
           const css=e=>doc.defaultView.getComputedStyle(e),num=x=>parseFloat(x);
           const card=doc.querySelector('[data-card="receiving-method"]');
           const rows=[...card.querySelectorAll('.qxframe9a7c2-check-field.pv-choice-field')];
-          const result={items:rows.map(el=>{
+          const group=card.querySelector('.qxframe9a7c2-choice-group');
+          const sourceColumns=num(css(root).getPropertyValue('--qxframe9a7c2-theme-choice-group-columns'));
+          const first=rows[0].getBoundingClientRect(),second=rows[1].getBoundingClientRect();
+          group.style.setProperty('--qxframe9a7c2-choice-group-columns','1');
+          const forcedSecond=rows[1].getBoundingClientRect();
+          group.style.removeProperty('--qxframe9a7c2-choice-group-columns');
+          const result={sourceColumns,firstTop:first.top,secondTop:second.top,firstBottom:first.bottom,
+            secondWidth:second.width,groupWidth:group.getBoundingClientRect().width,
+            forcedSecondTop:forcedSecond.top,
+            items:rows.map(el=>{
             const st=css(el),inner=el.querySelector('.qxframe9a7c2-field-content');
             return {paddingBottom:num(st.paddingBottom),paddingTop:num(st.paddingTop),
               border:num(st.borderTopWidth),gap:num(st.columnGap),
@@ -703,6 +712,14 @@ try {
         })()`);
         assert.equal(actual.items.length,2,style+'/'+mode+' has two radio Field rows');
         assert.equal(actual.items[0].checked,true,style+'/'+mode+' bank radio selected');
+        assert.equal(actual.sourceColumns,style==='sera'?1:2,style+'/'+mode+' source ChoiceGroup columns');
+        if(style==='sera')assert.ok(actual.secondTop>=actual.firstBottom,
+          style+'/'+mode+' editorial choices stack on separate rows');
+        else assert.ok(Math.abs(actual.secondTop-actual.firstTop)<=.5,
+          style+'/'+mode+' regular choices sit side by side');
+        assert.ok(actual.forcedSecondTop>=actual.firstBottom,
+          style+'/'+mode+' public one-column override stacks rows');
+
         for(const row of actual.items){
           assert.ok(Math.abs(row.paddingBottom-10)<=.5,style+'/'+mode+' source pb-2.5');
           assert.ok(Math.abs(row.paddingTop)<=.5,style+'/'+mode+' no invented top padding');
