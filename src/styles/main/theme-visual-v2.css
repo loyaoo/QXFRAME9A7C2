@@ -492,8 +492,8 @@
     --_qxframe9a7c2-switch-height: calc(var(--qxframe9a7c2-theme-switch-height) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
     --_qxframe9a7c2-switch-width: calc(var(--qxframe9a7c2-theme-switch-width) + var(--_qxframe9a7c2-v2-size-index) * .25rem);
     --_qxframe9a7c2-switch-padding: var(--qxframe9a7c2-theme-switch-inset);
-    --_qxframe9a7c2-switch-thumb-width: calc(var(--_qxframe9a7c2-switch-height) - var(--_qxframe9a7c2-switch-padding) * 2);
-    --_qxframe9a7c2-switch-thumb-height: var(--_qxframe9a7c2-switch-thumb-width);
+    --_qxframe9a7c2-switch-thumb-height: calc(var(--_qxframe9a7c2-switch-height) - var(--_qxframe9a7c2-switch-padding) * 2);
+    --_qxframe9a7c2-switch-thumb-width: var(--qxframe9a7c2-switch-thumb-width, min(calc(var(--_qxframe9a7c2-switch-thumb-height) + var(--qxframe9a7c2-theme-switch-thumb-extra)), calc(var(--_qxframe9a7c2-switch-width) - var(--_qxframe9a7c2-switch-padding) * 2 - .25rem)));
   }
   /* Track is a border box. Offsets are measured from its inner border edge. */
   .qxframe9a7c2-switch .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(var(--_qxframe9a7c2-switch-padding) - var(--_qxframe9a7c2-switch-track-border-width)); }
