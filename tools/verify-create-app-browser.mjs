@@ -259,6 +259,33 @@ try {
       return { group: css(root).borderTopWidth, addon: css(addon).borderTopWidth, input: css(field).borderTopWidth };
     })()`);
     assert.ok(group && parseFloat(group.group) > 0 && group.addon === '0px' && group.input === '0px', 'addon must be INSIDE one outlined field: ' + JSON.stringify(group));
+
+    const mixed = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const root = doc.createElement('div');
+      root.className = 'qxframe9a7c2-form-input-group';
+      root.style.width = '320px';
+      root.innerHTML = '<span class="qxframe9a7c2-form-input-group-prefix">https://</span><div class="qxframe9a7c2-form-input-group-field"><span class="qxframe9a7c2-form-input-group-addon">#</span><input class="qxframe9a7c2-form-input" value="project"></div><span class="qxframe9a7c2-form-input-group-suffix">.com</span>';
+      doc.body.append(root);
+      const names = ['prefix','field','addon','input','suffix'];
+      const els = [
+        root.children[0],root.children[1],root.children[1].children[0],
+        root.children[1].children[1],root.children[2]
+      ];
+      const result = Object.fromEntries(names.map((name,i) => {
+        const cs = doc.defaultView.getComputedStyle(els[i]);
+        return [name, { border: cs.borderTopWidth, leftRadius:cs.borderTopLeftRadius, rightRadius:cs.borderTopRightRadius }];
+      }));
+      result.rootBorder = doc.defaultView.getComputedStyle(root).borderTopWidth;
+      root.remove();return result;
+    })()`);
+    assert.equal(mixed.rootBorder, '0px', 'external segments are not inside a shared root border');
+    assert.ok(parseFloat(mixed.field.border)>0 && parseFloat(mixed.prefix.border)>0 && parseFloat(mixed.suffix.border)>0);
+    assert.equal(mixed.addon.border,'0px');
+    assert.equal(mixed.input.border,'0px');
+    assert.equal(mixed.field.leftRadius,'0px');
+    assert.equal(mixed.field.rightRadius,'0px');
+
   });
 
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
