@@ -108,8 +108,12 @@ not treated as 22 automatically validated defects.
   single-open/collapsible native details-name behavior also patched;
   existing private Accordion appearance is **not** yet promoted to
   reusable Collapse style.
-- **Needs continued validation/implementation:** #8 Empty glyph and
-  content gaps; #14 underlined inputs' shape exception (audit itself
+- **Source-backed additional implementation:** #8 Empty icon glyph
+  16/20/24px and action gap 8/10/16px now use registered shared
+  Theme roles. Eight pinned upstream style-*.css files verified;
+  explicit CSS instance overrides still take priority.
+- **Needs continued validation/implementation:** #14 underlined inputs'
+  shape exception (audit itself
   notes the owner is discussing precedence); #19 two preview Table
   surfaces not yet migrated; #20 Collapse owner consolidation;
   remaining visual parity for 300/528 initial-height diagnostics.
@@ -119,12 +123,12 @@ not treated as 22 automatically validated defects.
   not a silent Controller modification while `qxframe.js` must match
   `main`. They are *not* marked fixed, nor dismissed.
 - New code is on `redesign/create`. Current implementation/test SHA
-  `4304f90384e3b71cdfe41308c157e27d37390238`; CI must be
+  `189056f7c51caca654d3cc709a1b9b4386e37703`; CI must be
   queried by SHA and any errors repaired before acceptance. Never
   count a prior green run as confirmation of this batch.
 - Added source assertions for import/locks/shape/full dark/motion,
   browser regressions for Item accent, InputGroup geometry/states,
-  FAQ exclusivity and motion across 8 styles × light/dark.
+  FAQ exclusivity, motion, Empty icon and content gaps across 8 styles × light/dark.
 - No Controller/core JS touched, no gate tolerance relaxed, PR remains
   Draft, no main merge. Stage 3 next: fix any Actions failure first,
   then reuse shared Table/Collapse, Empty glyph precision, and resume
