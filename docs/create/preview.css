@@ -15,20 +15,24 @@ body.create-preview-body {
 :root[data-create-style="lyra"] body.create-preview-body,
 :root[data-create-style="mira"] body.create-preview-body { --create-gap: 1.5rem; --create-canvas: 162.5rem; }
 .create-canvas { overflow-x: auto; overflow-y: hidden; }
-.create-grid {
-  box-sizing: border-box;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--create-gap);
-  width: var(--create-canvas);
-  margin: 0 auto;
-  padding: var(--create-gap);
-  --create-col: calc((var(--create-canvas) - 8 * var(--create-gap)) / 7);
+/* Only the seven-column shadcn comparison canvas keeps page-owned geometry.
+ * Flex/Stack and generic gaps are framework-owned QX static composition. */
+.create-canvas>.qxframe9a7c2-flex {
+  box-sizing:border-box;align-items:flex-start;gap:var(--create-gap);
+  width:var(--create-canvas);margin:0 auto;padding:var(--create-gap);
+  --create-col:calc((var(--create-canvas) - 8 * var(--create-gap)) / 7)
 }
-.create-col { display: flex; flex-direction: column; gap: var(--create-gap); flex: 0 0 var(--create-col); width: var(--create-col); min-width: 0; padding: 0.25rem; box-sizing: border-box; }
-.create-col.is-span-2 { flex-basis: calc(2 * var(--create-col) + var(--create-gap)); width: calc(2 * var(--create-col) + var(--create-gap)); }
-.create-pair { display: flex; align-items: flex-start; gap: var(--create-gap); }
-.create-pair > .create-col { flex: 1 1 0; width: auto; padding: 0; }
+.create-canvas>.qxframe9a7c2-flex>.qxframe9a7c2-stack {
+  gap:var(--create-gap);flex:0 0 var(--create-col);width:var(--create-col);
+  min-width:0;padding:0.25rem;box-sizing:border-box
+}
+.create-canvas>.qxframe9a7c2-flex>.qxframe9a7c2-stack[data-create-span="2"]{
+  flex-basis:calc(2 * var(--create-col) + var(--create-gap));
+  width:calc(2 * var(--create-col) + var(--create-gap))
+}
+.create-canvas [data-create-pair]{align-items:flex-start;gap:var(--create-gap)}
+.create-canvas [data-create-pair]>.qxframe9a7c2-stack{flex:1 1 0;gap:var(--create-gap);width:auto;padding:0}
+
 
 /* ---- Preview-private primitives (pv-*) ------------------------------------------------
  * shadcn parts that qxframe has no static equivalent for yet (Item, Empty media, Field,
@@ -60,11 +64,6 @@ body.create-preview-body {
 .pv-row.is-gap-1 { gap: 0.25rem; }
 .pv-row.is-gap-3 { gap: 0.75rem; }
 .pv-row.is-gap-4 { gap: 1rem; }
-.pv-stack { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
-.pv-stack.is-gap-1 { gap: 0.25rem; }
-.pv-stack.is-gap-3 { gap: 0.75rem; }
-.pv-stack.is-gap-4 { gap: 1rem; }
-.pv-stack.is-gap-6 { gap: 1.5rem; }
 .pv-grow { flex: 1 1 auto; min-width: 0; }
 .pv-full { width: 100%; }
 .pv-cols-2 { display: flex; flex-wrap: wrap; gap: 0.75rem; }
@@ -99,13 +98,10 @@ body.create-preview-body {
 
 .pv-field { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
 .pv-field.is-horizontal { flex-direction: row; align-items: center; justify-content: space-between; gap: 0.75rem; }
-.pv-field-group { display: flex; flex-direction: column; gap: 1.75rem; }
 .pv-label { font-size: 0.875rem; font-weight: 500; line-height: 1.25rem; }
 .pv-field-desc { margin: 0; color: var(--qxframe9a7c2-theme-muted-foreground); font-size: 0.875rem; line-height: 1.375; }
 .pv-legend { font-size: 1rem; font-weight: 500; }
 
-.pv-separator { flex: 0 0 auto; height: 1px; margin: 0; border: 0; background: var(--qxframe9a7c2-theme-border); }
-.pv-separator.is-vertical { width: 1px; height: auto; align-self: stretch; }
 .pv-kbd {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
   min-width: 1.25rem; height: 1.25rem; padding: 0 0.25rem;
@@ -172,7 +168,6 @@ body.create-preview-body {
 .pv-cols-2.is-gap > *, .pv-cols-2.pv-gap-6 > * { flex: 1 1 0; }
 .pv-item-group.is-gap-3 { gap: 0.75rem; }
 .pv-item-footer { margin-top: 0.75rem; }
-.pv-stack.is-gap-0 { gap: 0.125rem; }
 .pv-row.is-gap-6 { gap: 1.5rem; }
 .pv-items-end { align-items: flex-end; }
 .pv-right { text-align: right; }
@@ -193,7 +188,7 @@ body.create-preview-body {
 .pv-nav-button { display: flex; align-items: center; gap: 0.5rem; height: 2rem; padding: 0 0.5rem; border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); color: inherit; font-size: 0.875rem; text-decoration: none; }
 .pv-nav-button:hover { background: var(--qxframe9a7c2-theme-accent); }
 .pv-nav-button.is-active { background: var(--qxframe9a7c2-theme-accent); color: var(--qxframe9a7c2-theme-accent-foreground); font-weight: 500; }
-.pv-nav-card .pv-separator { margin: 0 0.5rem; }
+.pv-nav-card .qxframe9a7c2-divider { margin: 0 0.5rem; }
 .pv-tabs-full { margin-bottom: 0.5rem; }
 .pv-accordion { display: flex; flex-direction: column; }
 .pv-accordion-item { border-bottom: 1px solid var(--qxframe9a7c2-theme-border); }
@@ -246,8 +241,6 @@ body.create-preview-body {
 .pv-shade { display: flex; flex-direction: column; height: 8rem; overflow: hidden; border: 1px solid var(--qxframe9a7c2-theme-border); border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background: var(--qxframe9a7c2-theme-muted); }
 .pv-shade > div { background: var(--qxframe9a7c2-theme-muted-foreground); }
 .pv-toggle-group.pv-fill > .qxframe9a7c2-button { flex: 1 1 0; }
-.pv-check-field { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; }
-.pv-check-field > .qxframe9a7c2-form-check-input { margin-top: 0.125rem; }
 .pv-m-0 { margin: 0; }
 .pv-pt-0.qxframe9a7c2-card-content, .pv-pt-0.qxframe9a7c2-card { padding-top: 0; }
 .pv-pb-0.qxframe9a7c2-card-header, .pv-pb-0.qxframe9a7c2-card { padding-bottom: 0; }
@@ -278,7 +271,6 @@ body.create-preview-body {
 .pv-title-lg .qxframe9a7c2-card-title { font-size: 1.125rem; }
 .pv-desc-clamp .qxframe9a7c2-card-description { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.375; }
 .pv-swatches { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-.pv-swatch-cell { display: flex; flex: 0 0 calc((100% - 3.75rem) / 6); flex-direction: column; align-items: center; gap: 0.5rem; min-width: 0; }
 .pv-swatch { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background: var(--pv-swatch); box-shadow: inset 0 0 0 1px var(--qxframe9a7c2-theme-border); }
 .pv-swatch-name { max-width: 3.5rem; overflow: hidden; font-family: var(--qxframe9a7c2-theme-font-mono, ui-monospace, monospace); font-size: 0.6rem; text-overflow: ellipsis; white-space: nowrap; }
 .pv-icon-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
