@@ -72,7 +72,7 @@ check('QX shape, Luma switch and shared layout contracts', () => {
     assert.match(zero, new RegExp('--qxframe9a7c2-theme-' + key + ': 0(?:rem)?;'), 'global sharp shape: ' + key);
   }
   const lyraDefault = model.compileTheme(model.normalizeConfig({ style: 'lyra', radius: 'default' })).body;
-  assert.match(lyraDefault, /--qxframe9a7c2-theme-radius-radio:\\s*62\\.5rem;/, 'source-locked Lyra circle remains by default');
+  assert.match(lyraDefault, /--qxframe9a7c2-theme-radius-radio:\s*62\.5rem;/, 'source-locked Lyra circle remains by default');
   const explicit = model.compileTheme(model.normalizeConfig({ style: 'nova', radius: 'none', ext: { shapeRadio: 'circle' } })).body;
   assert.match(explicit, /--qxframe9a7c2-theme-radius-radio:\s*62\.5rem;/);
   const button = file('src/styles/main/theme-visual-v2.css');
@@ -90,7 +90,7 @@ check('QX shape, Luma switch and shared layout contracts', () => {
   assert.match(composition, /form-input-group-suffix/);
   const privateCss = read('preview.css');
   for (const oldName of ['pv-stack', 'pv-row', 'pv-item', 'pv-field-group', 'pv-separator', 'pv-swatch-cell', 'pv-kbd', 'pv-skeleton', 'pv-spinner', 'pv-progress', 'create-grid', 'create-col']) {
-    assert.doesNotMatch(privateCss, new RegExp('\\\\.' + oldName + '(?:\\\\b|\\\\.)'), 'private duplicate not removed: ' + oldName);
+    assert.doesNotMatch(privateCss, new RegExp('\\.' + oldName + '(?:\\b|\\.)'), 'private duplicate not removed: ' + oldName);
   }
   for (const role of ['qxframe9a7c2-kbd','qxframe9a7c2-skeleton','qxframe9a7c2-spinner-icon','qxframe9a7c2-progress']) {
     const count = ['preview-01.html','preview-02.html'].reduce((n,page)=>n+(read(page).match(new RegExp('class="[^"]*' + role, 'g'))||[]).length,0);
