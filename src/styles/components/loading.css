@@ -14,3 +14,9 @@
 @keyframes qxframe9a7c2-loading-spin{to{transform:rotate(360deg)}}
 
 
+
+.qxframe9a7c2-skeleton{border-radius:var(--qxframe9a7c2-theme-radius-field);background:var(--qxframe9a7c2-theme-muted);animation:qxframe9a7c2-skeleton-pulse 2s ease-in-out infinite}
+.qxframe9a7c2-skeleton.is-avatar{border-radius:var(--qxframe9a7c2-theme-radius-avatar)}
+@keyframes qxframe9a7c2-skeleton-pulse{50%{opacity:.5}}
+.qxframe9a7c2-spinner-icon{width:1rem;height:1rem;animation:qxframe9a7c2-spinner-icon-spin 1s linear infinite}
+@keyframes qxframe9a7c2-spinner-icon-spin{to{transform:rotate(360deg)}}
