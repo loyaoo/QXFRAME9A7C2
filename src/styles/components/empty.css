@@ -36,10 +36,15 @@
   border-radius:var(--qxframe9a7c2-empty-radius,var(--qxframe9a7c2-theme-radius-empty));
 }
 .qxframe9a7c2-empty-header{
-  display:flex;flex-direction:column;align-items:center;gap:.375rem;max-width:24rem;min-width:0;
+  display:flex;flex-direction:column;align-items:center;
+  /* Mira's dense 28px controls use a 4px header gap; other pinned
+   * presets use 8px. No duplicated style-specific CSS selector. */
+  gap:var(--qxframe9a7c2-empty-header-gap,clamp(.25rem,calc((var(--qxframe9a7c2-theme-control-height) - 1.75rem) * 2),.5rem));
+  max-width:24rem;min-width:0;
 }
 .qxframe9a7c2-empty-media{
   display:flex;flex:0 0 auto;align-items:center;justify-content:center;
+  margin-block-end:.5rem;
 }
 .qxframe9a7c2-empty-media.is-icon{
   width:var(--_qxframe9a7c2-empty-media-size);
