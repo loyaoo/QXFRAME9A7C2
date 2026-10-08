@@ -149,7 +149,7 @@ body.create-preview-body {
 .pv-accordion { display: flex; flex-direction: column; }
 .pv-accordion-item { border-bottom: 1px solid var(--qxframe9a7c2-theme-border); }
 .pv-accordion-item:last-child { border-bottom: 0; }
-.pv-accordion-item > summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: var(--qxframe9a7c2-theme-accordion-padding) 0; border-radius: var(--qxframe9a7c2-theme-radius-field); font-size: var(--qxframe9a7c2-theme-text-size); font-weight: var(--qxframe9a7c2-theme-control-weight); list-style: none; cursor: pointer; }
+.pv-accordion-item > summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 0; padding: var(--qxframe9a7c2-theme-accordion-padding) 0; border-radius: var(--qxframe9a7c2-theme-radius-field); font-size: var(--qxframe9a7c2-theme-text-size); font-weight: var(--qxframe9a7c2-theme-control-weight); list-style: none; cursor: pointer; }
 .pv-accordion-item > summary::-webkit-details-marker { display: none; }
 .pv-accordion-item > summary .pv-icon { margin-top: 0.125rem; color: var(--qxframe9a7c2-theme-muted-foreground); transition: transform 200ms; }
 .pv-accordion-item[open] > summary .pv-icon { transform: rotate(180deg); }
