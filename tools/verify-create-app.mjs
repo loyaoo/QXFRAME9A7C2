@@ -528,7 +528,7 @@ check('audit #16: motion:none removes loading animation names, not just duration
   const css = fs.readFileSync(path.join(root,'src/styles/components/loading.css'),'utf8');
   for (const name of ['skeleton-animation','spinner-icon-animation','loading-spin-animation'])
     assert.ok(css.includes('var(--qxframe9a7c2-theme-' + name + ')'),name+' has a shared CSS consumer');
-  assert.match(read('preview.css'),/transition:\s*transform var\(--qxframe9a7c2-theme-duration-md\)/);
+  assert.match(fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8'),/transition:\s*transform var\(--qxframe9a7c2-theme-duration-md\)/);
 });
 
 check('audit #22: accent-paired Item link states are owned by the shared Item CSS', () => {
