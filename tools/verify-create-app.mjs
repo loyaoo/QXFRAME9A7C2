@@ -552,7 +552,18 @@ check('audit #20: FAQ native details is rendered through the framework Collapse 
   assert.match(faq,/class="qxframe9a7c2-collapse is-native"/);
   assert.equal((faq.match(/<details name="qx-create-faq" class="qxframe9a7c2-collapse-item"/g)||[]).length,3);
   assert.equal((faq.match(/class="qxframe9a7c2-collapse-header"/g)||[]).length,3);
-  assert.equal((faq.match(/class="qxframe9a7c2-collapse-content"/g)||[]).length,3);
+  assert.equal((faq.match(/class="qxframe9a7c2-collapse-content"/g)||[]).length,9);
+  // The pinned FAQ has three independent QX-owned Tabs content panels.
+  assert.match(faq,/data-pv-tab-group="faq"/);
+  for(const key of ['general','billing','goals']){
+    assert.match(faq,new RegExp('data-pv-tab-panel="'+key+'"'));
+    assert.equal((faq.match(new RegExp('name="qx-create-faq'+(key==='general'?'':'-'+key)+'"','g'))||[]).length,3);
+  }
+  assert.match(faq,/What is the difference between Basic and Pro pricing tiers/);
+  assert.match(faq,/How do I set up a custom financial goal/);
+  const panels=read('preview-cards.js');
+  assert.match(panels,/options\.onChange = function \(activeKey\)/);
+  assert.match(source,/\.qxframe9a7c2-collapse\.is-native\[hidden\]\{display:none\}/);
   assert.doesNotMatch(css,/\.pv-accordion\b/);
   assert.match(source,/\.qxframe9a7c2-collapse\.is-native/);
   assert.match(source,/summary::marker\{content:""\}/);
