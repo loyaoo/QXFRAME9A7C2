@@ -118,6 +118,11 @@ export const THEME_TOKENS = [
   // Containers.
   L('card-padding', 'Card padding (container padding axis)'),
   L('empty-inset', 'Empty density anchor; also derives media/title geometry'),
+  L('item-space', 'Static Item md padding and column gap; size variants derive from it'),
+  L('item-description-leading', 'Composed Item description line-height multiplier', 'number'),
+  L('field-group-gap', 'Vertical distance between composed Fields'),
+  L('field-gap', 'Gap between a composed Field label, control and description'),
+  L('field-label-line-height', 'Composed Field label line-box height'),
   L('card-gap', 'Card section gap'),
   L('card-meta-gap', 'Card title/description gap'),
   L('card-title-delta', 'Card title size step'),
