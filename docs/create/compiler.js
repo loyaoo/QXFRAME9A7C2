@@ -318,7 +318,7 @@ export function themeTokens(resolved) {
   root['text-size-heading'] = rem(headingSize);
   root['text-size-kpi'] = rem(kpiSize);
   root['text-weight'] = '400';
-  root['text-weight-label'] = '500';
+  root['text-weight-label'] = editorial ? '600' : resolved.font === 'mono' ? '400' : '500';
   const editorial = ext.textStyle === 'editorial';
   root['control-weight'] = editorial ? '600' : '500';
   root['control-tracking'] = editorial ? '0.1em' : 'normal';
@@ -343,6 +343,19 @@ export function themeTokens(resolved) {
   // shadcn Empty uses a compact 24px or spacious 48px surface. The
   // existing padding axis selects the tier; media/title scale derives in CSS.
   root['empty-inset'] = rem(PADDING[ext.padding] <= 1 ? 1.5 : 3);
+  // The shadcn Item/Field recipes share the existing container and typography
+  // axes; use five semantic anchors rather than per-style CSS or five size slots.
+  const itemSpace = PADDING[ext.padding] <= 1 ? 0.625 : 0.875;
+  const fieldSpace = PADDING[ext.padding] <= 1 ? 0.5 : 0.75;
+  const groupSpace = PADDING[ext.padding] + 0.25
+    + (PADDING[ext.padding] >= 2 ? 0.25 : 0)
+    - (height <= 1.75 ? 0.25 : 0);
+  root['item-space'] = rem(itemSpace);
+  root['item-description-leading'] = String(ext.textStyle === 'editorial' || ext.typography === 'compact'
+    ? 1.625 : PADDING[ext.padding] <= 1 ? 1.5 : 20 / 14);
+  root['field-group-gap'] = rem(groupSpace);
+  root['field-gap'] = rem(fieldSpace);
+  root['field-label-line-height'] = rem(editorial ? 1.21875 : Math.min(textSize, controlFont));
   root['card-gap'] = rem(PADDING[ext.padding]);
   root['card-meta-gap'] = rem(looks.metaGap);
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
