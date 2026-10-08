@@ -43,6 +43,16 @@ Coverage limits and next work:
 
 ## Nova light: diagnostic heights
 
+## 2026-10-08 — Stage 3 Payments same-browser reference check
+
+- Frozen upstream: `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`, `apps/v4/registry/bases/radix/ui/item.tsx` and `apps/v4/registry/styles/style-nova.css`.
+- **Measurement trap found:** the immutable 528-row source report was captured on **Windows Chrome 154** (recorded at the top of this Stage-3 QA file), whereas the GitHub Actions implementation diagnostic runs on **Linux HeadlessChrome 154**. `font-family:system-ui` does **not** lock the actual font metrics across platforms. Earlier numeric Card heights may encode differences in wrapping rather than genuine Theme geometry drift.
+- Introduced a **real same-browser, same-font Nova Payments Item comparator** in `tools/verify-create-app-browser.mjs`. Its independent CSS-only fixture reproduces the pinned React Item's layout recipe: root width, flex-wrap, 10px gap, 12/10px horizontal/vertical padding, 1px transparent border, icon boxes, ItemContent zero flex basis and 4px gap, title 14px/1.375, description 14px/1.5 with 2-line clamp, and ItemGroup gap 16px. Both candidates receive the **same** temporary system-ui override in one Chromium document.
+- [CSS Schema Acceptance #37794980057](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37794980057) passed, including **29/29** real Chromium checks. Linux observed all four QX rows = source fixture rows: **87.25px** each, ItemContent and description width **268.859px**, description line-height **21px**, description height **42px (two lines)**. Thus the QX Item geometric recipe is correct **in this controlled Nova fixture**, despite historical **Payments +42px** difference against the Windows capture. Do not alter ItemGroup gap, line-height or fixed Card height to chase that unpaired baseline.
+- The intermediate same-browser attempt at `60225c7b` failed by exposing a **different bug in the test fixture**: its source row used CSS `system-ui` while the live QX row inherited `Segoe UI, Arial, ...`, yielding 2 vs 1 lines. Explicitly using identical font override made the source comparison pass at `2f950ca8`.
+- The final first-Card report still records **252/528** cross-platform height differences above ±0.5px. The number is kept as a **diagnostic**, not rebaselined or promoted to a visual acceptance assertion. New summary includes `referenceCapturedOn`, `actualCapturedOn` and `fontMetricParityUnverified`. Reliable next steps: regenerate the pinned source screenshot/measurements in the same browser environment as QX, or build additional side-by-side same-browser source fixtures for component families before changing geometry.
+- This work does **not** change `qxframe.js`, any framework runtime Controller, Card CSS, Theme Token, prior 27/28 tests, or tolerances. PR #265 stays Draft and unmerged. The **new HEAD** after summary/doc updates must still pass both workflows before declaring final acceptance.
+
 Width and wrapping do not constitute alignment criteria. This table identifies
 where to investigate component geometry; it does not assign a pass/fail verdict.
 
