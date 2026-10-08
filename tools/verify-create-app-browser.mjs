@@ -626,11 +626,14 @@ try {
           const css=e=>doc.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
           const labels=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-field-content>.qxframe9a7c2-form-label')];
           const faq=doc.querySelector('[data-card="faq"]'),summary=faq.querySelector('.pv-accordion-item>summary');
+          const accordionContent=faq.querySelector('.pv-accordion-content');
           const fields=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-check-field')];
           const ans={labelLines:labels.map(e=>px(css(e).lineHeight)),labelWeights:labels.map(e=>Number(css(e).fontWeight)),
             fieldGaps:fields.map(e=>px(css(e).columnGap)),
             expectedFieldGap:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-gap'))*16,
             expectedLine:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-label-line-height'))*16,
+            faqContentLine:px(css(accordionContent).lineHeight),
+            expectedFaqContentLine:px(css(accordionContent).fontSize)*px(css(root).getPropertyValue('--qxframe9a7c2-theme-text-leading')),
             actualGap:px(css(summary).columnGap),faqHeight:faq.getBoundingClientRect().height,
             notificationHeight:doc.querySelector('[data-card="notification-settings"]').getBoundingClientRect().height};
           root.classList.toggle('dark',prev);return ans;
@@ -640,6 +643,8 @@ try {
         for(const g of actual.fieldGaps)assert.ok(Math.abs(g-actual.expectedFieldGap)<=.5,
           style+'/'+mode+' checkbox Field consumes theme gap: '+g+'/'+actual.expectedFieldGap);
         assert.ok(Math.abs(actual.actualGap)<=.5,style+'/'+mode+' no invented FAQ gap');
+        assert.ok(Math.abs(actual.faqContentLine-actual.expectedFaqContentLine)<=.5,
+          style+'/'+mode+' FAQ content consumes Theme text-leading: '+actual.faqContentLine+'/'+actual.expectedFaqContentLine);
         for(const line of actual.labelLines)assert.ok(Math.abs(line-actual.expectedLine)<=.5,
           style+'/'+mode+' FieldContent label line consumes role: '+line+'/'+actual.expectedLine);
         assert.ok(actual.labelWeights.every(Number.isFinite),style+'/'+mode+' valid Label font weights');
