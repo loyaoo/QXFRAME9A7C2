@@ -515,6 +515,20 @@ check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode invento
   assert.equal(token(square,'radius-switch'),'0', 'explicit per-component shape overrides global pill');
 });
 
+
+check('audit #16: motion:none removes loading animation names, not just durations', () => {
+  const none = model.compileTheme(model.normalizeConfig({ ext: { motion:'none' } })).body;
+  const standard = model.compileTheme(model.normalizeConfig({ ext: { motion:'standard' } })).body;
+  for (const name of ['skeleton-animation','spinner-icon-animation','loading-spin-animation']) {
+    assert.match(none,new RegExp('--qxframe9a7c2-theme-' + name + ': none;'));
+    assert.match(standard,new RegExp('--qxframe9a7c2-theme-' + name + ': qxframe9a7c2-'));
+  }
+  const css = fs.readFileSync(path.join(root,'src/styles/components/loading.css'),'utf8');
+  for (const name of ['skeleton-animation','spinner-icon-animation','loading-spin-animation'])
+    assert.ok(css.includes('var(--qxframe9a7c2-theme-' + name + ')'),name+' has a shared CSS consumer');
+  assert.match(read('preview.css'),/transition:\s*transform var\(--qxframe9a7c2-theme-duration-md\)/);
+});
+
 check('audit #22: accent-paired Item link states are owned by the shared Item CSS', () => {
   const shared = fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   const privateCss = read('preview.css');
