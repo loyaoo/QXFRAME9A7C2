@@ -148,7 +148,7 @@ body.create-preview-body {
  * QX segmented Tabs exposes the tab-height slot; compensate its
  * 3px rail chrome on both edges locally, not via an app-owned Tabs. */
 .pv-tabs-full {
-  --qxframe9a7c2-tabs-height:calc(var(--qxframe9a7c2-theme-control-height) - .375rem);
+  --qxframe9a7c2-tabs-height:calc(max(2rem,var(--qxframe9a7c2-theme-control-height)) - .375rem);
   margin-bottom:.5rem;
 }
 /* Pinned shadcn FieldSeparator has a 20px layout slot and 1px visual
