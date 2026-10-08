@@ -54,7 +54,7 @@
  * native/interactive Item Surface remains a separate authoritative class. */
 .qxframe9a7c2-item{
   --_qxframe9a7c2-static-item-space:var(--qxframe9a7c2-item-space,var(--qxframe9a7c2-theme-item-space,.625rem));
-  box-sizing:border-box;display:flex;align-items:center;
+  box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;width:100%;
   gap:var(--qxframe9a7c2-item-gap,var(--_qxframe9a7c2-static-item-space));
   padding-block:var(--qxframe9a7c2-item-padding-block,var(--_qxframe9a7c2-static-item-space));
   padding-inline:var(--qxframe9a7c2-item-padding-inline,calc(var(--_qxframe9a7c2-static-item-space) + .125rem));
@@ -78,11 +78,13 @@
 .qxframe9a7c2-item-group:has(>.qxframe9a7c2-item.is-xs){--_qxframe9a7c2-static-item-group-gap:.5rem}
 .qxframe9a7c2-item-content{display:flex;flex:1 1 auto;flex-direction:column;gap:.25rem;min-width:0}
 .qxframe9a7c2-item-title{
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
   font-weight:var(--qxframe9a7c2-theme-control-weight);
   line-height:1.375;
 }
 .qxframe9a7c2-item-desc{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
   margin:0;color:var(--qxframe9a7c2-theme-muted-foreground);
   font-size:var(--qxframe9a7c2-theme-text-size);
   line-height:var(--qxframe9a7c2-theme-item-description-leading);
