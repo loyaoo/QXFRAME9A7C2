@@ -477,9 +477,14 @@ try {
         return { gap,overriddenGap,
           media:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
             const icon=el.querySelector('.qxframe9a7c2-item-media.is-icon');
+            const slider=el.querySelector('.qxframe9a7c2-slider');
+            const handle=el.querySelector('.qxframe9a7c2-slider-handle');
+            const title=el.querySelector('.qxframe9a7c2-item-title');
             return {count:el.querySelectorAll('.qxframe9a7c2-item-media').length,
               width:n(css(icon).width),height:n(css(icon).height),
-              border:n(css(icon).borderTopWidth)};
+              border:n(css(icon).borderTopWidth),
+              slider:n(css(slider).height),handle:n(css(handle).height),
+              title:n(css(title).lineHeight),row:el.getBoundingClientRect().height};
           })};
       })()`);
       assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');
@@ -490,6 +495,34 @@ try {
         assert.equal(media.width,16,style+' unboxed ItemMedia width');
         assert.equal(media.height,16,style+' unboxed ItemMedia height');
         assert.equal(media.border,0,style+' unboxed ItemMedia border');
+        assert.ok(Math.abs(media.slider-media.handle)<=.5,style+' Slider footprint follows thumb size');
+        assert.ok(Math.abs(media.row-(Math.max(media.title,media.handle)+22))<=.5,style+' row owns no extra Slider control height');
+      }
+    }
+  });
+
+  await step('Payments ItemContent shrinks without wrapping trailing chevrons', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payments fixture');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Payments Item');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        return [...doc.querySelectorAll('[data-card="payments"] .qxframe9a7c2-item')].map(el=>{
+          const content=el.querySelector('.qxframe9a7c2-item-content');
+          const svg=el.lastElementChild;
+          const cr=content.getBoundingClientRect(),sr=svg.getBoundingClientRect(),ir=el.getBoundingClientRect();
+          const css=doc.defaultView.getComputedStyle(content);
+          return {basis:css.flexBasis,rootHeight:ir.height,
+            centered:Math.abs((cr.top+cr.height/2)-(sr.top+sr.height/2))};
+        });
+      })()`);
+      assert.equal(actual.length,4,style+' Payment rows');
+      for(const row of actual){
+        assert.equal(row.basis,'0px',style+' ItemContent zero basis');
+        assert.ok(row.rootHeight<115,style+' item row did not wrap');
+        assert.ok(row.centered<1,style+' trailing chevron stays on same row');
       }
     }
   });
