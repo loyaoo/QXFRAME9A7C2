@@ -855,6 +855,43 @@ try {
     }
     await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", ext: {} })');
   });
+
+  await step('Static embedded Table recipes across eight styles and light/dark', async () => {
+    const expected={vega:8,nova:8,maia:12,lyra:8,mira:8,luma:12,sera:12,rhea:8};
+    for(const [style,inset] of Object.entries(expected)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' embedded Table');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement,old=html.classList.contains('dark');
+          html.classList.toggle('dark',${mode==='dark');
+          const host=doc.createElement('div');
+          host.style.cssText='position:absolute;left:0;top:0;width:360px;visibility:hidden';
+          host.innerHTML='<table class="qxframe9a7c2-table is-embedded is-hover"><thead><tr><th>Item</th><th>Amount</th></tr></thead><tbody><tr><td>Subscription</td><td>$10</td></tr><tr><td>Service</td><td>$20</td></tr></tbody></table>';
+          doc.body.append(host);
+          const table=host.firstElementChild,head=table.querySelector('th'),cell=table.querySelector('td');
+          const sample=doc.createElement('span');
+          sample.style.color='var(--qxframe9a7c2-theme-table-heading-foreground)';
+          host.append(sample);
+          const css=el=>doc.defaultView.getComputedStyle(el),px=value=>parseFloat(value);
+          const result={inset:px(css(cell).paddingLeft),headerHeight:px(css(head).height),
+            headerText:css(head).color,expectedText:css(sample).color,
+            font:px(css(table).fontSize),headerFont:px(css(head).fontSize),bodyBackground:css(cell).backgroundColor};
+          host.remove();html.classList.toggle('dark',old);
+          return result;
+        })()`);
+        const label=style+'/'+mode+' embedded Table';
+        assert.ok(Math.abs(actual.inset-inset)<.51,label+' padding '+JSON.stringify(actual));
+        assert.ok(Math.abs(actual.headerHeight-(24+2*inset))<.51,label+' header height '+JSON.stringify(actual));
+        assert.equal(actual.headerText,actual.expectedText,label+' header semantic text');
+        assert.ok(Math.abs(actual.font-(['lyra','mira'].includes(style)?12:14))<.51,label+' body size');
+        assert.ok(Math.abs(actual.headerFont-(style==='sera'?12:actual.font))<.51,label+' head size');
+        assert.equal(actual.bodyBackground,'rgba(0, 0, 0, 0)',label+' unpainted cell');
+      }
+    }
+  });
+
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
