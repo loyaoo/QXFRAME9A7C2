@@ -90,6 +90,47 @@ Next:
 Engineering estimate: CREATEAPP-V3 **61%**, Stage 3 **55%**
 (provisional; percentages are not inferred from green CI or 528 heights).
 
+### 2026-10-08 · PR #265 audit triage / code batch (CI pending)
+
+Owner supplied `AUDIT-PR265-ae56205.md`, 22 candidate findings;
+not treated as 22 automatically validated defects.
+
+- **Not a task:** #1 older-browser compatibility (owner explicitly
+  waived legacy browser support in this continuation).
+- **Patched in Stage 3 branch:** #2/#3/#4/#5 InputGroup border
+  ownership, variant paint, control-height and separate/vertical addon;
+  #6 switchLook independent of style name; #7 explicit pill shape
+  precedence; #15 24px container radius cap for all allocations;
+  #16 motion:none static loading/accordion effects; #17 strict header
+  import; #18 locked theme/chart palette on shuffle/reset; #21 full
+  `:root` and `.dark` token inventory; #22 paired Item link/accent
+  foreground moved to framework and sidebar hover paired. #20 FAQ
+  single-open/collapsible native details-name behavior also patched;
+  existing private Accordion appearance is **not** yet promoted to
+  reusable Collapse style.
+- **Needs continued validation/implementation:** #8 Empty glyph and
+  content gaps; #14 underlined inputs' shape exception (audit itself
+  notes the owner is discussing precedence); #19 two preview Table
+  surfaces not yet migrated; #20 Collapse owner consolidation;
+  remaining visual parity for 300/528 initial-height diagnostics.
+- **Confirmed historical baseline, outside this Stage 3 PR's frozen
+  JS mandate:** #9/#10 numeric API, #11/#12 week calculation, #13
+  AsyncTask re-entry. These require a separately scoped runtime fix,
+  not a silent Controller modification while `qxframe.js` must match
+  `main`. They are *not* marked fixed, nor dismissed.
+- New code is on `redesign/create`. Current implementation/test SHA
+  `4304f90384e3b71cdfe41308c157e27d37390238`; CI must be
+  queried by SHA and any errors repaired before acceptance. Never
+  count a prior green run as confirmation of this batch.
+- Added source assertions for import/locks/shape/full dark/motion,
+  browser regressions for Item accent, InputGroup geometry/states,
+  FAQ exclusivity and motion across 8 styles × light/dark.
+- No Controller/core JS touched, no gate tolerance relaxed, PR remains
+  Draft, no main merge. Stage 3 next: fix any Actions failure first,
+  then reuse shared Table/Collapse, Empty glyph precision, and resume
+  Payments/FAQ/Payout/Upcoming source geometry.
+- Estimate unchanged pending CI: overall ~61%, Stage 3 ~55%.
+
 ### Owner decisions (2026-10-07) — frozen
 
 - Stage 2 decisions: dark mode selector is **`.dark` only** (no `[data-qxframe9a7c2-theme="dark"]` alias; repo docs/createApp switch to class="dark"); docs-site theme/style switchers **simplified to light/dark only** (style/theme customization lives in createApp; tokens.html shows the new token list; theme-playground redirects to createApp); **Claude drafts the ~100-token closed list** (registered under tools/manifests) and migrates directly, owner accepts on Pages; stage 2 split into **2a** (list + compiler + default theme + preview-used core components) and **2b** (all remaining components, :root component tokens cleared), each merged on green CI.
