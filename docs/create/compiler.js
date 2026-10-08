@@ -343,6 +343,13 @@ export function themeTokens(resolved) {
   // shadcn Empty uses a compact 24px or spacious 48px surface. The
   // existing padding axis selects the tier; media/title scale derives in CSS.
   root['empty-inset'] = rem(PADDING[ext.padding] <= 1 ? 1.5 : 3);
+  // The icon glyph has three independent source tiers: 16 / 20 / 24px.
+  // Vega/Maia's spacious glyph is 24px; other spacious looks use 20px.
+  // Explicit density/padding still select compact (16px) or spacious
+  // modes, while instance --qxframe9a7c2-empty-icon-size may override.
+  const emptyCompact = PADDING[ext.padding] <= 1;
+  root['empty-icon-size'] = rem(emptyCompact ? 1 : (style === 'vega' || style === 'maia' ? 1.5 : 1.25));
+  root['empty-content-gap'] = rem(emptyCompact ? (ext.density === 'dense' ? .5 : .625) : 1);
   // The shadcn Item/Field recipes share the existing container and typography
   // axes; use five semantic anchors rather than per-style CSS or five size slots.
   const itemSpace = PADDING[ext.padding] <= 1 ? 0.625 : 0.875;
