@@ -351,8 +351,10 @@ export function themeTokens(resolved) {
     + (PADDING[ext.padding] >= 2 ? 0.25 : 0)
     - (height <= 1.75 ? 0.25 : 0);
   root['item-space'] = rem(itemSpace);
+  // Vega's measured regular Item description is 21/14, unlike other spacious
+  // regular styles. Keep the style's source recipe here, never in component CSS.
   root['item-description-leading'] = String(ext.textStyle === 'editorial' || ext.typography === 'compact'
-    ? 1.625 : PADDING[ext.padding] <= 1 ? 1.5 : 20 / 14);
+    ? 1.625 : style === 'vega' || PADDING[ext.padding] <= 1 ? 1.5 : 20 / 14);
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
   root['field-label-line-height'] = rem(editorial ? 1.21875 : Math.min(textSize, controlFont));
