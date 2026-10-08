@@ -358,6 +358,11 @@ export function themeTokens(resolved) {
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
   root['field-label-line-height'] = editorial ? '1.21875rem' : rem(Math.min(textSize, controlFont));
+  // Source Accordion recipes: default py-2.5, dense compact p-2,
+  // spacious/rounded p-4. This is the only style family projection.
+  root['accordion-padding'] = rem(editorial ? 1
+    : ext.typography === 'compact' && ext.density === 'dense' ? 0.5
+    : PADDING[ext.padding] <= 1 ? 0.625 : 1);
   root['card-gap'] = rem(PADDING[ext.padding]);
   root['card-meta-gap'] = rem(looks.metaGap);
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
