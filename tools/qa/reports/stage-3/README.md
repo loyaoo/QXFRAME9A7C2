@@ -81,3 +81,23 @@ where to investigate component geometry; it does not assign a pass/fail verdict.
 | new-milestone | 347.00 | 367.00 | 20.00 |
 | social-links | 411.00 | 459.00 | 48.00 |
 | notification-settings | 403.00 | 464.00 | 61.00 |
+
+## 2026-10-08 — Empty composed component follow-up (in progress)
+
+- Promoted the preview Empty geometry to shared `src/styles/components/empty.css`.
+  Legacy `.qxframe9a7c2-empty-image/-description/-extra` contract remains intact.
+- All 9 Empty instances in Preview 01/02 use QX classes; icon media is
+  a sibling of the header instead of being nested inside it.
+- The intended Nova geometry is 32px icon media, 14px title, 16px root gap;
+  styled by theme tokens for background, foreground and radius. Preview-private
+  `.pv-empty*` declarations have been removed.
+- Static regression `verify:create-app` adds composed-Empty contract (15 checks);
+  browser regression checks computed dimensions and slot parentage.
+- Local source/static checks passed on the supplied R2 source snapshot:
+  `verify:create-app` 15/15; CSS source authority, concatenation,
+  constraints and theme-token ratchet passed after regenerating local CSS.
+- The R2 snapshot's createApp browser smoke timed out before boot in the
+  current Linux container; it is **not** a passing browser measurement.
+  GitHub CI on PR #265 remains the release gate.
+- The 410 previous height diagnostics have not been remeasured or closed.
+  Continue with per-card computed geometry and Item/Field/form/list internals.
