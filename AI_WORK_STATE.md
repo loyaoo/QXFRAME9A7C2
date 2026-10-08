@@ -19,73 +19,72 @@
 
 ## CURRENT
 
-Active task: `CREATEAPP-V3-S3` source-locked Preview 01 geometry parity.
-Branch `redesign/create`, Draft PR #265. Stages 0–2 merged;
-runtime Controller migration 40/40 accepted. Do not change
-qxframe.js or redo Controller. No main merge until owner approval.
+Task: `CREATEAPP-V3-S3` — source-locked Preview 01 geometry parity.
+Branch `redesign/create`; PR #265 is **Draft**, not merged.
+Stages 0–2 merged; Controller runtime 40/40 accepted,
+not reopened; production qxframe.js unchanged.
+Reference shadcn-ui/ui commit
+`295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
 
-LATEST **GREEN** SOURCE CODE HEAD `a7d764b54b9887719c63ef225fef2e9c888bdfce`:
-QXFRAME CI `37760566328` release + windows-tools success;
-CSS Schema Acceptance `37760566341` success;
-all **21** createApp Chromium browser checks passed.
-528 tracked first-Card height records vs pinned shadcn source
-`295a1f114a138f23b5dfee0e0c6812394dfeb90c`:
-**316/528** have >0.5px height difference, down from
-330/528 previous batch, 362/528 earlier and **410/528 initial**.
-270 improved and 120 worsened vs original reference.
-No blanket Card visual acceptance is implied. The other 212
-are height-within-tolerance only, not complete visual equivalence.
-Nova source parity: Kitchen Island 337/337px, Sidebar Nav
-377/377px; Notification Settings 405/403 (+2px), FAQ
-400/375 (+25px), Payments 473/431 (+42px). Preferences is
-no longer in Nova's ten largest height differences after
-FieldSeparator slot fix (previously -38px); exact current value
-is in QA artifact, do not infer an exact value from omission.
+LATEST GREEN CODE HEAD `c372bb81ddec9a03a529b0a048177f4008c34f67`:
+QXFRAME CI `37764637779` release+windows success;
+CSS Schema Acceptance `37764637828` success,
+21 createApp browser tests passed, including source FAQ line
+height and Tabs height in eight styles × two modes.
 
-2026-10-08 completed source-specific S3 batches:
-- Shared ItemMedia icon unboxed16px and ItemGroup gap 16/10/8;
-  Kitchen 4 duplicated icon wrappers removed; Slider root
-  uses optional local `--qxframe9a7c2-slider-height` thumb
-  footprint, default runtime untouched. Kitchen now exactly
-  matches Nova height.
-- Sidebar source menu gaps 4/0/4/0/1/2/2/2px;
-  group seam/padding aligned, Nova height matches source.
-- ItemContent zero flex basis fixes wrapped Payment Chevron.
-  Shared Item title clamp 1 line / description 2.
-- Shared `FieldContent` consumes typed Theme gap, label
-  font-size/line-height/weight roles; Checkbox Field gap
-  8px for Nova/Lyra/Mira, 12px for other source styles.
-  Notifications now within 2px Nova.
-- FAQ AccordionTrigger unnecessary 16px horizontal gap removed;
-  source trigger text no longer wraps an extra line; Nova
-  improved by 20px.
-- Preferences: pinned `FieldSeparator -my-4 h-5` uses
-  20px transparent layout slot with 1px centered stroke,
-  not the earlier 1px slot. Both local instances now preserve
-  correct layout. This batch reduced overall height mismatch
-  count 330→316 across style/mode cases.
-- Static 8-style and browser 8×light/dark real computed
-  assertions maintain 0.5px tolerance and theme whitelist.
-  Bug in source regex was fixed without changing actual
-  CSS or relaxing tests.
-- QA details: `tools/qa/reports/stage-3/README.md`.
-  No production Controller/JS modifications.
+Tracked 528 first Card heights: **316/528** >0.5px,
+same count as previous checkpoint, down from initial 410.
+272 improved and 126 worsened vs original source. This
+is height-only diagnosis, not complete visual/DOM parity.
+Nova FAQ now **389px vs ref375px (+14px)**, down from
+400px (+25px) after fixing 14/20 `text-sm` line height and
+removing 6px extra segmented Tabs rail height.
+Nova Kitchen 337/337 and Sidebar Nav 377/377 remain exact;
+Payments 473 vs431 (+42) and Receiving Method +24.75
+remain unresolved; extensive other styles still differ.
 
-Estimate: overall CREATEAPP-V3 **60%**, S3 Stage3 **48%**.
-Stages 4/5, nested Cards, broader Item xs/sm, full first-Card
-size/spacing and exact per-card parity remain unaccepted.
-Sera `style-sera:hidden` separators are source-specific
-still unimplemented; first-Card report includes residual
-style differences.
+2026-10-08 CURRENT BATCH pending new HEAD CI:
+- FAQ source tabs list heights locked to 32/36/40px
+  via public Tabs local `--qxframe9a7c2-tabs-height`,
+  using existing density slot and 32px minimum.
+  FAQ Accordion consumes existing `theme-text-leading`
+  instead of fixed 1.5; all 16 mode browser checks passed
+  at the green checkpoint above.
+- Source `preferences.tsx` explicitly hides two
+  `FieldSeparator -my-4` instances in Sera. Registered
+  **one generic Theme role** `field-separator-display`:
+  editorial text style default → none, regular → block.
+  Existing local `.pv-divider-bleed` consumes this with
+  `--qxframe9a7c2-field-separator-display` author override
+  precedence. Generic 1px Divider untouched.
+- Added static eight-style expected display checks and
+  browser eight styles × light/dark computed display,
+  visible 20px/hidden 0px geometry, public override tests.
+  No `[data-create-style]` selectors, no Controller/JS
+  implementation changes and no ratchet weakening.
+- Added the `[preview-01-structure-nova]` per-row browser
+  probe for source Payment text width / line count and
+  FAQ open/collapsed text metrics; results confirm four
+  Payment descriptions take two 21px lines at 268.86px
+  content width. The original source Card is 42px shorter;
+  **do not alter font size/padding to game baseline**
+  before confirming font metric parity.
+- See `tools/qa/reports/stage-3/README.md`.
 
-NEXT EXACT STEP: continue source-driven Payments +42px and
-FAQ +25px discrepancy isolation, inspect text wrapping and
-pinned Card internals rather than setting fixed Card heights.
-Add per-item Payment text line/width diagnostics to browser
-QA before changing typography. Verify each batch in Draft
-PR #265, preserve 0.5px ratchet. Do not merge without owner
-stage acceptance, do not redo already-green 624/624
-shared Card subset and 40/40 Controller.
+Engineering estimate overall CREATEAPP-V3 **61%**,
+Stage 3 / Task CREATEAPP-V3-S3 **51%** (provisional,
+subject to Sera CI). Accepted earlier 624/624 shared
+Card geometry subset and Controller 40/40 are frozen.
+Whole Preview 01, individual nested Cards, Item xs/sm,
+full text/DOM visual parity and Stage 4/5 are open.
+
+NEXT EXACT STEP: inspect newest PR #265 Actions; fix
+any failed static/browser assertion without relaxing
+gates; read updated 528 source Card height report and
+Sera Preferences outcomes; update checkpoint with GREEN
+evidence. Continue source-verified Payment font metrics
+and remaining FAQ +14 rather than inventing heights.
+Keep Draft and no main merge until owner approval.
 
 
 ### Owner decisions (2026-10-07) — frozen
