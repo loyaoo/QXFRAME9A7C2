@@ -340,6 +340,9 @@ export function themeTokens(resolved) {
 
   // Containers.
   root['card-padding'] = rem(PADDING[ext.padding]);
+  // shadcn Empty uses a compact 24px or spacious 48px surface. The
+  // existing padding axis selects the tier; media/title scale derives in CSS.
+  root['empty-inset'] = rem(PADDING[ext.padding] <= 1 ? 1.5 : 3);
   root['card-gap'] = rem(PADDING[ext.padding]);
   root['card-meta-gap'] = rem(looks.metaGap);
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
@@ -377,6 +380,15 @@ export function themeTokens(resolved) {
   root['radius-track'] = roundShape('shapeThumb') === 'circle' ? PILL : root['radius-thumb'];
   root['radius-avatar'] = shapeRadius(roundShape('shapeAvatar'), alloc.button, controlShape);
   const container = ext.shapeContainer === 'square' ? () => '0' : value => value;
+  // Source-locked Empty rounded roles per shared radius-allocation recipe.
+  // Values scale with the selected radius; global straight corners stay zero.
+  const emptyRadiusRoles = {
+    standard: [1, 1], balanced: [1.4, 1], rounded: [1, 1],
+    compact: [1.4, .8], soft: [1.8, 1.4], smooth: [2.2, 1.4]
+  };
+  const [emptyRootScale, emptyMediaScale] = emptyRadiusRoles[ext.radiusAlloc];
+  root['radius-empty'] = container(px(basePx * emptyRootScale));
+  root['radius-empty-media'] = px(basePx * emptyMediaScale);
   root['radius-card'] = container(alloc.card);
   root['radius-popup'] = container(alloc.popup);
   root['radius-dialog'] = container(alloc.dialog);
