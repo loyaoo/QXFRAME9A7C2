@@ -1091,6 +1091,10 @@ try {
     const bad=row=>row.delta!==null&&Math.abs(row.delta)>.5;
     const oldBad=row=>row.referenceHeight!==null&&row.priorHeight!==null&&Math.abs(row.priorHeight-row.referenceHeight)>.5;
     const summary={source:baseline.source,font:'system-ui,sans-serif',scope:'first Card per example only; heights diagnostic, not acceptance',
+      referenceCapturedOn:'Windows Chrome 154 (see tools/qa/reports/stage-3/README.md)',
+      actualCapturedOn:process.platform,
+      fontMetricParityUnverified:process.platform!=='win32',
+      caution:'Cross-OS system-ui may resolve to different font faces. Treat text-wrap height differences as unverified until both sides run in the same browser.',
       renders:rows.length,previousOverTolerance:rows.filter(oldBad).length,currentOverTolerance:rows.filter(bad).length,
       improved:rows.filter(row=>row.delta!==null&&row.priorHeight!==null&&Math.abs(row.delta)<Math.abs(row.priorHeight-row.referenceHeight)-.5).length,
       worsened:rows.filter(row=>row.delta!==null&&row.priorHeight!==null&&Math.abs(row.delta)>Math.abs(row.priorHeight-row.referenceHeight)+.5).length,
