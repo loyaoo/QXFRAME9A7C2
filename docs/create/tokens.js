@@ -125,6 +125,7 @@ export const THEME_TOKENS = [
   L('field-label-line-height', 'Composed Field label line-box height'),
   L('field-content-gap', 'FieldContent label and description gap derived from Field density'),
   L('field-separator-display', 'FieldSeparator presence for editorial Field composition', 'keyword'),
+  L('choice-group-columns', 'Default responsive choice group column count from typography layout', 'number'),
   L('accordion-padding', 'Accordion trigger and opened content inset derived from style density'),
   L('sidebar-menu-gap', 'Sidebar menu item distance from control surface recipe'),
   L('sidebar-group-padding-block', 'Sidebar group vertical inset from density'),
