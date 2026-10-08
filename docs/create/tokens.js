@@ -117,6 +117,7 @@ export const THEME_TOKENS = [
 
   // Containers.
   L('card-padding', 'Card padding (container padding axis)'),
+  L('empty-inset', 'Empty density anchor; also derives media/title geometry'),
   L('card-gap', 'Card section gap'),
   L('card-meta-gap', 'Card title/description gap'),
   L('card-title-delta', 'Card title size step'),
@@ -144,6 +145,8 @@ export const THEME_TOKENS = [
   L('radius-track', 'Slider / progress track'),
   L('radius-avatar', 'Avatar'),
   L('radius-card', 'Cards, alerts'),
+  L('radius-empty', 'Empty container radius; container shape policy'),
+  L('radius-empty-media', 'Empty icon media radius; radius allocation policy'),
   L('radius-popup', 'Popovers, menus, tooltips'),
   L('radius-dialog', 'Dialogs, drawers'),
 
