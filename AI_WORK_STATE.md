@@ -19,23 +19,22 @@
 
 ## CURRENT
 
-Task: CREATEAPP-V3-S3 — Preview 01 geometry parity to pinned shadcn reference.
-Status: IN PROGRESS, draft PR #265 on `redesign/create`; retain Draft until owner acceptance. Prior stages 0–2 merged; runtime Controller 40/40 accepted, do not redo.
+Task: CREATEAPP-V3-S3 — Preview 01 source-locked geometry and shared QX static components.
+Status: IN PROGRESS, Draft PR #265 on branch `redesign/create`, no merge before owner acceptance. Stages 0–2 merged; 40/40 runtime Controller migration accepted and frozen.
 
-Verified prior head `64d5655167fb1c237b8d8b68f226fc0ed9eeab92`: QXFRAME CI release/windows-tools passed (run 37735827160); CSS Schema Acceptance passed (run 37735827236). This supersedes the earlier stale "CI pending" entry.
+Last fully green checkpoint: `4855d5bd9cc72764fc7c187ad9d2cf40837a9127`, QXFRAME CI run 37737418728 and CSS Schema Acceptance run 37737418756; previous Empty 8-style × light/dark geometry accepted.
 
-2026-10-08 current task batch: source-locked Empty geometry across all eight styles, both modes. Previously `empty.css` fixed 32px media, 14px title and 16px padding, which only matched part of Nova and diverged from Vega/Maia/Luma/Sera/Rhea. The pinned 8-style `tools/qa/spec.json` explicitly separates compact 24px inset/32px media/14px title and spacious 48px inset/40px media/18px title. Root and icon media radii also vary with radius-allocation policy.
+2026-10-08 current batch: Item and Field default-md parity from the EXACT pinned `tools/qa/spec.json` Git blob `4cd9ab1c61c8fe335a05de7880f101a02301e534`. CSS previously hardcoded 16px Item padding/gap and 28px FieldGroup gap independent of style, diverging from source.
 
-Implemented on `redesign/create`:
-- Registered only three new semantic Theme inputs: `empty-inset`, `radius-empty`, `radius-empty-media`; default Nova theme output updated.
-- Compiler determines two Empty density tiers from the existing padding axis, and root/media radius from existing radius allocation + global radius + container shape. No style-specific CSS selectors.
-- Shared `src/styles/components/empty.css` consumes these inputs, derives title/media/icon dimensions and source-matched description font/line-height from theme typography. Preserves legacy Empty structure and all authored preview examples.
-- Static `verify-create-app.mjs` checks 8 pinned styles; browser `verify-create-app-browser.mjs` measures 8 styles × light/dark for 10 computed geometry properties at 0.5px tolerance.
-- QA evidence documented in `tools/qa/reports/stage-3/README.md`.
+DONE on current PR:
+- Added 5 registered theme semantic inputs: `item-space`, `item-description-leading`, `field-group-gap`, `field-gap`, `field-label-line-height`. Compiler derives them from existing density/padding/typography axes, with source-locked Vega description leading recipe, and default Nova `theme.css` updated. No per-style CSS selectors.
+- Shared `item-surface.css` static Item now projects its md padding/gap, capped radius, title font/line/weight and description leading from theme. `composition.css` FieldGroup and `form-native.css` composed FormField/Label/Description consume same roles; existing local public overrides remain.
+- Static 8-style numeric role test and browser 8 × 2 × 15 default-md computed geometry test (≤0.5px) added. QA table and limits recorded in `tools/qa/reports/stage-3/README.md`.
+- qxframe.js source and Controller unaffected.
 
-Progress engineering estimates: overall CREATEAPP-V3 **56%**, Stage 3 / Task S3 **30%** pending CI and additional Card audits. Earlier 624/624 shared Card geometry and 528/528 first-Card tracked properties remain accepted only for those properties; previously logged 410 height differences are unresolved until rerun.
+Estimate: CREATEAPP-V3 overall 57%, Stage 3 / Task S3 36%, pending current batch CI. Shared Card 624/624 checks and previous Empty checks are already done; DO NOT redo. Previously 410 first-Card height differences remain historical diagnostics, NOT current passes. Item sm/xs source exactness, nested Card geometry and all remaining Form/Item case variants remain open.
 
-Next exact step: check latest PR #265 CI for new Empty static/16-mode browser checks, repair failures without changing ratchet; then regenerate pinned reference comparison for Empty-bearing first Cards and continue Item/Field/list/form geometry, including nested Card coverage. Keep `qxframe.js` unchanged, keep stage PR Draft, old browser compatibility is not a blocker under v3.
+NEXT EXACT STEP: read latest PR CI jobs, resolve static/browser/theme-token failures without relaxing ratchet; then rerun pinned Preview 01 audit with current CSS and resolve remaining per-Card heights. Do not merge PR before owner approval, and old browser fallbacks are out of scope.
 
 
 ### Owner decisions (2026-10-07) — frozen
