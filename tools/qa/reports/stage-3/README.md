@@ -691,3 +691,38 @@ override wins. Actual source-height effect remains
 unconfirmed until the new full CI 528-height report
 finishes. At narrower viewport widths, general
 responsive behavior remains part of remaining parity QA.
+
+## 2026-10-08 — Resumed S3: proven ItemMedia position bug (CI pending)
+
+**GitHub-reconciled baseline:** Draft PR #265 at
+`1f7e2ab8bfb7779df2c0b7006e21cb4de9bf9872` passed
+QXFRAME CI [37769225703](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37769225703)
+(release/windows-tools) and CSS Schema [37769225824](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37769225824).
+The release job `113284794521` reported 22 createApp Chromium checks.
+Source-locked first-Card height mismatches: **300/528**, previously
+410/528 before the Stage-3 fixes, with 292 improved and 122 worsened
+against the original actual heights. This supersedes the historical
+316/528 and CI-pending notes above, not their implementation history.
+
+**Pinned-source-backed correction:**
+`shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`,
+eight `apps/v4/registry/styles/style-*.css` files all specify
+`cn-item-media` with `gap-2` and, when a descendant
+`[data-slot=item-description]` exists, `self-start translate-y-0.5`.
+The QX `item-surface.css` still centered its 16px media in the taller
+Payments Item despite matching ItemContent's zero flex basis.
+The shared Item now uses a documented `:has(.qxframe9a7c2-item-desc)`
+media rule with `align-self:flex-start;transform:translateY(.125rem)`
+and an internal 8px gap; a description-less Item retains center alignment.
+Static source assertions and an 8 style × light/dark browser check read
+the real icon top offset, transform and computed gap.
+No Card heights, typography, runtime JS, theme token roles or test
+tolerances are changed. **This addresses icon positioning only.**
+
+**Still open**: Nova Payments +42px (all four QX descriptions presently
+two lines at 268.86px text width); FAQ +14px (the first Accordion item
+open, other two closed); Payout Threshold -22px; Upcoming Payments -18.5px;
+Claimable Balance -18px; other 528 diagnostic discrepancies, nested Card
+and Preview 02 full fidelity. Measured height is not visual acceptance.
+The post-change CI and updated 528 summary are **pending**, and should
+be recorded separately after they actually run. Keep PR #265 Draft.
