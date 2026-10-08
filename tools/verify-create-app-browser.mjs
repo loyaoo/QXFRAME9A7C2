@@ -530,6 +530,47 @@ try {
     }
   });
 
+  await step('FieldContent and Item text clamp calculated parity across 16 themes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=notification-settings]")','Form cards');
+    const expected={vega:4,nova:2,maia:4,lyra:2,mira:2,luma:4,sera:4,rhea:4};
+    for(const [style,expectedGap] of Object.entries(expected)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' FieldContent');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement,prev=html.classList.contains('dark');
+          html.classList.toggle('dark',${mode==='dark'});
+          const css=el=>doc.defaultView.getComputedStyle(el),n=str=>parseFloat(str);
+          const preference=[...doc.querySelectorAll('[data-card="preferences"] .qxframe9a7c2-field-content')];
+          const notifications=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-field-content')];
+          const host=doc.createElement('div');
+          host.style.cssText='width:250px;position:absolute;left:0;top:0;visibility:hidden';
+          host.innerHTML='<div class="qxframe9a7c2-item"><div class="qxframe9a7c2-item-content"><div class="qxframe9a7c2-item-title">A very long name of an individual item that should be truncated</div><p class="qxframe9a7c2-item-desc">Long description text that must be constrained across enough words to span several additional lines when natural wrapping would otherwise exceed two lines in this narrow fixture.</p></div></div>';
+          doc.body.append(host);
+          const item=host.querySelector('.qxframe9a7c2-item');
+          const title=host.querySelector('.qxframe9a7c2-item-title');
+          const desc=host.querySelector('.qxframe9a7c2-item-desc');
+          const out={p:preference.map(el=>n(css(el).rowGap)),
+            n:notifications.map(el=>n(css(el).rowGap)),
+            itemWidth:n(css(item).width),hostWidth:host.getBoundingClientRect().width,
+            titleClamp:css(title).webkitLineClamp,descClamp:css(desc).webkitLineClamp,
+            descH:desc.getBoundingClientRect().height,descLine:n(css(desc).lineHeight)};
+          host.remove();html.classList.toggle('dark',prev);return out;
+        })()`);
+        assert.equal(actual.p.length,2,style+'/'+mode+' Preferences FieldContent slots');
+        assert.equal(actual.n.length,5,style+'/'+mode+' Notification FieldContent slots');
+        for(const gap of [...actual.p,...actual.n])
+          assert.ok(Math.abs(gap-expectedGap)<.5,style+'/'+mode+' FieldContent gap '+gap);
+        assert.ok(Math.abs(actual.itemWidth-actual.hostWidth)<.5,style+'/'+mode+' full-width Item');
+        assert.equal(actual.titleClamp,'1',style+'/'+mode+' title clamp');
+        assert.equal(actual.descClamp,'2',style+'/'+mode+' description clamp');
+        assert.ok(actual.descH<=actual.descLine*2+.5,style+'/'+mode+' description max two lines');
+      }
+    }
+  });
+
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
