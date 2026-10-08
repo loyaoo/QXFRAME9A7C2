@@ -19,24 +19,23 @@
 
 ## CURRENT
 
-Task: CREATEAPP-V3-S3 — Preview 01 shadcn geometry and shared statics.
-Status: IN PROGRESS, draft PR #265 (`redesign/create`), do not merge before owner acceptance.
-Engineering estimate: overall CREATEAPP-V3 56%, stage 3 / S3 28% (provisional until browser/CI verified). Stages 0–2 merged; Controller 40/40 accepted and not touched.
+Task: CREATEAPP-V3-S3 — Preview 01 geometry parity to pinned shadcn reference.
+Status: IN PROGRESS, draft PR #265 on `redesign/create`; retain Draft until owner acceptance. Prior stages 0–2 merged; runtime Controller 40/40 accepted, do not redo.
 
-2026-10-08 owner-reported defects batch:
-- `.is-square` previously reset corner radius despite meaning equal dimensions; removed that reset in shared button theme rules.
-- Radio dot `::before` now follows `theme-radius-radio`; global explicit radius=none propagates through follow-style rounded categories while explicit category shape remains authoritative.
-- Luma switch thumb now horizontal capsule via `switch-thumb-extra` theme token + width/height separated consumer and track offset; native SelectGroup switch follows the same scheme.
-- InputGroup CSS now distinguishes borderless interior addon from separately bordered prefix/suffix and provides start/end connected radius clipping, retaining old control value/state semantics.
-- Replaced duplicated preview `create-grid/col/pair` and `pv-row/stack/field-group/check-field/swatch-cell/separator/item/field/label/kbd/skeleton/spinner/progress` markup/styles with QX Flex/Stack, Divider, Item, FormField, Kbd, Skeleton, Spinner, Progress. The shadcn fixed-width canvas geometry remains app-private.
-- New static and browser tests; QA report updated. Runtime qxframe.js unchanged. **Old browser compatibility not required** under v3.
-- CI ratchet initially failed because of five public layout-gap modifier declarations and two duplicate FormLabel font owners; corrected root cause without relaxing baseline.
-- Fixed resolved compiler model to preserve explicit category shape choices; otherwise radius:none would override them.
-- Previous Empty migration and shared Card work remain intact.
+Verified prior head `64d5655167fb1c237b8d8b68f226fc0ed9eeab92`: QXFRAME CI release/windows-tools passed (run 37735827160); CSS Schema Acceptance passed (run 37735827236). This supersedes the earlier stale "CI pending" entry.
 
-Validation: on this batch, GitHub QXFRAME CI first failed in verify:theme-tokens with two ratchet increases; committed targeted fixes. Latest GH CI and browser checks are **pending/not yet accepted**. Do not label card pixel parity or geometry fully passed. Prior 410 height diagnostics are still open.
+2026-10-08 current task batch: source-locked Empty geometry across all eight styles, both modes. Previously `empty.css` fixed 32px media, 14px title and 16px padding, which only matched part of Nova and diverged from Vega/Maia/Luma/Sera/Rhea. The pinned 8-style `tools/qa/spec.json` explicitly separates compact 24px inset/32px media/14px title and spacious 48px inset/40px media/18px title. Root and icon media radii also vary with radius-allocation policy.
 
-NEXT EXACT STEPS: confirm latest CI (especially `verify:create-app`, `verify:theme-tokens`, `verify:create-app-browser`); fix failures without changing ratchet baselines. Mixed InputGroup uses `.qxframe9a7c2-form-input-group-field` to separate bordered external prefix/suffix from the single bordered inner field; QX FormInputGroup is now a theme control-size owner. Progress has reusable `.is-full`. Then compare Preview 01 geometry against pinned shadcn reference and continue semantic `pv-*` elimination. Keep PR #265 Draft until stage complete.
+Implemented on `redesign/create`:
+- Registered only three new semantic Theme inputs: `empty-inset`, `radius-empty`, `radius-empty-media`; default Nova theme output updated.
+- Compiler determines two Empty density tiers from the existing padding axis, and root/media radius from existing radius allocation + global radius + container shape. No style-specific CSS selectors.
+- Shared `src/styles/components/empty.css` consumes these inputs, derives title/media/icon dimensions and source-matched description font/line-height from theme typography. Preserves legacy Empty structure and all authored preview examples.
+- Static `verify-create-app.mjs` checks 8 pinned styles; browser `verify-create-app-browser.mjs` measures 8 styles × light/dark for 10 computed geometry properties at 0.5px tolerance.
+- QA evidence documented in `tools/qa/reports/stage-3/README.md`.
+
+Progress engineering estimates: overall CREATEAPP-V3 **56%**, Stage 3 / Task S3 **30%** pending CI and additional Card audits. Earlier 624/624 shared Card geometry and 528/528 first-Card tracked properties remain accepted only for those properties; previously logged 410 height differences are unresolved until rerun.
+
+Next exact step: check latest PR #265 CI for new Empty static/16-mode browser checks, repair failures without changing ratchet; then regenerate pinned reference comparison for Empty-bearing first Cards and continue Item/Field/list/form geometry, including nested Card coverage. Keep `qxframe.js` unchanged, keep stage PR Draft, old browser compatibility is not a blocker under v3.
 
 
 ### Owner decisions (2026-10-07) — frozen
