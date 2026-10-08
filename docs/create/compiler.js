@@ -363,6 +363,11 @@ export function themeTokens(resolved) {
   root['accordion-padding'] = rem(editorial ? 1
     : ext.typography === 'compact' && ext.density === 'dense' ? 0.5
     : PADDING[ext.padding] <= 1 ? 0.625 : 1);
+  // Pinned SidebarMenu gaps: control look distinguishes 4/0/1/2px tiers.
+  // The group block inset follows the existing dense vs normal control axis.
+  const sidebarMenuGap = { 'solid-shadow': .25, solid: 0, tinted: .25, transparent: .0625, 'light-solid': .125, ghost: .125 };
+  root['sidebar-menu-gap'] = rem(sidebarMenuGap[ext.controlLook]);
+  root['sidebar-group-padding-block'] = rem(ext.density === 'dense' ? .25 : .5);
   root['card-gap'] = rem(PADDING[ext.padding]);
   root['card-meta-gap'] = rem(looks.metaGap);
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
