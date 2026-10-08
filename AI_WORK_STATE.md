@@ -36,7 +36,7 @@ Engineering estimate: overall CREATEAPP-V3 56%, stage 3 / S3 28% (provisional un
 
 Validation: on this batch, GitHub QXFRAME CI first failed in verify:theme-tokens with two ratchet increases; committed targeted fixes. Latest GH CI and browser checks are **pending/not yet accepted**. Do not label card pixel parity or geometry fully passed. Prior 410 height diagnostics are still open.
 
-NEXT EXACT STEPS: confirm latest CI (especially `verify:create-app`, `verify:theme-tokens`, `verify:create-app-browser`); fix any failures without adjusting ratchet baselines, then compare Preview 01 card geometry and remove further redundant `pv-*` only where QX equivalent exists. Align InputGroup addon/prefix/suffix and Luma switch in browser. Keep PR #265 as draft until phase completion.
+NEXT EXACT STEPS: confirm latest CI (especially `verify:create-app`, `verify:theme-tokens`, `verify:create-app-browser`); fix failures without changing ratchet baselines. Mixed InputGroup uses `.qxframe9a7c2-form-input-group-field` to separate bordered external prefix/suffix from the single bordered inner field; QX FormInputGroup is now a theme control-size owner. Progress has reusable `.is-full`. Then compare Preview 01 geometry against pinned shadcn reference and continue semantic `pv-*` elimination. Keep PR #265 Draft until stage complete.
 
 
 ### Owner decisions (2026-10-07) — frozen
