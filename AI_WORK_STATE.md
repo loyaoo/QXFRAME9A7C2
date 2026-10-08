@@ -19,72 +19,64 @@
 
 ## CURRENT
 
-Task: `CREATEAPP-V3-S3` — source-locked Preview 01 geometry parity.
-Branch `redesign/create`; PR #265 is **Draft**, not merged.
-Stages 0–2 merged; Controller runtime 40/40 accepted,
-not reopened; production qxframe.js unchanged.
-Reference shadcn-ui/ui commit
+Task `CREATEAPP-V3-S3` — Preview 01 source-locked geometry parity.
+Branch `redesign/create`, Draft PR #265. Stages 0–2 merged;
+runtime Controller 40/40 accepted and frozen; qxframe.js unchanged,
+no legacy browser work. Pinned shadcn commit
 `295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
 
-LATEST GREEN CODE HEAD `c372bb81ddec9a03a529b0a048177f4008c34f67`:
-QXFRAME CI `37764637779` release+windows success;
-CSS Schema Acceptance `37764637828` success,
-21 createApp browser tests passed, including source FAQ line
-height and Tabs height in eight styles × two modes.
+LATEST COMPLETED GREEN CODE CHECKPOINT:
+HEAD `8398f8ff5cea9517140db5599c76b6b1467bd58c`,
+QXFRAME CI run `37765996385` release and windows-tools success,
+CSS Schema Acceptance run `37765996393` success; 21 createApp
+Chromium browser checks passed.
+528 first-Card height records: **316/528** exceed 0.5px,
+down from 410/528 initial. Relative to original results,
+274 improved and 124 worsened. This is height-only QA,
+**not full Card visual or DOM parity**. Nova biggest
+residual Payments +42px, Receiving Method +24.75px,
+Payout Threshold -22px, Upcoming Payments -18.5px;
+FAQ +14px after prior fixes. Nova Kitchen Island 337/337
+and Sidebar Nav 377/377 fully match reference heights.
+Sera source `FieldSeparator -my-4 style-sera:hidden`
+now passes conditional visibility tests (8 styles ×
+2 modes), using generic editorial Theme role rather
+than style-specific CSS. Total mismatch count unchanged.
 
-Tracked 528 first Card heights: **316/528** >0.5px,
-same count as previous checkpoint, down from initial 410.
-272 improved and 126 worsened vs original source. This
-is height-only diagnosis, not complete visual/DOM parity.
-Nova FAQ now **389px vs ref375px (+14px)**, down from
-400px (+25px) after fixing 14/20 `text-sm` line height and
-removing 6px extra segmented Tabs rail height.
-Nova Kitchen 337/337 and Sidebar Nav 377/377 remain exact;
-Payments 473 vs431 (+42) and Receiving Method +24.75
-remain unresolved; extensive other styles still differ.
-
-2026-10-08 CURRENT BATCH pending new HEAD CI:
-- FAQ source tabs list heights locked to 32/36/40px
-  via public Tabs local `--qxframe9a7c2-tabs-height`,
-  using existing density slot and 32px minimum.
-  FAQ Accordion consumes existing `theme-text-leading`
-  instead of fixed 1.5; all 16 mode browser checks passed
-  at the green checkpoint above.
-- Source `preferences.tsx` explicitly hides two
-  `FieldSeparator -my-4` instances in Sera. Registered
-  **one generic Theme role** `field-separator-display`:
-  editorial text style default → none, regular → block.
-  Existing local `.pv-divider-bleed` consumes this with
-  `--qxframe9a7c2-field-separator-display` author override
-  precedence. Generic 1px Divider untouched.
-- Added static eight-style expected display checks and
-  browser eight styles × light/dark computed display,
-  visible 20px/hidden 0px geometry, public override tests.
-  No `[data-create-style]` selectors, no Controller/JS
-  implementation changes and no ratchet weakening.
-- Added the `[preview-01-structure-nova]` per-row browser
-  probe for source Payment text width / line count and
-  FAQ open/collapsed text metrics; results confirm four
-  Payment descriptions take two 21px lines at 268.86px
-  content width. The original source Card is 42px shorter;
-  **do not alter font size/padding to game baseline**
-  before confirming font metric parity.
-- See `tools/qa/reports/stage-3/README.md`.
+NEW IMPLEMENTATION BATCH (latest CI pending):
+- Read pinned `blocks/preview-02/cards/roller-shades.tsx`.
+  Its inline Slider has thumb-driven height, but QX Preview
+  still used default control height. Reused existing public
+  Slider `--qxframe9a7c2-slider-height` local variable,
+  setting it only on the Roller Shades preview instance to
+  `var(--qxframe9a7c2-theme-slider-thumb)`. The same
+  technique already aligned Kitchen Island exact height.
+- Added static source check and merged Roller computed
+  height vs thumb check into existing eight-style Kitchen
+  Chromium geometry gate. Does not change shared Slider
+  defaults or runtime JS. No new theme inputs.
+- New source measurements were added in previous batch:
+  each Payment description is two lines of 21px and
+  content 268.86px wide. Source Card is 42px shorter.
+  Do not arbitrarily alter typography/width to achieve
+  the desired height without confirmed source comparison.
+- Detailed evidence and QA: `tools/qa/reports/stage-3/README.md`.
 
 Engineering estimate overall CREATEAPP-V3 **61%**,
-Stage 3 / Task CREATEAPP-V3-S3 **51%** (provisional,
-subject to Sera CI). Accepted earlier 624/624 shared
-Card geometry subset and Controller 40/40 are frozen.
-Whole Preview 01, individual nested Cards, Item xs/sm,
-full text/DOM visual parity and Stage 4/5 are open.
+Stage3/Task **52%** (provisional). Earlier 624/624
+shared Card subset and frozen 40/40 Controller are done.
+Nested Cards, comprehensive Preview01/02 style parity,
+hundreds of >0.5px height mismatches and Stages4/5 remain open.
 
-NEXT EXACT STEP: inspect newest PR #265 Actions; fix
-any failed static/browser assertion without relaxing
-gates; read updated 528 source Card height report and
-Sera Preferences outcomes; update checkpoint with GREEN
-evidence. Continue source-verified Payment font metrics
-and remaining FAQ +14 rather than inventing heights.
-Keep Draft and no main merge until owner approval.
+NEXT EXACT STEP:
+1. Inspect HEAD PR #265 latest Actions, fix any failed
+   test or generated file discrepancy without weakening
+   Source/Schema ratchets. Obtain new 528-record summary;
+   confirm Roller Shades height before claiming improvement.
+2. Continue source-backed Payments +42px, FAQ +14px,
+   Receiving Method +24.75px. Compare actual text glyph
+   widths and line wraps; do not set fixed Card heights.
+3. Update state/QA/PR, keep PR Draft and do not merge main.
 
 
 ### Owner decisions (2026-10-07) — frozen
