@@ -212,3 +212,19 @@ that report predates this batch and must be rerun; no total-height parity
 claimed. Item `.is-sm`/`.is-xs` remain a separate source-precision task.
 Nested Cards and full FieldGroup/content equality are not yet accepted.
 
+
+
+### First-Card height refresh diagnostic (new Actions artifact)
+
+`tools/verify-create-app-browser.mjs` now measures Preview 01's **33 first
+Cards × 8 styles × 2 modes = 528 records** against the saved source-locked
+reference side of `preview-01/report.json`. It uses the same system-ui forced
+font method as `tools/qa/preview-01-audit.mjs`, and writes
+`preview-01/current-report.json` during Actions for upload in the QA artifact.
+
+The report includes old/reference/current heights and widths, current number
+of cases beyond 0.5px, improved/worsened cases and the largest Nova defects.
+It is **diagnostic only**. All 528 reference cards must be found, but the
+height mismatches intentionally do not cause a green gate or false parity
+claim. The pinned original reference is never modified by this diagnostic.
+Nested Cards remain uncovered by this first-Card audit.
