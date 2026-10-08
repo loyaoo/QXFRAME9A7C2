@@ -159,17 +159,17 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 
 
 /* Shared static layout: all visual density is expressed by the normal QX style layer. */
-.qxframe9a7c2-flex{display:flex;align-items:center;gap:var(--qxframe9a7c2-layout-gap,0.5rem);min-width:0}
+.qxframe9a7c2-flex{display:flex;align-items:center;gap:var(--qxframe9a7c2-layout-gap,var(--_qxframe9a7c2-layout-gap,0.5rem));min-width:0}
 .qxframe9a7c2-flex.is-start{align-items:flex-start}
 .qxframe9a7c2-flex.is-between{justify-content:space-between}
 .qxframe9a7c2-flex.is-baseline{align-items:baseline}
 .qxframe9a7c2-flex.is-wrap{flex-wrap:wrap}
-.qxframe9a7c2-stack{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-layout-gap,0.5rem);min-width:0}
-.qxframe9a7c2-flex.is-gap-0,.qxframe9a7c2-stack.is-gap-0{--qxframe9a7c2-layout-gap:0.125rem}
-.qxframe9a7c2-flex.is-gap-1,.qxframe9a7c2-stack.is-gap-1{--qxframe9a7c2-layout-gap:0.25rem}
-.qxframe9a7c2-flex.is-gap-3,.qxframe9a7c2-stack.is-gap-3{--qxframe9a7c2-layout-gap:0.75rem}
-.qxframe9a7c2-flex.is-gap-4,.qxframe9a7c2-stack.is-gap-4{--qxframe9a7c2-layout-gap:1rem}
-.qxframe9a7c2-flex.is-gap-6,.qxframe9a7c2-stack.is-gap-6{--qxframe9a7c2-layout-gap:1.5rem}
+.qxframe9a7c2-stack{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-layout-gap,var(--_qxframe9a7c2-layout-gap,0.5rem));min-width:0}
+.qxframe9a7c2-flex.is-gap-0,.qxframe9a7c2-stack.is-gap-0{--_qxframe9a7c2-layout-gap:0.125rem}
+.qxframe9a7c2-flex.is-gap-1,.qxframe9a7c2-stack.is-gap-1{--_qxframe9a7c2-layout-gap:0.25rem}
+.qxframe9a7c2-flex.is-gap-3,.qxframe9a7c2-stack.is-gap-3{--_qxframe9a7c2-layout-gap:0.75rem}
+.qxframe9a7c2-flex.is-gap-4,.qxframe9a7c2-stack.is-gap-4{--_qxframe9a7c2-layout-gap:1rem}
+.qxframe9a7c2-flex.is-gap-6,.qxframe9a7c2-stack.is-gap-6{--_qxframe9a7c2-layout-gap:1.5rem}
 .qxframe9a7c2-field-group{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-field-group-gap,1.75rem);min-width:0}
 .qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer}
 .qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}
