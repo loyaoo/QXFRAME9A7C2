@@ -605,6 +605,35 @@ try {
     }
   });
 
+  await step('FieldContent label line and FAQ trigger gap follow source in 16 themes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ and Notifications');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','FAQ/Field '+style);
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,prev=root.classList.contains('dark');
+          root.classList.toggle('dark',${mode==='dark'});
+          const css=e=>doc.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+          const labels=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-field-content>.qxframe9a7c2-form-label')];
+          const faq=doc.querySelector('[data-card="faq"]'),summary=faq.querySelector('.pv-accordion-item>summary');
+          const ans={labelLines:labels.map(e=>px(css(e).lineHeight)),labelWeights:labels.map(e=>Number(css(e).fontWeight)),
+            expectedLine:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-label-line-height'))*16,
+            actualGap:px(css(summary).columnGap),faqHeight:faq.getBoundingClientRect().height,
+            notificationHeight:doc.querySelector('[data-card="notification-settings"]').getBoundingClientRect().height};
+          root.classList.toggle('dark',prev);return ans;
+        })()`);
+        assert.equal(actual.labelLines.length,5,style+'/'+mode+' field labels');
+        assert.ok(Math.abs(actual.actualGap)<=.5,style+'/'+mode+' no invented FAQ gap');
+        for(const line of actual.labelLines)assert.ok(Math.abs(line-actual.expectedLine)<=.5,
+          style+'/'+mode+' FieldContent label line consumes role: '+line+'/'+actual.expectedLine);
+        assert.ok(actual.labelWeights.every(Number.isFinite),style+'/'+mode+' valid Label font weights');
+      }
+    }
+  });
+
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
