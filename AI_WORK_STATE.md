@@ -20,12 +20,16 @@
 ## CURRENT
 
 Task: CREATEAPP-V3-S3 — Preview 01 (shadcn preview-02).
-Status: IN PROGRESS on `redesign/create`, based on main `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
-Reconciled evidence: PR #264 merged; main Actions run `37608238589` succeeded. No open PR at resume. Remote redesign/create is 5f9e786 (post-merge checkpoint only); preserve it as a commit parent along with current main.
-Engineering estimate: program 53%, stage 3 / task S3 15%. Shared Card repair is implemented; per-card acceptance is incomplete.
-Next exact step: publish stage-3 draft PR with the completed local evidence, inspect CI, then align Preview 01 internal form/list/empty components within that PR. Do not merge until the stage is complete.
+Status: IN PROGRESS, draft PR #265 at https://github.com/loyaoo/QXFRAME9A7C2/pull/265 on `redesign/create` (base main `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`). Do not merge before stage-3 acceptance.
+Engineering estimate: overall createApp program **54%**, stage 3 / task S3 **22%**. Earlier 624/624 Card geometry and 528/528 first-Card properties remain accepted only for the recorded properties; 410 height diagnostics are not closed.
 
-Current edits: shared Card title/description/gaps/partitions, border geometry and public overrides; preview box sizing and QR top inset; portable reference renderer with 159 source hashes and locked tool dependencies. Runtime source is unchanged. Browser Card geometry/state suite: 624 checks passed with enforced system font. Preview inventory: 33 examples × 16 themes, first Card per example only; nested cards and full height/section parity remain pending. Static verify chain completed with npm 10 after regenerating a CRLF-sensitive docs block (no content diff) and updating the Card outer-ring assertion. createApp browser 9/9 and theme browser 8 styles passed. CSS/token ratchet passed; duplicate-owner 141→136. Preview subset 528/528 matched (radius/title size/title offsets), but 410 height differences remain diagnostic, not accepted. Earlier optional Modal/Drawer timing check failed on Windows Chrome; runtime baseline investigation remains needed if reproduced in CI.
+2026-10-08 current batch: promote Empty composition into `src/styles/components/empty.css` (preserve legacy Empty), remove preview-specific `.pv-empty*` geometry, migrate nine Preview 01/02 Empty examples to shared QX slots with media outside the header, and lock nominal Nova geometry (32px icon media / 14px title / 16px root gap). Added `verify:create-app` structural/ownership gate and `verify:create-app-browser` computed-geometry gate. QA report updated at `tools/qa/reports/stage-3/README.md`. No runtime JavaScript source changes.
+
+Checks on user-supplied R2 snapshot: static createApp gate 15/15, CSS source authority and concat, CSS constraints and theme-token ratchet pass. Browser smoke timed out before createApp boot in this local Linux container, **not passed**; PR Actions remain authoritative. A current remote PR CI result must be checked after new commits. Older browser fallback is not a blocker per v3 §2 (Chrome/Edge 111+, Safari 16.2+, Firefox 113+).
+
+Next exact step: inspect PR #265 CI including new Empty browser step, fix any failure; then measure all four Preview 01 Empty cards against the pinned shadcn reference in both themes, reduce genuine height/section discrepancies, and continue Item/Field/list/form composition. Recheck affected canonical docs and demo surfaces. Do not redo 40/40 Controller migration.
+
+Previous batch: shared Card title/description/gaps/partitions, border geometry and public overrides; preview box sizing and QR inset; portable reference renderer with 159 source hashes and locked QA dependencies. Historic Windows Modal/Drawer lease timing failure is outside the current CSS patch unless CI reproduces it.
 
 ### Owner decisions (2026-10-07) — frozen
 
