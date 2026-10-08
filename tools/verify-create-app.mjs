@@ -152,6 +152,20 @@ check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry
   }
 });
 
+check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources', () => {
+  const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  assert.match(item,/\.qxframe9a7c2-item-media\.is-icon\{\s*width:1rem;height:1rem;border:0;border-radius:0;background:transparent\}/,
+    'ItemMedia icon must be unboxed 16px; EmptyMedia retains its own boxed 32/40px recipe');
+  assert.match(item,/\.qxframe9a7c2-item-group\{[^}]*gap:1rem/,'default group gap 16px');
+  assert.match(item,/\.qxframe9a7c2-item-group:has\(>\.qxframe9a7c2-item\.is-sm\)\{gap:\.625rem\}/,'sm group gap 10px');
+  assert.match(item,/\.qxframe9a7c2-item-group:has\(>\.qxframe9a7c2-item\.is-xs\)\{gap:\.5rem\}/,'xs group gap 8px');
+  const html=read('preview-01.html');
+  const kitchen=html.slice(html.indexOf('data-card="kitchen-island"'),html.indexOf('<!-- @end kitchen-island -->'));
+  assert.equal((kitchen.match(/class="qxframe9a7c2-item-media is-icon"/g)||[]).length,4);
+  assert.doesNotMatch(kitchen,/qxframe9a7c2-item-media"><span class="qxframe9a7c2-item-media is-icon"/,
+    'Kitchen previously rendered a duplicated media wrapper in each slider row');
+});
+
 check('QX shape, Luma switch and shared layout contracts', () => {
   const file = p => fs.readFileSync(path.join(root, p), 'utf8');
   const defaultCss = model.compileTheme(model.defaultConfig()).body;
