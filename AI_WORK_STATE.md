@@ -19,6 +19,12 @@
 
 ## CURRENT
 
+SOURCE-FONT GEOMETRY INVESTIGATION (2026-10-08, Stage 3 continuing):
+- Pinned Windows Chrome reference source capture vs Linux Chromium implementation measurement uses different real fonts even when both declare `system-ui`. Historical Payments +42px should not trigger a CSS size hack.
+- Real browser source CSS Item fixture using the SAME CSS font in the SAME Linux Chromium now proves all 4 Nova Payments rows have identical source/QX geometry (87.25px each, 268.859px content, description 2×21px). CSS Schema run #37794980057 passed **29/29** createApp checks at code SHA `2f950ca8`.
+- The 528-row diagnostic remains 252 out of ±0.5px, unrebased, with explicit cross-platform-font warning in its summary. Source comparison is pinned to upstream `295a1f11` and directly verifies the shared Item contract; **no CSS or Controller change** in this batch.
+- Final code/documentation SHA is after the above check; verify both QXFRAME CI and CSS Schema Acceptance at the newest HEAD before treating this as a green checkpoint. PR #265 stays Draft.
+
 LATEST CONTINUATION — 2026-10-08 (PR #265 Draft, not merged):
 - User pruned historical branches: verified exact GitHub list is only `main`, `backup/main-before-pr265-2026-10-08`, and active `redesign/create`. Backup and `main` both remain at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`; never advance the backup ref.
 - Stage 3 continued at current source branch: FAQ General/Billing/Goals are now three genuinely independent question panels (3 questions each) copied from pinned shadcn `faq.tsx`; previously Tabs changed the active label but General content always remained visible.
