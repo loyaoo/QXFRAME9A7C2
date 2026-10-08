@@ -96,13 +96,6 @@ body.create-preview-body {
 .pv-item-media.is-icon { width: 2rem; height: 2rem; border: 1px solid var(--qxframe9a7c2-theme-border); border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background: var(--qxframe9a7c2-theme-muted); }
 .pv-item-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 0.5rem; }
 
-.pv-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 1rem; text-align: center; }
-.pv-empty-header { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; max-width: 24rem; }
-.pv-empty-media { display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; margin-bottom: 0.5rem; border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }
-.pv-empty-media .pv-icon { width: 1.5rem; height: 1.5rem; }
-.pv-empty-title { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; }
-.pv-empty-desc { margin: 0; color: var(--qxframe9a7c2-theme-muted-foreground); font-size: 0.875rem; line-height: 1.5; }
-.pv-empty-content { display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 100%; max-width: 24rem; }
 
 .pv-field { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
 .pv-field.is-horizontal { flex-direction: row; align-items: center; justify-content: space-between; gap: 0.75rem; }
@@ -304,7 +297,6 @@ body.create-preview-body {
 .pv-feature { color: var(--qxframe9a7c2-theme-muted-foreground); font-size: 0.875rem; line-height: 1.625; }
 .pv-feature strong { color: var(--qxframe9a7c2-theme-foreground); font-weight: 500; }
 .pv-alert.qxframe9a7c2-alert-root { border: 1px solid var(--qxframe9a7c2-theme-border); background: var(--qxframe9a7c2-theme-card); color: var(--qxframe9a7c2-theme-card-foreground); }
-.pv-empty-bordered { border: 1px dashed var(--qxframe9a7c2-theme-border); border-radius: var(--qxframe9a7c2-theme-radius-card, 0.75rem); }
 .pv-cols-4 { display: flex; gap: 0.5rem; }
 .pv-cols-4 > * { flex: 1 1 0; }
 .pv-cols-7 { display: flex; gap: 0.375rem; }
