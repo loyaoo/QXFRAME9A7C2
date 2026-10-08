@@ -470,7 +470,11 @@ try {
         const card=doc.querySelector('[data-card="kitchen-island"]');
         const group=card.querySelector('.qxframe9a7c2-item-group');
         const css=e=>doc.defaultView.getComputedStyle(e),n=v=>parseFloat(v);
-        return { gap:n(css(group).rowGap),
+        const gap=n(css(group).rowGap);
+        group.style.setProperty('--qxframe9a7c2-item-group-gap','1.75rem');
+        const overriddenGap=n(css(group).rowGap);
+        group.style.removeProperty('--qxframe9a7c2-item-group-gap');
+        return { gap,overriddenGap,
           media:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
             const icon=el.querySelector('.qxframe9a7c2-item-media.is-icon');
             return {count:el.querySelectorAll('.qxframe9a7c2-item-media').length,
@@ -480,6 +484,7 @@ try {
       })()`);
       assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');
       assert.ok(Math.abs(actual.gap-10)<.5,style+' compact ItemGroup gap');
+      assert.ok(Math.abs(actual.overriddenGap-28)<.5,style+' explicit ItemGroup gap wins');
       for(const media of actual.media){
         assert.equal(media.count,1,style+' must not duplicate ItemMedia DOM');
         assert.equal(media.width,16,style+' unboxed ItemMedia width');
