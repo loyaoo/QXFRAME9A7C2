@@ -543,6 +543,31 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
   assert.match(privateCss,/\.pv-nav-button:hover\s*\{\s*background:[^;]+;\s*color:\s*var\(--qxframe9a7c2-theme-accent-foreground\)/);
 });
 
+
+check('audit #19: both preview tables use shared framework Table and pinned density roles', () => {
+  const table = fs.readFileSync(path.join(root, 'src/styles/components/table.css'), 'utf8');
+  const privateCss = read('preview.css');
+  assert.doesNotMatch(privateCss, /\.pv-table\b/, 'no private Table renderer may survive');
+  for (const page of ['preview-01.html', 'preview-02.html']) {
+    const html = read(page);
+    assert.match(html, /class="qxframe9a7c2-table is-embedded is-hover"/);
+    assert.doesNotMatch(html, /class="pv-table"/);
+  }
+  assert.match(table, /\.qxframe9a7c2-table\.is-embedded\s*\{/);
+  assert.match(table, /var\(--qxframe9a7c2-theme-table-cell-inset\)/);
+  assert.match(table, /var\(--qxframe9a7c2-theme-table-heading-foreground\)/);
+  // Source: shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c
+  const expected = {vega:8,nova:8,maia:12,lyra:8,mira:8,luma:12,sera:12,rhea:8};
+  for (const [style, px] of Object.entries(expected)) {
+    const body = model.compileTheme(model.normalizeConfig({style})).body;
+    const inset = body.match(/--qxframe9a7c2-theme-table-cell-inset:\s*([^;]+);/)?.[1];
+    assert.equal(parseFloat(inset)*16,px,style+' embedded Table cell inset');
+    const color = body.match(/--qxframe9a7c2-theme-table-heading-foreground:\s*([^;]+);/)?.[1];
+    const source = body.match(new RegExp('--qxframe9a7c2-theme-' +(style === 'sera'?'muted-foreground':'foreground')+':\\s*([^;]+);'))?.[1];
+    assert.equal(color,source,style+' semantic Table header text');
+  }
+});
+
 check('every option of every extension axis changes a theme token that qxframe.css or the preview consumes', () => {
   const dist = path.join(root, 'dist/qxframe9a7c2.css');
   const consumers = (fs.existsSync(dist) ? fs.readFileSync(dist, 'utf8') : '') + read('preview.css');
