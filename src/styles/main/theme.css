@@ -95,6 +95,7 @@
   --qxframe9a7c2-theme-radio-fill: 100%;
   --qxframe9a7c2-theme-border-width: 1px;
   --qxframe9a7c2-theme-card-padding: 1rem;
+  --qxframe9a7c2-theme-empty-inset: 1.5rem;
   --qxframe9a7c2-theme-card-gap: 1rem;
   --qxframe9a7c2-theme-card-meta-gap: 0.25rem;
   --qxframe9a7c2-theme-card-title-delta: 0.125rem;
@@ -120,6 +121,8 @@
   --qxframe9a7c2-theme-radius-track: 62.5rem;
   --qxframe9a7c2-theme-radius-avatar: 62.5rem;
   --qxframe9a7c2-theme-radius-card: 0.875rem;
+  --qxframe9a7c2-theme-radius-empty: 0.875rem;
+  --qxframe9a7c2-theme-radius-empty-media: 0.625rem;
   --qxframe9a7c2-theme-radius-popup: 0.625rem;
   --qxframe9a7c2-theme-radius-dialog: 0.875rem;
   --qxframe9a7c2-theme-switch-width: 2rem;
