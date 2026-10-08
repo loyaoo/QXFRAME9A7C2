@@ -292,6 +292,8 @@ export function themeTokens(resolved) {
   if (style === 'nova' || style === 'lyra') look('field-disabled', 'input/50', 'input/80');
   else look('field-disabled', input.bg[0], input.bg[1]);
   root['field-sides'] = input.sides + '%';
+  // Static embedded Table: header is subdued only for editorial styles.
+  look('table-heading-foreground', ext.textStyle === 'editorial' ? 'muted-foreground' : 'foreground');
 
   // Choice, switch, slider (style looks).
   look('choice', looks.choice[0], looks.choice[1]);
@@ -350,6 +352,11 @@ export function themeTokens(resolved) {
   const emptyCompact = PADDING[ext.padding] <= 1;
   root['empty-icon-size'] = rem(emptyCompact ? 1 : (style === 'vega' || style === 'maia' ? 1.5 : 1.25));
   root['empty-content-gap'] = rem(emptyCompact ? (ext.density === 'dense' ? .5 : .625) : 1);
+  // Pinned shadcn Table: compact 8px vs spacious 12px cell padding.
+  // Existing padding/radius allocation axes determine the tier; no style class.
+  const tableSpacious = PADDING[ext.padding] >= 2 ||
+    (PADDING[ext.padding] >= 1.5 && ['rounded', 'soft'].includes(ext.radiusAlloc));
+  root['table-cell-inset'] = rem(tableSpacious ? .75 : .5);
   // The shadcn Item/Field recipes share the existing container and typography
   // axes; use five semantic anchors rather than per-style CSS or five size slots.
   const itemSpace = PADDING[ext.padding] <= 1 ? 0.625 : 0.875;
