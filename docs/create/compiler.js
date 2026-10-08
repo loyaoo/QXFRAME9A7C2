@@ -361,6 +361,9 @@ export function themeTokens(resolved) {
     alloc[key] = radiusFor(step, basePx, ['card', 'dialog'].includes(key) && ext.radiusAlloc === 'smooth' ? CONTAINER_CAP_PX : 0);
   });
   const controlShape = ext.controlShape;
+  // The global zero-radius shortcut wins over style FOLLOW defaults; explicit
+  // per-category shape selections remain authoritative (v3 §4.5).
+  const roundShape = key => basePx === 0 && resolved.explicit?.[key] === undefined ? 'radius' : ext[key];
   root['radius-button'] = shapeRadius(ext.shapeButton, alloc.button, controlShape);
   root['radius-field'] = shapeRadius(ext.shapeInput, alloc.field, controlShape);
   root['radius-select'] = shapeRadius(ext.shapeSelect, alloc.field, controlShape);
@@ -368,11 +371,11 @@ export function themeTokens(resolved) {
   root['radius-tabs'] = shapeRadius(ext.shapeTabs, alloc.tabs, controlShape);
   root['radius-item'] = alloc.item;
   root['radius-choice'] = alloc.choice;
-  root['radius-radio'] = shapeRadius(ext.shapeRadio, alloc.button, controlShape);
-  root['radius-switch'] = shapeRadius(ext.shapeSwitch, alloc.switch, controlShape);
-  root['radius-thumb'] = shapeRadius(ext.shapeThumb, alloc.thumb, controlShape);
-  root['radius-track'] = ext.shapeThumb === 'circle' ? PILL : root['radius-thumb'];
-  root['radius-avatar'] = shapeRadius(ext.shapeAvatar, alloc.button, controlShape);
+  root['radius-radio'] = shapeRadius(roundShape('shapeRadio'), alloc.button, controlShape);
+  root['radius-switch'] = shapeRadius(roundShape('shapeSwitch'), alloc.switch, controlShape);
+  root['radius-thumb'] = shapeRadius(roundShape('shapeThumb'), alloc.thumb, controlShape);
+  root['radius-track'] = roundShape('shapeThumb') === 'circle' ? PILL : root['radius-thumb'];
+  root['radius-avatar'] = shapeRadius(roundShape('shapeAvatar'), alloc.button, controlShape);
   const container = ext.shapeContainer === 'square' ? () => '0' : value => value;
   root['radius-card'] = container(alloc.card);
   root['radius-popup'] = container(alloc.popup);
