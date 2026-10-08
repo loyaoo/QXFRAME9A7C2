@@ -184,6 +184,19 @@ check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources',
     'Kitchen previously rendered a duplicated media wrapper in each slider row');
 });
 
+check('Receiving Method radio choices use shared Field composition, not custom Cards', () => {
+  const html=read('preview-01.html');
+  const section=html.slice(html.indexOf('data-card="receiving-method"'),
+    html.indexOf('<!-- @end receiving-method -->'));
+  assert.equal((section.match(/class="qxframe9a7c2-check-field pv-choice-field"/g)||[]).length,2);
+  assert.equal((section.match(/class="qxframe9a7c2-field-content"/g)||[]).length,2);
+  assert.doesNotMatch(section,/pv-choice-card/,'no invented private Radio choice surface');
+  const css=read('preview.css');
+  assert.match(css,/\.pv-choice-field\s*\{\s*padding-block-end:\s*\.625rem;/,
+    'pinned Field horizontal option has only 10px bottom inset');
+  assert.doesNotMatch(css,/\.pv-choice-card(?:\s|\{|\:)/,'obsolete custom Card styling must be absent');
+});
+
 check('Payments Item flex basis and Kitchen Slider intrinsic footprint are source-aligned', () => {
   const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   const slider=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');
