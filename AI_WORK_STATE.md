@@ -19,55 +19,56 @@
 
 ## CURRENT
 
-Task `CREATEAPP-V3-S3`: Preview 01 visual source parity. Branch `redesign/create`,
-Draft PR #265, not merged. Stages 0–2 merged, all 40/40 runtime Controller
-migrations frozen. Do not redo qxframe.js or release legacy browser support.
+Active Task: CREATEAPP-V3-S3 Preview 01 geometry source parity.
+Branch `redesign/create`; Draft PR #265. Do not merge without owner
+acceptance. Earlier stages 0–2 are merged, runtime Controller 40/40
+accepted: do not re-audit or modify qxframe.js.
 
-Last **fully GREEN** HEAD `0786b8cf758477eba8da5f7d202fa14144cfc722`:
-QXFRAME CI `37741832685` (release + windows tools success),
-CSS Schema Acceptance `37741832686` (success).
-First-card diagnostic measures 528 style/mode/card records vs pinned
-shadcn reference: **358/528** with height diff >0.5px vs original
-410/528, 244 improved, 132 worsened. Current Nova top residuals
-Kitchen +51, FAQ +45, Payments +42, Sidebar Nav +36, Notifications +36.
-A component-subgeometry check passing does not mean full-Card acceptance.
+LAST VERIFIED GREEN HEAD: `8c14677538b6ed1512e9fa9d629e52e99d2aaf47`
+QXFRAME CI release/windows `37744243988` success, CSS Schema
+Acceptance `37744243987` success, 19 browser test steps passed.
+Measured first-Card heights 8 styles × light/dark × 33 cards:
+**362/528 >0.5px**, vs previous 358/528 and original 410/528;
+226 improved, 166 worsened against original. Nova Sidebar Nav
+is **exact 377px**, repaired by 0/1/2/4px source menu-gap
+recipe. Nova high residuals: Payments +109px, Kitchen +51px,
+FAQ +45px, Notification Settings +28px and Preferences -26px.
+This is QA diagnostic, NOT Stage 3 final Card parity.
 
-2026-10-08 latest **CURRENT CODE BATCH / CI pending**:
-- Inspected pinned `style-*.css` and upstream SidebarNav/Payments/
-  Notifications/Item source from commit `295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
-- Corrected preview Sidebar's 8-style menu gap values (4/0/4/0/1/2/2/2px)
-  with exactly TWO registered theme inputs `sidebar-menu-gap` and
-  `sidebar-group-padding-block`, derived from existing `controlLook`
-  and `density`. The groups' explicit `pb-1/pt-1` seams are 4px
-  irrespective of style. All calculations remain in Theme, no
-  `[data-create-style]` CSS branches. Nova expected to eliminate the
-  +36px Sidebar root height error, **not claimed until new report**.
-- Shared `.qxframe9a7c2-field-content` now uses one new role
-  `field-content-gap`, derived from the existing Field gap: 2px
-  (Nova/Lyra/Mira) or 4px (other five styles). Both Preferences (2)
-  and Notification Settings (5) consume the new QX structure. Public
-  per-instance override retains priority.
-- Shared static Item `width:100%`, `flex-wrap:wrap` and title/
-  description `-webkit-line-clamp:1/2` match upstream item.tsx,
-  without old-browser fallback. Unboxed 16px ItemMedia retained.
-- Added 8-style static checks, 8 style × light/dark actual Sidebar,
-  FieldContent and Item clamp browser tests; added a Nova per-subtree
-  height diagnostic for the top five cards in browser Actions.
-- QA details in `tools/qa/reports/stage-3/README.md`.
+CURRENT SOURCE-PROVEN FIX BATCH (pending new CI):
+- Browser subtree log `[preview-01-structure-nova]` measured Payments
+  first Item 139.25px (wrap bug): source `ItemContent` is Tailwind
+  `flex-1` zero-basis, but QX was `flex:1 1 auto`.
+  Shared `item-surface.css` now uses `flex:1 1 0`, retaining
+  source Item wrap/title clamp/description clamp and permitting
+  chevron to stay on the same row. Eight-style actual browser
+  tests check trailing chevrons and four row heights.
+- The Kitchen Slider row measured 54px, of which 32px belonged
+  to the runtime Slider root standard control height.
+  Shared Slider now supports optional per-instance inherited
+  `--qxframe9a7c2-slider-height` with its previous default
+  control-height fallback intact. Four Kitchen instances supply
+  `var(--qxframe9a7c2-theme-slider-thumb)` via local style,
+  matching pinned source's thumb-driven visual footprint.
+  Browser tests assert four rows' intrinsic height is max(title,
+  thumb) plus actual padding/border, across eight styles.
+- Static contracts added to `verify-create-app.mjs`, browser
+  contracts to `verify-create-app-browser.mjs`; numeric
+  source and limitations in `tools/qa/reports/stage-3/README.md`.
+- Runtime qxframe.js untouched, CSS ratchets/whitelists unchanged,
+  no style CSS selectors added.
 
-Estimate overall program **58%**, Stage 3 **40%** (engineering
-estimate, **not** final visual acceptance; latest CI pending).
-Existing 624/624 shared Card subset and Empty/Item default-md
-subset checks are not reopened. Nested Cards and hundreds of Card
-height gaps remain.
+Engineering progress estimate CREATEAPP-V3 overall **58%**,
+Stage 3 **42%** (pending current CI and new 528 diagnostic).
+Earlier 624/624 Card subset, Empty/Item/Field/Sidebar validated
+subgeometry are done: DO NOT redo. Hundreds of first-Card
+height differences and nested cards remain unaccepted.
 
-NEXT EXACT STEP: read latest PR HEAD and QXFRAME release/schema
-Actions. Repair any new failed gate without widening tolerance or
-ratchet. Extract `[preview-01-structure-nova]` and
-`[preview-01-first-card-diagnostic]` lines from release logs to
-identify actual Nova component-height contributors, then fix next
-large residual (Kitchen, FAQ, Payments, Notifications), regenerate
-diagnostics and checkpoint. Preserve stage PR Draft and qxframe.js.
+NEXT EXACT STEP: inspect latest PR #265 Actions and fix real
+failures; read new `[preview-01-first-card-diagnostic]` report
+and compare with 362/528 baseline; if improved checkpoint
+exact count, continue FAQ/Kitchen/Payments remaining card
+height/DOM gaps. Keep PR Draft; owner handles merge acceptance.
 
 
 ### Owner decisions (2026-10-07) — frozen
