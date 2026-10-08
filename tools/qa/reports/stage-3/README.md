@@ -876,3 +876,38 @@ re-collapsible state and the source 8-style FAQ inset/leading.
   Read a newer green diagnostic before claiming its effect.
 - The project state / PR disposition are updated separately.
   No main merge, no relaxed CSS or visual source gate.
+
+
+## 2026-10-08 — source FAQ Tabs content parity; branch consolidation
+
+The owner deleted old remote branches; GitHub now reports precisely `main`,
+`backup/main-before-pr265-2026-10-08`, `redesign/create`. The
+fixed backup points to the unmerged main SHA `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+Do not modify this backup or merge PR #265 while Stage 3 remains unaccepted.
+
+Pinned source: `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`,
+`apps/v4/registry/bases/radix/blocks/preview-02/cards/faq.tsx`.
+It declares three independent question lists: General, Billing, Goals,
+with three questions each. The QX preview previously exposed all three tab
+labels but always displayed the General questions. This is behavioral and
+content drift even when the initial Card geometry is close.
+
+The Preview now authors all nine source questions in three opt-in framework
+`qxframe9a7c2-collapse is-native` groups. Actual `QX.Components.Tabs`
+remains the sole activation owner: `onChange` projects the selection into
+the active content panel's native `hidden` state, while `collapse.css`
+implements the corresponding hidden display rule. There is no preview-owned
+Accordion CSS or extra Tabs controller; QX runtime JS is unchanged.
+The three `details name` groups each retain single-open, collapsible behavior.
+The initial General panel has the same markup and layout as before. Hidden
+Billing/Goals do not participate in geometry, so this is not a Card-height
+fix.
+
+Static verification now counts nine FAQ questions, checks all tab keys and
+preserved source text, and asserts one shared hidden owner. The new real
+Chromium test switches General → Billing → Goals → General, checks the
+visible text, 3 distinct `details name` groups, and Billing one-open state.
+**Pending:** both GitHub Actions workflows on the final HEAD must pass;
+28/28 createApp browser steps is the target, not yet an asserted result.
+The previously confirmed `252/528` >±0.5px diagnostic is still the
+last validated measurement; this task does not relax or rebaseline it.
