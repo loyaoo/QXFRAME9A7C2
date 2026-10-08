@@ -163,6 +163,9 @@
   --qxframe9a7c2-theme-duration-sm: 150ms;
   --qxframe9a7c2-theme-duration-md: 200ms;
   --qxframe9a7c2-theme-duration-lg: 300ms;
+  --qxframe9a7c2-theme-skeleton-animation: qxframe9a7c2-skeleton-pulse;
+  --qxframe9a7c2-theme-spinner-icon-animation: qxframe9a7c2-spinner-icon-spin;
+  --qxframe9a7c2-theme-loading-spin-animation: qxframe9a7c2-loading-spin;
 }
 .dark {
   --qxframe9a7c2-theme-background: oklch(0.145 0 0);
@@ -327,4 +330,7 @@
   --qxframe9a7c2-theme-duration-sm: 150ms;
   --qxframe9a7c2-theme-duration-md: 200ms;
   --qxframe9a7c2-theme-duration-lg: 300ms;
+  --qxframe9a7c2-theme-skeleton-animation: qxframe9a7c2-skeleton-pulse;
+  --qxframe9a7c2-theme-spinner-icon-animation: qxframe9a7c2-spinner-icon-spin;
+  --qxframe9a7c2-theme-loading-spin-animation: qxframe9a7c2-loading-spin;
 }
