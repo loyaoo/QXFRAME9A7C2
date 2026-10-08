@@ -114,6 +114,29 @@ try {
   await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
+  await step('Preview Empty is a QX composition with measured 32/14/16 geometry', async () => {
+    const geometry = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const root = doc.querySelector('[data-card="empty-distribute-track"] .qxframe9a7c2-empty.is-composed');
+      if (!root) return null;
+      const media = root.querySelector('.qxframe9a7c2-empty-media.is-icon');
+      const header = root.querySelector('.qxframe9a7c2-empty-header');
+      const title = header?.querySelector('.qxframe9a7c2-empty-title');
+      if (!media || !title) return null;
+      return {
+        media: getComputedStyle(media).width,
+        title: getComputedStyle(title).fontSize,
+        gap: getComputedStyle(root).rowGap,
+        mediaOwnedByRoot: media.parentElement === root,
+        titleOwnedByHeader: title.parentElement === header
+      };
+    })()`);
+    assert.deepEqual(geometry, {
+      media: '32px', title: '14px', gap: '16px',
+      mediaOwnedByRoot: true, titleOwnedByHeader: true
+    });
+  });
+
   await step('hover previews a style without committing; leaving reverts', async () => {
     await click('document.querySelector(\'[data-create-picker="style"]\')');
     await waitFor(`!!(${menuItem('Luma')})`, 'style menu');
