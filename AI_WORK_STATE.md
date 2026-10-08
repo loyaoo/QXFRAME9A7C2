@@ -19,6 +19,14 @@
 
 ## CURRENT
 
+LATEST CONTINUATION — 2026-10-08 (PR #265 Draft, not merged):
+- User pruned historical branches: verified exact GitHub list is only `main`, `backup/main-before-pr265-2026-10-08`, and active `redesign/create`. Backup and `main` both remain at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`; never advance the backup ref.
+- Stage 3 continued at current source branch: FAQ General/Billing/Goals are now three genuinely independent question panels (3 questions each) copied from pinned shadcn `faq.tsx`; previously Tabs changed the active label but General content always remained visible.
+- `docs/create/preview-cards.js` uses QX `Tabs.create({onChange})` as the sole selection owner, toggling authored framework Collapse panels via `hidden`. Shared `collapse.css` owns `.is-native[hidden]` display, not a duplicate private FAQ implementation. Each question panel uses native exclusive/collapsible `details`.
+- Added static nine-question / three-panel contract and Chromium Tabs/FAQ switching test; expected createApp browser steps: 28. No runtime Controller or `qxframe.js` change. CSS design ratchet and locked ±0.5px geometry gates unchanged.
+- Code checkpoint: `31176234106a13ac9ae2378b1d7c088f84a07815` (last code commit; subsequent state/QA updates may advance the branch). Two workflows must be green on the final document HEAD before acceptance. One intermediate release failure at `0b1d741c` was test-only (old FAQ header count 3 versus new 9), fixed at `2f0b3151`; do not treat earlier failed or canceled runs as final.
+- Previous accepted green geometry result remains 252/528 first-Card heights outside ±0.5px, including Nova Payments +42px and FAQ +14px; **no new height improvement is claimed** until final Actions produce source-locked measurements. Program ~62%, Stage 3 ~58% provisional. Keep Draft; no main merge.
+
 Task: `CREATEAPP-V3-S3` — source-locked Preview 01 geometry, ongoing.
 Branch `redesign/create`, open Draft PR #265. Stages 0–2 merged;
 40/40 runtime Controller work and 624/624 shared Card subset already
