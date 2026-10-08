@@ -540,7 +540,7 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
   assert.match(shared,/\.qxframe9a7c2-item-link:hover:not\(\.is-disabled\)[^{]*\.qxframe9a7c2-item-desc/);
   assert.doesNotMatch(privateCss,/\.qxframe9a7c2-item-link(?::hover)?\s*\{/,
     'Preview must not own a second Item hover style');
-  assert.match(privateCss,/\.pv-nav-button:hover\s*\{\s*background:[^;]+;\s*color:var\(--qxframe9a7c2-theme-accent-foreground\)/);
+  assert.match(privateCss,/\.pv-nav-button:hover\s*\{\s*background:[^;]+;\s*color:\s*var\(--qxframe9a7c2-theme-accent-foreground\)/);
 });
 
 check('every option of every extension axis changes a theme token that qxframe.css or the preview consumes', () => {
