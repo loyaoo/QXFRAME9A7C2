@@ -202,6 +202,18 @@ check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', 
   }
 });
 
+check('Checkbox Field uses the shared horizontal Field gap role', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-check-field\{[^}]*gap:var\(--qxframe9a7c2-check-field-gap,var\(--qxframe9a7c2-theme-field-gap/);
+  const expected={vega:12,nova:8,maia:12,lyra:8,mira:8,luma:12,sera:12,rhea:12};
+  for(const [style,pixels] of Object.entries(expected)){
+    const theme=model.compileTheme(model.normalizeConfig({style})).body;
+    const m=theme.match(/--qxframe9a7c2-theme-field-gap:\s*([^;]+);/);
+    assert.ok(m,style+' has Field role');
+    assert.equal(parseFloat(m[1])*16,pixels,style+' Checkbox Field gap');
+  }
+});
+
 check('FieldContent labels consume shared Theme lines and FAQ trigger has no non-source gap', () => {
   const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const preview=read('preview.css');
