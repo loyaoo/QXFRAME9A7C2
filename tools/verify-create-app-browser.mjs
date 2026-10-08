@@ -557,6 +557,29 @@ try {
     }
   });
 
+  await step('Payout Threshold live amount tracks QX Slider keyboard ValueController', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payout-threshold] .qxframe9a7c2-slider-handle")','Payout Slider ready');
+    const result=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const card=doc.querySelector('[data-card="payout-threshold"]');
+      const amount=card.querySelector('[data-pv-value-for="payout-threshold-amount"]');
+      const slider=card.querySelector('[data-pv-output="payout-threshold-amount"]');
+      const handle=slider.querySelector('.qxframe9a7c2-slider-handle');
+      const before=amount.textContent;
+      const send=k=>{
+        handle.dispatchEvent(new doc.defaultView.KeyboardEvent('keydown',{key:k,code:k,bubbles:true,cancelable:true}));
+        handle.dispatchEvent(new doc.defaultView.KeyboardEvent('keyup',{key:k,code:k,bubbles:true,cancelable:true}));
+      };
+      handle.focus();send('ArrowRight');const increased=amount.textContent;
+      send('ArrowLeft');const restored=amount.textContent;
+      return {before,increased,restored,sliderRoot:!!slider.querySelector('.qxframe9a7c2-slider')};
+    })()`);
+    assert.equal(result.before,'$2500.00');
+    assert.equal(result.increased,'$2550.00','QX Slider keyboard input projects into source amount text');
+    assert.equal(result.restored,'$2500.00','reverse keyboard change restores original amount');
+    assert.equal(result.sliderRoot,true,'existing QX runtime Slider is the only Slider root');
+  });
   await step('Payments source-locked Nova Item rows match same-browser geometry', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payments comparison fixture');
