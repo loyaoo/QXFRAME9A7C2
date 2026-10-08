@@ -281,3 +281,12 @@
 .qxframe9a7c2-native-form button:focus-visible,.qxframe9a7c2-native-form input[type="button"]:focus-visible,.qxframe9a7c2-native-form input[type="reset"]:focus-visible,.qxframe9a7c2-native-form input[type="submit"]:focus-visible,.qxframe9a7c2-native-form .qxframe9a7c2-native-button:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-native-form button:disabled,.qxframe9a7c2-native-form input[type="button"]:disabled,.qxframe9a7c2-native-form input[type="reset"]:disabled,.qxframe9a7c2-native-form input[type="submit"]:disabled,.qxframe9a7c2-native-form .qxframe9a7c2-native-button:disabled{border-color:var(--_qxframe9a7c2-control-border-disabled);background:var(--_qxframe9a7c2-control-bg-disabled);color:var(--_qxframe9a7c2-control-text-disabled);cursor:not-allowed}
 
+
+/* Composable static FormField slots shared with the createApp specimens. */
+.qxframe9a7c2-form-field.is-composed { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.qxframe9a7c2-form-field.is-composed.is-horizontal { flex-direction: row; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.qxframe9a7c2-form-label { font-size: 0.875rem; font-weight: 500; line-height: 1.25rem; }
+.qxframe9a7c2-form-description { margin: 0; color: var(--qxframe9a7c2-theme-muted-foreground); font-size: 0.875rem; line-height: 1.375; }
+.qxframe9a7c2-form-legend { font-size: 1rem; font-weight: 500; }
+
+
