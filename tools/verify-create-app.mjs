@@ -127,6 +127,19 @@ check('Item and Field match the pinned 8-style spacing and typography recipes', 
   assert.match(layoutCSS, /theme-field-group-gap/);
 });
 
+check('Editorial FieldSeparator policy matches pinned Sera hidden instances', () => {
+  const expected=['vega','nova','maia','lyra','mira','luma','sera','rhea'];
+  for(const style of expected){
+    const compiled=model.compileTheme(model.normalizeConfig({style})).body;
+    const m=compiled.match(/--qxframe9a7c2-theme-field-separator-display:\s*(none|block);/);
+    assert.ok(m,style+' missing FieldSeparator role');
+    assert.equal(m[1],style==='sera'?'none':'block',style+' authored FieldSeparator visibility');
+  }
+  const css=read('preview.css');
+  assert.match(css,/\.pv-divider-bleed\s*\{[^}]*display:var\(--qxframe9a7c2-field-separator-display,var\(--qxframe9a7c2-theme-field-separator-display,block\)\)/,
+    'public local override must precede generic Theme visibility policy');
+});
+
 check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry', () => {
   const html = read('preview-01.html');
   for (const id of ['empty-distribute-track','empty-connect-bank','empty-explore-catalog']) {
