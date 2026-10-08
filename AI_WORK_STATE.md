@@ -90,6 +90,56 @@ Next:
 Engineering estimate: CREATEAPP-V3 **61%**, Stage 3 **55%**
 (provisional; percentages are not inferred from green CI or 528 heights).
 
+### 2026-10-08 · Stage 3 continuation — shared Table and native FAQ Collapse
+
+Latest implementation milestone: `914f62db930e107395bed49548566b9d479543e6`
+(`redesign/create`; PR #265 stays Draft). Continue this SHA, not
+historical `1f7e2ab8` or `8f3ffe50` green checkpoints.
+
+- **#19 Table ownership:** removed all preview-private `pv-table`
+  selectors. Preview 01 Recent Transactions and Preview 02 Invoice now
+  use the framework `qxframe9a7c2-table is-embedded is-hover`.
+  The opt-in static Table modifier lives in
+  `src/styles/components/table.css`; it reuses the real Table's
+  semantics/row states and does not require an authored duplicate JS widget.
+  Two new registered Theme roles derive the 8/12px cell inset and
+  muted-vs-foreground head text from the existing padding/shape/text axes.
+  Header height derives from the same inset (40px/48px), Sera headings
+  inherit editorial uppercase and 12px typography.
+- **Table regression prevention:** browser checks the pinned eight
+  styles × two modes for shared Table typography, semantic foreground,
+  cell geometry and transparent body paint. The first post-migration
+  successful *Schema* diagnostic at `64c604c4` was still 252/528
+  over tolerance, but Recent Transactions increased from +10px to +16px.
+  The latest patch changes embedded table leading to the upstream
+  12px/16px, 14px/20px tiers via one CSS formula; CI is **pending** on
+  that patch, and the old 252/528 snapshot is not a post-patch result.
+- **#20 FAQ owner:** the FAQ now uses
+  `qxframe9a7c2-collapse is-native` with three native
+  `<details name="qx-create-faq">` children, no duplicate private
+  `pv-accordion` drawing. Static opt-in native disclosure styling
+  belongs to `src/styles/components/collapse.css`, without touching
+  the JS-driven Collapse Controller contract. Native single-open,
+  re-collapse, geometry, icon motion-none and source text-leading are
+  regression locked.
+- **CI evidence:** CSS Schema Acceptance **passed** for
+  `64c604c4` (run #37779358028), including 27/27 Chromium
+  createApp checks, 8-style theme browser checks and 653,064
+  canonical consumer checks without mismatches. A distinct QXFRAME
+  release run was still in progress at documentation time; do not
+  promote this to full release acceptance. The latest
+  `914f62db` revision needs independent success for **both** workflows.
+- No `qxframe.js` or Controller implementation modified. Do not
+  change the old-browser compatibility waiver, silent import rejection,
+  or current CSS schema gates. Existing #9–#13 runtime findings remain
+  out of this frozen JS Stage 3 PR; #14 underlined shape precedence
+  awaits a contract decision. Source geometry for Payments/Payout/
+  Upcoming and the remaining 252 first-Card deviations continues
+  after an accepted current CI.
+- Provisional program estimate: CREATEAPP-V3 ~62%, Stage 3 ~58%.
+  This is a planning estimate, not an acceptance or ratio of passing
+  Card geometry tests.
+
 ### 2026-10-08 · PR #265 audit triage / code batch (CI pending)
 
 Owner supplied `AUDIT-PR265-ae56205.md`, 22 candidate findings;
