@@ -160,7 +160,7 @@ check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry
     'FieldSeparator owns 20px source layout height and -16px margins');
   assert.match(css, /\.pv-divider-bleed::after\s*\{[^}]*height:1px;/,
     'separator line stays 1px within 20px layout slot');
-  assert.match(css, /\.pv-accordion-item\s*>\s*summary\s*\{[^}]*padding:\s*var\(--qxframe9a7c2-theme-accordion-padding\)/);
+  assert.match(fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8'), /\.qxframe9a7c2-collapse\.is-native>\.qxframe9a7c2-collapse-item>summary\.qxframe9a7c2-collapse-header\{[^}]*padding:var\(--qxframe9a7c2-theme-accordion-padding\)/);
   const levels = {vega:16,nova:10,maia:16,lyra:10,mira:8,luma:16,sera:16,rhea:16};
   for (const [style,px] of Object.entries(levels)) {
     const compiled = model.compileTheme(model.normalizeConfig({style})).body;
@@ -274,7 +274,7 @@ check('FAQ TabsList source height uses public Tabs slot without global overrides
 
 check('FAQ Accordion description line uses the shared text-leading role', () => {
   const css=read('preview.css');
-  assert.match(css,/\.pv-accordion-content\s*\{[^}]*line-height:\s*var\(--qxframe9a7c2-theme-text-leading\)/,
+  assert.match(fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8'), /\.qxframe9a7c2-collapse\.is-native>details>\.qxframe9a7c2-collapse-content\{[^}]*line-height:var\(--qxframe9a7c2-theme-text-leading\)/,
     'Accordion content text-sm line box must not hardcode 1.5');
   for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
@@ -289,7 +289,7 @@ check('FieldContent labels consume shared Theme lines and FAQ trigger has no non
   assert.match(composition,/\.qxframe9a7c2-field-content>\.qxframe9a7c2-form-label\{[^}]*line-height:var\(--qxframe9a7c2-theme-field-label-line-height\)/,
     'FieldContent label should share semantic typography with FormField');
   assert.match(composition,/\.qxframe9a7c2-field-content>\.qxframe9a7c2-form-label\{[^}]*font-weight:var\(--qxframe9a7c2-theme-text-weight-label\)/);
-  assert.match(preview,/\.pv-accordion-item\s*>\s*summary\s*\{[^}]*gap:\s*0;/,
+  assert.match(fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8'), /\.qxframe9a7c2-collapse\.is-native>\.qxframe9a7c2-collapse-item>summary\.qxframe9a7c2-collapse-header\{[^}]*gap:0;/,
     'upstream AccordionTrigger has no horizontal 16px gap');
 });
 
@@ -543,6 +543,20 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
   assert.match(privateCss,/\.pv-nav-button:hover\s*\{\s*background:[^;]+;\s*color:\s*var\(--qxframe9a7c2-theme-accent-foreground\)/);
 });
 
+
+
+check('audit #20: FAQ native details is rendered through the framework Collapse classes', () => {
+  const html=read('preview-01.html'),css=read('preview.css');
+  const source=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');
+  const faq=html.slice(html.indexOf('<!-- @card faq -->'),html.indexOf('<!-- @end faq -->'));
+  assert.match(faq,/class="qxframe9a7c2-collapse is-native"/);
+  assert.equal((faq.match(/<details name="qx-create-faq" class="qxframe9a7c2-collapse-item"/g)||[]).length,3);
+  assert.equal((faq.match(/class="qxframe9a7c2-collapse-header"/g)||[]).length,3);
+  assert.equal((faq.match(/class="qxframe9a7c2-collapse-content"/g)||[]).length,3);
+  assert.doesNotMatch(css,/\.pv-accordion\b/);
+  assert.match(source,/\.qxframe9a7c2-collapse\.is-native/);
+  assert.match(source,/summary::marker\{content:""\}/);
+});
 
 check('audit #19: both preview tables use shared framework Table and pinned density roles', () => {
   const table = fs.readFileSync(path.join(root, 'src/styles/components/table.css'), 'utf8');
