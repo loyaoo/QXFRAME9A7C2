@@ -89,7 +89,13 @@
   font-size:var(--qxframe9a7c2-theme-text-size);
   line-height:var(--qxframe9a7c2-theme-item-description-leading);
 }
-.qxframe9a7c2-item-media{display:flex;flex:0 0 auto;align-items:center;justify-content:center}
+.qxframe9a7c2-item-media{display:flex;flex:0 0 auto;align-items:center;justify-content:center;gap:.5rem}
+/* Pinned shadcn ItemMedia: an Item containing description top-aligns its
+ * media and lowers the glyph 2px; Item without description stays centered. */
+.qxframe9a7c2-item:has(.qxframe9a7c2-item-desc)>.qxframe9a7c2-item-media{
+  align-self:flex-start;
+  transform:translateY(.125rem);
+}
 /* shadcn ItemMedia variant=icon is an unboxed glyph, not EmptyMedia
  * variant=icon. The two semantics must never share a boxed 32px surface. */
 .qxframe9a7c2-item-media.is-icon{width:1rem;height:1rem;border:0;border-radius:0;background:transparent}
