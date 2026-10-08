@@ -45,8 +45,10 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
   const shared = fs.readFileSync(path.join(root, 'src/styles/components/empty.css'), 'utf8');
   assert.match(shared, /\.qxframe9a7c2-empty\.is-composed\s*\{/);
   assert.match(shared, /\.qxframe9a7c2-empty-media\.is-icon\s*\{/);
-  assert.match(shared, /width:\s*2rem;/);
-  assert.match(shared, /font-size:\s*0\.875rem;/);
+  assert.match(shared, /width:\\s*var\\(--_qxframe9a7c2-empty-media-size\\)/);
+  assert.match(shared, /font-size:\\s*var\\(--_qxframe9a7c2-empty-title-size\\)/);
+  assert.match(shared, /theme-empty-inset/);
+  assert.match(shared, /theme-radius-empty-media/);
   for (const page of ['preview-01.html', 'preview-02.html']) {
     const html = read(page);
     const count = (html.match(/class="qxframe9a7c2-empty is-composed/g) || []).length;
@@ -60,6 +62,34 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
+
+check('Empty geometry follows pinned 8-style source, not Nova hardcoding', () => {
+  // Source: tools/qa/spec.json at shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c.
+  // inset px, outer radius px, media radius px. Both modes share root geometry.
+  const expected = {
+    vega: [48, 10, 10], nova: [24, 14, 10],
+    maia: [48, 10, 10], lyra: [24, 0, 0],
+    mira: [24, 14, 8], luma: [48, 18, 14],
+    sera: [48, 0, 0], rhea: [48, 22, 14]
+  };
+  for (const [style, [inset, outer, media]] of Object.entries(expected)) {
+    const css = model.compileTheme(model.normalizeConfig({ style })).body;
+    const tokens = Object.fromEntries(
+      [...css.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+):\\s*([^;]+);/g)]
+        .map(m => [m[1], m[2]])
+    );
+    const n = value => parseFloat(value) * (value === '0' ? 1 : 16);
+    assert.equal(n(tokens['empty-inset']), inset, style + ' Empty inset');
+    assert.equal(n(tokens['radius-empty']), outer, style + ' Empty root radius');
+    assert.equal(n(tokens['radius-empty-media']), media, style + ' Empty media radius');
+  }
+  const input = model.normalizeConfig({ style: 'nova', ext: { padding: 'p24' } });
+  assert.match(model.compileTheme(input).body, /--qxframe9a7c2-theme-empty-inset:\\s*3rem;/);
+  const sharp = model.normalizeConfig({ style: 'luma', radius: 'none' });
+  const sharpCss = model.compileTheme(sharp).body;
+  assert.match(sharpCss, /--qxframe9a7c2-theme-radius-empty:\\s*0;/);
+  assert.match(sharpCss, /--qxframe9a7c2-theme-radius-empty-media:\\s*0;/);
+});
 
 check('QX shape, Luma switch and shared layout contracts', () => {
   const file = p => fs.readFileSync(path.join(root, p), 'utf8');
