@@ -309,3 +309,57 @@ and `blocks/preview-02/cards/kitchen-island.tsx`.
 accepted by latest Actions at this checkpoint; the next 528-card
 height diagnostic must determine actual net improvement. The full
 nested-card/Preview 02 audits remain outstanding. No runtime JS edits.
+
+
+## 2026-10-08 — SidebarNav / FieldContent / Item wrap source acceptance
+
+Last **fully green** commit before this batch:
+`0786b8cf758477eba8da5f7d202fa14144cfc722`, CI `37741832685`
+release/windows-tools and schema `37741832686` successful. The
+`[preview-01-first-card-diagnostic]` in its release job verified
+**358/528** heights outside ±0.5px against the frozen source (previous
+410/528). **244 improved**, **132 worsened**. Remaining Nova:
+Kitchen Island +51, FAQ +45, Payments +42, Sidebar Nav +36,
+Notification Settings +36. This is a diagnostic baseline, not a green
+height-parity gate.
+
+Pinned upstream evidence:
+`ui/sidebar.tsx`, `ui/item.tsx`, `ui/field.tsx`, source
+`blocks/preview-02/cards/sidebar-nav.tsx`, `payments.tsx`,
+`notification-settings.tsx` and
+`registry/styles/style-{vega,nova,maia,lyra,mira,luma,sera,rhea}.css`
+from shadcn commit
+`295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
+
+**Sidebar source layout** uses `SidebarMenu` gaps by style:
+Vega 4px, Nova 0px, Maia 4px, Lyra 0px, Mira 1px,
+Luma/Sera/Rhea 2px. A control-look recipe maps those categories
+without per-style CSS selectors. SidebarGroup is 8px vertical
+except dense Mira (4px), and the two authored Sidebar Groups
+supply explicit 4px `pb-1` and `pt-1` seam insets. Nova's
+old static 4px item gap across 7 in-between positions (=28px),
+plus two 4px excess seam insets (=8px), explain its +36px
+Sidebar height discrepancy as a source-supported hypothesis;
+the next 528-row refresh must confirm rather than assume.
+
+**FieldContent source gap**: Vega/Maia/Luma/Sera/Rhea 4px;
+Nova/Lyra/Mira 2px. Shared
+`.qxframe9a7c2-field-content` consumes one added
+`theme-field-content-gap` role derived from existing `field-gap`
+(default Nova 2px). Preview Preferences and Notification Settings
+use it instead of fixed `.qxframe9a7c2-stack.is-gap-1`.
+The existing public `--qxframe9a7c2-field-content-gap` wins.
+Static/Blink checks measure both affected cards across 16 modes.
+
+**Item text contract**: The upstream composed Item is `w-full flex-wrap`,
+clamps title to one line and description to two. QX static Item
+now reproduces those, preserving the earlier 10/14px md
+padding scheme and 16px bare ItemMedia. Browser QA checks
+the computed `-webkit-line-clamp`, actual two-line height and
+full-width box at a narrow fixture across 16 modes.
+No legacy browser fallbacks were added.
+
+Outstanding: nested Cards, complete Item xs/sm theme size curves,
+FAQ/Tabs/Slider structure and exact Cards' 528-height alignment;
+all changed source contracts must pass current CI. Runtime Controller
+and qxframe.js are unchanged. PR #265 stays Draft.
