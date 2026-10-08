@@ -357,7 +357,7 @@ export function themeTokens(resolved) {
     ? 1.625 : style === 'vega' || PADDING[ext.padding] <= 1 ? 1.5 : 20 / 14);
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
-  root['field-label-line-height'] = rem(editorial ? 1.21875 : Math.min(textSize, controlFont));
+  root['field-label-line-height'] = editorial ? '1.21875rem' : rem(Math.min(textSize, controlFont));
   root['card-gap'] = rem(PADDING[ext.padding]);
   root['card-meta-gap'] = rem(looks.metaGap);
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
