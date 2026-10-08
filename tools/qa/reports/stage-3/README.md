@@ -175,3 +175,40 @@ must **not** be treated as fixed until the full first-Card audit is regenerated
 against the pinned reference, and nested cards/form/list internals still need
 measurement. The new geometry test is an explicit partial Stage 3 contract,
 not a claim of full pixel parity.
+
+
+## 2026-10-08 — Item / Field geometry from pinned spec
+
+Pinned source: `tools/qa/spec.json` blob SHA
+`4cd9ab1c61c8fe335a05de7880f101a02301e534` at shadcn
+`295a1f114a138f23b5dfee0e0c6812394dfeb90c`. Source reference is
+used verbatim; Chrome geometries are sampled on the QX preview iframe.
+
+| Style | Item default block/gap | Radius | Item title/description line | FieldGroup | Field | Label line/weight |
+|---|---:|---:|---|---:|---:|---|
+| Vega | 14px | 8px | 19.25 / 21px | 28px | 12px | 14px / 500 |
+| Nova | 10px | 10px | 19.25 / 21px | 20px | 8px | 14px / 500 |
+| Maia | 14px | 18px | 19.25 / 20px | 28px | 12px | 14px / 500 |
+| Lyra | 10px | 0 | 16 / 19.5px | 20px | 8px | 12px / 400 |
+| Mira | 10px | 8px | 16.5 / 19.5px | 16px | 8px | 12px / 500 |
+| Luma | 14px | 18px | 19.25 / 20px | 28px | 12px | 14px / 500 |
+| Sera | 14px | 0 | 16.5 / 22.75px | 40px | 12px | 19.5px / 600 |
+| Rhea | 14px | 18px | 19.25 / 20px | 24px | 12px | 14px / 500 |
+
+**Code**: `tokens.js`, `compiler.js`, and generated Nova `theme.css`
+register five semantic roles:
+`item-space`, `item-description-leading`, `field-group-gap`,
+`field-gap`, `field-label-line-height`. The shared Item width inset
+derives as block + 2px; its radius reuses action radius with an 18px cap.
+Composed FormField/Label and Description consume theme typography and gap
+without modifying runtime state. No `data-create-style` selectors.
+
+**Regression**: `tools/verify-create-app.mjs` checks 8 preset projections.
+`tools/verify-create-app-browser.mjs` asserts 8 styles × 2 modes ×
+15 computed default-md Item/Field geometries, using 0.5px tolerance.
+Lyra title line projects 16.5px against 16px source (0.5px tolerance
+boundary), so is not exact. Legacy S3 reported 410 differing Card heights;
+that report predates this batch and must be rerun; no total-height parity
+claimed. Item `.is-sm`/`.is-xs` remain a separate source-precision task.
+Nested Cards and full FieldGroup/content equality are not yet accepted.
+
