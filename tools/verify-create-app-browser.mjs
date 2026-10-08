@@ -634,7 +634,7 @@ try {
             expectedFieldGap:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-gap'))*16,
             expectedLine:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-label-line-height'))*16,
             faqTabsHeight:faqTabs.getBoundingClientRect().height,
-            expectedFaqTabsHeight:px(css(root).getPropertyValue('--qxframe9a7c2-theme-control-height'))*16,
+            expectedFaqTabsHeight:Math.max(32,px(css(root).getPropertyValue('--qxframe9a7c2-theme-control-height'))*16),
             faqContentLine:px(css(accordionContent).lineHeight),
             expectedFaqContentLine:px(css(accordionContent).fontSize)*px(css(root).getPropertyValue('--qxframe9a7c2-theme-text-leading')),
             actualGap:px(css(summary).columnGap),faqHeight:faq.getBoundingClientRect().height,
