@@ -828,6 +828,29 @@ try {
     assert.deepEqual(states.collapsed,[false,false,false]);
     assert.deepEqual(states.restored,[true,false,false]);
   });
+  await step('Motion none stops static Skeleton, Spinner and Accordion indicator in 16 modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','Motion preview');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", ext: {motion: "none"} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' motion none');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          doc.documentElement.classList.toggle('dark', ${mode === 'dark'});
+          const cs=el=>doc.defaultView.getComputedStyle(el);
+          const skeleton=doc.querySelector('.qxframe9a7c2-skeleton');
+          const spinner=doc.querySelector('.qxframe9a7c2-spinner-icon');
+          const chevron=doc.querySelector('[data-card=faq] .pv-accordion-item>summary .pv-icon');
+          return {skeleton:skeleton&&cs(skeleton).animationName,spinner:spinner&&cs(spinner).animationName,
+            transition:chevron&&cs(chevron).transitionDuration,
+            duration:cs(doc.documentElement).getPropertyValue('--qxframe9a7c2-theme-duration-md').trim()};
+        })()`);
+        assert.deepEqual(actual,{skeleton:'none',spinner:'none',transition:'0s',duration:'0ms'},style+'/'+mode+' stops motion');
+      }
+    }
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", ext: {} })');
+  });
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
