@@ -19,24 +19,52 @@
 
 ## CURRENT
 
-Task: CREATEAPP-V3-S3 — Preview 01 source-locked geometry and shared QX static components.
-Status: IN PROGRESS, Draft PR #265 on branch `redesign/create`, no merge before owner acceptance. Stages 0–2 merged; 40/40 runtime Controller migration accepted and frozen.
+Task: `CREATEAPP-V3-S3` — Preview 01 geometry parity. Status: IN PROGRESS.
+Branch `redesign/create`, Draft PR #265, do not merge before owner acceptance.
+Stages 0–2 merged, Controller runtime 40/40 accepted; do not redo or modify qxframe.js.
 
-Last fully green checkpoint: `4855d5bd9cc72764fc7c187ad9d2cf40837a9127`, QXFRAME CI run 37737418728 and CSS Schema Acceptance run 37737418756; previous Empty 8-style × light/dark geometry accepted.
+LAST VERIFIED CI GREEN: HEAD `3f633e206a51dc43e7c82255afac18940873c0b2`,
+QXFRAME CI run `37739795743` release + windows-tools success,
+CSS Schema Acceptance run `37739795705` success. This batch registered
+Item/Field five Theme roles and added a pinned 8 styles × 2 modes × 15 computed
+geometry gate; 14 createApp browser steps passed. The new 528-entry first-Card
+diagnostic compares source-pinned first Card heights, reporting **400/528 >0.5px
+vs prior 410/528**, **186 improved and 172 worsened**. Top Nova residuals FAQ+87,
+Kitchen Island+45, Preferences+42, Sidebar Nav+36 and Empty Distribute+28.75.
+These are diagnostic counts, NOT Stage 3 Card parity acceptance.
 
-2026-10-08 current batch: Item and Field default-md parity from the EXACT pinned `tools/qa/spec.json` Git blob `4cd9ab1c61c8fe335a05de7880f101a02301e534`. CSS previously hardcoded 16px Item padding/gap and 28px FieldGroup gap independent of style, diverging from source.
+CURRENT CODE BATCH (source-backed targeted cards, pending its own CI):
+- Inspected upstream pinned `empty-distribute-track.tsx`, `faq.tsx`,
+  `preferences.tsx`, all eight `style-*.css` recipes.
+- Source Empty cards all locally specify `p-4` (16px) even though style's
+  Empty tier is 24/48px. Shared Empty now permits
+  `--qxframe9a7c2-empty-padding` local override without altering
+  theme media/title density. All three Preview 01 Empty cards set 16px;
+  shared icon media bottom gap is 8px; dense Mira header gap is 4px, other
+  pinned defaults are 8px, projected from existing control density.
+- FAQ Accordion source trigger/content insets are 16,10,16,10,8,16,16,16px
+  across Vega/Nova/Maia/Lyra/Mira/Luma/Sera/Rhea. Registered ONE new theme
+  input `accordion-padding`, compiled from existing axes. Preview
+  FAQ CSS consumes it along with theme type/weight/corner.
+- Two Preferences `FieldSeparator` examples now reproduce the source's
+  -16px top/bottom margins without changing the reusable Divider.
+- Added 8-style static source tests and 8×2 computed browser checks for FAQ,
+  Empty card instance padding/media/header, and Preferences separators.
+  QA documentation and PR description to be updated after CI.
 
-DONE on current PR:
-- Added 5 registered theme semantic inputs: `item-space`, `item-description-leading`, `field-group-gap`, `field-gap`, `field-label-line-height`. Compiler derives them from existing density/padding/typography axes, with source-locked Vega description leading recipe, and default Nova `theme.css` updated. No per-style CSS selectors.
-- Shared `item-surface.css` static Item now projects its md padding/gap, capped radius, title font/line/weight and description leading from theme. `composition.css` FieldGroup and `form-native.css` composed FormField/Label/Description consume same roles; existing local public overrides remain.
-- Static 8-style numeric role test and browser 8 × 2 × 15 default-md computed geometry test (≤0.5px) added. QA table and limits recorded in `tools/qa/reports/stage-3/README.md`.
-- qxframe.js source and Controller unaffected.
+Program engineering estimate: CREATEAPP-V3 overall 57%, S3 Stage 3 **38%**
+(provisional pending current CI); 624/624 earlier shared Card geometry and
+Empty/Item/Field subset browser gates already passed. New reports remain a
+non-gating diagnostic, and the old 410 differences are superseded by the
+measured 400/528 baseline only at the last green HEAD.
 
-Estimate: CREATEAPP-V3 overall 57%, Stage 3 / Task S3 36%, pending current batch CI. Shared Card 624/624 checks and previous Empty checks are already done; DO NOT redo. Previously 410 first-Card height differences remain historical diagnostics, NOT current passes. Item sm/xs source exactness, nested Card geometry and all remaining Form/Item case variants remain open.
-
-New first-Card diagnostic harness: `tools/verify-create-app-browser.mjs` now remeasures 33 × 8 × 2 = 528 QX first Cards against the frozen reference half of `preview-01/report.json`, writing `preview-01/current-report.json` to CI QA artifacts. Its height differences remain non-gating; missing cards fail the harness. The result count and impact are pending latest CI.
-
-NEXT EXACT STEP: read latest PR CI jobs, resolve static/browser/theme-token failures without relaxing ratchet; then rerun pinned Preview 01 audit with current CSS and resolve remaining per-Card heights. Do not merge PR before owner approval, and old browser fallbacks are out of scope.
+REMAINING: source `style-sera:hidden` on Preferences FieldSeparator,
+contained Accordion shell variants; Card internal/nested markup, Item sm/xs,
+and comprehensive first-Card height parity (old baseline still hundreds off).
+NEXT EXACT STEP: Inspect latest HEAD PR Actions, fix any failures without
+weakening §5/§6 ratchet; read full release `[preview-01-first-card-diagnostic]`
+lines, checkpoint new currentOverTolerance/improved/worsened values; continue
+source-driven high-impact cards. Keep PR #265 Draft, no main merge.
 
 
 ### Owner decisions (2026-10-07) — frozen
