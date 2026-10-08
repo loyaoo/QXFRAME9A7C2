@@ -51,6 +51,8 @@
   background:transparent;color:var(--qxframe9a7c2-theme-foreground);
   font-size:var(--qxframe9a7c2-theme-text-size)
 }
+/* Hidden native disclosure panels must not be reopened by the flex layout rule. */
+.qxframe9a7c2-collapse.is-native[hidden]{display:none}
 .qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item,
 .qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item{
   border:0;border-bottom:1px solid var(--qxframe9a7c2-theme-border)
