@@ -726,3 +726,22 @@ Claimable Balance -18px; other 528 diagnostic discrepancies, nested Card
 and Preview 02 full fidelity. Measured height is not visual acceptance.
 The post-change CI and updated 528 summary are **pending**, and should
 be recorded separately after they actually run. Keep PR #265 Draft.
+
+### Confirmed post-ItemMedia CI, 2026-10-08
+
+The code+test+documentation HEAD `b388b1f9568cf0458fb1dfce15588c498f45207d`
+has **both CI workflows green**:
+[QXFRAME CI #37771536451](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37771536451):
+release and windows-tools passed, deploy-pages skipped for Draft PR;
+[CSS Schema Acceptance #37771536361](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37771536361) passed.
+CreateApp real Chromium gate: **23/23 checks passed**, including
+`ItemMedia description alignment matches pinned source in eight styles and both modes`.
+
+The corresponding release diagnostic still reports **300/528** first-Card
+height differences over 0.5px (original 410/528), 292 improved and 122
+worsened against original; heights did not change with this visual
+icon-position fix. Nova Payments remains **473px versus reference 431px**
+(+42px), FAQ **389px versus 375px** (+14px), Payout Threshold -22px,
+Upcoming Payments -18.5px. Height-only diagnostics are not full visual
+acceptance. Next work continues per-row source-locked measurements and
+nested Cards; keep Draft PR #265 open without merge.
