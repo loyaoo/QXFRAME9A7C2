@@ -36,3 +36,5 @@
 
 
 .qxframe9a7c2-progress.is-chart-3{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-chart-3)}
+
+.qxframe9a7c2-progress.is-full{display:flex;width:100%}
