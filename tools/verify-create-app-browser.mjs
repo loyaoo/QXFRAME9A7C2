@@ -484,7 +484,8 @@ try {
               width:n(css(icon).width),height:n(css(icon).height),
               border:n(css(icon).borderTopWidth),
               slider:n(css(slider).height),handle:n(css(handle).height),
-              title:n(css(title).lineHeight),row:el.getBoundingClientRect().height};
+              title:n(css(title).lineHeight),row:el.getBoundingClientRect().height,
+              chrome:n(css(el).paddingTop)+n(css(el).paddingBottom)+n(css(el).borderTopWidth)+n(css(el).borderBottomWidth)};
           })};
       })()`);
       assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');
@@ -496,7 +497,7 @@ try {
         assert.equal(media.height,16,style+' unboxed ItemMedia height');
         assert.equal(media.border,0,style+' unboxed ItemMedia border');
         assert.ok(Math.abs(media.slider-media.handle)<=.5,style+' Slider footprint follows thumb size');
-        assert.ok(Math.abs(media.row-(Math.max(media.title,media.handle)+22))<=.5,style+' row owns no extra Slider control height');
+        assert.ok(Math.abs(media.row-(Math.max(media.title,media.handle)+media.chrome))<=.5,style+' row owns no extra Slider control height');
       }
     }
   });
