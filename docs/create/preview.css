@@ -68,19 +68,6 @@ body.create-preview-body {
 
 
 
-.pv-kbd {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
-  min-width: 1.25rem; height: 1.25rem; padding: 0 0.25rem;
-  border-radius: calc(var(--qxframe9a7c2-theme-radius-field, 0.5rem) * 0.5);
-  background: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground);
-  font: 500 0.75rem/1 var(--qxframe9a7c2-theme-font-sans, inherit);
-}
-.pv-skeleton { border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background: var(--qxframe9a7c2-theme-muted); animation: pv-pulse 2s ease-in-out infinite; }
-@keyframes pv-pulse { 50% { opacity: 0.5; } }
-.pv-spinner { width: 1rem; height: 1rem; animation: pv-spin 1s linear infinite; }
-@keyframes pv-spin { to { transform: rotate(360deg); } }
-.pv-progress { position: relative; height: 0.5rem; overflow: hidden; border-radius: 999px; background: color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent); }
-.pv-progress > span { display: block; height: 100%; border-radius: inherit; background: var(--qxframe9a7c2-theme-primary); }
 
 /* Static SVG charts take their colours from the chart theme inputs. */
 .pv-chart { display: block; width: 100%; overflow: visible; }
@@ -225,7 +212,6 @@ body.create-preview-body {
 .pv-overflow-hidden { overflow: hidden; }
 .pv-no-resize { resize: none; }
 .pv-mono { font-family: var(--qxframe9a7c2-theme-font-mono, ui-monospace, monospace); }
-.pv-round.pv-skeleton { border-radius: 50%; }
 .pv-grayscale { filter: grayscale(1); }
 .pv-primary-text { color: var(--qxframe9a7c2-theme-primary); }
 .pv-clamp-2 { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
@@ -266,6 +252,5 @@ body.create-preview-body {
 .qxframe9a7c2-item-link-plain { color: inherit; text-decoration: none; }
 .pv-wave rect { fill: gray; }
 .pv-select, .pv-tabs { min-width: 0; }
-.pv-progress.is-chart-3 > span { background: var(--qxframe9a7c2-theme-chart-3); }
 .qxframe9a7c2-item.is-plain { background: transparent; }
 .qxframe9a7c2-item-group.is-gap-0 { gap: 0; }
