@@ -203,8 +203,8 @@ body.create-preview-body {
 .pv-square .pv-icon { width: 1.5rem; height: 1.5rem; }
 .qxframe9a7c2-form-fieldset { display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; border: 0; }
 .qxframe9a7c2-form-fieldset > legend { margin-bottom: 0.75rem; padding: 0; }
-.pv-choice-card { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem 1rem 1.25rem; border: 1px solid var(--qxframe9a7c2-theme-border); border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); cursor: pointer; }
-.pv-choice-card:has(input:checked) { border-color: var(--qxframe9a7c2-theme-primary); background: color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 5%, transparent); }
+/* The source radio option is a horizontal Field with pb-2.5, not a boxed Card. */
+.pv-choice-field { padding-block-end: .625rem; }
 .pv-chart1-text { color: var(--qxframe9a7c2-theme-chart-1); }
 .qxframe9a7c2-items-start.qxframe9a7c2-card-footer { align-items: flex-start; }
 .pv-footer-column.is-gap-1 { gap: 0.25rem; }
