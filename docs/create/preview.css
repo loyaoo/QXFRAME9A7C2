@@ -145,7 +145,20 @@ body.create-preview-body {
 .pv-nav-button.is-active { background: var(--qxframe9a7c2-theme-accent); color: var(--qxframe9a7c2-theme-accent-foreground); font-weight: 500; }
 .pv-nav-card .qxframe9a7c2-divider { margin: 0 0.5rem; }
 .pv-tabs-full { margin-bottom: 0.5rem; }
-.pv-divider-bleed { margin-block: -1rem; }
+/* Pinned shadcn FieldSeparator has a 20px layout slot and 1px visual
+ * rule centered within it. The two -my-4 instances must retain that slot
+ * rather than applying negative margins to a bare 1px Divider. */
+.pv-divider-bleed {
+  position:relative;
+  height:1.25rem;
+  margin-block:-1rem;
+  background:transparent;
+}
+.pv-divider-bleed::after{
+  content:"";position:absolute;inset-inline:0;top:50%;
+  height:1px;background:var(--qxframe9a7c2-theme-border);
+  transform:translateY(-50%);
+}
 .pv-accordion { display: flex; flex-direction: column; }
 .pv-accordion-item { border-bottom: 1px solid var(--qxframe9a7c2-theme-border); }
 .pv-accordion-item:last-child { border-bottom: 0; }
