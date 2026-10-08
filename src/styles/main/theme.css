@@ -96,6 +96,8 @@
   --qxframe9a7c2-theme-border-width: 1px;
   --qxframe9a7c2-theme-card-padding: 1rem;
   --qxframe9a7c2-theme-empty-inset: 1.5rem;
+  --qxframe9a7c2-theme-empty-icon-size: 1rem;
+  --qxframe9a7c2-theme-empty-content-gap: 0.625rem;
   --qxframe9a7c2-theme-item-space: 0.625rem;
   --qxframe9a7c2-theme-item-description-leading: 1.5;
   --qxframe9a7c2-theme-field-group-gap: 1.25rem;
@@ -263,6 +265,8 @@
   --qxframe9a7c2-theme-border-width: 1px;
   --qxframe9a7c2-theme-card-padding: 1rem;
   --qxframe9a7c2-theme-empty-inset: 1.5rem;
+  --qxframe9a7c2-theme-empty-icon-size: 1rem;
+  --qxframe9a7c2-theme-empty-content-gap: 0.625rem;
   --qxframe9a7c2-theme-item-space: 0.625rem;
   --qxframe9a7c2-theme-item-description-leading: 1.5;
   --qxframe9a7c2-theme-field-group-gap: 1.25rem;
