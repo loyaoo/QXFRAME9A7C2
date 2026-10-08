@@ -277,3 +277,35 @@ additional source-specific shell/border/inset treatment. The reference
 `style-sera:hidden` FieldSeparator remains unmatched. Exact Empty text
 wrapping, nested cards and per-card full-height parity require further QA.
 No changes to runtime qxframe.js / Controller. PR #265 remains Draft.
+
+
+## 2026-10-08 — Kitchen Island ItemMedia structural parity
+
+Source-locked QX/static Item semantic correction:
+`shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`
+`apps/v4/registry/bases/radix/ui/item.tsx`,
+`registry/styles/style-{vega,nova,maia,lyra,mira,luma,sera,rhea}.css`
+and `blocks/preview-02/cards/kitchen-island.tsx`.
+
+- `ItemMedia variant="icon"` is **unboxed 16×16px** in all eight
+  upstream styles. It must not inherit EmptyMedia's separate **boxed**
+  32/40px semantics. QX static ItemMedia previously added a 32px
+  gray/bordered icon box; multiplied across four Kitchen slider rows this
+  produced much of the +45px Nova card-height difference.
+- Upstream `ItemGroup` gaps across all eight styles: base 16px, group
+  containing sm children 10px, group containing xs 8px. QX previously
+  hardcoded 8px regardless of child size. The shared ItemGroup now
+  uses these source widths via modern `:has()` (no legacy browser
+  fallback required).
+- Kitchen Island's four sliders previously nested redundant
+  `.qxframe9a7c2-item-media` inside another ItemMedia. The markup now
+  mirrors the source's single ItemMedia, without altering Slider runtime.
+- Static QA ensures shared selector contracts and exactly four
+  single media slots. Browser QA on Preview 01 measures four rows ×
+  eight styles, verifying icon 16×16, border 0, group gap 10px and
+  one ItemMedia DOM element.
+
+**Caution**: the source-linked structural change has not yet been
+accepted by latest Actions at this checkpoint; the next 528-card
+height diagnostic must determine actual net improvement. The full
+nested-card/Preview 02 audits remain outstanding. No runtime JS edits.
