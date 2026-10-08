@@ -172,6 +172,9 @@
   --_qxframe9a7c2-table-size-cell-px:var(--qxframe9a7c2-table-cell-inset,var(--qxframe9a7c2-theme-table-cell-inset));
   --_qxframe9a7c2-table-head-bg:transparent;
   font-size:var(--qxframe9a7c2-theme-text-size);
+  /* Pinned Tailwind text-xs/sm/base lines: 12/16, 14/20, 16/24px.
+   * The formula moves with the existing typography axis, no new Theme role. */
+  line-height:calc(var(--qxframe9a7c2-theme-text-size) * 2 - .5rem);
   background:transparent;
 }
 .qxframe9a7c2-table.is-embedded th,.qxframe9a7c2-table.is-embedded td{
