@@ -67,12 +67,12 @@ check('Empty geometry follows pinned 8-style source, not Nova hardcoding', () =>
   // Source: tools/qa/spec.json at shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c.
   // inset px, outer radius px, media radius px. Both modes share root geometry.
   const expected = {
-    vega: [48, 10, 10], nova: [24, 14, 10],
-    maia: [48, 10, 10], lyra: [24, 0, 0],
-    mira: [24, 14, 8], luma: [48, 18, 14],
-    sera: [48, 0, 0], rhea: [48, 22, 14]
+    vega: [48, 10, 10, 24, 16], nova: [24, 14, 10, 16, 10],
+    maia: [48, 10, 10, 24, 16], lyra: [24, 0, 0, 16, 10],
+    mira: [24, 14, 8, 16, 8], luma: [48, 18, 14, 20, 16],
+    sera: [48, 0, 0, 20, 16], rhea: [48, 22, 14, 20, 16]
   };
-  for (const [style, [inset, outer, media]] of Object.entries(expected)) {
+  for (const [style, [inset, outer, media, glyph, contentGap]] of Object.entries(expected)) {
     const css = model.compileTheme(model.normalizeConfig({ style })).body;
     const tokens = Object.fromEntries(
       [...css.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+):\s*([^;]+);/g)]
@@ -82,6 +82,8 @@ check('Empty geometry follows pinned 8-style source, not Nova hardcoding', () =>
     assert.equal(n(tokens['empty-inset']), inset, style + ' Empty inset');
     assert.equal(n(tokens['radius-empty']), outer, style + ' Empty root radius');
     assert.equal(n(tokens['radius-empty-media']), media, style + ' Empty media radius');
+    assert.equal(n(tokens['empty-icon-size']), glyph, style + ' Empty SVG glyph tier');
+    assert.equal(n(tokens['empty-content-gap']), contentGap, style + ' Empty action gap');
   }
   const input = model.normalizeConfig({ style: 'nova', ext: { padding: 'p24' } });
   assert.match(model.compileTheme(input).body, /--qxframe9a7c2-theme-empty-inset:\s*3rem;/);
