@@ -61,6 +61,33 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
 
+check('QX shape, Luma switch and shared layout contracts', () => {
+  const file = p => fs.readFileSync(path.join(root, p), 'utf8');
+  const defaultCss = model.compileTheme(model.defaultConfig()).body;
+  assert.match(defaultCss, /--qxframe9a7c2-theme-switch-thumb-extra:\s*0rem;/);
+  const luma = model.compileTheme(model.normalizeConfig({ style: 'luma' })).body;
+  assert.match(luma, /--qxframe9a7c2-theme-switch-thumb-extra:\s*0\.5rem;/);
+  const zero = model.compileTheme(model.normalizeConfig({ style: 'nova', radius: 'none' })).body;
+  for (const key of ['radius-radio', 'radius-switch', 'radius-switch-thumb', 'radius-avatar']) {
+    assert.match(zero, new RegExp('--qxframe9a7c2-theme-' + key + ': 0;'), 'global sharp shape: ' + key);
+  }
+  const explicit = model.compileTheme(model.normalizeConfig({ style: 'nova', radius: 'none', ext: { shapeRadio: 'circle' } })).body;
+  assert.match(explicit, /--qxframe9a7c2-theme-radius-radio:\s*62\.5rem;/);
+  const button = file('src/styles/main/theme-visual-v2.css');
+  assert.doesNotMatch(button, /\.qxframe9a7c2-button\.is-square\s*\{\s*border-radius:\s*0;/);
+  const radio = file('src/styles/components/choice-visual.css');
+  assert.match(radio, /radio-dot-radius/);
+  const composition = file('src/styles/components/composition.css');
+  for (const name of ['flex', 'stack', 'field-group', 'check-field', 'divider', 'swatch-cell']) {
+    assert.ok(composition.includes('.qxframe9a7c2-' + name), 'missing shared static primitive ' + name);
+  }
+  for (const page of ['preview-01.html', 'preview-02.html']) {
+    assert.doesNotMatch(read(page), /\b(?:pv-stack|pv-field-group|pv-check-field|pv-swatch-cell|pv-separator|create-grid|create-col|create-pair)\b/, 'duplicate private primitive ' + page);
+  }
+  assert.match(composition, /form-input-group-prefix/);
+  assert.match(composition, /form-input-group-suffix/);
+});
+
 check('option tables match v3 §4', () => {
   assert.deepEqual(data.STYLES.map(s => s.value), ['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea']);
   assert.deepEqual(data.BASE_COLORS, ['neutral', 'stone', 'zinc', 'mauve', 'olive', 'mist', 'taupe']);
