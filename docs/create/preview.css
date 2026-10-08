@@ -144,7 +144,13 @@ body.create-preview-body {
 .pv-nav-button:hover { background: var(--qxframe9a7c2-theme-accent); }
 .pv-nav-button.is-active { background: var(--qxframe9a7c2-theme-accent); color: var(--qxframe9a7c2-theme-accent-foreground); font-weight: 500; }
 .pv-nav-card .qxframe9a7c2-divider { margin: 0 0.5rem; }
-.pv-tabs-full { margin-bottom: 0.5rem; }
+/* The source TabsList height includes its inner rail padding.
+ * QX segmented Tabs exposes the tab-height slot; compensate its
+ * 3px rail chrome on both edges locally, not via an app-owned Tabs. */
+.pv-tabs-full {
+  --qxframe9a7c2-tabs-height:calc(var(--qxframe9a7c2-theme-control-height) - .375rem);
+  margin-bottom:.5rem;
+}
 /* Pinned shadcn FieldSeparator has a 20px layout slot and 1px visual
  * rule centered within it. The two -my-4 instances must retain that slot
  * rather than applying negative margins to a bare 1px Divider. */
