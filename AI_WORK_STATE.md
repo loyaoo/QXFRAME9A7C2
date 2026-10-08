@@ -19,6 +19,11 @@
 
 ## CURRENT
 
+PAYOUT THRESHOLD FUNCTIONAL SOURCE FIX (2026-10-08, after same-browser Item QA):
+- Pinned upstream `payout-threshold.tsx` updates `$2500.00` as the Slider changes; the QX Preview previously displayed an inert label despite working Slider ValueController.
+- `preview-01.html` adds a generic data-keyed output label and `data-pv-output-format="money-2"` on the existing QX Slider. `preview-cards.js` registers `Slider.onChange` to project the value, without a second value state or new input implementation. Added static gate and real keyboard ArrowRight/ArrowLeft browser assertion.
+- This is content/interaction parity, not a geometry correction; baseline 252/528 out-of-tolerance remains diagnostic, not a pass gate. The new HEAD after docs must pass both workflows before completion is reported. Keep PR #265 Draft and main/backup unchanged.
+
 SOURCE-FONT GEOMETRY INVESTIGATION (2026-10-08, Stage 3 continuing):
 - Pinned Windows Chrome reference source capture vs Linux Chromium implementation measurement uses different real fonts even when both declare `system-ui`. Historical Payments +42px should not trigger a CSS size hack.
 - Real browser source CSS Item fixture using the SAME CSS font in the SAME Linux Chromium now proves all 4 Nova Payments rows have identical source/QX geometry (87.25px each, 268.859px content, description 2×21px). CSS Schema run #37794980057 passed **29/29** createApp checks at code SHA `2f950ca8`.
