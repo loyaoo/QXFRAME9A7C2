@@ -492,7 +492,12 @@ try {
         group.style.setProperty('--qxframe9a7c2-item-group-gap','1.75rem');
         const overriddenGap=n(css(group).rowGap);
         group.style.removeProperty('--qxframe9a7c2-item-group-gap');
+        const roller=doc.querySelector('[data-card="roller-shades"]');
+        const rollerSlider=roller.querySelector('.qxframe9a7c2-slider');
+        const rollerThumb=roller.querySelector('.qxframe9a7c2-slider-handle');
         return { gap,overriddenGap,
+          rollerSliderHeight:n(css(rollerSlider).height),
+          rollerThumbHeight:n(css(rollerThumb).height),
           media:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
             const icon=el.querySelector('.qxframe9a7c2-item-media.is-icon');
             const slider=el.querySelector('.qxframe9a7c2-slider');
@@ -509,6 +514,8 @@ try {
       assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');
       assert.ok(Math.abs(actual.gap-10)<.5,style+' compact ItemGroup gap');
       assert.ok(Math.abs(actual.overriddenGap-28)<.5,style+' explicit ItemGroup gap wins');
+      assert.ok(Math.abs(actual.rollerSliderHeight-actual.rollerThumbHeight)<=.5,
+        style+' Roller Shades Slider root height follows source thumb rather than default button height');
       for(const media of actual.media){
         assert.equal(media.count,1,style+' must not duplicate ItemMedia DOM');
         assert.equal(media.width,16,style+' unboxed ItemMedia width');
