@@ -65,7 +65,7 @@ export function normalizeConfig(input) {
 
 // Fill "跟随风格" values from the current style.
 export function resolveConfig(config) {
-  const resolved = { ...config, ext: {} };
+  const resolved = { ...config, ext: {}, explicit: { ...config.ext } };
   for (const axis of ALL_EXT_AXES) resolved.ext[axis.key] = config.ext[axis.key] ?? axis.defaults[config.style];
   resolved.radiusValue = config.radius === 'default' ? STYLE_RADIUS[config.style] : config.radius;
   return resolved;
