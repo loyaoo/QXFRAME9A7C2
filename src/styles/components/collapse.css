@@ -42,3 +42,41 @@
 .qxframe9a7c2-collapse.is-sm{--_qxframe9a7c2-control-padding-inline:var(--_qxframe9a7c2-fixed-space-5)}
 
 
+/* Static native disclosure variant for authored FAQ/Accordion markup.
+ * It reuses the framework Collapse roles and borders without invoking
+ * the dynamic Collapse controller; <details name> owns exclusive open state.
+ * This opt-in modifier does not alter ordinary JS-driven Collapse instances. */
+.qxframe9a7c2-collapse.is-native{
+  display:flex;flex-direction:column;overflow:visible;border:0;border-radius:0;
+  background:transparent;color:var(--qxframe9a7c2-theme-foreground);
+  font-size:var(--qxframe9a7c2-theme-text-size)
+}
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item,
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item{
+  border:0;border-bottom:1px solid var(--qxframe9a7c2-theme-border)
+}
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item:last-child{border-bottom:0}
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item>summary.qxframe9a7c2-collapse-header{
+  box-sizing:border-box;display:flex;min-height:0;align-items:flex-start;justify-content:space-between;
+  gap:0;padding:var(--qxframe9a7c2-theme-accordion-padding) 0;
+  border-radius:var(--qxframe9a7c2-theme-radius-field);
+  background:transparent;color:inherit;font-size:var(--qxframe9a7c2-theme-text-size);
+  font-weight:var(--qxframe9a7c2-theme-control-weight);line-height:inherit;
+  list-style:none;cursor:pointer
+}
+.qxframe9a7c2-collapse.is-native>details>summary::-webkit-details-marker{display:none}
+.qxframe9a7c2-collapse.is-native>details>summary::marker{content:""}
+.qxframe9a7c2-collapse.is-native .qxframe9a7c2-collapse-disclosure-icon{
+  flex:0 0 auto;margin-top:0.125rem;
+  color:var(--qxframe9a7c2-theme-muted-foreground);
+  transition:transform var(--qxframe9a7c2-theme-duration-md)
+}
+.qxframe9a7c2-collapse.is-native>details[open]>summary .qxframe9a7c2-collapse-disclosure-icon{
+  transform:rotate(180deg)
+}
+.qxframe9a7c2-collapse.is-native>details>.qxframe9a7c2-collapse-content{
+  padding:0 0 var(--qxframe9a7c2-theme-accordion-padding);
+  color:var(--qxframe9a7c2-theme-muted-foreground);
+  font-size:var(--qxframe9a7c2-theme-text-size);
+  line-height:var(--qxframe9a7c2-theme-text-leading)
+}
