@@ -446,6 +446,87 @@ check('reset: style preset + follow-style axes; locks kept', () => {
 });
 
 
+
+check('audit #17: theme import rejects incomplete, duplicate, conflicting and malformed headers', () => {
+  const cfg = model.normalizeConfig({ style: 'luma', radius: 'xl', ext: { inputLook: 'soft' } });
+  const css = model.compileTheme(cfg).css;
+  const radiusLine = css.match(/^ \*   [^\n]*\(radius\):[^\n]*$/m)?.[0];
+  assert.ok(radiusLine, 'exported radius must be present');
+  const failures = [
+    css.replace(radiusLine + '\n', ''),
+    css.replace(radiusLine, radiusLine + '\n' + radiusLine),
+    css.replace(/ \*   [^\n]*\(density\):[^\n]*\n/, ''),
+    css.replace(radiusLine, ' *   broken radius entry'),
+    css.replace(/ \*   [^\n]*\(base\):[^\n]*\n/, ''),
+    css.replace('(menu): default', '(menu): default-translucent').replace('(accent): subtle', '(accent): bold')
+  ];
+  for (const [index, candidate] of failures.entries()) {
+    const result = model.parseThemeHeader(candidate);
+    assert.equal(result.ok, false, 'invalid import #' + index);
+    assert.equal(result.config, undefined, 'invalid import must never yield configuration');
+    assert.ok(result.errors.length, 'invalid import must include an actionable reason');
+  }
+  assert.equal(model.parseThemeHeader(css).ok, true, 'complete current export must still import');
+});
+
+check('audit #18: shuffle/reset respect locked theme and chart colors under base changes', () => {
+  const start = model.normalizeConfig({
+    style: 'sera', baseColor: 'neutral', theme: 'neutral', chartColor: 'neutral',
+    menuColor: 'default', menuAccent: 'bold', ext: { density: 'dense' }
+  });
+  const locks = new Set(['theme','chartColor','menuAccent']);
+  for (const random of [() => 0, () => .2, () => .9]) {
+    const next = model.randomizeConfig(start, locks, random);
+    for (const key of locks) assert.equal(next[key], start[key], key + ' stays locked');
+    assert.ok(data.themesForBaseColor(next.baseColor).includes(next.theme));
+    assert.ok(data.themesForBaseColor(next.baseColor).includes(next.chartColor));
+    assert.ok(!data.isTranslucentMenu(next.menuColor), 'locked bold menu accent cannot be normalized away');
+    assert.deepEqual(next.ext, start.ext, 'extension values survive shuffling');
+  }
+  const reset = model.resetConfig(start, locks);
+  assert.equal(reset.theme, 'neutral');
+  assert.equal(reset.chartColor, 'neutral');
+  assert.equal(reset.menuAccent, 'bold');
+  assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
+});
+
+check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode inventory', () => {
+  const token = (css, key) => css.match(new RegExp('--qxframe9a7c2-theme-' + key + ':\\s*([^;]+);'))?.[1];
+  for (const style of data.STYLES.map(s => s.value)) {
+    for (const switchLook of ['standard','wide']) {
+      const body = model.compileTheme(model.normalizeConfig({style,ext:{switchLook}})).body;
+      assert.equal(token(body,'switch-thumb-extra'), switchLook === 'wide' ? '0.5rem' : '0rem',
+        style + '/' + switchLook + ' thumb width must follow switchLook, not style name');
+    }
+    const body = model.compileTheme(model.normalizeConfig({style})).body;
+    const blocks = body.match(/^:root \{([\s\S]*?)\}\n\.dark \{([\s\S]*?)\}\n$/);
+    assert.ok(blocks, style + ' light/dark blocks');
+    const names = s => [...s.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+(?=:)/g)].map(m => m[0]);
+    assert.deepEqual(names(blocks[2]), names(blocks[1]), style + ' .dark must contain full ordered token registry');
+    for (const alloc of ['standard','balanced','rounded','compact','soft','smooth']) {
+      const shape = model.compileTheme(model.normalizeConfig({ style, radius:'xl', ext:{radiusAlloc:alloc}})).body;
+      assert.ok(parseFloat(token(shape,'radius-card')) * 16 <= 24.0001, style+'/'+alloc+' Card cap');
+    }
+  }
+  const pill = model.compileTheme(model.normalizeConfig({style:'nova',radius:'none',ext:{controlShape:'pill'}})).body;
+  assert.equal(token(pill,'radius-switch'),'62.5rem', 'explicit global pill survives radius:none');
+  assert.equal(token(pill,'radius-switch-thumb'),'62.5rem');
+  const square = model.compileTheme(model.normalizeConfig({style:'nova',radius:'none',ext:{controlShape:'pill',shapeSwitch:'square'}})).body;
+  assert.equal(token(square,'radius-switch'),'0', 'explicit per-component shape overrides global pill');
+});
+
+check('audit #22: accent-paired Item link states are owned by the shared Item CSS', () => {
+  const shared = fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  const privateCss = read('preview.css');
+  assert.match(shared,/\.qxframe9a7c2-item-link:hover:not\(\.is-disabled\)/);
+  assert.match(shared,/\.qxframe9a7c2-item-link:focus-visible:not\(\.is-disabled\)/);
+  assert.match(shared,/background:var\(--qxframe9a7c2-theme-accent\);\s*color:var\(--qxframe9a7c2-theme-accent-foreground\)/);
+  assert.match(shared,/\.qxframe9a7c2-item-link:hover:not\(\.is-disabled\)[^{]*\.qxframe9a7c2-item-desc/);
+  assert.doesNotMatch(privateCss,/\.qxframe9a7c2-item-link(?::hover)?\s*\{/,
+    'Preview must not own a second Item hover style');
+  assert.match(privateCss,/\.pv-nav-button:hover\s*\{\s*background:[^;]+;\s*color:var\(--qxframe9a7c2-theme-accent-foreground\)/);
+});
+
 check('every option of every extension axis changes a theme token that qxframe.css or the preview consumes', () => {
   const dist = path.join(root, 'dist/qxframe9a7c2.css');
   const consumers = (fs.existsSync(dist) ? fs.readFileSync(dist, 'utf8') : '') + read('preview.css');
