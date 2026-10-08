@@ -732,6 +732,36 @@ try {
     }
   });
 
+  await step('ItemMedia description alignment matches pinned source in eight styles and both modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payment media fixture');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' media style');
+      for(const mode of ['light','dark']) {
+        const expression = `(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          doc.documentElement.classList.toggle('dark', ${mode === 'dark'});
+          const css=el=>doc.defaultView.getComputedStyle(el);
+          return [...doc.querySelectorAll('[data-card="payments"] .qxframe9a7c2-item')].map(row=>{
+            const media=row.querySelector('.qxframe9a7c2-item-media');
+            const mr=media.getBoundingClientRect(),rr=row.getBoundingClientRect();
+            return {alignment:css(media).alignSelf,transform:css(media).transform,gap:css(media).gap,
+              top:mr.top-rr.top,border:parseFloat(css(row).borderTopWidth),padding:parseFloat(css(row).paddingTop)};
+          });
+        })()`;
+        const metrics=await evaluate(expression);
+        assert.equal(metrics.length,4,style+'/'+mode+' Payments descriptive rows');
+        for(const item of metrics) {
+          assert.equal(item.alignment,'flex-start',style+'/'+mode+' media is top-aligned');
+          assert.equal(item.gap,'8px',style+'/'+mode+' media child gap');
+          assert.match(item.transform,/matrix\(1, 0, 0, 1, 0, 2\)/,style+'/'+mode+' media offset +2px');
+          assert.ok(Math.abs(item.top-(item.border+item.padding+2))<.5,
+            style+'/'+mode+' media top follows pinned 2px offset and Item padding');
+        }
+      }
+    }
+  });
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
