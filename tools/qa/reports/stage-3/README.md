@@ -452,3 +452,21 @@ No runtime qxframe.js changes, no loosening of QA constraints,
 no private style selectors. **This batch's effect on 528
 height differences must be measured by its latest CI**;
 FAQ/Card height parity is not claimed yet. PR #265 remains Draft.
+
+
+### Checkbox Field horizontal gap follow-up
+
+The pinned eight `registry/styles/style-*.css` recipes specify
+`cn-field` horizontal gap by style: Vega/Maia/Luma/Sera/Rhea 12px,
+Nova/Lyra/Mira 8px. The QX `.qxframe9a7c2-check-field` had a
+fixed 12px gap, ignoring the already-registered and tested
+`theme-field-gap` role. It now consumes
+`var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem))`;
+public local override retains precedence.
+
+This changes only CSS layout for checkbox Field compositions; input
+state and handler behavior are untouched. The static eight-style
+and browser 8 styles × 2 modes checks verify the source gap on all
+five Notification Settings rows, alongside FAQ trigger and Label
+line-height tests. All Card height claims remain pending the next
+green 528-row diagnostic.
