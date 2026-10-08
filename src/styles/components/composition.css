@@ -162,6 +162,7 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-flex{display:flex;align-items:center;gap:var(--qxframe9a7c2-layout-gap,0.5rem);min-width:0}
 .qxframe9a7c2-flex.is-start{align-items:flex-start}
 .qxframe9a7c2-flex.is-between{justify-content:space-between}
+.qxframe9a7c2-flex.is-baseline{align-items:baseline}
 .qxframe9a7c2-flex.is-wrap{flex-wrap:wrap}
 .qxframe9a7c2-stack{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-layout-gap,0.5rem);min-width:0}
 .qxframe9a7c2-flex.is-gap-0,.qxframe9a7c2-stack.is-gap-0{--qxframe9a7c2-layout-gap:0.125rem}
