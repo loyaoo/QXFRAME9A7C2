@@ -124,6 +124,8 @@ export const THEME_TOKENS = [
   L('field-gap', 'Gap between a composed Field label, control and description'),
   L('field-label-line-height', 'Composed Field label line-box height'),
   L('accordion-padding', 'Accordion trigger and opened content inset derived from style density'),
+  L('sidebar-menu-gap', 'Sidebar menu item distance from control surface recipe'),
+  L('sidebar-group-padding-block', 'Sidebar group vertical inset from density'),
   L('card-gap', 'Card section gap'),
   L('card-meta-gap', 'Card title/description gap'),
   L('card-title-delta', 'Card title size step'),
