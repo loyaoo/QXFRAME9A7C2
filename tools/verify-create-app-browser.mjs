@@ -226,14 +226,28 @@ try {
     // The current page is Preview 02; validate against the real iframe stylesheet.
     await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "luma", radius: "default", ext: {} })');
     await waitFor(`${frameAttr('data-create-style')} === 'luma'`, 'Luma preview');
-    const luma = await evaluate(`(() => {
+    // Width transitions when the theme changes. The iframe style marker is
+    // updated synchronously, but the thumb's animated used width is not.
+    // Poll actual geometry until it reaches the target; never skip the assertion.
+    const lumaGeometry = `(() => {
       const doc = document.querySelector('[data-create-frame]').contentDocument;
-      const thumb = doc.querySelector('.qxframe9a7c2-switch-thumb');
+      const thumb = doc?.querySelector('.qxframe9a7c2-switch-thumb');
       if (!thumb) return null;
       const style = doc.defaultView.getComputedStyle(thumb);
-      return { width: parseFloat(style.width), height: parseFloat(style.height) };
-    })()`);
-    assert.ok(luma && luma.width > luma.height + 4, 'Luma switch thumb must be a horizontal capsule: ' + JSON.stringify(luma));
+      const root = doc.defaultView.getComputedStyle(doc.documentElement);
+      return {
+        width: parseFloat(style.width),
+        height: parseFloat(style.height),
+        extra: root.getPropertyValue('--qxframe9a7c2-theme-switch-thumb-extra').trim()
+      };
+    })()`;
+    await waitFor(`(() => {
+      const g = ${lumaGeometry};
+      return g && g.extra === '0.5rem' && g.width > g.height + 4;
+    })()`, 'Luma switch capsule after CSS transition', 5000);
+    const luma = await evaluate(lumaGeometry);
+    assert.ok(luma && luma.width > luma.height + 4 && luma.extra === '0.5rem',
+      'Luma switch thumb must reach a horizontal capsule: ' + JSON.stringify(luma));
 
     await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, radius: "none" })');
     const zero = await evaluate(`(() => {
