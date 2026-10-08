@@ -172,6 +172,14 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-flex.is-gap-6,.qxframe9a7c2-stack.is-gap-6{--_qxframe9a7c2-layout-gap:1.5rem}
 .qxframe9a7c2-field-group{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-field-group-gap,var(--qxframe9a7c2-theme-field-group-gap,1.75rem));min-width:0}
 .qxframe9a7c2-field-content{display:flex;flex:1 1 auto;flex-direction:column;gap:var(--qxframe9a7c2-field-content-gap,var(--qxframe9a7c2-theme-field-content-gap,.125rem));min-width:0}
+/* FieldContent is a first-class composition, not a FormField child.
+ * Its label must consume the same Theme typography as composed FormField.
+ * A local/public CSS override or inline style still wins by normal cascade. */
+.qxframe9a7c2-field-content>.qxframe9a7c2-form-label{
+  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
+  line-height:var(--qxframe9a7c2-theme-field-label-line-height);
+  font-weight:var(--qxframe9a7c2-theme-text-weight-label);
+}
 .qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer}
 .qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}
 .qxframe9a7c2-divider{flex:0 0 auto;height:1px;margin:0;border:0;background:var(--qxframe9a7c2-theme-border)}
