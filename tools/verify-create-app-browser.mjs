@@ -877,7 +877,7 @@ try {
           const css=el=>doc.defaultView.getComputedStyle(el),px=value=>parseFloat(value);
           const result={inset:px(css(cell).paddingLeft),headerHeight:px(css(head).height),
             headerText:css(head).color,expectedText:css(sample).color,
-            font:px(css(table).fontSize),headerFont:px(css(head).fontSize),bodyBackground:css(cell).backgroundColor};
+            font:px(css(table).fontSize),headerFont:px(css(head).fontSize),line:px(css(cell).lineHeight),bodyBackground:css(cell).backgroundColor};
           host.remove();html.classList.toggle('dark',old);
           return result;
         })()`);
@@ -887,6 +887,7 @@ try {
         assert.equal(actual.headerText,actual.expectedText,label+' header semantic text');
         assert.ok(Math.abs(actual.font-(['lyra','mira'].includes(style)?12:14))<.51,label+' body size');
         assert.ok(Math.abs(actual.headerFont-(style==='sera'?12:actual.font))<.51,label+' head size');
+        assert.ok(Math.abs(actual.line-(actual.font===12?16:20))<.51,label+' Tailwind table line box');
         assert.equal(actual.bodyBackground,'rgba(0, 0, 0, 0)',label+' unpainted cell');
       }
     }
