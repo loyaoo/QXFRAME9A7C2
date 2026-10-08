@@ -190,6 +190,17 @@ check('Receiving Method radio choices use shared Field composition, not custom C
     html.indexOf('<!-- @end receiving-method -->'));
   assert.equal((section.match(/class="qxframe9a7c2-check-field pv-choice-field"/g)||[]).length,2);
   assert.equal((section.match(/class="qxframe9a7c2-field-content"/g)||[]).length,2);
+  assert.match(section,/class="qxframe9a7c2-choice-group"/,'source RadioGroup must consume shared ChoiceGroup');
+  const compos=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  assert.match(compos,/\.qxframe9a7c2-choice-group\{[^}]*var\(--qxframe9a7c2-choice-group-columns,var\(--qxframe9a7c2-theme-choice-group-columns,2\)\)/,
+    'public local column override has precedence over Theme columns');
+  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+    const theme=model.compileTheme(model.normalizeConfig({style})).body;
+    const m=theme.match(/--qxframe9a7c2-theme-choice-group-columns:\s*([12]);/);
+    assert.ok(m,style+' missing ChoiceGroup theme role');
+    assert.equal(+m[1],style==='sera'?1:2,style+' source choice columns');
+  }
+
   assert.doesNotMatch(section,/pv-choice-card/,'no invented private Radio choice surface');
   const css=read('preview.css');
   assert.match(css,/\.pv-choice-field\s*\{\s*padding-block-end:\s*\.625rem;/,
