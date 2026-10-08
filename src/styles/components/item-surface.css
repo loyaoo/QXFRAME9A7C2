@@ -64,6 +64,24 @@
 }
 .qxframe9a7c2-item.is-muted{background:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) 50%,transparent)}
 .qxframe9a7c2-item.is-outline{border-color:var(--qxframe9a7c2-theme-border)}
+
+/* Static Item links share the same semantic surface. Hover, keyboard focus
+ * and press must project the accent/background + foreground as a pair;
+ * muted descriptions cannot keep a foreground meant for the old surface. */
+.qxframe9a7c2-item-link{color:inherit;text-decoration:none}
+.qxframe9a7c2-item-link:hover:not(.is-disabled):not(.is-readonly),
+.qxframe9a7c2-item-link:focus-visible:not(.is-disabled):not(.is-readonly),
+.qxframe9a7c2-item-link:active:not(.is-disabled):not(.is-readonly),
+.qxframe9a7c2-item-link.is-active:not(.is-disabled):not(.is-readonly){
+  background:var(--qxframe9a7c2-theme-accent);
+  color:var(--qxframe9a7c2-theme-accent-foreground);
+}
+.qxframe9a7c2-item-link:hover:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc,
+.qxframe9a7c2-item-link:focus-visible:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc,
+.qxframe9a7c2-item-link:active:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc,
+.qxframe9a7c2-item-link.is-active:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc{
+  color:inherit;
+}
 /* Smaller variants follow the Item md spacing anchor, rather than hardcoding
  * one style's values. Size-specific remaining differences are Stage 3 QA. */
 .qxframe9a7c2-item.is-sm{--_qxframe9a7c2-static-item-space:max(.625rem,calc(var(--qxframe9a7c2-theme-item-space) - .125rem))}
