@@ -675,6 +675,46 @@ try {
     }
   });
 
+  await step('Receiving Method uses 10px shared Radio Field rows in 16 modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','Receiving Method');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Receiving Method');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,prior=root.classList.contains('dark');
+          root.classList.toggle('dark',${mode==='dark'});
+          const css=e=>doc.defaultView.getComputedStyle(e),num=x=>parseFloat(x);
+          const card=doc.querySelector('[data-card="receiving-method"]');
+          const rows=[...card.querySelectorAll('.qxframe9a7c2-check-field.pv-choice-field')];
+          const result={items:rows.map(el=>{
+            const st=css(el),inner=el.querySelector('.qxframe9a7c2-field-content');
+            return {paddingBottom:num(st.paddingBottom),paddingTop:num(st.paddingTop),
+              border:num(st.borderTopWidth),gap:num(st.columnGap),
+              contentGap:num(css(inner).rowGap),
+              checked:el.querySelector('input[type=radio]').checked};
+          }),
+          themeGap:num(css(root).getPropertyValue('--qxframe9a7c2-theme-field-gap'))*16,
+          themeContentGap:num(css(root).getPropertyValue('--qxframe9a7c2-theme-field-content-gap'))*16};
+          root.classList.toggle('dark',prior);
+          return result;
+        })()`);
+        assert.equal(actual.items.length,2,style+'/'+mode+' has two radio Field rows');
+        assert.equal(actual.items[0].checked,true,style+'/'+mode+' bank radio selected');
+        for(const row of actual.items){
+          assert.ok(Math.abs(row.paddingBottom-10)<=.5,style+'/'+mode+' source pb-2.5');
+          assert.ok(Math.abs(row.paddingTop)<=.5,style+'/'+mode+' no invented top padding');
+          assert.equal(row.border,0,style+'/'+mode+' no invented boxed border');
+          assert.ok(Math.abs(row.gap-actual.themeGap)<=.5,style+'/'+mode+' Field gap role');
+          assert.ok(Math.abs(row.contentGap-actual.themeContentGap)<=.5,
+            style+'/'+mode+' FieldContent role');
+        }
+      }
+    }
+  });
+
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
