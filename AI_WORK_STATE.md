@@ -19,60 +19,55 @@
 
 ## CURRENT
 
-Task: `CREATEAPP-V3-S3` — Preview 01 visual geometry source alignment.
-Status: IN PROGRESS on branch `redesign/create`, Draft PR #265.
-Stages 0–2 merged; runtime Controller 40/40 accepted and frozen.
-Do not modify qxframe.js or add low-browser compatibility work.
+Task: CREATEAPP-V3-S3 — Preview 01 visual geometry, pinned shadcn
+`295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
+Draft PR #265 on `redesign/create`. Stages 0–2 merged,
+40/40 Controller accepted, qxframe.js unchanged; do not reopen.
 
-LAST GREEN CHECKPOINT `dc6a9fa7ad855a156b8a3710f6127ee1bb31660f`:
-QXFRAME CI run `37745480286` success (release and windows),
-CSS Schema Acceptance run `37745480393` success.
-20 Chromium createApp browser checks passed; fresh 528-entry
-source-locked Card height report has **330/528 differences >0.5px**,
-vs previous 362/528 and original 410/528.
-268 cases improved vs original and 124 worsened. Nova Kitchen Island
-fully matches pinned height 337px; Nova Sidebar Nav 377px also
-fully matches. Remaining Nova biggest deltas FAQ +45px, Payments +42,
-Notifications +28, Preferences −26, Receiving Method +24.75.
-These are diagnostics, NOT stage 3 final visual acceptance.
+MOST RECENT VERIFIED GREEN:
+HEAD `18d59c59a6782375644ce13a6046367770af11eb`,
+QXFRAME CI run `37759206595` release+windows success,
+CSS Schema Acceptance `37759206598` success.
+21 browser steps passed (8 styles × light/dark coverage);
+528 first-Card heights >0.5px mismatch: **330/528**, down
+from original 410, unchanged from previous batch.
+Nova metrics: Kitchen 337/337 exact, Sidebar 377/377 exact,
+FAQ 400 vs reference375 (+25, improved 20px), Notifications
+405 vs403 (+2, improved26px), Payments 473 vs431 (+42),
+Preferences 367 vs405 (-38), receiving-method +24.75.
+These are diagnostics, not Stage3 overall acceptance.
 
-2026-10-08 current batch, source-driven (latest CI pending):
-- Read pinned `ui/accordion.tsx` and `ui/field.tsx` from upstream
-  `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
-  AccordionTrigger has no fixed horizontal `gap:1rem`.
-  FAQ Preview summary previously had the extra 16px spacing,
-  causing premature trigger text wrapping; corrected to gap zero.
-- Checkbox Field horizontal gap also corrected from fixed 12px to
-  source-locked 8px (Nova/Lyra/Mira) or 12px (other five styles),
-  consuming existing `theme-field-gap` with public
-  `--qxframe9a7c2-check-field-gap` taking precedence.
-  Eight-style static + 16-mode five-row computed-style checks added;
-  no new Theme token or runtime change.
-- The shared QX `.qxframe9a7c2-field-content` now supplies
-  direct-child label font size, line height, and weight from
-  existing Theme roles. Formerly only `.form-field.is-composed`
-  labels consumed them; Notification Settings FieldContent labels
-  did not. No new Theme tokens or style branches, no runtime changes.
-- Added 8-style × 2-mode Chromium computed-style gate verifying
-  five Notification labels' line-height and FAQ summary zero
-  horizontal gap; added static source assertions.
-- Updated detailed QA record:
-  `tools/qa/reports/stage-3/README.md`.
-  Full Card height diff should be read from new CI, no guessed pass.
-- Preserved earlier 624/624 shared Card subset and 8-style
-  Empty, Item, Field, Sidebar and Kitchen browser gates.
+2026-10-08 CURRENT CODE BATCH, newest CI pending:
+- Compared pinned `FieldSeparator` source `h-5 -my-4` with
+  Preferences 2 `.pv-divider-bleed` instances. QX used 1px
+  layout height and -16px margins instead of source 20px
+  layout slot + 1px centered stroke. This produces an
+  **exact -38px** Nova Card discrepancy across two separators.
+- In `docs/create/preview.css`, made the *instance modifier*
+  `.pv-divider-bleed` occupy 20px and use transparent background
+  with centered 1px ::after divider. Shared Divider default
+  stays 1px; both -16px margins retained. No theme-token
+  proliferation, per-style selector or runtime change.
+- Static gate updated; existing 8×2 browser source-local
+  geometry gate now checks actual 20px slots, -16px margins
+  and transparent surface.
+- `tools/qa/reports/stage-3/README.md` updated with pinned
+  source root-cause analysis and remaining `style-sera:hidden`
+  behavior. Must **NOT** claim exact Preferences parity until
+  new CI remeasures 528 records.
 
-Engineering progress estimate: overall CREATEAPP-V3 **59%**,
-S3 **44%** provisional. Full Preview 01/nested Card parity and
-all Stage 4/5 work remain incomplete.
+Progress estimate: overall CREATEAPP-V3 **59%**, S3 **46%**
+(provisional). Earlier shared Card subset 624/624 and
+Empty/Item/Field/Sidebar/Kitchen Chromium subsets accepted;
+do not repeat. Hundreds of first-Card/nested Card height
+differences remain, so stage acceptance is still pending.
 
-NEXT EXACT STEP: inspect current PR #265 HEAD and both Actions;
-fix static/browser failures without loosening 0.5px or
-ratchet. Extract `[preview-01-first-card-diagnostic]` and
-`[preview-01-structure-nova]` from successful release logs.
-Compare FAQ and Notification Settings height changes against
-330/528 baseline; continue Payments/FAQ composition and nested
-card QA. Keep Draft; no main merge until owner accepts.
+NEXT EXACT STEP: inspect HEAD PR #265 Actions, repair any
+static/browser gate errors without relaxing thresholds,
+read `[preview-01-first-card-diagnostic]` for updated
+Preferences and total 528-row count; then focus
+Payments+42, FAQ+25 and Sera FieldSeparator conditional.
+Update QA/state after green. Keep PR Draft and main unchanged.
 
 
 ### Owner decisions (2026-10-07) — frozen
