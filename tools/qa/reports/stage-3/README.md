@@ -132,3 +132,46 @@ where to investigate component geometry; it does not assign a pass/fail verdict.
   typography owner; the CSS gate baseline was not increased. Recheck latest CI.
 
 Additional InputGroup closeout: shared `.qxframe9a7c2-form-input-group-field` provides an explicitly bordered inner field when prefix/suffix and addon coexist. The parent group now joins the same theme control-size owner as other controls; nested addon/input have zero border, external prefix/suffix retain bordered segments. Browser test creates this mixed structure and checks border owners and center square seams. The separate full-width Progress projection `.qxframe9a7c2-progress.is-full` restores the original block-level demo geometry after swapping to the existing QX progress internals. Current CI remains authoritative; do not assert passing visual acceptance before it completes.
+
+
+## 2026-10-08 — Empty across eight styles (CREATEAPP-V3-S3)
+
+Root cause: the previous composed-Empty CSS fixed Nova-sized media/title/inset
+for all 8 styles. The pinned reference at
+`tools/qa/spec.json` has two distinct geometry tiers; retaining the Nova
+constants would prevent Stage 3 style parity even when the Card outer frame
+passed.
+
+Reference source geometry (light/dark share these dimensions):
+
+| Style | Inset | Media square | Title (font / line) | Empty root radius | Media radius |
+|---|---:|---:|---:|---:|---:|
+| Vega | 48px | 40px | 18px / 28px | 10px | 10px |
+| Nova | 24px | 32px | 14px / 20px | 14px | 10px |
+| Maia | 48px | 40px | 18px / 28px | 10px | 10px |
+| Lyra | 24px | 32px | 14px / 20px | 0 | 0 |
+| Mira | 24px | 32px | 14px / 20px | 14px | 8px |
+| Luma | 48px | 40px | 18px / 28px | 18px | 14px |
+| Sera | 48px | 40px | 18px / 28px | 0 | 0 |
+| Rhea | 48px | 40px | 18px / 28px | 22px | 14px |
+
+Implementation:
+- Register exactly three added Theme inputs:
+  `empty-inset`, `radius-empty`, `radius-empty-media`.
+  The 24px/48px tier is selected by the existing container padding axis; the
+  two radius roles use the existing six-category radius-allocation recipe,
+  scaled by the global radius. An explicit container-square shape clips root
+  radius to zero. No `data-create-style` selector or runtime JS is used.
+- Shared Empty CSS derives media size `24px + inset/3`, icon SVG dimensions
+  `16px + inset/6`, title font `10px + inset/6` and title line
+  `12px + inset/3`. Description font consumes `text-size` and its line
+  multiplier 1.625 matches the source's 14px/22.75px and 12px/19.5px.
+- Add 8-style numeric checks to the static createApp gate and computed-style
+  checks for eight styles × light/dark to browser CI (0.5px tolerance), including
+  media/root corners. All existing Empty demos and legacy Empty DOM remain.
+
+Status: changes submitted in draft PR #265. Previous 410 height differences
+must **not** be treated as fixed until the full first-Card audit is regenerated
+against the pinned reference, and nested cards/form/list internals still need
+measurement. The new geometry test is an explicit partial Stage 3 contract,
+not a claim of full pixel parity.
