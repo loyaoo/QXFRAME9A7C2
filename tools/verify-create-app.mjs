@@ -45,8 +45,8 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
   const shared = fs.readFileSync(path.join(root, 'src/styles/components/empty.css'), 'utf8');
   assert.match(shared, /\.qxframe9a7c2-empty\.is-composed\s*\{/);
   assert.match(shared, /\.qxframe9a7c2-empty-media\.is-icon\s*\{/);
-  assert.match(shared, /width:\\s*var\\(--_qxframe9a7c2-empty-media-size\\)/);
-  assert.match(shared, /font-size:\\s*var\\(--_qxframe9a7c2-empty-title-size\\)/);
+  assert.match(shared, /width:\s*var\(--_qxframe9a7c2-empty-media-size\)/);
+  assert.match(shared, /font-size:\s*var\(--_qxframe9a7c2-empty-title-size\)/);
   assert.match(shared, /theme-empty-inset/);
   assert.match(shared, /theme-radius-empty-media/);
   for (const page of ['preview-01.html', 'preview-02.html']) {
@@ -75,7 +75,7 @@ check('Empty geometry follows pinned 8-style source, not Nova hardcoding', () =>
   for (const [style, [inset, outer, media]] of Object.entries(expected)) {
     const css = model.compileTheme(model.normalizeConfig({ style })).body;
     const tokens = Object.fromEntries(
-      [...css.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+):\\s*([^;]+);/g)]
+      [...css.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+):\s*([^;]+);/g)]
         .map(m => [m[1], m[2]])
     );
     const n = value => parseFloat(value) * (value === '0' ? 1 : 16);
@@ -84,11 +84,11 @@ check('Empty geometry follows pinned 8-style source, not Nova hardcoding', () =>
     assert.equal(n(tokens['radius-empty-media']), media, style + ' Empty media radius');
   }
   const input = model.normalizeConfig({ style: 'nova', ext: { padding: 'p24' } });
-  assert.match(model.compileTheme(input).body, /--qxframe9a7c2-theme-empty-inset:\\s*3rem;/);
+  assert.match(model.compileTheme(input).body, /--qxframe9a7c2-theme-empty-inset:\s*3rem;/);
   const sharp = model.normalizeConfig({ style: 'luma', radius: 'none' });
   const sharpCss = model.compileTheme(sharp).body;
-  assert.match(sharpCss, /--qxframe9a7c2-theme-radius-empty:\\s*0;/);
-  assert.match(sharpCss, /--qxframe9a7c2-theme-radius-empty-media:\\s*0;/);
+  assert.match(sharpCss, /--qxframe9a7c2-theme-radius-empty:\s*0;/);
+  assert.match(sharpCss, /--qxframe9a7c2-theme-radius-empty-media:\s*0;/);
 });
 
 check('QX shape, Luma switch and shared layout contracts', () => {
