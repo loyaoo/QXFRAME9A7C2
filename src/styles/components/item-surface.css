@@ -76,7 +76,7 @@
 }
 .qxframe9a7c2-item-group:has(>.qxframe9a7c2-item.is-sm){--_qxframe9a7c2-static-item-group-gap:.625rem}
 .qxframe9a7c2-item-group:has(>.qxframe9a7c2-item.is-xs){--_qxframe9a7c2-static-item-group-gap:.5rem}
-.qxframe9a7c2-item-content{display:flex;flex:1 1 auto;flex-direction:column;gap:.25rem;min-width:0}
+.qxframe9a7c2-item-content{display:flex;flex:1 1 0;flex-direction:column;gap:.25rem;min-width:0}
 .qxframe9a7c2-item-title{
   display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
