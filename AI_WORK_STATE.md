@@ -62,6 +62,17 @@ NEW IMPLEMENTATION BATCH (latest CI pending):
   static and 8 styles × light/dark computed-style gates.
   Pinned Sera-specific one-column radio layout is still
   outstanding; do not claim exact Sera parity.
+- Source Sera `RadioGroup style-sera:grid-cols-1` differed
+  from QX's fixed two-column flex preview. Registered ONE
+  generalized `theme-choice-group-columns` numeric role,
+  deriving 1 editorial / 2 regular from existing textStyle;
+  added reusable pure CSS `qxframe9a7c2-choice-group`
+  using flex (no CSS Grid). Public
+  `--qxframe9a7c2-choice-group-columns` overrides Theme.
+  Receiving Method consumes it; 8-style static and
+  16-mode browser column/override tests added. This
+  resolves the previously deferred Sera one-column case
+  subject to latest CI. No runtime JS changes.
 - Added static source check and merged Roller computed
   height vs thumb check into existing eight-style Kitchen
   Chromium geometry gate. Does not change shared Slider
@@ -74,7 +85,7 @@ NEW IMPLEMENTATION BATCH (latest CI pending):
 - Detailed evidence and QA: `tools/qa/reports/stage-3/README.md`.
 
 Engineering estimate overall CREATEAPP-V3 **61%**,
-Stage3/Task **54%** (provisional). Earlier 624/624
+Stage3/Task **55%** (provisional). Earlier 624/624
 shared Card subset and frozen 40/40 Controller are done.
 Nested Cards, comprehensive Preview01/02 style parity,
 hundreds of >0.5px height mismatches and Stages4/5 remain open.
@@ -83,7 +94,7 @@ NEXT EXACT STEP:
 1. Inspect HEAD PR #265 latest Actions, fix any failed
    test or generated file discrepancy without weakening
    Source/Schema ratchets. Obtain new 528-record summary;
-   confirm Roller Shades and Receiving Method heights before claiming improvement.
+   confirm Roller Shades, Receiving Method and Sera columns before claiming improvement.
 2. Continue source-backed Payments +42px, FAQ +14px,
    Receiving Method +24.75px. Compare actual text glyph
    widths and line wraps; do not set fixed Card heights.
