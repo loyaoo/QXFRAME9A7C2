@@ -1,11 +1,11 @@
 // QXFRAME9A7C2 theme token closed list (v3 §5.1). The only theme inputs are the
 // `--qxframe9a7c2-theme-*` names below; every theme (the default block inside
 // qxframe.css and every createApp export) writes the whole list: `:root` holds
-// every token, `.dark` repeats every `mode: 'color'` token with its dark value.
+// every token, `.dark` also contains every token (with dark values for colors).
 // New tokens are added here only (registered), never ad hoc in CSS.
 //
 // kind:  color | length | number | percent | font | keyword | shadow | time
-// mode:  'color' → written in :root and .dark;  'root' → written in :root only.
+// mode: 'color' → mode-specific values; 'root' → identical in both blocks.
 
 export const TOKEN_PREFIX = '--qxframe9a7c2-theme-';
 
@@ -194,7 +194,10 @@ export const THEME_TOKENS = [
   L('duration-xs', 'Motion 1', 'time'),
   L('duration-sm', 'Motion 2', 'time'),
   L('duration-md', 'Motion 3', 'time'),
-  L('duration-lg', 'Motion 5', 'time')
+  L('duration-lg', 'Motion 5', 'time'),
+  L('skeleton-animation', 'Skeleton pulse animation name; none disables looping', 'keyword'),
+  L('spinner-icon-animation', 'Static spinner animation name; none disables looping', 'keyword'),
+  L('loading-spin-animation', 'Loading overlay spinner animation name; none disables looping', 'keyword')
 ];
 
 export const THEME_TOKEN_NAMES = THEME_TOKENS.map(token => TOKEN_PREFIX + token.name);
