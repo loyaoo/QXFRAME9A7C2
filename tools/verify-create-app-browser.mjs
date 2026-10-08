@@ -358,6 +358,62 @@ try {
     }
   });
 
+  await step('Item and Field computed parity across 8 styles x light/dark', async () => {
+    // Pinned source: tools/qa/spec.json; target only shared default-md layout,
+    // leaving independent xs/sm geometry and nested Card acceptance for S3.
+    const expected = {
+      vega:[74.25,14,16,14,8,14,19.25,500,21,28,12,14,14,500,21],
+      nova:[66.25,10,12,10,10,14,19.25,500,21,20,8,14,14,500,21],
+      maia:[73.25,14,16,14,18,14,19.25,500,20,28,12,14,14,500,21],
+      lyra:[61.5,10,12,10,0,12,16,500,19.5,20,8,12,12,400,18],
+      mira:[62,10,12,10,8,12,16.5,500,19.5,16,8,12,12,500,18],
+      luma:[73.25,14,16,14,18,14,19.25,500,20,28,12,14,14,500,21],
+      sera:[73.25,14,16,14,0,12,16.5,600,22.75,40,12,12,19.5,600,21],
+      rhea:[73.25,14,16,14,18,14,19.25,500,20,24,12,14,14,500,21]
+    };
+    const approx = (actual, expectedValue, name) =>
+      assert.ok(Number.isFinite(actual) && Math.abs(actual-expectedValue) <= .5,
+        name + ': expected ' + expectedValue + 'px, measured ' + actual + 'px');
+    for (const [style, numbers] of Object.entries(expected)) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "' + style + '", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style') + ' === "' + style + '"', 'Item/Field preview ' + style);
+      for (const mode of ['light','dark']) {
+        const actual = await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement, old=html.classList.contains('dark');
+          html.classList.toggle('dark', ${mode === 'dark'});
+          const host=doc.createElement('div');
+          host.style.cssText='position:absolute;left:0;top:0;width:320px;visibility:hidden';
+          host.innerHTML='<div class="qxframe9a7c2-item is-outline"><div class="qxframe9a7c2-item-content"><div class="qxframe9a7c2-item-title">Short item</div><p class="qxframe9a7c2-item-desc">A short note.</p></div></div><div class="qxframe9a7c2-field-group"><div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label">Full name</label><input class="qxframe9a7c2-form-input" value="Example"><p class="qxframe9a7c2-form-description">Description</p></div><div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label">Email</label><input class="qxframe9a7c2-form-input" value="example@mail.test"></div></div>';
+          doc.body.append(host);
+          const css=el=>doc.defaultView.getComputedStyle(el),n=v=>parseFloat(v);
+          const item=host.querySelector('.qxframe9a7c2-item');
+          const title=host.querySelector('.qxframe9a7c2-item-title');
+          const itemDesc=host.querySelector('.qxframe9a7c2-item-desc');
+          const fields=host.querySelector('.qxframe9a7c2-field-group');
+          const field=fields.firstElementChild;
+          const label=field.querySelector('.qxframe9a7c2-form-label');
+          const formDesc=field.querySelector('.qxframe9a7c2-form-description');
+          const values=[
+            n(css(item).height),n(css(item).paddingTop),n(css(item).paddingLeft),n(css(item).columnGap),
+            n(css(item).borderTopLeftRadius),n(css(title).fontSize),n(css(title).lineHeight),
+            n(css(title).fontWeight),n(css(itemDesc).lineHeight),
+            n(css(fields).rowGap),n(css(field).rowGap),n(css(label).fontSize),
+            n(css(label).lineHeight),n(css(label).fontWeight),n(css(formDesc).lineHeight)
+          ];
+          host.remove(); html.classList.toggle('dark',old);
+          return values;
+        })()`);
+        assert.ok(Array.isArray(actual), style + '/' + mode + ' fixture missing');
+        const labels=['item height','item block padding','item inline padding','item gap',
+          'item corner','title font','title line','title weight','item description line',
+          'field-group gap','field gap','label font','label line','label weight','field description line'];
+        for(let i=0;i<numbers.length;i++)
+          approx(actual[i],numbers[i],style+'/'+mode+' '+labels[i]);
+      }
+    }
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {
