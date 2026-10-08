@@ -63,6 +63,7 @@
   --qxframe9a7c2-theme-field: transparent;
   --qxframe9a7c2-theme-field-border: oklch(0.922 0 0);
   --qxframe9a7c2-theme-field-disabled: oklch(0.922 0 0 / 0.5);
+  --qxframe9a7c2-theme-table-heading-foreground: oklch(0.145 0 0);
   --qxframe9a7c2-theme-choice: transparent;
   --qxframe9a7c2-theme-choice-border: oklch(0.922 0 0);
   --qxframe9a7c2-theme-switch-track: oklch(0.922 0 0);
@@ -98,6 +99,7 @@
   --qxframe9a7c2-theme-empty-inset: 1.5rem;
   --qxframe9a7c2-theme-empty-icon-size: 1rem;
   --qxframe9a7c2-theme-empty-content-gap: 0.625rem;
+  --qxframe9a7c2-theme-table-cell-inset: 0.5rem;
   --qxframe9a7c2-theme-item-space: 0.625rem;
   --qxframe9a7c2-theme-item-description-leading: 1.5;
   --qxframe9a7c2-theme-field-group-gap: 1.25rem;
@@ -232,6 +234,7 @@
   --qxframe9a7c2-theme-field: oklch(1 0 0 / 0.045);
   --qxframe9a7c2-theme-field-border: oklch(1 0 0 / 15%);
   --qxframe9a7c2-theme-field-disabled: oklch(1 0 0 / 0.12);
+  --qxframe9a7c2-theme-table-heading-foreground: oklch(0.985 0 0);
   --qxframe9a7c2-theme-choice: oklch(1 0 0 / 0.045);
   --qxframe9a7c2-theme-choice-border: oklch(1 0 0 / 15%);
   --qxframe9a7c2-theme-switch-track: oklch(1 0 0 / 0.12);
@@ -267,6 +270,7 @@
   --qxframe9a7c2-theme-empty-inset: 1.5rem;
   --qxframe9a7c2-theme-empty-icon-size: 1rem;
   --qxframe9a7c2-theme-empty-content-gap: 0.625rem;
+  --qxframe9a7c2-theme-table-cell-inset: 0.5rem;
   --qxframe9a7c2-theme-item-space: 0.625rem;
   --qxframe9a7c2-theme-item-description-leading: 1.5;
   --qxframe9a7c2-theme-field-group-gap: 1.25rem;
