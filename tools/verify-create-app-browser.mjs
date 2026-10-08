@@ -566,6 +566,9 @@ try {
       const doc=document.querySelector('[data-create-frame]').contentDocument;
       const rows=[...doc.querySelectorAll('[data-card="payments"] .qxframe9a7c2-item')];
       const width=rows[0].parentNode.getBoundingClientRect().width;
+      const font=doc.createElement('style');
+      font.textContent='body,body *{font-family:system-ui,sans-serif!important}';
+      doc.head.append(font);
       const css=doc.createElement('style');
       // Source contract: pinned ui/item.tsx + style-nova.css (Item/default,
       // ItemContent flex-1, ItemDescription line-clamp-2, ItemGroup gap-4).
@@ -600,7 +603,7 @@ try {
       const source=measure('.qx-source-payments .src-item');
       const systemFont=doc.defaultView.getComputedStyle(doc.body).fontFamily;
       const browser=doc.defaultView.navigator.userAgent;
-      host.remove();css.remove();return {actual,source,width,systemFont,browser};
+      host.remove();css.remove();font.remove();return {actual,source,width,systemFont,browser};
     })()`);
     assert.equal(geometry.actual.length,4);assert.equal(geometry.source.length,4);
     for(let i=0;i<4;i++){
