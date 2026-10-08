@@ -180,7 +180,7 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   line-height:var(--qxframe9a7c2-theme-field-label-line-height);
   font-weight:var(--qxframe9a7c2-theme-text-weight-label);
 }
-.qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer}
+.qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem));cursor:pointer}
 .qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}
 .qxframe9a7c2-divider{flex:0 0 auto;height:1px;margin:0;border:0;background:var(--qxframe9a7c2-theme-border)}
 .qxframe9a7c2-divider.is-vertical{width:1px;height:auto;align-self:stretch}
