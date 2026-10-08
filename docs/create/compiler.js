@@ -318,7 +318,7 @@ export function themeTokens(resolved) {
   root['text-size-heading'] = rem(headingSize);
   root['text-size-kpi'] = rem(kpiSize);
   root['text-weight'] = '400';
-  root['text-weight-label'] = ext.textStyle === 'editorial' ? '600' : resolved.font === 'mono' ? '400' : '500';
+  root['text-weight-label'] = ext.textStyle === 'editorial' ? '600' : (resolved.font === 'mono' || style === 'lyra') ? '400' : '500';
   const editorial = ext.textStyle === 'editorial';
   root['control-weight'] = editorial ? '600' : '500';
   root['control-tracking'] = editorial ? '0.1em' : 'normal';
