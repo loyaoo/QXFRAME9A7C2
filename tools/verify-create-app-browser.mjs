@@ -832,6 +832,40 @@ try {
     assert.deepEqual(states.collapsed,[false,false,false]);
     assert.deepEqual(states.restored,[true,false,false]);
   });
+  await step('FAQ QX Tabs switches independent source-locked Billing and Goals panels', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs-tab-action")', 'FAQ Tabs ready');
+    const result = await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const faq=doc.querySelector('[data-card="faq"]');
+      const actions=[...faq.querySelectorAll('.pv-tabs .qxframe9a7c2-tabs-tab-action')];
+      const panels=[...faq.querySelectorAll('[data-pv-tab-panel]')];
+      const snap=()=>({selected:actions.filter(e=>e.classList.contains('is-active')).map(e=>e.textContent.trim()),
+        shown:panels.filter(e=>!e.hidden&&doc.defaultView.getComputedStyle(e).display!=='none').map(e=>e.getAttribute('data-pv-tab-panel')),
+        questions:panels.filter(e=>!e.hidden).flatMap(e=>[...e.querySelectorAll('summary')].map(x=>x.textContent.trim()))});
+      const initial=snap();
+      actions[1].click(); const billing=snap();
+      const billingItems=[...faq.querySelectorAll('[data-pv-tab-panel="billing"] details')];
+      billingItems[1].querySelector('summary').click();
+      const billingSingleOpen=billingItems.map(e=>e.open);
+      actions[2].click(); const goals=snap();
+      actions[0].click(); const restored=snap();
+      return {tabs:actions.length,panels:panels.length,initial,billing,goals,restored,billingSingleOpen,
+        names:[...faq.querySelectorAll('details')].map(e=>e.name)};
+    })()`);
+    assert.equal(result.tabs,3);
+    assert.equal(result.panels,3);
+    assert.deepEqual(result.initial.shown,['general']);
+    assert.deepEqual(result.billing.shown,['billing']);
+    assert.deepEqual(result.goals.shown,['goals']);
+    assert.deepEqual(result.restored.shown,['general']);
+    assert.ok(result.billing.questions[0].includes('Basic and Pro pricing tiers'));
+    assert.ok(result.goals.questions[0].includes('custom financial goal'));
+    assert.deepEqual(result.billingSingleOpen,[false,true,false]);
+    assert.equal(result.names.length,9);
+    assert.equal(new Set(result.names).size,3);
+  });
+  
   await step('Motion none stops static Skeleton, Spinner and Accordion indicator in 16 modes', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','Motion preview');
