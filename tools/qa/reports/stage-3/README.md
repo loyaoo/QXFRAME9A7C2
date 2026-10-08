@@ -803,3 +803,22 @@ New source and browser tests are committed. Pending results at
 `4304f90384e3b71cdfe41308c157e27d37390238`
 (or newer documentation HEAD); any GitHub Actions failure must
 be investigated before calling the batch accepted. Keep #265 Draft.
+
+### Follow-up to audit #8: pinned Empty glyph and action gaps
+
+Reopened the exact shadcn-ui/ui pinned `style-*.css` files for all
+8 styles. Source `cn-empty-media-icon` SVG sizes: Vega/Maia 24px;
+Luma/Sera/Rhea 20px; Nova/Lyra/Mira 16px, while media boxes stay
+40px and 32px respectively. Source `cn-empty-content` gaps:
+Mira 8px, Nova/Lyra 10px, all remaining styles 16px. This verifies
+#8, rather than assuming it from the audit report.
+
+Two shared Theme roles `empty-icon-size` / `empty-content-gap` now
+express these differences, the compiler and generated default full
+light/dark file are synchronized (167 total roles), and composed
+Empty consumes them with public instance overrides. The 8 styles ×
+2 modes static/Chromium checks now inspect the SVG *inside* the media
+box and computed gaps of EmptyContent children. Compact/spacious
+padding tier still determines structural media sizing, as before.
+Do not claim first-Card height improvements until a new green CI
+report is measured; QA status for this code batch remains pending.
