@@ -202,6 +202,16 @@ check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', 
   }
 });
 
+check('FieldContent labels consume shared Theme lines and FAQ trigger has no non-source gap', () => {
+  const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  const preview=read('preview.css');
+  assert.match(composition,/\.qxframe9a7c2-field-content>\.qxframe9a7c2-form-label\{[^}]*line-height:var\(--qxframe9a7c2-theme-field-label-line-height\)/,
+    'FieldContent label should share semantic typography with FormField');
+  assert.match(composition,/\.qxframe9a7c2-field-content>\.qxframe9a7c2-form-label\{[^}]*font-weight:var\(--qxframe9a7c2-theme-text-weight-label\)/);
+  assert.match(preview,/\.pv-accordion-item\s*>\s*summary\s*\{[^}]*gap:\s*0;/,
+    'upstream AccordionTrigger has no horizontal 16px gap');
+});
+
 check('Pinned SidebarMenu gap and SidebarGroup padding across eight styles', () => {
   const gaps={vega:4,nova:0,maia:4,lyra:0,mira:1,luma:2,sera:2,rhea:2};
   for(const [style,gap] of Object.entries(gaps)){
