@@ -19,55 +19,73 @@
 
 ## CURRENT
 
-Task: CREATEAPP-V3-S3 — Preview 01 visual geometry, pinned shadcn
-`295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
-Draft PR #265 on `redesign/create`. Stages 0–2 merged,
-40/40 Controller accepted, qxframe.js unchanged; do not reopen.
+Active task: `CREATEAPP-V3-S3` source-locked Preview 01 geometry parity.
+Branch `redesign/create`, Draft PR #265. Stages 0–2 merged;
+runtime Controller migration 40/40 accepted. Do not change
+qxframe.js or redo Controller. No main merge until owner approval.
 
-MOST RECENT VERIFIED GREEN:
-HEAD `18d59c59a6782375644ce13a6046367770af11eb`,
-QXFRAME CI run `37759206595` release+windows success,
-CSS Schema Acceptance `37759206598` success.
-21 browser steps passed (8 styles × light/dark coverage);
-528 first-Card heights >0.5px mismatch: **330/528**, down
-from original 410, unchanged from previous batch.
-Nova metrics: Kitchen 337/337 exact, Sidebar 377/377 exact,
-FAQ 400 vs reference375 (+25, improved 20px), Notifications
-405 vs403 (+2, improved26px), Payments 473 vs431 (+42),
-Preferences 367 vs405 (-38), receiving-method +24.75.
-These are diagnostics, not Stage3 overall acceptance.
+LATEST **GREEN** SOURCE CODE HEAD `a7d764b54b9887719c63ef225fef2e9c888bdfce`:
+QXFRAME CI `37760566328` release + windows-tools success;
+CSS Schema Acceptance `37760566341` success;
+all **21** createApp Chromium browser checks passed.
+528 tracked first-Card height records vs pinned shadcn source
+`295a1f114a138f23b5dfee0e0c6812394dfeb90c`:
+**316/528** have >0.5px height difference, down from
+330/528 previous batch, 362/528 earlier and **410/528 initial**.
+270 improved and 120 worsened vs original reference.
+No blanket Card visual acceptance is implied. The other 212
+are height-within-tolerance only, not complete visual equivalence.
+Nova source parity: Kitchen Island 337/337px, Sidebar Nav
+377/377px; Notification Settings 405/403 (+2px), FAQ
+400/375 (+25px), Payments 473/431 (+42px). Preferences is
+no longer in Nova's ten largest height differences after
+FieldSeparator slot fix (previously -38px); exact current value
+is in QA artifact, do not infer an exact value from omission.
 
-2026-10-08 CURRENT CODE BATCH, newest CI pending:
-- Compared pinned `FieldSeparator` source `h-5 -my-4` with
-  Preferences 2 `.pv-divider-bleed` instances. QX used 1px
-  layout height and -16px margins instead of source 20px
-  layout slot + 1px centered stroke. This produces an
-  **exact -38px** Nova Card discrepancy across two separators.
-- In `docs/create/preview.css`, made the *instance modifier*
-  `.pv-divider-bleed` occupy 20px and use transparent background
-  with centered 1px ::after divider. Shared Divider default
-  stays 1px; both -16px margins retained. No theme-token
-  proliferation, per-style selector or runtime change.
-- Static gate updated; existing 8×2 browser source-local
-  geometry gate now checks actual 20px slots, -16px margins
-  and transparent surface.
-- `tools/qa/reports/stage-3/README.md` updated with pinned
-  source root-cause analysis and remaining `style-sera:hidden`
-  behavior. Must **NOT** claim exact Preferences parity until
-  new CI remeasures 528 records.
+2026-10-08 completed source-specific S3 batches:
+- Shared ItemMedia icon unboxed16px and ItemGroup gap 16/10/8;
+  Kitchen 4 duplicated icon wrappers removed; Slider root
+  uses optional local `--qxframe9a7c2-slider-height` thumb
+  footprint, default runtime untouched. Kitchen now exactly
+  matches Nova height.
+- Sidebar source menu gaps 4/0/4/0/1/2/2/2px;
+  group seam/padding aligned, Nova height matches source.
+- ItemContent zero flex basis fixes wrapped Payment Chevron.
+  Shared Item title clamp 1 line / description 2.
+- Shared `FieldContent` consumes typed Theme gap, label
+  font-size/line-height/weight roles; Checkbox Field gap
+  8px for Nova/Lyra/Mira, 12px for other source styles.
+  Notifications now within 2px Nova.
+- FAQ AccordionTrigger unnecessary 16px horizontal gap removed;
+  source trigger text no longer wraps an extra line; Nova
+  improved by 20px.
+- Preferences: pinned `FieldSeparator -my-4 h-5` uses
+  20px transparent layout slot with 1px centered stroke,
+  not the earlier 1px slot. Both local instances now preserve
+  correct layout. This batch reduced overall height mismatch
+  count 330→316 across style/mode cases.
+- Static 8-style and browser 8×light/dark real computed
+  assertions maintain 0.5px tolerance and theme whitelist.
+  Bug in source regex was fixed without changing actual
+  CSS or relaxing tests.
+- QA details: `tools/qa/reports/stage-3/README.md`.
+  No production Controller/JS modifications.
 
-Progress estimate: overall CREATEAPP-V3 **59%**, S3 **46%**
-(provisional). Earlier shared Card subset 624/624 and
-Empty/Item/Field/Sidebar/Kitchen Chromium subsets accepted;
-do not repeat. Hundreds of first-Card/nested Card height
-differences remain, so stage acceptance is still pending.
+Estimate: overall CREATEAPP-V3 **60%**, S3 Stage3 **48%**.
+Stages 4/5, nested Cards, broader Item xs/sm, full first-Card
+size/spacing and exact per-card parity remain unaccepted.
+Sera `style-sera:hidden` separators are source-specific
+still unimplemented; first-Card report includes residual
+style differences.
 
-NEXT EXACT STEP: inspect HEAD PR #265 Actions, repair any
-static/browser gate errors without relaxing thresholds,
-read `[preview-01-first-card-diagnostic]` for updated
-Preferences and total 528-row count; then focus
-Payments+42, FAQ+25 and Sera FieldSeparator conditional.
-Update QA/state after green. Keep PR Draft and main unchanged.
+NEXT EXACT STEP: continue source-driven Payments +42px and
+FAQ +25px discrepancy isolation, inspect text wrapping and
+pinned Card internals rather than setting fixed Card heights.
+Add per-item Payment text line/width diagnostics to browser
+QA before changing typography. Verify each batch in Draft
+PR #265, preserve 0.5px ratchet. Do not merge without owner
+stage acceptance, do not redo already-green 624/624
+shared Card subset and 40/40 Controller.
 
 
 ### Owner decisions (2026-10-07) — frozen
