@@ -222,6 +222,45 @@ try {
     await waitFor(`${frameAttr('data-create-style')} === 'rhea'`, 'preview follows URL');
   });
 
+  await step('QX shape and InputGroup: theme radius / addon borders / Luma switch', async () => {
+    // The current page is Preview 02; validate against the real iframe stylesheet.
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "luma", radius: "default", ext: {} })');
+    await waitFor(`${frameAttr('data-create-style')} === 'luma'`, 'Luma preview');
+    const luma = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const thumb = doc.querySelector('.qxframe9a7c2-switch-thumb');
+      if (!thumb) return null;
+      const style = doc.defaultView.getComputedStyle(thumb);
+      return { width: parseFloat(style.width), height: parseFloat(style.height) };
+    })()`);
+    assert.ok(luma && luma.width > luma.height + 4, 'Luma switch thumb must be a horizontal capsule: ' + JSON.stringify(luma));
+
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, radius: "none" })');
+    const zero = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const host = doc.createElement('div'); host.className = 'qxframe9a7c2-native-form';
+      const radio = doc.createElement('input'); radio.type = 'radio'; radio.checked = true;
+      host.append(radio); doc.body.append(host);
+      const computed = doc.defaultView.getComputedStyle(radio);
+      const dot = doc.defaultView.getComputedStyle(radio, '::before');
+      const result = { outer: computed.borderTopLeftRadius, inner: dot.borderTopLeftRadius };
+      host.remove();
+      return result;
+    })()`);
+    assert.deepEqual(zero, { outer: '0px', inner: '0px' }, 'global zero radius applies to both radio rings');
+
+    const group = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const root = doc.querySelector('.qxframe9a7c2-form-input-group:has(> .qxframe9a7c2-form-input-group-addon)');
+      const addon = root?.querySelector(':scope > .qxframe9a7c2-form-input-group-addon');
+      const field = root?.querySelector(':scope > .qxframe9a7c2-form-input');
+      if (!root || !addon || !field) return null;
+      const css = node => doc.defaultView.getComputedStyle(node);
+      return { group: css(root).borderTopWidth, addon: css(addon).borderTopWidth, input: css(field).borderTopWidth };
+    })()`);
+    assert.ok(group && parseFloat(group.group) > 0 && group.addon === '0px' && group.input === '0px', 'addon must be INSIDE one outlined field: ' + JSON.stringify(group));
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {
