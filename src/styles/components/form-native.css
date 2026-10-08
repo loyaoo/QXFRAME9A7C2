@@ -283,9 +283,17 @@
 
 
 /* Composable static FormField slots shared with the createApp specimens. */
-.qxframe9a7c2-form-field.is-composed { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.qxframe9a7c2-form-field.is-composed {
+  --_qxframe9a7c2-form-field-gap:var(--qxframe9a7c2-form-field-gap,var(--qxframe9a7c2-theme-field-gap,.5rem));
+  display:flex;flex-direction:column;gap:var(--_qxframe9a7c2-form-field-gap);min-width:0
+}
+.qxframe9a7c2-form-field.is-composed>.qxframe9a7c2-form-label {
+  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
+  line-height:var(--qxframe9a7c2-theme-field-label-line-height);
+  font-weight:var(--qxframe9a7c2-theme-text-weight-label)
+}
 .qxframe9a7c2-form-field.is-composed.is-horizontal { flex-direction: row; align-items: center; justify-content: space-between; gap: 0.75rem; }
-.qxframe9a7c2-form-description { margin: 0; color: var(--qxframe9a7c2-theme-muted-foreground); font-size: 0.875rem; line-height: 1.375; }
+.qxframe9a7c2-form-description { margin:0; color:var(--qxframe9a7c2-theme-muted-foreground); font-size:var(--qxframe9a7c2-theme-text-size); line-height:1.5; }
 .qxframe9a7c2-form-legend { font-size: 1rem; font-weight: 500; }
 
 
