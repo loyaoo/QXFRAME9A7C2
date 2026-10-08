@@ -383,6 +383,7 @@ export function themeTokens(resolved) {
   root['switch-width'] = rem(switchWidth);
   root['switch-height'] = rem(switchHeight);
   root['switch-inset'] = '0.125rem';
+  root['switch-thumb-extra'] = style === 'luma' ? '0.5rem' : '0rem';
   // Concentric thumb: outer radius − inset, never below zero (v3 §4.5 rule 3).
   const switchRadius = root['radius-switch'];
   root['radius-switch-thumb'] = switchRadius === PILL ? PILL : rem(Math.max(0, parseFloat(switchRadius) - 0.125));
