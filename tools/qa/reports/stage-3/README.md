@@ -470,3 +470,37 @@ and browser 8 styles × 2 modes checks verify the source gap on all
 five Notification Settings rows, alongside FAQ trigger and Label
 line-height tests. All Card height claims remain pending the next
 green 528-row diagnostic.
+
+
+### Preferences FieldSeparator source-height correction
+
+The validated `18d59c59a6782375644ce13a6046367770af11eb`
+build passed QXFRAME CI run `37759206595` and Schema run `37759206598`.
+Its 21 browser steps passed. First-Card height diff count remained
+**330/528 >0.5px**. Nova FAQ improved 420→400px (ref 375);
+Notifications improved 431→405px (ref 403), while
+Preferences fell further to 367px (ref 405).
+
+**Root cause verified against the pinned source**: each of the two
+`<FieldSeparator className="-my-4 ..."/>` elements has a
+**20px slot** (`cn-field-separator h-5`) with a 1px center
+separator stroke. The earlier QX Preview used `<hr
+class="qxframe9a7c2-divider pv-divider-bleed">` with a
+1px layout height and the same -16px top/bottom margins.
+That was **19px too little occupied layout height per separator**,
+or 38px across two, exactly matching the Nova shortfall
+(405 reference − 367 QX = 38).
+
+The existing reusable Divider remains 1px by default. The
+Preview instance modifier `.pv-divider-bleed` now gives it a
+transparent 20px *layout slot*, with a centered 1px stroke
+via ::after, while preserving `margin-block:-1rem`.
+No extra token, no private component replacement and no
+JS/runtime changes.
+
+Static and 16-mode browser QA assert both separators' 20px
+height and -16px margins as well as the transparent layout
+slot. Full 528-row count and all-mode parity remain pending
+latest CI, as source Sera explicitly hides those separator
+instances (`style-sera:hidden`), still an independent
+remaining behavior to handle.
