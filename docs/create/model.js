@@ -141,7 +141,7 @@ export function compileTheme(config, { version = 'unknown', generatedAt = new Da
     ' * 生成工具: QXFRAME9A7C2 Create (docs/create)',
     ' * 配置:',
     ...configSummary(config).map(line => ' *   ' + line),
-    ' * 内容: --qxframe9a7c2-theme-* 封闭清单全量输出（:root 全部、.dark 全部颜色）。',
+    ' * 内容: --qxframe9a7c2-theme-* 封闭清单全量输出（:root 和 .dark 各自包含完整 token 清单）。',
     ' */'
   ].join('\n');
   return { css: `${header}\n${body}`, body, header };
