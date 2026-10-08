@@ -91,6 +91,42 @@ check('Empty geometry follows pinned 8-style source, not Nova hardcoding', () =>
   assert.match(sharpCss, /--qxframe9a7c2-theme-radius-empty-media:\s*0;/);
 });
 
+check('Item and Field match the pinned 8-style spacing and typography recipes', () => {
+  // [item spacing px, item description line px, FieldGroup gap px,
+  //  Field gap px, Field label line px, Field label weight]
+  const expected = {
+    vega:[14,21,28,12,14,500], nova:[10,21,20,8,14,500],
+    maia:[14,20,28,12,14,500], lyra:[10,19.5,20,8,12,400],
+    mira:[10,19.5,16,8,12,500], luma:[14,20,28,12,14,500],
+    sera:[14,22.75,40,12,19.5,600], rhea:[14,20,24,12,14,500]
+  };
+  for (const [style, [item,desc,group,field,label,weight]] of Object.entries(expected)) {
+    const css = model.compileTheme(model.normalizeConfig({ style })).body;
+    const token = name => {
+      const match = css.match(new RegExp('--qxframe9a7c2-theme-' + name + ':\\s*([^;]+);'));
+      assert.ok(match, style + ' missing role ' + name);
+      return match[1];
+    };
+    const px = value => parseFloat(value) * (value.endsWith('rem') ? 16 : 1);
+    assert.equal(px(token('item-space')), item, style + ' item space');
+    const leading = parseFloat(token('item-description-leading'));
+    const font = style === 'lyra' || style === 'mira' ? 12 : 14;
+    assert.ok(Math.abs(leading * font - desc) < 0.001, style + ' item desc leading');
+    assert.equal(px(token('field-group-gap')), group, style + ' field group');
+    assert.equal(px(token('field-gap')), field, style + ' field');
+    assert.equal(px(token('field-label-line-height')), label, style + ' field label');
+    assert.equal(Number(token('text-weight-label')), weight, style + ' label weight');
+  }
+  const itemCSS = fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  const fieldCSS = fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  const layoutCSS = fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  assert.match(itemCSS, /theme-item-space/);
+  assert.match(itemCSS, /theme-item-description-leading/);
+  assert.match(fieldCSS, /theme-field-gap/);
+  assert.match(fieldCSS, /theme-field-label-line-height/);
+  assert.match(layoutCSS, /theme-field-group-gap/);
+});
+
 check('QX shape, Luma switch and shared layout contracts', () => {
   const file = p => fs.readFileSync(path.join(root, p), 'utf8');
   const defaultCss = model.compileTheme(model.defaultConfig()).body;
