@@ -168,6 +168,24 @@ check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources',
     'Kitchen previously rendered a duplicated media wrapper in each slider row');
 });
 
+check('Pinned SidebarMenu gap and SidebarGroup padding across eight styles', () => {
+  const gaps={vega:4,nova:0,maia:4,lyra:0,mira:1,luma:2,sera:2,rhea:2};
+  for(const [style,gap] of Object.entries(gaps)){
+    const css=model.compileTheme(model.normalizeConfig({style})).body;
+    const get=name=>{
+      const m=css.match(new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);'));
+      assert.ok(m,style+' missing '+name);
+      const v=m[1].trim();return parseFloat(v)*(v.endsWith('rem')?16:1);
+    };
+    assert.equal(get('sidebar-menu-gap'),gap,style+' sidebar menu gap');
+    assert.equal(get('sidebar-group-padding-block'),style==='mira'?4:8,style+' sidebar group default inset');
+  }
+  const css=read('preview.css');
+  assert.match(css,/\.pv-nav\s*\{[^}]*gap:\s*var\(--qxframe9a7c2-theme-sidebar-menu-gap/);
+  assert.match(css,/\.pv-nav-card \.pv-nav-group:first-child\s*\{\s*padding-bottom:\s*0\.25rem/);
+  assert.match(css,/\.pv-nav-card \.pv-nav-group:last-child\s*\{\s*padding-top:\s*0\.25rem/);
+});
+
 check('QX shape, Luma switch and shared layout contracts', () => {
   const file = p => fs.readFileSync(path.join(root, p), 'utf8');
   const defaultCss = model.compileTheme(model.defaultConfig()).body;
