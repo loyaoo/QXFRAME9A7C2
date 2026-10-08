@@ -19,87 +19,61 @@
 
 ## CURRENT
 
-Task `CREATEAPP-V3-S3` — Preview 01 source-locked geometry parity.
-Branch `redesign/create`, Draft PR #265. Stages 0–2 merged;
-runtime Controller 40/40 accepted and frozen; qxframe.js unchanged,
-no legacy browser work. Pinned shadcn commit
-`295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
+Task: `CREATEAPP-V3-S3` — source-locked Preview 01 geometry, ongoing.
+Branch `redesign/create`, open Draft PR #265. Stages 0–2 merged;
+40/40 runtime Controller work and 624/624 shared Card subset already
+accepted. Do **not** restart either. qxframe.js remains frozen.
 
-LATEST COMPLETED GREEN CODE CHECKPOINT:
-HEAD `8398f8ff5cea9517140db5599c76b6b1467bd58c`,
-QXFRAME CI run `37765996385` release and windows-tools success,
-CSS Schema Acceptance run `37765996393` success; 21 createApp
-Chromium browser checks passed.
-528 first-Card height records: **316/528** exceed 0.5px,
-down from 410/528 initial. Relative to original results,
-274 improved and 124 worsened. This is height-only QA,
-**not full Card visual or DOM parity**. Nova biggest
-residual Payments +42px, Receiving Method +24.75px,
-Payout Threshold -22px, Upcoming Payments -18.5px;
-FAQ +14px after prior fixes. Nova Kitchen Island 337/337
-and Sidebar Nav 377/377 fully match reference heights.
-Sera source `FieldSeparator -my-4 style-sera:hidden`
-now passes conditional visibility tests (8 styles ×
-2 modes), using generic editorial Theme role rather
-than style-specific CSS. Total mismatch count unchanged.
+REAL-TIME RECOVERY, 2026-10-08:
+- PR #265 at verified green baseline HEAD
+  `1f7e2ab8bfb7779df2c0b7006e21cb4de9bf9872`,
+  still Draft/open, based on main `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+- QXFRAME CI `37769225703`: release success, windows-tools success;
+  deploy-pages skipped (expected on PR).
+- CSS Schema Acceptance `37769225824`: schema-acceptance success.
+- Chromium createApp browser gate: **22 checks** passed.
+- Latest successful source-locked first-Card height diagnostic:
+  **300/528** over ±0.5px (initially 410/528), 292 improved vs
+  old and 122 worsened. *Diagnostic only*, not full Card alignment.
+- Nova light residuals: Payments +42px, FAQ +14px,
+  Payout Threshold -22px, Upcoming Payments -18.5px,
+  Claimable Balance -18px, Loading Card +16px.
+  Kitchen Island 337/337px and Sidebar Nav 377/377px match height
+  (not full visual acceptance).
 
-NEW IMPLEMENTATION BATCH (latest CI pending):
-- Read pinned `blocks/preview-02/cards/roller-shades.tsx`.
-  Its inline Slider has thumb-driven height, but QX Preview
-  still used default control height. Reused existing public
-  Slider `--qxframe9a7c2-slider-height` local variable,
-  setting it only on the Roller Shades preview instance to
-  `var(--qxframe9a7c2-theme-slider-thumb)`. The same
-  technique already aligned Kitchen Island exact height.
-- Source Receiving Method contained two invented `pv-choice-card`
-  boxed 16px-top/20px-bottom labels. Pinned upstream uses
-  `Field orientation=horizontal pb-2.5` (10px bottom
-  only). Converted both to shared `qxframe9a7c2-check-field`
-  + `qxframe9a7c2-field-content` and tiny
-  `pv-choice-field` instance modifier; deleted the custom
-  bordered/selected Card rules. Shared Field token
-  overrides and native checked radio preserved. Added
-  static and 8 styles × light/dark computed-style gates.
-  Pinned Sera-specific one-column radio layout is still
-  outstanding; do not claim exact Sera parity.
-- Source Sera `RadioGroup style-sera:grid-cols-1` differed
-  from QX's fixed two-column flex preview. Registered ONE
-  generalized `theme-choice-group-columns` numeric role,
-  deriving 1 editorial / 2 regular from existing textStyle;
-  added reusable pure CSS `qxframe9a7c2-choice-group`
-  using flex (no CSS Grid). Public
-  `--qxframe9a7c2-choice-group-columns` overrides Theme.
-  Receiving Method consumes it; 8-style static and
-  16-mode browser column/override tests added. This
-  resolves the previously deferred Sera one-column case
-  subject to latest CI. No runtime JS changes.
-- Added static source check and merged Roller computed
-  height vs thumb check into existing eight-style Kitchen
-  Chromium geometry gate. Does not change shared Slider
-  defaults or runtime JS. No new theme inputs.
-- New source measurements were added in previous batch:
-  each Payment description is two lines of 21px and
-  content 268.86px wide. Source Card is 42px shorter.
-  Do not arbitrarily alter typography/width to achieve
-  the desired height without confirmed source comparison.
-- Detailed evidence and QA: `tools/qa/reports/stage-3/README.md`.
+CURRENT NEW COMMIT BATCH — GitHub Actions pending:
+- Compared upstream pinned `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`
+  and all 8 `style-*.css` recipes. All require described
+  `ItemMedia` to align self at flex-start and translate down 2px,
+  with 8px internal gap. QX shared `item-surface.css` previously
+  centered the glyph in its tall Item row, including Payments.
+- Corrected this missing shared ItemMedia rule using modern `:has()`;
+  a description-less Item still uses centered alignment.
+  Added static source assertions and 8 style × light/dark Payments
+  geometry regression. No font, Card height, runtime JS, generator,
+  token inventory, or test tolerance changes.
+- This fixes a verified **icon placement** issue, NOT Payments' +42px
+  height residual. Do not count any first-Card height improvement
+  without the next CI diagnostic.
+- Changed code commits: `322a75f7` (CSS), `0304fff9` (static QA),
+  `64a8cc5d` (browser QA). Follow subsequent documentation commits
+  and the final Actions result as authoritative for the latest HEAD.
 
-Engineering estimate overall CREATEAPP-V3 **61%**,
-Stage3/Task **55%** (provisional). Earlier 624/624
-shared Card subset and frozen 40/40 Controller are done.
-Nested Cards, comprehensive Preview01/02 style parity,
-hundreds of >0.5px height mismatches and Stages4/5 remain open.
+Next:
+1. Confirm both Actions workflows for the latest HEAD; on failure,
+   read job logs, repair the real cause and rerun without relaxing gates.
+2. Compare true upstream row-level text widths / line wraps for Payments
+   +42px and Accordion content structure for FAQ +14px; also handle
+   Payout Threshold -22px and Upcoming Payments -18.5px.
+   No fixed Card heights or font tweaks to mask layout differences.
+3. Expand source-backed geometry to all nested Cards and Preview 01;
+   Stage 4/5 remain unfinished. Keep PR Draft; do not merge main
+   until explicit stage acceptance.
+4. Update this file, Stage-3 QA and PR with the confirmed new HEAD,
+   real run URLs, mismatch count and completed/uncompleted items.
 
-NEXT EXACT STEP:
-1. Inspect HEAD PR #265 latest Actions, fix any failed
-   test or generated file discrepancy without weakening
-   Source/Schema ratchets. Obtain new 528-record summary;
-   confirm Roller Shades, Receiving Method and Sera columns before claiming improvement.
-2. Continue source-backed Payments +42px, FAQ +14px,
-   Receiving Method +24.75px. Compare actual text glyph
-   widths and line wraps; do not set fixed Card heights.
-3. Update state/QA/PR, keep PR Draft and do not merge main.
-
+Engineering estimate: CREATEAPP-V3 **61%**, Stage 3 **55%**
+(provisional; percentages are not inferred from green CI or 528 heights).
 
 ### Owner decisions (2026-10-07) — frozen
 
