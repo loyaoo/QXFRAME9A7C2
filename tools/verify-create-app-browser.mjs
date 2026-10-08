@@ -438,8 +438,8 @@ try {
           const empty=doc.querySelector('[data-card="empty-distribute-track"] .qxframe9a7c2-empty.is-composed');
           const separators=[...prefs.querySelectorAll('.pv-divider-bleed')];
           const result={
-            trigger: px(css(faq.querySelector('.pv-accordion-item > summary')).paddingTop),
-            content: px(css(faq.querySelector('.pv-accordion-content')).paddingBottom),
+            trigger: px(css(faq.querySelector('.qxframe9a7c2-collapse-item > summary')).paddingTop),
+            content: px(css(faq.querySelector('.qxframe9a7c2-collapse-content')).paddingBottom),
             separatorCount: separators.length,
             separator: separators.map(el=>{
               const before=css(el);
@@ -647,8 +647,8 @@ try {
           root.classList.toggle('dark',${mode==='dark'});
           const css=e=>doc.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
           const labels=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-field-content>.qxframe9a7c2-form-label')];
-          const faq=doc.querySelector('[data-card="faq"]'),summary=faq.querySelector('.pv-accordion-item>summary');
-          const accordionContent=faq.querySelector('.pv-accordion-content');
+          const faq=doc.querySelector('[data-card="faq"]'),summary=faq.querySelector('.qxframe9a7c2-collapse-item>summary');
+          const accordionContent=faq.querySelector('.qxframe9a7c2-collapse-content');
           const faqTabs=faq.querySelector('.pv-tabs-full .qxframe9a7c2-tabs');
           const fields=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-check-field')];
           const ans={labelLines:labels.map(e=>px(css(e).lineHeight)),labelWeights:labels.map(e=>Number(css(e).fontWeight)),
@@ -845,7 +845,7 @@ try {
           const cs=el=>doc.defaultView.getComputedStyle(el);
           const skeleton=doc.querySelector('.qxframe9a7c2-skeleton');
           const spinner=doc.querySelector('.qxframe9a7c2-spinner-icon');
-          const chevron=doc.querySelector('[data-card=faq] .pv-accordion-item>summary .pv-icon');
+          const chevron=doc.querySelector('[data-card=faq] .qxframe9a7c2-collapse-item>summary .pv-icon');
           return {skeleton:skeleton&&cs(skeleton).animationName,spinner:spinner&&cs(spinner).animationName,
             transition:chevron&&cs(chevron).transitionDuration,
             duration:cs(doc.documentElement).getPropertyValue('--qxframe9a7c2-theme-duration-md').trim()};
@@ -914,7 +914,7 @@ try {
         if(!card)continue;
         const samples=[];
         const selectors=name==='faq'
-          ? ['.qxframe9a7c2-card-content','.pv-tabs','.qxframe9a7c2-tabs','.qxframe9a7c2-tabs-list','.pv-accordion','.pv-accordion-item','summary','.pv-accordion-content','.qxframe9a7c2-card-footer']
+          ? ['.qxframe9a7c2-card-content','.pv-tabs','.qxframe9a7c2-tabs','.qxframe9a7c2-tabs-list','.qxframe9a7c2-collapse','.qxframe9a7c2-collapse-item','summary','.qxframe9a7c2-collapse-content','.qxframe9a7c2-card-footer']
           : name==='kitchen-island'
           ? ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.pv-toggle-group','.qxframe9a7c2-item-group','.pv-slider-item','.qxframe9a7c2-item-content','.qxframe9a7c2-item-title','.qxframe9a7c2-item-actions','.pv-slider']
           : name==='payments'
@@ -942,8 +942,8 @@ try {
           });
         }
         if(name==='faq'){
-          result[name].details=[...card.querySelectorAll('.pv-accordion-item')].map((row,i)=>{
-            const summary=row.querySelector('summary'),content=row.querySelector('.pv-accordion-content');
+          result[name].details=[...card.querySelectorAll('.qxframe9a7c2-collapse-item')].map((row,i)=>{
+            const summary=row.querySelector('summary'),content=row.querySelector('.qxframe9a7c2-collapse-content');
             const st=doc.defaultView.getComputedStyle(content);
             return {index:i,open:row.open,row:get(row),summary:get(summary),content:get(content),
               text:content.textContent,whiteSpace:st.whiteSpace,fontSize:st.fontSize,
