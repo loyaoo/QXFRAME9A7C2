@@ -504,3 +504,32 @@ slot. Full 528-row count and all-mode parity remain pending
 latest CI, as source Sera explicitly hides those separator
 instances (`style-sera:hidden`), still an independent
 remaining behavior to handle.
+
+
+### FieldSeparator final green CI checkpoint
+
+Commit `a7d764b54b9887719c63ef225fef2e9c888bdfce`
+passed both GitHub Actions workflows:
+- QXFRAME CI `37760566328`: release + windows-tools success,
+  21 Chromium createApp checks successful; PR Pages deploy skipped.
+- CSS Schema Acceptance `37760566341`: success.
+
+The regenerated `preview-01/current-report.json` in the run's
+QA Reports artifact measures **316/528** source-locked first Card
+height records beyond ±0.5px, down from 330 immediately prior
+and 410 at S3 diagnostic start. Relative to the original,
+270 cases improved, 120 worsened (height only). The new 20px
+FieldSeparator layout correction eliminated 14 further
+over-tolerance records, without changing reusable 1px
+Divider CSS or the compiler.
+Nova: Kitchen Island 337/337 exact, Sidebar Nav 377/377 exact,
+Notification Settings 405 vs ref 403, FAQ 400 vs ref 375,
+Payments 473 vs ref 431. Preferences had a prior -38px
+residual and is now absent from the ten largest Nova outliers;
+the QA artifact is authoritative for its precise value.
+Source `style-sera:hidden` remains outstanding.
+
+The preceding bad static regex contained double-escaped
+backslashes and was repaired without changing the
+CSS source or relaxing the ratchet.
+**The 316/528 count is not full Card pixel/DOM acceptance.**
