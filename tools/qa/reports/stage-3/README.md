@@ -822,3 +822,57 @@ box and computed gaps of EmptyContent children. Compact/spacious
 padding tier still determines structural media sizing, as before.
 Do not claim first-Card height improvements until a new green CI
 report is measured; QA status for this code batch remains pending.
+
+
+## 2026-10-08 — Stage 3 #19/#20 actual Table + Collapse owners
+
+Pinned source: `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`,
+`apps/v4/registry/styles/style-{vega,nova,maia,lyra,mira,luma,sera,rhea}.css`.
+
+### #19 Embedded Table
+
+Both Create previews now render authored HTML using
+`qxframe9a7c2-table is-embedded is-hover` and the actual framework
+`src/styles/components/table.css` owner. Preview's duplicate
+`pv-table` class and table paint rules have been deleted; the
+app-specific 40px and 32px icon/action columns remain ordinary
+private width utilities, not a second Table renderer.
+Theme inventory adds only `table-cell-inset` and
+`table-heading-foreground`, keeping base typography under the
+existing `text-size` axis and line-height as a CSS formula.
+Source default cell padding is 8px (Vega/Nova/Lyra/Mira/Rhea),
+12px (Maia/Luma/Sera), with head row height 40/48px respectively.
+Sera alone has the muted editorial header foreground, 12px
+uppercase tracking. Native `Table` runtime and sizing modes are
+otherwise unchanged. Source text line heights are 16px at 12px
+and 20px at 14px; the next QA report must confirm the updated
+formula removes the +6px Recent Transactions regression detected
+after the initial Table migration.
+
+### #20 Native FAQ backed by shared Collapse
+
+FAQ is now `qxframe9a7c2-collapse is-native`, three
+`qxframe9a7c2-collapse-item` native details with one shared
+`name`, `qxframe9a7c2-collapse-header` summaries, and
+`qxframe9a7c2-collapse-content` panels. Geometry, icon
+transform/motion, border, text and font roles live solely in
+`src/styles/components/collapse.css`. No preview-local
+`pv-accordion` remains. This is a strictly opt-in static
+native variant; existing JS-driven Collapse behavior and
+Controller source are frozen. Tests still enforce single-open,
+re-collapsible state and the source 8-style FAQ inset/leading.
+
+### Evidence and continuation
+
+- CSS Schema Acceptance run #37779358028: success on
+  `64c604c4`. Its Chromium gate passed 27/27 steps including
+  new Table/FAQ fixtures in all 16 style×mode combinations.
+- At that checkpoint the 528 first-Card diagnostic remained
+  252 beyond ±0.5px, with 308 items improved and 128 worsened
+  relative to the original. Nova Recent Transactions moved
+  from +10px to +16px. **Do not mark this as improvement.**
+- The follow-up Table line-height change is at
+  `914f62db930e107395bed49548566b9d479543e6`.
+  Read a newer green diagnostic before claiming its effect.
+- The project state / PR disposition are updated separately.
+  No main merge, no relaxed CSS or visual source gate.
