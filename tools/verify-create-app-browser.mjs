@@ -414,6 +414,58 @@ try {
     }
   });
 
+  await step('Preview 01 refreshed first-Card height diagnostic against pinned source', async () => {
+    const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/qa/reports/stage-3/preview-01/report.json'), 'utf8'));
+    assert.equal(baseline.source, '295a1f114a138f23b5dfee0e0c6812394dfeb90c');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=contribution-history]")', 'Preview 01 canvas', 7000);
+    const rows = [];
+    for (const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "' + style + '", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style') + ' === "' + style + '"', style + ' Preview 01');
+      for (const mode of ['light','dark']) {
+        const actual = await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement, previous=html.classList.contains('dark');
+          html.classList.toggle('dark', ${mode === 'dark'});
+          let qa=doc.getElementById('qx-create-qa-measurement');
+          if(!qa){
+            qa=doc.createElement('style');qa.id='qx-create-qa-measurement';
+            qa.textContent='body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none;content-visibility:visible!important}';
+            doc.head.append(qa);
+          }
+          const values={};
+          for(const group of doc.querySelectorAll('[data-card]')){
+            if(!group.dataset.card || group.parentElement.closest('[data-card]'))continue;
+            const card=group.classList.contains('qxframe9a7c2-card')?group:group.querySelector('.qxframe9a7c2-card');
+            if(card){const rect=card.getBoundingClientRect();values[group.dataset.card]={height:rect.height,width:rect.width};}
+          }
+          html.classList.toggle('dark',previous);
+          return values;
+        })()`);
+        for(const record of baseline.rows.filter(row=>row.style===style&&row.mode===mode)){
+          const now=actual[record.card], reference=record.reference, prior=record.actual;
+          rows.push({style,mode,card:record.card,
+            referenceHeight:reference?.height??null,priorHeight:prior?.height??null,
+            currentHeight:now?.height??null,referenceWidth:reference?.width??null,currentWidth:now?.width??null,
+            delta:reference&&now?+(now.height-reference.height).toFixed(3):null});
+        }
+      }
+    }
+    assert.equal(rows.length, baseline.rows.length, 'every pinned first-Card row must be remeasured');
+    assert.ok(rows.every(row=>row.currentHeight!==null),'a pinned reference Card is missing');
+    const bad=row=>row.delta!==null&&Math.abs(row.delta)>.5;
+    const oldBad=row=>row.referenceHeight!==null&&row.priorHeight!==null&&Math.abs(row.priorHeight-row.referenceHeight)>.5;
+    const summary={source:baseline.source,font:'system-ui,sans-serif',scope:'first Card per example only; heights diagnostic, not acceptance',
+      renders:rows.length,previousOverTolerance:rows.filter(oldBad).length,currentOverTolerance:rows.filter(bad).length,
+      improved:rows.filter(row=>row.delta!==null&&row.priorHeight!==null&&Math.abs(row.delta)<Math.abs(row.priorHeight-row.referenceHeight)-.5).length,
+      worsened:rows.filter(row=>row.delta!==null&&row.priorHeight!==null&&Math.abs(row.delta)>Math.abs(row.priorHeight-row.referenceHeight)+.5).length,
+      topNova:rows.filter(row=>row.style==='nova'&&row.mode==='light').sort((a,b)=>Math.abs(b.delta??0)-Math.abs(a.delta??0)).slice(0,10)};
+    fs.writeFileSync(path.join(root,'tools/qa/reports/stage-3/preview-01/current-report.json'),
+      JSON.stringify({...summary,rows},null,2)+'\n');
+    console.log('[preview-01-first-card-diagnostic] '+JSON.stringify(summary));
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {
