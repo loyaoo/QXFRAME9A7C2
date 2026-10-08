@@ -50,26 +50,37 @@
 .qxframe9a7c2-item-surface.is-selection-check-start.is-disabled{--_qxframe9a7c2-item-bg:transparent;--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 
 
-/* Static composed Item; shares the framework theme but does not own interactive state. */
-.qxframe9a7c2-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid transparent;
-  border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem);
-  font-size: 0.875rem;
+/* Static composed Item. Spacing and typography are shared recipe projections;
+ * native/interactive Item Surface remains a separate authoritative class. */
+.qxframe9a7c2-item{
+  --_qxframe9a7c2-static-item-space:var(--qxframe9a7c2-item-space,var(--qxframe9a7c2-theme-item-space,.625rem));
+  box-sizing:border-box;display:flex;align-items:center;
+  gap:var(--qxframe9a7c2-item-gap,var(--_qxframe9a7c2-static-item-space));
+  padding-block:var(--qxframe9a7c2-item-padding-block,var(--_qxframe9a7c2-static-item-space));
+  padding-inline:var(--qxframe9a7c2-item-padding-inline,calc(var(--_qxframe9a7c2-static-item-space) + .125rem));
+  border:1px solid transparent;
+  border-radius:var(--qxframe9a7c2-item-radius,min(var(--qxframe9a7c2-theme-radius-button),1.125rem));
+  font-size:var(--qxframe9a7c2-theme-text-size);
 }
-.qxframe9a7c2-item.is-muted { background: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent); }
-.qxframe9a7c2-item.is-outline { border-color: var(--qxframe9a7c2-theme-border); }
-.qxframe9a7c2-item.is-sm { gap: 0.625rem; padding: 0.75rem 1rem; }
-.qxframe9a7c2-item.is-xs { gap: 0.5rem; padding: 0.5rem 0.75rem; }
-.qxframe9a7c2-item.is-column { flex-direction: column; align-items: stretch; }
-.qxframe9a7c2-item-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.qxframe9a7c2-item-content { display: flex; flex: 1 1 auto; flex-direction: column; gap: 0.25rem; min-width: 0; }
-.qxframe9a7c2-item-title { font-weight: 500; line-height: 1.25rem; }
-.qxframe9a7c2-item-desc { margin: 0; color: var(--qxframe9a7c2-theme-muted-foreground); line-height: 1.25rem; }
-.qxframe9a7c2-item-media { display: flex; flex: 0 0 auto; align-items: center; justify-content: center; }
-.qxframe9a7c2-item-media.is-icon { width: 2rem; height: 2rem; border: 1px solid var(--qxframe9a7c2-theme-border); border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background: var(--qxframe9a7c2-theme-muted); }
-.qxframe9a7c2-item-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 0.5rem; }
-
+.qxframe9a7c2-item.is-muted{background:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) 50%,transparent)}
+.qxframe9a7c2-item.is-outline{border-color:var(--qxframe9a7c2-theme-border)}
+/* Smaller variants follow the Item md spacing anchor, rather than hardcoding
+ * one style's values. Size-specific remaining differences are Stage 3 QA. */
+.qxframe9a7c2-item.is-sm{--_qxframe9a7c2-static-item-space:max(.625rem,calc(var(--qxframe9a7c2-theme-item-space) - .125rem))}
+.qxframe9a7c2-item.is-xs{--_qxframe9a7c2-static-item-space:max(.5rem,calc(var(--qxframe9a7c2-theme-item-space) - .25rem))}
+.qxframe9a7c2-item.is-column{flex-direction:column;align-items:stretch}
+.qxframe9a7c2-item-group{display:flex;flex-direction:column;gap:.5rem}
+.qxframe9a7c2-item-content{display:flex;flex:1 1 auto;flex-direction:column;gap:.25rem;min-width:0}
+.qxframe9a7c2-item-title{
+  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
+  font-weight:var(--qxframe9a7c2-theme-control-weight);
+  line-height:1.375;
+}
+.qxframe9a7c2-item-desc{
+  margin:0;color:var(--qxframe9a7c2-theme-muted-foreground);
+  font-size:var(--qxframe9a7c2-theme-text-size);
+  line-height:var(--qxframe9a7c2-theme-item-description-leading);
+}
+.qxframe9a7c2-item-media{display:flex;flex:0 0 auto;align-items:center;justify-content:center}
+.qxframe9a7c2-item-media.is-icon{width:2rem;height:2rem;border:1px solid var(--qxframe9a7c2-theme-border);border-radius:var(--qxframe9a7c2-theme-radius-field,.5rem);background:var(--qxframe9a7c2-theme-muted)}
+.qxframe9a7c2-item-actions{display:flex;flex:0 0 auto;align-items:center;gap:.5rem}
