@@ -810,6 +810,24 @@ try {
       }
     }
   });
+  await step('FAQ remains single-open and collapsible after switching questions', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ toggle fixture');
+    const states=await evaluate(`(() => {
+      const items=[...document.querySelector('[data-create-frame]').contentDocument.querySelectorAll('[data-card=faq] details[name="qx-create-faq"]')];
+      const opened=()=>items.map(x=>x.open);
+      const initial=opened();
+      items[1].querySelector('summary').click();const switched=opened();
+      items[1].querySelector('summary').click();const collapsed=opened();
+      items[0].querySelector('summary').click();const restored=opened();
+      return {count:items.length,initial,switched,collapsed,restored};
+    })()`);
+    assert.equal(states.count,3);
+    assert.deepEqual(states.initial,[true,false,false]);
+    assert.deepEqual(states.switched,[false,true,false]);
+    assert.deepEqual(states.collapsed,[false,false,false]);
+    assert.deepEqual(states.restored,[true,false,false]);
+  });
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
