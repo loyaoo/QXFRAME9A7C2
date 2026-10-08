@@ -551,7 +551,7 @@ check('audit #20: FAQ native details is rendered through the framework Collapse 
   const faq=html.slice(html.indexOf('<!-- @card faq -->'),html.indexOf('<!-- @end faq -->'));
   assert.match(faq,/class="qxframe9a7c2-collapse is-native"/);
   assert.equal((faq.match(/<details name="qx-create-faq" class="qxframe9a7c2-collapse-item"/g)||[]).length,3);
-  assert.equal((faq.match(/class="qxframe9a7c2-collapse-header"/g)||[]).length,3);
+  assert.equal((faq.match(/class="qxframe9a7c2-collapse-header"/g)||[]).length,9);
   assert.equal((faq.match(/class="qxframe9a7c2-collapse-content"/g)||[]).length,9);
   // The pinned FAQ has three independent QX-owned Tabs content panels.
   assert.match(faq,/data-pv-tab-group="faq"/);
