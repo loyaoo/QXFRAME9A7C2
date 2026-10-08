@@ -43,6 +43,10 @@ Coverage limits and next work:
 
 ## Nova light: diagnostic heights
 
+### Payout Threshold runtime value parity (2026-10-08)
+
+Pinned upstream `apps/v4/registry/bases/radix/blocks/preview-02/cards/payout-threshold.tsx` holds `amount` and projects `$ + amount.toFixed(2)` whenever the Slider changes. The QX Preview previously mounted the real QX Slider but left its adjacent `$2500.00` display static. The authored slider now carries `data-pv-output`, pointing to an existing label, with the optional display formatter `money-2`. `docs/create/preview-cards.js` uses the Slider's public `onChange` callback; it does not own or duplicate Slider state. Added a static contract and a Chromium keyboard ArrowRight (+50) / ArrowLeft (-50) test that must restore the label. This task changes no Card height policy, Theme token or runtime Controller. **CI for this new batch is pending.**
+
 ## 2026-10-08 — Stage 3 Payments same-browser reference check
 
 - Frozen upstream: `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`, `apps/v4/registry/bases/radix/ui/item.tsx` and `apps/v4/registry/styles/style-nova.css`.
