@@ -141,9 +141,9 @@ check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry
     'local Empty padding must not affect structural media/title size');
   assert.match(empty, /margin-block-end:\.5rem;/);
   const css = read('preview.css');
-  assert.match(css, /\\.pv-divider-bleed\\s*\\{[^}]*height:1\\.25rem;[^}]*margin-block:-1rem;/,
+  assert.match(css, /\.pv-divider-bleed\s*\{[^}]*height:1\.25rem;[^}]*margin-block:-1rem;/,
     'FieldSeparator owns 20px source layout height and -16px margins');
-  assert.match(css, /\\.pv-divider-bleed::after\\s*\\{[^}]*height:1px;/,
+  assert.match(css, /\.pv-divider-bleed::after\s*\{[^}]*height:1px;/,
     'separator line stays 1px within 20px layout slot');
   assert.match(css, /\.pv-accordion-item\s*>\s*summary\s*\{[^}]*padding:\s*var\(--qxframe9a7c2-theme-accordion-padding\)/);
   const levels = {vega:16,nova:10,maia:16,lyra:10,mira:8,luma:16,sera:16,rhea:16};
