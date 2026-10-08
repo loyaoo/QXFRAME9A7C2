@@ -662,3 +662,32 @@ Sera-specific one-column choice layout
 layout stays two columns; this is **still open**, not
 silently claimed complete. Next 528-height CI result
 must verify the actual effect, not an assumed reduction.
+
+
+### 2026-10-08 — Shared ChoiceGroup column allocation
+
+The pinned `receiving-method.tsx` RadioGroup source explicitly
+uses 2 columns on the captured desktop viewport, except Sera
+(`style-sera:grid-cols-1`). The QX preview's former
+`pv-cols-2` fixed two-column layout could not reproduce Sera.
+
+This difference is a cross-component **ChoiceGroup** layout
+choice, not an incidental CSS patch. One new numeric
+`theme-choice-group-columns` role projects from the
+already-present editorial typography axis: 1 for editorial
+(Sera), otherwise 2 for other styles. New reusable pure-CSS
+`.qxframe9a7c2-choice-group` uses flex layout, not CSS Grid,
+and resolves public per-instance
+`--qxframe9a7c2-choice-group-columns` before the theme
+default. Current Receiving Method uses this shared class.
+No `[data-create-style]` selectors, no hard-coded Sera CSS
+and no runtime JS.
+
+New static 8-style Theme and component consumer checks,
+plus browser 8 styles × dark/light checks, assert
+Sera rows vertically stack, other styles have two
+side-by-side radio choices, and the explicit one-column
+override wins. Actual source-height effect remains
+unconfirmed until the new full CI 528-height report
+finishes. At narrower viewport widths, general
+responsive behavior remains part of remaining parity QA.
