@@ -142,7 +142,7 @@ body.create-preview-body {
 .pv-nav-button.is-active { background: var(--qxframe9a7c2-theme-accent); color: var(--qxframe9a7c2-theme-accent-foreground); font-weight: 500; }
 .pv-nav-card .qxframe9a7c2-divider { margin: 0 0.5rem; }
 .pv-tabs-full { margin-bottom: 0.5rem; }
-.pv-field-separator { margin-block: -1rem; }
+.pv-divider-bleed { margin-block: -1rem; }
 .pv-accordion { display: flex; flex-direction: column; }
 .pv-accordion-item { border-bottom: 1px solid var(--qxframe9a7c2-theme-border); }
 .pv-accordion-item:last-child { border-bottom: 0; }
