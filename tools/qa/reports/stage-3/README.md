@@ -592,3 +592,37 @@ do not imply nested-Card, layout, visual or interaction
 acceptance. Pending the latest Sera batch CI, the
 **last confirmed** 528 height-over-tolerance count is
 316/528, not an extrapolated improvement.
+
+
+### 2026-10-08 — Roller Shades shared Slider height reuse
+
+CI checkpoint at `8398f8ff5cea9517140db5599c76b6b1467bd58c`
+was **fully green**, QXFRAME `37765996385` (release and
+Windows tools), CSS Schema `37765996393`; the 21 browser
+tests passed. After Sera's `FieldSeparator` conditional,
+the source-locked first-Card over-tolerance count remains
+**316/528**, versus the initial 410/528 (274 old-vs-new cases
+improved; 124 worsened). The pinned 8-style source ref stays
+`295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
+A zero difference in the total number of height mismatches
+does not imply no changes in individual style/card heights.
+
+A separate source check of `blocks/preview-02/cards/roller-shades.tsx`
+found that its inline `<Slider className="flex-1" />` is
+thumb-height-based, unlike the QX Slider's default 32px
+standalone control footprint. This matches the earlier
+measured Kitchen Island mismatch that was fixed using
+the public local `--qxframe9a7c2-slider-height` override.
+Now *only* the Roller Shades slider instance consumes
+`var(--qxframe9a7c2-theme-slider-thumb)` via that existing
+override. The reusable Slider's default geometry, all
+input interactions, track, keyboard navigation and CSS
+token roles remain unchanged.
+
+Static QA asserts this instance uses the existing
+author override, and the existing Kitchen Island
+eight-style Chromium browser check now also validates
+the Roller root's computed height against its handle
+height. The actual effect on the 528-card height
+diagnostic is **pending the latest CI**, and no precise
+height improvement is claimed before measurement.
