@@ -389,12 +389,12 @@ export function themeTokens(resolved) {
   const alloc = {};
   ALLOCATION[ext.radiusAlloc].forEach((step, index) => {
     const key = ALLOCATION_KEYS[index];
-    alloc[key] = radiusFor(step, basePx, ['card', 'dialog'].includes(key) && ext.radiusAlloc === 'smooth' ? CONTAINER_CAP_PX : 0);
+    alloc[key] = radiusFor(step, basePx, ['card', 'dialog'].includes(key) ? CONTAINER_CAP_PX : 0);
   });
   const controlShape = ext.controlShape;
   // The global zero-radius shortcut wins over style FOLLOW defaults; explicit
   // per-category shape selections remain authoritative (v3 §4.5).
-  const roundShape = key => basePx === 0 && resolved.radius === 'none' && resolved.explicit?.[key] === undefined ? 'radius' : ext[key];
+  const roundShape = key => basePx === 0 && resolved.radius === 'none' && resolved.explicit?.[key] === undefined && controlShape !== 'pill' ? 'radius' : ext[key];
   root['radius-button'] = shapeRadius(ext.shapeButton, alloc.button, controlShape);
   root['radius-field'] = shapeRadius(ext.shapeInput, alloc.field, controlShape);
   root['radius-select'] = shapeRadius(ext.shapeSelect, alloc.field, controlShape);
@@ -426,7 +426,7 @@ export function themeTokens(resolved) {
   root['switch-width'] = rem(switchWidth);
   root['switch-height'] = rem(switchHeight);
   root['switch-inset'] = '0.125rem';
-  root['switch-thumb-extra'] = style === 'luma' ? '0.5rem' : '0rem';
+  root['switch-thumb-extra'] = ext.switchLook === 'wide' ? '0.5rem' : '0rem';
   // Concentric thumb: outer radius − inset, never below zero (v3 §4.5 rule 3).
   const switchRadius = root['radius-switch'];
   root['radius-switch-thumb'] = switchRadius === PILL ? PILL : rem(Math.max(0, parseFloat(switchRadius) - 0.125));
@@ -459,7 +459,7 @@ export function themeTokens(resolved) {
   const motion = MOTION[ext.motion];
   ['xs', 'sm', 'md', 'lg'].forEach((step, index) => { root['duration-' + step] = motion[index] + 'ms'; });
 
-  // Colors go to both blocks; everything else to :root only.
+  // The exported theme is self-contained in each mode: both blocks declare the closed list.
   const rootBlock = {}, darkBlock = {};
   for (const token of THEME_TOKENS) {
     if (token.mode === 'color') {
@@ -469,6 +469,7 @@ export function themeTokens(resolved) {
     } else {
       if (root[token.name] === undefined) throw new Error('Missing token: ' + token.name);
       rootBlock[token.name] = root[token.name];
+      darkBlock[token.name] = root[token.name];
     }
   }
   return { root: rootBlock, dark: darkBlock };
