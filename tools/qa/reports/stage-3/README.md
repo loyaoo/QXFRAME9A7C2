@@ -533,3 +533,62 @@ The preceding bad static regex contained double-escaped
 backslashes and was repaired without changing the
 CSS source or relaxing the ratchet.
 **The 316/528 count is not full Card pixel/DOM acceptance.**
+
+
+## 2026-10-08 — FAQ Typography/Tabs and editorial FieldSeparator
+
+**Verified FAQ batch**: HEAD `c372bb81ddec9a03a529b0a048177f4008c34f67`
+passed QXFRAME CI run `37764637779` (release/windows-tools),
+CSS Schema Acceptance run `37764637828` and **21** Chromium
+createApp checks. The 528-case diagnostic remained **316/528**
+heights exceeding ±0.5px (272 improved / 126 worsened vs original
+source reference). Nova FAQ improved **400px → 389px**
+(reference **375px**), a measured 11px reduction, but not
+full-Card parity. Nova Payments remains **473px**
+(reference 431, +42px).
+
+This FAQ batch corrects two source-backed projections, without
+`[data-create-style]` CSS branches:
+
+- The pinned Nova Accordion `cn-accordion-content` uses
+  `text-sm` (14px / 20px). QX previously forced `line-height:1.5`
+  (14px / 21px) even though the semantic
+  `theme-text-leading` already resolves to **20/14**.
+  Preview FAQ now consumes the shared `theme-text-leading`;
+  browser tests assert real line-height equals text-size ×
+  semantic leading for all eight styles × light/dark.
+- The pinned `cn-tabs-list` horizontal list heights are:
+  Vega/Maia/Luma 36px; Nova/Lyra/Mira/Rhea 32px;
+  Sera 40px. QX FAQ `pv-tabs` previously occupied
+  38px in Nova while its actual list was 32px, adding
+  6px to the Card. The existing public
+  `--qxframe9a7c2-tabs-height` API is now set **only**
+  on the FAQ preview host, deriving its rail height
+  from `max(32px, theme-control-height) − 6px`.
+  All eight browser styles assert the actual rail
+  geometry; no production Tabs behavior is changed.
+
+**Sera FieldSeparator source case — current batch, CI pending**:
+
+Upstream `preferences.tsx` explicitly uses two
+`<FieldSeparator className="-my-4 style-sera:hidden" />`
+instances. The earlier QX 20px slot reconstruction
+rendered both in all styles. A single *generic* Theme role,
+`field-separator-display`, now derives `none` for the
+existing editorial text configuration (Sera default)
+and `block` otherwise. The two authored Preview instances
+consume that role with public
+`--qxframe9a7c2-field-separator-display` taking precedence.
+No style-named selector or runtime branch is added.
+Static 8-style and Chromium 8×2 checks cover actual
+display, 20px visible slot / 0px hidden bounding box,
+and author override. The generic Divider still renders as
+a 1px line outside this local instance.
+
+Source reference remains pinned to
+`shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`.
+Only first Card height metrics are tracked; these changes
+do not imply nested-Card, layout, visual or interaction
+acceptance. Pending the latest Sera batch CI, the
+**last confirmed** 528 height-over-tolerance count is
+316/528, not an extrapolated improvement.
