@@ -217,6 +217,15 @@ check('Checkbox Field uses the shared horizontal Field gap role', () => {
   }
 });
 
+check('FAQ TabsList source height uses public Tabs slot without global overrides', () => {
+  const css=read('preview.css');
+  assert.match(css,/\.pv-tabs-full\s*\{[^}]*--qxframe9a7c2-tabs-height:\s*calc\(var\(--qxframe9a7c2-theme-control-height\)\s*-\s*\.375rem\)/,
+    'FAQ uses source Tab rail height through the public Tabs size API');
+  const shared=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  assert.match(shared,/--_qxframe9a7c2-tabs-height:var\(--qxframe9a7c2-tabs-height,/,
+    'public Tab height must continue to consume author override');
+});
+
 check('FAQ Accordion description line uses the shared text-leading role', () => {
   const css=read('preview.css');
   assert.match(css,/\.pv-accordion-content\s*\{[^}]*line-height:\s*var\(--qxframe9a7c2-theme-text-leading\)/,
