@@ -228,3 +228,44 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   background: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground);
   font: 500 0.75rem/1 var(--qxframe9a7c2-theme-font-sans, inherit);
 }
+
+/* Mixed connected InputGroup protocol:
+ * PREFIX | [FIELD: addon + input + addon] | SUFFIX
+ * The Field wrapper owns the single input border; prefix/suffix retain their
+ * own borders outside it. This avoids the impossible single-root outline when
+ * both inner and outer segments are present in the same flat DOM. */
+.qxframe9a7c2-form-input-group-field{
+  box-sizing:border-box;display:flex;flex:1 1 0;align-items:stretch;min-width:0;
+  border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
+  border-radius:var(--_qxframe9a7c2-form-input-group-radius);
+  background:var(--qxframe9a7c2-theme-background)
+}
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input,
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-input{
+  flex:1 1 0;min-width:0;border:0;border-radius:0;background:transparent
+}
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon{
+  display:inline-flex;align-items:center;flex:0 1 auto;min-width:0;
+  border:0;border-radius:0;background:transparent
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-field:not(:first-child){
+  border-start-start-radius:0;border-end-start-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-field:not(:last-child){
+  border-start-end-radius:0;border-end-end-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-prefix,
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-suffix{
+  border-radius:var(--_qxframe9a7c2-form-input-group-radius)
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-prefix:not(:last-child),
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-suffix:not(:last-child){
+  border-start-end-radius:0;border-end-end-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-prefix:not(:first-child),
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-suffix:not(:first-child){
+  border-start-start-radius:0;border-end-start-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>:not(:first-child){
+  margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))
+}
