@@ -626,3 +626,39 @@ the Roller root's computed height against its handle
 height. The actual effect on the 528-card height
 diagnostic is **pending the latest CI**, and no precise
 height improvement is claimed before measurement.
+
+
+### 2026-10-08 — Receiving Method unboxed horizontal Field composition
+
+Pinned source `apps/v4/registry/bases/radix/blocks/preview-02/cards/receiving-method.tsx`
+places exactly two `Field orientation="horizontal" className="pb-2.5"`
+inside `FieldLabel` within the RadioGroup; the radio choices
+are **not** raised/bordered background Cards. QX previously
+used two invented `.pv-choice-card` labels with `padding:
+1rem 1rem 1.25rem`, a 1px border and selected background.
+The extra 16px top + 20px bottom (compared with source 10px
+bottom) is a measured source-consistent explanation for
+much of Nova Receiving Method's +24.75px Card residual.
+
+Both choices now compose existing framework primitives:
+`.qxframe9a7c2-check-field` and
+`.qxframe9a7c2-field-content`, with a single authored
+non-framework instance modifier `.pv-choice-field`
+contributing **only 10px bottom padding**. The custom
+choice-card CSS rules and selected box chrome are removed.
+The shared `theme-field-gap` / `theme-field-content-gap`
+tokens continue to control spacing, including 8/12px
+horizontal and 2/4px content gaps across the 8 source
+styles. Native radio state/keyboard behavior and all
+runtime Controller code remain unchanged.
+
+Eight-style static markup checks and actual Chromium
+8-style×light/dark×2 radio Field computed geometry checks
+guard 10px bottom padding, no top padding/border,
+selected bank radio and both token spacing roles.
+The pinned source additionally specifies a
+Sera-specific one-column choice layout
+(`style-sera:grid-cols-1`), while the current QX
+layout stays two columns; this is **still open**, not
+silently claimed complete. Next 528-height CI result
+must verify the actual effect, not an assumed reduction.
