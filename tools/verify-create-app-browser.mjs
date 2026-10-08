@@ -432,7 +432,7 @@ try {
           const faq=doc.querySelector('[data-card="faq"]');
           const prefs=doc.querySelector('[data-card="preferences"]');
           const empty=doc.querySelector('[data-card="empty-distribute-track"] .qxframe9a7c2-empty.is-composed');
-          const separators=[...prefs.querySelectorAll('.pv-field-separator')];
+          const separators=[...prefs.querySelectorAll('.pv-divider-bleed')];
           const result={
             trigger: px(css(faq.querySelector('.pv-accordion-item > summary')).paddingTop),
             content: px(css(faq.querySelector('.pv-accordion-content')).paddingBottom),
