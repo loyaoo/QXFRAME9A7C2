@@ -130,3 +130,5 @@ where to investigate component geometry; it does not assign a pass/fail verdict.
   duplicated FormLabel font owners. Fixed the cause by assigning private
   `--_qxframe9a7c2-layout-gap` per modifier and removing the extra FormLabel
   typography owner; the CSS gate baseline was not increased. Recheck latest CI.
+
+Additional InputGroup closeout: shared `.qxframe9a7c2-form-input-group-field` provides an explicitly bordered inner field when prefix/suffix and addon coexist. The parent group now joins the same theme control-size owner as other controls; nested addon/input have zero border, external prefix/suffix retain bordered segments. Browser test creates this mixed structure and checks border owners and center square seams. The separate full-width Progress projection `.qxframe9a7c2-progress.is-full` restores the original block-level demo geometry after swapping to the existing QX progress internals. Current CI remains authoritative; do not assert passing visual acceptance before it completes.
