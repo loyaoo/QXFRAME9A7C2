@@ -101,3 +101,32 @@ where to investigate component geometry; it does not assign a pass/fail verdict.
   GitHub CI on PR #265 remains the release gate.
 - The 410 previous height diagnostics have not been remeasured or closed.
   Continue with per-card computed geometry and Item/Field/form/list internals.
+
+
+## 2026-10-08 — Owner visual-semantic corrections / private primitive removal (PR #265)
+
+- `.is-square` is solely width=height; it no longer forces a corner radius of zero.
+  Actual straight-corner policy is the theme/category radius.
+- Radio interior dot follows the theme's radio radius; explicit global zero radius
+  affects follow-style categories, while an explicitly selected circle shape wins.
+- Luma switch thumb width is independently derived from height with an 8px horizontal
+  extension, capped inside the switch track; the selectgroup switch is in the same
+  shape scheme.
+- FormInputGroup connected segments have start/end seam clipping; addon is a
+  borderless inner part, prefix/suffix are separately bordered outer segments,
+  with CSS `:has()` (modern browser baseline; no legacy fallback).
+- Preview 01/02 classes migrated: `create-grid/col/pair`, `pv-row/stack`,
+  `pv-field-group/check-field`, `pv-item/field/label`, `pv-separator`,
+  `pv-swatch-cell`, `pv-kbd`, `pv-skeleton/spinner/progress`. Shared structure
+  is now defined by QX Flex/Stack, FormField, Item, Divider, Kbd,
+  Skeleton/Spinner and Progress styles.
+  The fixed seven-column comparison canvas stays page-owned.
+- Static and browser regression checks added to guard shape/geometry,
+  closed-theme token consumers and remaining duplicate private CSS primitives.
+- **Not yet accepted:** pixel/geometric regression of all preview cards,
+  visual fidelity to the pinned shadcn renderer, and complete cleanup of
+  still-page-private special-purpose demo classes. These remain stage-3 tasks.
+- First CI attempt reported 5 public `layout-gap` declarations and 2
+  duplicated FormLabel font owners. Fixed the cause by assigning private
+  `--_qxframe9a7c2-layout-gap` per modifier and removing the extra FormLabel
+  typography owner; the CSS gate baseline was not increased. Recheck latest CI.
