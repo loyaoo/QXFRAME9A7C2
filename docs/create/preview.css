@@ -155,6 +155,7 @@ body.create-preview-body {
  * rule centered within it. The two -my-4 instances must retain that slot
  * rather than applying negative margins to a bare 1px Divider. */
 .pv-divider-bleed {
+  display:var(--qxframe9a7c2-field-separator-display,var(--qxframe9a7c2-theme-field-separator-display,block));
   position:relative;
   height:1.25rem;
   margin-block:-1rem;
