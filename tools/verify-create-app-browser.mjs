@@ -414,6 +414,51 @@ try {
     }
   });
 
+  await step('Source-local FAQ, Empty and Preferences geometry in 16 themes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=empty-distribute-track]")', 'Preview 01 card fixtures');
+    const accordion={vega:16,nova:10,maia:16,lyra:10,mira:8,luma:16,sera:16,rhea:16};
+    const approx=(actual,expected,label)=>assert.ok(Number.isFinite(actual)&&Math.abs(actual-expected)<=.5,
+      label+': expected '+expected+', observed '+actual);
+    for(const [style,inset] of Object.entries(accordion)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' FAQ fixtures');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement,prev=html.classList.contains('dark');
+          html.classList.toggle('dark',${mode==='dark'});
+          const css=el=>doc.defaultView.getComputedStyle(el),px=v=>parseFloat(v);
+          const faq=doc.querySelector('[data-card="faq"]');
+          const prefs=doc.querySelector('[data-card="preferences"]');
+          const empty=doc.querySelector('[data-card="empty-distribute-track"] .qxframe9a7c2-empty.is-composed');
+          const separators=[...prefs.querySelectorAll('.pv-field-separator')];
+          const result={
+            trigger: px(css(faq.querySelector('.pv-accordion-item > summary')).paddingTop),
+            content: px(css(faq.querySelector('.pv-accordion-content')).paddingBottom),
+            separatorCount: separators.length,
+            separator: separators.map(el=>[px(css(el).marginTop),px(css(el).marginBottom)]),
+            emptyPadding: px(css(empty).paddingTop),
+            emptyMedia: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).width),
+            emptyMediaBottom: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).marginBottom),
+            emptyHeader: px(css(empty.querySelector('.qxframe9a7c2-empty-header')).rowGap)
+          };
+          html.classList.toggle('dark',prev);
+          return result;
+        })()`);
+        const label=style+'/'+mode;
+        approx(actual.trigger,inset,label+' Accordion trigger inset');
+        approx(actual.content,inset,label+' Accordion content inset');
+        assert.equal(actual.separatorCount,2,label+' field separators');
+        for(const pair of actual.separator)for(const value of pair)approx(value,-16,label+' separator margin');
+        approx(actual.emptyPadding,16,label+' Card Empty p-4');
+        approx(actual.emptyMedia,(['nova','lyra','mira'].includes(style)?32:40),label+' media retains theme size');
+        approx(actual.emptyMediaBottom,8,label+' media bottom gap');
+        approx(actual.emptyHeader,style==='mira'?4:8,label+' Empty header gap');
+      }
+    }
+  });
+
   await step('Preview 01 refreshed first-Card height diagnostic against pinned source', async () => {
     const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/qa/reports/stage-3/preview-01/report.json'), 'utf8'));
     assert.equal(baseline.source, '295a1f114a138f23b5dfee0e0c6812394dfeb90c');
