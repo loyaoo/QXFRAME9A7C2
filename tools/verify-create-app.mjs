@@ -69,7 +69,7 @@ check('QX shape, Luma switch and shared layout contracts', () => {
   assert.match(luma, /--qxframe9a7c2-theme-switch-thumb-extra:\s*0\.5rem;/);
   const zero = model.compileTheme(model.normalizeConfig({ style: 'nova', radius: 'none' })).body;
   for (const key of ['radius-radio', 'radius-switch', 'radius-switch-thumb', 'radius-avatar']) {
-    assert.match(zero, new RegExp('--qxframe9a7c2-theme-' + key + ': 0;'), 'global sharp shape: ' + key);
+    assert.match(zero, new RegExp('--qxframe9a7c2-theme-' + key + ': 0(?:rem)?;'), 'global sharp shape: ' + key);
   }
   const explicit = model.compileTheme(model.normalizeConfig({ style: 'nova', radius: 'none', ext: { shapeRadio: 'circle' } })).body;
   assert.match(explicit, /--qxframe9a7c2-theme-radius-radio:\s*62\.5rem;/);
@@ -82,7 +82,7 @@ check('QX shape, Luma switch and shared layout contracts', () => {
     assert.ok(composition.includes('.qxframe9a7c2-' + name), 'missing shared static primitive ' + name);
   }
   for (const page of ['preview-01.html', 'preview-02.html']) {
-    assert.doesNotMatch(read(page), /\b(?:pv-stack|pv-field-group|pv-check-field|pv-swatch-cell|pv-separator|create-grid|create-col|create-pair)\b/, 'duplicate private primitive ' + page);
+    assert.doesNotMatch(read(page), /class="[^"]*\b(?:pv-stack|pv-field-group|pv-check-field|pv-swatch-cell|pv-separator|pv-row|pv-item|pv-field|create-grid|create-col|create-pair)\b/, 'duplicate private primitive ' + page);
   }
   assert.match(composition, /form-input-group-prefix/);
   assert.match(composition, /form-input-group-suffix/);
