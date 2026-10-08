@@ -172,6 +172,17 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-flex.is-gap-6,.qxframe9a7c2-stack.is-gap-6{--_qxframe9a7c2-layout-gap:1.5rem}
 .qxframe9a7c2-field-group{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-field-group-gap,var(--qxframe9a7c2-theme-field-group-gap,1.75rem));min-width:0}
 .qxframe9a7c2-field-content{display:flex;flex:1 1 auto;flex-direction:column;gap:var(--qxframe9a7c2-field-content-gap,var(--qxframe9a7c2-theme-field-content-gap,.125rem));min-width:0}
+/* Theme sets the standard choice density; a local override always wins.
+ * Flex only (no CSS Grid), source Sera editorial uses one column. */
+.qxframe9a7c2-choice-group{
+  --_qxframe9a7c2-choice-columns:var(--qxframe9a7c2-choice-group-columns,var(--qxframe9a7c2-theme-choice-group-columns,2));
+  display:flex;flex-wrap:wrap;gap:var(--qxframe9a7c2-choice-group-gap,.75rem);min-width:0;
+}
+.qxframe9a7c2-choice-group>*{
+  box-sizing:border-box;
+  flex:1 1 calc((100% - (var(--_qxframe9a7c2-choice-columns) - 1) * var(--qxframe9a7c2-choice-group-gap,.75rem)) / var(--_qxframe9a7c2-choice-columns));
+  min-width:0;
+}
 /* FieldContent is a first-class composition, not a FormField child.
  * Its label must consume the same Theme typography as composed FormField.
  * A local/public CSS override or inline style still wins by normal cascade. */
