@@ -156,3 +156,65 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item.is-current{z-index:var(--qxframe9a7c2-z-local-overlay)}
 .qxframe9a7c2-pagination.is-segmented>.qxframe9a7c2-pagination-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
 
+
+
+/* Shared static layout: all visual density is expressed by the normal QX style layer. */
+.qxframe9a7c2-flex{display:flex;align-items:center;gap:var(--qxframe9a7c2-layout-gap,0.5rem);min-width:0}
+.qxframe9a7c2-flex.is-start{align-items:flex-start}
+.qxframe9a7c2-flex.is-between{justify-content:space-between}
+.qxframe9a7c2-flex.is-wrap{flex-wrap:wrap}
+.qxframe9a7c2-stack{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-layout-gap,0.5rem);min-width:0}
+.qxframe9a7c2-flex.is-gap-0,.qxframe9a7c2-stack.is-gap-0{--qxframe9a7c2-layout-gap:0.125rem}
+.qxframe9a7c2-flex.is-gap-1,.qxframe9a7c2-stack.is-gap-1{--qxframe9a7c2-layout-gap:0.25rem}
+.qxframe9a7c2-flex.is-gap-3,.qxframe9a7c2-stack.is-gap-3{--qxframe9a7c2-layout-gap:0.75rem}
+.qxframe9a7c2-flex.is-gap-4,.qxframe9a7c2-stack.is-gap-4{--qxframe9a7c2-layout-gap:1rem}
+.qxframe9a7c2-flex.is-gap-6,.qxframe9a7c2-stack.is-gap-6{--qxframe9a7c2-layout-gap:1.5rem}
+.qxframe9a7c2-field-group{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-field-group-gap,1.75rem);min-width:0}
+.qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer}
+.qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}
+.qxframe9a7c2-divider{flex:0 0 auto;height:1px;margin:0;border:0;background:var(--qxframe9a7c2-theme-border)}
+.qxframe9a7c2-divider.is-vertical{width:1px;height:auto;align-self:stretch}
+.qxframe9a7c2-swatch-cell{display:flex;flex:0 0 calc((100% - 3.75rem) / 6);flex-direction:column;align-items:center;gap:0.5rem;min-width:0}
+
+/* Composition protocol: an addon belongs INSIDE one field outline.
+ * Prefix/suffix are attached OUTER segments with an inner dividing border.
+ * The connected group owns seams; the field retains value, state and focus. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>:not(:first-child){
+  border-start-start-radius:0;border-end-start-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>:not(:last-child){
+  border-start-end-radius:0;border-end-end-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:not(:first-child)>.qxframe9a7c2-group-control{
+  border-start-start-radius:0;border-end-start-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:not(:last-child)>.qxframe9a7c2-group-control{
+  border-start-end-radius:0;border-end-end-radius:0
+}
+.qxframe9a7c2-form-input-group-prefix,.qxframe9a7c2-form-input-group-suffix{
+  box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  min-width:0;flex:0 1 auto;padding-inline:var(--_qxframe9a7c2-control-padding-inline);
+  border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
+  border-radius:var(--_qxframe9a7c2-form-input-group-radius);
+  background:var(--_qxframe9a7c2-semantic-surface-muted);color:var(--_qxframe9a7c2-semantic-text-secondary)
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon){
+  border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
+  border-radius:var(--_qxframe9a7c2-form-input-group-radius);
+  background:var(--qxframe9a7c2-theme-background)
+}
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-addon{
+  border:0;border-radius:0;background:transparent;min-height:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input,
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-input{
+  border:0;border-radius:0;background:transparent;min-width:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix,
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix{
+  border-block:0;border-radius:0
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix:first-child,
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix:first-child{border-inline-start:0}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix:last-child,
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix:last-child{border-inline-end:0}
