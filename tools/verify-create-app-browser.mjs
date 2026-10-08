@@ -865,7 +865,7 @@ try {
         const actual=await evaluate(`(() => {
           const doc=document.querySelector('[data-create-frame]').contentDocument;
           const html=doc.documentElement,old=html.classList.contains('dark');
-          html.classList.toggle('dark',${mode==='dark');
+          html.classList.toggle('dark',${mode==='dark'});
           const host=doc.createElement('div');
           host.style.cssText='position:absolute;left:0;top:0;width:360px;visibility:hidden';
           host.innerHTML='<table class="qxframe9a7c2-table is-embedded is-hover"><thead><tr><th>Item</th><th>Amount</th></tr></thead><tbody><tr><td>Subscription</td><td>$10</td></tr><tr><td>Service</td><td>$20</td></tr></tbody></table>';
