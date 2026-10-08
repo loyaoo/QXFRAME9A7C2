@@ -43,10 +43,10 @@ check('createApp private styles never enter qxframe.css', () => {
 
 check('Empty: shared QX composition replaces preview-private geometry', () => {
   const shared = fs.readFileSync(path.join(root, 'src/styles/components/empty.css'), 'utf8');
-  assert.match(shared, /\\.qxframe9a7c2-empty\\.is-composed\\s*\\{/);
-  assert.match(shared, /\\.qxframe9a7c2-empty-media\\.is-icon\\s*\\{/);
-  assert.match(shared, /width:\\s*2rem;/);
-  assert.match(shared, /font-size:\\s*0\\.875rem;/);
+  assert.match(shared, /\.qxframe9a7c2-empty\.is-composed\s*\{/);
+  assert.match(shared, /\.qxframe9a7c2-empty-media\.is-icon\s*\{/);
+  assert.match(shared, /width:\s*2rem;/);
+  assert.match(shared, /font-size:\s*0\.875rem;/);
   for (const page of ['preview-01.html', 'preview-02.html']) {
     const html = read(page);
     const count = (html.match(/class="qxframe9a7c2-empty is-composed/g) || []).length;
