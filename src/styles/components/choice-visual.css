@@ -35,7 +35,7 @@
 /* Radio dot. */
 .qxframe9a7c2-native-form input[type="radio"]::before,.qxframe9a7c2-form-check-input[type="radio"]::before,.qxframe9a7c2-form-selectgroup-indicator.is-radio::before{
   box-sizing:border-box;content:"";width:calc(var(--_qxframe9a7c2-choice-size) * .48);height:calc(var(--_qxframe9a7c2-choice-size) * .48);
-  border-radius:50%;background:var(--qxframe9a7c2-theme-primary);opacity:0;transform:scale(.35);
+  border-radius:var(--qxframe9a7c2-radio-dot-radius,max(0px,calc(var(--qxframe9a7c2-theme-radius-radio) - var(--_qxframe9a7c2-choice-size) * .26)));background:var(--qxframe9a7c2-theme-primary);opacity:0;transform:scale(.35);
   transition:opacity var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.12,.4,.29,1.46)
 }
 .qxframe9a7c2-native-form input[type="radio"]:checked,.qxframe9a7c2-form-check-input[type="radio"]:checked,.qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator.is-radio{border-color:var(--qxframe9a7c2-theme-primary);background-color:var(--_qxframe9a7c2-semantic-surface)}
