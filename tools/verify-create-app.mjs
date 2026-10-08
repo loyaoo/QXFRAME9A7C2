@@ -168,6 +168,27 @@ check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources',
     'Kitchen previously rendered a duplicated media wrapper in each slider row');
 });
 
+check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', () => {
+  const styles={vega:4,nova:2,maia:4,lyra:2,mira:2,luma:4,sera:4,rhea:4};
+  for(const [style,pixels] of Object.entries(styles)){
+    const css=model.compileTheme(model.normalizeConfig({style})).body;
+    const hit=css.match(/--qxframe9a7c2-theme-field-content-gap:\s*([^;]+);/);
+    assert.ok(hit,style+' FieldContent role');
+    assert.equal(parseFloat(hit[1])*16,pixels,style+' FieldContent gap');
+  }
+  const compos=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  assert.match(compos,/\.qxframe9a7c2-field-content\{[^}]*theme-field-content-gap/);
+  assert.match(item,/flex-wrap:wrap;align-items:center;width:100%/);
+  assert.match(item,/\.qxframe9a7c2-item-title\{[^}]*-webkit-line-clamp:1/);
+  assert.match(item,/\.qxframe9a7c2-item-desc\{[^}]*-webkit-line-clamp:2/);
+  const html=read('preview-01.html');
+  for(const [card,expected] of [['preferences',2],['notification-settings',5]]){
+    const section=html.slice(html.indexOf('data-card="'+card+'"'),html.indexOf('<!-- @end '+card+' -->'));
+    assert.equal((section.match(/class="qxframe9a7c2-field-content"/g)||[]).length,expected,card+' uses shared FieldContent');
+  }
+});
+
 check('Pinned SidebarMenu gap and SidebarGroup padding across eight styles', () => {
   const gaps={vega:4,nova:0,maia:4,lyra:0,mira:1,luma:2,sera:2,rhea:2};
   for(const [style,gap] of Object.entries(gaps)){
