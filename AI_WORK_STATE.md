@@ -58,6 +58,20 @@ Empty/Item/Field subset browser gates already passed. New reports remain a
 non-gating diagnostic, and the old 410 differences are superseded by the
 measured 400/528 baseline only at the last green HEAD.
 
+KITCHEN ISLAND SOURCE-DERIVED FOLLOW-UP (2026-10-08, CI pending):
+- Read pinned upstream `ui/item.tsx`, eight `style-*.css` recipes and
+  `blocks/preview-02/cards/kitchen-island.tsx`.
+- Upstream `ItemMedia variant=icon` is a bare 16px glyph with no
+  32px background/border in all eight styles; QX erroneously used a
+  32px boxed icon, ballooning four Kitchen slider rows.
+- Shared QX `item-surface.css` now emits bare 16px icon media and
+  16px default / 10px sm children / 8px xs children ItemGroup gaps
+  using `:has()`. Preview 01 Kitchen markup removes four redundant
+  nested media wrappers. Static and browser QA added (8 style × 4
+  rows; verify DOM count, width/height/border/group gap).
+- Await HEAD CI and newly regenerated 528-card diagnostic; do not
+  claim the +45px Nova kitchen difference fixed before measurement.
+
 REMAINING: source `style-sera:hidden` on Preferences FieldSeparator,
 contained Accordion shell variants; Card internal/nested markup, Item sm/xs,
 and comprehensive first-Card height parity (old baseline still hundreds off).
