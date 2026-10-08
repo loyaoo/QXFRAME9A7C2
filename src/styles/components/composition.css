@@ -220,16 +220,46 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   background:var(--_qxframe9a7c2-semantic-surface-muted);color:var(--_qxframe9a7c2-semantic-text-secondary)
 }
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon){
-  border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
+  box-sizing:border-box;height:var(--_qxframe9a7c2-control-height);
+  border:var(--_qxframe9a7c2-control-border-width) solid var(--qxframe9a7c2-theme-field-border);
+  border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+  border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
   border-radius:var(--_qxframe9a7c2-form-input-group-radius);
-  background:var(--qxframe9a7c2-theme-background)
+  background:var(--qxframe9a7c2-theme-field)
 }
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-addon{
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon{
   border:0;border-radius:0;background:transparent;min-height:0
 }
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input,
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-input{
+  box-sizing:border-box;height:100%;min-height:0;
   border:0;border-radius:0;background:transparent;min-width:0
+}
+/* One border owner consumes the actual field's appearance and capability
+ * state. Inner inputs keep value/focus/keyboard ownership, not border paint. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-addon{
+  box-sizing:border-box;min-height:0;height:100%;
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
+.qxframe9a7c2-form-input-group-field:focus-within{
+  border-color:var(--qxframe9a7c2-theme-ring);
+}
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon),
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group-field,
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-warning),
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-warning),
+.qxframe9a7c2-form-input-group-field:has(>.is-warning){
+  border-color:var(--qxframe9a7c2-theme-warning);
+}
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon),
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input-group-field,
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-invalid),
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-error),
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-invalid),
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-error),
+.qxframe9a7c2-form-input-group-field:has(>.is-invalid),
+.qxframe9a7c2-form-input-group-field:has(>.is-error){
+  border-color:var(--qxframe9a7c2-theme-destructive);
 }
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix,
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix{
@@ -256,13 +286,16 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
  * both inner and outer segments are present in the same flat DOM. */
 .qxframe9a7c2-form-input-group-field{
   box-sizing:border-box;display:flex;flex:1 1 0;align-items:stretch;min-width:0;
-  border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
+  box-sizing:border-box;height:var(--_qxframe9a7c2-control-height);
+  border:var(--_qxframe9a7c2-control-border-width) solid var(--qxframe9a7c2-theme-field-border);
+  border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+  border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
   border-radius:var(--_qxframe9a7c2-form-input-group-radius);
-  background:var(--qxframe9a7c2-theme-background)
+  background:var(--qxframe9a7c2-theme-field)
 }
 .qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input,
 .qxframe9a7c2-form-input-group-field>.qxframe9a7c2-input{
-  flex:1 1 0;min-width:0;border:0;border-radius:0;background:transparent
+  box-sizing:border-box;flex:1 1 0;min-width:0;min-height:0;height:100%;border:0;border-radius:0;background:transparent
 }
 .qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon{
   display:inline-flex;align-items:center;flex:0 1 auto;min-width:0;
