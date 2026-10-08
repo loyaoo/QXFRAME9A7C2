@@ -19,17 +19,25 @@
 
 ## CURRENT
 
-Task: CREATEAPP-V3-S3 — Preview 01 (shadcn preview-02).
-Status: IN PROGRESS, draft PR #265 at https://github.com/loyaoo/QXFRAME9A7C2/pull/265 on `redesign/create` (base main `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`). Do not merge before stage-3 acceptance.
-Engineering estimate: overall createApp program **54%**, stage 3 / task S3 **22%**. Earlier 624/624 Card geometry and 528/528 first-Card properties remain accepted only for the recorded properties; 410 height diagnostics are not closed.
+Task: CREATEAPP-V3-S3 — Preview 01 shadcn geometry and shared statics.
+Status: IN PROGRESS, draft PR #265 (`redesign/create`), do not merge before owner acceptance.
+Engineering estimate: overall CREATEAPP-V3 56%, stage 3 / S3 28% (provisional until browser/CI verified). Stages 0–2 merged; Controller 40/40 accepted and not touched.
 
-2026-10-08 current batch: promote Empty composition into `src/styles/components/empty.css` (preserve legacy Empty), remove preview-specific `.pv-empty*` geometry, migrate nine Preview 01/02 Empty examples to shared QX slots with media outside the header, and lock nominal Nova geometry (32px icon media / 14px title / 16px root gap). Added `verify:create-app` structural/ownership gate and `verify:create-app-browser` computed-geometry gate. QA report updated at `tools/qa/reports/stage-3/README.md`. No runtime JavaScript source changes.
+2026-10-08 owner-reported defects batch:
+- `.is-square` previously reset corner radius despite meaning equal dimensions; removed that reset in shared button theme rules.
+- Radio dot `::before` now follows `theme-radius-radio`; global explicit radius=none propagates through follow-style rounded categories while explicit category shape remains authoritative.
+- Luma switch thumb now horizontal capsule via `switch-thumb-extra` theme token + width/height separated consumer and track offset; native SelectGroup switch follows the same scheme.
+- InputGroup CSS now distinguishes borderless interior addon from separately bordered prefix/suffix and provides start/end connected radius clipping, retaining old control value/state semantics.
+- Replaced duplicated preview `create-grid/col/pair` and `pv-row/stack/field-group/check-field/swatch-cell/separator/item/field/label/kbd/skeleton/spinner/progress` markup/styles with QX Flex/Stack, Divider, Item, FormField, Kbd, Skeleton, Spinner, Progress. The shadcn fixed-width canvas geometry remains app-private.
+- New static and browser tests; QA report updated. Runtime qxframe.js unchanged. **Old browser compatibility not required** under v3.
+- CI ratchet initially failed because of five public layout-gap modifier declarations and two duplicate FormLabel font owners; corrected root cause without relaxing baseline.
+- Fixed resolved compiler model to preserve explicit category shape choices; otherwise radius:none would override them.
+- Previous Empty migration and shared Card work remain intact.
 
-Checks on user-supplied R2 snapshot: static createApp gate 15/15, CSS source authority and concat, CSS constraints and theme-token ratchet pass. Browser smoke timed out before createApp boot in this local Linux container, **not passed**; PR Actions remain authoritative. A current remote PR CI result must be checked after new commits. Older browser fallback is not a blocker per v3 §2 (Chrome/Edge 111+, Safari 16.2+, Firefox 113+).
+Validation: on this batch, GitHub QXFRAME CI first failed in verify:theme-tokens with two ratchet increases; committed targeted fixes. Latest GH CI and browser checks are **pending/not yet accepted**. Do not label card pixel parity or geometry fully passed. Prior 410 height diagnostics are still open.
 
-Next exact step: inspect PR #265 CI including new Empty browser step, fix any failure; then measure all four Preview 01 Empty cards against the pinned shadcn reference in both themes, reduce genuine height/section discrepancies, and continue Item/Field/list/form composition. Recheck affected canonical docs and demo surfaces. Do not redo 40/40 Controller migration.
+NEXT EXACT STEPS: confirm latest CI (especially `verify:create-app`, `verify:theme-tokens`, `verify:create-app-browser`); fix any failures without adjusting ratchet baselines, then compare Preview 01 card geometry and remove further redundant `pv-*` only where QX equivalent exists. Align InputGroup addon/prefix/suffix and Luma switch in browser. Keep PR #265 as draft until phase completion.
 
-Previous batch: shared Card title/description/gaps/partitions, border geometry and public overrides; preview box sizing and QR inset; portable reference renderer with 159 source hashes and locked QA dependencies. Historic Windows Modal/Drawer lease timing failure is outside the current CSS patch unless CI reproduces it.
 
 ### Owner decisions (2026-10-07) — frozen
 
