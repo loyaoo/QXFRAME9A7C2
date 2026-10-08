@@ -745,3 +745,61 @@ icon-position fix. Nova Payments remains **473px versus reference 431px**
 Upcoming Payments -18.5px. Height-only diagnostics are not full visual
 acceptance. Next work continues per-row source-locked measurements and
 nested Cards; keep Draft PR #265 open without merge.
+
+
+## 2026-10-08 — Audit PR #265 triage (22 candidates; CI not yet verified)
+
+Input source: `AUDIT-PR265-ae56205.md` (review of commits through
+`d661b282`). This audit contains evidence, but "22 problems" is not
+itself an acceptance decision.
+
+Candidate dispositions:
+- #1: legacy-browser version mismatch is outside this task because the
+  owner explicitly dropped older-version compatibility.
+- #2–#5: InputGroup outer edge now consumes field theme surface, side
+  border, invalid/warning/focus; one fixed control-height border box;
+  inner fields fill the box; standalone connected addon alone loses
+  its extra chrome. Separated/vertical addons retain their own border
+  and muted background. Added Chromium 8-style × 2-mode comparison
+  to normal field appearance/height and invalid state.
+- #6: switch thumb extra width derives only from `switchLook=wide`,
+  preserving default Luma 8px capsule without style-named logic.
+- #7: `radius:none + controlShape:pill` respects the explicit pill
+  choice unless a per-category shape overrides it.
+- #15: card/dialog 24px cap applies to all radius allocations, not
+  just smooth; all 8 presets × allocations checked.
+- #16: three registered loading-animation names return `none` for
+  motion:none; Skeleton/Spinner/Loading consume their names, durations
+  derive from existing Theme time and Accordion uses duration-md.
+- #17: ThemeHeader parser now requires the current complete export,
+  rejects duplicates/malformed/missing/contradictory config rows,
+  and returns no config upon failure. Old-version migration is not
+  promised implicitly.
+- #18: random/reset base candidates respect locked theme/chart;
+  matching menu accent/menuColor constraint preserved.
+- #20: the three FAQ details share a native `name` value to enforce
+  single-open/collapsible behavior. **Remaining**: replace the
+  preview-private Accordion visual owner with framework Collapse
+  composition instead of claiming complete reuse.
+- #21: both theme blocks now enumerate all 162 existing roles;
+  three registered animation roles bring the inventory to **165**.
+  Generator, generated `src/styles/main/theme.css`, and
+  `tools/css-gates.mjs` updated together. Theme file now exceeds
+  the historical 16KB *warning* threshold; this is explicitly
+  expected from v3's full-dark-list contract, not a hidden exception.
+- #22: reusable Item link owns matching accent background/foreground,
+  including its description in hover/focus/active, avoiding dark/text
+  contrast failures. The other sidebar hover accent consumer is paired.
+
+**Not closed**: #8 Empty 3-tier glyph/content gaps; #14 underline
+shape policy under discussion; #19 preview Table reuse; #20 reusable
+Collapse appearance; #9–#13 historical runtime defects. Runtime
+`qxframe.js` is frozen by the current v3 Stage 3 mandate; numeric,
+calendar week and async core fixes require a separately authorized
+runtime patch. Existing first-Card 300/528 over-tolerance baseline
+still applies until a fresh successful browser diagnostic is read.
+
+New source and browser tests are committed. Pending results at
+`4304f90384e3b71cdfe41308c157e27d37390238`
+(or newer documentation HEAD); any GitHub Actions failure must
+be investigated before calling the batch accepted. Keep #265 Draft.
