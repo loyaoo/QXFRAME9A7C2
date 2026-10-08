@@ -363,3 +363,50 @@ Outstanding: nested Cards, complete Item xs/sm theme size curves,
 FAQ/Tabs/Slider structure and exact Cards' 528-height alignment;
 all changed source contracts must pass current CI. Runtime Controller
 and qxframe.js are unchanged. PR #265 stays Draft.
+
+
+## 2026-10-08 — Browser-rooted Payments and Kitchen closeout
+
+**Last confirmed green before this fix**:
+HEAD `8c14677538b6ed1512e9fa9d629e52e99d2aaf47`,
+release/windows `37744243988`, schema `37744243987`.
+The `verify-create-app-browser` suite ran 19 checks. Its 528 current
+first-Card height differences at tolerance 0.5px were **362/528**
+(226 improved, 166 worsened vs original 410/528). Compared with
+the immediately preceding 358/528 result, this version regressed by
+four cases despite fixing Nova Sidebar exactly (377px QX = 377px
+pinned reference). These values are diagnostics, not release gates.
+
+The new `[preview-01-structure-nova]` browser report isolated two
+root causes (rather than attempting Card height hacks):
+
+- **Payments**: first Item unexpectedly rendered 139.25px and
+  whole Card 540px vs source 431px. QX Item was corrected
+  to `flex-wrap:wrap` earlier, but its `ItemContent` still used
+  `flex:1 1 auto`. That content claimed intrinsic full width,
+  forcing trailing chevrons into a new flex row. Pinned upstream
+  `ui/item.tsx` uses `flex-1` = zero basis. QX shared
+  `.qxframe9a7c2-item-content` now uses `flex:1 1 0`,
+  retaining min-width:0 and the source's two-line clamp.
+  Browser QA verifies all four Payments rows keep their trailing
+  SVGs center-aligned on the same row in eight themes.
+
+- **Kitchen Island**: QX Item row 54px despite correct unboxed
+  ItemMedia icon and compact group gap. Its embedded native
+  QX Slider consumed 32px height due to the standard button/control
+  footprint; in the pinned React source the Slider visual
+  dimension is determined by its thumb, and row height should
+  follow the Item title + vertical padding instead. QX Slider
+  now reads optional inherited
+  `--qxframe9a7c2-slider-height` before falling back to its
+  unchanged default control height. The four Kitchen instances
+  set that variable locally to
+  `var(--qxframe9a7c2-theme-slider-thumb)`; no runtime JS,
+  private selector, global Slider shrinkage or duplicate token.
+  Browser QA checks intrinsic thumb height vs Slider root and
+  Item row geometry, including style-dependent padding.
+
+The fallback keeps all existing Slider demos and author overrides
+unchanged. No component pixel acceptance is declared until
+the newly generated 528-row report shows the net effect.
+Nested-card/full visual acceptance and other cards remain open.
