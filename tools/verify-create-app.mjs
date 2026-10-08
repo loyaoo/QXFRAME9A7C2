@@ -214,6 +214,10 @@ check('Payments Item flex basis and Kitchen Slider intrinsic footprint are sourc
   const html=read('preview-01.html');
   assert.match(item,/\.qxframe9a7c2-item-content\{display:flex;flex:1 1 0;/,
     'ItemContent uses pinned flex-1 zero basis and avoids wrapping trailing icons');
+  assert.match(item,/\.qxframe9a7c2-item:has\(\.qxframe9a7c2-item-desc\)>\.qxframe9a7c2-item-media\s*\{\s*align-self:flex-start;\s*transform:translateY\(\.125rem\);/,
+    'Pinned descriptive ItemMedia must align at the top, shifted down 2px');
+  assert.match(item,/\.qxframe9a7c2-item-media\{[^}]*gap:\.5rem/,
+    'ItemMedia consumes the pinned 8px internal glyph gap');
   assert.match(slider,/height:var\(--qxframe9a7c2-slider-height,var\(--_qxframe9a7c2-control-height\)\)/,
     'Slider root height accepts an inherited local variable while preserving default control footprint');
   const kitchen=html.slice(html.indexOf('data-card="kitchen-island"'),html.indexOf('<!-- @end kitchen-island -->'));
