@@ -13,7 +13,7 @@
   transition:border-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),background-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),box-shadow var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),opacity var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)
 }
 .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],.qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,.qxframe9a7c2-form-selectgroup-indicator.is-checkbox{border-radius:var(--_qxframe9a7c2-choice-checkbox-radius,0.25rem)}
-.qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],.qxframe9a7c2-form-selectgroup-indicator.is-radio{border-radius:var(--_qxframe9a7c2-choice-radio-radius,50%)}
+.qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],.qxframe9a7c2-form-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-radio-radius,var(--qxframe9a7c2-theme-radius-radio))}
 
 
 .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-native-form input[type="radio"]{margin:var(--_qxframe9a7c2-fixed-space-1) 0.375rem var(--_qxframe9a7c2-fixed-space-1) 0;vertical-align:middle;cursor:pointer}
