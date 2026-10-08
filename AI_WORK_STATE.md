@@ -41,7 +41,21 @@ REAL-TIME RECOVERY, 2026-10-08:
   Kitchen Island 337/337px and Sidebar Nav 377/377px match height
   (not full visual acceptance).
 
-CURRENT NEW COMMIT BATCH — GitHub Actions pending:
+LATEST VERIFIED GREEN S3 BATCH:
+- Source/QA/documentation checkpoint HEAD `b388b1f9568cf0458fb1dfce15588c498f45207d`
+  passed QXFRAME CI `37771536451` (release and windows-tools
+  success; deploy-pages skipped) and CSS Schema Acceptance
+  `37771536361` (success).
+- Chromium createApp gate: **23/23 checks passed**, including the new
+  pinned descriptive ItemMedia 8-style × light/dark browser check.
+- Remeasured 528 first-Card source-locked heights: **300/528** beyond
+  ±0.5px; 292 improved / 122 worsened relative to original; unchanged
+  from the previous green baseline. Positioning fix is real but does not
+  repair Payments +42px or FAQ +14px.
+- QA and work-state final evidence is a documentation-only follow-up;
+  the above tested code SHA is the authoritative new visual checkpoint.
+
+SOURCE-BACKED CHANGE DETAILS:
 - Compared upstream pinned `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`
   and all 8 `style-*.css` recipes. All require described
   `ItemMedia` to align self at flex-start and translate down 2px,
@@ -54,7 +68,8 @@ CURRENT NEW COMMIT BATCH — GitHub Actions pending:
   token inventory, or test tolerance changes.
 - This fixes a verified **icon placement** issue, NOT Payments' +42px
   height residual. Do not count any first-Card height improvement
-  without the next CI diagnostic.
+  without the next CI diagnostic. The measured result is now confirmed
+  unchanged at 300/528.
 - Changed code commits: `322a75f7` (CSS), `0304fff9` (static QA),
   `64a8cc5d` (browser QA). Follow subsequent documentation commits
   and the final Actions result as authoritative for the latest HEAD.
