@@ -954,11 +954,12 @@ try {
       const billingSingleOpen=billingItems.map(e=>e.open);
       actions[2].click(); const goals=snap();
       actions[0].click(); const restored=snap();
-      return {tabs:actions.length,panels:panels.length,initial,billing,goals,restored,billingSingleOpen,
+      return {tabs:actions.length,panels:panels.length,segmented:!!faq.querySelector('.pv-tabs .qxframe9a7c2-tabs.is-segmented'),initial,billing,goals,restored,billingSingleOpen,
         names:[...faq.querySelectorAll('details')].map(e=>e.name)};
     })()`);
     assert.equal(result.tabs,3);
     assert.equal(result.panels,3);
+    assert.equal(result.segmented,true,'source FAQ TabsList uses QX segmented style');
     assert.deepEqual(result.initial.shown,['general']);
     assert.deepEqual(result.billing.shown,['billing']);
     assert.deepEqual(result.goals.shown,['goals']);
