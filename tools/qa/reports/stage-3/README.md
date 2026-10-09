@@ -1,5 +1,14 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Source FieldLegend and AccordionContent authored owner split
+
+Pinned shadcn `style-mira.css`: AccordionTrigger `p-2` but AccordionContentInner `pb-4`. QX shared Collapse was consuming trigger padding for content and thus Mira FAQ 8px too short; split Theme inputs (with `accordion-content-padding` default .625rem in root+dark) and consume in shared Collapse. Source content uses 16px in Vega/Maia/Mira/Luma/Sera/Rhea, 10px in Nova/Lyra. Dedicated Mira content/Card strict pairing added.
+
+Native FieldSet/FieldLegend: locked source Nova `FieldLegend mb-1.5` (6px), Lyra `mb-2.5` (10px), Mira `mb-2` (8px), other source styles `mb-3` (12px). QX had a reusable `form-fieldset` hidden in Preview-specific CSS using 12px for every style, placing Nova RadioGroup and its whole Card 6px lower. FieldSet classes moved to shared `composition.css`, one `field-legend-gap` registered compiler/Theme role, Preview CSS duplicates removed, strict Nova FieldSet/Card pairing added. Existing Radio Field dimensions unchanged.
+
+Last confirmed completed pinned first-Card measurement: **102/528** on `f24bbbe7` (down from 104/528), not a claim of this new HEAD. Upcoming CI must confirm staged Savings/Overview/Mira/Nova repairs. PR #265 remains Draft; Stage 3 incomplete.
+
+
 ## 2026-10-09 — paired 102/528, native ItemFooter sibling + Overview Button no-wrap
 
 `f24bbbe7` source-preview-geometry SUCCESS: 528/528 same-Chromium/forced-system-ui pairs, **102/528** first Card height outliers (104 prior), no unauthorized geometry subset violations. Sera IndexInvesting source/QX both289.25px, matching after editorial prose margin owner. This 102/528 is real measured evidence; it is **not** whole visual or Stage 3 acceptance.

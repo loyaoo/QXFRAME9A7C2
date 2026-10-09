@@ -4,6 +4,14 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 source-approved shared FieldLegend and AccordionContent separation (new CI pending)
+
+- Prior measured gate: `f24bbbe7` source-preview-geometry SUCCESS, **102/528** source-paired first Card height diagnostics (104 before), 528/528 measured and no nonauthorized geometry-subset mismatch. The previous intermediate run's CSS Schema passed; newest HEAD still requires both CI.
+- Pinned `style-mira.css` has AccordionTrigger `p-2` (8px) but `AccordionContentInner pb-4` (16px): prior QX incorrectly used one `accordion-padding` for both, causing Mira FAQ first open content and total Card **−8px**. New registered `accordion-content-padding` source role, shared Collapse owner and paired Mira open content/Card checks. All source styles use pb-4 except Nova/Lyra pb-2.5. Existing trigger padding unchanged.
+- Pinned FieldLegend margins: Nova mb-1.5 (6px), Lyra mb-2.5 (10px), Mira mb-2 (8px), others mb-3 (12px). Prior `docs/create/preview.css` incorrectly owned reusable `form-fieldset` and hardcoded margin 12px, causing Nova ReceivingMethod FieldSet/Card **+6px**. Migrated its static class into `src/styles/components/composition.css`, registered `field-legend-gap` closed Theme role, projected pinned values in compiler; removed private preview CSS duplicate. Added strict Nova paired FieldSet/Card checks.
+- Savings ItemFooter direct sibling fix and CardOverview Button natural no-wrap from `ff89e656` are in this same staged branch; verify on newest CI before claiming results. No production JS changes, no fixed Card heights or threshold change, PR remains Draft. Provisional overall ~65%, Stage 3 ~64% until full visual acceptance.
+- Next exact step: inspect both latest Actions, paired 528 metrics and per-node gate; update PR and QA with verified numbers; remaining Lyra Calendar ~5.234px, AccountAccess and others require source-backed fix, Stage 4/5 remain undone.
+
 ## CURRENT — 2026-10-09 source paired Stage 3 sibling composition (new CI pending)
 
 - `f24bbbe7` pinned same-browser job passed 528/528 and diagnosed **102/528** first Card heights outside ±0.5px, down from 104/528, with Sera IndexInvesting source/QX **289.25/289.25px**. Geometry subset has zero nonauthorized mismatches; 66 Luma radius cap exceptions remain authorized. Its other release/schema runs were still in progress at the point the next batch began; do not claim those suites green until latest HEAD completes.

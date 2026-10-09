@@ -390,11 +390,17 @@ export function themeTokens(resolved) {
   root['field-separator-display'] = ext.textStyle === 'editorial' ? 'none' : 'block';
   root['choice-group-columns'] = ext.textStyle === 'editorial' ? '1' : '2';
   root['field-label-line-height'] = editorial ? '1.21875rem' : rem(Math.min(textSize, controlFont));
+  // Source native FieldLegend mb-3 (most), mb-2.5 (Lyra), mb-2 (Mira), mb-1.5 (Nova).
+  // FieldSet with RadioGroup owns only the post-legend separation; preview has no CSS owner.
+  root['field-legend-gap']=rem(style==='nova'?.375:style==='lyra'?.625:style==='mira'?.5:.75);
   // Source Accordion recipes: default py-2.5, dense compact p-2,
   // spacious/rounded p-4. This is the only style family projection.
   root['accordion-padding'] = rem(editorial ? 1
     : ext.typography === 'compact' && ext.density === 'dense' ? 0.5
     : PADDING[ext.padding] <= 1 ? 0.625 : 1);
+  // Source AccordionContentInner pb-4 in every pinned style except Nova/Lyra pb-2.5.
+  // Mira trigger p-2 but opened content pb-4: these must have separate owners.
+  root['accordion-content-padding']=rem(['nova','lyra'].includes(style)?.625:1);
   // Pinned Accordion component family: Maia/Mira/Luma/Rhea use a framed,
   // clipped surface; others use divided rows without an outer box.
   // Sera uses a 24px trigger gap but retains the unframed editorial surface.

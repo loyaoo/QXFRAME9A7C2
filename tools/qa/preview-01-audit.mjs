@@ -212,6 +212,20 @@ try {
         }
         if(style==='sera'&&id==='card-overview'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
           throw new Error('Sera Overview peer Card Button natural no-wrap/shrink mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        if(style==='mira'&&id==='faq'){
+          const srcContent=record.source.find(x=>x.className.includes('cn-accordion-content-inner'));
+          const qxContent=record.qx.find(x=>x.className.includes('qxframe9a7c2-collapse-content'));
+          if(!srcContent||!qxContent||Math.abs(srcContent.h-qxContent.h)>.5||
+            Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Mira FAQ source-paired independent open content trailing padding mismatch: '+JSON.stringify({srcContent,qxContent,src:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='nova'&&id==='receiving-method'){
+          const sourceFieldset=record.source.find(x=>x.className.includes('cn-field-set'));
+          const qxFieldset=record.qx.find(x=>x.className.includes('qxframe9a7c2-form-fieldset'));
+          if(!sourceFieldset||!qxFieldset||Math.abs(sourceFieldset.h-qxFieldset.h)>.5||
+             Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Nova ReceivingMethod FieldLegend post-legend margin mismatch: '+JSON.stringify({sourceFieldset,qxFieldset,source:record.source[0],qx:record.qx[0]}));
+        }
         if(style==='sera'&&id==='index-investing'){
           const sourceProse=record.source.filter(x=>x.className.includes('cn-card-description')).at(-1);
           const qxProse=record.qx.find(x=>x.className.includes('is-prose-intro'));
