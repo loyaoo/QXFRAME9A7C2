@@ -18,6 +18,20 @@
       placeholder: host.getAttribute('data-placeholder') || undefined,
       size: host.getAttribute('data-size') || 'md'
     });
+    // A non-searchable QX Select owns a focusable div[tabindex], not an
+    // input. Bridge source FieldLabel clicks to the QX-owned focus root.
+    var focusId = host.getAttribute('data-pv-label-id');
+    if (focusId) {
+      var field = host.closest('.qxframe9a7c2-form-field');
+      var label = field && field.querySelector('label[for="' + focusId + '"]');
+      var root = host.querySelector('.qxframe9a7c2-select[tabindex]');
+      if (label && root) {
+        root.id = focusId;
+        label.addEventListener('click', function () {
+          root.focus({ preventScroll: true });
+        });
+      }
+    }
   });
   var sliders = new Map();
   document.querySelectorAll('[data-pv-slider]').forEach(function (host) {

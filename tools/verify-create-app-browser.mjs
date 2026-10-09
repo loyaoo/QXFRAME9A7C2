@@ -1798,6 +1798,14 @@ try {
     assert.deepEqual(observations.filter(x=>x.error||!x.matches||!x.focused),[],JSON.stringify(observations));
   });
 
+  await step('Preview 01 five source Select FieldLabels focus existing QX Controller roots', async () => {
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method] input")', 'Preview native fields');
+    const cases = await evaluate("(() => {\n  const d=document.querySelector('[data-create-frame]').contentDocument;\n  const fields=[[\"payout-threshold\",\"preferred-currency\"],[\"preferences\",\"default-currency\"],[\"transfer-funds\",\"from-account\"],[\"transfer-funds\",\"to-account\"],[\"stock-performance\",\"stock-ticker\"]];\n  return fields.map(([card,id])=>{\n    const panel=d.querySelector('[data-card=\"'+card+'\"]');\n    const label=panel?.querySelector('label[for=\"'+id+'\"]');\n    const focus=panel?.querySelector('#'+id+'.qxframe9a7c2-select[tabindex]');\n    if(!label||!focus)return {card,id,error:'missing live label or QX root'};\n    const before=focus.textContent.trim();\n    label.click();\n    return {card,id,focused:d.activeElement===focus,\n      ownedClass:focus.classList.contains('is-focused'),\n      valueUnchanged:focus.textContent.trim()===before,\n      noFakeInput:!focus.querySelector('input'),\n      popupClosed:!panel.querySelector('.qxframe9a7c2-select-panel:not([hidden])')};\n  });\n})()");
+    assert.equal(cases.length,5,'five QX Select labels');
+    assert.deepEqual(cases.filter(x=>x.error||!x.focused||!x.ownedClass||!x.valueUnchanged||!x.noFakeInput||!x.popupClosed),[],JSON.stringify(cases));
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {

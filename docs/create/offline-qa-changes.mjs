@@ -1,33 +1,17 @@
-/** Offline QA: current-round only. */
+/** Current offline batch ONLY; previous yellow highlights never accumulate. */
 const groups = [
-  ['payout-threshold','Payout Threshold · 原生字段标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="payout-notes"])','Notes','点击 Notes 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__']
+  ['payout-threshold','Payout Threshold · Select 标签',[
+    ['.qxframe9a7c2-form-field:has(label[for="preferred-currency"])','Preferred Currency','标签聚焦 QX Select 的真实根节点，不误打开弹层','__QA_BUNDLE_HEAD__']
   ]],
-  ['savings-targets','Savings Targets / Buy Investment · 原生字段标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="investment-amount"])','Amount to Invest','点击 Amount to Invest 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="investment-order-type"])','Order Type','点击 Order Type 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__']
+  ['preferences','Preferences · Select 标签',[
+    ['.qxframe9a7c2-form-field:has(label[for="default-currency"])','Default Currency','标签聚焦真实 QX Select 根节点，保留 FocusController','__QA_BUNDLE_HEAD__']
   ]],
-  ['account-access','Account Access · 原生字段标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="email-address"])','Email Address','点击 Email Address 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="current-password"])','Current Password','点击 Current Password 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__']
+  ['transfer-funds','Transfer Funds · Select 标签',[
+    ['.qxframe9a7c2-form-field:has(label[for="from-account"])','From Account','来源账户标签聚焦真实 QX Select','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="to-account"])','To Account','目标账户标签聚焦真实 QX Select','__QA_BUNDLE_HEAD__']
   ]],
-  ['transfer-funds','Transfer Funds · 原生字段标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="transfer-amount"])','Amount to Transfer','点击 Amount to Transfer 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__']
-  ]],
-  ['receiving-method','Receiving Method · 原生字段标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="account-holder"])','Account Holder Name','点击 Account Holder Name 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="iban"])','IBAN / Account Number','点击 IBAN / Account Number 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__']
-  ]],
-  ['new-milestone','New Milestone · 原生字段标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="goal-name"])','Goal Name','点击 Goal Name 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="target-amount"])','Target Amount','点击 Target Amount 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="target-date"])','Target Date','点击 Target Date 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__']
-  ]],
-  ['social-links','Social Links · 原生字段标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="spotify-url"])','Spotify Artist URL','点击 Spotify Artist URL 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="instagram-handle"])','Instagram Handle','点击 Instagram Handle 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="soundcloud-url"])','SoundCloud URL','点击 SoundCloud URL 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="website-url"])','Website','点击 Website 标签聚焦对应原生输入控件','__QA_BUNDLE_HEAD__']
+  ['stock-performance','Stock Performance · Select 标签',[
+    ['.qxframe9a7c2-form-field:has(label[for="stock-ticker"])','Ticker','Ticker 标签聚焦真实 Select，弹层仍默认关闭','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

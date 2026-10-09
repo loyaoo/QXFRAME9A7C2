@@ -20,24 +20,21 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'payout-threshold':['payout-notes'],
-    'savings-targets':['investment-amount','investment-order-type'],
-    'account-access':['email-address','current-password'],
-    'transfer-funds':['transfer-amount'],
-    'receiving-method':['account-holder','iban'],
-    'new-milestone':['goal-name','target-amount','target-date'],
-    'social-links':['spotify-url','instagram-handle','soundcloud-url','website-url']
+    'payout-threshold':['preferred-currency'],
+    'preferences':['default-currency'],
+    'transfer-funds':['from-account','to-account'],
+    'stock-performance':['stock-ticker']
   };
   let count=0;
   for(const [id,ids] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'target card '+id);
-    assert.ok(ledger.includes("['"+id+"'"),'current group '+id);
-    for(const key of ids){assert.ok(ledger.includes('label[for="'+key+'"]'),'active field '+id+'/'+key);count++;}
+    assert.ok(ledger.includes("['"+id+"'"),'current batch card '+id);
+    for(const key of ids){assert.ok(ledger.includes('label[for="'+key+'"]'),'exact field target '+key);count++;}
   }
-  for(const previous of ['kitchen-island','roller-shades','release-catalog','notification-settings','front-door','faq','recent-transactions','syncing-state','preferences','stock-performance'])
-    assert.ok(!ledger.includes("['"+previous+"'"),'noncurrent group must be absent '+previous);
-  assert.equal(count,15);
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,15,'current batch exact count');
+  for(const previous of ['kitchen-island','roller-shades','release-catalog','notification-settings','front-door','faq','recent-transactions','syncing-state','savings-targets','account-access','receiving-method','new-milestone','social-links'])
+    assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
+  assert.equal(count,5);
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,5,'exactly five current regions');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -1017,8 +1014,23 @@ check('fifteen source-locked native FieldLabels connect within seven Cards',()=>
     assert.ok(section.includes('for="'+id+'">'+label+'</label>'),card+'/'+label+' association');
     assert.ok(section.includes('id="'+id+'"'),card+'/'+id+' actual target');
   }
+  // QX Select has a focusable root (no input), verified by the browser gate.
   for(const id of ['preferred-currency','default-currency','from-account','to-account','stock-ticker'])
-    assert.ok(!html.includes('data-pv-label-id="'+id+'"'),'unverified runtime Select not delivered '+id);
+    assert.ok(html.includes('data-pv-label-id="'+id+'"'),'QX Select authoring ID present '+id);
+});
+
+check('five source-pinned QX Select FieldLabels target existing root focus controls',()=>{
+  const preview=read('preview-01.html'),mount=read('preview-cards.js'),fields=[["payout-threshold","Preferred Currency","preferred-currency"],["preferences","Default Currency","default-currency"],["transfer-funds","From Account","from-account"],["transfer-funds","To Account","to-account"],["stock-performance","Ticker","stock-ticker"]];
+  for(const [card,label,id] of fields){
+    const a=preview.indexOf('<!-- @card '+card+' -->'),b=preview.indexOf('<!-- @end '+card+' -->',a);
+    assert.ok(a>=0&&b>a,card+' card');
+    const section=preview.slice(a,b);
+    assert.ok(section.includes('for="'+id+'">'+label+'</label>'),card+'/'+label+' htmlFor');
+    assert.ok(section.includes('data-pv-label-id="'+id+'"'),card+'/'+id+' host');
+  }
+  assert.match(mount,/\.qxframe9a7c2-select\[tabindex\]/,'QX Select root is the focus target');
+  assert.match(mount,/root\.focus\(\{ preventScroll: true \}\)/,'focus forwarded to QX root');
+  assert.doesNotMatch(mount,/new MutationObserver\(bindLabel\)/,'no synthetic async inputs');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

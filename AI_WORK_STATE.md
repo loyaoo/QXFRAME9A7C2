@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — CREATEAPP-V3-S3 QX Select Label/Focus ownership — 2026-10-09 (new CI pending)
+
+- Source-pinned **4 Cards / 5 QX Select labels**: Payout Threshold Preferred Currency, Preferences Default Currency, Transfer Funds From/To Account, Stock Performance Ticker. Root cause confirmed by locally executing bundled Preview in Chromium: non-searchable QX Select creates `div.qxframe9a7c2-select[tabindex="0"]`, **not an input**. Earlier guesses caused missing association / aborted Slider mounting. This Preview-only bridge connects the source-authored FieldLabel to the live QX root and calls `root.focus({preventScroll:true})`; existing FocusController continues to own `.is-focused`, selection, overlay and keyboard behavior. No framework JS/CSS changes.
+- Local Chromium (in-memory HTML and official prior dist JS) successfully verified **5/5** labels focused the real root, `.is-focused` became true, no popup opened, values stayed unchanged, Kitchen Island's four Sliders remained mounted, no page exceptions. Added equivalent real GitHub Chromium test and static source/ledger contract. Previously completed **7 Cards / 15 native Input/Textarea/Select label links remain intact**. The 528-source same-browser ±0.5px/Card-height and CSS Schema gates remain unchanged.
+- Offline QA ledger reset to **only 4 Cards / 5 exact Select Field regions**, not the 7 Card/15 native fields of the previous batch or any prior yellow highlight. Official Windows dist+docs ZIP must be built from the final two-green GitHub Actions artifact, with verified current SHA, CRC, local HTTP200, targets and no prior marked groups.
+- Completion still needs full Stage 3 Preview01 pixel/nested-card/manual acceptance; Stage 4/5 not started. Progress estimate **CREATEAPP-V3 overall ~65%, Stage 3 ~70%**, not incremented per microcommit. PR #265 must stay Draft. Main/backup stay `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`. For real final CI IDs and ZIP result, see PR #265 checkpoint.
+
+
 ## CURRENT — 2026-10-09 Stage3 7-Card native label source parity (full CI pending)
 
 - Real Chromium on prior candidate verified **all 15 native Input/Textarea/Select label click-to-focus checks passed**; the separate 5 runtime QX Select label-to-trigger cases failed and remain **NOT COMPLETED**. Discarded only that unaccepted Select adapter, which had temporarily interrupted downstream Slider mounting; existing QX Select/Slider/Tabs implementation restored unchanged.
