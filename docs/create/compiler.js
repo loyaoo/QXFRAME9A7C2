@@ -352,6 +352,8 @@ export function themeTokens(resolved) {
   const emptyCompact = PADDING[ext.padding] <= 1;
   root['empty-icon-size'] = rem(emptyCompact ? 1 : (style === 'vega' || style === 'maia' ? 1.5 : 1.25));
   root['empty-content-gap'] = rem(emptyCompact ? (ext.density === 'dense' ? .5 : .625) : 1);
+  // Pinned editorial EmptyDescription uses mt-0.5 (2px); normal styles 0.
+  root['empty-description-offset']=rem(editorial?.125:0);
   // Pinned shadcn Table: compact 8px vs spacious 12px cell padding.
   // Existing padding/radius allocation axes determine the tier; no style class.
   const tableSpacious = PADDING[ext.padding] >= 2 ||

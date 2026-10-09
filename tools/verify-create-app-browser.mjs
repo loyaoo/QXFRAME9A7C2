@@ -620,6 +620,35 @@ try {
     }
   });
 
+  await step('Syncing State uses symmetric Card insets and nested EmptyMedia in all themes', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state]")','Syncing State composition');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Syncing composition');
+      const result=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const card=doc.querySelector('[data-card="syncing-state"]');
+        const content=card.querySelector('.qxframe9a7c2-card-content');
+        const empty=content.querySelector('.qxframe9a7c2-empty');
+        const header=empty.querySelector('.qxframe9a7c2-empty-header');
+        const media=empty.querySelector('.qxframe9a7c2-empty-media');
+        const desc=empty.querySelector('.qxframe9a7c2-empty-description');
+        const c=el=>doc.defaultView.getComputedStyle(el);
+        return {parented:media.parentElement===header,symmetric:parseFloat(c(card).paddingTop)-parseFloat(c(card).paddingBottom),
+          inset:parseFloat(c(card).paddingTop),innerTop:parseFloat(c(content).paddingTop),
+          innerBottom:parseFloat(c(content).paddingBottom),
+          descOffset:parseFloat(c(desc).marginTop)};
+      })()`);
+      const expectedInset=style==='sera'?32:style==='nova'||style==='lyra'||style==='mira'?16:24;
+      assert.equal(result.parented,true,style+' EmptyMedia must belong to EmptyHeader');
+      assert.ok(Math.abs(result.symmetric)<=.5,style+' source Card owns symmetric vertical insets');
+      assert.ok(Math.abs(result.inset-expectedInset)<=.5,style+' source Card vertical padding');
+      assert.ok(Math.abs(result.innerTop)<=.5&&Math.abs(result.innerBottom)<=.5,style+' sole CardContent is flush');
+      assert.ok(Math.abs(result.descOffset-(style==='sera'?2:0))<=.5,style+' editorial EmptyDescription offset');
+    }
+  });
+
   await step('Source editorial ItemTitle text transformation is theme-driven, not a one-off wrap', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")','Dividend titles');

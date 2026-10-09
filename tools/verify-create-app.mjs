@@ -692,6 +692,26 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('Content-only Card and nested EmptyHeader match pinned Syncing State composition', () => {
+  const cardCss=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  const emptyCss=fs.readFileSync(path.join(root,'src/styles/components/empty.css'),'utf8');
+  const html=read('preview-01.html');
+  const section=html.slice(html.indexOf('<!-- @card syncing-state -->'),html.indexOf('<!-- @end syncing-state -->'));
+  assert.match(section,/qxframe9a7c2-card is-content-only" data-card="syncing-state"/);
+  assert.match(section,/qxframe9a7c2-card-content is-flush/);
+  assert.match(section,/qxframe9a7c2-empty-header"><div class="qxframe9a7c2-empty-media is-icon"/);
+  assert.match(cardCss,/\.qxframe9a7c2-card\.is-content-only\{padding-block:var\(--_qxframe9a7c2-card-padding\)\}/);
+  assert.match(cardCss,/\.qxframe9a7c2-card\.is-content-only>\.qxframe9a7c2-card-content:only-child\{padding:0\}/);
+  assert.match(emptyCss,/margin-block-start:var\(--qxframe9a7c2-empty-description-offset,var\(--qxframe9a7c2-theme-empty-description-offset,0\)\)/);
+  assert.ok(read('tokens.js').includes("L('empty-description-offset'"));
+  assert.ok(read('compiler.js').includes("root['empty-description-offset']"));
+  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+    const theme=model.compileTheme(model.normalizeConfig({style})).body;
+    const value=theme.match(/--qxframe9a7c2-theme-empty-description-offset:\s*([^;]+);/)?.[1];
+    assert.equal(parseFloat(value)*16,style==='sera'?2:0,style+' pinned EmptyDescription margin');
+  }
+});
+
 check('Syncing State overrides only public Empty instance padding to pinned p-4', () => {
   const html=read('preview-01.html');
   const card=html.slice(html.indexOf('<!-- @card syncing-state -->'),html.indexOf('<!-- @end syncing-state -->'));

@@ -30,6 +30,10 @@
   line-height:var(--qxframe9a7c2-theme-text-leading,1.4285714286);
   font-size:var(--_qxframe9a7c2-card-font-size)
 }
+/* Content-only Card: the source Card owns symmetric outer block padding.
+ * The sole CardContent does not inject its own inset. Both are natural-size. */
+.qxframe9a7c2-card.is-content-only{padding-block:var(--_qxframe9a7c2-card-padding)}
+.qxframe9a7c2-card.is-content-only>.qxframe9a7c2-card-content:only-child{padding:0}
 .qxframe9a7c2-card.is-xs{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-xs-padding,0.5rem);--_qxframe9a7c2-card-font-size:0.75rem}
 .qxframe9a7c2-card.is-sm{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-sm-padding,var(--_qxframe9a7c2-fixed-space-5));--_qxframe9a7c2-card-font-size:0.875rem}
 .qxframe9a7c2-card.is-md{--_qxframe9a7c2-card-padding:var(--qxframe9a7c2-card-md-padding,0.75rem);--_qxframe9a7c2-card-font-size:0.875rem}

@@ -121,6 +121,7 @@ export const THEME_TOKENS = [
   L('empty-inset', 'Empty density anchor; also derives media/title geometry'),
   L('empty-icon-size', 'Empty glyph dimension; pinned style recipe distinct from media box'),
   L('empty-content-gap', 'Empty action group gap; compact/dense typography recipe'),
+  L('empty-description-offset', 'EmptyDescription authored editorial leading margin'),
   L('table-cell-inset', 'Static card-embedded Table cell inset from source density'),
   L('item-space', 'Static Item md padding and column gap; size variants derive from it'),
   L('item-description-leading', 'Composed Item description line-height multiplier', 'number'),

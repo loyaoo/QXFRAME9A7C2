@@ -159,6 +159,10 @@ try {
           if(!srcRow||!qxRow||Math.abs(srcRow.h-91.5)>.5||Math.abs(qxRow.h-srcRow.h)>.5)
             throw new Error(style+' source-locked RadioField row geometry mismatch: '+JSON.stringify({source:srcRow,qx:qxRow}));
         }
+        if(id==='syncing-state'&&['vega','nova','maia','luma','sera'].includes(style)){
+          if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error(style+' Syncing source-paired Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
         if(style==='sera'&&id==='dividend-income'){
           const sourceItem=record.source.find(x=>x.className.includes('cn-item group/item'));
           const qxItem=record.qx.find(x=>x.className.includes('qxframe9a7c2-item is-muted'));

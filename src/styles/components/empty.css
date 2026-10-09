@@ -65,6 +65,7 @@
 }
 .qxframe9a7c2-empty.is-composed .qxframe9a7c2-empty-description{
   margin:0;max-width:24rem;
+  margin-block-start:var(--qxframe9a7c2-empty-description-offset,var(--qxframe9a7c2-theme-empty-description-offset,0));
   color:var(--qxframe9a7c2-theme-muted-foreground);
   font-size:var(--qxframe9a7c2-theme-text-size);
   line-height:1.625;
