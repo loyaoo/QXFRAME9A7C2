@@ -25,6 +25,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     assert.ok(ledger.includes("'"+id+"'"), 'offline QA ledger must record Card '+id);
   }
   for(const selector of ['.pv-tabs[data-pv-tabs]','.qxframe9a7c2-collapse-content','td.is-muted',
+    '.qxframe9a7c2-empty-media.is-glyph-sm svg',
     '.qxframe9a7c2-card-footer .qxframe9a7c2-card-description','.qxframe9a7c2-empty-description']){
     assert.ok(ledger.includes(selector),'ledger must target inner Card change: '+selector);
   }

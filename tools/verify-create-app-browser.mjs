@@ -873,12 +873,20 @@ try {
           inset:parseFloat(c(card).paddingTop),innerTop:parseFloat(c(content).paddingTop),
           innerBottom:parseFloat(c(content).paddingBottom),
           descOffset:parseFloat(c(desc).marginTop),descText:desc.textContent.trim(),
-          descBalanced:c(desc).textWrap==='balance'&&desc.classList.contains('is-balanced')};
+          descBalanced:c(desc).textWrap==='balance'&&desc.classList.contains('is-balanced'),
+          mediaSize:media.getBoundingClientRect().width,
+          mediaGlyphClass:media.classList.contains('is-glyph-sm'),
+          iconSize:parseFloat(c(media.querySelector('svg')).width),
+          iconHeight:parseFloat(c(media.querySelector('svg')).height)};
       })()`);
       const expectedInset=style==='sera'?32:style==='rhea'?20:style==='nova'||style==='lyra'||style==='mira'?16:24;
       assert.equal(result.descText,"We're pulling in your latest transactions. This usually takes a few seconds.",style+' source Empty description text');
       assert.equal(result.descBalanced,true,style+' source-balanced Empty description must use opt-in shared class');
       assert.equal(result.parented,true,style+' EmptyMedia must belong to EmptyHeader');
+      assert.equal(result.mediaGlyphClass,true,style+' shared Empty compact glyph modifier');
+      assert.ok(Math.abs(result.iconSize-16)<=.5&&Math.abs(result.iconHeight-16)<=.5,
+        style+' source Empty glyph is 16px (independent of rotating SVG bounding box)');
+      assert.ok(result.mediaSize>=32,style+' 32/40px Empty media remains independent of icon glyph');
       assert.ok(Math.abs(result.symmetric)<=.5,style+' source Card owns symmetric vertical insets');
       assert.ok(Math.abs(result.inset-expectedInset)<=.5,style+' source Card vertical padding');
       assert.ok(Math.abs(result.innerTop)<=.5&&Math.abs(result.innerBottom)<=.5,style+' sole CardContent is flush');

@@ -59,7 +59,9 @@ try {
         minWidth:cs.minWidth,minHeight:cs.minHeight,
         pt:cs.paddingTop,pb:cs.paddingBottom,pl:cs.paddingLeft,pr:cs.paddingRight,
         borderTop:cs.borderTopWidth,borderBottom:cs.borderBottomWidth,
-        fs:cs.fontSize,lh:cs.lineHeight,transform:cs.textTransform};
+        fs:cs.fontSize,lh:cs.lineHeight,transform:cs.textTransform,
+        cssW:el.tagName.toLowerCase()==='svg'?parseFloat(cs.width):null,
+        cssH:el.tagName.toLowerCase()==='svg'?parseFloat(cs.height):null};
     });
   },{source,id});
   const sourceStyleProbe=async (source,cardId)=>page.evaluate(({source,cardId})=>{
@@ -233,6 +235,21 @@ try {
         if(id==='syncing-state'&&['vega','nova','maia','luma','sera'].includes(style)){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' Syncing source-paired Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+          // Both sides have a 16px glyph centered in a larger 32/40px media
+          // surface. The QX spinner may rotate; transformed bounding width
+          // varies by animation frame, so compare CSS geometry and centers.
+          const sourceMedia=record.source.find(n=>n.className.includes('cn-empty-media'));
+          const qxMedia=record.qx.find(n=>n.className.includes('qxframe9a7c2-empty-media'));
+          const sourceGlyph=record.source.find(n=>n.tag==='svg');
+          const qxGlyph=record.qx.find(n=>n.tag==='svg');
+          if(!sourceMedia||!qxMedia||!sourceGlyph||!qxGlyph||
+            Math.abs(sourceGlyph.cssW-16)>.5||Math.abs(sourceGlyph.cssH-16)>.5||
+            Math.abs(qxGlyph.cssW-sourceGlyph.cssW)>.5||
+            Math.abs(qxGlyph.cssH-sourceGlyph.cssH)>.5||
+            Math.abs((qxGlyph.x+qxGlyph.w/2)-(sourceGlyph.x+sourceGlyph.w/2))>.5||
+            Math.abs((qxGlyph.y+qxGlyph.h/2)-(sourceGlyph.y+sourceGlyph.h/2))>.5||
+            Math.abs(qxMedia.w-sourceMedia.w)>.5||Math.abs(qxMedia.h-sourceMedia.h)>.5)
+            throw new Error(style+' Syncing source-paired Empty icon glyph + media mismatch: '+JSON.stringify({sourceMedia,qxMedia,sourceGlyph,qxGlyph}));
         }
         if(id==='cover-art'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)

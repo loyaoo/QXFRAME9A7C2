@@ -53,6 +53,10 @@
   background:var(--qxframe9a7c2-theme-muted);
   color:var(--qxframe9a7c2-theme-foreground);
 }
+/* Source EmptyMedia has a separate compact 1rem glyph inside the styled
+ * 2rem/2.5rem media surface. Opt in without changing the default icon scale
+ * or inventing a per-Style Theme token. Existing instance override wins. */
+.qxframe9a7c2-empty-media.is-icon.is-glyph-sm{--qxframe9a7c2-empty-icon-size:1rem}
 .qxframe9a7c2-empty-media.is-icon>svg{
   width:var(--qxframe9a7c2-empty-icon-size,var(--qxframe9a7c2-theme-empty-icon-size));
   height:var(--qxframe9a7c2-empty-icon-size,var(--qxframe9a7c2-theme-empty-icon-size));

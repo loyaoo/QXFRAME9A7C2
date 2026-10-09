@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 S3-SYNCING-GLYPH-001 shared Empty compact glyph (CI pending)
+
+- Reconciled Git/PR/CI stable HEAD `b424cb37879adadd013035252fb864451ce09f75`: PR #265 Draft/unmerged; main and backup `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`; QXFRAME #37921619118 and CSS Schema #37921619145 SUCCESS, 528 first Cards and all existing pinned strict geometry checks passing. Successful local annotated Windows ZIP was delivered (4 Cards / 6 regions).
+- Source paired same-Chromium node logs revealed a new **true internal mismatch** in Syncing State: source EmptyMedia glyph is 16x16px across Vega/Nova/Maia/Luma/Sera while QX spinner glyph computed/theme size is >16; outer 32/40px EmptyMedia and Card geometry already match. Fix only glyph: shared reusable CSS modifier `.qxframe9a7c2-empty-media.is-icon.is-glyph-sm` sets existing public `--qxframe9a7c2-empty-icon-size:1rem`, opt in on Preview01 Syncing; no global changes or new Theme token. Keep source media/outer Card dimensions intact, other Empty instances unchanged.
+- Strict Stage3 pinned-source regression now compares computed CSS SVG width+height (not animation-transformed bounding width) and SVG center/media size for five sampled Styles. Create Chromium checks all eight styles for 16px computed dimensions, 32px+ media, exact glyph modifier. Existing QA offline Card/inner-region ledger adds Syncing icon exact region, previous Syncing text record now references `b424cb37`, for 4 Cards / 7 regions total. No a11y/ARIA/RTL/old browser workaround, JS runtime or fixed Card height changes.
+- NEXT: one atomic Git commit, both full QXFRAME + CSS Schema SUCCESS, verify same Git tree and download real Actions dist+docs artifact. Rebuild annotated ZIP using committed `tools/qa/build-offline-demo.py`; verify 4 Cards / 7 inner regions, clickable change locator, on/off/on, ZIP CRC and HTTP200. PR Draft; no main/backup change. Overall ~65%, Stage3 ~66% estimate, Stage4/5 unstarted.
+
+
 ## CURRENT — 2026-10-09 S3-QA-ANNOTATIONS-001 & syncing source text/wrapping (new CI required)
 
 - Resumed from Git verified HEAD `e4fa02d5c731de5497b4ee3ae6bd9b9b6120062a`, PR #265 Draft, main/backup `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`. QXFRAME #37918985032 and CSS Schema #37918984965 **both SUCCESS**, source geometry 528/528 verified; Windows offline bundle for prior HEAD delivered.

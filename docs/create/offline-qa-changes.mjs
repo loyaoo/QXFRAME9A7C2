@@ -9,7 +9,8 @@ const groups = [
   ['recent-transactions','Recent Transactions · 近期交易',[
     ['td.is-muted','五处日期文字','使用 Theme muted-foreground 而非深色文字','24bcbaaa']]],
   ['syncing-state','Syncing State · 同步状态',[
-    ['.qxframe9a7c2-empty-description','同步提示说明','原文撇号和均衡换行与上游对齐','本轮']]]
+    ['.qxframe9a7c2-empty-description','同步提示说明','原文撇号和均衡换行与上游对齐','b424cb37'],
+    ['.qxframe9a7c2-empty-media.is-glyph-sm svg','同步图标尺寸','图标本体恢复上游 16×16px，保留原 32/40px 外层容器','本轮']]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
