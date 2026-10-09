@@ -545,6 +545,14 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('Syncing State overrides only public Empty instance padding to pinned p-4', () => {
+  const html=read('preview-01.html');
+  const card=html.slice(html.indexOf('<!-- @card syncing-state -->'),html.indexOf('<!-- @end syncing-state -->'));
+  assert.match(card,/qxframe9a7c2-empty is-composed" style="--qxframe9a7c2-empty-padding:1rem"/);
+  const shared=fs.readFileSync(path.join(root,'src/styles/components/empty.css'),'utf8');
+  assert.match(shared,/padding:var\(--qxframe9a7c2-empty-padding,var\(--_qxframe9a7c2-empty-inset\)\)/);
+});
+
 check('Loading Card uses shared 8px Flex/Stack gap instead of preview-owned geometry', () => {
   const html=read('preview-01.html');
   const card=html.slice(html.indexOf('<!-- @card loading-card -->'),html.indexOf('<!-- @end loading-card -->'));
