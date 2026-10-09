@@ -996,7 +996,7 @@ check('Preview 01 source-pinned controlled visual state is authored across four 
   }
   assert.match(js,/setToggleValue\(group, value\)/);
   assert.match(js,/setDisabled\(!enabled\)/);
-  assert.match(js,/slider\.setValue\(value\)/);
+  assert.match(js,/kitchenSliders\[index\]\.setValue\(value\)/);
   assert.match(js,/\.pv-shade > div/);
   assert.match(js,/master\.indeterminate = chosen > 0 && chosen < checks\.length/);
   assert.match(js,/do not invent an item-filtering behavior/i);
