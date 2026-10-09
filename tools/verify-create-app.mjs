@@ -545,6 +545,16 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('Loading Card uses shared 8px Flex/Stack gap instead of preview-owned geometry', () => {
+  const html=read('preview-01.html');
+  const card=html.slice(html.indexOf('<!-- @card loading-card -->'),html.indexOf('<!-- @end loading-card -->'));
+  assert.match(card,/class="qxframe9a7c2-stack is-gap-2"/);
+  assert.match(card,/class="qxframe9a7c2-flex is-gap-2"/);
+  const shared=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  assert.match(shared,/\.qxframe9a7c2-flex\.is-gap-2,\.qxframe9a7c2-stack\.is-gap-2\{--_qxframe9a7c2-layout-gap:0\.5rem\}/);
+  assert.doesNotMatch(read('preview.css'),/\.pv-loading-skeleton-gap/);
+});
+
 check('Payout Threshold amount follows framework Slider onChange, not a second input', () => {
   const html=read('preview-01.html');
   const slice=html.slice(html.indexOf('<!-- @card payout-threshold -->'),html.indexOf('<!-- @end payout-threshold -->'));
