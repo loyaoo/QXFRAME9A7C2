@@ -166,7 +166,11 @@ try {
         if(style==='sera'&&id==='faq'){
           const sourceFooter=record.source.find(x=>x.className.startsWith('cn-card-footer'));
           const qxFooter=record.qx.find(x=>x.className.startsWith('qxframe9a7c2-card-footer'));
-          if(!sourceFooter||!qxFooter||Math.abs(sourceFooter.h-qxFooter.h)>.5||
+          // Source Card owns bottom padding; QX CardFooter owns that same
+          // bottom inset, so compare footer box height plus its owning inset.
+          const sourceBottomInset=parseFloat(record.source[0].pb)||0;
+          if(!sourceFooter||!qxFooter||
+             Math.abs(sourceFooter.h+sourceBottomInset-qxFooter.h)>.5||
              Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error('Sera FAQ source nonshrinking Button/Footer mismatch: '+JSON.stringify({sourceFooter,qxFooter,source:record.source[0],qx:record.qx[0]}));
         }
