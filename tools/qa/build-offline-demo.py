@@ -114,7 +114,7 @@ http.createServer((req,res)=>{
     '点击变更条目定位到对应卡片；点击「关闭高亮 · 原貌对比」恢复干净画面。'
     '独立打开 Preview 01 也有同样的清单。所有改动标记只注入此本地包副本，'
     '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n'
-    ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。')
+    ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。') +
     '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。'
     'Preview 02 本批没有改动。'
     '未标注的卡片不代表已通过验收。\n\n'
