@@ -20,6 +20,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
+    'claimable-balance':['.qxframe9a7c2-badge.is-status-label.is-outlined'],
     'front-door':['.qxframe9a7c2-badge.is-status-label.is-destructive'],
     'release-catalog':['.qxframe9a7c2-badge.is-status-label.is-outlined'],
     'upcoming-payments':['.qxframe9a7c2-badge.is-status-label.is-secondary']
@@ -34,8 +35,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'transfer-funds','stock-performance','kitchen-island','roller-shades','release-catalog-old',
     'notification-settings','savings-targets','account-access','receiving-method','new-milestone'])
     assert.ok(!ledger.includes("['"+id+"'"),'old yellow group must not accumulate '+id);
-  assert.equal(count,3,'three current Badge role regions');
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,3,'only current Badge QA markers');
+  assert.equal(count,4,'four current Badge role regions');
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,4,'only current Badge QA markers');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -994,7 +995,10 @@ check('Preview 01 source-pinned controlled visual state is authored across four 
     assert.ok(html.includes('data-card="'+id+'"'),id+' exists');
     assert.ok(html.includes('data-card="'+id+'"'),id+' source remains authored');
   }
-  for (const id of ['kitchen-island','roller-shades','release-catalog','notification-settings']) {
+  // Release Catalog is intentionally highlighted AGAIN this batch for the
+  // newly corrected four Badge roles. The earlier checkbox/filter fixes remain
+  // historical, but no longer own its yellow regions.
+  for (const id of ['kitchen-island','roller-shades','notification-settings']) {
     assert.ok(!overlay.includes("['"+id+"'"),id+' last batch is no longer highlighted');
   }
   assert.match(js,/setToggleValue\(group, value\)/);
@@ -1059,7 +1063,7 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
 check('source pinned Badge roles mapped to QX semantic status-label instead of dead per-card paint',()=>{
   const html=read('preview-01.html');
   const framework=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
-  const cards=[['front-door','is-destructive',1],['release-catalog','is-outlined',4],
+  const cards=[['claimable-balance','is-outlined',1],['front-door','is-destructive',1],['release-catalog','is-outlined',4],
     ['upcoming-payments','is-secondary',3]];
   for(const [id,role,count] of cards){
     const start=html.indexOf('<!-- @card '+id+' -->'),end=html.indexOf('<!-- @end '+id+' -->',start);
@@ -1071,6 +1075,10 @@ check('source pinned Badge roles mapped to QX semantic status-label instead of d
   for(const role of ['is-destructive','is-outlined','is-secondary'])
     assert.ok(framework.includes('.qxframe9a7c2-badge.is-status-label.'+role),
       'Theme V2 owns '+role+' Badge paint');
+  const compiler=read('compiler.js'),catalog=read('tokens.js');
+  assert.match(catalog,/C\('badge-label-outline-bg'/,'new sparse source-derived Badge token registered');
+  assert.match(compiler,/look\('badge-label-outline-bg'/,'generated Theme light\/dark role matches pinned styles');
+  assert.match(framework,/var\(--qxframe9a7c2-theme-badge-label-outline-bg,transparent\)/,'Badge CSS consumes Theme role token');
   assert.match(framework,/var\(--_qxframe9a7c2-badge-label-editorial\)/,
     'source editorial Badge policy must suppress special paint in Sera');
 });

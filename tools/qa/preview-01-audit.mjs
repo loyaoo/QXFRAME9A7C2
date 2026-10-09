@@ -59,13 +59,28 @@ try {
       badge:source?'[data-slot="badge"]':'.qxframe9a7c2-badge',
       field:source?'[data-slot="field"]':'.qxframe9a7c2-form-field'
     };
+    // Canvas normalizes equivalent oklch/oklab/rgba authoring into one
+    // sRGB pixel representation. Compare composited Badge paint, not CSS
+    // serialization strings; alpha is kept for soft destructive variants.
+    const swatch=document.createElement('canvas');
+    swatch.width=swatch.height=1;
+    const pixel=swatch.getContext('2d',{willReadFrequently:true});
+    const rgba=value=>{
+      pixel.clearRect(0,0,1,1);
+      pixel.fillStyle=value;
+      pixel.fillRect(0,0,1,1);
+      return Array.from(pixel.getImageData(0,0,1,1).data);
+    };
     const record=e=>{
       if(!e)return null;
       const r=e.getBoundingClientRect(),cs=getComputedStyle(e);
+      const badgePaint=e.matches('[data-slot="badge"],.qxframe9a7c2-badge') ?
+        {bg:rgba(cs.backgroundColor),fg:rgba(cs.color),border:rgba(cs.borderTopColor)} : null;
       return {x:+r.x.toFixed(2),y:+r.y.toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),
         color:cs.color,background:cs.backgroundColor,borderColor:cs.borderTopColor,
         padTop:cs.paddingTop,padBottom:cs.paddingBottom,padLeft:cs.paddingLeft,
         fontSize:cs.fontSize,fontWeight:cs.fontWeight,radius:cs.borderTopLeftRadius,
+        badgePaint,
         text:(e.textContent||'').trim().replace(/\s+/g,' ').slice(0,64)};
     };
     return Object.fromEntries([...document.querySelectorAll('['+marker+']')]

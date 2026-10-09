@@ -48,6 +48,28 @@ for(const row of nested.rows){
 // Source-lock the nested Badge contract separately from non-comparable
 // Card wrapper geometry. All measured variants use the same semantic label
 // sizing recipe (including Mira 10px and Sera editorial compact shape).
+// Equivalent QX and pinned-source Item and Field primitives must match in
+// their final screen coordinates, not merely in wrapper padding. These cover
+// 11 Item-bearing + 9 Field-bearing Card groups throughout all 16 themes.
+const structuralRoles=['item','field'],structuralCounts={},structuralErrors=[];
+for(const row of nested.rows){
+  for(const role of structuralRoles){
+    const source=row.source[role],actual=row.qx[role];
+    if(!source&&!actual)continue;
+    structuralCounts[role]=(structuralCounts[role]||0)+1;
+    if(!source||!actual){structuralErrors.push({style:row.style,mode:row.mode,card:row.card,role,reason:'missing role'});continue;}
+    for(const property of ['x','y','w','h','fontSize','fontWeight','radius']){
+      const a=parseFloat(source[property]),b=parseFloat(actual[property]);
+      if(!Number.isFinite(a)||!Number.isFinite(b)||Math.abs(a-b)>.5)
+        structuralErrors.push({style:row.style,mode:row.mode,card:row.card,role,property,source:source[property],qx:actual[property]});
+    }
+  }
+}
+assert.equal(structuralCounts.item,176,'11 source Item Card groups × 16 theme variants');
+assert.equal(structuralCounts.field,128,'8 source Field Card groups × 16 theme variants');
+assert.deepEqual(structuralErrors,[],'source-paired nested Item/Field visual geometry differs: '+JSON.stringify(structuralErrors.slice(0,24)));
+console.log('[stage3-nested-strict-parity] '+JSON.stringify({roles:structuralRoles,item:structuralCounts.item,field:structuralCounts.field,assertions:304*7,errors:structuralErrors.length}));
+
 const badgeCards=['claimable-balance','front-door','release-catalog','upcoming-payments'];
 const badgeFailures=[],badgeCounts={};
 for(const row of nested.rows){
@@ -55,6 +77,11 @@ for(const row of nested.rows){
   const src=row.source.badge,qx=row.qx.badge,key=row.card;
   badgeCounts[key]=(badgeCounts[key]||0)+1;
   if(!src||!qx){badgeFailures.push({key,style:row.style,mode:row.mode,issue:'missing badge'});continue;}
+  for(const channel of ['bg','fg']){
+    const a=src.badgePaint?.[channel],b=qx.badgePaint?.[channel];
+    if(!a||!b||a.length!==4||b.length!==4||a.some((value,i)=>Math.abs(value-b[i])>2))
+      badgeFailures.push({key,style:row.style,mode:row.mode,channel,source:a,qx:b});
+  }
   for(const prop of ['w','h','fontSize','fontWeight']){
     const a=parseFloat(src[prop]),b=parseFloat(qx[prop]);
     if(!Number.isFinite(a)||!Number.isFinite(b)||Math.abs(a-b)>.5)
@@ -64,7 +91,7 @@ for(const row of nested.rows){
 for(const card of badgeCards)
   assert.equal(badgeCounts[card],16,'Badge sampled in all 8 source styles x light/dark: '+card);
 assert.deepEqual(badgeFailures,[],'source-locked Badge label geometry mismatch: '+JSON.stringify(badgeFailures.slice(0,24)));
-console.log('[stage3-badge-parity] '+JSON.stringify({cards:badgeCards,checked:64,properties:4,issues:badgeFailures.length}));
+console.log('[stage3-badge-parity] '+JSON.stringify({cards:badgeCards,checked:64,properties:6,issues:badgeFailures.length}));
 
 console.log('[stage3-inner-differences] '+JSON.stringify({
  geometryCount:innerGeometryIssues.length,paintCount:innerPaintIssues.length,

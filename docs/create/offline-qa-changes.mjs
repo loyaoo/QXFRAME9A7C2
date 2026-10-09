@@ -1,5 +1,8 @@
 /** Current-round ONLY: semantic Badge visual role parity across 16 themes. */
 const groups = [
+  ['claimable-balance','Claimable Balance · Outline Badge',[
+    ['.qxframe9a7c2-badge.is-status-label.is-outlined','Pending Setup','来源 Outline 主题半透明背景在 Maia/Mira 暗亮联动，保持原有 Badge 排版尺寸','__QA_BUNDLE_HEAD__']
+  ]],
   ['front-door','Front Door · Destructive Badge',[
     ['.qxframe9a7c2-badge.is-status-label.is-destructive','Live Badge','危险状态由实心色改为上游 10% 透明底色/语义前景，Mira/Sera 尺寸联动','__QA_BUNDLE_HEAD__']
   ]],

@@ -525,15 +525,18 @@
   .qxframe9a7c2-badge.is-status-label.is-destructive{
     background:color-mix(in oklab,var(--qxframe9a7c2-theme-destructive) calc(10% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
     color:var(--qxframe9a7c2-theme-destructive);
-    border-color:transparent;
+    border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-border) calc(100% * var(--_qxframe9a7c2-badge-label-editorial)),transparent);
+  }
+  .dark .qxframe9a7c2-badge.is-status-label.is-destructive{
+    background:color-mix(in oklab,var(--qxframe9a7c2-theme-destructive) calc(20% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
   }
   .qxframe9a7c2-badge.is-status-label.is-secondary{
     background:color-mix(in oklab,var(--qxframe9a7c2-theme-secondary) calc(100% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
-    color:var(--qxframe9a7c2-theme-secondary-foreground);
-    border-color:transparent;
+    color:color-mix(in oklab,var(--qxframe9a7c2-theme-muted-foreground) calc(100% * var(--_qxframe9a7c2-badge-label-editorial)),var(--qxframe9a7c2-theme-secondary-foreground));
+    border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-border) calc(100% * var(--_qxframe9a7c2-badge-label-editorial)),transparent);
   }
   .qxframe9a7c2-badge.is-status-label.is-outlined{
-    background:transparent;
+    background:var(--qxframe9a7c2-theme-badge-label-outline-bg,transparent);
     color:var(--qxframe9a7c2-theme-foreground);
     border-color:var(--qxframe9a7c2-theme-border);
   }

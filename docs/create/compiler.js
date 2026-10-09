@@ -294,6 +294,12 @@ export function themeTokens(resolved) {
   root['field-sides'] = input.sides + '%';
   // Static embedded Table: header is subdued only for editorial styles.
   look('table-heading-foreground', ext.textStyle === 'editorial' ? 'muted-foreground' : 'foreground');
+  // Pinned shadcn Badge outline variant: Maia uses border/30, Mira border/20
+  // in light; both use foreground/4.5 in dark. Other styles transparent.
+  // One semantic token instead of style-dependent Badge CSS selectors.
+  look('badge-label-outline-bg',
+    style === 'maia' ? 'border/30' : style === 'mira' ? 'border/20' : 'transparent',
+    style === 'maia' || style === 'mira' ? 'foreground/4.5' : 'transparent');
 
   // Choice, switch, slider (style looks).
   look('choice', looks.choice[0], looks.choice[1]);

@@ -76,6 +76,7 @@ export const THEME_TOKENS = [
   C('outline', 'Outline button background (control look axis)'),
   C('outline-hover', 'Outline button hover background'),
   C('outline-border', 'Outline button border'),
+  C('badge-label-outline-bg', 'Source-derived Outline Badge surface (Maia/Mira tint and dark editorial policy)'),
   C('field', 'Input background (input look axis)'),
   C('field-border', 'Input border at rest'),
   C('field-disabled', 'Disabled input background'),
