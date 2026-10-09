@@ -613,9 +613,10 @@ try {
       const title=claim.querySelector('.qxframe9a7c2-card-title');
       const payout=doc.querySelector('[data-card="payout-threshold"]');
       const slider=payout.querySelector('.qxframe9a7c2-slider');
+      const textarea=payout.querySelector('textarea');
       const rail=slider.querySelector('.qxframe9a7c2-slider-rail');
       return {claimableHeight:claim.getBoundingClientRect().height,titleHeight:title.getBoundingClientRect().height,
-        titleLine:getComputedStyle(title).lineHeight,sliderHeight:slider.getBoundingClientRect().height,
+        titleLine:getComputedStyle(title).lineHeight,payoutHeight:payout.getBoundingClientRect().height,textareaHeight:textarea.getBoundingClientRect().height,textareaMinHeight:getComputedStyle(textarea).minHeight,sliderHeight:slider.getBoundingClientRect().height,
         sliderRailHeight:rail.getBoundingClientRect().height,trackVariant:slider.classList.contains('is-track-height')};
     })()`);
     assert.ok(Math.abs(result.titleHeight-66)<=.5,'pinned Nova text-5xl CardTitle uses 66px leading-snug: '+JSON.stringify(result));
@@ -623,6 +624,8 @@ try {
     assert.ok(Math.abs(result.sliderHeight-4)<=.5,'source Nova Payout Slider root follows 4px intrinsic rail: '+JSON.stringify(result));
     assert.ok(Math.abs(result.sliderRailHeight-4)<=.5);
     assert.equal(result.trackVariant,true);
+    assert.ok(Math.abs(result.textareaHeight-100)<=.5,'pinned Notes Textarea min-height 100px must survive shared Theme sizing: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.payoutHeight-468)<=.5,'pinned Nova Payout Threshold Card is 468px: '+JSON.stringify(result));
   });
   await step('Payout Threshold live amount tracks QX Slider keyboard ValueController', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
