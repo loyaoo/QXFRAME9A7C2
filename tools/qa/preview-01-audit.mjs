@@ -94,6 +94,16 @@ try {
       await page.waitForTimeout(350);
       const actual = await measure(false);
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) {novaCardStructures[id].qx=await nodeStructure(false,id); console.log('[stage3-structure-'+id+'] '+JSON.stringify(novaCardStructures[id]));}
+      if(style==='nova'&&!dark) console.log('[stage3-payout-textarea-css] '+JSON.stringify(await page.evaluate(() => {
+        const el=document.querySelector('[data-card="payout-threshold"] textarea'),cs=getComputedStyle(el);
+        const slider=document.querySelector('[data-card="payout-threshold"] .qxframe9a7c2-slider');
+        const ss=getComputedStyle(slider);
+        return {rootFont:getComputedStyle(document.documentElement).fontSize,textarea:{box:el.getBoundingClientRect().height,
+          minHeight:cs.minHeight,maxHeight:cs.maxHeight,height:cs.height,boxSizing:cs.boxSizing,
+          fieldSizing:cs.fieldSizing,display:cs.display,inlineStyle:el.getAttribute('style'),
+          cssClass:el.className},slider:{box:slider.getBoundingClientRect().height,rail:getComputedStyle(slider.querySelector('.qxframe9a7c2-slider-rail')).height,
+          class:slider.className}};
+      })));
       if(style==='nova'&&!dark) console.log('[stage3-loading-nova-structure] '+JSON.stringify({source:novaLoadingSource,qx:await loadingStructure(false)}));
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-qx.png'), fullPage: true });
       for (const id of new Set([...Object.keys(reference), ...Object.keys(actual)])) {
