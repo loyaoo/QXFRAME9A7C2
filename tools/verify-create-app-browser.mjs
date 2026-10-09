@@ -650,6 +650,38 @@ try {
     }
   });
 
+  await step('Pinned status Badge/Stock separator/Cover artwork consume shared recipes', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=cover-art]")','Cover Artwork');
+    for(const style of ['vega','mira','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' status/cover');
+      const info=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const computed=e=>doc.defaultView.getComputedStyle(e),px=s=>parseFloat(s);
+        const badge=doc.querySelector('[data-card="claimable-balance"] .qxframe9a7c2-badge');
+        const stock=doc.querySelector('[data-card="stock-performance"] .qxframe9a7c2-divider');
+        const cover=doc.querySelector('[data-card="cover-art"]'),item=cover.querySelector('.qxframe9a7c2-item.is-artwork');
+        const svg=item.querySelector('.qxframe9a7c2-item-artwork-label svg'),footer=cover.querySelector('.qxframe9a7c2-card-footer');
+        return {badgeHeight:badge.getBoundingClientRect().height,badgeFont:px(computed(badge).fontSize),
+          badgeLine:px(computed(badge).lineHeight),badgeInset:px(computed(badge).paddingLeft),
+          separatorDisplay:computed(stock).display,
+          coverAspect:item.getBoundingClientRect().width/item.getBoundingClientRect().height,
+          iconWidth:svg.getBoundingClientRect().width,footerGap:px(computed(footer).rowGap),
+          footerColumn:computed(footer).flexDirection};
+      })()`);
+      const sourceHeight=style==='sera'?100/7:20;
+      assert.ok(Math.abs(info.badgeHeight-sourceHeight)<=.5,style+' Badge intrinsic source height');
+      assert.equal(info.badgeFont,style==='vega'?12:10,style+' Badge source typography');
+      assert.ok(Math.abs(info.badgeInset-(style==='sera'?0:8))<=.5,style+' Badge source inline inset');
+      assert.equal(info.separatorDisplay,style==='sera'?'none':'block',style+' optional Stock separator visibility');
+      assert.ok(Math.abs(info.coverAspect-1)<=.01,style+' Cover Art Item is square');
+      assert.ok(Math.abs(info.iconWidth-40)<=.5,style+' Cover Art source placeholder icon');
+      assert.equal(info.footerColumn,'column',style+' Cover footer semantic layout');
+      assert.ok(Math.abs(info.footerGap-8)<=.5,style+' source Cover footer gap-2');
+    }
+  });
+
   await step('Syncing State uses symmetric Card insets and nested EmptyMedia in all themes', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state]")','Syncing State composition');

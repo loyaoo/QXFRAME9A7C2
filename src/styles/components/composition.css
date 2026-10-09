@@ -246,6 +246,7 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 }
 .qxframe9a7c2-divider{flex:0 0 auto;height:1px;margin:0;border:0;background:var(--qxframe9a7c2-theme-border)}
 .qxframe9a7c2-divider.is-vertical{width:1px;height:auto;align-self:stretch}
+.qxframe9a7c2-divider.is-theme-optional{display:var(--qxframe9a7c2-divider-display,var(--qxframe9a7c2-theme-field-separator-display,block))}
 .qxframe9a7c2-swatch-cell{display:flex;flex:0 0 calc((100% - 3.75rem) / 6);flex-direction:column;align-items:center;gap:0.5rem;min-width:0}
 
 /* Composition protocol: an addon belongs INSIDE one field outline.

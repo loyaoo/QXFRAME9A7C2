@@ -1,5 +1,13 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — batch source-backed shared StatusBadge/Divider/CoverArt
+
+Previous SHA `615d72d2` has QXFRAME CI and CSS Schema Acceptance **both green**, 528/528 same-Chromium source pairs, 116/528 Card heights outside ±0.5px, 0 pinned geometry subset mismatches.
+
+Three independently traceable source-to-QX problems fixed in one branch update: (1) Sera Claimable reference Badge 10px font/14.2857px line, no border or padding, natural height14.2857px vs QX Badge min-height20px (exact +5.7143px Card). New shared `Badge.is-status-label` consumes closed Theme font/line/height/editorial roles; it honors non-editorial h-5 outlines and Sera tracking/uppercase, while the icon is an ordinary shared BadgeIndicator. (2) Sera StockPerformance reference `<Separator className="style-sera:hidden" />` is absent; QX showed it with Flex gap16px plus 1px line (exact +17px Card). Shared `Divider.is-theme-optional` consumes already-existing `field-separator-display` Theme token, and makes no new style-scoped selectors. (3) CoverArt source Item is aspect-square, child label centers a 40px image icon; Footer `flex-col gap-2` centers two natural blocks. Replaced preview private square styling with shared Item artwork composition and shared CardFooter column gap 8px. No fixed Card height.
+
+Added static + 3-style live browser checks. Pinned source same-Chromium QA must find Sera Claimable/Stock whole Card and Badge heights within original 0.5px threshold. Added targeted node reporting for Sera PayoutThreshold, CoverArt, Preferences, CardOverview and Vega Kitchen Island plus multi-style RecentTransactions, for next source-grounded batch. Pending actual CI and refreshed 528 count; PR #265 remains Draft, protected refs unchanged.
+
 ## 2026-10-09 — Sera FAQ full-width Button semantics and Rhea gate
 
 Last confirmed `0b50751f` same browser audited 528/528, **118/528 >0.5px** (202 handoff), 0 geometry subset mismatches, 66 authorized Luma radius caps. Five Syncing State style Cards exactly match their source heights; main/backup remain frozen.

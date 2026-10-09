@@ -354,6 +354,12 @@ export function themeTokens(resolved) {
   root['empty-content-gap'] = rem(emptyCompact ? (ext.density === 'dense' ? .5 : .625) : 1);
   // Pinned editorial EmptyDescription uses mt-0.5 (2px); normal styles 0.
   root['empty-description-offset']=rem(editorial?.125:0);
+  // Pinned eight-style Badge: h-5 outlined label except Sera borderless
+  // text-only status. Text metrics are sourced from style CSS, not Card sizing.
+  root['badge-label-editorial']=editorial?'1':'0';
+  root['badge-label-font-size']=editorial||style==='mira'?'0.625rem':'0.75rem';
+  root['badge-label-leading']=editorial?'0.892857142857rem':style==='mira'?'1.015625rem':'1rem';
+  root['badge-label-height']=editorial?'auto':'1.25rem';
   // Pinned shadcn Table: compact 8px vs spacious 12px cell padding.
   // Existing padding/radius allocation axes determine the tier; no style class.
   const tableSpacious = PADDING[ext.padding] >= 2 ||

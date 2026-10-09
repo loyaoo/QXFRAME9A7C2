@@ -51,6 +51,7 @@
 /* Structural slots: partitioned footers follow the theme; is-divided is explicit. */
 .qxframe9a7c2-card-header,.qxframe9a7c2-card-footer{display:flex;min-width:0;gap:var(--_qxframe9a7c2-card-padding)}
 .qxframe9a7c2-card-footer.is-gap-0{gap:0}
+.qxframe9a7c2-card-footer.is-column{flex-direction:column;gap:var(--qxframe9a7c2-card-footer-gap,.5rem)}
 .qxframe9a7c2-card-header{align-items:flex-start;background:var(--_qxframe9a7c2-card-bg);min-height:0;padding:var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding) calc(var(--_qxframe9a7c2-card-padding) / 2);border-bottom:0 solid var(--_qxframe9a7c2-card-divider);border-start-start-radius:max(0px,var(--_qxframe9a7c2-card-radius));border-start-end-radius:max(0px,var(--_qxframe9a7c2-card-radius))}
 .qxframe9a7c2-card-header.is-divided,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header{padding-bottom:var(--_qxframe9a7c2-card-padding);border-bottom-width:1px}
 .qxframe9a7c2-card-footer{align-items:center;padding:var(--qxframe9a7c2-theme-card-section-inset,0) var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding);background:var(--qxframe9a7c2-theme-card-section,transparent);border-top:var(--qxframe9a7c2-theme-card-section-width,0) solid var(--qxframe9a7c2-theme-card-section-border,var(--_qxframe9a7c2-card-divider));border-end-start-radius:max(0px,var(--_qxframe9a7c2-card-radius));border-end-end-radius:max(0px,var(--_qxframe9a7c2-card-radius))}

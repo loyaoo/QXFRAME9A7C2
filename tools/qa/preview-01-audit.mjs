@@ -100,10 +100,10 @@ try {
   // Focused structure evidence for unresolved Stage 3 cards, measured in the
   // same Chromium and font as the pinned upstream renderer.
   const targetCards={
-    sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state'],
-    vega:['dividend-income','claimable-balance','syncing-state'],
-    nova:['upcoming-payments','claimable-balance','syncing-state'],
-    rhea:['faq','claimable-balance'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state'],
+    sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state','stock-performance','cover-art','payout-threshold','preferences','card-overview'],
+    vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions'],
+    nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions'],
+    rhea:['faq','claimable-balance'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions'],
     luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state'],
     lyra:['faq','claimable-balance'],mira:['upcoming-payments','claimable-balance']
   };
@@ -162,6 +162,17 @@ try {
         if(id==='syncing-state'&&['vega','nova','maia','luma','sera'].includes(style)){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' Syncing source-paired Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='sera'&&id==='stock-performance'){
+          if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Sera StockPerformance source-optional Separator Card mismatch: '+
+              JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='sera'&&id==='claimable-balance'){
+          const src=record.source.find(x=>x.className.startsWith('cn-badge'));
+          const qx=record.qx.find(x=>x.className.includes('qxframe9a7c2-badge is-status-label'));
+          if(!src||!qx||Math.abs(src.h-qx.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Sera StatusBadge source typography mismatch: '+JSON.stringify({src,qx}));
         }
         if(style==='sera'&&id==='faq'){
           const sourceFooter=record.source.find(x=>x.className.startsWith('cn-card-footer'));

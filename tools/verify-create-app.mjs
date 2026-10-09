@@ -692,6 +692,38 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('Pinned StatusBadge, optional Divider and CoverArtwork share component compositions', () => {
+  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
+  const comp=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  const cardCss=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  const html=read('preview-01.html'),compiler=read('compiler.js'),tokens=read('tokens.js');
+  assert.match(badge,/\.qxframe9a7c2-badge\.is-status-label\{/);
+  assert.match(badge,/\.qxframe9a7c2-badge-indicator\{/);
+  for(const key of ['badge-label-editorial','badge-label-font-size','badge-label-leading','badge-label-height']){
+    assert.ok(compiler.includes("root['"+key+"']"),key+' Theme compiler');
+    assert.ok(tokens.includes("L('"+key+"'"),key+' registered Theme input');
+    assert.ok(badge.includes('var(--qxframe9a7c2-theme-'+key),key+' shared Badge consumer');
+  }
+  assert.match(comp,/\.qxframe9a7c2-divider\.is-theme-optional\{display:var\(--qxframe9a7c2-divider-display,var\(--qxframe9a7c2-theme-field-separator-display,block\)\)\}/);
+  assert.match(cardCss,/\.qxframe9a7c2-card-footer\.is-column\{flex-direction:column;gap:var\(--qxframe9a7c2-card-footer-gap,\.5rem\)\}/);
+  assert.match(item,/\.qxframe9a7c2-item\.is-artwork\{aspect-ratio:1\/1;justify-content:center\}/);
+  assert.match(item,/\.qxframe9a7c2-item-artwork-label>svg\{[^}]*width:2\.5rem;height:2\.5rem/);
+  const section=id=>html.slice(html.indexOf('<!-- @card '+id+' -->'),html.indexOf('<!-- @end '+id+' -->'));
+  assert.match(section('claimable-balance'),/qxframe9a7c2-badge is-status-label/);
+  assert.match(section('stock-performance'),/qxframe9a7c2-divider is-theme-optional/);
+  assert.match(section('cover-art'),/qxframe9a7c2-card-footer is-column/);
+  assert.match(section('cover-art'),/qxframe9a7c2-item-artwork-label/);
+  const expectedFont={vega:12,nova:12,maia:12,lyra:12,mira:10,luma:12,sera:10,rhea:12};
+  for(const style of Object.keys(expectedFont)){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const value=name=>body.match(new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);'))?.[1];
+    assert.equal(parseFloat(value('badge-label-font-size'))*16,expectedFont[style],style+' Badge font');
+    assert.equal(value('badge-label-height'),style==='sera'?'auto':'1.25rem',style+' Badge height policy');
+    assert.equal(value('field-separator-display'),style==='sera'?'none':'block',style+' Separator policy');
+  }
+});
+
 check('FAQ Footer uses source full-width non-shrinking Button composition', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
   const buttons=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');

@@ -100,6 +100,10 @@
   --qxframe9a7c2-theme-empty-icon-size: 1rem;
   --qxframe9a7c2-theme-empty-content-gap: 0.625rem;
   --qxframe9a7c2-theme-empty-description-offset: 0;
+  --qxframe9a7c2-theme-badge-label-editorial: 0;
+  --qxframe9a7c2-theme-badge-label-font-size: 0.75rem;
+  --qxframe9a7c2-theme-badge-label-leading: 1rem;
+  --qxframe9a7c2-theme-badge-label-height: 1.25rem;
   --qxframe9a7c2-theme-table-cell-inset: 0.5rem;
   --qxframe9a7c2-theme-item-space: 0.625rem;
   --qxframe9a7c2-theme-item-description-leading: 1.5;
@@ -281,6 +285,10 @@
   --qxframe9a7c2-theme-empty-icon-size: 1rem;
   --qxframe9a7c2-theme-empty-content-gap: 0.625rem;
   --qxframe9a7c2-theme-empty-description-offset: 0;
+  --qxframe9a7c2-theme-badge-label-editorial: 0;
+  --qxframe9a7c2-theme-badge-label-font-size: 0.75rem;
+  --qxframe9a7c2-theme-badge-label-leading: 1rem;
+  --qxframe9a7c2-theme-badge-label-height: 1.25rem;
   --qxframe9a7c2-theme-table-cell-inset: 0.5rem;
   --qxframe9a7c2-theme-item-space: 0.625rem;
   --qxframe9a7c2-theme-item-description-leading: 1.5;
