@@ -43,6 +43,20 @@ Coverage limits and next work:
 
 ## Nova light: diagnostic heights
 
+### Syncing State — restore authored source Empty padding
+
+The pinned upstream `syncing-state.tsx` explicitly renders
+`<Empty className="p-4">`, independent of each look's Empty default
+padding (24px for compact Nova, 48px for spacious variants). Preview 01
+previously omitted the instance override, inheriting the global composed
+Empty padding and creating approximately +16px/+64px excess vertical space
+before other typography differences. The preview now sets the public
+`--qxframe9a7c2-empty-padding:1rem` on **this instance only**; the shared
+Empty density hierarchy and other cards remain untouched. Static QA and a
+new eight-style × light/dark Chromium test enforce the 16px computed inset.
+**Latest CI still pending**; source-paired height reductions are not claimed
+until remeasurement.
+
 ### FAQ Tabs presentation — shared segmented type
 
 The locked `faq.tsx` mounts `TabsList` with a muted segmented background
