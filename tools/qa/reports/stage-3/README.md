@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Post-34/528 semantic checkbox/KPI/ItemTitle sources (CI pending)
+
+Paired `c3b2bee` 528 same Chromium found 34/528 >0.5px, 0 unauthorized geometry. Three source-backed distinct shared fixes: NotificationSettings only first row had checkbox margin inflating 16px to18px; `CheckField.is-center` applies source horizontal centering to 5 rows. ContributionHistory text-xs category Item descriptions are Vega/Nova18px Sera19.5px rather than QX16px; reuse existing `ItemDescription.is-kpi-label`. Lyra DividendItem wrapped titles line-height source16px not QX16.5px; closed Theme `item-wrapping-title-leading` (Lyra4/3, others1.375) feeds shared `ItemTitle.is-wrapping`. Extended pinned source pairs for these Cards; no thresholds relaxed, no Card dimensions forced. Await final CI and matching dist/docs ZIP before classifying batch as delivered.
+
 ## 2026-10-09 — Source PowerUsage metric spacing and Mira FieldTitle (CI pending)
 
 Pinned PowerUsage 2px gap-0.5 between metric title and number was absent in two QX Stack.is-gap-0 pairs; introduced shared Flex/Stack.is-gap-half (.125rem), used in Preview01. Mira ReceivingMethod FieldTitle pinned 12px/19.5px (text-xs/relaxed) instead of QX 12px/16.5px; closed Theme field-title-leading and shared FieldTitle consumer. Strict source-paired Card gates now check all eight PowerUsage styles plus Mira Radio title+whole Card. Extended DOM traces cover NotificationSettings/ContributionHistory and Lyra; obtain actual next 528 count from complete CI before declaring fixes accepted. Draft PR preserved; protected branches unchanged. Mandatory new final-HEAD dist+docs ZIP after both CI suites pass.

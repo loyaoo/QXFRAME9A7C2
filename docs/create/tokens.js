@@ -133,6 +133,7 @@ export const THEME_TOKENS = [
   L('item-sm-reduction', 'Shared small Item source padding step'),
   L('item-description-leading', 'Composed Item description line-height multiplier', 'number'),
   L('item-kpi-label-leading', 'Explicit text-xs editorial Item label source line box'),
+  L('item-wrapping-title-leading', 'Wrapping ItemTitle natural line-height per source typography'),
   L('field-group-gap', 'Vertical distance between composed Fields'),
   L('field-gap', 'Gap between a composed Field label, control and description'),
   L('field-label-line-height', 'Composed Field label line-box height'),

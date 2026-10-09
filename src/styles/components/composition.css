@@ -202,6 +202,9 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 }
 .qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem));cursor:pointer}
 .qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}
+/* Horizontal Checkbox rows center both controls and text without vertical offset. */
+.qxframe9a7c2-check-field.is-center{align-items:center}
+.qxframe9a7c2-check-field.is-center>.qxframe9a7c2-form-check-input{margin-top:0}
 /* Framed RadioGroup/FieldLabel composition from pinned shadcn: the label
  * owns the border and the inner horizontal Field's top/inline inset.
  * The authored pb-2.5 may override only the trailing padding as in source. */

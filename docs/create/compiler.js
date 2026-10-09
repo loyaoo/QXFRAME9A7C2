@@ -387,6 +387,8 @@ export function themeTokens(resolved) {
   // Pinned SavingsTargets text-xs Item label is 18px Nova, 19.5px Sera,
   // otherwise 16px. Its explicit text-xs leading differs from ItemDescription.
   root['item-kpi-label-leading']=['nova','vega'].includes(style)?'1.125rem':style==='sera'?'1.21875rem':'1rem';
+  // Pinned Lyra's wrapping ItemTitle has 16px, rather than 16.5px, lines.
+  root['item-wrapping-title-leading']=style==='lyra'?'1.3333333333333333':'1.375';
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
   root['field-content-gap'] = rem(fieldSpace <= .5 ? .125 : .25);

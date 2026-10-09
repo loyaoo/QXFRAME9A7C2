@@ -292,6 +292,25 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error('Lyra FAQ whole Card height differs after icon alignment');
         }
+        if(id==='notification-settings'&&style!=='sera'){
+          const sourceRow=record.source.find(n=>n.className.includes('cn-field group/field'));
+          const qxRow=record.qx.find(n=>n.className==='qxframe9a7c2-check-field is-center');
+          if(!sourceRow||!qxRow||Math.abs(sourceRow.h-16)>.5||
+            Math.abs(qxRow.h-sourceRow.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error(style+' notification horizontal checkbox align/source Card mismatch: '+JSON.stringify({sourceRow,qxRow,source:record.source[0],qx:record.qx[0]}));
+        }
+        if(id==='contribution-history'&&['vega','nova','sera'].includes(style)){
+          const sourceLabels=record.source.filter(n=>n.text==='Upcoming'||n.text==='Auto-Save Plan');
+          const qxLabels=record.qx.filter(n=>n.text==='Upcoming'||n.text==='Auto-Save Plan');
+          if(sourceLabels.length!==2||qxLabels.length!==2||sourceLabels.some((n,i)=>Math.abs(n.h-qxLabels[i].h)>.5)||Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error(style+' ContributionHistory category ItemDescription leading mismatch: '+JSON.stringify({sourceLabels,qxLabels,source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='lyra'&&id==='dividend-income'){
+          const titles=rows=>rows.filter(n=>['Vanguard VIG','S&P 500 VOO','Apple AAPL','Realty Income'].includes(n.text));
+          const src=titles(record.source),qx=titles(record.qx);
+          if(src.length!==4||qx.length!==4||src.some((n,i)=>Math.abs(n.h-qx[i].h)>.5)||Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Lyra Dividend source ItemTitle wrapping line-box mismatch: '+JSON.stringify({src,qx,source:record.source[0],actual:record.qx[0]}));
+        }
         if(id==='power-usage'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
           throw new Error(style+' PowerUsage 2px metric-pair source gap mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         if(style==='mira'&&id==='receiving-method'){

@@ -4,6 +4,14 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 paired 34/528, 3 shared residual owners (CI pending)
+
+- GitHub QXFRAME CI #37901911627 same-Chromium job SUCCESS on `c3b2bee1836208e18f876707fce39d152124c17a`: 528/528 matched, **34/528** first Card heights >0.5px (was52), 0 unauthorized four-property deviations, 66 permitted Luma radii. CSS Schema #37901911601 SUCCESS, full QXFRAME release completion still subject to verification. PR #265 Draft and protected main/backup unchanged.
+- Source/QX node evidence: NotificationSettings first checkbox-only Field row source16px QX18px from generic CheckField checkbox 2px top margin. Shared `CheckField.is-center` centers checkbox with margin0 for the five authored rows, without changing other CheckField composition. Vega/Nova/Mira/other source and Card strict pair regression gates.
+- Source ContributionHistory text-xs ItemDescription category label source Vega/Nova18px Sera19.5px while QX16px. Reuse existing registered `ItemDescription.is-kpi-label` role in both Item descriptions, strict source label+Card pairs. No duplicate token.
+- Source Lyra DividendIncome four wrapped ItemTitle heights source16/16/16/32px vs QX16.5/16.5/16.5/33px, cumulative +2.5px Card. Closed `item-wrapping-title-leading` Theme: Lyra4/3, other existing1.375; shared `ItemTitle.is-wrapping` consumes it. Source title/Card gate.
+- These are three further shared root causes, not fixed Card heights or Preview-only CSS. Next: verify two complete final-HEAD CI suites and refreshed 528 diagnostic; create corresponding CI dist+docs Windows ZIP including local relative JS, check integrity and HTTP. Existing 3b32e3d ZIP is ONLY previous stable baseline. Estimates overall65%, Stage364% until actual visual acceptance.
+
 ## CURRENT — 2026-10-09 Stage 3 PowerUsage / Mira FieldTitle source-paired repair, residual tracing (CI pending)
 
 - GitHub checked baseline HEAD `3b32e3d701d8afdf8dccbc545819a68274bf9515`: QXFRAME CI #37898122441 and CSS Schema #37898122595 both success, 528/528 same-Chromium pairs, 52/528 first-Card height deviations >0.5px, 0 unauthorized geometry subset deltas and 66 allowed Luma caps. PR #265 remains Open/Draft; frozen main and backup at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
