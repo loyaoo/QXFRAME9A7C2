@@ -4,6 +4,13 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 CI strict failures corrected: generated Theme order + source two-column stretch (pending new final CI)
+
+- On `ec8f46d9377677cb7ee71e0e6f16996b2346f617`, QXFRAME #37905457103 Release FAILURE because generated `theme.css` token order differed from the compiler's `THEME_TOKENS` output: `button-sm-padding-inline` must be before `control-padding`. CSS Schema #37905457100 failed the same exact generated default check. Reordered **both** :root/.dark declarations without changing computed values, no verifier or threshold modifications.
+- Same source-preview-geometry job strict Sera Savings peer test correctly FAILED despite source small Button 115.922px = QX115.922px and descriptions both22.75px: source card A/B heights557.5/557.5px, QX A/B538.5/557.5px. The shared Button-sm fix removed source's extra two-line description, but old preview `.pv-cols-2.is-gap` had `align-items:flex-start` instead of upstream CSS Grid's equal-height sibling stretch. Source and sibling confirm parent layout defect, not Card padding.
+- Added reusable framework CSS Flex modifiers `is-stretch` and `is-equal` (flex-only, min-width:0), and changed **Savings** authoring wrapper from Preview private `pv-cols-2 is-gap` to `qxframe9a7c2-flex is-stretch is-equal`, consuming the existing `--create-gap` via an inline layout variable. This restores source two-column natural equal-height stretch with no fixed height or new Preview private CSS. Existing source strict checks enforce both sibling heights and Button width/line-box for Sera light/dark.
+- PR #265 remains Draft/unmerged; main and backup frozen. No JS runtime changes and no gate weakening. Next: two complete CIs on final HEAD (source 528/528 with zero >0.5 expected but **not yet verified**), download that successful HEAD's CI actual dist/docs artifact, create/test new Windows ZIP and update PR. Conservative overall65%, Stage364%; Stage3 manual visual acceptance remains.
+
 ## CURRENT — 2026-10-09 S3 2/528 paired, shared Button.sm intrinsic padding closeout (CI pending)
 
 - HEAD `a113163f2915f612dcb903ded559d9773e21fe8d` source-preview-geometry job #113735804348 SUCCESS: 528/528, only **2/528** first Card heights >0.5px, both Sera SavingsTargets light/dark +3.75px; 0 unauthorized geometry subset deltas; 66 permitted Luma radius caps. Release QXFRAME #37904872243 and CSS Schema #37904872231 must still be confirmed. PR #265 Draft, protected refs unchanged.
