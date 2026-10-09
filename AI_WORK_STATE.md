@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 Stage3 ≥15-point batch — nested 33-card × 16-theme source measurement in progress
+
+- Owner changed delivery policy: no more 3–5-region micro-round acceptance ZIPs; target **Stage3 70% → ≥85%**, count only confirmed scope. This work first extends existing *same Chromium, pinned shadcn source* audit from 528 outer Card checks to an **additional 528 × up to 7 nested-role samples** for Header / Content / Footer / Item / Button / Badge / Field.
+- `tools/qa/preview-01-audit.mjs` writes `inner-roles.json` for all 33 cards × 8 styles × light/dark; `tools/qa/validate-preview-01-same-browser.mjs` enforces complete source/QX coverage, sufficient component sampling and emits paint/geometry **diagnostics**. It does **not** label unnormalized color strings or non-equivalent DOM wrapper differences as failures or claim full pixel parity. Follow measured output to batch fix actual shared CSS/Theme/component issues; only then expand hard acceptance scope.
+- This is a diagnostic/QA infrastructure commit only: **no Preview DOM/style fix yet, so active offline yellow ledger intentionally unchanged**, and do not publish an acceptance ZIP for this checkpoint. Do not count Stage3 +15 until substantive inner-card parity is independently verified. PR #265 stays Draft; main/backup frozen; qxframe JS untouched.
+- Latest verified prior release HEAD `7421a656` (QXFRAME run `37950398355` and CSS Schema `37950398391` both SUCCESS); next CI on new HEAD must be assessed as separate candidate. Progress still **Stage3 ~70%, CREATEAPP-V3 total ~65%** until new hard results.
+
+
 ## CURRENT — 2026-10-09 Stage3 source Secondary and Segmented Tabs owner correction (CI pending)
 
 - Initial CSS patch `583dd93b` passed 528 geometry, but real browser computed-style gate exposed correct ownership: `src/styles/main/theme-visual-v2.css` is the **active Button paint bridge** and overrides legacy `button.css` private paint slots. Fix the **actual Preview authoring** rather than duplicate a dead CSS override: Qr Connect Got it, Cover Art Upload Artwork, Social Links Discard all map upstream shadcn `variant="secondary"` to framework `is-secondary is-solid`. Theme Visual V2 already handles that exact semantic pair in all light/dark styles; legacy interim `is-default.is-filled` patch removed.

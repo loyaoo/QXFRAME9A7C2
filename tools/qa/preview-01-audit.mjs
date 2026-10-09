@@ -20,7 +20,8 @@ const server = http.createServer((req, res) => {
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ headless: true, ...(process.env.CHROMIUM_BIN ? { executablePath: process.env.CHROMIUM_BIN } : {}) });
-const rows = [], errors = [];
+const rows = [], errors = [], innerRows = [];
+
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1200 } });
   page.on('pageerror', error => errors.push(error.message));
@@ -43,6 +44,35 @@ try {
       }];
     }));
   }, ref);
+  // Source-first nested visual sampling across ALL 33 card groups and all
+  // 16 style/mode pairs. This is deliberately separate from the earlier
+  // four-property Card gate: no first-Card-height pass substitutes for
+  // inner Header/Content/Footer/Item/Badge/Button parity.
+  const measureInner = async source => page.evaluate(source => {
+    const marker=source?'data-qa-card':'data-card';
+    const roles={
+      header:source?'[data-slot="card-header"]':'.qxframe9a7c2-card-header',
+      content:source?'[data-slot="card-content"]':'.qxframe9a7c2-card-content',
+      footer:source?'[data-slot="card-footer"]':'.qxframe9a7c2-card-footer',
+      item:source?'[data-slot="item"]':'.qxframe9a7c2-item',
+      button:source?'[data-slot="button"]':'.qxframe9a7c2-button',
+      badge:source?'[data-slot="badge"]':'.qxframe9a7c2-badge',
+      field:source?'[data-slot="field"]':'.qxframe9a7c2-form-field'
+    };
+    const record=e=>{
+      if(!e)return null;
+      const r=e.getBoundingClientRect(),cs=getComputedStyle(e);
+      return {x:+r.x.toFixed(2),y:+r.y.toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),
+        color:cs.color,background:cs.backgroundColor,borderColor:cs.borderTopColor,
+        padTop:cs.paddingTop,padBottom:cs.paddingBottom,padLeft:cs.paddingLeft,
+        fontSize:cs.fontSize,fontWeight:cs.fontWeight,radius:cs.borderTopLeftRadius,
+        text:(e.textContent||'').trim().replace(/\s+/g,' ').slice(0,64)};
+    };
+    return Object.fromEntries([...document.querySelectorAll('['+marker+']')]
+      .filter(el=>source||el.dataset.card&&!el.parentElement.closest('[data-card]'))
+      .map(group=>[group.getAttribute(marker),Object.fromEntries(
+         Object.entries(roles).map(([role,sel])=>[role,record(group.querySelector(sel))]))]));
+  },source);
   const nodeStructure = async (source, id) => page.evaluate(({source,id}) => {
     const root=document.querySelector(source ? '[data-qa-card="'+id+'"]' : '[data-card="'+id+'"]');
     if(!root)return [];
@@ -172,6 +202,7 @@ try {
       await page.addStyleTag({ content: '*{content-visibility:visible}body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const reference = await measure(true);
+      const sourceInner=await measureInner(true);
       if(style==='sera'&&!dark)sourceOverviewPeers=await overviewPeers(true);
       // Measure both siblings in every style/mode. The first Card alone does not
       // characterize the Buy Investment Card beside it.
@@ -193,6 +224,7 @@ try {
       await page.addStyleTag({ content: 'body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const actual = await measure(false);
+      const actualInner=await measureInner(false);
       if(style==='sera'&&!dark)console.log('[stage3-overview-row-sera] '+JSON.stringify({source:sourceOverviewPeers,qx:await overviewPeers(false)}));
       {
         const qxSavingsPeers=await savingsPeers(false);
@@ -473,6 +505,8 @@ try {
       })));
       if(style==='nova'&&!dark) console.log('[stage3-loading-nova-structure] '+JSON.stringify({source:novaLoadingSource,qx:await loadingStructure(false)}));
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-qx.png'), fullPage: true });
+      for(const id of new Set([...Object.keys(sourceInner),...Object.keys(actualInner)]))
+        innerRows.push({style,mode:dark?'dark':'light',card:id,source:sourceInner[id]||null,qx:actualInner[id]||null});
       for (const id of new Set([...Object.keys(reference), ...Object.keys(actual)])) {
         const ref = reference[id], qx = actual[id];
         const differences = !ref || !qx ? ['missing-card'] : ['radius', 'titleSize', 'titleInset', 'titleTop'].filter(k => ref[k] !== qx[k] && (ref[k] === null || qx[k] === null || Math.abs(ref[k] - qx[k]) > 0.5));
@@ -481,6 +515,12 @@ try {
     }
   }
 } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }
+const nestedReport={source:'295a1f114a138f23b5dfee0e0c6812394dfeb90c',roles:['header','content','footer','item','button','badge','field'],
+  note:'All 33 source Card groups, one representative per nested visual role. Role probes are diagnostic until source/QX mapping is calibrated; no unmeasured pixel parity is claimed.',
+  rows:innerRows};
+fs.writeFileSync(path.join(out,'inner-roles.json'),JSON.stringify(nestedReport,null,2)+'\n');
+console.log('[stage3-inner-roles] '+JSON.stringify({rows:innerRows.length,cards:new Set(innerRows.map(x=>x.card)).size,sourceMissing:innerRows.filter(x=>!x.source).length,qxMissing:innerRows.filter(x=>!x.qx).length,
+  sharedRoleComparisons:innerRows.reduce((n,x)=>n+(x.source&&x.qx?Object.keys(x.source).filter(k=>x.source[k]&&x.qx[k]).length:0),0)}));
 fs.writeFileSync(path.join(out, 'report.json'), JSON.stringify({ source: '295a1f114a138f23b5dfee0e0c6812394dfeb90c', font: 'system-ui, sans-serif', checkedProperties: ['radius', 'titleSize', 'titleInset', 'titleTop'], note: 'First Card in each source example: geometry inventory, not final acceptance or nested-card coverage. Chart/calendar stubs are excluded from content parity. Height/width recorded for diagnosis, wrapping excluded per v3.', errors, rows }, null, 2) + '\n');
 console.log(JSON.stringify({ cards: new Set(rows.map(r => r.card)).size, renders: rows.length, geometrySubsetMismatches: rows.filter(r => r.differences.length).length, heightDiagnostics: rows.filter(r => r.reference && r.actual && Math.abs(r.reference.height - r.actual.height) > 0.5).length, errors }));
 if (errors.length) process.exitCode = 1;

@@ -9,6 +9,48 @@ import assert from 'node:assert/strict';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const dir=path.join(root,'tools/qa/reports/stage-3/preview-01');
 const report=JSON.parse(fs.readFileSync(path.join(dir,'report.json'),'utf8'));
+const nested=JSON.parse(fs.readFileSync(path.join(dir,'inner-roles.json'),'utf8'));
+assert.equal(nested.source,'295a1f114a138f23b5dfee0e0c6812394dfeb90c','nested audit locked to same pinned source');
+assert.equal(nested.rows.length,528,'all 33 Card groups x 8 styles x 2 modes require nested samples');
+const nestedKeys=new Set(nested.rows.map(r=>[r.style,r.mode,r.card].join('/')));
+assert.equal(nestedKeys.size,528,'unique source/QX nested role samples in each style/mode');
+const nestedAbsent=nested.rows.filter(r=>!r.source||!r.qx);
+assert.deepEqual(nestedAbsent.map(r=>[r.style,r.mode,r.card]),[],'nested Card group missing');
+const roleNames=['header','content','footer','item','button','badge','field'];
+const observedRoles=nested.rows.reduce((acc,r)=>{
+  for(const name of roleNames) if(r.source[name]&&r.qx[name])acc[name]=(acc[name]||0)+1;
+  return acc;
+},{});
+assert.ok((observedRoles.header||0)>=300,'pinned Header inner visuals sampled for >=300 source QX cases');
+assert.ok((observedRoles.content||0)>=400,'pinned Content inner visuals sampled for >400 source QX cases');
+assert.ok((observedRoles.button||0)>=180,'source/QX Button paints sampled across 16 themes');
+console.log('[stage3-nested-role-coverage] '+JSON.stringify({renders:nested.rows.length,observedRoles,missing:nestedAbsent.length,cardCount:new Set(nested.rows.map(r=>r.card)).size}));
+
+const innerPaintIssues=[],innerGeometryIssues=[];
+const normalizeColor=value=>String(value||'').replace(/\\s+/g,' ').trim();
+for(const row of nested.rows){
+  for(const role of roleNames){
+    const x=row.source[role],y=row.qx[role];
+    if(!x||!y)continue;
+    for(const prop of ['w','h','padTop','padLeft','fontSize','radius']){
+      const ax=parseFloat(x[prop]),by=parseFloat(y[prop]);
+      if(Number.isFinite(ax)&&Number.isFinite(by)&&Math.abs(ax-by)>.5)
+        innerGeometryIssues.push({style:row.style,mode:row.mode,card:row.card,role,prop,source:x[prop],qx:y[prop]});
+    }
+    for(const prop of ['color','background']){
+      // CSS computed colors may use equivalent distinct coordinate spaces;
+      // a raw string mismatch is diagnostic, not an asserted color delta.
+      if(normalizeColor(x[prop])!==normalizeColor(y[prop]))
+        innerPaintIssues.push({style:row.style,mode:row.mode,card:row.card,role,prop,source:x[prop],qx:y[prop]});
+    }
+  }
+}
+console.log('[stage3-inner-differences] '+JSON.stringify({
+ geometryCount:innerGeometryIssues.length,paintCount:innerPaintIssues.length,
+ geometryExamples:innerGeometryIssues.slice(0,36),paintExamples:innerPaintIssues.slice(0,24),
+ note:'diagnostic until equivalent geometry and color-space normalization is established; not a pixel parity pass'}));
+
+
 const source='295a1f114a138f23b5dfee0e0c6812394dfeb90c';
 const styles=['vega','nova','maia','lyra','mira','luma','sera','rhea'];
 const modes=['light','dark'];
