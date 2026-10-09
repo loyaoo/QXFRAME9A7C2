@@ -501,6 +501,37 @@ try {
     assert.ok(state.selected[0].today,'live selected date matches Calendar own today state');
   });
 
+  await step('Adaptive Calendar uses source-sized cells and visible month rows', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Adaptive Calendar');
+    for(const style of ['nova','mira','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Adaptive Calendar');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const calendar=doc.querySelector('[data-card="upcoming-payments"] .qxframe9a7c2-calendar');
+        const css=e=>doc.defaultView.getComputedStyle(e);
+        const cells=[...calendar.querySelectorAll('.qxframe9a7c2-calendar-cell')];
+        const first=cells.findIndex(c=>!c.classList.contains('is-outside'));
+        const inside=cells.filter(c=>!c.classList.contains('is-outside')).length;
+        const visible=cells.filter(c=>css(c).display!=='none').length;
+        return {css:calendar.className,width:calendar.getBoundingClientRect().width,
+          inset:parseFloat(css(calendar).paddingTop),border:parseFloat(css(calendar).borderTopWidth),
+          cell:cells[0].getBoundingClientRect().width,nav:calendar.querySelector('.qxframe9a7c2-calendar-header').getBoundingClientRect().height,
+          total:cells.length,visible,expected:Math.ceil((first+inside)/7)*7};
+      })()`);
+      const cell=style==='sera'?36:40,inset=style==='nova'?8:12;
+      assert.ok(actual.css.includes('is-adaptive-month'),style+' variant');
+      assert.ok(Math.abs(actual.width-(cell*7+inset*2))<=.5,style+' calendar width');
+      assert.ok(Math.abs(actual.inset-inset)<=.5,style+' calendar inset');
+      assert.equal(actual.border,0,style+' borderless calendar');
+      assert.ok(Math.abs(actual.cell-cell)<=.5,style+' source day width');
+      assert.ok(Math.abs(actual.nav-cell)<=.5,style+' source nav height');
+      assert.equal(actual.total,42,style+' runtime calendar retains 42 state entries');
+      assert.equal(actual.visible,actual.expected,style+' displays 4/5/6 actual month weeks');
+    }
+  });
+
   await step('Dividend Income preserves the source Item flex sibling structure', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');

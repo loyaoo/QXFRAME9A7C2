@@ -387,6 +387,10 @@ export function themeTokens(resolved) {
   root['accordion-framed'] = accordionFramed ? '1' : '0';
   root['accordion-overflow'] = accordionFramed ? 'hidden' : 'visible';
   root['accordion-trigger-gap'] = rem(['maia','mira','luma','sera','rhea'].includes(style) ? 1.5 : 0);
+  // Pinned source Calendar: Nova/Lyra p-2, others p-3. Upcoming Payments
+  // uses responsive 32/40px day cells, 36px on editorial Sera.
+  root['calendar-padding'] = rem(['nova','lyra'].includes(style) ? .5 : .75);
+  root['calendar-cell-size'] = rem(editorial ? 2.25 : 2.5);
   // Pinned SidebarMenu gaps: control look distinguishes 4/0/1/2px tiers.
   // The group block inset follows the existing dense vs normal control axis.
   const sidebarMenuGap = { 'solid-shadow': .25, solid: 0, tinted: .25, transparent: .0625, 'light-solid': .125, ghost: .125 };

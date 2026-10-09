@@ -134,6 +134,8 @@ export const THEME_TOKENS = [
   L('accordion-framed', 'Whether the source Accordion uses its bordered surface (0 or 1)', 'number'),
   L('accordion-overflow', 'Framed Accordion clipping policy', 'keyword'),
   L('accordion-trigger-gap', 'Space between Accordion label and disclosure icon'),
+  L('calendar-padding', 'Inline Calendar inset from pinned style recipe'),
+  L('calendar-cell-size', 'Responsive large-screen adaptive Calendar cell size'),
   L('sidebar-menu-gap', 'Sidebar menu item distance from control surface recipe'),
   L('sidebar-group-padding-block', 'Sidebar group vertical inset from density'),
   L('card-gap', 'Card section gap'),

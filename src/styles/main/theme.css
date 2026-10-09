@@ -112,6 +112,8 @@
   --qxframe9a7c2-theme-accordion-framed: 0;
   --qxframe9a7c2-theme-accordion-overflow: visible;
   --qxframe9a7c2-theme-accordion-trigger-gap: 0;
+  --qxframe9a7c2-theme-calendar-padding: 0.5rem;
+  --qxframe9a7c2-theme-calendar-cell-size: 2.5rem;
   --qxframe9a7c2-theme-sidebar-menu-gap: 0;
   --qxframe9a7c2-theme-sidebar-group-padding-block: 0.5rem;
   --qxframe9a7c2-theme-card-gap: 1rem;
@@ -286,6 +288,8 @@
   --qxframe9a7c2-theme-accordion-framed: 0;
   --qxframe9a7c2-theme-accordion-overflow: visible;
   --qxframe9a7c2-theme-accordion-trigger-gap: 0;
+  --qxframe9a7c2-theme-calendar-padding: 0.5rem;
+  --qxframe9a7c2-theme-calendar-cell-size: 2.5rem;
   --qxframe9a7c2-theme-sidebar-menu-gap: 0;
   --qxframe9a7c2-theme-sidebar-group-padding-block: 0.5rem;
   --qxframe9a7c2-theme-card-gap: 1rem;

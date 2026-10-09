@@ -200,7 +200,7 @@ body.create-preview-body {
 .pv-justify-center { justify-content: center; }
 .pv-justify-end.qxframe9a7c2-card-footer { justify-content: flex-end; }
 .pv-gap-2.qxframe9a7c2-card-footer { gap: 0.5rem; }
-.pv-calendar { width: 100%; }
+.pv-calendar { display: flex; width: 100%; justify-content: center; }
 .pv-shade { display: flex; flex-direction: column; height: 8rem; overflow: hidden; border: 1px solid var(--qxframe9a7c2-theme-border); border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background: var(--qxframe9a7c2-theme-muted); }
 .pv-shade > div { background: var(--qxframe9a7c2-theme-muted-foreground); }
 .pv-toggle-group.pv-fill > .qxframe9a7c2-button { flex: 1 1 0; }

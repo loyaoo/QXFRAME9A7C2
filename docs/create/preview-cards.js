@@ -75,6 +75,10 @@
     // than pinning April 2024 to the unrelated transaction copy.
     var authoredValue = host.getAttribute('data-value');
     Calendar.create({ container: host, value: authoredValue === 'today' ? new Date() : authoredValue || undefined });
+    if (host.getAttribute('data-pv-calendar-layout') === 'adaptive-month') {
+      var calendarRoot = host.querySelector('.qxframe9a7c2-calendar');
+      if (calendarRoot) calendarRoot.classList.add('is-adaptive-month');
+    }
   });
   document.querySelectorAll('input[data-indeterminate]').forEach(function (input) { input.indeterminate = true; });
 })();

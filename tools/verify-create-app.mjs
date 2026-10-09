@@ -170,6 +170,21 @@ check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry
   }
 });
 
+check('Adaptive Calendar source-style cell/row geometry consumes shared tokens', () => {
+  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+  const html=read('preview-01.html'),script=read('preview-cards.js');
+  assert.match(picker,/\.qxframe9a7c2-calendar\.is-adaptive-month/);
+  for(const index of [29,36])assert.ok(picker.includes('nth-child('+index+').is-outside'),'complete outside week selector '+index);
+  assert.match(script,/calendarRoot\.classList\.add\('is-adaptive-month'\)/);
+  assert.match(html.slice(html.indexOf('data-card="upcoming-payments"'),html.indexOf('<!-- @end upcoming-payments -->')),/data-pv-calendar-layout="adaptive-month"/);
+  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const px=name=>parseFloat(body.match(new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);'))?.[1])*16;
+    assert.equal(px('calendar-padding'),['nova','lyra'].includes(style)?8:12,style+' calendar inset');
+    assert.equal(px('calendar-cell-size'),style==='sera'?36:40,style+' source responsive cell');
+  }
+});
+
 check('Upcoming Payments Calendar follows source today-selected date rather than 2024 transaction copy', () => {
   const html=read('preview-01.html');
   const card=html.slice(html.indexOf('data-card="upcoming-payments"'),html.indexOf('<!-- @end upcoming-payments -->'));
