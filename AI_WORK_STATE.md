@@ -19,6 +19,11 @@
 
 ## CURRENT
 
+2026-10-09 CREATEAPP-V3-S3 FAQ trigger box-model correction (CI pending):
+- Source-preview-geometry on 71b74b98 succeeded: height diagnostics decreased **202/528 -> 192/528**; paired Sera Dividend -44.25px -> +5.25px, Rhea FAQ -68px -> -6px, Maia FAQ -48px -> -6px. Paired 528 property exceptions remain exactly the 66 v3-mandated Luma radius caps.
+- Remaining -6px for Rhea/Maia FAQ traced to 3 original AccordionTrigger 1px transparent borders at top/bottom, absent in QX native Collapse summaries (source each 74px vs QX 72px). Applied shared 1px transparent summary border and Chromium+static assertions; no Card height hacks.
+- Earlier 71b74b98 release job failed only because the closed theme catalog had three new tokens not yet mirrored in generated default root/dark theme.css; commit 1f678de4 synchronizes that default CSS without weakening gate. Verify newest CI before acceptance.
+- Upcoming Payments remains Mira -48.89px, Nova -18.5px pending Calendar geometry. NEXT EXACT STEP: inspect full newest CI and remaining paired 528 diagnostics, address shared Calendar next, update PR body. No main/backup edits, PR Draft.
 2026-10-09 CREATEAPP-V3-S3 pinned paired node remediation (CI pending):
 - First sibling-topology commit 0d69fe72: source-preview-geometry passed, 528/528 measured and 202/528 outlier heights unchanged; Sera Dividend reduced from roughly -89.75px to -44.25px (44–45px recovered). CSS Schema #37869373895 succeeded; release final status to verify.
 - Paired Rhea FAQ source Accordion has 1px outer frame, 16px trigger/content inline inset and 24px trigger icon gap; QX shared native Collapse previously had 0 for all three. Maia/Rhea/Luma/Mira use framed source style, Sera is gap-only editorial; added closed Theme recipe inputs for framed/overflow/trigger-gap and switched shared Collapse native adapter to consume these without component-name/style selectors or hardcoded Card heights.

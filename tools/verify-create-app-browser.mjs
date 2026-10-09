@@ -840,6 +840,7 @@ try {
             actualGap:px(css(summary).columnGap),
             accordionBorder:px(css(faq.querySelector('.qxframe9a7c2-collapse.is-native')).borderTopWidth),
             accordionInlinePadding:px(css(summary).paddingLeft),
+            accordionTriggerBorder:px(css(summary).borderTopWidth),
             faqHeight:faq.getBoundingClientRect().height,
             notificationHeight:doc.querySelector('[data-card="notification-settings"]').getBoundingClientRect().height};
           root.classList.toggle('dark',prev);return ans;
@@ -851,6 +852,7 @@ try {
         assert.ok(Math.abs(actual.actualGap-(['maia','mira','luma','sera','rhea'].includes(style)?24:0))<=.5,
           style+'/'+mode+' source Accordion trigger gap');
         const framed=['maia','mira','luma','rhea'].includes(style);
+        assert.ok(Math.abs(actual.accordionTriggerBorder-1)<=.5,style+'/'+mode+' source native Accordion trigger transparent border');
         assert.ok(Math.abs(actual.accordionBorder-(framed?1:0))<=.5,
           style+'/'+mode+' native Accordion outer border');
         assert.ok(Math.abs(actual.accordionInlinePadding-(framed?({maia:16,mira:8,luma:16,rhea:16}[style]):0))<=.5,

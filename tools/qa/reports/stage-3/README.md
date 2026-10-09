@@ -1,5 +1,13 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — paired 192/528 diagnostic and native AccordionTrigger border
+
+The second source-locked same-Chromium run (`71b74b98`, job `113625030611`) reduced **202 → 192 of 528** height outliers, without lowering tolerance or modifying the 66 governed Luma radius exceptions. Sera Dividend changed -44.25 → +5.25px (needs further 1st Item min-content examination), Rhea FAQ changed -68 → -6px, and Maia FAQ changed -48 → -6px.
+
+The remaining FAQ exactly 6px is three upstream `AccordionTrigger` instances whose core JSX class includes `border border-transparent` (each 1px top and bottom); QX's native summary lacked this transparent layout border. The shared native Collapse header now gets 1px transparent border. Eight-style light/dark Chromium assertion and static contract added. CI pending for this change.
+
+Previous `71b74b98` release failed `verify:theme-default` because the three new closed Accordion inputs were missing from generated default CSS; `1f678de4` added these to root/dark, no validation relaxation. Verify release and CSS Schema jobs on latest branch before declaring green.
+
 ## 2026-10-09 — shared Collapse framed recipe and Dividend intrinsic Item title
 
 Same-Chromium node evidence after sibling fix: 202/528 total height outliers unchanged, but Sera Dividend decreases from -89.75px to -44.25px. Original shadcn Sera ItemContent and ItemTitle have intrinsic flex sizing/wrapping that QX's long-standing one-line clamp suppresses. Introduced opt-in shared `ItemContent.is-intrinsic` and `ItemTitle.is-wrapping`, applying only to Dividend's four holdings; default truncated Item behavior remains covered.

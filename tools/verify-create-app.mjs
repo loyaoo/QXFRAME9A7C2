@@ -181,6 +181,12 @@ check('Dividend Income uses the pinned Item sibling layout rather than an ItemAc
     'the original shadcn chart and amount are direct Item flex children, not an ItemActions group');
 });
 
+check('Source native Accordion trigger retains the one-pixel transparent layout border', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-collapse\.is-native>\.qxframe9a7c2-collapse-item>summary\.qxframe9a7c2-collapse-header\{[^}]*border:1px solid transparent;/,
+    'all shadcn AccordionTrigger variants use border border-transparent (two layout pixels)');
+});
+
 check('Source Accordion frame and Item intrinsic wrapping are shared Theme/component rules', () => {
   const compiler=read('compiler.js'),tokens=read('tokens.js');
   const collapse=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');

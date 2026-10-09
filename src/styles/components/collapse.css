@@ -70,6 +70,7 @@
   box-sizing:border-box;display:flex;min-height:0;align-items:flex-start;justify-content:space-between;
   gap:var(--qxframe9a7c2-theme-accordion-trigger-gap,0);
   padding:var(--qxframe9a7c2-theme-accordion-padding) calc(var(--_qxframe9a7c2-accordion-framed) * var(--qxframe9a7c2-theme-accordion-padding));
+  border:1px solid transparent;
   border-radius:var(--qxframe9a7c2-theme-radius-field);
   background:transparent;color:inherit;font-size:var(--qxframe9a7c2-theme-text-size);
   font-weight:var(--qxframe9a7c2-theme-control-weight);line-height:inherit;
