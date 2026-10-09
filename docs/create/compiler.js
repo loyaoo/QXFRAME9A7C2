@@ -395,6 +395,10 @@ export function themeTokens(resolved) {
   root['field-label-line-height'] = editorial ? '1.21875rem' : rem(Math.min(textSize, controlFont));
   // Source Sera cn-label uses tracking-wide (0.025em), distinct from sidebar control tracking.
   root['field-label-tracking'] = editorial ? '0.025em' : 'normal';
+  // Pinned Mira uses text-xs/relaxed (12px / 19.5px) for FieldTitle;
+  // default FieldTitle uses the text-sm/leading-snug recipe. The
+  // dedicated role does not alter ordinary body or FormLabel leading.
+  root['field-title-leading'] = style === 'mira' ? '1.625' : '1.375';
   // Source native FieldLegend mb-3 (most), mb-2.5 (Lyra), mb-2 (Mira), mb-1.5 (Nova).
   // FieldSet with RadioGroup owns only the post-legend separation; preview has no CSS owner.
   root['field-legend-gap']=rem(style==='nova'?.375:style==='lyra'?.625:style==='mira'?.5:.75);

@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Source PowerUsage metric spacing and Mira FieldTitle (CI pending)
+
+Pinned PowerUsage 2px gap-0.5 between metric title and number was absent in two QX Stack.is-gap-0 pairs; introduced shared Flex/Stack.is-gap-half (.125rem), used in Preview01. Mira ReceivingMethod FieldTitle pinned 12px/19.5px (text-xs/relaxed) instead of QX 12px/16.5px; closed Theme field-title-leading and shared FieldTitle consumer. Strict source-paired Card gates now check all eight PowerUsage styles plus Mira Radio title+whole Card. Extended DOM traces cover NotificationSettings/ContributionHistory and Lyra; obtain actual next 528 count from complete CI before declaring fixes accepted. Draft PR preserved; protected branches unchanged. Mandatory new final-HEAD dist+docs ZIP after both CI suites pass.
+
 ## 2026-10-09 — Vega Item KPI and CardTitle 2xl source parity (CI pending)
 
 Vega SavingsTargets source first Item 148px/QX146px due label line box 18px vs16px, reused Theme KPI leading. Vega Overview source CardTitle text-2xl 24px/36px vs QX 24px/32px; shared CardTitle.is-value with Theme card-value-leading Vega1.5 and others4/3. Generated Nova theme synchronized. Strict paired Item/Overview card gates added. Current last measured c5490932 68/528; new CI pending; PR Draft.

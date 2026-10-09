@@ -4,6 +4,15 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 Stage 3 PowerUsage / Mira FieldTitle source-paired repair, residual tracing (CI pending)
+
+- GitHub checked baseline HEAD `3b32e3d701d8afdf8dccbc545819a68274bf9515`: QXFRAME CI #37898122441 and CSS Schema #37898122595 both success, 528/528 same-Chromium pairs, 52/528 first-Card height deviations >0.5px, 0 unauthorized geometry subset deltas and 66 allowed Luma caps. PR #265 remains Open/Draft; frozen main and backup at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+- Source-backed fix 1: pinned PowerUsage uses two metric stacks with `gap-0.5` (2px); QX Preview01 used `Stack.is-gap-0` (0px), accounting for the common -2px card-height residual in eight style families. Added reusable Flex/Stack `is-gap-half` modifier in shared composition CSS, used for both metric pairs; 8-style source-paired full Card gate. No fixed Card dimensions.
+- Source-backed fix 2: pinned Mira `cn-field-title` is `text-xs/relaxed` (12px/19.5px), while QX FieldTitle hardcoded 1.375 (16.5px). Added one closed `field-title-leading` Theme role (Mira1.625, default1.375), default Nova root/dark synchronization and shared FieldTitle consumer, with Mira source-paired title and full Card check.
+- Expanded same-Chromium node traces for remaining ContributionHistory, NotificationSettings, Lyra Dividend/Payments/Upcoming and editorial Savings to identify shared next owners, not compensate in Preview private styles. Do not claim a new mismatch count until same-final-HEAD CI. No JS runtime modification, no threshold changes.
+- Mandatory release: after both workflows SUCCESS on final HEAD, download that HEAD's actual dist-docs artifact and provide a new Windows local ZIP with corrected relative JS links. Existing baseline local ZIP is pinned to prior 3b32e3d and must not be reused for new HEAD.
+- Next exact step: confirm CI source geometry and static regressions; if either fails, fix the source cause; diagnose remaining captured nodes, batch repair, update PR progress. Provisional overall65% Stage364% until real acceptance.
+
 ## CURRENT — 2026-10-09 Vega SavingsTargets and CardOverview 2xl parity (CI pending)
 
 - Previous c5490932 528 source-paired geometry SUCCESS: 68/528 first Card height deltas from 70, Sera PayoutThreshold exact 627.5/627.5px. Pinned Vega SavingsTargets first Item 148px vs QX146px because ItemDescription text-xs 18px vs16px, across 2 items => first Card -4px. Updated shared KPI label leading to 18px Vega (Nova18, Sera19.5, others16), with strict Vega source Item/Content/Footer/Card gate.

@@ -166,6 +166,8 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-flex.is-wrap{flex-wrap:wrap}
 .qxframe9a7c2-stack{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-layout-gap,var(--_qxframe9a7c2-layout-gap,0.5rem));min-width:0}
 .qxframe9a7c2-flex.is-gap-0,.qxframe9a7c2-stack.is-gap-0{--_qxframe9a7c2-layout-gap:0}
+/* Half-spacing is the source 2px text-pair gap, not a redefinition of gap-0. */
+.qxframe9a7c2-flex.is-gap-half,.qxframe9a7c2-stack.is-gap-half{--_qxframe9a7c2-layout-gap:.125rem}
 .qxframe9a7c2-flex.is-gap-1,.qxframe9a7c2-stack.is-gap-1{--_qxframe9a7c2-layout-gap:0.25rem}
 .qxframe9a7c2-flex.is-gap-2,.qxframe9a7c2-stack.is-gap-2{--_qxframe9a7c2-layout-gap:0.5rem}
 .qxframe9a7c2-flex.is-gap-3,.qxframe9a7c2-stack.is-gap-3{--_qxframe9a7c2-layout-gap:0.75rem}
@@ -218,7 +220,7 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   display:flex;align-items:center;width:fit-content;gap:.5rem;
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
   font-weight:var(--qxframe9a7c2-theme-control-weight);
-  line-height:1.375;
+  line-height:var(--qxframe9a7c2-field-title-leading,var(--qxframe9a7c2-theme-field-title-leading,1.375));
   text-transform:var(--qxframe9a7c2-theme-control-transform,none)
 }
 /* Reusable static SidebarMenuButton and SidebarGroupLabel: source icon/text

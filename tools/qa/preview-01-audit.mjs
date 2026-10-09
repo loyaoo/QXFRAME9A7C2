@@ -100,13 +100,13 @@ try {
   // Focused structure evidence for unresolved Stage 3 cards, measured in the
   // same Chromium and font as the pinned upstream renderer.
   const targetCards={
-    sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state','stock-performance','cover-art','payout-threshold','preferences','card-overview','index-investing','savings-targets'],
+    sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state','stock-performance','cover-art','payout-threshold','preferences','card-overview','index-investing','savings-targets','contribution-history','power-usage','notification-settings','receiving-method'],
     // Cross-style small Item regression discovered by full 528-run, not a single-style exception.
-    vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions','savings-targets','card-overview'],
-    nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions','savings-targets','receiving-method','account-access','cover-art'],
-    rhea:['faq','claimable-balance','kitchen-island','cover-art'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets','cover-art'],
-    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island','cover-art'],
-    lyra:['faq','claimable-balance','savings-targets','upcoming-payments','account-access','cover-art'],mira:['upcoming-payments','claimable-balance','savings-targets','faq','receiving-method','account-access','cover-art']
+    vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions','savings-targets','card-overview','contribution-history','power-usage','notification-settings'],
+    nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions','savings-targets','receiving-method','account-access','cover-art','contribution-history','power-usage','notification-settings','card-overview'],
+    rhea:['faq','claimable-balance','kitchen-island','cover-art','power-usage','notification-settings'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets','cover-art','power-usage','notification-settings'],
+    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island','cover-art','power-usage','notification-settings'],
+    lyra:['faq','claimable-balance','savings-targets','upcoming-payments','account-access','cover-art','dividend-income','kitchen-island','payments','power-usage','notification-settings','receiving-method'],mira:['upcoming-payments','claimable-balance','savings-targets','faq','receiving-method','account-access','cover-art','power-usage','notification-settings']
   };
   const sourceNodePairs={};
   // The first Overview card is stretched by its sibling in the pinned two-column
@@ -291,6 +291,15 @@ try {
             throw new Error('Lyra FAQ source-paired Accordion trigger height mismatch: '+JSON.stringify({source:sourceTrigger,qx:qxTrigger}));
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error('Lyra FAQ whole Card height differs after icon alignment');
+        }
+        if(id==='power-usage'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
+          throw new Error(style+' PowerUsage 2px metric-pair source gap mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        if(style==='mira'&&id==='receiving-method'){
+          const titleOf=rows=>rows.find(n=>n.text==='Bank Transfer');
+          const srcTitle=titleOf(record.source),qxTitle=titleOf(record.qx);
+          if(!srcTitle||!qxTitle||Math.abs(srcTitle.h-19.5)>.5||
+            Math.abs(srcTitle.h-qxTitle.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Mira FieldTitle text-xs/relaxed line box differs: '+JSON.stringify({srcTitle,qxTitle,source:record.source[0],qx:record.qx[0]}));
         }
         console.log('[stage3-target-'+style+'-'+id+'] '+JSON.stringify(record));
       }

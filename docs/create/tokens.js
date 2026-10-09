@@ -136,6 +136,7 @@ export const THEME_TOKENS = [
   L('field-group-gap', 'Vertical distance between composed Fields'),
   L('field-gap', 'Gap between a composed Field label, control and description'),
   L('field-label-line-height', 'Composed Field label line-box height'),
+  L('field-title-leading', 'Native FieldTitle title line-height recipe'),
   L('field-label-tracking', 'FieldLabel letter-spacing (source Sera tracking-wide)'),
   L('field-legend-gap', 'FieldSet radio-group separation after the native legend; source FieldLegend margin'),
   L('field-content-gap', 'FieldContent label and description gap derived from Field density'),
