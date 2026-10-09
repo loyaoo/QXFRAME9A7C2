@@ -10,7 +10,7 @@ const groups = [
     ['td.is-muted','五处日期文字','使用 Theme muted-foreground 而非深色文字','24bcbaaa']]],
   ['syncing-state','Syncing State · 同步状态',[
     ['.qxframe9a7c2-empty-description','同步提示说明','原文撇号和均衡换行与上游对齐','b424cb37'],
-    ['.qxframe9a7c2-empty-media.is-glyph-sm svg','同步图标尺寸','图标本体恢复上游 16×16px，保留原 32/40px 外层容器','本轮']]]
+    ['.qxframe9a7c2-empty-media.is-glyph-sm svg','同步图标尺寸','图标本体恢复上游 16×16px，保留原 32/40px 外层容器','__QA_BUNDLE_HEAD__']]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -69,7 +69,8 @@ function mount(){
   if(embedded)return;
   const panel=document.createElement('section');
   panel.className='qa-offline-toolbar';panel.dataset.qaToolbar='';
-  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01 · 6 处</span></div>'+
+  const markedRegions=groups.reduce((count,g)=>count+g[2].length,0);
+  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01 · '+markedRegions+' 处</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
     '<p class="qa-toolbar-caption">Preview 02 本批未修改。未标注不代表完成验收；请关闭高亮后做原貌对比。</p></div>';

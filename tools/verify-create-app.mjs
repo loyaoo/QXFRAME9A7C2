@@ -30,6 +30,9 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     assert.ok(ledger.includes(selector),'ledger must target inner Card change: '+selector);
   }
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
+  assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
+  assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
+  assert.match(packager,/ledger\.replace\('__QA_BUNDLE_HEAD__',head\[:8\]\)/,'ZIP must embed the exact CI Git HEAD');
   assert.match(ledger,/data-qa-toggle/,'offline QA must support original clean view');
   assert.match(packager,/offline-qa-changes\.mjs/,'packager must inject the QA module into local copies');
   assert.match(packager,/offline-qa-changes\.css/,'packager must inject the QA stylesheet into local copies');

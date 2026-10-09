@@ -1,5 +1,10 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Dynamic offline changed-region count and same-HEAD commit attribution (CI pending)
+
+The seventh Syncing glyph region uncovered hardcoded `Preview 01 · 6 处` in offline panel. Replaced it with count derived from `groups` records; made new change's commit reference a build-time placeholder resolved to verified current final HEAD in `tools/qa/build-offline-demo.py` extracted Windows bundle only. Static verify asserts both. Avoids stale or vague annotations; production Create HTML still intentionally never loads the overlay. Additional final CI and Actions source matching bundle required.
+
+
 ## 2026-10-09 — Source-paired Syncing State spinner glyph vs media (CI pending)
 
 Same Chromium pinned shadcn source measurements across Vega/Nova/Maia/Luma/Sera show source Syncing State spinner glyph exactly 16px inside shared 32px/40px media box. QX glyph was magnified by Theme Empty icon size (CSS box sizes vary by Style; rotation additionally affects screenshot bounding rectangle), despite media box/Card parity. Add generic opt-in `EmptyMedia.is-icon.is-glyph-sm` consuming existing public `--qxframe9a7c2-empty-icon-size:1rem`; use it only in Syncing State to avoid changing all other Empty variants. Strict browser source-pair compares CSS intrinsic SVG width/height, glyph center and unchanged media dimensions for 5 proven Styles. Create real Chromium checks computed size for all 8 Styles. Updated offline change ledger adds precise icon glyph region (four annotated Cards / seven inner regions), preserves clean-mode and previous source text record. No global Theme token expansion or new hardcoded Card height. CI and official Actions-based annotated Windows bundle pending; Stage3 ~66% and overall ~65% estimates.

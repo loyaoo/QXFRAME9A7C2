@@ -38,6 +38,13 @@ with zipfile.ZipFile(artifact) as outer:
         assert set(required).issubset(inner.namelist()), 'Missing Create or QA script in Actions artifact'
         inner.extractall(work)
 
+# Fill self-referential change records with the exact commit used to build this
+# ZIP. Never leave a vague 'current run' label or stale hardcoded count.
+ledger_path=work/'docs/create/offline-qa-changes.mjs'
+ledger=ledger_path.read_text('utf-8')
+assert ledger.count('__QA_BUNDLE_HEAD__')==1, 'missing exact-HEAD change annotation'
+ledger_path.write_text(ledger.replace('__QA_BUNDLE_HEAD__',head[:8]),'utf-8')
+
 online = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js'
 for name in ('index.html', 'preview-01.html', 'preview-02.html'):
     file = work / 'docs/create' / name

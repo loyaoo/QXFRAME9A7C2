@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 S3-QA-MARKER-CONSISTENCY-002 finalizing source-backed Syncing glyph (new final CI pending)
+
+- First commit `02f3acd97ce2e65f61c68437dcdfe7f61ae77c17` adds proven 16px Syncing icon glyph and strict source-paired + all-eight-Styles Create browser checks, plus precise seventh offline annotation. Git state remains PR #265 Draft, main/backup frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+- Proactively caught annotation correctness defect before Windows QA: previously the panel heading literal `Preview 01 · 6 处` would be stale as soon as a seventh region was added. `offline-qa-changes.mjs` now computes live count from its array with `groups.reduce`. New change's commit label uses one `__QA_BUNDLE_HEAD__` placeholder, and official `tools/qa/build-offline-demo.py` replaces it with the exact final development SHA prefix **after** verifying the source ZIP, before local-only injection. `tools/verify-create-app.mjs` strictly asserts count/placeholder/builder paths in addition to no online HTML overlays. No marked Preview02 false claims.
+- NEXT: final single new HEAD both complete CI suites SUCCESS, exact Actions dist/docs artifact, using committed offline packager; local browser verify 4 Cards/7 marked regions, dynamic panel count=7, exact HEAD in glyph tooltip, click-to-jump, clean mode and ZIP CRC/HTTP200. Must not deliver previous pre-fix package. Overall~65%, Stage3~66% estimates; Stage4/5 pending.
+
+
 ## CURRENT — 2026-10-09 S3-SYNCING-GLYPH-001 shared Empty compact glyph (CI pending)
 
 - Reconciled Git/PR/CI stable HEAD `b424cb37879adadd013035252fb864451ce09f75`: PR #265 Draft/unmerged; main and backup `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`; QXFRAME #37921619118 and CSS Schema #37921619145 SUCCESS, 528 first Cards and all existing pinned strict geometry checks passing. Successful local annotated Windows ZIP was delivered (4 Cards / 6 regions).
