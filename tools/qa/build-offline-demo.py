@@ -9,6 +9,7 @@ import io
 import hashlib
 import http.server
 import os
+import re
 from pathlib import Path
 import shutil
 import sys
@@ -43,6 +44,10 @@ with zipfile.ZipFile(artifact) as outer:
 ledger_path=work/'docs/create/offline-qa-changes.mjs'
 ledger=ledger_path.read_text('utf-8')
 assert ledger.count('__QA_BUNDLE_HEAD__')>=1, 'current batch must contain exact-HEAD annotations'
+active_regions = ledger.count('__QA_BUNDLE_HEAD__')
+active_cards = re.findall(r"^\s*\['([a-z0-9-]+)','([^']+)',\[$", ledger, flags=re.M)
+assert active_cards and len(set(id for id, _ in active_cards)) == len(active_cards), 'active annotation groups must be distinct'
+active_summary = ', '.join(name for _, name in active_cards)
 ledger_path.write_text(ledger.replace('__QA_BUNDLE_HEAD__',head[:8]),'utf-8')
 
 online = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js'
@@ -109,9 +114,9 @@ http.createServer((req,res)=>{
     '点击变更条目定位到对应卡片；点击「关闭高亮 · 原貌对比」恢复干净画面。'
     '独立打开 Preview 01 也有同样的清单。所有改动标记只注入此本地包副本，'
     '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n'
-    '本轮且仅本轮标注：Kitchen Island 四行滑块轨道；Front Door 细斜纹装饰区。'
-    '上一轮 FAQ、Savings Targets、Recent Transactions、Syncing State 的高亮已经清零，'
-    '历史修复保留在仓库状态文档中。Preview 02 本批没有改动。'
+    ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。')
+    '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。'
+    'Preview 02 本批没有改动。'
     '未标注的卡片不代表已通过验收。\n\n'
     '之后每批更改卡片必须同步更新 docs/create/offline-qa-changes.mjs 的清单。'
     '此包未合并到 main，Stage 3 尚待人工验收。\n', encoding='utf-8')
