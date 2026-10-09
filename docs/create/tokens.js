@@ -119,7 +119,6 @@ export const THEME_TOKENS = [
 
   // Containers.
   L('card-padding', 'Card padding (container padding axis)'),
-  L('card-peer-alignment', 'Shared Card peer-row cross-axis alignment during source style transition', 'keyword'),
   L('empty-inset', 'Empty density anchor; also derives media/title geometry'),
   L('empty-icon-size', 'Empty glyph dimension; pinned style recipe distinct from media box'),
   L('empty-content-gap', 'Empty action group gap; compact/dense typography recipe'),

@@ -167,7 +167,6 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 /* Equal-width row: flex-only counterpart of a two-column source Grid.
  * Stretch both cards to the tallest sibling without imposing fixed height. */
 .qxframe9a7c2-flex.is-stretch{align-items:stretch}
-.qxframe9a7c2-flex.is-peer-row{align-items:var(--qxframe9a7c2-peer-alignment,var(--qxframe9a7c2-theme-card-peer-alignment,flex-start))}
 .qxframe9a7c2-flex.is-equal>*{min-width:0;flex:1 1 0}
 .qxframe9a7c2-stack{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-layout-gap,var(--_qxframe9a7c2-layout-gap,0.5rem));min-width:0}
 .qxframe9a7c2-flex.is-gap-0,.qxframe9a7c2-stack.is-gap-0{--_qxframe9a7c2-layout-gap:0}
