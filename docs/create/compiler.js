@@ -387,8 +387,8 @@ export function themeTokens(resolved) {
   // Pinned SavingsTargets text-xs Item label is 18px Nova, 19.5px Sera,
   // otherwise 16px. Its explicit text-xs leading differs from ItemDescription.
   root['item-kpi-label-leading']=['nova','vega'].includes(style)?'1.125rem':style==='sera'?'1.21875rem':'1rem';
-  // Pinned Lyra's wrapping ItemTitle has 16px, rather than 16.5px, lines.
-  root['item-wrapping-title-leading']=style==='lyra'?'1.3333333333333333':'1.375';
+  // The same pinned 16px Lyra title line is consumed by ordinary Item and wrapping Item.
+  root['item-title-leading']=style==='lyra'?'1.3333333333333333':'1.375';
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
   root['field-content-gap'] = rem(fieldSpace <= .5 ? .125 : .25);
@@ -400,7 +400,11 @@ export function themeTokens(resolved) {
   // Pinned Mira uses text-xs/relaxed (12px / 19.5px) for FieldTitle;
   // default FieldTitle uses the text-sm/leading-snug recipe. The
   // dedicated role does not alter ordinary body or FormLabel leading.
-  root['field-title-leading'] = style === 'mira' ? '1.625' : '1.375';
+  root['field-title-leading'] = style === 'mira' ? '1.625' : style === 'sera' ? '1.5' : '1.375';
+  // FieldLegend is a distinct size/leading role: Sera title-xs has 16px, while
+  // Nova/Luma headings inherit 20px. Lyra's existing 19.5px remains stable
+  // pending independent source-vs-card reconciliation.
+  root['field-legend-leading']=style==='sera'?'1rem':['lyra','mira'].includes(style)?'1.21875rem':'1.25rem';
   // Source native FieldLegend mb-3 (most), mb-2.5 (Lyra), mb-2 (Mira), mb-1.5 (Nova).
   // FieldSet with RadioGroup owns only the post-legend separation; preview has no CSS owner.
   root['field-legend-gap']=rem(style==='nova'?.375:style==='lyra'?.625:style==='mira'?.5:.75);
@@ -458,7 +462,7 @@ export function themeTokens(resolved) {
   root['text-leading'] = ext.typography === 'compact' ? '1.625' : String(20 / 14);
   root['calendar-weekday-leading'] = style === 'lyra' ? String(4/3) : root['text-leading'];
   root['heading-leading'] = editorial ? String(28 / 18) : ext.typography === 'compact' ? String(20 / 14) : style === 'nova' ? '1.375' : '1.5';
-  root['card-value-leading'] = style === 'vega' ? '1.5' : String(4/3);
+  root['card-value-leading'] = style === 'vega' ? '1.5' : style === 'nova' ? '1.375' : String(4/3);
   root['description-leading'] = editorial || ext.typography === 'compact' ? '1.625' : String(20 / 14);
 
   // Radius.

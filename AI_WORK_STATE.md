@@ -4,6 +4,15 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 S3 residual 12/528 source-backed ItemTitle/CardValue/FieldLegend batch (CI pending)
+
+- Baseline HEAD `db6aaed73ef38ab959d67a3c1399b914fb951065`, PR #265 Open/Draft; QXFRAME #37902751672 and CSS Schema #37902751687 both SUCCESS. Pinned same-Chromium 528/528, **12/528** first-Card height deltas >0.5px, no unauthorized Card subset differences, 66 allowed Luma radius caps. main and backup frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+- Root #1: Lyra 12px ItemTitle source line-box16px, but ordinary QX ItemTitle 16.5px; KitchenIsland and Payments four rows each +2px, UpcomingPayments three titles +1.5px. Reuse the previously introduced Lyra 4/3 leading Theme input for **all** shared ItemTitles, and rename it to semantically accurate `item-title-leading` (no new duplicate Theme role). Wrapping ItemTitle inherits the same line-height. Strict source 16px title/whole Card gates for Lyra Kitchen/Payments/Upcoming.
+- Root #2: Nova 2xl CardTitle source 24px/33px, QX 24px/32px, lowering CardOverview by1px. Correct existing closed `card-value-leading` Nova source recipe to1.375 (Vega still1.5 and all other styles unchanged), strict source CardTitle and Card height gate.
+- Root #3: Sera ReceivingMethod source native FieldLegend 12px/16px versus QX14px/20px, combined with FieldTitle source12px/18px versus QX12px/16.5px. Shared FieldSet legend now consumes one closed `field-legend-leading` role and the already-available font-size minimum; Sera FieldTitle leading1.5, Mira1.625, others unchanged1.375. Styles other than Sera keep their observed leading values to avoid a silent regression. New Sera source legend/title/whole Card gate.
+- Sera SavingsTargets remains a two-column row-height problem: source New Goal button115.92px versus QX127.92px, causing a wrapping heading, but the Card may also stretch to sibling Buy Investment. Added exact source/QX paired measurement of both cards and their controls before attempting a height workaround. No fixed Card heights, preview-private CSS, JS runtime changes, or threshold relaxation.
+- Next: push branch PR with code+docs, run BOTH full workflows on identical HEAD, inspect 528 and Sera sibling pair, fix any strict failure; each completed batch must include its own CI-built Windows dist+docs ZIP (Create/Preview local JS, HTTP/ZIP integrity). Overall program~65% Stage3~64% conservative pending full owner visual acceptance.
+
 ## CURRENT — 2026-10-09 paired 34/528, 3 shared residual owners (CI pending)
 
 - GitHub QXFRAME CI #37901911627 same-Chromium job SUCCESS on `c3b2bee1836208e18f876707fce39d152124c17a`: 528/528 matched, **34/528** first Card heights >0.5px (was52), 0 unauthorized four-property deviations, 66 permitted Luma radii. CSS Schema #37901911601 SUCCESS, full QXFRAME release completion still subject to verification. PR #265 Draft and protected main/backup unchanged.

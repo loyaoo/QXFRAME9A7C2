@@ -176,7 +176,7 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 /* Native FieldSet is a reusable composition. Source FieldLegend mb controls
  * the separation after a legend even when the FieldSet's radio child uses gap-3. */
 .qxframe9a7c2-form-fieldset{display:flex;flex-direction:column;gap:.75rem;margin:0;padding:0;border:0;min-width:0}
-.qxframe9a7c2-form-fieldset>legend{margin-bottom:var(--qxframe9a7c2-field-legend-gap,var(--qxframe9a7c2-theme-field-legend-gap,.75rem));padding:0}
+.qxframe9a7c2-form-fieldset>legend{margin-bottom:var(--qxframe9a7c2-field-legend-gap,var(--qxframe9a7c2-theme-field-legend-gap,.75rem));padding:0;font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));line-height:var(--qxframe9a7c2-theme-field-legend-leading,1.25rem)}
 .qxframe9a7c2-field-group{display:flex;flex-direction:column;gap:var(--qxframe9a7c2-field-group-gap,var(--qxframe9a7c2-theme-field-group-gap,1.75rem));min-width:0}
 .qxframe9a7c2-field-content{display:flex;flex:1 1 auto;flex-direction:column;gap:var(--qxframe9a7c2-field-content-gap,var(--qxframe9a7c2-theme-field-content-gap,.125rem));min-width:0}
 /* Theme sets the standard choice density; a local override always wins.

@@ -127,6 +127,25 @@ try {
     });
   },source);
   let sourceOverviewPeers=null;
+  // Savings A can stretch to its sibling. Measure both before card fixes.
+  const savingsPeers=async source=>page.evaluate(source=>{
+    const first=document.querySelector(source?'[data-qa-card="savings-targets"]':'[data-card="savings-targets-a"]');
+    if(!first)return null;
+    const selectors=source?'[data-slot="card-header"],[data-slot="card-title"],[data-slot="card-description"],[data-slot="card-content"],[data-slot="card-footer"],[data-slot="field"],[data-slot="field-label"],[data-slot="button"],[data-slot="input-group"],[data-slot="native-select"]':'.qxframe9a7c2-card-header,.qxframe9a7c2-card-title,.qxframe9a7c2-card-description,.qxframe9a7c2-card-content,.qxframe9a7c2-card-footer,.qxframe9a7c2-form-field,.qxframe9a7c2-form-label,.qxframe9a7c2-button,.qxframe9a7c2-form-input-group,.qxframe9a7c2-form-select';
+    return [...first.parentElement.children].filter(el=>el.getBoundingClientRect().width>100).slice(0,2).map(el=>{
+      const r=el.getBoundingClientRect();
+      return {h:+r.height.toFixed(3),w:+r.width.toFixed(3),
+        children:[...el.querySelectorAll(selectors)].slice(0,35).map(node=>{
+          const cs=getComputedStyle(node),box=node.getBoundingClientRect();
+          return {className:String(node.className).slice(0,70),
+            text:node.children.length?'':node.textContent?.trim().slice(0,50),
+            h:+box.height.toFixed(3),w:+box.width.toFixed(3),
+            lineHeight:cs.lineHeight,pt:cs.paddingTop,pb:cs.paddingBottom,gap:cs.gap};
+        })
+      };
+    });
+  },source);
+  let sourceSavingsPeers=null;
 
   const loadingStructure = async source => page.evaluate(source => {
     const card = document.querySelector(source ? '[data-qa-card="loading-card"]' : '[data-card="loading-card"]');
@@ -152,6 +171,7 @@ try {
       await page.waitForTimeout(350);
       const reference = await measure(true);
       if(style==='sera'&&!dark)sourceOverviewPeers=await overviewPeers(true);
+      if(style==='sera'&&!dark)sourceSavingsPeers=await savingsPeers(true);
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
       if(!dark) for(const id of targetCards[style]||[])
         sourceNodePairs[style+'/'+id]={source:await nodeStructure(true,id)};
@@ -170,6 +190,7 @@ try {
       await page.waitForTimeout(350);
       const actual = await measure(false);
       if(style==='sera'&&!dark)console.log('[stage3-overview-row-sera] '+JSON.stringify({source:sourceOverviewPeers,qx:await overviewPeers(false)}));
+      if(style==='sera'&&!dark)console.log('[stage3-savings-row-sera] '+JSON.stringify({source:sourceSavingsPeers,qx:await savingsPeers(false)}));
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) {novaCardStructures[id].qx=await nodeStructure(false,id); console.log('[stage3-structure-'+id+'] '+JSON.stringify(novaCardStructures[id]));}
       if(!dark) for(const id of targetCards[style]||[]) {
         const record=sourceNodePairs[style+'/'+id];
@@ -319,6 +340,30 @@ try {
           if(!srcTitle||!qxTitle||Math.abs(srcTitle.h-19.5)>.5||
             Math.abs(srcTitle.h-qxTitle.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error('Mira FieldTitle text-xs/relaxed line box differs: '+JSON.stringify({srcTitle,qxTitle,source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='lyra'&&['kitchen-island','payments','upcoming-payments'].includes(id)){
+          if(id!=='upcoming-payments'){
+            const getTitles=nodes=>nodes.filter(n=>['Brightness','Color Temp','Volume','Fade','Change transfer limit','Scheduled transfers','Direct Debits','Recurring card payments'].includes(n.text));
+            const st=getTitles(record.source),qt=getTitles(record.qx);
+            if(st.length!==4||qt.length!==4||st.some((n,i)=>Math.abs(n.h-qt[i].h)>.5))
+              throw new Error('Lyra ordinary ItemTitle source 16px line-box mismatch: '+JSON.stringify({st,qt}));
+          }
+          if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Lyra ItemTitle and related Card height differ: '+JSON.stringify({id,source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='nova'&&id==='card-overview'){
+          const title=rows=>rows.find(n=>n.text==='US$12.94');
+          const st=title(record.source),qt=title(record.qx);
+          if(!st||!qt||Math.abs(st.h-33)>.5||Math.abs(st.h-qt.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Nova 2xl CardTitle source 33px leading/Card height differ: '+JSON.stringify({st,qt,source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='sera'&&id==='receiving-method'){
+          const legend=rows=>rows.find(n=>n.tag==='legend'||n.className.includes('cn-field-legend'));
+          const fieldTitle=rows=>rows.find(n=>n.text==='Bank Transfer');
+          const sl=legend(record.source),ql=legend(record.qx),st=fieldTitle(record.source),qt=fieldTitle(record.qx);
+          if(!sl||!ql||!st||!qt||Math.abs(sl.h-16)>.5||Math.abs(sl.h-ql.h)>.5||
+            Math.abs(st.h-18)>.5||Math.abs(st.h-qt.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Sera FieldLegend/FieldTitle source line-height Card mismatch: '+JSON.stringify({sl,ql,st,qt,source:record.source[0],qx:record.qx[0]}));
         }
         console.log('[stage3-target-'+style+'-'+id+'] '+JSON.stringify(record));
       }
