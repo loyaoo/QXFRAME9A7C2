@@ -60,6 +60,11 @@
   --qxframe9a7c2-theme-outline: oklch(1 0 0);
   --qxframe9a7c2-theme-outline-hover: oklch(0.97 0 0);
   --qxframe9a7c2-theme-outline-border: oklch(0.922 0 0);
+  --qxframe9a7c2-theme-badge-label-outline-bg: transparent;
+  --qxframe9a7c2-theme-badge-label-destructive-bg: oklch(0.577 0.245 27.325 / 0.1);
+  --qxframe9a7c2-theme-badge-label-secondary-bg: oklch(0.97 0 0);
+  --qxframe9a7c2-theme-badge-label-secondary-fg: oklch(0.205 0 0);
+  --qxframe9a7c2-theme-badge-label-solid-border: transparent;
   --qxframe9a7c2-theme-field: transparent;
   --qxframe9a7c2-theme-field-border: oklch(0.922 0 0);
   --qxframe9a7c2-theme-field-disabled: oklch(0.922 0 0 / 0.5);
@@ -259,6 +264,11 @@
   --qxframe9a7c2-theme-outline: oklch(1 0 0 / 0.045);
   --qxframe9a7c2-theme-outline-hover: oklch(1 0 0 / 0.075);
   --qxframe9a7c2-theme-outline-border: oklch(1 0 0 / 15%);
+  --qxframe9a7c2-theme-badge-label-outline-bg: transparent;
+  --qxframe9a7c2-theme-badge-label-destructive-bg: oklch(0.704 0.191 22.216 / 0.2);
+  --qxframe9a7c2-theme-badge-label-secondary-bg: oklch(0.269 0 0);
+  --qxframe9a7c2-theme-badge-label-secondary-fg: oklch(0.985 0 0);
+  --qxframe9a7c2-theme-badge-label-solid-border: transparent;
   --qxframe9a7c2-theme-field: oklch(1 0 0 / 0.045);
   --qxframe9a7c2-theme-field-border: oklch(1 0 0 / 15%);
   --qxframe9a7c2-theme-field-disabled: oklch(1 0 0 / 0.12);

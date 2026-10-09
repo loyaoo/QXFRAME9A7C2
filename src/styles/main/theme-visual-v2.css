@@ -523,17 +523,14 @@
    * background, Outline is the outlined role. Sera's editorial Badge policy
    * suppresses the paint as well as the padding/border; no per-Card PV CSS. */
   .qxframe9a7c2-badge.is-status-label.is-destructive{
-    background:color-mix(in oklab,var(--qxframe9a7c2-theme-destructive) calc(10% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
+    background:var(--qxframe9a7c2-theme-badge-label-destructive-bg);
     color:var(--qxframe9a7c2-theme-destructive);
-    border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-border) calc(100% * var(--_qxframe9a7c2-badge-label-editorial)),transparent);
-  }
-  .dark .qxframe9a7c2-badge.is-status-label.is-destructive{
-    background:color-mix(in oklab,var(--qxframe9a7c2-theme-destructive) calc(20% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
+    border-color:var(--qxframe9a7c2-theme-badge-label-solid-border);
   }
   .qxframe9a7c2-badge.is-status-label.is-secondary{
-    background:color-mix(in oklab,var(--qxframe9a7c2-theme-secondary) calc(100% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
-    color:color-mix(in oklab,var(--qxframe9a7c2-theme-muted-foreground) calc(100% * var(--_qxframe9a7c2-badge-label-editorial)),var(--qxframe9a7c2-theme-secondary-foreground));
-    border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-border) calc(100% * var(--_qxframe9a7c2-badge-label-editorial)),transparent);
+    background:var(--qxframe9a7c2-theme-badge-label-secondary-bg);
+    color:var(--qxframe9a7c2-theme-badge-label-secondary-fg);
+    border-color:var(--qxframe9a7c2-theme-badge-label-solid-border);
   }
   .qxframe9a7c2-badge.is-status-label.is-outlined{
     background:var(--qxframe9a7c2-theme-badge-label-outline-bg,transparent);

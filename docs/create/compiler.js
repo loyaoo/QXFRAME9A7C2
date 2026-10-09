@@ -300,6 +300,13 @@ export function themeTokens(resolved) {
   look('badge-label-outline-bg',
     style === 'maia' ? 'border/30' : style === 'mira' ? 'border/20' : 'transparent',
     style === 'maia' || style === 'mira' ? 'foreground/4.5' : 'transparent');
+  // At one Theme owner: source-pinned Badge dark/light/editorial paint.
+  look('badge-label-destructive-bg',
+    ext.textStyle === 'editorial' ? 'transparent' : 'destructive/10',
+    ext.textStyle === 'editorial' ? 'transparent' : 'destructive/20');
+  look('badge-label-secondary-bg', ext.textStyle === 'editorial' ? 'transparent' : 'secondary');
+  look('badge-label-secondary-fg', ext.textStyle === 'editorial' ? 'muted-foreground' : 'secondary-foreground');
+  look('badge-label-solid-border', ext.textStyle === 'editorial' ? 'border' : 'transparent');
 
   // Choice, switch, slider (style looks).
   look('choice', looks.choice[0], looks.choice[1]);
