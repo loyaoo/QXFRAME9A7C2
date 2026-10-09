@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Fix Release static FAQ attribute-order contract (new final CI required)
+
+- HEAD `24bcbaaab54b7f5ed9af929f3bafeef2e19ff98f`: QXFRAME #37916022095 source-preview-geometry SUCCESS, Windows tools SUCCESS, but Release FAILED on `Full release verification`: strict pre-existing `verify-create-app` pattern requires adjacent `data-pv-tabs data-type="segmented"`. Adding `data-pv-equal` between the two accidentally broke this valid authoring contract. The new shared Tabs and Table CSS are not implicated by this failure.
+- Corrected Preview01 FAQ authoring to `data-pv-tabs data-type="segmented" data-pv-equal`. No verifier edits or tolerance changes. The next *single* HEAD must pass complete QXFRAME and CSS Schema workflows; then download the matching Action's actual dist/docs ZIP and package a Windows offline demo. PR #265 remains Draft; main/backup unchanged. Overall~65%, Stage3~64% pending owner acceptance.
+
+
 ## CURRENT — 2026-10-09 Stage3 shared Table muted cell color (CI pending)
 
 - In pinned source Nova visual screenshot, Recent Transactions' five date cells use muted-foreground. QX screenshot showed regular/darker text even though cells carried `pv-muted`; cause: Table row's high-specificity `tbody tr > td` foreground owner overrides lower-specificity standalone preview utility.

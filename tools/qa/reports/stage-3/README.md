@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — CI static FAQ attribute-order repair (rerun pending)
+
+The first combined Tabs/Table run #37916022095 passed same-browser source-preview-geometry but Release failed an existing structural pattern requiring `data-pv-tabs data-type="segmented"`. The new `data-pv-equal` had been placed in between. Moved `data-pv-equal` after `data-type`, leaving the strict verifier unchanged; next final-HEAD complete CI and same-tree Windows ZIP required.
+
 ## 2026-10-09 — Recent Transactions semantic muted Table cells (CI pending)
 
 Pinned Nova reference dates have muted-foreground. QX Table's row-level foreground selector overrides the weaker Preview utility on the five date `td` elements, leaving an unintended dark date color. A reusable `Table td.is-muted` opt-in now consumes Theme muted foreground with an optional Table public override. Preview01's five cells use this modifier; no global row color or private Preview CSS changed. Chromium computes and compares the five date colors to the actual Theme token. Requires both CI workflows green and matching Windows local package.
