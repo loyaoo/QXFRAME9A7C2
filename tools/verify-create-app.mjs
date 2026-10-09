@@ -327,14 +327,15 @@ check('FAQ Accordion description line uses the shared text-leading role', () => 
   }
 });
 
-check('FieldContent labels consume shared Theme lines and FAQ trigger has no non-source gap', () => {
+check('FieldContent labels consume shared Theme lines and FAQ trigger gap follows pinned styles', () => {
   const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const preview=read('preview.css');
   assert.match(composition,/\.qxframe9a7c2-field-content>\.qxframe9a7c2-form-label\{[^}]*line-height:var\(--qxframe9a7c2-theme-field-label-line-height\)/,
     'FieldContent label should share semantic typography with FormField');
   assert.match(composition,/\.qxframe9a7c2-field-content>\.qxframe9a7c2-form-label\{[^}]*font-weight:var\(--qxframe9a7c2-theme-text-weight-label\)/);
-  assert.match(fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8'), /\.qxframe9a7c2-collapse\.is-native>\.qxframe9a7c2-collapse-item>summary\.qxframe9a7c2-collapse-header\{[^}]*gap:0;/,
-    'upstream AccordionTrigger has no horizontal 16px gap');
+  assert.match(fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8'),
+    /\.qxframe9a7c2-collapse\.is-native>\.qxframe9a7c2-collapse-item>summary\.qxframe9a7c2-collapse-header\{[^}]*gap:var\(--qxframe9a7c2-theme-accordion-trigger-gap,0\);/,
+    'upstream AccordionTrigger gap is 24px in framed/Sera styles, zero in other source recipes');
 });
 
 check('Pinned SidebarMenu gap and SidebarGroup padding across eight styles', () => {
