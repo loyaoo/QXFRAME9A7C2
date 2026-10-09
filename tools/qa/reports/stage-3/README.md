@@ -1,5 +1,11 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Dividend/Lyra exact pair, regression isolation
+
+Pinned `8bae71d0` same Chromium 528 audit: **Lyra FAQ 359/359px and Sera Dividend 606.25/606.25px**, both 0px whole-Card height difference. The original fixed source tolerance remains ±0.5px. Aggregate first-Card height outliers **146/528** vs prior 144/528: the new first-title max-content rule eliminated Sera's two light/dark mismatches but introduced one each in Vega/Maia/Luma light and dark. We do not claim monotonic improvement. Source-paired DOM measurements have been enabled for those specific Dividend styles to resolve the cross-style rule; focused Syncing State nodes (Sera/Vega/Maia/Luma/Nova) added for next batch.
+
+Release static test was stale: counting the exact suffix `is-wrapping"` excluded the new `is-wrapping is-intrinsic-line"`. The test now requires four shared ItemTitle wrappers and precisely one intrinsic modifier. This is not a test weakening: it adds the source semantic requirement. CI pending.
+
 ## 2026-10-09 — Sera Dividend first Item intrinsic line-packing
 
 Pinned same-browser prior first row: shadcn title `Vanguard VIG` width103.3px/height16.5px, QX 74.02px/height33px. QX let that title wrap, shrinking the content flex min-content enough for content + 96px chart + $1,842.10 to share one Flex row; source uses content + chart on row one and amount on row two. Introduced reusable `ItemTitle.is-intrinsic-line` with white-space nowrap and min-width:max-content on the Vanguard heading only. No card or item fixed pixel height/width; just the correct intrinsic text contract. Same-Chromium source-paired first Item and title heights must now agree within 0.5px, with a separate browser text-wrap assertion. Latest paired 528 count pending.

@@ -99,7 +99,14 @@ try {
   let novaCardStructures = {};
   // Focused structure evidence for unresolved Stage 3 cards, measured in the
   // same Chromium and font as the pinned upstream renderer.
-  const targetCards={sera:['dividend-income','sidebar-nav','claimable-balance','faq'],vega:['claimable-balance'],nova:['upcoming-payments','claimable-balance'],rhea:['faq','claimable-balance'],maia:['faq','receiving-method','sidebar-nav','claimable-balance'],luma:['receiving-method','sidebar-nav','claimable-balance'],lyra:['faq','claimable-balance'],mira:['upcoming-payments','claimable-balance']};
+  const targetCards={
+    sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state'],
+    vega:['dividend-income','claimable-balance','syncing-state'],
+    nova:['upcoming-payments','claimable-balance','syncing-state'],
+    rhea:['faq','claimable-balance'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state'],
+    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state'],
+    lyra:['faq','claimable-balance'],mira:['upcoming-payments','claimable-balance']
+  };
   const sourceNodePairs={};
 
   const loadingStructure = async source => page.evaluate(source => {

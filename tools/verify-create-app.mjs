@@ -259,7 +259,10 @@ check('Source Accordion frame and Item intrinsic wrapping are shared Theme/compo
   const dividend=html.slice(html.indexOf('data-card="dividend-income"'),
     html.indexOf('<!-- @end dividend-income -->'));
   assert.equal((dividend.match(/class="qxframe9a7c2-item-content is-intrinsic"/g)||[]).length,4);
-  assert.equal((dividend.match(/class="qxframe9a7c2-item-title is-wrapping"/g)||[]).length,4);
+  assert.equal((dividend.match(/class="qxframe9a7c2-item-title is-wrapping(?: is-intrinsic-line)?"/g)||[]).length,4,
+    'all four first-Card titles retain shared ItemTitle semantics');
+  assert.equal((dividend.match(/class="qxframe9a7c2-item-title is-wrapping is-intrinsic-line"/g)||[]).length,1,
+    'only the intrinsic first title enforces its source text width');
 });
 
 check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources', () => {
