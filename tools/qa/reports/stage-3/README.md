@@ -43,6 +43,35 @@ Coverage limits and next work:
 
 ## Nova light: diagnostic heights
 
+### Root cause: Control sizing mistakenly overrides Textarea min-height
+
+The same-browser node audit identified a pair of compensating defects in
+Payout Threshold: QX Slider took a 32px Control-height root instead of the
+source's Nova 4px intrinsic rail, while QX Notes Textarea rendered at 50px
+instead of the upstream minimum 100px. The net Card error (-22px) concealed
+these +28px and -50px internal errors. An optional shared
+`.qxframe9a7c2-slider.is-track-height` now maps root height to the
+already-themed rail, keeping actual QX Slider keyboard/pointer authority.
+
+Detailed CSSOM trace showed the Notes textarea computed `min-height:32px`
+in spite of two matched rules for `5rem` and `6.25rem`. The source was the
+legacy single-line control bridge in
+`src/styles/main/theme-visual-v2.css`, whose higher-specificity
+`.qxframe9a7c2-form-textarea[class]` group forcibly assigned the Control
+min-height. That rule now shares only typography and padding with
+Textarea. The min-height assignment applies exclusively to single-line
+Button/Input/Select controls, leaving FormTextarea's own 5rem base and
+instance min-height available. The browser gate now checks Nova Notes =100px
+and Payout Card=468px, in addition to the existing keyboard Slider change.
+
+Claimable Balance's full -18px came from preview typography helper
+`.pv-text-5xl` overriding CardTitle's source `line-height:1.375` with 1.
+Removing the excess declaration restores title 66px and Card 374px in Nova.
+
+**Acceptance pending:** both complete CI suites and paired 528 source/QX
+measurements on the newest branch commit. No Card fixed heights, no new
+Controller, and no relaxation of source thresholds.
+
 ## 2026-10-09 — Nova Payout / Claimable node-level source comparison
 
 The pinned reference and QX paired source job now prints first-Card DOM
