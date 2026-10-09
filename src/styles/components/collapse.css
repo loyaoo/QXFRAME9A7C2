@@ -93,7 +93,7 @@
 }
 .qxframe9a7c2-collapse.is-native>details>.qxframe9a7c2-collapse-content{
   padding:0 calc(var(--_qxframe9a7c2-accordion-framed) * var(--qxframe9a7c2-theme-accordion-padding)) var(--qxframe9a7c2-accordion-content-padding,var(--qxframe9a7c2-theme-accordion-content-padding,var(--qxframe9a7c2-theme-accordion-padding)));
-  color:var(--qxframe9a7c2-theme-muted-foreground);
+  color:var(--qxframe9a7c2-collapse-content-color,var(--qxframe9a7c2-theme-muted-foreground));
   font-size:var(--qxframe9a7c2-theme-text-size);
   line-height:var(--qxframe9a7c2-theme-accordion-line-height,1.25rem)
 }

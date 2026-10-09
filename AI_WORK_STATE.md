@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Native Collapse color owner repaired after strict CI failure (rerun pending)
+
+- Commit `8c871b8e3ac2af7a4731e643e9eb7c2ca607230e`: QXFRAME #37918375886 source-preview-geometry SUCCESS (new eight-style Savings note intrinsic-text geometry gate); CSS Schema #37918375804 FAILED in real Create browser: FAQ all nine answers still `oklch(0.708 0 0)` while Card foreground `oklch(0.985 0 0)`.
+- Real cause: `.qxframe9a7c2-collapse.is-native>details>.qxframe9a7c2-collapse-content` had a *second* higher-specificity color owner fixed to `--theme-muted-foreground`. Updated that exact native rule to consume the same public `--qxframe9a7c2-collapse-content-color` with its existing muted Theme fallback; default native Collapse unchanged. Do NOT remove or soften the browser gate. General Collapse still falls back to its own prior secondary semantic.
+- Next: both complete workflows SUCCESS at new HEAD, unchanged main/backup and PR Draft, matching Actions dist/docs Windows offline ZIP from identical Git tree. Stage3 still not fully visually/manually accepted, Stage4/5 untouched, progress total~65% Stage3~64%.
+
+
 ## CURRENT — 2026-10-09 Stage 3 shared FAQ prose / Savings footer note parity (CI pending)
 
 - Reconciled Git/PR/CI at stable development HEAD `34b369233bc14e06bf6e57c7cf1395296828d53c`: PR #265 Draft/unmerged; main and backup at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`; QXFRAME CI #37916334634 and CSS Schema #37916334873 both SUCCESS, 528/528 first Card height diagnostic 0 above 0.5px. Previous Windows package delivered.

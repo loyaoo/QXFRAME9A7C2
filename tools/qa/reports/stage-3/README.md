@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Native Collapse own color priority (CI gate caught)
+
+On `8c871b8e`, the full QXFRAME same-browser Savings note geometry passed, but CSS Schema Create Chromium failed because nine FAQ answer computed colors remained muted. `.qxframe9a7c2-collapse.is-native>details>.qxframe9a7c2-collapse-content` owns a higher-specificity direct `color:var(--theme-muted-foreground)` and bypassed the newly introduced public override in general Collapse. Both Collapse and native detail paint positions now consume the same public `--qxframe9a7c2-collapse-content-color` with their **existing** default fallbacks (secondary general / muted native). User-authored FAQ foreground should now win without Preview private CSS. CI and Windows bundle pending; strict test unchanged.
+
 ## 2026-10-09 — FAQ prose foreground and Savings note intrinsic width (CI pending)
 
 Pinned source/QX Nova screenshot comparison shows FAQ content normally painted with foreground while shared Collapse default uses secondary text. The framework Collapse content now consumes an opt-in public per-instance `--qxframe9a7c2-collapse-content-color`, retaining original secondary fallback; Preview 01 FAQ Card scopes Theme foreground to all independent panels. The Savings Targets footer note is an intrinsic centered flex child upstream; remove QX `pv-full` that stretches its text box and shifts visible alignment. Same-browser pinned source audit enforces Savings note text x, width and height for all eight styles; Create browser gate enforces all nine FAQ answers matching Card foreground. Neither gate is relaxed; no private preview CSS, fixed Card height, new Theme token, or JS runtime change. Both CI suites, matching tree and Windows offline artifact remain pending. Overall ~65%; Stage 3 ~64%.
