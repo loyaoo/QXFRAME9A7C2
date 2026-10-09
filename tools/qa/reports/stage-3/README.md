@@ -1,5 +1,14 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — paired 102/528, native ItemFooter sibling + Overview Button no-wrap
+
+`f24bbbe7` source-preview-geometry SUCCESS: 528/528 same-Chromium/forced-system-ui pairs, **102/528** first Card height outliers (104 prior), no unauthorized geometry subset violations. Sera IndexInvesting source/QX both289.25px, matching after editorial prose margin owner. This 102/528 is real measured evidence; it is **not** whole visual or Stage 3 acceptance.
+
+New source-paired DOM proof: Lyra/Mira SavingsTargets source each muted Item132px, QX138px; QX ItemContent wrapped its ItemFooter, unlike upstream which authors Footer as next sibling with independent parent Item gap. Two matching DOM repairs move Footer directly next to ItemContent (no fixed heights). Remaining Nova+8 and Maia+4 follow the same two-item structural defect. Strict first Item/Content/Footer/Card source gates for four styles now enforce this natural composition.
+
+Sera CardOverview pair: upstream both row Cards170.75px; QX both184.75px, even though Card A child positions are exact. Sibling Card B Pay Early button is source36px/nowrap/flex0 0 auto, QX50px/normal/flex0 1 auto; row stretch lifts A. Reused generic `Button.is-no-shrink` and set its no-wrap policy alongside flex-shrink0, as pinned `cn-button` uses nowrap, rather than changing Card A padding/height. Sera first Card source ±0.5px gate added. Pending new paired result and both Actions; PR #265 stays Draft; main/backup fixed.
+
+
 ## 2026-10-09 — IndexInvesting prose source ownership / unresolved sibling & Savings probes
 
 Verified baseline HEAD `bd32478eb1229051ca2e9d818326f51b69040d36`: QXFRAME #37884789294 and CSS Schema #37884789259 Success, 528/528 same Chromium/forced system-ui pairs, 104/528 first Card height diagnostics over ±0.5px, zero nonauthorized four-property subset mismatches, 66 authorized Luma radius caps.

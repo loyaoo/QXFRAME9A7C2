@@ -4,6 +4,13 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 source paired Stage 3 sibling composition (new CI pending)
+
+- `f24bbbe7` pinned same-browser job passed 528/528 and diagnosed **102/528** first Card heights outside ±0.5px, down from 104/528, with Sera IndexInvesting source/QX **289.25/289.25px**. Geometry subset has zero nonauthorized mismatches; 66 Luma radius cap exceptions remain authorized. Its other release/schema runs were still in progress at the point the next batch began; do not claim those suites green until latest HEAD completes.
+- New real node evidence: SavingsTargets Lyra/Mira first `Item` QX138px versus source132px twice, Nova+8, Maia+4. Source `ItemFooter` is a direct sibling after 80px `ItemContent`, but QX placed Footer *inside* ItemContent, causing an additional content gap before each footer. Corrected both SavingsTargets instances by moving the existing closing tag (same shared `ItemContent`/`ItemFooter` classes, no extra preview CSS), source-paired four-style first Item/content/footer/Card gates added.
+- Sera CardOverview sibling peer probe: source both cards170.75px, QX both184.75px despite first card's text metrics matching exactly. Source Pay Early button36px and `white-space:nowrap;flex:0 0 auto`; QX sibling button50px, `white-space:normal;flex:0 1 auto`. Used existing shared Button `is-no-shrink` and restored nowrap in that reusable modifier; both cards then retain natural-height sizing, no fixed card/button pixel override. Added Sera first Card paired regression gate.
+- Changed: `docs/create/preview-01.html`, `src/styles/components/button.css`, `tools/qa/preview-01-audit.mjs`, this state and Stage 3 QA. No JS, no altered threshold, no protected refs changed. **Next**: watch newest two workflows; if new strict source gate fails read source-preview-geometry actual node logs and correct; refresh 528 result, update PR #265 with exact HEAD / CI. Stage 3 still not visually complete. Estimate CREATEAPP-V3 ~65%, Stage 3 ~64% pending additional gates.
+
 ## CURRENT — 2026-10-09 source-paired S3 focused batch (CI pending)
 
 - GitHub check: `redesign/create` started at `bd32478eb1229051ca2e9d818326f51b69040d36`, PR #265 Open/Draft; `main` and `backup/main-before-pr265-2026-10-08` frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`. Baseline QXFRAME run #37884789294 and CSS Schema run #37884789259 both SUCCESS, 528/528 pairs, 104/528 height diagnostics, zero unapproved Card geometry subset failures, 66 authorized Luma radius caps.

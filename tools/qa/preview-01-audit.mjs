@@ -196,6 +196,22 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' RecentTransactions source collapse/gap0 table mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
+        if(['lyra','mira','nova','maia'].includes(style)&&id==='savings-targets'){
+          const sourceFirst=record.source.find(x=>x.className.includes('cn-item group/item'));
+          const qxFirst=record.qx.find(x=>x.className.includes('qxframe9a7c2-item is-muted'));
+          const sourceContent=record.source.find(x=>x.className.startsWith('cn-item-content'));
+          const qxContent=record.qx.find(x=>x.className.startsWith('qxframe9a7c2-item-content'));
+          const sourceFooter=record.source.find(x=>x.className.startsWith('cn-item-footer'));
+          const qxFooter=record.qx.find(x=>x.className.includes('qxframe9a7c2-item-footer'));
+          if(!sourceFirst||!qxFirst||!sourceContent||!qxContent||!sourceFooter||!qxFooter||
+            Math.abs(sourceFirst.h-qxFirst.h)>.5||
+            Math.abs(sourceContent.h-qxContent.h)>.5||
+            Math.abs(sourceFooter.y-qxFooter.y)>.5||
+            Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error(style+' SavingsTargets ItemContent/ItemFooter sibling ownership mismatch: '+JSON.stringify({sourceFirst,qxFirst,sourceContent,qxContent,sourceFooter,qxFooter,source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='sera'&&id==='card-overview'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
+          throw new Error('Sera Overview peer Card Button natural no-wrap/shrink mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         if(style==='sera'&&id==='index-investing'){
           const sourceProse=record.source.filter(x=>x.className.includes('cn-card-description')).at(-1);
           const qxProse=record.qx.find(x=>x.className.includes('is-prose-intro'));
