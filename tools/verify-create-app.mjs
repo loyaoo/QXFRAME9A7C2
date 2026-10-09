@@ -390,14 +390,16 @@ check('FAQ TabsList source height uses public Tabs slot without global overrides
     'public Tab height must continue to consume author override');
 });
 
-check('FAQ Accordion description line uses the shared text-leading role', () => {
-  const css=read('preview.css');
-  assert.match(fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8'), /\.qxframe9a7c2-collapse\.is-native>details>\.qxframe9a7c2-collapse-content\{[^}]*line-height:var\(--qxframe9a7c2-theme-text-leading\)/,
-    'Accordion content text-sm line box must not hardcode 1.5');
-  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+check('FAQ Accordion description consumes its source-locked component line-height role', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-collapse\.is-native>details>\.qxframe9a7c2-collapse-content\{[^}]*line-height:var\(--qxframe9a7c2-theme-accordion-line-height,1\.25rem\)/,
+    'Accordion uses its distinct source text line box, not general body leading');
+  const expected={vega:20,nova:20,maia:20,lyra:16,mira:19.5,luma:20,sera:20,rhea:20};
+  for(const [style,px] of Object.entries(expected)){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
-    assert.match(theme,/--qxframe9a7c2-theme-text-leading:\s*[^;]+;/,
-      style+' must provide the source text line-height role');
+    const token=theme.match(/--qxframe9a7c2-theme-accordion-line-height:\s*([^;]+);/);
+    assert.ok(token,style+' must emit the source Accordion line-height role');
+    assert.equal(parseFloat(token[1])*16,px,style+' source-computed Accordion line box');
   }
 });
 

@@ -99,7 +99,7 @@ try {
   let novaCardStructures = {};
   // Focused structure evidence for unresolved Stage 3 cards, measured in the
   // same Chromium and font as the pinned upstream renderer.
-  const targetCards={sera:['dividend-income','sidebar-nav','claimable-balance','faq'],vega:['claimable-balance'],nova:['claimable-balance'],rhea:['faq','claimable-balance'],maia:['faq','receiving-method','sidebar-nav','claimable-balance'],luma:['receiving-method','sidebar-nav','claimable-balance'],lyra:['faq','claimable-balance'],mira:['upcoming-payments','claimable-balance'],nova:['upcoming-payments']};
+  const targetCards={sera:['dividend-income','sidebar-nav','claimable-balance','faq'],vega:['claimable-balance'],nova:['upcoming-payments','claimable-balance'],rhea:['faq','claimable-balance'],maia:['faq','receiving-method','sidebar-nav','claimable-balance'],luma:['receiving-method','sidebar-nav','claimable-balance'],lyra:['faq','claimable-balance'],mira:['upcoming-payments','claimable-balance']};
   const sourceNodePairs={};
 
   const loadingStructure = async source => page.evaluate(source => {
@@ -146,6 +146,12 @@ try {
       if(!dark) for(const id of targetCards[style]||[]) {
         const record=sourceNodePairs[style+'/'+id];
         record.qx=await nodeStructure(false,id);
+        if(id==='receiving-method'&&['maia','luma'].includes(style)){
+          const srcRow=record.source.find(x=>x.tag==='label'&&x.h>70&&x.h<95&&x.w<200);
+          const qxRow=record.qx.find(x=>x.className.includes('qxframe9a7c2-check-field is-choice'));
+          if(!srcRow||!qxRow||Math.abs(srcRow.h-91.5)>.5||Math.abs(qxRow.h-srcRow.h)>.5)
+            throw new Error(style+' source-locked RadioField row geometry mismatch: '+JSON.stringify({source:srcRow,qx:qxRow}));
+        }
         console.log('[stage3-target-'+style+'-'+id+'] '+JSON.stringify(record));
       }
       if(!dark && ['sera','mira','nova'].includes(style))

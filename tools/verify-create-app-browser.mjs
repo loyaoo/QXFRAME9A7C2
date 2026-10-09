@@ -517,7 +517,9 @@ try {
         const groupTitle=menu.querySelector('.qxframe9a7c2-sidebar-group-label');
         return {choices:choices.map(c=>({top:px(css(c).paddingTop),bottom:px(css(c).paddingBottom),
           side:px(css(c).paddingLeft),border:px(css(c).borderTopWidth),height:c.getBoundingClientRect().height,
-          titleLine:px(css(c.querySelector('.qxframe9a7c2-field-title')).lineHeight)})),
+          titleLine:px(css(c.querySelector('.qxframe9a7c2-field-title')).lineHeight),
+          contentHeight:c.querySelector('.qxframe9a7c2-field-content').getBoundingClientRect().height,
+          titleHeight:c.querySelector('.qxframe9a7c2-field-title').getBoundingClientRect().height})),
           buttonHeight:button.getBoundingClientRect().height,buttonPad:px(css(button).paddingLeft),
           groupPad:px(css(groupTitle).paddingLeft)};
       })()`);
@@ -533,8 +535,16 @@ try {
       assert.ok(Math.abs(actual.buttonHeight-menuHeight)<=.5,style+' pinned SidebarMenuButton height');
       assert.ok(Math.abs(actual.buttonPad-(menuHeight===36?12:8))<=.5,style+' pinned SidebarMenuButton horizontal pad');
       assert.ok(Math.abs(actual.groupPad-(menuHeight===36?12:8))<=.5,style+' source SidebarGroupLabel inset');
-      if(['maia','luma'].includes(style))assert.ok(Math.abs(actual.choices[0].height-91.5)<=.5,
-        style+' source wrapped Bank Transfer row height');
+      for(const row of actual.choices){
+        const expectedHeight=Math.max(16,row.contentHeight)+row.top+row.bottom+row.border*2;
+        assert.ok(Math.abs(row.height-expectedHeight)<=.5,
+          style+' RadioField natural height tracks content and exact source insets: '+row.height+'/'+expectedHeight);
+        assert.ok(row.titleHeight>=row.titleLine-.5,
+          style+' source title owns at least one typographic line');
+      }
+      // The pinned 91.5px absolute comparison is checked under the *same*
+      // Chromium+system-ui font as the source, inside preview-01-audit.mjs.
+      // The browser theme-control test may use different font metrics.
     }
   });
 

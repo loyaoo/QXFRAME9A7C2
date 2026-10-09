@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — 144/528 and CI gate correction
+
+Pinned QA on `11443533` measured 144/528 first-Card heights over ±0.5px, an improvement from 154/528; Sera Claimable 448.75px vs reference 443.03px (+5.72px), Lyra FAQ363px vs359px (+4px), while Maia/Luma RadioField, Sidebar Nav and Upcoming Calendar remain exact at Card height. Two CI regressions were test contracts, not evidence that those source-paired values regressed: a historical static regex expected `theme-text-leading` after migration to the dedicated `accordion-line-height` role; the standalone createApp browser applied an absolute 91.5px Bank Transfer row expectation despite not using the source-audit's forced system-ui. Revised the static check to require 16px/19.5px/20px source style line heights, and enforced Maia/Luma 91.5px Row in the **same Chromium/font source-paired QA** while the separate interactive browser checks natural row height equals content box + the exact source top/bottom/border insets. Fixed duplicated Nova target key. CI pending; no Card height offsets or reduced tolerances.
+
 ## 2026-10-09 — source display CardTitle leading
 
 Pinned source `ClaimableBalance` shows `text-5xl` (48px). Vega `CardTitle` explicitly sets `leading-normal` (=72px), Nova `leading-snug` (=66px), all other pinned style CardTitles lack an explicit leading override and retain Tailwind text-5xl tight (=48px). QX preview's private `pv-text-5xl` set font-size48 but inherited generic heading-leading. Sera's source title was 48px tall, QX 74.6667px, accounting for 26.6667px of the +32.375px Card delta; the remaining ~5.7px is the editorial Badge, to investigate next.
