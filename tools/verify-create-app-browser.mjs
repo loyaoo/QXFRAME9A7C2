@@ -650,6 +650,32 @@ try {
     }
   });
 
+  await step('Embedded Table uses collapsed Row borders, excluding final row', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=recent-transactions]")','Transaction rows');
+    for(const style of ['vega','nova']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' source Table row');
+      const rows=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const table=doc.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-table.is-embedded');
+        const css=x=>doc.defaultView.getComputedStyle(x);
+        return {collapse:css(table).borderCollapse,items:[...table.querySelectorAll('tbody tr')].map(tr=>({
+          row:parseFloat(css(tr).borderBottomWidth),
+          cell:parseFloat(css(tr.querySelector('td')).borderBottomWidth),
+          height:tr.getBoundingClientRect().height}))};
+      })()`);
+      assert.equal(rows.collapse,'collapse',style+' pinned source Table');
+      assert.equal(rows.items.length,5,style+' five pinned transactions');
+      rows.items.forEach((row,i)=>{
+        assert.equal(row.cell,0,style+' Row not Cell owns border');
+        assert.equal(row.row,i===4?0:1,style+' interrow border only');
+        assert.ok(Math.abs(row.height-(i===0||i===4?56.5:57))<=.5,
+          style+' natural row height with shared collapsed border');
+      });
+    }
+  });
+
   await step('Source Card action gap, Item sm vertical insets and transaction zero Stack', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")','Kitchen Item');

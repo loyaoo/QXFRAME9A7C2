@@ -180,6 +180,14 @@
   line-height:calc(var(--qxframe9a7c2-theme-text-size) * 2 - .5rem);
   background:transparent;
 }
+/* The pinned TableRow owns the collapsed border, not every TableCell.
+ * Last row has no border. Shared half-pixel boundary accounting exactly
+ * reproduces the 56.5 / 57 / 57 / 57 / 56.5 source row geometry. */
+.qxframe9a7c2-table.is-embedded tbody tr:not(:last-child){
+  border-bottom:1px solid var(--qxframe9a7c2-theme-border)
+}
+.qxframe9a7c2-table.is-embedded tbody tr:last-child{border-bottom:0}
+.qxframe9a7c2-table.is-embedded tbody tr>td{border-bottom-width:0}
 .qxframe9a7c2-table.is-embedded th,.qxframe9a7c2-table.is-embedded td{
   padding:var(--_qxframe9a7c2-table-cell-py) var(--_qxframe9a7c2-table-cell-px);
   border-bottom-color:var(--qxframe9a7c2-theme-border);

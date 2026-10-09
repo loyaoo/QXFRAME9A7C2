@@ -692,6 +692,13 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('Embedded source TableRow owns interrow borders, not five TableCells', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/table.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-table\.is-embedded tbody tr:not\(:last-child\)\{\s*border-bottom:1px solid var\(--qxframe9a7c2-theme-border\)/);
+  assert.match(css,/\.qxframe9a7c2-table\.is-embedded tbody tr:last-child\{border-bottom:0\}/);
+  assert.match(css,/\.qxframe9a7c2-table\.is-embedded tbody tr>td\{border-bottom-width:0\}/);
+});
+
 check('Source Card action gap, compact Item, zero Stack and collapsed embedded Table', () => {
   const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
   const comp=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
