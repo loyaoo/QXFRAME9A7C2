@@ -14,6 +14,29 @@ const check = (name, fn) => { fn(); checks.push(name); };
 const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview.css', 'preview.js', 'preview-cards.js'];
 check('files', () => { for (const f of FILES) assert.ok(fs.existsSync(path.join(dir, f)), 'missing docs/create/' + f); });
 
+check('offline changes ledger and packaging are opt-in and do not contaminate production Create HTML', () => {
+  const ledger=read('offline-qa-changes.mjs');
+  const overlay=read('offline-qa-changes.css');
+  const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
+  const preview=read('preview-01.html');
+  const expectedCards=['faq','savings-targets-a','recent-transactions','syncing-state'];
+  for(const id of expectedCards){
+    assert.ok(preview.includes('data-card="'+id+'"'), 'QA target Card must exist: '+id);
+    assert.ok(ledger.includes("'"+id+"'"), 'offline QA ledger must record Card '+id);
+  }
+  for(const selector of ['.pv-tabs[data-pv-tabs]','.qxframe9a7c2-collapse-content','td.is-muted',
+    '.qxframe9a7c2-card-footer .qxframe9a7c2-card-description','.qxframe9a7c2-empty-description']){
+    assert.ok(ledger.includes(selector),'ledger must target inner Card change: '+selector);
+  }
+  assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
+  assert.match(ledger,/data-qa-toggle/,'offline QA must support original clean view');
+  assert.match(packager,/offline-qa-changes\.mjs/,'packager must inject the QA module into local copies');
+  assert.match(packager,/offline-qa-changes\.css/,'packager must inject the QA stylesheet into local copies');
+  for(const page of ['index.html','preview-01.html','preview-02.html'])
+    assert.doesNotMatch(read(page),/offline-qa-changes/,
+      'QA visuals are forbidden in source / online Create HTML: '+page);
+});
+
 check('pages load the online qxframe.js and the local qxframe.css only', () => {
   for (const page of ['index.html', 'preview-01.html', 'preview-02.html']) {
     const html = read(page);

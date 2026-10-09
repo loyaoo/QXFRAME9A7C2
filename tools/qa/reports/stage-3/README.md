@@ -1,5 +1,11 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Required offline visual change annotations and Syncing State source wrapping (CI pending)
+
+The owner cannot identify recently modified cards in unmarked Windows demo packages. Persisted a concrete visual ledger in `docs/create/offline-qa-changes.mjs` with 4 Preview01 Cards/6 inner areas: FAQ (Tabs equal rail, foreground), Savings Targets (Item spacing + footer note width), Recent Transactions (five muted dates), Syncing State (original text + balance). The local-only CSS visually frames Cards and inner changed targets; clickable panel jumps to card, has explanations and commits and a one-click clean mode. No Preview02 Card was changed, so none is misrepresented. Added `tools/qa/build-offline-demo.py` to inject overlay only into **offline Actions artifact copies**; strict static verifier prevents source HTML contamination; AGENTS and checkpoint require ledger updates in future batches. Also fixed Syncing text ASCII source apostrophe and opt-in shared Empty balanced wrap, verified locally with Chromium layout probe; Create browser tests assert exact copy and computed balance in eight styles. No production JS changes, geometry tolerance changes or unverified fix labels.
+
+New full QXFRAME and CSS Schema workflows, verified postbuild marker interactions/clean render and CRC zip still required. Est total 65%, S3 64%.
+
 ## 2026-10-09 — Native Collapse own color priority (CI gate caught)
 
 On `8c871b8e`, the full QXFRAME same-browser Savings note geometry passed, but CSS Schema Create Chromium failed because nine FAQ answer computed colors remained muted. `.qxframe9a7c2-collapse.is-native>details>.qxframe9a7c2-collapse-content` owns a higher-specificity direct `color:var(--theme-muted-foreground)` and bypassed the newly introduced public override in general Collapse. Both Collapse and native detail paint positions now consume the same public `--qxframe9a7c2-collapse-content-color` with their **existing** default fallbacks (secondary general / muted native). User-authored FAQ foreground should now win without Preview private CSS. CI and Windows bundle pending; strict test unchanged.

@@ -74,3 +74,6 @@
   display:flex;flex-direction:column;align-items:center;gap:var(--qxframe9a7c2-empty-content-gap,var(--qxframe9a7c2-theme-empty-content-gap));
   width:100%;max-width:24rem;
 }
+
+/* Opt-in balanced text wrapping for composed Empty descriptions. Preserve default greedy wrapping. */
+.qxframe9a7c2-empty-description.is-balanced{text-wrap:balance}

@@ -872,9 +872,12 @@ try {
         return {parented:media.parentElement===header,symmetric:parseFloat(c(card).paddingTop)-parseFloat(c(card).paddingBottom),
           inset:parseFloat(c(card).paddingTop),innerTop:parseFloat(c(content).paddingTop),
           innerBottom:parseFloat(c(content).paddingBottom),
-          descOffset:parseFloat(c(desc).marginTop)};
+          descOffset:parseFloat(c(desc).marginTop),descText:desc.textContent.trim(),
+          descBalanced:c(desc).textWrap==='balance'&&desc.classList.contains('is-balanced')};
       })()`);
       const expectedInset=style==='sera'?32:style==='rhea'?20:style==='nova'||style==='lyra'||style==='mira'?16:24;
+      assert.equal(result.descText,"We're pulling in your latest transactions. This usually takes a few seconds.",style+' source Empty description text');
+      assert.equal(result.descBalanced,true,style+' source-balanced Empty description must use opt-in shared class');
       assert.equal(result.parented,true,style+' EmptyMedia must belong to EmptyHeader');
       assert.ok(Math.abs(result.symmetric)<=.5,style+' source Card owns symmetric vertical insets');
       assert.ok(Math.abs(result.inset-expectedInset)<=.5,style+' source Card vertical padding');

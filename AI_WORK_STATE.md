@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 S3-QA-ANNOTATIONS-001 & syncing source text/wrapping (new CI required)
+
+- Resumed from Git verified HEAD `e4fa02d5c731de5497b4ee3ae6bd9b9b6120062a`, PR #265 Draft, main/backup `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`. QXFRAME #37918985032 and CSS Schema #37918984965 **both SUCCESS**, source geometry 528/528 verified; Windows offline bundle for prior HEAD delivered.
+- Owner requirement: from this package forward, annotate **exact Create Card and changed inner region**, not a vague changed page. Added `docs/create/offline-qa-changes.mjs` Card/region change ledger (FAQ, Savings Targets, Recent Transactions, Syncing State), and `offline-qa-changes.css` bright Card outline + dashed inner changes; clickable local panel, commit/change explanation, one-click marker off/on, Preview02 explicitly unchanged. `tools/qa/build-offline-demo.py` injects script+stylesheet **only into extracted Windows package**, never production HTML/CI browser, and uses Actions real dist/docs artifact. `AGENTS.md` makes this ledger/update/injection mandatory for every subsequent local bundle. `verify-create-app.mjs` asserts no online HTML links to overlay, ledger selectors and builder. New bundle must be browser-inspected for accurate marks and off mode.
+- Additional source-backed Preview01 discrepancy: Syncing State description source uses straight ASCII apostrophe and visually balanced sentence wraps. QX had curly apostrophe and greedy wrapping that moved `This` onto first line. Shared Empty opt-in `.is-balanced` applies `text-wrap:balance` without changing default; HTML restores exact source text. Create real Chromium verifies literal copy and computed wrap in 8 styles. Previous first Card/source paired shape/color thresholds untouched.
+- NEXT: submit single atomic PR-branch commit; new HEAD full QXFRAME + CSS Schema SUCCESS required; obtain same Git tree Action artifact; generate **annotated** Windows ZIP; validate 4 Card markers/6 precise regions, clickable locator + clean state, local HTTP + ZIP CRC. PR Draft; no main/backup write. Overall ~65%, Stage3 ~64% pending final success; Stage4/5 untouched.
+
+
 ## CURRENT — 2026-10-09 Native Collapse color owner repaired after strict CI failure (rerun pending)
 
 - Commit `8c871b8e3ac2af7a4731e643e9eb7c2ca607230e`: QXFRAME #37918375886 source-preview-geometry SUCCESS (new eight-style Savings note intrinsic-text geometry gate); CSS Schema #37918375804 FAILED in real Create browser: FAQ all nine answers still `oklch(0.708 0 0)` while Card foreground `oklch(0.985 0 0)`.
