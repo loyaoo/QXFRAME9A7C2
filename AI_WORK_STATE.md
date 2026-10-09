@@ -4,6 +4,11 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 default generated Theme source parity (CI pending)
+
+- `c5490932` Release failed verify:theme-tokens because the two new registered Theme tokens were absent from the committed generated default theme CSS (both :root and .dark), though 528 same-browser geometry job SUCCESS with 68/528 on that HEAD. Updated generated `src/styles/main/theme.css` with compiler-equivalent default Nova/neutral field-label-tracking normal, calendar-weekday-leading 20/14, and synchronized previously corrected non-editorial artwork-label-leading 12px. No source architecture or defaults changed beyond the registered compiler recipe.
+- Latest HEAD requires green both suites; base 528 on previous commit 68/528, newest CoverArt all-style delta still pending. Draft PR #265 remains unmerged.
+
 ## CURRENT — 2026-10-09 CoverArt text-xs/leading-none cross-style owner (CI pending)
 
 - Upstream pinned styles Vega/Nova/Maia/Lyra/Mira/Luma/Rhea source .cn-label all use leading-none; CoverArt explicitly sets text-xs (12px); current shared Theme artwork-label-leading returned 12px ONLY for Vega but 16px for other six non-editorial styles. Existing 528 result shows CoverArt +4px for Lyra/Mira/Nova etc; the erroneous extra 4px arises from this single shared Label role. Corrected existing closed Theme token to 12px for ALL non-editorial families, retains source Sera 19.5px. No Preview-only CSS and no Card fixed-height compensation.

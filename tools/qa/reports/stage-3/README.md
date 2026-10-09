@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — generated Theme alignment (CI pending)
+
+Release on c5490932 reported both new registered Theme inputs absent from checked-in generated default theme. Updated Nova default `src/styles/main/theme.css` compiler-equivalent values for both modes, including source 12px artwork label leading. Previous same-browser c5490932 passed 528/528, 68 height deltas; new full CI result pending.
+
 ## 2026-10-09 — CoverArt text-xs source line-box closure (CI pending)
 
 Pinned styles' `.cn-label leading-none` plus CoverArt `text-xs` produces a 12px label line-box in Vega/Nova/Maia/Lyra/Mira/Luma/Rhea. Framework Theme artwork-label-leading had returned 16px for the last six, making the Card +4px. Shared existing role now 12px for all non-editorial; Sera stays 19.5px. Enforced source-paired all-eight CoverArt Card height. Previous green baseline 70/528, no updated claim until full latest CI.
