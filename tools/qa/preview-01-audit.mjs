@@ -171,7 +171,7 @@ try {
       await page.waitForTimeout(350);
       const reference = await measure(true);
       if(style==='sera'&&!dark)sourceOverviewPeers=await overviewPeers(true);
-      if(style==='sera'&&!dark)sourceSavingsPeers=await savingsPeers(true);
+      if(style==='sera')sourceSavingsPeers=await savingsPeers(true);
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
       if(!dark) for(const id of targetCards[style]||[])
         sourceNodePairs[style+'/'+id]={source:await nodeStructure(true,id)};
@@ -190,7 +190,20 @@ try {
       await page.waitForTimeout(350);
       const actual = await measure(false);
       if(style==='sera'&&!dark)console.log('[stage3-overview-row-sera] '+JSON.stringify({source:sourceOverviewPeers,qx:await overviewPeers(false)}));
-      if(style==='sera'&&!dark)console.log('[stage3-savings-row-sera] '+JSON.stringify({source:sourceSavingsPeers,qx:await savingsPeers(false)}));
+      if(style==='sera'){
+        const qxSavingsPeers=await savingsPeers(false);
+        const src=sourceSavingsPeers,actual=qxSavingsPeers;
+        if(!src||!actual||src.length!==2||actual.length!==2)
+          throw new Error('Sera Savings two-column Card source/QX peer structures missing');
+        const button=card=>card.children.find(n=>n.text==='New Goal'||n.className.includes('qxframe9a7c2-button is-default is-outlined'));
+        const description=card=>card.children.find(n=>n.text==='Active milestones for 2024');
+        if(!button(src[0])||!button(actual[0])||!description(src[0])||!description(actual[0])||
+          Math.abs(button(src[0]).w-button(actual[0]).w)>.5||
+          Math.abs(description(src[0]).h-description(actual[0]).h)>.5||
+          src.some((card,i)=>Math.abs(card.h-actual[i].h)>.5))
+          throw new Error('Sera Savings shared Button size-sm and two-column natural Card height differ: '+JSON.stringify({source:src,qx:actual}));
+        if(!dark)console.log('[stage3-savings-row-sera] '+JSON.stringify({source:src,qx:actual}));
+      }
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) {novaCardStructures[id].qx=await nodeStructure(false,id); console.log('[stage3-structure-'+id+'] '+JSON.stringify(novaCardStructures[id]));}
       if(!dark) for(const id of targetCards[style]||[]) {
         const record=sourceNodePairs[style+'/'+id];

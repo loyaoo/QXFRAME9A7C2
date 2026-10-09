@@ -4,6 +4,13 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 S3 2/528 paired, shared Button.sm intrinsic padding closeout (CI pending)
+
+- HEAD `a113163f2915f612dcb903ded559d9773e21fe8d` source-preview-geometry job #113735804348 SUCCESS: 528/528, only **2/528** first Card heights >0.5px, both Sera SavingsTargets light/dark +3.75px; 0 unauthorized geometry subset deltas; 66 permitted Luma radius caps. Release QXFRAME #37904872243 and CSS Schema #37904872231 must still be confirmed. PR #265 Draft, protected refs unchanged.
+- Source-paired both cards: Sera Savings A/B source 557.5/557.5px; QX A/B 561.25/557.5px. The Buy Investment sibling already exact. Source New Goal Button.sm width115.922px, QX127.922px because source horizontal inset16px each, QX22px each; QX header description therefore wraps twice (45.5px) vs source one line (22.75px), making first Card natural height overflow before two-column stretch. Changing Card height or the Preview-only wrapper would hide the incorrect button width.
+- Shared Button size-sm now consumes ONE closed `button-sm-padding-inline` Theme role based on pinned eight styles' real px-2/2.5/3/4 values (8/10/12/16px), with the user's density extension delta applied to the style baseline. Icon/square buttons retain their existing ownership. Strict Sera same-browser Button width, description line-box and both peer Card heights gate; no fixed Card height, no Preview private CSS or threshold changes.
+- Combined prior batch introduced reusable ordinary ItemTitle leading, Nova value leading, Sera FieldLegend/FieldTitle and strict source gates. Next: confirm both full CI suites on new final HEAD, inspect 528 count and failures, deliver corresponding CI-built nested dist+docs Windows ZIP. Overall~65%, Stage3~64% engineering estimates pending user visual acceptance; Stage4/5 untouched.
+
 ## CURRENT — 2026-10-09 S3 residual 12/528 source-backed ItemTitle/CardValue/FieldLegend batch (CI pending)
 
 - Baseline HEAD `db6aaed73ef38ab959d67a3c1399b914fb951065`, PR #265 Open/Draft; QXFRAME #37902751672 and CSS Schema #37902751687 both SUCCESS. Pinned same-Chromium 528/528, **12/528** first-Card height deltas >0.5px, no unauthorized Card subset differences, 66 allowed Luma radius caps. main and backup frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.

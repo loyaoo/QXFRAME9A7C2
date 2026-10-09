@@ -71,6 +71,11 @@
     box-shadow var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1);
 }
 
+/* Source size-sm text actions have their own compact inline padding.
+ * Icon/square controls keep their existing fixed square size contract. */
+.qxframe9a7c2-button.is-sm:not(.is-square):not(.is-icon-only){
+  padding-inline:var(--qxframe9a7c2-button-sm-padding-inline,var(--qxframe9a7c2-theme-button-sm-padding-inline,.75rem))
+}
 .qxframe9a7c2-button.is-default{
   --_qxframe9a7c2-button-accent:var(--_qxframe9a7c2-semantic-text);
   --_qxframe9a7c2-button-hover:var(--_qxframe9a7c2-semantic-text);

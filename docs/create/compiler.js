@@ -333,6 +333,12 @@ export function themeTokens(resolved) {
   const roundAllocation = ['rounded', 'soft', 'smooth'].includes(ext.radiusAlloc);
   root['control-height'] = rem(height);
   root['control-padding'] = rem(padding + (roundAllocation && padding < 1 ? 0.125 : 0));
+  // Pinned shadcn Button size=sm uses a separate horizontal inset from md.
+  // Preserve size/spacing extension priority: offset the source style's
+  // sm inset by the change in the user's density axis (never fixed Card size).
+  const sourceSmInline={vega:.625,nova:.625,maia:.75,lyra:.625,mira:.5,luma:.75,sera:1,rhea:.75};
+  const sourceDensity={vega:'standard',nova:'compact',maia:'standard',lyra:'compact',mira:'dense',luma:'standard',sera:'loose',rhea:'compact'};
+  root['button-sm-padding-inline']=rem(Math.max(.5,sourceSmInline[style]+(padding-DENSITY[sourceDensity[style]][1])));
   root['control-gap'] = rem(gap);
   root['control-icon'] = rem(icon);
   // Editorial (Sera) controls use text-xs uppercase labels.
