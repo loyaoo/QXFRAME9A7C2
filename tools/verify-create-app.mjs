@@ -982,4 +982,24 @@ check('every option of every extension axis changes a theme token that qxframe.c
   assert.deepEqual(dead, [], 'extension levels whose tokens no consumer reads');
 });
 
+
+check('Preview 01 source-pinned controlled visual state is authored across four Cards', () => {
+  const js = read('preview-cards.js');
+  const html = read('preview-01.html');
+  const overlay = read('offline-qa-changes.mjs');
+  for (const id of ['kitchen-island','roller-shades','release-catalog','notification-settings']) {
+    assert.ok(html.includes('data-card="'+id+'"'),id+' exists');
+    assert.ok(overlay.includes("['"+id+"'"),id+' is highlighted this round');
+  }
+  for (const id of ['front-door','faq','savings-targets','recent-transactions','syncing-state']) {
+    assert.ok(!overlay.includes("['"+id+"'"),id+' old highlight cleared');
+  }
+  assert.match(js,/setToggleValue\(group, value\)/);
+  assert.match(js,/setDisabled\(!enabled\)/);
+  assert.match(js,/slider\.setValue\(value\)/);
+  assert.match(js,/\.pv-shade > div/);
+  assert.match(js,/master\.indeterminate = chosen > 0 && chosen < checks\.length/);
+  assert.match(js,/do not invent an item-filtering behavior/i);
+});
+
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

@@ -1,3 +1,12 @@
+## 2026-10-09 — Four-card controlled visual parity (CI pending)
+
+- Live Git baseline PR #265 Draft/unmerged at `dc7e070581b8a9fe280a300d837286ce7cbea277`: QXFRAME #37931075977 **SUCCESS**, CSS Schema #37931076100 **SUCCESS**; previous `AI_WORK_STATE.md` top pending was stale. Main and backup stay `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`. Overall ~65%; Stage 3 not user accepted, Stage 4/5 not started.
+- New source-pinned `preview-02/cards/{kitchen-island,roller-shades,release-catalog,notification-settings}.tsx` behavioral/visual batch: shared Preview authoring for single-selection ToggleGroups, QX Slider value/disabled state and native checkbox indeterminate sync. Kitchen Scenes apply 4 pinned presets and master power disables scene buttons/Sliders; Roller Shades presets and dragging keep shade height/selected button in sync; Release Catalog only updates active category without inventing filtering; Notifications master updates all 4 choices and reflects mixed state.
+- This is cross-Card Preview 01 **controlled visual state parity**, not a new shared CSS geometry recipe and **not a first-Card height improvement**. Framework qxframe.js remains frozen; QX Slider and native input remain state owners. Existing geometry 528/±0.5px, CSS Schema, same-tree dist/docs, all regressions unchanged.
+- Active yellow QA ledger reset to ONLY 4 Cards / 10 exact regions: Kitchen (scene bar/power), Roller (shade/preset), Release Catalog (category bar), Notifications (master+4 choices). Prior Kitchen four rails and Front Door stripe, FAQ/Savings/Transactions/Syncing are NOT highlighted. New ZIP may be published only from final *two-green* HEAD official Actions artifact with HEAD stamp and verification.
+- NEXT: GitHub atomic candidate -> both full QXFRAME/CSS Schema success -> inspect actual Chromium controlled-state step and 528 geometry -> release same-tree Windows dist/docs offline ZIP -> PR #265 checkpoint. CI is pending, not claimed successful.
+
+ 
 # Stage 3 checkpoint — shared Card geometry
 
 ## 2026-10-09 — Source-paired Kitchen slider root min-width (new final CI pending)

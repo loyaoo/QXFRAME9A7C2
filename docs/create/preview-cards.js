@@ -19,6 +19,7 @@
       size: host.getAttribute('data-size') || 'md'
     });
   });
+  var sliders = new Map();
   document.querySelectorAll('[data-pv-slider]').forEach(function (host) {
     var raw = String(host.getAttribute('data-value') || '0').split(',').map(Number);
     var options = {
@@ -45,7 +46,20 @@
         };
       }
     }
-    C.Slider.create(options);
+    if (host.closest('[data-card="roller-shades"]')) {
+      // Source RollerShades: the controlled value drives both artwork and the active preset.
+      options.onChange = function (nextValue) {
+        var position = Number(Array.isArray(nextValue) ? nextValue[0] : nextValue);
+        if (Number.isFinite(position)) {
+          var card = host.closest('[data-card="roller-shades"]');
+          var fill = card.querySelector('.pv-shade > div');
+          if (fill) fill.style.height = position + '%';
+          setToggleValue(card.querySelector('.pv-toggle-group'), position <= 10 ? 'open' : position >= 90 ? 'closed' : 'half');
+        }
+      };
+    }
+    var slider = C.Slider.create(options);
+    sliders.set(host, slider);
     if (host.hasAttribute('data-pv-track-height')) {
       var root = host.querySelector('.qxframe9a7c2-slider');
       if (root) root.classList.add('is-track-height');
@@ -82,5 +96,91 @@
       if (calendarRoot) calendarRoot.classList.add('is-adaptive-month');
     }
   });
+
+  // shadcn's single-selection ToggleGroup semantics on the three Preview 01
+  // compositions. This is card authoring, not a replacement framework Controller.
+  function buttonValue(button) {
+    return button.textContent.trim().toLowerCase().replace(/\s+/g, '-');
+  }
+  function setToggleValue(group, value) {
+    if (!group) return;
+    group.querySelectorAll('button').forEach(function (button) {
+      var selected = buttonValue(button) === value;
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+  }
+  function bindSingleToggle(card, onChange, retainSelection) {
+    if (!card) return;
+    var group = card.querySelector('.pv-toggle-group');
+    if (!group) return;
+    group.addEventListener('click', function (event) {
+      var button = event.target.closest('button');
+      if (!button || !group.contains(button) || button.disabled) return;
+      var value = buttonValue(button);
+      var selected = button.getAttribute('aria-pressed') === 'true';
+      if (selected && retainSelection) return;
+      var next = selected ? '' : value;
+      setToggleValue(group, next);
+      if (next) onChange(next);
+    });
+  }
+  var kitchen = document.querySelector('[data-card="kitchen-island"]');
+  if (kitchen) {
+    var scenes = {
+      cooking: [90,70,30,0], dining: [50,40,20,60],
+      nightlight: [15,20,0,80], focus: [100,85,0,0]
+    };
+    var kitchenSliders = Array.prototype.map.call(kitchen.querySelectorAll('[data-pv-slider]'), function (host) {
+      return sliders.get(host);
+    });
+    bindSingleToggle(kitchen, function (name) {
+      scenes[name].forEach(function (value, index) { kitchenSliders[index].setValue(value); });
+    }, true);
+    var masterSwitch = kitchen.querySelector('.qxframe9a7c2-switch-input');
+    if (masterSwitch) {
+      function syncKitchenEnabled() {
+        var enabled = masterSwitch.checked;
+        kitchen.querySelectorAll('.pv-toggle-group button').forEach(function (button) { button.disabled = !enabled; });
+        kitchenSliders.forEach(function (slider) { slider.setDisabled(!enabled); });
+      }
+      masterSwitch.addEventListener('change', syncKitchenEnabled);
+      syncKitchenEnabled();
+    }
+  }
+  var roller = document.querySelector('[data-card="roller-shades"]');
+  if (roller) {
+    var rollerHost = roller.querySelector('[data-pv-slider]');
+    bindSingleToggle(roller, function (name) {
+      var position = name === 'open' ? 0 : name === 'closed' ? 100 : 50;
+      sliders.get(rollerHost).setValue(position);
+      // Keep the authored media and selection in sync even if setValue is silent.
+      roller.querySelector('.pv-shade > div').style.height = position + '%';
+      setToggleValue(roller.querySelector('.pv-toggle-group'), name);
+    }, true);
+  }
+  // Upstream ReleaseCatalog changes the active filter pill without filtering
+  // its static HOLDINGS list. Do not invent an item-filtering behavior.
+  bindSingleToggle(document.querySelector('[data-card="release-catalog"]'), function () {}, false);
+
+  // Pinned NotificationSettings: one indeterminate master reflects 4 choices.
+  var notifications = document.querySelector('[data-card="notification-settings"]');
+  if (notifications) {
+    var checks = Array.prototype.slice.call(notifications.querySelectorAll('.qxframe9a7c2-check-field input[type="checkbox"]'));
+    var master = checks.shift();
+    if (master && checks.length === 4) {
+      function syncMaster() {
+        var chosen = checks.filter(function (check) { return check.checked; }).length;
+        master.checked = chosen === checks.length;
+        master.indeterminate = chosen > 0 && chosen < checks.length;
+      }
+      master.addEventListener('change', function () {
+        checks.forEach(function (check) { check.checked = master.checked; });
+        syncMaster();
+      });
+      checks.forEach(function (check) { check.addEventListener('change', syncMaster); });
+      syncMaster();
+    }
+  }
   document.querySelectorAll('input[data-indeterminate]').forEach(function (input) { input.indeterminate = true; });
 })();

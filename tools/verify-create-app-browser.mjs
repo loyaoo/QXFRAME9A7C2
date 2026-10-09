@@ -1728,6 +1728,55 @@ try {
     console.log('[preview-01-first-card-diagnostic] '+JSON.stringify(summary));
   });
 
+
+  await step('Preview 01 controlled ToggleGroup/Slider/Checkbox states match pinned source', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=roller-shades] .qxframe9a7c2-slider")', 'interactive Preview 01');
+    const state = await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const card=id=>doc.querySelector('[data-card="'+id+'"]');
+      const press=(root,index)=>root.querySelectorAll('.pv-toggle-group button')[index].click();
+      const active=root=>[...root.querySelectorAll('.pv-toggle-group button')].filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.textContent.trim());
+      const kitchen=card('kitchen-island');
+      press(kitchen,1);
+      const scene=active(kitchen);
+      const sceneValues=[...kitchen.querySelectorAll('.qxframe9a7c2-slider-handle')].map(h=>h.getAttribute('aria-valuenow')||h.style.left||h.style.bottom);
+      const power=kitchen.querySelector('.qxframe9a7c2-switch-input');
+      power.click();
+      const sceneDisabled=[...kitchen.querySelectorAll('.pv-toggle-group button')].every(b=>b.disabled);
+      const sliderDisabled=[...kitchen.querySelectorAll('.qxframe9a7c2-slider')].every(s=>s.classList.contains('is-disabled'));
+      power.click();
+      const sceneEnabled=[...kitchen.querySelectorAll('.pv-toggle-group button')].every(b=>!b.disabled);
+      const roller=card('roller-shades');
+      press(roller,2);
+      const closed={active:active(roller),height:roller.querySelector('.pv-shade > div').style.height};
+      press(roller,0);
+      const open={active:active(roller),height:roller.querySelector('.pv-shade > div').style.height};
+      const release=card('release-catalog');
+      press(release,0);
+      const stock={active:active(release),holdings:release.querySelectorAll('.qxframe9a7c2-item-group > .qxframe9a7c2-item').length};
+      const notification=card('notification-settings');
+      const check=[...notification.querySelectorAll('.qxframe9a7c2-check-field input[type=checkbox]')];
+      const initial={checked:check[0].checked,indeterminate:check[0].indeterminate};
+      check[0].click();
+      const allChecked=check.every(c=>c.checked)&&!check[0].indeterminate;
+      check[1].click();
+      const partial={checked:check[0].checked,indeterminate:check[0].indeterminate};
+      return {scene,sceneValues,sceneDisabled,sliderDisabled,sceneEnabled,closed,open,stock,initial,allChecked,partial};
+    })()`);
+    assert.deepEqual(state.scene,['Dining'],'Kitchen scene selection');
+    assert.equal(state.sceneValues.length,4,'four actual QX Slider handles remain');
+    assert.equal(state.sceneDisabled,true,'master switch disables four scene buttons');
+    assert.equal(state.sliderDisabled,true,'master switch disables QX Sliders');
+    assert.equal(state.sceneEnabled,true,'scene buttons re-enable');
+    assert.deepEqual(state.closed,{active:['Closed'],height:'100%'},'Roller closed preset');
+    assert.deepEqual(state.open,{active:['Open'],height:'0%'},'Roller open preset');
+    assert.deepEqual(state.stock,{active:['Stocks'],holdings:4},'source ReleaseCatalog filter does not remove holdings');
+    assert.deepEqual(state.initial,{checked:false,indeterminate:true},'source initial mixed state');
+    assert.equal(state.allChecked,true,'all choices are checked from master');
+    assert.deepEqual(state.partial,{checked:false,indeterminate:true},'individual choice restores mixed state');
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {

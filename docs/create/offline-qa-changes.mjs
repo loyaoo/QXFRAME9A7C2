@@ -1,12 +1,19 @@
-/** Offline bundle only. Keep visual change records here, not in production HTML. */
+/** Offline bundle only. This ledger contains ONLY the current batch, never historical highlights. */
 const groups = [
-  ['kitchen-island','Kitchen Island · 滑块对齐',[
-    ['.pv-slider-item:nth-child(1) .qxframe9a7c2-slider','亮度','Brightness 轨道保持右对齐，并与其它三行两列等份且共用起点','__QA_BUNDLE_HEAD__'],
-    ['.pv-slider-item:nth-child(2) .qxframe9a7c2-slider','色温','Color Temp 轨道不再随左侧文字宽度变化','__QA_BUNDLE_HEAD__'],
-    ['.pv-slider-item:nth-child(3) .qxframe9a7c2-slider','音量','Volume 轨道与其它三行等宽，使用等份 ItemActions','__QA_BUNDLE_HEAD__'],
-    ['.pv-slider-item:nth-child(4) .qxframe9a7c2-slider','Fade','Fade 轨道与其它三行等宽，保留原始取值','__QA_BUNDLE_HEAD__']]],
-  ['front-door','Front Door · 装饰区域',[
-    ['.pv-stripes','细斜纹','将宽斜条纹改为更贴近参考画面的细斜线纹理','__QA_BUNDLE_HEAD__']]]
+  ['kitchen-island','Kitchen Island · 场景状态',[
+    ['.pv-toggle-group','场景预设','切换 Cooking/Dining/Nightlight/Focus 同步四条 Slider 的值；关灯时禁止场景交互','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-switch','开关状态','主开关同时控制场景按钮和 Slider 禁用状态','__QA_BUNDLE_HEAD__']]],
+  ['roller-shades','Roller Shades · 滑块与画面',[
+    ['.pv-shade > div','遮光高度','Slider 值实时更新窗帘画面高度','__QA_BUNDLE_HEAD__'],
+    ['.pv-toggle-group','快捷预设','Open/Half/Closed 选择与 Slider 及画面保持双向同步','__QA_BUNDLE_HEAD__']]],
+  ['release-catalog','Release Catalog · 分类按钮',[
+    ['.pv-toggle-group','类别选择','Stocks/ETFs/REITs 互斥按钮现可切换选中外观；按源站保留全部 holdings 列表','__QA_BUNDLE_HEAD__']]],
+  ['notification-settings','Notifications · 全选状态',[
+    ['.qxframe9a7c2-check-field:nth-child(1)','全选复选框','根据四条通知选择正确显示全选、半选或未选','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-check-field:nth-child(2)','交易通知','改变 Transaction alerts 会同步更新全选状态','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-check-field:nth-child(3)','安全通知','改变 Security alerts 会同步更新全选状态','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-check-field:nth-child(4)','目标通知','改变 Goal milestones 会同步更新全选状态','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-check-field:nth-child(5)','市场通知','改变 Market updates 会同步更新全选状态','__QA_BUNDLE_HEAD__']]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
