@@ -1,3 +1,12 @@
+# Stage 3 current checkpoint
+
+## CURRENT — 2026-10-10 S3 Batch A: source Badge semantics & first comprehensive nested-role gate (new CI pending)
+
+- The first same-Chromium pinned source/QX matrix now covers **33 Cards × 8 styles × light/dark = 528 paired render groups and 1,856 corresponding nested component roles**. Zero missing source/QX cards and prior 528 first-Card geometry gate still green. The raw matrix reported 2630 wrapper-related geometry differences and 621 raw color-string differences; these are *diagnostic*, often non-equivalent wrapper padding or color-space notation. Never claim all are visual bugs; isolate equivalent nodes/roles.
+- **Concrete source deviation identified:** `front-door` badge source `variant=destructive` is translucent and keeps semantic foreground, QX previously `is-error is-solid`. `release-catalog` source four `outline` labels use 500 weight (except Sera editorial) and 10px Mira; QX four had 600/12px. `upcoming-payments` source three `secondary` labels use neutral Theme Secondary and editorial Sera dimensions; QX were filled with the wrong type. Shared theme role adapters now extend QX `Badge.is-status-label` for `is-destructive/is-outlined/is-secondary`. The exact 1 + 4 + 3 Badge DOM pieces are updated, and **64 source-paired Badge samples × 4 measured properties** (4 cards with prior passing Claimable) become a **hard source-derived CI gate**. Theme remains owner, no Preview-specific paint hacks, no JS changes.
+- Active offline QA ledger reset to **only current three Cards / three grouped inner Badge selectors (8 physical badges)**: Front Door, Release Catalog, Upcoming Payments. Previous Qr Connect / Cover Art / Social Links / FAQ and older marks removed. No ZIP until final new two-green CI and enough material scope for owner >=15point batch.
+- Source-paired comprehensive internal layout remains not fully accepted: non-comparable wrapping structure and chart/calendar mock measurements need careful calibration; owner Stage3 70→85 target **not yet achieved**. Stage3 ~70%, whole CREATEAPP-V3 ~65% remain accurate until the larger hard-gated batch is complete. Main & backup frozen; PR #265 stays Draft.
+
 # Stage 3 latest checkpoint
 
 ## CURRENT — 2026-10-10 Stage3 ≥15-point batch — nested 33-card × 16-theme source measurement in progress

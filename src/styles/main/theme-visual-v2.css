@@ -516,3 +516,25 @@
   /* END GEOMETRY qx-md-1 */
 
 }
+
+@scope (:root) {
+  /* Shared Badge label-size + role mapping (pinned shadcn preview-02):
+   * Destructive is a 10%-tinted semantic label, Secondary is the neutral
+   * background, Outline is the outlined role. Sera's editorial Badge policy
+   * suppresses the paint as well as the padding/border; no per-Card PV CSS. */
+  .qxframe9a7c2-badge.is-status-label.is-destructive{
+    background:color-mix(in oklab,var(--qxframe9a7c2-theme-destructive) calc(10% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
+    color:var(--qxframe9a7c2-theme-destructive);
+    border-color:transparent;
+  }
+  .qxframe9a7c2-badge.is-status-label.is-secondary{
+    background:color-mix(in oklab,var(--qxframe9a7c2-theme-secondary) calc(100% * (1 - var(--_qxframe9a7c2-badge-label-editorial))),transparent);
+    color:var(--qxframe9a7c2-theme-secondary-foreground);
+    border-color:transparent;
+  }
+  .qxframe9a7c2-badge.is-status-label.is-outlined{
+    background:transparent;
+    color:var(--qxframe9a7c2-theme-foreground);
+    border-color:var(--qxframe9a7c2-theme-border);
+  }
+}

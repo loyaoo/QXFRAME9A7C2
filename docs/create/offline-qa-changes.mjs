@@ -1,16 +1,13 @@
-/** Active visual QA groups for this batch ONLY: 3 source secondary Buttons + FAQ Tab. */
+/** Current-round ONLY: semantic Badge visual role parity across 16 themes. */
 const groups = [
-  ['qr-connect','Qr Connect · Secondary 按钮',[
-    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid','Got it','修复为 QX Secondary + Solid 语义，复用 Theme V2 正确配色与 Focus 状态','__QA_BUNDLE_HEAD__']
+  ['front-door','Front Door · Destructive Badge',[
+    ['.qxframe9a7c2-badge.is-status-label.is-destructive','Live Badge','危险状态由实心色改为上游 10% 透明底色/语义前景，Mira/Sera 尺寸联动','__QA_BUNDLE_HEAD__']
   ]],
-  ['cover-art','Cover Art · Secondary 按钮',[
-    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid','Upload Artwork','与源 shadcn Secondary 对应，消费 QX Secondary + Solid 组件规则','__QA_BUNDLE_HEAD__']
+  ['release-catalog','Release Catalog · Outline Badges',[
+    ['.qxframe9a7c2-badge.is-status-label.is-outlined','Ticker 类型徽标','四处 ETF / Stock / REIT 徽标统一字号字重、描边与 Sera 紧凑标签','__QA_BUNDLE_HEAD__']
   ]],
-  ['social-links','Social Links · Secondary 按钮',[
-    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid','Discard','次级操作从错误 Default+Filled 改成 QX Secondary+Solid，保持主题联动','__QA_BUNDLE_HEAD__']
-  ]],
-  ['faq','FAQ · Segmented Tab 前景',[
-    ['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active','General / Billing / Goals','激活项使用 Theme Foreground 与正常字重，不再错误采用 Primary / 600','__QA_BUNDLE_HEAD__']
+  ['upcoming-payments','Upcoming Payments · Secondary Badges',[
+    ['.qxframe9a7c2-badge.is-status-label.is-secondary','支付金额徽标','三处金额使用 Theme Secondary 语义，中性色与编辑式尺寸统一','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

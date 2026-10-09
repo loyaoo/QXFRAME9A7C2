@@ -20,22 +20,22 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'qr-connect':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid'],
-    'cover-art':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid'],
-    'social-links':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid'],
-    'faq':['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active']
+    'front-door':['.qxframe9a7c2-badge.is-status-label.is-destructive'],
+    'release-catalog':['.qxframe9a7c2-badge.is-status-label.is-outlined'],
+    'upcoming-payments':['.qxframe9a7c2-badge.is-status-label.is-secondary']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current QA card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'current QA ledger card '+id);
-    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'inner QA target '+id);count++;}
+    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'current inner QA target '+id);count++;}
   }
-  for(const id of ['payout-threshold','preferences','transfer-funds','stock-performance',
-    'kitchen-island','roller-shades','release-catalog','notification-settings','front-door','savings-targets','account-access','receiving-method','new-milestone'])
+  for(const id of ['qr-connect','cover-art','social-links','faq','payout-threshold','preferences',
+    'transfer-funds','stock-performance','kitchen-island','roller-shades','release-catalog-old',
+    'notification-settings','savings-targets','account-access','receiving-method','new-milestone'])
     assert.ok(!ledger.includes("['"+id+"'"),'old yellow group must not accumulate '+id);
-  assert.equal(count,4,'four source-backed current regions');
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,4,'four active markers only');
+  assert.equal(count,3,'three current Badge role regions');
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,3,'only current Badge QA markers');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -1054,6 +1054,25 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
   assert.match(v2,/\.qxframe9a7c2-button\.is-solid\s*\{/,'v2 solid consumes type');
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-text:var\(--qxframe9a7c2-theme-foreground\)/);
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-weight:inherit/);
+});
+
+check('source pinned Badge roles mapped to QX semantic status-label instead of dead per-card paint',()=>{
+  const html=read('preview-01.html');
+  const framework=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const cards=[['front-door','is-destructive',1],['release-catalog','is-outlined',4],
+    ['upcoming-payments','is-secondary',3]];
+  for(const [id,role,count] of cards){
+    const start=html.indexOf('<!-- @card '+id+' -->'),end=html.indexOf('<!-- @end '+id+' -->',start);
+    assert.ok(start>=0&&end>start,'pinned Badge Card '+id);
+    const section=html.slice(start,end);
+    const selector='qxframe9a7c2-badge is-status-label '+role;
+    assert.equal(section.split(selector).length-1,count,id+' exact Badge semantic count');
+  }
+  for(const role of ['is-destructive','is-outlined','is-secondary'])
+    assert.ok(framework.includes('.qxframe9a7c2-badge.is-status-label.'+role),
+      'Theme V2 owns '+role+' Badge paint');
+  assert.match(framework,/var\(--_qxframe9a7c2-badge-label-editorial\)/,
+    'source editorial Badge policy must suppress special paint in Sera');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

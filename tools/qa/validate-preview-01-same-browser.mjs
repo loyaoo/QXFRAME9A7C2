@@ -45,6 +45,27 @@ for(const row of nested.rows){
     }
   }
 }
+// Source-lock the nested Badge contract separately from non-comparable
+// Card wrapper geometry. All measured variants use the same semantic label
+// sizing recipe (including Mira 10px and Sera editorial compact shape).
+const badgeCards=['claimable-balance','front-door','release-catalog','upcoming-payments'];
+const badgeFailures=[],badgeCounts={};
+for(const row of nested.rows){
+  if(!badgeCards.includes(row.card))continue;
+  const src=row.source.badge,qx=row.qx.badge,key=row.card;
+  badgeCounts[key]=(badgeCounts[key]||0)+1;
+  if(!src||!qx){badgeFailures.push({key,style:row.style,mode:row.mode,issue:'missing badge'});continue;}
+  for(const prop of ['w','h','fontSize','fontWeight']){
+    const a=parseFloat(src[prop]),b=parseFloat(qx[prop]);
+    if(!Number.isFinite(a)||!Number.isFinite(b)||Math.abs(a-b)>.5)
+      badgeFailures.push({key,style:row.style,mode:row.mode,prop,source:src[prop],qx:qx[prop]});
+  }
+}
+for(const card of badgeCards)
+  assert.equal(badgeCounts[card],16,'Badge sampled in all 8 source styles x light/dark: '+card);
+assert.deepEqual(badgeFailures,[],'source-locked Badge label geometry mismatch: '+JSON.stringify(badgeFailures.slice(0,24)));
+console.log('[stage3-badge-parity] '+JSON.stringify({cards:badgeCards,checked:64,properties:4,issues:badgeFailures.length}));
+
 console.log('[stage3-inner-differences] '+JSON.stringify({
  geometryCount:innerGeometryIssues.length,paintCount:innerPaintIssues.length,
  geometryExamples:innerGeometryIssues.slice(0,36),paintExamples:innerPaintIssues.slice(0,24),
