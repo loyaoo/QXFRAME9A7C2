@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Sera Dividend first Item intrinsic line-packing
+
+Pinned same-browser prior first row: shadcn title `Vanguard VIG` width103.3px/height16.5px, QX 74.02px/height33px. QX let that title wrap, shrinking the content flex min-content enough for content + 96px chart + $1,842.10 to share one Flex row; source uses content + chart on row one and amount on row two. Introduced reusable `ItemTitle.is-intrinsic-line` with white-space nowrap and min-width:max-content on the Vanguard heading only. No card or item fixed pixel height/width; just the correct intrinsic text contract. Same-Chromium source-paired first Item and title heights must now agree within 0.5px, with a separate browser text-wrap assertion. Latest paired 528 count pending.
+
 ## 2026-10-09 — Lyra FAQ icon layout and Radio Field test gate
 
 Source-locked Chromium on `11443533` proves Lyra FAQ source Accordion first and third single-line triggers are 38px, QX 40px, while the two-line middle trigger already equals the 54px source. The source 16px chevron occupies no extra ascent; QX had 16px icon plus 2px top margin, adding 2px per single-line header. The shared native Collapse icon now calculates a capped optical offset from the existing `accordion-line-height`: 0px in Lyra (16px), 2px for other pinned typography families. Same-browser Lyra trigger/whole Card gate now requires ≤0.5px; no Card fixed height or exception. CSS Schema test exposed an older RadioField assertion still forbidding top inset and borders. Updated it to require source Theme `choice-field-inset` and 1px FieldLabel border while retaining 10px authored bottom padding and 2-column/1-column tests.

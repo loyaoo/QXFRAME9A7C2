@@ -334,6 +334,16 @@ check('Receiving Method radio choices use shared Field composition, not custom C
   assert.doesNotMatch(css,/\.pv-choice-card(?:\s|\{|\:)/,'obsolete custom Card styling must be absent');
 });
 
+check('Dividend first title participates in intrinsic flex wrapping without fixed row height', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  const html=read('preview-01.html');
+  const card=html.slice(html.indexOf('<!-- @card dividend-income -->'),html.indexOf('<!-- @end dividend-income -->'));
+  assert.match(css,/\.qxframe9a7c2-item-title\.is-intrinsic-line\{white-space:nowrap;min-width:max-content\}/);
+  assert.match(card,/qxframe9a7c2-item-title is-wrapping is-intrinsic-line">Vanguard VIG/);
+  assert.doesNotMatch(css,/\.qxframe9a7c2-item-title\.is-intrinsic-line\{[^}]*(?:height|width):\d/,
+    'natural min-content title must not pin a pixel width or height');
+});
+
 check('Payments Item flex basis and Kitchen Slider intrinsic footprint are source-aligned', () => {
   const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   const slider=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');

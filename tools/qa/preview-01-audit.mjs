@@ -152,6 +152,15 @@ try {
           if(!srcRow||!qxRow||Math.abs(srcRow.h-91.5)>.5||Math.abs(qxRow.h-srcRow.h)>.5)
             throw new Error(style+' source-locked RadioField row geometry mismatch: '+JSON.stringify({source:srcRow,qx:qxRow}));
         }
+        if(style==='sera'&&id==='dividend-income'){
+          const sourceItem=record.source.find(x=>x.className.includes('cn-item group/item'));
+          const qxItem=record.qx.find(x=>x.className.includes('qxframe9a7c2-item is-muted'));
+          const sourceTitle=record.source.find(x=>x.className.includes('cn-item-title'));
+          const qxTitle=record.qx.find(x=>x.className.includes('qxframe9a7c2-item-title'));
+          if(!sourceItem||!qxItem||!sourceTitle||!qxTitle||Math.abs(sourceItem.h-qxItem.h)>.5||
+              Math.abs(sourceTitle.h-qxTitle.h)>.5)
+            throw new Error('Sera Dividend first Item natural wrapping mismatch: '+JSON.stringify({sourceItem,qxItem,sourceTitle,qxTitle}));
+        }
         if(style==='lyra'&&id==='faq'){
           const getTrigger=r=>r.find(x=>x.className.includes('accordion-trigger')||x.className.includes('qxframe9a7c2-collapse-header'));
           const sourceTrigger=getTrigger(record.source),qxTrigger=getTrigger(record.qx);

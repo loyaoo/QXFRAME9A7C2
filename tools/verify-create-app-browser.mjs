@@ -620,6 +620,30 @@ try {
     }
   });
 
+  await step('Dividend intrinsic first-title min-content drives natural flex wrapping', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")','Dividend intrinsic title');
+    for(const style of ['nova','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Dividend title');
+      const row=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const item=doc.querySelector('[data-card="dividend-income"] .qxframe9a7c2-item');
+        const title=item.querySelector('.qxframe9a7c2-item-title');
+        const css=doc.defaultView.getComputedStyle(title);
+        const rect=title.getBoundingClientRect();
+        const content=item.querySelector('.qxframe9a7c2-item-content');
+        return {intrinsic:title.classList.contains('is-intrinsic-line'),
+          whiteSpace:css.whiteSpace,minWidth:css.minWidth,
+          titleWidth:rect.width,contentWidth:content.getBoundingClientRect().width};
+      })()`);
+      assert.equal(row.intrinsic,true,style+' source intrinsic title modifier');
+      assert.equal(row.whiteSpace,'nowrap',style+' first title single line');
+      assert.equal(row.minWidth,'max-content',style+' source max-content participating in Item flex');
+      assert.ok(row.contentWidth>=row.titleWidth-.5,style+' title must not overflow flex content');
+    }
+  });
+
   await step('Dividend Income preserves the source Item flex sibling structure', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');
