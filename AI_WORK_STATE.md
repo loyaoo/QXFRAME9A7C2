@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Batch Kitchen slider root owner correction after source CI (rerun required)
+
+- Candidate `8968b848e2c6c45c05abd04eea7e403857990fd7`: source-preview-geometry #37927531635 FAILED the **new** strict Kitchen 4-rail x gate. In Vega the four QX slider widths all corrected to 132.36px versus upstream 132.44px, but x remained at [147.58,151.31,125.08,105.86] instead of uniform 205.42. Genuine root cause: preview.css legacy `.pv-slider-item .qxframe9a7c2-item-content{flex:0 0 auto}` and `.pv-slider-item .qxframe9a7c2-item-actions{flex:1 1 auto}` replaced framework Item flex distribution, so making right actions proportional alone cannot move their left edges. Removed BOTH old private flex policies and restored canonical shared ItemContent flex-grow plus new opt-in shared fixed-proportion ItemActions. Preview retains only child slider host flex. Source same-browser x/width/center and eight-style Create gates unchanged; **no gate weakened**.
+- This remains one batch: Kitchen four rails + Front Door thin stripe artwork. Offline QA active ledger **only 2 Cards/5 regions this round**, no old yellow highlights. Next new final HEAD CI both green and same-tree official Actions bundle; no merge, main+backup frozen, overall~65% Stage3 open.
+
+
 ## CURRENT — 2026-10-09 S3-BATCH-KITCHEN-FRONT-001 (final CI pending)
 
 - Reconciled stable development `943960ff1823ec3b5b4326b11aae8f81fec58bfd`, QXFRAME #37924086652 / CSS Schema #37924086734 SUCCESS; PR #265 Draft and main/backup frozen `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`. Owner expressly requires **each Windows demo shows ONLY this batch's yellow highlights**; prior batch's overlays must be dropped.
