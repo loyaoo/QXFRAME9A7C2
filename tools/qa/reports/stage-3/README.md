@@ -43,6 +43,36 @@ Coverage limits and next work:
 
 ## Nova light: diagnostic heights
 
+## 2026-10-09 — paired Chromium source audit + Loading Card fix
+
+**Reference build is now reproducible inside CI.** The dedicated QXFRAME
+`source-preview-geometry` job checks out SHA-locked shadcn, validates the 159
+`ref/source-lock.json` hashes, builds the reference-only React renderer,
+then runs existing `tools/qa/preview-01-audit.mjs` with shadcn and QX in the
+same Linux Chromium with a forced common font. The reference tree never
+becomes a QX runtime dependency or part of the npm artifact. The report and
+Nova screenshots are uploaded as `stage3-same-browser-<sha>`.
+
+The first actual paired run ([#37862646440](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37862646440)) measured **528** cells, with no missing examples or page errors.
+**226/528** first-Card heights differed by more than 0.5px, down from the
+incomparable **252/528** Windows-source vs Linux-QX count. This reduction
+is a measurement-correction, **not** a CSS improvement. Nova Payments 0px
+height delta; Nova FAQ -6px; Nova Loading Card +16px. There are 66 raw
+core-geometry differences, all precisely Luma/Card radius: source **26px**
+vs QX **24px**, 33 cards × light/dark. The 24px cap is mandated by higher
+priority v3 §4.5; validator locks exactly those exceptions and rejects
+any new core geometry mismatch. Source-geometry job [#37863258225](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37863258225) passed.
+
+The Nova Loading Card structural readout identifies one true 16px error:
+source Card root 348px; QX 364px. The three-line Skeleton group has
+source **8px** row gap, QX **16px**; two gaps make the 16px height error.
+Their component root/header and all child sizes otherwise align. Rather
+than overriding the component in `preview.css`, the shared Flex/Stack
+static layout gained `.is-gap-2` = 8px, consumed by the Loading Card
+stack and horizontal button-placeholder row. The browser gate asserts
+all eight pinned style heights in light and dark. **Latest code CI still
+pending**; no claim of visual acceptance or new 528 height count yet.
+
 ### Payout Threshold runtime value parity (2026-10-08)
 
 Pinned upstream `apps/v4/registry/bases/radix/blocks/preview-02/cards/payout-threshold.tsx` holds `amount` and projects `$ + amount.toFixed(2)` whenever the Slider changes. The QX Preview previously mounted the real QX Slider but left its adjacent `$2500.00` display static. The authored slider now carries `data-pv-output`, pointing to an existing label, with the optional display formatter `money-2`. `docs/create/preview-cards.js` uses the Slider's public `onChange` callback; it does not own or duplicate Slider state. Added a static contract and a Chromium keyboard ArrowRight (+50) / ArrowLeft (-50) test that must restore the label. This task changes no Card height policy, Theme token or runtime Controller. **CI for this new batch is pending.**
