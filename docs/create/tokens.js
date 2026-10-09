@@ -130,6 +130,7 @@ export const THEME_TOKENS = [
   L('artwork-description-leading', 'CoverArt meta description source-leading'),
   L('table-cell-inset', 'Static card-embedded Table cell inset from source density'),
   L('item-space', 'Static Item md padding and column gap; size variants derive from it'),
+  L('item-sm-reduction', 'Shared small Item source padding step'),
   L('item-description-leading', 'Composed Item description line-height multiplier', 'number'),
   L('field-group-gap', 'Vertical distance between composed Fields'),
   L('field-gap', 'Gap between a composed Field label, control and description'),

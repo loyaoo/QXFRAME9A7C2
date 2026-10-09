@@ -676,6 +676,29 @@ try {
     }
   });
 
+  await step('Small Item style tiers and Sera Preferences action width remain source-driven', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=preferences]")','Preferences footer');
+    for(const style of ['vega','maia','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Item sm tier');
+      const v=await evaluate(`(() => {
+        const d=document.querySelector('[data-create-frame]').contentDocument,css=e=>d.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+        const row=d.querySelector('[data-card="kitchen-island"] .qxframe9a7c2-item.is-sm');
+        const footer=d.querySelector('[data-card="preferences"] .qxframe9a7c2-card-footer');
+        const buttons=[...footer.querySelectorAll('.qxframe9a7c2-button')];
+        return {sm:px(css(row).paddingTop),footerGap:px(css(footer).columnGap),
+          heights:buttons.map(b=>b.getBoundingClientRect().height),widths:buttons.map(b=>b.getBoundingClientRect().width)};
+      })()`);
+      assert.ok(Math.abs(v.sm-(style==='vega'?10:12))<=.5,style+' source small Item inset');
+      assert.equal(v.footerGap,0,style+' Preferences Footer has no invented gap');
+      if(style==='sera'){
+        assert.ok(Math.abs(v.heights[1]-40)<=.5,'Sera Save Preferences must stay one line, 40px');
+        assert.ok(Math.abs(v.widths[1]-203.73)<=.5,'Sera Save Preferences must retain intrinsic width');
+      }
+    }
+  });
+
   await step('Source Card action gap, Item sm vertical insets and transaction zero Stack', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")','Kitchen Item');
@@ -695,7 +718,7 @@ try {
           artLabel:px(css(label).lineHeight),artDesc:px(css(desc).lineHeight)};
       })()`);
       assert.ok(Math.abs(v.headerGap-(style==='sera'?6:4))<=.5,style+' pinned Header action gap');
-      if(style==='vega')assert.ok(Math.abs(v.smPadding-10)<=.5,'Vega pinned sm Item padding');
+      assert.ok(Math.abs(v.smPadding-(style==='vega'?10:12))<=.5,style+' pinned sm Item padding');
       assert.ok(Math.abs(v.stackGap)<=.01,style+' semantic gap-0 must be zero');
       assert.equal(v.tableCollapse,'collapse',style+' source Tailwind Table border collapse');
       if(style==='vega'){assert.ok(Math.abs(v.artLabel-12)<=.5);assert.ok(Math.abs(v.artDesc-16)<=.5)}

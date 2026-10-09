@@ -377,6 +377,9 @@ export function themeTokens(resolved) {
     + (PADDING[ext.padding] >= 2 ? 0.25 : 0)
     - (height <= 1.75 ? 0.25 : 0);
   root['item-space'] = rem(itemSpace);
+  // Pinned small Item recipe: Vega subtracts 4px from its normal 14px;
+  // Maia/Luma/Sera/Rhea keep the 2px step; dense styles clamp at 10px.
+  root['item-sm-reduction']=rem(style==='vega'?.25:.125);
   // Vega's measured regular Item description is 21/14, unlike other spacious
   // regular styles. Keep the style's source recipe here, never in component CSS.
   root['item-description-leading'] = String(ext.textStyle === 'editorial' || ext.typography === 'compact'

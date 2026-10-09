@@ -1,5 +1,11 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Kitchen cross-style regression and Preferences action width
+
+Pinned `e7752a00` same Chromium **528/528 geometry job succeeded, 114/528** heights beyond unchanged ±0.5px, 0 subset mismatches. Vega KitchenIsland 367/367px, Vega/Nova RecentTransactions 0px, Sera/Vega CoverArt within0.02px; Sera PayoutThreshold improved from +21.75 to -1px after source-backed CardHeader gap fix. However treating all Item.sm as Vega's 10px produced -16px on Maia/Luma/Sera/Rhea KitchenIsland (four rows ×4px; two light/dark each). A *single shared Theme size-step* `item-sm-reduction` now takes Vega4px, others2px, with dense families max-clamped at10px. The shared Item.sm uses this instead of forcing all source styles to one value; five-family same-browser gate enforces natural Card parity.
+
+Pinned Sera Preferences Footer source Button widths Reset98.47px and Save203.73px, heights40px; QX Footer had 32px fabricated gap, shrinking Save to180.38px, wrapping to two lines/54px and raising Card by14px. Reused existing shared CardFooter.is-gap-0 with the existing `ml-auto` button for intrinsic horizontal composition. No fixed button height, no new app CSS. Source-paired whole Preferences Card ≤0.5px and standalone browser intrinsic widths/heights added. New CI pending.
+
 ## 2026-10-09 — source CardHeader ownership acceptance
 
 `3228303e` Release `verify:theme-tokens` identified one new duplicate CSS owner for `CardHeader.gap` (group selector and Header-only override). Header and Footer now share only structural display/min-width; the existing dedicated Header rule uniquely emits the source 4/6px meta gap, and Footer's dedicated rule uniquely emits section spacing. No style values changed and the static gate now rejects grouped duplicate ownership. The same run's RecentTransactions remaining +1px after gap0/collapse has been assigned to source TableRow rather than per-td borders. New CI pending. Threshold remains 0.5px.

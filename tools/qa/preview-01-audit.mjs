@@ -101,10 +101,11 @@ try {
   // same Chromium and font as the pinned upstream renderer.
   const targetCards={
     sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state','stock-performance','cover-art','payout-threshold','preferences','card-overview'],
+    // Cross-style small Item regression discovered by full 528-run, not a single-style exception.
     vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions'],
     nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions'],
-    rhea:['faq','claimable-balance'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions'],
-    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state'],
+    rhea:['faq','claimable-balance','kitchen-island'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island'],
+    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island'],
     lyra:['faq','claimable-balance'],mira:['upcoming-payments','claimable-balance']
   };
   const sourceNodePairs={};
@@ -167,7 +168,7 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' CoverArt source Label/Footer line boxes mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
-        if(style==='vega'&&id==='kitchen-island'){
+        if(['vega','maia','luma','sera','rhea'].includes(style)&&id==='kitchen-island'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error('Vega KitchenIsland source small Item paddings mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
@@ -175,6 +176,8 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' RecentTransactions source collapse/gap0 table mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
+        if(style==='sera'&&id==='preferences'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
+          throw new Error('Sera Preferences source Footer action shrink mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         if(style==='sera'&&id==='stock-performance'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error('Sera StockPerformance source-optional Separator Card mismatch: '+

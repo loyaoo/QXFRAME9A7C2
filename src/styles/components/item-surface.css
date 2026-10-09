@@ -84,7 +84,7 @@
 }
 /* Smaller variants follow the Item md spacing anchor, rather than hardcoding
  * one style's values. Size-specific remaining differences are Stage 3 QA. */
-.qxframe9a7c2-item.is-sm{--_qxframe9a7c2-static-item-space:max(.625rem,calc(var(--qxframe9a7c2-theme-item-space) - .25rem))}
+.qxframe9a7c2-item.is-sm{--_qxframe9a7c2-static-item-space:max(.625rem,calc(var(--qxframe9a7c2-theme-item-space) - var(--qxframe9a7c2-item-sm-reduction,var(--qxframe9a7c2-theme-item-sm-reduction,.125rem))))}
 .qxframe9a7c2-item.is-xs{--_qxframe9a7c2-static-item-space:max(.5rem,calc(var(--qxframe9a7c2-theme-item-space) - .25rem))}
 .qxframe9a7c2-item.is-column{flex-direction:column;align-items:stretch}
 .qxframe9a7c2-item-group{

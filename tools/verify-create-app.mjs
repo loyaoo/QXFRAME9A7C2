@@ -692,6 +692,20 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('Style-derived small Item maps pinned source padding while Preferences preserves Footer action width', () => {
+  const html=read('preview-01.html');
+  const prefs=html.slice(html.indexOf('<!-- @card preferences -->'),html.indexOf('<!-- @end preferences -->'));
+  assert.match(prefs,/<footer class="qxframe9a7c2-card-footer is-gap-0">/);
+  const expected={vega:10,nova:10,maia:12,lyra:10,mira:10,luma:12,sera:12,rhea:12};
+  for(const [style,px] of Object.entries(expected)){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const raw=name=>body.match(new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);'))?.[1];
+    const parent=parseFloat(raw('item-space'))*16;
+    const reduction=parseFloat(raw('item-sm-reduction'))*16;
+    assert.equal(Math.max(10,parent-reduction),px,style+' pinned sm Item block inset');
+  }
+});
+
 check('Embedded source TableRow owns interrow borders, not five TableCells', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/table.css'),'utf8');
   assert.match(css,/\.qxframe9a7c2-table\.is-embedded tbody tr:not\(:last-child\)\{\s*border-bottom:1px solid var\(--qxframe9a7c2-theme-border\)/);
@@ -709,7 +723,9 @@ check('Source Card action gap, compact Item, zero Stack and collapsed embedded T
   assert.doesNotMatch(card,/\.qxframe9a7c2-card-header,\.qxframe9a7c2-card-footer\{[^}]*gap:/,
     'only dedicated CardHeader/CardFooter rules own their respective gaps');
   assert.match(comp,/\.qxframe9a7c2-flex\.is-gap-0,\.qxframe9a7c2-stack\.is-gap-0\{--_qxframe9a7c2-layout-gap:0\}/);
-  assert.match(item,/\.qxframe9a7c2-item\.is-sm\{--_qxframe9a7c2-static-item-space:max\(\.625rem,calc\(var\(--qxframe9a7c2-theme-item-space\) - \.25rem\)\)\}/);
+  assert.match(item,/\.qxframe9a7c2-item\.is-sm\{--_qxframe9a7c2-static-item-space:max\(\.625rem,calc\(var\(--qxframe9a7c2-theme-item-space\) - var\(--qxframe9a7c2-item-sm-reduction,var\(--qxframe9a7c2-theme-item-sm-reduction,\.125rem\)\)\)\)\}/);
+  assert.ok(read('compiler.js').includes("root['item-sm-reduction']"));
+  assert.ok(read('tokens.js').includes("L('item-sm-reduction'"));
   assert.match(table,/\.qxframe9a7c2-table\.is-embedded\{[^}]*border-collapse:collapse;/);
   assert.match(comp,/\.qxframe9a7c2-form-label\.is-artwork-meta\{font-size:\.75rem;line-height:var\(--qxframe9a7c2-theme-artwork-label-leading,1rem\)\}/);
   assert.match(card,/\.qxframe9a7c2-card-description\.is-artwork-meta\{font-size:\.75rem;line-height:var\(--qxframe9a7c2-theme-artwork-description-leading,1rem\)\}/);
