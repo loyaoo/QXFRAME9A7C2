@@ -19,6 +19,12 @@
 
 ## CURRENT
 
+2026-10-09 CREATEAPP-V3-S3 pinned paired node remediation (CI pending):
+- First sibling-topology commit 0d69fe72: source-preview-geometry passed, 528/528 measured and 202/528 outlier heights unchanged; Sera Dividend reduced from roughly -89.75px to -44.25px (44–45px recovered). CSS Schema #37869373895 succeeded; release final status to verify.
+- Paired Rhea FAQ source Accordion has 1px outer frame, 16px trigger/content inline inset and 24px trigger icon gap; QX shared native Collapse previously had 0 for all three. Maia/Rhea/Luma/Mira use framed source style, Sera is gap-only editorial; added closed Theme recipe inputs for framed/overflow/trigger-gap and switched shared Collapse native adapter to consume these without component-name/style selectors or hardcoded Card heights.
+- Sera Dividend ItemContent/source title can wrap with intrinsic minimum and flex/w-fit title; QX legacy clamping remains default, new shared .is-intrinsic/.is-wrapping options used only where pinned source requires them.
+- NEXT EXACT STEP: Actions on newest HEAD, compare same-browser 202/528 diagnostic and targeted FAQ/Dividend geometry, inspect regressions, keep main and backup unchanged and PR #265 Draft.
+
 2026-10-09 CREATEAPP-V3-S3 source-locked Dividend sibling-structure batch (CI pending):
 - Recovered GitHub baseline: PR #265 Draft, HEAD 65c80d018615e191da13448a7bf8a5472dd1f471, both QXFRAME CI #37866512674 and CSS Schema #37866512679 successful; latest paired Chromium 33/33 and 202/528 first-Card height outliers. Historical "CI pending" at top of CURRENT is superseded.
 - Source `dividend-income.tsx` mounts ItemContent, ChartContainer and amount span as THREE direct Item flex children. The QX example incorrectly grouped chart + amount into a fourth-layer ItemActions, changing flex wrapping at narrow Sera card widths. Removed only that extra markup, preserving real QX Item CSS and data.

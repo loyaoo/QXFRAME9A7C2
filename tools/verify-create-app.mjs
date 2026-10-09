@@ -181,6 +181,33 @@ check('Dividend Income uses the pinned Item sibling layout rather than an ItemAc
     'the original shadcn chart and amount are direct Item flex children, not an ItemActions group');
 });
 
+check('Source Accordion frame and Item intrinsic wrapping are shared Theme/component rules', () => {
+  const compiler=read('compiler.js'),tokens=read('tokens.js');
+  const collapse=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');
+  const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  const html=read('preview-01.html');
+  for(const token of ['accordion-framed','accordion-overflow','accordion-trigger-gap']){
+    assert.ok(compiler.includes("root['"+token+"']"),token+' Theme compiler');
+    assert.ok(tokens.includes("L('"+token+"'"),token+' closed Token schema');
+    assert.ok(collapse.includes('var(--qxframe9a7c2-theme-'+token),token+' shared consumer');
+  }
+  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const capture=name=>body.match(new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);'))?.[1];
+    const framed=['maia','mira','luma','rhea'].includes(style);
+    assert.equal(capture('accordion-framed'),framed?'1':'0',style+' source framed recipe');
+    assert.equal(capture('accordion-overflow'),framed?'hidden':'visible',style+' source clip recipe');
+    assert.equal(parseFloat(capture('accordion-trigger-gap'))*16,
+      ['maia','mira','luma','sera','rhea'].includes(style)?24:0,style+' source icon gap');
+  }
+  assert.match(item,/\.qxframe9a7c2-item-content\.is-intrinsic\{min-width:auto\}/);
+  assert.match(item,/\.qxframe9a7c2-item-title\.is-wrapping\{display:flex;width:fit-content/);
+  const dividend=html.slice(html.indexOf('data-card="dividend-income"'),
+    html.indexOf('<!-- @end dividend-income -->'));
+  assert.equal((dividend.match(/class="qxframe9a7c2-item-content is-intrinsic"/g)||[]).length,4);
+  assert.equal((dividend.match(/class="qxframe9a7c2-item-title is-wrapping"/g)||[]).length,4);
+});
+
 check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources', () => {
   const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   assert.match(item,/\.qxframe9a7c2-item-media\.is-icon\{\s*width:1rem;height:1rem;border:0;border-radius:0;background:transparent\}/,

@@ -380,6 +380,13 @@ export function themeTokens(resolved) {
   root['accordion-padding'] = rem(editorial ? 1
     : ext.typography === 'compact' && ext.density === 'dense' ? 0.5
     : PADDING[ext.padding] <= 1 ? 0.625 : 1);
+  // Pinned Accordion component family: Maia/Mira/Luma/Rhea use a framed,
+  // clipped surface; others use divided rows without an outer box.
+  // Sera uses a 24px trigger gap but retains the unframed editorial surface.
+  const accordionFramed = ['maia','mira','luma','rhea'].includes(style);
+  root['accordion-framed'] = accordionFramed ? '1' : '0';
+  root['accordion-overflow'] = accordionFramed ? 'hidden' : 'visible';
+  root['accordion-trigger-gap'] = rem(['maia','mira','luma','sera','rhea'].includes(style) ? 1.5 : 0);
   // Pinned SidebarMenu gaps: control look distinguishes 4/0/1/2px tiers.
   // The group block inset follows the existing dense vs normal control axis.
   const sidebarMenuGap = { 'solid-shadow': .25, solid: 0, tinted: .25, transparent: .0625, 'light-solid': .125, ghost: .125 };

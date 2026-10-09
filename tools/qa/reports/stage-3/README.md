@@ -1,5 +1,11 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — shared Collapse framed recipe and Dividend intrinsic Item title
+
+Same-Chromium node evidence after sibling fix: 202/528 total height outliers unchanged, but Sera Dividend decreases from -89.75px to -44.25px. Original shadcn Sera ItemContent and ItemTitle have intrinsic flex sizing/wrapping that QX's long-standing one-line clamp suppresses. Introduced opt-in shared `ItemContent.is-intrinsic` and `ItemTitle.is-wrapping`, applying only to Dividend's four holdings; default truncated Item behavior remains covered.
+
+The original Rhea/Maia Accordion is an actual framed `Accordion` with 1px border, vertical/horizontal 16px trigger inset, 24px disclosure gap, 16px content inset and muted/50 opened background; existing native QX Collapse was unframed, had zero horizontal padding/gap and therefore shorter text blocks. Three closed theme inputs (`accordion-framed`, `accordion-overflow`, `accordion-trigger-gap`) now drive the shared Collapse adapter. Frameless Nova/Vega/Lyra/Sera remain unboxed; Sera retains the original 24px gap. Added source-derived static and Chromium checks across all eight styles/light-dark. Pending final newest-HEAD CI; no height claim until remeasurement, runtime JS untouched.
+
 ## 2026-10-09 — source sibling-structure restoration and next-node probes
 
 Verified previous GitHub checkpoint `65c80d01`: QXFRAME CI `37866512674`, CSS Schema `37866512679` both succeeded; 33/33 Chromium cases passed. The pinned same-Linux-browser first-Card height residual is **202/528 >0.5px**; this is not acceptance.

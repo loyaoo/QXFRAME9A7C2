@@ -494,7 +494,9 @@ try {
         return rows.map(row=>{
           const chart=row.querySelector('.pv-mini-chart'),amount=row.querySelector('.pv-num');
           return {chartDirect:chart?.parentElement===row,amountDirect:amount?.parentElement===row,
-            childCount:row.children.length,actions:row.querySelectorAll('.qxframe9a7c2-item-actions').length};
+            childCount:row.children.length,actions:row.querySelectorAll('.qxframe9a7c2-item-actions').length,
+            contentMinWidth:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-content')).minWidth,
+            titleDisplay:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-title')).display};
         });
       })()`);
       assert.equal(actual.length,4,style+' dividend has four holdings');
@@ -502,6 +504,8 @@ try {
         assert.ok(row.chartDirect&&row.amountDirect,style+' holding '+index+' requires source sibling layout');
         assert.equal(row.childCount,3,style+' holding '+index+' Item has three direct children');
         assert.equal(row.actions,0,style+' no extra ItemActions wrapper');
+        assert.equal(row.contentMinWidth,'auto',style+' original flex min-content behavior');
+        assert.equal(row.titleDisplay,'flex',style+' source ItemTitle flex-wrap behavior');
       }
     }
   });
@@ -833,7 +837,10 @@ try {
             expectedFaqTabsHeight:Math.max(32,px(css(root).getPropertyValue('--qxframe9a7c2-theme-control-height'))*16),
             faqContentLine:px(css(accordionContent).lineHeight),
             expectedFaqContentLine:px(css(accordionContent).fontSize)*px(css(root).getPropertyValue('--qxframe9a7c2-theme-text-leading')),
-            actualGap:px(css(summary).columnGap),faqHeight:faq.getBoundingClientRect().height,
+            actualGap:px(css(summary).columnGap),
+            accordionBorder:px(css(faq.querySelector('.qxframe9a7c2-collapse.is-native')).borderTopWidth),
+            accordionInlinePadding:px(css(summary).paddingLeft),
+            faqHeight:faq.getBoundingClientRect().height,
             notificationHeight:doc.querySelector('[data-card="notification-settings"]').getBoundingClientRect().height};
           root.classList.toggle('dark',prev);return ans;
         })()`);
@@ -841,7 +848,13 @@ try {
         assert.equal(actual.fieldGaps.length,5,style+'/'+mode+' checkbox Field rows');
         for(const g of actual.fieldGaps)assert.ok(Math.abs(g-actual.expectedFieldGap)<=.5,
           style+'/'+mode+' checkbox Field consumes theme gap: '+g+'/'+actual.expectedFieldGap);
-        assert.ok(Math.abs(actual.actualGap)<=.5,style+'/'+mode+' no invented FAQ gap');
+        assert.ok(Math.abs(actual.actualGap-(['maia','mira','luma','sera','rhea'].includes(style)?24:0))<=.5,
+          style+'/'+mode+' source Accordion trigger gap');
+        const framed=['maia','mira','luma','rhea'].includes(style);
+        assert.ok(Math.abs(actual.accordionBorder-(framed?1:0))<=.5,
+          style+'/'+mode+' native Accordion outer border');
+        assert.ok(Math.abs(actual.accordionInlinePadding-(framed?({maia:16,mira:8,luma:16,rhea:16}[style]):0))<=.5,
+          style+'/'+mode+' native Accordion horizontal inset');
         assert.ok(Math.abs(actual.faqTabsHeight-actual.expectedFaqTabsHeight)<=.5,
           style+'/'+mode+' FAQ Tabs rail matches source control height: '+actual.faqTabsHeight+'/'+actual.expectedFaqTabsHeight);
         assert.ok(Math.abs(actual.faqContentLine-actual.expectedFaqContentLine)<=.5,
