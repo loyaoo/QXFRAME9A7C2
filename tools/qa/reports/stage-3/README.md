@@ -1,5 +1,13 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — bulk shared header, compact item, zero stack/table, Cover typography
+
+Latest source-paired report `7a71ad29`: 528/528, **112/528 >0.5px** (handoff 202), 0 pinned Card geometry subset mismatches. Sera Claimable Badge 443.03/443.03px and StockPerformance 440.25/440.25px exactly matched.
+
+Same-Chromium node measurements from this report identify four additional independent shared causes: PayoutThreshold Sera action header QX heading width242.84px vs upstream 268.86px because QX used 32px Card spacing as the action column gap vs source 6px heading/meta gap; 3-line vs 2-line description adds22.75px of its +21.75px Card delta. Header uses existing shared heading gap now. Vega KitchenIsland four sm Items had QX 12px top/bottom insets vs source10px, each adding4px, exact +16px Card difference; shared Item sm size now subtracts4px from its Theme space anchor rather than2px. RecentTransactions five table rows source ~57px vs QX59px: shared Stack.is-gap-0 erroneously created 2px, and embedded QX Table had separate borders rather than upstream Tailwind-collapsed borders. Corrected both shared utilities, expected −11px Card height. CoverArt pinned label/footer text metrics: Vega Label source12px/QX16, Sera Label19.5/QX16 and description source39/QX32. Two closed Theme typography-leading roles in shared FormLabel/CardDescription artwork modifiers target those exact source properties without changing Card heights or artwork Item dimensions.
+
+Added pinned same-browser ±0.5px whole Card gates for Vega/Sera CoverArt, Vega KitchenIsland, Vega/Nova RecentTransactions, and browser/static checks for shared action gap, item-sm padding, true gap0 and collapsed table. New CI result and aggregate 528 count pending; no acceptance threshold lowered.
+
 ## 2026-10-09 — batch source-backed shared StatusBadge/Divider/CoverArt
 
 Previous SHA `615d72d2` has QXFRAME CI and CSS Schema Acceptance **both green**, 528/528 same-Chromium source pairs, 116/528 Card heights outside ±0.5px, 0 pinned geometry subset mismatches.

@@ -50,6 +50,9 @@
 
 /* Structural slots: partitioned footers follow the theme; is-divided is explicit. */
 .qxframe9a7c2-card-header,.qxframe9a7c2-card-footer{display:flex;min-width:0;gap:var(--_qxframe9a7c2-card-padding)}
+/* Source CardHeader grid's action column uses the SAME editorial heading
+ * gap, not the surrounding Card's large section spacing. */
+.qxframe9a7c2-card-header{gap:var(--qxframe9a7c2-card-header-gap,var(--_qxframe9a7c2-card-heading-gap))}
 .qxframe9a7c2-card-footer.is-gap-0{gap:0}
 .qxframe9a7c2-card-footer.is-column{flex-direction:column;gap:var(--qxframe9a7c2-card-footer-gap,.5rem)}
 .qxframe9a7c2-card-header{align-items:flex-start;background:var(--_qxframe9a7c2-card-bg);min-height:0;padding:var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding) calc(var(--_qxframe9a7c2-card-padding) / 2);border-bottom:0 solid var(--_qxframe9a7c2-card-divider);border-start-start-radius:max(0px,var(--_qxframe9a7c2-card-radius));border-start-end-radius:max(0px,var(--_qxframe9a7c2-card-radius))}
@@ -67,6 +70,7 @@
 }
 .qxframe9a7c2-card-header>.qxframe9a7c2-card-title{flex:1 1 auto}
 .qxframe9a7c2-card-heading>.qxframe9a7c2-card-title{flex:0 1 auto}
+.qxframe9a7c2-card-description.is-artwork-meta{font-size:.75rem;line-height:var(--qxframe9a7c2-theme-artwork-description-leading,1rem)}
 .qxframe9a7c2-card-description{margin:0;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:var(--_qxframe9a7c2-card-font-size);font-weight:400;line-height:var(--qxframe9a7c2-theme-description-leading,1.4285714286)}
 .qxframe9a7c2-card-header-action,.qxframe9a7c2-card-extra{min-width:0;flex:0 0 auto;align-self:flex-start;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 

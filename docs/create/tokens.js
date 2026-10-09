@@ -126,6 +126,8 @@ export const THEME_TOKENS = [
   L('badge-label-font-size', 'Status Label typography size'),
   L('badge-label-leading', 'Status Label line box'),
   L('badge-label-height', 'Status Label intrinsic or fixed line box'),
+  L('artwork-label-leading', 'Art placeholder Label type-leading by style'),
+  L('artwork-description-leading', 'CoverArt meta description source-leading'),
   L('table-cell-inset', 'Static card-embedded Table cell inset from source density'),
   L('item-space', 'Static Item md padding and column gap; size variants derive from it'),
   L('item-description-leading', 'Composed Item description line-height multiplier', 'number'),

@@ -650,6 +650,33 @@ try {
     }
   });
 
+  await step('Source Card action gap, Item sm vertical insets and transaction zero Stack', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")','Kitchen Item');
+    for(const style of ['vega','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' source header/Item');
+      const v=await evaluate(`(() => {
+        const d=document.querySelector('[data-create-frame]').contentDocument,css=e=>d.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+        const header=d.querySelector('[data-card="payout-threshold"] .qxframe9a7c2-card-header');
+        const small=d.querySelector('[data-card="kitchen-island"] .qxframe9a7c2-item.is-sm');
+        const stack=d.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-stack.is-gap-0');
+        const table=d.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-table.is-embedded');
+        const label=d.querySelector('[data-card="cover-art"] .qxframe9a7c2-form-label.is-artwork-meta');
+        const desc=d.querySelector('[data-card="cover-art"] .qxframe9a7c2-card-description.is-artwork-meta');
+        return {headerGap:px(css(header).columnGap),smPadding:px(css(small).paddingTop),
+          stackGap:px(css(stack).rowGap),tableCollapse:css(table).borderCollapse,
+          artLabel:px(css(label).lineHeight),artDesc:px(css(desc).lineHeight)};
+      })()`);
+      assert.ok(Math.abs(v.headerGap-(style==='sera'?6:4))<=.5,style+' pinned Header action gap');
+      if(style==='vega')assert.ok(Math.abs(v.smPadding-10)<=.5,'Vega pinned sm Item padding');
+      assert.ok(Math.abs(v.stackGap)<=.01,style+' semantic gap-0 must be zero');
+      assert.equal(v.tableCollapse,'collapse',style+' source Tailwind Table border collapse');
+      if(style==='vega'){assert.ok(Math.abs(v.artLabel-12)<=.5);assert.ok(Math.abs(v.artDesc-16)<=.5)}
+      if(style==='sera'){assert.ok(Math.abs(v.artLabel-19.5)<=.5);assert.ok(Math.abs(v.artDesc-19.5)<=.5)}
+    }
+  });
+
   await step('Pinned status Badge/Stock separator/Cover artwork consume shared recipes', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=cover-art]")','Cover Artwork');

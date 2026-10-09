@@ -692,6 +692,33 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('Source Card action gap, compact Item, zero Stack and collapsed embedded Table', () => {
+  const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  const comp=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  const table=fs.readFileSync(path.join(root,'src/styles/components/table.css'),'utf8');
+  const html=read('preview-01.html');
+  assert.match(card,/\.qxframe9a7c2-card-header\{gap:var\(--qxframe9a7c2-card-header-gap,var\(--_qxframe9a7c2-card-heading-gap\)\)\}/);
+  assert.match(comp,/\.qxframe9a7c2-flex\.is-gap-0,\.qxframe9a7c2-stack\.is-gap-0\{--_qxframe9a7c2-layout-gap:0\}/);
+  assert.match(item,/\.qxframe9a7c2-item\.is-sm\{--_qxframe9a7c2-static-item-space:max\(\.625rem,calc\(var\(--qxframe9a7c2-theme-item-space\) - \.25rem\)\)\}/);
+  assert.match(table,/\.qxframe9a7c2-table\.is-embedded\{[^}]*border-collapse:collapse;/);
+  assert.match(comp,/\.qxframe9a7c2-form-label\.is-artwork-meta\{font-size:\.75rem;line-height:var\(--qxframe9a7c2-theme-artwork-label-leading,1rem\)\}/);
+  assert.match(card,/\.qxframe9a7c2-card-description\.is-artwork-meta\{font-size:\.75rem;line-height:var\(--qxframe9a7c2-theme-artwork-description-leading,1rem\)\}/);
+  const cover=html.slice(html.indexOf('<!-- @card cover-art -->'),html.indexOf('<!-- @end cover-art -->'));
+  assert.match(cover,/qxframe9a7c2-form-label is-artwork-meta/);
+  assert.match(cover,/qxframe9a7c2-card-description is-artwork-meta/);
+  for(const token of ['artwork-label-leading','artwork-description-leading']){
+    assert.ok(read('compiler.js').includes("root['"+token+"']"),token+' compiler');
+    assert.ok(read('tokens.js').includes("L('"+token+"'"),token+' schema');
+  }
+  for(const [style,expectedLabel,expectedDesc] of [['vega',12,16],['sera',19.5,19.5]]){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const number=t=>parseFloat(body.match(new RegExp('--qxframe9a7c2-theme-'+t+':\\s*([^;]+);'))?.[1])*16;
+    assert.equal(number('artwork-label-leading'),expectedLabel,style+' source Cover label line');
+    assert.equal(number('artwork-description-leading'),expectedDesc,style+' source Cover description line');
+  }
+});
+
 check('Pinned StatusBadge, optional Divider and CoverArtwork share component compositions', () => {
   const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
   const comp=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');

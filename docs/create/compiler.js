@@ -360,6 +360,10 @@ export function themeTokens(resolved) {
   root['badge-label-font-size']=editorial||style==='mira'?'0.625rem':'0.75rem';
   root['badge-label-leading']=editorial?'0.892857142857rem':style==='mira'?'1.015625rem':'1rem';
   root['badge-label-height']=editorial?'auto':'1.25rem';
+  // CoverArt's explicit text-xs utility inherits distinct pinned style lines.
+  // Its Label and CardDescription do not have identical source typography.
+  root['artwork-label-leading']=style==='vega'?'0.75rem':editorial?'1.21875rem':'1rem';
+  root['artwork-description-leading']=editorial?'1.21875rem':'1rem';
   // Pinned shadcn Table: compact 8px vs spacious 12px cell padding.
   // Existing padding/radius allocation axes determine the tier; no style class.
   const tableSpacious = PADDING[ext.padding] >= 2 ||

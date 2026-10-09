@@ -163,6 +163,18 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' Syncing source-paired Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
+        if((style==='vega'||style==='sera')&&id==='cover-art'){
+          if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error(style+' CoverArt source Label/Footer line boxes mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='vega'&&id==='kitchen-island'){
+          if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Vega KitchenIsland source small Item paddings mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
+        if((style==='vega'||style==='nova')&&id==='recent-transactions'){
+          if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error(style+' RecentTransactions source collapse/gap0 table mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
         if(style==='sera'&&id==='stock-performance'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error('Sera StockPerformance source-optional Separator Card mismatch: '+
