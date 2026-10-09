@@ -104,8 +104,8 @@ try {
     // Cross-style small Item regression discovered by full 528-run, not a single-style exception.
     vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions','savings-targets','card-overview','contribution-history','power-usage','notification-settings'],
     nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions','savings-targets','receiving-method','account-access','cover-art','contribution-history','power-usage','notification-settings','card-overview'],
-    rhea:['faq','claimable-balance','kitchen-island','cover-art','power-usage','notification-settings'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets','cover-art','power-usage','notification-settings'],
-    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island','cover-art','power-usage','notification-settings'],
+    rhea:['faq','claimable-balance','kitchen-island','cover-art','power-usage','notification-settings','savings-targets'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets','cover-art','power-usage','notification-settings'],
+    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island','cover-art','power-usage','notification-settings','savings-targets'],
     lyra:['faq','claimable-balance','savings-targets','upcoming-payments','account-access','cover-art','dividend-income','kitchen-island','payments','power-usage','notification-settings','receiving-method'],mira:['upcoming-payments','claimable-balance','savings-targets','faq','receiving-method','account-access','cover-art','power-usage','notification-settings']
   };
   const sourceNodePairs={};
@@ -245,6 +245,17 @@ try {
         if((style==='vega'||style==='nova')&&id==='recent-transactions'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' RecentTransactions source collapse/gap0 table mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
+        if(id==='savings-targets'){
+          // Source note is intrinsic-width within the footer flex row: do not
+          // force it full-width merely to center the text.
+          const note='You have not met your targets for this';
+          const sourceNote=record.source.find(n=>(n.text||'').includes(note));
+          const qxNote=record.qx.find(n=>(n.text||'').includes(note));
+          if(!sourceNote||!qxNote||Math.abs(sourceNote.x-qxNote.x)>.5||
+            Math.abs(sourceNote.w-qxNote.w)>.5||
+            Math.abs(sourceNote.h-qxNote.h)>.5)
+            throw new Error(style+' SavingsTargets footer note source width/inset mismatch: '+JSON.stringify({source:sourceNote,qx:qxNote}));
         }
         if(['vega','lyra','mira','nova','maia'].includes(style)&&id==='savings-targets'){
           const sourceFirst=record.source.find(x=>x.className.includes('cn-item group/item'));

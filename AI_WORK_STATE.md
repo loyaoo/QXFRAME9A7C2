@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Stage 3 shared FAQ prose / Savings footer note parity (CI pending)
+
+- Reconciled Git/PR/CI at stable development HEAD `34b369233bc14e06bf6e57c7cf1395296828d53c`: PR #265 Draft/unmerged; main and backup at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`; QXFRAME CI #37916334634 and CSS Schema #37916334873 both SUCCESS, 528/528 first Card height diagnostic 0 above 0.5px. Previous Windows package delivered.
+- Task S3-FAQ-SAVINGS-VISUAL-003: source-pinned Nova reference versus QX screenshot shows FAQ answer prose must use normal foreground; QX Collapse default renders it muted. Shared `collapse.css` now consumes public per-instance `--qxframe9a7c2-collapse-content-color` with unchanged secondary fallback; the composed FAQ Card sets this one existing Theme foreground role for all nine answers (no preview-owned CSS, no JS runtime change).
+- Savings Targets footer note's source has an intrinsic text-width centered child; QX's authored `pv-full` inflated its flex width, shifting text in Preview 01. Removed only this superfluous class; no height locks. Pinned same-browser source trace strict-checks note x / width / height for all eight Styles (light); existing first-Card + Sera full sibling thresholds unchanged. Create Chromium test checks all nine FAQ answers use Card foreground while preserving panel activation.
+- NEXT: full QXFRAME + CSS Schema on new submitted HEAD, fix any real regression, use only final-HEAD successful Actions artifact to rebuild Windows ZIP (local JS / CRC / HTTP). Owner manual Stage3 approval pending; Stage4/5 untouched. Estimates total ~65%, Stage3 ~64%.
+
+
 ## CURRENT — 2026-10-09 Fix Release static FAQ attribute-order contract (new final CI required)
 
 - HEAD `24bcbaaab54b7f5ed9af929f3bafeef2e19ff98f`: QXFRAME #37916022095 source-preview-geometry SUCCESS, Windows tools SUCCESS, but Release FAILED on `Full release verification`: strict pre-existing `verify-create-app` pattern requires adjacent `data-pv-tabs data-type="segmented"`. Adding `data-pv-equal` between the two accidentally broke this valid authoring contract. The new shared Tabs and Table CSS are not implicated by this failure.

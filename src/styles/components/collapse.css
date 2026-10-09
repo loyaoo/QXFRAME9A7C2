@@ -27,7 +27,8 @@
 .qxframe9a7c2-collapse-extra{flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 .qxframe9a7c2-collapse-panel{overflow:hidden;background:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-panel{background:transparent}
-.qxframe9a7c2-collapse-content{padding:0.375rem var(--_qxframe9a7c2-control-padding-inline);color:var(--_qxframe9a7c2-semantic-text-secondary)}
+/* Public per-instance prose color. Default Collapse keeps muted detail text. */
+.qxframe9a7c2-collapse-content{padding:0.375rem var(--_qxframe9a7c2-control-padding-inline);color:var(--qxframe9a7c2-collapse-content-color,var(--_qxframe9a7c2-semantic-text-secondary))}
 /* Capability resolves last and suppresses hover/focus disclosure decoration without changing Collapse behavior. */
 .qxframe9a7c2-collapse-item.is-disabled{--_qxframe9a7c2-collapse-main-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed;--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-indicator-ring:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed;--_qxframe9a7c2-collapse-item-opacity:.55}
 .qxframe9a7c2-collapse-main:disabled{--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed}

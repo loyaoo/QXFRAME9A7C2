@@ -1460,6 +1460,8 @@ try {
       const faq=doc.querySelector('[data-card="faq"]');
       const actions=[...faq.querySelectorAll('.pv-tabs .qxframe9a7c2-tabs-tab-action')];
       const panels=[...faq.querySelectorAll('[data-pv-tab-panel]')];
+      const bodyColors=[...faq.querySelectorAll('.qxframe9a7c2-collapse-content')].map(el=>doc.defaultView.getComputedStyle(el).color);
+      const faqForeground=doc.defaultView.getComputedStyle(faq).color;
       const tabList=faq.querySelector('.qxframe9a7c2-tabs-list');
       const shells=[...faq.querySelectorAll('.qxframe9a7c2-tabs-tab-shell:not([hidden])')];
       const slotWidths=shells.map(node=>node.getBoundingClientRect().width);
@@ -1476,7 +1478,7 @@ try {
       const billingSingleOpen=billingItems.map(e=>e.open);
       actions[2].click(); const goals=snap();
       actions[0].click(); const restored=snap();
-      return {tabs:actions.length,panels:panels.length,segmented:!!faq.querySelector('.pv-tabs .qxframe9a7c2-tabs.is-segmented'),hasEqualModifier,slotWidths,listWidth,slotGap,initial,billing,goals,restored,billingSingleOpen,
+      return {tabs:actions.length,panels:panels.length,segmented:!!faq.querySelector('.pv-tabs .qxframe9a7c2-tabs.is-segmented'),hasEqualModifier,slotWidths,listWidth,slotGap,bodyColors,faqForeground,initial,billing,goals,restored,billingSingleOpen,
         names:[...faq.querySelectorAll('details')].map(e=>e.name)};
     })()`);
     assert.equal(result.tabs,3);
@@ -1488,6 +1490,9 @@ try {
       'FAQ segmented slots must be equal width: '+JSON.stringify(result));
     assert.ok(Math.abs(result.slotWidths.reduce((sum,n)=>sum+n,0)+result.slotGap*2-result.listWidth)<=1.5,
       'FAQ three equal Tabs slots must fill available list width: '+JSON.stringify(result));
+    assert.equal(result.bodyColors.length,9,'FAQ independent panels retain all nine descriptions');
+    assert.ok(result.bodyColors.every(color=>color===result.faqForeground),
+      'FAQ prose must consume regular Card foreground, not muted Collapse default: '+JSON.stringify(result));
     assert.deepEqual(result.initial.shown,['general']);
     assert.deepEqual(result.billing.shown,['billing']);
     assert.deepEqual(result.goals.shown,['goals']);

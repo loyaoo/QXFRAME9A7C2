@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — FAQ prose foreground and Savings note intrinsic width (CI pending)
+
+Pinned source/QX Nova screenshot comparison shows FAQ content normally painted with foreground while shared Collapse default uses secondary text. The framework Collapse content now consumes an opt-in public per-instance `--qxframe9a7c2-collapse-content-color`, retaining original secondary fallback; Preview 01 FAQ Card scopes Theme foreground to all independent panels. The Savings Targets footer note is an intrinsic centered flex child upstream; remove QX `pv-full` that stretches its text box and shifts visible alignment. Same-browser pinned source audit enforces Savings note text x, width and height for all eight styles; Create browser gate enforces all nine FAQ answers matching Card foreground. Neither gate is relaxed; no private preview CSS, fixed Card height, new Theme token, or JS runtime change. Both CI suites, matching tree and Windows offline artifact remain pending. Overall ~65%; Stage 3 ~64%.
+
 ## 2026-10-09 — CI static FAQ attribute-order repair (rerun pending)
 
 The first combined Tabs/Table run #37916022095 passed same-browser source-preview-geometry but Release failed an existing structural pattern requiring `data-pv-tabs data-type="segmented"`. The new `data-pv-equal` had been placed in between. Moved `data-pv-equal` after `data-type`, leaving the strict verifier unchanged; next final-HEAD complete CI and same-tree Windows ZIP required.
