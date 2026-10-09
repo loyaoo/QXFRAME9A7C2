@@ -23,8 +23,16 @@
     // QX Select keeps all focus/keyboard/open-state ownership.
     var labelId = host.getAttribute('data-pv-label-id');
     if (labelId) {
-      var focusInput = select.getInputElement();
-      if (!focusInput) throw new Error('Preview Select missing focus input: ' + labelId);
+      // Select's own focus accessor can reference a Control-owned node
+      // before the host is fully placed. Resolve its LIVE composed input
+      // from the authoring Field after create, never a detached template.
+      var field = host.closest('.qxframe9a7c2-form-field');
+      var focusInput = field && field.querySelector('.qxframe9a7c2-select-input');
+      if (!focusInput || !focusInput.isConnected) {
+        var candidate = select.getInputElement();
+        if (candidate && candidate.isConnected) focusInput = candidate;
+      }
+      if (!focusInput || !focusInput.isConnected) throw new Error('Preview Select missing connected focus input: ' + labelId);
       focusInput.id = labelId;
     }
   });
