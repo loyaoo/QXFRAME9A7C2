@@ -4,6 +4,12 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 S3 transition: source-locked Sera peer stretch, non-editorial Buy Investment remains unaccepted (CI pending)
+
+- `6d7bb85eadf6a4466db41c45bf7f9a2d6e4c51e1` source-preview-geometry job #113739959814 failed a **pre-existing non-editorial sibling height exposure**: global Flex stretch propagated Vega Buy Investment's currently oversized Card into source-locked Vega SavingsTargets first Card, making its first Item 204px vs source148px. This is not permission to relax the existing Item/first Card source gate. QXFRAME Release/CSS Schema remained pending when repair began; no acceptance claim.
+- Retained source-validated small Button width/description repair for Sera (both 115.922px and22.75px). Shared `Card peer row` alignment role now permits **editorial Sera** natural sibling stretch while **non-editorial** styles retain previously source-paired first Card intrinsic height. Shared `Flex.is-peer-row.is-equal` owns the layout and consumes closed `card-peer-alignment` Theme input (`stretch` Sera, `flex-start` others); no private Preview CSS, fixed Card height or dropped threshold. This is an incremental dual-card compatibility policy, **not final validation of non-editorial Buy Investment sibling geometry**; the remaining second-card parity is an explicit Stage3 visual QA item.
+- Mandatory: next current-HEAD 2 complete CI green, 528 same-Chromium source diagnostic, full dist+docs demo ZIP from matching Release artifact, HTTP/ZIP inspection and PR Draft checkpoint. Protected main+backup untouched. Engineering estimates total65%, Stage3~64% while full owner visual acceptance pending.
+
 ## CURRENT — 2026-10-09 CI strict failures corrected: generated Theme order + source two-column stretch (pending new final CI)
 
 - On `ec8f46d9377677cb7ee71e0e6f16996b2346f617`, QXFRAME #37905457103 Release FAILURE because generated `theme.css` token order differed from the compiler's `THEME_TOKENS` output: `button-sm-padding-inline` must be before `control-padding`. CSS Schema #37905457100 failed the same exact generated default check. Reordered **both** :root/.dark declarations without changing computed values, no verifier or threshold modifications.

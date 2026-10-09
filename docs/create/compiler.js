@@ -348,6 +348,10 @@ export function themeTokens(resolved) {
 
   // Containers.
   root['card-padding'] = rem(PADDING[ext.padding]);
+  // Only Sera's source-paired Savings row currently requires a stretched
+  // equal-height peer. Other visual families retain verified intrinsic rows
+  // until their Buy Investment sibling geometry is independently closed.
+  root['card-peer-alignment'] = editorial ? 'stretch' : 'flex-start';
   // shadcn Empty uses a compact 24px or spacious 48px surface. The
   // existing padding axis selects the tier; media/title scale derives in CSS.
   root['empty-inset'] = rem(PADDING[ext.padding] <= 1 ? 1.5 : 3);
