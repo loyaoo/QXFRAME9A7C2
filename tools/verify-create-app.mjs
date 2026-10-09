@@ -306,8 +306,11 @@ check('Receiving Method radio choices use shared Field composition, not custom C
 
   assert.doesNotMatch(section,/pv-choice-card/,'no invented private Radio choice surface');
   const css=read('preview.css');
-  assert.match(css,/\.pv-choice-field\s*\{\s*padding-block-end:\s*\.625rem;/,
-    'pinned Field horizontal option has only 10px bottom inset');
+  assert.match(css,/\.pv-choice-field\s*\{\s*--qxframe9a7c2-choice-field-padding-bottom:\s*\.625rem;/,
+    'pinned Field option sets 10px local inset via public component variable');
+  const shared=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  assert.match(shared,/padding-block-end:var\(--qxframe9a7c2-choice-field-padding-bottom,/,
+    'shared CheckField consumes authored source pb-2.5 rather than app-owned padding');
   assert.doesNotMatch(css,/\.pv-choice-card(?:\s|\{|\:)/,'obsolete custom Card styling must be absent');
 });
 
