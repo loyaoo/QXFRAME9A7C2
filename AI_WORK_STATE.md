@@ -19,6 +19,13 @@
 
 ## CURRENT
 
+2026-10-09 CREATEAPP-V3-S3 — same-browser pinned source QA and Loading Card follow-up:
+- PR #265 is still Draft, on `redesign/create`; no merge, `main` and `backup/main-before-pr265-2026-10-08` stay at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+- Wired existing `tools/qa/preview-01-audit.mjs` into a dedicated QXFRAME CI `source-preview-geometry` job. This job checks out pinned shadcn source at `295a1f114a138f23b5dfee0e0c6812394dfeb90c`, verifies all **159 source hashes**, builds the reference, renders it and QX in **one Linux Chromium**, records/uploads 528 Card measurements and Nova screenshots. The source renderer is not part of framework/build output.
+- First actual same-browser result, run [#37862646440](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37862646440): **528/528 measured, no page errors, 226/528 heights differ >0.5px**. Exactly **66** core-geometry differences are solely Luma source radius 26px vs v3 §4.5 mandatory QX Card maximum 24px (33 cards × 2 modes). All other core radius/title/inset/top properties match. Initial strict CI check rejected these 66; revised validator now hard-locks the *exact* v3-authorized cap and rejects every other deviation; [#37863258225](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37863258225) source job passed.
+- Source/QX Nova Loading Card instrumented: source Skeleton content Stack has **8px** gaps and total card height **348px**; QX Stack inherited theme's **16px** gap causing 364px height; identical +16px across all eight styles. Added shared `qxframe9a7c2-flex.is-gap-2` / `qxframe9a7c2-stack.is-gap-2` with 8px and applied to Loading Card's three-line and button-row wrappers. Static and real browser gates now require source-locked heights in 8 styles × 2 modes. **New CI pending**; do not claim reduced 226/528 before the final source job measures it.
+- Do not weaken original v3 24px container cap or old 528 data. No `qxframe.js`/Controller modifications; report only verified diagnostics. Subsequent geometry priorities: Syncing State (source vs QX Empty), FAQ Tabs visual variant, Payout Threshold and Upcoming Payments. Check CI latest HEAD before accepting.
+
 PAYOUT THRESHOLD FUNCTIONAL SOURCE FIX (2026-10-08, after same-browser Item QA):
 - Pinned upstream `payout-threshold.tsx` updates `$2500.00` as the Slider changes; the QX Preview previously displayed an inert label despite working Slider ValueController.
 - `preview-01.html` adds a generic data-keyed output label and `data-pv-output-format="money-2"` on the existing QX Slider. `preview-cards.js` registers `Slider.onChange` to project the value, without a second value state or new input implementation. Added static gate and real keyboard ArrowRight/ArrowLeft browser assertion.
