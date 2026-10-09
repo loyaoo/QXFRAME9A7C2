@@ -43,6 +43,17 @@ Coverage limits and next work:
 
 ## Nova light: diagnostic heights
 
+### FAQ Tabs presentation — shared segmented type
+
+The locked `faq.tsx` mounts `TabsList` with a muted segmented background
+and three evenly sized triggers. Previously the QX Preview's own Tab renderer
+used its default line/underline type, a visible mismatch despite functioning
+selection. The FAQ now passes `data-type="segmented"` through the existing
+`C.Tabs.create` interface; framework Tabs owns the background, selected
+surface, keyboard and focus. No FAQ-specific CSS was added. Static and
+Chromium gates assert the segmented variant. **New source-paired and
+browser results pending.**
+
 ## 2026-10-09 — paired Chromium source audit + Loading Card fix
 
 **Reference build is now reproducible inside CI.** The dedicated QXFRAME
