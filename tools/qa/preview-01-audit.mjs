@@ -59,6 +59,40 @@ try {
         fs:cs.fontSize,lh:cs.lineHeight};
     });
   },{source,id});
+  const sourceStyleProbe=async (source,cardId)=>page.evaluate(({source,cardId})=>{
+    const card=document.querySelector(source?'[data-qa-card="'+cardId+'"]':'[data-card="'+cardId+'"]');
+    if(!card)return {missing:true};
+    const root=card.getBoundingClientRect();
+    const snapshot=(e)=>{if(!e)return null;const c=getComputedStyle(e),r=e.getBoundingClientRect();return {
+      tag:e.tagName.toLowerCase(),className:String(e.className).slice(0,110),text:(e.children.length?'':e.textContent||'').slice(0,48),
+      x:+(r.x-root.x).toFixed(2),y:+(r.y-root.y).toFixed(2),width:+r.width.toFixed(2),height:+r.height.toFixed(2),
+      display:c.display,flex:c.flex,flexBasis:c.flexBasis,minWidth:c.minWidth,whiteSpace:c.whiteSpace,
+      gap:c.gap,rowGap:c.rowGap,columnGap:c.columnGap,
+      pt:c.paddingTop,pb:c.paddingBottom,pl:c.paddingLeft,pr:c.paddingRight,
+      marginTop:c.marginTop,borderTop:c.borderTopWidth,borderBottom:c.borderBottomWidth,
+      fontSize:c.fontSize,lineHeight:c.lineHeight,gridRows:c.gridTemplateRows};
+    };
+    if(cardId==='dividend-income'){
+      const item=card.querySelector(source?'[data-slot="item-group"] > [data-slot="item"]':'.qxframe9a7c2-item-group > .qxframe9a7c2-item');
+      const content=item?.querySelector(source?'[data-slot="item-content"]':'.qxframe9a7c2-item-content');
+      return {firstItem:snapshot(item),children:[...item?.children||[]].map(snapshot),
+        title:snapshot(content?.querySelector(source?'[data-slot="item-title"]':'.qxframe9a7c2-item-title')),
+        description:snapshot(content?.querySelector(source?'[data-slot="item-description"]':'.qxframe9a7c2-item-desc'))};
+    }
+    const calendar=card.querySelector(source?'[data-slot="calendar"]':'.qxframe9a7c2-calendar');
+    const pick=selectors=>{for(const selector of selectors){const el=calendar?.querySelector(selector);if(el)return el}return null};
+    const cells=[...calendar?.querySelectorAll(source?'[data-day]':'.qxframe9a7c2-calendar-cell')||[]];
+    const weekday=pick(source?['.rdp-weekday','th']:['.qxframe9a7c2-calendar-weekday']);
+    const navigation=pick(source?['.rdp-nav','nav']:['.qxframe9a7c2-calendar-header']);
+    const weeks=source?[...calendar?.querySelectorAll('.rdp-week')||[]]:[];
+    return {calendar:snapshot(calendar),navigation:snapshot(navigation),
+      weekday:snapshot(weekday),firstCell:snapshot(cells[0]),lastCell:snapshot(cells.at(-1)),
+      cellsCount:cells.length,weekCount:weeks.length,weekdayCount:calendar?.querySelectorAll(source?'.rdp-weekday':'.qxframe9a7c2-calendar-weekday').length,
+      item:snapshot(calendar?.closest(source?'[data-slot="item"]':'.qxframe9a7c2-item')),
+      cellsLastSeven:cells.slice(-7).map(x=>({text:x.textContent.trim().slice(0,4),outside:source?x.closest('.rdp-outside')!==null:x.classList.contains('is-outside'),display:getComputedStyle(x).display})),
+      calendarMarkup:calendar?.outerHTML.slice(0,650)};
+  },{source,cardId});
+  const sourceStyleProbes={};
   let novaCardStructures = {};
   // Focused structure evidence for unresolved Stage 3 cards, measured in the
   // same Chromium and font as the pinned upstream renderer.
@@ -91,6 +125,10 @@ try {
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
       if(!dark) for(const id of targetCards[style]||[])
         sourceNodePairs[style+'/'+id]={source:await nodeStructure(true,id)};
+      if(!dark && ['sera','mira','nova'].includes(style))
+        for(const id of (style==='sera'?['dividend-income']:['upcoming-payments']))
+          sourceStyleProbes[style+'/'+id]={source:await sourceStyleProbe(true,id)};
+
 
       if(style==='nova'&&!dark) novaLoadingSource=await loadingStructure(true);
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-reference.png'), fullPage: true });
@@ -107,6 +145,13 @@ try {
         record.qx=await nodeStructure(false,id);
         console.log('[stage3-target-'+style+'-'+id+'] '+JSON.stringify(record));
       }
+      if(!dark && ['sera','mira','nova'].includes(style))
+        for(const id of (style==='sera'?['dividend-income']:['upcoming-payments'])) {
+          const key=style+'/'+id;
+          sourceStyleProbes[key].qx=await sourceStyleProbe(false,id);
+          console.log('[stage3-css-probe-'+style+'-'+id+'] '+JSON.stringify(sourceStyleProbes[key]));
+        }
+
 
       if(style==='nova'&&!dark) console.log('[stage3-payout-textarea-css] '+JSON.stringify(await page.evaluate(() => {
         const el=document.querySelector('[data-card="payout-threshold"] textarea'),cs=getComputedStyle(el);
