@@ -563,6 +563,19 @@ check('Loading Card uses shared 8px Flex/Stack gap instead of preview-owned geom
   assert.doesNotMatch(read('preview.css'),/\.pv-loading-skeleton-gap/);
 });
 
+check('Claimable display title inherits CardTitle line-height and Payout uses shared Slider track variant', () => {
+  const css=read('preview.css');
+  assert.match(css,/\.pv-text-5xl\s*\{\s*font-size:\s*3rem;\s*\}/);
+  const html=read('preview-01.html');
+  const claim=html.slice(html.indexOf('<!-- @card claimable-balance -->'),html.indexOf('<!-- @end claimable-balance -->'));
+  assert.match(claim,/qxframe9a7c2-card-title pv-heading pv-text-5xl pv-num/);
+  const payout=html.slice(html.indexOf('<!-- @card payout-threshold -->'),html.indexOf('<!-- @end payout-threshold -->'));
+  assert.match(payout,/data-pv-slider data-pv-track-height/);
+  const sliderCss=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');
+  assert.match(sliderCss,/\.qxframe9a7c2-slider\.is-track-height\{height:var\(--_qxframe9a7c2-slider-rail\)\}/);
+  assert.match(read('preview-cards.js'),/root\.classList\.add\('is-track-height'\)/);
+});
+
 check('Payout Threshold amount follows framework Slider onChange, not a second input', () => {
   const html=read('preview-01.html');
   const slice=html.slice(html.indexOf('<!-- @card payout-threshold -->'),html.indexOf('<!-- @end payout-threshold -->'));
