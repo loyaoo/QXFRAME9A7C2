@@ -24,17 +24,27 @@
     // QX Select keeps all focus/keyboard/open-state ownership.
     var labelId = host.getAttribute('data-pv-label-id');
     if (labelId) {
-      // Select's own focus accessor can reference a Control-owned node
-      // before the host is fully placed. Resolve its LIVE composed input
-      // from the authoring Field after create, never a detached template.
+      // FieldHost can project a composed Select after create() returns.
+      // Bind the source FieldLabel to the *connected*, live focus input
+      // when it exists. Never abort the whole Preview's later Sliders/Tabs.
       var field = authoredField;
-      var focusInput = field && field.querySelector('.qxframe9a7c2-select-input');
-      if (!focusInput || !focusInput.isConnected) {
-        var candidate = select.getInputElement();
-        if (candidate && candidate.isConnected) focusInput = candidate;
+      var observer;
+      function bindLabel() {
+        var input = field && field.querySelector('.qxframe9a7c2-select-input');
+        if (!input || !input.isConnected) {
+          var candidate = select.getInputElement();
+          if (candidate && candidate.isConnected) input = candidate;
+        }
+        if (!input || !input.isConnected) return false;
+        input.id = labelId;
+        if (observer) observer.disconnect();
+        return true;
       }
-      if (!focusInput || !focusInput.isConnected) throw new Error('Preview Select missing connected focus input: ' + labelId);
-      focusInput.id = labelId;
+      if (!bindLabel() && field) {
+        observer = new MutationObserver(bindLabel);
+        observer.observe(field, {childList:true,subtree:true});
+        requestAnimationFrame(bindLabel);
+      }
     }
   });
   var sliders = new Map();
