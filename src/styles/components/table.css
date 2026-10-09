@@ -211,3 +211,8 @@
 .qxframe9a7c2-table.is-embedded tbody tr:not(.qxframe9a7c2-table-expanded-row)>td{
   background:var(--_qxframe9a7c2-table-row-bg);
 }
+/* A semantic muted body cell must win over the row's default foreground.
+ * Opt-in only; ordinary Table cells retain the normal row state recipe. */
+.qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row)>td.is-muted{
+  color:var(--qxframe9a7c2-table-muted-foreground,var(--qxframe9a7c2-theme-muted-foreground));
+}

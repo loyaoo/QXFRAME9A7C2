@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Recent Transactions semantic muted Table cells (CI pending)
+
+Pinned Nova reference dates have muted-foreground. QX Table's row-level foreground selector overrides the weaker Preview utility on the five date `td` elements, leaving an unintended dark date color. A reusable `Table td.is-muted` opt-in now consumes Theme muted foreground with an optional Table public override. Preview01's five cells use this modifier; no global row color or private Preview CSS changed. Chromium computes and compares the five date colors to the actual Theme token. Requires both CI workflows green and matching Windows local package.
+
 ## 2026-10-09 — FAQ equal-width segmented tabs (CI pending)
 
 Pinned shadcn Nova screenshot renders General/Billing/Goals as three equal slots filling the segmented TabsList; QX's intrinsic-width tabs leave unused gray rail. Added reusable opt-in shared Tabs.is-equal horizontal flex modifier and Preview01 data-pv-equal authoring mapping; this is framework CSS rather than a Preview-only styling rule. Added real Chromium regression for equal shell widths, total list fill and existing panel switching. Needs both CI suites green before calling accepted, and matching Windows dist/docs.

@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Stage3 shared Table muted cell color (CI pending)
+
+- In pinned source Nova visual screenshot, Recent Transactions' five date cells use muted-foreground. QX screenshot showed regular/darker text even though cells carried `pv-muted`; cause: Table row's high-specificity `tbody tr > td` foreground owner overrides lower-specificity standalone preview utility.
+- Task S3-TABLE-MUTED-001: shared opt-in `Table td.is-muted` sets Theme muted foreground, with optional public table muted override. Preview's five date cells consume that role instead of relying on a defeated preview utility. Browser test asserts all five date computed foregrounds equal Theme muted. No global Table default color change, no Preview CSS patch, no token expansion.
+- Combine with prior `b1919e1d` shared `Tabs.is-equal` FAQ layout and the 16-mode Buy Investment peer geometry audit. Both full CI workflows mandatory at the new final HEAD. No merge. Overall~65%, Stage3~64% until wider visuals+manual owner signoff.
+
+
 ## CURRENT — 2026-10-09 Stage3 FAQ Tabs equal-width source layout (CI pending)
 
 - Real pinned source vs QX Nova visual comparison showed FAQ segmented **General/Billing/Goals** source tabs fill the entire rail with three equal-width slots, while QX left a large unused segment to the right. The generic Tabs component only had intrinsic-width shells.

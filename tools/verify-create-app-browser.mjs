@@ -1499,6 +1499,27 @@ try {
     assert.equal(new Set(result.names).size,3);
   });
   
+  await step('Recent Transactions dates consume semantic muted Table cell foreground', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=recent-transactions] .qxframe9a7c2-table")', 'Transactions Table ready');
+    const result=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const table=doc.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-table');
+      const cells=[...table.querySelectorAll('tbody td.is-muted')];
+      const probe=doc.createElement('span');
+      probe.style.color='var(--qxframe9a7c2-theme-muted-foreground)';
+      doc.body.appendChild(probe);
+      const expected=doc.defaultView.getComputedStyle(probe).color;
+      probe.remove();
+      const actual=cells.map(el=>doc.defaultView.getComputedStyle(el).color);
+      const normal=doc.defaultView.getComputedStyle(table.querySelector('tbody td:not(.is-muted)')).color;
+      return {length:cells.length,actual,expected,normal};
+    })()`);
+    assert.equal(result.length,5,'all five transaction dates use the shared muted cell role');
+    assert.ok(result.actual.every(color=>color===result.expected),
+      'muted dates must use Theme muted foreground instead of Table row foreground: '+JSON.stringify(result));
+  });
+
   await step('Motion none stops static Skeleton, Spinner and Accordion indicator in 16 modes', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','Motion preview');
