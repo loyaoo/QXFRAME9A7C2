@@ -43,6 +43,19 @@ try {
       }];
     }));
   }, ref);
+  const loadingStructure = async source => page.evaluate(source => {
+    const card = document.querySelector(source ? '[data-qa-card="loading-card"]' : '[data-card="loading-card"]');
+    if (!card) return null;
+    const root = card.getBoundingClientRect();
+    return [card,...card.querySelectorAll('header,div,footer')].slice(0,23).map((el,i)=>{
+      const rect=el.getBoundingClientRect(),css=getComputedStyle(el);
+      return {i,className:String(el.className).slice(0,100),
+        top:+(rect.top-root.top).toFixed(2),height:+rect.height.toFixed(2),
+        gap:css.rowGap,paddingTop:css.paddingTop,paddingBottom:css.paddingBottom,
+        display:css.display,flex:css.flexDirection};
+    });
+  },source);
+  let novaLoadingSource = null;
   for (const style of (process.env.QA_STYLE ? [process.env.QA_STYLE] : ['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea'])) {
     for (const dark of [false, true]) {
       const key = style + (dark ? '-dark' : '');
@@ -53,6 +66,7 @@ try {
       await page.addStyleTag({ content: '*{content-visibility:visible}body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const reference = await measure(true);
+      if(style==='nova'&&!dark) novaLoadingSource=await loadingStructure(true);
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-reference.png'), fullPage: true });
       await page.goto(`${origin}/docs/create/preview-01.html`);
       await page.waitForSelector('[data-card="contribution-history"]');
@@ -61,6 +75,7 @@ try {
       await page.addStyleTag({ content: 'body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const actual = await measure(false);
+      if(style==='nova'&&!dark) console.log('[stage3-loading-nova-structure] '+JSON.stringify({source:novaLoadingSource,qx:await loadingStructure(false)}));
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-qx.png'), fullPage: true });
       for (const id of new Set([...Object.keys(reference), ...Object.keys(actual)])) {
         const ref = reference[id], qx = actual[id];
