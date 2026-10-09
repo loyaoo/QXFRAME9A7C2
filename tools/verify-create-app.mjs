@@ -576,6 +576,7 @@ check('audit #20: FAQ native details is rendered through the framework Collapse 
   assert.equal((faq.match(/class="qxframe9a7c2-collapse-content"/g)||[]).length,9);
   // The pinned FAQ has three independent QX-owned Tabs content panels.
   assert.match(faq,/data-pv-tab-group="faq"/);
+  assert.match(faq,/data-pv-tabs data-type="segmented"/);
   for(const key of ['general','billing','goals']){
     assert.match(faq,new RegExp('data-pv-tab-panel="'+key+'"'));
     assert.equal((faq.match(new RegExp('name="qx-create-faq'+(key==='general'?'':'-'+key)+'"','g'))||[]).length,3);
