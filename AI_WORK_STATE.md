@@ -4,6 +4,10 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 Release source-order correction (new CI pending)
+
+- Release #37897438706 failed token schema initialization: calendar-weekday-leading was assigned before text-leading, yielding an undefined Theme token during generated CSS verification. Moved weekday-leading projection immediately after text-leading initialization, retaining exactly the same intended values. Strict source-paired geometry job and CSS Schema must re-run at new HEAD. PR Draft.
+
 ## CURRENT — 2026-10-09 CREATEAPP-V3-S3 source-backed FieldLabel + Calendar weekday batch (CI pending)
 
 - Confirmed baseline HEAD `61dd0a71`, PR #265 Open/Draft, QXFRAME #37888241850 and CSS Schema #37888241908 SUCCESS; 528/528 paired Chromium, 70/528 Card height deltas >0.5px, zero unauthorized geometry subset mismatches, 66 approved Luma caps. Protected main/backup unchanged.

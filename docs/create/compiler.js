@@ -422,7 +422,6 @@ export function themeTokens(resolved) {
   root['calendar-padding'] = rem(['nova','lyra'].includes(style) ? .5 : .75);
   root['calendar-cell-size'] = rem(editorial ? 2.25 : 2.5);
   // Source Lyra's rdp-weekday uses its inherited 4/3 line-box, not compact body 1.625.
-  root['calendar-weekday-leading'] = style === 'lyra' ? String(4/3) : root['text-leading'];
   // Pinned SidebarMenu gaps: control look distinguishes 4/0/1/2px tiers.
   // The group block inset follows the existing dense vs normal control axis.
   const sidebarMenuGap = { 'solid-shadow': .25, solid: 0, tinted: .25, transparent: .0625, 'light-solid': .125, ghost: .125 };
@@ -451,6 +450,7 @@ export function themeTokens(resolved) {
   root['card-section-inset'] = ext.sections === 'none' ? '0' : rem(PADDING[ext.padding]);
   root['card-section-width'] = ext.sections === 'none' ? '0' : '1px';
   root['text-leading'] = ext.typography === 'compact' ? '1.625' : String(20 / 14);
+  root['calendar-weekday-leading'] = style === 'lyra' ? String(4/3) : root['text-leading'];
   root['heading-leading'] = editorial ? String(28 / 18) : ext.typography === 'compact' ? String(20 / 14) : style === 'nova' ? '1.375' : '1.5';
   root['description-leading'] = editorial || ext.typography === 'compact' ? '1.625' : String(20 / 14);
 
