@@ -390,7 +390,7 @@ export function themeTokens(resolved) {
   // Pinned AccordionTrigger/Content typography: Lyra text-xs (12/16),
   // Mira text-xs/relaxed (12/19.5), other styles text-sm (14/20).
   // This is a distinct composition role; general body line-height differs.
-  root['accordion-line-height']=rem(style==='lyra'?1:style==='mira'?1.21875:1.25);
+  root['accordion-line-height']=style==='lyra'?'1rem':style==='mira'?'1.21875rem':'1.25rem';
   // Pinned source Calendar: Nova/Lyra p-2, others p-3. Upcoming Payments
   // uses responsive 32/40px day cells, 36px on editorial Sera.
   root['calendar-padding'] = rem(['nova','lyra'].includes(style) ? .5 : .75);
