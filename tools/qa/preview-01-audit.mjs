@@ -101,7 +101,22 @@ try {
         return {rootFont:getComputedStyle(document.documentElement).fontSize,textarea:{box:el.getBoundingClientRect().height,
           minHeight:cs.minHeight,maxHeight:cs.maxHeight,height:cs.height,boxSizing:cs.boxSizing,
           fieldSizing:cs.fieldSizing,display:cs.display,inlineStyle:el.getAttribute('style'),
-          cssClass:el.className},slider:{box:slider.getBoundingClientRect().height,rail:getComputedStyle(slider.querySelector('.qxframe9a7c2-slider-rail')).height,
+          cssClass:el.className,
+          matchedRules:(() => {
+            const result=[];
+            const walk=(rules,source)=>{
+              for(const rule of Array.from(rules||[])){
+                if(rule.cssRules)walk(rule.cssRules,source);
+                if(!rule.selectorText||!rule.style?.minHeight)continue;
+                try{if(el.matches(rule.selectorText))result.push({source,selector:rule.selectorText.slice(0,180),minHeight:rule.style.minHeight,priority:rule.style.getPropertyPriority('min-height')});}
+                catch{}
+              }
+            };
+            for(const sheet of Array.from(document.styleSheets)){
+              try{walk(sheet.cssRules,sheet.href||'[inline]');}catch{}
+            }
+            return result.slice(-30);
+          })()},slider:{box:slider.getBoundingClientRect().height,rail:getComputedStyle(slider.querySelector('.qxframe9a7c2-slider-rail')).height,
           class:slider.className}};
       })));
       if(style==='nova'&&!dark) console.log('[stage3-loading-nova-structure] '+JSON.stringify({source:novaLoadingSource,qx:await loadingStructure(false)}));
