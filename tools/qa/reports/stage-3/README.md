@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — DatePanel omitted from shared Theme geometry owner (CI pending)
+
+The new Create real-Chromium regression gate caught a genuine defect: standalone `DatePanelCell` 4px radius vs QX Button 10px, despite changing its radius consumer to `--_qxframe9a7c2-action-radius`. Cause: DatePanel wasn't a registered **independent geometry owner** under `theme-visual-v2.css`, unlike Calendar/PeriodPanel/Button, so inherited old 4px family action value. Register DatePanel under existing geometry owner selector to share the same Theme radius-button, ratio and Popup radius calculations, without forking a new recipe. Remaining Select natural-padding and opaque selected Primary changes unchanged; CI and browser gate rerun mandatory.
+
 ## 2026-10-09 — User Select/DatePicker shared component consistency follow-up (CI pending)
 
 Targeted owner defects after prior 528/528 first-Card acceptance: Select option heights too tall and content clipped; DatePicker selected hover 80% alpha and wrong shape role. Shared ItemCollection rows now consume no fixed/min item height: computed vertical padding centers one Control font-size × 1.4 line to resolved Control height, while wrapping/custom renders grow naturally. Default label/content-slot/root no longer cut off multiline; explicit user row padding remains possible; group/title minimums unchanged. Date/Calendar shell uses Popup shape; day/month uses Button Action shape; public per-component radius overrides remain higher priority. Selected day/month no longer fade to 80%-transparent Primary on hover; soft range selection retains 10/20%. Existing Create Chromium browser suite now checks option md/sm/lg line metrics and multiline growth and DatePicker/PeriodPanel selected shape/colors. CI and Windows same-HEAD dist/docs bundle pending; no main or backup updates. Stage3 other visual acceptance remains open.

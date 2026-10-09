@@ -4,6 +4,13 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 DatePanel shared Theme Geometry owner fix (new CI required)
+
+- On `ec70db9c7dedb1fa220f763698a0096bdb935529`, QXFRAME #37912292100 source-preview-geometry job #113760062249 SUCCESS: 528/528 matched, 0/528 first Card height outliers, 0 unauthorized four-property differences, 66 permitted Luma caps. Windows tools SUCCESS. CSS Schema #37912292118 FAILED during Theme Studio browser because the new source-paired DatePicker radius assertion found standalone DatePanel day radius **4px vs Button 10px**, even after DateCell switched from navigation to action radius.
+- Root: shared Theme geometry resolver in `src/styles/main/theme-visual-v2.css` assigns `--_qxframe9a7c2-action-radius` to Button/Calendar/PeriodPanel roots but omitted the generic `.qxframe9a7c2-date-panel` root. DateCell inherited legacy `--_action-radius` (4px). Registered DatePanel in the **existing same geometry owner selector**, reusing the exact Button radius/size formula, no copied color or radius formula, no new theme token, retains public overrides.
+- Both CI suites must pass on next HEAD, including the new Create browser gate measuring Select natural one-line/sm-md-lg height, multi-line/custom expansion, and Date/Period selected Primary+Button-radius. No constraints relaxed, no main/backup/JS runtime changes. Earlier Select `1.4em` constraint defect already replaced with rem-sized Control font token × unitless1.4.
+- Overall program ~65%, Stage 3 ~64%, targeted task ~85% until two full CIs + matching Windows dist/docs artifact and manual visual signoff.
+
 ## CURRENT — 2026-10-09 Select padding CSS unit-ratchet correction (CI pending)
 
 - First branch head `55f9756019e6e28539551afca87facdb1a28ccbe` QXFRAME release job #113758921256 failed v3 CSS constraints only: one new `em` unit in Select ItemCollection block-padding; rule forbids non-rem length increases. Corrected to arithmetic of `--_qxframe9a7c2-control-font-size` × unitless `1.4` and Control height (no fixed row height). No gate ratchets loosened. Other source geometry/browser/schema must be verified again on new HEAD.
