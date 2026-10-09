@@ -1,5 +1,12 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — 84/528 verified, AccountAccess nested FormLabel owner
+
+`33316902` source-preview-geometry SUCCESS: 528/528 pinned same-Chromium/forced-system-ui pairs, **84/528** first Card height diagnostics outside ±0.5px (102 prior, 104 original), 0 nonauthorized four-property subset mismatches. Verified 0px Card delta for Sera CardOverview and IndexInvesting, all Lyra/Mira/Nova/Maia SavingsTargets, Mira FAQ, Nova ReceivingMethod. Separate Release and CSS Schema job conclusions are not inferred from this source job.
+
+New AccountAccess node evidence: source Nova Current Password `cn-label` h14px wrapped in 16px Forgot? row, QX FormLabel h20px because `.form-field.is-composed>.form-label` skipped nested FieldLabel. Root Source/QX Card371.25/375.25px Nova; Lyra362/366px and Mira329.5/333px, same ancestor selector issue. Broadened existing single framework CSS FormLabel rule to descendant under FormField, preserving Theme label line-height semantics inside composition rows. Paired Nova/Lyra/Mira label + Card strict checks added. Updated first Card count must be verified by next CI; no hardcoded Card height or threshold change.
+
+
 ## 2026-10-09 — Failed strict gate correction: source Item label line-box, footer margin, Button modifier
 
 CI #37887238932 failed in Release static check due to changed literal `.is-no-shrink` declaration, and source-preview-geometry strict Nova SavingsTargets probe: source first muted Item134px/QX144px, source ItemContent82px/QX80px. The source ItemFooter is an actual sibling, but Preview still specified a redundant 12px top margin after the Item parent gap. Deleted that Preview CSS owner; parent gap is canonical in shared Item. Source text-xs ItemDescription label is 18px in Nova, 19.5px Sera, 16px other sampled styles, while preview `pv-text-xs` hardcoded16px. Added registered `item-kpi-label-leading` theme role and a shared Item label semantic variant, used by both SavingsTargets labels. Source-aligned per-style heights must be established by new CI.

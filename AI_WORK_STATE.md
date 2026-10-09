@@ -4,6 +4,12 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 84/528 measured, shared nested FieldLabel root cause closeout (CI pending)
+
+- At `33316902` [QXFRAME #37887627002](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37887627002) source-preview-geometry job SUCCESS: pinned source 528/528 same Chromium forced system-ui, first Card height outliers **84/528** (down from 102 and starting 104), geometry subset zero unauthorized. Exact 0px matches: Sera CardOverview, Sera IndexInvesting, Lyra/Mira/Nova/Maia SavingsTargets, Mira FAQ, Nova ReceivingMethod. QXFRAME Release and CSS Schema were still executing when the next batch started, not yet claimed green.
+- Node comparison pinned AccountAccess: Nova source Card371.25px/QX375.25px and form Current Password row source16px/QX20px. Lyra source Card362/QX366, Mira329.5/QX333. QX `.is-composed > .form-label` only styles direct children: the password FieldLabel is nested in a Flex row beside Forgot?, so its inherited line box becomes 20px/19.5px while source FieldLabel maintains font-height and the row remains 16px. Extended the **single existing shared FormLabel owner selector** to nested descendants in FormField, no preview CSS compensation. Added strict source-paired AccountAccess Card + label check for Nova/Lyra/Mira. Expect similar 4px convergence for other source styles, but next 528 run must confirm.
+- Keep PR #265 Draft and protected refs unchanged. Next: validate two full CI suites and report updated 528 count, handle failures, then remaining Lyra UpcomingPayments/calendar and other nested visual differences. CREATEAPP-V3 ~65%, Stage3 ~64% provisional.
+
 ## CURRENT — 2026-10-09 strict QA feedback closeout: ItemFooter single gap and Button selector regression (CI pending)
 
 - `ff89e656` QXFRAME run #37887238932 failed on two actionable sources: release static assertion expects exact `.qxframe9a7c2-button.is-no-shrink{flex-shrink:0}`; geometry strict Nova SavingsTargets trace shows ItemFooter after being moved to sibling still has extraneous 12px `margin-top` authored privately in `docs/create/preview.css` and its explicit text-xs label is 16px instead of source Nova 18px.

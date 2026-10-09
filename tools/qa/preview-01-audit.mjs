@@ -212,6 +212,13 @@ try {
         }
         if(style==='sera'&&id==='card-overview'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
           throw new Error('Sera Overview peer Card Button natural no-wrap/shrink mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        if(['nova','lyra','mira'].includes(style)&&id==='account-access'){
+          const srcLabel=record.source.find(x=>x.text==='Current Password');
+          const qxLabel=record.qx.find(x=>x.text==='Current Password');
+          if(!srcLabel||!qxLabel||Math.abs(srcLabel.h-qxLabel.h)>.5||
+            Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error(style+' AccountAccess nested FieldLabel source line-box mismatch: '+JSON.stringify({srcLabel,qxLabel,src:record.source[0],qx:record.qx[0]}));
+        }
         if(style==='mira'&&id==='faq'){
           const srcContent=record.source.find(x=>x.className.includes('cn-accordion-content-inner'));
           const qxContent=record.qx.find(x=>x.className.includes('qxframe9a7c2-collapse-content'));
