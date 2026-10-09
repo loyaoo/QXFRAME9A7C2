@@ -620,27 +620,25 @@ try {
     }
   });
 
-  await step('Dividend intrinsic first-title min-content drives natural flex wrapping', async () => {
+  await step('Source editorial ItemTitle text transformation is theme-driven, not a one-off wrap', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
-    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")','Dividend intrinsic title');
-    for(const style of ['nova','sera']){
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")','Dividend titles');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
-      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Dividend title');
-      const row=await evaluate(`(() => {
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Dividend text transformation');
+      const titles=await evaluate(`(() => {
         const doc=document.querySelector('[data-create-frame]').contentDocument;
-        const item=doc.querySelector('[data-card="dividend-income"] .qxframe9a7c2-item');
-        const title=item.querySelector('.qxframe9a7c2-item-title');
-        const css=doc.defaultView.getComputedStyle(title);
-        const rect=title.getBoundingClientRect();
-        const content=item.querySelector('.qxframe9a7c2-item-content');
-        return {intrinsic:title.classList.contains('is-intrinsic-line'),
-          whiteSpace:css.whiteSpace,minWidth:css.minWidth,
-          titleWidth:rect.width,contentWidth:content.getBoundingClientRect().width};
+        return [...doc.querySelectorAll('[data-card="dividend-income"] .qxframe9a7c2-item-title')]
+          .map(el=>({transform:doc.defaultView.getComputedStyle(el).textTransform,
+            nowrap:doc.defaultView.getComputedStyle(el).whiteSpace,
+            forced:el.classList.contains('is-intrinsic-line')}));
       })()`);
-      assert.equal(row.intrinsic,true,style+' source intrinsic title modifier');
-      assert.equal(row.whiteSpace,'nowrap',style+' first title single line');
-      assert.equal(row.minWidth,'max-content',style+' source max-content participating in Item flex');
-      assert.ok(row.contentWidth>=row.titleWidth-.5,style+' title must not overflow flex content');
+      assert.equal(titles.length,4,style+' source titles');
+      for(const title of titles){
+        assert.equal(title.transform,style==='sera'?'uppercase':'none',style+' themed editorial title');
+        assert.equal(title.nowrap,'normal',style+' title wrapping not artificially blocked');
+        assert.equal(title.forced,false,style+' no one-off intrinsic title class');
+      }
     }
   });
 

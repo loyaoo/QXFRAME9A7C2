@@ -59,7 +59,7 @@ try {
         minWidth:cs.minWidth,minHeight:cs.minHeight,
         pt:cs.paddingTop,pb:cs.paddingBottom,pl:cs.paddingLeft,pr:cs.paddingRight,
         borderTop:cs.borderTopWidth,borderBottom:cs.borderBottomWidth,
-        fs:cs.fontSize,lh:cs.lineHeight};
+        fs:cs.fontSize,lh:cs.lineHeight,transform:cs.textTransform};
     });
   },{source,id});
   const sourceStyleProbe=async (source,cardId)=>page.evaluate(({source,cardId})=>{
@@ -164,8 +164,8 @@ try {
           const qxItem=record.qx.find(x=>x.className.includes('qxframe9a7c2-item is-muted'));
           const sourceTitle=record.source.find(x=>x.className.includes('cn-item-title'));
           const qxTitle=record.qx.find(x=>x.className.includes('qxframe9a7c2-item-title'));
-          if(!sourceItem||!qxItem||!sourceTitle||!qxTitle||Math.abs(sourceItem.h-qxItem.h)>.5||
-              Math.abs(sourceTitle.h-qxTitle.h)>.5)
+          if(!sourceItem||!qxItem||!sourceTitle||!qxTitle||sourceTitle.transform!==qxTitle.transform||
+              Math.abs(sourceItem.h-qxItem.h)>.5||Math.abs(sourceTitle.h-qxTitle.h)>.5)
             throw new Error('Sera Dividend first Item natural wrapping mismatch: '+JSON.stringify({sourceItem,qxItem,sourceTitle,qxTitle}));
         }
         if(style==='lyra'&&id==='faq'){

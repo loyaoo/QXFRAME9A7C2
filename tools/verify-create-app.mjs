@@ -259,10 +259,8 @@ check('Source Accordion frame and Item intrinsic wrapping are shared Theme/compo
   const dividend=html.slice(html.indexOf('data-card="dividend-income"'),
     html.indexOf('<!-- @end dividend-income -->'));
   assert.equal((dividend.match(/class="qxframe9a7c2-item-content is-intrinsic"/g)||[]).length,4);
-  assert.equal((dividend.match(/class="qxframe9a7c2-item-title is-wrapping(?: is-intrinsic-line)?"/g)||[]).length,4,
-    'all four first-Card titles retain shared ItemTitle semantics');
-  assert.equal((dividend.match(/class="qxframe9a7c2-item-title is-wrapping is-intrinsic-line"/g)||[]).length,1,
-    'only the intrinsic first title enforces its source text width');
+  assert.equal((dividend.match(/class="qxframe9a7c2-item-title is-wrapping"/g)||[]).length,4,
+    'all four Dividend titles share the same intrinsic source ItemTitle rules');
 });
 
 check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources', () => {
@@ -337,14 +335,20 @@ check('Receiving Method radio choices use shared Field composition, not custom C
   assert.doesNotMatch(css,/\.pv-choice-card(?:\s|\{|\:)/,'obsolete custom Card styling must be absent');
 });
 
-check('Dividend first title participates in intrinsic flex wrapping without fixed row height', () => {
+check('Sera editorial ItemTitle consumes shared theme text transformation rather than forcing nowrap', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   const html=read('preview-01.html');
   const card=html.slice(html.indexOf('<!-- @card dividend-income -->'),html.indexOf('<!-- @end dividend-income -->'));
-  assert.match(css,/\.qxframe9a7c2-item-title\.is-intrinsic-line\{white-space:nowrap;min-width:max-content\}/);
-  assert.match(card,/qxframe9a7c2-item-title is-wrapping is-intrinsic-line">Vanguard VIG/);
-  assert.doesNotMatch(css,/\.qxframe9a7c2-item-title\.is-intrinsic-line\{[^}]*(?:height|width):\d/,
-    'natural min-content title must not pin a pixel width or height');
+  assert.match(css,/\.qxframe9a7c2-item-title\{[^}]*text-transform:var\(--qxframe9a7c2-theme-control-transform,none\)/);
+  assert.doesNotMatch(css,/\.qxframe9a7c2-item-title\.is-intrinsic-line\{/,
+    'editorial sizing belongs to the Theme and the shared Item, not a forced wrap modifier');
+  assert.equal((card.match(/class="qxframe9a7c2-item-title is-wrapping"/g)||[]).length,4);
+  const expected={vega:'none',nova:'none',maia:'none',lyra:'none',mira:'none',luma:'none',sera:'uppercase',rhea:'none'};
+  for(const [style,transform] of Object.entries(expected)){
+    const theme=model.compileTheme(model.normalizeConfig({style})).body;
+    const actual=theme.match(/--qxframe9a7c2-theme-control-transform:\s*([^;]+);/)?.[1];
+    assert.equal(actual,transform,style+' shared editorial text transformation');
+  }
 });
 
 check('Payments Item flex basis and Kitchen Slider intrinsic footprint are source-aligned', () => {

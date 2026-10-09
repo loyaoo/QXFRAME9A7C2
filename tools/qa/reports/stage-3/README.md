@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — replace Dividend nowrap workaround with shared editorial typography
+
+The last `8bae71d0` run closed Sera Dividend at 606.25/606.25px but created six paired Vega/Maia/Luma regressions (146/528 overall). Pinned source `style-sera.css` explicitly sets `.cn-item-title` uppercase and semibold; QX ItemTitle lacked the uppercase mapping. This changes intrinsic min-content and Flex line packing. Removed the one-off `is-intrinsic-line` white-space/max-content modifier and instead made the shared `ItemTitle` consume the existing `--theme-control-transform` (uppercased editorial Sera; none elsewhere). No new token or pixel width/height. Static/browser tests verify all eight styles and consistent four-title markup, paired source Chromium checks Sera first Item and title. New 528 geometry result pending.
+
 ## 2026-10-09 — Dividend/Lyra exact pair, regression isolation
 
 Pinned `8bae71d0` same Chromium 528 audit: **Lyra FAQ 359/359px and Sera Dividend 606.25/606.25px**, both 0px whole-Card height difference. The original fixed source tolerance remains ±0.5px. Aggregate first-Card height outliers **146/528** vs prior 144/528: the new first-title max-content rule eliminated Sera's two light/dark mismatches but introduced one each in Vega/Maia/Luma light and dark. We do not claim monotonic improvement. Source-paired DOM measurements have been enabled for those specific Dividend styles to resolve the cross-style rule; focused Syncing State nodes (Sera/Vega/Maia/Luma/Nova) added for next batch.
