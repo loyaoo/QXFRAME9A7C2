@@ -43,6 +43,33 @@ Coverage limits and next work:
 
 ## Nova light: diagnostic heights
 
+## 2026-10-09 — Nova Payout / Claimable node-level source comparison
+
+The pinned reference and QX paired source job now prints first-Card DOM
+bounding boxes and computed layout for `payout-threshold` and
+`claimable-balance`, rather than guessing from total heights. On the
+last completed paired run (CI #37865241466, Nova/light):
+
+- Claimable source total 374px, QX 356px. The `text-5xl` CardTitle is
+  66px source vs 48px QX, exactly the total 18px deficit; shared Item,
+  footer, content are otherwise identical. The preview's typography helper
+  was erroneously overriding CardTitle `leading-snug` to `line-height:1`.
+  Removed that override without changing the shared Card component recipe.
+- Payout source total 468px, QX 446px. The source `Slider` root is 4px
+  while QX's full-height controller root is 32px (+28px); source Notes
+  Textarea is 100px while QX is 50px (-50px). These *opposite* offsets
+  happen to produce the net -22px total; simple padding tweaks would hide
+  the structural error. A framework-wide opt-in
+  `.qxframe9a7c2-slider.is-track-height` uses the existing internal rail
+  token to size the Slider root, preserving native QX value/focus handling.
+  The Payout Preview activates this class only for that authored instance.
+  Browser checks verify the Nova root is 4px and previous keyboard
+  interactions still work. Textarea computed min-height and inherited
+  declarations are being probed before any size change.
+
+The new source CI has not passed yet for these changes. Continue to enforce
+the v3 Luma 24px Card radius limit and use **same-browser** geometry data.
+
 ### Syncing State — restore authored source Empty padding
 
 The pinned upstream `syncing-state.tsx` explicitly renders
