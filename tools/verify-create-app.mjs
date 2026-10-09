@@ -692,6 +692,21 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
 
 
 
+check('FAQ Footer uses source full-width non-shrinking Button composition', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  const buttons=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
+  const html=read('preview-01.html');
+  const faq=html.slice(html.indexOf('<!-- @card faq -->'),html.indexOf('<!-- @end faq -->'));
+  assert.match(css,/\.qxframe9a7c2-card-footer\.is-gap-0\{gap:0\}/);
+  assert.match(buttons,/\.qxframe9a7c2-button\.is-block\{width:100%\}/);
+  assert.match(buttons,/\.qxframe9a7c2-button\.is-no-shrink\{flex-shrink:0\}/);
+  assert.match(faq,/<footer class="qxframe9a7c2-card-footer is-gap-0"/);
+  assert.equal((faq.match(/qxframe9a7c2-button is-[^"]*is-block is-no-shrink"/g)||[]).length,2,
+    'source FAQ has two full-width shrink-0 actions that occupy separate horizontal intrinsic widths');
+  assert.doesNotMatch(faq,/<button[^>]*pv-full/,
+    'FAQ must use framework Button semantics instead of app-owned forced flex grow');
+});
+
 check('Content-only Card and nested EmptyHeader match pinned Syncing State composition', () => {
   const cardCss=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
   const emptyCss=fs.readFileSync(path.join(root,'src/styles/components/empty.css'),'utf8');

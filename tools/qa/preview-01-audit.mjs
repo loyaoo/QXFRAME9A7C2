@@ -163,6 +163,13 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' Syncing source-paired Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
+        if(style==='sera'&&id==='faq'){
+          const sourceFooter=record.source.find(x=>x.className.startsWith('cn-card-footer'));
+          const qxFooter=record.qx.find(x=>x.className.startsWith('qxframe9a7c2-card-footer'));
+          if(!sourceFooter||!qxFooter||Math.abs(sourceFooter.h-qxFooter.h)>.5||
+             Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Sera FAQ source nonshrinking Button/Footer mismatch: '+JSON.stringify({sourceFooter,qxFooter,source:record.source[0],qx:record.qx[0]}));
+        }
         if(style==='sera'&&id==='dividend-income'){
           const sourceItem=record.source.find(x=>x.className.includes('cn-item group/item'));
           const qxItem=record.qx.find(x=>x.className.includes('qxframe9a7c2-item is-muted'));

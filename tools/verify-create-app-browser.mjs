@@ -620,6 +620,36 @@ try {
     }
   });
 
+  await step('FAQ footer preserves two intrinsic non-shrinking full-width actions', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ footer');
+    for(const style of ['sera','lyra','maia','nova']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' FAQ Footer');
+      const g=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const footer=doc.querySelector('[data-card="faq"] .qxframe9a7c2-card-footer');
+        const elements=[...footer.querySelectorAll('.qxframe9a7c2-button')];
+        const cs=e=>doc.defaultView.getComputedStyle(e),r=footer.getBoundingClientRect();
+        return {gap:parseFloat(cs(footer).columnGap),footerHeight:r.height,
+          buttons:elements.map(el=>({height:el.getBoundingClientRect().height,
+            width:el.getBoundingClientRect().width,left:el.getBoundingClientRect().left-r.left,
+            shrink:cs(el).flexShrink,text:el.querySelector('.qxframe9a7c2-button-label')?.getBoundingClientRect().height}))};
+      })()`);
+      assert.equal(g.gap,0,style+' source adjacent FAQ actions');
+      assert.equal(g.buttons.length,2,style+' source two FAQ Buttons');
+      for(const btn of g.buttons){
+        assert.equal(btn.shrink,'0',style+' Button shrink-0');
+        assert.ok(Math.abs(btn.height-g.buttons[0].height)<=.5,style+' FAQ Buttons share one row height');
+      }
+      assert.ok(Math.abs(g.buttons[1].left-(g.buttons[0].left+g.buttons[0].width))<=.5,
+        style+' source full-width Buttons sit side by side without shrink/gap');
+      assert.ok(Math.abs(g.buttons[0].width-(r=>r)(g.buttons[1].width))<=.5,
+        style+' both actions consume same full-width card-content span');
+      assert.ok(g.footerHeight>=g.buttons[0].height-.5,style+' footer retains natural action height');
+    }
+  });
+
   await step('Syncing State uses symmetric Card insets and nested EmptyMedia in all themes', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state]")','Syncing State composition');
@@ -640,7 +670,7 @@ try {
           innerBottom:parseFloat(c(content).paddingBottom),
           descOffset:parseFloat(c(desc).marginTop)};
       })()`);
-      const expectedInset=style==='sera'?32:style==='nova'||style==='lyra'||style==='mira'?16:24;
+      const expectedInset=style==='sera'?32:style==='rhea'?20:style==='nova'||style==='lyra'||style==='mira'?16:24;
       assert.equal(result.parented,true,style+' EmptyMedia must belong to EmptyHeader');
       assert.ok(Math.abs(result.symmetric)<=.5,style+' source Card owns symmetric vertical insets');
       assert.ok(Math.abs(result.inset-expectedInset)<=.5,style+' source Card vertical padding');
