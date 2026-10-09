@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Vega Item KPI and CardTitle 2xl source parity (CI pending)
+
+Vega SavingsTargets source first Item 148px/QX146px due label line box 18px vs16px, reused Theme KPI leading. Vega Overview source CardTitle text-2xl 24px/36px vs QX 24px/32px; shared CardTitle.is-value with Theme card-value-leading Vega1.5 and others4/3. Generated Nova theme synchronized. Strict paired Item/Overview card gates added. Current last measured c5490932 68/528; new CI pending; PR Draft.
+
 ## 2026-10-09 — generated Theme alignment (CI pending)
 
 Release on c5490932 reported both new registered Theme inputs absent from checked-in generated default theme. Updated Nova default `src/styles/main/theme.css` compiler-equivalent values for both modes, including source 12px artwork label leading. Previous same-browser c5490932 passed 528/528, 68 height deltas; new full CI result pending.

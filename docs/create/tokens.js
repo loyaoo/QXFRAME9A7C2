@@ -165,6 +165,7 @@ export const THEME_TOKENS = [
   L('card-section-width', 'Footer divider width (partition axis)'),
   L('text-leading', 'Body line height (source compact / standard)', 'number'),
   L('heading-leading', 'Heading line height (source style typography)', 'number'),
+  L('card-value-leading', 'CardTitle explicit 2xl metric line-height (source cn-card-title)', 'number'),
   L('description-leading', 'Description line height (source editorial / compact)', 'number'),
 
   // Radius (base × allocation multiplier, shape axes, caps resolved by the compiler).

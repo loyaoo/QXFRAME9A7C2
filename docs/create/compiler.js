@@ -386,7 +386,7 @@ export function themeTokens(resolved) {
     ? 1.625 : style === 'vega' || PADDING[ext.padding] <= 1 ? 1.5 : 20 / 14);
   // Pinned SavingsTargets text-xs Item label is 18px Nova, 19.5px Sera,
   // otherwise 16px. Its explicit text-xs leading differs from ItemDescription.
-  root['item-kpi-label-leading']=style==='nova'?'1.125rem':style==='sera'?'1.21875rem':'1rem';
+  root['item-kpi-label-leading']=['nova','vega'].includes(style)?'1.125rem':style==='sera'?'1.21875rem':'1rem';
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
   root['field-content-gap'] = rem(fieldSpace <= .5 ? .125 : .25);
@@ -452,6 +452,7 @@ export function themeTokens(resolved) {
   root['text-leading'] = ext.typography === 'compact' ? '1.625' : String(20 / 14);
   root['calendar-weekday-leading'] = style === 'lyra' ? String(4/3) : root['text-leading'];
   root['heading-leading'] = editorial ? String(28 / 18) : ext.typography === 'compact' ? String(20 / 14) : style === 'nova' ? '1.375' : '1.5';
+  root['card-value-leading'] = style === 'vega' ? '1.5' : String(4/3);
   root['description-leading'] = editorial || ext.typography === 'compact' ? '1.625' : String(20 / 14);
 
   // Radius.

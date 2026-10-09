@@ -63,6 +63,8 @@
 /* Source CardTitle text-5xl overrides its font but carries each style's
  * explicit typography leading (Vega normal, Nova snug, all others default
  * display-tight). Keep this a shared CardTitle variant, not preview CSS. */
+/* Source 2xl metric titles consume a shared CardTitle line-height role. */
+.qxframe9a7c2-card-title.is-value{line-height:var(--qxframe9a7c2-card-value-leading,var(--qxframe9a7c2-theme-card-value-leading,1.3333333333333333))}
 .qxframe9a7c2-card-title.is-display{
   font-size:3rem;
   line-height:var(--qxframe9a7c2-card-display-leading,var(--qxframe9a7c2-theme-card-display-leading,1))

@@ -4,6 +4,12 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 Vega SavingsTargets and CardOverview 2xl parity (CI pending)
+
+- Previous c5490932 528 source-paired geometry SUCCESS: 68/528 first Card height deltas from 70, Sera PayoutThreshold exact 627.5/627.5px. Pinned Vega SavingsTargets first Item 148px vs QX146px because ItemDescription text-xs 18px vs16px, across 2 items => first Card -4px. Updated shared KPI label leading to 18px Vega (Nova18, Sera19.5, others16), with strict Vega source Item/Content/Footer/Card gate.
+- Vega CardOverview source metric CardTitle 24px/36px from pinned cn-card-title leading-normal, QX 24px/32px due text-size utility. Introduced reusable CardTitle.is-value with closed card-value-leading Theme: Vega1.5, others unchanged 4/3; used for both metric headings, strict paired Vega Overview Card test. Updated generated Nova default Theme. No Card fixed heights, no framework JS, no private Preview layout compensation.
+- Next: verify both full CI suites on final HEAD, report 528 count, fix failures. PR #265 Draft/unmerged, main+backup untouched. Engineering estimates overall65%, Stage364% pending final acceptance.
+
 ## CURRENT — 2026-10-09 default generated Theme source parity (CI pending)
 
 - `c5490932` Release failed verify:theme-tokens because the two new registered Theme tokens were absent from the committed generated default theme CSS (both :root and .dark), though 528 same-browser geometry job SUCCESS with 68/528 on that HEAD. Updated generated `src/styles/main/theme.css` with compiler-equivalent default Nova/neutral field-label-tracking normal, calendar-weekday-leading 20/14, and synchronized previously corrected non-editorial artwork-label-leading 12px. No source architecture or defaults changed beyond the registered compiler recipe.

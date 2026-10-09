@@ -196,7 +196,7 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' RecentTransactions source collapse/gap0 table mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
-        if(['lyra','mira','nova','maia'].includes(style)&&id==='savings-targets'){
+        if(['vega','lyra','mira','nova','maia'].includes(style)&&id==='savings-targets'){
           const sourceFirst=record.source.find(x=>x.className.includes('cn-item group/item'));
           const qxFirst=record.qx.find(x=>x.className.includes('qxframe9a7c2-item is-muted'));
           const sourceContent=record.source.find(x=>x.className.startsWith('cn-item-content'));
@@ -210,6 +210,8 @@ try {
             Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' SavingsTargets ItemContent/ItemFooter sibling ownership mismatch: '+JSON.stringify({sourceFirst,qxFirst,sourceContent,qxContent,sourceFooter,qxFooter,source:record.source[0],qx:record.qx[0]}));
         }
+        if(style==='vega'&&id==='card-overview'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
+          throw new Error('Vega Overview source 2xl metric line-box mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         if(style==='sera'&&id==='card-overview'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
           throw new Error('Sera Overview peer Card Button natural no-wrap/shrink mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         if(['nova','lyra','mira'].includes(style)&&id==='account-access'){
