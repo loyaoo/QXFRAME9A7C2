@@ -470,12 +470,16 @@
   .qxframe9a7c2-input-group:not(.is-mixed-size) > .qxframe9a7c2-button,
   .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-form-input,
   .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-button { --_qxframe9a7c2-v2-size-index: inherit; }
+  /* Controls and multi-line Textarea share typography and padding, not
+     minimum height: Textarea's base 5rem and authored size overrides must win. */
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class] {
     height: auto;
-    min-height: var(--_qxframe9a7c2-control-height);
     padding-block: var(--_qxframe9a7c2-control-padding-block);
     font-size: var(--_qxframe9a7c2-control-font-size);
     line-height: var(--_qxframe9a7c2-control-line-height);
+  }
+  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
+    min-height: var(--_qxframe9a7c2-control-height);
   }
   .qxframe9a7c2-input > .qxframe9a7c2-input-control, .qxframe9a7c2-text-field > .qxframe9a7c2-input-control { height: auto; min-height: var(--_qxframe9a7c2-control-line-height); }
   .qxframe9a7c2-input.is-textarea { padding: 0; }
