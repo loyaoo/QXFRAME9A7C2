@@ -57,7 +57,7 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
     assert.equal((html.match(/class="qxframe9a7c2-empty-title"/g) || []).length, count, page + ' missing Empty title');
     assert.doesNotMatch(html, /class="pv-empty/, page + ' still uses the preview-private Empty');
   }
-  assert.match(read('preview-01.html'), /class="qxframe9a7c2-empty is-composed"><div class="qxframe9a7c2-empty-media is-icon">/);
+  assert.match(read('preview-01.html'), /class="qxframe9a7c2-empty is-composed" style="--qxframe9a7c2-empty-padding:1rem"><div class="qxframe9a7c2-empty-media is-icon">/);
 });
 
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
