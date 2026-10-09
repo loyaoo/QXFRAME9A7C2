@@ -214,6 +214,20 @@ check('Source native Accordion trigger retains the one-pixel transparent layout 
     'all shadcn AccordionTrigger variants use border border-transparent (two layout pixels)');
 });
 
+check('Native Accordion typography uses pinned component line boxes instead of body leading', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');
+  assert.match(css,/line-height:var\(--qxframe9a7c2-theme-accordion-line-height,1\.25rem\)/);
+  assert.ok(read('tokens.js').includes("L('accordion-line-height'"));
+  assert.ok(read('compiler.js').includes("root['accordion-line-height']"));
+  const expected={vega:20,nova:20,maia:20,lyra:16,mira:19.5,luma:20,sera:20,rhea:20};
+  for(const [style,px] of Object.entries(expected)){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const hit=body.match(/--qxframe9a7c2-theme-accordion-line-height:\s*([^;]+);/);
+    assert.ok(hit,style+' line-height Theme input');
+    assert.equal(parseFloat(hit[1])*16,px,style+' pinned Accordion line box');
+  }
+});
+
 check('Source Accordion frame and Item intrinsic wrapping are shared Theme/component rules', () => {
   const compiler=read('compiler.js'),tokens=read('tokens.js');
   const collapse=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');

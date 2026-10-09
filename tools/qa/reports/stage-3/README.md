@@ -1,5 +1,11 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — native FAQ composition line box and 154/528 paired results
+
+Same-browser pinned run on `d58d740c`, source-preview-geometry job `113635342375`, yielded 528 measured, **154/528 >0.5px** (previous 168). Maia/Luma Receiving Method source and QX exactly 487.5/487.5px and 485.5/485.5px; Maia/Luma/Sera SidebarNav respectively 441/441px, 427/427px, 427/427px. New static RadioField shared-variable test supersedes an obsolete `pv-choice-field padding-block-end` assumption and does not change source pb-2.5 acceptance.
+
+Lyra FAQ source first Accordion item 129px, QX 150px, overall source FAQ359px vs QX390.5px. Trigger line boxes are 16px source vs 19.5px QX for four rendered lines (14px total); content uses 16px source vs 19.5px QX for five rendered lines (17.5px total). Their 31.5px sum explains the exact card delta. The native Collapse adapter now consumes a source-derived closed `accordion-line-height` Theme input (Lyra16px, Mira19.5px, all other styles20px) for trigger and content instead of generic body line-height. All regular Collapse instances retain existing behavior. CI and refreshed count pending; no threshold relaxation.
+
 ## 2026-10-09 — source-locked Radio Field and SidebarMenu ownership
 
 The paired Maia/Luma Receiving Method FieldSet is **123.5px source vs 87px QX**, precisely the whole −36.5px Card delta. Its source RadioGroup has a 91.5px Bank Transfer FieldLabel with 1px outer border and 16px top/inline inner Field padding, an authored 10px bottom padding and 14px/19.25px title wrapping to two lines. QX previously rendered 55px frameless CheckFields. Shared `CheckField.is-choice` and `FieldTitle` now own border/padding/title semantics; Preview 01 retains only local pb-2.5. Pinned style ChoiceField inset map (8/10/12/16px) emits one registered Theme input and respects the Padding extension.

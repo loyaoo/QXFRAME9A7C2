@@ -53,7 +53,8 @@
   border:calc(var(--_qxframe9a7c2-accordion-framed) * 1px) solid var(--qxframe9a7c2-theme-border);
   border-radius:var(--qxframe9a7c2-theme-radius-field);
   background:transparent;color:var(--qxframe9a7c2-theme-foreground);
-  font-size:var(--qxframe9a7c2-theme-text-size)
+  font-size:var(--qxframe9a7c2-theme-text-size);
+  line-height:var(--qxframe9a7c2-theme-accordion-line-height,1.25rem)
 }
 /* Hidden native disclosure panels must not be reopened by the flex layout rule. */
 .qxframe9a7c2-collapse.is-native[hidden]{display:none}
@@ -90,5 +91,5 @@
   padding:0 calc(var(--_qxframe9a7c2-accordion-framed) * var(--qxframe9a7c2-theme-accordion-padding)) var(--qxframe9a7c2-theme-accordion-padding);
   color:var(--qxframe9a7c2-theme-muted-foreground);
   font-size:var(--qxframe9a7c2-theme-text-size);
-  line-height:var(--qxframe9a7c2-theme-text-leading)
+  line-height:var(--qxframe9a7c2-theme-accordion-line-height,1.25rem)
 }

@@ -387,6 +387,10 @@ export function themeTokens(resolved) {
   root['accordion-framed'] = accordionFramed ? '1' : '0';
   root['accordion-overflow'] = accordionFramed ? 'hidden' : 'visible';
   root['accordion-trigger-gap'] = rem(['maia','mira','luma','sera','rhea'].includes(style) ? 1.5 : 0);
+  // Pinned AccordionTrigger/Content typography: Lyra text-xs (12/16),
+  // Mira text-xs/relaxed (12/19.5), other styles text-sm (14/20).
+  // This is a distinct composition role; general body line-height differs.
+  root['accordion-line-height']=rem(style==='lyra'?1:style==='mira'?1.21875:1.25);
   // Pinned source Calendar: Nova/Lyra p-2, others p-3. Upcoming Payments
   // uses responsive 32/40px day cells, 36px on editorial Sera.
   root['calendar-padding'] = rem(['nova','lyra'].includes(style) ? .5 : .75);

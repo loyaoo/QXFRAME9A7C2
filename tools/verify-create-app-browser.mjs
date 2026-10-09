@@ -946,7 +946,7 @@ try {
             faqTabsHeight:faqTabs.getBoundingClientRect().height,
             expectedFaqTabsHeight:Math.max(32,px(css(root).getPropertyValue('--qxframe9a7c2-theme-control-height'))*16),
             faqContentLine:px(css(accordionContent).lineHeight),
-            expectedFaqContentLine:px(css(accordionContent).fontSize)*px(css(root).getPropertyValue('--qxframe9a7c2-theme-text-leading')),
+            expectedFaqContentLine:px(css(root).getPropertyValue('--qxframe9a7c2-theme-accordion-line-height'))*16,
             actualGap:px(css(summary).columnGap),
             accordionBorder:px(css(faq.querySelector('.qxframe9a7c2-collapse.is-native')).borderTopWidth),
             accordionInlinePadding:px(css(summary).paddingLeft),
@@ -970,7 +970,7 @@ try {
         assert.ok(Math.abs(actual.faqTabsHeight-actual.expectedFaqTabsHeight)<=.5,
           style+'/'+mode+' FAQ Tabs rail matches source control height: '+actual.faqTabsHeight+'/'+actual.expectedFaqTabsHeight);
         assert.ok(Math.abs(actual.faqContentLine-actual.expectedFaqContentLine)<=.5,
-          style+'/'+mode+' FAQ content consumes Theme text-leading: '+actual.faqContentLine+'/'+actual.expectedFaqContentLine);
+          style+'/'+mode+' FAQ content consumes source Accordion line-height: '+actual.faqContentLine+'/'+actual.expectedFaqContentLine);
         for(const line of actual.labelLines)assert.ok(Math.abs(line-actual.expectedLine)<=.5,
           style+'/'+mode+' FieldContent label line consumes role: '+line+'/'+actual.expectedLine);
         assert.ok(actual.labelWeights.every(Number.isFinite),style+'/'+mode+' valid Label font weights');
