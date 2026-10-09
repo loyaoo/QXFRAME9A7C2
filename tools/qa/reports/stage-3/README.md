@@ -1,3 +1,12 @@
+# Stage 3 checkpoint — Preview 01 source-backed parity
+
+## CURRENT — 2026-10-09 CREATEAPP-V3-S3 FieldLabel visual focus batch (new CI pending)
+
+- Source pinned `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c` uses `FieldLabel htmlFor` and an exact native Input/InputGroupInput/Textarea/SelectTrigger `id` in Payout Threshold, Preferences, Savings Targets/Buy Investment, Account Access, Transfer Funds, Receiving Method, Stock Performance, New Milestone and Social Links. Our Preview 01 authored **twenty unassociated labels**, leaving clicks unable to deliver the associated input's visual focus. This batch connects twenty labels to actual native controls and, for runtime QX Select, its actual `getInputElement()` focus input. QX Select remains the only Focus/Value/Overlay owner and `src/qxframe9a7c2.js` stays unchanged.
+- Batch **9 Cards / 20 exact label+control field regions**. Active offline yellow groups are *only these 9 cards*. Previous Kitchen Island, Roller Shades, Release Catalog, Notifications and older Front Door/FAQ/etc. groups removed from current ledger; history retained in README and PR.
+- New static tests require exact current ledger, twenty source field associations and Select focus ownership. New real Chromium test clicks all twenty labels and asserts `label.control === actualControl` and `document.activeElement === actualControl`. Strict 528 / ±0.5px, CSS Schema, runtime JS unchanged and pinned source gates all remain. This is real internal focus presentation parity, **not an unmeasured Card-height claim**.
+- Baseline previously validated HEAD `56588ea6`, dual-green QXFRAME #37936538257/CSS Schema #37936538247; 528/528 first Card height diagnostic >0.5px = 0. Next require both suites SUCCESS on final HEAD before packaging real Actions dist/docs ZIP. Stage 3 remains open, overall project ~65%, Stage3 ~70% estimate pending user visual validation. PR #265 Draft, main and backup locked.
+
 ## 2026-10-09 — Four-card controlled visual parity (CI pending)
 
 ## VERIFIED — 2026-10-09 S3 4-Card controlled state and rotating offline QA ledger

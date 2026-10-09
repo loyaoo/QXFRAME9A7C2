@@ -11,13 +11,22 @@
     });
   }
   document.querySelectorAll('[data-pv-select]').forEach(function (host) {
-    C.Select.create({
+    var select = C.Select.create({
       container: host,
       items: pairs(host.getAttribute('data-options')),
       value: host.getAttribute('data-value') || undefined,
       placeholder: host.getAttribute('data-placeholder') || undefined,
       size: host.getAttribute('data-size') || 'md'
     });
+    // The pinned FieldLabel -> SelectTrigger association must follow the
+    // real QX Select focus input, not the inert Preview mounting <div>.
+    // QX Select keeps all focus/keyboard/open-state ownership.
+    var labelId = host.getAttribute('data-pv-label-id');
+    if (labelId) {
+      var focusInput = select.getInputElement();
+      if (!focusInput) throw new Error('Preview Select missing focus input: ' + labelId);
+      focusInput.id = labelId;
+    }
   });
   var sliders = new Map();
   document.querySelectorAll('[data-pv-slider]').forEach(function (host) {

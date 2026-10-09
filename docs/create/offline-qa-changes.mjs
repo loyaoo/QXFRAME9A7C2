@@ -1,19 +1,43 @@
-/** Offline bundle only. This ledger contains ONLY the current batch, never historical highlights. */
+/** Offline bundle only. Display ONLY this batch's changes, not earlier rounds. */
 const groups = [
-  ['kitchen-island','Kitchen Island · 场景状态',[
-    ['.pv-toggle-group','场景预设','切换 Cooking/Dining/Nightlight/Focus 同步四条 Slider 的值；关灯时禁止场景交互','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-switch','开关状态','主开关同时控制场景按钮和 Slider 禁用状态','__QA_BUNDLE_HEAD__']]],
-  ['roller-shades','Roller Shades · 滑块与画面',[
-    ['.pv-shade > div','遮光高度','Slider 值实时更新窗帘画面高度','__QA_BUNDLE_HEAD__'],
-    ['.pv-toggle-group','快捷预设','Open/Half/Closed 选择与 Slider 及画面保持双向同步','__QA_BUNDLE_HEAD__']]],
-  ['release-catalog','Release Catalog · 分类按钮',[
-    ['.pv-toggle-group','类别选择','Stocks/ETFs/REITs 互斥按钮现可切换选中外观；按源站保留全部 holdings 列表','__QA_BUNDLE_HEAD__']]],
-  ['notification-settings','Notifications · 全选状态',[
-    ['.qxframe9a7c2-check-field:nth-child(1)','全选复选框','根据四条通知选择正确显示全选、半选或未选','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-check-field:nth-child(2)','交易通知','改变 Transaction alerts 会同步更新全选状态','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-check-field:nth-child(3)','安全通知','改变 Security alerts 会同步更新全选状态','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-check-field:nth-child(4)','目标通知','改变 Goal milestones 会同步更新全选状态','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-check-field:nth-child(5)','市场通知','改变 Market updates 会同步更新全选状态','__QA_BUNDLE_HEAD__']]]
+  ['payout-threshold','Payout Threshold · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="preferred-currency"])','Preferred Currency','点击 Preferred Currency 标签聚焦 QX Select，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="payout-notes"])','Notes','点击 Notes 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['preferences','Preferences · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="default-currency"])','Default Currency','点击 Default Currency 标签聚焦 QX Select，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['savings-targets','Savings Targets / Buy Investment · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="investment-amount"])','Amount to Invest','点击 Amount to Invest 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="investment-order-type"])','Order Type','点击 Order Type 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['account-access','Account Access · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="email-address"])','Email Address','点击 Email Address 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="current-password"])','Current Password','点击 Current Password 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['transfer-funds','Transfer Funds · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="transfer-amount"])','Amount to Transfer','点击 Amount to Transfer 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="from-account"])','From Account','点击 From Account 标签聚焦 QX Select，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="to-account"])','To Account','点击 To Account 标签聚焦 QX Select，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['receiving-method','Receiving Method · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="account-holder"])','Account Holder Name','点击 Account Holder Name 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="iban"])','IBAN / Account Number','点击 IBAN / Account Number 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['stock-performance','Stock Performance · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="stock-ticker"])','Ticker','点击 Ticker 标签聚焦 QX Select，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['new-milestone','New Milestone · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="goal-name"])','Goal Name','点击 Goal Name 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="target-amount"])','Target Amount','点击 Target Amount 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="target-date"])','Target Date','点击 Target Date 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]],
+  ['social-links','Social Links · 标签焦点对应',[
+    ['.qxframe9a7c2-form-field:has(label[for="spotify-url"])','Spotify Artist URL','点击 Spotify Artist URL 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="instagram-handle"])','Instagram Handle','点击 Instagram Handle 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="soundcloud-url"])','SoundCloud URL','点击 SoundCloud URL 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-field:has(label[for="website-url"])','Website','点击 Website 标签聚焦 对应原生输入控件，与锁定的 shadcn FieldLabel/Control 对应关系一致','__QA_BUNDLE_HEAD__']
+  ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
