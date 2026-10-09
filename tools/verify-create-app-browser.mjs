@@ -557,6 +557,26 @@ try {
     }
   });
 
+  await step('Syncing State consumes source p-4 Empty inset in all 16 style modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state] .qxframe9a7c2-empty")','Syncing Empty ready');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','Syncing '+style);
+      for(const dark of [false,true]){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,prev=root.classList.contains('dark');
+          root.classList.toggle('dark',${dark});
+          const empty=doc.querySelector('[data-card="syncing-state"] .qxframe9a7c2-empty');
+          const css=doc.defaultView.getComputedStyle(empty);
+          const result={top:parseFloat(css.paddingTop),right:parseFloat(css.paddingRight),bottom:parseFloat(css.paddingBottom),left:parseFloat(css.paddingLeft)};
+          root.classList.toggle('dark',prev);return result;
+        })()`);
+        for(const [key,value] of Object.entries(actual)) assert.equal(value,16,style+'/'+dark+' Syncing Empty '+key+' inset follows pinned p-4');
+      }
+    }
+  });
   await step('Loading Card matches pinned source height in eight styles and both modes', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=loading-card]")','Loading Card source fixture');
