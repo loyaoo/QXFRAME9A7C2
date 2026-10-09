@@ -109,6 +109,9 @@
   --qxframe9a7c2-theme-field-separator-display: block;
   --qxframe9a7c2-theme-choice-group-columns: 2;
   --qxframe9a7c2-theme-accordion-padding: 0.625rem;
+  --qxframe9a7c2-theme-accordion-framed: 0;
+  --qxframe9a7c2-theme-accordion-overflow: visible;
+  --qxframe9a7c2-theme-accordion-trigger-gap: 0;
   --qxframe9a7c2-theme-sidebar-menu-gap: 0;
   --qxframe9a7c2-theme-sidebar-group-padding-block: 0.5rem;
   --qxframe9a7c2-theme-card-gap: 1rem;
@@ -280,6 +283,9 @@
   --qxframe9a7c2-theme-field-separator-display: block;
   --qxframe9a7c2-theme-choice-group-columns: 2;
   --qxframe9a7c2-theme-accordion-padding: 0.625rem;
+  --qxframe9a7c2-theme-accordion-framed: 0;
+  --qxframe9a7c2-theme-accordion-overflow: visible;
+  --qxframe9a7c2-theme-accordion-trigger-gap: 0;
   --qxframe9a7c2-theme-sidebar-menu-gap: 0;
   --qxframe9a7c2-theme-sidebar-group-padding-block: 0.5rem;
   --qxframe9a7c2-theme-card-gap: 1rem;
