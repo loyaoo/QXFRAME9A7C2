@@ -19,6 +19,8 @@
 
 ## CURRENT
 
+LATEST Stage 3 visual follow-up: FAQ's three tabs are now configured as framework-owned `Tabs type="segmented"` using `data-type="segmented"` rather than QX's line/underline default. This follows the pinned shadcn `TabsList` muted band and active segment, reuses existing public Tabs CSS/Controller, and adds static + browser type assertions. Await exact paired CI height diagnostics for this and the Loading gap-2 fix. Do not merge PR #265.
+
 2026-10-09 CREATEAPP-V3-S3 — same-browser pinned source QA and Loading Card follow-up:
 - PR #265 is still Draft, on `redesign/create`; no merge, `main` and `backup/main-before-pr265-2026-10-08` stay at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
 - Wired existing `tools/qa/preview-01-audit.mjs` into a dedicated QXFRAME CI `source-preview-geometry` job. This job checks out pinned shadcn source at `295a1f114a138f23b5dfee0e0c6812394dfeb90c`, verifies all **159 source hashes**, builds the reference, renders it and QX in **one Linux Chromium**, records/uploads 528 Card measurements and Nova screenshots. The source renderer is not part of framework/build output.
