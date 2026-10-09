@@ -114,6 +114,92 @@ try {
   await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
+  await step('Shared Select option padding grows with content; DatePicker Primary/shape roles match Button', async () => {
+    const result = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const outer = doc.createElement('div');
+      outer.className = 'qxframe9a7c2-select-option-host';
+      outer.style.cssText = 'position:absolute;left:-9999px;top:0;width:20rem;visibility:hidden;pointer-events:none';
+      const list = doc.createElement('div');
+      list.className = 'qxframe9a7c2-item-collection';
+      outer.appendChild(list);
+      const add = (id, content) => {
+        const row = doc.createElement('div');
+        row.className = 'qxframe9a7c2-item-collection-item';
+        row.dataset.qa = id;
+        row.innerHTML = content;
+        list.appendChild(row);
+        return row;
+      };
+      const single = add('single','<span class="qxframe9a7c2-item-collection-content-slot"><span class="qxframe9a7c2-item-collection-label">Alpha</span></span>');
+      const multiline = add('multiline','<span class="qxframe9a7c2-item-collection-content-slot">Line 1<br>Line 2</span>');
+      const rich = add('rich','<span class="qxframe9a7c2-item-collection-content-slot qxframe9a7c2-item-collection-custom-content"><span style="width:100%">Custom 1</span><span style="width:100%">Custom 2</span></span>');
+      const gauge = doc.createElement('div');
+      gauge.style.cssText = 'height:var(--_qxframe9a7c2-control-height);width:1px';
+      list.appendChild(gauge);
+      const panel = doc.createElement('div');
+      panel.className='qxframe9a7c2-date-panel';
+      const day = doc.createElement('button');
+      day.className='qxframe9a7c2-date-panel-cell is-selected';
+      day.textContent='15';
+      panel.appendChild(day);
+      outer.appendChild(panel);
+      const period = doc.createElement('div');
+      period.className='qxframe9a7c2-period-panel qxframe9a7c2-date-panel';
+      const month = doc.createElement('button');
+      month.className='qxframe9a7c2-period-panel-cell qxframe9a7c2-date-panel-cell is-selected';
+      month.textContent='October';
+      period.appendChild(month);
+      outer.appendChild(period);
+      const button=doc.createElement('button');
+      button.className='qxframe9a7c2-button is-primary is-solid';
+      button.textContent='Button';
+      outer.appendChild(button);
+      const primary=doc.createElement('div');
+      primary.style.background='var(--qxframe9a7c2-theme-primary)';
+      primary.style.border='1px solid var(--qxframe9a7c2-theme-primary)';
+      outer.appendChild(primary);
+      doc.body.appendChild(outer);
+      const dimensions=[];
+      try {
+        for(const size of ['is-sm','is-md','is-lg']){
+          list.className='qxframe9a7c2-item-collection '+size;
+          const h=el=>el.getBoundingClientRect().height;
+          const css=getComputedStyle(single);
+          dimensions.push({size,control:h(gauge),single:h(single),multiline:h(multiline),rich:h(rich),
+            padding:css.paddingTop,overflow:css.overflow,whiteSpace:css.whiteSpace,
+            clipped:[multiline,rich].some(el=>el.scrollHeight>el.clientHeight+1)});
+        }
+        const buttonRadius=getComputedStyle(button).borderRadius;
+        const dateRadius=getComputedStyle(day).borderRadius;
+        const monthRadius=getComputedStyle(month).borderRadius;
+        const panelRadius=getComputedStyle(panel).borderRadius;
+        const solid=getComputedStyle(primary).backgroundColor;
+        const normal=getComputedStyle(day).backgroundColor;
+        day.classList.add('is-hover');
+        const hovered=getComputedStyle(day).backgroundColor;
+        day.classList.remove('is-hover');
+        month.classList.add('is-hover');
+        const monthHover=getComputedStyle(month).backgroundColor;
+        return {dimensions,buttonRadius,dateRadius,monthRadius,panelRadius,
+          solid,normal,hovered,monthHover};
+      } finally {outer.remove();}
+    })()`);
+    assert.equal(result?.dimensions?.length,3,'Select source size variants measured');
+    for(const entry of result.dimensions){
+      assert.ok(Math.abs(entry.single-entry.control)<=.6,'Select single option must match Control via natural padding: '+JSON.stringify(entry));
+      assert.ok(entry.multiline>entry.single+8 && entry.rich>entry.single+8,'Select multiline and rendered item must expand: '+JSON.stringify(entry));
+      assert.equal(entry.clipped,false,'Select rich and multiline options cannot be clipped');
+      assert.equal(entry.whiteSpace,'normal','Select item must allow natural text wrapping');
+    }
+    assert.equal(result.dateRadius,result.buttonRadius,'DatePicker day radius follows Button action radius');
+    assert.equal(result.monthRadius,result.buttonRadius,'PeriodPanel cell radius follows Button action radius');
+    assert.equal(result.normal,result.solid,'Selected date uses solid Theme Primary');
+    assert.equal(result.hovered,result.solid,'Selected DatePicker hover must not fade Theme Primary to 80%');
+    assert.equal(result.monthHover,result.solid,'Selected PeriodPanel hover must not fade Theme Primary to 80%');
+  });
+
+
   await step('Preview Empty is a QX composition with measured 32/14/16 geometry', async () => {
     const geometry = await evaluate(`(() => {
       const doc = document.querySelector('[data-create-frame]').contentDocument;

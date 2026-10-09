@@ -31,6 +31,10 @@
 .qxframe9a7c2-item-collection{
   outline:none;
   --_qxframe9a7c2-list-row-height:var(--qxframe9a7c2-item-collection-row-height,var(--_qxframe9a7c2-control-height));
+  /* Base option: one 1.4em text line + vertical insets = Control height.
+   * This is padding, never a fixed/min row height; multi-line and rich
+   * content grow naturally. A caller may override the vertical inset. */
+  --_qxframe9a7c2-list-item-padding-block:var(--qxframe9a7c2-item-collection-item-padding-block,max(0px,calc((var(--_qxframe9a7c2-control-height) - 1.4em)/2)));
   --_qxframe9a7c2-list-padding-x:var(--qxframe9a7c2-item-collection-padding-x,var(--_qxframe9a7c2-control-padding-inline));
   --_qxframe9a7c2-list-indent:var(--qxframe9a7c2-item-collection-indent,1rem);
   --_qxframe9a7c2-list-max-height:var(--qxframe9a7c2-item-collection-max-height,15rem);
@@ -51,7 +55,7 @@
 .qxframe9a7c2-item-collection-search-input::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}
 .qxframe9a7c2-item-collection-search-input:focus{--_qxframe9a7c2-list-search-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-list-search-ring:none}
 .qxframe9a7c2-item-collection-search-input:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
-.qxframe9a7c2-item-collection-item{--_qxframe9a7c2-list-item-bg:var(--_qxframe9a7c2-item-bg,transparent);--_qxframe9a7c2-list-item-text:var(--_qxframe9a7c2-item-text,inherit);--_qxframe9a7c2-list-item-ring:var(--_qxframe9a7c2-item-ring,none);--_qxframe9a7c2-list-item-cursor:var(--_qxframe9a7c2-item-cursor,pointer);box-sizing:border-box;display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);width:100%;min-height:var(--_qxframe9a7c2-list-row-height);padding-inline:calc(var(--_qxframe9a7c2-list-padding-x) + var(--qxframe9a7c2-item-collection-depth,0)*var(--_qxframe9a7c2-list-indent)) var(--_qxframe9a7c2-list-padding-x);color:var(--_qxframe9a7c2-list-item-text);background:var(--_qxframe9a7c2-list-item-bg);box-shadow:var(--_qxframe9a7c2-list-item-ring);cursor:var(--_qxframe9a7c2-list-item-cursor);user-select:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-item-collection-item{--_qxframe9a7c2-list-item-bg:var(--_qxframe9a7c2-item-bg,transparent);--_qxframe9a7c2-list-item-text:var(--_qxframe9a7c2-item-text,inherit);--_qxframe9a7c2-list-item-ring:var(--_qxframe9a7c2-item-ring,none);--_qxframe9a7c2-list-item-cursor:var(--_qxframe9a7c2-item-cursor,pointer);box-sizing:border-box;display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);width:100%;padding-block:var(--_qxframe9a7c2-list-item-padding-block);padding-inline:calc(var(--_qxframe9a7c2-list-padding-x) + var(--qxframe9a7c2-item-collection-depth,0)*var(--_qxframe9a7c2-list-indent)) var(--_qxframe9a7c2-list-padding-x);color:var(--_qxframe9a7c2-list-item-text);background:var(--_qxframe9a7c2-list-item-bg);box-shadow:var(--_qxframe9a7c2-list-item-ring);cursor:var(--_qxframe9a7c2-list-item-cursor);user-select:none;overflow:visible;white-space:normal}
 .qxframe9a7c2-item-collection-item.is-readonly{--_qxframe9a7c2-list-item-cursor:var(--_qxframe9a7c2-item-cursor,default)}
 .qxframe9a7c2-item-collection-item.is-disabled{--_qxframe9a7c2-list-item-cursor:var(--_qxframe9a7c2-item-cursor,not-allowed)}
 .qxframe9a7c2-item-collection-group{box-sizing:border-box;min-height:var(--_qxframe9a7c2-list-row-height);display:flex;align-items:center;padding-inline:var(--_qxframe9a7c2-list-padding-x);border-radius:var(--_qxframe9a7c2-list-group-radius);color:var(--_qxframe9a7c2-list-group-text);background:var(--_qxframe9a7c2-list-group-bg);font-weight:600;user-select:none}
@@ -64,13 +68,13 @@
 /* Original List parity projection */
 .qxframe9a7c2-item-collection-divider{height:1px;margin:var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-list-padding-x);background:var(--_qxframe9a7c2-semantic-border-subtle)}
 .qxframe9a7c2-item-collection-title{box-sizing:border-box;min-height:var(--_qxframe9a7c2-list-row-height);display:flex;align-items:center;padding-inline:var(--_qxframe9a7c2-list-padding-x);color:var(--_qxframe9a7c2-semantic-text-muted);font-size:.875em;font-weight:600}
-.qxframe9a7c2-item-collection-content-slot{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.qxframe9a7c2-item-collection-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-item-collection-content-slot{min-width:0;flex:1 1 auto;overflow-wrap:anywhere;white-space:normal}
+.qxframe9a7c2-item-collection-label{min-width:0;overflow-wrap:anywhere;white-space:normal}
 .qxframe9a7c2-item-collection-icon{display:inline-flex;width:var(--_qxframe9a7c2-control-icon-size);height:var(--_qxframe9a7c2-control-icon-size);flex:0 0 var(--_qxframe9a7c2-control-icon-size);align-items:center;justify-content:center;overflow:hidden}
 .qxframe9a7c2-item-collection-icon img{display:block;width:100%;height:100%;object-fit:contain}
 .qxframe9a7c2-item-collection-shortcut,.qxframe9a7c2-item-collection-extra{flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-muted);font-size:.875em}
 .qxframe9a7c2-item-collection-arrow{box-sizing:border-box;display:inline-block;width:.48em;height:.48em;flex:0 0 .48em;margin-inline:.18em .08em;border-top:max(1px,.12em) solid currentColor;border-right:max(1px,.12em) solid currentColor;color:var(--_qxframe9a7c2-semantic-text-muted);font-size:var(--_qxframe9a7c2-control-icon-size,0.875rem);line-height:1;transform:rotate(45deg);transform-origin:center}
-.qxframe9a7c2-item-collection-custom-content{display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap)}
+.qxframe9a7c2-item-collection-custom-content{display:flex;align-items:center;flex-wrap:wrap;gap:var(--_qxframe9a7c2-control-gap)}
 .qxframe9a7c2-item-collection-header,.qxframe9a7c2-item-collection-footer,.qxframe9a7c2-item-collection-load-more{box-sizing:border-box;padding:0.375rem var(--_qxframe9a7c2-list-padding-x)}
 .qxframe9a7c2-item-collection-header{border-bottom:1px solid var(--_qxframe9a7c2-semantic-border-subtle);font-weight:600}
 .qxframe9a7c2-item-collection-footer,.qxframe9a7c2-item-collection-load-more{border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
