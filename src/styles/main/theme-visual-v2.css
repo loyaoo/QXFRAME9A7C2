@@ -515,9 +515,6 @@
   }
   /* END GEOMETRY qx-md-1 */
 
-}
-
-@scope (:root) {
   /* Shared Badge label-size + role mapping (pinned shadcn preview-02):
    * Destructive is a 10%-tinted semantic label, Secondary is the neutral
    * background, Outline is the outlined role. Sera's editorial Badge policy

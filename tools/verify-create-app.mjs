@@ -1079,8 +1079,10 @@ check('source pinned Badge roles mapped to QX semantic status-label instead of d
   assert.match(catalog,/C\('badge-label-outline-bg'/,'new sparse source-derived Badge token registered');
   assert.match(compiler,/look\('badge-label-outline-bg'/,'generated Theme light\/dark role matches pinned styles');
   assert.match(framework,/var\(--qxframe9a7c2-theme-badge-label-outline-bg,transparent\)/,'Badge CSS consumes Theme role token');
-  assert.match(framework,/var\(--_qxframe9a7c2-badge-label-editorial\)/,
-    'source editorial Badge policy must suppress special paint in Sera');
+  for(const role of ['badge-label-destructive-bg','badge-label-secondary-bg','badge-label-secondary-fg','badge-label-solid-border'])
+    assert.match(compiler,new RegExp("look\\('"+role+"'"),'Theme compiler owns source editorial semantic role '+role);
+  assert.match(compiler,/ext\.textStyle === 'editorial' \? 'transparent' : 'destructive\/10'/,
+    'Sera editorial paint must be compiled into Theme, not an unverified runtime mix');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));
