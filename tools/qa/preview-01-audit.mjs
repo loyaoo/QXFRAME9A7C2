@@ -260,8 +260,8 @@ try {
             throw new Error(style+' KitchenIsland Item/Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
           const src=record.source.filter(n=>n.className.startsWith('cn-slider relative'));
           const qx=record.qx.filter(n=>n.className.startsWith('qxframe9a7c2-slider is-'));
-          if(src.length!==4||qx.length!==4||src.some((s,j)=>Math.abs(qx[j].x-s.x)>8||
-             Math.abs(qx[j].w-s.w)>8||
+          if(src.length!==4||qx.length!==4||src.some((s,j)=>Math.abs(qx[j].x-s.x)>.5||
+             Math.abs(qx[j].w-s.w)>.5||
              Math.abs(qx[j].x+qx[j].w-s.x-s.w)>.5||
              Math.abs(qx[j].y+qx[j].h/2-s.y-s.h/2)>.5)||
              Math.max(...qx.map(n=>n.x))-Math.min(...qx.map(n=>n.x))>.5)

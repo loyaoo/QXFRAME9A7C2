@@ -1,5 +1,10 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Replace guessed percentage with source equal-flex Item owner
+
+QXFRAME CI from `9aca424f` proved Kitchen rails now align per text length but Lyra source x186/w121 vs QX x184.69/w128 showed incorrect 44%-based allocation, with unchanged source right-edge gate. Examined actual pinned source subtree: **both** `cn-item-content` and `cn-item-actions` have `flex-1`; Lyra equal width 121px. Matched this *common invariant* using shared `Item.is-actions-equal` + default equal-flex ItemContent, no hardcoded percentage, special Style branch, or new Token. Four Preview01 rows opt in. Tightened new Kitchen per-rail source test x/width to 0.5px (right-edge and centers already 0.5px) for 5 source-inspected Styles. Original Card gates unchanged. QA marks only this batch's two Cards/five regions.
+
+
 ## 2026-10-09 — Batch CI feedback: remove Preview-only Item flex veto (new CI pending)
 
 The new paired Kitchen slider gate correctly caught `8968b848`: QX four rails now all 132.36px (source 132.44px for Vega) but their x coordinates remained based on label lengths. The legacy `preview.css` forced `ItemContent{flex:0 0 auto}` and `ItemActions{flex:1 1 auto}`, overriding the semantic shared Item layout. Removed both preview-private overrides; the default shared ItemContent grows and shared opt-in `is-actions-proportional` reserves a uniform right action rail. Existing non-Kitchen Item default unchanged. Strict source y and right-edge tolerance, 8px transitional left/width threshold and all eight-style tests unchanged. Only Kitchen/Front Door highlighted this batch.

@@ -1,9 +1,9 @@
 /** Offline bundle only. Keep visual change records here, not in production HTML. */
 const groups = [
   ['kitchen-island','Kitchen Island · 滑块对齐',[
-    ['.pv-slider-item:nth-child(1) .qxframe9a7c2-slider','亮度','Brightness 轨道保持右对齐，并与其它三行共用起点','__QA_BUNDLE_HEAD__'],
+    ['.pv-slider-item:nth-child(1) .qxframe9a7c2-slider','亮度','Brightness 轨道保持右对齐，并与其它三行两列等份且共用起点','__QA_BUNDLE_HEAD__'],
     ['.pv-slider-item:nth-child(2) .qxframe9a7c2-slider','色温','Color Temp 轨道不再随左侧文字宽度变化','__QA_BUNDLE_HEAD__'],
-    ['.pv-slider-item:nth-child(3) .qxframe9a7c2-slider','音量','Volume 轨道与其它三行等宽','__QA_BUNDLE_HEAD__'],
+    ['.pv-slider-item:nth-child(3) .qxframe9a7c2-slider','音量','Volume 轨道与其它三行等宽，使用等份 ItemActions','__QA_BUNDLE_HEAD__'],
     ['.pv-slider-item:nth-child(4) .qxframe9a7c2-slider','Fade','Fade 轨道与其它三行等宽，保留原始取值','__QA_BUNDLE_HEAD__']]],
   ['front-door','Front Door · 装饰区域',[
     ['.pv-stripes','细斜纹','将宽斜条纹改为更贴近参考画面的细斜线纹理','__QA_BUNDLE_HEAD__']]]
