@@ -43,6 +43,23 @@ try {
       }];
     }));
   }, ref);
+  const nodeStructure = async (source, id) => page.evaluate(({source,id}) => {
+    const root=document.querySelector(source ? '[data-qa-card="'+id+'"]' : '[data-card="'+id+'"]');
+    if(!root)return [];
+    const card=source||root.classList.contains('qxframe9a7c2-card')?root:root.querySelector('.qxframe9a7c2-card');
+    const rect=card.getBoundingClientRect();
+    return [card,...card.querySelectorAll('*')].filter(el=>{
+      const cs=getComputedStyle(el);return cs.display!=='none'&&el.getBoundingClientRect().height>=2;
+    }).slice(0,75).map((el,i)=>{
+      const r=el.getBoundingClientRect(),cs=getComputedStyle(el);
+      return {i,tag:el.tagName.toLowerCase(),className:typeof el.className==='string'?el.className.slice(0,90):'svg',
+        text:el.children.length?undefined:(el.textContent||'').slice(0,38),
+        x:+(r.left-rect.left).toFixed(2),y:+(r.top-rect.top).toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),
+        display:cs.display,gap:cs.rowGap,pt:cs.paddingTop,pb:cs.paddingBottom,
+        fs:cs.fontSize,lh:cs.lineHeight};
+    });
+  },{source,id});
+  let novaCardStructures = {};
   const loadingStructure = async source => page.evaluate(source => {
     const card = document.querySelector(source ? '[data-qa-card="loading-card"]' : '[data-card="loading-card"]');
     if (!card) return null;
@@ -66,6 +83,7 @@ try {
       await page.addStyleTag({ content: '*{content-visibility:visible}body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const reference = await measure(true);
+      if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
       if(style==='nova'&&!dark) novaLoadingSource=await loadingStructure(true);
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-reference.png'), fullPage: true });
       await page.goto(`${origin}/docs/create/preview-01.html`);
@@ -75,6 +93,7 @@ try {
       await page.addStyleTag({ content: 'body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const actual = await measure(false);
+      if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) {novaCardStructures[id].qx=await nodeStructure(false,id); console.log('[stage3-structure-'+id+'] '+JSON.stringify(novaCardStructures[id]));}
       if(style==='nova'&&!dark) console.log('[stage3-loading-nova-structure] '+JSON.stringify({source:novaLoadingSource,qx:await loadingStructure(false)}));
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-qx.png'), fullPage: true });
       for (const id of new Set([...Object.keys(reference), ...Object.keys(actual)])) {
