@@ -40,7 +40,7 @@
   box-sizing:border-box;flex:0 0 calc(100% / 7);width:calc(100% / 7);min-width:0;padding:0
 }
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-weekday{
-  font-size:.8rem;line-height:var(--qxframe9a7c2-theme-text-leading);font-weight:400
+  font-size:.8rem;line-height:var(--qxframe9a7c2-theme-calendar-weekday-leading,var(--qxframe9a7c2-theme-text-leading));font-weight:400
 }
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid{
   margin-top:.5rem;row-gap:.5rem

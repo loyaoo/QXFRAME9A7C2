@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Sera FieldLabel wrapping / Lyra Calendar weekday source roles (CI pending)
+
+Source-backed shared FormLabel uppercase/tracking (.025em Sera) and Lyra Calendar weekday 4/3 line-box repair; strict paired regressions added for Sera PayoutThreshold Card and Lyra weekday, expanded CoverArt and Vega savings trace. Baseline green 61dd0a71 70/528; outcome must be confirmed by new both-suite CI before declaring improvement. PR #265 Draft, protected refs unchanged. Completion estimate CREATEAPP-V3 ~65%, Stage3 ~64%.
+
 ## 2026-10-09 — 70/528, Browser Accordion source assertion correction
 
 Verified QXFRAME `8d24d8b0` source-preview-geometry SUCCESS, 528/528 source-paired, **70/528** first Card height diagnostics over ±0.5px, zero unapproved four-property subset mismatches, 66 authorized Luma radius caps. AccountAccess nested FieldLabel source exact Nova/Mira, Lyra first Card within +0.5px.

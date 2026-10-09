@@ -195,6 +195,8 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
   line-height:var(--qxframe9a7c2-theme-field-label-line-height);
   font-weight:var(--qxframe9a7c2-theme-text-weight-label);
+  text-transform:var(--qxframe9a7c2-theme-control-transform,none);
+  letter-spacing:var(--qxframe9a7c2-theme-field-label-tracking,normal);
 }
 .qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem));cursor:pointer}
 .qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}

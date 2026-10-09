@@ -4,6 +4,14 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 CREATEAPP-V3-S3 source-backed FieldLabel + Calendar weekday batch (CI pending)
+
+- Confirmed baseline HEAD `61dd0a71`, PR #265 Open/Draft, QXFRAME #37888241850 and CSS Schema #37888241908 SUCCESS; 528/528 paired Chromium, 70/528 Card height deltas >0.5px, zero unauthorized geometry subset mismatches, 66 approved Luma caps. Protected main/backup unchanged.
+- Pinned Sera PayoutThreshold source FieldLabel "Minimum Payout Amount" uppercase with tracking-wide breaks into 39px two-line label; QX had 19.5px one line because reusable composed FormLabel had no transform/tracking. Mapped source .025em FieldLabel tracking through one closed Theme role and shared FormField / FieldContent label selectors; enforced source-paired label+Card height.
+- Pinned Lyra UpcomingPayments source Calendar weekday line box ~17.05px, QX 20.78px because adaptive weekday consumed compact body leading 1.625 instead of source 4/3. Mapped independent weekday leading role and strict source-paired Calendar weekday check, keeping other source styles' current line-height untouched.
+- Broadened source paired diagnostic logs for Vega CardOverview/SavingsTargets and CoverArt in Lyra/Mira/Nova/Luma/Rhea to identify remaining shared-owner 4px differences, without speculative styling.
+- Next: inspect both latest GitHub CI results on new HEAD; correct any strict fail, quantify updated 528 mismatches, then batch CoverArt / Savings root fixes. DO NOT merge Draft #265, do not change main or backup. Estimate overall65%, Stage364% until acceptance evidence.
+
 ## CURRENT — 2026-10-09 CSS Schema browser regression expectation corrected (pending latest CI)
 
 - On `8d24d8b0`, QXFRAME source-preview-geometry SUCCESS: 528/528 measured, **70/528** first-Card heights >0.5px, 0 nonauthorized geometry subset mismatches (66 allowed Luma caps). Source label/Cards AccountAccess Nova and Mira exact, Lyra +0.5px. Full Release job had not completed at correction.

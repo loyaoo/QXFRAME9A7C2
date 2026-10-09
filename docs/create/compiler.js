@@ -393,6 +393,8 @@ export function themeTokens(resolved) {
   root['field-separator-display'] = ext.textStyle === 'editorial' ? 'none' : 'block';
   root['choice-group-columns'] = ext.textStyle === 'editorial' ? '1' : '2';
   root['field-label-line-height'] = editorial ? '1.21875rem' : rem(Math.min(textSize, controlFont));
+  // Source Sera cn-label uses tracking-wide (0.025em), distinct from sidebar control tracking.
+  root['field-label-tracking'] = editorial ? '0.025em' : 'normal';
   // Source native FieldLegend mb-3 (most), mb-2.5 (Lyra), mb-2 (Mira), mb-1.5 (Nova).
   // FieldSet with RadioGroup owns only the post-legend separation; preview has no CSS owner.
   root['field-legend-gap']=rem(style==='nova'?.375:style==='lyra'?.625:style==='mira'?.5:.75);
@@ -419,6 +421,8 @@ export function themeTokens(resolved) {
   // uses responsive 32/40px day cells, 36px on editorial Sera.
   root['calendar-padding'] = rem(['nova','lyra'].includes(style) ? .5 : .75);
   root['calendar-cell-size'] = rem(editorial ? 2.25 : 2.5);
+  // Source Lyra's rdp-weekday uses its inherited 4/3 line-box, not compact body 1.625.
+  root['calendar-weekday-leading'] = style === 'lyra' ? String(4/3) : root['text-leading'];
   // Pinned SidebarMenu gaps: control look distinguishes 4/0/1/2px tiers.
   // The group block inset follows the existing dense vs normal control axis.
   const sidebarMenuGap = { 'solid-shadow': .25, solid: 0, tinted: .25, transparent: .0625, 'light-solid': .125, ghost: .125 };

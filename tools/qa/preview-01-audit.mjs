@@ -102,11 +102,11 @@ try {
   const targetCards={
     sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state','stock-performance','cover-art','payout-threshold','preferences','card-overview','index-investing','savings-targets'],
     // Cross-style small Item regression discovered by full 528-run, not a single-style exception.
-    vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions'],
-    nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions','savings-targets','receiving-method','account-access'],
-    rhea:['faq','claimable-balance','kitchen-island'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets'],
-    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island'],
-    lyra:['faq','claimable-balance','savings-targets','upcoming-payments','account-access'],mira:['upcoming-payments','claimable-balance','savings-targets','faq','receiving-method','account-access']
+    vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions','savings-targets','card-overview'],
+    nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions','savings-targets','receiving-method','account-access','cover-art'],
+    rhea:['faq','claimable-balance','kitchen-island','cover-art'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets'],
+    luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island','cover-art'],
+    lyra:['faq','claimable-balance','savings-targets','upcoming-payments','account-access','cover-art'],mira:['upcoming-payments','claimable-balance','savings-targets','faq','receiving-method','account-access','cover-art']
   };
   const sourceNodePairs={};
   // The first Overview card is stretched by its sibling in the pinned two-column
@@ -155,7 +155,7 @@ try {
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
       if(!dark) for(const id of targetCards[style]||[])
         sourceNodePairs[style+'/'+id]={source:await nodeStructure(true,id)};
-      if(!dark && ['sera','mira','nova'].includes(style))
+      if(!dark && ['sera','mira','nova','lyra'].includes(style))
         for(const id of (style==='sera'?['dividend-income']:['upcoming-payments']))
           sourceStyleProbes[style+'/'+id]={source:await sourceStyleProbe(true,id)};
 
@@ -218,6 +218,15 @@ try {
           if(!srcLabel||!qxLabel||Math.abs(srcLabel.h-qxLabel.h)>.5||
             Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' AccountAccess nested FieldLabel source line-box mismatch: '+JSON.stringify({srcLabel,qxLabel,src:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='sera'&&id==='payout-threshold'){
+          const findLabel=(a)=>a.find(n=>n.text==='Minimum Payout Amount');
+          const sourceLabel=findLabel(record.source), qxLabel=findLabel(record.qx);
+          if(!sourceLabel||!qxLabel||qxLabel.transform!=='uppercase'||
+            Math.abs(sourceLabel.h-qxLabel.h)>.5||
+            Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Sera PayoutThreshold editorial FieldLabel wrapping and Card mismatch: '+
+              JSON.stringify({sourceLabel,qxLabel,source:record.source[0],qx:record.qx[0]}));
         }
         if(style==='mira'&&id==='faq'){
           const srcContent=record.source.find(x=>x.className.includes('cn-accordion-content-inner'));
@@ -287,6 +296,12 @@ try {
         for(const id of (style==='sera'?['dividend-income']:['upcoming-payments'])) {
           const key=style+'/'+id;
           sourceStyleProbes[key].qx=await sourceStyleProbe(false,id);
+          if(style==='lyra'&&id==='upcoming-payments'){
+            const pair=sourceStyleProbes[key];
+            if(!pair.source.weekday||!pair.qx.weekday||
+              Math.abs(pair.source.weekday.height-pair.qx.weekday.height)>.5)
+              throw new Error('Lyra source Calendar weekday line box mismatch: '+JSON.stringify({source:pair.source.weekday,qx:pair.qx.weekday}));
+          }
           console.log('[stage3-css-probe-'+style+'-'+id+'] '+JSON.stringify(sourceStyleProbes[key]));
         }
 
