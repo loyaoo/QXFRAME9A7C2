@@ -1,5 +1,14 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — IndexInvesting prose source ownership / unresolved sibling & Savings probes
+
+Verified baseline HEAD `bd32478eb1229051ca2e9d818326f51b69040d36`: QXFRAME #37884789294 and CSS Schema #37884789259 Success, 528/528 same Chromium/forced system-ui pairs, 104/528 first Card height diagnostics over ±0.5px, zero nonauthorized four-property subset mismatches, 66 authorized Luma radius caps.
+
+The locked `index-investing.tsx` has `CardDescription className="mt-3 text-sm leading-relaxed style-sera:mt-0"`. QX incorrectly retained `pv-mt-3` for Sera; it accounts exactly for that card's observed +12px. The new generic `CardDescription.is-prose-intro` owns the prose offset with one registered closed `card-prose-offset` Theme input (0 editorial, 12px otherwise). Added exact Sera source-paired prose Y and whole Card height regression checks, without hardcoded Card height. New CI measurement pending; baseline 104/528 is NOT yet a new-result count.
+
+CardOverview Sera A has source/QX identical text and internal line boxes, but outer 170.75 vs184.75px. Both columns' parent row can stretch A to sibling B; next paired job logs both sibling Content and Button boxes as `[stage3-overview-row-sera]` before any first-card padding changes. Added node probes for SavingsTargets Lyra/Mira/Nova/Maia, Mira FAQ, Nova ReceivingMethod, Lyra UpcomingPayments and AccountAccess. These remain diagnostic and require computed DOM evidence before further CSS changes. PR remains Draft; Stage 3 is incomplete.
+
+
 ## 2026-10-09 — Kitchen cross-style regression and Preferences action width
 
 Pinned `e7752a00` same Chromium **528/528 geometry job succeeded, 114/528** heights beyond unchanged ±0.5px, 0 subset mismatches. Vega KitchenIsland 367/367px, Vega/Nova RecentTransactions 0px, Sera/Vega CoverArt within0.02px; Sera PayoutThreshold improved from +21.75 to -1px after source-backed CardHeader gap fix. However treating all Item.sm as Vega's 10px produced -16px on Maia/Luma/Sera/Rhea KitchenIsland (four rows ×4px; two light/dark each). A *single shared Theme size-step* `item-sm-reduction` now takes Vega4px, others2px, with dense families max-clamped at10px. The shared Item.sm uses this instead of forcing all source styles to one value; five-family same-browser gate enforces natural Card parity.

@@ -151,6 +151,7 @@ export const THEME_TOKENS = [
   L('sidebar-menu-button-height', 'Static SidebarMenuButton row height'),
   L('card-gap', 'Card section gap'),
   L('card-meta-gap', 'Card title/description gap'),
+  L('card-prose-offset', 'Authored CardDescription introductory prose offset; editorial style suppresses mt-3'),
   L('card-title-delta', 'Card title size step'),
   L('card-display-leading', 'Display-sized CardTitle line-height from style'),
   L('card-font-size', 'Card body size'),

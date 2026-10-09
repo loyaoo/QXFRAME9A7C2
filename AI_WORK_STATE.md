@@ -4,6 +4,14 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 source-paired S3 focused batch (CI pending)
+
+- GitHub check: `redesign/create` started at `bd32478eb1229051ca2e9d818326f51b69040d36`, PR #265 Open/Draft; `main` and `backup/main-before-pr265-2026-10-08` frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`. Baseline QXFRAME run #37884789294 and CSS Schema run #37884789259 both SUCCESS, 528/528 pairs, 104/528 height diagnostics, zero unapproved Card geometry subset failures, 66 authorized Luma radius caps.
+- Locked source `index-investing.tsx` explicitly sets `mt-3 style-sera:mt-0` on the introductory CardDescription, while QX left `pv-mt-3` active for Sera. This is direct evidence for Sera IndexInvesting +12px. Added one registered `card-prose-offset` closed Theme input, generic `CardDescription.is-prose-intro` owner, preview semantic class and strict paired Sera Card/prose position gate. No fixed Card heights, framework JS or preview-local duplicated owner.
+- Extended node-level paired traces for SavingsTargets (Lyra/Mira/Nova/Maia), Mira FAQ, Nova ReceivingMethod, Lyra UpcomingPayments, AccountAccess and Sera CardOverview second sibling. The +14px first Overview Card may be caused by flex row stretch from PaymentDue; do not alter its padding before comparing both siblings.
+- Completed: one source-backed shared CSS/Theme fix + multi-card paired regression instrumentation. Unfinished: consume resulting new job traces to identify additional shared root causes, refresh 104/528 diagnostic, verify BOTH workflows, update PR #265 body. Stage 3 visual/nested-card acceptance remains open; no Stage 4/5 work. Engineering estimates held **CREATEAPP-V3 ~65%, Stage 3 ~64%**, pending CI.
+- Next exact step: inspect new `source-preview-geometry` logs for `[stage3-target-*]` and `[stage3-overview-row-sera]`; identify shared SavingsTargets/Overview/FAQ/Calendar/Radio root causes, batch-fix the measured owners; keep Draft and protected refs unchanged.
+
 ## CURRENT — 2026-10-09 CREATEAPP-V3-S3
 
 - Latest `e7752a00` same-Chromium geometry job **success**, 528/528, zero subset failures, 114/528 >0.5px. Targets Vega Kitchen 367/367, Vega/Nova Recent Transactions exact, Vega/Sera CoverArt within .02px. Aggregate 112→114 regression comes entirely from Vega-only sm Item subtraction applied to Maia/Luma/Sera/Rhea: 4 small Items each became 4px shorter (each style both modes, eight regressions), despite Vega now exact. Mapped `item-sm-reduction` as a single new closed Theme input: 4px Vega, 2px other pinned families, dense clamp at10px. Added source-paired gates across 5 Kitchen styles.

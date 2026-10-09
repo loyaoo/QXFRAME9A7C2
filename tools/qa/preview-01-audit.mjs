@@ -100,15 +100,33 @@ try {
   // Focused structure evidence for unresolved Stage 3 cards, measured in the
   // same Chromium and font as the pinned upstream renderer.
   const targetCards={
-    sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state','stock-performance','cover-art','payout-threshold','preferences','card-overview'],
+    sera:['dividend-income','sidebar-nav','claimable-balance','faq','syncing-state','stock-performance','cover-art','payout-threshold','preferences','card-overview','index-investing','savings-targets'],
     // Cross-style small Item regression discovered by full 528-run, not a single-style exception.
     vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions'],
-    nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions'],
-    rhea:['faq','claimable-balance','kitchen-island'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island'],
+    nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions','savings-targets','receiving-method','account-access'],
+    rhea:['faq','claimable-balance','kitchen-island'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets'],
     luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island'],
-    lyra:['faq','claimable-balance'],mira:['upcoming-payments','claimable-balance']
+    lyra:['faq','claimable-balance','savings-targets','upcoming-payments','account-access'],mira:['upcoming-payments','claimable-balance','savings-targets','faq','receiving-method','account-access']
   };
   const sourceNodePairs={};
+  // The first Overview card is stretched by its sibling in the pinned two-column
+  // row. Compare BOTH siblings before attributing any row-height delta to Card A.
+  const overviewPeers=async source=>page.evaluate(source=>{
+    const first=document.querySelector(source?'[data-qa-card="card-overview"]':'[data-card="card-overview-a"]');
+    if(!first)return null;
+    return [...first.parentElement.children].slice(0,2).map((el,i)=>{
+      const cs=getComputedStyle(el),box=el.getBoundingClientRect();
+      const content=el.querySelector(source?'[data-slot="card-content"]':'.qxframe9a7c2-card-content');
+      const button=el.querySelector('button');
+      const describe=node=>{if(!node)return null;const style=getComputedStyle(node),rect=node.getBoundingClientRect();
+        return {height:+rect.height.toFixed(3),pt:style.paddingTop,pb:style.paddingBottom,
+          marginTop:style.marginTop,flex:style.flex,align:style.alignItems,justify:style.justifyContent,
+          lineHeight:style.lineHeight,whiteSpace:style.whiteSpace}};
+      return {i,height:+box.height.toFixed(3),gap:cs.gap,content:describe(content),
+        button:describe(button),children:[...content?.children||[]].map(describe)};
+    });
+  },source);
+  let sourceOverviewPeers=null;
 
   const loadingStructure = async source => page.evaluate(source => {
     const card = document.querySelector(source ? '[data-qa-card="loading-card"]' : '[data-card="loading-card"]');
@@ -133,6 +151,7 @@ try {
       await page.addStyleTag({ content: '*{content-visibility:visible}body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const reference = await measure(true);
+      if(style==='sera'&&!dark)sourceOverviewPeers=await overviewPeers(true);
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
       if(!dark) for(const id of targetCards[style]||[])
         sourceNodePairs[style+'/'+id]={source:await nodeStructure(true,id)};
@@ -150,6 +169,7 @@ try {
       await page.addStyleTag({ content: 'body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
       await page.waitForTimeout(350);
       const actual = await measure(false);
+      if(style==='sera'&&!dark)console.log('[stage3-overview-row-sera] '+JSON.stringify({source:sourceOverviewPeers,qx:await overviewPeers(false)}));
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) {novaCardStructures[id].qx=await nodeStructure(false,id); console.log('[stage3-structure-'+id+'] '+JSON.stringify(novaCardStructures[id]));}
       if(!dark) for(const id of targetCards[style]||[]) {
         const record=sourceNodePairs[style+'/'+id];
@@ -175,6 +195,13 @@ try {
         if((style==='vega'||style==='nova')&&id==='recent-transactions'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' RecentTransactions source collapse/gap0 table mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+        }
+        if(style==='sera'&&id==='index-investing'){
+          const sourceProse=record.source.find(x=>x.className.includes('cn-card-description')&&x.text?.startsWith('Over time'));
+          const qxProse=record.qx.find(x=>x.className.includes('is-prose-intro'));
+          if(!sourceProse||!qxProse||Math.abs(sourceProse.y-qxProse.y)>.5||
+             Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Sera IndexInvesting authored prose mt-0 geometry mismatch: '+JSON.stringify({sourceProse,qxProse,source:record.source[0],qx:record.qx[0]}));
         }
         if(style==='sera'&&id==='preferences'&&Math.abs(record.source[0].h-record.qx[0].h)>.5)
           throw new Error('Sera Preferences source Footer action shrink mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));

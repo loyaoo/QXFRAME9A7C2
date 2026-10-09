@@ -70,6 +70,7 @@
 .qxframe9a7c2-card-header>.qxframe9a7c2-card-title{flex:1 1 auto}
 .qxframe9a7c2-card-heading>.qxframe9a7c2-card-title{flex:0 1 auto}
 .qxframe9a7c2-card-description.is-artwork-meta{font-size:.75rem;line-height:var(--qxframe9a7c2-theme-artwork-description-leading,1rem)}
+.qxframe9a7c2-card-description.is-prose-intro{margin-top:var(--qxframe9a7c2-card-prose-offset,var(--qxframe9a7c2-theme-card-prose-offset,.75rem))}
 .qxframe9a7c2-card-description{margin:0;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:var(--_qxframe9a7c2-card-font-size);font-weight:400;line-height:var(--qxframe9a7c2-theme-description-leading,1.4285714286)}
 .qxframe9a7c2-card-header-action,.qxframe9a7c2-card-extra{min-width:0;flex:0 0 auto;align-self:flex-start;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 
