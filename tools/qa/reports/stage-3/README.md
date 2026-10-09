@@ -1,5 +1,10 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Source-paired Kitchen slider root min-width (new final CI pending)
+
+The common Item x owner is aligned after equal flex and Theme gap recipe. New strict source gate on `e6566178` caught Maia source slider x209.42/w126.44 against QX x209.42/w128. QX standalone Slider has `min-width:8rem`, overruling the narrower computed equal-actions Item slot, although rail center and Card geometry were otherwise correct. Shared opt-in Item variant now sets child Slider min-width:0 only within `is-actions-equal` rows, preserving the standalone Slider default. No guessed slider width or preview-private override. All eight-style Chromium checks verify opt-in min-width; unchanged five-source-style ±0.5px x/width/right-edge/center gate detects geometry regressions. Offline bundle highlights ONLY current Kitchen (4 rails) and Front Door (1 stripe), not earlier batches.
+
+
 ## 2026-10-09 — Equal-action Item row gap derived from existing Theme recipe (CI required)
 
 On `3bea7c7d`, new strict source-paired gate found Maia source four rails x209.42/w126.44 while QX x207.42/w128.42; the main flex invariant now works but QX Item gap was 12px versus pinned source 14px (Maia/Luma/Rhea), while Vega/Lyra already have 10px correct. The existing `theme-item-sm-reduction` axis distinguishes Vega's 4px from other 2px, and existing `theme-item-space` distinguishes compact 10px / spacious 14px. New shared opt-in `is-actions-equal` consumer computes source-aligned row gap from those roles (Vega 10, Maia/Luma/Rhea 14, Lyra 10), with public item-gap override preserved, without theme token expansion or Preview-local compensations. Existing source±0.5px tests unchanged. Only current Kitchen+FrontDoor QA badges remain.

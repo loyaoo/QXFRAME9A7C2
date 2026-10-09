@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 S3 Kitchen four equal rails: standalone Slider min-width collision (CI pending)
+
+- Reconciled live Git HEAD `e6566178b03918901293a0d233b9137de584deb9`, PR #265 Draft/unmerged. QXFRAME #37929320175: **Release SUCCESS**, **windows-tools SUCCESS**, source-preview-geometry FAILED the newly added strict Kitchen source comparison for Maia; CSS Schema #37929320258 SUCCESS. Exact failing source Maia rails x209.42/w126.44/h12 vs QX x209.42/w128/h16. Their centers already match; the QX Slider's `min-width:8rem` default prevents the flex share shrinking to 126.44px. The other four rails match x, so no change to Item flex allocation or gap required.
+- Fixed **shared owner** `src/styles/components/item-surface.css`: opt-in `.qxframe9a7c2-item.is-actions-equal .qxframe9a7c2-slider{min-width:0}` ONLY within equal-actions Item, preserving general Slider's 8rem public default and legacy standalone behavior. This allows four source rails to resolve to actual equal flex slots across Vega/Maia/Lyra/Luma/Rhea, avoiding a fixed pixel or Style branch. Eight-style Chromium regression asserts all four Slider roots compute min-width 0. Existing strict source-pair x,width,right edge,vertical center <=0.5px unchanged.
+- Required Windows bundle current-only yellow QA ledger ALREADY reset on prior batch: 2 Cards only, Kitchen Island four rails and Front Door thin stripes (5 regions). Do not highlight FAQ/Savings/Transactions/Syncing again. The actual package must be built once from final double-green Action, with exact HEAD stamped in those five regions. Main & backup remain frozen. Overall ~65%, Stage3 open; Stage4/5 untouched.
+- NEXT: atomic commit, full QXFRAME + CSS Schema CI both SUCCESS on new HEAD, inspect source paired rails and Release, then download exact same-tree dist/docs artifact, assemble local Windows ZIP, test 2 Cards / 5 regions only, ZIP CRC + HTTP200 + click/highlight toggle; PR Draft.
+
+
 ## CURRENT — 2026-10-09 S3 Kitchen Item equal Actions and source row gap (new final CI)
 
 - Candidate `3bea7c7d81cb1d3c48d00bebc7397b9d56e51798` strict source CI FAILED Maia: source 4 slider rails x=209.42,width=126.44, QX x=207.42,width=128.42, all four equally aligned. Source structure proves row Item gap =14px Maia/Luma/Rhea, while QX shared Item.is-sm gap=12px. Vega/Lyra source and QX row gap=10px. This is a **shared Item gap geometry recipe** difference, not Slider ValueController or per-style fixed pixel.

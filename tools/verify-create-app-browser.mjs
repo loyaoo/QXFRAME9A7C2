@@ -971,7 +971,7 @@ try {
           rails:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
             const rail=el.querySelector('.qxframe9a7c2-slider').getBoundingClientRect();
             const cardRect=card.getBoundingClientRect();
-            return {x:rail.x-cardRect.x,w:rail.width,equal:el.classList.contains('is-actions-equal')};
+            return {x:rail.x-cardRect.x,w:rail.width,equal:el.classList.contains('is-actions-equal'),minWidth:css(el.querySelector('.qxframe9a7c2-slider')).minWidth};
           }),
           media:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
             const icon=el.querySelector('.qxframe9a7c2-item-media.is-icon');
@@ -988,6 +988,7 @@ try {
       })()`);
       assert.equal(actual.rails.length,4,style+' four slider rails');
       assert.ok(actual.rails.every(n=>n.equal),style+' equal ItemActions modifier on all rows');
+      assert.ok(actual.rails.every(n=>n.minWidth==='0px'),style+' equal ItemActions Slider opts out of standalone 8rem minimum');
       assert.ok(Math.max(...actual.rails.map(n=>n.x))-Math.min(...actual.rails.map(n=>n.x))<=.5,
         style+' all Kitchen sliders must start together: '+JSON.stringify(actual.rails));
       assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');

@@ -146,3 +146,7 @@
   ));
 }
 .qxframe9a7c2-item.is-actions-equal .qxframe9a7c2-item-actions{flex:1 1 0;min-width:0}
+/* An equal-flex Item action slot may be narrower than Slider's 8rem
+ * standalone minimum. Scope intrinsic shrinking to this opt-in layout;
+ * regular standalone Slider retains its default minimum. */
+.qxframe9a7c2-item.is-actions-equal .qxframe9a7c2-slider{min-width:0}
