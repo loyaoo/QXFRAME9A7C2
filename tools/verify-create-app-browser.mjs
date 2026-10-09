@@ -1779,8 +1779,8 @@ try {
 
 
   await step('Preview 01 twenty source-pinned FieldLabels activate actual native or QX Select controls', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
-    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method] input')', 'Preview native fields');
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method] input")', 'Preview native fields');
     const observations = await evaluate(`(() => {
       const d=document.querySelector('[data-create-frame]').contentDocument;
       const fields=[{"card":"payout-threshold","id":"preferred-currency","kind":"runtime"},{"card":"payout-threshold","id":"payout-notes","kind":"textarea"},{"card":"preferences","id":"default-currency","kind":"runtime"},{"card":"savings-targets","id":"investment-amount","kind":"input"},{"card":"savings-targets","id":"investment-order-type","kind":"select"},{"card":"account-access","id":"email-address","kind":"input"},{"card":"account-access","id":"current-password","kind":"input"},{"card":"transfer-funds","id":"transfer-amount","kind":"input"},{"card":"transfer-funds","id":"from-account","kind":"runtime"},{"card":"transfer-funds","id":"to-account","kind":"runtime"},{"card":"receiving-method","id":"account-holder","kind":"input"},{"card":"receiving-method","id":"iban","kind":"input"},{"card":"stock-performance","id":"stock-ticker","kind":"runtime"},{"card":"new-milestone","id":"goal-name","kind":"input"},{"card":"new-milestone","id":"target-amount","kind":"input"},{"card":"new-milestone","id":"target-date","kind":"input"},{"card":"social-links","id":"spotify-url","kind":"input"},{"card":"social-links","id":"instagram-handle","kind":"input"},{"card":"social-links","id":"soundcloud-url","kind":"input"},{"card":"social-links","id":"website-url","kind":"input"}];
