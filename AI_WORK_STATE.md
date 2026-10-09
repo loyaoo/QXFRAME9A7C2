@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 S3 Kitchen Item equal Actions and source row gap (new final CI)
+
+- Candidate `3bea7c7d81cb1d3c48d00bebc7397b9d56e51798` strict source CI FAILED Maia: source 4 slider rails x=209.42,width=126.44, QX x=207.42,width=128.42, all four equally aligned. Source structure proves row Item gap =14px Maia/Luma/Rhea, while QX shared Item.is-sm gap=12px. Vega/Lyra source and QX row gap=10px. This is a **shared Item gap geometry recipe** difference, not Slider ValueController or per-style fixed pixel.
+- Existing Theme `--theme-item-space` is 14px spacious and 10px compact. Existing `--theme-item-sm-reduction` is 4px Vega, 2px other Styles (see compiler.js). Equal-action source recipe maps Vega 14 - 2*(4-2)=10px, spacious others 14px, compact 10px. Added an opt-in shared `Item.is-actions-equal` gap consumer deriving the row gap from these **existing** Theme roles with no new tokens, custom Style names or Preview CSS. Two child flex:1 sizes then match five source sampled Style rail widths/left/right/centers within existing new ±0.5px gate.
+- Keep all previous strict verification gates and current round offline marks only two Cards/five regions: Kitchen 4 rails, Front Door thin stripe; historical yellow highlights absent. Same final HEAD both QXFRAME/CSS Schema SUCCESS still required; official Actions artifact local ZIP only after CI success. No PR merge, no main/backup change, Stage3 pending.
+
+
 ## CURRENT — 2026-10-09 S3 Kitchen equal-flex source invariant (final CI pending)
 
 - Candidate `9aca424f6394cb8b0d1092d49d0aef8418faa1af` source CI proved Preview flex conflict removed and rails aligned, but Lyra source (x186, w121) vs QX (x184.69,w128) still failed exact right-edge; a 44% guess was insufficient. Original pinned source node trace revealed decisive architecture: **cn-item-content flex-1 and cn-item-actions flex-1**, both measured 121px in Lyra. Restored one shared generic *equal halves* variant `Item.is-actions-equal .item-actions{flex:1 1 0}` matching default `ItemContent{flex:1 1 0}`, not a guessed percentage. Four Kitchen rows opt in; old Preview private flex veto already removed. Strict source paired x, width, rail right-edge and center all now **<=0.5px** for five source-traced Styles. Browser check asserts four equal action shells in all eight Styles.

@@ -1,5 +1,10 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Equal-action Item row gap derived from existing Theme recipe (CI required)
+
+On `3bea7c7d`, new strict source-paired gate found Maia source four rails x209.42/w126.44 while QX x207.42/w128.42; the main flex invariant now works but QX Item gap was 12px versus pinned source 14px (Maia/Luma/Rhea), while Vega/Lyra already have 10px correct. The existing `theme-item-sm-reduction` axis distinguishes Vega's 4px from other 2px, and existing `theme-item-space` distinguishes compact 10px / spacious 14px. New shared opt-in `is-actions-equal` consumer computes source-aligned row gap from those roles (Vega 10, Maia/Luma/Rhea 14, Lyra 10), with public item-gap override preserved, without theme token expansion or Preview-local compensations. Existing source±0.5px tests unchanged. Only current Kitchen+FrontDoor QA badges remain.
+
+
 ## 2026-10-09 — Replace guessed percentage with source equal-flex Item owner
 
 QXFRAME CI from `9aca424f` proved Kitchen rails now align per text length but Lyra source x186/w121 vs QX x184.69/w128 showed incorrect 44%-based allocation, with unchanged source right-edge gate. Examined actual pinned source subtree: **both** `cn-item-content` and `cn-item-actions` have `flex-1`; Lyra equal width 121px. Matched this *common invariant* using shared `Item.is-actions-equal` + default equal-flex ItemContent, no hardcoded percentage, special Style branch, or new Token. Four Preview01 rows opt in. Tightened new Kitchen per-rail source test x/width to 0.5px (right-edge and centers already 0.5px) for 5 source-inspected Styles. Original Card gates unchanged. QA marks only this batch's two Cards/five regions.

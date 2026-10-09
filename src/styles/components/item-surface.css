@@ -132,6 +132,17 @@
 .qxframe9a7c2-item-media.is-icon{width:1rem;height:1rem;border:0;border-radius:0;background:transparent}
 .qxframe9a7c2-item-media.is-icon>svg{display:block;width:1rem;height:1rem}
 .qxframe9a7c2-item-actions{display:flex;flex:0 0 auto;align-items:center;gap:.5rem}
-/* Source ItemContent and ItemActions each flex:1: split the remaining
- * row space equally after icon/gaps, at every density and width. */
+/* Source paired equal-action Items use 2 equal flex columns. Their row gap
+ * belongs to the uncompressed Item recipe for the 2px sm tier; Vega's
+ * 4px sm reduction also reduces each of the 2 horizontal gaps by 2px.
+ * Derive this entirely from EXISTING Theme item-space + sm-reduction axes. */
+.qxframe9a7c2-item.is-actions-equal{
+  gap:var(--qxframe9a7c2-item-gap,calc(
+    var(--qxframe9a7c2-theme-item-space,.625rem) -
+    max(0rem,calc(
+      var(--qxframe9a7c2-theme-item-sm-reduction,.125rem) +
+      var(--qxframe9a7c2-theme-item-sm-reduction,.125rem) - .25rem
+    ))
+  ));
+}
 .qxframe9a7c2-item.is-actions-equal .qxframe9a7c2-item-actions{flex:1 1 0;min-width:0}
