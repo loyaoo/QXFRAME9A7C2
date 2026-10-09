@@ -20,6 +20,11 @@
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{flex-direction:column;min-width:100%;min-height:max-content}
 .qxframe9a7c2-tabs-list{box-sizing:border-box;position:relative}
 .qxframe9a7c2-tabs-tab-shell{box-sizing:border-box;display:inline-flex;min-width:0;flex:0 0 auto}
+/* Equal-width horizontal TabsList, reusable for source-style segmented controls.
+ * Default Tabs remain intrinsic-width and preserve scrolling/overflow behavior. */
+.qxframe9a7c2-tabs.is-equal:not(.is-vertical) .qxframe9a7c2-tabs-list{width:100%;min-width:100%}
+.qxframe9a7c2-tabs.is-equal:not(.is-vertical) .qxframe9a7c2-tabs-tab-shell{flex:1 1 0;min-width:0}
+.qxframe9a7c2-tabs.is-equal:not(.is-vertical) .qxframe9a7c2-tabs-tab{width:100%}
 .qxframe9a7c2-tabs-tab-shell[hidden]{display:none}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-tab-shell{width:100%}
 /* Tabs state resolver: the stable visual tab owns chrome; native sibling actions own activation/close. */

@@ -1460,6 +1460,12 @@ try {
       const faq=doc.querySelector('[data-card="faq"]');
       const actions=[...faq.querySelectorAll('.pv-tabs .qxframe9a7c2-tabs-tab-action')];
       const panels=[...faq.querySelectorAll('[data-pv-tab-panel]')];
+      const tabList=faq.querySelector('.qxframe9a7c2-tabs-list');
+      const shells=[...faq.querySelectorAll('.qxframe9a7c2-tabs-tab-shell:not([hidden])')];
+      const slotWidths=shells.map(node=>node.getBoundingClientRect().width);
+      const listWidth=tabList.getBoundingClientRect().width;
+      const slotGap=parseFloat(doc.defaultView.getComputedStyle(tabList).columnGap)||0;
+      const hasEqualModifier=!!faq.querySelector('.qxframe9a7c2-tabs.is-equal');
       const snap=()=>({selected:actions.filter(e=>e.classList.contains('is-active')).map(e=>e.textContent.trim()),
         shown:panels.filter(e=>!e.hidden&&doc.defaultView.getComputedStyle(e).display!=='none').map(e=>e.getAttribute('data-pv-tab-panel')),
         questions:panels.filter(e=>!e.hidden).flatMap(e=>[...e.querySelectorAll('summary')].map(x=>x.textContent.trim()))});
@@ -1470,12 +1476,18 @@ try {
       const billingSingleOpen=billingItems.map(e=>e.open);
       actions[2].click(); const goals=snap();
       actions[0].click(); const restored=snap();
-      return {tabs:actions.length,panels:panels.length,segmented:!!faq.querySelector('.pv-tabs .qxframe9a7c2-tabs.is-segmented'),initial,billing,goals,restored,billingSingleOpen,
+      return {tabs:actions.length,panels:panels.length,segmented:!!faq.querySelector('.pv-tabs .qxframe9a7c2-tabs.is-segmented'),hasEqualModifier,slotWidths,listWidth,slotGap,initial,billing,goals,restored,billingSingleOpen,
         names:[...faq.querySelectorAll('details')].map(e=>e.name)};
     })()`);
     assert.equal(result.tabs,3);
     assert.equal(result.panels,3);
     assert.equal(result.segmented,true,'source FAQ TabsList uses QX segmented style');
+    assert.equal(result.hasEqualModifier,true,'FAQ must use reusable equal-width Tabs slots');
+    assert.equal(result.slotWidths.length,3,'FAQ has three equal Tabs slots');
+    assert.ok(Math.max(...result.slotWidths)-Math.min(...result.slotWidths)<=.5,
+      'FAQ segmented slots must be equal width: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.slotWidths.reduce((sum,n)=>sum+n,0)+result.slotGap*2-result.listWidth)<=1.5,
+      'FAQ three equal Tabs slots must fill available list width: '+JSON.stringify(result));
     assert.deepEqual(result.initial.shown,['general']);
     assert.deepEqual(result.billing.shown,['billing']);
     assert.deepEqual(result.goals.shown,['goals']);

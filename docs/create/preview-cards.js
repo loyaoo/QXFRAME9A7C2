@@ -65,6 +65,8 @@
       };
     }
     var tabs = C.Tabs.create(options);
+    // Author equal-width segmented slots using the framework's reusable Tabs modifier.
+    if (host.hasAttribute('data-pv-equal')) tabs.getRootElement().classList.add('is-equal');
     if (panels.length) options.onChange(tabs.activeKey || options.defaultActiveKey);
   });
   var Calendar = C.Calendar || (Q.BuildingBlocks && Q.BuildingBlocks.Calendar);

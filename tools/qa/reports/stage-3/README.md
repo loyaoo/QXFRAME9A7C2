@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — FAQ equal-width segmented tabs (CI pending)
+
+Pinned shadcn Nova screenshot renders General/Billing/Goals as three equal slots filling the segmented TabsList; QX's intrinsic-width tabs leave unused gray rail. Added reusable opt-in shared Tabs.is-equal horizontal flex modifier and Preview01 data-pv-equal authoring mapping; this is framework CSS rather than a Preview-only styling rule. Added real Chromium regression for equal shell widths, total list fill and existing panel switching. Needs both CI suites green before calling accepted, and matching Windows dist/docs.
+
 ## 2026-10-09 — Buy Investment sibling source-pair diagnostics (CI pending)
 
 Savings Targets is a composed two-column region; first-Card strict parity and Sera-only sibling parity do not prove **Buy Investment** parity for other Styles. Added same-Chromium pinned source/QX measurements for both sibling widths/heights across eight Styles and light/dark, logging child geometry only when >0.5px different. This is evidence collection, not yet a fix or new pass claim. Preserve existing Sera strict checks and 528 first-card gates. Next: inspect CI per-style differences, fix shared owner, add strict test, obtain both green workflows and matching Windows dist/docs. Overall~65%, Stage3~64%.

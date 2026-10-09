@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Stage3 FAQ Tabs equal-width source layout (CI pending)
+
+- Real pinned source vs QX Nova visual comparison showed FAQ segmented **General/Billing/Goals** source tabs fill the entire rail with three equal-width slots, while QX left a large unused segment to the right. The generic Tabs component only had intrinsic-width shells.
+- Task S3-TABS-EQUAL-001: add opt-in shared `Tabs.is-equal` flex distribution without modifying intrinsic default, vertical/overflow behavior, Theme tokens, or JS runtime. Preview 01 opts in via `data-pv-equal` and authored mounting adds shared CSS modifier on the actual Tabs root. Added real Chromium FAQ regression that all three tabs have equal width and together fill the list; existing activation/panel test remains.
+- Latest working parent `2d57916825f38d183ae4f17d91bb8eee2985a8bd` included 16-mode Buy Investment sibling diagnostics with 0 Card outer height/width deltas; internal placement still not certified. Preserve all 528 source and Sera peer assertions. Current update must run both complete workflows on final head and generate the same-tree Windows demo ZIP before delivery. PR #265 Draft, frozen main/backup, overall~65%, Stage3~64%, Stage4/5 untouched.
+
+
 ## CURRENT — 2026-10-09 Stage3 Buy Investment sibling source diagnostics (CI pending)
 
 - Verified stable HEAD `645d884c77d900f8a0e346fd8217f55e70544f59`: QXFRAME CI #37912898948 / CSS Schema #37912898938 SUCCESS, 528/528 first Cards within 0.5px, PR #265 Draft, main and backup frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
