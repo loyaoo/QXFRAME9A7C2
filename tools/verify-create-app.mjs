@@ -262,6 +262,8 @@ check('Pinned Radio Field and SidebarMenu static compositions use shared framewo
   const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const preview=read('preview-01.html'),app=read('preview.css'),compiled=read('compiler.js');
   assert.match(css,/\.qxframe9a7c2-check-field\.is-choice\{/);
+  assert.match(css,/padding-block-end:var\(--qxframe9a7c2-choice-field-padding-bottom,/,
+    'source pb-2.5 is a local public option not an app-owned padding override');
   assert.match(css,/\.qxframe9a7c2-field-title\{/);
   assert.match(css,/\.qxframe9a7c2-sidebar-menu-button\{/);
   assert.match(css,/\.qxframe9a7c2-sidebar-group-label\{/);

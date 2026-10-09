@@ -199,7 +199,10 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
  * The authored pb-2.5 may override only the trailing padding as in source. */
 .qxframe9a7c2-check-field.is-choice{
   box-sizing:border-box;align-items:center;
-  padding:var(--qxframe9a7c2-choice-field-inset,var(--qxframe9a7c2-theme-choice-field-inset,.625rem));
+  --_qxframe9a7c2-choice-field-inset:var(--qxframe9a7c2-choice-field-inset,var(--qxframe9a7c2-theme-choice-field-inset,.625rem));
+  padding-block-start:var(--_qxframe9a7c2-choice-field-inset);
+  padding-inline:var(--_qxframe9a7c2-choice-field-inset);
+  padding-block-end:var(--qxframe9a7c2-choice-field-padding-bottom,var(--_qxframe9a7c2-choice-field-inset));
   border:1px solid var(--qxframe9a7c2-theme-border);
   border-radius:var(--qxframe9a7c2-theme-radius-field);
   background:transparent
