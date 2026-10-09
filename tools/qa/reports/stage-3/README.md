@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Buy Investment sibling source-pair diagnostics (CI pending)
+
+Savings Targets is a composed two-column region; first-Card strict parity and Sera-only sibling parity do not prove **Buy Investment** parity for other Styles. Added same-Chromium pinned source/QX measurements for both sibling widths/heights across eight Styles and light/dark, logging child geometry only when >0.5px different. This is evidence collection, not yet a fix or new pass claim. Preserve existing Sera strict checks and 528 first-card gates. Next: inspect CI per-style differences, fix shared owner, add strict test, obtain both green workflows and matching Windows dist/docs. Overall~65%, Stage3~64%.
+
 ## 2026-10-09 — DatePanel omitted from shared Theme geometry owner (CI pending)
 
 The new Create real-Chromium regression gate caught a genuine defect: standalone `DatePanelCell` 4px radius vs QX Button 10px, despite changing its radius consumer to `--_qxframe9a7c2-action-radius`. Cause: DatePanel wasn't a registered **independent geometry owner** under `theme-visual-v2.css`, unlike Calendar/PeriodPanel/Button, so inherited old 4px family action value. Register DatePanel under existing geometry owner selector to share the same Theme radius-button, ratio and Popup radius calculations, without forking a new recipe. Remaining Select natural-padding and opaque selected Primary changes unchanged; CI and browser gate rerun mandatory.

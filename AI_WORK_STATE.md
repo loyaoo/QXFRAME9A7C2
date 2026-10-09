@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Stage3 Buy Investment sibling source diagnostics (CI pending)
+
+- Verified stable HEAD `645d884c77d900f8a0e346fd8217f55e70544f59`: QXFRAME CI #37912898948 / CSS Schema #37912898938 SUCCESS, 528/528 first Cards within 0.5px, PR #265 Draft, main and backup frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+- Task S3-SAVINGS-PEERS-002: first Card checks and the Sera two-column peer gate do not cover adjacent **Buy Investment** in the other Styles. Extend pinned-source Chromium audit to emit both Card widths/heights and subtree details for eight Styles/light-dark. Existing strict gates unchanged. This is *diagnostic coverage*, not a completed visual fix.
+- Next: inspect source-vs-QX sibling deltas in actual CI logs; repair shared CSS geometry with regression assertion; obtain two green workflows for the same final HEAD and Windows offline dist/docs ZIP. Stage 4/5 untouched. Estimates overall~65%, Stage 3~64%.
+
+
 > Persistent recovery checkpoint. Read `AGENTS.md` first.
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.

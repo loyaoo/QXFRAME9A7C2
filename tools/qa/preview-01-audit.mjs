@@ -171,7 +171,9 @@ try {
       await page.waitForTimeout(350);
       const reference = await measure(true);
       if(style==='sera'&&!dark)sourceOverviewPeers=await overviewPeers(true);
-      if(style==='sera')sourceSavingsPeers=await savingsPeers(true);
+      // Measure both siblings in every style/mode. The first Card alone does not
+      // characterize the Buy Investment Card beside it.
+      sourceSavingsPeers=await savingsPeers(true);
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
       if(!dark) for(const id of targetCards[style]||[])
         sourceNodePairs[style+'/'+id]={source:await nodeStructure(true,id)};
@@ -190,11 +192,24 @@ try {
       await page.waitForTimeout(350);
       const actual = await measure(false);
       if(style==='sera'&&!dark)console.log('[stage3-overview-row-sera] '+JSON.stringify({source:sourceOverviewPeers,qx:await overviewPeers(false)}));
-      if(style==='sera'){
+      {
         const qxSavingsPeers=await savingsPeers(false);
         const src=sourceSavingsPeers,actual=qxSavingsPeers;
         if(!src||!actual||src.length!==2||actual.length!==2)
-          throw new Error('Sera Savings two-column Card source/QX peer structures missing');
+          throw new Error(style+' Savings two-column Card source/QX peer structures missing');
+        const peers=src.map((card,i)=>({
+          name:i===0?'Savings Targets':'Buy Investment',
+          sourceHeight:card.h,qxHeight:actual[i].h,
+          sourceWidth:card.w,qxWidth:actual[i].w,
+          deltaHeight:+(actual[i].h-card.h).toFixed(3),
+          deltaWidth:+(actual[i].w-card.w).toFixed(3)
+        }));
+        // Diagnostic only until the second Card is source-matched across styles.
+        // Existing Sera and first-Card strict assertions remain unchanged.
+        console.log('[stage3-savings-peer-geometry] '+JSON.stringify({style,dark,peers}));
+        if(peers.some(row=>Math.abs(row.deltaHeight)>.5||Math.abs(row.deltaWidth)>.5))
+          console.log('[stage3-savings-peer-subtree-diff] '+JSON.stringify({style,dark,source:src,qx:actual}));
+        if(style==='sera'){
         const button=card=>card.children.find(n=>n.text==='New Goal'||n.className.includes('qxframe9a7c2-button is-default is-outlined'));
         const description=card=>card.children.find(n=>n.text==='Active milestones for 2024');
         if(!button(src[0])||!button(actual[0])||!description(src[0])||!description(actual[0])||
@@ -203,6 +218,7 @@ try {
           src.some((card,i)=>Math.abs(card.h-actual[i].h)>.5))
           throw new Error('Sera Savings shared Button size-sm and two-column natural Card height differ: '+JSON.stringify({source:src,qx:actual}));
         if(!dark)console.log('[stage3-savings-row-sera] '+JSON.stringify({source:src,qx:actual}));
+        }
       }
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) {novaCardStructures[id].qx=await nodeStructure(false,id); console.log('[stage3-structure-'+id+'] '+JSON.stringify(novaCardStructures[id]));}
       if(!dark) for(const id of targetCards[style]||[]) {
