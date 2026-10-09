@@ -389,6 +389,7 @@
 .qxframe9a7c2-button.is-block{width:100%}
 /* A source Button with shrink-0 and w-full must retain its intrinsic flex
  * footprint even beside another full-width action (for example FAQ footer). */
-.qxframe9a7c2-button.is-no-shrink{flex-shrink:0;white-space:nowrap}
+.qxframe9a7c2-button.is-no-shrink{flex-shrink:0}
+.qxframe9a7c2-button.is-label-nowrap{white-space:nowrap}
 
 

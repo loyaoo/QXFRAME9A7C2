@@ -117,6 +117,9 @@
   font-size:var(--qxframe9a7c2-theme-text-size);
   line-height:var(--qxframe9a7c2-theme-item-description-leading);
 }
+/* Explicit source text-xs ItemDescription used as a KPI/category heading;
+ * ordinary Item descriptions continue consuming their existing text-leading. */
+.qxframe9a7c2-item-desc.is-kpi-label{line-height:var(--qxframe9a7c2-item-kpi-label-leading,var(--qxframe9a7c2-theme-item-kpi-label-leading,1rem))}
 .qxframe9a7c2-item-media{display:flex;flex:0 0 auto;align-items:center;justify-content:center;gap:.5rem}
 /* Pinned shadcn ItemMedia: an Item containing description top-aligns its
  * media and lowers the glyph 2px; Item without description stays centered. */

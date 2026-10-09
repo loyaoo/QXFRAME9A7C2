@@ -4,6 +4,12 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 strict QA feedback closeout: ItemFooter single gap and Button selector regression (CI pending)
+
+- `ff89e656` QXFRAME run #37887238932 failed on two actionable sources: release static assertion expects exact `.qxframe9a7c2-button.is-no-shrink{flex-shrink:0}`; geometry strict Nova SavingsTargets trace shows ItemFooter after being moved to sibling still has extraneous 12px `margin-top` authored privately in `docs/create/preview.css` and its explicit text-xs label is 16px instead of source Nova 18px.
+- Restored Button's established `is-no-shrink` declaration exactly and added independent shared semantic `Button.is-label-nowrap` (Sera Overview source Button has `white-space:nowrap`). Deleted duplicate Preview-local `.item-footer{margin-top:.75rem}`; Item parent now owns its documented gap. Registered `item-kpi-label-leading` Theme role and `ItemDescription.is-kpi-label` source label composition (Nova18px, Sera19.5px, other source styles16px), used on both SavingsTarget labels. Expected source-paired first Item source/QX Nova134px, Lyra/Mira132px, Maia152px; must confirm in new CI rather than report prediction as result.
+- Prev complete paired baseline `f24bbbe7`: 102/528; new complete result not yet known. Latest batch also includes Mira AccordionContent and Nova FieldLegend shared source roles. Update PR and Stage3 QA after latest two CI jobs. Provisional CREATEAPP-V3 65%, Stage3 64%, Draft, no main/backup changes.
+
 ## CURRENT — 2026-10-09 source-approved shared FieldLegend and AccordionContent separation (new CI pending)
 
 - Prior measured gate: `f24bbbe7` source-preview-geometry SUCCESS, **102/528** source-paired first Card height diagnostics (104 before), 528/528 measured and no nonauthorized geometry-subset mismatch. The previous intermediate run's CSS Schema passed; newest HEAD still requires both CI.

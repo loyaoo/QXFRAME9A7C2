@@ -384,6 +384,9 @@ export function themeTokens(resolved) {
   // regular styles. Keep the style's source recipe here, never in component CSS.
   root['item-description-leading'] = String(ext.textStyle === 'editorial' || ext.typography === 'compact'
     ? 1.625 : style === 'vega' || PADDING[ext.padding] <= 1 ? 1.5 : 20 / 14);
+  // Pinned SavingsTargets text-xs Item label is 18px Nova, 19.5px Sera,
+  // otherwise 16px. Its explicit text-xs leading differs from ItemDescription.
+  root['item-kpi-label-leading']=style==='nova'?'1.125rem':style==='sera'?'1.21875rem':'1rem';
   root['field-group-gap'] = rem(groupSpace);
   root['field-gap'] = rem(fieldSpace);
   root['field-content-gap'] = rem(fieldSpace <= .5 ? .125 : .25);

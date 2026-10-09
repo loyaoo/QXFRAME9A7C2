@@ -1,5 +1,12 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Failed strict gate correction: source Item label line-box, footer margin, Button modifier
+
+CI #37887238932 failed in Release static check due to changed literal `.is-no-shrink` declaration, and source-preview-geometry strict Nova SavingsTargets probe: source first muted Item134px/QX144px, source ItemContent82px/QX80px. The source ItemFooter is an actual sibling, but Preview still specified a redundant 12px top margin after the Item parent gap. Deleted that Preview CSS owner; parent gap is canonical in shared Item. Source text-xs ItemDescription label is 18px in Nova, 19.5px Sera, 16px other sampled styles, while preview `pv-text-xs` hardcoded16px. Added registered `item-kpi-label-leading` theme role and a shared Item label semantic variant, used by both SavingsTargets labels. Source-aligned per-style heights must be established by new CI.
+
+Restored old shared `is-no-shrink{flex-shrink:0}` declaration to meet established Release verifier and added distinct `is-label-nowrap` policy for pinned Sera Overview button; no fixed dimension. Prior f24bbbe7 measured 102/528, stage 3 incomplete. New CI pending, preserve PR Draft.
+
+
 ## 2026-10-09 — Source FieldLegend and AccordionContent authored owner split
 
 Pinned shadcn `style-mira.css`: AccordionTrigger `p-2` but AccordionContentInner `pb-4`. QX shared Collapse was consuming trigger padding for content and thus Mira FAQ 8px too short; split Theme inputs (with `accordion-content-padding` default .625rem in root+dark) and consume in shared Collapse. Source content uses 16px in Vega/Maia/Mira/Luma/Sera/Rhea, 10px in Nova/Lyra. Dedicated Mira content/Card strict pairing added.
