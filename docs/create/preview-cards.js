@@ -46,6 +46,10 @@
       }
     }
     C.Slider.create(options);
+    if (host.hasAttribute('data-pv-track-height')) {
+      var root = host.querySelector('.qxframe9a7c2-slider');
+      if (root) root.classList.add('is-track-height');
+    }
   });
   document.querySelectorAll('[data-pv-tabs]').forEach(function (host) {
     var items = pairs(host.getAttribute('data-items')).map(function (item) { return { key: item.value, label: item.label }; });
