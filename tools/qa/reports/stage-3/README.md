@@ -1,5 +1,11 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — source display CardTitle leading
+
+Pinned source `ClaimableBalance` shows `text-5xl` (48px). Vega `CardTitle` explicitly sets `leading-normal` (=72px), Nova `leading-snug` (=66px), all other pinned style CardTitles lack an explicit leading override and retain Tailwind text-5xl tight (=48px). QX preview's private `pv-text-5xl` set font-size48 but inherited generic heading-leading. Sera's source title was 48px tall, QX 74.6667px, accounting for 26.6667px of the +32.375px Card delta; the remaining ~5.7px is the editorial Badge, to investigate next.
+
+New shared `qxframe9a7c2-card-title.is-display` handles the 3rem font scale and a single closed `card-display-leading` Theme input (Vega1.5/Nova1.375/others1). This is source-backed composition, not a per-Card height override. Existing other CardTitle defaults remain unchanged. Updated all-style Chromium/title box tests and broadened same-browser Claimable node reports. Pending CI and 528 paired height diagnosis.
+
 ## 2026-10-09 — native FAQ composition line box and 154/528 paired results
 
 Same-browser pinned run on `d58d740c`, source-preview-geometry job `113635342375`, yielded 528 measured, **154/528 >0.5px** (previous 168). Maia/Luma Receiving Method source and QX exactly 487.5/487.5px and 485.5/485.5px; Maia/Luma/Sera SidebarNav respectively 441/441px, 427/427px, 427/427px. New static RadioField shared-variable test supersedes an obsolete `pv-choice-field padding-block-end` assumption and does not change source pb-2.5 acceptance.

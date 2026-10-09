@@ -101,8 +101,7 @@ body.create-preview-body {
 .pv-min-h-100 { min-height: 6.25rem; }
 .pv-self-start { align-self: flex-start; }
 .pv-ml-auto { margin-inline-start: auto; }
-/* Display-size override must preserve the owning component's line-height (CardTitle uses leading-snug). */
-.pv-text-5xl { font-size: 3rem; }
+
 .pv-flex-end { display: flex; flex: 1 1 auto; flex-direction: column; justify-content: flex-end; }
 .pv-footer-column.qxframe9a7c2-card-footer { flex-direction: column; align-items: stretch; gap: 0; }
 .pv-status-dot { display: inline-block; width: 0.5rem; height: 0.5rem; margin-inline-end: 0.25rem; border-radius: 50%; background: currentColor; }

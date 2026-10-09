@@ -144,6 +144,7 @@ export const THEME_TOKENS = [
   L('card-gap', 'Card section gap'),
   L('card-meta-gap', 'Card title/description gap'),
   L('card-title-delta', 'Card title size step'),
+  L('card-display-leading', 'Display-sized CardTitle line-height from style'),
   L('card-font-size', 'Card body size'),
   L('card-border-width', 'Card ring width'),
   L('card-section-inset', 'Footer block inset (partition axis; source Nova / Lyra)'),

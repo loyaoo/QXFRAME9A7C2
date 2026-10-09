@@ -411,6 +411,9 @@ export function themeTokens(resolved) {
   root['sidebar-group-padding-block'] = rem(ext.density === 'dense' ? .25 : .5);
   root['card-gap'] = rem(PADDING[ext.padding]);
   root['card-meta-gap'] = rem(looks.metaGap);
+  // text-5xl in the pinned Claimable Card: Vega's leading-normal and
+  // Nova's leading-snug override display tight; remaining styles use 1.
+  root['card-display-leading'] = style==='vega'?'1.5':style==='nova'?'1.375':'1';
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
   root['card-font-size'] = rem(cardSize);
   root['card-border-width'] = '1px';

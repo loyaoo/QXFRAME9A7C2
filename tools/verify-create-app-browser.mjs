@@ -589,6 +589,27 @@ try {
     assert.equal(state.hiddenActive,0,'adaptive trailing-week CSS must not create invisible active day');
   });
 
+  await step('Display CardTitle uses pinned source leading for each style', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=claimable-balance]")','Claimable Card');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Claimable title');
+      const row=await evaluate(`(() => {
+        const d=document.querySelector('[data-create-frame]').contentDocument;
+        const title=d.querySelector('[data-card="claimable-balance"] .qxframe9a7c2-card-title');
+        const css=d.defaultView.getComputedStyle(title),r=title.getBoundingClientRect();
+        return {display:title.classList.contains('is-display'),font:parseFloat(css.fontSize),
+          line:parseFloat(css.lineHeight),height:r.height};
+      })()`);
+      const leading=style==='vega'?1.5:style==='nova'?1.375:1;
+      assert.equal(row.display,true,style+' shared display variant');
+      assert.ok(Math.abs(row.font-48)<=.5,style+' source text-5xl');
+      assert.ok(Math.abs(row.line-48*leading)<=.5,style+' source line-height');
+      assert.ok(Math.abs(row.height-48*leading)<=.5,style+' source title box height');
+    }
+  });
+
   await step('Dividend Income preserves the source Item flex sibling structure', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');

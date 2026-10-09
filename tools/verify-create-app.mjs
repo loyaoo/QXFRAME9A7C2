@@ -697,12 +697,23 @@ check('multi-line Textarea does not inherit single-line Theme min-height', () =>
   assert.match(forms,/\.qxframe9a7c2-form-textarea,\.qxframe9a7c2-native-form textarea\{min-height:5rem/);
 });
 
-check('Claimable display title inherits CardTitle line-height and Payout uses shared Slider track variant', () => {
+check('Pinned Claimable CardTitle display typography and Payout shared Slider', () => {
   const css=read('preview.css');
-  assert.match(css,/\.pv-text-5xl\s*\{\s*font-size:\s*3rem;\s*\}/);
+  assert.doesNotMatch(css,/\.pv-text-5xl\s*\{/,'Card display typography belongs to shared Card');
+  const title=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  assert.match(title,/\.qxframe9a7c2-card-title\.is-display\{[^}]*font-size:3rem;/);
+  assert.match(title,/line-height:var\(--qxframe9a7c2-card-display-leading,var\(--qxframe9a7c2-theme-card-display-leading,1\)\)/);
+  assert.ok(read('tokens.js').includes("L('card-display-leading'"),'registered closed Theme role');
+  assert.ok(read('compiler.js').includes("root['card-display-leading']"),'source theme recipe');
   const html=read('preview-01.html');
   const claim=html.slice(html.indexOf('<!-- @card claimable-balance -->'),html.indexOf('<!-- @end claimable-balance -->'));
-  assert.match(claim,/qxframe9a7c2-card-title pv-heading pv-text-5xl pv-num/);
+  assert.match(claim,/qxframe9a7c2-card-title is-display pv-heading pv-num/);
+  const expected={vega:1.5,nova:1.375,maia:1,lyra:1,mira:1,luma:1,sera:1,rhea:1};
+  for(const [style,leading] of Object.entries(expected)){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const value=body.match(/--qxframe9a7c2-theme-card-display-leading:\s*([^;]+);/)?.[1];
+    assert.equal(Number(value),leading,style+' pinned display leading');
+  }
   const payout=html.slice(html.indexOf('<!-- @card payout-threshold -->'),html.indexOf('<!-- @end payout-threshold -->'));
   assert.match(payout,/data-pv-slider data-pv-track-height/);
   const sliderCss=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');

@@ -122,6 +122,7 @@
   --qxframe9a7c2-theme-card-gap: 1rem;
   --qxframe9a7c2-theme-card-meta-gap: 0.25rem;
   --qxframe9a7c2-theme-card-title-delta: 0.125rem;
+  --qxframe9a7c2-theme-card-display-leading: 1.375;
   --qxframe9a7c2-theme-card-font-size: 0.875rem;
   --qxframe9a7c2-theme-card-border-width: 1px;
   --qxframe9a7c2-theme-card-section-inset: 1rem;
@@ -301,6 +302,7 @@
   --qxframe9a7c2-theme-card-gap: 1rem;
   --qxframe9a7c2-theme-card-meta-gap: 0.25rem;
   --qxframe9a7c2-theme-card-title-delta: 0.125rem;
+  --qxframe9a7c2-theme-card-display-leading: 1.375;
   --qxframe9a7c2-theme-card-font-size: 0.875rem;
   --qxframe9a7c2-theme-card-border-width: 1px;
   --qxframe9a7c2-theme-card-section-inset: 1rem;

@@ -52,6 +52,13 @@
 .qxframe9a7c2-card-footer.is-divided,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-footer{padding-top:var(--_qxframe9a7c2-card-padding);border-top-width:1px}
 .qxframe9a7c2-card-heading{display:flex;min-width:0;flex:1 1 auto;flex-direction:column;gap:var(--_qxframe9a7c2-card-heading-gap)}
 .qxframe9a7c2-card-title{min-width:0;margin:0;color:var(--_qxframe9a7c2-semantic-text);font-family:var(--_qxframe9a7c2-fixed-font-family-heading,inherit);font-size:calc(var(--_qxframe9a7c2-card-font-size) + var(--_qxframe9a7c2-fixed-card-title-delta));font-weight:var(--qxframe9a7c2-theme-control-weight,500);line-height:var(--qxframe9a7c2-theme-heading-leading,1.375)}
+/* Source CardTitle text-5xl overrides its font but carries each style's
+ * explicit typography leading (Vega normal, Nova snug, all others default
+ * display-tight). Keep this a shared CardTitle variant, not preview CSS. */
+.qxframe9a7c2-card-title.is-display{
+  font-size:3rem;
+  line-height:var(--qxframe9a7c2-card-display-leading,var(--qxframe9a7c2-theme-card-display-leading,1))
+}
 .qxframe9a7c2-card-header>.qxframe9a7c2-card-title{flex:1 1 auto}
 .qxframe9a7c2-card-heading>.qxframe9a7c2-card-title{flex:0 1 auto}
 .qxframe9a7c2-card-description{margin:0;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:var(--_qxframe9a7c2-card-font-size);font-weight:400;line-height:var(--qxframe9a7c2-theme-description-leading,1.4285714286)}
