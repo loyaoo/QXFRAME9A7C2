@@ -19,6 +19,8 @@
 
 ## CURRENT
 
+LATEST Stage 3 source-parity batch: `SyncingState` upstream `Empty className="p-4"` requires 16px instance padding in every style, but Preview omitted that override (spacious styles inherited up to 48px). Applied the already supported `--qxframe9a7c2-empty-padding:1rem` directly on its composed Empty instance; no global Empty CSS/token or Controller change. Added static + Chromium eight-style × light/dark padding gate. Pending paired CI for this, Loading Card gap-2, and FAQ segmented Tabs; do not claim completion until the latest HEAD passes.
+
 LATEST Stage 3 visual follow-up: FAQ's three tabs are now configured as framework-owned `Tabs type="segmented"` using `data-type="segmented"` rather than QX's line/underline default. This follows the pinned shadcn `TabsList` muted band and active segment, reuses existing public Tabs CSS/Controller, and adds static + browser type assertions. Await exact paired CI height diagnostics for this and the Loading gap-2 fix. Do not merge PR #265.
 
 2026-10-09 CREATEAPP-V3-S3 — same-browser pinned source QA and Loading Card follow-up:
