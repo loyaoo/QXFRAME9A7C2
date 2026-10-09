@@ -362,7 +362,7 @@ export function themeTokens(resolved) {
   root['badge-label-height']=editorial?'auto':'1.25rem';
   // CoverArt's explicit text-xs utility inherits distinct pinned style lines.
   // Its Label and CardDescription do not have identical source typography.
-  root['artwork-label-leading']=style==='vega'?'0.75rem':editorial?'1.21875rem':'1rem';
+  root['artwork-label-leading']=editorial?'1.21875rem':'0.75rem';
   root['artwork-description-leading']=editorial?'1.21875rem':'1rem';
   // Pinned shadcn Table: compact 8px vs spacious 12px cell padding.
   // Existing padding/radius allocation axes determine the tier; no style class.

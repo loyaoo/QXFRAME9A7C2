@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — CoverArt text-xs source line-box closure (CI pending)
+
+Pinned styles' `.cn-label leading-none` plus CoverArt `text-xs` produces a 12px label line-box in Vega/Nova/Maia/Lyra/Mira/Luma/Rhea. Framework Theme artwork-label-leading had returned 16px for the last six, making the Card +4px. Shared existing role now 12px for all non-editorial; Sera stays 19.5px. Enforced source-paired all-eight CoverArt Card height. Previous green baseline 70/528, no updated claim until full latest CI.
+
 ## 2026-10-09 — Sera FieldLabel wrapping / Lyra Calendar weekday source roles (CI pending)
 
 Source-backed shared FormLabel uppercase/tracking (.025em Sera) and Lyra Calendar weekday 4/3 line-box repair; strict paired regressions added for Sera PayoutThreshold Card and Lyra weekday, expanded CoverArt and Vega savings trace. Baseline green 61dd0a71 70/528; outcome must be confirmed by new both-suite CI before declaring improvement. PR #265 Draft, protected refs unchanged. Completion estimate CREATEAPP-V3 ~65%, Stage3 ~64%.

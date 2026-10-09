@@ -104,7 +104,7 @@ try {
     // Cross-style small Item regression discovered by full 528-run, not a single-style exception.
     vega:['dividend-income','claimable-balance','syncing-state','cover-art','kitchen-island','recent-transactions','savings-targets','card-overview'],
     nova:['upcoming-payments','claimable-balance','syncing-state','recent-transactions','savings-targets','receiving-method','account-access','cover-art'],
-    rhea:['faq','claimable-balance','kitchen-island','cover-art'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets'],
+    rhea:['faq','claimable-balance','kitchen-island','cover-art'],maia:['dividend-income','faq','receiving-method','sidebar-nav','claimable-balance','syncing-state','recent-transactions','kitchen-island','savings-targets','cover-art'],
     luma:['dividend-income','receiving-method','sidebar-nav','claimable-balance','syncing-state','kitchen-island','cover-art'],
     lyra:['faq','claimable-balance','savings-targets','upcoming-payments','account-access','cover-art'],mira:['upcoming-payments','claimable-balance','savings-targets','faq','receiving-method','account-access','cover-art']
   };
@@ -184,7 +184,7 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' Syncing source-paired Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
-        if((style==='vega'||style==='sera')&&id==='cover-art'){
+        if(id==='cover-art'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' CoverArt source Label/Footer line boxes mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }

@@ -4,6 +4,11 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 CoverArt text-xs/leading-none cross-style owner (CI pending)
+
+- Upstream pinned styles Vega/Nova/Maia/Lyra/Mira/Luma/Rhea source .cn-label all use leading-none; CoverArt explicitly sets text-xs (12px); current shared Theme artwork-label-leading returned 12px ONLY for Vega but 16px for other six non-editorial styles. Existing 528 result shows CoverArt +4px for Lyra/Mira/Nova etc; the erroneous extra 4px arises from this single shared Label role. Corrected existing closed Theme token to 12px for ALL non-editorial families, retains source Sera 19.5px. No Preview-only CSS and no Card fixed-height compensation.
+- Expanded paired CoverArt card strict source-height gate across 8 styles, added Maia trace alongside previous additions. Latest two CI suites must pass on new HEAD; do not claim mismatch decrease until verified. PR #265 Draft and protected branches untouched.
+
 ## CURRENT — 2026-10-09 Release source-order correction (new CI pending)
 
 - Release #37897438706 failed token schema initialization: calendar-weekday-leading was assigned before text-leading, yielding an undefined Theme token during generated CSS verification. Moved weekday-leading projection immediately after text-leading initialization, retaining exactly the same intended values. Strict source-paired geometry job and CSS Schema must re-run at new HEAD. PR Draft.
