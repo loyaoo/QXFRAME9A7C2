@@ -602,6 +602,28 @@ try {
       }
     }
   });
+  await step('Nova Claimable CardTitle and Payout Slider track match pinned source heights', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=claimable-balance]")','Claimable Card ready');
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
+    await waitFor(frameAttr('data-create-style')+' === "nova"','Nova geometry');
+    const result=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const claim=doc.querySelector('[data-card="claimable-balance"]');
+      const title=claim.querySelector('.qxframe9a7c2-card-title');
+      const payout=doc.querySelector('[data-card="payout-threshold"]');
+      const slider=payout.querySelector('.qxframe9a7c2-slider');
+      const rail=slider.querySelector('.qxframe9a7c2-slider-rail');
+      return {claimableHeight:claim.getBoundingClientRect().height,titleHeight:title.getBoundingClientRect().height,
+        titleLine:getComputedStyle(title).lineHeight,sliderHeight:slider.getBoundingClientRect().height,
+        sliderRailHeight:rail.getBoundingClientRect().height,trackVariant:slider.classList.contains('is-track-height')};
+    })()`);
+    assert.ok(Math.abs(result.titleHeight-66)<=.5,'pinned Nova text-5xl CardTitle uses 66px leading-snug: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.claimableHeight-374)<=.5,'source Claimable Balance first Card is 374px: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.sliderHeight-4)<=.5,'source Nova Payout Slider root follows 4px intrinsic rail: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.sliderRailHeight-4)<=.5);
+    assert.equal(result.trackVariant,true);
+  });
   await step('Payout Threshold live amount tracks QX Slider keyboard ValueController', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payout-threshold] .qxframe9a7c2-slider-handle")','Payout Slider ready');
