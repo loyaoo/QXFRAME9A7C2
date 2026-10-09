@@ -563,6 +563,18 @@ check('Loading Card uses shared 8px Flex/Stack gap instead of preview-owned geom
   assert.doesNotMatch(read('preview.css'),/\.pv-loading-skeleton-gap/);
 });
 
+check('multi-line Textarea does not inherit single-line Theme min-height', () => {
+  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const shared=theme.slice(theme.indexOf('/* Controls and multi-line Textarea share typography'),theme.indexOf('  .qxframe9a7c2-input > .qxframe9a7c2-input-control',theme.indexOf('/* Controls and multi-line Textarea share typography')));
+  assert.match(shared,/\.qxframe9a7c2-form-textarea\[class\]/);
+  const groups=[...shared.matchAll(/\{([^{}]+)\}/g)].map(x=>x[1]);
+  assert.ok(groups.length>=2,'separate multiline typography and singleline height rules');
+  assert.doesNotMatch(groups[0],/min-height/,'Textareas must never be clamped by Control min-height');
+  assert.match(groups[1],/min-height:\s*var\(--_qxframe9a7c2-control-height\)/,'single-line controls retain theme height');
+  const forms=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  assert.match(forms,/\.qxframe9a7c2-form-textarea,\.qxframe9a7c2-native-form textarea\{min-height:5rem/);
+});
+
 check('Claimable display title inherits CardTitle line-height and Payout uses shared Slider track variant', () => {
   const css=read('preview.css');
   assert.match(css,/\.pv-text-5xl\s*\{\s*font-size:\s*3rem;\s*\}/);
