@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 S3-SYNCING-GLYPH-001 public Token declaration ratchet repair (new final CI pending)
+
+- `02f3acd9` QXFRAME #37923344273 source-preview-geometry SUCCESS (new five-style source-paired 16px spinner glyph + center test), but Release FAILED on strict CSS Schema size/owner ratchet: `public-component-token-declared` +1 due to opt-in `.is-glyph-sm{--qxframe9a7c2-empty-icon-size:1rem}`. This is NOT geometry failure. CSS Schema first-HEAD run was cancelled as newer `def8124f` queued. Neither upstream thresholds nor verifier may be relaxed.
+- Resolved real owner/rachet issue: shared Empty opt-in now styles only glyph SVG at higher specificity `.qxframe9a7c2-empty-media.is-icon.is-glyph-sm>svg` with `width/height:var(--qxframe9a7c2-empty-icon-size,1rem)`, reusing existing public input (if user explicitly supplies it) and source 1rem fallback. **No additional public token declaration** and no new Theme role. Default all other Empty instances unchanged. HTML and strict browser/source QA unchanged.
+- Prior `def8124f` additionally fixes offline ledger dynamic 7-region count and bundle-resolved final commit id. Need new final-HEAD both complete QXFRAME and CSS Schema SUCCESS, same-tree Actions artifact, annotated Windows bundle, no merge. Stage3~66%, overall~65%, PR #265 Draft; main/backup `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+
+
 ## CURRENT — 2026-10-09 S3-QA-MARKER-CONSISTENCY-002 finalizing source-backed Syncing glyph (new final CI pending)
 
 - First commit `02f3acd97ce2e65f61c68437dcdfe7f61ae77c17` adds proven 16px Syncing icon glyph and strict source-paired + all-eight-Styles Create browser checks, plus precise seventh offline annotation. Git state remains PR #265 Draft, main/backup frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.

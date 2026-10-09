@@ -1,5 +1,10 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Shared Empty glyph modifier ratchet repair (CI required)
+
+CI run #37923344273 passed strict source-paired Syncing source geometry, but QXFRAME Release static CSS owners/size ratchet blocked new `--qxframe9a7c2-empty-icon-size` *declaration* inside the modifier (`public-component-token-declared` +1). Refactored modifier to a higher-specificity existing SVG consumption of **existing** public `--qxframe9a7c2-empty-icon-size` with `1rem` fallback, not a declaration: `.qxframe9a7c2-empty-media.is-icon.is-glyph-sm>svg` width/height. Public per-instance override remains usable; no Theme additions. Same source 16px geometry and strict browser tests retained. Full CI and local annotated Actions package pending.
+
+
 ## 2026-10-09 — Dynamic offline changed-region count and same-HEAD commit attribution (CI pending)
 
 The seventh Syncing glyph region uncovered hardcoded `Preview 01 · 6 处` in offline panel. Replaced it with count derived from `groups` records; made new change's commit reference a build-time placeholder resolved to verified current final HEAD in `tools/qa/build-offline-demo.py` extracted Windows bundle only. Static verify asserts both. Avoids stale or vague annotations; production Create HTML still intentionally never loads the overlay. Additional final CI and Actions source matching bundle required.
