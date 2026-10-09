@@ -705,7 +705,9 @@ check('Source Card action gap, compact Item, zero Stack and collapsed embedded T
   const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   const table=fs.readFileSync(path.join(root,'src/styles/components/table.css'),'utf8');
   const html=read('preview-01.html');
-  assert.match(card,/\.qxframe9a7c2-card-header\{gap:var\(--qxframe9a7c2-card-header-gap,var\(--_qxframe9a7c2-card-heading-gap\)\)\}/);
+  assert.match(card,/\.qxframe9a7c2-card-header\{gap:var\(--qxframe9a7c2-card-header-gap,var\(--_qxframe9a7c2-card-heading-gap\)\);align-items:flex-start/);
+  assert.doesNotMatch(card,/\.qxframe9a7c2-card-header,\.qxframe9a7c2-card-footer\{[^}]*gap:/,
+    'only dedicated CardHeader/CardFooter rules own their respective gaps');
   assert.match(comp,/\.qxframe9a7c2-flex\.is-gap-0,\.qxframe9a7c2-stack\.is-gap-0\{--_qxframe9a7c2-layout-gap:0\}/);
   assert.match(item,/\.qxframe9a7c2-item\.is-sm\{--_qxframe9a7c2-static-item-space:max\(\.625rem,calc\(var\(--qxframe9a7c2-theme-item-space\) - \.25rem\)\)\}/);
   assert.match(table,/\.qxframe9a7c2-table\.is-embedded\{[^}]*border-collapse:collapse;/);

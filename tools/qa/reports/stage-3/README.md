@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — source CardHeader ownership acceptance
+
+`3228303e` Release `verify:theme-tokens` identified one new duplicate CSS owner for `CardHeader.gap` (group selector and Header-only override). Header and Footer now share only structural display/min-width; the existing dedicated Header rule uniquely emits the source 4/6px meta gap, and Footer's dedicated rule uniquely emits section spacing. No style values changed and the static gate now rejects grouped duplicate ownership. The same run's RecentTransactions remaining +1px after gap0/collapse has been assigned to source TableRow rather than per-td borders. New CI pending. Threshold remains 0.5px.
+
 ## 2026-10-09 — embedded Table border owner closeout
 
 The first strict same-browser attempt on `3228303e` confirmed Vega KitchenIsland 367/367px and Vega CoverArt 498.86/498.84px (both pass ±0.5px). Vega RecentTransactions was source404px vs QX405px, caught by the new hard gate. After correcting the true 2px Stack.is-gap-0 and collapsed Table, the last +1px came from borders being drawn on all five QX TableCells. The source TableRow owns a 1px inter-row border, except the last row; collapsing borders makes the five natural rows 56.5/57/57/57/56.5px (sum284). Updated embedded Table adapter to draw borders only on `tr:not(:last-child)` and remove cell bottom borders, with no row height overrides. Added source-row ownership and heights to browser/static tests. Re-running entire CI; no acceptance thresholds changed.
