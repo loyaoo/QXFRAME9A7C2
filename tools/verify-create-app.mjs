@@ -579,7 +579,7 @@ check('Claimable display title inherits CardTitle line-height and Payout uses sh
 check('Payout Threshold amount follows framework Slider onChange, not a second input', () => {
   const html=read('preview-01.html');
   const slice=html.slice(html.indexOf('<!-- @card payout-threshold -->'),html.indexOf('<!-- @end payout-threshold -->'));
-  assert.match(slice,/data-pv-slider data-pv-output="payout-threshold-amount" data-pv-output-format="money-2"/);
+  assert.match(slice,/data-pv-slider data-pv-track-height data-pv-output="payout-threshold-amount" data-pv-output-format="money-2"/);
   assert.match(slice,/data-pv-value-for="payout-threshold-amount">\$2500\.00<\/span>/);
   const cards=read('preview-cards.js');
   assert.match(cards,/options\.onChange = function \(nextValue\)/);
