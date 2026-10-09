@@ -31,10 +31,10 @@
 .qxframe9a7c2-item-collection{
   outline:none;
   --_qxframe9a7c2-list-row-height:var(--qxframe9a7c2-item-collection-row-height,var(--_qxframe9a7c2-control-height));
-  /* Base option: one 1.4em text line + vertical insets = Control height.
+  /* Base option: one Control-font-size × 1.4 text line + vertical insets = Control height.
    * This is padding, never a fixed/min row height; multi-line and rich
    * content grow naturally. A caller may override the vertical inset. */
-  --_qxframe9a7c2-list-item-padding-block:var(--qxframe9a7c2-item-collection-item-padding-block,max(0px,calc((var(--_qxframe9a7c2-control-height) - 1.4em)/2)));
+  --_qxframe9a7c2-list-item-padding-block:var(--qxframe9a7c2-item-collection-item-padding-block,max(0px,calc((var(--_qxframe9a7c2-control-height) - (var(--_qxframe9a7c2-control-font-size) * 1.4))/2)));
   --_qxframe9a7c2-list-padding-x:var(--qxframe9a7c2-item-collection-padding-x,var(--_qxframe9a7c2-control-padding-inline));
   --_qxframe9a7c2-list-indent:var(--qxframe9a7c2-item-collection-indent,1rem);
   --_qxframe9a7c2-list-max-height:var(--qxframe9a7c2-item-collection-max-height,15rem);
