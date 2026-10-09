@@ -4,6 +4,12 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 CSS Schema browser regression expectation corrected (pending latest CI)
+
+- On `8d24d8b0`, QXFRAME source-preview-geometry SUCCESS: 528/528 measured, **70/528** first-Card heights >0.5px, 0 nonauthorized geometry subset mismatches (66 allowed Luma caps). Source label/Cards AccountAccess Nova and Mira exact, Lyra +0.5px. Full Release job had not completed at correction.
+- CSS Schema [#37887892053](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37887892053) FAILURE solely in Chromium browser assertion `mira/light Accordion content inset: expected 8, observed 16` after source-locked ownership split. Pinned `style-mira.css` explicitly sets `AccordionTrigger p-2` and `AccordionContentInner pb-4`; source-paired Mira FAQ Card385/385px passed. Updated `tools/verify-create-app-browser.mjs` to preserve strict **independent** expected trigger8/content16 (all 8 styles in maps; other values unchanged), rather than reverting correct implementation or relaxing tolerance. This is correcting stale expectation with real reference evidence.
+- Next: wait for BOTH new workflows on the newest HEAD, inspect and fix any additional failures, update PR #265 with final run URLs/status. Protected main/backup unchanged, PR Draft, Stage 3 unfinished. Current estimate overall65%, Stage364%.
+
 ## CURRENT — 2026-10-09 84/528 measured, shared nested FieldLabel root cause closeout (CI pending)
 
 - At `33316902` [QXFRAME #37887627002](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/37887627002) source-preview-geometry job SUCCESS: pinned source 528/528 same Chromium forced system-ui, first Card height outliers **84/528** (down from 102 and starting 104), geometry subset zero unauthorized. Exact 0px matches: Sera CardOverview, Sera IndexInvesting, Lyra/Mira/Nova/Maia SavingsTargets, Mira FAQ, Nova ReceivingMethod. QXFRAME Release and CSS Schema were still executing when the next batch started, not yet claimed green.

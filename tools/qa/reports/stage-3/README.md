@@ -1,5 +1,12 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — 70/528, Browser Accordion source assertion correction
+
+Verified QXFRAME `8d24d8b0` source-preview-geometry SUCCESS, 528/528 source-paired, **70/528** first Card height diagnostics over ±0.5px, zero unapproved four-property subset mismatches, 66 authorized Luma radius caps. AccountAccess nested FieldLabel source exact Nova/Mira, Lyra first Card within +0.5px.
+
+CSS Schema Acceptance #37887892053 failed a stale browser assertion that expected Mira Accordion open content bottom padding8px merely because its trigger top padding is8px. Pinned `style-mira.css` source has trigger `p-2` **and** content `pb-4` (16px); source-paired Mira FAQ Card matched 385px. Updated separate pinned-style expected trigger and content maps in `tools/verify-create-app-browser.mjs` (8 independent style values; no tolerance change). Stage 3 visual acceptance remains pending.
+
+
 ## 2026-10-09 — 84/528 verified, AccountAccess nested FormLabel owner
 
 `33316902` source-preview-geometry SUCCESS: 528/528 pinned same-Chromium/forced-system-ui pairs, **84/528** first Card height diagnostics outside ±0.5px (102 prior, 104 original), 0 nonauthorized four-property subset mismatches. Verified 0px Card delta for Sera CardOverview and IndexInvesting, all Lyra/Mira/Nova/Maia SavingsTargets, Mira FAQ, Nova ReceivingMethod. Separate Release and CSS Schema job conclusions are not inferred from this source job.

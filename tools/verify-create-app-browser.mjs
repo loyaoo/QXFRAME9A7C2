@@ -421,10 +421,13 @@ try {
   await step('Source-local FAQ, Empty and Preferences geometry in 16 themes', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=empty-distribute-track]")', 'Preview 01 card fixtures');
-    const accordion={vega:16,nova:10,maia:16,lyra:10,mira:8,luma:16,sera:16,rhea:16};
+    // Pinned source style-mira has AccordionTrigger p-2 (8px), yet
+    // AccordionContentInner pb-4 (16px); the roles are independently sourced.
+    const accordionTrigger={vega:16,nova:10,maia:16,lyra:10,mira:8,luma:16,sera:16,rhea:16};
+    const accordionContent={vega:16,nova:10,maia:16,lyra:10,mira:16,luma:16,sera:16,rhea:16};
     const approx=(actual,expected,label)=>assert.ok(Number.isFinite(actual)&&Math.abs(actual-expected)<=.5,
       label+': expected '+expected+', observed '+actual);
-    for(const [style,inset] of Object.entries(accordion)){
+    for(const [style,inset] of Object.entries(accordionTrigger)){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
       await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' FAQ fixtures');
       for(const mode of ['light','dark']){
@@ -460,7 +463,7 @@ try {
         })()`);
         const label=style+'/'+mode;
         approx(actual.trigger,inset,label+' Accordion trigger inset');
-        approx(actual.content,inset,label+' Accordion content inset');
+        approx(actual.content,accordionContent[style],label+' Accordion content inset');
         assert.equal(actual.separatorCount,2,label+' field separators');
         for(const pair of actual.separator){
           approx(pair[0],-16,label+' separator top margin');
