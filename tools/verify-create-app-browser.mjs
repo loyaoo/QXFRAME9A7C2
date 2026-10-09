@@ -532,6 +532,26 @@ try {
     }
   });
 
+  await step('Adaptive Calendar keyboard movement across the month remains visible', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Calendar keyboard');
+    const state=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const root=doc.querySelector('[data-card="upcoming-payments"] .qxframe9a7c2-calendar');
+      const cells=[...root.querySelectorAll('.qxframe9a7c2-calendar-cell')];
+      const lastCurrent=cells.filter(el=>!el.classList.contains('is-outside')).at(-1);
+      const before=root.querySelector('.qxframe9a7c2-calendar-title').textContent.trim();
+      lastCurrent.click();
+      root.dispatchEvent(new doc.defaultView.KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true,cancelable:true}));
+      const after=root.querySelector('.qxframe9a7c2-calendar-title').textContent.trim();
+      const hiddenActive=[...root.querySelectorAll('.qxframe9a7c2-calendar-cell.is-keyboard-focus,.qxframe9a7c2-calendar-cell.is-active')]
+        .filter(el=>doc.defaultView.getComputedStyle(el).display==='none').length;
+      return {before,after,hiddenActive};
+    })()`);
+    assert.notEqual(state.before,state.after,'ArrowDown from last visible week navigates into next month');
+    assert.equal(state.hiddenActive,0,'adaptive trailing-week CSS must not create invisible active day');
+  });
+
   await step('Dividend Income preserves the source Item flex sibling structure', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');

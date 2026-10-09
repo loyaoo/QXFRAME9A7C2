@@ -4,6 +4,15 @@
 > Git / PR / CI facts override stale text here. Always query the current branch, PR and Actions before continuing.
 > Keep CURRENT concise. Historical investigation belongs in Git history and task change documents.
 
+## CURRENT — 2026-10-09 CREATEAPP-V3-S3
+
+- Branch `redesign/create`, PR #265 **Draft**, do not merge; `main` and `backup/main-before-pr265-2026-10-08` both frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.
+- Latest geometry code checkpoint: `c81856991cbdb6176f9d9742cbbc2a27420d0fdb`. Same-browser source-locked 528-pair audit passed its measurement job: **182/528 → 168/528** height differences >0.5px (handoff 202/528). **Mira/Nova Upcoming Payments now both exactly 0px whole-Card height delta**, with source 40px day cells, 8/12px padding, 40px navigation and 4/5/6-week month geometry. Rhea/Maia FAQ remain 0px; Sera Dividend remains +5.25px. Controlled 66 Luma radius exceptions and ±0.5px tolerance unchanged.
+- Source provenance: `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`; matched computed Calendar/Item CSS through `tools/qa/preview-01-audit.mjs` in the same Chromium process. Shared `Calendar.is-adaptive-month` opted in from Preview 01; hosted DatePicker retains its regular six-week presentation. Sera `ItemTitle.is-wrapping` drops legacy max-width cap, but Dividend first row still differs +5.25px; do not force sizes without source evidence.
+- `c8185699` Release job failed a **stale static HTML attribute adjacency assertion**; revised the test to require both real `data-pv-calendar-layout` and `data-value` attributes while permitting intervening attributes. Added keyboard regression to guard against invisible focus when hidden outside-only week changes the view. New combined docs/test commit CI is pending; do not mark latest HEAD green prematurely.
+- NEXT EXACT STEPS: inspect latest Actions/Chromium, fix failures; reduce top source-paired remaining deltas (Receiving Method Maia/Luma −36.5px, Sidebar Nav Maia/Luma/Sera −36px, Sera Claimable Balance +32.375px, Lyra FAQ +31.5px). Keep core `qxframe.js` identical to main, do not redo prior phases. Update PR body and QA report for confirmed HEAD.
+- Program ~65%, Stage 3 ~64% prior provisional estimates; Stage 3 full visual/nested-card acceptance **not complete**.
+
 ## Repository checkpoint
 
 - Last checkpoint date: 2026-10-08

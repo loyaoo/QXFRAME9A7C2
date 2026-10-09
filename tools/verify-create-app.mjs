@@ -188,7 +188,8 @@ check('Adaptive Calendar source-style cell/row geometry consumes shared tokens',
 check('Upcoming Payments Calendar follows source today-selected date rather than 2024 transaction copy', () => {
   const html=read('preview-01.html');
   const card=html.slice(html.indexOf('data-card="upcoming-payments"'),html.indexOf('<!-- @end upcoming-payments -->'));
-  assert.match(card,/data-pv-calendar data-value="today"/);
+  assert.match(card,/data-pv-calendar\b[^>]*\bdata-pv-calendar-layout="adaptive-month"[^>]*\bdata-value="today"/,
+    'Upcoming Payments must retain its date and opt in to shared adaptive Calendar layout');
   assert.doesNotMatch(card,/data-pv-calendar data-value="2024-04-15"/);
   const mounting=read('preview-cards.js');
   assert.match(mounting,/authoredValue === 'today' \? new Date\(\)/,

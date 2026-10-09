@@ -1,5 +1,15 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — adaptive Calendar source parity (CI remediation)
+
+Pinned same-browser source probe isolated Upcoming Payments differences to framework Calendar layout: source Mira Calendar 304×340.78px (12px padding) vs QX 278×291.89px (6px panel inset, 1px border); source Nova 296×330.28px (8px padding) vs QX 296×311.78px. Source uses 40px desktop day cells and navigation, 8px margin before date grid, 8px vertical week gap and 35 cells in October 2026; QX had 36/39px cells and 42 cells. The source card sets responsive 32/40px days (36px for Sera), distinct from base Calendar style sizes.
+
+Shared `Calendar.is-adaptive-month` now projects 4/5/6 visible weeks via CSS :has on the first full outside-only trailing week (leaving the 42 core Calendar state entries intact and keeping regular DatePicker unaffected), source-sized adaptive day cells, 8/12px style padding and 40/36px desktop navigation. `pv-calendar` merely centers the shared component in its authored Item. No new proprietary Calendar renderer, runtime Value/Focus rewrite or fixed Card height. Calendar roles `calendar-padding` and `calendar-cell-size` are in closed theme schema and both default theme modes.
+
+**Source-locked Chromium geometry job on `c8185699`: 528 measured, 168/528 heights beyond ±0.5px, down from 182/528. Mira Upcoming source=688.28125/QX=688.28125 (0px); Nova Upcoming source=693.03125/QX=693.03125 (0px).** Rhea/Maia FAQ also 0px, Sera Dividend remains +5.25px. All 66 governed Luma Card radius caps unchanged. This is first-Card height diagnostic, not full visual parity.
+
+`c8185699` Release static check rejected the new intervening `data-pv-calendar-layout` attribute because a historical regex assumed two attributes were adjacent. Revised the assertion to require both real attributes and added Calendar keyboard cross-month regression. Latest-HEAD CI verification pending; no gate or threshold relaxation.
+
 ## 2026-10-09 — Upcoming Payments current-date parity
 
 The pinned `upcoming-payments.tsx` initializes `useState(new Date())`, while the three payment descriptions intentionally refer to Apr 2024. QX previously selected `2024-04-15` in Calendar and displayed a different month than the pinned source. The preview now authors a `today` sentinel and resolves it only at the existing `Calendar.create` public instance API; source text in the payment rows remains unchanged. Added static/runtime tests that the live selected QX cell is also its own today cell. This does not yet solve Calendar box-model size parity; that remains under same-browser QA.
