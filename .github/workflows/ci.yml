@@ -193,6 +193,69 @@ jobs:
         with:
           path: demo-package
 
+
+  # Stage 3 Preview-01 geometry: run original shadcn and QX in ONE Linux browser.
+  # This job is deliberately separate from the release gate so pinned source
+  # dependencies cannot enter the shipped framework, dist or npm package.
+  source-preview-geometry:
+    if: github.event_name == 'pull_request' && github.head_ref == 'redesign/create'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout framework
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Checkout SHA-locked shadcn source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: shadcn-ui/ui
+          ref: 295a1f114a138f23b5dfee0e0c6812394dfeb90c
+          path: .qx-shadcn-source
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build framework CSS and JS
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+
+      - name: Install pinned reference-only dependencies
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: npx --yes pnpm@10.28.1 --dir tools/qa/ref install --frozen-lockfile
+
+      - name: Build verified source renderer
+        env:
+          SHADCN_SOURCE: ${{ github.workspace }}/.qx-shadcn-source
+        run: node tools/qa/ref/build.mjs
+
+      - name: Same-browser first-Card reference and QX geometry
+        env:
+          QA_STYLE: ""
+        run: |
+          set -euo pipefail
+          CHROMIUM_BIN="$(command -v chromium || command -v chromium-browser || command -v google-chrome || command -v google-chrome-stable)"
+          export CHROMIUM_BIN
+          node tools/qa/preview-01-audit.mjs
+          node tools/qa/validate-preview-01-same-browser.mjs
+
+      - name: Upload same-browser report and screenshots
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: stage3-same-browser-${{ github.sha }}
+          path: tools/qa/reports/stage-3/preview-01/
+          if-no-files-found: warn
+          retention-days: 30
+
   windows-tools:
     runs-on: windows-latest
     timeout-minutes: 10
