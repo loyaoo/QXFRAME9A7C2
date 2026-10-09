@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Stage3 source Secondary and Segmented Tabs owner correction (CI pending)
+
+- Initial CSS patch `583dd93b` passed 528 geometry, but real browser computed-style gate exposed correct ownership: `src/styles/main/theme-visual-v2.css` is the **active Button paint bridge** and overrides legacy `button.css` private paint slots. Fix the **actual Preview authoring** rather than duplicate a dead CSS override: Qr Connect Got it, Cover Art Upload Artwork, Social Links Discard all map upstream shadcn `variant="secondary"` to framework `is-secondary is-solid`. Theme Visual V2 already handles that exact semantic pair in all light/dark styles; legacy interim `is-default.is-filled` patch removed.
+- FAQ source Tabs active has Theme Foreground and inherited weight. Existing shared segmented Tabs CSS patch kept. Browser gate now suppresses transition timing while reading computed light/dark properties to avoid mid-transition false mismatches; 4 Cards / 4 exact QA regions only, prior round highlights removed. Runtime JS unchanged; 528/±0.5px/Schema uncompromised.
+- Prior CI `CSS Schema #37948503530` failed *our new real Chromium source-role assertion*, not source geometry: wrong Button Color Axis used and palette animation was read before settling. Current candidate requires both QXFRAME and CSS Schema SUCCESS before Windows offline ZIP.
+- Progress remains **CREATEAPP-V3 ~65%**, **Stage3 ~70%** pending pixel/nested-card and user signoff; PR #265 Draft, main+backup locked.
+
+
 ## CURRENT — 2026-10-09 S3 pinned source multi-Card Secondary/Tabs visual parity (CI pending)
 
 - Source-pinned shadcn @ `295a1f114a138f23b5dfee0e0c6812394dfeb90c`: QrConnect `Got it`, CoverArt `Upload Artwork`, SocialLinks `Discard` each have `Button variant="secondary"`. QX Preview represents these 3 with `is-default is-filled` but its shared CSS used a too-strong semantic subtle color (Nova screenshot actual ~225 vs pinned reference ~245 in light, actual ~74 vs pinned reference ~38 in dark). Fixed shared Button color recipe with `--qxframe9a7c2-theme-secondary/secondary-foreground`, source hover alpha via color-mix; no per-card PV color hacks.

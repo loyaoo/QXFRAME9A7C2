@@ -1,13 +1,13 @@
 /** Active visual QA groups for this batch ONLY: 3 source secondary Buttons + FAQ Tab. */
 const groups = [
   ['qr-connect','Qr Connect · Secondary 按钮',[
-    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled','Got it','修复次级按钮底色与前景色；各 Style / Light / Dark 共用 Theme Secondary Token','__QA_BUNDLE_HEAD__']
+    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid','Got it','修复为 QX Secondary + Solid 语义，复用 Theme V2 正确配色与 Focus 状态','__QA_BUNDLE_HEAD__']
   ]],
   ['cover-art','Cover Art · Secondary 按钮',[
-    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled','Upload Artwork','与 shadcn secondary 按钮相同，共用 QX Default + Filled Theme 配方','__QA_BUNDLE_HEAD__']
+    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid','Upload Artwork','与源 shadcn Secondary 对应，消费 QX Secondary + Solid 组件规则','__QA_BUNDLE_HEAD__']
   ]],
   ['social-links','Social Links · Secondary 按钮',[
-    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled','Discard','修复次级操作按钮的中性色底色，保持主题联动','__QA_BUNDLE_HEAD__']
+    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid','Discard','次级操作从错误 Default+Filled 改成 QX Secondary+Solid，保持主题联动','__QA_BUNDLE_HEAD__']
   ]],
   ['faq','FAQ · Segmented Tab 前景',[
     ['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active','General / Billing / Goals','激活项使用 Theme Foreground 与正常字重，不再错误采用 Primary / 600','__QA_BUNDLE_HEAD__']

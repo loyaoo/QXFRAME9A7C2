@@ -178,16 +178,6 @@
   --_qxframe9a7c2-button-disabled-text:var(--qxframe9a7c2-theme-muted-foreground);
 }
 
-/* Shared QX Default + Filled maps the pinned shadcn secondary surface.
- * QrConnect, CoverArt and SocialLinks all consume this same component recipe,
- * in light/dark and every Style. Do not create per-Card PV button colors. */
-.qxframe9a7c2-button.is-default.is-filled{
-  --_qxframe9a7c2-button-bg:var(--qxframe9a7c2-theme-secondary);
-  --_qxframe9a7c2-button-text:var(--qxframe9a7c2-theme-secondary-foreground);
-  --_qxframe9a7c2-button-hover-bg:color-mix(in oklch,var(--qxframe9a7c2-theme-secondary) 80%,transparent);
-  --_qxframe9a7c2-button-hover-text:var(--qxframe9a7c2-theme-secondary-foreground);
-}
-
 .qxframe9a7c2-button.is-plain{
   --_qxframe9a7c2-button-bg:transparent;
   --_qxframe9a7c2-button-border:transparent;

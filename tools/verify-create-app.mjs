@@ -20,9 +20,9 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'qr-connect':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled'],
-    'cover-art':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled'],
-    'social-links':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled'],
+    'qr-connect':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid'],
+    'cover-art':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid'],
+    'social-links':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-secondary.is-solid'],
     'faq':['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active']
   };
   let count=0;
@@ -1043,11 +1043,15 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
     assert.ok(start>0,card+' source card');
     const end=html.indexOf('<!-- @end '+card+' -->',start);
     const part=html.slice(start,end);
-    assert.match(part,/qxframe9a7c2-button is-default is-filled/,card+' secondary mapping');
+    assert.match(part,/qxframe9a7c2-button is-secondary is-solid/,card+' secondary mapping');
   }
-  assert.match(button,/\.qxframe9a7c2-button\.is-default\.is-filled\s*\{/);
-  assert.match(button,/--_qxframe9a7c2-button-bg:var\(--qxframe9a7c2-theme-secondary\)/);
-  assert.match(button,/--_qxframe9a7c2-button-text:var\(--qxframe9a7c2-theme-secondary-foreground\)/);
+  assert.match(button,/\.qxframe9a7c2-button\.is-solid\s*\{/);
+  assert.match(button,/--_qxframe9a7c2-button-bg:var\(--_qxframe9a7c2-button-accent\)/);
+  assert.match(button,/--_qxframe9a7c2-button-text:var\(--_qxframe9a7c2-button-on-accent\)/);
+  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  assert.match(v2,/\.qxframe9a7c2-button\.is-secondary\s*\{/,'v2 has secondary axis');
+  assert.match(v2,/--_qxframe9a7c2-v2-type: var\(--qxframe9a7c2-theme-secondary\)/);
+  assert.match(v2,/\.qxframe9a7c2-button\.is-solid\s*\{/,'v2 solid consumes type');
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-text:var\(--qxframe9a7c2-theme-foreground\)/);
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-weight:inherit/);
 });
