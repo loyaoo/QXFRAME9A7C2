@@ -152,6 +152,14 @@ try {
           if(!srcRow||!qxRow||Math.abs(srcRow.h-91.5)>.5||Math.abs(qxRow.h-srcRow.h)>.5)
             throw new Error(style+' source-locked RadioField row geometry mismatch: '+JSON.stringify({source:srcRow,qx:qxRow}));
         }
+        if(style==='lyra'&&id==='faq'){
+          const getTrigger=r=>r.find(x=>x.className.includes('accordion-trigger')||x.className.includes('qxframe9a7c2-collapse-header'));
+          const sourceTrigger=getTrigger(record.source),qxTrigger=getTrigger(record.qx);
+          if(!sourceTrigger||!qxTrigger||Math.abs(sourceTrigger.h-qxTrigger.h)>.5)
+            throw new Error('Lyra FAQ source-paired Accordion trigger height mismatch: '+JSON.stringify({source:sourceTrigger,qx:qxTrigger}));
+          if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
+            throw new Error('Lyra FAQ whole Card height differs after icon alignment');
+        }
         console.log('[stage3-target-'+style+'-'+id+'] '+JSON.stringify(record));
       }
       if(!dark && ['sera','mira','nova'].includes(style))

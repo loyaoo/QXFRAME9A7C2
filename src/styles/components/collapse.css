@@ -80,7 +80,10 @@
 .qxframe9a7c2-collapse.is-native>details>summary::-webkit-details-marker{display:none}
 .qxframe9a7c2-collapse.is-native>details>summary::marker{content:""}
 .qxframe9a7c2-collapse.is-native .qxframe9a7c2-collapse-disclosure-icon{
-  flex:0 0 auto;margin-top:0.125rem;
+  flex:0 0 auto;
+  /* The chevron is 16px. Lyra's 16px trigger line has no spare ascent;
+   * 19.5/20px styles retain their original 2px optical offset. */
+  margin-top:clamp(0rem,calc(var(--qxframe9a7c2-theme-accordion-line-height,1.25rem) - 1rem),.125rem);
   color:var(--qxframe9a7c2-theme-muted-foreground);
   transition:transform var(--qxframe9a7c2-theme-duration-md)
 }

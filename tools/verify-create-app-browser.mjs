@@ -982,6 +982,7 @@ try {
             accordionBorder:px(css(faq.querySelector('.qxframe9a7c2-collapse.is-native')).borderTopWidth),
             accordionInlinePadding:px(css(summary).paddingLeft),
             accordionTriggerBorder:px(css(summary).borderTopWidth),
+            accordionIconOffset:px(css(summary.querySelector('.qxframe9a7c2-collapse-disclosure-icon')).marginTop),
             faqHeight:faq.getBoundingClientRect().height,
             notificationHeight:doc.querySelector('[data-card="notification-settings"]').getBoundingClientRect().height};
           root.classList.toggle('dark',prev);return ans;
@@ -994,6 +995,8 @@ try {
           style+'/'+mode+' source Accordion trigger gap');
         const framed=['maia','mira','luma','rhea'].includes(style);
         assert.ok(Math.abs(actual.accordionTriggerBorder-1)<=.5,style+'/'+mode+' source native Accordion trigger transparent border');
+        assert.ok(Math.abs(actual.accordionIconOffset-(style==='lyra'?0:2))<=.5,
+          style+'/'+mode+' pinned Accordion disclosure icon offset');
         assert.ok(Math.abs(actual.accordionBorder-(framed?1:0))<=.5,
           style+'/'+mode+' native Accordion outer border');
         assert.ok(Math.abs(actual.accordionInlinePadding-(framed?({maia:16,mira:8,luma:16,rhea:16}[style]):0))<=.5,
@@ -1039,6 +1042,7 @@ try {
               contentGap:num(css(inner).rowGap),
               checked:el.querySelector('input[type=radio]').checked};
           }),
+          themeChoiceInset:num(css(root).getPropertyValue('--qxframe9a7c2-theme-choice-field-inset'))*16,
           themeGap:num(css(root).getPropertyValue('--qxframe9a7c2-theme-field-gap'))*16,
           themeContentGap:num(css(root).getPropertyValue('--qxframe9a7c2-theme-field-content-gap'))*16};
           root.classList.toggle('dark',prior);
@@ -1056,8 +1060,9 @@ try {
 
         for(const row of actual.items){
           assert.ok(Math.abs(row.paddingBottom-10)<=.5,style+'/'+mode+' source pb-2.5');
-          assert.ok(Math.abs(row.paddingTop)<=.5,style+'/'+mode+' no invented top padding');
-          assert.equal(row.border,0,style+'/'+mode+' no invented boxed border');
+          assert.ok(Math.abs(row.paddingTop-actual.themeChoiceInset)<=.5,
+            style+'/'+mode+' upstream framed RadioField top inset');
+          assert.equal(row.border,1,style+'/'+mode+' upstream FieldLabel border');
           assert.ok(Math.abs(row.gap-actual.themeGap)<=.5,style+'/'+mode+' Field gap role');
           assert.ok(Math.abs(row.contentGap-actual.themeContentGap)<=.5,
             style+'/'+mode+' FieldContent role');

@@ -214,6 +214,12 @@ check('Source native Accordion trigger retains the one-pixel transparent layout 
     'all shadcn AccordionTrigger variants use border border-transparent (two layout pixels)');
 });
 
+check('Accordion disclosure icon top offset tracks available source line height', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');
+  assert.match(css,/margin-top:clamp\(0rem,calc\(var\(--qxframe9a7c2-theme-accordion-line-height,1\.25rem\) - 1rem\),\.125rem\)/,
+    '16px lyric line leaves no spare space; 20px source line retains 2px');
+});
+
 check('Native Accordion typography uses pinned component line boxes instead of body leading', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/collapse.css'),'utf8');
   assert.match(css,/line-height:var\(--qxframe9a7c2-theme-accordion-line-height,1\.25rem\)/);
