@@ -1,3 +1,12 @@
+# Stage 3 checkpoint
+
+## CURRENT — 2026-10-09 Stage3 7-Card native label source parity (full CI pending)
+
+- Real Chromium on prior candidate verified **all 15 native Input/Textarea/Select label click-to-focus checks passed**; the separate 5 runtime QX Select label-to-trigger cases failed and remain **NOT COMPLETED**. Discarded only that unaccepted Select adapter, which had temporarily interrupted downstream Slider mounting; existing QX Select/Slider/Tabs implementation restored unchanged.
+- Native scope: 7 Cards / 15 FieldLabel-to-native-control connections. Cards: Payout Threshold (Notes), Savings Targets/Buy Investment (Amount, Order Type), Account Access (Email, Password), Transfer Funds (Amount), Receiving Method (Holder, IBAN), New Milestone (3 fields), Social Links (4 fields). Added strict 15/15 real browser associations, existing 528 same-browser ±0.5px and CSS Schema gates unchanged; no framework runtime or shared CSS edit.
+- Offline active ledger reset to exactly these 7 Cards / 15 label+field rectangles. Old Kitchen/Roller/Release/Notifications and earlier yellow marks absent. Full QXFRAME+CSS Schema both must be SUCCESS on final HEAD before Windows dist+docs ZIP release.
+- Stage3 estimated ~70% (not user accepted), whole CREATEAPP-V3 ~65%; Stage4/5 not started. PR #265 Draft, main+backup frozen. Next batch tackles 5 runtime Select associations separately using QX Controller-owned focus.
+
 # Stage 3 checkpoint — Preview 01 source-backed parity
 
 ## CURRENT — 2026-10-09 CREATEAPP-V3-S3 FieldLabel visual focus batch (new CI pending)

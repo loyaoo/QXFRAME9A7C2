@@ -20,29 +20,24 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'payout-threshold':['preferred-currency','payout-notes'],
-    'preferences':['default-currency'],
+    'payout-threshold':['payout-notes'],
     'savings-targets':['investment-amount','investment-order-type'],
     'account-access':['email-address','current-password'],
-    'transfer-funds':['transfer-amount','from-account','to-account'],
+    'transfer-funds':['transfer-amount'],
     'receiving-method':['account-holder','iban'],
-    'stock-performance':['stock-ticker'],
     'new-milestone':['goal-name','target-amount','target-date'],
     'social-links':['spotify-url','instagram-handle','soundcloud-url','website-url']
   };
   let count=0;
   for(const [id,ids] of Object.entries(current)){
-    assert.ok(preview.includes('data-card="'+id+'"'),'QA target Card must exist: '+id);
-    assert.ok(ledger.includes("['"+id+"'"),'current active group must include '+id);
-    for(const key of ids){
-      assert.ok(ledger.includes('label[for="'+key+'"]'),'current region must match '+id+'/'+key);
-      count++;
-    }
+    assert.ok(preview.includes('data-card="'+id+'"'),'target card '+id);
+    assert.ok(ledger.includes("['"+id+"'"),'current group '+id);
+    for(const key of ids){assert.ok(ledger.includes('label[for="'+key+'"]'),'active field '+id+'/'+key);count++;}
   }
-  for(const previous of ['kitchen-island','roller-shades','release-catalog','notification-settings','front-door','faq','recent-transactions','syncing-state'])
-    assert.ok(!ledger.includes("['"+previous+"'"),'previous highlight group removed: '+previous);
-  assert.equal(count,20);
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,20,'only twenty current batch regions');
+  for(const previous of ['kitchen-island','roller-shades','release-catalog','notification-settings','front-door','faq','recent-transactions','syncing-state','preferences','stock-performance'])
+    assert.ok(!ledger.includes("['"+previous+"'"),'noncurrent group must be absent '+previous);
+  assert.equal(count,15);
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,15,'current batch exact count');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -1013,17 +1008,17 @@ check('Preview 01 source-pinned controlled visual state is authored across four 
 });
 
 
-check('source-locked FieldLabel connections are complete for twenty controls across nine Cards', () => {
-  const html=read('preview-01.html'), mount=read('preview-cards.js');
-  const controls=[["payout-threshold","Preferred Currency","preferred-currency","runtime"],["payout-threshold","Notes","payout-notes","textarea"],["preferences","Default Currency","default-currency","runtime"],["savings-targets","Amount to Invest","investment-amount","input"],["savings-targets","Order Type","investment-order-type","select"],["account-access","Email Address","email-address","input"],["account-access","Current Password","current-password","input"],["transfer-funds","Amount to Transfer","transfer-amount","input"],["transfer-funds","From Account","from-account","runtime"],["transfer-funds","To Account","to-account","runtime"],["receiving-method","Account Holder Name","account-holder","input"],["receiving-method","IBAN / Account Number","iban","input"],["stock-performance","Ticker","stock-ticker","runtime"],["new-milestone","Goal Name","goal-name","input"],["new-milestone","Target Amount","target-amount","input"],["new-milestone","Target Date","target-date","input"],["social-links","Spotify Artist URL","spotify-url","input"],["social-links","Instagram Handle","instagram-handle","input"],["social-links","SoundCloud URL","soundcloud-url","input"],["social-links","Website","website-url","input"]];
-  for(const [card,label,id,kind] of controls){
+check('fifteen source-locked native FieldLabels connect within seven Cards',()=>{
+  const html=read('preview-01.html'), fields=[["payout-threshold","Notes","payout-notes","textarea"],["savings-targets","Amount to Invest","investment-amount","input"],["savings-targets","Order Type","investment-order-type","select"],["account-access","Email Address","email-address","input"],["account-access","Current Password","current-password","input"],["transfer-funds","Amount to Transfer","transfer-amount","input"],["receiving-method","Account Holder Name","account-holder","input"],["receiving-method","IBAN / Account Number","iban","input"],["new-milestone","Goal Name","goal-name","input"],["new-milestone","Target Amount","target-amount","input"],["new-milestone","Target Date","target-date","input"],["social-links","Spotify Artist URL","spotify-url","input"],["social-links","Instagram Handle","instagram-handle","input"],["social-links","SoundCloud URL","soundcloud-url","input"],["social-links","Website","website-url","input"]];
+  for(const [card,label,id] of fields){
     const a=html.indexOf('<!-- @card '+card+' -->'),b=html.indexOf('<!-- @end '+card+' -->',a);
-    assert.ok(a>=0&&b>a,card+' card');
-    const slice=html.slice(a,b);
-    assert.ok(slice.includes('for="'+id+'">'+label+'</label>'),card+'/'+label+' authored association');
-    assert.ok(slice.includes(kind==='runtime'?'data-pv-label-id="'+id+'"':'id="'+id+'"'),card+'/'+id+' target');
+    assert.ok(a>=0&&b>a,card+' authored card');
+    const section=html.slice(a,b);
+    assert.ok(section.includes('for="'+id+'">'+label+'</label>'),card+'/'+label+' association');
+    assert.ok(section.includes('id="'+id+'"'),card+'/'+id+' actual target');
   }
-  assert.match(mount,/select\.getInputElement\(\)/,'QX Select owns rendered focus input');
+  for(const id of ['preferred-currency','default-currency','from-account','to-account','stock-ticker'])
+    assert.ok(!html.includes('data-pv-label-id="'+id+'"'),'unverified runtime Select not delivered '+id);
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

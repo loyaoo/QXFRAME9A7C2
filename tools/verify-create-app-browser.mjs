@@ -1778,12 +1778,12 @@ try {
   });
 
 
-  await step('Preview 01 twenty source-pinned FieldLabels activate actual native or QX Select controls', async () => {
+  await step('Preview 01 fifteen pinned native FieldLabels focus their controls', async () => {
     await click('document.querySelector(\'[data-create-item="01"]\')');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method] input")', 'Preview native fields');
     const observations = await evaluate(`(() => {
       const d=document.querySelector('[data-create-frame]').contentDocument;
-      const fields=[{"card":"payout-threshold","id":"preferred-currency","kind":"runtime"},{"card":"payout-threshold","id":"payout-notes","kind":"textarea"},{"card":"preferences","id":"default-currency","kind":"runtime"},{"card":"savings-targets","id":"investment-amount","kind":"input"},{"card":"savings-targets","id":"investment-order-type","kind":"select"},{"card":"account-access","id":"email-address","kind":"input"},{"card":"account-access","id":"current-password","kind":"input"},{"card":"transfer-funds","id":"transfer-amount","kind":"input"},{"card":"transfer-funds","id":"from-account","kind":"runtime"},{"card":"transfer-funds","id":"to-account","kind":"runtime"},{"card":"receiving-method","id":"account-holder","kind":"input"},{"card":"receiving-method","id":"iban","kind":"input"},{"card":"stock-performance","id":"stock-ticker","kind":"runtime"},{"card":"new-milestone","id":"goal-name","kind":"input"},{"card":"new-milestone","id":"target-amount","kind":"input"},{"card":"new-milestone","id":"target-date","kind":"input"},{"card":"social-links","id":"spotify-url","kind":"input"},{"card":"social-links","id":"instagram-handle","kind":"input"},{"card":"social-links","id":"soundcloud-url","kind":"input"},{"card":"social-links","id":"website-url","kind":"input"}];
+      const fields=[{"card":"payout-threshold","id":"payout-notes","kind":"textarea"},{"card":"savings-targets","id":"investment-amount","kind":"input"},{"card":"savings-targets","id":"investment-order-type","kind":"select"},{"card":"account-access","id":"email-address","kind":"input"},{"card":"account-access","id":"current-password","kind":"input"},{"card":"transfer-funds","id":"transfer-amount","kind":"input"},{"card":"receiving-method","id":"account-holder","kind":"input"},{"card":"receiving-method","id":"iban","kind":"input"},{"card":"new-milestone","id":"goal-name","kind":"input"},{"card":"new-milestone","id":"target-amount","kind":"input"},{"card":"new-milestone","id":"target-date","kind":"input"},{"card":"social-links","id":"spotify-url","kind":"input"},{"card":"social-links","id":"instagram-handle","kind":"input"},{"card":"social-links","id":"soundcloud-url","kind":"input"},{"card":"social-links","id":"website-url","kind":"input"}];
       return fields.map(({card,id,kind})=>{
         const target=d.querySelector('[data-card="'+card+'"]');
         const label=target?.querySelector('label[for="'+id+'"]');
@@ -1794,7 +1794,7 @@ try {
           matches:label.control===focus,focused:d.activeElement===focus};
       });
     })()`);
-    assert.equal(observations.length,20,'twenty pinned Label associations');
+    assert.equal(observations.length,15,'fifteen native Label associations');
     assert.deepEqual(observations.filter(x=>x.error||!x.matches||!x.focused),[],JSON.stringify(observations));
   });
 

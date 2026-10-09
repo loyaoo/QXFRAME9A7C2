@@ -11,41 +11,13 @@
     });
   }
   document.querySelectorAll('[data-pv-select]').forEach(function (host) {
-    var authoredField = host.closest('.qxframe9a7c2-form-field');
-    var select = C.Select.create({
+    C.Select.create({
       container: host,
       items: pairs(host.getAttribute('data-options')),
       value: host.getAttribute('data-value') || undefined,
       placeholder: host.getAttribute('data-placeholder') || undefined,
       size: host.getAttribute('data-size') || 'md'
     });
-    // The pinned FieldLabel -> SelectTrigger association must follow the
-    // real QX Select focus input, not the inert Preview mounting <div>.
-    // QX Select keeps all focus/keyboard/open-state ownership.
-    var labelId = host.getAttribute('data-pv-label-id');
-    if (labelId) {
-      // FieldHost can project a composed Select after create() returns.
-      // Bind the source FieldLabel to the *connected*, live focus input
-      // when it exists. Never abort the whole Preview's later Sliders/Tabs.
-      var field = authoredField;
-      var observer;
-      function bindLabel() {
-        var input = field && field.querySelector('.qxframe9a7c2-select-input');
-        if (!input || !input.isConnected) {
-          var candidate = select.getInputElement();
-          if (candidate && candidate.isConnected) input = candidate;
-        }
-        if (!input || !input.isConnected) return false;
-        input.id = labelId;
-        if (observer) observer.disconnect();
-        return true;
-      }
-      if (!bindLabel() && field) {
-        observer = new MutationObserver(bindLabel);
-        observer.observe(field, {childList:true,subtree:true});
-        requestAnimationFrame(bindLabel);
-      }
-    }
   });
   var sliders = new Map();
   document.querySelectorAll('[data-pv-slider]').forEach(function (host) {
