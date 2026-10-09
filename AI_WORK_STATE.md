@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-09 Syncing glyph exact static authoring assertion repaired (new final CI required)
+
+- Latest `ec3ba7f4fbb1cff7ba85f193a799cc51b092f8d0` QXFRAME #37923808097 Release FAIL at strict static `verify-create-app` pattern: expected `qxframe9a7c2-empty-media is-icon` followed by closing quote; legitimate new authored `is-glyph-sm` extends same icon container class and invalidates old exact markup text. **Structural parent / nested media role unchanged**. Updated verifier to require the complete new `...is-icon is-glyph-sm` markup exactly (no permissive regex), and kept icon/glyph computed + pinned source ±0.5px assertions.
+- Prior `02f3acd9` source-preview-geometry job was SUCCESS; CSS owner ratchet failure fixed in `ec3ba7f4` via existing variable **consumer** not declaration; after this last verifier update, both complete workflows must pass on identical final HEAD. No forced Card heights, token expansion, runtime JS, change to main/backup or premature PR merge. User's offline Card precise region ledger 7 modifications, dynamic count and ZIP-stamped exact HEAD retained. Total~65% Stage3~66% until CI.
+
+
 ## CURRENT — 2026-10-09 S3-SYNCING-GLYPH-001 public Token declaration ratchet repair (new final CI pending)
 
 - `02f3acd9` QXFRAME #37923344273 source-preview-geometry SUCCESS (new five-style source-paired 16px spinner glyph + center test), but Release FAILED on strict CSS Schema size/owner ratchet: `public-component-token-declared` +1 due to opt-in `.is-glyph-sm{--qxframe9a7c2-empty-icon-size:1rem}`. This is NOT geometry failure. CSS Schema first-HEAD run was cancelled as newer `def8124f` queued. Neither upstream thresholds nor verifier may be relaxed.

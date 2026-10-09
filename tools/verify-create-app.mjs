@@ -825,7 +825,7 @@ check('Content-only Card and nested EmptyHeader match pinned Syncing State compo
   const section=html.slice(html.indexOf('<!-- @card syncing-state -->'),html.indexOf('<!-- @end syncing-state -->'));
   assert.match(section,/qxframe9a7c2-card is-content-only" data-card="syncing-state"/);
   assert.match(section,/qxframe9a7c2-card-content is-flush/);
-  assert.match(section,/qxframe9a7c2-empty-header"><div class="qxframe9a7c2-empty-media is-icon"/);
+  assert.match(section,/qxframe9a7c2-empty-header"><div class="qxframe9a7c2-empty-media is-icon is-glyph-sm"/);
   assert.match(cardCss,/\.qxframe9a7c2-card\.is-content-only\{padding-block:var\(--_qxframe9a7c2-card-padding\)\}/);
   assert.match(cardCss,/\.qxframe9a7c2-card\.is-content-only>\.qxframe9a7c2-card-content:only-child\{padding:0\}/);
   assert.match(emptyCss,/margin-block-start:var\(--qxframe9a7c2-empty-description-offset,var\(--qxframe9a7c2-theme-empty-description-offset,0\)\)/);

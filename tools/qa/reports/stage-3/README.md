@@ -1,5 +1,10 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Strict syncing media class authoring assertion updated (CI required)
+
+`ec3ba7f4` Release static `verify-create-app` failed because the established exact static contract matched `is-icon"` and new legitimate shared `is-icon is-glyph-sm"` adds modifier without changing nesting. Changed the pattern to require the exact updated class text, **not** to permit arbitrary class names. Source-pinned five-style 16px glyph/center checks and eight-style real Chromium glyph checks remain strict; no weakening. CI rerun and annotated bundle pending.
+
+
 ## 2026-10-09 — Shared Empty glyph modifier ratchet repair (CI required)
 
 CI run #37923344273 passed strict source-paired Syncing source geometry, but QXFRAME Release static CSS owners/size ratchet blocked new `--qxframe9a7c2-empty-icon-size` *declaration* inside the modifier (`public-component-token-declared` +1). Refactored modifier to a higher-specificity existing SVG consumption of **existing** public `--qxframe9a7c2-empty-icon-size` with `1rem` fallback, not a declaration: `.qxframe9a7c2-empty-media.is-icon.is-glyph-sm>svg` width/height. Public per-instance override remains usable; no Theme additions. Same source 16px geometry and strict browser tests retained. Full CI and local annotated Actions package pending.
