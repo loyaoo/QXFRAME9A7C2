@@ -1,5 +1,13 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — source sibling-structure restoration and next-node probes
+
+Verified previous GitHub checkpoint `65c80d01`: QXFRAME CI `37866512674`, CSS Schema `37866512679` both succeeded; 33/33 Chromium cases passed. The pinned same-Linux-browser first-Card height residual is **202/528 >0.5px**; this is not acceptance.
+
+Pinned `dividend-income.tsx` has three direct Item children: `ItemContent`, a responsive `ChartContainer`, and a separate responsive amount `span`. Preview incorrectly grouped the latter two inside `ItemActions`, changing the flex wrap algorithm. Restored the upstream child topology, reused QX Item/Card, and added static + eight-style browser topology checks. No fixed height, private replacement component, runtime JS change, or test relaxation.
+
+The existing same-browser QA now emits focused source/QX node reports for Sera Dividend, Rhea/Maia FAQ, Mira/Nova Upcoming Payments (light mode) to distinguish per-node padding/wrap differences from chart/calendar stubs. **New CI and the resulting delta count are pending**, not yet a claimed improvement. Remaining: these cards, nested Cards, Preview 02, full visual/content acceptance. PR #265 stays Draft; main and fixed backup are untouched.
+
 Status: **in progress; not stage acceptance**. Baseline main: fe209ab.
 Reference: shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c.
 Windows Chrome 154, both sides forced to system-ui, sans-serif; tolerance 0.5px.

@@ -170,6 +170,17 @@ check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry
   }
 });
 
+check('Dividend Income uses the pinned Item sibling layout rather than an ItemActions wrapper', () => {
+  const html=read('preview-01.html');
+  const dividend=html.slice(html.indexOf('data-card="dividend-income"'),
+    html.indexOf('<!-- @end dividend-income -->'));
+  assert.equal((dividend.match(/class="qxframe9a7c2-item is-muted"/g)||[]).length,4);
+  assert.equal((dividend.match(/class="pv-mini-chart"/g)||[]).length,4);
+  assert.equal((dividend.match(/class="pv-text-sm pv-semibold pv-num"/g)||[]).length,4);
+  assert.doesNotMatch(dividend,/qxframe9a7c2-item-actions/,
+    'the original shadcn chart and amount are direct Item flex children, not an ItemActions group');
+});
+
 check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources', () => {
   const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   assert.match(item,/\.qxframe9a7c2-item-media\.is-icon\{\s*width:1rem;height:1rem;border:0;border-radius:0;background:transparent\}/,

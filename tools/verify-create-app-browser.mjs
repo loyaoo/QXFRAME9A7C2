@@ -481,6 +481,31 @@ try {
     }
   });
 
+  await step('Dividend Income preserves the source Item flex sibling structure', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Dividend Income');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const card=doc.querySelector('[data-card="dividend-income"]');
+        const rows=[...card.querySelectorAll('.qxframe9a7c2-item-group > .qxframe9a7c2-item')];
+        return rows.map(row=>{
+          const chart=row.querySelector('.pv-mini-chart'),amount=row.querySelector('.pv-num');
+          return {chartDirect:chart?.parentElement===row,amountDirect:amount?.parentElement===row,
+            childCount:row.children.length,actions:row.querySelectorAll('.qxframe9a7c2-item-actions').length};
+        });
+      })()`);
+      assert.equal(actual.length,4,style+' dividend has four holdings');
+      for(const [index,row] of actual.entries()){
+        assert.ok(row.chartDirect&&row.amountDirect,style+' holding '+index+' requires source sibling layout');
+        assert.equal(row.childCount,3,style+' holding '+index+' Item has three direct children');
+        assert.equal(row.actions,0,style+' no extra ItemActions wrapper');
+      }
+    }
+  });
+
   await step('Kitchen Island uses 16px unboxed ItemMedia and 10px compact group gaps', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")', 'Kitchen Island');

@@ -55,11 +55,16 @@ try {
       return {i,tag:el.tagName.toLowerCase(),className:typeof el.className==='string'?el.className.slice(0,90):'svg',
         text:el.children.length?undefined:(el.textContent||'').slice(0,38),
         x:+(r.left-rect.left).toFixed(2),y:+(r.top-rect.top).toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),
-        display:cs.display,gap:cs.rowGap,pt:cs.paddingTop,pb:cs.paddingBottom,
+        display:cs.display,gap:cs.rowGap,flex:cs.flex,wrap:cs.flexWrap,pt:cs.paddingTop,pb:cs.paddingBottom,
         fs:cs.fontSize,lh:cs.lineHeight};
     });
   },{source,id});
   let novaCardStructures = {};
+  // Focused structure evidence for unresolved Stage 3 cards, measured in the
+  // same Chromium and font as the pinned upstream renderer.
+  const targetCards={sera:['dividend-income'],rhea:['faq'],maia:['faq'],mira:['upcoming-payments'],nova:['upcoming-payments']};
+  const sourceNodePairs={};
+
   const loadingStructure = async source => page.evaluate(source => {
     const card = document.querySelector(source ? '[data-qa-card="loading-card"]' : '[data-card="loading-card"]');
     if (!card) return null;
@@ -84,6 +89,9 @@ try {
       await page.waitForTimeout(350);
       const reference = await measure(true);
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) novaCardStructures[id]={source:await nodeStructure(true,id)};
+      if(!dark) for(const id of targetCards[style]||[])
+        sourceNodePairs[style+'/'+id]={source:await nodeStructure(true,id)};
+
       if(style==='nova'&&!dark) novaLoadingSource=await loadingStructure(true);
       if (style === 'nova') await page.screenshot({ path: path.join(out, key + '-reference.png'), fullPage: true });
       await page.goto(`${origin}/docs/create/preview-01.html`);
@@ -94,6 +102,12 @@ try {
       await page.waitForTimeout(350);
       const actual = await measure(false);
       if(style==='nova'&&!dark) for(const id of ['payout-threshold','claimable-balance']) {novaCardStructures[id].qx=await nodeStructure(false,id); console.log('[stage3-structure-'+id+'] '+JSON.stringify(novaCardStructures[id]));}
+      if(!dark) for(const id of targetCards[style]||[]) {
+        const record=sourceNodePairs[style+'/'+id];
+        record.qx=await nodeStructure(false,id);
+        console.log('[stage3-target-'+style+'-'+id+'] '+JSON.stringify(record));
+      }
+
       if(style==='nova'&&!dark) console.log('[stage3-payout-textarea-css] '+JSON.stringify(await page.evaluate(() => {
         const el=document.querySelector('[data-card="payout-threshold"] textarea'),cs=getComputedStyle(el);
         const slider=document.querySelector('[data-card="payout-threshold"] .qxframe9a7c2-slider');

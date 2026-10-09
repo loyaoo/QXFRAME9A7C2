@@ -19,6 +19,12 @@
 
 ## CURRENT
 
+2026-10-09 CREATEAPP-V3-S3 source-locked Dividend sibling-structure batch (CI pending):
+- Recovered GitHub baseline: PR #265 Draft, HEAD 65c80d018615e191da13448a7bf8a5472dd1f471, both QXFRAME CI #37866512674 and CSS Schema #37866512679 successful; latest paired Chromium 33/33 and 202/528 first-Card height outliers. Historical "CI pending" at top of CURRENT is superseded.
+- Source `dividend-income.tsx` mounts ItemContent, ChartContainer and amount span as THREE direct Item flex children. The QX example incorrectly grouped chart + amount into a fourth-layer ItemActions, changing flex wrapping at narrow Sera card widths. Removed only that extra markup, preserving real QX Item CSS and data.
+- Added static and eight-theme real Chromium direct-child topology regression. Extended the pinned same-browser QA to log node-level source/QX for Sera Dividend, Rhea/Maia FAQ, Mira/Nova Upcoming Payments; no tolerance changes and no runtime Controller edits.
+- NEXT EXACT STEP: run both workflows, retrieve source-preview-geometry paired rows and target node traces, decide additional shared Item/Collapse/Calendar fixes by measured cause. Reconcile 202/528 baseline before claiming any numerical improvement. Keep main and backup unchanged and PR #265 Draft.
+
 2026-10-09 Stage 3 Payout/Claimable root cause resolved (CI pending):
 - Paired source Nova geometry in source QA run #37865241466: Payout net -22px combined **Slider height +28px** (QX32px/source4px) with **Textarea -50px** (QX50px/source100px). Claimable -18px was entirely a 48px QX CardTitle line box instead of source66px.
 - Claimable `pv-text-5xl` no longer replaces CardTitle's `line-height:1.375`, restoring source 374px. Payout opts into reusable `Slider.is-track-height` (root height equals its theme rail height) using the existing preview controller and preserves keyboard value handling.
