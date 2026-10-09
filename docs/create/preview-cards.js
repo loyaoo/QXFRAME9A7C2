@@ -11,6 +11,7 @@
     });
   }
   document.querySelectorAll('[data-pv-select]').forEach(function (host) {
+    var authoredField = host.closest('.qxframe9a7c2-form-field');
     var select = C.Select.create({
       container: host,
       items: pairs(host.getAttribute('data-options')),
@@ -26,7 +27,7 @@
       // Select's own focus accessor can reference a Control-owned node
       // before the host is fully placed. Resolve its LIVE composed input
       // from the authoring Field after create, never a detached template.
-      var field = host.closest('.qxframe9a7c2-form-field');
+      var field = authoredField;
       var focusInput = field && field.querySelector('.qxframe9a7c2-select-input');
       if (!focusInput || !focusInput.isConnected) {
         var candidate = select.getInputElement();
