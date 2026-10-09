@@ -6,6 +6,8 @@
 
 ## CURRENT — 2026-10-09 CREATEAPP-V3-S3
 
+- Source-locked paired node evidence from `3c635463` identifies Maia/Luma Receiving Method radio FieldSet exactly **91.5px upstream vs 55px QX** (−36.5px Card), caused by missing 1px FieldLabel border and p-4 top/inline Field inset; source Bank Transfer title wraps at width95.42px (19.25px leading). Added shared `CheckField.is-choice` and `FieldTitle` roles with closed style-based inset token, preserving authored pb-2.5 override; no fixed row/card height.
+- Sidebar Nav Maia/Luma/Sera upstream has **nine 36px SidebarMenuButtons**, QX had nine 32px private preview links (−36px Card). Replaced preview paint with shared `SidebarMenuButton`/`SidebarGroupLabel` compositions and a closed Theme height role; source gap and per-instance active state retained. New static/Chromium tests. **CI and paired count pending**; last confirmed 168/528.
 - Next measured-pair batch: shared ItemContent opt-in now uses the source `flex:1 1 0%` (was `0px`) alongside intrinsic min-width and unclamped title, to resolve Sera Dividend's remaining +5.25px first-row wrapping without per-Card constants. Static/Chromium test checks computed flex-basis.
 - Existing same-browser node probe extended to Maia/Luma Receiving Method, Maia/Luma/Sera Sidebar Nav, Sera Claimable Balance and Lyra FAQ; inspect actual DOM paddings/borders/line heights before changing shared Field/Sidebar primitives. New CI results pending; previous 168/528 remains the last **confirmed** diagnostic.
 - Branch `redesign/create`, PR #265 **Draft**, do not merge; `main` and `backup/main-before-pr265-2026-10-08` both frozen at `fe209abbf1698294ec6cda468b7fd4cf9ee56ff3`.

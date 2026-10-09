@@ -1,5 +1,13 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — source-locked Radio Field and SidebarMenu ownership
+
+The paired Maia/Luma Receiving Method FieldSet is **123.5px source vs 87px QX**, precisely the whole −36.5px Card delta. Its source RadioGroup has a 91.5px Bank Transfer FieldLabel with 1px outer border and 16px top/inline inner Field padding, an authored 10px bottom padding and 14px/19.25px title wrapping to two lines. QX previously rendered 55px frameless CheckFields. Shared `CheckField.is-choice` and `FieldTitle` now own border/padding/title semantics; Preview 01 retains only local pb-2.5. Pinned style ChoiceField inset map (8/10/12/16px) emits one registered Theme input and respects the Padding extension.
+
+Maia/Luma/Sera first Sidebar Nav Card: source nine 36px `SidebarMenuButton` rows vs QX nine private 32px `pv-nav-button` rows (exact −36px). Preview Nav link/label chrome moved into shared `qxframe9a7c2-sidebar-menu-button` and `qxframe9a7c2-sidebar-group-label`, with a single Theme row-height role (36px verified families, 32px previous compact others) and source 8/12px horizontal padding. Menu gap, group padding and native Card/Divider remain unchanged. This also removes duplicate preview hover/selected paint.
+
+All corrections are rooted in per-node computed styles on the pinned same-browser renderer, not forced Card heights. Static and Chromium style/geometry checks added; current-HEAD CI pending. PR remains Draft, main and backup unchanged.
+
 ## 2026-10-09 — adaptive Calendar source parity (CI remediation)
 
 Next probe batch (pending CI): source `ItemContent.flex-1` emits computed `flex-basis:0%`; QX's legacy `flex:1 1 0` emitted `0px`. The opt-in intrinsic Item now matches the pinned basis while preserving the default QX Item rule. Expanded paired node structures to additional unresolved Receiving Method, Sidebar Nav, Claimable Balance and Lyra FAQ cards, including all four box paddings/borders and minimum sizes. Do not infer any height improvement until the same-Chromium rerun.

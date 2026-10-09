@@ -258,11 +258,38 @@ check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources',
     'Kitchen previously rendered a duplicated media wrapper in each slider row');
 });
 
+check('Pinned Radio Field and SidebarMenu static compositions use shared framework classes', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  const preview=read('preview-01.html'),app=read('preview.css'),compiled=read('compiler.js');
+  assert.match(css,/\.qxframe9a7c2-check-field\.is-choice\{/);
+  assert.match(css,/\.qxframe9a7c2-field-title\{/);
+  assert.match(css,/\.qxframe9a7c2-sidebar-menu-button\{/);
+  assert.match(css,/\.qxframe9a7c2-sidebar-group-label\{/);
+  for(const token of ['choice-field-inset','sidebar-menu-button-height']){
+    assert.ok(read('tokens.js').includes("L('"+token+"'"),token+' Token schema');
+    assert.ok(compiled.includes("root['"+token+"']"),token+' Theme recipe');
+    assert.ok(css.includes('var(--qxframe9a7c2-theme-'+token),token+' shared consumer');
+  }
+  const receiving=preview.slice(preview.indexOf('data-card="receiving-method"'),preview.indexOf('<!-- @end receiving-method -->'));
+  assert.equal((receiving.match(/class="qxframe9a7c2-check-field is-choice pv-choice-field"/g)||[]).length,2);
+  assert.equal((receiving.match(/class="qxframe9a7c2-field-title"/g)||[]).length,2);
+  const sidebar=preview.slice(preview.indexOf('data-card="sidebar-nav"'),preview.indexOf('<!-- @end sidebar-nav -->'));
+  assert.equal((sidebar.match(/class="qxframe9a7c2-sidebar-menu-button/g)||[]).length,18);
+  assert.doesNotMatch(app,/\.pv-nav-button(?:\:hover|\.is-active)?\s*\{/);
+  const expectedChoice={vega:12,nova:10,maia:16,lyra:8,mira:8,luma:16,sera:16,rhea:16};
+  for(const style of Object.keys(expectedChoice)){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const px=name=>parseFloat(body.match(new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);'))?.[1])*16;
+    assert.equal(px('choice-field-inset'),expectedChoice[style],style+' pinned Field child padding');
+    assert.equal(px('sidebar-menu-button-height'),['maia','luma','sera'].includes(style)?36:32,style+' pinned sidebar row height');
+  }
+});
+
 check('Receiving Method radio choices use shared Field composition, not custom Cards', () => {
   const html=read('preview-01.html');
   const section=html.slice(html.indexOf('data-card="receiving-method"'),
     html.indexOf('<!-- @end receiving-method -->'));
-  assert.equal((section.match(/class="qxframe9a7c2-check-field pv-choice-field"/g)||[]).length,2);
+  assert.equal((section.match(/class="qxframe9a7c2-check-field is-choice pv-choice-field"/g)||[]).length,2);
   assert.equal((section.match(/class="qxframe9a7c2-field-content"/g)||[]).length,2);
   assert.match(section,/class="qxframe9a7c2-choice-group"/,'source RadioGroup must consume shared ChoiceGroup');
   const compos=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
@@ -613,7 +640,10 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
   assert.match(shared,/\.qxframe9a7c2-item-link:hover:not\(\.is-disabled\)[^{]*\.qxframe9a7c2-item-desc/);
   assert.doesNotMatch(privateCss,/\.qxframe9a7c2-item-link(?::hover)?\s*\{/,
     'Preview must not own a second Item hover style');
-  assert.match(privateCss,/\.pv-nav-button:hover\s*\{\s*background:[^;]+;\s*color:\s*var\(--qxframe9a7c2-theme-accent-foreground\)/);
+  assert.match(fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8'),
+    /\.qxframe9a7c2-sidebar-menu-button:hover,/,'SidebarMenu hover belongs to shared CSS');
+  assert.doesNotMatch(privateCss,/\.pv-nav-button(?:\:hover)?\s*\{/,
+    'preview must not own a second SidebarMenuButton paint rule');
 });
 
 

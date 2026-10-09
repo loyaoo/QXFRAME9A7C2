@@ -138,6 +138,8 @@ export const THEME_TOKENS = [
   L('calendar-cell-size', 'Responsive large-screen adaptive Calendar cell size'),
   L('sidebar-menu-gap', 'Sidebar menu item distance from control surface recipe'),
   L('sidebar-group-padding-block', 'Sidebar group vertical inset from density'),
+  L('choice-field-inset', 'Bordered RadioGroup FieldLabel inner Field padding'),
+  L('sidebar-menu-button-height', 'Static SidebarMenuButton row height'),
   L('card-gap', 'Card section gap'),
   L('card-meta-gap', 'Card title/description gap'),
   L('card-title-delta', 'Card title size step'),

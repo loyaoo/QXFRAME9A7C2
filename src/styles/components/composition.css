@@ -194,6 +194,53 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 }
 .qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem));cursor:pointer}
 .qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}
+/* Framed RadioGroup/FieldLabel composition from pinned shadcn: the label
+ * owns the border and the inner horizontal Field's top/inline inset.
+ * The authored pb-2.5 may override only the trailing padding as in source. */
+.qxframe9a7c2-check-field.is-choice{
+  box-sizing:border-box;align-items:center;
+  padding:var(--qxframe9a7c2-choice-field-inset,var(--qxframe9a7c2-theme-choice-field-inset,.625rem));
+  border:1px solid var(--qxframe9a7c2-theme-border);
+  border-radius:var(--qxframe9a7c2-theme-radius-field);
+  background:transparent
+}
+.qxframe9a7c2-check-field.is-choice>.qxframe9a7c2-form-check-input{margin-top:0}
+.qxframe9a7c2-field-title{
+  display:flex;align-items:center;width:fit-content;gap:.5rem;
+  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
+  font-weight:var(--qxframe9a7c2-theme-control-weight);
+  line-height:1.375;
+  text-transform:var(--qxframe9a7c2-theme-control-transform,none)
+}
+/* Reusable static SidebarMenuButton and SidebarGroupLabel: source icon/text
+ * gap and per-style button geometry are shared framework roles, not app CSS. */
+.qxframe9a7c2-sidebar-menu-button{
+  --_qxframe9a7c2-sidebar-menu-button-height:var(--qxframe9a7c2-sidebar-menu-button-height,var(--qxframe9a7c2-theme-sidebar-menu-button-height,2rem));
+  box-sizing:border-box;display:flex;align-items:center;gap:.5rem;min-width:0;
+  width:100%;height:var(--_qxframe9a7c2-sidebar-menu-button-height);
+  padding-block:0;padding-inline:calc(.5rem + (var(--_qxframe9a7c2-sidebar-menu-button-height) - 2rem));
+  border:0;border-radius:var(--qxframe9a7c2-theme-radius-field);
+  background:transparent;color:inherit;font-size:var(--qxframe9a7c2-theme-text-size);
+  text-decoration:none
+}
+.qxframe9a7c2-sidebar-menu-button:hover,
+.qxframe9a7c2-sidebar-menu-button.is-active{
+  background:var(--qxframe9a7c2-theme-accent);
+  color:var(--qxframe9a7c2-theme-accent-foreground)
+}
+.qxframe9a7c2-sidebar-menu-button.is-active{font-weight:500}
+.qxframe9a7c2-sidebar-menu-button:focus-visible{
+  outline:var(--_qxframe9a7c2-focus-visible-outline);
+  outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
+}
+.qxframe9a7c2-sidebar-group-label{
+  box-sizing:border-box;display:flex;align-items:center;height:2rem;
+  padding-inline:calc(.5rem + (var(--qxframe9a7c2-theme-sidebar-menu-button-height,2rem) - 2rem));
+  color:var(--qxframe9a7c2-theme-muted-foreground);
+  font-size:.75rem;font-weight:var(--qxframe9a7c2-theme-control-weight);
+  text-transform:var(--qxframe9a7c2-theme-control-transform,none);
+  letter-spacing:var(--qxframe9a7c2-theme-control-tracking,normal)
+}
 .qxframe9a7c2-divider{flex:0 0 auto;height:1px;margin:0;border:0;background:var(--qxframe9a7c2-theme-border)}
 .qxframe9a7c2-divider.is-vertical{width:1px;height:auto;align-self:stretch}
 .qxframe9a7c2-swatch-cell{display:flex;flex:0 0 calc((100% - 3.75rem) / 6);flex-direction:column;align-items:center;gap:0.5rem;min-width:0}

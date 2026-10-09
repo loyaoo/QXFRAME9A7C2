@@ -394,6 +394,15 @@ export function themeTokens(resolved) {
   // Pinned SidebarMenu gaps: control look distinguishes 4/0/1/2px tiers.
   // The group block inset follows the existing dense vs normal control axis.
   const sidebarMenuGap = { 'solid-shadow': .25, solid: 0, tinted: .25, transparent: .0625, 'light-solid': .125, ghost: .125 };
+  // Pinned FieldLabel child Field p-2/p-2.5/p-3/p-4; the baseline
+  // source family differs per style, and the padding axis adjusts it.
+  const sourceChoiceInset={vega:.75,nova:.625,maia:1,lyra:.5,mira:.5,luma:1,sera:1,rhea:1};
+  const sourceStylePadding={vega:1.5,nova:1,maia:1.5,lyra:1,mira:1,luma:1.5,sera:2,rhea:1.25};
+  root['choice-field-inset']=rem(Math.max(.5,Math.min(1.25,
+    sourceChoiceInset[style]+(PADDING[ext.padding]-sourceStylePadding[style])*.25)));
+  // shadcn SidebarMenuButton uses h-8 in compact families, h-9 in the
+  // pinned Maia/Luma/Sera family. Other styles await paired source proof.
+  root['sidebar-menu-button-height']=rem(['maia','luma','sera'].includes(style)?2.25:2);
   root['sidebar-menu-gap'] = rem(sidebarMenuGap[ext.controlLook]);
   root['sidebar-group-padding-block'] = rem(ext.density === 'dense' ? .25 : .5);
   root['card-gap'] = rem(PADDING[ext.padding]);

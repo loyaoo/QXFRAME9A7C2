@@ -501,6 +501,43 @@ try {
     assert.ok(state.selected[0].today,'live selected date matches Calendar own today state');
   });
 
+  await step('Framed Radio Field and static SidebarMenuButton reproduce source box models', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','Receiving Method');
+    for(const style of ['nova','maia','luma','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Radio Field/Sidebar');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const css=e=>doc.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+        const radio=doc.querySelector('[data-card="receiving-method"]');
+        const choices=[...radio.querySelectorAll('.qxframe9a7c2-check-field.is-choice')];
+        const menu=doc.querySelector('[data-card="sidebar-nav"]');
+        const button=menu.querySelector('.qxframe9a7c2-sidebar-menu-button');
+        const groupTitle=menu.querySelector('.qxframe9a7c2-sidebar-group-label');
+        return {choices:choices.map(c=>({top:px(css(c).paddingTop),bottom:px(css(c).paddingBottom),
+          side:px(css(c).paddingLeft),border:px(css(c).borderTopWidth),height:c.getBoundingClientRect().height,
+          titleLine:px(css(c.querySelector('.qxframe9a7c2-field-title')).lineHeight)})),
+          buttonHeight:button.getBoundingClientRect().height,buttonPad:px(css(button).paddingLeft),
+          groupPad:px(css(groupTitle).paddingLeft)};
+      })()`);
+      assert.equal(actual.choices.length,2,style+' shared Radio Field rows');
+      const inset={nova:10,maia:16,luma:16,sera:16}[style];
+      for(const row of actual.choices){
+        assert.equal(row.border,1,style+' FieldLabel outer border');
+        assert.ok(Math.abs(row.top-inset)<=.5&&Math.abs(row.side-inset)<=.5,
+          style+' source Radio Field p-x/p-t');
+        assert.ok(Math.abs(row.bottom-10)<=.5,style+' source pb-2.5');
+      }
+      const menuHeight=['maia','luma','sera'].includes(style)?36:32;
+      assert.ok(Math.abs(actual.buttonHeight-menuHeight)<=.5,style+' pinned SidebarMenuButton height');
+      assert.ok(Math.abs(actual.buttonPad-(menuHeight===36?12:8))<=.5,style+' pinned SidebarMenuButton horizontal pad');
+      assert.ok(Math.abs(actual.groupPad-(menuHeight===36?12:8))<=.5,style+' source SidebarGroupLabel inset');
+      if(['maia','luma'].includes(style))assert.ok(Math.abs(actual.choices[0].height-91.5)<=.5,
+        style+' source wrapped Bank Transfer row height');
+    }
+  });
+
   await step('Adaptive Calendar uses source-sized cells and visible month rows', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Adaptive Calendar');
