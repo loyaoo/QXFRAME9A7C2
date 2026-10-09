@@ -197,7 +197,7 @@ try {
             throw new Error(style+' RecentTransactions source collapse/gap0 table mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
         if(style==='sera'&&id==='index-investing'){
-          const sourceProse=record.source.find(x=>x.className.includes('cn-card-description')&&x.text?.startsWith('Over time'));
+          const sourceProse=record.source.filter(x=>x.className.includes('cn-card-description')).at(-1);
           const qxProse=record.qx.find(x=>x.className.includes('is-prose-intro'));
           if(!sourceProse||!qxProse||Math.abs(sourceProse.y-qxProse.y)>.5||
              Math.abs(record.source[0].h-record.qx[0].h)>.5)
