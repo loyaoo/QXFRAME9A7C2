@@ -968,6 +968,11 @@ try {
         return { gap,overriddenGap,
           rollerSliderHeight:n(css(rollerSlider).height),
           rollerThumbHeight:n(css(rollerThumb).height),
+          rails:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
+            const rail=el.querySelector('.qxframe9a7c2-slider').getBoundingClientRect();
+            const cardRect=card.getBoundingClientRect();
+            return {x:rail.x-cardRect.x,w:rail.width,proportional:el.classList.contains('is-actions-proportional')};
+          }),
           media:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
             const icon=el.querySelector('.qxframe9a7c2-item-media.is-icon');
             const slider=el.querySelector('.qxframe9a7c2-slider');
@@ -981,6 +986,10 @@ try {
               chrome:n(css(el).paddingTop)+n(css(el).paddingBottom)+n(css(el).borderTopWidth)+n(css(el).borderBottomWidth)};
           })};
       })()`);
+      assert.equal(actual.rails.length,4,style+' four slider rails');
+      assert.ok(actual.rails.every(n=>n.proportional),style+' right-actions modifier on all rows');
+      assert.ok(Math.max(...actual.rails.map(n=>n.x))-Math.min(...actual.rails.map(n=>n.x))<=.5,
+        style+' all Kitchen sliders must start together: '+JSON.stringify(actual.rails));
       assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');
       assert.ok(Math.abs(actual.gap-10)<.5,style+' compact ItemGroup gap');
       assert.ok(Math.abs(actual.overriddenGap-28)<.5,style+' explicit ItemGroup gap wins');

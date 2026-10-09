@@ -1,16 +1,12 @@
 /** Offline bundle only. Keep visual change records here, not in production HTML. */
 const groups = [
-  ['faq','FAQ · 常见问题',[
-    ['.pv-tabs[data-pv-tabs]','等宽标签栏','General/Billing/Goals 等分整条标签栏','b1919e1d'],
-    ['.qxframe9a7c2-collapse-content','答案正文颜色','九段 FAQ 正文现在跟随 Theme foreground','e4fa02d5']]],
-  ['savings-targets-a','Savings Targets · 储蓄目标',[
-    ['.qxframe9a7c2-item','目标条目的布局','Item 内间距与相邻卡片对齐','5d165318'],
-    ['.qxframe9a7c2-card-footer .qxframe9a7c2-card-description','底部说明的位置','移除多余全宽拉伸，按文字自然宽度居中','8c871b8e']]],
-  ['recent-transactions','Recent Transactions · 近期交易',[
-    ['td.is-muted','五处日期文字','使用 Theme muted-foreground 而非深色文字','24bcbaaa']]],
-  ['syncing-state','Syncing State · 同步状态',[
-    ['.qxframe9a7c2-empty-description','同步提示说明','原文撇号和均衡换行与上游对齐','b424cb37'],
-    ['.qxframe9a7c2-empty-media.is-glyph-sm svg','同步图标尺寸','图标本体恢复上游 16×16px，保留原 32/40px 外层容器','__QA_BUNDLE_HEAD__']]]
+  ['kitchen-island','Kitchen Island · 滑块对齐',[
+    ['.pv-slider-item:nth-child(1) .qxframe9a7c2-slider','亮度','Brightness 轨道保持右对齐，并与其它三行共用起点','__QA_BUNDLE_HEAD__'],
+    ['.pv-slider-item:nth-child(2) .qxframe9a7c2-slider','色温','Color Temp 轨道不再随左侧文字宽度变化','__QA_BUNDLE_HEAD__'],
+    ['.pv-slider-item:nth-child(3) .qxframe9a7c2-slider','音量','Volume 轨道与其它三行等宽','__QA_BUNDLE_HEAD__'],
+    ['.pv-slider-item:nth-child(4) .qxframe9a7c2-slider','Fade','Fade 轨道与其它三行等宽，保留原始取值','__QA_BUNDLE_HEAD__']]],
+  ['front-door','Front Door · 装饰区域',[
+    ['.pv-stripes','细斜纹','将宽斜条纹改为更贴近参考画面的细斜线纹理','__QA_BUNDLE_HEAD__']]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -73,7 +69,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01 · '+markedRegions+' 处</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">Preview 02 本批未修改。未标注不代表完成验收；请关闭高亮后做原貌对比。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。Preview 02 本批没有修改；关闭高亮可查看原貌。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

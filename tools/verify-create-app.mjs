@@ -19,16 +19,20 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const overlay=read('offline-qa-changes.css');
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
-  const expectedCards=['faq','savings-targets-a','recent-transactions','syncing-state'];
+  const expectedCards=['kitchen-island','front-door'];
   for(const id of expectedCards){
     assert.ok(preview.includes('data-card="'+id+'"'), 'QA target Card must exist: '+id);
     assert.ok(ledger.includes("'"+id+"'"), 'offline QA ledger must record Card '+id);
   }
-  for(const selector of ['.pv-tabs[data-pv-tabs]','.qxframe9a7c2-collapse-content','td.is-muted',
-    '.qxframe9a7c2-empty-media.is-glyph-sm svg',
-    '.qxframe9a7c2-card-footer .qxframe9a7c2-card-description','.qxframe9a7c2-empty-description']){
+  for(const selector of ['.pv-slider-item:nth-child(1) .qxframe9a7c2-slider',
+    '.pv-slider-item:nth-child(2) .qxframe9a7c2-slider',
+    '.pv-slider-item:nth-child(3) .qxframe9a7c2-slider',
+    '.pv-slider-item:nth-child(4) .qxframe9a7c2-slider','.pv-stripes']){
     assert.ok(ledger.includes(selector),'ledger must target inner Card change: '+selector);
   }
+  for(const previous of ["'faq','FAQ","'savings-targets-a','Savings","'recent-transactions','Recent","'syncing-state','Syncing"])
+    assert.ok(!ledger.includes(previous),'previous batch must not remain annotated: '+previous);
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,5,'exactly five current batch annotations');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');

@@ -42,7 +42,7 @@ with zipfile.ZipFile(artifact) as outer:
 # ZIP. Never leave a vague 'current run' label or stale hardcoded count.
 ledger_path=work/'docs/create/offline-qa-changes.mjs'
 ledger=ledger_path.read_text('utf-8')
-assert ledger.count('__QA_BUNDLE_HEAD__')==1, 'missing exact-HEAD change annotation'
+assert ledger.count('__QA_BUNDLE_HEAD__')>=1, 'current batch must contain exact-HEAD annotations'
 ledger_path.write_text(ledger.replace('__QA_BUNDLE_HEAD__',head[:8]),'utf-8')
 
 online = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js'
@@ -109,8 +109,9 @@ http.createServer((req,res)=>{
     '点击变更条目定位到对应卡片；点击「关闭高亮 · 原貌对比」恢复干净画面。'
     '独立打开 Preview 01 也有同样的清单。所有改动标记只注入此本地包副本，'
     '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n'
-    '本轮标注：FAQ 三等分标签与答案颜色、Savings Targets 条目和底部提示、'
-    'Recent Transactions 日期色、Syncing State 文本换行。Preview 02 本批未更改。'
+    '本轮且仅本轮标注：Kitchen Island 四行滑块轨道；Front Door 细斜纹装饰区。'
+    '上一轮 FAQ、Savings Targets、Recent Transactions、Syncing State 的高亮已经清零，'
+    '历史修复保留在仓库状态文档中。Preview 02 本批没有改动。'
     '未标注的卡片不代表已通过验收。\n\n'
     '之后每批更改卡片必须同步更新 docs/create/offline-qa-changes.mjs 的清单。'
     '此包未合并到 main，Stage 3 尚待人工验收。\n', encoding='utf-8')

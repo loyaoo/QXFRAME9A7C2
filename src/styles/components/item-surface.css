@@ -132,3 +132,5 @@
 .qxframe9a7c2-item-media.is-icon{width:1rem;height:1rem;border:0;border-radius:0;background:transparent}
 .qxframe9a7c2-item-media.is-icon>svg{display:block;width:1rem;height:1rem}
 .qxframe9a7c2-item-actions{display:flex;flex:0 0 auto;align-items:center;gap:.5rem}
+/* Shared opt-in: consistent percentage-width right actions regardless of label length. */
+.qxframe9a7c2-item.is-actions-proportional .qxframe9a7c2-item-actions{flex:0 0 44%;min-width:0}

@@ -1,5 +1,10 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Batched Kitchen Island rail geometry and Front Door art; current-round-only QA
+
+Pinned source's Kitchen Island four slider rails are equal width and share a common x in five inspected Styles; QX's label-length-dependent rails vary 178–232px, misplacing thumbs even though the values 90/70/30/0 are correct. Shared opt-in `Item.is-actions-proportional` gives each right action rail 44% of row interior, without changing default Item. Same-browser gate enforces common x, right edge and vertical center ±0.5px and narrowed width/inset discrepancy <=8px for five Styles; strict Card height gate retained. All eight Styles check the proportional modifier in the Create browser suite. Front Door decorative placeholder changed from broad diagonal bands to narrower lines in Preview-only CSS (no framework Theme token or shared component workaround). User-mandated offline QA marks now reset per build, this batch **Kitchen Island 4 sliders and Front Door stripes only** (2 Cards / 5 region entries); all prior yellow highlights gone. Previous fixes remain in this document and Git PR history. Double-green final CI and owner Windows QA still required.
+
+
 ## 2026-10-09 — Strict syncing media class authoring assertion updated (CI required)
 
 `ec3ba7f4` Release static `verify-create-app` failed because the established exact static contract matched `is-icon"` and new legitimate shared `is-icon is-glyph-sm"` adds modifier without changing nesting. Changed the pattern to require the exact updated class text, **not** to permit arbitrary class names. Source-pinned five-style 16px glyph/center checks and eight-style real Chromium glyph checks remain strict; no weakening. CI rerun and annotated bundle pending.

@@ -164,7 +164,8 @@ body.create-preview-body {
 .pv-stripes {
   position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 9; overflow: hidden;
   border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); background-color: var(--qxframe9a7c2-theme-muted);
-  background-image: repeating-linear-gradient(45deg, transparent, transparent 0.625rem, var(--qxframe9a7c2-theme-border) 0.625rem, var(--qxframe9a7c2-theme-border) 1.25rem);
+  /* Thin Source-like diagonal placeholder rules; Preview artwork only. */
+  background-image:repeating-linear-gradient(45deg,transparent 0,transparent .5rem,var(--qxframe9a7c2-theme-border) .5rem,var(--qxframe9a7c2-theme-border) .625rem);
 }
 .pv-corner { position: absolute; top: 0.5rem; right: 0.5rem; }
 .pv-ticker { display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border: 1px solid var(--qxframe9a7c2-theme-border); border-radius: var(--qxframe9a7c2-theme-radius-field, 0.5rem); font-size: 0.875rem; font-weight: 600; }

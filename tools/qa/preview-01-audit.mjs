@@ -255,9 +255,17 @@ try {
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' CoverArt source Label/Footer line boxes mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
         }
-        if(['vega','maia','luma','sera','rhea'].includes(style)&&id==='kitchen-island'){
+        if(['vega','maia','lyra','luma','sera','rhea'].includes(style)&&id==='kitchen-island'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
-            throw new Error('Vega KitchenIsland source small Item paddings mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+            throw new Error(style+' KitchenIsland Item/Card height mismatch: '+JSON.stringify({source:record.source[0],qx:record.qx[0]}));
+          const src=record.source.filter(n=>n.className.startsWith('cn-slider relative'));
+          const qx=record.qx.filter(n=>n.className.startsWith('qxframe9a7c2-slider is-'));
+          if(src.length!==4||qx.length!==4||src.some((s,j)=>Math.abs(qx[j].x-s.x)>8||
+             Math.abs(qx[j].w-s.w)>8||
+             Math.abs(qx[j].x+qx[j].w-s.x-s.w)>.5||
+             Math.abs(qx[j].y+qx[j].h/2-s.y-s.h/2)>.5)||
+             Math.max(...qx.map(n=>n.x))-Math.min(...qx.map(n=>n.x))>.5)
+            throw new Error(style+' KitchenIsland four source-aligned rails mismatch: '+JSON.stringify({src,qx}));
         }
         if((style==='vega'||style==='nova')&&id==='recent-transactions'){
           if(Math.abs(record.source[0].h-record.qx[0].h)>.5)
