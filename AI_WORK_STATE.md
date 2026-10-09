@@ -17,7 +17,10 @@
 - Current Phase: CREATEAPP-V3 stage 3 — Preview 01 geometry alignment.
 - Current Task: `CREATEAPP-V3-S3` — resumed on owner instruction, 2026-10-07.
 
-## CURRENT
+2026-10-09 CREATEAPP-V3-S3 Upcoming Payments date semantic restoration (CI pending):
+- The locked shadcn `UpcomingPayments` initializes Calendar selected value with `useState(new Date())`; payment rows carry independent fixed Apr 2024 text. QX had bound calendar to 2024-04-15, incorrectly showing a different current month and selected day.
+- Preview now uses generic `data-value="today"` and resolves to live `new Date()` ONLY as an instance argument to the existing QX `Calendar.create`. No framework JS/controller mutation, no private datepicker. Added static and real Chromium selected/today assertions; calendar layout size/row chrome still to be investigated.
+- NEXT EXACT STEP: verify latest HEAD CI and paired geometry; Calendar padding/week cell sizes in shared picker-family/date-panel CSS remain the source of Mira/Nova Upcoming height mismatch; no arbitrary fixed Card height. Keep PR Draft and main/backup pinned.
 
 2026-10-09 CREATEAPP-V3-S3 FAQ trigger box-model correction (CI pending):
 - Source-preview-geometry on 71b74b98 succeeded: height diagnostics decreased **202/528 -> 192/528**; paired Sera Dividend -44.25px -> +5.25px, Rhea FAQ -68px -> -6px, Maia FAQ -48px -> -6px. Paired 528 property exceptions remain exactly the 66 v3-mandated Luma radius caps.

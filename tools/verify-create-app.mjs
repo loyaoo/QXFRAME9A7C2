@@ -170,6 +170,17 @@ check('Preview 01 source-local Empty / FieldSeparator and FAQ Accordion geometry
   }
 });
 
+check('Upcoming Payments Calendar follows source today-selected date rather than 2024 transaction copy', () => {
+  const html=read('preview-01.html');
+  const card=html.slice(html.indexOf('data-card="upcoming-payments"'),html.indexOf('<!-- @end upcoming-payments -->'));
+  assert.match(card,/data-pv-calendar data-value="today"/);
+  assert.doesNotMatch(card,/data-pv-calendar data-value="2024-04-15"/);
+  const mounting=read('preview-cards.js');
+  assert.match(mounting,/authoredValue === 'today' \? new Date\(\)/,
+    'Calendar instance configuration must supply live today via the QX Calendar public API');
+  assert.doesNotMatch(mounting,/Date\.parse\(authoredValue\)/,'do not introduce a replacement Calendar parser');
+});
+
 check('Dividend Income uses the pinned Item sibling layout rather than an ItemActions wrapper', () => {
   const html=read('preview-01.html');
   const dividend=html.slice(html.indexOf('data-card="dividend-income"'),

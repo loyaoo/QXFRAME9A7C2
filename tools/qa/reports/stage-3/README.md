@@ -1,5 +1,9 @@
 # Stage 3 checkpoint — shared Card geometry
 
+## 2026-10-09 — Upcoming Payments current-date parity
+
+The pinned `upcoming-payments.tsx` initializes `useState(new Date())`, while the three payment descriptions intentionally refer to Apr 2024. QX previously selected `2024-04-15` in Calendar and displayed a different month than the pinned source. The preview now authors a `today` sentinel and resolves it only at the existing `Calendar.create` public instance API; source text in the payment rows remains unchanged. Added static/runtime tests that the live selected QX cell is also its own today cell. This does not yet solve Calendar box-model size parity; that remains under same-browser QA.
+
 ## 2026-10-09 — paired 192/528 diagnostic and native AccordionTrigger border
 
 The second source-locked same-Chromium run (`71b74b98`, job `113625030611`) reduced **202 → 192 of 528** height outliers, without lowering tolerance or modifying the 66 governed Luma radius exceptions. Sera Dividend changed -44.25 → +5.25px (needs further 1st Item min-content examination), Rhea FAQ changed -68 → -6px, and Maia FAQ changed -48 → -6px.

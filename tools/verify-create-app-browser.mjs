@@ -481,6 +481,26 @@ try {
     }
   });
 
+  await step('Upcoming Payments Calendar selects today using the original source runtime configuration', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")', 'Upcoming Payments');
+    const state=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const host=doc.querySelector('[data-card="upcoming-payments"] [data-pv-calendar]');
+      const today=new Date();
+      const toKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+      return {authored:host?.getAttribute('data-value'),
+        todayKey:toKey(today),
+        selected:[...host.querySelectorAll('.qxframe9a7c2-calendar-cell.is-selected')].map(el=>({
+          date:el.dataset.value||el.getAttribute('data-date')||el.getAttribute('title')||'',
+          today:el.classList.contains('is-today')
+        }))};
+    })()`);
+    assert.equal(state.authored,'today');
+    assert.equal(state.selected.length,1,'UpcomingPayments original source initializes selected new Date()');
+    assert.ok(state.selected[0].today,'live selected date matches Calendar own today state');
+  });
+
   await step('Dividend Income preserves the source Item flex sibling structure', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');

@@ -69,7 +69,12 @@
   });
   var Calendar = C.Calendar || (Q.BuildingBlocks && Q.BuildingBlocks.Calendar);
   document.querySelectorAll('[data-pv-calendar]').forEach(function (host) {
-    if (Calendar) Calendar.create({ container: host, value: host.getAttribute('data-value') || undefined });
+    if (!Calendar) return;
+    // Locked shadcn UpcomingPayments initializes its live Calendar with
+    // useState(new Date()). Resolve the demo keyword at mount time, rather
+    // than pinning April 2024 to the unrelated transaction copy.
+    var authoredValue = host.getAttribute('data-value');
+    Calendar.create({ container: host, value: authoredValue === 'today' ? new Date() : authoredValue || undefined });
   });
   document.querySelectorAll('input[data-indeterminate]').forEach(function (input) { input.indeterminate = true; });
 })();
