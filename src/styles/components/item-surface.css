@@ -97,7 +97,7 @@
 .qxframe9a7c2-item-content{display:flex;flex:1 1 0;flex-direction:column;gap:.25rem;min-width:0}
 /* Upstream ItemContent permits its intrinsic minimum during wrapping;
  * opt-in preserves the legacy zero-min-width compact Item contract. */
-.qxframe9a7c2-item-content.is-intrinsic{min-width:auto}
+.qxframe9a7c2-item-content.is-intrinsic{min-width:auto;flex:1 1 0%}
 .qxframe9a7c2-item-title{
   display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));

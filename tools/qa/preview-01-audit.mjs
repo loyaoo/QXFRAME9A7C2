@@ -55,7 +55,10 @@ try {
       return {i,tag:el.tagName.toLowerCase(),className:typeof el.className==='string'?el.className.slice(0,90):'svg',
         text:el.children.length?undefined:(el.textContent||'').slice(0,38),
         x:+(r.left-rect.left).toFixed(2),y:+(r.top-rect.top).toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),
-        display:cs.display,gap:cs.rowGap,flex:cs.flex,wrap:cs.flexWrap,pt:cs.paddingTop,pb:cs.paddingBottom,
+        display:cs.display,gap:cs.rowGap,flex:cs.flex,wrap:cs.flexWrap,
+        minWidth:cs.minWidth,minHeight:cs.minHeight,
+        pt:cs.paddingTop,pb:cs.paddingBottom,pl:cs.paddingLeft,pr:cs.paddingRight,
+        borderTop:cs.borderTopWidth,borderBottom:cs.borderBottomWidth,
         fs:cs.fontSize,lh:cs.lineHeight};
     });
   },{source,id});
@@ -96,7 +99,7 @@ try {
   let novaCardStructures = {};
   // Focused structure evidence for unresolved Stage 3 cards, measured in the
   // same Chromium and font as the pinned upstream renderer.
-  const targetCards={sera:['dividend-income'],rhea:['faq'],maia:['faq'],mira:['upcoming-payments'],nova:['upcoming-payments']};
+  const targetCards={sera:['dividend-income','sidebar-nav','claimable-balance'],rhea:['faq'],maia:['faq','receiving-method','sidebar-nav'],luma:['receiving-method','sidebar-nav'],lyra:['faq'],mira:['upcoming-payments'],nova:['upcoming-payments']};
   const sourceNodePairs={};
 
   const loadingStructure = async source => page.evaluate(source => {

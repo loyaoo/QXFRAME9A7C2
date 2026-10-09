@@ -567,6 +567,7 @@ try {
           return {chartDirect:chart?.parentElement===row,amountDirect:amount?.parentElement===row,
             childCount:row.children.length,actions:row.querySelectorAll('.qxframe9a7c2-item-actions').length,
             contentMinWidth:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-content')).minWidth,
+            contentBasis:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-content')).flexBasis,
             titleDisplay:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-title')).display};
         });
       })()`);
@@ -576,6 +577,7 @@ try {
         assert.equal(row.childCount,3,style+' holding '+index+' Item has three direct children');
         assert.equal(row.actions,0,style+' no extra ItemActions wrapper');
         assert.equal(row.contentMinWidth,'auto',style+' original flex min-content behavior');
+        assert.equal(row.contentBasis,'0%',style+' pinned ItemContent flex-basis');
         assert.equal(row.titleDisplay,'flex',style+' source ItemTitle flex-wrap behavior');
       }
     }

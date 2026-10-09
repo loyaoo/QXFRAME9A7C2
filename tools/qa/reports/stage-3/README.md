@@ -2,6 +2,8 @@
 
 ## 2026-10-09 — adaptive Calendar source parity (CI remediation)
 
+Next probe batch (pending CI): source `ItemContent.flex-1` emits computed `flex-basis:0%`; QX's legacy `flex:1 1 0` emitted `0px`. The opt-in intrinsic Item now matches the pinned basis while preserving the default QX Item rule. Expanded paired node structures to additional unresolved Receiving Method, Sidebar Nav, Claimable Balance and Lyra FAQ cards, including all four box paddings/borders and minimum sizes. Do not infer any height improvement until the same-Chromium rerun.
+
 Pinned same-browser source probe isolated Upcoming Payments differences to framework Calendar layout: source Mira Calendar 304×340.78px (12px padding) vs QX 278×291.89px (6px panel inset, 1px border); source Nova 296×330.28px (8px padding) vs QX 296×311.78px. Source uses 40px desktop day cells and navigation, 8px margin before date grid, 8px vertical week gap and 35 cells in October 2026; QX had 36/39px cells and 42 cells. The source card sets responsive 32/40px days (36px for Sera), distinct from base Calendar style sizes.
 
 Shared `Calendar.is-adaptive-month` now projects 4/5/6 visible weeks via CSS :has on the first full outside-only trailing week (leaving the 42 core Calendar state entries intact and keeping regular DatePicker unaffected), source-sized adaptive day cells, 8/12px style padding and 40/36px desktop navigation. `pv-calendar` merely centers the shared component in its authored Item. No new proprietary Calendar renderer, runtime Value/Focus rewrite or fixed Card height. Calendar roles `calendar-padding` and `calendar-cell-size` are in closed theme schema and both default theme modes.

@@ -233,7 +233,8 @@ check('Source Accordion frame and Item intrinsic wrapping are shared Theme/compo
     assert.equal(parseFloat(capture('accordion-trigger-gap'))*16,
       ['maia','mira','luma','sera','rhea'].includes(style)?24:0,style+' source icon gap');
   }
-  assert.match(item,/\.qxframe9a7c2-item-content\.is-intrinsic\{min-width:auto\}/);
+  assert.match(item,/\.qxframe9a7c2-item-content\.is-intrinsic\{min-width:auto;flex:1 1 0%\}/,
+    'pinned ItemContent flex-1 is 0% basis, not a 0px flex basis');
   assert.match(item,/\.qxframe9a7c2-item-title\.is-wrapping\{display:flex;width:fit-content/);
   const dividend=html.slice(html.indexOf('data-card="dividend-income"'),
     html.indexOf('<!-- @end dividend-income -->'));
