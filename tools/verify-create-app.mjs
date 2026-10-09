@@ -20,21 +20,22 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'payout-threshold':['preferred-currency'],
-    'preferences':['default-currency'],
-    'transfer-funds':['from-account','to-account'],
-    'stock-performance':['stock-ticker']
+    'qr-connect':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled'],
+    'cover-art':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled'],
+    'social-links':['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled'],
+    'faq':['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active']
   };
   let count=0;
-  for(const [id,ids] of Object.entries(current)){
-    assert.ok(preview.includes('data-card="'+id+'"'),'target card '+id);
-    assert.ok(ledger.includes("['"+id+"'"),'current batch card '+id);
-    for(const key of ids){assert.ok(ledger.includes('label[for="'+key+'"]'),'exact field target '+key);count++;}
+  for(const [id,selectors] of Object.entries(current)){
+    assert.ok(preview.includes('data-card="'+id+'"'),'current QA card '+id);
+    assert.ok(ledger.includes("['"+id+"'"),'current QA ledger card '+id);
+    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'inner QA target '+id);count++;}
   }
-  for(const previous of ['kitchen-island','roller-shades','release-catalog','notification-settings','front-door','faq','recent-transactions','syncing-state','savings-targets','account-access','receiving-method','new-milestone','social-links'])
-    assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,5);
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,5,'exactly five current regions');
+  for(const id of ['payout-threshold','preferences','transfer-funds','stock-performance',
+    'kitchen-island','roller-shades','release-catalog','notification-settings','front-door','savings-targets','account-access','receiving-method','new-milestone'])
+    assert.ok(!ledger.includes("['"+id+"'"),'old yellow group must not accumulate '+id);
+  assert.equal(count,4,'four source-backed current regions');
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,4,'four active markers only');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -1031,6 +1032,24 @@ check('five source-pinned QX Select FieldLabels target existing root focus contr
   assert.match(mount,/\.qxframe9a7c2-select\[tabindex\]/,'QX Select root is the focus target');
   assert.match(mount,/root\.focus\(\{ preventScroll: true \}\)/,'focus forwarded to QX root');
   assert.doesNotMatch(mount,/new MutationObserver\(bindLabel\)/,'no synthetic async inputs');
+});
+
+check('pinned secondary Buttons and active segmented Tabs use shared Theme recipes',()=>{
+  const html=read('preview-01.html');
+  const button=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
+  const tabs=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  for(const card of ['qr-connect','cover-art','social-links']){
+    const start=html.indexOf('data-card="'+card+'"');
+    assert.ok(start>0,card+' source card');
+    const end=html.indexOf('<!-- @end '+card+' -->',start);
+    const part=html.slice(start,end);
+    assert.match(part,/qxframe9a7c2-button is-default is-filled/,card+' secondary mapping');
+  }
+  assert.match(button,/\.qxframe9a7c2-button\.is-default\.is-filled\s*\{/);
+  assert.match(button,/--_qxframe9a7c2-button-bg:var\(--qxframe9a7c2-theme-secondary\)/);
+  assert.match(button,/--_qxframe9a7c2-button-text:var\(--qxframe9a7c2-theme-secondary-foreground\)/);
+  assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-text:var\(--qxframe9a7c2-theme-foreground\)/);
+  assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-weight:inherit/);
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

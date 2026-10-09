@@ -1,17 +1,16 @@
-/** Current offline batch ONLY; previous yellow highlights never accumulate. */
+/** Active visual QA groups for this batch ONLY: 3 source secondary Buttons + FAQ Tab. */
 const groups = [
-  ['payout-threshold','Payout Threshold · Select 标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="preferred-currency"])','Preferred Currency','标签聚焦 QX Select 的真实根节点，不误打开弹层','__QA_BUNDLE_HEAD__']
+  ['qr-connect','Qr Connect · Secondary 按钮',[
+    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled','Got it','修复次级按钮底色与前景色；各 Style / Light / Dark 共用 Theme Secondary Token','__QA_BUNDLE_HEAD__']
   ]],
-  ['preferences','Preferences · Select 标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="default-currency"])','Default Currency','标签聚焦真实 QX Select 根节点，保留 FocusController','__QA_BUNDLE_HEAD__']
+  ['cover-art','Cover Art · Secondary 按钮',[
+    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled','Upload Artwork','与 shadcn secondary 按钮相同，共用 QX Default + Filled Theme 配方','__QA_BUNDLE_HEAD__']
   ]],
-  ['transfer-funds','Transfer Funds · Select 标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="from-account"])','From Account','来源账户标签聚焦真实 QX Select','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-field:has(label[for="to-account"])','To Account','目标账户标签聚焦真实 QX Select','__QA_BUNDLE_HEAD__']
+  ['social-links','Social Links · Secondary 按钮',[
+    ['.qxframe9a7c2-card-footer .qxframe9a7c2-button.is-default.is-filled','Discard','修复次级操作按钮的中性色底色，保持主题联动','__QA_BUNDLE_HEAD__']
   ]],
-  ['stock-performance','Stock Performance · Select 标签',[
-    ['.qxframe9a7c2-form-field:has(label[for="stock-ticker"])','Ticker','Ticker 标签聚焦真实 Select，弹层仍默认关闭','__QA_BUNDLE_HEAD__']
+  ['faq','FAQ · Segmented Tab 前景',[
+    ['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active','General / Billing / Goals','激活项使用 Theme Foreground 与正常字重，不再错误采用 Primary / 600','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

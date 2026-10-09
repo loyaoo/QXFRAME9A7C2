@@ -1,3 +1,12 @@
+# Stage 3 current source-backed checkpoint
+
+## CURRENT — 2026-10-09 S3 pinned source multi-Card Secondary/Tabs visual parity (CI pending)
+
+- Source-pinned shadcn @ `295a1f114a138f23b5dfee0e0c6812394dfeb90c`: QrConnect `Got it`, CoverArt `Upload Artwork`, SocialLinks `Discard` each have `Button variant="secondary"`. QX Preview represents these 3 with `is-default is-filled` but its shared CSS used a too-strong semantic subtle color (Nova screenshot actual ~225 vs pinned reference ~245 in light, actual ~74 vs pinned reference ~38 in dark). Fixed shared Button color recipe with `--qxframe9a7c2-theme-secondary/secondary-foreground`, source hover alpha via color-mix; no per-card PV color hacks.
+- Pinned shadcn FAQ `TabsTrigger` active is `text-foreground` with the **same inherited font weight** as inactive, while QX `is-segmented` currently inherited generic active `Primary/600`. Shared Tabs segmented active now consumes Theme Foreground and inherited weight; inactive tabs, keyboard and other Tabs variants remain unchanged.
+- Batch **4 Cards / 4 precise internal visual regions** (3 secondary Buttons + FAQ selected Tab). Active offline QA ledger REPLACED: **none** of previous 4 Card / 5 Select or older yellow highlights persist. Framework JS/runtimes untouched; CSS shared components only, Theme tokens used directly. Added source-backed static checks and true Chromium light/dark computed-style parity for 3 Buttons and FAQ; 528/±0.5px and CSS Schema unchanged.
+- Mandatory double-green QXFRAME/CSS Schema pending on final same-tree HEAD before official Actions dist+docs Windows ZIP. Progress estimate **Stage 3 ~70%**, total CREATEAPP-V3 **~65%**; do not mechanically advance for a CSS microcommit. PR #265 stays Draft, main+backup frozen. Stage 3 still needs full inner/nested Card pixel/semantic plus user Windows acceptance; Stage 4/5 not started.
+
 # Stage 3 current checkpoint
 
 ## CURRENT — CREATEAPP-V3-S3 QX Select Label/Focus ownership — 2026-10-09 (new CI pending)

@@ -49,7 +49,8 @@ button.qxframe9a7c2-tabs-tab{padding:0 var(--_qxframe9a7c2-tabs-pad-x);gap:0.375
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab{--_qxframe9a7c2-tabs-tab-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface-muted);border:1px solid var(--_qxframe9a7c2-tabs-tab-border)}
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-tabs-tab-border:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{padding:0.25rem;border-radius:var(--_qxframe9a7c2-tabs-radius);background:var(--_qxframe9a7c2-semantic-surface-muted)}
-.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-tabs-tab-elevation:var(--qxframe9a7c2-shadow-sm,0 0 0 0 transparent)}
+/* Pinned shadcn TabsTrigger data-active uses normal weight and foreground, not primary/bold. */
+.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-tabs-tab-elevation:var(--qxframe9a7c2-shadow-sm,0 0 0 0 transparent);--_qxframe9a7c2-tabs-tab-text:var(--qxframe9a7c2-theme-foreground);--_qxframe9a7c2-tabs-tab-weight:inherit}
 .qxframe9a7c2-tabs-tab-action:focus-visible{outline:none;box-shadow:none}
 .qxframe9a7c2-tabs-tab.is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-tabs-tab.is-disabled,button.qxframe9a7c2-tabs-tab:disabled{--_qxframe9a7c2-tabs-tab-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-tabs-tab-cursor:not-allowed;--_qxframe9a7c2-tabs-tab-ring:0 0 0 0 transparent}
