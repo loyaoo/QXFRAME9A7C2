@@ -85,7 +85,8 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(css('tabs'),/\.qxframe9a7c2-tabs-scroll\{width:100%;height:var\(--_qxframe9a7c2-tabs-height\)/,'horizontal Tabs root uses shared tab height');
   assert.match(css('tabs'),/is-segmented:not\(\.is-vertical\) \.qxframe9a7c2-tabs-scroll\{height:calc\(var\(--_qxframe9a7c2-tabs-height\) \+ \.5rem\)/,'segmented Scroll adds the full vertical 8px rail budget');
   assert.match(css('tabs'),/\.qxframe9a7c2-scroll-viewport\{box-sizing:border-box;padding:0\.25rem;/,'viewport 4px vertical padding restored without overflow');
-  assert.match(css('form-native'),/form-select-arrow-image,light-dark\(url\("data:image\/svg\+xml/,'native Select arrow is a theme-overridable SVG');
+  assert.match(css('form-native'),/form-select-arrow-image,var\(--_qxframe9a7c2-native-select-chevron\)/,'native Select arrow uses a theme-overridable SVG image slot');
+  assert.match(css('form-native'),/\.dark \.qxframe9a7c2-form-select,\.dark \.qxframe9a7c2-native-form select\{/,'dark SVG must use theme boundary (light-dark does not accept URLs)');
   assert.match(css('form-native'),/m6 9 6 6 6-6/,'native SVG chevron follows JS icon path');
   assert.match(fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8'),/form-input-group-field:focus-within[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes pointer Theme token');
   assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');

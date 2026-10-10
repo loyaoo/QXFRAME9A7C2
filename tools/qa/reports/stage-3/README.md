@@ -1,5 +1,10 @@
 # Owner follow-up: pointer InputGroup focus, segmented rail padding, native SVG chevron
 
+## CURRENT — 2026-10-10 SVG arrow CSS image mode correction
+- Before accepting CI, local Chromium checked `CSS.supports('background-image','light-dark(url(...),url(...))') === false`. Fixed source syntax by using a theme-boundary `.dark` CSS override for the SVG URI and retaining one `--qxframe9a7c2-form-select-arrow-image` public override. Native Select must compute a genuine SVG URL, not `none`. Static regression enforces this; browser acceptance will check computed image.
+- The other follow-up repairs (group mouse Theme pointer tokens, Tabs rail vertical 4px inset with fixed height budget) remain. Prior commit was provisional, no success or offline ZIP yet.
+
+
 ## CURRENT — 2026-10-10 owner follow-up three concrete regressions (CI pending)
 - Latest baseline `b185660e93260dc2acc424b4b18edfa05e50bb08` passed QXFRAME `38021362739` and CSS Schema `38021362707`; PR #265 remains Draft.
 - Fixed at framework level: connected InputGroup / InputGroupField pointer focus now reuses same Theme pointer width/opacity/offset as standalone Input; no second child outline, existing keyboard 2px owner unchanged. Segmented Tabs 4px top/bottom viewport padding restored, Scroll rail owns 8px extra vertical budget; source Create tab height mapping adjusted to 24px trigger + 8px rail = 32px and segmented Panel removes duplicate 6px spacer to keep source Card height; cross-checked locally in real Chromium. Native Select gradient triangles replaced by a round-stroke SVG chevron, light/dark URI with overridable image slot.
