@@ -1,5 +1,6 @@
 // createApp (docs/create) static + model gate, v3 §2–§5. Fast, no browser.
 import fs from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -30,6 +31,10 @@ check('Canonical Field structure shares one CSS owner with native Form', () => {
 });
 
 check('files', () => { for (const f of FILES) assert.ok(fs.existsSync(path.join(dir, f)), 'missing docs/create/' + f); });
+
+check('Chromium acceptance module must parse before any heavy browser workflow',()=>{
+  execFileSync(process.execPath,['--check',path.join(root,'tools/verify-create-app-browser.mjs')],{stdio:'pipe'});
+});
 
 check('offline changes ledger and packaging are opt-in and do not contaminate production Create HTML', () => {
   const ledger=read('offline-qa-changes.mjs');

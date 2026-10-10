@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-10 Chromium test syntax restored (same-HEAD CI pending)
+- QXFRAME #38044213027 and CSS Schema Acceptance #38044213045: initial Create browser acceptance was aborted before any browser run due to an unescaped literal newline inserted into the JavaScript string for the synthetic Surface transition fix (SyntaxError line 1828). Replaced the two physical lines inside evaluate(...) with escaped \\n sequences, keeping the actual test-created Surface transition:none and production motion unchanged.
+- Added a fast static node --check gate in tools/verify-create-app.mjs so the browser test module is syntax-checked before the expensive acceptance suite. Both workflows must pass on the new HEAD before distributing any Actions dist+docs ZIP. PR #265 remains Draft.
+
 ## CURRENT — 2026-10-10 FocusOwner settled-paint browser test (new CI pending)
 - CSS Schema #38043988823 Chromium diagnostic proved input actually focused, :focus-visible=true, root FocusOrigin keyboard=true, computed Surface `--_qxframe9a7c2-choice-ring` and Theme focus-shadow both 3px green. Immediate computed box-shadow was 0px transparent because the Surface transitions `box-shadow` from no ring; synchronous diagnostic sampled frame 0. Set ONLY the test-created Surface's `transition:none` to measure resolved paint without animating; no production CSS/motion weakened. Re-run full both CI same HEAD and package official Actions ZIP only after success.
 
