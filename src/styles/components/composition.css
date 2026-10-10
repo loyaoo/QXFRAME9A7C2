@@ -197,7 +197,7 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 /* FieldContent is a first-class composition, not a FormField child.
  * Its label must consume the same Theme typography as composed FormField.
  * A local/public CSS override or inline style still wins by normal cascade. */
-.qxframe9a7c2-field-content>.qxframe9a7c2-field-label,.qxframe9a7c2-field-content>.qxframe9a7c2-form-label{
+.qxframe9a7c2-field-content>.qxframe9a7c2-form-label{
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
   line-height:var(--qxframe9a7c2-theme-field-label-line-height);
   font-weight:var(--qxframe9a7c2-theme-text-weight-label);

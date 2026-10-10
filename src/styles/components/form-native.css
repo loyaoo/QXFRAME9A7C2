@@ -307,7 +307,14 @@
 }
 /* Source FieldLabel line-box is unchanged when the label is nested in a
  * sibling Flex row with an action, e.g. AccountAccess password / Forgot?. */
-.qxframe9a7c2-form-field.is-composed .qxframe9a7c2-field-label,.qxframe9a7c2-form-label {
+.qxframe9a7c2-form-field.is-composed .qxframe9a7c2-form-label {
+  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
+  line-height:var(--qxframe9a7c2-theme-field-label-line-height);
+  font-weight:var(--qxframe9a7c2-theme-text-weight-label);
+  text-transform:var(--qxframe9a7c2-theme-control-transform,none);
+  letter-spacing:var(--qxframe9a7c2-theme-field-label-tracking,normal)
+}
+.qxframe9a7c2-field-label {
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
   line-height:var(--qxframe9a7c2-theme-field-label-line-height);
   font-weight:var(--qxframe9a7c2-theme-text-weight-label);

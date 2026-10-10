@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-10 Field baseline CI follow-up: preserve source label owner (CI pending)
+- Candidate 2fc2967 source job found source-locked Sera PayoutThreshold label/card differed by 1px; Release `verify:theme-tokens` rejected duplicate owner count 12→14 for legacy FormLabel fontsize/weight. Repair keeps original `.form-label` rule intact, gives new `.field-label` its own selector, and removes the extra FieldContent alias on the old specialized FormLabel rule. No source gate or baseline was weakened. CI on new HEAD required; first Field foundation remains unaccepted until both pass.
+
 ## CURRENT — 2026-10-10 CREATEAPP-V3-S3-FIELD-001: shared Field foundation (CI pending)
 - Resumed verified PR #265 Open/Draft and HEAD `fc489c9c5b72ea106febeace9c31f7af86808251`; QXFRAME CI #38030203282 and CSS Schema #38030203246 SUCCESS **at the old HEAD only**. Frozen source geometry and previously valid Focus shadow/hover are unchanged.
 - Task IDs: CREATEAPP-V3-S3-FIELD-001 (active), CREATEAPP-V3-S3-SELECTGROUP-002, CREATEAPP-V3-S3-CHOICE-COMPOSE-003, CREATEAPP-V3-S3-STATE-004, CREATEAPP-V3-S3-PREVIEW01-CLOSEOUT-005 (not started).

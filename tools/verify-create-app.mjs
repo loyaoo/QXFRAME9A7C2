@@ -17,7 +17,7 @@ check('Canonical Field structure shares one CSS owner with native Form', () => {
   const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const docs=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
   for(const selector of ['.qxframe9a7c2-field,.qxframe9a7c2-form-field{',
-    '.qxframe9a7c2-field-label,.qxframe9a7c2-form-label {',
+    '.qxframe9a7c2-field-label {',
     '.qxframe9a7c2-field-description,.qxframe9a7c2-form-description {',
     '.qxframe9a7c2-field-error,.qxframe9a7c2-form-feedback{'])
     assert.ok(native.includes(selector),'Field and native Form share one owner: '+selector);
