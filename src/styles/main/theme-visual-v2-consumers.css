@@ -20,16 +20,7 @@
     outline-offset: var(--qxframe9a7c2-theme-pointer-offset);
   }
 
-  /* Shared Input/Select/Picker hover only adjusts the field border role.
-     It never outranks a focused/invalid/warning/disabled state. Buttons
-     already have complete hover/active resolvers; they are not recreated. */
-  .qxframe9a7c2-input:hover:not(:focus-within):not(.is-focused):not(.is-expanded):not(.is-disabled):not(.is-error):not(.is-invalid):not(.is-warning),
-  .qxframe9a7c2-form-input:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
-  .qxframe9a7c2-form-select:hover:not(:focus):not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
-  .qxframe9a7c2-form-textarea:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
-    --_qxframe9a7c2-v2-control-border:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength));
-    background-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
-  }
+  /* Hover is painted by the shared state consumers after this scope. */
 
   /* Result's legacy status class names are not the framework-wide is-* Type
      aliases. Bind them to the already-shared v2 current-Type resolver instead
@@ -95,22 +86,40 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus:not(:d
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-pointer-focus)}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-focus)}
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-pointer-focus)}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-focus)}
-/* Feedback overrides all Hover/Focus-derived paint without hiding the halo. */
-.qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input,
-.qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select,
-.qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-textarea,
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input,
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-select,
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-textarea{border-color:var(--qxframe9a7c2-theme-destructive)}
-.qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input,
-.qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select,
-.qxframe9a7c2-field.is-warning .qxframe9a7c2-form-textarea,
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input,
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-select,
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-textarea{border-color:var(--qxframe9a7c2-theme-warning)}
-.qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive)}
-.qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning)}
+
+/* Explicit Field feedback wins even when a nested real input is focused:
+ * this source is after both component and focus rules, not a duplicate owner. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:focus,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:focus,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:focus,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:focus{
+  border-color:var(--qxframe9a7c2-theme-destructive)
+}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:focus,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:focus,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:focus,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:focus{
+  border-color:var(--qxframe9a7c2-theme-warning)
+}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
+ --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);border-color:var(--qxframe9a7c2-theme-destructive)
+}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
+ --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);border-color:var(--qxframe9a7c2-theme-warning)
+}
+/* Pointer Outline is explicit opt-in only; default Pointer Border has width 0.
+ * Keep native and SelectGroup visual focus on the owning Surface. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
+ outline:var(--qxframe9a7c2-theme-pointer-width) solid var(--qxframe9a7c2-theme-pointer-focus);
+ outline-offset:var(--qxframe9a7c2-theme-pointer-offset)
+}
