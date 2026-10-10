@@ -58,6 +58,8 @@ check('small Button typography consumes one source-mapped Theme token', () => {
   const tokens=fs.readFileSync(path.join(root,'docs/create/tokens.js'),'utf8');
   const button=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
   assert.match(tokens,/L\('button-sm-font-size'/,'closed theme schema');
+  const defaultTheme=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+  assert.equal((defaultTheme.match(/--qxframe9a7c2-theme-button-sm-font-size:/g)||[]).length,2,'default Nova light/dark token symmetry');
   assert.match(compiler,/root\['button-sm-font-size'\]/,'compiler emits independent style recipe');
   assert.match(button,/\.qxframe9a7c2-button\.is-sm\{\s*font-size:var\(--qxframe9a7c2-theme-button-sm-font-size/,'shared QX Button consumes Theme');
 });
