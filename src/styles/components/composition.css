@@ -379,7 +379,9 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
  * one 2px outline to the border owner. Mouse focus keeps the existing border
  * projection, and the native input NEVER draws a second outline. */
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
-.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible){
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)),
+.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)){
   outline:var(--_qxframe9a7c2-focus-visible-outline);
   outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
 }
@@ -387,10 +389,20 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input:focus-visible{
   outline:none;box-shadow:none
 }
+/* A hosted JS Input shell owns value and runtime focus origin, but the
+ * connected Field/Group owns both painted outlines and shadows. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-input,
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-input{
+  --_qxframe9a7c2-state-ring:none;
+  --_qxframe9a7c2-state-outline:none;
+  outline:none;box-shadow:none
+}
 /* The same connected border owner paints the keyboard halo; child editor
  * remains shadowless so the input and addon never show two nested rings. */
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
-.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible){
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)),
+.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)){
   box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none)
 }
 /* A nested group is an independent composition island. Mixing connected
@@ -461,7 +473,9 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input:focus-visible),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input:focus-visible){
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)){
   outline:var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab,var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
   outline-offset:var(--qxframe9a7c2-theme-pointer-offset);
   box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
@@ -469,8 +483,21 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-fie
 
 /* Connected InputGroup must expose the same subtle hover border as a single
  * Control. Never let hover hide focus or any child disabled/error/warning. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-form-input.is-invalid)):not(:has(>.qxframe9a7c2-form-input.is-error)):not(:has(>.qxframe9a7c2-form-input.is-warning)){
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-form-input.is-invalid)):not(:has(>.qxframe9a7c2-form-input.is-error)):not(:has(>.qxframe9a7c2-form-input.is-warning)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.qxframe9a7c2-input.is-invalid)):not(:has(>.qxframe9a7c2-input.is-error)):not(:has(>.qxframe9a7c2-input.is-warning)){
   border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) 70%,var(--qxframe9a7c2-theme-ring))
+}
+/* InputGroupField is an independent border owner, not an unstyled inner
+ * wrapper. Mirror the same Theme hover derivation without replacing focus
+ * or error/warning/disabled feedback, including a hosted JS Input. */
+.qxframe9a7c2-form-input-group-field:hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.is-invalid)):not(:has(>.is-error)):not(:has(>.is-warning)){
+  border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) 70%,var(--qxframe9a7c2-theme-ring))
+}
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input-group-field:hover,
+.qxframe9a7c2-form-field.is-error .qxframe9a7c2-form-input-group-field:hover{
+  border-color:var(--qxframe9a7c2-theme-destructive)
+}
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group-field:hover{
+  border-color:var(--qxframe9a7c2-theme-warning)
 }
 
 /* Action Addons keep an independent pointer shadow only while THEY have
