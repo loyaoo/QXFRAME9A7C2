@@ -600,7 +600,7 @@ try {
         const doc=document.querySelector('[data-create-frame]').contentDocument;
         const css=e=>doc.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
         const radio=doc.querySelector('[data-card="receiving-method"]');
-        const choices=[...radio.querySelectorAll('.qxframe9a7c2-check-field.is-choice')];
+        const choices=[...radio.querySelectorAll('.qxframe9a7c2-selectgroup-item')];
         const menu=doc.querySelector('[data-card="sidebar-nav"]');
         const button=menu.querySelector('.qxframe9a7c2-sidebar-menu-button');
         const groupTitle=menu.querySelector('.qxframe9a7c2-sidebar-group-label');
@@ -1275,9 +1275,9 @@ try {
           const faq=doc.querySelector('[data-card="faq"]'),summary=faq.querySelector('.qxframe9a7c2-collapse-item>summary');
           const accordionContent=faq.querySelector('.qxframe9a7c2-collapse-content');
           const faqTabs=faq.querySelector('.pv-tabs-full .qxframe9a7c2-tabs');
-          const fields=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-check-field')];
+          const fields=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-selectgroup-item')];
           const ans={labelLines:labels.map(e=>px(css(e).lineHeight)),labelWeights:labels.map(e=>Number(css(e).fontWeight)),
-            fieldGaps:fields.map(e=>px(css(e).columnGap)),
+            fieldGaps:fields.map(e=>px(css(e.querySelector('.qxframe9a7c2-flex')).columnGap)),
             expectedFieldGap:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-gap'))*16,
             expectedLine:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-label-line-height'))*16,
             faqTabsHeight:faqTabs.getBoundingClientRect().height,
@@ -1331,7 +1331,7 @@ try {
           root.classList.toggle('dark',${mode==='dark'});
           const css=e=>doc.defaultView.getComputedStyle(e),num=x=>parseFloat(x);
           const card=doc.querySelector('[data-card="receiving-method"]');
-          const rows=[...card.querySelectorAll('.qxframe9a7c2-check-field.pv-choice-field')];
+          const rows=[...card.querySelectorAll('.qxframe9a7c2-selectgroup-item')];
           const group=card.querySelector('.qxframe9a7c2-choice-group');
           const sourceColumns=num(css(root).getPropertyValue('--qxframe9a7c2-theme-choice-group-columns'));
           const first=rows[0].getBoundingClientRect(),second=rows[1].getBoundingClientRect();
@@ -1636,7 +1636,7 @@ try {
           ? ['.qxframe9a7c2-card-header','.pv-breadcrumb','.qxframe9a7c2-card-content','.qxframe9a7c2-item-group','.qxframe9a7c2-item','.qxframe9a7c2-item-content','.qxframe9a7c2-item-title','.qxframe9a7c2-item-desc']
           : name==='sidebar-nav'
           ? ['.qxframe9a7c2-card','.pv-nav-group','.pv-nav-label','.pv-nav','.pv-nav-button','.qxframe9a7c2-divider']
-          : ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.qxframe9a7c2-field-group','.qxframe9a7c2-check-field','.qxframe9a7c2-form-description','.qxframe9a7c2-card-footer'];
+          : ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.qxframe9a7c2-field-group','.qxframe9a7c2-selectgroup-item','.qxframe9a7c2-form-description','.qxframe9a7c2-card-footer'];
         for(const selector of selectors){const el=card.querySelector(selector);samples.push({selector,metrics:get(el)});}
         result[name]={root:get(card),samples};
         // Preserve per-row text-wrap evidence for Payments/FAQ before changing
@@ -1756,7 +1756,7 @@ try {
       press(release,0);
       const stock={active:active(release),holdings:release.querySelectorAll('.qxframe9a7c2-item-group > .qxframe9a7c2-item').length};
       const notification=card('notification-settings');
-      const check=[...notification.querySelectorAll('.qxframe9a7c2-check-field input[type=checkbox]')];
+      const check=[...notification.querySelectorAll('.qxframe9a7c2-selectgroup-item input[type=checkbox]')];
       const initial={checked:check[0].checked,indeterminate:check[0].indeterminate};
       check[0].click();
       const allChecked=check.every(c=>c.checked)&&!check[0].indeterminate;
@@ -1814,21 +1814,14 @@ try {
     assert.deepEqual(result.filter(x=>x.error||x.bgMatch===false||x.fgMatch===false||x.sameWeight===false||x.foregroundMatch===false),[],JSON.stringify(result));
   });
 
-  await step('CheckField centers its indicator by default and aligns start/center/end without offsets',async()=>{
+  await step('SelectGroup None preserves keyboard/focus, real checkbox and Flex cross axis',async()=>{
     await click('document.querySelector(\'[data-create-item="01"]\')');
-    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=notification-settings] .qxframe9a7c2-check-field")','CheckField');
-    const readings=await evaluate("(() => { const d=document.querySelector('[data-create-frame]').contentDocument; const row=d.querySelector('[data-card=notification-settings] .qxframe9a7c2-check-field'); if(!row)return {error:'missing row'}; const input=row.querySelector('.qxframe9a7c2-form-check-input'); const before=row.className; const oldMin=row.style.minHeight; row.style.minHeight='6rem'; const result={}; for(const mode of ['default','start','center','end']){row.className='qxframe9a7c2-check-field'+(mode==='default'?'':' is-'+mode);const cs=getComputedStyle(row),ic=getComputedStyle(input),r=row.getBoundingClientRect(),b=input.getBoundingClientRect();result[mode]={align:cs.alignItems,input:ic.alignSelf,marginTop:ic.marginTop,marginBottom:ic.marginBottom,top:+(b.top-r.top).toFixed(2),bottom:+(r.bottom-b.bottom).toFixed(2)};}row.className=before;row.style.minHeight=oldMin;return result;})()");
-    assert.ok(!readings.error,JSON.stringify(readings));
-    for(const mode of ['default','start','center','end']){
-      const r=readings[mode], expected=mode==='start'?'flex-start':mode==='end'?'flex-end':'center';
-      assert.equal(r.align,expected,mode+' row');
-      assert.equal(r.input,expected,mode+' indicator');
-      assert.equal(r.marginTop,'0px',mode+' top compensation');
-      assert.equal(r.marginBottom,'0px',mode+' bottom compensation');
-      if(expected==='flex-start')assert.ok(Math.abs(r.top)<1,JSON.stringify({mode,r}));
-      else if(expected==='flex-end')assert.ok(Math.abs(r.bottom)<1,JSON.stringify({mode,r}));
-      else assert.ok(Math.abs(r.top-r.bottom)<1,JSON.stringify({mode,r}));
-    }
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=notification-settings] .qxframe9a7c2-selectgroup-item")','SelectGroup');
+    const results=await evaluate("(() => { const d=document.querySelector('[data-create-frame]').contentDocument;const row=d.querySelector('[data-card=notification-settings] .qxframe9a7c2-selectgroup-item');const input=row.querySelector('.qxframe9a7c2-selectgroup-input'),surface=row.querySelector('.qxframe9a7c2-selectgroup-label'),flex=row.querySelector('.qxframe9a7c2-flex'),indicator=row.querySelector('.qxframe9a7c2-selectgroup-indicator');const css=e=>getComputedStyle(e);let defaultState={border:css(surface).borderTopWidth,bg:css(surface).backgroundColor,padding:css(surface).paddingTop,checked:input.checked,indicator:css(indicator).backgroundColor,align:css(flex).alignItems}; const modes={};for(const mode of ['start','center','end']){flex.classList.remove('is-start','is-center','is-end');flex.classList.add('is-'+mode);modes[mode]=css(flex).alignItems;}flex.classList.remove('is-start','is-center','is-end');flex.classList.add('is-start');return {defaultState,modes};})()");
+    assert.equal(results.defaultState.border,'0px','None has no border');
+    assert.equal(results.defaultState.padding,'0px','None has zero padding');
+    assert.equal(results.defaultState.bg,'rgba(0, 0, 0, 0)','None background transparent');
+    assert.deepEqual(results.modes,{start:'flex-start',center:'center',end:'flex-end'},'independent Flex controls alignment');
   });
 
   await step('Owner feedback: group focus, Tabs scroll and native Select paint',async()=>{

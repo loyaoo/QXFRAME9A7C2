@@ -37,7 +37,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'savings-targets':['.qxframe9a7c2-form-input-group']
+    'notification-settings':['.qxframe9a7c2-selectgroup-label'],
+    'receiving-method':['.qxframe9a7c2-selectgroup-label']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
@@ -70,20 +71,18 @@ check('segmented Tabs use the pinned source dark active input/30 recipe', () => 
   assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-choice-border\)\)/,'shared choice border recipe retains source Luma/Rhea transparent policy');
 });
 
-check('CheckField 3-way alignment has no margin-offset or Card-specific owner', () => {
+check('SelectGroup replaces CheckField without a duplicate choice Field owner', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
-  assert.match(css,/\.qxframe9a7c2-check-field\{[\s\S]*?align-items:center;/,'centered cross axis by default');
-  assert.match(css,/\.qxframe9a7c2-check-field>\.qxframe9a7c2-form-check-input\{\s*align-self:center;margin-block:0/,'input and its drawn indicator centered without top offset');
-  for(const [name,alignment] of [['start','flex-start'],['center','center'],['end','flex-end']]){
-    assert.ok(css.includes('.qxframe9a7c2-check-field.is-'+name+'{align-items:'+alignment+'}'),name+' row alignment');
-    assert.ok(css.includes('.qxframe9a7c2-check-field.is-'+name+'>.qxframe9a7c2-form-check-input{align-self:'+alignment+'}'),name+' input alignment');
-  }
-  assert.doesNotMatch(css,/\.qxframe9a7c2-check-field>\.qxframe9a7c2-form-check-input\{margin-top:/,'no old offset compensation');
-  assert.doesNotMatch(css,/\.qxframe9a7c2-check-field\.is-choice\{[^}]*align-items:/,'choice frame must not override cross-axis states');
+  const selectCss=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  assert.doesNotMatch(css,/qxframe9a7c2-check-field/,'retired dedicated CheckField must be absent');
+  assert.match(selectCss,/\.qxframe9a7c2-selectgroup\.is-outline/,'framed choices are SelectGroup appearance');
+  assert.match(selectCss,/\.qxframe9a7c2-selectgroup\.is-muted/,'filled choices use Theme muted appearance');
+  assert.match(selectCss,/--_qxframe9a7c2-choice-bg:transparent/,'default None has no surface');
   const preview=read('preview-01.html');
   const section=preview.slice(preview.indexOf('<!-- @card notification-settings -->'),preview.indexOf('<!-- @end notification-settings -->'));
-  assert.equal((section.match(/class="qxframe9a7c2-check-field"/g)||[]).length,5,'five CheckField rows use default center');
-  assert.ok(!section.includes('qxframe9a7c2-check-field is-center'),'default center does not require per-Card state');
+  assert.equal((section.match(/class="qxframe9a7c2-selectgroup-item"/g)||[]).length,5,'five native checkbox SelectGroup items');
+  assert.match(section,/qxframe9a7c2-flex is-start/,'cross-axis top alignment is an independent inner Flex');
+  assert.doesNotMatch(section,/qxframe9a7c2-check-field/,'old CheckField not present');
 });
 
 check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and grouped focus are shared recipes',()=>{
@@ -429,60 +428,55 @@ check('ItemMedia icon and ItemGroup size variants follow pinned shadcn sources',
     'Kitchen previously rendered a duplicated media wrapper in each slider row');
 });
 
-check('Pinned Radio Field and SidebarMenu static compositions use shared framework classes', () => {
+check('Pinned Radio Field and SidebarMenu composition retain Theme owners', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
-  const preview=read('preview-01.html'),app=read('preview.css'),compiled=read('compiler.js');
-  assert.match(css,/\.qxframe9a7c2-check-field\.is-choice\{/);
-  assert.match(css,/padding-block-end:var\(--qxframe9a7c2-choice-field-padding-bottom,/,
-    'source pb-2.5 is a local public option not an app-owned padding override');
+  const choice=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  const preview=read('preview-01.html'),compiled=read('compiler.js');
+  assert.match(choice,/\.qxframe9a7c2-selectgroup\.is-outline \.qxframe9a7c2-selectgroup-label/);
+  assert.match(choice,/padding:var\(--qxframe9a7c2-selectgroup-padding-block-start,/,
+    'source Field choice inset consumes shared Theme variable');
   assert.match(css,/\.qxframe9a7c2-field-title\{/);
   assert.match(css,/\.qxframe9a7c2-sidebar-menu-button\{/);
   assert.match(css,/\.qxframe9a7c2-sidebar-group-label\{/);
   for(const token of ['choice-field-inset','sidebar-menu-button-height']){
     assert.ok(read('tokens.js').includes("L('"+token+"'"),token+' Token schema');
     assert.ok(compiled.includes("root['"+token+"']"),token+' Theme recipe');
-    assert.ok(css.includes('var(--qxframe9a7c2-theme-'+token),token+' shared consumer');
+    assert.ok((css+choice).includes('var(--qxframe9a7c2-theme-'+token),token+' shared consumer');
   }
   const receiving=preview.slice(preview.indexOf('data-card="receiving-method"'),preview.indexOf('<!-- @end receiving-method -->'));
-  assert.equal((receiving.match(/class="qxframe9a7c2-check-field is-choice pv-choice-field"/g)||[]).length,2);
+  assert.equal((receiving.match(/class="qxframe9a7c2-selectgroup-item"/g)||[]).length,2);
+  assert.match(receiving,/qxframe9a7c2-selectgroup is-outline/);
   assert.equal((receiving.match(/class="qxframe9a7c2-field-title"/g)||[]).length,2);
   const sidebar=preview.slice(preview.indexOf('data-card="sidebar-nav"'),preview.indexOf('<!-- @end sidebar-nav -->'));
   assert.equal((sidebar.match(/class="qxframe9a7c2-sidebar-menu-button/g)||[]).length,18);
-  assert.doesNotMatch(app,/\.pv-nav-button(?:\:hover|\.is-active)?\s*\{/);
   const expectedChoice={vega:12,nova:10,maia:16,lyra:8,mira:8,luma:16,sera:16,rhea:16};
   for(const style of Object.keys(expectedChoice)){
     const body=model.compileTheme(model.normalizeConfig({style})).body;
     const px=name=>parseFloat(body.match(new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);'))?.[1])*16;
     assert.equal(px('choice-field-inset'),expectedChoice[style],style+' pinned Field child padding');
-    assert.equal(px('sidebar-menu-button-height'),['maia','luma','sera'].includes(style)?36:32,style+' pinned sidebar row height');
+    assert.equal(px('sidebar-menu-button-height'),['maia','luma','sera'].includes(style)?36:32,style+' pinned sidebar height');
   }
 });
 
-check('Receiving Method radio choices use shared Field composition, not custom Cards', () => {
-  const html=read('preview-01.html');
-  const section=html.slice(html.indexOf('data-card="receiving-method"'),
-    html.indexOf('<!-- @end receiving-method -->'));
-  assert.equal((section.match(/class="qxframe9a7c2-check-field is-choice pv-choice-field"/g)||[]).length,2);
+check('Receiving Method radio uses Outline SelectGroup and source Theme columns', () => {
+  const html=read('preview-01.html'),section=html.slice(html.indexOf('data-card="receiving-method"'),html.indexOf('<!-- @end receiving-method -->'));
+  assert.equal((section.match(/class="qxframe9a7c2-selectgroup-item"/g)||[]).length,2);
   assert.equal((section.match(/class="qxframe9a7c2-field-content"/g)||[]).length,2);
-  assert.match(section,/class="qxframe9a7c2-choice-group"/,'source RadioGroup must consume shared ChoiceGroup');
+  assert.match(section,/class="qxframe9a7c2-choice-group"/,'external Flex group owns columns');
+  assert.match(section,/class="qxframe9a7c2-selectgroup is-outline"/,'appearance is explicit Outline');
+  assert.doesNotMatch(section,/check-field|pv-choice-field/);
   const compos=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
-  assert.match(compos,/\.qxframe9a7c2-choice-group\{[^}]*var\(--qxframe9a7c2-choice-group-columns,var\(--qxframe9a7c2-theme-choice-group-columns,2\)\)/,
-    'public local column override has precedence over Theme columns');
+  assert.match(compos,/\.qxframe9a7c2-choice-group\{[^}]*var\(--qxframe9a7c2-choice-group-columns,var\(--qxframe9a7c2-theme-choice-group-columns,2\)\)/);
   for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
     const m=theme.match(/--qxframe9a7c2-theme-choice-group-columns:\s*([12]);/);
-    assert.ok(m,style+' missing ChoiceGroup theme role');
+    assert.ok(m,style+' missing ChoiceGroup Theme columns');
     assert.equal(+m[1],style==='sera'?1:2,style+' source choice columns');
   }
-
-  assert.doesNotMatch(section,/pv-choice-card/,'no invented private Radio choice surface');
   const css=read('preview.css');
-  assert.match(css,/\.pv-choice-field\s*\{\s*--qxframe9a7c2-choice-field-padding-bottom:\s*\.625rem;/,
-    'pinned Field option sets 10px local inset via public component variable');
-  const shared=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
-  assert.match(shared,/padding-block-end:var\(--qxframe9a7c2-choice-field-padding-bottom,/,
-    'shared CheckField consumes authored source pb-2.5 rather than app-owned padding');
-  assert.doesNotMatch(css,/\.pv-choice-card(?:\s|\{|\:)/,'obsolete custom Card styling must be absent');
+  assert.doesNotMatch(css,/\.pv-choice-field/,'Preview must not own the choice inset');
+  const shared=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  assert.match(shared,/--qxframe9a7c2-selectgroup-padding-block-end/,'public local choice end inset');
 });
 
 check('Sera editorial ItemTitle consumes shared theme text transformation rather than forcing nowrap', () => {
@@ -542,15 +536,15 @@ check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', 
   }
 });
 
-check('Checkbox Field uses the shared horizontal Field gap role', () => {
-  const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
-  assert.match(css,/\.qxframe9a7c2-check-field\{[^}]*gap:var\(--qxframe9a7c2-check-field-gap,var\(--qxframe9a7c2-theme-field-gap/);
+check('Checkbox SelectGroup Flex consumes Theme Field gap', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-selectgroup\{--qxframe9a7c2-layout-gap:var\(--qxframe9a7c2-theme-field-gap/);
   const expected={vega:12,nova:8,maia:12,lyra:8,mira:8,luma:12,sera:12,rhea:12};
   for(const [style,pixels] of Object.entries(expected)){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
     const m=theme.match(/--qxframe9a7c2-theme-field-gap:\s*([^;]+);/);
-    assert.ok(m,style+' has Field role');
-    assert.equal(parseFloat(m[1])*16,pixels,style+' Checkbox Field gap');
+    assert.ok(m,style+' has Field gap role');
+    assert.equal(parseFloat(m[1])*16,pixels,style+' native Choice horizontal gap');
   }
 });
 
@@ -624,7 +618,7 @@ check('QX shape, Luma switch and shared layout contracts', () => {
   const radio = file('src/styles/components/choice-visual.css');
   assert.match(radio, /radio-dot-radius/);
   const composition = file('src/styles/components/composition.css');
-  for (const name of ['flex', 'stack', 'field-group', 'check-field', 'divider', 'swatch-cell']) {
+  for (const name of ['flex', 'stack', 'field-group', 'selectgroup', 'divider', 'swatch-cell']) {
     assert.ok(composition.includes('.qxframe9a7c2-' + name), 'missing shared static primitive ' + name);
   }
   for (const page of ['preview-01.html', 'preview-02.html']) {

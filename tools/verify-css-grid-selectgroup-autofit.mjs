@@ -2,21 +2,16 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 import {readCanonicalComponentStyleSource} from './style-source.mjs';
-
+import fs from 'node:fs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const css=readCanonicalComponentStyleSource({root});
-
-assert.match(css,/\.qxframe9a7c2-selectgroup-item\{flex:1 1 var\(--_qxframe9a7c2-selectgroup-item-basis,0\);min-width:var\(--_qxframe9a7c2-selectgroup-item-min-width,0\)\}/);
-for(const mode of ['is-image-grid','is-boxes']){
-  const rule=css.split('.qxframe9a7c2-selectgroup.'+mode+'{')[1]?.split('}')[0]||'';
-  assert.ok(rule,'Missing SelectGroup flex mode: '+mode);
-  assert.match(rule,/display:flex/,'SelectGroup '+mode+' must remain Flex.');
-  // v3 stage 2b may inline the root constant; basis and min-width must still share one value.
-  const basis=rule.match(/--_qxframe9a7c2-selectgroup-item-basis:([^;]+)/)?.[1];
-  const minWidth=rule.match(/--_qxframe9a7c2-selectgroup-item-min-width:([^;]+)/)?.[1];
-  assert.ok(basis&&/^(?:var\(--[^)]+\)|calc\([^;]+\)|-?\d*\.?\d+rem)$/.test(basis),'SelectGroup '+mode+' basis must have one shared geometry owner.');
-  assert.equal(minWidth,basis,'SelectGroup '+mode+' min-width must share the basis owner.');
-  assert.doesNotMatch(rule,/display:grid|grid-template-columns/,'SelectGroup '+mode+' must not reintroduce Grid.');
+const docs=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
+assert.match(css,/\.qxframe9a7c2-selectgroup\{display:flex;flex-wrap:wrap/,'SelectGroup uses Flex');
+assert.match(css,/\.qxframe9a7c2-selectgroup-item\{position:relative/,'Item is independent of group layout');
+for(const mode of ['is-image-grid','is-boxes','is-color-grid','is-pill','is-toolbar','is-filled','is-buttons']){
+  assert.doesNotMatch(css,new RegExp('\\.qxframe9a7c2-selectgroup\\.'+mode+'\\b'),'retired scene mode must have no CSS owner: '+mode);
+  assert.doesNotMatch(docs,new RegExp('selectgroup '+mode+'\\b'),'retired scene mode must have no docs consumer: '+mode);
 }
-
-console.log(JSON.stringify({ok:true,batch:'selectgroup-auto-fit-to-flex',convertedRules:2,retiredThemeSizeDependency:false}));
+assert.match(css,/\.qxframe9a7c2-selectgroup\.is-connected\.is-outline/,'connected is a separate shared seam contract');
+assert.doesNotMatch(css,/\.qxframe9a7c2-selectgroup\{[^}]*display:grid/);
+console.log(JSON.stringify({ok:true,batch:'selectgroup-composable-layout',removedSceneModes:7,connectedShared:true}));

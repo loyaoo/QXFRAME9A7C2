@@ -321,7 +321,7 @@ try {
         record.qx=await nodeStructure(false,id);
         if(id==='receiving-method'&&['maia','luma'].includes(style)){
           const srcRow=record.source.find(x=>x.tag==='label'&&x.h>70&&x.h<95&&x.w<200);
-          const qxRow=record.qx.find(x=>x.className.includes('qxframe9a7c2-check-field is-choice'));
+          const qxRow=record.qx.find(x=>x.className.includes('qxframe9a7c2-selectgroup-item'));
           if(!srcRow||!qxRow||Math.abs(srcRow.h-91.5)>.5||Math.abs(qxRow.h-srcRow.h)>.5)
             throw new Error(style+' source-locked RadioField row geometry mismatch: '+JSON.stringify({source:srcRow,qx:qxRow}));
         }
@@ -475,7 +475,7 @@ try {
           const sourceRow=record.source.find(n=>n.className.includes('cn-field group/field'));
           // CheckField center is now the default; keep exact source row/Card geometry
           // comparisons while removing the legacy per-Card is-center dependency.
-          const qxRow=record.qx.find(n=>n.className==='qxframe9a7c2-check-field');
+          const qxRow=record.qx.find(n=>n.className==='qxframe9a7c2-selectgroup-item');
           if(!sourceRow||!qxRow||Math.abs(sourceRow.h-16)>.5||
             Math.abs(qxRow.h-sourceRow.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' notification horizontal checkbox align/source Card mismatch: '+JSON.stringify({sourceRow,qxRow,source:record.source[0],qx:record.qx[0]}));
