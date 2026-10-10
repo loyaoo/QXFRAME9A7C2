@@ -27,3 +27,5 @@ Theme → 组件映射，不产生卡片私有 `pv-*` 样式或新增 JS Control
 - 键盘焦点继续使用框架 2px focus-visible；鼠标焦点在 Theme v2 的 `@scope (:root)` 中复用独立 Input 的 `--qxframe9a7c2-theme-pointer-width/opacity/offset`，默认 0 宽保留 border feedback，配置不为 0 时由 Group 外框单独绘制；避免内部重复 outline。
 - 分段 Tabs 不允许以删除滚动容器上下 padding 为代价修剪裁切。应使用固定 Scroll 轨道 = TabItem 高度 + 2 × 4px，Viewport 使用 border-box，Panels 不重复提供在当前源 Source Card 中已由 Tabs 轨道消费的 6px 空白；普通 Tabs 与垂直 Tabs 保留既有职责。
 - 原生 Select 的箭头为与 JS Select 相同的 round-stroke SVG chevron-down，使用可替换 CSS 图像 token（数据 URI 图像不继承 currentColor，所以光暗模式分别提供中性色笔画）。
+
+- 焦点协议门禁补充：输入组的指针 outline 必须以真实子 Input 的 `:focus-visible` 匹配为前提；不可仅靠 Root `:focus-within` 绘制轮廓，因为普通鼠标/程序化 focus 与键盘 focus 需要统一 FocusOrigin 解释。可用 `:has(> .form-input:focus-visible)` 投射到 border owner，再通过 `html:not(.qxframe9a7c2-keyboard-focus-origin)` 区分指针。

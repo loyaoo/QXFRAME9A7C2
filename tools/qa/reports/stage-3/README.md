@@ -1,3 +1,11 @@
+# FocusOrigin no-bare-focus-within outline correction
+
+## CURRENT — 2026-10-10 FocusOrigin verifier correction
+- QXFRAME `38023345059` Release rejected any `:focus-within` block that draws `outline`, even under non-keyboard html origin. Correctly enforced shared runtime FocusOrigin contract; NOT disabled.
+- InputGroup pointer rule now projects from actual `FormInput:focus-visible` / `Input:focus-visible` through parent `:has()`, with pointer origin class filter, rather than :focus-within. Browser test against official earlier offline base confirmed theme Pointer **3px width/2px offset** and keyboard **2px/-1px** simultaneously. The old Group `:focus-within` border color, which draws NO outline, is preserved.
+- Keep same visual acceptance and 4px segmented rail; repeat both CI workflows after commit. No core JS modifications.
+
+
 # Strict FAQ Tabs source slot assertion modernization
 
 ## CURRENT — 2026-10-10 FAQ rail static source assertion updated after real geometry proof

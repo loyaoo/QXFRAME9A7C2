@@ -450,9 +450,12 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
  * It must sit in the shared composition cascade, NOT on an html descendant
  * inside @scope(:root) (the :root scope boundary cannot contain another
  * html element, so such a selector never matches). This selector's focus
- * origin is separate from the keyboard 2px visual owner above. */
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:focus-within{
+ * origin is separate from the keyboard 2px visual owner above; no bare
+ * :focus-within outline (forbidden by the FocusOrigin contract). */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input:focus-visible){
   outline:var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab,var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
   outline-offset:var(--qxframe9a7c2-theme-pointer-offset)
 }

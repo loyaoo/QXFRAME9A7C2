@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 FocusOrigin verifier correction
+- QXFRAME `38023345059` Release rejected any `:focus-within` block that draws `outline`, even under non-keyboard html origin. Correctly enforced shared runtime FocusOrigin contract; NOT disabled.
+- InputGroup pointer rule now projects from actual `FormInput:focus-visible` / `Input:focus-visible` through parent `:has()`, with pointer origin class filter, rather than :focus-within. Browser test against official earlier offline base confirmed theme Pointer **3px width/2px offset** and keyboard **2px/-1px** simultaneously. The old Group `:focus-within` border color, which draws NO outline, is preserved.
+- Keep same visual acceptance and 4px segmented rail; repeat both CI workflows after commit. No core JS modifications.
+
+
 ## CURRENT — 2026-10-10 FAQ rail static source assertion updated after real geometry proof
 - Official QXFRAME run `38023226924` Release failed only on stale static assertion requiring old `--tabs-height:calc(... - .375rem)`; the component now uses `- .5rem` because 4px+4px vertical rail padding has been restored. Local Chromium demonstrated FAQ Card remains 355px, with Scroll rail 32px, Viewport padding-block 4px each and TabItem 24px fully visible. Strict source-locked Card and TabItem browser gates remain; update static assertion to match the new correct public Tabs slot mapping, do not remove the gate.
 - Await the separate same-browser source geometry job result; rerun both workflows at new HEAD. PR Draft.
