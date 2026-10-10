@@ -1,3 +1,11 @@
+# Focus shadow browser transition acceptance
+
+## CURRENT — 2026-10-10 Button pointer halo first-frame browser-test correction
+- Failing QXFRAME `38026688662` / CSS `38026688667`: all group/native pointer/keyboard halos pass, only Button mouse halo test sampled two transparent shadows immediately after `focus()`.
+- New instrumented CI `38027357014` showed Button `document.activeElement===button`, :focus true, selector true, pointer Theme token **red 3px** properly inherited, no disabled state. `button.css` has `transition:box-shadow var(--_qxframe9a7c2-fixed-motion-duration-3)`; synchronous getComputedStyle sampled the first 0px transparent transition frame, not the final halo.
+- Browser test now verifies selector/token immediately, awaits 450ms for the existing transition, then strictly checks the actual painted red 3px shadow and persistent focus. No production behavior changes, no reduced assertions or skipped tests. Preserve pinned source/Card gates; rerun both CI. PR Draft, main/backup unchanged.
+
+
 # Current focus shadow diagnostic
 
 ## CURRENT — 2026-10-10 exact focus rendering diagnostic before repair
