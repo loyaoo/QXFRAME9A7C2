@@ -1883,8 +1883,21 @@ try {
       assert.equal(r.disabled,'not-allowed','native disabled cursor');
       assert.equal(r.error,r.expected,'FieldError warning matches Theme');
       assert.notEqual(r.description,r.expected,'FieldDescription stays muted');
-      assert.deepEqual(r.pointerPixels,r.expectedPixels,'pointer Focus preserves warning border paint');
-      assert.deepEqual(r.keyboardPixels,r.expectedPixels,'keyboard Focus preserves warning border paint');
+      // Chromium serializes an identical OKLab color as oklab(...) or oklch(...)
+      // depending on whether its source went through color-mix(). Compare in
+      // the same color space, without 8-bit Canvas rounding or a weakened gate.
+      const toLab=value=>{
+        const m=/^(oklab|oklch)\(\s*([\d.+-]+)\s+([\d.+-]+)\s+([\d.+-]+)\s*\)$/.exec(value);
+        assert.ok(m,'browser color must be OKLab/OKLCH: '+value);
+        const l=Number(m[2]),a=Number(m[3]),b=Number(m[4]);
+        return m[1]==='oklab'?[l,a,b]:[l,a*Math.cos(b*Math.PI/180),a*Math.sin(b*Math.PI/180)];
+      };
+      const expectedLab=toLab(r.expected);
+      for(const [name,value] of [['pointer',r.pointerInput],['keyboard',r.keyboardInput]]){
+        const received=toLab(value);
+        assert.ok(received.every((channel,i)=>Math.abs(channel-expectedLab[i])<0.00001),
+          name+' Focus must preserve exact warning paint: '+JSON.stringify({received,expectedLab,mode:r.dark,appearance:r.appearance}));
+      }
       assert.deepEqual(r.before,[['mode','one']]);
       assert.deepEqual(r.after,[['mode','two']]);
       assert.deepEqual(r.reset,[['mode','one']]);
