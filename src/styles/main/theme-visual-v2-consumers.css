@@ -67,13 +67,17 @@
 @scope (:root) {
  .qxframe9a7c2-input:hover:not(:focus-within):not(.is-focused):not(.is-expanded):not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning){
    --_qxframe9a7c2-state-border:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength));
-   --_qxframe9a7c2-state-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-field),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
+   --_qxframe9a7c2-state-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-field),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength));
+   --_qxframe9a7c2-v2-control-border:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength));
+   --_qxframe9a7c2-v2-control-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-field),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
  }
  .qxframe9a7c2-form-input:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
  .qxframe9a7c2-form-select:hover:not(:focus):not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
  .qxframe9a7c2-form-textarea:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
    --_qxframe9a7c2-native-field-border:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength));
-   --_qxframe9a7c2-native-field-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-field),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
+   --_qxframe9a7c2-native-field-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-field),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength));
+   --_qxframe9a7c2-v2-control-border:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength));
+   --_qxframe9a7c2-v2-control-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-field),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
  }
 }
 /* Independent Pointer/Keyboard color projection; no false keyboard outline on pointer. */

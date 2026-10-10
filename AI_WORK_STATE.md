@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-10 CREATEAPP-V3-S3 consolidated V2 Hover paint and Connected orientation (CI pending)
+- Parent HEAD 0e6599639ec2fa17e7f736493283e5590579e293, PR #265 Draft/unmerged, both official workflows SUCCESS.
+- Seven-axis Hover consumer previously changed only --_qxframe9a7c2-state-* or --_qxframe9a7c2-native-field-*; Theme V2's late physical painter uses --_qxframe9a7c2-v2-control-border/bg. Unified native Input/Select/Textarea and JS Input Hover to actual V2 paint owner, without new public token. The existing Theme Hover style strengths 0/30% and 0/15% continue to control Border/Background/Both/None.
+- Preserved Field is-invalid/is-warning as a stronger V2 Hover feedback owner. Added strict CSS verifier checks.
+- Connected horizontal first/last Theme corners now match ONLY direct Items or Items inside direct Flex; independent Stack's top/bottom geometry cannot inherit horizontal start/end corners. Field/SelectGroup native FormData/reset unchanged.
+- No changes to Preview card DOM; offline QA marker remains empty. Before acceptance run complete same-HEAD CSS Schema, Release, geometry, Windows CI and return official same-HEAD dist/docs Windows ZIP; PR remains Draft.
+
 ## CURRENT — 2026-10-10 S3 Theme V2 Field Focus and feedback correction (CI pending)
 - Previous candidate 53abce75 failed true Chromium test: warning Field native Input was neutral, despite a parent is-warning. Root cause is the later Theme V2 consumer's hardcoded ring and V2 control border override, not the old native input token. Geometry and Windows-tools already succeeded.
 - Repair: seven-axis keyboard/pointer focus feeds --_qxframe9a7c2-v2-control-border; the existing Theme V2 appearance painter now consumes that slot (instead of hardcoded ring). Focused Field is-warning/is-invalid supplies a stronger V2 color token without introducing duplicate physical border/outline ownership. Nonfocused Field error/warning stays on its existing classes. No new Theme tokens or JS runtime.

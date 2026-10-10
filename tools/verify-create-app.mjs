@@ -79,6 +79,21 @@ check('segmented Tabs use the pinned source dark active input/30 recipe', () => 
   assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-choice-border\)\)/,'shared choice border recipe retains source Luma/Rhea transparent policy');
 });
 
+check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
+  const consumer=read('src/styles/main/theme-visual-v2-consumers.css');
+  const style=read('src/styles/main/theme-visual-v2-style-consumers.css');
+  const structure=read('src/styles/components/composition.css');
+  for(const name of ['hover-border-strength','hover-background-strength','hover-color']){
+    assert.ok(consumer.includes('--qxframe9a7c2-theme-'+name),'real Theme Hover token '+name);
+  }
+  assert.match(consumer,/--_qxframe9a7c2-v2-control-border:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field-border\)/,'native and JS Hover must update V2 physical border owner');
+  assert.match(consumer,/--_qxframe9a7c2-v2-control-bg:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field\)/,'native and JS Hover must update V2 physical background owner');
+  assert.match(style,/\.qxframe9a7c2-field\.is-warning \.qxframe9a7c2-form-input:hover:not\(:disabled\)/,'warning feedback wins on hover');
+  assert.match(style,/\.qxframe9a7c2-field\.is-invalid \.qxframe9a7c2-form-input:hover:not\(:disabled\)/,'invalid feedback wins on hover');
+  assert.match(structure,/is-connected\.is-outline>\.qxframe9a7c2-flex>\.qxframe9a7c2-selectgroup-item:first-child/,'horizontal corners scoped to Flex');
+  assert.doesNotMatch(structure,/is-connected\.is-outline \.qxframe9a7c2-selectgroup-item:first-child/,'horizontal corner cannot leak to vertical Stack');
+});
+
 check('SelectGroup replaces CheckField without a duplicate choice Field owner', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const selectCss=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
