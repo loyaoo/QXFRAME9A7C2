@@ -352,6 +352,11 @@ export function themeTokens(resolved) {
   const sourceSmInline={vega:.625,nova:.625,maia:.75,lyra:.625,mira:.5,luma:.75,sera:1,rhea:.75};
   const sourceDensity={vega:'standard',nova:'compact',maia:'standard',lyra:'compact',mira:'dense',luma:'standard',sera:'loose',rhea:'compact'};
   root['button-sm-padding-inline']=rem(Math.max(.5,sourceSmInline[style]+(padding-DENSITY[sourceDensity[style]][1])));
+  // Source Button size-sm is 14px for standard styles, 12.8px in Nova,
+  // and 12px in Lyra/Mira/Sera. Unlike the generic QX size curve, the
+  // source does NOT shrink icon-sm and text-sm typography by 2px.
+  // Derive from the chosen typography axis, never hardcode this in Preview CSS.
+  root['button-sm-font-size']=rem(Math.min(controlFont,editorial?.75:(style==='nova'?.8:controlFont)));
   root['control-gap'] = rem(gap);
   root['control-icon'] = rem(icon);
   // Editorial (Sera) controls use text-xs uppercase labels.

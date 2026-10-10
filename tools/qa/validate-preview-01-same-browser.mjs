@@ -72,6 +72,31 @@ assert.equal(structuralCounts.field,128,'8 source Field Card groups × 16 theme 
 assert.deepEqual(structuralErrors,[],'source-paired nested Item/Field visual geometry differs: '+JSON.stringify(structuralErrors.slice(0,24)));
 console.log('[stage3-nested-strict-parity] '+JSON.stringify({roles:structuralRoles,item:structuralCounts.item,field:structuralCounts.field,assertions:304*7,errors:structuralErrors.length}));
 
+// Source-paired small Button glyph+label typography; unlike the generic QX
+// five-size curve, pinned shadcn size=sm/icon-sm does not always shrink text.
+// All sampled buttons are the first small action for these 7 source Cards,
+// including two intrinsic-width outline actions and five icon-only headers.
+const smallButtonCards=['dividend-income','payout-threshold','preferences',
+  'savings-targets','recent-transactions','transfer-funds','receiving-method'];
+const smallButtonCounts={},smallButtonIssues=[];
+for(const row of nested.rows){
+  if(!smallButtonCards.includes(row.card))continue;
+  smallButtonCounts[row.card]=(smallButtonCounts[row.card]||0)+1;
+  const a=row.source?.button,b=row.qx?.button;
+  if(!a||!b){smallButtonIssues.push({card:row.card,style:row.style,mode:row.mode,reason:'missing button'});continue;}
+  // Compare the type scale in pixels, and source-driven intrinsic width for
+  // the two text actions. Square icon-sm buttons keep their prior width.
+  for(const prop of row.card==='savings-targets'||row.card==='recent-transactions'
+    ? ['fontSize','fontWeight','w','h'] : ['fontSize','fontWeight','w','h']){
+    const x=parseFloat(a[prop]),y=parseFloat(b[prop]);
+    if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x-y)>.5)
+      smallButtonIssues.push({card:row.card,style:row.style,mode:row.mode,prop,source:a[prop],qx:b[prop]});
+  }
+}
+for(const card of smallButtonCards)assert.equal(smallButtonCounts[card],16,'small Button source sample missing '+card);
+assert.deepEqual(smallButtonIssues,[],'source-pinned small Button type/width geometry mismatch: '+JSON.stringify(smallButtonIssues.slice(0,22)));
+console.log('[stage3-small-button-parity] '+JSON.stringify({cards:smallButtonCards,count:112,checks:448,issues:smallButtonIssues.length}));
+
 const badgeCards=['claimable-balance','front-door','release-catalog','upcoming-payments'];
 const badgeFailures=[],badgeCounts={};
 for(const row of nested.rows){

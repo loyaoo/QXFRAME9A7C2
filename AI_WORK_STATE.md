@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 Stage3 seven-card source Button type parity (NEW CI PENDING)
+
+- Pinned shadcn same-Chromium `inner-roles.json` found actual 7-Card **small Button** deviations: 5 Header icon-sm Cards rendered QX 12px vs source 14px for Vega/Nova/Maia/Luma/Rhea; in Savings Targets and Recent Transactions the source text-sm type was 14px (Nova 12.8px) vs QX 12px, shortening intrinsic widths. Lyra/Mira/Sera intentionally remain 12px. This is not wrapper noise; exact same DOM role and fontSize differ.
+- Added one closed Theme token `button-sm-font-size` consumed in shared `button.css`, derived from existing user typography axis and pinned source-style Nova exception; no per-card CSS, no JS code. Source-paired mandatory **7 Cards × 16 light/dark Style cases × 4 font/size properties = 448 strict Button checks**. Any measured >0.5px discrepancy fails CI, in addition to existing 528 outer geometry, 2,128 Item/Field and 384 Badge checks.
+- Offline QA ledger replaced with current **7 Cards / 8 precise inner regions**, including all five Recent Transactions row buttons, previous Badge highlights cleared. Changes in existing `src/styles/components/button.css` and generated Theme tokens. PR #265 remains Draft, main/backup untouched. **Current progress estimate remains Stage3 ~85%, overall ~69%** until final same-HEAD two-green CI and wider visual/pixel validation; no claim of 100% without owner acceptance.
+- Pending steps: run QXFRAME + CSS Schema; if computed source width drift is found, fix shared sizing without weakening or deleting the new gate; then build official Actions Windows dist+docs QA artifact and verify marker rotation. Full nested/pixel manual acceptance still open.
+
+
 ## CURRENT — 2026-10-10 Stage3 ≥15-point acceptance scope — nested universal primitives + semantic Badge paints (FINAL CI PENDING)
 
 - Locked shadcn reference `295a1f114a138f23b5dfee0e0c6812394dfeb90c`. Expanded **same-Chromium** 33 example Cards × 8 styles × light/dark = **528 source/QX Card pairs, 1,856 shared nested-role samples** in one renderer/process; 0 missing cards. Retains strict 528 first-Card geometry and height gates; wrapper difference diagnostics are explicitly NOT counted as visual failures (source uses root padding; QX distributes padding into Header/Content/Footer). Full pixel acceptance still outstanding.

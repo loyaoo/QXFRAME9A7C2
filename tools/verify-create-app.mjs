@@ -20,23 +20,27 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'claimable-balance':['.qxframe9a7c2-badge.is-status-label.is-outlined'],
-    'front-door':['.qxframe9a7c2-badge.is-status-label.is-destructive'],
-    'release-catalog':['.qxframe9a7c2-badge.is-status-label.is-outlined'],
-    'upcoming-payments':['.qxframe9a7c2-badge.is-status-label.is-secondary']
+    'dividend-income':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
+    'payout-threshold':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
+    'preferences':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
+    'savings-targets':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
+    'recent-transactions':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm',
+      '.qxframe9a7c2-card-content .qxframe9a7c2-button.is-sm.is-square'],
+    'transfer-funds':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
+    'receiving-method':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(preview.includes('data-card="'+id+'"'),'current QA card '+id);
-    assert.ok(ledger.includes("['"+id+"'"),'current QA ledger card '+id);
-    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'current inner QA target '+id);count++;}
+    assert.ok(preview.includes('data-card="'+id+'"'),'source Card '+id);
+    assert.ok(ledger.includes("['"+id+"'"),'active-only QA ledger card '+id);
+    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'inner target '+id);count++;}
   }
-  for(const id of ['qr-connect','cover-art','social-links','faq','payout-threshold','preferences',
-    'transfer-funds','stock-performance','kitchen-island','roller-shades','release-catalog-old',
-    'notification-settings','savings-targets','account-access','receiving-method','new-milestone'])
-    assert.ok(!ledger.includes("['"+id+"'"),'old yellow group must not accumulate '+id);
-  assert.equal(count,4,'four current Badge role regions');
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,4,'only current Badge QA markers');
+  for(const id of ['claimable-balance','front-door','release-catalog','upcoming-payments',
+    'qr-connect','cover-art','social-links','faq','stock-performance','kitchen-island',
+    'roller-shades','notification-settings','account-access','new-milestone'])
+    assert.ok(!ledger.includes("['"+id+"'"),'previous-yellow group absent '+id);
+  assert.equal(count,8,'seven Cards with eight changed regions');
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,8,'exactly eight active regions');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -47,6 +51,15 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const page of ['index.html','preview-01.html','preview-02.html'])
     assert.doesNotMatch(read(page),/offline-qa-changes/,
       'QA visuals are forbidden in source / online Create HTML: '+page);
+});
+
+check('small Button typography consumes one source-mapped Theme token', () => {
+  const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+  const tokens=fs.readFileSync(path.join(root,'docs/create/tokens.js'),'utf8');
+  const button=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
+  assert.match(tokens,/L\('button-sm-font-size'/,'closed theme schema');
+  assert.match(compiler,/root\['button-sm-font-size'\]/,'compiler emits independent style recipe');
+  assert.match(button,/\.qxframe9a7c2-button\.is-sm\{\s*font-size:var\(--qxframe9a7c2-theme-button-sm-font-size/,'shared QX Button consumes Theme');
 });
 
 check('pages load the online qxframe.js and the local qxframe.css only', () => {

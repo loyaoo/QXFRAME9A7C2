@@ -1,16 +1,26 @@
-/** Current-round ONLY: semantic Badge visual role parity across 16 themes. */
+/** Active QA ONLY: seven source-paired small Button typography cards. */
 const groups = [
-  ['claimable-balance','Claimable Balance · Outline Badge',[
-    ['.qxframe9a7c2-badge.is-status-label.is-outlined','Pending Setup','来源 Outline 主题半透明背景在 Maia/Mira 暗亮联动，保持原有 Badge 排版尺寸','__QA_BUNDLE_HEAD__']
+  ['dividend-income','Dividend Income · 图标按钮',[
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','源主题 icon-sm 字号跟随 style 而非统一缩小 2px','__QA_BUNDLE_HEAD__']
   ]],
-  ['front-door','Front Door · Destructive Badge',[
-    ['.qxframe9a7c2-badge.is-status-label.is-destructive','Live Badge','危险状态由实心色改为上游 10% 透明底色/语义前景，Mira/Sera 尺寸联动','__QA_BUNDLE_HEAD__']
+  ['payout-threshold','Payout Threshold · 图标按钮',[
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','14px / 12px 的上游 Button 字号在 8 种 Style 同步','__QA_BUNDLE_HEAD__']
   ]],
-  ['release-catalog','Release Catalog · Outline Badges',[
-    ['.qxframe9a7c2-badge.is-status-label.is-outlined','Ticker 类型徽标','四处 ETF / Stock / REIT 徽标统一字号字重、描边与 Sera 紧凑标签','__QA_BUNDLE_HEAD__']
+  ['preferences','Preferences · 图标按钮',[
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','QX Button 字号改为消费 Theme button-sm-font-size','__QA_BUNDLE_HEAD__']
   ]],
-  ['upcoming-payments','Upcoming Payments · Secondary Badges',[
-    ['.qxframe9a7c2-badge.is-status-label.is-secondary','支付金额徽标','三处金额使用 Theme Secondary 语义，中性色与编辑式尺寸统一','__QA_BUNDLE_HEAD__']
+  ['savings-targets','Savings Targets · New Goal',[
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','New Goal','源文字尺寸恢复 14px（Nova 12.8px），同时修复按钮自然宽度','__QA_BUNDLE_HEAD__']
+  ]],
+  ['recent-transactions','Recent Transactions · 操作按钮',[
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','View All','源字体大小与自然宽度随主题一致','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-card-content .qxframe9a7c2-button.is-sm.is-square','每行更多操作','表格中的五个小图标按钮使用同一 Theme 字号','__QA_BUNDLE_HEAD__']
+  ]],
+  ['transfer-funds','Transfer Funds · 图标按钮',[
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','源 icon-sm 字号恢复并保留 QX 自有主题尺寸','__QA_BUNDLE_HEAD__']
+  ]],
+  ['receiving-method','Receiving Method · 图标按钮',[
+    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','源 icon-sm 字体大小跟随 Style 与字体设置','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
