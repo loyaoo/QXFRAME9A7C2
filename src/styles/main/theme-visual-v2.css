@@ -436,7 +436,7 @@
 
   /* GEOMETRY qx-md-1: public md lengths -> local fixed CSS rules.
      Every independent root owns index zero; connected groups explicitly share it. */
-  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-text-field[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class], .qxframe9a7c2-form-selectgroup[class], .qxframe9a7c2-form-check[class], .qxframe9a7c2-form-check-input[class], .qxframe9a7c2-form-segmented[class], .qxframe9a7c2-button-group[class], .qxframe9a7c2-input-group[class], .qxframe9a7c2-form-group[class], .qxframe9a7c2-tags[class], .qxframe9a7c2-tag[class], .qxframe9a7c2-badge[class], .qxframe9a7c2-input-otp[class], .qxframe9a7c2-switch[class], .qxframe9a7c2-slider[class], .qxframe9a7c2-progress[class], .qxframe9a7c2-rate[class], .qxframe9a7c2-card[class], .qxframe9a7c2-collapse[class], .qxframe9a7c2-descriptions[class], .qxframe9a7c2-avatar[class], .qxframe9a7c2-empty[class], .qxframe9a7c2-result[class], .qxframe9a7c2-list[class], .qxframe9a7c2-tree[class], .qxframe9a7c2-transfer[class], .qxframe9a7c2-table[class], .qxframe9a7c2-menu[class], .qxframe9a7c2-tabs[class], .qxframe9a7c2-steps[class], .qxframe9a7c2-pagination[class], .qxframe9a7c2-upload[class], .qxframe9a7c2-alert-root[class], .qxframe9a7c2-message[class], .qxframe9a7c2-notification[class], .qxframe9a7c2-popup-surface[class], .qxframe9a7c2-popover-root[class], .qxframe9a7c2-modal-root[class], .qxframe9a7c2-drawer-root[class], .qxframe9a7c2-calendar[class], .qxframe9a7c2-period-panel[class], .qxframe9a7c2-time-panel[class], .qxframe9a7c2-wheel-panel[class], .qxframe9a7c2-color-panel[class] {
+  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-text-field[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class], .qxframe9a7c2-form-selectgroup[class], .qxframe9a7c2-form-check[class], .qxframe9a7c2-form-check-input[class], .qxframe9a7c2-form-segmented[class], .qxframe9a7c2-button-group[class], .qxframe9a7c2-input-group[class], .qxframe9a7c2-form-input-group[class], .qxframe9a7c2-form-group[class], .qxframe9a7c2-tags[class], .qxframe9a7c2-tag[class], .qxframe9a7c2-badge[class], .qxframe9a7c2-input-otp[class], .qxframe9a7c2-switch[class], .qxframe9a7c2-slider[class], .qxframe9a7c2-progress[class], .qxframe9a7c2-rate[class], .qxframe9a7c2-card[class], .qxframe9a7c2-collapse[class], .qxframe9a7c2-descriptions[class], .qxframe9a7c2-avatar[class], .qxframe9a7c2-empty[class], .qxframe9a7c2-result[class], .qxframe9a7c2-list[class], .qxframe9a7c2-tree[class], .qxframe9a7c2-transfer[class], .qxframe9a7c2-table[class], .qxframe9a7c2-menu[class], .qxframe9a7c2-tabs[class], .qxframe9a7c2-steps[class], .qxframe9a7c2-pagination[class], .qxframe9a7c2-upload[class], .qxframe9a7c2-alert-root[class], .qxframe9a7c2-message[class], .qxframe9a7c2-notification[class], .qxframe9a7c2-popup-surface[class], .qxframe9a7c2-popover-root[class], .qxframe9a7c2-modal-root[class], .qxframe9a7c2-drawer-root[class], .qxframe9a7c2-date-panel[class], .qxframe9a7c2-calendar[class], .qxframe9a7c2-period-panel[class], .qxframe9a7c2-time-panel[class], .qxframe9a7c2-wheel-panel[class], .qxframe9a7c2-color-panel[class] {
     --_qxframe9a7c2-v2-size-index: 0;
     --_qxframe9a7c2-v2-size-ratio: calc(1 + var(--_qxframe9a7c2-v2-size-index) * .125);
     --_qxframe9a7c2-v2-font-step: clamp(-1, var(--_qxframe9a7c2-v2-size-index), 1);
@@ -470,30 +470,45 @@
   .qxframe9a7c2-input-group:not(.is-mixed-size) > .qxframe9a7c2-button,
   .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-form-input,
   .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-button { --_qxframe9a7c2-v2-size-index: inherit; }
+  /* Controls and multi-line Textarea share typography and padding, not
+     minimum height: Textarea's base 5rem and authored size overrides must win. */
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class] {
     height: auto;
-    min-height: var(--_qxframe9a7c2-control-height);
     padding-block: var(--_qxframe9a7c2-control-padding-block);
     font-size: var(--_qxframe9a7c2-control-font-size);
     line-height: var(--_qxframe9a7c2-control-line-height);
+  }
+  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
+    min-height: var(--_qxframe9a7c2-control-height);
+  }
+  /* The scoped V2 geometry owner is final for Button typography:
+     shadcn text-sm uses the source style scale (Nova 12.8px), while icon-sm
+     still inherits source body/control type (Nova 14px). Do not resize the
+     full control, or shadow this owner with an earlier component CSS rule. */
+  .qxframe9a7c2-button.is-sm{
+    font-size:var(--qxframe9a7c2-theme-button-sm-font-size,var(--_qxframe9a7c2-control-font-size));
+  }
+  .qxframe9a7c2-button.is-sm.is-square,
+  .qxframe9a7c2-button.is-sm.is-icon-only{
+    font-size:var(--qxframe9a7c2-theme-control-font-size,var(--_qxframe9a7c2-control-font-size));
   }
   .qxframe9a7c2-input > .qxframe9a7c2-input-control, .qxframe9a7c2-text-field > .qxframe9a7c2-input-control { height: auto; min-height: var(--_qxframe9a7c2-control-line-height); }
   .qxframe9a7c2-input.is-textarea { padding: 0; }
   .qxframe9a7c2-input.is-textarea > .qxframe9a7c2-input-control { min-height: calc(var(--_qxframe9a7c2-control-height) - 2px); }
   .qxframe9a7c2-button.is-square, .qxframe9a7c2-button.is-circle { padding-inline: 0; width: var(--_qxframe9a7c2-control-height); height: var(--_qxframe9a7c2-control-height); }
   .qxframe9a7c2-button.is-circle { border-radius: 50%; }
-  .qxframe9a7c2-button.is-square { border-radius: 0; }
+  /* is-square is geometric (width = height), not a hard-corner shape. */
   .qxframe9a7c2-card[class] {
-    --_qxframe9a7c2-card-padding: var(--_qxframe9a7c2-v2-surface-padding);
-    --_qxframe9a7c2-card-radius: var(--_qxframe9a7c2-surface-radius);
-    --_qxframe9a7c2-card-heading-gap: var(--_qxframe9a7c2-v2-surface-gap);
+    --_qxframe9a7c2-card-padding: var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding));
+    --_qxframe9a7c2-card-radius: var(--qxframe9a7c2-card-radius,var(--qxframe9a7c2-theme-radius-card));
+    --_qxframe9a7c2-card-heading-gap: var(--qxframe9a7c2-theme-card-meta-gap);
   }
   .qxframe9a7c2-switch[class] {
     --_qxframe9a7c2-switch-height: calc(var(--qxframe9a7c2-theme-switch-height) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
     --_qxframe9a7c2-switch-width: calc(var(--qxframe9a7c2-theme-switch-width) + var(--_qxframe9a7c2-v2-size-index) * .25rem);
     --_qxframe9a7c2-switch-padding: var(--qxframe9a7c2-theme-switch-inset);
-    --_qxframe9a7c2-switch-thumb-width: calc(var(--_qxframe9a7c2-switch-height) - var(--_qxframe9a7c2-switch-padding) * 2);
-    --_qxframe9a7c2-switch-thumb-height: var(--_qxframe9a7c2-switch-thumb-width);
+    --_qxframe9a7c2-switch-thumb-height: calc(var(--_qxframe9a7c2-switch-height) - var(--_qxframe9a7c2-switch-padding) * 2);
+    --_qxframe9a7c2-switch-thumb-width: var(--qxframe9a7c2-switch-thumb-width, min(calc(var(--_qxframe9a7c2-switch-thumb-height) + var(--qxframe9a7c2-theme-switch-thumb-extra)), calc(var(--_qxframe9a7c2-switch-width) - var(--_qxframe9a7c2-switch-padding) * 2 - .25rem)));
   }
   /* Track is a border box. Offsets are measured from its inner border edge. */
   .qxframe9a7c2-switch .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(var(--_qxframe9a7c2-switch-padding) - var(--_qxframe9a7c2-switch-track-border-width)); }
@@ -511,4 +526,23 @@
   }
   /* END GEOMETRY qx-md-1 */
 
+  /* Shared Badge label-size + role mapping (pinned shadcn preview-02):
+   * Destructive is a 10%-tinted semantic label, Secondary is the neutral
+   * background, Outline is the outlined role. Sera's editorial Badge policy
+   * suppresses the paint as well as the padding/border; no per-Card PV CSS. */
+  .qxframe9a7c2-badge.is-status-label.is-destructive{
+    background:var(--qxframe9a7c2-theme-badge-label-destructive-bg);
+    color:var(--qxframe9a7c2-theme-destructive);
+    border-color:var(--qxframe9a7c2-theme-badge-label-solid-border);
+  }
+  .qxframe9a7c2-badge.is-status-label.is-secondary{
+    background:var(--qxframe9a7c2-theme-badge-label-secondary-bg);
+    color:var(--qxframe9a7c2-theme-badge-label-secondary-fg);
+    border-color:var(--qxframe9a7c2-theme-badge-label-solid-border);
+  }
+  .qxframe9a7c2-badge.is-status-label.is-outlined{
+    background:var(--qxframe9a7c2-theme-badge-label-outline-bg,transparent);
+    color:var(--qxframe9a7c2-theme-foreground);
+    border-color:var(--qxframe9a7c2-theme-border);
+  }
 }

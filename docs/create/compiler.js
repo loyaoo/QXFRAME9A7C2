@@ -110,11 +110,12 @@ const SHADOW_TIERS = {
 };
 
 // Density: md height / inline padding / gap / icon (rem).
+// 28→32→36→40→44: horizontal inset must never decrease as density relaxes.
 const DENSITY = {
   dense: [1.75, 0.5, 0.25, 0.875],
   compact: [2, 0.625, 0.375, 1],
   standard: [2.25, 0.625, 0.375, 1],
-  loose: [2.5, 1.5, 0.375, 1],
+  loose: [2.5, 0.875, 0.375, 1],
   touch: [2.75, 1, 0.5, 1.25] // QX
 };
 const PADDING = { p12: 0.75, p16: 1, p20: 1.25, p24: 1.5, p28: 1.75, p32: 2 };
@@ -292,6 +293,21 @@ export function themeTokens(resolved) {
   if (style === 'nova' || style === 'lyra') look('field-disabled', 'input/50', 'input/80');
   else look('field-disabled', input.bg[0], input.bg[1]);
   root['field-sides'] = input.sides + '%';
+  // Static embedded Table: header is subdued only for editorial styles.
+  look('table-heading-foreground', ext.textStyle === 'editorial' ? 'muted-foreground' : 'foreground');
+  // Pinned shadcn Badge outline variant: Maia uses border/30, Mira border/20
+  // in light; both use foreground/4.5 in dark. Other styles transparent.
+  // One semantic token instead of style-dependent Badge CSS selectors.
+  look('badge-label-outline-bg',
+    style === 'maia' ? 'border/30' : style === 'mira' ? 'border/20' : 'transparent',
+    style === 'maia' || style === 'mira' ? 'foreground/4.5' : 'transparent');
+  // At one Theme owner: source-pinned Badge dark/light/editorial paint.
+  look('badge-label-destructive-bg',
+    ext.textStyle === 'editorial' ? 'transparent' : 'destructive/10',
+    ext.textStyle === 'editorial' ? 'transparent' : 'destructive/20');
+  look('badge-label-secondary-bg', ext.textStyle === 'editorial' ? 'transparent' : 'secondary');
+  look('badge-label-secondary-fg', ext.textStyle === 'editorial' ? 'muted-foreground' : 'secondary-foreground');
+  look('badge-label-solid-border', ext.textStyle === 'editorial' ? 'border' : 'transparent');
 
   // Choice, switch, slider (style looks).
   look('choice', looks.choice[0], looks.choice[1]);
@@ -303,9 +319,21 @@ export function themeTokens(resolved) {
   look('thumb', looks.thumb);
   look('thumb-border', looks.thumbBorder);
 
-  // Focus color: mono = black in light, white in dark (QX); theme = primary.
-  if (ext.focusColor === 'theme') look('focus', 'primary');
-  else { light.focus = 'oklch(0 0 0)'; dark.focus = 'oklch(1 0 0)'; }
+  // Independent hover / keyboard / pointer color sources.
+  // "black-white" means light black and dark white, not one shared color setting.
+  const assignInteractionColor = (name, choice) => {
+    if (choice === 'black-white') { light[name] = 'oklch(0 0 0)'; dark[name] = 'oklch(1 0 0)'; }
+    else look(name, choice === 'theme' ? 'primary' : 'ring');
+  };
+  assignInteractionColor('hover-color', ext.hoverColor);
+  assignInteractionColor('focus', ext.keyboardFocusColor);
+  assignInteractionColor('pointer-focus', ext.pointerFocusColor);
+  // Keyboard theme explicitly changes the native focus boundary as before.
+  // Pointer color never mutates the keyboard or neutral ring token.
+  if (ext.keyboardFocusColor === 'theme') {
+    light.ring = light.primary;
+    dark.ring = dark.primary;
+  }
 
   // Typography.
   const body = FONTS.find(f => f.value === resolved.font).stack;
@@ -318,7 +346,7 @@ export function themeTokens(resolved) {
   root['text-size-heading'] = rem(headingSize);
   root['text-size-kpi'] = rem(kpiSize);
   root['text-weight'] = '400';
-  root['text-weight-label'] = '500';
+  root['text-weight-label'] = ext.textStyle === 'editorial' ? '600' : (resolved.font === 'mono' || style === 'lyra') ? '400' : '500';
   const editorial = ext.textStyle === 'editorial';
   root['control-weight'] = editorial ? '600' : '500';
   root['control-tracking'] = editorial ? '0.1em' : 'normal';
@@ -331,6 +359,24 @@ export function themeTokens(resolved) {
   const roundAllocation = ['rounded', 'soft', 'smooth'].includes(ext.radiusAlloc);
   root['control-height'] = rem(height);
   root['control-padding'] = rem(padding + (roundAllocation && padding < 1 ? 0.125 : 0));
+  // Pinned shadcn Button size=sm uses a separate horizontal inset from md.
+  // Preserve size/spacing extension priority: offset the source style's
+  // sm inset by the change in the user's density axis (never fixed Card size).
+  const sourceSmInline={vega:.625,nova:.625,maia:.75,lyra:.625,mira:.5,luma:.75,sera:1,rhea:.75};
+  const sourceDensity={vega:'standard',nova:'compact',maia:'standard',lyra:'compact',mira:'dense',luma:'standard',sera:'loose',rhea:'compact'};
+  root['button-sm-padding-inline']=rem(Math.max(.5,sourceSmInline[style]+(padding-DENSITY[sourceDensity[style]][1])));
+  // Editorial Sera MD Button chrome is wider than generic controls. Keep
+  // 28→44 density monotonic without altering source 134.813/168.047 widths.
+  // Maia/Luma/Rhea's source MD Button inset is one QX size-step larger
+  // than their generic form-field density. Keep one family mapping, not Card
+  // overrides: its delta remains constant under user density changes.
+  const mdButtonDelta=editorial?.625:(['maia','luma','rhea'].includes(style)?.125:0);
+  root['button-md-padding-inline']=rem(padding+mdButtonDelta);
+  // Source Button size-sm is 14px for standard styles, 12.8px in Nova,
+  // and 12px in Lyra/Mira/Sera. Unlike the generic QX size curve, the
+  // source does NOT shrink icon-sm and text-sm typography by 2px.
+  // Derive from the chosen typography axis, never hardcode this in Preview CSS.
+  root['button-sm-font-size']=rem(Math.min(controlFont,editorial?.75:(style==='nova'?.8:controlFont)));
   root['control-gap'] = rem(gap);
   root['control-icon'] = rem(icon);
   // Editorial (Sera) controls use text-xs uppercase labels.
@@ -340,11 +386,131 @@ export function themeTokens(resolved) {
 
   // Containers.
   root['card-padding'] = rem(PADDING[ext.padding]);
+  // Source peer actions: editorial Sera uses CardFooter Buttons with flex:1 1 0% + min-content clamping;
+  // other Styles retain each Button's intrinsic size (one shared Theme slot).
+  root['card-footer-peer-flex'] = editorial ? '1 1 0%' : '0 1 auto';
+  // shadcn Empty uses a compact 24px or spacious 48px surface. The
+  // existing padding axis selects the tier; media/title scale derives in CSS.
+  root['empty-inset'] = rem(PADDING[ext.padding] <= 1 ? 1.5 : 3);
+  // The icon glyph has three independent source tiers: 16 / 20 / 24px.
+  // Vega/Maia's spacious glyph is 24px; other spacious looks use 20px.
+  // Explicit density/padding still select compact (16px) or spacious
+  // modes, while instance --qxframe9a7c2-empty-icon-size may override.
+  const emptyCompact = PADDING[ext.padding] <= 1;
+  root['empty-icon-size'] = rem(emptyCompact ? 1 : (style === 'vega' || style === 'maia' ? 1.5 : 1.25));
+  root['empty-content-gap'] = rem(emptyCompact ? (ext.density === 'dense' ? .5 : .625) : 1);
+  // Pinned editorial EmptyDescription uses mt-0.5 (2px); normal styles 0.
+  root['empty-description-offset']=rem(editorial?.125:0);
+  // Pinned eight-style Badge: h-5 outlined label except Sera borderless
+  // text-only status. Text metrics are sourced from style CSS, not Card sizing.
+  root['badge-label-editorial']=editorial?'1':'0';
+  root['badge-label-font-size']=editorial||style==='mira'?'0.625rem':'0.75rem';
+  root['badge-label-leading']=editorial?'0.892857142857rem':style==='mira'?'1.015625rem':'1rem';
+  root['badge-label-height']=editorial?'auto':'1.25rem';
+  // CoverArt's explicit text-xs utility inherits distinct pinned style lines.
+  // Its Label and CardDescription do not have identical source typography.
+  root['artwork-label-leading']=editorial?'1.21875rem':'0.75rem';
+  root['artwork-description-leading']=editorial?'1.21875rem':'1rem';
+  // Pinned shadcn Table: compact 8px vs spacious 12px cell padding.
+  // Existing padding/radius allocation axes determine the tier; no style class.
+  const tableSpacious = PADDING[ext.padding] >= 2 ||
+    (PADDING[ext.padding] >= 1.5 && ['rounded', 'soft'].includes(ext.radiusAlloc));
+  root['table-cell-inset'] = rem(tableSpacious ? .75 : .5);
+  // The shadcn Item/Field recipes share the existing container and typography
+  // axes; use five semantic anchors rather than per-style CSS or five size slots.
+  const itemSpace = PADDING[ext.padding] <= 1 ? 0.625 : 0.875;
+  const fieldSpace = PADDING[ext.padding] <= 1 ? 0.5 : 0.75;
+  const groupSpace = PADDING[ext.padding] + 0.25
+    + (PADDING[ext.padding] >= 2 ? 0.25 : 0)
+    - (height <= 1.75 ? 0.25 : 0);
+  root['item-space'] = rem(itemSpace);
+  // Pinned small Item recipe: Vega subtracts 4px from its normal 14px;
+  // Maia/Luma/Sera/Rhea keep the 2px step; dense styles clamp at 10px.
+  root['item-sm-reduction']=rem(style==='vega'?.25:.125);
+  // Vega's measured regular Item description is 21/14, unlike other spacious
+  // regular styles. Keep the style's source recipe here, never in component CSS.
+  root['item-description-leading'] = String(ext.textStyle === 'editorial' || ext.typography === 'compact'
+    ? 1.625 : style === 'vega' || PADDING[ext.padding] <= 1 ? 1.5 : 20 / 14);
+  // Pinned SavingsTargets text-xs Item label is 18px Nova, 19.5px Sera,
+  // otherwise 16px. Its explicit text-xs leading differs from ItemDescription.
+  root['item-kpi-label-leading']=['nova','vega'].includes(style)?'1.125rem':style==='sera'?'1.21875rem':'1rem';
+  // The same pinned 16px Lyra title line is consumed by ordinary Item and wrapping Item.
+  root['item-title-leading']=style==='lyra'?'1.3333333333333333':'1.375';
+  root['field-group-gap'] = rem(groupSpace);
+  root['field-gap'] = rem(fieldSpace);
+  root['field-content-gap'] = rem(fieldSpace <= .5 ? .125 : .25);
+  root['field-separator-display'] = ext.textStyle === 'editorial' ? 'none' : 'block';
+  root['choice-group-columns'] = ext.textStyle === 'editorial' ? '1' : '2';
+  root['field-label-line-height'] = editorial ? '1.21875rem' : rem(Math.min(textSize, controlFont));
+  // Source Sera cn-label uses tracking-wide (0.025em), distinct from sidebar control tracking.
+  root['field-label-tracking'] = editorial ? '0.025em' : 'normal';
+  // Pinned Mira uses text-xs/relaxed (12px / 19.5px) for FieldTitle;
+  // default FieldTitle uses the text-sm/leading-snug recipe. The
+  // dedicated role does not alter ordinary body or FormLabel leading.
+  root['field-title-leading'] = style === 'mira' ? '1.625' : style === 'sera' ? '1.5' : '1.375';
+  // FieldLegend is a distinct size/leading role: Sera title-xs has 16px, while
+  // Nova/Luma headings inherit 20px. Lyra's existing 19.5px remains stable
+  // pending independent source-vs-card reconciliation.
+  root['field-legend-leading']=style==='sera'?'1rem':['lyra','mira'].includes(style)?'1.21875rem':'1.25rem';
+  // Source native FieldLegend mb-3 (most), mb-2.5 (Lyra), mb-2 (Mira), mb-1.5 (Nova).
+  // FieldSet with RadioGroup owns only the post-legend separation; preview has no CSS owner.
+  root['field-legend-gap']=rem(style==='nova'?.375:style==='lyra'?.625:style==='mira'?.5:.75);
+  // Source Accordion recipes: default py-2.5, dense compact p-2,
+  // spacious/rounded p-4. This is the only style family projection.
+  root['accordion-padding'] = rem(editorial ? 1
+    : ext.typography === 'compact' && ext.density === 'dense' ? 0.5
+    : PADDING[ext.padding] <= 1 ? 0.625 : 1);
+  // Source AccordionContentInner pb-4 in every pinned style except Nova/Lyra pb-2.5.
+  // Mira trigger p-2 but opened content pb-4: these must have separate owners.
+  root['accordion-content-padding']=rem(['nova','lyra'].includes(style)?.625:1);
+  // Pinned Accordion component family: Maia/Mira/Luma/Rhea use a framed,
+  // clipped surface; others use divided rows without an outer box.
+  // Sera uses a 24px trigger gap but retains the unframed editorial surface.
+  const accordionFramed = ['maia','mira','luma','rhea'].includes(style);
+  root['accordion-framed'] = accordionFramed ? '1' : '0';
+  root['accordion-overflow'] = accordionFramed ? 'hidden' : 'visible';
+  root['accordion-trigger-gap'] = rem(['maia','mira','luma','sera','rhea'].includes(style) ? 1.5 : 0);
+  // Pinned AccordionTrigger/Content typography: Lyra text-xs (12/16),
+  // Mira text-xs/relaxed (12/19.5), other styles text-sm (14/20).
+  // This is a distinct composition role; general body line-height differs.
+  root['accordion-line-height']=style==='lyra'?'1rem':style==='mira'?'1.21875rem':'1.25rem';
+  // Pinned source Calendar: Nova/Lyra p-2, others p-3. Upcoming Payments
+  // uses responsive 32/40px day cells, 36px on editorial Sera.
+  root['calendar-padding'] = rem(['nova','lyra'].includes(style) ? .5 : .75);
+  root['calendar-cell-size'] = rem(editorial ? 2.25 : 2.5);
+  // Source Lyra's rdp-weekday uses its inherited 4/3 line-box, not compact body 1.625.
+  // Pinned SidebarMenu gaps: control look distinguishes 4/0/1/2px tiers.
+  // The group block inset follows the existing dense vs normal control axis.
+  const sidebarMenuGap = { 'solid-shadow': .25, solid: 0, tinted: .25, transparent: .0625, 'light-solid': .125, ghost: .125 };
+  // Pinned FieldLabel child Field p-2/p-2.5/p-3/p-4; the baseline
+  // source family differs per style, and the padding axis adjusts it.
+  const sourceChoiceInset={vega:.75,nova:.625,maia:1,lyra:.5,mira:.5,luma:1,sera:1,rhea:1};
+  const sourceStylePadding={vega:1.5,nova:1,maia:1.5,lyra:1,mira:1,luma:1.5,sera:2,rhea:1.25};
+  root['choice-field-inset']=rem(Math.max(.5,Math.min(1.25,
+    sourceChoiceInset[style]+(PADDING[ext.padding]-sourceStylePadding[style])*.25)));
+  // shadcn SidebarMenuButton uses h-8 in compact families, h-9 in the
+  // pinned Maia/Luma/Sera family. Other styles await paired source proof.
+  root['sidebar-menu-button-height']=rem(['maia','luma','sera'].includes(style)?2.25:2);
+  root['sidebar-menu-gap'] = rem(sidebarMenuGap[ext.controlLook]);
+  root['sidebar-group-padding-block'] = rem(ext.density === 'dense' ? .25 : .5);
   root['card-gap'] = rem(PADDING[ext.padding]);
   root['card-meta-gap'] = rem(looks.metaGap);
+  // Pinned IndexInvesting: prose uses mt-3 normally, style-sera:mt-0.
+  // This semantic source role belongs to CardDescription, not preview CSS.
+  root['card-prose-offset'] = rem(editorial ? 0 : .75);
+  // text-5xl in the pinned Claimable Card: Vega's leading-normal and
+  // Nova's leading-snug override display tight; remaining styles use 1.
+  root['card-display-leading'] = style==='vega'?'1.5':style==='nova'?'1.375':'1';
   root['card-title-delta'] = editorial ? '0.25rem' : '0.125rem';
   root['card-font-size'] = rem(cardSize);
   root['card-border-width'] = '1px';
+  root['card-section-inset'] = ext.sections === 'none' ? '0' : rem(PADDING[ext.padding]);
+  root['card-section-width'] = ext.sections === 'none' ? '0' : '1px';
+  root['text-leading'] = ext.typography === 'compact' ? '1.625' : String(20 / 14);
+  root['calendar-weekday-leading'] = style === 'lyra' ? String(4/3) : root['text-leading'];
+  root['heading-leading'] = editorial ? String(28 / 18) : ext.typography === 'compact' ? String(20 / 14) : style === 'nova' ? '1.375' : '1.5';
+  root['card-value-leading'] = style === 'vega' ? '1.5' : style === 'nova' ? '1.375' : String(4/3);
+  root['description-leading'] = editorial || ext.typography === 'compact' ? '1.625' : String(20 / 14);
 
   // Radius.
   const radius = RADII.find(r => r.value === resolved.radiusValue);
@@ -353,9 +519,12 @@ export function themeTokens(resolved) {
   const alloc = {};
   ALLOCATION[ext.radiusAlloc].forEach((step, index) => {
     const key = ALLOCATION_KEYS[index];
-    alloc[key] = radiusFor(step, basePx, ['card', 'dialog'].includes(key) && ext.radiusAlloc === 'smooth' ? CONTAINER_CAP_PX : 0);
+    alloc[key] = radiusFor(step, basePx, ['card', 'dialog'].includes(key) ? CONTAINER_CAP_PX : 0);
   });
   const controlShape = ext.controlShape;
+  // The global zero-radius shortcut wins over style FOLLOW defaults; explicit
+  // per-category shape selections remain authoritative (v3 §4.5).
+  const roundShape = key => basePx === 0 && resolved.radius === 'none' && resolved.explicit?.[key] === undefined && controlShape !== 'pill' ? 'radius' : ext[key];
   root['radius-button'] = shapeRadius(ext.shapeButton, alloc.button, controlShape);
   root['radius-field'] = shapeRadius(ext.shapeInput, alloc.field, controlShape);
   root['radius-select'] = shapeRadius(ext.shapeSelect, alloc.field, controlShape);
@@ -363,12 +532,21 @@ export function themeTokens(resolved) {
   root['radius-tabs'] = shapeRadius(ext.shapeTabs, alloc.tabs, controlShape);
   root['radius-item'] = alloc.item;
   root['radius-choice'] = alloc.choice;
-  root['radius-radio'] = shapeRadius(ext.shapeRadio, alloc.button, controlShape);
-  root['radius-switch'] = shapeRadius(ext.shapeSwitch, alloc.switch, controlShape);
-  root['radius-thumb'] = shapeRadius(ext.shapeThumb, alloc.thumb, controlShape);
-  root['radius-track'] = ext.shapeThumb === 'circle' ? PILL : root['radius-thumb'];
-  root['radius-avatar'] = shapeRadius(ext.shapeAvatar, alloc.button, controlShape);
+  root['radius-radio'] = shapeRadius(roundShape('shapeRadio'), alloc.button, controlShape);
+  root['radius-switch'] = shapeRadius(roundShape('shapeSwitch'), alloc.switch, controlShape);
+  root['radius-thumb'] = shapeRadius(roundShape('shapeThumb'), alloc.thumb, controlShape);
+  root['radius-track'] = roundShape('shapeThumb') === 'circle' ? PILL : root['radius-thumb'];
+  root['radius-avatar'] = shapeRadius(roundShape('shapeAvatar'), alloc.button, controlShape);
   const container = ext.shapeContainer === 'square' ? () => '0' : value => value;
+  // Source-locked Empty rounded roles per shared radius-allocation recipe.
+  // Values scale with the selected radius; global straight corners stay zero.
+  const emptyRadiusRoles = {
+    standard: [1, 1], balanced: [1.4, 1], rounded: [1, 1],
+    compact: [1.4, .8], soft: [1.8, 1.4], smooth: [2.2, 1.4]
+  };
+  const [emptyRootScale, emptyMediaScale] = emptyRadiusRoles[ext.radiusAlloc];
+  root['radius-empty'] = container(px(basePx * emptyRootScale));
+  root['radius-empty-media'] = px(basePx * emptyMediaScale);
   root['radius-card'] = container(alloc.card);
   root['radius-popup'] = container(alloc.popup);
   root['radius-dialog'] = container(alloc.dialog);
@@ -378,6 +556,7 @@ export function themeTokens(resolved) {
   root['switch-width'] = rem(switchWidth);
   root['switch-height'] = rem(switchHeight);
   root['switch-inset'] = '0.125rem';
+  root['switch-thumb-extra'] = ext.switchLook === 'wide' ? '0.5rem' : '0rem';
   // Concentric thumb: outer radius − inset, never below zero (v3 §4.5 rule 3).
   const switchRadius = root['radius-switch'];
   root['radius-switch-thumb'] = switchRadius === PILL ? PILL : rem(Math.max(0, parseFloat(switchRadius) - 0.125));
@@ -398,19 +577,35 @@ export function themeTokens(resolved) {
   root['shadow-thumb'] = SHADOWS[looks.thumbShadow];
   root['shadow-switch-thumb'] = SHADOWS[looks.switchShadow];
 
-  // Focus (v3 §4.6): outline = 2px / 100% / -1px (QX keyboard default), ring = 3px / 40% / 0;
-  // pointer "follow" keeps the QX pointer look (no outline).
-  const FOCUS = { outline: ['0.125rem', '100%', '-0.0625rem'], ring: ['0.1875rem', '40%', '0'], none: ['0', '100%', '0'] };
-  const [kWidth, kOpacity, kOffset] = FOCUS[ext.keyboardFocus === 'ring' ? 'ring' : 'outline'];
-  const [pWidth, pOpacity, pOffset] = FOCUS[ext.pointerFocus === 'qx' ? 'none' : ext.pointerFocus];
+  // The seven independent axes share these few semantic style/paint slots.
+  // Border focus keeps the native border; keyboard outline retains 2px/-1px.
+  const FOCUS = { border: ['0', '100%', '0'], outline: ['0.125rem', '100%', '-0.0625rem'], ring: ['0', '100%', '0'] };
+  const [kWidth, kOpacity, kOffset] = FOCUS[ext.keyboardFocus];
+  const [pWidth, pOpacity, pOffset] = FOCUS[ext.pointerFocus];
   root['focus-width'] = kWidth; root['focus-opacity'] = kOpacity; root['focus-offset'] = kOffset;
   root['pointer-width'] = pWidth; root['pointer-opacity'] = pOpacity; root['pointer-offset'] = pOffset;
+  root['focus-shadow'] = ext.keyboardFocus === 'ring'
+    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
+    : 'none';
+  // Pointer never consumes CSS outline: explicit "outline" means a sharp
+  // external 2px shadow edge, preserving FocusOrigin and component elevation.
+  root['pointer-shadow'] = ext.pointerFocus === 'ring'
+    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 40%,transparent)'
+    : ext.pointerFocus === 'outline'
+      ? '0 0 0 0.125rem var(--qxframe9a7c2-theme-pointer-focus)'
+      : 'none';
+  root['hover-border-strength'] = ['border', 'both'].includes(ext.hoverStyle) ? '30%' : '0%';
+  root['hover-background-strength'] = ['background', 'both'].includes(ext.hoverStyle) ? '15%' : '0%';
+  root['focus-background-strength'] = ext.focusBackground === 'parent-surface' ? '100%' : '0%';
 
   // Motion.
   const motion = MOTION[ext.motion];
   ['xs', 'sm', 'md', 'lg'].forEach((step, index) => { root['duration-' + step] = motion[index] + 'ms'; });
+  root['skeleton-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-skeleton-pulse';
+  root['spinner-icon-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-spinner-icon-spin';
+  root['loading-spin-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-loading-spin';
 
-  // Colors go to both blocks; everything else to :root only.
+  // The exported theme is self-contained in each mode: both blocks declare the closed list.
   const rootBlock = {}, darkBlock = {};
   for (const token of THEME_TOKENS) {
     if (token.mode === 'color') {
@@ -420,6 +615,7 @@ export function themeTokens(resolved) {
     } else {
       if (root[token.name] === undefined) throw new Error('Missing token: ' + token.name);
       rootBlock[token.name] = root[token.name];
+      darkBlock[token.name] = root[token.name];
     }
   }
   return { root: rootBlock, dark: darkBlock };

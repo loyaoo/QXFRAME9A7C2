@@ -162,3 +162,57 @@
 .qxframe9a7c2-table-filter-option.has-children > span:last-child{font-weight:600}
 .qxframe9a7c2-table-filter-option-spacer{width:1rem;height:1rem;flex:0 0 1rem}
 
+/* Static Card-embedded Table is a modifier of the actual framework Table,
+ * not an application-owned parallel widget. It retains the reusable
+ * Table's cells, state classes and semantic colours without requiring the
+ * runtime Table constructor for authored HTML.
+ * Source: shadcn-ui/ui@295a1f11 style-*.css cn-table-head/cn-table-cell. */
+.qxframe9a7c2-table.is-embedded{
+  --_qxframe9a7c2-table-size-cell-py:var(--qxframe9a7c2-table-cell-inset,var(--qxframe9a7c2-theme-table-cell-inset));
+  --_qxframe9a7c2-table-size-cell-px:var(--qxframe9a7c2-table-cell-inset,var(--qxframe9a7c2-theme-table-cell-inset));
+  --_qxframe9a7c2-table-head-bg:transparent;
+  /* Tailwind Preflight collapses source Table borders; separate borders
+   * add one extra pixel across five transaction rows. */
+  border-collapse:collapse;
+  font-size:var(--qxframe9a7c2-theme-text-size);
+  /* Pinned Tailwind text-xs/sm/base lines: 12/16, 14/20, 16/24px.
+   * The formula moves with the existing typography axis, no new Theme role. */
+  line-height:calc(var(--qxframe9a7c2-theme-text-size) * 2 - .5rem);
+  background:transparent;
+}
+/* The pinned TableRow owns the collapsed border, not every TableCell.
+ * Last row has no border. Shared half-pixel boundary accounting exactly
+ * reproduces the 56.5 / 57 / 57 / 57 / 56.5 source row geometry. */
+.qxframe9a7c2-table.is-embedded tbody tr:not(:last-child){
+  border-bottom:1px solid var(--qxframe9a7c2-theme-border)
+}
+.qxframe9a7c2-table.is-embedded tbody tr:last-child{border-bottom:0}
+.qxframe9a7c2-table.is-embedded tbody tr>td{border-bottom-width:0}
+.qxframe9a7c2-table.is-embedded th,.qxframe9a7c2-table.is-embedded td{
+  padding:var(--_qxframe9a7c2-table-cell-py) var(--_qxframe9a7c2-table-cell-px);
+  border-bottom-color:var(--qxframe9a7c2-theme-border);
+  white-space:nowrap;
+}
+.qxframe9a7c2-table.is-embedded thead th{
+  height:calc(1.5rem + var(--qxframe9a7c2-theme-table-cell-inset) * 2);
+  background:transparent;
+  color:var(--qxframe9a7c2-theme-table-heading-foreground);
+  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
+  font-weight:500;
+  letter-spacing:var(--qxframe9a7c2-theme-heading-tracking);
+  text-transform:var(--qxframe9a7c2-theme-heading-transform);
+}
+.qxframe9a7c2-table.is-embedded tbody tr:not(.qxframe9a7c2-table-expanded-row){
+  --_qxframe9a7c2-table-row-bg:transparent;
+}
+.qxframe9a7c2-table.is-embedded.is-hover tbody tr:not(.qxframe9a7c2-table-expanded-row):hover{
+  --_qxframe9a7c2-table-row-bg:color-mix(in oklch,var(--qxframe9a7c2-theme-muted) 50%,transparent);
+}
+.qxframe9a7c2-table.is-embedded tbody tr:not(.qxframe9a7c2-table-expanded-row)>td{
+  background:var(--_qxframe9a7c2-table-row-bg);
+}
+/* A semantic muted body cell must win over the row's default foreground.
+ * Opt-in only; ordinary Table cells retain the normal row state recipe. */
+.qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row)>td.is-muted{
+  color:var(--qxframe9a7c2-table-muted-foreground,var(--qxframe9a7c2-theme-muted-foreground));
+}

@@ -13,6 +13,10 @@
 .qxframe9a7c2-tabs-nav{position:relative;display:flex;align-items:center;min-width:0;min-height:0;gap:var(--_qxframe9a7c2-tabs-gap)}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-nav{width:max-content;max-width:42%;flex-direction:column;align-items:stretch}
 .qxframe9a7c2-tabs-scroll-host{min-width:0;min-height:0;flex:1 1 auto;overflow:hidden}
+/* Horizontal tabs: the rail height includes its viewport padding for
+ * segmented mode; the TabItem retains its own intrinsic height. A fixed
+ * rail/inner height agreement prevents Scroll clipping without auto-height
+ * recursion through its 100%-height viewport. */
 .qxframe9a7c2-tabs-scroll{width:100%;height:var(--_qxframe9a7c2-tabs-height)}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-scroll{height:100%;min-height:7.5rem;width:100%}
 .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{display:flex;align-items:stretch;min-width:max-content;min-height:100%;gap:var(--_qxframe9a7c2-tabs-gap)}
@@ -20,6 +24,11 @@
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{flex-direction:column;min-width:100%;min-height:max-content}
 .qxframe9a7c2-tabs-list{box-sizing:border-box;position:relative}
 .qxframe9a7c2-tabs-tab-shell{box-sizing:border-box;display:inline-flex;min-width:0;flex:0 0 auto}
+/* Equal-width horizontal TabsList, reusable for source-style segmented controls.
+ * Default Tabs remain intrinsic-width and preserve scrolling/overflow behavior. */
+.qxframe9a7c2-tabs.is-equal:not(.is-vertical) .qxframe9a7c2-tabs-list{width:100%;min-width:100%}
+.qxframe9a7c2-tabs.is-equal:not(.is-vertical) .qxframe9a7c2-tabs-tab-shell{flex:1 1 0;min-width:0}
+.qxframe9a7c2-tabs.is-equal:not(.is-vertical) .qxframe9a7c2-tabs-tab{width:100%}
 .qxframe9a7c2-tabs-tab-shell[hidden]{display:none}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-tab-shell{width:100%}
 /* Tabs state resolver: the stable visual tab owns chrome; native sibling actions own activation/close. */
@@ -43,8 +52,17 @@ button.qxframe9a7c2-tabs-tab{padding:0 var(--_qxframe9a7c2-tabs-pad-x);gap:0.375
 .qxframe9a7c2-tabs.is-animated-indicator .qxframe9a7c2-tabs-indicator{transition:transform var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing),width var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing),height var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing)}
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab{--_qxframe9a7c2-tabs-tab-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface-muted);border:1px solid var(--_qxframe9a7c2-tabs-tab-border)}
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-tabs-tab-border:var(--qxframe9a7c2-theme-primary)}
-.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{padding:0.25rem;border-radius:var(--_qxframe9a7c2-tabs-radius);background:var(--_qxframe9a7c2-semantic-surface-muted)}
-.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-tabs-tab-elevation:var(--qxframe9a7c2-shadow-sm,0 0 0 0 transparent)}
+/* Full 4px rail insets on all edges. Segmented TabsList reserves these 8px
+ * in the Scroll owner's fixed height; no clipping of the 24px TabItem. */
+.qxframe9a7c2-tabs.is-segmented:not(.is-vertical) .qxframe9a7c2-tabs-scroll{height:calc(var(--_qxframe9a7c2-tabs-height) + .5rem)}
+.qxframe9a7c2-tabs.is-segmented:not(.is-vertical) .qxframe9a7c2-tabs-panels{padding-top:0}
+.qxframe9a7c2-tabs.is-segmented.is-placement-bottom .qxframe9a7c2-tabs-panels{padding-bottom:0}
+.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{box-sizing:border-box;padding:0.25rem;border-radius:var(--_qxframe9a7c2-tabs-radius);background:var(--_qxframe9a7c2-semantic-surface-muted)}
+/* Source-pinned TabsTrigger uses a transparent 1px border at rest and
+ * dark:active:border-input; keep border-box geometry stable in both modes. */
+.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab{border:1px solid transparent}
+/* Pinned shadcn TabsTrigger data-active uses normal weight and foreground, not primary/bold. */
+.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:light-dark(var(--qxframe9a7c2-theme-background),color-mix(in oklab,var(--qxframe9a7c2-theme-input) 30%,transparent));--_qxframe9a7c2-tabs-tab-border:light-dark(transparent,var(--qxframe9a7c2-theme-choice-border));border-color:var(--_qxframe9a7c2-tabs-tab-border);--_qxframe9a7c2-tabs-tab-elevation:var(--qxframe9a7c2-shadow-sm,0 0 0 0 transparent);--_qxframe9a7c2-tabs-tab-text:var(--qxframe9a7c2-theme-foreground);--_qxframe9a7c2-tabs-tab-weight:inherit}
 .qxframe9a7c2-tabs-tab-action:focus-visible{outline:none;box-shadow:none}
 .qxframe9a7c2-tabs-tab.is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-tabs-tab.is-disabled,button.qxframe9a7c2-tabs-tab:disabled{--_qxframe9a7c2-tabs-tab-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-tabs-tab-cursor:not-allowed;--_qxframe9a7c2-tabs-tab-ring:0 0 0 0 transparent}

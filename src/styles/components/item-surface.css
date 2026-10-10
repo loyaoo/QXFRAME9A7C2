@@ -49,3 +49,104 @@
 .qxframe9a7c2-item-surface.is-selection-check-start.is-selected.is-active{--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
 .qxframe9a7c2-item-surface.is-selection-check-start.is-disabled{--_qxframe9a7c2-item-bg:transparent;--_qxframe9a7c2-item-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 
+
+/* Static composed Item. Spacing and typography are shared recipe projections;
+ * native/interactive Item Surface remains a separate authoritative class. */
+.qxframe9a7c2-item{
+  --_qxframe9a7c2-static-item-space:var(--qxframe9a7c2-item-space,var(--qxframe9a7c2-theme-item-space,.625rem));
+  box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;width:100%;
+  gap:var(--qxframe9a7c2-item-gap,var(--_qxframe9a7c2-static-item-space));
+  padding-block:var(--qxframe9a7c2-item-padding-block,var(--_qxframe9a7c2-static-item-space));
+  padding-inline:var(--qxframe9a7c2-item-padding-inline,calc(var(--_qxframe9a7c2-static-item-space) + .125rem));
+  border:1px solid transparent;
+  border-radius:var(--qxframe9a7c2-item-radius,min(var(--qxframe9a7c2-theme-radius-button),1.125rem));
+  font-size:var(--qxframe9a7c2-theme-text-size);
+}
+.qxframe9a7c2-item.is-muted{background:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) 50%,transparent)}
+.qxframe9a7c2-item.is-outline{border-color:var(--qxframe9a7c2-theme-border)}
+
+/* Static Item links share the same semantic surface. Hover, keyboard focus
+ * and press must project the accent/background + foreground as a pair;
+ * muted descriptions cannot keep a foreground meant for the old surface. */
+.qxframe9a7c2-item-link{color:inherit;text-decoration:none}
+.qxframe9a7c2-item-link:hover:not(.is-disabled):not(.is-readonly),
+.qxframe9a7c2-item-link:focus-visible:not(.is-disabled):not(.is-readonly),
+.qxframe9a7c2-item-link:active:not(.is-disabled):not(.is-readonly),
+.qxframe9a7c2-item-link.is-active:not(.is-disabled):not(.is-readonly){
+  background:var(--qxframe9a7c2-theme-accent);
+  color:var(--qxframe9a7c2-theme-accent-foreground);
+}
+.qxframe9a7c2-item-link:hover:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc,
+.qxframe9a7c2-item-link:focus-visible:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc,
+.qxframe9a7c2-item-link:active:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc,
+.qxframe9a7c2-item-link.is-active:not(.is-disabled):not(.is-readonly) .qxframe9a7c2-item-desc{
+  color:inherit;
+}
+/* Smaller variants follow the Item md spacing anchor, rather than hardcoding
+ * one style's values. Size-specific remaining differences are Stage 3 QA. */
+.qxframe9a7c2-item.is-sm{--_qxframe9a7c2-static-item-space:max(.625rem,calc(var(--qxframe9a7c2-theme-item-space) - var(--qxframe9a7c2-item-sm-reduction,var(--qxframe9a7c2-theme-item-sm-reduction,.125rem))))}
+.qxframe9a7c2-item.is-xs{--_qxframe9a7c2-static-item-space:max(.5rem,calc(var(--qxframe9a7c2-theme-item-space) - .25rem))}
+.qxframe9a7c2-item.is-column{flex-direction:column;align-items:stretch}
+.qxframe9a7c2-item-group{
+  --_qxframe9a7c2-static-item-group-gap:1rem;
+  display:flex;flex-direction:column;min-width:0;
+  gap:var(--qxframe9a7c2-item-group-gap,var(--_qxframe9a7c2-static-item-group-gap));
+}
+.qxframe9a7c2-item-group:has(>.qxframe9a7c2-item.is-sm){--_qxframe9a7c2-static-item-group-gap:.625rem}
+.qxframe9a7c2-item-group:has(>.qxframe9a7c2-item.is-xs){--_qxframe9a7c2-static-item-group-gap:.5rem}
+.qxframe9a7c2-item-content{display:flex;flex:1 1 0;flex-direction:column;gap:.25rem;min-width:0}
+/* Upstream ItemContent permits its intrinsic minimum during wrapping;
+ * opt-in preserves the legacy zero-min-width compact Item contract. */
+.qxframe9a7c2-item-content.is-intrinsic{min-width:auto;flex:1 1 0%}
+.qxframe9a7c2-item-title{
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;
+  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
+  font-weight:var(--qxframe9a7c2-theme-control-weight);
+  text-transform:var(--qxframe9a7c2-theme-control-transform,none);
+  line-height:var(--qxframe9a7c2-item-title-leading,var(--qxframe9a7c2-theme-item-title-leading,1.375));
+}
+/* Upstream ItemTitle's flex/w-fit composition may wrap despite its
+ * line-clamp utility. Keep the ordinary QX single-line default available. */
+.qxframe9a7c2-item-title.is-wrapping{display:flex;width:fit-content;max-width:none;align-items:center;gap:.5rem}
+.qxframe9a7c2-item.is-artwork{aspect-ratio:1/1;justify-content:center}
+.qxframe9a7c2-item-artwork-label{display:flex;width:100%;height:100%;align-items:center;justify-content:center;cursor:pointer}
+.qxframe9a7c2-item-artwork-label>svg{display:block;width:2.5rem;height:2.5rem;color:var(--qxframe9a7c2-theme-muted-foreground)}
+.qxframe9a7c2-item-desc{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+  margin:0;color:var(--qxframe9a7c2-theme-muted-foreground);
+  font-size:var(--qxframe9a7c2-theme-text-size);
+  line-height:var(--qxframe9a7c2-theme-item-description-leading);
+}
+/* Explicit source text-xs ItemDescription used as a KPI/category heading;
+ * ordinary Item descriptions continue consuming their existing text-leading. */
+.qxframe9a7c2-item-desc.is-kpi-label{line-height:var(--qxframe9a7c2-item-kpi-label-leading,var(--qxframe9a7c2-theme-item-kpi-label-leading,1rem))}
+.qxframe9a7c2-item-media{display:flex;flex:0 0 auto;align-items:center;justify-content:center;gap:.5rem}
+/* Pinned shadcn ItemMedia: an Item containing description top-aligns its
+ * media and lowers the glyph 2px; Item without description stays centered. */
+.qxframe9a7c2-item:has(.qxframe9a7c2-item-desc)>.qxframe9a7c2-item-media{
+  align-self:flex-start;
+  transform:translateY(.125rem);
+}
+/* shadcn ItemMedia variant=icon is an unboxed glyph, not EmptyMedia
+ * variant=icon. The two semantics must never share a boxed 32px surface. */
+.qxframe9a7c2-item-media.is-icon{width:1rem;height:1rem;border:0;border-radius:0;background:transparent}
+.qxframe9a7c2-item-media.is-icon>svg{display:block;width:1rem;height:1rem}
+.qxframe9a7c2-item-actions{display:flex;flex:0 0 auto;align-items:center;gap:.5rem}
+/* Source paired equal-action Items use 2 equal flex columns. Their row gap
+ * belongs to the uncompressed Item recipe for the 2px sm tier; Vega's
+ * 4px sm reduction also reduces each of the 2 horizontal gaps by 2px.
+ * Derive this entirely from EXISTING Theme item-space + sm-reduction axes. */
+.qxframe9a7c2-item.is-actions-equal{
+  gap:var(--qxframe9a7c2-item-gap,calc(
+    var(--qxframe9a7c2-theme-item-space,.625rem) -
+    max(0rem,calc(
+      var(--qxframe9a7c2-theme-item-sm-reduction,.125rem) +
+      var(--qxframe9a7c2-theme-item-sm-reduction,.125rem) - .25rem
+    ))
+  ));
+}
+.qxframe9a7c2-item.is-actions-equal .qxframe9a7c2-item-actions{flex:1 1 0;min-width:0}
+/* An equal-flex Item action slot may be narrower than Slider's 8rem
+ * standalone minimum. Scope intrinsic shrinking to this opt-in layout;
+ * regular standalone Slider retains its default minimum. */
+.qxframe9a7c2-item.is-actions-equal .qxframe9a7c2-slider{min-width:0}

@@ -1,11 +1,11 @@
 // QXFRAME9A7C2 theme token closed list (v3 §5.1). The only theme inputs are the
 // `--qxframe9a7c2-theme-*` names below; every theme (the default block inside
 // qxframe.css and every createApp export) writes the whole list: `:root` holds
-// every token, `.dark` repeats every `mode: 'color'` token with its dark value.
+// every token, `.dark` also contains every token (with dark values for colors).
 // New tokens are added here only (registered), never ad hoc in CSS.
 //
 // kind:  color | length | number | percent | font | keyword | shadow | time
-// mode:  'color' → written in :root and .dark;  'root' → written in :root only.
+// mode: 'color' → mode-specific values; 'root' → identical in both blocks.
 
 export const TOKEN_PREFIX = '--qxframe9a7c2-theme-';
 
@@ -76,9 +76,15 @@ export const THEME_TOKENS = [
   C('outline', 'Outline button background (control look axis)'),
   C('outline-hover', 'Outline button hover background'),
   C('outline-border', 'Outline button border'),
+  C('badge-label-outline-bg', 'Source-derived Outline Badge surface (Maia/Mira tint and dark editorial policy)'),
+  C('badge-label-destructive-bg', 'Source tint for Badge destructive / editorial'),
+  C('badge-label-secondary-bg', 'Source Badge secondary surface / editorial'),
+  C('badge-label-secondary-fg', 'Source Badge secondary foreground / editorial'),
+  C('badge-label-solid-border', 'Source Badge semantic border / editorial'),
   C('field', 'Input background (input look axis)'),
   C('field-border', 'Input border at rest'),
   C('field-disabled', 'Disabled input background'),
+  C('table-heading-foreground', 'Static Table header text surface contrast'),
   C('choice', 'Checkbox / radio unchecked background'),
   C('choice-border', 'Checkbox / radio unchecked border'),
   C('switch-track', 'Switch unchecked track'),
@@ -86,7 +92,9 @@ export const THEME_TOKENS = [
   C('slider-rail', 'Slider / progress rail'),
   C('thumb', 'Slider thumb'),
   C('thumb-border', 'Slider thumb border'),
-  C('focus', 'Focus color (focus color axis)'),
+  C('focus', 'Keyboard focus color'),
+  C('pointer-focus', 'Pointer focus color, independent of keyboard focus'),
+  C('hover-color', 'Hover accent color independent of focus'),
 
   // Typography.
   L('font-sans', 'Body font stack', 'font'),
@@ -106,6 +114,9 @@ export const THEME_TOKENS = [
 
   // Control size (md anchors; xs–xl follow the shared size curve).
   L('control-height', 'Control md height (density axis)'),
+  L('button-sm-padding-inline', 'Small Button horizontal inset, source style size-sm plus density extension'),
+  L('button-md-padding-inline', 'Medium Button style inset plus density extension'),
+  L('button-sm-font-size', 'Source Button size-sm type scale with typography axis'),
   L('control-padding', 'Control md inline padding'),
   L('control-gap', 'Control md gap'),
   L('control-icon', 'Control md icon size'),
@@ -117,11 +128,59 @@ export const THEME_TOKENS = [
 
   // Containers.
   L('card-padding', 'Card padding (container padding axis)'),
+  L('card-footer-peer-flex', 'Card Footer opt-in peer action sizing: Sera equal flex basis with min-content clamp / other intrinsic', 'keyword'),
+  L('empty-inset', 'Empty density anchor; also derives media/title geometry'),
+  L('empty-icon-size', 'Empty glyph dimension; pinned style recipe distinct from media box'),
+  L('empty-content-gap', 'Empty action group gap; compact/dense typography recipe'),
+  L('empty-description-offset', 'EmptyDescription authored editorial leading margin'),
+  L('badge-label-editorial', 'Editorial Badge density switch', 'number'),
+  L('badge-label-font-size', 'Status Label typography size'),
+  L('badge-label-leading', 'Status Label line box'),
+  L('badge-label-height', 'Status Label intrinsic or fixed line box'),
+  L('artwork-label-leading', 'Art placeholder Label type-leading by style'),
+  L('artwork-description-leading', 'CoverArt meta description source-leading'),
+  L('table-cell-inset', 'Static card-embedded Table cell inset from source density'),
+  L('item-space', 'Static Item md padding and column gap; size variants derive from it'),
+  L('item-sm-reduction', 'Shared small Item source padding step'),
+  L('item-description-leading', 'Composed Item description line-height multiplier', 'number'),
+  L('item-kpi-label-leading', 'Explicit text-xs editorial Item label source line box'),
+  L('item-title-leading', 'Shared ItemTitle line-height, plain and wrapping variants'),
+  L('field-group-gap', 'Vertical distance between composed Fields'),
+  L('field-gap', 'Gap between a composed Field label, control and description'),
+  L('field-label-line-height', 'Composed Field label line-box height'),
+  L('field-title-leading', 'Native FieldTitle title line-height recipe'),
+  L('field-label-tracking', 'FieldLabel letter-spacing (source Sera tracking-wide)'),
+  L('field-legend-gap', 'FieldSet radio-group separation after the native legend; source FieldLegend margin'),
+  L('field-legend-leading', 'Native FieldLegend line-height independent from composed FieldLabel'),
+  L('field-content-gap', 'FieldContent label and description gap derived from Field density'),
+  L('field-separator-display', 'FieldSeparator presence for editorial Field composition', 'keyword'),
+  L('choice-group-columns', 'Default responsive choice group column count from typography layout', 'number'),
+  L('accordion-padding', 'Accordion trigger inset derived from source style density'),
+  L('accordion-content-padding', 'Accordion open content trailing inset, independent from trigger inset'),
+  L('accordion-framed', 'Whether the source Accordion uses its bordered surface (0 or 1)', 'number'),
+  L('accordion-overflow', 'Framed Accordion clipping policy', 'keyword'),
+  L('accordion-trigger-gap', 'Space between Accordion label and disclosure icon'),
+  L('accordion-line-height', 'Pinned Accordion trigger and content line box by style'),
+  L('calendar-padding', 'Inline Calendar inset from pinned style recipe'),
+  L('calendar-cell-size', 'Responsive large-screen adaptive Calendar cell size'),
+  L('calendar-weekday-leading', 'Adaptive Calendar weekday text line height by source typography', 'number'),
+  L('sidebar-menu-gap', 'Sidebar menu item distance from control surface recipe'),
+  L('sidebar-group-padding-block', 'Sidebar group vertical inset from density'),
+  L('choice-field-inset', 'Bordered RadioGroup FieldLabel inner Field padding'),
+  L('sidebar-menu-button-height', 'Static SidebarMenuButton row height'),
   L('card-gap', 'Card section gap'),
   L('card-meta-gap', 'Card title/description gap'),
+  L('card-prose-offset', 'Authored CardDescription introductory prose offset; editorial style suppresses mt-3'),
   L('card-title-delta', 'Card title size step'),
+  L('card-display-leading', 'Display-sized CardTitle line-height from style'),
   L('card-font-size', 'Card body size'),
   L('card-border-width', 'Card ring width'),
+  L('card-section-inset', 'Footer block inset (partition axis; source Nova / Lyra)'),
+  L('card-section-width', 'Footer divider width (partition axis)'),
+  L('text-leading', 'Body line height (source compact / standard)', 'number'),
+  L('heading-leading', 'Heading line height (source style typography)', 'number'),
+  L('card-value-leading', 'CardTitle explicit 2xl metric line-height (source cn-card-title)', 'number'),
+  L('description-leading', 'Description line height (source editorial / compact)', 'number'),
 
   // Radius (base × allocation multiplier, shape axes, caps resolved by the compiler).
   L('radius', 'Radius base'),
@@ -139,6 +198,8 @@ export const THEME_TOKENS = [
   L('radius-track', 'Slider / progress track'),
   L('radius-avatar', 'Avatar'),
   L('radius-card', 'Cards, alerts'),
+  L('radius-empty', 'Empty container radius; container shape policy'),
+  L('radius-empty-media', 'Empty icon media radius; radius allocation policy'),
   L('radius-popup', 'Popovers, menus, tooltips'),
   L('radius-dialog', 'Dialogs, drawers'),
 
@@ -146,6 +207,7 @@ export const THEME_TOKENS = [
   L('switch-width', 'Switch width (switch look axis)'),
   L('switch-height', 'Switch height'),
   L('switch-inset', 'Switch thumb inset'),
+  L('switch-thumb-extra', 'Switch thumb width extension; Luma long capsule'),
   L('slider-track', 'Slider track thickness (slider look axis)'),
   L('slider-thumb', 'Slider thumb height'),
   L('slider-thumb-width', 'Slider thumb width (Luma: long capsule)'),
@@ -166,15 +228,23 @@ export const THEME_TOKENS = [
   L('focus-width', 'Keyboard focus width (outline 2px, ring 3px)'),
   L('focus-opacity', 'Keyboard focus color strength (ring 40%)', 'percent'),
   L('focus-offset', 'Keyboard focus offset (outline -1px inset, ring 0)'),
+  L('focus-shadow', 'Keyboard focus real box-shadow ring; none for outline', 'shadow'),
   L('pointer-width', 'Pointer focus width (0 = QX default: no outline)'),
   L('pointer-opacity', 'Pointer focus color strength', 'percent'),
   L('pointer-offset', 'Pointer focus offset'),
+  L('pointer-shadow', 'Pointer focus real box-shadow ring; none for default/outline', 'shadow'),
+  L('hover-border-strength', 'Hover border contrast; 0% disables border hover', 'percent'),
+  L('hover-background-strength', 'Hover surface mix; 0% preserves background', 'percent'),
+  L('focus-background-strength', 'Focus parent-surface mix; 0% keeps control surface', 'percent'),
 
   // Motion.
   L('duration-xs', 'Motion 1', 'time'),
   L('duration-sm', 'Motion 2', 'time'),
   L('duration-md', 'Motion 3', 'time'),
-  L('duration-lg', 'Motion 5', 'time')
+  L('duration-lg', 'Motion 5', 'time'),
+  L('skeleton-animation', 'Skeleton pulse animation name; none disables looping', 'keyword'),
+  L('spinner-icon-animation', 'Static spinner animation name; none disables looping', 'keyword'),
+  L('loading-spin-animation', 'Loading overlay spinner animation name; none disables looping', 'keyword')
 ];
 
 export const THEME_TOKEN_NAMES = THEME_TOKENS.map(token => TOKEN_PREFIX + token.name);

@@ -82,9 +82,9 @@ function exceptionMessage(result, label) {
     return new Error(label + ': ' + (description || details.text || 'browser evaluation failed'));
 }
 
-function launchBrowser() {
+function launchBrowserAttempt(attempt) {
     return new Promise((resolve, reject) => {
-        const profile = path.join('/tmp', 'qxframe9a7c2-browser-smoke-' + process.pid + '-' + Date.now());
+        const profile = path.join('/tmp', 'qxframe9a7c2-browser-smoke-' + process.pid + '-' + Date.now() + '-' + attempt);
         fs.rmSync(profile, { recursive: true, force: true });
         const child = cp.spawn(browser, [
             '--headless=new', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage',
@@ -94,28 +94,53 @@ function launchBrowser() {
         ], { stdio: ['ignore', 'ignore', 'pipe'] });
         let stderr = '';
         let settled = false;
-        const timer = setTimeout(() => finish(new Error('Chromium DevTools endpoint timed out')), 30000);
+        const timer = setTimeout(() => finish(new Error(
+            'Chromium DevTools endpoint timed out (attempt ' + attempt +
+            ', browser=' + browser + ', pid=' + child.pid +
+            ', stderr=' + stderr.slice(-1500) + ')'
+        )), 30000);
         function finish(error, endpoint) {
             if (settled) return;
             settled = true;
             clearTimeout(timer);
             if (error) {
                 try { child.kill('SIGKILL'); } catch (_) {}
-                fs.rmSync(profile, { recursive: true, force: true });
+                try { fs.rmSync(profile, { recursive: true, force: true }); } catch (_) {}
                 reject(error);
             } else resolve({ child, profile, endpoint });
         }
         child.stderr.setEncoding('utf8');
         child.stderr.on('data', (chunk) => {
-            stderr += chunk;
+            stderr = (stderr + chunk).slice(-6000);
             const match = stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/);
             if (match) finish(null, match[1]);
         });
         child.once('error', finish);
         child.once('exit', (code, signal) => {
-            if (!settled) finish(new Error('Chromium exited before DevTools was ready: ' + code + '/' + signal + '\n' + stderr.slice(-1500)));
+            if (!settled) finish(new Error(
+                'Chromium exited before DevTools was ready (attempt ' + attempt +
+                '): ' + code + '/' + signal + '\n' + stderr.slice(-1500)
+            ));
         });
     });
+}
+
+// Retry transport bootstrap only, not a failed page assertion. All browser
+// smoke checks still run exactly as before and remain mandatory with --required.
+async function launchBrowser() {
+    let firstError;
+    try {
+        return await launchBrowserAttempt(1);
+    } catch (error) {
+        firstError = error;
+        console.error('[browser-smoke] Chromium bootstrap attempt 1 failed: ' + error.message);
+    }
+    try {
+        return await launchBrowserAttempt(2);
+    } catch (error) {
+        throw new Error('Chromium failed to start twice. First: ' +
+            firstError.message + '\nSecond: ' + error.message, { cause: error });
+    }
 }
 
 function connectCDP(endpoint) {

@@ -43,7 +43,7 @@
 /* Hosted Tags/MultipleSelect editors are implementation details; the outer Control shell owns focus. */
 .qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input:focus-visible{outline:none}
 /* SelectGroup already exposes one focus ring on the label; never draw a second ring on its indicator. */
-.qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator{outline:none}
+.qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator{outline:none}
 /* Pointer focus must not accidentally inherit UA :focus-visible heuristics on text-editing controls. */
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-slider-handle:focus-visible{
   --_qxframe9a7c2-slider-handle-outline:none;
@@ -76,3 +76,30 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form textarea
   outline:none
 }
 
+
+/* Shared native field ring ownership. :focus alone never paints an outline;
+ * text input UA focus-visible is projected through the existing FocusOrigin.
+ * Error/disabled states keep their native state semantics. */
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible:not(:disabled){
+  box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none)
+}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus-visible:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus-visible:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus-visible:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible:not(:disabled){
+  box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
+}
+
+/* Theme Focus Background: zero keeps the authored control surface; 100% overlays
+ * its parent-surface color. Status borders and FocusOrigin stay independent. */
+.qxframe9a7c2-form-input:focus:not(:disabled),
+.qxframe9a7c2-form-select:focus:not(:disabled),
+.qxframe9a7c2-form-textarea:focus:not(:disabled),
+.qxframe9a7c2-input:focus-within:not(.is-disabled),
+.qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
+  --_qxframe9a7c2-focused-parent-layer:color-mix(in oklab,var(--qxframe9a7c2-theme-background) var(--qxframe9a7c2-theme-focus-background-strength),transparent);
+  background-image:linear-gradient(var(--_qxframe9a7c2-focused-parent-layer),var(--_qxframe9a7c2-focused-parent-layer))
+}

@@ -1,4 +1,4 @@
-.qxframe9a7c2-calendar{--_qxframe9a7c2-calendar-ring:none;--_qxframe9a7c2-calendar-opacity:1;--_qxframe9a7c2-date-panel-radius:var(--qxframe9a7c2-calendar-radius,var(--_qxframe9a7c2-data-radius));box-shadow:var(--_qxframe9a7c2-calendar-ring);outline:0 solid transparent;outline-offset:var(--_qxframe9a7c2-focus-visible-offset);opacity:var(--_qxframe9a7c2-calendar-opacity);user-select:none}
+.qxframe9a7c2-calendar{--_qxframe9a7c2-calendar-ring:none;--_qxframe9a7c2-calendar-opacity:1;--_qxframe9a7c2-date-panel-radius:var(--qxframe9a7c2-calendar-radius,var(--_qxframe9a7c2-popup-radius));box-shadow:var(--_qxframe9a7c2-calendar-ring);outline:0 solid transparent;outline-offset:var(--_qxframe9a7c2-focus-visible-offset);opacity:var(--_qxframe9a7c2-calendar-opacity);user-select:none}
 .qxframe9a7c2-calendar:focus-visible{--_qxframe9a7c2-calendar-ring:none;outline:none}
 .qxframe9a7c2-calendar-weekdays,.qxframe9a7c2-calendar-grid{display:flex;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-1)}
 .qxframe9a7c2-calendar-weekday,.qxframe9a7c2-calendar-cell{box-sizing:border-box;flex:0 0 calc((100% - 0.75rem)/7);min-width:0}
@@ -7,8 +7,52 @@
 .qxframe9a7c2-calendar-cell.is-outside:not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-calendar-cell.is-outside:hover:not(:disabled):not(.is-selected):not(.is-in-range),.qxframe9a7c2-calendar-cell.is-outside.is-hover:not(:disabled):not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-calendar.is-disabled{--_qxframe9a7c2-calendar-ring:none;--_qxframe9a7c2-calendar-opacity:.62}
+/* Opt-in source-style inline month. Dates/keyboard remain Calendar-owned;
+ * hidden complete trailing outside weeks are not part of this month's view.
+ * Default hosted/DatePicker calendars retain their six-week presentation. */
+.qxframe9a7c2-calendar.is-adaptive-month{
+  --_qxframe9a7c2-calendar-adaptive-cell:var(--qxframe9a7c2-calendar-cell-size,2rem);
+  --_qxframe9a7c2-calendar-adaptive-padding:var(--qxframe9a7c2-calendar-padding,var(--qxframe9a7c2-theme-calendar-padding,.5rem));
+  box-sizing:border-box;flex:0 0 auto;min-width:0;max-width:none;
+  width:calc(7 * var(--_qxframe9a7c2-calendar-adaptive-cell) + 2 * var(--_qxframe9a7c2-calendar-adaptive-padding));
+  padding:var(--_qxframe9a7c2-calendar-adaptive-padding);
+  border:0;background:transparent
+}
+@media (min-width:48rem){
+  .qxframe9a7c2-calendar.is-adaptive-month{
+    --_qxframe9a7c2-calendar-adaptive-cell:var(--qxframe9a7c2-calendar-cell-size,var(--qxframe9a7c2-theme-calendar-cell-size,2.5rem))
+  }
+}
+.qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-header{
+  min-height:var(--_qxframe9a7c2-calendar-adaptive-cell);
+  height:var(--_qxframe9a7c2-calendar-adaptive-cell);
+  margin-bottom:1rem
+}
+.qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-nav{
+  width:var(--_qxframe9a7c2-calendar-adaptive-cell);
+  height:var(--_qxframe9a7c2-calendar-adaptive-cell);
+  flex:0 0 var(--_qxframe9a7c2-calendar-adaptive-cell)
+}
+.qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-weekdays,
+.qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid{gap:0}
+.qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-weekday,
+.qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-cell{
+  box-sizing:border-box;flex:0 0 calc(100% / 7);width:calc(100% / 7);min-width:0;padding:0
+}
+.qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-weekday{
+  font-size:.8rem;line-height:var(--qxframe9a7c2-theme-calendar-weekday-leading,var(--qxframe9a7c2-theme-text-leading));font-weight:400
+}
+.qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid{
+  margin-top:.5rem;row-gap:.5rem
+}
+.qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-cell{
+  aspect-ratio:1/1;border-width:0
+}
+/* Source DayPicker presents four, five or six weeks as needed by the month. */
+.qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid:has(>.qxframe9a7c2-calendar-cell:nth-child(29).is-outside)>.qxframe9a7c2-calendar-cell:nth-child(n+29),
+.qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid:has(>.qxframe9a7c2-calendar-cell:nth-child(36).is-outside)>.qxframe9a7c2-calendar-cell:nth-child(n+36){display:none}
 
-.qxframe9a7c2-period-panel{--_qxframe9a7c2-period-panel-min-width:var(--qxframe9a7c2-period-panel-min-width,calc(16rem + 1.5rem));--_qxframe9a7c2-period-panel-bg:var(--qxframe9a7c2-period-panel-bg,var(--_qxframe9a7c2-semantic-surface));--_qxframe9a7c2-period-panel-border:var(--qxframe9a7c2-period-panel-border,var(--_qxframe9a7c2-semantic-border));--_qxframe9a7c2-period-panel-text:var(--qxframe9a7c2-period-panel-text,var(--_qxframe9a7c2-semantic-text));--_qxframe9a7c2-period-panel-divider:var(--qxframe9a7c2-period-panel-divider,var(--_qxframe9a7c2-semantic-border-subtle));--_qxframe9a7c2-period-panel-hover-bg:var(--qxframe9a7c2-period-panel-hover-bg,var(--_qxframe9a7c2-navigation-hover-bg));--_qxframe9a7c2-period-panel-selected-bg:var(--qxframe9a7c2-period-panel-selected-bg,var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-period-panel-selected-text:var(--qxframe9a7c2-period-panel-selected-text,var(--_qxframe9a7c2-semantic-on-accent));--_qxframe9a7c2-period-panel-range-bg:var(--qxframe9a7c2-period-panel-range-bg,var(--_qxframe9a7c2-data-selected-bg));--_qxframe9a7c2-period-panel-radius:var(--qxframe9a7c2-period-panel-radius,var(--_qxframe9a7c2-data-radius));--_qxframe9a7c2-period-panel-item-radius:var(--qxframe9a7c2-period-panel-item-radius,var(--_qxframe9a7c2-navigation-radius));--_qxframe9a7c2-date-panel-min-width:var(--_qxframe9a7c2-period-panel-min-width);--_qxframe9a7c2-date-panel-bg:var(--_qxframe9a7c2-period-panel-bg);--_qxframe9a7c2-date-panel-border:var(--_qxframe9a7c2-period-panel-border);--_qxframe9a7c2-date-panel-text:var(--_qxframe9a7c2-period-panel-text);--_qxframe9a7c2-date-panel-radius:var(--_qxframe9a7c2-period-panel-radius)}
+.qxframe9a7c2-period-panel{--_qxframe9a7c2-period-panel-min-width:var(--qxframe9a7c2-period-panel-min-width,calc(16rem + 1.5rem));--_qxframe9a7c2-period-panel-bg:var(--qxframe9a7c2-period-panel-bg,var(--_qxframe9a7c2-semantic-surface));--_qxframe9a7c2-period-panel-border:var(--qxframe9a7c2-period-panel-border,var(--_qxframe9a7c2-semantic-border));--_qxframe9a7c2-period-panel-text:var(--qxframe9a7c2-period-panel-text,var(--_qxframe9a7c2-semantic-text));--_qxframe9a7c2-period-panel-divider:var(--qxframe9a7c2-period-panel-divider,var(--_qxframe9a7c2-semantic-border-subtle));--_qxframe9a7c2-period-panel-hover-bg:var(--qxframe9a7c2-period-panel-hover-bg,var(--_qxframe9a7c2-navigation-hover-bg));--_qxframe9a7c2-period-panel-selected-bg:var(--qxframe9a7c2-period-panel-selected-bg,var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-period-panel-selected-text:var(--qxframe9a7c2-period-panel-selected-text,var(--_qxframe9a7c2-semantic-on-accent));--_qxframe9a7c2-period-panel-range-bg:var(--qxframe9a7c2-period-panel-range-bg,var(--_qxframe9a7c2-data-selected-bg));--_qxframe9a7c2-period-panel-radius:var(--qxframe9a7c2-period-panel-radius,var(--_qxframe9a7c2-popup-radius));--_qxframe9a7c2-period-panel-item-radius:var(--qxframe9a7c2-period-panel-item-radius,var(--_qxframe9a7c2-action-radius));--_qxframe9a7c2-date-panel-min-width:var(--_qxframe9a7c2-period-panel-min-width);--_qxframe9a7c2-date-panel-bg:var(--_qxframe9a7c2-period-panel-bg);--_qxframe9a7c2-date-panel-border:var(--_qxframe9a7c2-period-panel-border);--_qxframe9a7c2-date-panel-text:var(--_qxframe9a7c2-period-panel-text);--_qxframe9a7c2-date-panel-radius:var(--_qxframe9a7c2-period-panel-radius)}
 .qxframe9a7c2-period-panel-grid{display:flex;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-2)}
 .qxframe9a7c2-period-panel-cell{--_qxframe9a7c2-date-panel-cell-radius:var(--_qxframe9a7c2-period-panel-item-radius);position:relative;min-height:var(--_qxframe9a7c2-control-height);flex:0 0 calc(25% - (var(--_qxframe9a7c2-fixed-space-2) * .75));padding:var(--_qxframe9a7c2-control-gap)}
 .qxframe9a7c2-period-panel.is-disabled{opacity:.62}

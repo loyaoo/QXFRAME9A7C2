@@ -148,10 +148,13 @@ assert(controlSource.includes('clearReplacesToggle: false')&&!controlSource.incl
 for(const marker of [
   'Native text controls consume the same visual recipe as Control',
   ':hover:not(:focus):not(:disabled)',
-  '.qxframe9a7c2-form-selectgroup-item:has(>.qxframe9a7c2-form-selectgroup-input:checked)',
+  '.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked)',
   '.qxframe9a7c2-menu.is-inline.is-collapsed{min-width:0;width:min(var(--_qxframe9a7c2-menu-collapsed-width),100%)}',
   '.qxframe9a7c2-menu-group-label{display:none}',
-  'border-start-start-radius:max(0px,calc(var(--_qxframe9a7c2-card-radius) - 1px))',
+  // Card uses an outer ring, so slot corners keep the full surface radius.
+  'border:0 solid var(--_qxframe9a7c2-card-border)',
+  'outline:var(--qxframe9a7c2-theme-card-border-width,1px) solid var(--_qxframe9a7c2-card-border)',
+  'border-start-start-radius:max(0px,var(--_qxframe9a7c2-card-radius))',
   'can-scroll-start','can-scroll-end','--_qxframe9a7c2-table-fixed-head-z'
 ])assert(frameworkCss.includes(marker),'shared framework CSS polish marker missing '+marker);
 for(const marker of ["classList.toggle('has-horizontal-overflow'","classList.toggle('can-scroll-start'","classList.toggle('can-scroll-end'","DOM.listen(scrollViewport, 'scroll'"])assert(tableSource.includes(marker),'Table horizontal-overflow state marker missing '+marker);

@@ -13,8 +13,8 @@ const radius = (p.style === "lyra" || p.style === "sera") ? "none" : p.radius
 const t: any = buildRegistryTheme({ ...DEFAULT_CONFIG, baseColor: p.baseColor, theme: p.theme, chartColor: p.chartColor, menuAccent: p.menuAccent, radius } as any)
 const rule = (sel: string, v: any) => `${sel}{${Object.entries(v || {}).map(([k, x]) => `--${k}:${x};`).join("")}}`
 const st = document.createElement("style"); st.textContent = rule(":root", { ...(t.cssVars.theme || {}), ...t.cssVars.light }) + rule(".dark", t.cssVars.dark); document.head.appendChild(st)
-document.documentElement.style.setProperty("--font-sans", "RefInter, sans-serif")
-document.documentElement.style.setProperty("--font-heading", "RefInter, sans-serif")
+document.documentElement.style.setProperty("--font-sans", "system-ui, sans-serif")
+document.documentElement.style.setProperty("--font-heading", "system-ui, sans-serif")
 const C = p.item === "gallery" ? Gallery : p.item === "preview-02" ? Preview02 : Preview
 createRoot(document.getElementById("root")!).render(<TooltipProvider><div className="relative bg-background"><C /></div></TooltipProvider>)
 setTimeout(() => { (window as any).__ready = true }, 300)

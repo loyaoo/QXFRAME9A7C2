@@ -27,7 +27,8 @@
 .qxframe9a7c2-collapse-extra{flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 .qxframe9a7c2-collapse-panel{overflow:hidden;background:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-panel{background:transparent}
-.qxframe9a7c2-collapse-content{padding:0.375rem var(--_qxframe9a7c2-control-padding-inline);color:var(--_qxframe9a7c2-semantic-text-secondary)}
+/* Public per-instance prose color. Default Collapse keeps muted detail text. */
+.qxframe9a7c2-collapse-content{padding:0.375rem var(--_qxframe9a7c2-control-padding-inline);color:var(--qxframe9a7c2-collapse-content-color,var(--_qxframe9a7c2-semantic-text-secondary))}
 /* Capability resolves last and suppresses hover/focus disclosure decoration without changing Collapse behavior. */
 .qxframe9a7c2-collapse-item.is-disabled{--_qxframe9a7c2-collapse-main-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed;--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-indicator-ring:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed;--_qxframe9a7c2-collapse-item-opacity:.55}
 .qxframe9a7c2-collapse-main:disabled{--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed}
@@ -42,3 +43,57 @@
 .qxframe9a7c2-collapse.is-sm{--_qxframe9a7c2-control-padding-inline:var(--_qxframe9a7c2-fixed-space-5)}
 
 
+/* Static native disclosure variant for authored FAQ/Accordion markup.
+ * It reuses the framework Collapse roles and borders without invoking
+ * the dynamic Collapse controller; <details name> owns exclusive open state.
+ * This opt-in modifier does not alter ordinary JS-driven Collapse instances. */
+.qxframe9a7c2-collapse.is-native{
+  --_qxframe9a7c2-accordion-framed:var(--qxframe9a7c2-theme-accordion-framed,0);
+  box-sizing:border-box;display:flex;flex-direction:column;
+  overflow:var(--qxframe9a7c2-theme-accordion-overflow,visible);
+  border:calc(var(--_qxframe9a7c2-accordion-framed) * 1px) solid var(--qxframe9a7c2-theme-border);
+  border-radius:var(--qxframe9a7c2-theme-radius-field);
+  background:transparent;color:var(--qxframe9a7c2-theme-foreground);
+  font-size:var(--qxframe9a7c2-theme-text-size);
+  line-height:var(--qxframe9a7c2-theme-accordion-line-height,1.25rem)
+}
+/* Hidden native disclosure panels must not be reopened by the flex layout rule. */
+.qxframe9a7c2-collapse.is-native[hidden]{display:none}
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item,
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item{
+  border:0;border-bottom:1px solid var(--qxframe9a7c2-theme-border)
+}
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item:last-child{border-bottom:0}
+/* The framed source Accordion tints the expanded row, not every disclosure. */
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item[open]{
+  background:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) calc(var(--_qxframe9a7c2-accordion-framed) * 50%),transparent)
+}
+.qxframe9a7c2-collapse.is-native>.qxframe9a7c2-collapse-item>summary.qxframe9a7c2-collapse-header{
+  box-sizing:border-box;display:flex;min-height:0;align-items:flex-start;justify-content:space-between;
+  gap:var(--qxframe9a7c2-theme-accordion-trigger-gap,0);
+  padding:var(--qxframe9a7c2-theme-accordion-padding) calc(var(--_qxframe9a7c2-accordion-framed) * var(--qxframe9a7c2-theme-accordion-padding));
+  border:1px solid transparent;
+  border-radius:var(--qxframe9a7c2-theme-radius-field);
+  background:transparent;color:inherit;font-size:var(--qxframe9a7c2-theme-text-size);
+  font-weight:var(--qxframe9a7c2-theme-control-weight);line-height:inherit;
+  list-style:none;cursor:pointer
+}
+.qxframe9a7c2-collapse.is-native>details>summary::-webkit-details-marker{display:none}
+.qxframe9a7c2-collapse.is-native>details>summary::marker{content:""}
+.qxframe9a7c2-collapse.is-native .qxframe9a7c2-collapse-disclosure-icon{
+  flex:0 0 auto;
+  /* The chevron is 16px. Lyra's 16px trigger line has no spare ascent;
+   * 19.5/20px styles retain their original 2px optical offset. */
+  margin-top:clamp(0rem,calc(var(--qxframe9a7c2-theme-accordion-line-height,1.25rem) - 1rem),.125rem);
+  color:var(--qxframe9a7c2-theme-muted-foreground);
+  transition:transform var(--qxframe9a7c2-theme-duration-md)
+}
+.qxframe9a7c2-collapse.is-native>details[open]>summary .qxframe9a7c2-collapse-disclosure-icon{
+  transform:rotate(180deg)
+}
+.qxframe9a7c2-collapse.is-native>details>.qxframe9a7c2-collapse-content{
+  padding:0 calc(var(--_qxframe9a7c2-accordion-framed) * var(--qxframe9a7c2-theme-accordion-padding)) var(--qxframe9a7c2-accordion-content-padding,var(--qxframe9a7c2-theme-accordion-content-padding,var(--qxframe9a7c2-theme-accordion-padding)));
+  color:var(--qxframe9a7c2-collapse-content-color,var(--qxframe9a7c2-theme-muted-foreground));
+  font-size:var(--qxframe9a7c2-theme-text-size);
+  line-height:var(--qxframe9a7c2-theme-accordion-line-height,1.25rem)
+}

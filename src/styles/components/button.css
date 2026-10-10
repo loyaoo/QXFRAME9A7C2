@@ -71,6 +71,14 @@
     box-shadow var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1);
 }
 
+/* Source size-sm text actions have their own compact inline padding.
+ * Icon/square controls keep their existing fixed square size contract. */
+.qxframe9a7c2-button.is-md:not(.is-square):not(.is-icon-only){
+  padding-inline:var(--qxframe9a7c2-button-md-padding-inline,var(--qxframe9a7c2-theme-button-md-padding-inline,var(--_qxframe9a7c2-control-padding-inline)))
+}
+.qxframe9a7c2-button.is-sm:not(.is-square):not(.is-icon-only){
+  padding-inline:var(--qxframe9a7c2-button-sm-padding-inline,var(--qxframe9a7c2-theme-button-sm-padding-inline,.75rem))
+}
 .qxframe9a7c2-button.is-default{
   --_qxframe9a7c2-button-accent:var(--_qxframe9a7c2-semantic-text);
   --_qxframe9a7c2-button-hover:var(--_qxframe9a7c2-semantic-text);
@@ -288,6 +296,7 @@
   --_qxframe9a7c2-state-shadow:var(--_qxframe9a7c2-button-shadow);
   outline:var(--_qxframe9a7c2-focus-visible-outline);
   outline-offset:var(--_qxframe9a7c2-focus-visible-offset);
+  box-shadow:var(--_qxframe9a7c2-state-shadow),var(--qxframe9a7c2-theme-focus-shadow,none);
 }
 .qxframe9a7c2-button:active{
   --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-active-bg);
@@ -387,5 +396,16 @@
 }
 .qxframe9a7c2-button.is-circle{border-radius:50%}
 .qxframe9a7c2-button.is-block{width:100%}
+/* A source Button with shrink-0 and w-full must retain its intrinsic flex
+ * footprint even beside another full-width action (for example FAQ footer). */
+.qxframe9a7c2-button.is-no-shrink{flex-shrink:0}
+.qxframe9a7c2-button.is-label-nowrap{white-space:nowrap}
 
 
+
+/* Pointer focus is not Button :active: it is the persistent focus reached
+ * after a mouse click. Unlike keyboard :focus-visible, it has no outline;
+ * the Theme pointer halo is composed with the Button elevation. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:disabled):not(.is-disabled):not(.is-loading){
+  box-shadow:var(--_qxframe9a7c2-state-shadow),var(--qxframe9a7c2-theme-pointer-shadow,none)
+}

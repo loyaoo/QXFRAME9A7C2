@@ -114,6 +114,115 @@ try {
   await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
+  await step('Shared Select option padding grows with content; DatePicker Primary/shape roles match Button', async () => {
+    const result = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const outer = doc.createElement('div');
+      outer.className = 'qxframe9a7c2-select-option-host';
+      outer.style.cssText = 'position:absolute;left:-9999px;top:0;width:20rem;visibility:hidden;pointer-events:none';
+      const list = doc.createElement('div');
+      list.className = 'qxframe9a7c2-item-collection';
+      outer.appendChild(list);
+      const add = (id, content) => {
+        const row = doc.createElement('div');
+        row.className = 'qxframe9a7c2-item-collection-item';
+        row.dataset.qa = id;
+        row.innerHTML = content;
+        list.appendChild(row);
+        return row;
+      };
+      const single = add('single','<span class="qxframe9a7c2-item-collection-content-slot"><span class="qxframe9a7c2-item-collection-label">Alpha</span></span>');
+      const multiline = add('multiline','<span class="qxframe9a7c2-item-collection-content-slot">Line 1<br>Line 2</span>');
+      const rich = add('rich','<span class="qxframe9a7c2-item-collection-content-slot qxframe9a7c2-item-collection-custom-content"><span style="width:100%">Custom 1</span><span style="width:100%">Custom 2</span></span>');
+      const gauge = doc.createElement('div');
+      gauge.style.cssText = 'height:var(--_qxframe9a7c2-control-height);width:1px';
+      list.appendChild(gauge);
+      const panel = doc.createElement('div');
+      panel.className='qxframe9a7c2-date-panel';
+      const day = doc.createElement('button');
+      day.className='qxframe9a7c2-date-panel-cell is-selected';
+      day.textContent='15';
+      panel.appendChild(day);
+      outer.appendChild(panel);
+      const period = doc.createElement('div');
+      period.className='qxframe9a7c2-period-panel qxframe9a7c2-date-panel';
+      const month = doc.createElement('button');
+      month.className='qxframe9a7c2-period-panel-cell qxframe9a7c2-date-panel-cell is-selected';
+      month.textContent='October';
+      period.appendChild(month);
+      outer.appendChild(period);
+      const button=doc.createElement('button');
+      button.className='qxframe9a7c2-button is-primary is-solid';
+      button.textContent='Button';
+      outer.appendChild(button);
+      const primary=doc.createElement('div');
+      primary.style.background='var(--qxframe9a7c2-theme-primary)';
+      primary.style.border='1px solid var(--qxframe9a7c2-theme-primary)';
+      outer.appendChild(primary);
+      doc.body.appendChild(outer);
+      const dimensions=[];
+      try {
+        for(const size of ['is-sm','is-md','is-lg']){
+          list.className='qxframe9a7c2-item-collection '+size;
+          const h=el=>el.getBoundingClientRect().height;
+          const css=getComputedStyle(single);
+          dimensions.push({size,control:h(gauge),single:h(single),multiline:h(multiline),rich:h(rich),
+            padding:css.paddingTop,overflow:css.overflow,whiteSpace:css.whiteSpace,
+            clipped:[multiline,rich].some(el=>el.scrollHeight>el.clientHeight+1)});
+        }
+        const buttonRadius=getComputedStyle(button).borderRadius;
+        const dateRadius=getComputedStyle(day).borderRadius;
+        const monthRadius=getComputedStyle(month).borderRadius;
+        const panelRadius=getComputedStyle(panel).borderRadius;
+        const solid=getComputedStyle(primary).backgroundColor;
+        const normal=getComputedStyle(day).backgroundColor;
+        day.classList.add('is-hover');
+        const hovered=getComputedStyle(day).backgroundColor;
+        day.classList.remove('is-hover');
+        month.classList.add('is-hover');
+        const monthHover=getComputedStyle(month).backgroundColor;
+        return {dimensions,buttonRadius,dateRadius,monthRadius,panelRadius,
+          solid,normal,hovered,monthHover};
+      } finally {outer.remove();}
+    })()`);
+    assert.equal(result?.dimensions?.length,3,'Select source size variants measured');
+    for(const entry of result.dimensions){
+      assert.ok(Math.abs(entry.single-entry.control)<=.6,'Select single option must match Control via natural padding: '+JSON.stringify(entry));
+      assert.ok(entry.multiline>entry.single+8 && entry.rich>entry.single+8,'Select multiline and rendered item must expand: '+JSON.stringify(entry));
+      assert.equal(entry.clipped,false,'Select rich and multiline options cannot be clipped');
+      assert.equal(entry.whiteSpace,'normal','Select item must allow natural text wrapping');
+    }
+    assert.equal(result.dateRadius,result.buttonRadius,'DatePicker day radius follows Button action radius');
+    assert.equal(result.monthRadius,result.buttonRadius,'PeriodPanel cell radius follows Button action radius');
+    assert.equal(result.normal,result.solid,'Selected date uses solid Theme Primary');
+    assert.equal(result.hovered,result.solid,'Selected DatePicker hover must not fade Theme Primary to 80%');
+    assert.equal(result.monthHover,result.solid,'Selected PeriodPanel hover must not fade Theme Primary to 80%');
+  });
+
+
+  await step('Preview Empty is a QX composition with measured 32/14/16 geometry', async () => {
+    const geometry = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const root = doc.querySelector('[data-card="empty-distribute-track"] .qxframe9a7c2-empty.is-composed');
+      if (!root) return null;
+      const media = root.querySelector('.qxframe9a7c2-empty-media.is-icon');
+      const header = root.querySelector('.qxframe9a7c2-empty-header');
+      const title = header?.querySelector('.qxframe9a7c2-empty-title');
+      if (!media || !title) return null;
+      return {
+        media: getComputedStyle(media).width,
+        title: getComputedStyle(title).fontSize,
+        gap: getComputedStyle(root).rowGap,
+        mediaOwnedByRoot: media.parentElement === root,
+        titleOwnedByHeader: title.parentElement === header
+      };
+    })()`);
+    assert.deepEqual(geometry, {
+      media: '32px', title: '14px', gap: '16px',
+      mediaOwnedByRoot: true, titleOwnedByHeader: true
+    });
+  });
+
   await step('hover previews a style without committing; leaving reverts', async () => {
     await click('document.querySelector(\'[data-create-picker="style"]\')');
     await waitFor(`!!(${menuItem('Luma')})`, 'style menu');
@@ -197,6 +306,1721 @@ try {
     assert.equal(restored.config.theme, 'teal');
     assert.equal(restored.config.ext.density, 'loose');
     await waitFor(`${frameAttr('data-create-style')} === 'rhea'`, 'preview follows URL');
+  });
+
+  await step('QX shape and InputGroup: theme radius / addon borders / Luma switch', async () => {
+    // The current page is Preview 02; validate against the real iframe stylesheet.
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "luma", radius: "default", ext: {} })');
+    await waitFor(`${frameAttr('data-create-style')} === 'luma'`, 'Luma preview');
+    // Width transitions when the theme changes. The iframe style marker is
+    // updated synchronously, but the thumb's animated used width is not.
+    // Poll actual geometry until it reaches the target; never skip the assertion.
+    const lumaGeometry = `(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const thumb = doc?.querySelector('.qxframe9a7c2-switch-thumb');
+      if (!thumb) return null;
+      const style = doc.defaultView.getComputedStyle(thumb);
+      const root = doc.defaultView.getComputedStyle(doc.documentElement);
+      return {
+        width: parseFloat(style.width),
+        height: parseFloat(style.height),
+        extra: root.getPropertyValue('--qxframe9a7c2-theme-switch-thumb-extra').trim()
+      };
+    })()`;
+    await waitFor(`(() => {
+      const g = ${lumaGeometry};
+      return g && g.extra === '0.5rem' && g.width > g.height + 4;
+    })()`, 'Luma switch capsule after CSS transition', 5000);
+    const luma = await evaluate(lumaGeometry);
+    assert.ok(luma && luma.width > luma.height + 4 && luma.extra === '0.5rem',
+      'Luma switch thumb must reach a horizontal capsule: ' + JSON.stringify(luma));
+
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, radius: "none" })');
+    const zero = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const host = doc.createElement('div'); host.className = 'qxframe9a7c2-native-form';
+      const radio = doc.createElement('input'); radio.type = 'radio'; radio.checked = true;
+      host.append(radio); doc.body.append(host);
+      const computed = doc.defaultView.getComputedStyle(radio);
+      const dot = doc.defaultView.getComputedStyle(radio, '::before');
+      const result = { outer: computed.borderTopLeftRadius, inner: dot.borderTopLeftRadius };
+      host.remove();
+      return result;
+    })()`);
+    assert.deepEqual(zero, { outer: '0px', inner: '0px' }, 'global zero radius applies to both radio rings');
+
+    const group = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const root = doc.querySelector('.qxframe9a7c2-form-input-group:has(> .qxframe9a7c2-form-input-group-addon)');
+      const addon = root?.querySelector(':scope > .qxframe9a7c2-form-input-group-addon');
+      const field = root?.querySelector(':scope > .qxframe9a7c2-form-input');
+      if (!root || !addon || !field) return null;
+      const css = node => doc.defaultView.getComputedStyle(node);
+      return { group: css(root).borderTopWidth, addon: css(addon).borderTopWidth, input: css(field).borderTopWidth };
+    })()`);
+    assert.ok(group && parseFloat(group.group) > 0 && group.addon === '0px' && group.input === '0px', 'addon must be INSIDE one outlined field: ' + JSON.stringify(group));
+
+    const mixed = await evaluate(`(() => {
+      const doc = document.querySelector('[data-create-frame]').contentDocument;
+      const root = doc.createElement('div');
+      root.className = 'qxframe9a7c2-form-input-group';
+      root.style.width = '320px';
+      root.innerHTML = '<span class="qxframe9a7c2-form-input-group-prefix">https://</span><div class="qxframe9a7c2-form-input-group-field"><span class="qxframe9a7c2-form-input-group-addon">#</span><input class="qxframe9a7c2-form-input" value="project"></div><span class="qxframe9a7c2-form-input-group-suffix">.com</span>';
+      doc.body.append(root);
+      const names = ['prefix','field','addon','input','suffix'];
+      const els = [
+        root.children[0],root.children[1],root.children[1].children[0],
+        root.children[1].children[1],root.children[2]
+      ];
+      const result = Object.fromEntries(names.map((name,i) => {
+        const cs = doc.defaultView.getComputedStyle(els[i]);
+        return [name, { border: cs.borderTopWidth, leftRadius:cs.borderTopLeftRadius, rightRadius:cs.borderTopRightRadius }];
+      }));
+      result.rootBorder = doc.defaultView.getComputedStyle(root).borderTopWidth;
+      root.remove();return result;
+    })()`);
+    assert.equal(mixed.rootBorder, '0px', 'external segments are not inside a shared root border');
+    assert.ok(parseFloat(mixed.field.border)>0 && parseFloat(mixed.prefix.border)>0 && parseFloat(mixed.suffix.border)>0);
+    assert.equal(mixed.addon.border,'0px');
+    assert.equal(mixed.input.border,'0px');
+    assert.equal(mixed.field.leftRadius,'0px');
+    assert.equal(mixed.field.rightRadius,'0px');
+
+  });
+
+  await step('Empty geometry: source-locked 8 styles x light/dark', async () => {
+    const expected = {
+      vega: [48,40,18,28,10,10,24,16], nova: [24,32,14,20,14,10,16,10],
+      maia: [48,40,18,28,10,10,24,16], lyra: [24,32,14,20,0,0,16,10],
+      mira: [24,32,14,20,14,8,16,8], luma: [48,40,18,28,18,14,20,16],
+      sera: [48,40,18,28,0,0,20,16], rhea: [48,40,18,28,22,14,20,16]
+    };
+    const approx = (actual, expectedValue, description) =>
+      assert.ok(Number.isFinite(actual) && Math.abs(actual - expectedValue) <= 0.5,
+        description + ': expected ' + expectedValue + 'px, got ' + actual);
+    for (const [style, [inset, mediaSize, titleSize, titleLine, outerRadius, mediaRadius, glyphSize, contentGap]] of Object.entries(expected)) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "' + style + '", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style') + ' === "' + style + '"', style + ' Empty style');
+      for (const mode of ['light','dark']) {
+        const actual = await evaluate(`(() => {
+          const doc = document.querySelector('[data-create-frame]').contentDocument;
+          const root = doc.documentElement, previous = root.classList.contains('dark');
+          root.classList.toggle('dark', ${mode === 'dark'});
+          const empty = doc.querySelector('.qxframe9a7c2-empty.is-composed:has(> .qxframe9a7c2-empty-media.is-icon)');
+          if (!empty) { root.classList.toggle('dark', previous); return null; }
+          const media = empty.querySelector('.qxframe9a7c2-empty-media.is-icon');
+          const title = empty.querySelector('.qxframe9a7c2-empty-title');
+          const desc = empty.querySelector('.qxframe9a7c2-empty-description');
+          const fixture = doc.createElement('div');
+          fixture.className = 'qxframe9a7c2-empty is-composed is-bordered';
+          fixture.innerHTML = '<div class="qxframe9a7c2-empty-content"><span>Alpha</span><span>Beta</span></div>';
+          doc.body.append(fixture);
+          const css = el => doc.defaultView.getComputedStyle(el);
+          const read = value => parseFloat(value);
+          const result = {
+            inset: read(css(empty).paddingTop), gap: read(css(empty).rowGap),
+            media: read(css(media).width), mediaRadius: read(css(media).borderTopLeftRadius),
+            glyph: read(css(media.querySelector('svg')).width), contentGap: read(css(fixture.firstElementChild).rowGap),
+            titleSize: read(css(title).fontSize), titleLine: read(css(title).lineHeight),
+            titleWeight: read(css(title).fontWeight), descSize: read(css(desc).fontSize),
+            descLine: read(css(desc).lineHeight),
+            outerRadius: read(css(fixture).borderTopLeftRadius)
+          };
+          fixture.remove();
+          root.classList.toggle('dark', previous);
+          return result;
+        })()`);
+        assert.ok(actual, style + '/' + mode + ' missing Empty specimen');
+        const label = style + '/' + mode + ' Empty';
+        approx(actual.inset, inset, label + ' inset');
+        approx(actual.gap, 16, label + ' gap');
+        approx(actual.media, mediaSize, label + ' media');
+        approx(actual.glyph, glyphSize, label + ' inner SVG (not media box)');
+        approx(actual.contentGap, contentGap, label + ' EmptyContent children gap');
+        approx(actual.mediaRadius, mediaRadius, label + ' media radius');
+        approx(actual.titleSize, titleSize, label + ' title size');
+        approx(actual.titleLine, titleLine, label + ' title line');
+        approx(actual.outerRadius, outerRadius, label + ' outer radius');
+        approx(actual.descSize, ['lyra','mira'].includes(style) ? 12 : 14, label + ' description size');
+        approx(actual.descLine, ['lyra','mira'].includes(style) ? 19.5 : 22.75, label + ' description line');
+        assert.equal(actual.titleWeight, style === 'sera' ? 600 : 500, label + ' title weight');
+      }
+    }
+  });
+
+  await step('Item and Field computed parity across 8 styles x light/dark', async () => {
+    // Pinned source: tools/qa/spec.json; target only shared default-md layout,
+    // leaving independent xs/sm geometry and nested Card acceptance for S3.
+    const expected = {
+      vega:[74.25,14,16,14,8,14,19.25,500,21,28,12,14,14,500,21],
+      nova:[66.25,10,12,10,10,14,19.25,500,21,20,8,14,14,500,21],
+      maia:[73.25,14,16,14,18,14,19.25,500,20,28,12,14,14,500,21],
+      lyra:[61.5,10,12,10,0,12,16,500,19.5,20,8,12,12,400,18],
+      mira:[62,10,12,10,8,12,16.5,500,19.5,16,8,12,12,500,18],
+      luma:[73.25,14,16,14,18,14,19.25,500,20,28,12,14,14,500,21],
+      sera:[73.25,14,16,14,0,12,16.5,600,22.75,40,12,12,19.5,600,21],
+      rhea:[73.25,14,16,14,18,14,19.25,500,20,24,12,14,14,500,21]
+    };
+    const approx = (actual, expectedValue, name) =>
+      assert.ok(Number.isFinite(actual) && Math.abs(actual-expectedValue) <= .5,
+        name + ': expected ' + expectedValue + 'px, measured ' + actual + 'px');
+    for (const [style, numbers] of Object.entries(expected)) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "' + style + '", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style') + ' === "' + style + '"', 'Item/Field preview ' + style);
+      for (const mode of ['light','dark']) {
+        const actual = await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement, old=html.classList.contains('dark');
+          html.classList.toggle('dark', ${mode === 'dark'});
+          const host=doc.createElement('div');
+          host.style.cssText='position:absolute;left:0;top:0;width:320px;visibility:hidden';
+          host.innerHTML='<div class="qxframe9a7c2-item is-outline"><div class="qxframe9a7c2-item-content"><div class="qxframe9a7c2-item-title">Short item</div><p class="qxframe9a7c2-item-desc">A short note.</p></div></div><div class="qxframe9a7c2-field-group"><div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label">Full name</label><input class="qxframe9a7c2-form-input" value="Example"><p class="qxframe9a7c2-form-description">Description</p></div><div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label">Email</label><input class="qxframe9a7c2-form-input" value="example@mail.test"></div></div>';
+          doc.body.append(host);
+          const css=el=>doc.defaultView.getComputedStyle(el),n=v=>parseFloat(v);
+          const item=host.querySelector('.qxframe9a7c2-item');
+          const title=host.querySelector('.qxframe9a7c2-item-title');
+          const itemDesc=host.querySelector('.qxframe9a7c2-item-desc');
+          const fields=host.querySelector('.qxframe9a7c2-field-group');
+          const field=fields.firstElementChild;
+          const label=field.querySelector('.qxframe9a7c2-form-label');
+          const formDesc=field.querySelector('.qxframe9a7c2-form-description');
+          const values=[
+            n(css(item).height),n(css(item).paddingTop),n(css(item).paddingLeft),n(css(item).columnGap),
+            n(css(item).borderTopLeftRadius),n(css(title).fontSize),n(css(title).lineHeight),
+            n(css(title).fontWeight),n(css(itemDesc).lineHeight),
+            n(css(fields).rowGap),n(css(field).rowGap),n(css(label).fontSize),
+            n(css(label).lineHeight),n(css(label).fontWeight),n(css(formDesc).lineHeight)
+          ];
+          host.remove(); html.classList.toggle('dark',old);
+          return values;
+        })()`);
+        assert.ok(Array.isArray(actual), style + '/' + mode + ' fixture missing');
+        const labels=['item height','item block padding','item inline padding','item gap',
+          'item corner','title font','title line','title weight','item description line',
+          'field-group gap','field gap','label font','label line','label weight','field description line'];
+        for(let i=0;i<numbers.length;i++)
+          approx(actual[i],numbers[i],style+'/'+mode+' '+labels[i]);
+      }
+    }
+  });
+
+  await step('Source-local FAQ, Empty and Preferences geometry in 16 themes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=empty-distribute-track]")', 'Preview 01 card fixtures');
+    // Pinned source style-mira has AccordionTrigger p-2 (8px), yet
+    // AccordionContentInner pb-4 (16px); the roles are independently sourced.
+    const accordionTrigger={vega:16,nova:10,maia:16,lyra:10,mira:8,luma:16,sera:16,rhea:16};
+    const accordionContent={vega:16,nova:10,maia:16,lyra:10,mira:16,luma:16,sera:16,rhea:16};
+    const approx=(actual,expected,label)=>assert.ok(Number.isFinite(actual)&&Math.abs(actual-expected)<=.5,
+      label+': expected '+expected+', observed '+actual);
+    for(const [style,inset] of Object.entries(accordionTrigger)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' FAQ fixtures');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement,prev=html.classList.contains('dark');
+          html.classList.toggle('dark',${mode==='dark'});
+          const css=el=>doc.defaultView.getComputedStyle(el),px=v=>parseFloat(v);
+          const faq=doc.querySelector('[data-card="faq"]');
+          const prefs=doc.querySelector('[data-card="preferences"]');
+          const empty=doc.querySelector('[data-card="empty-distribute-track"] .qxframe9a7c2-empty.is-composed');
+          const separators=[...prefs.querySelectorAll('.pv-divider-bleed')];
+          const result={
+            trigger: px(css(faq.querySelector('.qxframe9a7c2-collapse-item > summary')).paddingTop),
+            content: px(css(faq.querySelector('.qxframe9a7c2-collapse-content')).paddingBottom),
+            separatorCount: separators.length,
+            separator: separators.map(el=>{
+              const before=css(el);
+              const values=[px(before.marginTop),px(before.marginBottom),px(before.height),
+                before.backgroundColor,before.display,el.getBoundingClientRect().height];
+              el.style.setProperty('--qxframe9a7c2-field-separator-display','block');
+              values.push(css(el).display);
+              el.style.removeProperty('--qxframe9a7c2-field-separator-display');
+              return values;
+            }),
+            emptyPadding: px(css(empty).paddingTop),
+            emptyMedia: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).width),
+            emptyMediaBottom: px(css(empty.querySelector('.qxframe9a7c2-empty-media')).marginBottom),
+            emptyHeader: px(css(empty.querySelector('.qxframe9a7c2-empty-header')).rowGap)
+          };
+          html.classList.toggle('dark',prev);
+          return result;
+        })()`);
+        const label=style+'/'+mode;
+        approx(actual.trigger,inset,label+' Accordion trigger inset');
+        approx(actual.content,accordionContent[style],label+' Accordion content inset');
+        assert.equal(actual.separatorCount,2,label+' field separators');
+        for(const pair of actual.separator){
+          approx(pair[0],-16,label+' separator top margin');
+          approx(pair[1],-16,label+' separator bottom margin');
+          approx(pair[2],20,label+' source 20px separator slot');
+          assert.ok(pair[3]==='rgba(0, 0, 0, 0)'||pair[3]==='transparent',
+            label+' separator slot must be transparent except 1px center line');
+          assert.equal(pair[4],style==='sera'?'none':'block',
+            label+' source editorial FieldSeparator hidden only in Sera');
+          approx(pair[5],style==='sera'?0:20,label+' displayed separator layout box');
+          assert.equal(pair[6],'block',label+' local author override wins over Theme visibility');
+        }
+        approx(actual.emptyPadding,16,label+' Card Empty p-4');
+        approx(actual.emptyMedia,(['nova','lyra','mira'].includes(style)?32:40),label+' media retains theme size');
+        approx(actual.emptyMediaBottom,8,label+' media bottom gap');
+        approx(actual.emptyHeader,style==='mira'?4:8,label+' Empty header gap');
+      }
+    }
+  });
+
+  await step('Upcoming Payments Calendar selects today using the original source runtime configuration', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")', 'Upcoming Payments');
+    const state=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const host=doc.querySelector('[data-card="upcoming-payments"] [data-pv-calendar]');
+      const today=new Date();
+      const toKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+      return {authored:host?.getAttribute('data-value'),
+        todayKey:toKey(today),
+        selected:[...host.querySelectorAll('.qxframe9a7c2-calendar-cell.is-selected')].map(el=>({
+          date:el.dataset.value||el.getAttribute('data-date')||el.getAttribute('title')||'',
+          today:el.classList.contains('is-today')
+        }))};
+    })()`);
+    assert.equal(state.authored,'today');
+    assert.equal(state.selected.length,1,'UpcomingPayments original source initializes selected new Date()');
+    assert.ok(state.selected[0].today,'live selected date matches Calendar own today state');
+  });
+
+  await step('Framed Radio Field and static SidebarMenuButton reproduce source box models', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','Receiving Method');
+    for(const style of ['nova','maia','luma','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Radio Field/Sidebar');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const css=e=>doc.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+        const radio=doc.querySelector('[data-card="receiving-method"]');
+        const choices=[...radio.querySelectorAll('.qxframe9a7c2-selectgroup-item')];
+        const menu=doc.querySelector('[data-card="sidebar-nav"]');
+        const button=menu.querySelector('.qxframe9a7c2-sidebar-menu-button');
+        const groupTitle=menu.querySelector('.qxframe9a7c2-sidebar-group-label');
+        return {choices:choices.map(c=>({top:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).paddingTop),bottom:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).paddingBottom),
+          side:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).paddingLeft),border:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).borderTopWidth),height:c.getBoundingClientRect().height,
+          titleLine:px(css(c.querySelector('.qxframe9a7c2-field-title')).lineHeight),
+          contentHeight:c.querySelector('.qxframe9a7c2-field-content').getBoundingClientRect().height,
+          titleHeight:c.querySelector('.qxframe9a7c2-field-title').getBoundingClientRect().height})),
+          buttonHeight:button.getBoundingClientRect().height,buttonPad:px(css(button).paddingLeft),
+          groupPad:px(css(groupTitle).paddingLeft)};
+      })()`);
+      assert.equal(actual.choices.length,2,style+' shared Radio Field rows');
+      const inset={nova:10,maia:16,luma:16,sera:16}[style];
+      for(const row of actual.choices){
+        assert.equal(row.border,1,style+' FieldLabel outer border');
+        assert.ok(Math.abs(row.top-inset)<=.5&&Math.abs(row.side-inset)<=.5,
+          style+' source Radio Field p-x/p-t');
+        assert.ok(Math.abs(row.bottom-10)<=.5,style+' source pb-2.5');
+      }
+      const menuHeight=['maia','luma','sera'].includes(style)?36:32;
+      assert.ok(Math.abs(actual.buttonHeight-menuHeight)<=.5,style+' pinned SidebarMenuButton height');
+      assert.ok(Math.abs(actual.buttonPad-(menuHeight===36?12:8))<=.5,style+' pinned SidebarMenuButton horizontal pad');
+      assert.ok(Math.abs(actual.groupPad-(menuHeight===36?12:8))<=.5,style+' source SidebarGroupLabel inset');
+      for(const row of actual.choices){
+        const expectedHeight=Math.max(16,row.contentHeight)+row.top+row.bottom+row.border*2;
+        assert.ok(Math.abs(row.height-expectedHeight)<=.5,
+          style+' RadioField natural height tracks content and exact source insets: '+row.height+'/'+expectedHeight);
+        assert.ok(row.titleHeight>=row.titleLine-.5,
+          style+' source title owns at least one typographic line');
+      }
+      // The pinned 91.5px absolute comparison is checked under the *same*
+      // Chromium+system-ui font as the source, inside preview-01-audit.mjs.
+      // The browser theme-control test may use different font metrics.
+    }
+  });
+
+  await step('Adaptive Calendar uses source-sized cells and visible month rows', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Adaptive Calendar');
+    for(const style of ['nova','mira','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Adaptive Calendar');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const calendar=doc.querySelector('[data-card="upcoming-payments"] .qxframe9a7c2-calendar');
+        const css=e=>doc.defaultView.getComputedStyle(e);
+        const cells=[...calendar.querySelectorAll('.qxframe9a7c2-calendar-cell')];
+        const first=cells.findIndex(c=>!c.classList.contains('is-outside'));
+        const inside=cells.filter(c=>!c.classList.contains('is-outside')).length;
+        const visible=cells.filter(c=>css(c).display!=='none').length;
+        return {css:calendar.className,width:calendar.getBoundingClientRect().width,
+          inset:parseFloat(css(calendar).paddingTop),border:parseFloat(css(calendar).borderTopWidth),
+          cell:cells[0].getBoundingClientRect().width,nav:calendar.querySelector('.qxframe9a7c2-calendar-header').getBoundingClientRect().height,
+          total:cells.length,visible,expected:Math.ceil((first+inside)/7)*7};
+      })()`);
+      const cell=style==='sera'?36:40,inset=style==='nova'?8:12;
+      assert.ok(actual.css.includes('is-adaptive-month'),style+' variant');
+      assert.ok(Math.abs(actual.width-(cell*7+inset*2))<=.5,style+' calendar width');
+      assert.ok(Math.abs(actual.inset-inset)<=.5,style+' calendar inset');
+      assert.equal(actual.border,0,style+' borderless calendar');
+      assert.ok(Math.abs(actual.cell-cell)<=.5,style+' source day width');
+      assert.ok(Math.abs(actual.nav-cell)<=.5,style+' source nav height');
+      assert.equal(actual.total,42,style+' runtime calendar retains 42 state entries');
+      assert.equal(actual.visible,actual.expected,style+' displays 4/5/6 actual month weeks');
+    }
+  });
+
+  await step('Adaptive Calendar keyboard movement across the month remains visible', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Calendar keyboard');
+    const state=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const root=doc.querySelector('[data-card="upcoming-payments"] .qxframe9a7c2-calendar');
+      const cells=[...root.querySelectorAll('.qxframe9a7c2-calendar-cell')];
+      const lastCurrent=cells.filter(el=>!el.classList.contains('is-outside')).at(-1);
+      const before=root.querySelector('.qxframe9a7c2-calendar-title').textContent.trim();
+      lastCurrent.click();
+      root.dispatchEvent(new doc.defaultView.KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true,cancelable:true}));
+      const after=root.querySelector('.qxframe9a7c2-calendar-title').textContent.trim();
+      const hiddenActive=[...root.querySelectorAll('.qxframe9a7c2-calendar-cell.is-keyboard-focus,.qxframe9a7c2-calendar-cell.is-active')]
+        .filter(el=>doc.defaultView.getComputedStyle(el).display==='none').length;
+      return {before,after,hiddenActive};
+    })()`);
+    assert.notEqual(state.before,state.after,'ArrowDown from last visible week navigates into next month');
+    assert.equal(state.hiddenActive,0,'adaptive trailing-week CSS must not create invisible active day');
+  });
+
+  await step('Display CardTitle uses pinned source leading for each style', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=claimable-balance]")','Claimable Card');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Claimable title');
+      const row=await evaluate(`(() => {
+        const d=document.querySelector('[data-create-frame]').contentDocument;
+        const title=d.querySelector('[data-card="claimable-balance"] .qxframe9a7c2-card-title');
+        const css=d.defaultView.getComputedStyle(title),r=title.getBoundingClientRect();
+        return {display:title.classList.contains('is-display'),font:parseFloat(css.fontSize),
+          line:parseFloat(css.lineHeight),height:r.height};
+      })()`);
+      const leading=style==='vega'?1.5:style==='nova'?1.375:1;
+      assert.equal(row.display,true,style+' shared display variant');
+      assert.ok(Math.abs(row.font-48)<=.5,style+' source text-5xl');
+      assert.ok(Math.abs(row.line-48*leading)<=.5,style+' source line-height');
+      assert.ok(Math.abs(row.height-48*leading)<=.5,style+' source title box height');
+    }
+  });
+
+  await step('FAQ footer preserves two intrinsic non-shrinking full-width actions', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ footer');
+    for(const style of ['sera','lyra','maia','nova']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' FAQ Footer');
+      const g=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const footer=doc.querySelector('[data-card="faq"] .qxframe9a7c2-card-footer');
+        const elements=[...footer.querySelectorAll('.qxframe9a7c2-button')];
+        const cs=e=>doc.defaultView.getComputedStyle(e),r=footer.getBoundingClientRect();
+        return {gap:parseFloat(cs(footer).columnGap),footerHeight:r.height,
+          buttons:elements.map(el=>({height:el.getBoundingClientRect().height,
+            width:el.getBoundingClientRect().width,left:el.getBoundingClientRect().left-r.left,
+            shrink:cs(el).flexShrink,text:el.querySelector('.qxframe9a7c2-button-label')?.getBoundingClientRect().height}))};
+      })()`);
+      assert.equal(g.gap,0,style+' source adjacent FAQ actions');
+      assert.equal(g.buttons.length,2,style+' source two FAQ Buttons');
+      for(const btn of g.buttons){
+        assert.equal(btn.shrink,'0',style+' Button shrink-0');
+        assert.ok(Math.abs(btn.height-g.buttons[0].height)<=.5,style+' FAQ Buttons share one row height');
+      }
+      assert.ok(Math.abs(g.buttons[1].left-(g.buttons[0].left+g.buttons[0].width))<=.5,
+        style+' source full-width Buttons sit side by side without shrink/gap');
+      assert.ok(Math.abs(g.buttons[0].width-(r=>r)(g.buttons[1].width))<=.5,
+        style+' both actions consume same full-width card-content span');
+      assert.ok(g.footerHeight>=g.buttons[0].height-.5,style+' footer retains natural action height');
+    }
+  });
+
+  await step('Embedded Table uses collapsed Row borders, excluding final row', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=recent-transactions]")','Transaction rows');
+    for(const style of ['vega','nova']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' source Table row');
+      const rows=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const table=doc.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-table.is-embedded');
+        const css=x=>doc.defaultView.getComputedStyle(x);
+        return {collapse:css(table).borderCollapse,items:[...table.querySelectorAll('tbody tr')].map(tr=>({
+          row:parseFloat(css(tr).borderBottomWidth),
+          cell:parseFloat(css(tr.querySelector('td')).borderBottomWidth),
+          height:tr.getBoundingClientRect().height}))};
+      })()`);
+      assert.equal(rows.collapse,'collapse',style+' pinned source Table');
+      assert.equal(rows.items.length,5,style+' five pinned transactions');
+      rows.items.forEach((row,i)=>{
+        assert.equal(row.cell,0,style+' Row not Cell owns border');
+        assert.equal(row.row,i===4?0:1,style+' interrow border only');
+        assert.ok(row.height>=55.5,style+' transaction Row natural media + padding size');
+        // Exact 56.5/57/57/57/56.5px source rows are enforced in the
+        // paired system-ui Chromium job, not under this browser's font.
+      });
+    }
+  });
+
+  await step('Small Item style tiers and Sera Preferences action width remain source-driven', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=preferences]")','Preferences footer');
+    for(const style of ['vega','maia','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Item sm tier');
+      const v=await evaluate(`(() => {
+        const d=document.querySelector('[data-create-frame]').contentDocument,css=e=>d.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+        const row=d.querySelector('[data-card="kitchen-island"] .qxframe9a7c2-item.is-sm');
+        const footer=d.querySelector('[data-card="preferences"] .qxframe9a7c2-card-footer');
+        const buttons=[...footer.querySelectorAll('.qxframe9a7c2-button')];
+        return {sm:px(css(row).paddingTop),footerGap:px(css(footer).columnGap),
+          heights:buttons.map(b=>b.getBoundingClientRect().height),
+          widths:buttons.map(b=>b.getBoundingClientRect().width),
+          intrinsicWidths:buttons.map(b=>b.querySelector('.qxframe9a7c2-button-label').getBoundingClientRect().width+
+            px(css(b).paddingLeft)+px(css(b).paddingRight)+px(css(b).borderLeftWidth)+px(css(b).borderRightWidth))};
+      })()`);
+      assert.ok(Math.abs(v.sm-(style==='vega'?10:12))<=.5,style+' source small Item inset');
+      assert.equal(v.footerGap,0,style+' Preferences Footer has no invented gap');
+      if(style==='sera'){
+        assert.ok(Math.abs(v.heights[1]-40)<=.5,'Sera Save Preferences must stay one line, 40px');
+        assert.ok(v.widths[1]>=v.intrinsicWidths[1]-.5,
+          'Sera Save Preferences must not shrink below one-line label plus padding');
+        // 203.73px source width is accepted by the paired system-ui renderer,
+        // since this interaction runner need not share that font.
+      }
+    }
+  });
+
+  await step('Source Card action gap, Item sm vertical insets and transaction zero Stack', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")','Kitchen Item');
+    for(const style of ['vega','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' source header/Item');
+      const v=await evaluate(`(() => {
+        const d=document.querySelector('[data-create-frame]').contentDocument,css=e=>d.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+        const header=d.querySelector('[data-card="payout-threshold"] .qxframe9a7c2-card-header');
+        const small=d.querySelector('[data-card="kitchen-island"] .qxframe9a7c2-item.is-sm');
+        const stack=d.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-stack.is-gap-0');
+        const table=d.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-table.is-embedded');
+        const label=d.querySelector('[data-card="cover-art"] .qxframe9a7c2-form-label.is-artwork-meta');
+        const desc=d.querySelector('[data-card="cover-art"] .qxframe9a7c2-card-description.is-artwork-meta');
+        return {headerGap:px(css(header).columnGap),smPadding:px(css(small).paddingTop),
+          stackGap:px(css(stack).rowGap),tableCollapse:css(table).borderCollapse,
+          artLabel:px(css(label).lineHeight),artDesc:px(css(desc).lineHeight)};
+      })()`);
+      assert.ok(Math.abs(v.headerGap-(style==='sera'?6:4))<=.5,style+' pinned Header action gap');
+      assert.ok(Math.abs(v.smPadding-(style==='vega'?10:12))<=.5,style+' pinned sm Item padding');
+      assert.ok(Math.abs(v.stackGap)<=.01,style+' semantic gap-0 must be zero');
+      assert.equal(v.tableCollapse,'collapse',style+' source Tailwind Table border collapse');
+      if(style==='vega'){assert.ok(Math.abs(v.artLabel-12)<=.5);assert.ok(Math.abs(v.artDesc-16)<=.5)}
+      if(style==='sera'){assert.ok(Math.abs(v.artLabel-19.5)<=.5);assert.ok(Math.abs(v.artDesc-19.5)<=.5)}
+    }
+  });
+
+  await step('Pinned status Badge/Stock separator/Cover artwork consume shared recipes', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=cover-art]")','Cover Artwork');
+    for(const style of ['vega','mira','sera']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' status/cover');
+      const info=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const computed=e=>doc.defaultView.getComputedStyle(e),px=s=>parseFloat(s);
+        const badge=doc.querySelector('[data-card="claimable-balance"] .qxframe9a7c2-badge');
+        const stock=doc.querySelector('[data-card="stock-performance"] .qxframe9a7c2-divider');
+        const cover=doc.querySelector('[data-card="cover-art"]'),item=cover.querySelector('.qxframe9a7c2-item.is-artwork');
+        const svg=item.querySelector('.qxframe9a7c2-item-artwork-label svg'),footer=cover.querySelector('.qxframe9a7c2-card-footer');
+        return {badgeHeight:badge.getBoundingClientRect().height,badgeFont:px(computed(badge).fontSize),
+          badgeLine:px(computed(badge).lineHeight),badgeInset:px(computed(badge).paddingLeft),
+          separatorDisplay:computed(stock).display,
+          coverAspect:item.getBoundingClientRect().width/item.getBoundingClientRect().height,
+          iconWidth:svg.getBoundingClientRect().width,footerGap:px(computed(footer).rowGap),
+          footerColumn:computed(footer).flexDirection};
+      })()`);
+      const sourceHeight=style==='sera'?100/7:20;
+      assert.ok(Math.abs(info.badgeHeight-sourceHeight)<=.5,style+' Badge intrinsic source height');
+      assert.equal(info.badgeFont,style==='vega'?12:10,style+' Badge source typography');
+      assert.ok(Math.abs(info.badgeInset-(style==='sera'?0:8))<=.5,style+' Badge source inline inset');
+      assert.equal(info.separatorDisplay,style==='sera'?'none':'block',style+' optional Stock separator visibility');
+      assert.ok(Math.abs(info.coverAspect-1)<=.01,style+' Cover Art Item is square');
+      assert.ok(Math.abs(info.iconWidth-40)<=.5,style+' Cover Art source placeholder icon');
+      assert.equal(info.footerColumn,'column',style+' Cover footer semantic layout');
+      assert.ok(Math.abs(info.footerGap-8)<=.5,style+' source Cover footer gap-2');
+    }
+  });
+
+  await step('Syncing State uses symmetric Card insets and nested EmptyMedia in all themes', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state]")','Syncing State composition');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Syncing composition');
+      const result=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const card=doc.querySelector('[data-card="syncing-state"]');
+        const content=card.querySelector('.qxframe9a7c2-card-content');
+        const empty=content.querySelector('.qxframe9a7c2-empty');
+        const header=empty.querySelector('.qxframe9a7c2-empty-header');
+        const media=empty.querySelector('.qxframe9a7c2-empty-media');
+        const desc=empty.querySelector('.qxframe9a7c2-empty-description');
+        const c=el=>doc.defaultView.getComputedStyle(el);
+        return {parented:media.parentElement===header,symmetric:parseFloat(c(card).paddingTop)-parseFloat(c(card).paddingBottom),
+          inset:parseFloat(c(card).paddingTop),innerTop:parseFloat(c(content).paddingTop),
+          innerBottom:parseFloat(c(content).paddingBottom),
+          descOffset:parseFloat(c(desc).marginTop),descText:desc.textContent.trim(),
+          descBalanced:c(desc).textWrap==='balance'&&desc.classList.contains('is-balanced'),
+          mediaSize:media.getBoundingClientRect().width,
+          mediaGlyphClass:media.classList.contains('is-glyph-sm'),
+          iconSize:parseFloat(c(media.querySelector('svg')).width),
+          iconHeight:parseFloat(c(media.querySelector('svg')).height)};
+      })()`);
+      const expectedInset=style==='sera'?32:style==='rhea'?20:style==='nova'||style==='lyra'||style==='mira'?16:24;
+      assert.equal(result.descText,"We're pulling in your latest transactions. This usually takes a few seconds.",style+' source Empty description text');
+      assert.equal(result.descBalanced,true,style+' source-balanced Empty description must use opt-in shared class');
+      assert.equal(result.parented,true,style+' EmptyMedia must belong to EmptyHeader');
+      assert.equal(result.mediaGlyphClass,true,style+' shared Empty compact glyph modifier');
+      assert.ok(Math.abs(result.iconSize-16)<=.5&&Math.abs(result.iconHeight-16)<=.5,
+        style+' source Empty glyph is 16px (independent of rotating SVG bounding box)');
+      assert.ok(result.mediaSize>=32,style+' 32/40px Empty media remains independent of icon glyph');
+      assert.ok(Math.abs(result.symmetric)<=.5,style+' source Card owns symmetric vertical insets');
+      assert.ok(Math.abs(result.inset-expectedInset)<=.5,style+' source Card vertical padding');
+      assert.ok(Math.abs(result.innerTop)<=.5&&Math.abs(result.innerBottom)<=.5,style+' sole CardContent is flush');
+      assert.ok(Math.abs(result.descOffset-(style==='sera'?2:0))<=.5,style+' editorial EmptyDescription offset');
+    }
+  });
+
+  await step('Source editorial ItemTitle text transformation is theme-driven, not a one-off wrap', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")','Dividend titles');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Dividend text transformation');
+      const titles=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        return [...doc.querySelectorAll('[data-card="dividend-income"] .qxframe9a7c2-item-title')]
+          .map(el=>({transform:doc.defaultView.getComputedStyle(el).textTransform,
+            nowrap:doc.defaultView.getComputedStyle(el).whiteSpace,
+            forced:el.classList.contains('is-intrinsic-line')}));
+      })()`);
+      assert.equal(titles.length,4,style+' source titles');
+      for(const title of titles){
+        assert.equal(title.transform,style==='sera'?'uppercase':'none',style+' themed editorial title');
+        assert.equal(title.nowrap,'normal',style+' title wrapping not artificially blocked');
+        assert.equal(title.forced,false,style+' no one-off intrinsic title class');
+      }
+    }
+  });
+
+  await step('Dividend Income preserves the source Item flex sibling structure', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Dividend Income');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const card=doc.querySelector('[data-card="dividend-income"]');
+        const rows=[...card.querySelectorAll('.qxframe9a7c2-item-group > .qxframe9a7c2-item')];
+        return rows.map(row=>{
+          const chart=row.querySelector('.pv-mini-chart'),amount=row.querySelector('.pv-num');
+          return {chartDirect:chart?.parentElement===row,amountDirect:amount?.parentElement===row,
+            childCount:row.children.length,actions:row.querySelectorAll('.qxframe9a7c2-item-actions').length,
+            contentMinWidth:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-content')).minWidth,
+            contentBasis:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-content')).flexBasis,
+            titleDisplay:doc.defaultView.getComputedStyle(row.querySelector('.qxframe9a7c2-item-title')).display};
+        });
+      })()`);
+      assert.equal(actual.length,4,style+' dividend has four holdings');
+      for(const [index,row] of actual.entries()){
+        assert.ok(row.chartDirect&&row.amountDirect,style+' holding '+index+' requires source sibling layout');
+        assert.equal(row.childCount,3,style+' holding '+index+' Item has three direct children');
+        assert.equal(row.actions,0,style+' no extra ItemActions wrapper');
+        assert.equal(row.contentMinWidth,'auto',style+' original flex min-content behavior');
+        assert.equal(row.contentBasis,'0%',style+' pinned ItemContent flex-basis');
+        assert.equal(row.titleDisplay,'flex',style+' source ItemTitle flex-wrap behavior');
+      }
+    }
+  });
+
+  await step('Kitchen Island uses 16px unboxed ItemMedia and 10px compact group gaps', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")', 'Kitchen Island');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Kitchen Island');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        const card=doc.querySelector('[data-card="kitchen-island"]');
+        const group=card.querySelector('.qxframe9a7c2-item-group');
+        const css=e=>doc.defaultView.getComputedStyle(e),n=v=>parseFloat(v);
+        const gap=n(css(group).rowGap);
+        group.style.setProperty('--qxframe9a7c2-item-group-gap','1.75rem');
+        const overriddenGap=n(css(group).rowGap);
+        group.style.removeProperty('--qxframe9a7c2-item-group-gap');
+        const roller=doc.querySelector('[data-card="roller-shades"]');
+        const rollerSlider=roller.querySelector('.qxframe9a7c2-slider');
+        const rollerThumb=roller.querySelector('.qxframe9a7c2-slider-handle');
+        return { gap,overriddenGap,
+          rollerSliderHeight:n(css(rollerSlider).height),
+          rollerThumbHeight:n(css(rollerThumb).height),
+          rails:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
+            const rail=el.querySelector('.qxframe9a7c2-slider').getBoundingClientRect();
+            const cardRect=card.getBoundingClientRect();
+            return {x:rail.x-cardRect.x,w:rail.width,equal:el.classList.contains('is-actions-equal'),minWidth:css(el.querySelector('.qxframe9a7c2-slider')).minWidth};
+          }),
+          media:[...card.querySelectorAll('.pv-slider-item')].map(el=>{
+            const icon=el.querySelector('.qxframe9a7c2-item-media.is-icon');
+            const slider=el.querySelector('.qxframe9a7c2-slider');
+            const handle=el.querySelector('.qxframe9a7c2-slider-handle');
+            const title=el.querySelector('.qxframe9a7c2-item-title');
+            return {count:el.querySelectorAll('.qxframe9a7c2-item-media').length,
+              width:n(css(icon).width),height:n(css(icon).height),
+              border:n(css(icon).borderTopWidth),
+              slider:n(css(slider).height),handle:n(css(handle).height),
+              title:n(css(title).lineHeight),row:el.getBoundingClientRect().height,
+              chrome:n(css(el).paddingTop)+n(css(el).paddingBottom)+n(css(el).borderTopWidth)+n(css(el).borderBottomWidth)};
+          })};
+      })()`);
+      assert.equal(actual.rails.length,4,style+' four slider rails');
+      assert.ok(actual.rails.every(n=>n.equal),style+' equal ItemActions modifier on all rows');
+      assert.ok(actual.rails.every(n=>n.minWidth==='0px'),style+' equal ItemActions Slider opts out of standalone 8rem minimum');
+      assert.ok(Math.max(...actual.rails.map(n=>n.x))-Math.min(...actual.rails.map(n=>n.x))<=.5,
+        style+' all Kitchen sliders must start together: '+JSON.stringify(actual.rails));
+      assert.ok(actual&&actual.media.length===4,style+' has four Kitchen slider rows');
+      assert.ok(Math.abs(actual.gap-10)<.5,style+' compact ItemGroup gap');
+      assert.ok(Math.abs(actual.overriddenGap-28)<.5,style+' explicit ItemGroup gap wins');
+      assert.ok(Math.abs(actual.rollerSliderHeight-actual.rollerThumbHeight)<=.5,
+        style+' Roller Shades Slider root height follows source thumb rather than default button height');
+      for(const media of actual.media){
+        assert.equal(media.count,1,style+' must not duplicate ItemMedia DOM');
+        assert.equal(media.width,16,style+' unboxed ItemMedia width');
+        assert.equal(media.height,16,style+' unboxed ItemMedia height');
+        assert.equal(media.border,0,style+' unboxed ItemMedia border');
+        assert.ok(Math.abs(media.slider-media.handle)<=.5,style+' Slider footprint follows thumb size');
+        assert.ok(Math.abs(media.row-(Math.max(media.title,media.handle)+media.chrome))<=.5,style+' row owns no extra Slider control height');
+      }
+    }
+  });
+
+  await step('Payments ItemContent shrinks without wrapping trailing chevrons', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payments fixture');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Payments Item');
+      const actual=await evaluate(`(() => {
+        const doc=document.querySelector('[data-create-frame]').contentDocument;
+        return [...doc.querySelectorAll('[data-card="payments"] .qxframe9a7c2-item')].map(el=>{
+          const content=el.querySelector('.qxframe9a7c2-item-content');
+          const svg=el.lastElementChild;
+          const cr=content.getBoundingClientRect(),sr=svg.getBoundingClientRect(),ir=el.getBoundingClientRect();
+          const css=doc.defaultView.getComputedStyle(content);
+          return {basis:css.flexBasis,rootHeight:ir.height,
+            centered:Math.abs((cr.top+cr.height/2)-(sr.top+sr.height/2))};
+        });
+      })()`);
+      assert.equal(actual.length,4,style+' Payment rows');
+      for(const row of actual){
+        assert.equal(row.basis,'0px',style+' ItemContent zero basis');
+        assert.ok(row.rootHeight<115,style+' item row did not wrap');
+        assert.ok(row.centered<1,style+' trailing chevron stays on same row');
+      }
+    }
+  });
+
+  await step('Syncing State consumes source p-4 Empty inset in all 16 style modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state] .qxframe9a7c2-empty")','Syncing Empty ready');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','Syncing '+style);
+      for(const dark of [false,true]){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,prev=root.classList.contains('dark');
+          root.classList.toggle('dark',${dark});
+          const empty=doc.querySelector('[data-card="syncing-state"] .qxframe9a7c2-empty');
+          const css=doc.defaultView.getComputedStyle(empty);
+          const result={top:parseFloat(css.paddingTop),right:parseFloat(css.paddingRight),bottom:parseFloat(css.paddingBottom),left:parseFloat(css.paddingLeft)};
+          root.classList.toggle('dark',prev);return result;
+        })()`);
+        for(const [key,value] of Object.entries(actual)) assert.equal(value,16,style+'/'+dark+' Syncing Empty '+key+' inset follows pinned p-4');
+      }
+    }
+  });
+  await step('Loading Card matches pinned source height in eight styles and both modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=loading-card]")','Loading Card source fixture');
+    const height={vega:372,nova:348,maia:376,lyra:348,mira:348,luma:374,sera:398,rhea:362};
+    for(const [style,pinnedHeight] of Object.entries(height)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','Loading '+style);
+      for(const dark of [false,true]){
+        const got=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,previous=root.classList.contains('dark');
+          root.classList.toggle('dark',${dark});
+          const card=doc.querySelector('[data-card="loading-card"]');
+          const stack=card.querySelector('.qxframe9a7c2-card-content > .qxframe9a7c2-stack');
+          const row=card.querySelector('.qxframe9a7c2-card-content > .qxframe9a7c2-flex');
+          const n=el=>parseFloat(doc.defaultView.getComputedStyle(el).rowGap);
+          const data={height:card.getBoundingClientRect().height,stackGap:n(stack),buttonRowGap:n(row)};
+          root.classList.toggle('dark',previous);return data;
+        })()`);
+        assert.ok(Math.abs(got.height-pinnedHeight)<=.5,style+' '+dark+' pinned Loading Card source height: '+JSON.stringify(got));
+        assert.equal(got.stackGap,8,style+' Loading Stack uses shared gap-2');
+        assert.equal(got.buttonRowGap,8,style+' Loading button row uses shared gap-2');
+      }
+    }
+  });
+  await step('Nova Claimable CardTitle and Payout Slider track match pinned source heights', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=claimable-balance]")','Claimable Card ready');
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
+    await waitFor(frameAttr('data-create-style')+' === "nova"','Nova geometry');
+    const result=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const claim=doc.querySelector('[data-card="claimable-balance"]');
+      const title=claim.querySelector('.qxframe9a7c2-card-title');
+      const payout=doc.querySelector('[data-card="payout-threshold"]');
+      const slider=payout.querySelector('.qxframe9a7c2-slider');
+      const textarea=payout.querySelector('textarea');
+      const rail=slider.querySelector('.qxframe9a7c2-slider-rail');
+      return {claimableHeight:claim.getBoundingClientRect().height,titleHeight:title.getBoundingClientRect().height,
+        titleLine:getComputedStyle(title).lineHeight,payoutHeight:payout.getBoundingClientRect().height,textareaHeight:textarea.getBoundingClientRect().height,textareaMinHeight:getComputedStyle(textarea).minHeight,sliderHeight:slider.getBoundingClientRect().height,
+        sliderRailHeight:rail.getBoundingClientRect().height,trackVariant:slider.classList.contains('is-track-height')};
+    })()`);
+    assert.ok(Math.abs(result.titleHeight-66)<=.5,'pinned Nova text-5xl CardTitle uses 66px leading-snug: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.claimableHeight-374)<=.5,'source Claimable Balance first Card is 374px: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.sliderHeight-4)<=.5,'source Nova Payout Slider root follows 4px intrinsic rail: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.sliderRailHeight-4)<=.5);
+    assert.equal(result.trackVariant,true);
+    assert.ok(Math.abs(result.textareaHeight-100)<=.5,'pinned Notes Textarea min-height 100px must survive shared Theme sizing: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.payoutHeight-468)<=.5,'pinned Nova Payout Threshold Card is 468px: '+JSON.stringify(result));
+  });
+  await step('Payout Threshold live amount tracks QX Slider keyboard ValueController', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payout-threshold] .qxframe9a7c2-slider-handle")','Payout Slider ready');
+    const result=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const card=doc.querySelector('[data-card="payout-threshold"]');
+      const amount=card.querySelector('[data-pv-value-for="payout-threshold-amount"]');
+      const slider=card.querySelector('[data-pv-output="payout-threshold-amount"]');
+      const handle=slider.querySelector('.qxframe9a7c2-slider-handle');
+      const before=amount.textContent;
+      const send=k=>{
+        handle.dispatchEvent(new doc.defaultView.KeyboardEvent('keydown',{key:k,code:k,bubbles:true,cancelable:true}));
+        handle.dispatchEvent(new doc.defaultView.KeyboardEvent('keyup',{key:k,code:k,bubbles:true,cancelable:true}));
+      };
+      handle.focus();send('ArrowRight');const increased=amount.textContent;
+      send('ArrowLeft');const restored=amount.textContent;
+      return {before,increased,restored,sliderRoot:!!slider.querySelector('.qxframe9a7c2-slider')};
+    })()`);
+    assert.equal(result.before,'$2500.00');
+    assert.equal(result.increased,'$2550.00','QX Slider keyboard input projects into source amount text');
+    assert.equal(result.restored,'$2500.00','reverse keyboard change restores original amount');
+    assert.equal(result.sliderRoot,true,'existing QX runtime Slider is the only Slider root');
+  });
+  await step('Payments source-locked Nova Item rows match same-browser geometry', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payments comparison fixture');
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
+    await waitFor(frameAttr('data-create-style')+' === "nova"', 'Nova same-browser Payments fixture');
+    const geometry=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const rows=[...doc.querySelectorAll('[data-card="payments"] .qxframe9a7c2-item')];
+      const width=rows[0].parentNode.getBoundingClientRect().width;
+      const font=doc.createElement('style');
+      font.textContent='body,body *{font-family:system-ui,sans-serif!important}';
+      doc.head.append(font);
+      const css=doc.createElement('style');
+      // Source contract: pinned ui/item.tsx + style-nova.css (Item/default,
+      // ItemContent flex-1, ItemDescription line-clamp-2, ItemGroup gap-4).
+      // Run in the SAME browser, using the SAME system-ui font as the QX rows.
+      css.textContent=[
+        '.qx-source-payments{box-sizing:border-box;display:flex;flex-direction:column;gap:16px;width:'+width+'px;font-family:system-ui,sans-serif}',
+        '.qx-source-payments .src-item{box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;width:100%;gap:10px;padding:10px 12px;border:1px solid transparent;font-size:14px}',
+        '.qx-source-payments .src-media{display:flex;width:16px;height:16px;flex:0 0 auto;align-self:flex-start;transform:translateY(2px)}',
+        '.qx-source-payments .src-content{display:flex;flex:1 1 0%;min-width:0;flex-direction:column;gap:4px}',
+        '.qx-source-payments .src-title{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;width:fit-content;max-width:100%;font-size:14px;font-weight:500;line-height:1.375}',
+        '.qx-source-payments .src-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:14px;font-weight:400;line-height:1.5}',
+        '.qx-source-payments .src-chevron{width:16px;height:16px;flex:0 0 16px}'
+      ].join('');
+      const host=doc.createElement('div');
+      host.style.cssText='position:absolute;left:0;top:0;visibility:hidden;z-index:-1';
+      host.innerHTML='<div class="qx-source-payments">'+rows.map(row=>
+        '<div class="src-item"><div class="src-media"></div><div class="src-content"><div class="src-title">'+
+        row.querySelector('.qxframe9a7c2-item-title').textContent+'</div><p class="src-desc">'+
+        row.querySelector('.qxframe9a7c2-item-desc').textContent+'</p></div><div class="src-chevron"></div></div>'
+      ).join('')+'</div>';
+      doc.head.append(css);doc.body.append(host);
+      const n=x=>+x.toFixed(3),measure=selector=>[...doc.querySelectorAll(selector)].map(row=>{
+        const content=row.querySelector('.qxframe9a7c2-item-content,.src-content');
+        const description=row.querySelector('.qxframe9a7c2-item-desc,.src-desc');
+        const box=row.getBoundingClientRect(),c=content.getBoundingClientRect(),p=description.getBoundingClientRect();
+        const st=doc.defaultView.getComputedStyle(description);
+        return {height:n(box.height),width:n(box.width),contentWidth:n(c.width),descWidth:n(p.width),
+          descHeight:n(p.height),line:n(parseFloat(st.lineHeight)),font:st.fontFamily,
+          descLines:n(p.height/parseFloat(st.lineHeight))};
+      });
+      const actual=measure('[data-card="payments"] .qxframe9a7c2-item');
+      const source=measure('.qx-source-payments .src-item');
+      const systemFont=doc.defaultView.getComputedStyle(doc.body).fontFamily;
+      const browser=doc.defaultView.navigator.userAgent;
+      host.remove();css.remove();font.remove();return {actual,source,width,systemFont,browser};
+    })()`);
+    assert.equal(geometry.actual.length,4);assert.equal(geometry.source.length,4);
+    for(let i=0;i<4;i++){
+      const actual=geometry.actual[i],expected=geometry.source[i];
+      for(const k of ['height','width','contentWidth','descWidth','descHeight','line','descLines'])
+        assert.ok(Math.abs(actual[k]-expected[k])<=.5, 'Nova Payments source geometry row '+i+' '+k+': '+JSON.stringify({actual,expected}));
+    }
+    console.log('[payments-same-browser-source] '+JSON.stringify(geometry));
+  });
+  await step('SidebarNav follows pinned 8-style menu and group gaps', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=sidebar-nav]")','SidebarNav fixture');
+    const gaps={vega:4,nova:0,maia:4,lyra:0,mira:1,luma:2,sera:2,rhea:2};
+    const approx=(actual,expected,desc)=>assert.ok(Number.isFinite(actual)&&Math.abs(actual-expected)<=.5,
+      desc+': expected '+expected+'px, observed '+actual+'px');
+    for(const [style,gap] of Object.entries(gaps)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','SidebarNav '+style);
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,old=root.classList.contains('dark');
+          root.classList.toggle('dark',${mode==='dark'});
+          const style=el=>doc.defaultView.getComputedStyle(el),n=x=>parseFloat(x);
+          const cards=[...doc.querySelectorAll('[data-card="sidebar-nav"] .pv-nav-card')];
+          const out=cards.map(card=>{
+            const group=card.querySelectorAll('.pv-nav-group'),lists=card.querySelectorAll('.pv-nav');
+            return {gap:[...lists].map(x=>n(style(x).rowGap)),
+              firstTop:n(style(group[0]).paddingTop),firstBottom:n(style(group[0]).paddingBottom),
+              lastTop:n(style(group[1]).paddingTop),lastBottom:n(style(group[1]).paddingBottom)};
+          });
+          root.classList.toggle('dark',old);return out;
+        })()`);
+        assert.equal(actual.length,2,style+'/'+mode+' Sidebar cards');
+        for(const card of actual){
+          for(const val of card.gap)approx(val,gap,style+'/'+mode+' menu item gap');
+          approx(card.firstTop,style==='mira'?4:8,style+'/'+mode+' top group');
+          approx(card.firstBottom,4,style+'/'+mode+' pb-1 source');
+          approx(card.lastTop,4,style+'/'+mode+' pt-1 source');
+          approx(card.lastBottom,style==='mira'?4:8,style+'/'+mode+' last group');
+        }
+      }
+    }
+  });
+
+  await step('FieldContent and Item text clamp calculated parity across 16 themes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=notification-settings]")','Form cards');
+    const expected={vega:4,nova:2,maia:4,lyra:2,mira:2,luma:4,sera:4,rhea:4};
+    for(const [style,expectedGap] of Object.entries(expected)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' FieldContent');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement,prev=html.classList.contains('dark');
+          html.classList.toggle('dark',${mode==='dark'});
+          const css=el=>doc.defaultView.getComputedStyle(el),n=str=>parseFloat(str);
+          const preference=[...doc.querySelectorAll('[data-card="preferences"] .qxframe9a7c2-field-content')];
+          const notifications=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-field-content')];
+          const host=doc.createElement('div');
+          host.style.cssText='width:250px;position:absolute;left:0;top:0;visibility:hidden';
+          host.innerHTML='<div class="qxframe9a7c2-item"><div class="qxframe9a7c2-item-content"><div class="qxframe9a7c2-item-title">A very long name of an individual item that should be truncated</div><p class="qxframe9a7c2-item-desc">Long description text that must be constrained across enough words to span several additional lines when natural wrapping would otherwise exceed two lines in this narrow fixture.</p></div></div>';
+          doc.body.append(host);
+          const item=host.querySelector('.qxframe9a7c2-item');
+          const title=host.querySelector('.qxframe9a7c2-item-title');
+          const desc=host.querySelector('.qxframe9a7c2-item-desc');
+          const out={p:preference.map(el=>n(css(el).rowGap)),
+            n:notifications.map(el=>n(css(el).rowGap)),
+            itemWidth:n(css(item).width),hostWidth:host.getBoundingClientRect().width,
+            titleClamp:css(title).webkitLineClamp,descClamp:css(desc).webkitLineClamp,
+            descH:desc.getBoundingClientRect().height,descLine:n(css(desc).lineHeight)};
+          host.remove();html.classList.toggle('dark',prev);return out;
+        })()`);
+        assert.equal(actual.p.length,2,style+'/'+mode+' Preferences FieldContent slots');
+        assert.equal(actual.n.length,5,style+'/'+mode+' Notification FieldContent slots');
+        for(const gap of [...actual.p,...actual.n])
+          assert.ok(Math.abs(gap-expectedGap)<.5,style+'/'+mode+' FieldContent gap '+gap);
+        assert.ok(Math.abs(actual.itemWidth-actual.hostWidth)<.5,style+'/'+mode+' full-width Item');
+        assert.equal(actual.titleClamp,'1',style+'/'+mode+' title clamp');
+        assert.equal(actual.descClamp,'2',style+'/'+mode+' description clamp');
+        assert.ok(actual.descH<=actual.descLine*2+.5,style+'/'+mode+' description max two lines');
+      }
+    }
+  });
+
+  await step('FieldContent label line and FAQ trigger gap follow source in 16 themes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ and Notifications');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','FAQ/Field '+style);
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,prev=root.classList.contains('dark');
+          root.classList.toggle('dark',${mode==='dark'});
+          const css=e=>doc.defaultView.getComputedStyle(e),px=x=>parseFloat(x);
+          const labels=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-field-content>.qxframe9a7c2-form-label')];
+          const faq=doc.querySelector('[data-card="faq"]'),summary=faq.querySelector('.qxframe9a7c2-collapse-item>summary');
+          const accordionContent=faq.querySelector('.qxframe9a7c2-collapse-content');
+          const faqTabs=faq.querySelector('.pv-tabs-full .qxframe9a7c2-tabs');
+          const fields=[...doc.querySelectorAll('[data-card="notification-settings"] .qxframe9a7c2-selectgroup-item')];
+          const ans={labelLines:labels.map(e=>px(css(e).lineHeight)),labelWeights:labels.map(e=>Number(css(e).fontWeight)),
+            fieldGaps:fields.map(e=>px(css(e.querySelector('.qxframe9a7c2-flex')).columnGap)),
+            expectedFieldGap:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-gap'))*16,
+            expectedLine:px(css(root).getPropertyValue('--qxframe9a7c2-theme-field-label-line-height'))*16,
+            faqTabsHeight:faqTabs.getBoundingClientRect().height,
+            expectedFaqTabsHeight:Math.max(32,px(css(root).getPropertyValue('--qxframe9a7c2-theme-control-height'))*16),
+            faqContentLine:px(css(accordionContent).lineHeight),
+            expectedFaqContentLine:px(css(root).getPropertyValue('--qxframe9a7c2-theme-accordion-line-height'))*16,
+            actualGap:px(css(summary).columnGap),
+            accordionBorder:px(css(faq.querySelector('.qxframe9a7c2-collapse.is-native')).borderTopWidth),
+            accordionInlinePadding:px(css(summary).paddingLeft),
+            accordionTriggerBorder:px(css(summary).borderTopWidth),
+            accordionIconOffset:px(css(summary.querySelector('.qxframe9a7c2-collapse-disclosure-icon')).marginTop),
+            faqHeight:faq.getBoundingClientRect().height,
+            notificationHeight:doc.querySelector('[data-card="notification-settings"]').getBoundingClientRect().height};
+          root.classList.toggle('dark',prev);return ans;
+        })()`);
+        assert.equal(actual.labelLines.length,5,style+'/'+mode+' field labels');
+        assert.equal(actual.fieldGaps.length,5,style+'/'+mode+' checkbox Field rows');
+        for(const g of actual.fieldGaps)assert.ok(Math.abs(g-actual.expectedFieldGap)<=.5,
+          style+'/'+mode+' checkbox Field consumes theme gap: '+g+'/'+actual.expectedFieldGap);
+        assert.ok(Math.abs(actual.actualGap-(['maia','mira','luma','sera','rhea'].includes(style)?24:0))<=.5,
+          style+'/'+mode+' source Accordion trigger gap');
+        const framed=['maia','mira','luma','rhea'].includes(style);
+        assert.ok(Math.abs(actual.accordionTriggerBorder-1)<=.5,style+'/'+mode+' source native Accordion trigger transparent border');
+        assert.ok(Math.abs(actual.accordionIconOffset-(style==='lyra'?0:2))<=.5,
+          style+'/'+mode+' pinned Accordion disclosure icon offset');
+        assert.ok(Math.abs(actual.accordionBorder-(framed?1:0))<=.5,
+          style+'/'+mode+' native Accordion outer border');
+        assert.ok(Math.abs(actual.accordionInlinePadding-(framed?({maia:16,mira:8,luma:16,rhea:16}[style]):0))<=.5,
+          style+'/'+mode+' native Accordion horizontal inset');
+        assert.ok(Math.abs(actual.faqTabsHeight-actual.expectedFaqTabsHeight)<=.5,
+          style+'/'+mode+' FAQ Tabs rail matches source control height: '+actual.faqTabsHeight+'/'+actual.expectedFaqTabsHeight);
+        assert.ok(Math.abs(actual.faqContentLine-actual.expectedFaqContentLine)<=.5,
+          style+'/'+mode+' FAQ content consumes source Accordion line-height: '+actual.faqContentLine+'/'+actual.expectedFaqContentLine);
+        for(const line of actual.labelLines)assert.ok(Math.abs(line-actual.expectedLine)<=.5,
+          style+'/'+mode+' FieldContent label line consumes role: '+line+'/'+actual.expectedLine);
+        assert.ok(actual.labelWeights.every(Number.isFinite),style+'/'+mode+' valid Label font weights');
+      }
+    }
+  });
+
+  await step('Receiving Method uses 10px shared Radio Field rows in 16 modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','Receiving Method');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' Receiving Method');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const root=doc.documentElement,prior=root.classList.contains('dark');
+          root.classList.toggle('dark',${mode==='dark'});
+          const css=e=>doc.defaultView.getComputedStyle(e),num=x=>parseFloat(x);
+          const card=doc.querySelector('[data-card="receiving-method"]');
+          const rows=[...card.querySelectorAll('.qxframe9a7c2-selectgroup-item')];
+          const group=card.querySelector('.qxframe9a7c2-choice-group');
+          const sourceColumns=num(css(root).getPropertyValue('--qxframe9a7c2-theme-choice-group-columns'));
+          const first=rows[0].getBoundingClientRect(),second=rows[1].getBoundingClientRect();
+          group.style.setProperty('--qxframe9a7c2-choice-group-columns','1');
+          const forcedSecond=rows[1].getBoundingClientRect();
+          group.style.removeProperty('--qxframe9a7c2-choice-group-columns');
+          const result={sourceColumns,firstTop:first.top,secondTop:second.top,firstBottom:first.bottom,
+            secondWidth:second.width,groupWidth:group.getBoundingClientRect().width,
+            forcedSecondTop:forcedSecond.top,
+            items:rows.map(el=>{
+            const st=css(el.querySelector('.qxframe9a7c2-selectgroup-label')),flex=el.querySelector('.qxframe9a7c2-flex'),inner=el.querySelector('.qxframe9a7c2-field-content');
+            return {paddingBottom:num(st.paddingBottom),paddingTop:num(st.paddingTop),
+              border:num(st.borderTopWidth),gap:num(css(flex).columnGap),
+              contentGap:num(css(inner).rowGap),
+              checked:el.querySelector('input[type=radio]').checked};
+          }),
+          themeChoiceInset:num(css(root).getPropertyValue('--qxframe9a7c2-theme-choice-field-inset'))*16,
+          themeGap:num(css(root).getPropertyValue('--qxframe9a7c2-theme-field-gap'))*16,
+          themeContentGap:num(css(root).getPropertyValue('--qxframe9a7c2-theme-field-content-gap'))*16};
+          root.classList.toggle('dark',prior);
+          return result;
+        })()`);
+        assert.equal(actual.items.length,2,style+'/'+mode+' has two radio Field rows');
+        assert.equal(actual.items[0].checked,true,style+'/'+mode+' bank radio selected');
+        assert.equal(actual.sourceColumns,style==='sera'?1:2,style+'/'+mode+' source ChoiceGroup columns');
+        if(style==='sera')assert.ok(actual.secondTop>=actual.firstBottom,
+          style+'/'+mode+' editorial choices stack on separate rows');
+        else assert.ok(Math.abs(actual.secondTop-actual.firstTop)<=.5,
+          style+'/'+mode+' regular choices sit side by side');
+        assert.ok(actual.forcedSecondTop>=actual.firstBottom,
+          style+'/'+mode+' public one-column override stacks rows');
+
+        for(const row of actual.items){
+          assert.ok(Math.abs(row.paddingBottom-10)<=.5,style+'/'+mode+' source pb-2.5');
+          assert.ok(Math.abs(row.paddingTop-actual.themeChoiceInset)<=.5,
+            style+'/'+mode+' upstream framed RadioField top inset');
+          assert.equal(row.border,1,style+'/'+mode+' upstream FieldLabel border');
+          assert.ok(Math.abs(row.gap-actual.themeGap)<=.5,style+'/'+mode+' Field gap role');
+          assert.ok(Math.abs(row.contentGap-actual.themeContentGap)<=.5,
+            style+'/'+mode+' FieldContent role');
+        }
+      }
+    }
+  });
+
+  await step('ItemMedia description alignment matches pinned source in eight styles and both modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payment media fixture');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' media style');
+      for(const mode of ['light','dark']) {
+        const expression = `(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          doc.documentElement.classList.toggle('dark', ${mode === 'dark'});
+          const css=el=>doc.defaultView.getComputedStyle(el);
+          return [...doc.querySelectorAll('[data-card="payments"] .qxframe9a7c2-item')].map(row=>{
+            const media=row.querySelector('.qxframe9a7c2-item-media');
+            const mr=media.getBoundingClientRect(),rr=row.getBoundingClientRect();
+            return {alignment:css(media).alignSelf,transform:css(media).transform,gap:css(media).gap,
+              top:mr.top-rr.top,border:parseFloat(css(row).borderTopWidth),padding:parseFloat(css(row).paddingTop)};
+          });
+        })()`;
+        const metrics=await evaluate(expression);
+        assert.equal(metrics.length,4,style+'/'+mode+' Payments descriptive rows');
+        for(const item of metrics) {
+          assert.equal(item.alignment,'flex-start',style+'/'+mode+' media is top-aligned');
+          assert.equal(item.gap,'8px',style+'/'+mode+' media child gap');
+          assert.match(item.transform,/matrix\(1, 0, 0, 1, 0, 2\)/,style+'/'+mode+' media offset +2px');
+          assert.ok(Math.abs(item.top-(item.border+item.padding+2))<.5,
+            style+'/'+mode+' media top follows pinned 2px offset and Item padding');
+        }
+      }
+    }
+  });
+  await step('Audit InputGroup border/size/appearance and Item accent pairs in 16 modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','audit visual fixtures');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' audit themes');
+      for(const mode of ['light','dark']) {
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          doc.documentElement.classList.toggle('dark', ${mode === 'dark'});
+          const host=doc.createElement('div');host.style.cssText='position:absolute;width:320px;visibility:hidden';
+          host.innerHTML='<input class="qxframe9a7c2-form-input is-md" value="normal">'+
+            '<div class="qxframe9a7c2-form-input-group is-md" data-case="flat"><span class="qxframe9a7c2-form-input-group-addon">$</span><input class="qxframe9a7c2-form-input is-md is-invalid" value="invalid"></div>'+
+            '<div class="qxframe9a7c2-form-input-group is-md" data-case="mixed"><span class="qxframe9a7c2-form-input-group-prefix">$</span><div class="qxframe9a7c2-form-input-group-field"><span class="qxframe9a7c2-form-input-group-addon">@</span><input class="qxframe9a7c2-form-input is-md is-invalid" value="invalid"></div><span class="qxframe9a7c2-form-input-group-suffix">USD</span></div>'+
+            '<div class="qxframe9a7c2-form-input-group is-separated is-md" data-case="separated"><span class="qxframe9a7c2-form-input-group-addon">$</span><input class="qxframe9a7c2-form-input" value="separate"></div>'+
+            '<div class="qxframe9a7c2-form-input-group is-vertical is-md" data-case="vertical"><span class="qxframe9a7c2-form-input-group-addon">$</span><input class="qxframe9a7c2-form-input" value="vertical"></div>';
+          doc.body.append(host);
+          const cs=el=>doc.defaultView.getComputedStyle(el),rect=el=>el.getBoundingClientRect();
+          const plain=host.firstElementChild,flat=host.querySelector('[data-case=flat]'),mixed=host.querySelector('[data-case=mixed]');
+          const field=mixed.querySelector('.qxframe9a7c2-form-input-group-field');
+          const sep=host.querySelector('[data-case=separated] .qxframe9a7c2-form-input-group-addon');
+          const vert=host.querySelector('[data-case=vertical] .qxframe9a7c2-form-input-group-addon');
+          const link=doc.querySelector('[data-card=payments] .qxframe9a7c2-item-link').cloneNode(true);
+          link.classList.add('is-active');host.append(link);
+          const desc=link.querySelector('.qxframe9a7c2-item-desc');
+          const sample=doc.createElement('span');sample.style.color='var(--qxframe9a7c2-theme-accent-foreground)';
+          sample.style.borderColor='var(--qxframe9a7c2-theme-destructive)';host.append(sample);
+          const out={plainHeight:rect(plain).height,flatHeight:rect(flat).height,mixedHeight:rect(mixed).height,
+            plainBg:cs(plain).backgroundColor,flatBg:cs(flat).backgroundColor,fieldBg:cs(field).backgroundColor,
+            flatBorder:cs(flat).borderTopColor,fieldBorder:cs(field).borderTopColor,invalidBorder:cs(sample).borderTopColor,
+            separatedWidth:cs(sep).borderTopWidth,verticalWidth:cs(vert).borderTopWidth,
+            linkColor:cs(link).color,descColor:cs(desc).color,accentText:cs(sample).color};
+          host.remove();return out;
+        })()`);
+        const label=style+'/'+mode;
+        assert.ok(Math.abs(actual.flatHeight-actual.plainHeight)<=.5,label+' flat group same control height');
+        assert.ok(Math.abs(actual.mixedHeight-actual.plainHeight)<=.5,label+' mixed group same control height');
+        assert.equal(actual.flatBorder,actual.invalidBorder,label+' invalid flat border owner');
+        assert.equal(actual.fieldBorder,actual.invalidBorder,label+' invalid inner field border owner');
+        assert.equal(actual.flatBg,actual.plainBg,label+' group uses same input look surface');
+        assert.equal(actual.fieldBg,actual.plainBg,label+' mixed field uses same input look surface');
+        assert.equal(actual.separatedWidth,'1px',label+' separated addon still owns border');
+        assert.equal(actual.verticalWidth,'1px',label+' vertical addon still owns border');
+        assert.equal(actual.linkColor,actual.accentText,label+' Item accent foreground follows background');
+        assert.equal(actual.descColor,actual.accentText,label+' Item muted description uses paired accent foreground');
+      }
+    }
+  });
+  await step('FAQ remains single-open and collapsible after switching questions', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ toggle fixture');
+    const states=await evaluate(`(() => {
+      const items=[...document.querySelector('[data-create-frame]').contentDocument.querySelectorAll('[data-card=faq] details[name="qx-create-faq"]')];
+      const opened=()=>items.map(x=>x.open);
+      const initial=opened();
+      items[1].querySelector('summary').click();const switched=opened();
+      items[1].querySelector('summary').click();const collapsed=opened();
+      items[0].querySelector('summary').click();const restored=opened();
+      return {count:items.length,initial,switched,collapsed,restored};
+    })()`);
+    assert.equal(states.count,3);
+    assert.deepEqual(states.initial,[true,false,false]);
+    assert.deepEqual(states.switched,[false,true,false]);
+    assert.deepEqual(states.collapsed,[false,false,false]);
+    assert.deepEqual(states.restored,[true,false,false]);
+  });
+  await step('FAQ QX Tabs switches independent source-locked Billing and Goals panels', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs-tab-action")', 'FAQ Tabs ready');
+    const result = await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const faq=doc.querySelector('[data-card="faq"]');
+      const actions=[...faq.querySelectorAll('.pv-tabs .qxframe9a7c2-tabs-tab-action')];
+      const panels=[...faq.querySelectorAll('[data-pv-tab-panel]')];
+      const bodyColors=[...faq.querySelectorAll('.qxframe9a7c2-collapse-content')].map(el=>doc.defaultView.getComputedStyle(el).color);
+      const faqForeground=doc.defaultView.getComputedStyle(faq).color;
+      const tabList=faq.querySelector('.qxframe9a7c2-tabs-list');
+      const shells=[...faq.querySelectorAll('.qxframe9a7c2-tabs-tab-shell:not([hidden])')];
+      const slotWidths=shells.map(node=>node.getBoundingClientRect().width);
+      const listWidth=tabList.getBoundingClientRect().width;
+      const slotGap=parseFloat(doc.defaultView.getComputedStyle(tabList).columnGap)||0;
+      const hasEqualModifier=!!faq.querySelector('.qxframe9a7c2-tabs.is-equal');
+      const snap=()=>({selected:actions.filter(e=>e.classList.contains('is-active')).map(e=>e.textContent.trim()),
+        shown:panels.filter(e=>!e.hidden&&doc.defaultView.getComputedStyle(e).display!=='none').map(e=>e.getAttribute('data-pv-tab-panel')),
+        questions:panels.filter(e=>!e.hidden).flatMap(e=>[...e.querySelectorAll('summary')].map(x=>x.textContent.trim()))});
+      const initial=snap();
+      actions[1].click(); const billing=snap();
+      const billingItems=[...faq.querySelectorAll('[data-pv-tab-panel="billing"] details')];
+      billingItems[1].querySelector('summary').click();
+      const billingSingleOpen=billingItems.map(e=>e.open);
+      actions[2].click(); const goals=snap();
+      actions[0].click(); const restored=snap();
+      return {tabs:actions.length,panels:panels.length,segmented:!!faq.querySelector('.pv-tabs .qxframe9a7c2-tabs.is-segmented'),hasEqualModifier,slotWidths,listWidth,slotGap,bodyColors,faqForeground,initial,billing,goals,restored,billingSingleOpen,
+        names:[...faq.querySelectorAll('details')].map(e=>e.name)};
+    })()`);
+    assert.equal(result.tabs,3);
+    assert.equal(result.panels,3);
+    assert.equal(result.segmented,true,'source FAQ TabsList uses QX segmented style');
+    assert.equal(result.hasEqualModifier,true,'FAQ must use reusable equal-width Tabs slots');
+    assert.equal(result.slotWidths.length,3,'FAQ has three equal Tabs slots');
+    assert.ok(Math.max(...result.slotWidths)-Math.min(...result.slotWidths)<=.5,
+      'FAQ segmented slots must be equal width: '+JSON.stringify(result));
+    assert.ok(Math.abs(result.slotWidths.reduce((sum,n)=>sum+n,0)+result.slotGap*2-result.listWidth)<=1.5,
+      'FAQ three equal Tabs slots must fill available list width: '+JSON.stringify(result));
+    assert.equal(result.bodyColors.length,9,'FAQ independent panels retain all nine descriptions');
+    assert.ok(result.bodyColors.every(color=>color===result.faqForeground),
+      'FAQ prose must consume regular Card foreground, not muted Collapse default: '+JSON.stringify(result));
+    assert.deepEqual(result.initial.shown,['general']);
+    assert.deepEqual(result.billing.shown,['billing']);
+    assert.deepEqual(result.goals.shown,['goals']);
+    assert.deepEqual(result.restored.shown,['general']);
+    assert.ok(result.billing.questions[0].includes('Basic and Pro pricing tiers'));
+    assert.ok(result.goals.questions[0].includes('custom financial goal'));
+    assert.deepEqual(result.billingSingleOpen,[false,true,false]);
+    assert.equal(result.names.length,9);
+    assert.equal(new Set(result.names).size,3);
+  });
+  
+  await step('Recent Transactions dates consume semantic muted Table cell foreground', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=recent-transactions] .qxframe9a7c2-table")', 'Transactions Table ready');
+    const result=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const table=doc.querySelector('[data-card="recent-transactions"] .qxframe9a7c2-table');
+      const cells=[...table.querySelectorAll('tbody td.is-muted')];
+      const probe=doc.createElement('span');
+      probe.style.color='var(--qxframe9a7c2-theme-muted-foreground)';
+      doc.body.appendChild(probe);
+      const expected=doc.defaultView.getComputedStyle(probe).color;
+      probe.remove();
+      const actual=cells.map(el=>doc.defaultView.getComputedStyle(el).color);
+      const normal=doc.defaultView.getComputedStyle(table.querySelector('tbody td:not(.is-muted)')).color;
+      return {length:cells.length,actual,expected,normal};
+    })()`);
+    assert.equal(result.length,5,'all five transaction dates use the shared muted cell role');
+    assert.ok(result.actual.every(color=>color===result.expected),
+      'muted dates must use Theme muted foreground instead of Table row foreground: '+JSON.stringify(result));
+  });
+
+  await step('Motion none stops static Skeleton, Spinner and Accordion indicator in 16 modes', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','Motion preview');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", ext: {motion: "none"} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' motion none');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          doc.documentElement.classList.toggle('dark', ${mode === 'dark'});
+          const cs=el=>doc.defaultView.getComputedStyle(el);
+          const skeleton=doc.querySelector('.qxframe9a7c2-skeleton');
+          const spinner=doc.querySelector('.qxframe9a7c2-spinner-icon');
+          const chevron=doc.querySelector('[data-card=faq] .qxframe9a7c2-collapse-item>summary .pv-icon');
+          return {skeleton:skeleton&&cs(skeleton).animationName,spinner:spinner&&cs(spinner).animationName,
+            transition:chevron&&cs(chevron).transitionDuration,
+            duration:cs(doc.documentElement).getPropertyValue('--qxframe9a7c2-theme-duration-md').trim()};
+        })()`);
+        assert.deepEqual(actual,{skeleton:'none',spinner:'none',transition:'0s',duration:'0ms'},style+'/'+mode+' stops motion');
+      }
+    }
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", ext: {} })');
+  });
+
+  await step('Static embedded Table recipes across eight styles and light/dark', async () => {
+    const expected={vega:8,nova:8,maia:12,lyra:8,mira:8,luma:12,sera:12,rhea:8};
+    for(const [style,inset] of Object.entries(expected)){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"',style+' embedded Table');
+      for(const mode of ['light','dark']){
+        const actual=await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement,old=html.classList.contains('dark');
+          html.classList.toggle('dark',${mode==='dark'});
+          const host=doc.createElement('div');
+          host.style.cssText='position:absolute;left:0;top:0;width:360px;visibility:hidden';
+          host.innerHTML='<table class="qxframe9a7c2-table is-embedded is-hover"><thead><tr><th>Item</th><th>Amount</th></tr></thead><tbody><tr><td>Subscription</td><td>$10</td></tr><tr><td>Service</td><td>$20</td></tr></tbody></table>';
+          doc.body.append(host);
+          const table=host.firstElementChild,head=table.querySelector('th'),cell=table.querySelector('td');
+          const sample=doc.createElement('span');
+          sample.style.color='var(--qxframe9a7c2-theme-table-heading-foreground)';
+          host.append(sample);
+          const css=el=>doc.defaultView.getComputedStyle(el),px=value=>parseFloat(value);
+          const result={inset:px(css(cell).paddingLeft),headerHeight:px(css(head).height),
+            headerText:css(head).color,expectedText:css(sample).color,
+            font:px(css(table).fontSize),headerFont:px(css(head).fontSize),line:px(css(cell).lineHeight),bodyBackground:css(cell).backgroundColor};
+          host.remove();html.classList.toggle('dark',old);
+          return result;
+        })()`);
+        const label=style+'/'+mode+' embedded Table';
+        assert.ok(Math.abs(actual.inset-inset)<.51,label+' padding '+JSON.stringify(actual));
+        assert.ok(Math.abs(actual.headerHeight-(24+2*inset))<.51,label+' header height '+JSON.stringify(actual));
+        assert.equal(actual.headerText,actual.expectedText,label+' header semantic text');
+        assert.ok(Math.abs(actual.font-(['lyra','mira'].includes(style)?12:14))<.51,label+' body size');
+        assert.ok(Math.abs(actual.headerFont-(style==='sera'?12:actual.font))<.51,label+' head size');
+        assert.ok(Math.abs(actual.line-(actual.font===12?16:20))<.51,label+' Tailwind table line box');
+        assert.equal(actual.bodyBackground,'rgba(0, 0, 0, 0)',label+' unpainted cell');
+      }
+    }
+  });
+
+  await step('High-difference first-Card structural diagnostics (Nova)', async () => {
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
+    await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
+    await waitFor(frameAttr('data-create-style')+' === "nova"','Nova diagnostic');
+    const structure = await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const style=doc.createElement('style');
+      style.textContent='body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none;content-visibility:visible!important}';
+      doc.head.appendChild(style);
+      const number=n=>+n.toFixed(2),get=el=>{
+        if(!el)return null;
+        const st=doc.defaultView.getComputedStyle(el),r=el.getBoundingClientRect();
+        return {h:number(r.height),w:number(r.width),gap:st.rowGap,pt:st.paddingTop,pb:st.paddingBottom,
+          mt:st.marginTop,mb:st.marginBottom,lh:st.lineHeight,children:el.children.length};
+      };
+      const result={};
+      for(const name of ['faq','kitchen-island','payments','sidebar-nav','notification-settings']){
+        const card=doc.querySelector('[data-card="'+name+'"]');
+        if(!card)continue;
+        const samples=[];
+        const selectors=name==='faq'
+          ? ['.qxframe9a7c2-card-content','.pv-tabs','.qxframe9a7c2-tabs','.qxframe9a7c2-tabs-list','.qxframe9a7c2-collapse','.qxframe9a7c2-collapse-item','summary','.qxframe9a7c2-collapse-content','.qxframe9a7c2-card-footer']
+          : name==='kitchen-island'
+          ? ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.pv-toggle-group','.qxframe9a7c2-item-group','.pv-slider-item','.qxframe9a7c2-item-content','.qxframe9a7c2-item-title','.qxframe9a7c2-item-actions','.pv-slider']
+          : name==='payments'
+          ? ['.qxframe9a7c2-card-header','.pv-breadcrumb','.qxframe9a7c2-card-content','.qxframe9a7c2-item-group','.qxframe9a7c2-item','.qxframe9a7c2-item-content','.qxframe9a7c2-item-title','.qxframe9a7c2-item-desc']
+          : name==='sidebar-nav'
+          ? ['.qxframe9a7c2-card','.pv-nav-group','.pv-nav-label','.pv-nav','.pv-nav-button','.qxframe9a7c2-divider']
+          : ['.qxframe9a7c2-card-header','.qxframe9a7c2-card-content','.qxframe9a7c2-field-group','.qxframe9a7c2-selectgroup-item','.qxframe9a7c2-form-description','.qxframe9a7c2-card-footer'];
+        for(const selector of selectors){const el=card.querySelector(selector);samples.push({selector,metrics:get(el)});}
+        result[name]={root:get(card),samples};
+        // Preserve per-row text-wrap evidence for Payments/FAQ before changing
+        // fonts, glyph widths or the shared Item roles.
+        if(name==='payments'){
+          result[name].rows=[...card.querySelectorAll('.qxframe9a7c2-item')].map((row,i)=>{
+            const content=row.querySelector('.qxframe9a7c2-item-content');
+            const title=row.querySelector('.qxframe9a7c2-item-title');
+            const desc=row.querySelector('.qxframe9a7c2-item-desc');
+            const media=row.querySelector('.qxframe9a7c2-item-media');
+            const glyph=row.lastElementChild, st=doc.defaultView.getComputedStyle(desc);
+            return {index:i,row:get(row),content:get(content),title:get(title),
+              desc:get(desc),media:get(media),glyph:get(glyph),
+              descText:desc.textContent,fontSize:st.fontSize,fontWeight:st.fontWeight,
+              letterSpacing:st.letterSpacing,whiteSpace:st.whiteSpace,
+              descLines:+(desc.getBoundingClientRect().height/parseFloat(st.lineHeight)).toFixed(2),
+              glyphStyle:doc.defaultView.getComputedStyle(glyph).flexShrink};
+          });
+        }
+        if(name==='faq'){
+          result[name].details=[...card.querySelectorAll('.qxframe9a7c2-collapse-item')].map((row,i)=>{
+            const summary=row.querySelector('summary'),content=row.querySelector('.qxframe9a7c2-collapse-content');
+            const st=doc.defaultView.getComputedStyle(content);
+            return {index:i,open:row.open,row:get(row),summary:get(summary),content:get(content),
+              text:content.textContent,whiteSpace:st.whiteSpace,fontSize:st.fontSize,
+              fontWeight:st.fontWeight,letterSpacing:st.letterSpacing,
+              contentLines:+(content.getBoundingClientRect().height/parseFloat(st.lineHeight)).toFixed(2)};
+          });
+        }
+      }
+      style.remove();return result;
+    })()`);
+    console.log('[preview-01-structure-nova] '+JSON.stringify(structure));
+  });
+
+  await step('Preview 01 refreshed first-Card height diagnostic against pinned source', async () => {
+    const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/qa/reports/stage-3/preview-01/report.json'), 'utf8'));
+    assert.equal(baseline.source, '295a1f114a138f23b5dfee0e0c6812394dfeb90c');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=contribution-history]")', 'Preview 01 canvas', 7000);
+    const rows = [];
+    for (const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "' + style + '", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style') + ' === "' + style + '"', style + ' Preview 01');
+      for (const mode of ['light','dark']) {
+        const actual = await evaluate(`(() => {
+          const doc=document.querySelector('[data-create-frame]').contentDocument;
+          const html=doc.documentElement, previous=html.classList.contains('dark');
+          html.classList.toggle('dark', ${mode === 'dark'});
+          let qa=doc.getElementById('qx-create-qa-measurement');
+          if(!qa){
+            qa=doc.createElement('style');qa.id='qx-create-qa-measurement';
+            qa.textContent='body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none;content-visibility:visible!important}';
+            doc.head.append(qa);
+          }
+          const values={};
+          for(const group of doc.querySelectorAll('[data-card]')){
+            if(!group.dataset.card || group.parentElement.closest('[data-card]'))continue;
+            const card=group.classList.contains('qxframe9a7c2-card')?group:group.querySelector('.qxframe9a7c2-card');
+            if(card){const rect=card.getBoundingClientRect();values[group.dataset.card]={height:rect.height,width:rect.width};}
+          }
+          html.classList.toggle('dark',previous);
+          return values;
+        })()`);
+        for(const record of baseline.rows.filter(row=>row.style===style&&row.mode===mode)){
+          const now=actual[record.card], reference=record.reference, prior=record.actual;
+          rows.push({style,mode,card:record.card,
+            referenceHeight:reference?.height??null,priorHeight:prior?.height??null,
+            currentHeight:now?.height??null,referenceWidth:reference?.width??null,currentWidth:now?.width??null,
+            delta:reference&&now?+(now.height-reference.height).toFixed(3):null});
+        }
+      }
+    }
+    assert.equal(rows.length, baseline.rows.length, 'every pinned first-Card row must be remeasured');
+    assert.ok(rows.every(row=>row.currentHeight!==null),'a pinned reference Card is missing');
+    const bad=row=>row.delta!==null&&Math.abs(row.delta)>.5;
+    const oldBad=row=>row.referenceHeight!==null&&row.priorHeight!==null&&Math.abs(row.priorHeight-row.referenceHeight)>.5;
+    const summary={source:baseline.source,font:'system-ui,sans-serif',scope:'first Card per example only; heights diagnostic, not acceptance',
+      referenceCapturedOn:'Windows Chrome 154 (see tools/qa/reports/stage-3/README.md)',
+      actualCapturedOn:process.platform,
+      fontMetricParityUnverified:process.platform!=='win32',
+      caution:'Cross-OS system-ui may resolve to different font faces. Treat text-wrap height differences as unverified until both sides run in the same browser.',
+      renders:rows.length,previousOverTolerance:rows.filter(oldBad).length,currentOverTolerance:rows.filter(bad).length,
+      improved:rows.filter(row=>row.delta!==null&&row.priorHeight!==null&&Math.abs(row.delta)<Math.abs(row.priorHeight-row.referenceHeight)-.5).length,
+      worsened:rows.filter(row=>row.delta!==null&&row.priorHeight!==null&&Math.abs(row.delta)>Math.abs(row.priorHeight-row.referenceHeight)+.5).length,
+      topNova:rows.filter(row=>row.style==='nova'&&row.mode==='light').sort((a,b)=>Math.abs(b.delta??0)-Math.abs(a.delta??0)).slice(0,10)};
+    fs.writeFileSync(path.join(root,'tools/qa/reports/stage-3/preview-01/current-report.json'),
+      JSON.stringify({...summary,rows},null,2)+'\n');
+    console.log('[preview-01-first-card-diagnostic] '+JSON.stringify(summary));
+  });
+
+
+  await step('Preview 01 controlled ToggleGroup/Slider/Checkbox states match pinned source', async () => {
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=roller-shades] .qxframe9a7c2-slider")', 'interactive Preview 01');
+    const state = await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument;
+      const card=id=>doc.querySelector('[data-card="'+id+'"]');
+      const press=(root,index)=>root.querySelectorAll('.pv-toggle-group button')[index].click();
+      const active=root=>[...root.querySelectorAll('.pv-toggle-group button')].filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.textContent.trim());
+      const kitchen=card('kitchen-island');
+      press(kitchen,1);
+      const scene=active(kitchen);
+      const sceneValues=[...kitchen.querySelectorAll('.qxframe9a7c2-slider-handle')].map(h=>h.getAttribute('aria-valuenow')||h.style.left||h.style.bottom);
+      const power=kitchen.querySelector('.qxframe9a7c2-switch-input');
+      power.click();
+      const sceneDisabled=[...kitchen.querySelectorAll('.pv-toggle-group button')].every(b=>b.disabled);
+      const sliderDisabled=[...kitchen.querySelectorAll('.qxframe9a7c2-slider')].every(s=>s.classList.contains('is-disabled'));
+      power.click();
+      const sceneEnabled=[...kitchen.querySelectorAll('.pv-toggle-group button')].every(b=>!b.disabled);
+      const roller=card('roller-shades');
+      press(roller,2);
+      const closed={active:active(roller),height:roller.querySelector('.pv-shade > div').style.height};
+      press(roller,0);
+      const open={active:active(roller),height:roller.querySelector('.pv-shade > div').style.height};
+      const release=card('release-catalog');
+      press(release,0);
+      const stock={active:active(release),holdings:release.querySelectorAll('.qxframe9a7c2-item-group > .qxframe9a7c2-item').length};
+      const notification=card('notification-settings');
+      const check=[...notification.querySelectorAll('.qxframe9a7c2-selectgroup-item input[type=checkbox]')];
+      const initial={checked:check[0].checked,indeterminate:check[0].indeterminate};
+      check[0].click();
+      const allChecked=check.every(c=>c.checked)&&!check[0].indeterminate;
+      check[1].click();
+      const partial={checked:check[0].checked,indeterminate:check[0].indeterminate};
+      return {scene,sceneValues,sceneDisabled,sliderDisabled,sceneEnabled,closed,open,stock,initial,allChecked,partial};
+    })()`);
+    assert.deepEqual(state.scene,['Dining'],'Kitchen scene selection');
+    assert.equal(state.sceneValues.length,4,'four actual QX Slider handles remain');
+    assert.equal(state.sceneDisabled,true,'master switch disables four scene buttons');
+    assert.equal(state.sliderDisabled,true,'master switch disables QX Sliders');
+    assert.equal(state.sceneEnabled,true,'scene buttons re-enable');
+    assert.deepEqual(state.closed,{active:['Closed'],height:'100%'},'Roller closed preset');
+    assert.deepEqual(state.open,{active:['Open'],height:'0%'},'Roller open preset');
+    assert.deepEqual(state.stock,{active:['Stocks'],holdings:4},'source ReleaseCatalog filter does not remove holdings');
+    assert.deepEqual(state.initial,{checked:false,indeterminate:true},'source initial mixed state');
+    assert.equal(state.allChecked,true,'all choices are checked from master');
+    assert.deepEqual(state.partial,{checked:false,indeterminate:true},'individual choice restores mixed state');
+  });
+
+
+  await step('Preview 01 fifteen pinned native FieldLabels focus their controls', async () => {
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method] input")', 'Preview native fields');
+    const observations = await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const fields=[{"card":"payout-threshold","id":"payout-notes","kind":"textarea"},{"card":"savings-targets","id":"investment-amount","kind":"input"},{"card":"savings-targets","id":"investment-order-type","kind":"select"},{"card":"account-access","id":"email-address","kind":"input"},{"card":"account-access","id":"current-password","kind":"input"},{"card":"transfer-funds","id":"transfer-amount","kind":"input"},{"card":"receiving-method","id":"account-holder","kind":"input"},{"card":"receiving-method","id":"iban","kind":"input"},{"card":"new-milestone","id":"goal-name","kind":"input"},{"card":"new-milestone","id":"target-amount","kind":"input"},{"card":"new-milestone","id":"target-date","kind":"input"},{"card":"social-links","id":"spotify-url","kind":"input"},{"card":"social-links","id":"instagram-handle","kind":"input"},{"card":"social-links","id":"soundcloud-url","kind":"input"},{"card":"social-links","id":"website-url","kind":"input"}];
+      return fields.map(({card,id,kind})=>{
+        const target=d.querySelector('[data-card="'+card+'"]');
+        const label=target?.querySelector('label[for="'+id+'"]');
+        const focus=target?.querySelector('[id="'+id+'"]');
+        if(!label||!focus)return {card,id,kind,error:'missing association'};
+        label.click();
+        return {card,id,kind,tag:focus.tagName.toLowerCase(),
+          matches:label.control===focus,focused:d.activeElement===focus};
+      });
+    })()`);
+    assert.equal(observations.length,15,'fifteen native Label associations');
+    assert.deepEqual(observations.filter(x=>x.error||!x.matches||!x.focused),[],JSON.stringify(observations));
+  });
+
+  await step('Preview 01 five source Select FieldLabels focus existing QX Controller roots', async () => {
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method] input")', 'Preview native fields');
+    const cases = await evaluate("(() => {\n  const d=document.querySelector('[data-create-frame]').contentDocument;\n  const fields=[[\"payout-threshold\",\"preferred-currency\"],[\"preferences\",\"default-currency\"],[\"transfer-funds\",\"from-account\"],[\"transfer-funds\",\"to-account\"],[\"stock-performance\",\"stock-ticker\"]];\n  return fields.map(([card,id])=>{\n    const panel=d.querySelector('[data-card=\"'+card+'\"]');\n    const label=panel?.querySelector('label[for=\"'+id+'\"]');\n    const focus=panel?.querySelector('#'+id+'.qxframe9a7c2-select[tabindex]');\n    if(!label||!focus)return {card,id,error:'missing live label or QX root'};\n    const before=focus.textContent.trim();\n    label.click();\n    return {card,id,focused:d.activeElement===focus,\n      ownedClass:focus.classList.contains('is-focused'),\n      valueUnchanged:focus.textContent.trim()===before,\n      noFakeInput:!focus.querySelector('input'),\n      popupClosed:!panel.querySelector('.qxframe9a7c2-select-panel:not([hidden])')};\n  });\n})()");
+    assert.equal(cases.length,5,'five QX Select labels');
+    assert.deepEqual(cases.filter(x=>x.error||!x.focused||!x.ownedClass||!x.valueUnchanged||!x.noFakeInput||!x.popupClosed),[],JSON.stringify(cases));
+  });
+
+  await step('Pinned secondary Buttons and FAQ segmented Tabs match Theme roles in light and dark',async()=>{
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs-tab.is-active")','Preview 01 Tab');
+    const result=await evaluate("(() => {\n const doc=document.querySelector('[data-create-frame]').contentDocument;\n const root=doc.documentElement,initialDark=root.classList.contains('dark');\n const noTransition=doc.createElement('style');\n noTransition.textContent='.qxframe9a7c2-button,.qxframe9a7c2-tabs-tab{transition:none!important}';\n doc.head.appendChild(noTransition);\n const cards=[['qr-connect','Got it'],['cover-art','Upload Artwork'],['social-links','Discard']];\n const result=[];\n const probe=doc.createElement('span');\n probe.style.cssText='position:absolute;display:block;background:var(--qxframe9a7c2-theme-secondary);color:var(--qxframe9a7c2-theme-secondary-foreground)';\n doc.body.appendChild(probe);\n for(const dark of [false,true]){\n  root.classList.toggle('dark',dark);\n  const expectedBg=getComputedStyle(probe).backgroundColor,expectedText=getComputedStyle(probe).color;\n  for(const [card,name] of cards){\n   const el=doc.querySelector('[data-card=\"'+card+'\"] .qxframe9a7c2-button.is-secondary.is-solid');\n   if(!el){result.push({dark,card,error:'missing secondary button'});continue;}\n   const style=getComputedStyle(el);\n   result.push({dark,card,text:el.textContent.trim(),name,\n     bgMatch:style.backgroundColor===expectedBg,\n     fgMatch:style.color===expectedText});\n  }\n  const tabs=doc.querySelector('[data-card=\"faq\"] .qxframe9a7c2-tabs.is-segmented');\n  const active=tabs?.querySelector('.qxframe9a7c2-tabs-tab.is-active');\n  const inactive=tabs?.querySelector('.qxframe9a7c2-tabs-tab:not(.is-active)');\n  probe.style.color='var(--qxframe9a7c2-theme-foreground)';\n  const expectedFg=getComputedStyle(probe).color;\n  if(!active||!inactive)result.push({dark,card:'faq',error:'missing Tabs'});\n  else result.push({dark,card:'faq',sameWeight:getComputedStyle(active).fontWeight===getComputedStyle(inactive).fontWeight,\n   foregroundMatch:getComputedStyle(active).color===expectedFg});\n  probe.style.color='var(--qxframe9a7c2-theme-secondary-foreground)';\n }\n root.classList.toggle('dark',initialDark);\n probe.remove();noTransition.remove();\n return result;\n})()");
+    assert.equal(result.length,8,'three Buttons + FAQ in both modes');
+    assert.deepEqual(result.filter(x=>x.error||x.bgMatch===false||x.fgMatch===false||x.sameWeight===false||x.foregroundMatch===false),[],JSON.stringify(result));
+  });
+
+  await step('SelectGroup None preserves keyboard/focus, real checkbox and Flex cross axis',async()=>{
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=notification-settings] .qxframe9a7c2-selectgroup-item")','SelectGroup');
+    const results=await evaluate("(() => { const d=document.querySelector('[data-create-frame]').contentDocument;const row=d.querySelector('[data-card=notification-settings] .qxframe9a7c2-selectgroup-item');const input=row.querySelector('.qxframe9a7c2-selectgroup-input'),surface=row.querySelector('.qxframe9a7c2-selectgroup-label'),flex=row.querySelector('.qxframe9a7c2-flex'),indicator=row.querySelector('.qxframe9a7c2-selectgroup-indicator');const css=e=>getComputedStyle(e);let defaultState={border:css(surface).borderTopWidth,bg:css(surface).backgroundColor,padding:css(surface).paddingTop,checked:input.checked,indicator:css(indicator).backgroundColor,align:css(flex).alignItems}; const modes={};for(const mode of ['start','center','end']){flex.classList.remove('is-start','is-center','is-end');flex.classList.add('is-'+mode);modes[mode]=css(flex).alignItems;}flex.classList.remove('is-start','is-center','is-end');flex.classList.add('is-start');return {defaultState,modes};})()");
+    assert.equal(results.defaultState.border,'0px','None has no border');
+    assert.equal(results.defaultState.padding,'0px','None has zero padding');
+    assert.equal(results.defaultState.bg,'rgba(0, 0, 0, 0)','None background transparent');
+    assert.deepEqual(results.modes,{start:'flex-start',center:'center',end:'flex-end'},'independent Flex controls alignment');
+  });
+
+  await step('Field and SelectGroup state priority, disabled hover, FormData and native reset',async()=>{
+    const out=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,origin=h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),dark=h.classList.contains('dark'),results=[];h.classList.remove('qxframe9a7c2-keyboard-focus-origin');for(const mode of [false,true]){h.classList.toggle('dark',mode);for(const feedback of ['is-invalid','is-warning','is-valid']){for(const appearance of ['is-outline','is-muted']){const form=d.createElement('form');form.className='qxframe9a7c2-field '+feedback;const group=d.createElement('div');group.className='qxframe9a7c2-selectgroup '+appearance;const flex=d.createElement('div');flex.className='qxframe9a7c2-flex is-gap-2';group.append(flex);form.append(group);for(const [value,disabled] of [['first',false],['second',false],['no',true]]){const label=d.createElement('label');label.className='qxframe9a7c2-selectgroup-item';label.innerHTML='<input type=\"radio\" class=\"qxframe9a7c2-selectgroup-input\" name=\"channel\" value=\"'+value+'\"'+(value==='first'?' checked required':'')+(disabled?' disabled':'')+'><span class=\"qxframe9a7c2-selectgroup-label\">'+value+'</span>';flex.append(label);}d.body.append(form);const inputs=Array.from(flex.querySelectorAll('input')),labels=Array.from(flex.querySelectorAll('.qxframe9a7c2-selectgroup-label'));labels.forEach(el=>el.style.transition='none');const disabledBefore=getComputedStyle(labels[2]).backgroundColor;inputs[2].parentElement.dispatchEvent(new MouseEvent('mouseover',{bubbles:true}));const disabledHover=getComputedStyle(labels[2]).backgroundColor;inputs[1].focus();const pointerBorder=getComputedStyle(labels[1]).borderTopColor;const expected=d.createElement('span');expected.style.color='var(--qxframe9a7c2-theme-'+(feedback==='is-invalid'?'destructive':feedback==='is-warning'?'warning':'success')+')';form.append(expected);const expectedBorder=getComputedStyle(expected).color;const before=Array.from(new FormData(form).entries());inputs[1].parentElement.click();const after=Array.from(new FormData(form).entries());form.reset();const reset=Array.from(new FormData(form).entries());results.push({mode,feedback,appearance,before,after,reset,disabledBefore,disabledHover,pointerBorder,expectedBorder,disabledCursor:getComputedStyle(inputs[2].parentElement).cursor,disabledChecked:inputs[2].checked});form.remove();}}}h.classList.toggle('dark',dark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',origin);return results;})()");
+    assert.equal(out.length,12,'three feedback roles × two appearances × light/dark');
+    for(const row of out){
+      assert.deepEqual(row.before,[['channel','first']],'FormData starts with native radio');
+      assert.deepEqual(row.after,[['channel','second']],'click changes the native FormData owner');
+      assert.deepEqual(row.reset,[['channel','first']],'reset restores native default checked value');
+      assert.equal(row.disabledBefore,row.disabledHover,'disabled hover never paints a new background');
+      assert.equal(row.disabledCursor,'not-allowed','disabled native input also disables entire label');
+      assert.equal(row.disabledChecked,false,'disabled input remains unchanged');
+      if(row.appearance==='is-outline'&&row.feedback!=='is-valid')assert.equal(row.pointerBorder,row.expectedBorder,'feedback border wins over pointer focus '+JSON.stringify(row));
+    }
+  });
+
+  await step('SelectGroup media Surface and independent Flex preserve native choice and connected seam', async()=>{
+    const result=await evaluate("(() => { const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,prior=h.classList.contains('dark'),host=d.createElement('section'),out=[];host.style.cssText='position:absolute;left:0;top:0;z-index:9;width:560px';d.body.append(host);for(const dark of [false,true]){h.classList.toggle('dark',dark);for(const mode of ['none','outline','muted']){const group=d.createElement('div');group.className='qxframe9a7c2-selectgroup'+(mode==='none'?'':' is-'+mode);const flex=d.createElement('div');flex.className='qxframe9a7c2-flex is-wrap is-gap-2';group.append(flex);for(let j=0;j<2;j++){const item=d.createElement('label');item.className='qxframe9a7c2-selectgroup-item';item.style.width='10rem';item.innerHTML='<input class=\"qxframe9a7c2-selectgroup-input\" type=\"radio\" name=\"test-'+mode+'-'+dark+'\"'+(j===0?' checked':'')+'><span class=\"qxframe9a7c2-selectgroup-label\">'+(j===0?'<span>Text</span>':'<span class=\"qxframe9a7c2-selectgroup-image\"><span class=\"qxframe9a7c2-selectgroup-image-preview\">Media</span></span>')+'</span>';flex.append(item);}host.append(group);const items=Array.from(flex.children),surface=items.map(i=>i.querySelector('.qxframe9a7c2-selectgroup-label'));surface.forEach(el=>el.style.transition='none');const styles=surface.map(el=>getComputedStyle(el)),before=items.map(i=>i.querySelector('input').checked);items[1].click();out.push({kind:'media',dark,mode,display:styles.map(s=>s.display),padding:styles.map(s=>s.paddingTop),border:styles.map(s=>s.borderTopWidth),before,after:items.map(i=>i.querySelector('input').checked)});group.remove();}}for(const appearance of ['is-outline','is-muted'])for(const nested of [false,true]){const group=d.createElement('div');group.className='qxframe9a7c2-selectgroup is-connected '+appearance;const flex=d.createElement('div');flex.className='qxframe9a7c2-flex is-gap-3';const parent=nested?flex:group;if(nested)group.append(flex);for(let j=0;j<3;j++){const item=d.createElement('label');item.className='qxframe9a7c2-selectgroup-item';item.innerHTML='<input class=\"qxframe9a7c2-selectgroup-input\" type=\"radio\" name=\"test-connected-'+nested+'\"'+(j===0?' checked':'')+'><span class=\"qxframe9a7c2-selectgroup-label\">Option '+j+'</span>';parent.append(item);}host.append(group);const items=Array.from(parent.children),rects=items.map(i=>i.getBoundingClientRect()),s=items.map(i=>getComputedStyle(i.querySelector('.qxframe9a7c2-selectgroup-label')));items[2].click();out.push({kind:'connected',appearance,nested,gap:getComputedStyle(parent).gap,seam:rects[1].left-rects[0].right,first:s[0].borderTopLeftRadius,middle:s[1].borderTopLeftRadius,last:s[2].borderTopRightRadius,checked:items.map(i=>i.querySelector('input').checked)});group.remove();}h.classList.toggle('dark',prior);host.remove();return out;})()");
+    for(const x of result){
+      if(x.kind==='media'){
+        assert.deepEqual(x.display,['flex','flex'],'image must not override universal Surface display: '+JSON.stringify(x));
+        assert.equal(x.padding[0],x.padding[1],'image and plain choice share Appearance padding: '+JSON.stringify(x));
+        if(x.mode==='none'){assert.deepEqual(x.padding,['0px','0px']);assert.deepEqual(x.border,['0px','0px']);}
+        if(x.mode==='outline'){assert.ok(parseFloat(x.padding[0])>0);assert.deepEqual(x.border,['1px','1px']);}
+        assert.deepEqual(x.before,[true,false]);assert.deepEqual(x.after,[false,true],'native radio mutual exclusion through label click');
+      }else{
+        assert.equal(x.gap,'0px','connected root/wrapper must have no gap: '+JSON.stringify(x));
+        assert.ok(Math.abs(x.seam)<1.5,'connected adjacent borders overlap: '+JSON.stringify(x));
+        assert.equal(x.middle,'0px','connected middle corner flush');
+        assert.notEqual(x.first,'0px','connected first keeps Theme radius');
+        assert.notEqual(x.last,'0px','connected last keeps Theme radius');
+        assert.deepEqual(x.checked,[false,false,true]);
+      }
+    }
+    assert.equal(result.length,10);
+  });
+
+  await step('Seven independent Hover/Focus axes: compiled themes and Chromium Focus Background paint',async()=>{
+    const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;\n const conf={...api.state.config,ext:{...api.state.config.ext,hoverStyle:'both',hoverColor:'theme',keyboardFocus:'ring',keyboardFocusColor:'theme',pointerFocus:'outline',pointerFocusColor:'black-white',focusBackground:'parent-surface'}};\n const style=d.createElement('style');style.textContent=api.compileTheme(conf,{generatedAt:''}).body;d.head.append(style);\n const input=d.createElement('input');input.type='text';input.className='qxframe9a7c2-form-input';input.style.transition='none';d.body.append(input);\n const h=getComputedStyle(d.documentElement),keys=['hover-border-strength','hover-background-strength','focus-background-strength','hover-color','focus','pointer-focus'];\n const values=Object.fromEntries(keys.map(k=>[k,h.getPropertyValue('--qxframe9a7c2-theme-'+k).trim()]));\n const idle=getComputedStyle(input).backgroundImage;input.focus();\n const focused=getComputedStyle(input).backgroundImage;\n const layer=getComputedStyle(input).getPropertyValue('--_qxframe9a7c2-focused-parent-layer').trim();\n input.remove();style.remove();return {values,idle,focused,layer};\n})()");
+    assert.equal(r.values['hover-border-strength'],'30%');
+    assert.equal(r.values['hover-background-strength'],'15%');
+    assert.equal(r.values['focus-background-strength'],'100%');
+    assert.notEqual(r.values.focus,r.values['pointer-focus'],'Keyboard and Pointer colors independent');
+    assert.notEqual(r.idle,r.focused,'Focus parent-surface overlays native input');
+    assert.ok(r.layer && r.layer!=='transparent','Focus layer must resolve actual paint');
+  });
+
+  await step('FieldSet/Legend/Error/Description + vertical Connected and feedback focus in real Chromium',async()=>{
+    const rows=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const wasDark=h.classList.contains('dark'),wasOrigin=h.classList.contains('qxframe9a7c2-keyboard-focus-origin');\n const host=d.createElement('form');host.style.cssText='position:absolute;top:0;left:-9999px;width:20rem';\n host.innerHTML='<fieldset class=\"qxframe9a7c2-field-set\"><legend class=\"qxframe9a7c2-field-legend\">Notification options</legend><div class=\"qxframe9a7c2-field is-warning\"><p class=\"qxframe9a7c2-field-description\">Neutral description</p><input class=\"qxframe9a7c2-form-input\" value=\"Hello\"><div class=\"qxframe9a7c2-selectgroup is-connected is-outline\"><div class=\"qxframe9a7c2-stack\"><label class=\"qxframe9a7c2-selectgroup-item\"><input class=\"qxframe9a7c2-selectgroup-input\" type=\"radio\" name=\"mode\" value=\"one\" checked required><span class=\"qxframe9a7c2-selectgroup-label\">One</span></label><label class=\"qxframe9a7c2-selectgroup-item\"><input class=\"qxframe9a7c2-selectgroup-input\" type=\"radio\" name=\"mode\" value=\"two\" required><span class=\"qxframe9a7c2-selectgroup-label\">Two</span></label><label class=\"qxframe9a7c2-selectgroup-item\"><input class=\"qxframe9a7c2-selectgroup-input\" type=\"radio\" name=\"mode\" value=\"disabled\" disabled><span class=\"qxframe9a7c2-selectgroup-label\">Disabled</span></label></div></div><p class=\"qxframe9a7c2-field-error\">Warning feedback</p></div></fieldset>';\n d.body.append(host);const out=[];\n for(const dark of [false,true]){h.classList.toggle('dark',dark);for(const appearance of ['is-outline','is-muted']){\n const group=host.querySelector('.qxframe9a7c2-selectgroup');group.className='qxframe9a7c2-selectgroup is-connected '+appearance;\n const stack=group.querySelector('.qxframe9a7c2-stack'),items=Array.from(stack.children),rects=items.map(x=>x.getBoundingClientRect()),surfaces=items.map(x=>getComputedStyle(x.querySelector('.qxframe9a7c2-selectgroup-label')));\n const field=host.querySelector('.qxframe9a7c2-field'),expect=d.createElement('span');expect.style.color='var(--qxframe9a7c2-theme-warning)';field.append(expect);const expected=getComputedStyle(expect).color;expect.remove();\n const pixels=color=>{const canvas=d.createElement('canvas');canvas.width=1;canvas.height=1;const ctx=canvas.getContext('2d');ctx.fillStyle=color;ctx.fillRect(0,0,1,1);return Array.from(ctx.getImageData(0,0,1,1).data);};\n const input=field.querySelector('.qxframe9a7c2-form-input');input.style.transition='none';for(const item of items)item.querySelector('.qxframe9a7c2-selectgroup-label').style.transition='none';h.classList.remove('qxframe9a7c2-keyboard-focus-origin');input.focus({preventScroll:true});const pointerInput=getComputedStyle(input).borderTopColor;h.classList.add('qxframe9a7c2-keyboard-focus-origin');const keyboardInput=getComputedStyle(input).borderTopColor;\n const before=Array.from(new FormData(host).entries()).filter(x=>x[0]==='mode');items[1].click();const after=Array.from(new FormData(host).entries()).filter(x=>x[0]==='mode');host.reset();const reset=Array.from(new FormData(host).entries()).filter(x=>x[0]==='mode');\n out.push({dark,appearance,gap:getComputedStyle(stack).rowGap,seam:rects[1].top-rects[0].bottom,first:surfaces[0].borderTopLeftRadius,firstBottom:surfaces[0].borderBottomLeftRadius,middle:surfaces[1].borderTopLeftRadius,last:surfaces[2].borderBottomRightRadius,lastTop:surfaces[2].borderTopRightRadius,disabled:getComputedStyle(items[2]).cursor,description:getComputedStyle(field.querySelector('.qxframe9a7c2-field-description')).color,error:getComputedStyle(field.querySelector('.qxframe9a7c2-field-error')).color,expected,pointerInput,keyboardInput,expectedPixels:pixels(expected),pointerPixels:pixels(pointerInput),keyboardPixels:pixels(keyboardInput),before,after,reset});\n }}\n h.classList.toggle('dark',wasDark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',wasOrigin);host.remove();return out;\n})()");
+    assert.equal(rows.length,4,'two modes by two appearances');
+    for(const r of rows){
+      assert.equal(r.gap,'0px','Stack owns zero connected gap');
+      assert.ok(Math.abs(r.seam)<1.5,'vertical shared border seam: '+JSON.stringify(r));
+      assert.notEqual(r.first,'0px','top Theme corners retained');
+      assert.equal(r.firstBottom,'0px','first lower corners flush');
+      assert.equal(r.middle,'0px','middle corners flush');
+      assert.notEqual(r.last,'0px','last bottom corners Theme');
+      assert.equal(r.lastTop,'0px','last top corners flush');
+      assert.equal(r.disabled,'not-allowed','native disabled cursor');
+      assert.equal(r.error,r.expected,'FieldError warning matches Theme');
+      assert.notEqual(r.description,r.expected,'FieldDescription stays muted');
+      // Chromium serializes an identical OKLab color as oklab(...) or oklch(...)
+      // depending on whether its source went through color-mix(). Compare in
+      // the same color space, without 8-bit Canvas rounding or a weakened gate.
+      const toLab=value=>{
+        const m=/^(oklab|oklch)\(\s*([\d.+-]+)\s+([\d.+-]+)\s+([\d.+-]+)\s*\)$/.exec(value);
+        assert.ok(m,'browser color must be OKLab/OKLCH: '+value);
+        const l=Number(m[2]),a=Number(m[3]),b=Number(m[4]);
+        return m[1]==='oklab'?[l,a,b]:[l,a*Math.cos(b*Math.PI/180),a*Math.sin(b*Math.PI/180)];
+      };
+      const expectedLab=toLab(r.expected);
+      for(const [name,value] of [['pointer',r.pointerInput],['keyboard',r.keyboardInput]]){
+        const received=toLab(value);
+        assert.ok(received.every((channel,i)=>Math.abs(channel-expectedLab[i])<0.00001),
+          name+' Focus must preserve exact warning paint: '+JSON.stringify({received,expectedLab,mode:r.dark,appearance:r.appearance}));
+      }
+      assert.deepEqual(r.before,[['mode','one']]);
+      assert.deepEqual(r.after,[['mode','two']]);
+      assert.deepEqual(r.reset,[['mode','one']]);
+    }
+  });
+
+  await step('Seven-axis Hover paints actually change selectable Surface in Chromium',async()=>{
+    const initial=await evaluate("(() => {\n const frame=document.querySelector('[data-create-frame]'),d=frame.contentDocument;\n const config={...window.QXFRAME9A7C2_CREATE.state.config,ext:{...window.QXFRAME9A7C2_CREATE.state.config.ext,\n  hoverStyle:'both',hoverColor:'theme',pointerFocus:'outline',pointerFocusColor:'theme',keyboardFocus:'border',keyboardFocusColor:'black-white',focusBackground:'parent-surface'}};\n const sheet=d.createElement('style');sheet.textContent=window.QXFRAME9A7C2_CREATE.compileTheme(config,{generatedAt:''}).body+'[data-seven-axis-qa] *{transition:none!important;animation:none!important}';d.head.append(sheet);\n const host=d.createElement('div');host.dataset.sevenAxisQa='';host.style.cssText='position:fixed;left:1rem;top:1rem;z-index:2147483000;width:20rem;padding:1rem;background:var(--qxframe9a7c2-theme-background)';\n host.innerHTML='<div class=\"qxframe9a7c2-selectgroup is-outline\"><div class=\"qxframe9a7c2-flex is-gap-2\"><label class=\"qxframe9a7c2-selectgroup-item\"><input class=\"qxframe9a7c2-selectgroup-input\" type=\"checkbox\"><span class=\"qxframe9a7c2-selectgroup-label\" data-qa-active>Hover target</span></label><label class=\"qxframe9a7c2-selectgroup-item\"><input class=\"qxframe9a7c2-selectgroup-input\" type=\"checkbox\" checked><span class=\"qxframe9a7c2-selectgroup-label\" data-qa-checked>Checked</span></label><label class=\"qxframe9a7c2-selectgroup-item\"><input class=\"qxframe9a7c2-selectgroup-input\" type=\"checkbox\" disabled><span class=\"qxframe9a7c2-selectgroup-label\" data-qa-disabled>Disabled</span></label></div></div><input type=\"text\" class=\"qxframe9a7c2-form-input\" data-qa-native value=\"Native input\">';\n d.body.append(host);window.__qxSevenAxisFixture={host,sheet};\n const css=getComputedStyle(d.documentElement);\n return {strengthBorder:css.getPropertyValue('--qxframe9a7c2-theme-hover-border-strength').trim(),strengthBg:css.getPropertyValue('--qxframe9a7c2-theme-hover-background-strength').trim(),pointer:css.getPropertyValue('--qxframe9a7c2-theme-pointer-focus').trim(),keyboard:css.getPropertyValue('--qxframe9a7c2-theme-focus').trim()};\n})()");
+    assert.equal(initial.strengthBorder,'30%');
+    assert.equal(initial.strengthBg,'15%');
+    assert.notEqual(initial.pointer,initial.keyboard,'pointer and keyboard colors are independent');
+    await mouse('mouseMoved',2,2);
+    const idle=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument;const el=d.querySelector('[data-qa-active]'),disabled=d.querySelector('[data-qa-disabled]'),checked=d.querySelector('[data-qa-checked]'),native=d.querySelector('[data-qa-native]');const c=x=>getComputedStyle(x);return {border:c(el).borderTopColor,bg:c(el).backgroundColor,disabledBorder:c(disabled).borderTopColor,disabledBg:c(disabled).backgroundColor,checkedBorder:c(checked).borderTopColor,nativeBorder:c(native).borderTopColor};})()");
+    const pos=await evaluate("(() => {const f=document.querySelector('[data-create-frame]'),el=f.contentDocument.querySelector('[data-qa-active]'),o=f.getBoundingClientRect(),r=el.getBoundingClientRect();return {x:o.left+r.left+r.width/2,y:o.top+r.top+r.height/2};})()");
+    assert.ok(pos.x>0&&pos.x<1440&&pos.y>0&&pos.y<900,'test fixture appears in real Chromium viewport: '+JSON.stringify(pos));
+    await mouse('mouseMoved',pos.x,pos.y);
+    const hovered=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument;const el=d.querySelector('[data-qa-active]'),disabled=d.querySelector('[data-qa-disabled]'),checked=d.querySelector('[data-qa-checked]'),native=d.querySelector('[data-qa-native]');const c=x=>getComputedStyle(x);return {border:c(el).borderTopColor,bg:c(el).backgroundColor,disabledBorder:c(disabled).borderTopColor,disabledBg:c(disabled).backgroundColor,checkedBorder:c(checked).borderTopColor,nativeBorder:c(native).borderTopColor};})()");
+    assert.notEqual(hovered.border,idle.border,'Theme Hover border paints on unselected SelectGroup');
+    assert.notEqual(hovered.bg,idle.bg,'Theme Hover background paints on unselected SelectGroup');
+    assert.equal(hovered.disabledBg,idle.disabledBg,'disabled item never inherits sibling Hover');
+    assert.equal(hovered.checkedBorder,idle.checkedBorder,'selected item border retained');
+    await evaluate("(() => {const fixture=window.__qxSevenAxisFixture;fixture?.host.remove();fixture?.sheet.remove();delete window.__qxSevenAxisFixture;return true;})()");
+    await mouse('mouseMoved',2,2);
+  });
+
+  await step('Seven-axis Hover paints real native and JS Input V2 surface; Field warning wins',async()=>{
+    const built=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE;\n const frame=document.querySelector('[data-create-frame]'),d=frame.contentDocument;\n const config={...api.state.config,ext:{...api.state.config.ext,hoverStyle:'both',hoverColor:'theme'}};\n const css=d.createElement('style');\n css.textContent=api.compileTheme(config,{generatedAt:''}).body+'[data-qa-v2-hover] *{transition:none!important;animation:none!important}';\n d.head.append(css);\n const host=d.createElement('div');host.dataset.qaV2Hover='';\n host.style.cssText='position:fixed;left:16px;top:16px;z-index:2147483001;display:flex;flex-direction:column;gap:12px;padding:12px;width:380px;background:var(--qxframe9a7c2-theme-background)';\n host.innerHTML='<input class=\"qxframe9a7c2-form-input\" data-v2-native type=\"text\" value=\"Native Hover\"><div class=\"qxframe9a7c2-input\" data-v2-js><input class=\"qxframe9a7c2-input-control\" type=\"text\" value=\"JS Hover\"></div><div class=\"qxframe9a7c2-field is-warning\"><input class=\"qxframe9a7c2-form-input\" data-v2-warning type=\"text\" value=\"Warning Hover\"></div><input class=\"qxframe9a7c2-form-input\" data-v2-disabled disabled value=\"Disabled Hover\">';\n d.body.append(host);window.__qxV2Hover={host,css};\n return {native:!!host.querySelector('[data-v2-native]'),js:!!host.querySelector('[data-v2-js]')};\n})()");
+    assert.ok(built.native&&built.js,'native/JS fixture mounted');
+    await mouse('mouseMoved',2,2);
+    const idle=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const names=['native','js','warning','disabled'],out={};\n for(const name of names){const node=d.querySelector('[data-v2-'+name+']'),c=getComputedStyle(node);\n  out[name]={border:c.borderBottomColor,bg:c.backgroundColor,role:c.getPropertyValue('--_qxframe9a7c2-v2-control-border').trim()};\n }\n return out;\n})()");
+    for(const target of ['native','js','warning']){
+      const expr="(() => {const f=document.querySelector('[data-create-frame]'),d=f.contentDocument,el=d.querySelector('[data-v2-'+\"TARGET\"+']'),o=f.getBoundingClientRect(),r=el.getBoundingClientRect();return{x:o.left+r.left+r.width/2,y:o.top+r.top+r.height/2};})()".replace('TARGET',target);
+      const pos=await evaluate(expr);
+      assert.ok(pos.x>0&&pos.x<1440&&pos.y>0&&pos.y<900,'hover point inside viewport '+JSON.stringify(pos));
+      await mouse('mouseMoved',pos.x,pos.y);
+      const active=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const names=['native','js','warning','disabled'],out={};\n for(const name of names){const node=d.querySelector('[data-v2-'+name+']'),c=getComputedStyle(node);\n  out[name]={border:c.borderBottomColor,bg:c.backgroundColor,role:c.getPropertyValue('--_qxframe9a7c2-v2-control-border').trim()};\n }\n return out;\n})()");
+      if(target!=='warning'){
+        assert.notEqual(active[target].border,idle[target].border,target+' V2 border must visibly change on Theme Hover');
+        assert.notEqual(active[target].bg,idle[target].bg,target+' V2 background must visibly change on Theme Hover');
+      }else{
+        assert.equal(active.warning.border,idle.warning.border,'Field warning border must dominate Theme Hover');
+      }
+      assert.equal(active.disabled.border,idle.disabled.border,'disabled native border unaffected');
+      await mouse('mouseMoved',2,2);
+    }
+    await evaluate("(() => {window.__qxV2Hover.host.remove();window.__qxV2Hover.css.remove();delete window.__qxV2Hover;return true;})()");
+  });
+
+  await step('SelectGroup nine floating anchors and one Surface focus owner', async()=>{
+    const result=await evaluate("(() => {\n      const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n      const origin=h.classList.contains('qxframe9a7c2-keyboard-focus-origin');\n      const host=d.createElement('div');\n      host.style.cssText='position:absolute;left:100px;top:100px;width:570px;z-index:1;background:var(--qxframe9a7c2-theme-background)';\n      const group=d.createElement('div');group.className='qxframe9a7c2-selectgroup is-outline';\n      const anchors=['top-left','top-center','top-right','middle-left','middle-center','middle-right','bottom-left','bottom-center','bottom-right'];\n      for(const anchor of anchors){\n        const row=d.createElement('label');row.className='qxframe9a7c2-selectgroup-item';\n        row.style.cssText='width:9rem;height:6rem';\n        row.innerHTML='<input type=\"checkbox\" class=\"qxframe9a7c2-selectgroup-input\"><span class=\"qxframe9a7c2-selectgroup-label\" style=\"width:100%;height:100%\"><span class=\"qxframe9a7c2-selectgroup-indicator is-checkbox is-floating is-'+anchor+'\"></span><span class=\"qxframe9a7c2-flex is-center\">'+anchor+'</span></span>';\n        group.append(row);\n      }\n      host.append(group);d.body.append(host);\n      const entries=[];\n      for(const [index,anchor] of anchors.entries()){\n        const row=group.children[index],surface=row.querySelector('.qxframe9a7c2-selectgroup-label'),indicator=row.querySelector('.qxframe9a7c2-selectgroup-indicator');\n        const b=surface.getBoundingClientRect(),r=indicator.getBoundingClientRect();\n        const x=(r.left+r.right-2*b.left)/(2*b.width),y=(r.top+r.bottom-2*b.top)/(2*b.height);\n        entries.push({anchor,x,y,position:getComputedStyle(indicator).position});\n      }\n      const input=group.children[0].querySelector('input'),surface=group.children[0].querySelector('.qxframe9a7c2-selectgroup-label'),indicator=group.children[0].querySelector('.qxframe9a7c2-selectgroup-indicator');\n      // Measure the settled focus paint synchronously; production keeps the box-shadow transition.\n      surface.style.transition='none';\n      const oldShadow=h.style.getPropertyValue('--qxframe9a7c2-theme-pointer-shadow'),oldWidth=h.style.getPropertyValue('--qxframe9a7c2-theme-pointer-width');\n      const oldKShadow=h.style.getPropertyValue('--qxframe9a7c2-theme-focus-shadow');\n      h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');\n      h.style.setProperty('--qxframe9a7c2-theme-pointer-width','0');\n      h.style.setProperty('--qxframe9a7c2-theme-focus-shadow','0 0 0 3px rgb(0, 180, 0)');\n      input.focus();\n      h.classList.add('qxframe9a7c2-keyboard-focus-origin');\n      const keyboard={surfaceOutline:getComputedStyle(surface).outlineWidth,surfaceShadow:getComputedStyle(surface).boxShadow,indicatorOutline:getComputedStyle(indicator).outlineStyle,actualFocus:d.activeElement===input,inputFocus:input.matches(':focus'),inputFocusVisible:input.matches(':focus-visible'),origin:h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),customRing:getComputedStyle(surface).getPropertyValue('--_qxframe9a7c2-choice-ring'),themeShadow:getComputedStyle(surface).getPropertyValue('--qxframe9a7c2-theme-focus-shadow'),styleCount:d.styleSheets.length};\n      h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n      const pointer={surfaceShadow:getComputedStyle(surface).boxShadow,surfaceOutline:getComputedStyle(surface).outlineWidth,indicatorOutline:getComputedStyle(indicator).outlineStyle,actualFocus:d.activeElement===input,inputFocus:input.matches(':focus'),origin:h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),customRing:getComputedStyle(surface).getPropertyValue('--_qxframe9a7c2-choice-ring'),themeShadow:getComputedStyle(surface).getPropertyValue('--qxframe9a7c2-theme-pointer-shadow')};\n      input.checked=true;\n      const checked=getComputedStyle(indicator).backgroundColor;\n      for(const [k,v] of [['--qxframe9a7c2-theme-pointer-shadow',oldShadow],['--qxframe9a7c2-theme-pointer-width',oldWidth],['--qxframe9a7c2-theme-focus-shadow',oldKShadow]]){\n        if(v)h.style.setProperty(k,v);else h.style.removeProperty(k);\n      }\n      h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',origin);\n      host.remove();\n      return {entries,keyboard,pointer,checked};\n    })()"); 
+    assert.equal(result.entries.length,9);
+    for(const e of result.entries){
+      const [v,h]=e.anchor.split('-');
+      const refX={left:0,center:.5,right:1}[h],refY={top:0,middle:.5,bottom:1}[v];
+      assert.ok(Math.abs(e.x-refX)<.2 && Math.abs(e.y-refY)<.2,e.anchor+' indicator anchored in correct quadrant '+JSON.stringify(e));
+      assert.equal(e.position,'absolute',e.anchor+' uses floating projection');
+    }
+    assert.equal(result.keyboard.indicatorOutline,'none','no double keyboard outline on indicator');
+    assert.ok(result.keyboard.surfaceShadow.includes('0, 180, 0'),'keyboard Theme shadow paints on Surface: '+JSON.stringify(result.keyboard));
+    assert.equal(result.pointer.indicatorOutline,'none','pointer projection never draws a nested outline');
+    assert.ok(result.pointer.surfaceShadow.includes('255, 0, 0'),'pointer Theme ring paints on Surface: '+JSON.stringify(result.pointer));
+    assert.ok(result.checked !== 'rgba(0, 0, 0, 0)','native checked state still paints indicator');
+  });
+
+  await step('Owner feedback: group focus, Tabs scroll and native Select paint',async()=>{
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=savings-targets] .qxframe9a7c2-form-input-group")','shared InputGroup');
+    const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-form-input-group'),input=group?.querySelector('.qxframe9a7c2-form-input'),addon=group?.querySelector('.qxframe9a7c2-form-input-group-addon'),tabs=d.querySelector('[data-card=faq] .qxframe9a7c2-tabs-scroll'),tab=tabs?.querySelector('.qxframe9a7c2-tabs-tab'),select=d.querySelector('[data-card=savings-targets] select.qxframe9a7c2-form-select');if(!input||!addon||!tabs||!tab||!select)return {error:'missing roles'};input.focus();const outer=getComputedStyle(group),inner=getComputedStyle(input),g=group.getBoundingClientRect(),v=tabs.querySelector('.qxframe9a7c2-scroll-viewport').getBoundingClientRect(),t=tab.getBoundingClientRect(),s=getComputedStyle(select);return {outerOutline:outer.outlineStyle,innerOutline:inner.outlineStyle,addonRight:parseFloat(getComputedStyle(addon).paddingRight),inputLeft:parseFloat(inner.paddingLeft),fieldWidth:g.width,tabHeight:t.height,viewportHeight:v.height,arrow:s.backgroundImage,appearance:s.appearance};})()");
+    assert.ok(!r.error,JSON.stringify(r));
+    assert.equal(r.outerOutline,'solid','entire grouped field owns keyboard outline');
+    assert.equal(r.innerOutline,'none','inner field cannot draw duplicate outline');
+    assert.ok(Math.abs(r.addonRight-r.inputLeft)<.6,'both sides of internal seam share half padding: '+JSON.stringify(r));
+    assert.ok(r.viewportHeight+.5>=r.tabHeight,'Tabs horizontal viewport cannot clip TabItem: '+JSON.stringify(r));
+    assert.equal(r.appearance,'none','native select uses standardized arrow');
+    assert.ok(r.arrow.includes('svg+xml'),'native Select displays a single SVG chevron');
+  });
+
+  await step('Owner follow-up: pointer focus tokens, 4px segmented Tabs viewport and SVG chevron',async()=>{
+    const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-form-input-group'),input=group.querySelector('.qxframe9a7c2-form-input'),tabs=d.querySelector('[data-card=faq] .qxframe9a7c2-tabs'),scroll=tabs.querySelector('.qxframe9a7c2-tabs-scroll'),viewport=scroll.querySelector('.qxframe9a7c2-scroll-viewport'),item=tabs.querySelector('.qxframe9a7c2-tabs-tab');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');h.style.setProperty('--qxframe9a7c2-theme-pointer-width','3px');h.style.setProperty('--qxframe9a7c2-theme-pointer-offset','2px');h.style.setProperty('--qxframe9a7c2-theme-pointer-opacity','100%');input.focus();let pointer=getComputedStyle(group),w=getComputedStyle(viewport),g=viewport.getBoundingClientRect(),t=item.getBoundingClientRect(),sr=scroll.getBoundingClientRect(),card=d.querySelector('[data-card=faq]').getBoundingClientRect();let out={pointerWidth:pointer.outlineWidth,pointerOffset:pointer.outlineOffset,paddingTop:parseFloat(w.paddingTop),paddingBottom:parseFloat(w.paddingBottom),withinTop:t.top>=g.top+parseFloat(w.paddingTop)-.6,withinBottom:t.bottom<=g.bottom-parseFloat(w.paddingBottom)+.6,tabHeight:t.height,railHeight:sr.height,cardHeight:card.height};h.classList.add('qxframe9a7c2-keyboard-focus-origin');const keyboard=getComputedStyle(group);out.keyboardWidth=keyboard.outlineWidth;out.keyboardOffset=keyboard.outlineOffset;h.style.removeProperty('--qxframe9a7c2-theme-pointer-width');h.style.removeProperty('--qxframe9a7c2-theme-pointer-offset');h.style.removeProperty('--qxframe9a7c2-theme-pointer-opacity');return out})()");
+    assert.equal(r.pointerWidth,'3px','InputGroup visual owner respects mouse focus Theme width');
+    assert.equal(r.pointerOffset,'2px','InputGroup visual owner respects mouse focus Theme offset');
+    assert.equal(r.keyboardWidth,'2px','keyboard Group outline is a separate 2px contract');
+    assert.equal(r.paddingTop,4,'segmented viewport has 4px top inset');
+    assert.equal(r.paddingBottom,4,'segmented viewport has 4px bottom inset');
+    assert.ok(r.withinTop&&r.withinBottom,'entire TabItem must be inside its padded Scroll viewport: '+JSON.stringify(r));
+    assert.ok(r.railHeight+1>=r.tabHeight+8,'rail reserves padding outside trigger height');
+  });
+
+  await step('Owner focus halo: actual shadow owner and pointer/keyboard modality',async()=>{
+    const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-form-input-group'),inner=group?.querySelector('.qxframe9a7c2-form-input'),native=d.createElement('input');native.type='text';native.className='qxframe9a7c2-form-input';d.body.appendChild(native);if(!group||!inner)return {error:'missing input/group roles'};h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');h.style.setProperty('--qxframe9a7c2-theme-focus-shadow','0 0 0 3px rgb(0, 200, 0)');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');inner.focus();const pointer=getComputedStyle(group).boxShadow,child=getComputedStyle(inner).boxShadow;h.classList.add('qxframe9a7c2-keyboard-focus-origin');const keyboard=getComputedStyle(group).boxShadow;native.focus();h.classList.add('qxframe9a7c2-keyboard-focus-origin');const nativeKeyboard=getComputedStyle(native).boxShadow;h.classList.remove('qxframe9a7c2-keyboard-focus-origin');const nativePointer=getComputedStyle(native).boxShadow;h.style.removeProperty('--qxframe9a7c2-theme-pointer-shadow');h.style.removeProperty('--qxframe9a7c2-theme-focus-shadow');native.remove();return {pointer,child,keyboard,nativeKeyboard,nativePointer};})()");
+    assert.ok(!r.error,JSON.stringify(r));
+    assert.ok(r.pointer.includes('255, 0, 0'),'group pointer halo is themed and rendered: '+JSON.stringify(r));
+    assert.ok(r.keyboard.includes('0, 200, 0'),'group keyboard halo is themed and rendered: '+JSON.stringify(r));
+    assert.ok(r.nativeKeyboard.includes('0, 200, 0'),'standalone native keyboard halo visible: '+JSON.stringify(r));
+    assert.ok(r.nativePointer.includes('255, 0, 0'),'standalone native pointer halo visible: '+JSON.stringify(r));
+    assert.equal(r.child,'none','grouped input does not paint duplicate halo');
+    const button=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,b=d.querySelector('[data-card=social-links] .qxframe9a7c2-card-footer .qxframe9a7c2-button');if(!b)return{error:'missing native Button'};h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');b.focus();h.classList.remove('qxframe9a7c2-keyboard-focus-origin');const g=getComputedStyle(b);const pointer=g.boxShadow;const info={focused:d.activeElement===b,focusSelector:b.matches(':focus'),focusVisible:b.matches(':focus-visible'),origin:h.className,shadowToken:g.getPropertyValue('--qxframe9a7c2-theme-pointer-shadow').trim(),baseShadow:g.getPropertyValue('--_qxframe9a7c2-state-shadow').trim(),styleScope:g.getPropertyValue('--_qxframe9a7c2-v2-action-shadow').trim(),ruleSelector:b.matches('html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:disabled):not(.is-disabled):not(.is-loading)'),isDisabled:b.disabled,classes:b.className};return{pointer,info}})()");
+    assert.ok(!button.error,JSON.stringify(button));
+    assert.ok(button.info.focused&&button.info.ruleSelector&&button.info.shadowToken.includes('255, 0, 0'),'Button pointer selector and token must be active before transition: '+JSON.stringify(button));
+    // The Button transitions box-shadow; sampling immediately after focus()
+    // catches the transparent first keyframe instead of the intended Theme halo.
+    // Assert the actual final painted value, not an unanimated snapshot.
+    await sleep(450);
+    const painted=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,b=d.querySelector('[data-card=social-links] .qxframe9a7c2-card-footer .qxframe9a7c2-button');const g=getComputedStyle(b),pointer=g.boxShadow,focused=d.activeElement===b,transition=g.transitionDuration;h.style.removeProperty('--qxframe9a7c2-theme-pointer-shadow');return {pointer,focused,transition};})()");
+    assert.ok(painted.focused,'Button remains focused while the box-shadow transition completes');
+    assert.ok(painted.pointer.includes('255, 0, 0'),'Button pointer focus must paint Theme shadow after CSS transition: '+JSON.stringify({button,painted}));
+  });
+
+
+  await step('JS Input flat/mixed/nested composition: pointer, keyboard, error and no duplicate halo',async()=>{
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=savings-targets]")','composition test document');
+    const result=await evaluate("(() => {\n  const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n  const origin=h.classList.contains('qxframe9a7c2-keyboard-focus-origin');\n  const style=d.createElement('style');\n  style.textContent='[data-qa-composition] *{transition:none!important;animation:none!important}';\n  d.head.append(style);\n  const host=d.createElement('div');\n  host.dataset.qaComposition='';\n  host.style.cssText='position:absolute;top:0;left:0;width:600px;pointer-events:none';\n  host.innerHTML=\n    '<div class=\"qxframe9a7c2-form-input-group is-md\" data-qa-kind=\"flat\"><span class=\"qxframe9a7c2-form-input-group-addon\">@</span><div class=\"qxframe9a7c2-input\"><input class=\"qxframe9a7c2-input-control\" type=\"text\"></div></div>'+\n    '<div class=\"qxframe9a7c2-form-input-group is-md\" data-qa-kind=\"mixed\"><span class=\"qxframe9a7c2-form-input-group-prefix\">USD</span><div class=\"qxframe9a7c2-form-input-group-field\"><span class=\"qxframe9a7c2-form-input-group-addon\">@</span><div class=\"qxframe9a7c2-input\"><input class=\"qxframe9a7c2-input-control\" type=\"text\"></div></div></div>'+\n    '<div class=\"qxframe9a7c2-form-input-group is-md\" data-qa-kind=\"island\"><div class=\"qxframe9a7c2-form-input-group\"><span class=\"qxframe9a7c2-form-input-group-addon\">@</span><div class=\"qxframe9a7c2-input\"><input class=\"qxframe9a7c2-input-control\" type=\"text\"></div></div></div>';\n  d.body.append(host);\n  const oldPointer=h.style.getPropertyValue('--qxframe9a7c2-theme-pointer-shadow');\n  const oldKeyboard=h.style.getPropertyValue('--qxframe9a7c2-theme-focus-shadow');\n  const oldWidth=h.style.getPropertyValue('--qxframe9a7c2-theme-pointer-width');\n  h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');\n  h.style.setProperty('--qxframe9a7c2-theme-focus-shadow','0 0 0 3px rgb(0, 200, 0)');\n  h.style.setProperty('--qxframe9a7c2-theme-pointer-width','3px');\n  const cases={};\n  for(const kind of ['flat','mixed','island']){\n    const wrapper=host.querySelector('[data-qa-kind=\"'+kind+'\"]');\n    const shell=wrapper.querySelector('.qxframe9a7c2-input');\n    const outer=kind==='mixed'?wrapper.querySelector('.qxframe9a7c2-form-input-group-field'):kind==='island'?wrapper.querySelector('.qxframe9a7c2-form-input-group'):wrapper;\n    const editor=shell.querySelector('input');\n    editor.focus();\n    shell.classList.add('is-focused');\n    h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n    const p=getComputedStyle(outer),c=getComputedStyle(shell);\n    const pointer={shadow:p.boxShadow,width:p.outlineWidth,childShadow:c.boxShadow,childOutline:c.outlineStyle};\n    h.classList.add('qxframe9a7c2-keyboard-focus-origin');\n    shell.classList.add('is-keyboard-focus');\n    const k=getComputedStyle(outer),kc=getComputedStyle(shell);\n    const keyboard={shadow:k.boxShadow,outline:k.outlineStyle,childShadow:kc.boxShadow,childOutline:kc.outlineStyle};\n    shell.classList.remove('is-keyboard-focus','is-focused');\n    editor.blur();\n    shell.classList.add('is-invalid');\n    const invalidBorder=getComputedStyle(outer).borderBottomColor;\n    shell.classList.remove('is-invalid');\n    cases[kind]={pointer,keyboard,invalidBorder};\n  }\n  const colorProbe=d.createElement('div');\n  colorProbe.style.color='var(--qxframe9a7c2-theme-destructive)';\n  host.append(colorProbe);\n  const destructive=getComputedStyle(colorProbe).color;\n  h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',origin);\n  for(const [token,value] of [['--qxframe9a7c2-theme-pointer-shadow',oldPointer],['--qxframe9a7c2-theme-focus-shadow',oldKeyboard],['--qxframe9a7c2-theme-pointer-width',oldWidth]]) {\n    if(value)h.style.setProperty(token,value);else h.style.removeProperty(token);\n  }\n  host.remove();style.remove();\n  return {cases,destructive};\n})()");
+    for(const [kind,c] of Object.entries(result.cases)){
+      assert.ok(c.pointer.shadow.includes('255, 0, 0'),kind+' pointer halo owned by outer border: '+JSON.stringify(c));
+      assert.equal(c.pointer.childShadow,'none',kind+' hosted JS Input has no second pointer ring');
+      assert.equal(c.pointer.childOutline,'none',kind+' hosted JS Input has no second pointer outline');
+      assert.ok(c.keyboard.shadow.includes('0, 200, 0'),kind+' keyboard halo owned by outer border: '+JSON.stringify(c));
+      assert.equal(c.keyboard.outline,'solid',kind+' keyboard outline on outer border');
+      assert.equal(c.keyboard.childShadow,'none',kind+' hosted JS Input has no second keyboard ring');
+      assert.equal(c.keyboard.childOutline,'none',kind+' hosted JS Input has no second keyboard outline');
+      assert.equal(c.invalidBorder,result.destructive,kind+' invalid border stays destructive');
+    }
   });
 
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
