@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-10 SelectGroup canonical layout verifier alignment (CI pending)
+- Previous candidate `b95deb661ecc5f7ef05e50beb94de0cee5aa8a5a` QXFRAME source geometry and windows tools passed. Full release failed in `verify-css-grid-selectgroup-autofit.mjs` only because its old regex still required SelectGroup root display:flex. The new contract intentionally makes the root display:block and delegates flow to independent Flex; Connected is the sole controlled flex seam exception. Updated verifier to enforce these new roles and docs composition instead, preserving all scene-mode prohibition and geometry gates.
+- Follow current newest HEAD through both full workflows, official same-tree dist/docs download and offline Windows package before marking done. PR remains Draft and unmerged.
+
 ## CURRENT — 2026-10-10 SelectGroup QA ledger static alignment (CI pending)
 - Source geometry job at previous candidate `2e1da54eaf3e8edcd61980c04a641d1243b8f0ab` passed. QXFRAME release job failed only at `tools/verify-create-app.mjs` because its 4-region ledger assertion retained the previous iteration's indicator selectors, while the new actual ledger deliberately marks group/Surface composition. Updated the static gate's expected current-group selectors; kept 4 real regions, the old-highlight absence checks, and all QA/ZIP guarantees. Do not claim new candidate CI is green until checked.
 
