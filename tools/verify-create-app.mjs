@@ -79,6 +79,15 @@ check('segmented Tabs use the pinned source dark active input/30 recipe', () => 
   assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-choice-border\)\)/,'shared choice border recipe retains source Luma/Rhea transparent policy');
 });
 
+check('Retired form-selectgroup selectors have no Theme V2 paint authority',()=>{
+  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  assert.doesNotMatch(theme,/qxframe9a7c2-form-selectgroup/,'no retired form-selectgroup selectors in V2 mapping');
+  assert.match(theme,/\.qxframe9a7c2-selectgroup-input:checked \+ \.qxframe9a7c2-selectgroup-label \.qxframe9a7c2-selectgroup-indicator\.is-radio/,'native SelectGroup radio owns checked V2 glyph');
+  assert.match(theme,/\.qxframe9a7c2-selectgroup\.is-xs/,'SelectGroup inherits public Theme size mapping');
+  const tabCss=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  assert.match(tabCss,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{--_qxframe9a7c2-tabs-tab-weight:var\(--qxframe9a7c2-theme-control-weight,500\)/,'segmented Tabs inherit Theme typography');
+});
+
 check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
   const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
   const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
@@ -1218,7 +1227,7 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
   assert.match(v2,/--_qxframe9a7c2-v2-type: var\(--qxframe9a7c2-theme-secondary\)/);
   assert.match(v2,/\.qxframe9a7c2-button\.is-solid\s*\{/,'v2 solid consumes type');
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-text:var\(--qxframe9a7c2-theme-foreground\)/);
-  assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-weight:inherit/);
+  assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-weight:var\(--qxframe9a7c2-theme-control-weight,500\)/);
 });
 
 check('source pinned Badge roles mapped to QX semantic status-label instead of dead per-card paint',()=>{

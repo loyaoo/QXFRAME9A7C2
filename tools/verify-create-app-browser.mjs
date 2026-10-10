@@ -1259,6 +1259,28 @@ try {
     }
   });
 
+  await step('Source FAQ segmented Tabs typography across eight styles and light/dark',async()=>{
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs")','source FAQ Tabs');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','FAQ Tabs theme '+style);
+      for(const mode of ['light','dark']){
+        const a=await evaluate(`(()=>{
+          const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;
+          const old=h.classList.contains('dark');h.classList.toggle('dark',${mode==='dark'});
+          const tabs=[...d.querySelectorAll('[data-card="faq"] .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab')];
+          const out={weights:tabs.map(t=>Number(getComputedStyle(t).fontWeight)),active:tabs.filter(t=>t.classList.contains('is-active')).map(t=>Number(getComputedStyle(t).fontWeight))};
+          h.classList.toggle('dark',old);return out;
+        })()`);
+        assert.ok(a.weights.length>=3,style+'/'+mode+' FAQ segmented triggers');
+        assert.equal(a.active.length,1,style+'/'+mode+' exactly one current tab');
+        const expected=style==='sera'?600:500;
+        for(const w of a.weights)assert.equal(w,expected,style+'/'+mode+' source tab weight');
+      }
+    }
+  });
+
   await step('FieldContent label line and FAQ trigger gap follow source in 16 themes', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ and Notifications');

@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-11 Stage 3 source inner-role typography + stale SelectGroup Theme selector cleanup (pending CI)
+- Confirmed parent 4d14fd61e32925fc3ade402d8b71f5c0410e5607: QXFRAME CI #38061687428 and CSS Schema #38061687433 both SUCCESS, PR #265 open/draft/unmerged.
+- Official same-Chromium 528/528 renders had 0 geometry/height discrepancies, but source inner-roles report showed FAQ segmented trigger fontWeight 500 across 7 styles and 600 for Sera while QX painted 400 in all 16 light/dark cells. Bound selected + inactive TabsTrigger weight to existing Theme control-weight without introducing public token, and added Chromium 16-style/mode regression (active and inactive).
+- Replaced exactly 19 retired form-selectgroup selectors in Theme V2 with canonical selectgroup including native checked glyphs and xs-xl Theme size/type mapping; old scene owner remains gone. Static guard prevents regression.
+- Pending complete same-HEAD Release Chromium+528 same-browser geometry+CSS Schema, then Windows full offline dist/docs artifact, clear yellow highlight since no Preview card markup changed, PR remains Draft. Stage4/5 are not started.
+
 ## CURRENT — 2026-10-10 CREATEAPP-V3-S3 consolidated V2 Hover paint and Connected orientation (CI pending)
 - Parent HEAD 0e6599639ec2fa17e7f736493283e5590579e293, PR #265 Draft/unmerged, both official workflows SUCCESS.
 - Seven-axis Hover consumer previously changed only --_qxframe9a7c2-state-* or --_qxframe9a7c2-native-field-*; Theme V2's late physical painter uses --_qxframe9a7c2-v2-control-border/bg. Unified native Input/Select/Textarea and JS Input Hover to actual V2 paint owner, without new public token. The existing Theme Hover style strengths 0/30% and 0/15% continue to control Border/Background/Both/None.
