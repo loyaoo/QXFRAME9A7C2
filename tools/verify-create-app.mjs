@@ -80,9 +80,9 @@ check('segmented Tabs use the pinned source dark active input/30 recipe', () => 
 });
 
 check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
-  const consumer=read('src/styles/main/theme-visual-v2-consumers.css');
-  const style=read('src/styles/main/theme-visual-v2-style-consumers.css');
-  const structure=read('src/styles/components/composition.css');
+  const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
+  const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+  const structure=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   for(const name of ['hover-border-strength','hover-background-strength','hover-color']){
     assert.ok(consumer.includes('--qxframe9a7c2-theme-'+name),'real Theme Hover token '+name);
   }
