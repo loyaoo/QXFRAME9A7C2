@@ -98,7 +98,14 @@ try {
       text:el.textContent.trim(),className:el.className,x:+r.x.toFixed(3),w:+r.width.toFixed(3),
       flex:st.flex,flexGrow:st.flexGrow,flexShrink:st.flexShrink,flexBasis:st.flexBasis,minWidth:st.minWidth,
       paddingInline:st.paddingInline,marginInline:st.marginInline,
+      paddingLeft:st.paddingLeft,paddingRight:st.paddingRight,
+      borderLeft:st.borderLeftWidth,borderRight:st.borderRightWidth,boxSizing:st.boxSizing,
+      scrollWidth:el.scrollWidth,whiteSpace:st.whiteSpace,
+      textRangeWidth:(()=>{const range=document.createRange();range.selectNodeContents(el);return +range.getBoundingClientRect().width.toFixed(3)})(),
+      pseudoBefore:(()=>{const c=getComputedStyle(el,'::before');return {content:c.content,display:c.display,width:c.width}})(),
+      pseudoAfter:(()=>{const c=getComputedStyle(el,'::after');return {content:c.content,display:c.display,width:c.width}})(),
       fontFamily:st.fontFamily,fontSize:st.fontSize,fontWeight:st.fontWeight,
+      fontStretch:st.fontStretch,fontFeatureSettings:st.fontFeatureSettings,
       letterSpacing:st.letterSpacing,textTransform:st.textTransform
     }};
     return {footer:{x:box.x,w:box.width,gap:cs.gap,padLeft:cs.paddingLeft,padRight:cs.paddingRight,justify:cs.justifyContent},buttons:[...footer.querySelectorAll('button')].map(snap)};
