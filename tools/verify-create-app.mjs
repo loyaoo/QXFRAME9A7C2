@@ -20,8 +20,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'savings-targets':['.qxframe9a7c2-form-input-group'],
-    'social-links':['.qxframe9a7c2-form-input','.qxframe9a7c2-card-footer>.qxframe9a7c2-button']
+    'savings-targets':['.qxframe9a7c2-form-input-group']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
@@ -31,9 +30,9 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   }
   for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','notification-settings',
     'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
-    'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone'])
+    'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,3,'three exact current round regions across two Cards');
+  assert.equal(count,1,'one exact current-round region in Savings Targets only');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
