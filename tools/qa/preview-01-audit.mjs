@@ -90,6 +90,19 @@ try {
       .map(group=>[group.getAttribute(marker),Object.fromEntries(
          Object.entries(roles).map(([role,sel])=>[role,record(group.querySelector(sel))]))]));
   },source);
+  const socialPeerProbe=async source=>page.evaluate(source=>{
+    const footer=document.querySelector(source?'[data-qa-card="social-links"] [data-slot="card-footer"]':'[data-card="social-links"] .qxframe9a7c2-card-footer');
+    if(!footer)return {missing:true};
+    const cs=getComputedStyle(footer),box=footer.getBoundingClientRect();
+    const snap=el=>{const st=getComputedStyle(el),r=el.getBoundingClientRect();return {
+      text:el.textContent.trim(),className:el.className,x:+r.x.toFixed(3),w:+r.width.toFixed(3),
+      flex:st.flex,flexGrow:st.flexGrow,flexShrink:st.flexShrink,flexBasis:st.flexBasis,minWidth:st.minWidth,
+      paddingInline:st.paddingInline,marginInline:st.marginInline,
+      fontFamily:st.fontFamily,fontSize:st.fontSize,fontWeight:st.fontWeight,
+      letterSpacing:st.letterSpacing,textTransform:st.textTransform
+    }};
+    return {footer:{x:box.x,w:box.width,gap:cs.gap,padLeft:cs.paddingLeft,padRight:cs.paddingRight,justify:cs.justifyContent},buttons:[...footer.querySelectorAll('button')].map(snap)};
+  },source);
   const nodeStructure = async (source, id) => page.evaluate(({source,id}) => {
     const root=document.querySelector(source ? '[data-qa-card="'+id+'"]' : '[data-card="'+id+'"]');
     if(!root)return [];
@@ -220,6 +233,7 @@ try {
       await page.waitForTimeout(350);
       const reference = await measure(true);
       const sourceInner=await measureInner(true);
+      const sourcePeer=style==='sera'&&!dark?await socialPeerProbe(true):null;
       if(style==='sera'&&!dark)sourceOverviewPeers=await overviewPeers(true);
       // Measure both siblings in every style/mode. The first Card alone does not
       // characterize the Buy Investment Card beside it.
@@ -242,6 +256,7 @@ try {
       await page.waitForTimeout(350);
       const actual = await measure(false);
       const actualInner=await measureInner(false);
+      if(style==='sera'&&!dark)console.log('[stage3-social-peer-deep] '+JSON.stringify({source:sourcePeer,qx:await socialPeerProbe(false)}));
       if(style==='sera'&&!dark)console.log('[stage3-overview-row-sera] '+JSON.stringify({source:sourceOverviewPeers,qx:await overviewPeers(false)}));
       {
         const qxSavingsPeers=await savingsPeers(false);
