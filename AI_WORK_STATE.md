@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-10 CSS outline-style vs outline-width browser assertion correction (new CI pending)
+- Previous QXFRAME #38042805245 and CSS Schema #38042805224 both reached real Chromium and failed the same new nine-anchor test. The indicator's CSS outline is explicitly 'none' but Chromium retains the computed 'medium' outline-width (3px) even when it is not painted. Browser test incorrectly asserted computed outline-width=0. Changed two assertions to require computed outline-style='none' for both pointer and keyboard origin: actual single-ring invariant, not looser behavior. No production CSS changed this correction; geometry was already green.
+
 ## CURRENT — 2026-10-10 FocusOrigin invariant correction (re-run CI pending)
 - QXFRAME run #38042618510: source-preview geometry and Windows tools green; release verify-final-focus-origin failed because first attempt put a positive outline on a pointer :focus selector. Invariant demands pointer use only border/box-shadow; corrected SelectGroup pointer Surface to zero outline, Theme pointer shadow and Outline appearance focus border (None remains borderless). No verifier bypass. CSS Schema #38042618531 was still running at correction. Re-run both checks at next SHA.
 
