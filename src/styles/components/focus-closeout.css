@@ -43,7 +43,7 @@
 /* Hosted Tags/MultipleSelect editors are implementation details; the outer Control shell owns focus. */
 .qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input:focus-visible{outline:none}
 /* SelectGroup already exposes one focus ring on the label; never draw a second ring on its indicator. */
-.qxframe9a7c2-form-selectgroup-input:focus-visible+.qxframe9a7c2-form-selectgroup-label .qxframe9a7c2-form-selectgroup-indicator{outline:none}
+.qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator{outline:none}
 /* Pointer focus must not accidentally inherit UA :focus-visible heuristics on text-editing controls. */
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-slider-handle:focus-visible{
   --_qxframe9a7c2-slider-handle-outline:none;

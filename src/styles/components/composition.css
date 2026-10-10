@@ -54,21 +54,15 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 @media(max-width:640px){
  .qxframe9a7c2-form-input-group.is-responsive>.qxframe9a7c2-group-control{margin-inline-start:0}
 }
-/* Native SelectGroup button mode reuses the same composition owner instead of maintaining a parallel seam system. */
-.qxframe9a7c2-form-selectgroup.is-buttons{gap:0;isolation:isolate}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-label{border-radius:0}
-.qxframe9a7c2-form-selectgroup.is-buttons>.qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item .qxframe9a7c2-form-selectgroup-label{margin-inline-start:0}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:first-child .qxframe9a7c2-form-selectgroup-label{border-start-start-radius:var(--_qxframe9a7c2-control-radius);border-end-start-radius:var(--_qxframe9a7c2-control-radius)}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:last-child .qxframe9a7c2-form-selectgroup-label{border-start-end-radius:var(--_qxframe9a7c2-control-radius);border-end-end-radius:var(--_qxframe9a7c2-control-radius)}
-.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons>.qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item{margin-inline-start:0;margin-block-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons .qxframe9a7c2-form-selectgroup-item+.qxframe9a7c2-form-selectgroup-item .qxframe9a7c2-form-selectgroup-label{margin-inline-start:0;margin-block-start:0}
-.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons .qxframe9a7c2-form-selectgroup-item:first-child .qxframe9a7c2-form-selectgroup-label{border-start-start-radius:var(--_qxframe9a7c2-control-radius);border-start-end-radius:var(--_qxframe9a7c2-control-radius);border-end-start-radius:0;border-end-end-radius:0}
-.qxframe9a7c2-form-selectgroup.is-vertical.is-buttons .qxframe9a7c2-form-selectgroup-item:last-child .qxframe9a7c2-form-selectgroup-label{border-start-start-radius:0;border-start-end-radius:0;border-end-start-radius:var(--_qxframe9a7c2-control-radius);border-end-end-radius:var(--_qxframe9a7c2-control-radius)}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item{z-index:var(--qxframe9a7c2-z-local-raised)}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:hover{z-index:var(--qxframe9a7c2-z-local-above)}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:has(>.qxframe9a7c2-form-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-input:checked+.qxframe9a7c2-form-selectgroup-label{z-index:var(--qxframe9a7c2-z-local-overlay)}
-.qxframe9a7c2-form-selectgroup.is-buttons .qxframe9a7c2-form-selectgroup-item:focus-within{z-index:calc(var(--qxframe9a7c2-z-local-active) + 1)}
-
+/* One connected seam owner; only explicit Outline draws shared overlapping borders. */
+.qxframe9a7c2-selectgroup.is-connected{isolation:isolate}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item{margin:0}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-start-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{border-start-end-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
 /* Nested stable GroupItem projects child interaction state to the composition stacking owner. */
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{--_qxframe9a7c2-group-stack:2}
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-error,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-warning{--_qxframe9a7c2-group-stack:3}
@@ -203,36 +197,6 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   font-weight:var(--qxframe9a7c2-theme-text-weight-label);
   text-transform:var(--qxframe9a7c2-theme-control-transform,none);
   letter-spacing:var(--qxframe9a7c2-theme-field-label-tracking,normal);
-}
-/* CheckField cross-axis policy is a three-state component contract, not a
- * Card-specific tweak. Center is the default for both row and native input
- * (including its ::before checkbox/radio indicator). No margin compensation. */
-.qxframe9a7c2-check-field{
-  display:flex;align-items:center;
-  gap:var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem));
-  cursor:pointer
-}
-.qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{
-  align-self:center;margin-block:0
-}
-.qxframe9a7c2-check-field.is-start{align-items:flex-start}
-.qxframe9a7c2-check-field.is-start>.qxframe9a7c2-form-check-input{align-self:flex-start}
-.qxframe9a7c2-check-field.is-center{align-items:center}
-.qxframe9a7c2-check-field.is-center>.qxframe9a7c2-form-check-input{align-self:center}
-.qxframe9a7c2-check-field.is-end{align-items:flex-end}
-.qxframe9a7c2-check-field.is-end>.qxframe9a7c2-form-check-input{align-self:flex-end}
-/* Framed RadioGroup/FieldLabel composition from pinned shadcn: the label
- * owns the border and the inner horizontal Field's top/inline inset.
- * The authored pb-2.5 may override only the trailing padding as in source. */
-.qxframe9a7c2-check-field.is-choice{
-  box-sizing:border-box;
-  --_qxframe9a7c2-choice-field-inset:var(--qxframe9a7c2-choice-field-inset,var(--qxframe9a7c2-theme-choice-field-inset,.625rem));
-  padding-block-start:var(--_qxframe9a7c2-choice-field-inset);
-  padding-inline:var(--_qxframe9a7c2-choice-field-inset);
-  padding-block-end:var(--qxframe9a7c2-choice-field-padding-bottom,var(--_qxframe9a7c2-choice-field-inset));
-  border:1px solid var(--qxframe9a7c2-theme-border);
-  border-radius:var(--qxframe9a7c2-theme-radius-field);
-  background:transparent
 }
 .qxframe9a7c2-field-title{
   display:flex;align-items:center;width:fit-content;gap:.5rem;

@@ -148,7 +148,7 @@ assert(controlSource.includes('clearReplacesToggle: false')&&!controlSource.incl
 for(const marker of [
   'Native text controls consume the same visual recipe as Control',
   ':hover:not(:focus):not(:disabled)',
-  '.qxframe9a7c2-form-selectgroup-item:has(>.qxframe9a7c2-form-selectgroup-input:checked)',
+  '.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked)',
   '.qxframe9a7c2-menu.is-inline.is-collapsed{min-width:0;width:min(var(--_qxframe9a7c2-menu-collapsed-width),100%)}',
   '.qxframe9a7c2-menu-group-label{display:none}',
   // Card uses an outer ring, so slot corners keep the full surface radius.

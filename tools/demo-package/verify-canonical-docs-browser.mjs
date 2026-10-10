@@ -362,10 +362,10 @@ try{
     result.nativeControlStyled=parseFloat(ps.minHeight)>=28&&ps.borderStyle==='solid'&&parseFloat(ps.borderRadius)>0;
     probe.remove();
     var group=document.createElement('div');
-    group.className='qxframe9a7c2-form-selectgroup is-buttons';
-    group.innerHTML='<label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" type="radio" name="zprobe" checked><span class="qxframe9a7c2-form-selectgroup-label">A</span></label><label class="qxframe9a7c2-form-selectgroup-item"><input class="qxframe9a7c2-form-selectgroup-input" type="radio" name="zprobe"><span class="qxframe9a7c2-form-selectgroup-label">B</span></label>';
+    group.className='qxframe9a7c2-selectgroup is-buttons';
+    group.innerHTML='<label class="qxframe9a7c2-selectgroup-item"><input class="qxframe9a7c2-selectgroup-input" type="radio" name="zprobe" checked><span class="qxframe9a7c2-selectgroup-label">A</span></label><label class="qxframe9a7c2-selectgroup-item"><input class="qxframe9a7c2-selectgroup-input" type="radio" name="zprobe"><span class="qxframe9a7c2-selectgroup-label">B</span></label>';
     document.body.appendChild(group);
-    var groupItems=group.querySelectorAll('.qxframe9a7c2-form-selectgroup-item');
+    var groupItems=group.querySelectorAll('.qxframe9a7c2-selectgroup-item');
     result.selectGroupCheckedAbove=groupItems.length===2&&(parseFloat(getComputedStyle(groupItems[0]).zIndex)||0)>(parseFloat(getComputedStyle(groupItems[1]).zIndex)||0);
     group.remove();
     var card=document.createElement('article');

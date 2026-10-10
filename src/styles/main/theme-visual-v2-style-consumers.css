@@ -88,9 +88,9 @@
 
   .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],
   .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
-  .qxframe9a7c2-form-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
+  .qxframe9a7c2-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
   .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
-  .qxframe9a7c2-form-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
+  .qxframe9a7c2-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
 
   /* Category radii (createApp v3 §4.5): badges/tags, tabs, dialogs follow their own theme roles. */
   .qxframe9a7c2-badge[class]:not(.is-dot),.qxframe9a7c2-tag[class]{border-radius:var(--qxframe9a7c2-theme-radius-badge)}

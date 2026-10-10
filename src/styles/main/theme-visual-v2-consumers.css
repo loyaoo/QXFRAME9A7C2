@@ -65,8 +65,8 @@
 
   /* Overlay choice indicators must not retain the legacy overlay-shadow color.
      Match the legacy selector specificity instead of using priority flags. */
-  .qxframe9a7c2-form-selectgroup-indicator.is-checkbox.is-overlay,
-  .qxframe9a7c2-form-selectgroup-indicator.is-radio.is-overlay {
+  .qxframe9a7c2-selectgroup-indicator.is-checkbox.is-overlay,
+  .qxframe9a7c2-selectgroup-indicator.is-radio.is-overlay {
     box-shadow: none;
   }
 }
