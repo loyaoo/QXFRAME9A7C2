@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-10 SelectGroup focused feedback border follows final Surface paint (CI pending)
+- At `03de08eee7b10be16eb8461010ff79d07150679b`, both release and CSS Schema failure reached the new Chromium Field/SelectGroup feedback fixture: invalid focused Outline Surface was gray (`oklch(0.708 0 0)`) instead of destructive red. Source pinned 528 geometry SUCCESS; previous CI remains red.
+- Fix on the *existing* single FocusOrigin/Field status selectors: explicitly paint `border-color` as well as status custom property, so actual border cannot consume neutral fallback after a pointer focus. Applied for invalid and warning, both canonical Field and legacy FormField. Do not disable or weaken the real browser assertion.
+- Re-run both full workflows, full geometry and matching offline artifact before declaring the latest HEAD accepted.
+
 ## CURRENT — 2026-10-10 S3 Field / SelectGroup native status + connected unified batch (CI pending)
 - Baseline verified development HEAD `1d0301428b2448170d76056ac7a368c9e5523d2f` (QXFRAME #38049252309, CSS Schema #38049252301 both SUCCESS, pinned 528/528 height over tolerance 0). New HEAD requires fresh both workflows.
 - Expanded general `.qxframe9a7c2-field.is-invalid/is-warning` to native Form Input/Select/Textarea and SelectGroup checkbox/radio Surfaces, retaining existing form-field renderer and normal native validity ownership.
