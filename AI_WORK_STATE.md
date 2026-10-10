@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-10 FocusOrigin invariant correction (re-run CI pending)
+- QXFRAME run #38042618510: source-preview geometry and Windows tools green; release verify-final-focus-origin failed because first attempt put a positive outline on a pointer :focus selector. Invariant demands pointer use only border/box-shadow; corrected SelectGroup pointer Surface to zero outline, Theme pointer shadow and Outline appearance focus border (None remains borderless). No verifier bypass. CSS Schema #38042618531 was still running at correction. Re-run both checks at next SHA.
+
 ## CURRENT — 2026-10-10 SelectGroup one-Surface FocusOrigin and nine-floating-anchor documentation (new CI pending)
 - Baseline 7d1e7cc8abf8a22f707d46e3602064046e537bc6: QXFRAME CI #38040376325 and CSS Schema Acceptance #38040376311 SUCCESS, PR #265 still Draft, not merged. Previous successful Actions artifact 11665697248.
 - Repaired a confirmed duplicate keyboard focus outline: shared Choice Visual no longer gives SelectGroup's inner indicator a second outline; its Surface paints keyboard Theme shadow, pointer Theme shadow and pointer width/offset/color according to FocusOrigin. Native checkbox/radio checked/disabled state ownership is unchanged.
