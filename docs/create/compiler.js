@@ -366,9 +366,9 @@ export function themeTokens(resolved) {
 
   // Containers.
   root['card-padding'] = rem(PADDING[ext.padding]);
-  // Source peer actions: editorial Sera uses CardFooter Buttons with flex-grown intrinsic bases;
+  // Source peer actions: editorial Sera uses CardFooter Buttons with flex:1 1 0% + min-content clamping;
   // other Styles retain each Button's intrinsic size (one shared Theme slot).
-  root['card-footer-peer-flex'] = editorial ? '1 1 auto' : '0 1 auto';
+  root['card-footer-peer-flex'] = editorial ? '1 1 0%' : '0 1 auto';
   // shadcn Empty uses a compact 24px or spacious 48px surface. The
   // existing padding axis selects the tier; media/title scale derives in CSS.
   root['empty-inset'] = rem(PADDING[ext.padding] <= 1 ? 1.5 : 3);

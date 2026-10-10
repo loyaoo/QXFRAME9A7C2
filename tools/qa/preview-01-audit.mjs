@@ -233,7 +233,7 @@ try {
       await page.waitForTimeout(350);
       const reference = await measure(true);
       const sourceInner=await measureInner(true);
-      const sourcePeer=style==='sera'&&!dark?await socialPeerProbe(true):null;
+      const sourcePeer=style==='sera'?await socialPeerProbe(true):null;
       if(style==='sera'&&!dark)sourceOverviewPeers=await overviewPeers(true);
       // Measure both siblings in every style/mode. The first Card alone does not
       // characterize the Buy Investment Card beside it.
@@ -256,7 +256,25 @@ try {
       await page.waitForTimeout(350);
       const actual = await measure(false);
       const actualInner=await measureInner(false);
-      if(style==='sera'&&!dark)console.log('[stage3-social-peer-deep] '+JSON.stringify({source:sourcePeer,qx:await socialPeerProbe(false)}));
+      if(style==='sera'){
+        const qxPeer=await socialPeerProbe(false);
+        const problems=[];
+        if(sourcePeer?.buttons?.length!==2||qxPeer?.buttons?.length!==2)
+          problems.push({issue:'two source/QX footer actions required'});
+        else for(let i=0;i<2;i++){
+          const src=sourcePeer.buttons[i],qx=qxPeer.buttons[i];
+          if(src.text!==qx.text)problems.push({i,text:[src.text,qx.text]});
+          for(const prop of ['x','w','fontSize','fontWeight','letterSpacing']){
+            const a=parseFloat(src[prop]),b=parseFloat(qx[prop]);
+            if(!Number.isFinite(a)||!Number.isFinite(b)||Math.abs(a-b)>.5)
+              problems.push({i,prop,source:src[prop],qx:qx[prop]});
+          }
+          for(const prop of ['flex','minWidth'])
+            if(src[prop]!==qx[prop])problems.push({i,prop,source:src[prop],qx:qx[prop]});
+        }
+        console.log('[stage3-social-peer-deep] '+JSON.stringify({style,mode:dark?'dark':'light',source:sourcePeer,qx:qxPeer,problems}));
+        if(problems.length)throw new Error('Sera source-pinned BOTH CardFooter Buttons min-content Flex mismatch: '+JSON.stringify(problems));
+      }
       if(style==='sera'&&!dark)console.log('[stage3-overview-row-sera] '+JSON.stringify({source:sourceOverviewPeers,qx:await overviewPeers(false)}));
       {
         const qxSavingsPeers=await savingsPeers(false);

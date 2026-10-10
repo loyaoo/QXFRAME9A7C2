@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 Stage3 Sera true min-content Flex parity source-confirmed (new CI pending)
+
+- Same Chromium probe `[stage3-social-peer-deep]` from failed candidate `d772f00a` resolved source actual: Sera Social Links buttons `flex:1 1 0%`, **`min-width:auto`**. Both have identical 12px/600/1.2px tracking, 24px horizontal padding, Footer gap 8px, left/right inset 32px. Browser's min-content width constraint gives **Discard 134.813px, Save Changes 168.047px**, rather than forced equal widths.
+- QX earlier `flex:1 1 auto;min-width:0` gave 126.781px/176.063px; QX `flex:1 1 0;min-width:0` gave 151.42px equally. Correct **component-level opt-in**: `CardFooter.is-source-peer-actions>.button{min-width:auto;flex:var(--theme-card-footer-peer-flex)}`, with **editorial Theme token `1 1 0%`** and other Theme styles `0 1 auto`. This faithfully restores browser min-content constraint without modifying framework-wide default min-width:0.
+- Source same-browser regression now strictly compares **BOTH Discard and Save Changes** in Sera light/dark, each x/width/fontSize/fontWeight/letterSpacing/flex/minWidth; previous 304 source-paired first Buttons × 16 themes, 528 Card, 2,128 Item+Field, 384 Badge, 448 small Button gates all retained without weakening. New CI must return QXFRAME and CSS Schema double-green on matching tree.
+- Offline changed-card ledger remains ONLY Social Links 1 grouped region / 2 Button nodes, old yellow removed. Progress estimate remains CREATEAPP-V3 total ~69%, Stage3 ~85% pending whole-pixel and Windows owner acceptance; PR #265 Draft, main + backup frozen. No QA ZIP from failed candidates.
+
+
 ## CURRENT — 2026-10-10 Stage3 Sera Social Links peer action exact flex basis (CI pending)
 
 - Strong 304-paired-button lock exposed Sera Social Links Discard source width **134.81px**, old QX **118.77px** (both light/dark). First opt-in peer rule `flex:1 1 0` overshot to **151.42px**, confirming the source is NOT equal-width; upstream Sera `style-sera:flex-1` retains an intrinsic base in the source's computed layout. Correct single Theme token now emits **`flex:1 1 auto` for editorial Sera**, `0 1 auto` otherwise. This lets both actions gain an equal share of remaining row space without erasing different text intrinsic widths.

@@ -1,7 +1,7 @@
 /** Current-round ONLY: Sera/other Style peer action widths; all prior yellow cleared. */
 const groups = [
   ['social-links','Social Links · 双按钮尺寸分配',[
-    ['.qxframe9a7c2-card-footer.is-source-peer-actions>.qxframe9a7c2-button','Discard / Save Changes','Sera 保留不同文字宽度并弹性扩展双按钮；其它 Style 保留自然宽度，单一 Theme Peer Flex 配方','__QA_BUNDLE_HEAD__']
+    ['.qxframe9a7c2-card-footer.is-source-peer-actions>.qxframe9a7c2-button','Discard / Save Changes','Sera 的 flex:1 1 0% 结合 min-width:auto 恢复源最小内容宽度约束；其它 Style 保留自然宽度，单一 Theme Peer Flex 配方','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
