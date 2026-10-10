@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-10 FocusOrigin Chromium computed-style diagnostics (new CI pending)
+- CSS Schema #38043676141 reached browser but keyboard shadow remained absent after moving selectors outside scope. New Chromium acceptance logs precise native input focus flag, `:focus`/`:focus-visible`, document FocusOrigin class, Surface custom ring var, Theme shadow token and computed box-shadow, as well as pointer projection. Test requirements unchanged; use this evidence to resolve paint owner before accepting.
+
 ## CURRENT — 2026-10-10 SelectGroup FocusOrigin moved outside @scope (new CI pending)
 - QXFRAME #38043420908 / CSS Schema #38043420954 again reached real Chromium, keyboard halo test failed despite previously added root selector. Actual cause: native Form CSS is emitted inside @scope(:root); a selector starting html.qxframe9a7c2-keyboard-focus-origin does not match a descendant of that scope boundary, exactly as documented for InputGroup. Moved both keyboard and pointer SelectGroup FocusOrigin selectors to canonical src/styles/components/composition.css outside @scope. Native Form still owns default Surface state, keyboard :focus-visible and radio/checkbox checked behavior. Updated static gate to require out-of-scope FocusOrigin projection. This is production cascade repair, not verifier relaxation. Recheck same-HEAD both CI before offline packaging.
 
