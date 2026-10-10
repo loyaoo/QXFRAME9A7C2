@@ -181,8 +181,6 @@ body.create-preview-body {
 .pv-cols-2 > .pv-span-all { flex-basis: 100%; }
 .pv-flex-col.qxframe9a7c2-card { display: flex; flex-direction: column; }
 .pv-flex-between { display: flex; flex: 1 1 auto; flex-direction: column; justify-content: space-between; }
-/* The source radio option is a horizontal Field with pb-2.5, not a boxed Card. */
-.pv-choice-field { --qxframe9a7c2-choice-field-padding-bottom: .625rem; }
 .pv-chart1-text { color: var(--qxframe9a7c2-theme-chart-1); }
 .qxframe9a7c2-items-start.qxframe9a7c2-card-footer { align-items: flex-start; }
 .pv-footer-column.is-gap-1 { gap: 0.25rem; }

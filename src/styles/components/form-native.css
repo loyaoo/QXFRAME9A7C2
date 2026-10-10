@@ -100,6 +100,9 @@
   --_qxframe9a7c2-choice-bg:var(--_qxframe9a7c2-semantic-bg-disabled)
 }
 .qxframe9a7c2-selectgroup-input:disabled+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-color{transform:none}
+.qxframe9a7c2-selectgroup>.qxframe9a7c2-field-group{flex:1 1 100%}
+.qxframe9a7c2-selectgroup-item:has(.qxframe9a7c2-selectgroup-image){flex:0 1 var(--_qxframe9a7c2-fixed-form-selectgroup-image-label-min-width);min-width:0}
+.qxframe9a7c2-selectgroup-item:has(.qxframe9a7c2-selectgroup-image)>.qxframe9a7c2-selectgroup-label{padding:0;display:block}
 .qxframe9a7c2-selectgroup-item.is-disabled{cursor:not-allowed}
 /* Indicator is a projection of native state. Floating is positioned in its own Surface. */
 .qxframe9a7c2-selectgroup-indicator.is-floating{

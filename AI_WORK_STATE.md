@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-10 S3-FIELD-001 / S3-SELECTGROUP-002 migration candidate; new CI required
+- Verified previous HEAD 4c40c708 both CI SUCCESS: QXFRAME 38038216181, CSS Schema 38038216271. Source geometry and Windows jobs passed.
+- Source files now rename formal SelectGroup and share None/Outline/Muted surfaces, native checked projection, nine floating anchors, one connected seam. CheckField-specific CSS removed; Preview01 Notifications and Receiving Method migrated to choice Surface and independent Flex; Preview02's two CheckField consumers updated as necessary migration only (not Stage4 acceptance).
+- Static docs and specialized tests must be completed before Stage3 closeout. Current candidate cannot be marked delivered until full CI, Chromium and same-HEAD Windows ZIP; PR #265 Draft and main unchanged.
+- Overall 65% / S3 75% revised scope; current SelectGroup task preliminary 25%, not accepted. Next: resolve static and browser gate failures; finish all docs composition modes and verify connected image/floating and SelectGroup/Field error/disabled behavior.
+
 ## CURRENT — 2026-10-10 Field baseline CI follow-up: preserve source label owner (CI pending)
 - Candidate 2fc2967 source job found source-locked Sera PayoutThreshold label/card differed by 1px; Release `verify:theme-tokens` rejected duplicate owner count 12→14 for legacy FormLabel fontsize/weight. Repair keeps original `.form-label` rule intact, gives new `.field-label` its own selector, and removes the extra FieldContent alias on the old specialized FormLabel rule. No source gate or baseline was weakened. CI on new HEAD required; first Field foundation remains unaccepted until both pass.
 

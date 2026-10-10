@@ -1,7 +1,10 @@
-/** Stage 3 current acceptance batch: only the connected InputGroup visual/hover owner. */
+/** Stage 3 current acceptance batch: Field / SelectGroup migration only. */
 const groups = [
-  ['savings-targets','Connected InputGroup · JS Input parity',[
-    ['.qxframe9a7c2-form-input-group','Shared hover and focus ownership','Flat connected group now guards JS Input disabled/error/warning hover; hosted JS Input focus is projected to the shared border owner','__QA_BUNDLE_HEAD__']
+  ['notification-settings','Notifications · None SelectGroup',[
+    ['.qxframe9a7c2-selectgroup-label','Checkbox selection surface + independent Flex','Replaced CheckField with transparent None and native checked/indeterminate indicator projection','__QA_BUNDLE_HEAD__']
+  ]],
+  ['receiving-method','Receiving Method · Outline SelectGroup',[
+    ['.qxframe9a7c2-selectgroup-label','Radio choice Outline surface','Preserved framed source option and native radio exclusivity without CheckField CSS','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
