@@ -35,3 +35,10 @@ Theme → 组件映射，不产生卡片私有 `pv-*` 样式或新增 JS Control
 - Theme `focusColor=theme` must link both `focus` and `ring` to `primary` so border, outline and halo agree. `mono` remains the baseline and does not recolor the Theme ring.
 - `keyboardFocus=ring` and `pointerFocus=ring` produce distinct **real shadow rings** (box-shadow). Keyboard/Pointer focus share Theme color but retain independent width/opacity/offset. Two Theme slots `focus-shadow`, `pointer-shadow` are only focus-specific presentation recipe slots (none by default); do not duplicate semantic colors per component. Preserve existing component elevation when composing a Button focus shadow.
 - For connected InputGroup, Root or Field owns the shadow and the input child stays shadowless; the existing FocusOrigin projection remains mandatory. Keyboard default outline remains unchanged.
+
+## 2026-10-10 JS Input 组合态补充
+
+- JS Input 的 `.is-focused` / `.is-keyboard-focus` 属于其已有 FocusOrigin/交互事实，不创建新的 Controller 或对 `qxframe.js` 打补丁。在连体 Addon 根节点或 InputGroupField 内，输入 shell 只负责值和真实焦点；**Group/Field 绘制一次完整 outline 与 shadow**。子 `.qxframe9a7c2-input` 不绘制第二套 ring。
+- 鼠标与键盘分别投射 pointer/focus shadow 和宽度设置；Root/Field 不通过裸 `:focus-within` 绘制轮廓。
+- Hover 70/30 Theme 派生只针对可交互、非 focus、非 invalid/error/warning 控件。Flat 组合同时排除原生 disabled 和 JS Input is-disabled；Field 要保留 FormField 父节点校验态优先级。
+- `InputGroup > InputGroup` 仍是**独立布局岛**，父 Root 不越层吞掉子 Field 的 halo。需要显式共同边框时采用 InputGroupField，而不是自动跨 Root 消除两道边框。
