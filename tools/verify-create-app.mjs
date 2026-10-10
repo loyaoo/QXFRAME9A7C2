@@ -31,7 +31,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'release-catalog','upcoming-payments','qr-connect','cover-art'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
   assert.equal(count,2,'two exact inner visual regions in the current round');
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,1,'one marker only');
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -48,7 +48,7 @@ check('segmented Tabs use the pinned source dark active input/30 recipe', () => 
   const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
   assert.match(css,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{border:1px solid transparent\}/,'source Tab border box');
   assert.match(css,/--_qxframe9a7c2-tabs-tab-bg:light-dark\(var\(--qxframe9a7c2-theme-background\),color-mix\(in oklab,var\(--qxframe9a7c2-theme-input\) 30%,transparent\)\)/,'dark input/30, light background');
-  assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-input\)\)/,'dark active input border');
+  assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-choice-border\)\)/,'shared choice border recipe retains source Luma/Rhea transparent policy');
 });
 
 check('small Button typography consumes one source-mapped Theme token', () => {

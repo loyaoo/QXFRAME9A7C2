@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 FAQ active source border recipe and 4,224 text gates (CI rerun)
+
+- Candidate `4da37e36`: same-browser source-preview job `38016429187` proved **352 Title + 352 Description matched pairs × 6 = 4,224 strict source-locked assertions PASS** across 8 Styles/light/dark; all earlier 528 outer, 2,128 Item/Field, 384 Badge, 448 small Button, and 304 paired first Buttons stayed passing. New FAQ Tabs background/foreground parity passed all modes but source dark Luma/Rhea active border was transparent while the initial QX CSS used the Input border. Root cause is the source's no-border choice policy, not a sampling error.
+- Existing Theme `choice-border` already represents precisely the required source style split: Luma/Rhea `transparent`, six others `input`. Segmented Tabs active dark border now consumes this shared token, no new dedicated Theme variable, no per-Style CSS override, JS unchanged. Strict FAQ test stays active for 16 variants × 3 RGBA channels.
+- Release in `38016429187` additionally failed because old offline marker assertion expected one marker after the current batch intentionally changed to two marked regions; fixed static assertion to use current ledger's region count without weakening exact selector checks.
+- New candidate requires fresh QXFRAME + CSS Schema SUCCESS; only THEN report the new scope as completed. QA ledger only FAQ active Tab and New Milestone description; prior Social Links yellow cleared. PR #265 Draft; main and backup unchanged. Progress stays ~69% total/~85% Stage until verified green and owner approval.
+
+
 ## CURRENT — 2026-10-10 S3 source-locked internal text and FAQ dark Tabs candidate (CI pending)
 
 - Baseline HEAD `86f124cdb1845cae5b325d36207cbf947b6d4490`; QXFRAME CI `38014041835` SUCCESS; CSS Schema `38014041832` SUCCESS; prior pending text is superseded. PR #265 stays Draft and main/backup remain untouched.

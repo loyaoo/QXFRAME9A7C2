@@ -1,3 +1,7 @@
+# Stage 3 2026-10-10 second candidate: 4,224 inner text strict PASS, FAQ border fix
+
+- QXFRAME run 38016429187 source-preview passed all 4,224 Title/Description assertions; only active FAQ Tab border in dark Luma/Rhea differed. The exact locked source uses transparent for Luma/Rhea, `input` for other six. Reusing existing `--qxframe9a7c2-theme-choice-border` aligns this without adding a source-special Token. Other channel checks retained. Static QA marker count updated from stale one to the active two-region ledger. New double-green CI required; no ZIP before then. Progress 69% total / 85% Stage pending completed CI and owner acceptance, PR Draft.
+
 # Stage 3 FAQ segmented Tabs paint and text-role hard-gate candidate (2026-10-10)
 
 - Green baseline: `86f124cd`, QXFRAME `38014041835` SUCCESS, CSS Schema `38014041832` SUCCESS. Candidate pending official workflow validation.
