@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 real-browser pointer focus cascade fix
+- Ran local Chromium against the previous official offline demo with the prospective pointer CSS. Pointer-focus `--theme-pointer-width:3px` and `offset:2px` **failed** when rule was expressed as `html:not(.keyboard)...` inside `@scope (:root)` (computed 2px/-1px keyboard outline); independent Chromium check showed the same selector outside scope correctly yielded **3px/2px** and keyboard remained 2px.
+- Moved InputGroup mouse Theme rule to the shared `src/styles/components/composition.css` cascade with `html:not(.qxframe9a7c2-keyboard-focus-origin)` selector. Keep Theme consumption, keyboard 2px, inner input none. Removed ineffective duplicate scoped rule, updated regression guard.
+- Current candidate still requires full two-green CI, then matching official Windows offline pack. No merge/branch pollution.
+
+
 ## CURRENT — 2026-10-10 SVG arrow CSS image mode correction
 - Before accepting CI, local Chromium checked `CSS.supports('background-image','light-dark(url(...),url(...))') === false`. Fixed source syntax by using a theme-boundary `.dark` CSS override for the SVG URI and retaining one `--qxframe9a7c2-form-select-arrow-image` public override. Native Select must compute a genuine SVG URL, not `none`. Static regression enforces this; browser acceptance will check computed image.
 - The other follow-up repairs (group mouse Theme pointer tokens, Tabs rail vertical 4px inset with fixed height budget) remain. Prior commit was provisional, no success or offline ZIP yet.

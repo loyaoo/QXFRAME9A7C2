@@ -1,3 +1,11 @@
+# Browser-confirmed InputGroup mouse focus selector ownership
+
+## CURRENT — 2026-10-10 real-browser pointer focus cascade fix
+- Ran local Chromium against the previous official offline demo with the prospective pointer CSS. Pointer-focus `--theme-pointer-width:3px` and `offset:2px` **failed** when rule was expressed as `html:not(.keyboard)...` inside `@scope (:root)` (computed 2px/-1px keyboard outline); independent Chromium check showed the same selector outside scope correctly yielded **3px/2px** and keyboard remained 2px.
+- Moved InputGroup mouse Theme rule to the shared `src/styles/components/composition.css` cascade with `html:not(.qxframe9a7c2-keyboard-focus-origin)` selector. Keep Theme consumption, keyboard 2px, inner input none. Removed ineffective duplicate scoped rule, updated regression guard.
+- Current candidate still requires full two-green CI, then matching official Windows offline pack. No merge/branch pollution.
+
+
 # Owner follow-up: pointer InputGroup focus, segmented rail padding, native SVG chevron
 
 ## CURRENT — 2026-10-10 SVG arrow CSS image mode correction

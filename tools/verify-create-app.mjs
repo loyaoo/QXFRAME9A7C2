@@ -88,7 +88,7 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(css('form-native'),/form-select-arrow-image,var\(--_qxframe9a7c2-native-select-chevron\)/,'native Select arrow uses a theme-overridable SVG image slot');
   assert.match(css('form-native'),/\.dark \.qxframe9a7c2-form-select,\.dark \.qxframe9a7c2-native-form select\{/,'dark SVG must use theme boundary (light-dark does not accept URLs)');
   assert.match(css('form-native'),/m6 9 6 6 6-6/,'native SVG chevron follows JS icon path');
-  assert.match(fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8'),/form-input-group-field:focus-within[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes pointer Theme token');
+  assert.match(css('composition'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-form-input-group-field:focus-within[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes Theme pointer token and is restricted to pointer origin');
   assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');
   assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
   assert.match(css('composition'),/sidebar-menu-button:hover:not\(\.is-active\)[^\{]*\{[^}]*theme-muted/,'muted hover');

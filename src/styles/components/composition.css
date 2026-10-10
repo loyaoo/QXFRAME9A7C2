@@ -445,3 +445,14 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>:not(:first-child){
   margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))
 }
+
+/* Pointer focus uses the same Theme visual recipe as standalone Input.
+ * It must sit in the shared composition cascade, NOT on an html descendant
+ * inside @scope(:root) (the :root scope boundary cannot contain another
+ * html element, so such a selector never matches). This selector's focus
+ * origin is separate from the keyboard 2px visual owner above. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:focus-within{
+  outline:var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab,var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
+  outline-offset:var(--qxframe9a7c2-theme-pointer-offset)
+}
