@@ -1,3 +1,11 @@
+# Stage 3 shared Button owner verification
+
+## CURRENT — 2026-10-10 Stage3 small Button V2 ownership correction (CI rerun)
+
+- First candidate `3a6a5756` source-locked strict font-size/width gate correctly failed: V2 scoped `.qxframe9a7c2-button[class]` late typography wins cascade over early `src/styles/components/button.css`; actual source-paired Vega/Nova QX small Buttons stayed 12px. Previous candidate `8e8325b0` added missing default `:root/.dark` `button-sm-font-size` token after canonical Schema rejection but was not sufficient to correct cascade.
+- **Real owner fixed** in `src/styles/main/theme-visual-v2.css`: co-located `.qxframe9a7c2-button.is-sm` source-size font rule just AFTER general `font-size` V2 geometry rule. Removed overwritten earlier `button.css` rule; canonical token produced in compiler/default CSS, no Preview-specific styling. Static gate enforces exactly this single consumption ownership. New strict **448 checks / 7 Cards / all 16 style-mode pairs** remain unchanged and must pass; prior 528 geometry, 2,128 Item/Field, 384 Badge acceptance remain.
+- Offline ledger active ONLY **7 Cards / 8 regions**, prior yellow labels cleared. Both QXFRAME + CSS Schema pending final HEAD, no ZIP until green; Stage3 still ~85% and total ~69% before owner inspection, PR Draft, main+backup untouched.
+
 # Stage 3 final small Button correction
 
 ## CURRENT — 2026-10-10 Stage3 small Button Theme schema correction (CI rerun required)

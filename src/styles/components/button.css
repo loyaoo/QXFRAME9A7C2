@@ -73,12 +73,6 @@
 
 /* Source size-sm text actions have their own compact inline padding.
  * Icon/square controls keep their existing fixed square size contract. */
-/* shadcn small Button typography is an independent Theme scale; its glyph
- * and label share the same font-size even when the 5-size control curve
- * reduces the component height. Fallback preserves external/old Theme CSS. */
-.qxframe9a7c2-button.is-sm{
-  font-size:var(--qxframe9a7c2-theme-button-sm-font-size,var(--_qxframe9a7c2-control-font-size))
-}
 .qxframe9a7c2-button.is-sm:not(.is-square):not(.is-icon-only){
   padding-inline:var(--qxframe9a7c2-button-sm-padding-inline,var(--qxframe9a7c2-theme-button-sm-padding-inline,.75rem))
 }
