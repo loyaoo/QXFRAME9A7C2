@@ -1,3 +1,11 @@
+# Stage 3 source-matched first Button peer fix
+
+## CURRENT — 2026-10-10 Stage3 full first-Button RGBA gate finds Sera peer sizing bug (CI pending)
+
+- A new source/QX **19 matched Card Groups × 8 Styles × light/dark = 304 first Button** gate compares exact source equivalent Button geometry/font and normalized sRGB colors. Neutral dark differences from prior diagnostic were transition sampling artefacts; override both renderers `animation:none!important;transition:none!important`. Upcoming Payments source first Button is Calendar day and QX first Button is nav, so explicitly not a matched pair.
+- Source gate revealed ONE real discrepancy across 304 pairs: **Sera Social Links Discard Button width 118.77px vs source 134.81px** (both light/dark). The source Sera footer sets both actions `flex:1`, other styles natural width. Added reusable QX `CardFooter.is-source-peer-actions` opt-in; new **single Theme token** `--qxframe9a7c2-theme-card-footer-peer-flex` outputs `1 1 0` for editorial Sera, `0 1 auto` otherwise. Source Preview Social Links consumes static CardFooter class. No private PV CSS/style selector, no qxframe runtime JS edit; default `:root` and `.dark` token synchronized, static schema gated.
+- Current offline QA ledger REPLACED with **only Social Links / 1 grouped footer / 2 actual Buttons**, all older yellow highlights cleared. Test source/Chromium gates retained; candidate requires BOTH full QXFRAME and CSS Schema GREEN and official Actions dist+docs before Windows QA. Stage3 ~85% and overall ~69% unchanged until confirmed actual visual acceptance; PR #265 Draft; main/backup frozen.
+
 # Stage 3 latest source-locked first-Button gate
 
 ## CURRENT — 2026-10-10 Stage3: semantic-matched 19-Card Button paint/type parity (CI PENDING)

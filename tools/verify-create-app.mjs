@@ -19,28 +19,19 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const overlay=read('offline-qa-changes.css');
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
-  const current={
-    'dividend-income':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
-    'payout-threshold':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
-    'preferences':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
-    'savings-targets':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
-    'recent-transactions':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm',
-      '.qxframe9a7c2-card-content .qxframe9a7c2-button.is-sm.is-square'],
-    'transfer-funds':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm'],
-    'receiving-method':['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm']
-  };
+  const current={'social-links':['.qxframe9a7c2-card-footer.is-source-peer-actions>.qxframe9a7c2-button']};
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(preview.includes('data-card="'+id+'"'),'source Card '+id);
-    assert.ok(ledger.includes("['"+id+"'"),'active-only QA ledger card '+id);
-    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'inner target '+id);count++;}
+    assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
+    assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
+    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  for(const id of ['claimable-balance','front-door','release-catalog','upcoming-payments',
-    'qr-connect','cover-art','social-links','faq','stock-performance','kitchen-island',
-    'roller-shades','notification-settings','account-access','new-milestone'])
-    assert.ok(!ledger.includes("['"+id+"'"),'previous-yellow group absent '+id);
-  assert.equal(count,8,'seven Cards with eight changed regions');
-  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,8,'exactly eight active regions');
+  for(const previous of ['dividend-income','payout-threshold','preferences','savings-targets',
+    'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
+    'release-catalog','upcoming-payments','qr-connect','cover-art','faq'])
+    assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
+  assert.equal(count,1,'one current grouped region spanning both Buttons');
+  assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,1,'one marker only');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
   assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
@@ -1101,6 +1092,22 @@ check('source pinned Badge roles mapped to QX semantic status-label instead of d
     assert.match(compiler,new RegExp("look\\('"+role+"'"),'Theme compiler owns source editorial semantic role '+role);
   assert.match(compiler,/ext\.textStyle === 'editorial' \? 'transparent' : 'destructive\/10'/,
     'Sera editorial paint must be compiled into Theme, not an unverified runtime mix');
+});
+
+check('CardFooter peer Button equal-width semantic only when editorial',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  const tokens=read('tokens.js'),compiler=read('compiler.js');
+  const html=read('preview-01.html');
+  assert.match(css,/\.qxframe9a7c2-card-footer\.is-source-peer-actions>\.qxframe9a7c2-button\{flex:var\(--qxframe9a7c2-theme-card-footer-peer-flex,0 1 auto\)/);
+  assert.ok(tokens.includes("L('card-footer-peer-flex'"));
+  assert.ok(compiler.includes("root['card-footer-peer-flex'] = editorial ? '1 1 0' : '0 1 auto'"));
+  assert.match(html,/data-card="social-links"[\s\S]*?card-footer pv-justify-end pv-gap-2 is-source-peer-actions/);
+  const themeDefault=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+  assert.equal((themeDefault.match(/--qxframe9a7c2-theme-card-footer-peer-flex: 0 1 auto;/g)||[]).length,2);
+  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+    const theme=model.compileTheme(model.normalizeConfig({style})).body;
+    assert.match(theme,new RegExp('--qxframe9a7c2-theme-card-footer-peer-flex: '+(style==='sera'?'1 1 0':'0 1 auto')+';'),'theme peer action role '+style);
+  }
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

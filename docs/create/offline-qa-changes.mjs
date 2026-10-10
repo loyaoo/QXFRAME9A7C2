@@ -1,26 +1,7 @@
-/** Active QA ONLY: seven source-paired small Button typography cards. */
+/** Current-round ONLY: Sera/other Style peer action widths; all prior yellow cleared. */
 const groups = [
-  ['dividend-income','Dividend Income · 图标按钮',[
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','源主题 icon-sm 字号跟随 style 而非统一缩小 2px','__QA_BUNDLE_HEAD__']
-  ]],
-  ['payout-threshold','Payout Threshold · 图标按钮',[
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','14px / 12px 的上游 Button 字号在 8 种 Style 同步','__QA_BUNDLE_HEAD__']
-  ]],
-  ['preferences','Preferences · 图标按钮',[
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','QX Button 字号改为消费 Theme button-sm-font-size','__QA_BUNDLE_HEAD__']
-  ]],
-  ['savings-targets','Savings Targets · New Goal',[
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','New Goal','源文字尺寸恢复 14px（Nova 12.8px），同时修复按钮自然宽度','__QA_BUNDLE_HEAD__']
-  ]],
-  ['recent-transactions','Recent Transactions · 操作按钮',[
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','View All','源字体大小与自然宽度随主题一致','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-card-content .qxframe9a7c2-button.is-sm.is-square','每行更多操作','表格中的五个小图标按钮使用同一 Theme 字号','__QA_BUNDLE_HEAD__']
-  ]],
-  ['transfer-funds','Transfer Funds · 图标按钮',[
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','源 icon-sm 字号恢复并保留 QX 自有主题尺寸','__QA_BUNDLE_HEAD__']
-  ]],
-  ['receiving-method','Receiving Method · 图标按钮',[
-    ['.qxframe9a7c2-card-header-action .qxframe9a7c2-button.is-sm','关闭图标按钮','源 icon-sm 字体大小跟随 Style 与字体设置','__QA_BUNDLE_HEAD__']
+  ['social-links','Social Links · 双按钮尺寸分配',[
+    ['.qxframe9a7c2-card-footer.is-source-peer-actions>.qxframe9a7c2-button','Discard / Save Changes','Sera 按上游两个按钮等宽；其它 Style 保留自然宽度，单一 Theme Peer Flex 配方','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

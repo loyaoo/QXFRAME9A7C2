@@ -54,6 +54,9 @@
  * its independent section spacing. Both have exactly one CSS owner. */
 .qxframe9a7c2-card-footer.is-gap-0{gap:0}
 .qxframe9a7c2-card-footer.is-column{flex-direction:column;gap:var(--qxframe9a7c2-card-footer-gap,.5rem)}
+/* Opt-in reusable CardFooter peer action policy. Style/density is assigned by
+ * the Theme, not a Create Preview style selector or card-specific override. */
+.qxframe9a7c2-card-footer.is-source-peer-actions>.qxframe9a7c2-button{flex:var(--qxframe9a7c2-theme-card-footer-peer-flex,0 1 auto);min-width:0}
 .qxframe9a7c2-card-header{gap:var(--qxframe9a7c2-card-header-gap,var(--_qxframe9a7c2-card-heading-gap));align-items:flex-start;background:var(--_qxframe9a7c2-card-bg);min-height:0;padding:var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding) calc(var(--_qxframe9a7c2-card-padding) / 2);border-bottom:0 solid var(--_qxframe9a7c2-card-divider);border-start-start-radius:max(0px,var(--_qxframe9a7c2-card-radius));border-start-end-radius:max(0px,var(--_qxframe9a7c2-card-radius))}
 .qxframe9a7c2-card-header.is-divided,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header{padding-bottom:var(--_qxframe9a7c2-card-padding);border-bottom-width:1px}
 .qxframe9a7c2-card-footer{gap:var(--_qxframe9a7c2-card-padding);align-items:center;padding:var(--qxframe9a7c2-theme-card-section-inset,0) var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding);background:var(--qxframe9a7c2-theme-card-section,transparent);border-top:var(--qxframe9a7c2-theme-card-section-width,0) solid var(--qxframe9a7c2-theme-card-section-border,var(--_qxframe9a7c2-card-divider));border-end-start-radius:max(0px,var(--_qxframe9a7c2-card-radius));border-end-end-radius:max(0px,var(--_qxframe9a7c2-card-radius))}
