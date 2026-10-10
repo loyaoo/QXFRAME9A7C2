@@ -1,3 +1,9 @@
+# True standalone Input focus shadow probe
+
+## CURRENT — 2026-10-10 actual standalone native Input test probe correction
+- CSS Schema `38025604755` browser gate showed connected InputGroup pointer shadow **red 3px**, keyboard shadow **green 3px**, and inner Input **none** (correct). It falsely claimed standalone native Input had no shadow because test used Social Links input nested inside an InputGroup, where removing its shadow is explicitly required.
+- Browser acceptance now appends a temporary standalone `<input class=qxframe9a7c2-form-input>` outside any Group, samples keyboard and pointer shadow and removes it. This preserves strict duplicate-shadow prevention and adds true standalone coverage. Production CSS remains unchanged in this correction; exact new SHA CI must be green.
+
 # New focus test initialization order
 
 ## CURRENT — 2026-10-10 static test initialization order correction
