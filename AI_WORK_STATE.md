@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-10 S3 seven-axis Hover/Focus consumer follow-up (CI pending)
+- First candidate 6d99ff72: QXFRAME #38056236352 release correctly rejected an unconsumed focusBackground=parent-surface token; this batch gives it a real native field, JS Input and SelectGroup focus-state CSS consumer. The gate remains enforced.
+- Expanded Chromium tests for both Connected Outline+Muted with direct/Flex item placement and seven independent Hover/Focus theme axes producing concrete Focus Background paint.
+- Cleared previous Preview 01 yellow highlight ledger: this batch updates common CSS/theme/panel and tests, without modifying Preview card markup. Offline-only toggle remains supported.
+- Old CI baseline 48fff228 had QXFRAME #38051099999 and Schema #38051099998 SUCCESS. New candidate needs fresh both-workflow SUCCESS and matching official dist/docs artifact. PR #265 remains Draft, Open and unmerged; Stage4/5 remain out of scope.
+
 ## CURRENT — 2026-10-10 CREATEAPP-V3-S3 Field/SelectGroup + seven independent Hover/Focus axes (CI pending)
 - Baseline 48fff22873b2355c8c00f99df56bca73bd36aebe verified: QXFRAME CI #38051099999 SUCCESS, CSS Schema Acceptance #38051099998 SUCCESS. The old pending text below describes earlier candidate commits only; do not rerun them.
 - This batch: Connected Muted and Outline now share Theme corner/edge geometry; seven independent Hover/Focus panel axes, URL/strict CSS header roundtrip and token compilation in both light/dark modes, plus shared input hover paint slots. Regression assertions added. PR #265 remains Draft/unmerged.

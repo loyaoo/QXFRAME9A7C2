@@ -42,10 +42,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={
-    'notification-settings':['.qxframe9a7c2-selectgroup','.qxframe9a7c2-selectgroup-label'],
-    'receiving-method':['.qxframe9a7c2-selectgroup','.qxframe9a7c2-selectgroup-label']
-  };
+  const current={}; // global CSS/config-only batch: no Preview cards changed
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -60,11 +57,12 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'four exact current-round composition regions (Preview 01 only)');
+  assert.equal(count,0,'no Preview cards touched in this batch');
+  assert.match(ledger,/const groups = \[\];/,'stale Preview highlights cleared');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
-  assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
+  if(count)assert.match(ledger,/__QA_BUNDLE_HEAD__/,'new changes must carry CI build HEAD placeholder');
   assert.match(packager,/ledger\.replace\('__QA_BUNDLE_HEAD__',head\[:8\]\)/,'ZIP must embed the exact CI Git HEAD');
   assert.match(ledger,/data-qa-toggle/,'offline QA must support original clean view');
   assert.match(packager,/offline-qa-changes\.mjs/,'packager must inject the QA module into local copies');

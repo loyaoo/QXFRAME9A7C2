@@ -1,14 +1,5 @@
-/** Current QA batch: shared Field feedback and SelectGroup disabled/connected paint. */
-const groups = [
-  ['notification-settings','Notifications · Disabled and Field feedback',[
-    ['.qxframe9a7c2-selectgroup','Native state group','Native disabled hover / status and form ownership repaired','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-selectgroup-label','Native choice Surface','Checkbox selection and disabled Surface retain correct state precedence','__QA_BUNDLE_HEAD__']
-  ]],
-  ['receiving-method','Receiving Method · Feedback and Connected seam',[
-    ['.qxframe9a7c2-selectgroup','Shared seam contract','Connected uses one seam algorithm for direct and Flex-wrapped Items','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-selectgroup-label','Field error and warning Surface','Field status color must win over Pointer Focus on Outline options','__QA_BUNDLE_HEAD__']
-  ]]
-];
+/** Current batch affects global Theme/Field CSS only; no Preview card DOM changes. */
+const groups = [];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
 try{visible=localStorage.getItem(key)!=='0';folded=localStorage.getItem(foldkey)==='1'}catch(_){ }
@@ -67,10 +58,10 @@ function mount(){
   const panel=document.createElement('section');
   panel.className='qa-offline-toolbar';panel.dataset.qaToolbar='';
   const markedRegions=groups.reduce((count,g)=>count+g[2].length,0);
-  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01 · '+markedRegions+' 处</span></div>'+
+  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview 01 · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。SelectGroup 组合修复只标注本轮实际受影响的卡片；关闭高亮可查看原貌。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮未更改 Preview 卡片 DOM，故无 Preview 高亮；此前的标注已经清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
