@@ -1,3 +1,11 @@
+# CheckField test-selector migration while retaining source strictness
+
+## CURRENT — 2026-10-10 CheckField source audit selector updated (rerun required)
+
+- Candidate `01e03012` QXFRAME source-preview-geometry `38019524639` failed in its *legacy expected class selector*, not a measured size deviation: audit expected exact `qxframe9a7c2-check-field is-center`, but new intended default-centered HTML correctly omits the redundant modifier. Audit now matches exact `qxframe9a7c2-check-field` and retains strict source row 16px + QX row 0.5px delta + whole Card height 0.5px delta checks. No gate relaxation. CI must rerun on the new tree.
+- Original baseline Stage3 91%/overall 70%; CheckField candidate not credited until green. PR #265 Draft; main and backup untouched.
+
+
 # Stage3 CheckField alignment policy - new owner feedback item 1 (CI pending)
 
 ## CURRENT — 2026-10-10 CheckField three-state cross-axis contract (CI pending)

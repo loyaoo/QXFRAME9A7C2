@@ -473,7 +473,9 @@ try {
         }
         if(id==='notification-settings'&&style!=='sera'){
           const sourceRow=record.source.find(n=>n.className.includes('cn-field group/field'));
-          const qxRow=record.qx.find(n=>n.className==='qxframe9a7c2-check-field is-center');
+          // CheckField center is now the default; keep exact source row/Card geometry
+          // comparisons while removing the legacy per-Card is-center dependency.
+          const qxRow=record.qx.find(n=>n.className==='qxframe9a7c2-check-field');
           if(!sourceRow||!qxRow||Math.abs(sourceRow.h-16)>.5||
             Math.abs(qxRow.h-sourceRow.h)>.5||Math.abs(record.source[0].h-record.qx[0].h)>.5)
             throw new Error(style+' notification horizontal checkbox align/source Card mismatch: '+JSON.stringify({sourceRow,qxRow,source:record.source[0],qx:record.qx[0]}));

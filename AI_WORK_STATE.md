@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 CheckField source audit selector updated (rerun required)
+
+- Candidate `01e03012` QXFRAME source-preview-geometry `38019524639` failed in its *legacy expected class selector*, not a measured size deviation: audit expected exact `qxframe9a7c2-check-field is-center`, but new intended default-centered HTML correctly omits the redundant modifier. Audit now matches exact `qxframe9a7c2-check-field` and retains strict source row 16px + QX row 0.5px delta + whole Card height 0.5px delta checks. No gate relaxation. CI must rerun on the new tree.
+- Original baseline Stage3 91%/overall 70%; CheckField candidate not credited until green. PR #265 Draft; main and backup untouched.
+
+
 ## CURRENT — 2026-10-10 CheckField three-state cross-axis contract (CI pending)
 
 - Latest verified baseline `322de1c1` PR #265 Draft; QXFRAME `38016670565` and CSS Schema `38016670548` both SUCCESS. This independent feedback batch addresses user item 1: the CheckField should not rely on a per-Card `.is-center` and a 2px margin patch.
