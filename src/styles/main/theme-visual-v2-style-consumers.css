@@ -79,20 +79,20 @@
 
   /* Field feedback remains higher priority than shared V2 Hover, for all
    * native inputs with valid focus, pointer, or neutral state. */
-  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:hover:not(:disabled),
-  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select:hover:not(:disabled),
-  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-textarea:hover:not(:disabled),
-  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:hover:not(:disabled),
-  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-select:hover:not(:disabled),
-  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-textarea:hover:not(:disabled){
+  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-textarea:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-textarea:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
     --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-destructive)
   }
-  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:hover:not(:disabled),
-  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select:hover:not(:disabled),
-  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-textarea:hover:not(:disabled),
-  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:hover:not(:disabled),
-  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-select:hover:not(:disabled),
-  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-textarea:hover:not(:disabled){
+  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-textarea:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-textarea:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
     --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-warning)
   }
 
