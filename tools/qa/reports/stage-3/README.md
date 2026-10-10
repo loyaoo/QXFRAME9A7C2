@@ -1,3 +1,11 @@
+# Stage 3 small text/icon role correction
+
+## CURRENT — 2026-10-10 V2 separate small text/icon font roles (candidate CI PENDING)
+
+- Source-paired Chromium 448-property Button gate proved after V2 cascade fix that all styles matched **except Nova icon-sm**: source Header icon buttons use **14px**, but Nova `size=sm` text Buttons use **12.8px**. Distinct roles now: `.button.is-sm` consumes `theme-button-sm-font-size`, whereas `.button.is-sm.is-square/.is-icon-only` consumes `theme-control-font-size` (Nova 14px). This is shared QX component mapping, not Preview CSS, no additional Theme token.
+- Relocated both rules **AFTER** generic single-line min-height geometry block, preserving existing static Textarea vs single-line structural contract. Prior candidate Release failure was caused solely by new CSS block interrupting that static group order. No gate removed or tolerance changed. Real source Card 7/16/4 Button 448 checks remain hard; prior 528 first-Card/2,128 Item-Field/384 Badge still hard.
+- 7 current Card / 8 inner-region offline QA highlights, no previous markers. Do not package prior failed CI. PR #265 Draft, main/backup unchanged. Pending double-green final official Actions artifact. Estimate unchanged Stage3 85%, total 69%; remaining full pixel and owner review.
+
 # Stage 3 shared Button owner verification
 
 ## CURRENT — 2026-10-10 Stage3 small Button V2 ownership correction (CI rerun)

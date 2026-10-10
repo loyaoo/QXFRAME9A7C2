@@ -478,14 +478,19 @@
     font-size: var(--_qxframe9a7c2-control-font-size);
     line-height: var(--_qxframe9a7c2-control-line-height);
   }
-  /* The V2 component geometry owner runs AFTER button.css and overwrites
-     its font-size. Small Button source type must be resolved here, where
-     the shared 5-size curve is consumed. This is one owner, not a PV hack. */
+  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
+    min-height: var(--_qxframe9a7c2-control-height);
+  }
+  /* The scoped V2 geometry owner is final for Button typography:
+     shadcn text-sm uses the source style scale (Nova 12.8px), while icon-sm
+     still inherits source body/control type (Nova 14px). Do not resize the
+     full control, or shadow this owner with an earlier component CSS rule. */
   .qxframe9a7c2-button.is-sm{
     font-size:var(--qxframe9a7c2-theme-button-sm-font-size,var(--_qxframe9a7c2-control-font-size));
   }
-  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
-    min-height: var(--_qxframe9a7c2-control-height);
+  .qxframe9a7c2-button.is-sm.is-square,
+  .qxframe9a7c2-button.is-sm.is-icon-only{
+    font-size:var(--qxframe9a7c2-theme-control-font-size,var(--_qxframe9a7c2-control-font-size));
   }
   .qxframe9a7c2-input > .qxframe9a7c2-input-control, .qxframe9a7c2-text-field > .qxframe9a7c2-input-control { height: auto; min-height: var(--_qxframe9a7c2-control-line-height); }
   .qxframe9a7c2-input.is-textarea { padding: 0; }
