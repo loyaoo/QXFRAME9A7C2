@@ -1,3 +1,12 @@
+# JS Input composition ownership and Chromium matrix
+
+## CURRENT — 2026-10-10 JS Input inside connected composition: shared halo/hover ownership (CI pending)
+- Verified GitHub baseline `e07d685f`: PR #265 Open/Draft; QXFRAME #38027653287 and CSS Schema #38027653277 both SUCCESS. Do not regress the original native-field focus/halo, 528 source-pinned source geometry or other locked gates.
+- Shared `composition.css` corrects previously unprojected **JS Input** `.is-focused` (pointer) and `.is-keyboard-focus` (keyboard) inside `InputGroup > Addon + JS Input` and `InputGroup > InputGroupField > Addon + JS Input`. Root/Field paints the ring and outline; nested JS shell clears its own outline/box-shadow. An `InputGroup > InputGroup` stays an independent layout/focus island. No JS controller/runtime changes.
+- Connected root's Theme hover now excludes JS Input `is-disabled/is-invalid/is-error/is-warning`. `InputGroupField` gets matching derived 70/30 Theme hover without overtaking focus or invalid/warning inherited from FormField. Added static CSS assertions and Chromium flat/mixed/island pointer/keyboard/error focus ownership regression; **new CI result not yet verified**.
+- Offline yellow ledger resets previous Savings/Social focus regions and marks **only Savings Targets' connected InputGroup** (one Card/one changed region) for current-round shared hover/visual ownership. A synthetic JS Input regression is not misrepresented as a modified Create Card.
+- Conservatively hold CREATEAPP-V3 **70%** / Stage3 **91%** until strict same-HEAD two-green CI and Windows offline owner review. PR remains Draft; main and backup unchanged. Next: inspect both workflow jobs, correct any strict failure, then obtain same-HEAD Actions dist+docs artifact and validate Windows ZIP before release.
+
 # Focus shadow browser transition acceptance
 
 ## CURRENT — 2026-10-10 Button pointer halo first-frame browser-test correction
