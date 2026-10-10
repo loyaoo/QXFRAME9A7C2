@@ -101,26 +101,6 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(read('tokens.js'),/L\('button-md-padding-inline'/,'registered medium Button slot');
 });
 
-check('Shared focus ring shadows, theme focus color and State ownership',()=>{
-  const source=p=>fs.readFileSync(path.join(root,p),'utf8');
-  const data=source('docs/create/data.js');
-  const generated=model.compileTheme(model.normalizeConfig({style:'nova',ext:{keyboardFocus:'ring',pointerFocus:'ring',focusColor:'theme'}})).body;
-  assert.match(data,/key: 'focusColor'/,'existing color selector is reused');
-  assert.match(generated,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0/,'keyboard ring has a genuine shadow');
-  assert.match(generated,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0/,'pointer ring has a genuine shadow');
-  assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'Theme ring is emitted');
-  const colorTokens=Object.fromEntries([...generated.matchAll(/--qxframe9a7c2-theme-([\w-]+):\s*([^;]+);/g)].map(x=>[x[1],x[2]]));
-  assert.equal(colorTokens.focus,colorTokens.primary,'selected theme sets focus outline to primary');
-  assert.equal(colorTokens.ring,colorTokens.primary,'selected theme sets actual control focus border to primary');
-  const baseline=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
-  assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*none/,'baseline keyboard default unchanged');
-  assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*none/,'baseline pointer default unchanged');
-  assert.match(source('docs/create/compiler.js'),/light\.ring = light\.primary;/,'theme-colored ring feeds focus border');
-  assert.match(source('src/styles/components/focus-closeout.css'),/theme-pointer-shadow/,'native pointer ring');
-  assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
-  assert.match(source('src/styles/components/native-input.css'),/\.qxframe9a7c2-input:hover:not\(:focus-within\)/,'JS Input native hover');
-  assert.match(source('src/styles/main/theme-visual-v2.css'),/qxframe9a7c2-theme-input/,'Theme hover mapping');
-});
 
 check('small Button typography consumes one source-mapped Theme token', () => {
   const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
@@ -184,6 +164,28 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
+
+check('Shared focus ring shadows, theme focus color and State ownership',()=>{
+  const source=p=>fs.readFileSync(path.join(root,p),'utf8');
+  const data=source('docs/create/data.js');
+  const generated=model.compileTheme(model.normalizeConfig({style:'nova',ext:{keyboardFocus:'ring',pointerFocus:'ring',focusColor:'theme'}})).body;
+  assert.match(data,/key: 'focusColor'/,'existing color selector is reused');
+  assert.match(generated,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0/,'keyboard ring has a genuine shadow');
+  assert.match(generated,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0/,'pointer ring has a genuine shadow');
+  assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'Theme ring is emitted');
+  const colorTokens=Object.fromEntries([...generated.matchAll(/--qxframe9a7c2-theme-([\w-]+):\s*([^;]+);/g)].map(x=>[x[1],x[2]]));
+  assert.equal(colorTokens.focus,colorTokens.primary,'selected theme sets focus outline to primary');
+  assert.equal(colorTokens.ring,colorTokens.primary,'selected theme sets actual control focus border to primary');
+  const baseline=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
+  assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*none/,'baseline keyboard default unchanged');
+  assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*none/,'baseline pointer default unchanged');
+  assert.match(source('docs/create/compiler.js'),/light\.ring = light\.primary;/,'theme-colored ring feeds focus border');
+  assert.match(source('src/styles/components/focus-closeout.css'),/theme-pointer-shadow/,'native pointer ring');
+  assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
+  assert.match(source('src/styles/components/native-input.css'),/\.qxframe9a7c2-input:hover:not\(:focus-within\)/,'JS Input native hover');
+  assert.match(source('src/styles/main/theme-visual-v2.css'),/qxframe9a7c2-theme-input/,'Theme hover mapping');
+});
+
 
 check('Empty geometry follows pinned 8-style source, not Nova hardcoding', () => {
   // Source: tools/qa/spec.json at shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c.

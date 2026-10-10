@@ -1,3 +1,10 @@
+# New focus test initialization order
+
+## CURRENT — 2026-10-10 static test initialization order correction
+- QXFRAME run `38025429041` passed pinned source preview geometry and Windows tools; Release static test failed before behavior checks: new focus Theme assertion referenced `model` before dynamic module initialization.
+- Move complete test block after existing dynamic model/data imports; no loosening assertions or production CSS. New exact-HEAD CI required. PR #265 Draft.
+
+
 # Acceptance highlights precision
 
 ## CURRENT — 2026-10-10 acceptance yellow ledger precision

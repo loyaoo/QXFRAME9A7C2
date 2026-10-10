@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 static test initialization order correction
+- QXFRAME run `38025429041` passed pinned source preview geometry and Windows tools; Release static test failed before behavior checks: new focus Theme assertion referenced `model` before dynamic module initialization.
+- Move complete test block after existing dynamic model/data imports; no loosening assertions or production CSS. New exact-HEAD CI required. PR #265 Draft.
+
+
 ## CURRENT — 2026-10-10 acceptance yellow ledger precision
 - Corrected current yellow regions to actual **InputGroup Savings Targets**, **native Input Social Links** and **CardFooter Button Social Links** (2 Cards, 3 selector categories). A preliminary ledger had a FAQ Tabs diagnostic line even though this batch modifies no Tabs code; removed that false highlight before the official ZIP.
 - No CSS behavior changes in this commit. Prior source-locked CI remains required, PR Draft. No previous-round yellow survives.
