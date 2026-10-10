@@ -79,10 +79,10 @@
 /* Independent Pointer/Keyboard color projection; no false keyboard outline on pointer. */
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-native-field-border:var(--qxframe9a7c2-theme-pointer-focus)}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-pointer-focus)}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-native-field-border:var(--qxframe9a7c2-theme-focus)}
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-focus)}
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-pointer-focus)}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-focus)}

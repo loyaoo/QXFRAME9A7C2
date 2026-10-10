@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-10 S3 Theme V2 Field Focus and feedback correction (CI pending)
+- Previous candidate 53abce75 failed true Chromium test: warning Field native Input was neutral, despite a parent is-warning. Root cause is the later Theme V2 consumer's hardcoded ring and V2 control border override, not the old native input token. Geometry and Windows-tools already succeeded.
+- Repair: seven-axis keyboard/pointer focus feeds --_qxframe9a7c2-v2-control-border; the existing Theme V2 appearance painter now consumes that slot (instead of hardcoded ring). Focused Field is-warning/is-invalid supplies a stronger V2 color token without introducing duplicate physical border/outline ownership. Nonfocused Field error/warning stays on its existing classes. No new Theme tokens or JS runtime.
+- Run official same-HEAD CSS Schema and QXFRAME Release with browser checks (light/dark warning, native FormData/reset, Connected vertical, SelectGroup hover). Produce official same-HEAD Windows dist/docs ZIP, then keep PR #265 Draft/unmerged; Stage4/5 remain pending.
+
 ## CURRENT — 2026-10-10 S3 Field/SelectGroup + seven-axis Theme Focus CI repair (pending verification)
 - Recovered branch d37b10a (both workflows failing). CSS Schema #38059567600 real Chromium pinpointed focused warning native input computed border black instead of Theme warning. This is a product cascade bug (not a test false positive).
 - Fix: keyboard/pointer native Focus change only the existing --_qxframe9a7c2-native-field-border token; the Field component remains the unique owner of error/warning physical border-color. Removed redundant focused Field border selectors from late Theme consumer; preserved SelectGroup status overrides and FocusOrigin policy.

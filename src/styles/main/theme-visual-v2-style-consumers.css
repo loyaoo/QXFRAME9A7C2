@@ -40,9 +40,9 @@
   .qxframe9a7c2-input-otp-segment:focus:not(.is-invalid),.qxframe9a7c2-input-otp-segment.is-focused:not(.is-invalid),
   .qxframe9a7c2-color-panel-input:focus:not(.is-invalid),.qxframe9a7c2-color-panel-input.is-focused:not(.is-invalid),
   .qxframe9a7c2-pagination-input:focus:not(.is-invalid),.qxframe9a7c2-pagination-input.is-focused:not(.is-invalid){
-    border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-ring) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-ring) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-end-color:var(--qxframe9a7c2-theme-ring);
+    border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-end-color:var(--_qxframe9a7c2-v2-control-border);
   }
   /* Source-specific disabled fills stay authoritative; appearance still owns the
      border topology. This preserves disabled contrast instead of treating it as
@@ -55,6 +55,25 @@
   .qxframe9a7c2-color-panel-input:disabled,.qxframe9a7c2-color-panel-input.is-disabled,
   .qxframe9a7c2-pagination-input:disabled,.qxframe9a7c2-pagination-input.is-disabled{
     background-color:var(--_qxframe9a7c2-v2-control-bg);
+  }
+
+  /* Field status wins over keyboard/pointer focus in the one V2 border owner.
+   * The Field parent owns warning/error, not native Control focus. */
+  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){
+    --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-destructive)
+  }
+  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){
+    --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-warning)
   }
 
   .qxframe9a7c2-button[class],.qxframe9a7c2-menu-item[class],.qxframe9a7c2-menu-submenu-title[class],.qxframe9a7c2-menu-overflow[class]{
