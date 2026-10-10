@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-10 S3 Field/SelectGroup + seven-axis Theme Focus CI repair (pending verification)
+- Recovered branch d37b10a (both workflows failing). CSS Schema #38059567600 real Chromium pinpointed focused warning native input computed border black instead of Theme warning. This is a product cascade bug (not a test false positive).
+- Fix: keyboard/pointer native Focus change only the existing --_qxframe9a7c2-native-field-border token; the Field component remains the unique owner of error/warning physical border-color. Removed redundant focused Field border selectors from late Theme consumer; preserved SelectGroup status overrides and FocusOrigin policy.
+- Must verify via real Chromium that light/dark warning Focus remains warning, vertical Connected labels keep corner/seam, native FormData/reset stays functional, and Hover border/background actually change. Re-run full Release + CSS Schema same HEAD. Never merge PR #265, which remains Draft.
+- Pending official same-HEAD Windows dist/docs artifact and local offline ZIP. No Preview card structure changed; prior yellow highlights stay cleared.
+
 ## CURRENT — 2026-10-10 S3 consolidated Field + SelectGroup + Theme Hover/Focus (CI pending)
 - Verified parent 914a8326aa0a2a1906e737615da323f2b51161c6: both workflows SUCCESS (#38056696431 / #38056696380), PR #265 open/draft/unmerged. Do not merge without owner permission.
 - Consolidated direct/Flex horizontal and Stack vertical Connected seam owner; vertical overlap and Theme top/bottom corners, preserving checked/disabled native ownership. Added FieldSet/Legend/Description/Error/Stack/Connected docs with native FormData/reset.

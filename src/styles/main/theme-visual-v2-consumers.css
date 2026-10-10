@@ -79,29 +79,18 @@
 /* Independent Pointer/Keyboard color projection; no false keyboard outline on pointer. */
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){border-color:var(--qxframe9a7c2-theme-pointer-focus)}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-native-field-border:var(--qxframe9a7c2-theme-pointer-focus)}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){border-color:var(--qxframe9a7c2-theme-focus)}
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-native-field-border:var(--qxframe9a7c2-theme-focus)}
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-pointer-focus)}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-focus)}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-focus)}
 
-/* Explicit Field feedback wins even when a nested real input is focused:
- * this source is after both component and focus rules, not a duplicate owner. */
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:focus,
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:focus,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:focus,
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:focus{
-  border-color:var(--qxframe9a7c2-theme-destructive)
-}
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:focus,
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:focus,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:focus,
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:focus{
-  border-color:var(--qxframe9a7c2-theme-warning)
-}
+/* Native Field feedback already owns border-color in form-native.css; the
+ * independent focus recipes above adjust only the field's color variable.
+ * No second physical border owner is needed in this late consumer. */
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
  --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);border-color:var(--qxframe9a7c2-theme-destructive)
