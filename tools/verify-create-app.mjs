@@ -21,8 +21,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const current={
     'savings-targets':['.qxframe9a7c2-form-input-group'],
-    'faq':['.qxframe9a7c2-tabs-scroll'],
-    'social-links':['.qxframe9a7c2-form-input']
+    'social-links':['.qxframe9a7c2-form-input','.qxframe9a7c2-card-footer>.qxframe9a7c2-button']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){

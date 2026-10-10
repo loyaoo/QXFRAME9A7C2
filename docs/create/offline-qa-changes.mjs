@@ -1,13 +1,11 @@
 /** Focus shadow / Theme ring-link and unified Control hover acceptance batch. */
 const groups = [
-  ['savings-targets','InputGroup · Theme focus ring/shadow',[
-    ['.qxframe9a7c2-form-input-group','Grouped Input shadow','Pointer/keyboard halo follows Theme focus color, width and box-shadow ownership','__QA_BUNDLE_HEAD__']
+  ['savings-targets','InputGroup · Theme focus shadow',[
+    ['.qxframe9a7c2-form-input-group','Connected InputGroup halo','Combined field focus outline + ring shadow follows the Theme without inner editor double halo','__QA_BUNDLE_HEAD__']
   ]],
-  ['faq','Button · hover and active recipes',[
-    ['.qxframe9a7c2-tabs-scroll','Interactive focus and hover policy','Existing Button/Tab state precedence preserved while focus ring is theme-aware','__QA_BUNDLE_HEAD__']
-  ]],
-  ['social-links','Native Input · hover and focus shadow',[
-    ['.qxframe9a7c2-form-input','Native field','Hover border is independent of focus and a real ring shadow can follow the theme color','__QA_BUNDLE_HEAD__']
+  ['social-links','Native Input and Button focus/shadow',[
+    ['.qxframe9a7c2-form-input','Native form Input','Native hover border and independent pointer/keyboard focus ring shadows','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-card-footer>.qxframe9a7c2-button','Action Button','Real keyboard ring is composed with the Button original elevation and state resolver','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

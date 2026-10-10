@@ -1,3 +1,10 @@
+# Acceptance highlights precision
+
+## CURRENT — 2026-10-10 acceptance yellow ledger precision
+- Corrected current yellow regions to actual **InputGroup Savings Targets**, **native Input Social Links** and **CardFooter Button Social Links** (2 Cards, 3 selector categories). A preliminary ledger had a FAQ Tabs diagnostic line even though this batch modifies no Tabs code; removed that false highlight before the official ZIP.
+- No CSS behavior changes in this commit. Prior source-locked CI remains required, PR Draft. No previous-round yellow survives.
+
+
 # 2026-10-10 pointer/keyboard ring actual browser regression gate
 
 ## CURRENT — 2026-10-10 browser focus halo ownership regression gate (CI pending)

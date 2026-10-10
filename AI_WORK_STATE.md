@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 acceptance yellow ledger precision
+- Corrected current yellow regions to actual **InputGroup Savings Targets**, **native Input Social Links** and **CardFooter Button Social Links** (2 Cards, 3 selector categories). A preliminary ledger had a FAQ Tabs diagnostic line even though this batch modifies no Tabs code; removed that false highlight before the official ZIP.
+- No CSS behavior changes in this commit. Prior source-locked CI remains required, PR Draft. No previous-round yellow survives.
+
+
 ## CURRENT — 2026-10-10 browser focus halo ownership regression gate (CI pending)
 - Added Chromium browser checks that force distinct visible 3px pointer red and keyboard green box-shadows to verify computed focus ownership on actual composed InputGroup vs standalone native Input; child Input must not draw a duplicate halo. Preserves existing pointer-vs-keyboard outline width tests. Added static test proving `focusColor=theme` sets `focus` AND `ring` to primary and baseline default shadow slots remain none.
 - This gate is diagnostic/acceptance only, no new Create Card changes; offline highlighted regions unchanged. PR Draft and all strict source gates retained.
