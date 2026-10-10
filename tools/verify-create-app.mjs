@@ -43,8 +43,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   const current={
-    'notification-settings':['.qxframe9a7c2-selectgroup-label','.qxframe9a7c2-selectgroup-indicator'],
-    'receiving-method':['.qxframe9a7c2-selectgroup-label','.qxframe9a7c2-selectgroup-indicator']
+    'notification-settings':['.qxframe9a7c2-selectgroup','.qxframe9a7c2-selectgroup-label'],
+    'receiving-method':['.qxframe9a7c2-selectgroup','.qxframe9a7c2-selectgroup-label']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
@@ -54,13 +54,13 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   }
   assert.doesNotMatch(ledger,/\['shipping-address'|\['contributions-activity'/,'last round Preview 02 highlights are cleared');
   for(const [id] of Object.entries(current)) {
-    assert.ok(ledger.includes("['"+id+"'"),'current-round focus card '+id);
+    assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
   for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','savings-targets',
     'recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'four exact current-round focus regions (Preview 01 only)');
+  assert.equal(count,4,'four exact current-round composition regions (Preview 01 only)');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');

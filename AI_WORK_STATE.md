@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-10 SelectGroup QA ledger static alignment (CI pending)
+- Source geometry job at previous candidate `2e1da54eaf3e8edcd61980c04a641d1243b8f0ab` passed. QXFRAME release job failed only at `tools/verify-create-app.mjs` because its 4-region ledger assertion retained the previous iteration's indicator selectors, while the new actual ledger deliberately marks group/Surface composition. Updated the static gate's expected current-group selectors; kept 4 real regions, the old-highlight absence checks, and all QA/ZIP guarantees. Do not claim new candidate CI is green until checked.
+
 ## CURRENT — 2026-10-10 S3 SelectGroup media/connected external Flex batch (new CI pending)
 - Previous validated HEAD: `7dbbe4ec5e5acd4aaff912c3c276e2f0b38a2ff5`; PR #265 Open/Draft/unmerged. All new changes require new HEAD two-workflow success and matching artifact before acceptance.
 - Choice group no longer imposes display:flex or media-dependent item sizing/Surface padding/display. Independent Flex owns item flow, including checkbox, radio, color and image docs examples. Demo-only media width stays in docs DOM.
