@@ -74,7 +74,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
 
 check('segmented Tabs use the pinned source dark active input/30 recipe', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
-  assert.match(css,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{border:1px solid transparent\}/,'source Tab border box');
+  assert.match(css,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{[^}]*border:1px solid transparent\}/,'source Tab border box with typography role');
   assert.match(css,/--_qxframe9a7c2-tabs-tab-bg:light-dark\(var\(--qxframe9a7c2-theme-background\),color-mix\(in oklab,var\(--qxframe9a7c2-theme-input\) 30%,transparent\)\)/,'dark input/30, light background');
   assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-choice-border\)\)/,'shared choice border recipe retains source Luma/Rhea transparent policy');
 });
