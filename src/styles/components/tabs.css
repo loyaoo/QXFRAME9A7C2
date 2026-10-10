@@ -13,11 +13,10 @@
 .qxframe9a7c2-tabs-nav{position:relative;display:flex;align-items:center;min-width:0;min-height:0;gap:var(--_qxframe9a7c2-tabs-gap)}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-nav{width:max-content;max-width:42%;flex-direction:column;align-items:stretch}
 .qxframe9a7c2-tabs-scroll-host{min-width:0;min-height:0;flex:1 1 auto;overflow:hidden}
-/* Horizontal Scroll needs intrinsic block sizing: a segmented viewport adds
- * padding around the tabs, which the old fixed height clipped. */
-.qxframe9a7c2-tabs-scroll{width:100%;height:auto;min-height:var(--_qxframe9a7c2-tabs-height)}
-.qxframe9a7c2-tabs:not(.is-vertical) .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{height:auto;min-height:var(--_qxframe9a7c2-tabs-height)}
-.qxframe9a7c2-tabs:not(.is-vertical) .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{min-height:0}
+/* Tabs horizontal rail and its TabItem share one measured block-height
+ * owner. Scroll is horizontal only; avoid an extra vertical padding layer
+ * that used to cut 8px off the TabItem's rendered box. */
+.qxframe9a7c2-tabs-scroll{width:100%;height:var(--_qxframe9a7c2-tabs-height)}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-scroll{height:100%;min-height:7.5rem;width:100%}
 .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{display:flex;align-items:stretch;min-width:max-content;min-height:100%;gap:var(--_qxframe9a7c2-tabs-gap)}
 .qxframe9a7c2-tabs.is-centered:not(.is-vertical) .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{justify-content:center;min-width:100%}
@@ -52,7 +51,7 @@ button.qxframe9a7c2-tabs-tab{padding:0 var(--_qxframe9a7c2-tabs-pad-x);gap:0.375
 .qxframe9a7c2-tabs.is-animated-indicator .qxframe9a7c2-tabs-indicator{transition:transform var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing),width var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing),height var(--qxframe9a7c2-motion-tabs-indicator-duration) var(--qxframe9a7c2-motion-tabs-indicator-easing)}
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab{--_qxframe9a7c2-tabs-tab-border:var(--_qxframe9a7c2-semantic-border);--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface-muted);border:1px solid var(--_qxframe9a7c2-tabs-tab-border)}
 .qxframe9a7c2-tabs.is-card .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-semantic-surface);--_qxframe9a7c2-tabs-tab-border:var(--qxframe9a7c2-theme-primary)}
-.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{padding:0.25rem;border-radius:var(--_qxframe9a7c2-tabs-radius);background:var(--_qxframe9a7c2-semantic-surface-muted)}
+.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{padding:0 0.25rem;border-radius:var(--_qxframe9a7c2-tabs-radius);background:var(--_qxframe9a7c2-semantic-surface-muted)}
 /* Source-pinned TabsTrigger uses a transparent 1px border at rest and
  * dark:active:border-input; keep border-box geometry stable in both modes. */
 .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab{border:1px solid transparent}

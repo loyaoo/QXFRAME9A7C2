@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 Tabs rail strict source correction
+- Official failed same-browser artifact `11657787259`: Lyra FAQ source Card 343px vs QX 475.75px when Scroll root/viewport were set to auto. Intrinsic Scroll sizing introduced a severe feedback/height-growth regression in the segmented rail. Preserved source-locked strict Card comparison and reverted root sizing to shared Theme tabs height.
+- Root-cause correction: horizontal segmented Scroll viewport formerly used `padding:0.25rem`, consuming 8px of the exact TabItem height and cropping the tab. The shared rule now keeps inline rail chrome while setting vertical padding to zero; viewport and tab use same block-height budget. No per-Card CSS, no test waiver. Pending same-browser rerun plus browser no-clip geometry assertion.
+- All other multi-component fixes remain part of the same batch. PR #265 Draft.
+
+
 ## CURRENT — 2026-10-10 shared fixes QA ledger round normalization (CI pending)
 - HEAD `9adcb02b` batch spans InputGroup padding/focus, native Select arrow, popup motion, sidebar hover, Tabs height, density. Its QA ledger was normalized to exactly three Card groups and four interior role selectors (Buy Investment includes two regions), preventing double grouping and eliminating stale test expectations from the previous CheckField-only round.
 - Full source-locked browser and Release CI continue as the acceptance authority. PR #265 remains Draft, no main/backup edit. No premature Stage3 percentage credit.

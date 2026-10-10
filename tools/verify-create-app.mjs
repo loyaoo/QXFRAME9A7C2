@@ -83,7 +83,8 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   });
   for(let col=0;col<4;col++)for(let i=1;i<rows.length;i++)
     assert.ok(rows[i][col]>=rows[i-1][col],'density '+i+' property '+col+' is monotonic');
-  assert.match(css('tabs'),/\.qxframe9a7c2-tabs-scroll\{width:100%;height:auto;min-height:/,'horizontal Tabs intrinsic height');
+  assert.match(css('tabs'),/\.qxframe9a7c2-tabs-scroll\{width:100%;height:var\(--_qxframe9a7c2-tabs-height\)/,'horizontal Tabs root uses shared tab height');
+  assert.match(css('tabs'),/qxframe9a7c2-scroll-viewport\{padding:0 0\.25rem;/,'horizontal segmented viewport does not subtract tab height');
   assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');
   assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
   assert.match(css('composition'),/sidebar-menu-button:hover:not\(\.is-active\)[^\{]*\{[^}]*theme-muted/,'muted hover');

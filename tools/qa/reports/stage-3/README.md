@@ -1,5 +1,11 @@
 # User-reported multi-component consistency batch (2026-10-10)
 
+## CURRENT — 2026-10-10 Tabs rail strict source correction
+- Official failed same-browser artifact `11657787259`: Lyra FAQ source Card 343px vs QX 475.75px when Scroll root/viewport were set to auto. Intrinsic Scroll sizing introduced a severe feedback/height-growth regression in the segmented rail. Preserved source-locked strict Card comparison and reverted root sizing to shared Theme tabs height.
+- Root-cause correction: horizontal segmented Scroll viewport formerly used `padding:0.25rem`, consuming 8px of the exact TabItem height and cropping the tab. The shared rule now keeps inline rail chrome while setting vertical padding to zero; viewport and tab use same block-height budget. No per-Card CSS, no test waiver. Pending same-browser rerun plus browser no-clip geometry assertion.
+- All other multi-component fixes remain part of the same batch. PR #265 Draft.
+
+
 ## CURRENT — 2026-10-10 S3 user feedback multi-component batch (CI pending)
 - Baseline green HEAD `15c7f5a3`, QXFRAME `38019740808` and CSS Schema `38019740821` SUCCESS; PR #265 Draft.
 - Shared CSS and compiler changes: density 28/32/36/40/44 inline-padding monotonic; Tabs horizontal intrinsic viewport height; placement-aware popup from attached edge scaleY/scaleX (no point-scale); Sidebar muted hover distinct from active accent; connected InputGroup additive padding seam halves and wrapper-owned focus-visible (not child's outline); native Select browser-stable drawn chevron; nesting contract documented without claiming seamless nested-group support.
