@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-10 exact Surface owner counter correction (CI pending)
+- QXFRAME run #38040160568: CSS Section5, JS runtime, source-preview-geometry and windows-tools previously green; release failed Phase F test because count('.selectgroup-label{') matches suffixes of 20 different selectors rather than one exact rule. This is a test selector bug, not 20 Surface drawing owners.
+- Correct static gate now uses line-anchored CSS basic rule selector and still requires exactly one base paint owner; state selectors remain checked by existing Section5 duplicate-owner ratchet. No production CSS changes or threshold weakening.
+- CSS Schema #38040160560 was pending during this correction. New same-HEAD QXFRAME + CSS Schema required, and final Actions ZIP must use successful HEAD. PR #265 Draft, no merge.
+
 ## CURRENT — 2026-10-10 native Notifications master-checkbox behavior and batch highlights (new CI pending)
 - QXFRAME #38039883190: CSS Section5 gate now SUCCESS, release static Create gate failed only because old-highlight list included this round's Notifications and Receiving cards. CSS Schema #38039883198: browser passed the earlier strict Radio Field/Theme tests; actual Notifications Select-All interaction failed because preview-cards.js queried removed CheckField class.
 - Fixed behavior at its JS binding owner: master now selects native SelectGroup checkbox inputs while retaining indeterminate/checked/change ownership; not a relaxed browser assertion. QA ledger now marks precisely current Preview01 Notifications/Receiving and Preview02 Shipping Address/Contributions Activity (required cross-scope CheckField removal only, not Stage4 geometric work); excludes prior Savings yellow.

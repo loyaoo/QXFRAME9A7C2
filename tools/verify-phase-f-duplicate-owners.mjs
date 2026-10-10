@@ -40,7 +40,7 @@ assert.match(css,/\.qxframe9a7c2-list-item\{[^}]*display:flex;align-items:center
 assert.equal(css.includes('.qxframe9a7c2-list-item{gap:var(--_qxframe9a7c2-fixed-space-2)}'),false,
   'List gap-only selector reopening must not return.');
 
-assert.equal(count('.qxframe9a7c2-selectgroup-label{'),1,'SelectGroup surface has exactly one canonical owner');
+assert.equal((css.match(/^\.qxframe9a7c2-selectgroup-label\{/gm)||[]).length,1,'SelectGroup base Surface has exactly one canonical owner, state rules are separate');
 assert.equal(count('.qxframe9a7c2-selectgroup.is-connected{'),1,'one connected seam owner in composition');
 assert.equal(count('.qxframe9a7c2-selectgroup.is-image-grid '),0,'old image-grid dedicated CSS must be absent');
 
