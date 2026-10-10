@@ -1,3 +1,11 @@
+# Frozen Theme source formula ownership correction
+
+## CURRENT — 2026-10-10 strict pinned Theme formula ownership
+- QXFRAME `38025980122` source geometry and Windows Tools SUCCESS; Release rejected `color-mix(in oklab,var(--theme-field-border) 70%,var(--theme-ring))` only because the hover-mapping rule was mistakenly placed in source-formula-locked `theme-visual-v2.css`.
+- Moved the exact shared input hover consumer rule into `theme-visual-v2-consumers.css`, the existing after-v2 consumption layer. Kept 70/30 derived contrast with zero extra Theme tokens. Connected InputGroup composition retains the same derived border recipe.
+- `tools/theme-v2-contract.mjs` remains untouched, its shadcn SHA/formula whitelist stays strict; updated static gate to assert the consumer, not frozen source. CI new SHA required.
+
+
 # Visibly distinct shared Control/InputGroup hover border
 
 ## CURRENT — 2026-10-10 visually effective default hover role
