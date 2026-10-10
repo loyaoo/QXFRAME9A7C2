@@ -1,3 +1,10 @@
+# Browser keyboard origin focus-event ordering
+
+## CURRENT — 2026-10-10 FocusOrigin event ordering in native probe
+- CSS Schema `38026172810`: group pointer red 3px, group keyboard green 3px, and standalone native input pointer red 3px all passed. Standalone native keyboard sample read red despite test setting keyboard-origin before `native.focus()`. The runtime FocusOrigin focus event changed the origin class on focus, so manual class injection must happen AFTER the focus event when testing an explicit keyboard origin.
+- Updated browser regression to `native.focus(); h.classList.add('qxframe9a7c2-keyboard-focus-origin'); getComputedStyle(native)`; pointer sample still reads after class removal. No production CSS or lowered assertion, test now actually measures the requested mode. New exact-HEAD both CI required.
+
+
 # Frozen Theme source formula ownership correction
 
 ## CURRENT — 2026-10-10 strict pinned Theme formula ownership

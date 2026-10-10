@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 FocusOrigin event ordering in native probe
+- CSS Schema `38026172810`: group pointer red 3px, group keyboard green 3px, and standalone native input pointer red 3px all passed. Standalone native keyboard sample read red despite test setting keyboard-origin before `native.focus()`. The runtime FocusOrigin focus event changed the origin class on focus, so manual class injection must happen AFTER the focus event when testing an explicit keyboard origin.
+- Updated browser regression to `native.focus(); h.classList.add('qxframe9a7c2-keyboard-focus-origin'); getComputedStyle(native)`; pointer sample still reads after class removal. No production CSS or lowered assertion, test now actually measures the requested mode. New exact-HEAD both CI required.
+
+
 ## CURRENT — 2026-10-10 strict pinned Theme formula ownership
 - QXFRAME `38025980122` source geometry and Windows Tools SUCCESS; Release rejected `color-mix(in oklab,var(--theme-field-border) 70%,var(--theme-ring))` only because the hover-mapping rule was mistakenly placed in source-formula-locked `theme-visual-v2.css`.
 - Moved the exact shared input hover consumer rule into `theme-visual-v2-consumers.css`, the existing after-v2 consumption layer. Kept 70/30 derived contrast with zero extra Theme tokens. Connected InputGroup composition retains the same derived border recipe.
