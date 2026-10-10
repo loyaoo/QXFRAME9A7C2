@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-10 SelectGroup one-Surface FocusOrigin and nine-floating-anchor documentation (new CI pending)
+- Baseline 7d1e7cc8abf8a22f707d46e3602064046e537bc6: QXFRAME CI #38040376325 and CSS Schema Acceptance #38040376311 SUCCESS, PR #265 still Draft, not merged. Previous successful Actions artifact 11665697248.
+- Repaired a confirmed duplicate keyboard focus outline: shared Choice Visual no longer gives SelectGroup's inner indicator a second outline; its Surface paints keyboard Theme shadow, pointer Theme shadow and pointer width/offset/color according to FocusOrigin. Native checkbox/radio checked/disabled state ownership is unchanged.
+- Generalized SelectGroup CSS gap through a public override without changing default geometry. Converted interactive docs checkbox/radio demos away from retired is-pill/scenario modes and old display:grid samples into Theme Appearance and nested Flex; added all nine floating anchors in docs.
+- Added static and Chromium browser acceptance for floating positions, independent Surface/indicator ownership, keyboard + pointer Theme ring, native state; this round's offline ledger marks only Preview01 Notifications/Receiving Method changed Surface/indicator regions; previous Preview02 yellow highlights cleared.
+- Await same-HEAD QXFRAME + CSS Schema Success, then produce a new official Actions dist+docs Windows offline ZIP. Stage3 still Draft and not accepted. Do not merge or start Stage4/5.
+
 ## CURRENT — 2026-10-10 exact Surface owner counter correction (CI pending)
 - QXFRAME run #38040160568: CSS Section5, JS runtime, source-preview-geometry and windows-tools previously green; release failed Phase F test because count('.selectgroup-label{') matches suffixes of 20 different selectors rather than one exact rule. This is a test selector bug, not 20 Surface drawing owners.
 - Correct static gate now uses line-anchored CSS basic rule selector and still requires exactly one base paint owner; state selectors remain checked by existing Section5 duplicate-owner ratchet. No production CSS changes or threshold weakening.

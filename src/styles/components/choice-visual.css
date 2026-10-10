@@ -44,9 +44,10 @@
 /* Shared interaction skin. Item keyboard focus remains owned by the Item surface itself. */
 .qxframe9a7c2-native-form input[type="checkbox"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form input[type="radio"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-form-check-input:hover:not(:disabled):not(:focus),.qxframe9a7c2-item-surface.is-hover .qxframe9a7c2-item-selection-indicator.is-checkbox:not(.is-disabled),.qxframe9a7c2-tree-check-wrap:hover>.qxframe9a7c2-tree-check:not(:disabled)+.qxframe9a7c2-tree-check-indicator,.qxframe9a7c2-selectgroup-item:hover .qxframe9a7c2-selectgroup-indicator.is-checkbox,.qxframe9a7c2-selectgroup-item:hover .qxframe9a7c2-selectgroup-indicator.is-radio{border-color:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent)}
 .qxframe9a7c2-native-form input[type="checkbox"]:focus-visible,.qxframe9a7c2-native-form input[type="radio"]:focus-visible,.qxframe9a7c2-form-check-input:focus-visible,
-.qxframe9a7c2-tree-check:focus-visible + .qxframe9a7c2-tree-check-indicator,
+.qxframe9a7c2-tree-check:focus-visible + .qxframe9a7c2-tree-check-indicator{border-color:var(--_qxframe9a7c2-semantic-focus);outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);box-shadow:none}
+/* SelectGroup Surface, not its indicator, is the only focus halo owner. */
 .qxframe9a7c2-selectgroup-input:focus-visible + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox,
-.qxframe9a7c2-selectgroup-input:focus-visible + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio{border-color:var(--_qxframe9a7c2-semantic-focus);outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);box-shadow:none}
+.qxframe9a7c2-selectgroup-input:focus-visible + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio{border-color:var(--_qxframe9a7c2-semantic-focus);outline:none;box-shadow:none}
 .qxframe9a7c2-form-check-input[readonly]{cursor:default}
 .qxframe9a7c2-native-form input[type="checkbox"]:disabled,.qxframe9a7c2-native-form input[type="radio"]:disabled,.qxframe9a7c2-form-check-input:disabled,
 .qxframe9a7c2-item-selection-indicator.is-checkbox.is-disabled,

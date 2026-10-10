@@ -38,8 +38,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   const current={
-    'notification-settings':['.qxframe9a7c2-selectgroup-label'],
-    'receiving-method':['.qxframe9a7c2-selectgroup-label']
+    'notification-settings':['.qxframe9a7c2-selectgroup-label','.qxframe9a7c2-selectgroup-indicator'],
+    'receiving-method':['.qxframe9a7c2-selectgroup-label','.qxframe9a7c2-selectgroup-indicator']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
@@ -47,20 +47,15 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  const current02={
-    'shipping-address':['.qxframe9a7c2-selectgroup-label'],
-    'contributions-activity':['.qxframe9a7c2-selectgroup-label']
-  };
-  for(const [id,selectors] of Object.entries(current02)){
-    assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview02 Card '+id);
-    assert.ok(ledger.includes("['"+id+"'"),'active QA Preview02 group '+id);
-    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed Preview02 child '+selector);count++;}
+  assert.doesNotMatch(ledger,/\['shipping-address'|\['contributions-activity'/,'last round Preview 02 highlights are cleared');
+  for(const [id] of Object.entries(current)) {
+    assert.ok(ledger.includes("['"+id+"'"),'current-round focus card '+id);
   }
   for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','savings-targets',
     'recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'four exact current-round regions (two per Preview)');
+  assert.equal(count,4,'four exact current-round focus regions (Preview 01 only)');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -93,6 +88,21 @@ check('SelectGroup replaces CheckField without a duplicate choice Field owner', 
   assert.equal((section.match(/class="qxframe9a7c2-selectgroup-item"/g)||[]).length,5,'five native checkbox SelectGroup items');
   assert.match(section,/qxframe9a7c2-flex is-start/,'cross-axis top alignment is an independent inner Flex');
   assert.doesNotMatch(section,/qxframe9a7c2-check-field/,'old CheckField not present');
+});
+
+check('SelectGroup appearance and nine floating positions have no retired scene owner', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  const visual=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+  const demos=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
+  assert.match(demos,/Floating indicator · Nine anchors/,'nine-anchor interactive docs example');
+  assert.match(demos,/\['top','middle','bottom'\]/);
+  assert.match(demos,/\['left','center','right'\]/);
+  assert.doesNotMatch(demos,/is-pill|is-boxes|is-image-grid|is-color-grid|display:grid/,'demos use composable appearances and Flex');
+  assert.match(css,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard Theme shadow paints on Surface');
+  assert.match(css,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer Theme shadow paints on Surface');
+  assert.match(visual,/\.qxframe9a7c2-selectgroup-indicator\.is-radio\{border-color:var\(--_qxframe9a7c2-semantic-focus\);outline:none;box-shadow:none\}/,'indicator cannot draw second focus halo');
+  for(const side of ['top-left','top-center','middle-left','middle-center','bottom-center','bottom-right'])
+    assert.match(css,new RegExp('is-'+side+'\\b'),'named floating anchor exists: '+side);
 });
 
 check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and grouped focus are shared recipes',()=>{

@@ -37,7 +37,7 @@
 .qxframe9a7c2-form-check-label{min-width:0;flex:1 1 0;line-height:1.45}
 .qxframe9a7c2-form-check-description{width:calc(100% - var(--_qxframe9a7c2-form-check-size) - 0.375rem);min-width:0;flex:0 0 auto;margin-inline-start:calc(var(--_qxframe9a7c2-form-check-size) + 0.375rem);color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em;line-height:1.45}.qxframe9a7c2-form-check.is-inline .qxframe9a7c2-form-check-label,.qxframe9a7c2-form-check-inline .qxframe9a7c2-form-check-label{flex:0 1 auto}.qxframe9a7c2-form-check.is-inline .qxframe9a7c2-form-check-description,.qxframe9a7c2-form-check-inline .qxframe9a7c2-form-check-description{width:auto;flex:0 1 auto;margin-inline-start:0}
 
-.qxframe9a7c2-selectgroup{display:flex;flex-wrap:wrap;align-items:stretch;gap:0.375rem;font-size:var(--_qxframe9a7c2-control-font-size)}
+.qxframe9a7c2-selectgroup{display:flex;flex-wrap:wrap;align-items:stretch;gap:var(--qxframe9a7c2-selectgroup-gap,.375rem);font-size:var(--_qxframe9a7c2-control-font-size)}
 
 .qxframe9a7c2-selectgroup-item{position:relative;z-index:0;display:inline-block;margin:0;cursor:pointer;user-select:none}
 .qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-above)}
@@ -87,7 +87,16 @@
   --_qxframe9a7c2-choice-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) 70%,var(--qxframe9a7c2-theme-primary))
 }
 .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{
-  --_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)
+  --_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline);
+  --_qxframe9a7c2-choice-ring:var(--qxframe9a7c2-theme-focus-shadow,none)
+}
+/* FocusOrigin switches the paint owner on the Surface alone. The native input
+ * keeps actual focus; indicator and content never paint independent halos. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
+  --_qxframe9a7c2-choice-outline:var(--qxframe9a7c2-theme-pointer-width,0) solid
+    color-mix(in oklab,var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity,100%),transparent);
+  --_qxframe9a7c2-choice-ring:var(--qxframe9a7c2-theme-pointer-shadow,none);
+  outline-offset:var(--qxframe9a7c2-theme-pointer-offset,0)
 }
 .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:disabled+.qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-text:var(--_qxframe9a7c2-semantic-text-disabled);

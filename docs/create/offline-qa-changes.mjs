@@ -1,17 +1,13 @@
-/** Stage 3 current acceptance batch: Field / SelectGroup migration only. */
+/** Stage 3 current acceptance batch: SelectGroup FocusOrigin + Surface/indicator paint. */
 const groups = [
-  ['notification-settings','Notifications · None SelectGroup',[
-    ['.qxframe9a7c2-selectgroup-label','Checkbox selection surface + independent Flex','Replaced CheckField with transparent None and native checked/indeterminate indicator projection','__QA_BUNDLE_HEAD__']
+  ['notification-settings','Notifications · Keyboard and pointer focus',[
+    ['.qxframe9a7c2-selectgroup-label','Surface single halo owner','Keyboard outline or ring and pointer Theme halo paint on choice Surface; indicator no longer draws a second halo','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-selectgroup-indicator','Checkbox indicator','Native checked/indeterminate visuals preserved without nested focus outline','__QA_BUNDLE_HEAD__']
   ]],
-  ['receiving-method','Receiving Method · Outline SelectGroup',[
-    ['.qxframe9a7c2-selectgroup-label','Radio choice Outline surface','Preserved framed source option and native radio exclusivity without CheckField CSS','__QA_BUNDLE_HEAD__']
-  ]],
-  ['shipping-address','Shipping Address · None SelectGroup',[
-    ['.qxframe9a7c2-selectgroup-label','Save default address checkbox','Migrated Preview02 CheckField to native SelectGroup','__QA_BUNDLE_HEAD__']
-  ],'02'],
-  ['contributions-activity','Contributions Activity · None SelectGroup',[
-    ['.qxframe9a7c2-selectgroup-label','Profile privacy checkbox','Migrated Preview02 CheckField to native SelectGroup','__QA_BUNDLE_HEAD__']
-  ],'02']
+  ['receiving-method','Receiving Method · Radio focus',[
+    ['.qxframe9a7c2-selectgroup-label','Radio Surface focus','Outline radio options respond to separate pointer and keyboard FocusOrigin tokens','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-selectgroup-indicator','Radio indicator','Dot remains native selection projection while Surface owns single focus ring','__QA_BUNDLE_HEAD__']
+  ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -71,10 +67,10 @@ function mount(){
   const panel=document.createElement('section');
   panel.className='qa-offline-toolbar';panel.dataset.qaToolbar='';
   const markedRegions=groups.reduce((count,g)=>count+g[2].length,0);
-  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01/02 · '+markedRegions+' 处</span></div>'+
+  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01 · '+markedRegions+' 处</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。Preview 02 同步标注本轮结构迁移；关闭高亮可查看原貌。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。SelectGroup 焦点修复只标注本轮实际受影响的卡片；关闭高亮可查看原貌。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
