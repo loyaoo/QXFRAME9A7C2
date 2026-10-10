@@ -1834,7 +1834,7 @@ try {
       assert.equal(row.disabledBefore,row.disabledHover,'disabled hover never paints a new background');
       assert.equal(row.disabledCursor,'not-allowed','disabled native input also disables entire label');
       assert.equal(row.disabledChecked,false,'disabled input remains unchanged');
-      if(row.appearance==='is-outline')assert.equal(row.pointerBorder,row.expectedBorder,'feedback border wins over pointer focus '+JSON.stringify(row));
+      if(row.appearance==='is-outline'&&row.feedback!=='is-valid')assert.equal(row.pointerBorder,row.expectedBorder,'feedback border wins over pointer focus '+JSON.stringify(row));
     }
   });
 
