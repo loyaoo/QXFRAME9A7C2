@@ -1,11 +1,7 @@
-/** Focus shadow / Theme ring-link and unified Control hover acceptance batch. */
+/** Stage 3 current acceptance batch: only the connected InputGroup visual/hover owner. */
 const groups = [
-  ['savings-targets','InputGroup · Theme focus shadow',[
-    ['.qxframe9a7c2-form-input-group','Connected InputGroup halo','Combined field focus outline + ring shadow follows the Theme without inner editor double halo','__QA_BUNDLE_HEAD__']
-  ]],
-  ['social-links','Native Input and Button focus/shadow',[
-    ['.qxframe9a7c2-form-input','Native form Input','Native hover border and independent pointer/keyboard focus ring shadows','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-card-footer>.qxframe9a7c2-button','Action Button','Real keyboard ring is composed with the Button original elevation and state resolver','__QA_BUNDLE_HEAD__']
+  ['savings-targets','Connected InputGroup · JS Input parity',[
+    ['.qxframe9a7c2-form-input-group','Shared hover and focus ownership','Flat connected group now guards JS Input disabled/error/warning hover; hosted JS Input focus is projected to the shared border owner','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
