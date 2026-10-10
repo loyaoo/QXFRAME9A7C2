@@ -186,11 +186,12 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   assert.match(source('src/styles/main/theme-visual-v2-consumers.css'),/--_qxframe9a7c2-v2-control-border:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field-border\) 70%,var\(--qxframe9a7c2-theme-ring\)\)/,'visible Theme hover step must differ from default field border');
   assert.match(source('src/styles/components/composition.css'),/form-input-group-addon\):hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'connected InputGroup shares hover border step');
 
-  assert.match(css('composition'),/form-input-group-field:has\(>\.qxframe9a7c2-input\.is-keyboard-focus[^\{]*\{[^}]*theme-focus-shadow/,'JS Input keyboard focus projects its halo to InputGroupField');
-  assert.match(css('composition'),/form-input-group-field:has\(>\.qxframe9a7c2-input\.is-focused[^\{]*\{[^}]*theme-pointer-shadow/,'JS Input pointer focus projects to its outer composition');
-  assert.match(css('composition'),/form-input-group-field>\.qxframe9a7c2-input\{[^}]*state-ring:none;[^}]*box-shadow:none/,'hosted JS Input never paints a second ring');
-  assert.match(css('composition'),/form-input-group-field:hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'InputGroupField has the same derived hover border');
-  assert.match(css('composition'),/form-input-group-addon\):hover:not\(:focus-within\)[^\{]*qxframe9a7c2-input\.is-disabled/,'connected InputGroup hover respects JS Input disabled state');
+  const groupCss=source('src/styles/components/composition.css');
+  assert.match(groupCss,/form-input-group-field:has\(>\.qxframe9a7c2-input\.is-keyboard-focus[^\{]*\{[^}]*theme-focus-shadow/,'JS Input keyboard focus projects its halo to InputGroupField');
+  assert.match(groupCss,/form-input-group-field:has\(>\.qxframe9a7c2-input\.is-focused[^\{]*\{[^}]*theme-pointer-shadow/,'JS Input pointer focus projects to its outer composition');
+  assert.match(groupCss,/form-input-group-field>\.qxframe9a7c2-input\{[^}]*state-ring:none;[^}]*box-shadow:none/,'hosted JS Input never paints a second ring');
+  assert.match(groupCss,/form-input-group-field:hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'InputGroupField has the same derived hover border');
+  assert.match(groupCss,/form-input-group-addon\):hover:not\(:focus-within\)[^\{]*qxframe9a7c2-input\.is-disabled/,'connected InputGroup hover respects JS Input disabled state');
 
 });
 
