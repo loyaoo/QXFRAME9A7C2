@@ -102,15 +102,11 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warnin
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:focus{
   border-color:var(--qxframe9a7c2-theme-warning)
 }
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
  --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);border-color:var(--qxframe9a7c2-theme-destructive)
 }
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
  --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);border-color:var(--qxframe9a7c2-theme-warning)
 }
