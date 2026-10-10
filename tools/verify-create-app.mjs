@@ -1100,13 +1100,13 @@ check('CardFooter peer Button equal-width semantic only when editorial',()=>{
   const html=read('preview-01.html');
   assert.match(css,/\.qxframe9a7c2-card-footer\.is-source-peer-actions>\.qxframe9a7c2-button\{flex:var\(--qxframe9a7c2-theme-card-footer-peer-flex,0 1 auto\)/);
   assert.ok(tokens.includes("L('card-footer-peer-flex'"));
-  assert.ok(compiler.includes("root['card-footer-peer-flex'] = editorial ? '1 1 0' : '0 1 auto'"));
+  assert.ok(compiler.includes("root['card-footer-peer-flex'] = editorial ? '1 1 auto' : '0 1 auto'"));
   assert.match(html,/data-card="social-links"[\s\S]*?card-footer pv-justify-end pv-gap-2 is-source-peer-actions/);
   const themeDefault=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
   assert.equal((themeDefault.match(/--qxframe9a7c2-theme-card-footer-peer-flex: 0 1 auto;/g)||[]).length,2);
   for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
-    assert.match(theme,new RegExp('--qxframe9a7c2-theme-card-footer-peer-flex: '+(style==='sera'?'1 1 0':'0 1 auto')+';'),'theme peer action role '+style);
+    assert.match(theme,new RegExp('--qxframe9a7c2-theme-card-footer-peer-flex: '+(style==='sera'?'1 1 auto':'0 1 auto')+';'),'theme peer action role '+style);
   }
 });
 

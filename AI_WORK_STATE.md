@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 Stage3 Sera Social Links peer action exact flex basis (CI pending)
+
+- Strong 304-paired-button lock exposed Sera Social Links Discard source width **134.81px**, old QX **118.77px** (both light/dark). First opt-in peer rule `flex:1 1 0` overshot to **151.42px**, confirming the source is NOT equal-width; upstream Sera `style-sera:flex-1` retains an intrinsic base in the source's computed layout. Correct single Theme token now emits **`flex:1 1 auto` for editorial Sera**, `0 1 auto` otherwise. This lets both actions gain an equal share of remaining row space without erasing different text intrinsic widths.
+- Prior candidate `77912bb8` same-Chromium pinned geometry gate FAILED exactly on those two values; no gate weakened, dimensions unchanged. Next HEAD must yield **304 Button source-paired visual-role passes**, plus existing 528 outer, 2,128 Item/Field, 384 Badge, 448 small Button gates and full CSS Schema. No production JS changes.
+- Offline QA active ONLY Social Links, one grouped inner footer region covering two Buttons; previous yellow cleared. Do not ship from failed build. Progress kept CREATEAPP-V3 total ~69%, Stage3 ~85% pending remaining full-pixel/manual owner acceptance.
+
+
 ## CURRENT — 2026-10-10 Stage3 full first-Button RGBA gate finds Sera peer sizing bug (CI pending)
 
 - A new source/QX **19 matched Card Groups × 8 Styles × light/dark = 304 first Button** gate compares exact source equivalent Button geometry/font and normalized sRGB colors. Neutral dark differences from prior diagnostic were transition sampling artefacts; override both renderers `animation:none!important;transition:none!important`. Upcoming Payments source first Button is Calendar day and QX first Button is nav, so explicitly not a matched pair.
