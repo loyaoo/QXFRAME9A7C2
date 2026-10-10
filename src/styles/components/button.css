@@ -402,3 +402,10 @@
 .qxframe9a7c2-button.is-label-nowrap{white-space:nowrap}
 
 
+
+/* Pointer focus is not Button :active: it is the persistent focus reached
+ * after a mouse click. Unlike keyboard :focus-visible, it has no outline;
+ * the Theme pointer halo is composed with the Button elevation. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:disabled):not(.is-disabled):not(.is-loading){
+  box-shadow:var(--_qxframe9a7c2-state-shadow),var(--qxframe9a7c2-theme-pointer-shadow,none)
+}

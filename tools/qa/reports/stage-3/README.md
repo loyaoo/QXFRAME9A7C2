@@ -1,3 +1,10 @@
+# Button and addon pointer halo role completion
+
+## CURRENT — 2026-10-10 Button pointer halo and actionable Addon focus parity
+- Previous batch supported Theme keyboard halo for Button and Theme pointer halo for Input/Select/InputGroup, but native Button pointer focus was missing. Added pointer-origin Button :focus shadow (no outline), composited with existing elevation and excluded disabled/loading. Clickable InputGroup Addon also maps independent focus-visible keyboard shadow and pointer :focus shadow; editor remains a separate border/focus owner.
+- Added static and actual Chromium regression for pointer-focused Button. No global :focus outline, no pressed/active semantics change; default Theme pointer-shadow none preserves baseline. Full QXFRAME + CSS Schema acceptance must pass on new HEAD.
+
+
 # Browser keyboard origin focus-event ordering
 
 ## CURRENT — 2026-10-10 FocusOrigin event ordering in native probe

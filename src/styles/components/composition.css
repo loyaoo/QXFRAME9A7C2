@@ -26,7 +26,7 @@
 }
 button.qxframe9a7c2-form-input-group-addon,a.qxframe9a7c2-form-input-group-addon,.qxframe9a7c2-form-input-group-addon.is-action{cursor:pointer;text-decoration:none}
 button.qxframe9a7c2-form-input-group-addon:hover,a.qxframe9a7c2-form-input-group-addon:hover,.qxframe9a7c2-form-input-group-addon.is-action:hover{background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text)}
-button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-input-group-addon:focus-visible,.qxframe9a7c2-form-input-group-addon.is-action:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);border-color:var(--_qxframe9a7c2-semantic-focus);box-shadow:none;z-index:var(--qxframe9a7c2-z-local-focus)}
+button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-input-group-addon:focus-visible,.qxframe9a7c2-form-input-group-addon.is-action:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);border-color:var(--_qxframe9a7c2-semantic-focus);box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none);z-index:var(--qxframe9a7c2-z-local-focus)}
 .qxframe9a7c2-form-input-group-addon>.qxframe9a7c2-form-check-input{--_qxframe9a7c2-form-check-size:calc(var(--_qxframe9a7c2-control-height) * .5);margin:0}
 .qxframe9a7c2-form-input-group-kbd{display:inline-flex;align-items:center;gap:.2em;padding:var(--_qxframe9a7c2-fixed-space-1) 0.375rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-bottom-width:var(--_qxframe9a7c2-fixed-form-kbd-border-bottom);border-radius:0.25rem;background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font:600 .78em/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .qxframe9a7c2-form-input-group-link{color:var(--qxframe9a7c2-theme-primary);text-decoration:none}
@@ -471,4 +471,11 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-fie
  * Control. Never let hover hide focus or any child disabled/error/warning. */
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-form-input.is-invalid)):not(:has(>.qxframe9a7c2-form-input.is-error)):not(:has(>.qxframe9a7c2-form-input.is-warning)){
   border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) 70%,var(--qxframe9a7c2-theme-ring))
+}
+
+/* Action Addons keep an independent pointer shadow only while THEY have
+ * real focus; they never steal the InputGroup Field's editor focus halo. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) button.qxframe9a7c2-form-input-group-addon:focus,
+html:not(.qxframe9a7c2-keyboard-focus-origin) a.qxframe9a7c2-form-input-group-addon:focus{
+  box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
 }

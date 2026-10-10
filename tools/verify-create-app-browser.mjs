@@ -1863,6 +1863,9 @@ try {
     assert.ok(r.nativeKeyboard.includes('0, 200, 0'),'standalone native keyboard halo visible: '+JSON.stringify(r));
     assert.ok(r.nativePointer.includes('255, 0, 0'),'standalone native pointer halo visible: '+JSON.stringify(r));
     assert.equal(r.child,'none','grouped input does not paint duplicate halo');
+    const button=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,b=d.querySelector('[data-card=social-links] .qxframe9a7c2-card-footer .qxframe9a7c2-button');if(!b)return{error:'missing native Button'};h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');b.focus();h.classList.remove('qxframe9a7c2-keyboard-focus-origin');const pointer=getComputedStyle(b).boxShadow;h.style.removeProperty('--qxframe9a7c2-theme-pointer-shadow');return{pointer}})()");
+    assert.ok(!button.error,JSON.stringify(button));
+    assert.ok(button.pointer.includes('255, 0, 0'),'Button pointer focus must paint Theme shadow: '+JSON.stringify(button));
   });
 
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
