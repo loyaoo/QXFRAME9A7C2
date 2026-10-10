@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 MD Button style-size step final source candidate
+- Source run `38021088496` now passed all prior Card/Item/Field checks through the 304 first-Button parity section. Remaining failure: only Maia, Luma, Rhea first MD Button width was -4px across 5 Cards × 2 modes; exactly one size-step (2px per side) missing after introducing explicit MD family Theme padding. Style MD Button mapping now adds .125rem to generic Control padding in these three source styles; Sera keeps .625rem editorial offset; all density levels still monotonic for every property and all generic inputs.
+- Keep strict 304 first-Button width/height/font/colors gate. Any new failures must be fixed, not suppressed; no current success claim. PR Draft, main/backup untouched.
+
+
 ## CURRENT — 2026-10-10 density/MD Button source regression and style mapping candidate
 - In QXFRAME `38020871123`, the fixed Tabs rail advanced the source gate beyond Lyra FAQ. Strict Sera Social Links then detected unequal source Footer Buttons **134.813px/168.047px** had become QX **151.422px/151.422px**. Cause: correcting incorrect control loose40 horizontal padding from 1.5rem to .875rem also changed Sera-specific md Button min-content clamp.
 - Correct architectural owner: new registered `button-md-padding-inline` Theme family slot. Sera md button retains its editorial +.625rem inset (original 1.5rem at loose40), generic controls follow monotone 28/32/36/40/44 density. No card-specific CSS or JS edits. Retain actual min-content source geometry strict gate. Static Sidebar hover selector migrated to distinct muted :hover:not(.is-active), not waived.

@@ -355,7 +355,11 @@ export function themeTokens(resolved) {
   root['button-sm-padding-inline']=rem(Math.max(.5,sourceSmInline[style]+(padding-DENSITY[sourceDensity[style]][1])));
   // Editorial Sera MD Button chrome is wider than generic controls. Keep
   // 28→44 density monotonic without altering source 134.813/168.047 widths.
-  root['button-md-padding-inline']=rem(padding+(editorial?.625:0));
+  // Maia/Luma/Rhea's source MD Button inset is one QX size-step larger
+  // than their generic form-field density. Keep one family mapping, not Card
+  // overrides: its delta remains constant under user density changes.
+  const mdButtonDelta=editorial?.625:(['maia','luma','rhea'].includes(style)?.125:0);
+  root['button-md-padding-inline']=rem(padding+mdButtonDelta);
   // Source Button size-sm is 14px for standard styles, 12.8px in Nova,
   // and 12px in Lyra/Mira/Sera. Unlike the generic QX size curve, the
   // source does NOT shrink icon-sm and text-sm typography by 2px.
