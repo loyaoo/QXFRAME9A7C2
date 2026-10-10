@@ -271,12 +271,12 @@ try {
         else for(let i=0;i<2;i++){
           const src=sourcePeer.buttons[i],qx=qxPeer.buttons[i];
           if(src.text!==qx.text)problems.push({i,text:[src.text,qx.text]});
-          for(const prop of ['x','w','fontSize','fontWeight','letterSpacing']){
+          for(const prop of ['x','w','fontSize','fontWeight','letterSpacing','textRangeWidth']){
             const a=parseFloat(src[prop]),b=parseFloat(qx[prop]);
             if(!Number.isFinite(a)||!Number.isFinite(b)||Math.abs(a-b)>.5)
               problems.push({i,prop,source:src[prop],qx:qx[prop]});
           }
-          for(const prop of ['flex','minWidth'])
+          for(const prop of ['flex','minWidth','whiteSpace'])
             if(src[prop]!==qx[prop])problems.push({i,prop,source:src[prop],qx:qx[prop]});
         }
         console.log('[stage3-social-peer-deep] '+JSON.stringify({style,mode:dark?'dark':'light',source:sourcePeer,qx:qxPeer,problems}));

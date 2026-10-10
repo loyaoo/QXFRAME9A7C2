@@ -1,3 +1,12 @@
+# Stage 3 source Button nowrap root cause
+
+## CURRENT — 2026-10-10 Sera Social Links source literal Button nowrap root-cause (CI pending)
+
+- Source-pinned same-Chromium log for HEAD `c63846a2` identified **actual** remaining discrepancy: source `whiteSpace:nowrap` on both Sera footer Buttons, QX `whiteSpace:normal`. Both already have identical 12px/600/1.2px, 24px horizontal padding, `flex:1 1 0%`, `min-width:auto`, border widths, 8px gap. Because QX text wrapped at its min-content threshold it distributed the 302.8px total equally (151.422px each) instead of source's natural min-content widths (134.813px / 168.047px). The correct shared opt-in rule now adds `white-space:nowrap`; no new forced widths, no style-specific override, no QX runtime JS edit. This is a genuine component flex/typography contract fix.
+- Extended strict source-pinned peer gate to compare `whiteSpace` and `textRangeWidth` for BOTH actions in Sera light/dark as well as prior x/width/font/flex/min-width assertions; static CSS regression also added. Existing 528 first Cards, 2,128 Item/Field, 384 Badge, 448 small Button and 304 first-Button source-gates retained (not weakened).
+- Prior HEAD `c63846a2`: CSS Schema SUCCESS `38012937231`, QXFRAME CI FAILED `38012937269` on exact peer widths only. New candidate requires two successful workflow runs on same tree and official Actions dist+docs artifact before Windows ZIP.
+- Active yellow offline QA ledger continues to include **only Social Links footer (2 Buttons)**. Progress stays Stage3 **~85%**, full CREATEAPP-V3 **~69%** until broad remaining pixel comparisons and owner Windows signoff. PR #265 remains Draft, main/backup untouched.
+
 # Stage 3 min-content Button peers source-proof
 
 ## CURRENT — 2026-10-10 Stage3 Sera true min-content Flex parity source-confirmed (new CI pending)
