@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 shared fixes QA ledger round normalization (CI pending)
+- HEAD `9adcb02b` batch spans InputGroup padding/focus, native Select arrow, popup motion, sidebar hover, Tabs height, density. Its QA ledger was normalized to exactly three Card groups and four interior role selectors (Buy Investment includes two regions), preventing double grouping and eliminating stale test expectations from the previous CheckField-only round.
+- Full source-locked browser and Release CI continue as the acceptance authority. PR #265 remains Draft, no main/backup edit. No premature Stage3 percentage credit.
+
+
 ## CURRENT — 2026-10-10 S3 user feedback multi-component batch (CI pending)
 - Baseline green HEAD `15c7f5a3`, QXFRAME `38019740808` and CSS Schema `38019740821` SUCCESS; PR #265 Draft.
 - Shared CSS and compiler changes: density 28/32/36/40/44 inline-padding monotonic; Tabs horizontal intrinsic viewport height; placement-aware popup from attached edge scaleY/scaleX (no point-scale); Sidebar muted hover distinct from active accent; connected InputGroup additive padding seam halves and wrapper-owned focus-visible (not child's outline); native Select browser-stable drawn chevron; nesting contract documented without claiming seamless nested-group support.

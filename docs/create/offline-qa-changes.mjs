@@ -1,16 +1,14 @@
 /** Current batch: seven shared role fixes, only affected current regions highlighted. */
 const groups = [
-  ['savings-targets','Buy Investment · InputGroup 接缝与整体焦点',[
-    ['.qxframe9a7c2-form-input-group','Amount 输入组合','Addon/Input 共用外框、接缝仅半间距、键盘焦点作用于整个外框','__QA_BUNDLE_HEAD__']
+  ['savings-targets','Buy Investment · InputGroup 与原生 Select',[
+    ['.qxframe9a7c2-form-input-group','Amount 输入组合','Addon/Input 共用外框、接缝仅半间距、键盘焦点作用于整个外框','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-select','Order Type 下拉箭头','CSS 绘制统一箭头，消除原生控件因浏览器不同导致的箭头差异','__QA_BUNDLE_HEAD__']
   ]],
   ['sidebar-nav','Workspace · hover / active 区分',[
     ['.qxframe9a7c2-sidebar-menu-button','SidebarMenuButton','hover 使用浅色 muted，is-active 使用主题 accent；醒目菜单强调不再污染 hover','__QA_BUNDLE_HEAD__']
   ]],
   ['faq','FAQ · Tabs 横向滚动高度',[
     ['.qxframe9a7c2-tabs-scroll','Tabs Scroll','移除横向 Scroll 固定高度，内容高度容纳 TabsTrigger 与 segmented padding','__QA_BUNDLE_HEAD__']
-  ]],
-  ['savings-targets','Buy Investment · 原生 Select 下拉箭头',[
-    ['.qxframe9a7c2-form-select','Order Type 下拉箭头','CSS 绘制统一箭头，消除原生控件因浏览器不同导致的箭头差异','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

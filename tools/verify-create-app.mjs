@@ -19,18 +19,22 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const overlay=read('offline-qa-changes.css');
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
-  const current={'notification-settings':['.qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input']};
+  const current={
+    'savings-targets':['.qxframe9a7c2-form-input-group','.qxframe9a7c2-form-select'],
+    'sidebar-nav':['.qxframe9a7c2-sidebar-menu-button'],
+    'faq':['.qxframe9a7c2-tabs-scroll']
+  };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  for(const previous of ['social-links','dividend-income','payout-threshold','preferences','savings-targets',
+  for(const previous of ['social-links','dividend-income','payout-threshold','preferences','notification-settings',
     'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
-    'release-catalog','upcoming-payments','qr-connect','cover-art','faq','new-milestone'])
+    'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'one grouped CheckField selector for five current checkbox indicators');
+  assert.equal(count,4,'four exact current round regions across three Cards');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
