@@ -12,6 +12,23 @@ const checks = [];
 const check = (name, fn) => { fn(); checks.push(name); };
 
 const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview.css', 'preview.js', 'preview-cards.js'];
+check('Canonical Field structure shares one CSS owner with native Form', () => {
+  const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  const docs=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
+  for(const selector of ['.qxframe9a7c2-field,.qxframe9a7c2-form-field{',
+    '.qxframe9a7c2-field-label,.qxframe9a7c2-form-label {',
+    '.qxframe9a7c2-field-description,.qxframe9a7c2-form-description {',
+    '.qxframe9a7c2-field-error,.qxframe9a7c2-form-feedback{'])
+    assert.ok(native.includes(selector),'Field and native Form share one owner: '+selector);
+  for(const selector of ['.qxframe9a7c2-field-set,.qxframe9a7c2-form-fieldset{',
+    '.qxframe9a7c2-field-set>.qxframe9a7c2-field-legend,',
+    '.qxframe9a7c2-field-separator,.qxframe9a7c2-divider{'])
+    assert.ok(composition.includes(selector),'Field composition shares owner: '+selector);
+  assert.match(docs,/Field · Shared structure/,'working docs example');
+  assert.match(docs,/qxframe9a7c2-field-error/,'FieldError docs');
+});
+
 check('files', () => { for (const f of FILES) assert.ok(fs.existsSync(path.join(dir, f)), 'missing docs/create/' + f); });
 
 check('offline changes ledger and packaging are opt-in and do not contaminate production Create HTML', () => {

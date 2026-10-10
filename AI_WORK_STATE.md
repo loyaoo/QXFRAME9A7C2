@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-10 CREATEAPP-V3-S3-FIELD-001: shared Field foundation (CI pending)
+- Resumed verified PR #265 Open/Draft and HEAD `fc489c9c5b72ea106febeace9c31f7af86808251`; QXFRAME CI #38030203282 and CSS Schema #38030203246 SUCCESS **at the old HEAD only**. Frozen source geometry and previously valid Focus shadow/hover are unchanged.
+- Task IDs: CREATEAPP-V3-S3-FIELD-001 (active), CREATEAPP-V3-S3-SELECTGROUP-002, CREATEAPP-V3-S3-CHOICE-COMPOSE-003, CREATEAPP-V3-S3-STATE-004, CREATEAPP-V3-S3-PREVIEW01-CLOSEOUT-005 (not started).
+- Concrete first delta: universal Field, FieldLabel, FieldDescription, FieldError, FieldSet/Legend and FieldSeparator now share existing Form/Divider CSS owners; docs Form demos include working native label/input/error/fieldset structure and regression assertions. No standalone duplicate Field drawing owner, no component JS changes.
+- **Incomplete / do not credit as migrated:** all CheckField CSS/markup and old SelectGroup classes still need removal; none/outline/muted, docs full replacement, nine Floating positions, connected, seven state axes, browser and source-locked geometry QA are NOT verified by this foundation commit.
+- Revised scope estimate (provisional): overall 65%, Stage3 75%, FIELD-001 15%. This reflects new tasks added, not a rollback of old completed work. Do not claim this batch delivered or provide Windows ZIP until both new HEAD CI pass; keep PR Draft, do not merge.
+- Next exact step: change CheckField and SelectGroup source/Preview/docs/tests together, preserve source-locked 0.5px geometry; then two complete CIs and same-HEAD dist/docs artifact plus Windows offline overlay.
+
 # QXFRAME9A7C2 AI Work State
 
 ## CURRENT — 2026-10-10 JS Input inside connected composition: shared halo/hover ownership (CI pending)
