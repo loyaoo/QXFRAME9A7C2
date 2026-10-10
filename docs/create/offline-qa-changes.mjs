@@ -1,14 +1,11 @@
-/** Current batch: seven shared role fixes, only affected current regions highlighted. */
+/** Current 2026-10-10 feedback: group pointer focus, segmented rail padding and native SVG chevron. */
 const groups = [
-  ['savings-targets','Buy Investment · InputGroup 与原生 Select',[
-    ['.qxframe9a7c2-form-input-group','Amount 输入组合','Addon/Input 共用外框、接缝仅半间距、键盘焦点作用于整个外框','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-select','Order Type 下拉箭头','CSS 绘制统一箭头，消除原生控件因浏览器不同导致的箭头差异','__QA_BUNDLE_HEAD__']
+  ['savings-targets','InputGroup pointer focus + Select SVG chevron',[
+    ['.qxframe9a7c2-form-input-group','Pointer/keyboard focus owners','Mouse focus consumes the Theme pointer-width/opacity/offset; keyboard outline stays on grouped border owner','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-form-select','Native SVG chevron','One rounded-stroke chevron-down SVG with light/dark strokes (no CSS triangular artefacts)','__QA_BUNDLE_HEAD__']
   ]],
-  ['sidebar-nav','Workspace · hover / active 区分',[
-    ['.qxframe9a7c2-sidebar-menu-button','SidebarMenuButton','hover 使用浅色 muted，is-active 使用主题 accent；醒目菜单强调不再污染 hover','__QA_BUNDLE_HEAD__']
-  ]],
-  ['faq','FAQ · Tabs 横向滚动高度',[
-    ['.qxframe9a7c2-tabs-scroll','Tabs Scroll','移除横向 Scroll 固定高度，内容高度容纳 TabsTrigger 与 segmented padding','__QA_BUNDLE_HEAD__']
+  ['faq','Segmented Tabs rail block padding',[
+    ['.qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport','Tabs Scroll viewport','Restore 4px top/bottom padding, keep TabItem inside Scroll and preserve source Card overall height','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

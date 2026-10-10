@@ -139,16 +139,18 @@
 .qxframe9a7c2-native-form input[type="tel"]::placeholder,
 .qxframe9a7c2-native-form textarea::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}
 .qxframe9a7c2-form-textarea,.qxframe9a7c2-native-form textarea{min-height:5rem;padding-block:0.5rem;resize:vertical}
-/* Draw the same theme-following chevron in supported browsers instead of
- * exposing OS-specific native select arrows. JS Select retains its own icon. */
+/* Native Select: match the JS Select chevron-down SVG geometry (24px
+ * viewBox, m6 9 6 6 6-6, round 2px stroke), not CSS triangles.
+ * Encoded external SVG cannot inherit currentColor, so use explicit
+ * light/dark neutral strokes and allow Theme to replace the image token. */
 .qxframe9a7c2-form-select,.qxframe9a7c2-native-form select{
   appearance:none;
   cursor:pointer;
   padding-inline-end:max(1.75rem,calc(var(--_qxframe9a7c2-control-padding-inline) + 1rem));
-  background-image:linear-gradient(45deg,transparent 49%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 51%);
+  background-image:var(--qxframe9a7c2-form-select-arrow-image,light-dark(url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d4d4d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")));
   background-repeat:no-repeat;
-  background-position:calc(100% - 1rem) 50%,calc(100% - .6875rem) 50%;
-  background-size:.375rem .375rem
+  background-position:right var(--_qxframe9a7c2-control-padding-inline) center;
+  background-size:1rem 1rem
 }
 .qxframe9a7c2-form-input:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-form-select:hover:not(:disabled):not([readonly]):not(:focus),

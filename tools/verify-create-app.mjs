@@ -21,8 +21,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const current={
     'savings-targets':['.qxframe9a7c2-form-input-group','.qxframe9a7c2-form-select'],
-    'sidebar-nav':['.qxframe9a7c2-sidebar-menu-button'],
-    'faq':['.qxframe9a7c2-tabs-scroll']
+    'faq':['.qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
@@ -30,11 +29,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  for(const previous of ['social-links','dividend-income','payout-threshold','preferences','notification-settings',
+  for(const previous of ['social-links','sidebar-nav','dividend-income','payout-threshold','preferences','notification-settings',
     'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'four exact current round regions across three Cards');
+  assert.equal(count,3,'three exact current round regions across two Cards');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -84,7 +83,11 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   for(let col=0;col<4;col++)for(let i=1;i<rows.length;i++)
     assert.ok(rows[i][col]>=rows[i-1][col],'density '+i+' property '+col+' is monotonic');
   assert.match(css('tabs'),/\.qxframe9a7c2-tabs-scroll\{width:100%;height:var\(--_qxframe9a7c2-tabs-height\)/,'horizontal Tabs root uses shared tab height');
-  assert.match(css('tabs'),/qxframe9a7c2-scroll-viewport\{padding:0 0\.25rem;/,'horizontal segmented viewport does not subtract tab height');
+  assert.match(css('tabs'),/is-segmented:not\(\.is-vertical\) \.qxframe9a7c2-tabs-scroll\{height:calc\(var\(--_qxframe9a7c2-tabs-height\) \+ \.5rem\)/,'segmented Scroll adds the full vertical 8px rail budget');
+  assert.match(css('tabs'),/\.qxframe9a7c2-scroll-viewport\{box-sizing:border-box;padding:0\.25rem;/,'viewport 4px vertical padding restored without overflow');
+  assert.match(css('form-native'),/form-select-arrow-image,light-dark\(url\("data:image\/svg\+xml/,'native Select arrow is a theme-overridable SVG');
+  assert.match(css('form-native'),/m6 9 6 6 6-6/,'native SVG chevron follows JS icon path');
+  assert.match(fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8'),/form-input-group-field:focus-within[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes pointer Theme token');
   assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');
   assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
   assert.match(css('composition'),/sidebar-menu-button:hover:not\(\.is-active\)[^\{]*\{[^}]*theme-muted/,'muted hover');

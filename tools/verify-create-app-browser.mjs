@@ -1841,7 +1841,18 @@ try {
     assert.ok(Math.abs(r.addonRight-r.inputLeft)<.6,'both sides of internal seam share half padding: '+JSON.stringify(r));
     assert.ok(r.viewportHeight+.5>=r.tabHeight,'Tabs horizontal viewport cannot clip TabItem: '+JSON.stringify(r));
     assert.equal(r.appearance,'none','native select uses standardized arrow');
-    assert.ok(r.arrow.includes('gradient'),'native select draws its own chevron');
+    assert.ok(r.arrow.includes('svg+xml'),'native Select displays a single SVG chevron');
+  });
+
+  await step('Owner follow-up: pointer focus tokens, 4px segmented Tabs viewport and SVG chevron',async()=>{
+    const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-form-input-group'),input=group.querySelector('.qxframe9a7c2-form-input'),tabs=d.querySelector('[data-card=faq] .qxframe9a7c2-tabs'),scroll=tabs.querySelector('.qxframe9a7c2-tabs-scroll'),viewport=scroll.querySelector('.qxframe9a7c2-scroll-viewport'),item=tabs.querySelector('.qxframe9a7c2-tabs-tab');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');h.style.setProperty('--qxframe9a7c2-theme-pointer-width','3px');h.style.setProperty('--qxframe9a7c2-theme-pointer-offset','2px');h.style.setProperty('--qxframe9a7c2-theme-pointer-opacity','100%');input.focus();let pointer=getComputedStyle(group),w=getComputedStyle(viewport),g=viewport.getBoundingClientRect(),t=item.getBoundingClientRect(),sr=scroll.getBoundingClientRect(),card=d.querySelector('[data-card=faq]').getBoundingClientRect();let out={pointerWidth:pointer.outlineWidth,pointerOffset:pointer.outlineOffset,paddingTop:parseFloat(w.paddingTop),paddingBottom:parseFloat(w.paddingBottom),withinTop:t.top>=g.top+parseFloat(w.paddingTop)-.6,withinBottom:t.bottom<=g.bottom-parseFloat(w.paddingBottom)+.6,tabHeight:t.height,railHeight:sr.height,cardHeight:card.height};h.classList.add('qxframe9a7c2-keyboard-focus-origin');const keyboard=getComputedStyle(group);out.keyboardWidth=keyboard.outlineWidth;out.keyboardOffset=keyboard.outlineOffset;h.style.removeProperty('--qxframe9a7c2-theme-pointer-width');h.style.removeProperty('--qxframe9a7c2-theme-pointer-offset');h.style.removeProperty('--qxframe9a7c2-theme-pointer-opacity');return out})()");
+    assert.equal(r.pointerWidth,'3px','InputGroup visual owner respects mouse focus Theme width');
+    assert.equal(r.pointerOffset,'2px','InputGroup visual owner respects mouse focus Theme offset');
+    assert.equal(r.keyboardWidth,'2px','keyboard Group outline is a separate 2px contract');
+    assert.equal(r.paddingTop,4,'segmented viewport has 4px top inset');
+    assert.equal(r.paddingBottom,4,'segmented viewport has 4px bottom inset');
+    assert.ok(r.withinTop&&r.withinBottom,'entire TabItem must be inside its padded Scroll viewport: '+JSON.stringify(r));
+    assert.ok(r.railHeight+1>=r.tabHeight+8,'rail reserves padding outside trigger height');
   });
 
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));

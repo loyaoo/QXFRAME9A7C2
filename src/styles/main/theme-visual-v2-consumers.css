@@ -20,6 +20,16 @@
     outline-offset: var(--qxframe9a7c2-theme-pointer-offset);
   }
 
+  /* InputGroup does not own real focus; its connected border owner must
+     consume the SAME pointer-focus tokens as standalone Input/Select.
+     Source input keeps outline:none in grouped mode; the root/Field receives
+     a mouse-only visual outline while keyboard uses 2px focus-visible. */
+  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
+  html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:focus-within {
+    outline: var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab, var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity), transparent);
+    outline-offset: var(--qxframe9a7c2-theme-pointer-offset);
+  }
+
   /* Result's legacy status class names are not the framework-wide is-* Type
      aliases. Bind them to the already-shared v2 current-Type resolver instead
      of duplicating the shadcn soft formula in a second module. */

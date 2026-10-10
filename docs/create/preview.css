@@ -135,11 +135,11 @@ body.create-preview-body {
 .pv-nav-card .pv-nav-group:last-child { padding-top: 0.25rem; }
 .pv-nav { display: flex; flex-direction: column; gap: var(--qxframe9a7c2-theme-sidebar-menu-gap, 0); margin: 0; padding: 0; list-style: none; }
 .pv-nav-card .qxframe9a7c2-divider { margin: 0 0.5rem; }
-/* The source TabsList height includes its inner rail padding.
- * QX segmented Tabs exposes the tab-height slot; compensate its
- * 3px rail chrome on both edges locally, not via an app-owned Tabs. */
+/* The pinned source rail is control-height (e.g. 32px): 4px block insets
+ * + a 24px TabItem. Framework segmented Tabs, not this app stylesheet,
+ * owns those rail insets. Preview maps just the source tab height. */
 .pv-tabs-full {
-  --qxframe9a7c2-tabs-height:calc(max(2rem,var(--qxframe9a7c2-theme-control-height)) - .375rem);
+  --qxframe9a7c2-tabs-height:calc(max(2rem,var(--qxframe9a7c2-theme-control-height)) - .5rem);
   margin-bottom:.5rem;
 }
 /* Pinned shadcn FieldSeparator has a 20px layout slot and 1px visual

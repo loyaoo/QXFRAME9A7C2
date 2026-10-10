@@ -20,3 +20,10 @@
 ## 约束与后续验证
 
 Theme → 组件映射，不产生卡片私有 `pv-*` 样式或新增 JS Controller。浏览器回归需覆盖键盘/鼠标轮廓所有权、交叉焦点、Addon 两端、混合段、缩放、溢出及已支持的 InputGroupField。当前只将三种主要结构纳入共享 CSS；组合嵌套并非全部自动无缝连接。
+
+## 2026-10-10 追加：Pointer Focus、Tabs 和原生 Select
+
+- 连体 InputGroup / InputGroupField 是鼠标与键盘焦点的**视觉所有者**；input/control 仍是 DOM 焦点及交互所有者。
+- 键盘焦点继续使用框架 2px focus-visible；鼠标焦点在 Theme v2 的 `@scope (:root)` 中复用独立 Input 的 `--qxframe9a7c2-theme-pointer-width/opacity/offset`，默认 0 宽保留 border feedback，配置不为 0 时由 Group 外框单独绘制；避免内部重复 outline。
+- 分段 Tabs 不允许以删除滚动容器上下 padding 为代价修剪裁切。应使用固定 Scroll 轨道 = TabItem 高度 + 2 × 4px，Viewport 使用 border-box，Panels 不重复提供在当前源 Source Card 中已由 Tabs 轨道消费的 6px 空白；普通 Tabs 与垂直 Tabs 保留既有职责。
+- 原生 Select 的箭头为与 JS Select 相同的 round-stroke SVG chevron-down，使用可替换 CSS 图像 token（数据 URI 图像不继承 currentColor，所以光暗模式分别提供中性色笔画）。
