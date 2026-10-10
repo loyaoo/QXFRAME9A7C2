@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-10 FocusOwner settled-paint browser test (new CI pending)
+- CSS Schema #38043988823 Chromium diagnostic proved input actually focused, :focus-visible=true, root FocusOrigin keyboard=true, computed Surface `--_qxframe9a7c2-choice-ring` and Theme focus-shadow both 3px green. Immediate computed box-shadow was 0px transparent because the Surface transitions `box-shadow` from no ring; synchronous diagnostic sampled frame 0. Set ONLY the test-created Surface's `transition:none` to measure resolved paint without animating; no production CSS/motion weakened. Re-run full both CI same HEAD and package official Actions ZIP only after success.
+
 ## CURRENT — 2026-10-10 FocusOrigin Chromium computed-style diagnostics (new CI pending)
 - CSS Schema #38043676141 reached browser but keyboard shadow remained absent after moving selectors outside scope. New Chromium acceptance logs precise native input focus flag, `:focus`/`:focus-visible`, document FocusOrigin class, Surface custom ring var, Theme shadow token and computed box-shadow, as well as pointer projection. Test requirements unchanged; use this evidence to resolve paint owner before accepting.
 
