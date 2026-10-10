@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 browser focus halo ownership regression gate (CI pending)
+- Added Chromium browser checks that force distinct visible 3px pointer red and keyboard green box-shadows to verify computed focus ownership on actual composed InputGroup vs standalone native Input; child Input must not draw a duplicate halo. Preserves existing pointer-vs-keyboard outline width tests. Added static test proving `focusColor=theme` sets `focus` AND `ring` to primary and baseline default shadow slots remain none.
+- This gate is diagnostic/acceptance only, no new Create Card changes; offline highlighted regions unchanged. PR Draft and all strict source gates retained.
+
+
 ## CURRENT — 2026-10-10 Focus halo/color & interactive state consistency batch — CI pending
 - Baseline verified 458cf9aa QXFRAME 38023498729 and CSS Schema 38023498714 SUCCESS, PR #265 Draft. Owner reported missing hover/active visual state, no real focus shadows, no consistent Theme-colored focus border.
 - Source audit: Button already has hover/active and state classes; native Form fields have hover, JS Input only is-hovered. Existing focusColor toggle (mono/theme) only recolored `focus` while components' border used unrelated `ring`. Corrected `focusColor=theme` to link both `focus` and `ring` to primary. Added only two Theme presentation slots `focus-shadow` and `pointer-shadow` (none in baseline). Each ring preset yields real box-shadow, with default QX focus unchanged. Native/JS Input, InputGroup and Button consume the shared roles; group owns shadow, child doesn't; Button retains base elevation. Added native hover for JS Input and V2 field family border hover mapping; no spurious pressed editing state and no core JS change.

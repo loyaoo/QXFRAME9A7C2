@@ -1855,6 +1855,16 @@ try {
     assert.ok(r.railHeight+1>=r.tabHeight+8,'rail reserves padding outside trigger height');
   });
 
+  await step('Owner focus halo: actual shadow owner and pointer/keyboard modality',async()=>{
+    const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-form-input-group'),inner=group?.querySelector('.qxframe9a7c2-form-input'),native=d.querySelector('[data-card=social-links] .qxframe9a7c2-form-input');if(!group||!inner||!native)return {error:'missing input/group roles'};h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');h.style.setProperty('--qxframe9a7c2-theme-focus-shadow','0 0 0 3px rgb(0, 200, 0)');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');inner.focus();const pointer=getComputedStyle(group).boxShadow,child=getComputedStyle(inner).boxShadow;h.classList.add('qxframe9a7c2-keyboard-focus-origin');const keyboard=getComputedStyle(group).boxShadow;native.focus();const nativeKeyboard=getComputedStyle(native).boxShadow;h.classList.remove('qxframe9a7c2-keyboard-focus-origin');const nativePointer=getComputedStyle(native).boxShadow;h.style.removeProperty('--qxframe9a7c2-theme-pointer-shadow');h.style.removeProperty('--qxframe9a7c2-theme-focus-shadow');return {pointer,child,keyboard,nativeKeyboard,nativePointer};})()");
+    assert.ok(!r.error,JSON.stringify(r));
+    assert.ok(r.pointer.includes('255, 0, 0'),'group pointer halo is themed and rendered: '+JSON.stringify(r));
+    assert.ok(r.keyboard.includes('0, 200, 0'),'group keyboard halo is themed and rendered: '+JSON.stringify(r));
+    assert.ok(r.nativeKeyboard.includes('0, 200, 0'),'standalone native keyboard halo visible: '+JSON.stringify(r));
+    assert.ok(r.nativePointer.includes('255, 0, 0'),'standalone native pointer halo visible: '+JSON.stringify(r));
+    assert.equal(r.child,'none','grouped input does not paint duplicate halo');
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {

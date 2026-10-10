@@ -110,6 +110,12 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   assert.match(generated,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0/,'keyboard ring has a genuine shadow');
   assert.match(generated,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0/,'pointer ring has a genuine shadow');
   assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'Theme ring is emitted');
+  const colorTokens=Object.fromEntries([...generated.matchAll(/--qxframe9a7c2-theme-([\w-]+):\s*([^;]+);/g)].map(x=>[x[1],x[2]]));
+  assert.equal(colorTokens.focus,colorTokens.primary,'selected theme sets focus outline to primary');
+  assert.equal(colorTokens.ring,colorTokens.primary,'selected theme sets actual control focus border to primary');
+  const baseline=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
+  assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*none/,'baseline keyboard default unchanged');
+  assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*none/,'baseline pointer default unchanged');
   assert.match(source('docs/create/compiler.js'),/light\.ring = light\.primary;/,'theme-colored ring feeds focus border');
   assert.match(source('src/styles/components/focus-closeout.css'),/theme-pointer-shadow/,'native pointer ring');
   assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');

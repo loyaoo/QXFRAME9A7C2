@@ -1,3 +1,10 @@
+# 2026-10-10 pointer/keyboard ring actual browser regression gate
+
+## CURRENT — 2026-10-10 browser focus halo ownership regression gate (CI pending)
+- Added Chromium browser checks that force distinct visible 3px pointer red and keyboard green box-shadows to verify computed focus ownership on actual composed InputGroup vs standalone native Input; child Input must not draw a duplicate halo. Preserves existing pointer-vs-keyboard outline width tests. Added static test proving `focusColor=theme` sets `focus` AND `ring` to primary and baseline default shadow slots remain none.
+- This gate is diagnostic/acceptance only, no new Create Card changes; offline highlighted regions unchanged. PR Draft and all strict source gates retained.
+
+
 # 2026-10-10 shared interactive state and focus halo/color batch
 
 ## CURRENT — 2026-10-10 Focus halo/color & interactive state consistency batch — CI pending
