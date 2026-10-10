@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 exact focus rendering diagnostic before repair
+- Latest HEAD `d1ac79f4` two CIs `38026688662/38026688667` failed only in Chromium Button pointer-shadow verification. Group pointer/keyboard and native Input pointer/keyboard probes pass; source geometry and Windows Tools succeed.
+- Added focused Button diagnostic: active element match, :focus / :focus-visible, FocusOrigin class, token inheritance, current V2 shadow, selector matching and disabled state to isolate failure rather than loosen test or guess. No production CSS changed; next CI yields evidence. PR Draft, no merge.
+
+
 ## CURRENT — 2026-10-10 Button pointer halo and actionable Addon focus parity
 - Previous batch supported Theme keyboard halo for Button and Theme pointer halo for Input/Select/InputGroup, but native Button pointer focus was missing. Added pointer-origin Button :focus shadow (no outline), composited with existing elevation and excluded disabled/loading. Clickable InputGroup Addon also maps independent focus-visible keyboard shadow and pointer :focus shadow; editor remains a separate border/focus owner.
 - Added static and actual Chromium regression for pointer-focused Button. No global :focus outline, no pressed/active semantics change; default Theme pointer-shadow none preserves baseline. Full QXFRAME + CSS Schema acceptance must pass on new HEAD.

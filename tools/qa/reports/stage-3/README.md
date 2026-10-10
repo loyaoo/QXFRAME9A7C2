@@ -1,3 +1,10 @@
+# Current focus shadow diagnostic
+
+## CURRENT — 2026-10-10 exact focus rendering diagnostic before repair
+- Latest HEAD `d1ac79f4` two CIs `38026688662/38026688667` failed only in Chromium Button pointer-shadow verification. Group pointer/keyboard and native Input pointer/keyboard probes pass; source geometry and Windows Tools succeed.
+- Added focused Button diagnostic: active element match, :focus / :focus-visible, FocusOrigin class, token inheritance, current V2 shadow, selector matching and disabled state to isolate failure rather than loosen test or guess. No production CSS changed; next CI yields evidence. PR Draft, no merge.
+
+
 # Button and addon pointer halo role completion
 
 ## CURRENT — 2026-10-10 Button pointer halo and actionable Addon focus parity
