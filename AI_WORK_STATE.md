@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-10 CREATEAPP-V3-S3 Field/SelectGroup + seven independent Hover/Focus axes (CI pending)
+- Baseline 48fff22873b2355c8c00f99df56bca73bd36aebe verified: QXFRAME CI #38051099999 SUCCESS, CSS Schema Acceptance #38051099998 SUCCESS. The old pending text below describes earlier candidate commits only; do not rerun them.
+- This batch: Connected Muted and Outline now share Theme corner/edge geometry; seven independent Hover/Focus panel axes, URL/strict CSS header roundtrip and token compilation in both light/dark modes, plus shared input hover paint slots. Regression assertions added. PR #265 remains Draft/unmerged.
+- CI is pending for the *new* HEAD and must pass both official workflows before a same-HEAD artifact is accepted. Preview 01 has no newly touched cards in this batch, so only previous highlight entries are to be cleared. Stage4/5 not started; remaining full-consumer hover/focus parity and Stage3 inner-role visual QA cannot be treated as complete.
+
 ## CURRENT — 2026-10-10 SelectGroup focused feedback border follows final Surface paint (CI pending)
 - At `03de08eee7b10be16eb8461010ff79d07150679b`, both release and CSS Schema failure reached the new Chromium Field/SelectGroup feedback fixture: invalid focused Outline Surface was gray (`oklch(0.708 0 0)`) instead of destructive red. Source pinned 528 geometry SUCCESS; previous CI remains red.
 - Fix on the *existing* single FocusOrigin/Field status selectors: explicitly paint `border-color` as well as status custom property, so actual border cannot consume neutral fallback after a pointer focus. Applied for invalid and warning, both canonical Field and legacy FormField. Do not disable or weaken the real browser assertion.

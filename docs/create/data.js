@@ -138,17 +138,29 @@ export const EXT_AXES = [
     { value: 'none', label: '无描边', qx: true }, { value: 'faint', label: '淡描边' }, { value: 'clear', label: '清晰描边' },
     { value: 'strong', label: '强描边', qx: true }],
     defaults: S('clear', 'clear', 'clear', 'clear', 'clear', 'faint', 'faint', 'faint') },
-  { key: 'keyboardFocus', param: 'kfocus', label: '键盘焦点样式', group: 'focus', followLabel: '跟随风格（QX 描边）', options: [
-    { value: 'ring', label: '光环' }, { value: 'outline', label: '描边' }],
-    // "跟随风格" = the existing QX keyboard focus (2px outline, -1px offset).
-    defaults: S('qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx') },
-  { key: 'pointerFocus', param: 'pfocus', label: '鼠标焦点样式', group: 'focus', followLabel: '跟随风格（QX 默认）', options: [
-    { value: 'ring', label: '光环' }, { value: 'outline', label: '描边' }],
-    // "跟随风格" = the existing QX pointer focus (per-component background / border change).
-    defaults: S('qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx') },
-  { key: 'focusColor', param: 'fcolor', label: '焦点颜色', group: 'focus', options: [
-    { value: 'mono', label: '黑白' }, { value: 'theme', label: '主题色' }],
-    defaults: S('mono', 'mono', 'mono', 'mono', 'mono', 'mono', 'mono', 'mono') },
+  // Seven independent Hover/Focus axes. An absent override always means follow Style.
+  { key: 'hoverStyle', param: 'hover-style', label: 'Hover 样式', group: 'focus', options: [
+    { value: 'border', label: '边框' }, { value: 'background', label: '背景' },
+    { value: 'both', label: '边框 + 背景' }, { value: 'none', label: '无' }],
+    defaults: S(...Array(8).fill('border')) },
+  { key: 'hoverColor', param: 'hover-color', label: 'Hover 颜色', group: 'focus', options: [
+    { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
+    defaults: S(...Array(8).fill('neutral')) },
+  { key: 'keyboardFocus', param: 'kfocus', label: '键盘 Focus 样式', group: 'focus', followLabel: '跟随风格（QX Outline）', options: [
+    { value: 'border', label: '边框' }, { value: 'ring', label: '光环' }, { value: 'outline', label: '外轮廓' }],
+    defaults: S(...Array(8).fill('outline')) },
+  { key: 'keyboardFocusColor', param: 'kfocus-color', label: '键盘 Focus 颜色', group: 'focus', options: [
+    { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
+    defaults: S(...Array(8).fill('black-white')) },
+  { key: 'pointerFocus', param: 'pfocus', label: '鼠标 Focus 样式', group: 'focus', followLabel: '跟随风格（QX Border）', options: [
+    { value: 'border', label: '边框' }, { value: 'ring', label: '光环' }, { value: 'outline', label: '外轮廓' }],
+    defaults: S(...Array(8).fill('border')) },
+  { key: 'pointerFocusColor', param: 'pfocus-color', label: '鼠标 Focus 颜色', group: 'focus', options: [
+    { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
+    defaults: S(...Array(8).fill('black-white')) },
+  { key: 'focusBackground', param: 'focus-bg', label: 'Focus 背景', group: 'focus', options: [
+    { value: 'keep', label: '保持当前背景' }, { value: 'parent-surface', label: '父级表面' }],
+    defaults: S(...Array(8).fill('keep')) },
   { key: 'hairline', param: 'hairline', label: '边界清晰度', group: 'advanced', qx: true, options: [
     { value: 'thin', label: '细' }, { value: 'standard', label: '标准' }, { value: 'clear', label: '清晰' }],
     defaults: S('standard', 'standard', 'standard', 'standard', 'standard', 'standard', 'standard', 'standard') },

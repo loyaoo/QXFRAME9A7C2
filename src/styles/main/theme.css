@@ -77,6 +77,8 @@
   --qxframe9a7c2-theme-thumb: oklch(1 0 0);
   --qxframe9a7c2-theme-thumb-border: oklch(0.708 0 0);
   --qxframe9a7c2-theme-focus: oklch(0 0 0);
+  --qxframe9a7c2-theme-pointer-focus: oklch(0 0 0);
+  --qxframe9a7c2-theme-hover-color: oklch(0.708 0 0);
   --qxframe9a7c2-theme-font-sans: "Segoe UI", Arial, "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
   --qxframe9a7c2-theme-font-heading: "Segoe UI", Arial, "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
   --qxframe9a7c2-theme-font-mono: Consolas, "Cascadia Mono", Menlo, "Microsoft YaHei", monospace;
@@ -201,6 +203,9 @@
   --qxframe9a7c2-theme-pointer-opacity: 100%;
   --qxframe9a7c2-theme-pointer-offset: 0;
   --qxframe9a7c2-theme-pointer-shadow: none;
+  --qxframe9a7c2-theme-hover-border-strength: 30%;
+  --qxframe9a7c2-theme-hover-background-strength: 0%;
+  --qxframe9a7c2-theme-focus-background-strength: 0%;
   --qxframe9a7c2-theme-duration-xs: 100ms;
   --qxframe9a7c2-theme-duration-sm: 150ms;
   --qxframe9a7c2-theme-duration-md: 200ms;
@@ -286,6 +291,8 @@
   --qxframe9a7c2-theme-thumb: oklch(1 0 0);
   --qxframe9a7c2-theme-thumb-border: oklch(0.556 0 0);
   --qxframe9a7c2-theme-focus: oklch(1 0 0);
+  --qxframe9a7c2-theme-pointer-focus: oklch(1 0 0);
+  --qxframe9a7c2-theme-hover-color: oklch(0.556 0 0);
   --qxframe9a7c2-theme-font-sans: "Segoe UI", Arial, "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
   --qxframe9a7c2-theme-font-heading: "Segoe UI", Arial, "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
   --qxframe9a7c2-theme-font-mono: Consolas, "Cascadia Mono", Menlo, "Microsoft YaHei", monospace;
@@ -410,6 +417,9 @@
   --qxframe9a7c2-theme-pointer-opacity: 100%;
   --qxframe9a7c2-theme-pointer-offset: 0;
   --qxframe9a7c2-theme-pointer-shadow: none;
+  --qxframe9a7c2-theme-hover-border-strength: 30%;
+  --qxframe9a7c2-theme-hover-background-strength: 0%;
+  --qxframe9a7c2-theme-focus-background-strength: 0%;
   --qxframe9a7c2-theme-duration-xs: 100ms;
   --qxframe9a7c2-theme-duration-sm: 150ms;
   --qxframe9a7c2-theme-duration-md: 200ms;

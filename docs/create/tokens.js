@@ -92,7 +92,9 @@ export const THEME_TOKENS = [
   C('slider-rail', 'Slider / progress rail'),
   C('thumb', 'Slider thumb'),
   C('thumb-border', 'Slider thumb border'),
-  C('focus', 'Focus color (focus color axis)'),
+  C('focus', 'Keyboard focus color'),
+  C('pointer-focus', 'Pointer focus color, independent of keyboard focus'),
+  C('hover-color', 'Hover accent color independent of focus'),
 
   // Typography.
   L('font-sans', 'Body font stack', 'font'),
@@ -231,6 +233,9 @@ export const THEME_TOKENS = [
   L('pointer-opacity', 'Pointer focus color strength', 'percent'),
   L('pointer-offset', 'Pointer focus offset'),
   L('pointer-shadow', 'Pointer focus real box-shadow ring; none for default/outline', 'shadow'),
+  L('hover-border-strength', 'Hover border contrast; 0% disables border hover', 'percent'),
+  L('hover-background-strength', 'Hover surface mix; 0% preserves background', 'percent'),
+  L('focus-background-strength', 'Focus parent-surface mix; 0% keeps control surface', 'percent'),
 
   // Motion.
   L('duration-xs', 'Motion 1', 'time'),

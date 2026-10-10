@@ -319,15 +319,21 @@ export function themeTokens(resolved) {
   look('thumb', looks.thumb);
   look('thumb-border', looks.thumbBorder);
 
-  // Focus color: mono = black in light, white in dark (QX); theme = primary.
-  if (ext.focusColor === 'theme') {
-    look('focus', 'primary');
-    // One source for the focus boundary of native inputs, JS controls,
-    // InputGroup and Buttons. The default mono style retains shadcn ring.
+  // Independent hover / keyboard / pointer color sources.
+  // "black-white" means light black and dark white, not one shared color setting.
+  const assignInteractionColor = (name, choice) => {
+    if (choice === 'black-white') { light[name] = 'oklch(0 0 0)'; dark[name] = 'oklch(1 0 0)'; }
+    else look(name, choice === 'theme' ? 'primary' : 'ring');
+  };
+  assignInteractionColor('hover-color', ext.hoverColor);
+  assignInteractionColor('focus', ext.keyboardFocusColor);
+  assignInteractionColor('pointer-focus', ext.pointerFocusColor);
+  // Keyboard theme explicitly changes the native focus boundary as before.
+  // Pointer color never mutates the keyboard or neutral ring token.
+  if (ext.keyboardFocusColor === 'theme') {
     light.ring = light.primary;
     dark.ring = dark.primary;
   }
-  else { light.focus = 'oklch(0 0 0)'; dark.focus = 'oklch(1 0 0)'; }
 
   // Typography.
   const body = FONTS.find(f => f.value === resolved.font).stack;
@@ -571,22 +577,22 @@ export function themeTokens(resolved) {
   root['shadow-thumb'] = SHADOWS[looks.thumbShadow];
   root['shadow-switch-thumb'] = SHADOWS[looks.switchShadow];
 
-  // Focus (v3 §4.6): outline = 2px / 100% / -1px (QX keyboard default), ring = 3px / 40% / 0;
-  // pointer "follow" keeps the QX pointer look (no outline).
-  const FOCUS = { outline: ['0.125rem', '100%', '-0.0625rem'], ring: ['0.1875rem', '40%', '0'], none: ['0', '100%', '0'] };
-  const [kWidth, kOpacity, kOffset] = FOCUS[ext.keyboardFocus === 'ring' ? 'ring' : 'outline'];
-  const [pWidth, pOpacity, pOffset] = FOCUS[ext.pointerFocus === 'qx' ? 'none' : ext.pointerFocus];
+  // The seven independent axes share these few semantic style/paint slots.
+  // Border focus keeps the native border; keyboard outline retains 2px/-1px.
+  const FOCUS = { border: ['0', '100%', '0'], outline: ['0.125rem', '100%', '-0.0625rem'], ring: ['0', '100%', '0'] };
+  const [kWidth, kOpacity, kOffset] = FOCUS[ext.keyboardFocus];
+  const [pWidth, pOpacity, pOffset] = FOCUS[ext.pointerFocus];
   root['focus-width'] = kWidth; root['focus-opacity'] = kOpacity; root['focus-offset'] = kOffset;
   root['pointer-width'] = pWidth; root['pointer-opacity'] = pOpacity; root['pointer-offset'] = pOffset;
-  // "ring" is a real box-shadow halo, not a thick translucent outline.
-  // Keep the historic outline-width tokens for keyboard safety and protocol
-  // compatibility; ring shadow is an additional opt-in presentation layer.
   root['focus-shadow'] = ext.keyboardFocus === 'ring'
     ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
     : 'none';
   root['pointer-shadow'] = ext.pointerFocus === 'ring'
-    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
+    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 40%,transparent)'
     : 'none';
+  root['hover-border-strength'] = ['border', 'both'].includes(ext.hoverStyle) ? '30%' : '0%';
+  root['hover-background-strength'] = ['background', 'both'].includes(ext.hoverStyle) ? '15%' : '0%';
+  root['focus-background-strength'] = ext.focusBackground === 'parent-surface' ? '100%' : '0%';
 
   // Motion.
   const motion = MOTION[ext.motion];

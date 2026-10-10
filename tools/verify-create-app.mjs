@@ -211,14 +211,25 @@ const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   const source=p=>fs.readFileSync(path.join(root,p),'utf8');
   const data=source('docs/create/data.js');
-  const generated=model.compileTheme(model.normalizeConfig({style:'nova',ext:{keyboardFocus:'ring',pointerFocus:'ring',focusColor:'theme'}})).body;
-  assert.match(data,/key: 'focusColor'/,'existing color selector is reused');
+  const axes=['hoverStyle','hoverColor','keyboardFocus','keyboardFocusColor','pointerFocus','pointerFocusColor','focusBackground'];
+  for (const key of axes) assert.ok(data.includes("key: '"+key+"'"),'independent Theme axis: '+key);
+  const generated=model.compileTheme(model.normalizeConfig({style:'nova',ext:{keyboardFocus:'ring',pointerFocus:'ring',keyboardFocusColor:'theme',pointerFocusColor:'black-white',hoverStyle:'both',hoverColor:'theme',focusBackground:'parent-surface'}})).body;
   assert.match(generated,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0/,'keyboard ring has a genuine shadow');
   assert.match(generated,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0/,'pointer ring has a genuine shadow');
   assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'Theme ring is emitted');
   const colorTokens=Object.fromEntries([...generated.matchAll(/--qxframe9a7c2-theme-([\w-]+):\s*([^;]+);/g)].map(x=>[x[1],x[2]]));
   assert.equal(colorTokens.focus,colorTokens.primary,'selected theme sets focus outline to primary');
   assert.equal(colorTokens.ring,colorTokens.primary,'selected theme sets actual control focus border to primary');
+  assert.equal(colorTokens['hover-color'],colorTokens.primary,'Hover theme color is resolved independently');
+  assert.notEqual(colorTokens['pointer-focus'],colorTokens.primary,'Pointer black-white does not inherit keyboard Theme color');
+  assert.match(generated,/--qxframe9a7c2-theme-hover-background-strength:\s*15%/,'combined hover paints background');
+  assert.match(generated,/--qxframe9a7c2-theme-focus-background-strength:\s*100%/,'parent surface Focus policy');
+  const seven=model.normalizeConfig({ext:Object.fromEntries(axes.map((k,i)=>[k,['both','theme','ring','theme','outline','neutral','parent-surface'][i]]))});
+  const fromUrl=model.parseConfig(model.serializeConfig(seven)).config;
+  for(const key of axes)assert.equal(fromUrl.ext[key],seven.ext[key],key+' URL roundtrip');
+  const fromHeader=model.parseThemeHeader(model.compileTheme(seven,{generatedAt:''}).css);
+  assert.equal(fromHeader.ok,true,JSON.stringify(fromHeader.errors));
+  for(const key of axes)assert.equal(fromHeader.config.ext[key],seven.ext[key],key+' CSS header roundtrip');
   const baseline=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
   assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*none/,'baseline keyboard default unchanged');
   assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*none/,'baseline pointer default unchanged');
@@ -227,7 +238,7 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
   assert.match(source('src/styles/components/button.css'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-button:focus[^\{]*\{[^}]*theme-pointer-shadow/,'Button pointer focus projects Theme shadow independently of :active');
   assert.match(source('src/styles/components/native-input.css'),/\.qxframe9a7c2-input:hover:not\(:focus-within\)/,'JS Input native hover');
-  assert.match(source('src/styles/main/theme-visual-v2-consumers.css'),/--_qxframe9a7c2-v2-control-border:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field-border\) 70%,var\(--qxframe9a7c2-theme-ring\)\)/,'visible Theme hover step must differ from default field border');
+  assert.match(source('src/styles/main/theme-visual-v2-consumers.css'),/theme-hover-border-strength/,'hover border is resolved from independent style axis');
   assert.match(source('src/styles/components/composition.css'),/form-input-group-addon\):hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'connected InputGroup shares hover border step');
 
   const groupCss=source('src/styles/components/composition.css');
@@ -675,7 +686,7 @@ check('option tables match v3 §4', () => {
     assert.ok(axis.options.length <= 7, axis.key + ' has more than 7 levels');
     for (const style of Object.keys(data.STYLE_PRESETS)) assert.ok(axis.defaults[style] !== undefined, axis.key + ' lacks a default for ' + style);
   }
-  for (const axis of data.EXT_AXES.filter(a => !['keyboardFocus', 'pointerFocus'].includes(a.key))) {
+  for (const axis of data.EXT_AXES) {
     for (const [style, value] of Object.entries(axis.defaults)) assert.ok(axis.options.some(o => o.value === value), `${axis.key}.${style} default ${value} is not an option`);
   }
 });
