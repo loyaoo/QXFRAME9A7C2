@@ -1,5 +1,14 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 CheckField three-state cross-axis contract (CI pending)
+
+- Latest verified baseline `322de1c1` PR #265 Draft; QXFRAME `38016670565` and CSS Schema `38016670548` both SUCCESS. This independent feedback batch addresses user item 1: the CheckField should not rely on a per-Card `.is-center` and a 2px margin patch.
+- Shared `src/styles/components/composition.css` CheckField now defaults to center alignment for both row and native checkbox/radio input (including its pseudo indicator), with opt-in `is-start/is-center/is-end` three-way cross-axis states controlling both `align-items` and child `align-self`. Removed old margin-top hacks. All five Notification Settings rows use implicit default center. Choice radio composition remains centered.
+- Added static source contract plus live Chromium computed geometry for default/start/center/end input positions (3 alignments + no margin offsets); no core JS edit. QA overlay ledger RESET to Notification Settings CheckField/indicators only; prior FAQ/New Milestone marks discarded. Existing locked Stage3 tests must remain unchanged.
+- Remaining user findings to handle next, each on evidence: InputGroup addon+input padding/focus ownership, menu/dropdown reveal animation, loose40 padding monotonicity, Tabs Scroll height clipping, sidebar hover/active semantics, cross-browser native select arrow, InputGroup-vs-Control and nested-composition contract. Do not claim these fixed in this checkpoint.
+- Progress remains latest validated Stage3 ~91%, overall CREATEAPP-V3 ~70%; new head cannot be credited before double-green and manual acceptance. Never merge PR #265 or touch main/backup.
+
+
 ## CURRENT — 2026-10-10 FAQ active source border recipe and 4,224 text gates (CI rerun)
 
 - Candidate `4da37e36`: same-browser source-preview job `38016429187` proved **352 Title + 352 Description matched pairs × 6 = 4,224 strict source-locked assertions PASS** across 8 Styles/light/dark; all earlier 528 outer, 2,128 Item/Field, 384 Badge, 448 small Button, and 304 paired first Buttons stayed passing. New FAQ Tabs background/foreground parity passed all modes but source dark Luma/Rhea active border was transparent while the initial QX CSS used the Input border. Root cause is the source's no-border choice policy, not a sampling error.

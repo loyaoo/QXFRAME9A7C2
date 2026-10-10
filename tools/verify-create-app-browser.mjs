@@ -1814,6 +1814,23 @@ try {
     assert.deepEqual(result.filter(x=>x.error||x.bgMatch===false||x.fgMatch===false||x.sameWeight===false||x.foregroundMatch===false),[],JSON.stringify(result));
   });
 
+  await step('CheckField centers its indicator by default and aligns start/center/end without offsets',async()=>{
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=notification-settings] .qxframe9a7c2-check-field")','CheckField');
+    const readings=await evaluate("(() => { const d=document.querySelector('[data-create-frame]').contentDocument; const row=d.querySelector('[data-card=notification-settings] .qxframe9a7c2-check-field'); if(!row)return {error:'missing row'}; const input=row.querySelector('.qxframe9a7c2-form-check-input'); const before=row.className; const oldMin=row.style.minHeight; row.style.minHeight='6rem'; const result={}; for(const mode of ['default','start','center','end']){row.className='qxframe9a7c2-check-field'+(mode==='default'?'':' is-'+mode);const cs=getComputedStyle(row),ic=getComputedStyle(input),r=row.getBoundingClientRect(),b=input.getBoundingClientRect();result[mode]={align:cs.alignItems,input:ic.alignSelf,marginTop:ic.marginTop,marginBottom:ic.marginBottom,top:+(b.top-r.top).toFixed(2),bottom:+(r.bottom-b.bottom).toFixed(2)};}row.className=before;row.style.minHeight=oldMin;return result;})()");
+    assert.ok(!readings.error,JSON.stringify(readings));
+    for(const mode of ['default','start','center','end']){
+      const r=readings[mode], expected=mode==='start'?'flex-start':mode==='end'?'flex-end':'center';
+      assert.equal(r.align,expected,mode+' row');
+      assert.equal(r.input,expected,mode+' indicator');
+      assert.equal(r.marginTop,'0px',mode+' top compensation');
+      assert.equal(r.marginBottom,'0px',mode+' bottom compensation');
+      if(expected==='flex-start')assert.ok(Math.abs(r.top)<1,JSON.stringify({mode,r}));
+      else if(expected==='flex-end')assert.ok(Math.abs(r.bottom)<1,JSON.stringify({mode,r}));
+      else assert.ok(Math.abs(r.top-r.bottom)<1,JSON.stringify({mode,r}));
+    }
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {

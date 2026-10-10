@@ -19,7 +19,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const overlay=read('offline-qa-changes.css');
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
-  const current={'faq':['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active'],'new-milestone':['.qxframe9a7c2-card-description']};
+  const current={'notification-settings':['.qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input']};
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -28,9 +28,9 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   }
   for(const previous of ['social-links','dividend-income','payout-threshold','preferences','savings-targets',
     'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
-    'release-catalog','upcoming-payments','qr-connect','cover-art'])
+    'release-catalog','upcoming-payments','qr-connect','cover-art','faq','new-milestone'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'two exact inner visual regions in the current round');
+  assert.equal(count,1,'one grouped CheckField selector for five current checkbox indicators');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -49,6 +49,21 @@ check('segmented Tabs use the pinned source dark active input/30 recipe', () => 
   assert.match(css,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{border:1px solid transparent\}/,'source Tab border box');
   assert.match(css,/--_qxframe9a7c2-tabs-tab-bg:light-dark\(var\(--qxframe9a7c2-theme-background\),color-mix\(in oklab,var\(--qxframe9a7c2-theme-input\) 30%,transparent\)\)/,'dark input/30, light background');
   assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-choice-border\)\)/,'shared choice border recipe retains source Luma/Rhea transparent policy');
+});
+
+check('CheckField 3-way alignment has no margin-offset or Card-specific owner', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-check-field\{[\s\S]*?align-items:center;/,'centered cross axis by default');
+  assert.match(css,/\.qxframe9a7c2-check-field>\.qxframe9a7c2-form-check-input\{\s*align-self:center;margin-block:0/,'input and its drawn indicator centered without top offset');
+  for(const [name,alignment] of [['start','flex-start'],['center','center'],['end','flex-end']]){
+    assert.ok(css.includes('.qxframe9a7c2-check-field.is-'+name+'{align-items:'+alignment+'}'),name+' row alignment');
+    assert.ok(css.includes('.qxframe9a7c2-check-field.is-'+name+'>.qxframe9a7c2-form-check-input{align-self:'+alignment+'}'),name+' input alignment');
+  }
+  assert.doesNotMatch(css,/\.qxframe9a7c2-check-field>\.qxframe9a7c2-form-check-input\{margin-top:/,'no old offset compensation');
+  const preview=read('preview-01.html');
+  const section=preview.slice(preview.indexOf('<!-- @card notification-settings -->'),preview.indexOf('<!-- @end notification-settings -->'));
+  assert.equal((section.match(/class="qxframe9a7c2-check-field"/g)||[]).length,5,'five CheckField rows use default center');
+  assert.ok(!section.includes('qxframe9a7c2-check-field is-center'),'default center does not require per-Card state');
 });
 
 check('small Button typography consumes one source-mapped Theme token', () => {

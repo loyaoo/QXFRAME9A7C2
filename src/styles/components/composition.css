@@ -204,11 +204,23 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   text-transform:var(--qxframe9a7c2-theme-control-transform,none);
   letter-spacing:var(--qxframe9a7c2-theme-field-label-tracking,normal);
 }
-.qxframe9a7c2-check-field{display:flex;align-items:flex-start;gap:var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem));cursor:pointer}
-.qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{margin-top:0.125rem}
-/* Horizontal Checkbox rows center both controls and text without vertical offset. */
+/* CheckField cross-axis policy is a three-state component contract, not a
+ * Card-specific tweak. Center is the default for both row and native input
+ * (including its ::before checkbox/radio indicator). No margin compensation. */
+.qxframe9a7c2-check-field{
+  display:flex;align-items:center;
+  gap:var(--qxframe9a7c2-check-field-gap,var(--qxframe9a7c2-theme-field-gap,.75rem));
+  cursor:pointer
+}
+.qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input{
+  align-self:center;margin-block:0
+}
+.qxframe9a7c2-check-field.is-start{align-items:flex-start}
+.qxframe9a7c2-check-field.is-start>.qxframe9a7c2-form-check-input{align-self:flex-start}
 .qxframe9a7c2-check-field.is-center{align-items:center}
-.qxframe9a7c2-check-field.is-center>.qxframe9a7c2-form-check-input{margin-top:0}
+.qxframe9a7c2-check-field.is-center>.qxframe9a7c2-form-check-input{align-self:center}
+.qxframe9a7c2-check-field.is-end{align-items:flex-end}
+.qxframe9a7c2-check-field.is-end>.qxframe9a7c2-form-check-input{align-self:flex-end}
 /* Framed RadioGroup/FieldLabel composition from pinned shadcn: the label
  * owns the border and the inner horizontal Field's top/inline inset.
  * The authored pb-2.5 may override only the trailing padding as in source. */
@@ -222,7 +234,6 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   border-radius:var(--qxframe9a7c2-theme-radius-field);
   background:transparent
 }
-.qxframe9a7c2-check-field.is-choice>.qxframe9a7c2-form-check-input{margin-top:0}
 .qxframe9a7c2-field-title{
   display:flex;align-items:center;width:fit-content;gap:.5rem;
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));

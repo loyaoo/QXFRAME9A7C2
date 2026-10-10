@@ -1,3 +1,14 @@
+# Stage3 CheckField alignment policy - new owner feedback item 1 (CI pending)
+
+## CURRENT — 2026-10-10 CheckField three-state cross-axis contract (CI pending)
+
+- Latest verified baseline `322de1c1` PR #265 Draft; QXFRAME `38016670565` and CSS Schema `38016670548` both SUCCESS. This independent feedback batch addresses user item 1: the CheckField should not rely on a per-Card `.is-center` and a 2px margin patch.
+- Shared `src/styles/components/composition.css` CheckField now defaults to center alignment for both row and native checkbox/radio input (including its pseudo indicator), with opt-in `is-start/is-center/is-end` three-way cross-axis states controlling both `align-items` and child `align-self`. Removed old margin-top hacks. All five Notification Settings rows use implicit default center. Choice radio composition remains centered.
+- Added static source contract plus live Chromium computed geometry for default/start/center/end input positions (3 alignments + no margin offsets); no core JS edit. QA overlay ledger RESET to Notification Settings CheckField/indicators only; prior FAQ/New Milestone marks discarded. Existing locked Stage3 tests must remain unchanged.
+- Remaining user findings to handle next, each on evidence: InputGroup addon+input padding/focus ownership, menu/dropdown reveal animation, loose40 padding monotonicity, Tabs Scroll height clipping, sidebar hover/active semantics, cross-browser native select arrow, InputGroup-vs-Control and nested-composition contract. Do not claim these fixed in this checkpoint.
+- Progress remains latest validated Stage3 ~91%, overall CREATEAPP-V3 ~70%; new head cannot be credited before double-green and manual acceptance. Never merge PR #265 or touch main/backup.
+
+
 # Stage 3 2026-10-10 second candidate: 4,224 inner text strict PASS, FAQ border fix
 
 - QXFRAME run 38016429187 source-preview passed all 4,224 Title/Description assertions; only active FAQ Tab border in dark Luma/Rhea differed. The exact locked source uses transparent for Luma/Rhea, `input` for other six. Reusing existing `--qxframe9a7c2-theme-choice-border` aligns this without adding a source-special Token. Other channel checks retained. Static QA marker count updated from stale one to the active two-region ledger. New double-green CI required; no ZIP before then. Progress 69% total / 85% Stage pending completed CI and owner acceptance, PR Draft.

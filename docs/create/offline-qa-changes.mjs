@@ -1,10 +1,7 @@
-/** Current-round ONLY: source-pinned FAQ segmented Tabs active paint; prior yellow cleared. */
+/** Current-round ONLY: shared CheckField 3-way cross-axis alignment, older labels cleared. */
 const groups = [
-  ['faq','FAQ · Tabs 激活项明暗外观',[
-    ['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active','FAQ / General 激活 Tab','锁定 shadcn 在深色使用 input/30 半透明背景及 input 边框，浅色使用 background；共享 QX Tabs 映射修正，不改变 JS','__QA_BUNDLE_HEAD__']
-  ]],
-  ['new-milestone','New Milestone · 标题描述文案字形',[
-    ['.qxframe9a7c2-card-description','Description 文案标点','将弯撇号恢复为上游直撇号，防止标题描述跨源角色比对中出现字形偏差','__QA_BUNDLE_HEAD__']
+  ['notification-settings','Notifications · CheckField 三种交叉轴对齐',[
+    ['.qxframe9a7c2-check-field>.qxframe9a7c2-form-check-input','五组 checkbox / indicator','CheckField 默认和 is-center 居中；is-start/is-end 通过行 align-items 与 input align-self 对齐，移除 margin-top 补丁与卡片内五处不必要的 is-center','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
