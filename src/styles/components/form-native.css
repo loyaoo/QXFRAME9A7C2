@@ -16,6 +16,15 @@
 .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-input,.qxframe9a7c2-form-field.is-warning input:not([type="hidden"]),.qxframe9a7c2-form-field.is-warning textarea,.qxframe9a7c2-form-field.is-warning select{border-color:var(--qxframe9a7c2-theme-warning)}
 .qxframe9a7c2-field-error.is-warning,.qxframe9a7c2-form-feedback.is-warning{color:var(--qxframe9a7c2-theme-warning)}
 
+/* Field is a full status owner, including its native Field controls.
+ * Keep status separate from appearance: native Input owns validity; Field paints. */
+.qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input,
+.qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select,
+.qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-textarea{border-color:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input,
+.qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select,
+.qxframe9a7c2-field.is-warning .qxframe9a7c2-form-textarea{border-color:var(--qxframe9a7c2-theme-warning)}
+
 /* v1.95 P2-A native Choice parity — native inputs remain the only checked/exclusivity owner. */
 .qxframe9a7c2-form-check.is-xs{--_qxframe9a7c2-form-check-size-default:0.75rem;font-size:0.75rem}
 .qxframe9a7c2-form-check.is-sm{--_qxframe9a7c2-form-check-size-default:0.875rem;font-size:0.875rem}
@@ -75,10 +84,10 @@
   --_qxframe9a7c2-choice-bg:var(--qxframe9a7c2-theme-muted);
   padding:var(--qxframe9a7c2-selectgroup-padding-block,.5rem) var(--qxframe9a7c2-selectgroup-padding-inline,.75rem)
 }
-.qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-item:hover>.qxframe9a7c2-selectgroup-label{
+.qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled))>.qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-border:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 70%,var(--qxframe9a7c2-theme-border))
 }
-.qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-item:hover>.qxframe9a7c2-selectgroup-label{
+.qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled))>.qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) 85%,var(--qxframe9a7c2-theme-primary))
 }
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label{
@@ -103,7 +112,7 @@
 }
 .qxframe9a7c2-selectgroup-input:disabled+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-color{transform:none}
 /* Image media cannot override the universal Surface padding, display or item sizing. */
-.qxframe9a7c2-selectgroup-item.is-disabled{cursor:not-allowed}
+.qxframe9a7c2-selectgroup-item.is-disabled,.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:disabled){cursor:not-allowed}
 /* Indicator is a projection of native state. Floating is positioned in its own Surface. */
 .qxframe9a7c2-selectgroup-indicator.is-floating{
   position:absolute;top:.5rem;inset-inline-end:.5rem;z-index:var(--qxframe9a7c2-z-local-above);
@@ -149,10 +158,15 @@
 .qxframe9a7c2-selectgroup-title{display:block;color:var(--_qxframe9a7c2-semantic-text);font-weight:600}
 .qxframe9a7c2-selectgroup-description{display:block;margin-top:var(--_qxframe9a7c2-fixed-space-1);color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em}
 
+.qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
+.qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-choice-ring:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
+.qxframe9a7c2-field.is-valid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-success)}
 
 /* Canonical native/text field surface. QX form classes are canonical; plain authored HTML is

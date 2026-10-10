@@ -1,12 +1,12 @@
-/** Stage 3 batch: SelectGroup independent layout and single Surface paint. */
+/** Current QA batch: shared Field feedback and SelectGroup disabled/connected paint. */
 const groups = [
-  ['notification-settings','Notifications · Native choices',[
-    ['.qxframe9a7c2-selectgroup','Default None root','SelectGroup root delegates arrangement to composition DOM, with no implicit Flex or border','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-selectgroup-label','None Surface','Checkbox state remains native, with zero Appearance padding and border','__QA_BUNDLE_HEAD__']
+  ['notification-settings','Notifications · Disabled and Field feedback',[
+    ['.qxframe9a7c2-selectgroup','Native state group','Native disabled hover / status and form ownership repaired','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-selectgroup-label','Native choice Surface','Checkbox selection and disabled Surface retain correct state precedence','__QA_BUNDLE_HEAD__']
   ]],
-  ['receiving-method','Receiving Method · Choice Surface',[
-    ['.qxframe9a7c2-selectgroup','Outline group','Root delegates dimensions and layout to the existing choice group','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-selectgroup-label','Outline Surface','Unified choice Surface draws themed border and padding; image and plain items use same owner','__QA_BUNDLE_HEAD__']
+  ['receiving-method','Receiving Method · Feedback and Connected seam',[
+    ['.qxframe9a7c2-selectgroup','Shared seam contract','Connected uses one seam algorithm for direct and Flex-wrapped Items','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-selectgroup-label','Field error and warning Surface','Field status color must win over Pointer Focus on Outline options','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

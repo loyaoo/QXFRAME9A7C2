@@ -1,3 +1,13 @@
+## CURRENT — 2026-10-10 S3 Field / SelectGroup native status + connected unified batch (CI pending)
+- Baseline verified development HEAD `1d0301428b2448170d76056ac7a368c9e5523d2f` (QXFRAME #38049252309, CSS Schema #38049252301 both SUCCESS, pinned 528/528 height over tolerance 0). New HEAD requires fresh both workflows.
+- Expanded general `.qxframe9a7c2-field.is-invalid/is-warning` to native Form Input/Select/Textarea and SelectGroup checkbox/radio Surfaces, retaining existing form-field renderer and normal native validity ownership.
+- Pointer FocusOrigin cannot displace destructive/warning feedback border on new Field or legacy FormField Outline SelectGroup.
+- Native disabled SelectGroup Input always causes disabled cursor, and disabled items no longer respond to hover color-mixing; valid/invalid and checked paint remain independent.
+- One Connected seam algorithm replaces two duplicated direct/Flex implementations; nested Flex has nowrap to keep one continuous seam.
+- New interactive docs SelectGroup example exercises native FormData, required, radio checked exclusivity, disabled and form.reset. Chromium regression checks 12 light/dark × state × appearance cases including FormData and reset.
+- Only current-round Preview01 Notifications and ReceivingMethod Surface/state highlighted in offline ledger; old highlight selectors reset.
+- Not yet claimed complete until new same-HEAD QXFRAME CI, CSS Schema Acceptance, 528, matching Actions Windows ZIP, PR Draft verification; seven Theme hover/focus configuration axes and remaining Stage 3 interior parity are still open. Never merge without user approval.
+
 ## CURRENT — 2026-10-10 SelectGroup canonical layout verifier alignment (CI pending)
 - Previous candidate `b95deb661ecc5f7ef05e50beb94de0cee5aa8a5a` QXFRAME source geometry and windows tools passed. Full release failed in `verify-css-grid-selectgroup-autofit.mjs` only because its old regex still required SelectGroup root display:flex. The new contract intentionally makes the root display:block and delegates flow to independent Flex; Connected is the sole controlled flex seam exception. Updated verifier to enforce these new roles and docs composition instead, preserving all scene-mode prohibition and geometry gates.
 - Follow current newest HEAD through both full workflows, official same-tree dist/docs download and offline Windows package before marking done. PR remains Draft and unmerged.

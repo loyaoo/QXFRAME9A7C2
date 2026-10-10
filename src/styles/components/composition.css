@@ -54,24 +54,23 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 @media(max-width:640px){
  .qxframe9a7c2-form-input-group.is-responsive>.qxframe9a7c2-group-control{margin-inline-start:0}
 }
-/* One connected seam owner; only explicit Outline draws shared overlapping borders. */
+/* One seam algorithm for direct Items and Items wrapped in an independent Flex.
+ * Connected is geometric, not an Appearance, and never invents None borders. */
 .qxframe9a7c2-selectgroup.is-connected{display:flex;flex-wrap:nowrap;gap:0;isolation:isolate}
-.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex{width:100%;gap:0;min-width:0}
-/* Direct and Flex-wrapped Items share a single border/seam and stacking owner. */
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item{margin:0}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-start-radius:var(--qxframe9a7c2-theme-radius-field)}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{border-start-end-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)}
-.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
-.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item{margin:0}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-start-radius:var(--qxframe9a7c2-theme-radius-field)}
-.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{border-start-end-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)}
-.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
-.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex{width:100%;min-width:0;gap:0;flex-wrap:nowrap}
+.qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item{margin:0}
+.qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
+.qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}
+.qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-start-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{border-start-end-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected .qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
+.qxframe9a7c2-selectgroup.is-connected .qxframe9a7c2-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
+/* Explicit feedback state wins over the pointer FocusOrigin border color.
+ * Keyboard still retains its single Focus Surface; no indicator outline. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive)}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning)}
 /* Nested stable GroupItem projects child interaction state to the composition stacking owner. */
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{--_qxframe9a7c2-group-stack:2}
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-error,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-warning{--_qxframe9a7c2-group-stack:3}
