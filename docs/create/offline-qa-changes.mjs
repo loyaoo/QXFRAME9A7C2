@@ -5,7 +5,13 @@ const groups = [
   ]],
   ['receiving-method','Receiving Method · Outline SelectGroup',[
     ['.qxframe9a7c2-selectgroup-label','Radio choice Outline surface','Preserved framed source option and native radio exclusivity without CheckField CSS','__QA_BUNDLE_HEAD__']
-  ]]
+  ]],
+  ['shipping-address','Shipping Address · None SelectGroup',[
+    ['.qxframe9a7c2-selectgroup-label','Save default address checkbox','Migrated Preview02 CheckField to native SelectGroup','__QA_BUNDLE_HEAD__']
+  ],'02'],
+  ['contributions-activity','Contributions Activity · None SelectGroup',[
+    ['.qxframe9a7c2-selectgroup-label','Profile privacy checkbox','Migrated Preview02 CheckField to native SelectGroup','__QA_BUNDLE_HEAD__']
+  ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -52,7 +58,7 @@ function locate(group,change){
     setTimeout(()=>node.classList.remove('qa-jump-flash'),1800);
     return true;
   };
-  if(!preview){document.querySelector('[data-create-item="01"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
+  if(!preview){document.querySelector('[data-create-item="'+(group[3]==='02'?'02':'01')+'"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
 }
 function toggleFold(v){
   folded=!!v;
@@ -65,10 +71,10 @@ function mount(){
   const panel=document.createElement('section');
   panel.className='qa-offline-toolbar';panel.dataset.qaToolbar='';
   const markedRegions=groups.reduce((count,g)=>count+g[2].length,0);
-  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01 · '+markedRegions+' 处</span></div>'+
+  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01/02 · '+markedRegions+' 处</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。Preview 02 本批没有修改；关闭高亮可查看原貌。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。Preview 02 同步标注本轮结构迁移；关闭高亮可查看原貌。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

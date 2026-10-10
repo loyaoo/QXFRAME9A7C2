@@ -180,7 +180,7 @@
   // Pinned NotificationSettings: one indeterminate master reflects 4 choices.
   var notifications = document.querySelector('[data-card="notification-settings"]');
   if (notifications) {
-    var checks = Array.prototype.slice.call(notifications.querySelectorAll('.qxframe9a7c2-check-field input[type="checkbox"]'));
+    var checks = Array.prototype.slice.call(notifications.querySelectorAll('.qxframe9a7c2-selectgroup-input[type="checkbox"]'));
     var master = checks.shift();
     if (master && checks.length === 4) {
       function syncMaster() {

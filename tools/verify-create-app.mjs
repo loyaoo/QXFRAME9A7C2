@@ -36,6 +36,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const overlay=read('offline-qa-changes.css');
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
+  const preview02=read('preview-02.html');
   const current={
     'notification-settings':['.qxframe9a7c2-selectgroup-label'],
     'receiving-method':['.qxframe9a7c2-selectgroup-label']
@@ -46,11 +47,20 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','notification-settings',
-    'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
+  const current02={
+    'shipping-address':['.qxframe9a7c2-selectgroup-label'],
+    'contributions-activity':['.qxframe9a7c2-selectgroup-label']
+  };
+  for(const [id,selectors] of Object.entries(current02)){
+    assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview02 Card '+id);
+    assert.ok(ledger.includes("['"+id+"'"),'active QA Preview02 group '+id);
+    for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed Preview02 child '+selector);count++;}
+  }
+  for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','savings-targets',
+    'recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'one exact current-round region in Savings Targets only');
+  assert.equal(count,4,'four exact current-round regions (two per Preview)');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
