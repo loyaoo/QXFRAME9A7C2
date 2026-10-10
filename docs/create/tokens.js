@@ -113,6 +113,7 @@ export const THEME_TOKENS = [
   // Control size (md anchors; xs–xl follow the shared size curve).
   L('control-height', 'Control md height (density axis)'),
   L('button-sm-padding-inline', 'Small Button horizontal inset, source style size-sm plus density extension'),
+  L('button-md-padding-inline', 'Medium Button style inset plus density extension'),
   L('button-sm-font-size', 'Source Button size-sm type scale with typography axis'),
   L('control-padding', 'Control md inline padding'),
   L('control-gap', 'Control md gap'),

@@ -73,6 +73,9 @@
 
 /* Source size-sm text actions have their own compact inline padding.
  * Icon/square controls keep their existing fixed square size contract. */
+.qxframe9a7c2-button.is-md:not(.is-square):not(.is-icon-only){
+  padding-inline:var(--qxframe9a7c2-button-md-padding-inline,var(--qxframe9a7c2-theme-button-md-padding-inline,var(--_qxframe9a7c2-control-padding-inline)))
+}
 .qxframe9a7c2-button.is-sm:not(.is-square):not(.is-icon-only){
   padding-inline:var(--qxframe9a7c2-button-sm-padding-inline,var(--qxframe9a7c2-theme-button-sm-padding-inline,.75rem))
 }

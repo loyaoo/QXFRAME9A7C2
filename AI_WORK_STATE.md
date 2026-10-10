@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 density/MD Button source regression and style mapping candidate
+- In QXFRAME `38020871123`, the fixed Tabs rail advanced the source gate beyond Lyra FAQ. Strict Sera Social Links then detected unequal source Footer Buttons **134.813px/168.047px** had become QX **151.422px/151.422px**. Cause: correcting incorrect control loose40 horizontal padding from 1.5rem to .875rem also changed Sera-specific md Button min-content clamp.
+- Correct architectural owner: new registered `button-md-padding-inline` Theme family slot. Sera md button retains its editorial +.625rem inset (original 1.5rem at loose40), generic controls follow monotone 28/32/36/40/44 density. No card-specific CSS or JS edits. Retain actual min-content source geometry strict gate. Static Sidebar hover selector migrated to distinct muted :hover:not(.is-active), not waived.
+- Complete prior multi-component batch still awaiting official two-green CI; user progress unchanged until validated. PR #265 Draft, protected branches untouched.
+
+
 ## CURRENT — 2026-10-10 Tabs rail strict source correction
 - Official failed same-browser artifact `11657787259`: Lyra FAQ source Card 343px vs QX 475.75px when Scroll root/viewport were set to auto. Intrinsic Scroll sizing introduced a severe feedback/height-growth regression in the segmented rail. Preserved source-locked strict Card comparison and reverted root sizing to shared Theme tabs height.
 - Root-cause correction: horizontal segmented Scroll viewport formerly used `padding:0.25rem`, consuming 8px of the exact TabItem height and cropping the tab. The shared rule now keeps inline rail chrome while setting vertical padding to zero; viewport and tab use same block-height budget. No per-Card CSS, no test waiver. Pending same-browser rerun plus browser no-clip geometry assertion.

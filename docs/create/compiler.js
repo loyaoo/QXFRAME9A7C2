@@ -353,6 +353,9 @@ export function themeTokens(resolved) {
   const sourceSmInline={vega:.625,nova:.625,maia:.75,lyra:.625,mira:.5,luma:.75,sera:1,rhea:.75};
   const sourceDensity={vega:'standard',nova:'compact',maia:'standard',lyra:'compact',mira:'dense',luma:'standard',sera:'loose',rhea:'compact'};
   root['button-sm-padding-inline']=rem(Math.max(.5,sourceSmInline[style]+(padding-DENSITY[sourceDensity[style]][1])));
+  // Editorial Sera MD Button chrome is wider than generic controls. Keep
+  // 28→44 density monotonic without altering source 134.813/168.047 widths.
+  root['button-md-padding-inline']=rem(padding+(editorial?.625:0));
   // Source Button size-sm is 14px for standard styles, 12.8px in Nova,
   // and 12px in Lyra/Mira/Sera. Unlike the generic QX size curve, the
   // source does NOT shrink icon-sm and text-sm typography by 2px.

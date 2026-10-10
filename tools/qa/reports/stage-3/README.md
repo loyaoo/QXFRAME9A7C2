@@ -1,3 +1,11 @@
+# Stage3 editorial Button family regression correction
+
+## CURRENT — 2026-10-10 density/MD Button source regression and style mapping candidate
+- In QXFRAME `38020871123`, the fixed Tabs rail advanced the source gate beyond Lyra FAQ. Strict Sera Social Links then detected unequal source Footer Buttons **134.813px/168.047px** had become QX **151.422px/151.422px**. Cause: correcting incorrect control loose40 horizontal padding from 1.5rem to .875rem also changed Sera-specific md Button min-content clamp.
+- Correct architectural owner: new registered `button-md-padding-inline` Theme family slot. Sera md button retains its editorial +.625rem inset (original 1.5rem at loose40), generic controls follow monotone 28/32/36/40/44 density. No card-specific CSS or JS edits. Retain actual min-content source geometry strict gate. Static Sidebar hover selector migrated to distinct muted :hover:not(.is-active), not waived.
+- Complete prior multi-component batch still awaiting official two-green CI; user progress unchanged until validated. PR #265 Draft, protected branches untouched.
+
+
 # User-reported multi-component consistency batch (2026-10-10)
 
 ## CURRENT — 2026-10-10 Tabs rail strict source correction

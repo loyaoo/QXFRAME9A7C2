@@ -93,6 +93,8 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(css('composition'),/form-input-group-addon\+\.qxframe9a7c2-form-input[^\{]*\{[^}]*padding-inline-start:calc/,'internal touching padding half');
   assert.match(css('form-native'),/\.qxframe9a7c2-form-select,\.qxframe9a7c2-native-form select\{[\s\S]*?appearance:none/,'native arrow replacement');
   assert.ok(fs.readFileSync(path.join(root,'docs/create/inputgroup-control-contract.md'),'utf8').includes('独立子组合布局岛'));
+  assert.match(css('button'),/\.qxframe9a7c2-button\.is-md:not\(\.is-square\):not\(\.is-icon-only\)[^\{]*\{[^}]*theme-button-md-padding-inline/,'MD Button family uses style-specific inset');
+  assert.match(read('tokens.js'),/L\('button-md-padding-inline'/,'registered medium Button slot');
 });
 
 check('small Button typography consumes one source-mapped Theme token', () => {
@@ -780,7 +782,7 @@ check('audit #22: accent-paired Item link states are owned by the shared Item CS
   assert.doesNotMatch(privateCss,/\.qxframe9a7c2-item-link(?::hover)?\s*\{/,
     'Preview must not own a second Item hover style');
   assert.match(fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8'),
-    /\.qxframe9a7c2-sidebar-menu-button:hover,/,'SidebarMenu hover belongs to shared CSS');
+    /\.qxframe9a7c2-sidebar-menu-button:hover:not\(\.is-active\)/,'SidebarMenu hover is muted and belongs to shared CSS');
   assert.doesNotMatch(privateCss,/\.pv-nav-button(?:\:hover)?\s*\{/,
     'preview must not own a second SidebarMenuButton paint rule');
 });
