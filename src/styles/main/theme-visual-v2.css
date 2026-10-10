@@ -345,7 +345,7 @@
   .qxframe9a7c2-form-input:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-select:hover:not(:focus):not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-textarea:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
-    --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-input)
+    --_qxframe9a7c2-v2-control-border:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) 70%,var(--qxframe9a7c2-theme-ring))
   }
 
   /* surface: retain Card composition and opt-in divider geometry. */

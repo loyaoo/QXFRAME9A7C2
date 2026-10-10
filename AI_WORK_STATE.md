@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 visually effective default hover role
+- Existing Theme default `field-border` and `input` values are identical in light and dark. Earlier field `:hover` mapping to `--theme-input` produced no visible change! Corrected shared V2 field hover to 70% field-border + 30% Theme ring, using existing Theme tokens, and added same hover border to connected addon InputGroup. Focus always takes precedence; disabled/error/warning don't inherit hover ring.
+- No new hover Theme tokens and no per-Card styling. Static gate now asserts real color-mix expression, not mere presence of `theme-input`. Official two green CI on the new SHA still required, exact baseline source locked tests untouched.
+
+
 ## CURRENT — 2026-10-10 actual standalone native Input test probe correction
 - CSS Schema `38025604755` browser gate showed connected InputGroup pointer shadow **red 3px**, keyboard shadow **green 3px**, and inner Input **none** (correct). It falsely claimed standalone native Input had no shadow because test used Social Links input nested inside an InputGroup, where removing its shadow is explicitly required.
 - Browser acceptance now appends a temporary standalone `<input class=qxframe9a7c2-form-input>` outside any Group, samples keyboard and pointer shadow and removes it. This preserves strict duplicate-shadow prevention and adds true standalone coverage. Production CSS remains unchanged in this correction; exact new SHA CI must be green.

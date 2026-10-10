@@ -466,3 +466,9 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-fie
   outline-offset:var(--qxframe9a7c2-theme-pointer-offset);
   box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
 }
+
+/* Connected InputGroup must expose the same subtle hover border as a single
+ * Control. Never let hover hide focus or any child disabled/error/warning. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-form-input.is-invalid)):not(:has(>.qxframe9a7c2-form-input.is-error)):not(:has(>.qxframe9a7c2-form-input.is-warning)){
+  border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) 70%,var(--qxframe9a7c2-theme-ring))
+}

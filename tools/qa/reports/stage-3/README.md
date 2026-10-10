@@ -1,3 +1,10 @@
+# Visibly distinct shared Control/InputGroup hover border
+
+## CURRENT — 2026-10-10 visually effective default hover role
+- Existing Theme default `field-border` and `input` values are identical in light and dark. Earlier field `:hover` mapping to `--theme-input` produced no visible change! Corrected shared V2 field hover to 70% field-border + 30% Theme ring, using existing Theme tokens, and added same hover border to connected addon InputGroup. Focus always takes precedence; disabled/error/warning don't inherit hover ring.
+- No new hover Theme tokens and no per-Card styling. Static gate now asserts real color-mix expression, not mere presence of `theme-input`. Official two green CI on the new SHA still required, exact baseline source locked tests untouched.
+
+
 # True standalone Input focus shadow probe
 
 ## CURRENT — 2026-10-10 actual standalone native Input test probe correction
