@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-10 FocusOrigin programmatic keyboard shadow projection (new CI pending)
+- CSS Schema #38043133548 reached Chromium and confirmed indicator outline-style:none, but synthetic native input.focus() after pointer-origin operation did not match :focus-visible even when FocusOrigin root became keyboard. This is expected Chromium modality behavior, not a second indicator outline. Surface now consumes Theme keyboard shadow under explicit html.qxframe9a7c2-keyboard-focus-origin plus native input:focus, preserving single Surface ownership; native :focus-visible continues to paint the default keyboard outline. No generic mouse/programmatic :focus positive outline introduced and no gate weakened.
+
 ## CURRENT — 2026-10-10 CSS outline-style vs outline-width browser assertion correction (new CI pending)
 - Previous QXFRAME #38042805245 and CSS Schema #38042805224 both reached real Chromium and failed the same new nine-anchor test. The indicator's CSS outline is explicitly 'none' but Chromium retains the computed 'medium' outline-width (3px) even when it is not painted. Browser test incorrectly asserted computed outline-width=0. Changed two assertions to require computed outline-style='none' for both pointer and keyboard origin: actual single-ring invariant, not looser behavior. No production CSS changed this correction; geometry was already green.
 

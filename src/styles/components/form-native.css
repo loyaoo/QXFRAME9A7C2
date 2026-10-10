@@ -90,6 +90,12 @@
   --_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline);
   --_qxframe9a7c2-choice-ring:var(--qxframe9a7c2-theme-focus-shadow,none)
 }
+/* Programmatic keyboard focus can carry FocusOrigin='keyboard' while native
+ * :focus-visible is temporarily false. Preserve the single Surface ring for
+ * both paths; keyboard outline itself still obeys the :focus-visible gate. */
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
+  --_qxframe9a7c2-choice-ring:var(--qxframe9a7c2-theme-focus-shadow,none)
+}
 /* FocusOrigin switches the paint owner on the Surface alone. The native input
  * keeps actual focus; indicator and content never paint independent halos. */
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{

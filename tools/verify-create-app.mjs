@@ -100,6 +100,7 @@ check('SelectGroup appearance and nine floating positions have no retired scene 
   assert.match(demos,/\['left','center','right'\]/);
   assert.doesNotMatch(demos,/is-pill|is-boxes|is-image-grid|is-color-grid|display:grid/,'demos use composable appearances and Flex');
   assert.match(css,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard Theme shadow paints on Surface');
+  assert.match(css,/html\.qxframe9a7c2-keyboard-focus-origin \.qxframe9a7c2-selectgroup \.qxframe9a7c2-selectgroup-input:focus\+\.qxframe9a7c2-selectgroup-label/,'FocusOrigin keyboard projection also covers native programmatic focus');
   assert.match(css,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer Theme shadow paints on Surface');
   assert.match(visual,/\.qxframe9a7c2-selectgroup-indicator\.is-radio\{border-color:var\(--_qxframe9a7c2-semantic-focus\);outline:none;box-shadow:none\}/,'indicator cannot draw second focus halo');
   for(const side of ['top-left','top-center','middle-left','middle-center','bottom-center','bottom-right'])
