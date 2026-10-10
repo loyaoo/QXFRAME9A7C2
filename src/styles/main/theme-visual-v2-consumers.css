@@ -110,12 +110,3 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-warning .qxframe9
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
  --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);border-color:var(--qxframe9a7c2-theme-warning)
 }
-/* Pointer Outline is explicit opt-in only; default Pointer Border has width 0.
- * Keep native and SelectGroup visual focus on the owning Surface. */
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus:not(:disabled),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus:not(:disabled),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:not(:disabled),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
- outline:var(--qxframe9a7c2-theme-pointer-width) solid var(--qxframe9a7c2-theme-pointer-focus);
- outline-offset:var(--qxframe9a7c2-theme-pointer-offset)
-}

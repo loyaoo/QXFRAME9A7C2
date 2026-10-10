@@ -587,9 +587,13 @@ export function themeTokens(resolved) {
   root['focus-shadow'] = ext.keyboardFocus === 'ring'
     ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
     : 'none';
+  // Pointer never consumes CSS outline: explicit "outline" means a sharp
+  // external 2px shadow edge, preserving FocusOrigin and component elevation.
   root['pointer-shadow'] = ext.pointerFocus === 'ring'
     ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 40%,transparent)'
-    : 'none';
+    : ext.pointerFocus === 'outline'
+      ? '0 0 0 0.125rem var(--qxframe9a7c2-theme-pointer-focus)'
+      : 'none';
   root['hover-border-strength'] = ['border', 'both'].includes(ext.hoverStyle) ? '30%' : '0%';
   root['hover-background-strength'] = ['background', 'both'].includes(ext.hoverStyle) ? '15%' : '0%';
   root['focus-background-strength'] = ext.focusBackground === 'parent-surface' ? '100%' : '0%';
