@@ -55,7 +55,16 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
  .qxframe9a7c2-form-input-group.is-responsive>.qxframe9a7c2-group-control{margin-inline-start:0}
 }
 /* One connected seam owner; only explicit Outline draws shared overlapping borders. */
-.qxframe9a7c2-selectgroup.is-connected{isolation:isolate}
+.qxframe9a7c2-selectgroup.is-connected{display:flex;flex-wrap:nowrap;gap:0;isolation:isolate}
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex{width:100%;gap:0;min-width:0}
+/* Direct and Flex-wrapped Items share a single border/seam and stacking owner. */
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item{margin:0}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-start-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{border-start-end-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item{margin:0}
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}

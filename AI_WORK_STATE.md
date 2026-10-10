@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-10 S3 SelectGroup media/connected external Flex batch (new CI pending)
+- Previous validated HEAD: `7dbbe4ec5e5acd4aaff912c3c276e2f0b38a2ff5`; PR #265 Open/Draft/unmerged. All new changes require new HEAD two-workflow success and matching artifact before acceptance.
+- Choice group no longer imposes display:flex or media-dependent item sizing/Surface padding/display. Independent Flex owns item flow, including checkbox, radio, color and image docs examples. Demo-only media width stays in docs DOM.
+- Connected Outline now uses a single no-gap seam owner for both direct Items and one external Flex wrapper. Native checked/focused stacking and first/last Theme corners retained.
+- Browser QA added for image/plain Surface None/Outline/Muted in light/dark and direct/nested connected seam and native selection. This batch's offline annotations reset to two actually affected Preview01 cards, Notifications and Receiving Method; historical yellow cleared.
+- Not yet accepted until QXFRAME CI, CSS Schema CI, pinned geometry and same-tree official dist/docs Windows ZIP pass. Remaining Stage3 full visual parity and seven theme hover/focus option axes require follow-up. Never merge Draft without user approval.
+
 ## CURRENT — 2026-10-10 Chromium test syntax restored (same-HEAD CI pending)
 - QXFRAME #38044213027 and CSS Schema Acceptance #38044213045: initial Create browser acceptance was aborted before any browser run due to an unescaped literal newline inserted into the JavaScript string for the synthetic Surface transition fix (SyntaxError line 1828). Replaced the two physical lines inside evaluate(...) with escaped \\n sequences, keeping the actual test-created Surface transition:none and production motion unchanged.
 - Added a fast static node --check gate in tools/verify-create-app.mjs so the browser test module is syntax-checked before the expensive acceptance suite. Both workflows must pass on the new HEAD before distributing any Actions dist+docs ZIP. PR #265 remains Draft.

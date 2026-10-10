@@ -37,7 +37,8 @@
 .qxframe9a7c2-form-check-label{min-width:0;flex:1 1 0;line-height:1.45}
 .qxframe9a7c2-form-check-description{width:calc(100% - var(--_qxframe9a7c2-form-check-size) - 0.375rem);min-width:0;flex:0 0 auto;margin-inline-start:calc(var(--_qxframe9a7c2-form-check-size) + 0.375rem);color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em;line-height:1.45}.qxframe9a7c2-form-check.is-inline .qxframe9a7c2-form-check-label,.qxframe9a7c2-form-check-inline .qxframe9a7c2-form-check-label{flex:0 1 auto}.qxframe9a7c2-form-check.is-inline .qxframe9a7c2-form-check-description,.qxframe9a7c2-form-check-inline .qxframe9a7c2-form-check-description{width:auto;flex:0 1 auto;margin-inline-start:0}
 
-.qxframe9a7c2-selectgroup{display:flex;flex-wrap:wrap;align-items:stretch;gap:var(--qxframe9a7c2-selectgroup-gap,.375rem);font-size:var(--_qxframe9a7c2-control-font-size)}
+/* SelectGroup owns selection and appearance; independent Flex owns the item flow. */
+.qxframe9a7c2-selectgroup{display:block;min-width:0;font-size:var(--_qxframe9a7c2-control-font-size)}
 
 .qxframe9a7c2-selectgroup-item{position:relative;z-index:0;display:inline-block;margin:0;cursor:pointer;user-select:none}
 .qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-above)}
@@ -101,9 +102,7 @@
   --_qxframe9a7c2-choice-bg:var(--_qxframe9a7c2-semantic-bg-disabled)
 }
 .qxframe9a7c2-selectgroup-input:disabled+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-color{transform:none}
-.qxframe9a7c2-selectgroup>.qxframe9a7c2-field-group{flex:1 1 100%}
-.qxframe9a7c2-selectgroup-item:has(.qxframe9a7c2-selectgroup-image){flex:0 1 var(--_qxframe9a7c2-fixed-form-selectgroup-image-label-min-width);min-width:0}
-.qxframe9a7c2-selectgroup-item:has(.qxframe9a7c2-selectgroup-image)>.qxframe9a7c2-selectgroup-label{padding:0;display:block}
+/* Image media cannot override the universal Surface padding, display or item sizing. */
 .qxframe9a7c2-selectgroup-item.is-disabled{cursor:not-allowed}
 /* Indicator is a projection of native state. Floating is positioned in its own Surface. */
 .qxframe9a7c2-selectgroup-indicator.is-floating{
@@ -128,7 +127,7 @@
 .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-switch{--_qxframe9a7c2-choice-switch-thumb-bg:var(--_qxframe9a7c2-semantic-on-accent);background:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-switch-thumb{inset-inline-start:calc(var(--_qxframe9a7c2-choice-switch-width) - var(--_qxframe9a7c2-choice-switch-thumb-width) - var(--_qxframe9a7c2-choice-switch-padding))}
 
-.qxframe9a7c2-selectgroup-image{display:flex;width:100%;min-width:0;flex-direction:column;overflow:hidden;background:var(--_qxframe9a7c2-semantic-subtle)}
+.qxframe9a7c2-selectgroup-image{display:flex;width:100%;min-width:0;flex:1 1 auto;flex-direction:column;overflow:hidden;background:var(--_qxframe9a7c2-semantic-subtle)}
 .qxframe9a7c2-selectgroup-image>img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .qxframe9a7c2-selectgroup-image-preview{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/3;background:var(--_qxframe9a7c2-semantic-subtle);color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:calc(var(--_qxframe9a7c2-control-icon-size) * 2)}
 .qxframe9a7c2-selectgroup-image-caption{display:block;padding:0.5rem var(--_qxframe9a7c2-fixed-space-5);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.875em}

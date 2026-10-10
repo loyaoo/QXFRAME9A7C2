@@ -1,12 +1,12 @@
-/** Stage 3 current acceptance batch: SelectGroup FocusOrigin + Surface/indicator paint. */
+/** Stage 3 batch: SelectGroup independent layout and single Surface paint. */
 const groups = [
-  ['notification-settings','Notifications · Keyboard and pointer focus',[
-    ['.qxframe9a7c2-selectgroup-label','Surface single halo owner','Keyboard outline or ring and pointer Theme halo paint on choice Surface; indicator no longer draws a second halo','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-selectgroup-indicator','Checkbox indicator','Native checked/indeterminate visuals preserved without nested focus outline','__QA_BUNDLE_HEAD__']
+  ['notification-settings','Notifications · Native choices',[
+    ['.qxframe9a7c2-selectgroup','Default None root','SelectGroup root delegates arrangement to composition DOM, with no implicit Flex or border','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-selectgroup-label','None Surface','Checkbox state remains native, with zero Appearance padding and border','__QA_BUNDLE_HEAD__']
   ]],
-  ['receiving-method','Receiving Method · Radio focus',[
-    ['.qxframe9a7c2-selectgroup-label','Radio Surface focus','Outline radio options respond to separate pointer and keyboard FocusOrigin tokens','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-selectgroup-indicator','Radio indicator','Dot remains native selection projection while Surface owns single focus ring','__QA_BUNDLE_HEAD__']
+  ['receiving-method','Receiving Method · Choice Surface',[
+    ['.qxframe9a7c2-selectgroup','Outline group','Root delegates dimensions and layout to the existing choice group','__QA_BUNDLE_HEAD__'],
+    ['.qxframe9a7c2-selectgroup-label','Outline Surface','Unified choice Surface draws themed border and padding; image and plain items use same owner','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -70,7 +70,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>Preview 01 · '+markedRegions+' 处</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。SelectGroup 焦点修复只标注本轮实际受影响的卡片；关闭高亮可查看原貌。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。SelectGroup 组合修复只标注本轮实际受影响的卡片；关闭高亮可查看原貌。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
