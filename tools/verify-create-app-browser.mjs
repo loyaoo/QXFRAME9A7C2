@@ -1831,6 +1831,19 @@ try {
     }
   });
 
+  await step('Owner feedback: group focus, Tabs scroll and native Select paint',async()=>{
+    await click('document.querySelector(\'[data-create-item="01"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=savings-targets] .qxframe9a7c2-form-input-group")','shared InputGroup');
+    const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-form-input-group'),input=group?.querySelector('.qxframe9a7c2-form-input'),addon=group?.querySelector('.qxframe9a7c2-form-input-group-addon'),tabs=d.querySelector('[data-card=faq] .qxframe9a7c2-tabs-scroll'),tab=tabs?.querySelector('.qxframe9a7c2-tabs-tab'),select=d.querySelector('[data-card=savings-targets] select.qxframe9a7c2-form-select');if(!input||!addon||!tabs||!tab||!select)return {error:'missing roles'};input.focus();const outer=getComputedStyle(group),inner=getComputedStyle(input),g=group.getBoundingClientRect(),v=tabs.querySelector('.qxframe9a7c2-scroll-viewport').getBoundingClientRect(),t=tab.getBoundingClientRect(),s=getComputedStyle(select);return {outerOutline:outer.outlineStyle,innerOutline:inner.outlineStyle,addonRight:parseFloat(getComputedStyle(addon).paddingRight),inputLeft:parseFloat(inner.paddingLeft),fieldWidth:g.width,tabHeight:t.height,viewportHeight:v.height,arrow:s.backgroundImage,appearance:s.appearance};})()");
+    assert.ok(!r.error,JSON.stringify(r));
+    assert.equal(r.outerOutline,'solid','entire grouped field owns keyboard outline');
+    assert.equal(r.innerOutline,'none','inner field cannot draw duplicate outline');
+    assert.ok(Math.abs(r.addonRight-r.inputLeft)<.6,'both sides of internal seam share half padding: '+JSON.stringify(r));
+    assert.ok(r.viewportHeight+.5>=r.tabHeight,'Tabs horizontal viewport cannot clip TabItem: '+JSON.stringify(r));
+    assert.equal(r.appearance,'none','native select uses standardized arrow');
+    assert.ok(r.arrow.includes('gradient'),'native select draws its own chevron');
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {

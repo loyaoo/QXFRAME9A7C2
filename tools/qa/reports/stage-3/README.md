@@ -1,3 +1,13 @@
+# User-reported multi-component consistency batch (2026-10-10)
+
+## CURRENT — 2026-10-10 S3 user feedback multi-component batch (CI pending)
+- Baseline green HEAD `15c7f5a3`, QXFRAME `38019740808` and CSS Schema `38019740821` SUCCESS; PR #265 Draft.
+- Shared CSS and compiler changes: density 28/32/36/40/44 inline-padding monotonic; Tabs horizontal intrinsic viewport height; placement-aware popup from attached edge scaleY/scaleX (no point-scale); Sidebar muted hover distinct from active accent; connected InputGroup additive padding seam halves and wrapper-owned focus-visible (not child's outline); native Select browser-stable drawn chevron; nesting contract documented without claiming seamless nested-group support.
+- New static and Chromium tests added; previous 528 source/Card, 2128 Field/Item, 384 Badge, 448 small Button, 304 first-Button, 4224 Title/Description and FAQ paint gates stay enabled. CI must verify visual regressions, especially editorial Sera affected by density source. If source-lock contradicts corrected monotonic density, adjudicate with real evidence; do not silently weaken source gates.
+- Current offline ledger is RESET to only four affected inner regions (Buy Investment input-group and Select, Sidebar menu, FAQ Tabs). No old yellow. New official 2-green artifact required.
+- Stage3 ~91%, total CREATEAPP-V3 ~70% prior to user acceptance; this batch is not credited until CI plus owner's review. No core JS edits, no PR merge, no main/backup edits.
+
+
 # CheckField test-selector migration while retaining source strictness
 
 ## CURRENT — 2026-10-10 CheckField source audit selector updated (rerun required)

@@ -110,11 +110,12 @@ const SHADOW_TIERS = {
 };
 
 // Density: md height / inline padding / gap / icon (rem).
+// 28→32→36→40→44: horizontal inset must never decrease as density relaxes.
 const DENSITY = {
   dense: [1.75, 0.5, 0.25, 0.875],
   compact: [2, 0.625, 0.375, 1],
   standard: [2.25, 0.625, 0.375, 1],
-  loose: [2.5, 1.5, 0.375, 1],
+  loose: [2.5, 0.875, 0.375, 1],
   touch: [2.75, 1, 0.5, 1.25] // QX
 };
 const PADDING = { p12: 0.75, p16: 1, p20: 1.25, p24: 1.5, p28: 1.75, p32: 2 };

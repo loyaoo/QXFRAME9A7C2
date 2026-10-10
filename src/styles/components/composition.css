@@ -252,12 +252,18 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
   background:transparent;color:inherit;font-size:var(--qxframe9a7c2-theme-text-size);
   text-decoration:none
 }
-.qxframe9a7c2-sidebar-menu-button:hover,
-.qxframe9a7c2-sidebar-menu-button.is-active{
-  background:var(--qxframe9a7c2-theme-accent);
-  color:var(--qxframe9a7c2-theme-accent-foreground)
+/* Hover is a subtle navigation hint; selected item alone receives the
+ * configured emphasis (including bold primary accent). */
+.qxframe9a7c2-sidebar-menu-button:hover:not(.is-active){
+  background:var(--qxframe9a7c2-theme-muted);
+  color:var(--qxframe9a7c2-theme-foreground)
 }
-.qxframe9a7c2-sidebar-menu-button.is-active{font-weight:500}
+.qxframe9a7c2-sidebar-menu-button.is-active,
+.qxframe9a7c2-sidebar-menu-button.is-active:hover{
+  background:var(--qxframe9a7c2-theme-accent);
+  color:var(--qxframe9a7c2-theme-accent-foreground);
+  font-weight:500
+}
 .qxframe9a7c2-sidebar-menu-button:focus-visible{
   outline:var(--_qxframe9a7c2-focus-visible-outline);
   outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
@@ -348,6 +354,44 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix:first-child{border-inline-start:0}
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix:last-child,
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix:last-child{border-inline-end:0}
+
+
+/* InputGroup is a presentation composition, not a second Control skin.
+ * Connected addon + field owns one OUTER border. Reduce only the two
+ * touching inset halves while preserving full exterior padding. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon:not(:last-child),
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon:not(:last-child){
+  padding-inline-end:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon:not(:first-child),
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon:not(:first-child){
+  padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon+.qxframe9a7c2-form-input,
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon+.qxframe9a7c2-form-input{
+  padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input:has(+.qxframe9a7c2-form-input-group-addon),
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input:has(+.qxframe9a7c2-form-input-group-addon){
+  padding-inline-end:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
+}
+/* A keyboard-focused field inside connected addon composition projects its
+ * one 2px outline to the border owner. Mouse focus keeps the existing border
+ * projection, and the native input NEVER draws a second outline. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible){
+  outline:var(--_qxframe9a7c2-focus-visible-outline);
+  outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
+}
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input:focus-visible,
+.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input:focus-visible{
+  outline:none;box-shadow:none
+}
+/* A nested group is an independent composition island. Mixing connected
+ * seam ownership across parent/child roots is not implicit. */
+.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group{
+  flex:1 1 auto;min-width:0
+}
 
 /* Static keyboard hint (Kbd) shares field shape and muted surface. */
 .qxframe9a7c2-kbd {

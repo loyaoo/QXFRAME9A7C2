@@ -67,6 +67,29 @@ check('CheckField 3-way alignment has no margin-offset or Card-specific owner', 
   assert.ok(!section.includes('qxframe9a7c2-check-field is-center'),'default center does not require per-Card state');
 });
 
+check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and grouped focus are shared recipes',()=>{
+  const css=(name)=>fs.readFileSync(path.join(root,'src/styles/components/'+name+'.css'),'utf8');
+  const compiler=read('compiler.js');
+  const density=compiler.match(/const DENSITY = \{([\s\S]*?)\n\};/);
+  assert.ok(density,'density source table');
+  const rows=['dense','compact','standard','loose','touch'].map(x=>{
+    const re=new RegExp(x+': \\[([^\\]]+)\\]');
+    const m=density[1].match(re);assert.ok(m,x+' row exists');
+    return m[1].split(',').map(y=>parseFloat(y));
+  });
+  for(let col=0;col<4;col++)for(let i=1;i<rows.length;i++)
+    assert.ok(rows[i][col]>=rows[i-1][col],'density '+i+' property '+col+' is monotonic');
+  assert.match(css('tabs'),/\.qxframe9a7c2-tabs-scroll\{width:100%;height:auto;min-height:/,'horizontal Tabs intrinsic height');
+  assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');
+  assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
+  assert.match(css('composition'),/sidebar-menu-button:hover:not\(\.is-active\)[^\{]*\{[^}]*theme-muted/,'muted hover');
+  assert.match(css('composition'),/sidebar-menu-button\.is-active:hover[^\{]*\{[^}]*theme-accent/,'theme active');
+  assert.match(css('composition'),/form-input-group-field:has\(>\.qxframe9a7c2-form-input:focus-visible\)[^\{]*\{[^}]*outline:/,'group owns keyboard outline');
+  assert.match(css('composition'),/form-input-group-addon\+\.qxframe9a7c2-form-input[^\{]*\{[^}]*padding-inline-start:calc/,'internal touching padding half');
+  assert.match(css('form-native'),/\.qxframe9a7c2-form-select,\.qxframe9a7c2-native-form select\{[\s\S]*?appearance:none/,'native arrow replacement');
+  assert.ok(fs.readFileSync(path.join(root,'docs/create/inputgroup-control-contract.md'),'utf8').includes('独立子组合布局岛'));
+});
+
 check('small Button typography consumes one source-mapped Theme token', () => {
   const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
   const tokens=fs.readFileSync(path.join(root,'docs/create/tokens.js'),'utf8');

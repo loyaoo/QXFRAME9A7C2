@@ -13,7 +13,11 @@
 .qxframe9a7c2-tabs-nav{position:relative;display:flex;align-items:center;min-width:0;min-height:0;gap:var(--_qxframe9a7c2-tabs-gap)}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-nav{width:max-content;max-width:42%;flex-direction:column;align-items:stretch}
 .qxframe9a7c2-tabs-scroll-host{min-width:0;min-height:0;flex:1 1 auto;overflow:hidden}
-.qxframe9a7c2-tabs-scroll{width:100%;height:var(--_qxframe9a7c2-tabs-height)}
+/* Horizontal Scroll needs intrinsic block sizing: a segmented viewport adds
+ * padding around the tabs, which the old fixed height clipped. */
+.qxframe9a7c2-tabs-scroll{width:100%;height:auto;min-height:var(--_qxframe9a7c2-tabs-height)}
+.qxframe9a7c2-tabs:not(.is-vertical) .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport{height:auto;min-height:var(--_qxframe9a7c2-tabs-height)}
+.qxframe9a7c2-tabs:not(.is-vertical) .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{min-height:0}
 .qxframe9a7c2-tabs.is-vertical .qxframe9a7c2-tabs-scroll{height:100%;min-height:7.5rem;width:100%}
 .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{display:flex;align-items:stretch;min-width:max-content;min-height:100%;gap:var(--_qxframe9a7c2-tabs-gap)}
 .qxframe9a7c2-tabs.is-centered:not(.is-vertical) .qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-content{justify-content:center;min-width:100%}
