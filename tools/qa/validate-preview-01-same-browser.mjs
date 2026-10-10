@@ -97,6 +97,40 @@ for(const card of smallButtonCards)assert.equal(smallButtonCounts[card],16,'smal
 assert.deepEqual(smallButtonIssues,[],'source-pinned small Button type/width geometry mismatch: '+JSON.stringify(smallButtonIssues.slice(0,22)));
 console.log('[stage3-small-button-parity] '+JSON.stringify({cards:smallButtonCards,count:112,checks:448,issues:smallButtonIssues.length}));
 
+// Every source/QX first Button in these 19 Card groups is the same
+// control, verified by text/role. Upcoming Payments is deliberately NOT
+// equivalent: source's first Button is a DayPicker day 27, while QX's
+// first Button is the Calendar navigation control. Comparing those would
+// create a fake palette/weight failure.
+const matchedButtonCards=[
+ 'account-access','contribution-history','cover-art','dividend-income',
+ 'empty-connect-bank','empty-distribute-track','empty-explore-catalog',
+ 'faq','new-milestone','notification-settings','payout-threshold',
+ 'preferences','qr-connect','receiving-method','recent-transactions',
+ 'savings-targets','social-links','syncing-state','transfer-funds'
+];
+const matchedButtonErrors=[], matchedButtonCounts={};
+for(const row of nested.rows){
+  if(!matchedButtonCards.includes(row.card))continue;
+  const src=row.source?.button, qx=row.qx?.button;
+  if(!src||!qx){matchedButtonErrors.push({card:row.card,style:row.style,mode:row.mode,error:'missing paired first Button'});continue;}
+  matchedButtonCounts[row.card]=(matchedButtonCounts[row.card]||0)+1;
+  if(src.text!==qx.text)matchedButtonErrors.push({card:row.card,style:row.style,mode:row.mode,error:'source/QX first Button represents a different control',source:src.text,qx:qx.text});
+  for(const prop of ['w','h','fontSize','fontWeight']){
+    const x=parseFloat(src[prop]),y=parseFloat(qx[prop]);
+    if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x-y)>.5)
+      matchedButtonErrors.push({card:row.card,style:row.style,mode:row.mode,prop,source:src[prop],qx:qx[prop]});
+  }
+  for(const channel of ['fg','bg']){
+    const x=src.buttonPaint?.[channel],y=qx.buttonPaint?.[channel];
+    if(!x||!y||x.length!==4||y.length!==4||x.some((value,i)=>Math.abs(value-y[i])>2))
+      matchedButtonErrors.push({card:row.card,style:row.style,mode:row.mode,channel,source:x,qx:y});
+  }
+}
+for(const card of matchedButtonCards)assert.equal(matchedButtonCounts[card],16,'same Chromium source/Button roles required for every style/mode '+card);
+assert.deepEqual(matchedButtonErrors,[],'source-matched Button paint/type/geometry divergence: '+JSON.stringify(matchedButtonErrors.slice(0,32)));
+console.log('[stage3-first-button-parity] '+JSON.stringify({cards:matchedButtonCards.length,pairs:304,propertyChannels:['w','h','fontSize','fontWeight','fg','bg'],errors:matchedButtonErrors.length}));
+
 const badgeCards=['claimable-balance','front-door','release-catalog','upcoming-payments'];
 const badgeFailures=[],badgeCounts={};
 for(const row of nested.rows){

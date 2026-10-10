@@ -76,11 +76,13 @@ try {
       const r=e.getBoundingClientRect(),cs=getComputedStyle(e);
       const badgePaint=e.matches('[data-slot="badge"],.qxframe9a7c2-badge') ?
         {bg:rgba(cs.backgroundColor),fg:rgba(cs.color),border:rgba(cs.borderTopColor)} : null;
+      const buttonPaint=e.matches('[data-slot="button"],.qxframe9a7c2-button') ?
+        {bg:rgba(cs.backgroundColor),fg:rgba(cs.color),border:rgba(cs.borderTopColor)} : null;
       return {x:+r.x.toFixed(2),y:+r.y.toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),
         color:cs.color,background:cs.backgroundColor,borderColor:cs.borderTopColor,
         padTop:cs.paddingTop,padBottom:cs.paddingBottom,padLeft:cs.paddingLeft,
         fontSize:cs.fontSize,fontWeight:cs.fontWeight,radius:cs.borderTopLeftRadius,
-        badgePaint,
+        badgePaint,buttonPaint,
         text:(e.textContent||'').trim().replace(/\s+/g,' ').slice(0,64)};
     };
     return Object.fromEntries([...document.querySelectorAll('['+marker+']')]
@@ -214,7 +216,7 @@ try {
       await page.waitForSelector('[data-qa-card="contribution-history"]');
       // Source content-visibility is a performance optimization. Force all cards
       // to lay out so offscreen columns are measured rather than estimated.
-      await page.addStyleTag({ content: '*{content-visibility:visible}body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
+      await page.addStyleTag({ content: '*{content-visibility:visible}body,body *{font-family:system-ui,sans-serif!important}*{animation:none!important;transition:none!important}' });
       await page.waitForTimeout(350);
       const reference = await measure(true);
       const sourceInner=await measureInner(true);
@@ -236,7 +238,7 @@ try {
       await page.waitForSelector('[data-card="contribution-history"]');
       await page.addStyleTag({ content: compileTheme(normalizeConfig({ style })).css });
       await page.evaluate(({ style, dark }) => { document.documentElement.dataset.createStyle = style; document.documentElement.classList.toggle('dark', dark); }, { style, dark });
-      await page.addStyleTag({ content: 'body,body *{font-family:system-ui,sans-serif!important}*{animation:none;transition:none}' });
+      await page.addStyleTag({ content: 'body,body *{font-family:system-ui,sans-serif!important}*{animation:none!important;transition:none!important}' });
       await page.waitForTimeout(350);
       const actual = await measure(false);
       const actualInner=await measureInner(false);

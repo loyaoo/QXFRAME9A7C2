@@ -1,5 +1,13 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 Stage3: semantic-matched 19-Card Button paint/type parity (CI PENDING)
+
+- Latest green base commit `5f7f70ab`, full QXFRAME CI `38009549018` and CSS Schema `38009549022` SUCCESS. PR #265 remains Draft, main/backup untouched. Existing 528 first-Card + 2,128 Item/Field + 384 Badge + 448 small Button gates all retained.
+- Source/QX nested role audit revealed a timing artifact: `transition:none` without `!important` loses against framework Button transitions. Dark computed color samples captured intermediate oklab mixtures, mistakenly suggesting that every dark Button is miscolored. Source and QX audited with **`animation:none!important;transition:none!important`** in both renderers; no production CSS altered.
+- Added same-Chromium **19 semantically matched first-Button Card groups × 16 styles/modes = 304 source/QX paired Buttons**, strict width/height/fontSize/fontWeight plus 2 normalized sRGB paint channels (4-channel RGBA for each). Explicitly exclude Upcoming Payments **because pinned source's first Button is calendar day 27 and QX first Button is calendar nav**: non-equivalent DOM roles, not an exception to an observed failure. Complete paint and geometry gate must pass; no visual acceptance from unverified alpha colors.
+- No visual-asset or DOM production change in this checkpoint. Current offline QA 7 Card / 8 region ledger from previous actually fixed small Button batch retained until a new visual batch; no ZIP issued solely for audit. Stage3 ~85%, total ~69% unchanged until actual new visual corrections/manual pass. New candidate CI pending.
+
+
 ## CURRENT — 2026-10-10 V2 separate small text/icon font roles (candidate CI PENDING)
 
 - Source-paired Chromium 448-property Button gate proved after V2 cascade fix that all styles matched **except Nova icon-sm**: source Header icon buttons use **14px**, but Nova `size=sm` text Buttons use **12.8px**. Distinct roles now: `.button.is-sm` consumes `theme-button-sm-font-size`, whereas `.button.is-sm.is-square/.is-icon-only` consumes `theme-control-font-size` (Nova 14px). This is shared QX component mapping, not Preview CSS, no additional Theme token.
