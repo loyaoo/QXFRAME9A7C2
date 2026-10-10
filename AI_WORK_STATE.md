@@ -1,5 +1,10 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 FAQ rail static source assertion updated after real geometry proof
+- Official QXFRAME run `38023226924` Release failed only on stale static assertion requiring old `--tabs-height:calc(... - .375rem)`; the component now uses `- .5rem` because 4px+4px vertical rail padding has been restored. Local Chromium demonstrated FAQ Card remains 355px, with Scroll rail 32px, Viewport padding-block 4px each and TabItem 24px fully visible. Strict source-locked Card and TabItem browser gates remain; update static assertion to match the new correct public Tabs slot mapping, do not remove the gate.
+- Await the separate same-browser source geometry job result; rerun both workflows at new HEAD. PR Draft.
+
+
 ## CURRENT — 2026-10-10 real-browser pointer focus cascade fix
 - Ran local Chromium against the previous official offline demo with the prospective pointer CSS. Pointer-focus `--theme-pointer-width:3px` and `offset:2px` **failed** when rule was expressed as `html:not(.keyboard)...` inside `@scope (:root)` (computed 2px/-1px keyboard outline); independent Chromium check showed the same selector outside scope correctly yielded **3px/2px** and keyboard remained 2px.
 - Moved InputGroup mouse Theme rule to the shared `src/styles/components/composition.css` cascade with `html:not(.qxframe9a7c2-keyboard-focus-origin)` selector. Keep Theme consumption, keyboard 2px, inner input none. Removed ineffective duplicate scoped rule, updated regression guard.

@@ -1,3 +1,10 @@
+# Strict FAQ Tabs source slot assertion modernization
+
+## CURRENT — 2026-10-10 FAQ rail static source assertion updated after real geometry proof
+- Official QXFRAME run `38023226924` Release failed only on stale static assertion requiring old `--tabs-height:calc(... - .375rem)`; the component now uses `- .5rem` because 4px+4px vertical rail padding has been restored. Local Chromium demonstrated FAQ Card remains 355px, with Scroll rail 32px, Viewport padding-block 4px each and TabItem 24px fully visible. Strict source-locked Card and TabItem browser gates remain; update static assertion to match the new correct public Tabs slot mapping, do not remove the gate.
+- Await the separate same-browser source geometry job result; rerun both workflows at new HEAD. PR Draft.
+
+
 # Browser-confirmed InputGroup mouse focus selector ownership
 
 ## CURRENT — 2026-10-10 real-browser pointer focus cascade fix

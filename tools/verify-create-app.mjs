@@ -507,7 +507,7 @@ check('Checkbox Field uses the shared horizontal Field gap role', () => {
 
 check('FAQ TabsList source height uses public Tabs slot without global overrides', () => {
   const css=read('preview.css');
-  assert.match(css,/\.pv-tabs-full\s*\{[^}]*--qxframe9a7c2-tabs-height:\s*calc\(max\(2rem,var\(--qxframe9a7c2-theme-control-height\)\)\s*-\s*\.375rem\)/,
+  assert.match(css,/\.pv-tabs-full\s*\{[^}]*--qxframe9a7c2-tabs-height:\s*calc\(max\(2rem,var\(--qxframe9a7c2-theme-control-height\)\)\s*-\s*\.5rem\)/,
     'FAQ uses source Tab rail height through the public Tabs size API');
   const shared=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
   assert.match(shared,/--_qxframe9a7c2-tabs-height:var\(--qxframe9a7c2-tabs-height,/,
