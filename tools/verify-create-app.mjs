@@ -93,6 +93,7 @@ check('SelectGroup replaces CheckField without a duplicate choice Field owner', 
 check('SelectGroup appearance and nine floating positions have no retired scene owner', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
   const visual=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+  const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const demos=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
   assert.match(demos,/Floating indicator · Nine anchors/,'nine-anchor interactive docs example');
   assert.ok((demos.match(/qxframe9a7c2-flex is-center is-gap-2/g)||[]).length>=16,'ordinary choice content composes through independent inner Flex');
@@ -100,8 +101,8 @@ check('SelectGroup appearance and nine floating positions have no retired scene 
   assert.match(demos,/\['left','center','right'\]/);
   assert.doesNotMatch(demos,/is-pill|is-boxes|is-image-grid|is-color-grid|display:grid/,'demos use composable appearances and Flex');
   assert.match(css,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard Theme shadow paints on Surface');
-  assert.match(css,/html\.qxframe9a7c2-keyboard-focus-origin \.qxframe9a7c2-selectgroup \.qxframe9a7c2-selectgroup-input:focus\+\.qxframe9a7c2-selectgroup-label/,'FocusOrigin keyboard projection also covers native programmatic focus');
-  assert.match(css,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer Theme shadow paints on Surface');
+  assert.match(composition,/html\.qxframe9a7c2-keyboard-focus-origin \.qxframe9a7c2-selectgroup \.qxframe9a7c2-selectgroup-input:focus\+\.qxframe9a7c2-selectgroup-label/,'FocusOrigin keyboard projection must be outside scoped canonical component CSS');
+  assert.match(composition,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer Theme shadow paints on Surface (outside @scope)');
   assert.match(visual,/\.qxframe9a7c2-selectgroup-indicator\.is-radio\{border-color:var\(--_qxframe9a7c2-semantic-focus\);outline:none;box-shadow:none\}/,'indicator cannot draw second focus halo');
   for(const side of ['top-left','top-center','middle-left','middle-center','bottom-center','bottom-right'])
     assert.match(css,new RegExp('is-'+side+'\\b'),'named floating anchor exists: '+side);
