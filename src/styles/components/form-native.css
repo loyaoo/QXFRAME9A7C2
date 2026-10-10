@@ -62,7 +62,7 @@
     background-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2,0,0,1),
     box-shadow var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2,0,0,1)
 }
-.qxframe9a7c2-selectgroup{--qxframe9a7c2-layout-gap:var(--qxframe9a7c2-theme-field-gap,.75rem)}
+.qxframe9a7c2-selectgroup{--_qxframe9a7c2-layout-gap:var(--qxframe9a7c2-theme-field-gap,.75rem)}
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-border);
   padding:var(--qxframe9a7c2-selectgroup-padding-block-start,var(--qxframe9a7c2-theme-choice-field-inset,.625rem))
@@ -113,17 +113,15 @@
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-middle-left,
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-bottom-left{inset-inline-start:.5rem;inset-inline-end:auto}
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-top-center,
-.qxframe9a7c2-selectgroup-indicator.is-floating.is-middle-center,
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-bottom-center{inset-inline-end:auto;inset-inline-start:50%;transform:translateX(-50%)}
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-middle-left,
-.qxframe9a7c2-selectgroup-indicator.is-floating.is-middle-center,
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-middle-right{top:50%;transform:translateY(-50%)}
-.qxframe9a7c2-selectgroup-indicator.is-floating.is-middle-center{transform:translate(-50%,-50%)}
+.qxframe9a7c2-selectgroup-indicator.is-floating.is-middle-center{top:50%;inset-inline-end:auto;inset-inline-start:50%;transform:translate(-50%,-50%)}
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-bottom-left,
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-bottom-center,
 .qxframe9a7c2-selectgroup-indicator.is-floating.is-bottom-right{top:auto;bottom:.5rem}
 /* Floating radio/checkbox always inherits the Surface's focus, never a second outline. */
-.qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator{outline:none;box-shadow:none}
+
 .qxframe9a7c2-selectgroup-switch{--_qxframe9a7c2-choice-switch-height:var(--qxframe9a7c2-choice-switch-height,var(--qxframe9a7c2-switch-height,calc(var(--_qxframe9a7c2-control-height)*.625)));--_qxframe9a7c2-choice-switch-width:var(--qxframe9a7c2-choice-switch-width,var(--qxframe9a7c2-switch-width,calc(var(--_qxframe9a7c2-control-height)*1.25)));--_qxframe9a7c2-choice-switch-padding:var(--qxframe9a7c2-choice-switch-padding,var(--qxframe9a7c2-switch-padding,var(--_qxframe9a7c2-fixed-space-1)));--_qxframe9a7c2-choice-switch-thumb-bg:var(--_qxframe9a7c2-semantic-overlay-text);position:relative;display:block;width:var(--_qxframe9a7c2-choice-switch-width);height:var(--_qxframe9a7c2-choice-switch-height);flex:0 0 var(--_qxframe9a7c2-choice-switch-width);border-radius:var(--qxframe9a7c2-theme-radius-switch);background:var(--_qxframe9a7c2-semantic-border-strong);transition:background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-selectgroup-switch-thumb{--_qxframe9a7c2-choice-switch-thumb-width:var(--qxframe9a7c2-choice-switch-thumb-width,min(calc(calc(var(--_qxframe9a7c2-choice-switch-height) - var(--_qxframe9a7c2-choice-switch-padding)*2) + var(--qxframe9a7c2-theme-switch-thumb-extra)),calc(var(--_qxframe9a7c2-choice-switch-width) - var(--_qxframe9a7c2-choice-switch-padding)*2 - .25rem)));position:absolute;top:var(--_qxframe9a7c2-choice-switch-padding);inset-inline-start:var(--_qxframe9a7c2-choice-switch-padding);width:var(--_qxframe9a7c2-choice-switch-thumb-width);height:calc(var(--_qxframe9a7c2-choice-switch-height) - var(--_qxframe9a7c2-choice-switch-padding)*2);border-radius:var(--qxframe9a7c2-theme-radius-switch-thumb);background:var(--_qxframe9a7c2-choice-switch-thumb-bg);box-shadow:0 1px 0.25rem rgb(0 0 0 / .24);transition:inset-inline-start var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),background-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-selectgroup .qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-switch{--_qxframe9a7c2-choice-switch-thumb-bg:var(--_qxframe9a7c2-semantic-on-accent);background:var(--qxframe9a7c2-theme-primary)}

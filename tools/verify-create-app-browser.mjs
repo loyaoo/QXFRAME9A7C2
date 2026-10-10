@@ -604,8 +604,8 @@ try {
         const menu=doc.querySelector('[data-card="sidebar-nav"]');
         const button=menu.querySelector('.qxframe9a7c2-sidebar-menu-button');
         const groupTitle=menu.querySelector('.qxframe9a7c2-sidebar-group-label');
-        return {choices:choices.map(c=>({top:px(css(c).paddingTop),bottom:px(css(c).paddingBottom),
-          side:px(css(c).paddingLeft),border:px(css(c).borderTopWidth),height:c.getBoundingClientRect().height,
+        return {choices:choices.map(c=>({top:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).paddingTop),bottom:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).paddingBottom),
+          side:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).paddingLeft),border:px(css(c.querySelector('.qxframe9a7c2-selectgroup-label')).borderTopWidth),height:c.getBoundingClientRect().height,
           titleLine:px(css(c.querySelector('.qxframe9a7c2-field-title')).lineHeight),
           contentHeight:c.querySelector('.qxframe9a7c2-field-content').getBoundingClientRect().height,
           titleHeight:c.querySelector('.qxframe9a7c2-field-title').getBoundingClientRect().height})),
@@ -1342,9 +1342,9 @@ try {
             secondWidth:second.width,groupWidth:group.getBoundingClientRect().width,
             forcedSecondTop:forcedSecond.top,
             items:rows.map(el=>{
-            const st=css(el),inner=el.querySelector('.qxframe9a7c2-field-content');
+            const st=css(el.querySelector('.qxframe9a7c2-selectgroup-label')),flex=el.querySelector('.qxframe9a7c2-flex'),inner=el.querySelector('.qxframe9a7c2-field-content');
             return {paddingBottom:num(st.paddingBottom),paddingTop:num(st.paddingTop),
-              border:num(st.borderTopWidth),gap:num(st.columnGap),
+              border:num(st.borderTopWidth),gap:num(css(flex).columnGap),
               contentGap:num(css(inner).rowGap),
               checked:el.querySelector('input[type=radio]').checked};
           }),

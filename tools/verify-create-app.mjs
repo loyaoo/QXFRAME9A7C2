@@ -538,7 +538,7 @@ check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', 
 
 check('Checkbox SelectGroup Flex consumes Theme Field gap', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
-  assert.match(css,/\.qxframe9a7c2-selectgroup\{--qxframe9a7c2-layout-gap:var\(--qxframe9a7c2-theme-field-gap/);
+  assert.match(css,/\.qxframe9a7c2-selectgroup\{--_qxframe9a7c2-layout-gap:var\(--qxframe9a7c2-theme-field-gap/);
   const expected={vega:12,nova:8,maia:12,lyra:8,mira:8,luma:12,sera:12,rhea:12};
   for(const [style,pixels] of Object.entries(expected)){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;

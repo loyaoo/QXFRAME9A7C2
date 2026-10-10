@@ -155,6 +155,8 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 /* Shared static layout: all visual density is expressed by the normal QX style layer. */
 .qxframe9a7c2-flex{display:flex;align-items:center;gap:var(--qxframe9a7c2-layout-gap,var(--_qxframe9a7c2-layout-gap,0.5rem));min-width:0}
 .qxframe9a7c2-flex.is-start{align-items:flex-start}
+.qxframe9a7c2-flex.is-center{align-items:center}
+.qxframe9a7c2-flex.is-end{align-items:flex-end}
 .qxframe9a7c2-flex.is-between{justify-content:space-between}
 .qxframe9a7c2-flex.is-baseline{align-items:baseline}
 .qxframe9a7c2-flex.is-wrap{flex-wrap:wrap}

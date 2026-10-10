@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-10 S3 SelectGroup failed CI correction (new CI pending)
+- Candidate 190c34a QXFRAME #38039628230: source-preview-geometry and windows-tools SUCCESS, release FAILED strict Section5 (public component --qxframe9a7c2-layout-gap, duplicate middle-center transform and indicator focus owner). CSS Schema #38039628207 failed Chromium when old test measured border on Item rather than its new Surface (0 vs expected 1).
+- Fix: use private inherited Field gap slot (no public declaration); one transform per floating anchor; Focus indicator outline owner only in focus-closeout; Flex supports is-center/is-end. Browser checks now measure Surface border/padding and independent Flex gap without weakening any tolerance.
+- Field/SelectGroup migrations still pending full same-HEAD CI and Windows offline ZIP. PR #265 Draft, no merge. Overall 65%, S3 75%, SelectGroup task provisional 25%.
+
 ## CURRENT — 2026-10-10 S3-FIELD-001 / S3-SELECTGROUP-002 migration candidate; new CI required
 - Verified previous HEAD 4c40c708 both CI SUCCESS: QXFRAME 38038216181, CSS Schema 38038216271. Source geometry and Windows jobs passed.
 - Source files now rename formal SelectGroup and share None/Outline/Muted surfaces, native checked projection, nine floating anchors, one connected seam. CheckField-specific CSS removed; Preview01 Notifications and Receiving Method migrated to choice Surface and independent Flex; Preview02's two CheckField consumers updated as necessary migration only (not Stage4 acceptance).
