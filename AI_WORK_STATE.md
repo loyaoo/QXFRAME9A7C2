@@ -1,5 +1,12 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 CheckField CSS state precedence and stale highlight gate (new CI pending)
+
+- After `df181ac3`, QXFRAME release in `38019622374` failed solely on a historical no-old-annotation assertion that still forbade `notification-settings` in the *current* QA ledger. This card is intentionally part of the new batch, so rotate the old batch prohibition to former `release-catalog` instead; retain the other old checks and exact active-selector assertions.
+- `.check-field.is-choice` previously re-declared `align-items:center` after the new three-state selectors, which would defeat explicit `is-start/is-end` on framed radio choices. Remove this redundant default so `is-choice` inherits centered base and obeys all three modifiers. All default source framing geometry must remain identical; strict CI guards not weakened.
+- Waiting QXFRAME and CSS Schema new same-tree green before exporting local annotated acceptance ZIP. Stage3 last confirmed ~91%, total ~70%; PR Draft, main/backup unchanged.
+
+
 ## CURRENT — 2026-10-10 CheckField source audit selector updated (rerun required)
 
 - Candidate `01e03012` QXFRAME source-preview-geometry `38019524639` failed in its *legacy expected class selector*, not a measured size deviation: audit expected exact `qxframe9a7c2-check-field is-center`, but new intended default-centered HTML correctly omits the redundant modifier. Audit now matches exact `qxframe9a7c2-check-field` and retains strict source row 16px + QX row 0.5px delta + whole Card height 0.5px delta checks. No gate relaxation. CI must rerun on the new tree.

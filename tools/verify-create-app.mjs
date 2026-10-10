@@ -60,6 +60,7 @@ check('CheckField 3-way alignment has no margin-offset or Card-specific owner', 
     assert.ok(css.includes('.qxframe9a7c2-check-field.is-'+name+'>.qxframe9a7c2-form-check-input{align-self:'+alignment+'}'),name+' input alignment');
   }
   assert.doesNotMatch(css,/\.qxframe9a7c2-check-field>\.qxframe9a7c2-form-check-input\{margin-top:/,'no old offset compensation');
+  assert.doesNotMatch(css,/\.qxframe9a7c2-check-field\.is-choice\{[^}]*align-items:/,'choice frame must not override cross-axis states');
   const preview=read('preview-01.html');
   const section=preview.slice(preview.indexOf('<!-- @card notification-settings -->'),preview.indexOf('<!-- @end notification-settings -->'));
   assert.equal((section.match(/class="qxframe9a7c2-check-field"/g)||[]).length,5,'five CheckField rows use default center');
@@ -1026,10 +1027,9 @@ check('Preview 01 source-pinned controlled visual state is authored across four 
     assert.ok(html.includes('data-card="'+id+'"'),id+' exists');
     assert.ok(html.includes('data-card="'+id+'"'),id+' source remains authored');
   }
-  // Release Catalog is intentionally highlighted AGAIN this batch for the
-  // newly corrected four Badge roles. The earlier checkbox/filter fixes remain
-  // historical, but no longer own its yellow regions.
-  for (const id of ['kitchen-island','roller-shades','notification-settings']) {
+  // These former behavior-fix rounds are no longer marked; the current
+  // CheckField policy batch legitimately highlights notification-settings.
+  for (const id of ['kitchen-island','roller-shades','release-catalog']) {
     assert.ok(!overlay.includes("['"+id+"'"),id+' last batch is no longer highlighted');
   }
   assert.match(js,/setToggleValue\(group, value\)/);

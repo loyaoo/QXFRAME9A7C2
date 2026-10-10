@@ -8,6 +8,13 @@
 
 # Stage3 CheckField alignment policy - new owner feedback item 1 (CI pending)
 
+## CURRENT — 2026-10-10 CheckField CSS state precedence and stale highlight gate (new CI pending)
+
+- After `df181ac3`, QXFRAME release in `38019622374` failed solely on a historical no-old-annotation assertion that still forbade `notification-settings` in the *current* QA ledger. This card is intentionally part of the new batch, so rotate the old batch prohibition to former `release-catalog` instead; retain the other old checks and exact active-selector assertions.
+- `.check-field.is-choice` previously re-declared `align-items:center` after the new three-state selectors, which would defeat explicit `is-start/is-end` on framed radio choices. Remove this redundant default so `is-choice` inherits centered base and obeys all three modifiers. All default source framing geometry must remain identical; strict CI guards not weakened.
+- Waiting QXFRAME and CSS Schema new same-tree green before exporting local annotated acceptance ZIP. Stage3 last confirmed ~91%, total ~70%; PR Draft, main/backup unchanged.
+
+
 ## CURRENT — 2026-10-10 CheckField three-state cross-axis contract (CI pending)
 
 - Latest verified baseline `322de1c1` PR #265 Draft; QXFRAME `38016670565` and CSS Schema `38016670548` both SUCCESS. This independent feedback batch addresses user item 1: the CheckField should not rely on a per-Card `.is-center` and a 2px margin patch.
