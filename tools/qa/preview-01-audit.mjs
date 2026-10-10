@@ -57,7 +57,10 @@ try {
       item:source?'[data-slot="item"]':'.qxframe9a7c2-item',
       button:source?'[data-slot="button"]':'.qxframe9a7c2-button',
       badge:source?'[data-slot="badge"]':'.qxframe9a7c2-badge',
-      field:source?'[data-slot="field"]':'.qxframe9a7c2-form-field'
+      field:source?'[data-slot="field"]':'.qxframe9a7c2-form-field',
+      title:source?'[data-slot="card-title"]':'.qxframe9a7c2-card-title',
+      description:source?'[data-slot="card-description"]':'.qxframe9a7c2-card-description',
+      tab:source?'[data-slot="tabs-trigger"][data-state="active"]':'.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active'
     };
     // Canvas normalizes equivalent oklch/oklab/rgba authoring into one
     // sRGB pixel representation. Compare composited Badge paint, not CSS
@@ -83,6 +86,7 @@ try {
         padTop:cs.paddingTop,padBottom:cs.paddingBottom,padLeft:cs.paddingLeft,
         fontSize:cs.fontSize,fontWeight:cs.fontWeight,radius:cs.borderTopLeftRadius,
         badgePaint,buttonPaint,
+        rolePaint:{bg:rgba(cs.backgroundColor),fg:rgba(cs.color),border:rgba(cs.borderTopColor)},
         text:(e.textContent||'').trim().replace(/\s+/g,' ').slice(0,64)};
     };
     return Object.fromEntries([...document.querySelectorAll('['+marker+']')]
@@ -572,7 +576,7 @@ try {
     }
   }
 } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }
-const nestedReport={source:'295a1f114a138f23b5dfee0e0c6812394dfeb90c',roles:['header','content','footer','item','button','badge','field'],
+const nestedReport={source:'295a1f114a138f23b5dfee0e0c6812394dfeb90c',roles:['header','content','footer','item','button','badge','field','title','description','tab'],
   note:'All 33 source Card groups, one representative per nested visual role. Role probes are diagnostic until source/QX mapping is calibrated; no unmeasured pixel parity is claimed.',
   rows:innerRows};
 fs.writeFileSync(path.join(out,'inner-roles.json'),JSON.stringify(nestedReport,null,2)+'\n');

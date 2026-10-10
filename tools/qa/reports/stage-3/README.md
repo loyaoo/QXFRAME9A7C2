@@ -1,3 +1,10 @@
+# Stage 3 FAQ segmented Tabs paint and text-role hard-gate candidate (2026-10-10)
+
+- Green baseline: `86f124cd`, QXFRAME `38014041835` SUCCESS, CSS Schema `38014041832` SUCCESS. Candidate pending official workflow validation.
+- Source: pinned shadcn `295a1f114a138f23b5dfee0e0c6812394dfeb90c`, upstream `apps/v4/registry/new-york-v4/ui/tabs.tsx` sets dark active `bg-input/30 border-input` and light active `bg-background`. QX shared segmented Tabs previously used surface in dark, clearly mispainting FAQ General. Shared Tabs CSS now consumes Theme input/background with a stable transparent border-box.
+- All 528 source/QX samples now also audit matched Title / Description / active Tab text and paint in the same Chromium, and require exact corresponding source typography and FAQ Tab paint. Existing 528 Card, 2,128 Item/Field, 384 Badge, 448 small Button and 304 first Button tests preserved. Actual new hard-gate counts/results require CI evidence.
+- Current-round offline QA ledger: FAQ segmented active Tab and New Milestone source punctuation (two exact regions); previous Social Links and older markers cleared. No new ZIP until double green on the same tree. Overall progress ~69%, Stage3 ~85% until trustworthy test results and owner acceptance; main/backup untouched, PR #265 Draft.
+
 # Stage 3 source Button nowrap root cause
 
 ## CURRENT — 2026-10-10 Sera Social Links source literal Button nowrap root-cause (CI pending)

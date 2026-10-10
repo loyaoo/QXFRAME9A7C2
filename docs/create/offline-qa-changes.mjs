@@ -1,7 +1,10 @@
-/** Current-round ONLY: Sera/other Style peer action widths; all prior yellow cleared. */
+/** Current-round ONLY: source-pinned FAQ segmented Tabs active paint; prior yellow cleared. */
 const groups = [
-  ['social-links','Social Links · 双按钮尺寸分配',[
-    ['.qxframe9a7c2-card-footer.is-source-peer-actions>.qxframe9a7c2-button','Discard / Save Changes','Sera 的 flex:1 1 0% 结合 min-width:auto 恢复源最小内容宽度约束；其它 Style 保留自然宽度，单一 Theme Peer Flex 配方','__QA_BUNDLE_HEAD__']
+  ['faq','FAQ · Tabs 激活项明暗外观',[
+    ['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active','FAQ / General 激活 Tab','锁定 shadcn 在深色使用 input/30 半透明背景及 input 边框，浅色使用 background；共享 QX Tabs 映射修正，不改变 JS','__QA_BUNDLE_HEAD__']
+  ]],
+  ['new-milestone','New Milestone · 标题描述文案字形',[
+    ['.qxframe9a7c2-card-description','Description 文案标点','将弯撇号恢复为上游直撇号，防止标题描述跨源角色比对中出现字形偏差','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

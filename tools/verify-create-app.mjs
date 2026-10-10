@@ -19,18 +19,18 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const overlay=read('offline-qa-changes.css');
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
-  const current={'social-links':['.qxframe9a7c2-card-footer.is-source-peer-actions>.qxframe9a7c2-button']};
+  const current={'faq':['.qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active'],'new-milestone':['.qxframe9a7c2-card-description']};
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  for(const previous of ['dividend-income','payout-threshold','preferences','savings-targets',
+  for(const previous of ['social-links','dividend-income','payout-threshold','preferences','savings-targets',
     'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
-    'release-catalog','upcoming-payments','qr-connect','cover-art','faq'])
+    'release-catalog','upcoming-payments','qr-connect','cover-art'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'one current grouped region spanning both Buttons');
+  assert.equal(count,2,'two exact inner visual regions in the current round');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,1,'one marker only');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -42,6 +42,13 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const page of ['index.html','preview-01.html','preview-02.html'])
     assert.doesNotMatch(read(page),/offline-qa-changes/,
       'QA visuals are forbidden in source / online Create HTML: '+page);
+});
+
+check('segmented Tabs use the pinned source dark active input/30 recipe', () => {
+  const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{border:1px solid transparent\}/,'source Tab border box');
+  assert.match(css,/--_qxframe9a7c2-tabs-tab-bg:light-dark\(var\(--qxframe9a7c2-theme-background\),color-mix\(in oklab,var\(--qxframe9a7c2-theme-input\) 30%,transparent\)\)/,'dark input/30, light background');
+  assert.match(css,/--_qxframe9a7c2-tabs-tab-border:light-dark\(transparent,var\(--qxframe9a7c2-theme-input\)\)/,'dark active input border');
 });
 
 check('small Button typography consumes one source-mapped Theme token', () => {

@@ -1,5 +1,14 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 S3 source-locked internal text and FAQ dark Tabs candidate (CI pending)
+
+- Baseline HEAD `86f124cdb1845cae5b325d36207cbf947b6d4490`; QXFRAME CI `38014041835` SUCCESS; CSS Schema `38014041832` SUCCESS; prior pending text is superseded. PR #265 stays Draft and main/backup remain untouched.
+- Compared official same Chromium artifact `11655478191` with locked shadcn `295a1f114a138f23b5dfee0e0c6812394dfeb90c`; outer 528 and existing Button/Item/Field/Badge gates pass. Real dark FAQ active Tabs surface mismatch confirmed against exact pinned source TabsTrigger: dark active bg=input/30 and border=input, light active bg=background. Fixed shared QX segmented Tabs in `src/styles/components/tabs.css` only; no Preview-private CSS, no JS core edits.
+- Extended paired source sampling to title/description/active Tab across all Cards and 16 Style/modes, with strict text positions/font/normalized text paint and FAQ active Tab normalized bg/fg/border paint; existing hard gates retained. Do not infer success until new same-browser Actions validate.
+- Offline QA ledger reset to FAQ active Tab and New Milestone description ONLY, former Social Links highlights removed. Progress baseline CREATEAPP-V3 **~69%**, Stage3 **~85%**; new coverage progress remains pending CI and owner visual acceptance. Source charts/QR are intentionally rendered static artwork in QX and stubbed in the harness; do not fake visual closure by erasing them.
+- Next: run both official CI workflows for the candidate; fix any genuinely equivalent title/description discrepancies without weakening gates; produce Windows offline ZIP only from same-tree two-green Actions artifact, then await owner acceptance.
+
+
 ## CURRENT — 2026-10-10 Sera Social Links source literal Button nowrap root-cause (CI pending)
 
 - Source-pinned same-Chromium log for HEAD `c63846a2` identified **actual** remaining discrepancy: source `whiteSpace:nowrap` on both Sera footer Buttons, QX `whiteSpace:normal`. Both already have identical 12px/600/1.2px, 24px horizontal padding, `flex:1 1 0%`, `min-width:auto`, border widths, 8px gap. Because QX text wrapped at its min-content threshold it distributed the 302.8px total equally (151.422px each) instead of source's natural min-content widths (134.813px / 168.047px). The correct shared opt-in rule now adds `white-space:nowrap`; no new forced widths, no style-specific override, no QX runtime JS edit. This is a genuine component flex/typography contract fix.

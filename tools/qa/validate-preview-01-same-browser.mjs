@@ -16,7 +16,7 @@ const nestedKeys=new Set(nested.rows.map(r=>[r.style,r.mode,r.card].join('/')));
 assert.equal(nestedKeys.size,528,'unique source/QX nested role samples in each style/mode');
 const nestedAbsent=nested.rows.filter(r=>!r.source||!r.qx);
 assert.deepEqual(nestedAbsent.map(r=>[r.style,r.mode,r.card]),[],'nested Card group missing');
-const roleNames=['header','content','footer','item','button','badge','field'];
+const roleNames=['header','content','footer','item','button','badge','field','title','description','tab'];
 const observedRoles=nested.rows.reduce((acc,r)=>{
   for(const name of roleNames) if(r.source[name]&&r.qx[name])acc[name]=(acc[name]||0)+1;
   return acc;
@@ -130,6 +130,54 @@ for(const row of nested.rows){
 for(const card of matchedButtonCards)assert.equal(matchedButtonCounts[card],16,'same Chromium source/Button roles required for every style/mode '+card);
 assert.deepEqual(matchedButtonErrors,[],'source-matched Button paint/type/geometry divergence: '+JSON.stringify(matchedButtonErrors.slice(0,32)));
 console.log('[stage3-first-button-parity] '+JSON.stringify({cards:matchedButtonCards.length,pairs:304,propertyChannels:['w','h','fontSize','fontWeight','fg','bg'],errors:matchedButtonErrors.length}));
+
+// Source-equivalent text elements, not their structurally different Card
+// wrapper padding, determine real inside-Card typographic parity. Assert
+// actual screen positions and foreground RGBA for EVERY available matched
+// Title/Description across all eight styles and both color modes.
+const typographyCounts={title:0,description:0}, typographyErrors=[];
+for(const row of nested.rows){
+  for(const role of ['title','description']){
+    const a=row.source[role], b=row.qx[role];
+    if(!a&&!b)continue;
+    if(!a||!b){typographyErrors.push({card:row.card,style:row.style,mode:row.mode,role,reason:'missing matched role'});continue;}
+    typographyCounts[role]++;
+    if(a.text!==b.text)typographyErrors.push({card:row.card,role,style:row.style,mode:row.mode,property:'text',source:a.text,qx:b.text});
+    for(const property of ['x','y','fontSize','fontWeight']){
+      const x=parseFloat(a[property]),y=parseFloat(b[property]);
+      if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x-y)>.5)
+        typographyErrors.push({card:row.card,style:row.style,mode:row.mode,role,property,source:a[property],qx:b[property]});
+    }
+    const x=a.rolePaint?.fg,y=b.rolePaint?.fg;
+    if(!x||!y||x.length!==4||y.length!==4||x.some((v,i)=>Math.abs(v-y[i])>2))
+      typographyErrors.push({card:row.card,style:row.style,mode:row.mode,role,property:'fg',source:x,qx:y});
+  }
+}
+assert.ok(typographyCounts.title>=200&&typographyCounts.description>=160,
+  'source/QX text elements must be meaningfully present across the 16 themes '+JSON.stringify(typographyCounts));
+assert.deepEqual(typographyErrors,[],
+  'source-paired inner Card title/description mismatch: '+JSON.stringify(typographyErrors.slice(0,32)));
+console.log('[stage3-inner-typography] '+JSON.stringify({pairs:typographyCounts,checks:(typographyCounts.title+typographyCounts.description)*6,errors:typographyErrors.length}));
+
+// Pinned shadcn tabs.tsx sets active:bg-background, and dark overrides
+// to input/30 plus border-input. Compare normalized RGBA, not raw color
+// serialization, and require every light/dark Style in the FAQ sample.
+const activeTabIssues=[], activeTabCounts={};
+for(const row of nested.rows){
+  if(row.card!=='faq')continue;
+  const a=row.source.tab,b=row.qx.tab;
+  activeTabCounts[row.style+'/'+row.mode]=(activeTabCounts[row.style+'/'+row.mode]||0)+1;
+  if(!a||!b){activeTabIssues.push({style:row.style,mode:row.mode,reason:'missing active tab'});continue;}
+  if(a.text!==b.text)activeTabIssues.push({style:row.style,mode:row.mode,reason:'tab label differs',source:a.text,qx:b.text});
+  for(const property of ['bg','fg','border']){
+    const x=a.rolePaint?.[property],y=b.rolePaint?.[property];
+    if(!x||!y||x.length!==4||y.length!==4||x.some((v,i)=>Math.abs(v-y[i])>2))
+      activeTabIssues.push({style:row.style,mode:row.mode,property,source:x,qx:y});
+  }
+}
+assert.equal(Object.keys(activeTabCounts).length,16,'16 active FAQ Tabs source/style variants');
+assert.deepEqual(activeTabIssues,[],'source-paired active FAQ tab paint mismatches: '+JSON.stringify(activeTabIssues));
+console.log('[stage3-active-tab-parity] '+JSON.stringify({variants:16,channels:48,errors:activeTabIssues.length}));
 
 const badgeCards=['claimable-balance','front-door','release-catalog','upcoming-payments'];
 const badgeFailures=[],badgeCounts={};
