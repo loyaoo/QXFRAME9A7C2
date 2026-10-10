@@ -20,8 +20,9 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const current={
-    'savings-targets':['.qxframe9a7c2-form-input-group','.qxframe9a7c2-form-select'],
-    'faq':['.qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport']
+    'savings-targets':['.qxframe9a7c2-form-input-group'],
+    'faq':['.qxframe9a7c2-tabs-scroll'],
+    'social-links':['.qxframe9a7c2-form-input']
   };
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
@@ -29,7 +30,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  for(const previous of ['social-links','sidebar-nav','dividend-income','payout-threshold','preferences','notification-settings',
+  for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','notification-settings',
     'recent-transactions','transfer-funds','receiving-method','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
@@ -99,6 +100,21 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.ok(fs.readFileSync(path.join(root,'docs/create/inputgroup-control-contract.md'),'utf8').includes('独立子组合布局岛'));
   assert.match(css('button'),/\.qxframe9a7c2-button\.is-md:not\(\.is-square\):not\(\.is-icon-only\)[^\{]*\{[^}]*theme-button-md-padding-inline/,'MD Button family uses style-specific inset');
   assert.match(read('tokens.js'),/L\('button-md-padding-inline'/,'registered medium Button slot');
+});
+
+check('Shared focus ring shadows, theme focus color and State ownership',()=>{
+  const source=p=>fs.readFileSync(path.join(root,p),'utf8');
+  const data=source('docs/create/data.js');
+  const generated=model.compileTheme(model.normalizeConfig({style:'nova',ext:{keyboardFocus:'ring',pointerFocus:'ring',focusColor:'theme'}})).body;
+  assert.match(data,/key: 'focusColor'/,'existing color selector is reused');
+  assert.match(generated,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0/,'keyboard ring has a genuine shadow');
+  assert.match(generated,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0/,'pointer ring has a genuine shadow');
+  assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'Theme ring is emitted');
+  assert.match(source('docs/create/compiler.js'),/light\.ring = light\.primary;/,'theme-colored ring feeds focus border');
+  assert.match(source('src/styles/components/focus-closeout.css'),/theme-pointer-shadow/,'native pointer ring');
+  assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
+  assert.match(source('src/styles/components/native-input.css'),/\.qxframe9a7c2-input:hover:not\(:focus-within\)/,'JS Input native hover');
+  assert.match(source('src/styles/main/theme-visual-v2.css'),/qxframe9a7c2-theme-input/,'Theme hover mapping');
 });
 
 check('small Button typography consumes one source-mapped Theme token', () => {

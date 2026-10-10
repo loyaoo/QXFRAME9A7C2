@@ -1,5 +1,11 @@
 # QXFRAME9A7C2 AI Work State
 
+## CURRENT — 2026-10-10 Focus halo/color & interactive state consistency batch — CI pending
+- Baseline verified 458cf9aa QXFRAME 38023498729 and CSS Schema 38023498714 SUCCESS, PR #265 Draft. Owner reported missing hover/active visual state, no real focus shadows, no consistent Theme-colored focus border.
+- Source audit: Button already has hover/active and state classes; native Form fields have hover, JS Input only is-hovered. Existing focusColor toggle (mono/theme) only recolored `focus` while components' border used unrelated `ring`. Corrected `focusColor=theme` to link both `focus` and `ring` to primary. Added only two Theme presentation slots `focus-shadow` and `pointer-shadow` (none in baseline). Each ring preset yields real box-shadow, with default QX focus unchanged. Native/JS Input, InputGroup and Button consume the shared roles; group owns shadow, child doesn't; Button retains base elevation. Added native hover for JS Input and V2 field family border hover mapping; no spurious pressed editing state and no core JS change.
+- Strict source gates preserved. Current offline ledger cleared prior yellow and marks only Savings Targets grouped Input, FAQ interactive Tab rail, and Social Links native Input. Both CI workflows + offline artifact need verification; no progress credit yet. Baseline total ~70%, S3 ~91%.
+
+
 ## CURRENT — 2026-10-10 FocusOrigin verifier correction
 - QXFRAME `38023345059` Release rejected any `:focus-within` block that draws `outline`, even under non-keyboard html origin. Correctly enforced shared runtime FocusOrigin contract; NOT disabled.
 - InputGroup pointer rule now projects from actual `FormInput:focus-visible` / `Input:focus-visible` through parent `:has()`, with pointer origin class filter, rather than :focus-within. Browser test against official earlier offline base confirmed theme Pointer **3px width/2px offset** and keyboard **2px/-1px** simultaneously. The old Group `:focus-within` border color, which draws NO outline, is preserved.

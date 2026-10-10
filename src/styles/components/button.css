@@ -296,6 +296,7 @@
   --_qxframe9a7c2-state-shadow:var(--_qxframe9a7c2-button-shadow);
   outline:var(--_qxframe9a7c2-focus-visible-outline);
   outline-offset:var(--_qxframe9a7c2-focus-visible-offset);
+  box-shadow:var(--_qxframe9a7c2-state-shadow),var(--qxframe9a7c2-theme-focus-shadow,none);
 }
 .qxframe9a7c2-button:active{
   --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-active-bg);

@@ -196,9 +196,11 @@
   --qxframe9a7c2-theme-focus-width: 0.125rem;
   --qxframe9a7c2-theme-focus-opacity: 100%;
   --qxframe9a7c2-theme-focus-offset: -0.0625rem;
+  --qxframe9a7c2-theme-focus-shadow: none;
   --qxframe9a7c2-theme-pointer-width: 0;
   --qxframe9a7c2-theme-pointer-opacity: 100%;
   --qxframe9a7c2-theme-pointer-offset: 0;
+  --qxframe9a7c2-theme-pointer-shadow: none;
   --qxframe9a7c2-theme-duration-xs: 100ms;
   --qxframe9a7c2-theme-duration-sm: 150ms;
   --qxframe9a7c2-theme-duration-md: 200ms;
@@ -403,9 +405,11 @@
   --qxframe9a7c2-theme-focus-width: 0.125rem;
   --qxframe9a7c2-theme-focus-opacity: 100%;
   --qxframe9a7c2-theme-focus-offset: -0.0625rem;
+  --qxframe9a7c2-theme-focus-shadow: none;
   --qxframe9a7c2-theme-pointer-width: 0;
   --qxframe9a7c2-theme-pointer-opacity: 100%;
   --qxframe9a7c2-theme-pointer-offset: 0;
+  --qxframe9a7c2-theme-pointer-shadow: none;
   --qxframe9a7c2-theme-duration-xs: 100ms;
   --qxframe9a7c2-theme-duration-sm: 150ms;
   --qxframe9a7c2-theme-duration-md: 200ms;

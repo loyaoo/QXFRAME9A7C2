@@ -320,7 +320,13 @@ export function themeTokens(resolved) {
   look('thumb-border', looks.thumbBorder);
 
   // Focus color: mono = black in light, white in dark (QX); theme = primary.
-  if (ext.focusColor === 'theme') look('focus', 'primary');
+  if (ext.focusColor === 'theme') {
+    look('focus', 'primary');
+    // One source for the focus boundary of native inputs, JS controls,
+    // InputGroup and Buttons. The default mono style retains shadcn ring.
+    light.ring = light.primary;
+    dark.ring = dark.primary;
+  }
   else { light.focus = 'oklch(0 0 0)'; dark.focus = 'oklch(1 0 0)'; }
 
   // Typography.
@@ -572,6 +578,15 @@ export function themeTokens(resolved) {
   const [pWidth, pOpacity, pOffset] = FOCUS[ext.pointerFocus === 'qx' ? 'none' : ext.pointerFocus];
   root['focus-width'] = kWidth; root['focus-opacity'] = kOpacity; root['focus-offset'] = kOffset;
   root['pointer-width'] = pWidth; root['pointer-opacity'] = pOpacity; root['pointer-offset'] = pOffset;
+  // "ring" is a real box-shadow halo, not a thick translucent outline.
+  // Keep the historic outline-width tokens for keyboard safety and protocol
+  // compatibility; ring shadow is an additional opt-in presentation layer.
+  root['focus-shadow'] = ext.keyboardFocus === 'ring'
+    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
+    : 'none';
+  root['pointer-shadow'] = ext.pointerFocus === 'ring'
+    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
+    : 'none';
 
   // Motion.
   const motion = MOTION[ext.motion];

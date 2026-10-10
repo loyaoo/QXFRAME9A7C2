@@ -76,3 +76,19 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form textarea
   outline:none
 }
 
+
+/* Shared native field ring ownership. :focus alone never paints an outline;
+ * text input UA focus-visible is projected through the existing FocusOrigin.
+ * Error/disabled states keep their native state semantics. */
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible:not(:disabled){
+  box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none)
+}
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus-visible:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus-visible:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus-visible:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible:not(:disabled){
+  box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
+}

@@ -25,6 +25,10 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
   box-sizing:border-box;display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);min-width:0;max-width:100%;min-height:var(--_qxframe9a7c2-control-local-height);padding:var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-state-border);border-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius));background:var(--_qxframe9a7c2-state-bg);color:var(--_qxframe9a7c2-state-text);cursor:var(--_qxframe9a7c2-state-cursor);outline:var(--_qxframe9a7c2-state-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);box-shadow:var(--_qxframe9a7c2-state-ring);font-family:var(--_qxframe9a7c2-font-family);font-size:var(--_qxframe9a7c2-control-font-size);transition:border-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),box-shadow var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)
 }
 .qxframe9a7c2-input.is-hovered{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-hover);--_qxframe9a7c2-state-z:2}
+.qxframe9a7c2-input:hover:not(:focus-within):not(.is-focused):not(.is-expanded):not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning){
+  --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-hover);
+  --_qxframe9a7c2-state-z:2
+}
 .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly),.qxframe9a7c2-input.is-focused,.qxframe9a7c2-input.is-expanded{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-state-ring:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:4}
 .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled){--_qxframe9a7c2-state-outline:var(--_qxframe9a7c2-focus-visible-outline);--_qxframe9a7c2-state-z:6}
 .qxframe9a7c2-input.is-error,.qxframe9a7c2-input.is-invalid{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-state-z:3}
@@ -92,3 +96,12 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-input.is-tags{--_qxframe9a7c2-compound-inset:var(--qxframe9a7c2-compound-control-inset,var(--_qxframe9a7c2-fixed-space-1));padding-inline:var(--_qxframe9a7c2-compound-inset);padding-block:var(--_qxframe9a7c2-compound-inset)}
 .qxframe9a7c2-input.is-tags .qxframe9a7c2-tags.is-hosted{--_qxframe9a7c2-compound-item-height:calc(var(--_qxframe9a7c2-control-local-height) - var(--_qxframe9a7c2-compound-inset)*2 - var(--_qxframe9a7c2-control-border-width)*2);--_qxframe9a7c2-compound-item-inset:calc(var(--_qxframe9a7c2-control-padding-inline) - var(--_qxframe9a7c2-compound-inset) - 1px)}
 .qxframe9a7c2-input.is-tags:not(.has-value) .qxframe9a7c2-tags-input{padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) - var(--_qxframe9a7c2-compound-inset))}
+
+/* The JS Input shell is the sole focus-shadow owner (internal editor is not).
+ * Normal/hover/pressed remain on existing Control border and background roles. */
+.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled):not(.is-focus-outline-disabled){
+  --_qxframe9a7c2-state-ring:var(--qxframe9a7c2-theme-focus-shadow,none)
+}
+.qxframe9a7c2-input.is-focused:not(.is-keyboard-focus):not(.is-disabled):not(.is-focus-outline-disabled){
+  --_qxframe9a7c2-state-ring:var(--qxframe9a7c2-theme-pointer-shadow,none)
+}

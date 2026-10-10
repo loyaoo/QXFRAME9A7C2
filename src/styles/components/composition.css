@@ -387,6 +387,12 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 .qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input:focus-visible{
   outline:none;box-shadow:none
 }
+/* The same connected border owner paints the keyboard halo; child editor
+ * remains shadowless so the input and addon never show two nested rings. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible){
+  box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none)
+}
 /* A nested group is an independent composition island. Mixing connected
  * seam ownership across parent/child roots is not implicit. */
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group{
@@ -457,5 +463,6 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input:focus-visible){
   outline:var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab,var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
-  outline-offset:var(--qxframe9a7c2-theme-pointer-offset)
+  outline-offset:var(--qxframe9a7c2-theme-pointer-offset);
+  box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
 }

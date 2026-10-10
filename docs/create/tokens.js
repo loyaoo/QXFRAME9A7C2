@@ -226,9 +226,11 @@ export const THEME_TOKENS = [
   L('focus-width', 'Keyboard focus width (outline 2px, ring 3px)'),
   L('focus-opacity', 'Keyboard focus color strength (ring 40%)', 'percent'),
   L('focus-offset', 'Keyboard focus offset (outline -1px inset, ring 0)'),
+  L('focus-shadow', 'Keyboard focus real box-shadow ring; none for outline', 'shadow'),
   L('pointer-width', 'Pointer focus width (0 = QX default: no outline)'),
   L('pointer-opacity', 'Pointer focus color strength', 'percent'),
   L('pointer-offset', 'Pointer focus offset'),
+  L('pointer-shadow', 'Pointer focus real box-shadow ring; none for default/outline', 'shadow'),
 
   // Motion.
   L('duration-xs', 'Motion 1', 'time'),

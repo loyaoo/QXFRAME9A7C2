@@ -338,6 +338,16 @@
   .qxframe9a7c2-input.is-variant-filled { --_qxframe9a7c2-v2-control-bg: var(--qxframe9a7c2-theme-muted); }
   .qxframe9a7c2-input.is-variant-borderless { --_qxframe9a7c2-v2-control-border: transparent; --_qxframe9a7c2-v2-control-bg: transparent; }
 
+  /* Shared Input/Select/Picker hover only adjusts the field border role.
+     It never outranks a focused/invalid/warning/disabled state. Buttons
+     already have complete hover/active resolvers; they are not recreated. */
+  .qxframe9a7c2-input:hover:not(:focus-within):not(.is-focused):not(.is-expanded):not(.is-disabled):not(.is-error):not(.is-invalid):not(.is-warning),
+  .qxframe9a7c2-form-input:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-select:hover:not(:focus):not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-textarea:hover:not(:focus):not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
+    --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-input)
+  }
+
   /* surface: retain Card composition and opt-in divider geometry. */
   .qxframe9a7c2-card {
     --_qxframe9a7c2-card-bg: var(--qxframe9a7c2-theme-card);

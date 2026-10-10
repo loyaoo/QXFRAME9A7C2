@@ -1,11 +1,13 @@
-/** Current 2026-10-10 feedback: group pointer focus, segmented rail padding and native SVG chevron. */
+/** Focus shadow / Theme ring-link and unified Control hover acceptance batch. */
 const groups = [
-  ['savings-targets','InputGroup pointer focus + Select SVG chevron',[
-    ['.qxframe9a7c2-form-input-group','Pointer/keyboard focus owners','Mouse focus consumes the Theme pointer-width/opacity/offset; keyboard outline stays on grouped border owner','__QA_BUNDLE_HEAD__'],
-    ['.qxframe9a7c2-form-select','Native SVG chevron','One rounded-stroke chevron-down SVG with light/dark strokes (no CSS triangular artefacts)','__QA_BUNDLE_HEAD__']
+  ['savings-targets','InputGroup · Theme focus ring/shadow',[
+    ['.qxframe9a7c2-form-input-group','Grouped Input shadow','Pointer/keyboard halo follows Theme focus color, width and box-shadow ownership','__QA_BUNDLE_HEAD__']
   ]],
-  ['faq','Segmented Tabs rail block padding',[
-    ['.qxframe9a7c2-tabs-scroll .qxframe9a7c2-scroll-viewport','Tabs Scroll viewport','Restore 4px top/bottom padding, keep TabItem inside Scroll and preserve source Card overall height','__QA_BUNDLE_HEAD__']
+  ['faq','Button · hover and active recipes',[
+    ['.qxframe9a7c2-tabs-scroll','Interactive focus and hover policy','Existing Button/Tab state precedence preserved while focus ring is theme-aware','__QA_BUNDLE_HEAD__']
+  ]],
+  ['social-links','Native Input · hover and focus shadow',[
+    ['.qxframe9a7c2-form-input','Native field','Hover border is independent of focus and a real ring shadow can follow the theme color','__QA_BUNDLE_HEAD__']
   ]]
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

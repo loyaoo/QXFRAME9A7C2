@@ -29,3 +29,9 @@ Theme → 组件映射，不产生卡片私有 `pv-*` 样式或新增 JS Control
 - 原生 Select 的箭头为与 JS Select 相同的 round-stroke SVG chevron-down，使用可替换 CSS 图像 token（数据 URI 图像不继承 currentColor，所以光暗模式分别提供中性色笔画）。
 
 - 焦点协议门禁补充：输入组的指针 outline 必须以真实子 Input 的 `:focus-visible` 匹配为前提；不可仅靠 Root `:focus-within` 绘制轮廓，因为普通鼠标/程序化 focus 与键盘 focus 需要统一 FocusOrigin 解释。可用 `:has(> .form-input:focus-visible)` 投射到 border owner，再通过 `html:not(.qxframe9a7c2-keyboard-focus-origin)` 区分指针。
+## 2026-10-10 State/Focus follow-up
+- Button already implements `:hover`, `:active`, `.is-hover`, `.is-active`; do not duplicate the native/JS state resolver. In an editable Input, “active editing” is focus, not a new persistent pressed state. In a Select/Button the native `:active` means temporary press; a selected value is not `:active`.
+- Native Form inputs/selects/textareas already have hover. JS Input gets a native `:hover` fallback without overriding focus/error/warning/disabled; V2 all field families use the single Theme border role for hover.
+- Theme `focusColor=theme` must link both `focus` and `ring` to `primary` so border, outline and halo agree. `mono` remains the baseline and does not recolor the Theme ring.
+- `keyboardFocus=ring` and `pointerFocus=ring` produce distinct **real shadow rings** (box-shadow). Keyboard/Pointer focus share Theme color but retain independent width/opacity/offset. Two Theme slots `focus-shadow`, `pointer-shadow` are only focus-specific presentation recipe slots (none by default); do not duplicate semantic colors per component. Preserve existing component elevation when composing a Button focus shadow.
+- For connected InputGroup, Root or Field owns the shadow and the input child stays shadowless; the existing FocusOrigin projection remains mandatory. Keyboard default outline remains unchanged.
