@@ -84,11 +84,12 @@
   --_qxframe9a7c2-choice-bg:var(--qxframe9a7c2-theme-muted);
   padding:var(--qxframe9a7c2-selectgroup-padding-block,.5rem) var(--qxframe9a7c2-selectgroup-padding-inline,.75rem)
 }
-.qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled))>.qxframe9a7c2-selectgroup-label{
-  --_qxframe9a7c2-choice-border:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 70%,var(--qxframe9a7c2-theme-border))
+.qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled)):not(:has(>.qxframe9a7c2-selectgroup-input:checked))>.qxframe9a7c2-selectgroup-label{
+  --_qxframe9a7c2-choice-border:color-mix(in oklab,var(--qxframe9a7c2-theme-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength));
+  --_qxframe9a7c2-choice-bg:color-mix(in oklab,transparent,var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
 }
-.qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled))>.qxframe9a7c2-selectgroup-label{
-  --_qxframe9a7c2-choice-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) 85%,var(--qxframe9a7c2-theme-primary))
+.qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled)):not(:has(>.qxframe9a7c2-selectgroup-input:checked))>.qxframe9a7c2-selectgroup-label{
+  --_qxframe9a7c2-choice-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-muted),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
 }
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-primary)
@@ -391,3 +392,9 @@
 .qxframe9a7c2-form-legend { font-size: 1rem; font-weight: 500; }
 
 
+
+/* Error vs Description are distinct semantic slots; native [hidden] remains authoritative. */
+.qxframe9a7c2-field.is-warning>.qxframe9a7c2-field-error,
+.qxframe9a7c2-form-field.is-warning>.qxframe9a7c2-field-error{color:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-field.is-invalid>.qxframe9a7c2-field-error,
+.qxframe9a7c2-form-field.is-invalid>.qxframe9a7c2-field-error{color:var(--qxframe9a7c2-theme-destructive)}

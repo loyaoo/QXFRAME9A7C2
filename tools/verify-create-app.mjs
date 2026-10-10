@@ -99,6 +99,7 @@ check('SelectGroup appearance and nine floating positions have no retired scene 
   const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const demos=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
   assert.match(demos,/Floating indicator · Nine anchors/,'nine-anchor interactive docs example');
+  assert.match(demos,/Field \+ vertical Connected \+ Theme Focus/,'native Field / vertical connected docs example');
   assert.ok((demos.match(/qxframe9a7c2-flex is-center is-gap-2/g)||[]).length>=16,'ordinary choice content composes through independent inner Flex');
   assert.match(demos,/\['top','middle','bottom'\]/);
   assert.match(demos,/\['left','center','right'\]/);

@@ -57,7 +57,8 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 /* One seam algorithm for direct Items and Items wrapped in an independent Flex.
  * Connected is geometric, not an Appearance, and never invents None borders. */
 .qxframe9a7c2-selectgroup.is-connected{display:flex;flex-wrap:nowrap;gap:0;isolation:isolate}
-.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex{width:100%;min-width:0;gap:0;flex-wrap:nowrap}
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-flex,
+.qxframe9a7c2-selectgroup.is-connected>.qxframe9a7c2-stack{width:100%;min-width:0;gap:0;flex-wrap:nowrap}
 .qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item{margin:0}
 .qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
 .qxframe9a7c2-selectgroup.is-connected.is-outline .qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label,
@@ -74,6 +75,20 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-invalid .qx
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);border-color:var(--qxframe9a7c2-theme-destructive)}
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);border-color:var(--qxframe9a7c2-theme-warning)}
+/* Vertical Connected is derived solely from an independent Stack child. */
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item+.qxframe9a7c2-selectgroup-item{
+  margin-inline-start:0;margin-block-start:calc(0px - var(--_qxframe9a7c2-control-border-width))
+}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label,
+.qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label,
+.qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{
+  border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-start-end-radius:var(--qxframe9a7c2-theme-radius-field)
+}
+.qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label,
+.qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{
+  border-end-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)
+}
 /* Nested stable GroupItem projects child interaction state to the composition stacking owner. */
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{--_qxframe9a7c2-group-stack:2}
 .qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-error,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-warning{--_qxframe9a7c2-group-stack:3}
@@ -461,13 +476,13 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-fie
 /* Connected InputGroup must expose the same subtle hover border as a single
  * Control. Never let hover hide focus or any child disabled/error/warning. */
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-form-input.is-invalid)):not(:has(>.qxframe9a7c2-form-input.is-error)):not(:has(>.qxframe9a7c2-form-input.is-warning)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.qxframe9a7c2-input.is-invalid)):not(:has(>.qxframe9a7c2-input.is-error)):not(:has(>.qxframe9a7c2-input.is-warning)){
-  border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) 70%,var(--qxframe9a7c2-theme-ring))
+  border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength))
 }
 /* InputGroupField is an independent border owner, not an unstyled inner
  * wrapper. Mirror the same Theme hover derivation without replacing focus
  * or error/warning/disabled feedback, including a hosted JS Input. */
 .qxframe9a7c2-form-input-group-field:hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.is-invalid)):not(:has(>.is-error)):not(:has(>.is-warning)){
-  border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) 70%,var(--qxframe9a7c2-theme-ring))
+  border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength))
 }
 .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input-group-field:hover,
 .qxframe9a7c2-form-field.is-error .qxframe9a7c2-form-input-group-field:hover{

@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-10 S3 consolidated Field + SelectGroup + Theme Hover/Focus (CI pending)
+- Verified parent 914a8326aa0a2a1906e737615da323f2b51161c6: both workflows SUCCESS (#38056696431 / #38056696380), PR #265 open/draft/unmerged. Do not merge without owner permission.
+- Consolidated direct/Flex horizontal and Stack vertical Connected seam owner; vertical overlap and Theme top/bottom corners, preserving checked/disabled native ownership. Added FieldSet/Legend/Description/Error/Stack/Connected docs with native FormData/reset.
+- Shared Hover Style/Color applied to JS Input, native Input/Select/Textarea, SelectGroup Outline/Muted, and InputGroup border; focused/invalid/warning/checked/disabled prioritized. Keyboard and Pointer focus colors project to their own border surfaces (not only the ring shadow), regardless of Theme color combinations. No new tokens or runtime JS.
+- Same-HEAD full CI, geometry, real Chromium browser gate, and official Actions dist/docs ZIP still required before completion. No Preview card DOM changed this round: offline yellow ledger remains cleared. Stage4/5 pending.
+
 ## CURRENT — 2026-10-10 S3 seven-axis Hover/Focus consumer follow-up (CI pending)
 - First candidate 6d99ff72: QXFRAME #38056236352 release correctly rejected an unconsumed focusBackground=parent-surface token; this batch gives it a real native field, JS Input and SelectGroup focus-state CSS consumer. The gate remains enforced.
 - Expanded Chromium tests for both Connected Outline+Muted with direct/Flex item placement and seven independent Hover/Focus theme axes producing concrete Focus Background paint.
