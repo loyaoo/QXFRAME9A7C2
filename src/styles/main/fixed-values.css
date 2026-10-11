@@ -5500,11 +5500,11 @@
     --_qxframe9a7c2-data-border: var(--_qxframe9a7c2-family-data-border, var(--_qxframe9a7c2-semantic-border-subtle));
     --_qxframe9a7c2-data-header-bg: var(--_qxframe9a7c2-family-data-header-bg, var(--_qxframe9a7c2-semantic-surface-muted));
     
-    --_qxframe9a7c2-data-radius: var(--_qxframe9a7c2-family-data-radius, var(--_qxframe9a7c2-control-radius));
+    --_qxframe9a7c2-data-radius: var(--_qxframe9a7c2-family-data-radius, var(--qxframe9a7c2-theme-radius-item));
 
     --_qxframe9a7c2-navigation-bg: var(--_qxframe9a7c2-family-navigation-bg, var(--_qxframe9a7c2-semantic-surface));
     --_qxframe9a7c2-navigation-hover-bg: var(--_qxframe9a7c2-family-navigation-hover-bg, var(--_qxframe9a7c2-semantic-surface-hover));
-    --_qxframe9a7c2-navigation-radius: var(--_qxframe9a7c2-family-navigation-radius, var(--_qxframe9a7c2-control-radius));
+    --_qxframe9a7c2-navigation-radius: var(--_qxframe9a7c2-family-navigation-radius, var(--qxframe9a7c2-theme-radius-item));
 
     
     
