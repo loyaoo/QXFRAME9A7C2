@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 Stage4 browser regression test literal syntax corrected (CI pending)
+- Prior 33b9b982632181a420d97891921891cc8e131b8a Release static gate failed due a test-internal comment inserted as literal newlines inside a JSON-escaped Runtime.evaluate argument (invalid JavaScript source), not a product defect. Removed only the inline comment, preserving target .qxframe9a7c2-tabs-tab-action and all Codespaces and BookAppointment assertions.
+- Earlier CSS Schema on c5d23c29 failed because it clicked decorative Surface instead of real QX inner action. Need exact-new-head dual-green CI, then full Windows offline bundle. Stage4 #266 remains Draft, no merge.
+
 ## CURRENT — 2026-10-11 Stage4 QX Tabs event target correction (CI pending)
 - Prior HEAD c5d23c29f97f55832bd3aa24b098afe0352b592e: CSS Schema #38128876105 real Chromium failed the NEW Stage4 Codespaces test at expected outer panel switch, because the test clicked `.qxframe9a7c2-tabs-tab` (non-interactive surface shell) not the actual framework button `.qxframe9a7c2-tabs-tab-action` (which owns private tabsKey and click handler). Source src/components/tabs.js createTab()/DOM.listen proves real event contract. Corrected test click target without changing production CSS or TS. Keep strong outer+inner content and 4-slot selection expectations unchanged.
 - Windows tools and Stage4 496/496 geometry passed on former HEAD. Await exact-new-head two-green CI; PR #266 Draft/no merge.
