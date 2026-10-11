@@ -572,14 +572,11 @@ export function themeTokens(resolved) {
   root['progress-ring'] = '7.5rem';
   root['choice-size'] = style === 'sera' ? '1.125rem' : '1rem';
 
-  // NORMAL-STATE elevation, independent of pointer/keyboard Focus and of the
-  // optional focus halo. Use a transparent zero-length shadow for 'none' because
-  // box-shadow lists are invalid if one comma-separated member is CSS `none`.
-  // All raised Button, Input, Select, Control/Group and SelectGroup surfaces
-  // consume this same shadow-control token, without a Focus state requirement.
-  // Elevation.
+  // Two independent axes: Card/Popup/Dialog surface strength, and ordinary Control
+  // elevation ON/OFF. Controls consume the shared shadow-control token at rest.
+  // Transparent zero shadow is required for valid normal + optional Focus Halo lists.
   const [cardTier, popupTier, dialogTier] = SHADOW_TIERS[ext.shadow];
-  root['shadow-control'] = ext.shadow === 'none' ? '0 0 0 0 transparent' : SHADOWS.xs;
+  root['shadow-control'] = ext.controlShadow === 'off' ? '0 0 0 0 transparent' : SHADOWS.xs;
   root['shadow-card'] = SHADOWS[cardTier];
   root['shadow-popup'] = SHADOWS[popupTier];
   root['shadow-dialog'] = SHADOWS[dialogTier];

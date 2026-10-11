@@ -106,6 +106,11 @@ export const EXT_AXES = [
     { value: 'solid', label: '实底' }, { value: 'solid-shadow', label: '实底带阴影' }, { value: 'tinted', label: '浅着色' },
     { value: 'transparent', label: '透明' }, { value: 'light-solid', label: '亮实暗透' }, { value: 'ghost', label: '全透明' }],
     defaults: S('solid-shadow', 'solid', 'tinted', 'solid', 'transparent', 'light-solid', 'ghost', 'light-solid') },
+  { key: 'controlShadow', param: 'control-shadow', label: '控件正常阴影', group: 'look', options: [
+    { value: 'on', label: '开启' }, { value: 'off', label: '关闭' }],
+    // Follows Style by default, never Card/Popup/Dialog shadow strength.
+    // Preserve the pre-split normal visual defaults for all eight Styles.
+    defaults: S('on', 'off', 'off', 'off', 'off', 'on', 'on', 'on') },
   { key: 'inputLook', param: 'input', label: '输入外观', group: 'look', options: [
     { value: 'outline', label: '描边' }, { value: 'tinted', label: '浅着色' }, { value: 'subtle', label: '微着色' },
     { value: 'soft', label: '柔和填充' }, { value: 'underline', label: '下划线' }, { value: 'borderless', label: '无边框', qx: true }],
@@ -129,7 +134,7 @@ export const EXT_AXES = [
   { key: 'sections', param: 'sections', label: '表面分区', group: 'surface', options: [
     { value: 'none', label: '无分区' }, { value: 'divider', label: '仅分隔线' }, { value: 'muted', label: '灰底分区' }],
     defaults: S('none', 'muted', 'none', 'divider', 'none', 'none', 'none', 'none') },
-  { key: 'shadow', param: 'shadow', label: '阴影强度', group: 'surface', options: [
+  { key: 'shadow', param: 'shadow', label: '表面阴影强度（Card/弹层）', group: 'surface', options: [
     { value: 'none', label: '无' }, { value: 'light', label: '轻' }, { value: 'medium', label: '适中' },
     { value: 'strong', label: '明显' }, { value: 'heavy', label: '强' }],
     // Card tier from shadcn styles: vega shadow-xs, luma shadow-md, sera/rhea shadow-sm, others none.

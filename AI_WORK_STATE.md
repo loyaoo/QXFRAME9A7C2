@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-11 S3 Control Shadow switch independent of Card/Popup/Dialog surface strength (CI pending)
+- Previous exact green HEAD aa44f25390abd1821bf08525cc8d4d118a14a864; user requires independent normal Control Shadow ON/OFF for Button, native Input/Select/Textarea, JS Input, InputGroup and SelectGroup (Outline/Muted). Card/Popup/Dialog retains five-step separate surface Shadow axis.
+- Added EXT `controlShadow` (`?control-shadow=on|off`) in Control panel; implicit Follow Style defaults Vega/Luma/Sera/Rhea ON, Nova/Maia/Lyra/Mira OFF preserve prior default paint. Changed ONLY compiler `shadow-control` source from ext.shadow to ext.controlShadow; no new public Theme token, no focus slot changes. Existing five-tier shadow strength remains Card/Popup/Dialog only.
+- Config serialization/normalization/import follows existing EXT axis machinery; static isolation tests added. Chromium isolation tests must verify actual CSS and independence. Offline QA ledger reset to only Savings Targets InputGroup and Receiving Method SelectGroup, not prior Textarea.
+- PR #265 Draft/open/unmerged, no main/backup change, no Stage4/5. Estimates Stage3 ~96%, Field/SelectGroup ~89%, overall ~79% pending user visual approval.
+
 ## CURRENT — 2026-10-11 Stage3 corresponding static gate for FocusOrigin-scoped native outlines (CI pending)
 - Previous parent 9f9afba006cf8a313db5ebf1a1bf4451d388da83 moved standalone bare Pointer Outline into explicit FocusOrigin CSS to preserve one painted owner; its own static verifier still expected obsolete unguarded declaration. Synchronized source assertion to require FocusOrigin-gated rule, explicit pointer border and outline, with no loosening. Needs exact-HEAD dual CI + official offline ZIP. PR #265 Draft.
 

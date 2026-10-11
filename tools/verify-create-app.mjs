@@ -58,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'payout-threshold':['.qxframe9a7c2-form-textarea']}; // current batch Textarea normal Shadow and true Outline
+  const current={'savings-targets':['.qxframe9a7c2-input-group'],'receiving-method':['.qxframe9a7c2-selectgroup']}; // this round Control/Surface Shadow split
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -69,10 +69,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
+  for(const previous of ['sidebar-nav','dividend-income','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only this round Textarea Shadow/Focus is highlighted in Preview 01');
+  assert.equal(count,2,'only this round Control/Surface Shadow split is highlighted in Preview 01');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -122,7 +122,7 @@ check('normal Control Shadow is shared and separate from pointer/keyboard focus'
   const compiler=read('compiler.js'),source=p=>fs.readFileSync(path.join(root,p),'utf8');
   const native=source('src/styles/components/native-input.css'),form=source('src/styles/components/form-native.css');
   const button=source('src/styles/components/button.css'),theme=source('src/styles/main/theme.css');
-  assert.ok(compiler.includes("root['shadow-control'] = ext.shadow === 'none' ? '0 0 0 0 transparent' : SHADOWS.xs"));
+  assert.ok(compiler.includes("root['shadow-control'] = ext.controlShadow === 'off' ? '0 0 0 0 transparent' : SHADOWS.xs"));
   for(const suffix of ['shadow-control','focus-shadow','pointer-shadow'])assert.ok(
     theme.includes('--qxframe9a7c2-theme-'+suffix+': 0 0 0 0 transparent;'),'default transparent shadow is visually off and composition-safe: '+suffix);
   assert.ok(native.includes('--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent'),'JS Input never invalidates normal shadow with comma+none');
@@ -156,7 +156,7 @@ check('real Focus outline and common Choice/Slider/Control Surface contracts',()
  const form=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
  const slider=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');
  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
- assert.ok(compiler.includes("root['shadow-control'] = ext.shadow === 'none' ? '0 0 0 0 transparent' : SHADOWS.xs"),'normal shadow-control follows Theme Shadow axis');
+ assert.ok(compiler.includes("root['shadow-control'] = ext.controlShadow === 'off' ? '0 0 0 0 transparent' : SHADOWS.xs"),'normal shadow-control follows Theme Shadow axis');
  assert.ok(compiler.includes("root['pointer-shadow'] = ext.pointerFocus === 'ring'"),'only explicit halo owns focus shadow');
  assert.ok(!compiler.includes("ext.pointerFocus === 'outline'\n      ? '0 0 0"),'no shadow-simulated outline');
  assert.doesNotMatch(group,/var\(--qxframe9a7c2-theme-ring\)/,'InputGroup no imported palette ring');
@@ -372,6 +372,34 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
+
+
+check('Control Shadow and Card Shadow independently switch and round-trip without new Theme tokens',()=>{
+ const control=data.EXT_AXES.find(a=>a.key==='controlShadow'),surface=data.EXT_AXES.find(a=>a.key==='shadow');
+ assert.ok(control&&surface,'distinct UI axes');
+ assert.equal(control.param,'control-shadow');
+ assert.deepEqual(control.options.map(o=>o.value),['on','off']);
+ for(const style of data.STYLES.map(s=>s.value))assert.ok(['on','off'].includes(
+   model.resolveConfig(model.normalizeConfig({style})).ext.controlShadow),'valid Style default '+style);
+ const compile=(controlShadow,shadow)=>model.compileTheme(
+   model.normalizeConfig({style:'vega',ext:{controlShadow,shadow}}),{generatedAt:''}).body;
+ const token=(css,name)=>new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);').exec(css)?.[1];
+ const oo=compile('off','none'),oi=compile('on','none'),ho=compile('off','heavy'),hi=compile('on','heavy');
+ assert.equal(token(oo,'shadow-control'),token(ho,'shadow-control'),'Card strength cannot change Control=off');
+ assert.equal(token(oi,'shadow-control'),token(hi,'shadow-control'),'Card strength cannot change Control=on');
+ assert.notEqual(token(oo,'shadow-control'),token(oi,'shadow-control'),'Control switch toggles normal elevation');
+ for(const name of ['shadow-card','shadow-popup','shadow-dialog']){
+   assert.equal(token(oo,name),token(oi,name),'Control switch leaves '+name+' unchanged with surface none');
+   assert.equal(token(ho,name),token(hi,name),'Control switch leaves '+name+' unchanged with surface heavy');
+ }
+ assert.notEqual(token(oo,'shadow-card'),token(ho,'shadow-card'),'Surface switch changes Card');
+ const cfg=model.normalizeConfig({style:'vega',ext:{controlShadow:'off',shadow:'heavy'}});
+ assert.deepEqual(model.parseConfig(model.serializeConfig(cfg)).config.ext,cfg.ext,'URL axes roundtrip');
+ const parsed=model.parseThemeHeader(model.compileTheme(cfg,{generatedAt:''}).css);
+ assert.equal(parsed.ok,true,JSON.stringify(parsed.errors));
+ assert.equal(parsed.config.ext.controlShadow,'off','CSS header Control setting roundtrip');
+ assert.equal(parsed.config.ext.shadow,'heavy','CSS header Card setting roundtrip');
+});
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   const source=p=>fs.readFileSync(path.join(root,p),'utf8');

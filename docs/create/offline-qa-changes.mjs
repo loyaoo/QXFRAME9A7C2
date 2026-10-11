@@ -1,8 +1,11 @@
-/** Current batch: native Textarea/control Shadow parity and genuine pointer/keyboard CSS Outline. */
+/** Only this batch: separate Control Shadow toggle from Card/Popup/Dialog strength. */
 const groups = [
-  ['payout-threshold','Payout Threshold · Textarea',[
-    ['.qxframe9a7c2-form-textarea','Textarea 正常阴影与焦点轮廓','正常 Shadow 与 Button 同步；鼠标 Outline 为真实 2px/-1px。','__QA_BUNDLE_HEAD__']
-  ],'01']
+ ['savings-targets','Savings Targets · Control Shadow',[
+  ['.qxframe9a7c2-input-group','控件阴影独立配置','InputGroup 与 Button/Input/Select 使用 Control Shadow，Card 阴影另行设置。','__QA_BUNDLE_HEAD__']
+ ],'01'],
+ ['receiving-method','Receiving Method · SelectGroup',[
+  ['.qxframe9a7c2-selectgroup','选择组阴影独立配置','Outline/Muted SelectGroup 仅受 Control Shadow 开关控制。','__QA_BUNDLE_HEAD__']
+ ],'01']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
