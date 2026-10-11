@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Chromium arrow contract updated for CSS base-select (CI pending)
+- Previous HEAD f3a2cb7f81387d6d414f4a290471cfc7cbde6d67 CSS Schema run #38125293855 reached real browser acceptance and verified newly added 64 Menu Picker cases, but failed an older browser test line 2368 insisting `appearance:none` on native Select; Chromium correctly computed `base-select` under the new opt-in.
+- Updated old assertion to require `base-select` on Select and its `::picker(select)`, plus `::picker-icon` display none, while preserving real SVG background-image arrow check. Does not weaken coverage or change CSS/geometry.
+- Must obtain new exact-head dual CI, then official dist+docs artifact + Windows offline bundle. PR #265 Draft, unmerged; main/backup unaffected.
+
 ## CURRENT — 2026-10-11 Stage3 offline QA readme must reflect Preview 02 real changes (CI pending)
 - Previous commit 6e3c1453491248aac454e9b521db4f11bc0ce745 adds native-select base-select picker and correctly scopes current-round QA to Preview 02 github-profile Public Email.
 - Fixed tools/qa/build-offline-demo.py README bug: it unconditionally declared Preview 02 had no changes. Now determines Preview 02 changed cards using actual preview-02.html card IDs from current ledger, and refers to both stand-alone preview pages. No UI/CSS behavior change.
