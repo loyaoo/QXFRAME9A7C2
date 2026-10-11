@@ -1,16 +1,28 @@
-# Stage 4 · Preview 02 source-locked visual acceptance
+# Stage 4 · Preview 02 practical visual acceptance
 
-Owner review on 2026-10-11: Stage 3 Preview 01 is visually usable and may proceed. This is not an assertion of every nested pixel matching the pinned source; carry those broad/full-component regressions to Stage 5.
+## Owner-approved acceptance policy (2026-10-11)
 
-**Scope**: exactly 31 Cards in `docs/create/preview-02.html`, based on the pinned `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c` Preview renderer (`?item=preview`, not Preview-02).
+Stage 3 **PR #265 merged into main**, merge `0b2c9310712ad73a9f2d279a9c3cfb2bc468e7d6`. The owner confirms Preview 01 solved most shared framework visual/unification defects. **Preview 02 must NOT be chased to pixel-level agreement with shadcn** when differences are caused by already modified, explicitly accepted QX components.
 
-**Baseline**: `node tools/qa/preview-02-audit.mjs` compares original source and QX in the same Chromium and same system font, 8 styles × light/dark, recording 496 mapped Card pairs, surface geometry and sample Header/Content/Footer/Field/Item/Button roles. Source-only and QX-only IDs and differences are explicit diagnostics, not silent passes. Compare static SVG charts only for available geometry/style, not data equivalence. Native Select popup and JS Select retain the already-green shared framework CSS/interaction owners.
+1. **Approved QX behavior takes precedence**: control height, radius, typography, box-shadow, InputGroup, SelectGroup, Field, focus Origin/outline and native/JS Select dropdown behavior already confirmed in Stage 3. A source/shadcn comparison must not override these fixed framework rules.
+2. **Fix actual regressions**: broken layout, clipped content/overflow, wrong contrast or dark/menu inversion, unintentional component heights or spacing, disabled/hover/active/focus mistakes, missing functionality, doubled focus borders/shadows and duplicated preview-specific component paint. Prefer one correction in canonical framework CSS or reusable static composition over per-card tweaks.
+3. **Source size deltas are advisory**: compare shadcn for intent, structure, spacing rhythm and coherence. An approved QX control height or radius changing Card geometry **is not a failure**. No arbitrary `height`, `max-height` or transform to force pixel alignment.
+4. **Fast batching**: group similar issues across all 31 Cards; don't reopen all Stage 3 corrections. Use 8 Styles × light/dark for theme regression, but run deeper source diagnostics only for visibly broken areas.
+5. **No new public token for a single Card**. Preview-specific content layout belongs in `preview.css`; actual components should use framework classes/Theme roles. Follow QX CSS restrictions (Flex only, no framework CSS grid, no @layer/:is/:where, no vw/vh/fr).
 
-**Wave order**: forms / controls (shipping-address, feedback-form, github-profile, report-bug, invite-team, book-appointment), generic Card/Item/Empty/badge/CTA (codespaces-card, invoice, contributors, no-team-members, etc.), chart/metrics static SVG (usage, sleep, analytics, visitors, bar/pie, waveform), mixed canvas. Prioritize shared framework slots, keep preview-only content layout in preview.css; do not recreate shadcn runtime or introduce display:grid.
+## Baseline
 
-**Frozen**: PR #265 Stage3 stays Draft/unmerged and main/backup unchanged. Stage4 is a separately reviewable Draft PR; user will accept its Windows complete dist+docs offline ZIP before merging. The Stage4 branch is based on Stage3 HEAD and the initial main-targeted PR includes Stage3 commits until #265 is merged. After owner explicitly approves Stage3 merge, narrow the Stage4 PR diff normally. CI benchmark source is pinned and must not be altered to hide differences.
+31 Cards listed below in `docs/create/preview-02.html`, original pinned source `shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c`. Stage 4 source renderer is `?item=preview` (not Stage 3 `?item=preview-02`). The original does **not** expose Stage 3's `data-qa-card`; the audit uses its seven-column published ordering and excludes its hidden mobile-only `UIElements` instance. Only mappings with verified column length are compared.
 
-**31 pinned target cards**:
+`tools/qa/preview-02-audit.mjs`: strict 31 QX visible Card IDs × 8 Styles × light/dark = 496 valid QX Card boxes and page error checks; diagnostic source metrics and Nova screenshots, including visible Card and inner Header/Content/Footer/Field/Item/Button values. Do **not** assert pixel-equal Card heights, outer radius or typography when they derive from accepted QX components. Missing/unmappable source roots must be reported as unavailable comparisons, not accepted.
+
+## Follow-up
+
+- Check Stage 4 dual CI on the exact final HEAD; fix measurement-script failures independently from actual component bugs.
+- Inspect actual Preview 02 Cards and group real regressions into focused CSS/layout batches. For each batch update QA marker ledger to ONLY the changed Card regions; official Windows dist+docs bundle from same successful GitHub Actions artifact (no npm/git for owner).
+- Stage 5 retains full component × 16 Theme regression and pre-delete legacy generator gates. Do not start Stage 5 or merge Stage4 PR without owner acceptance.
+
+## All 31 Stage4 Cards
 1. `style-overview`
 2. `typography-specimen`
 3. `codespaces-card`
@@ -42,5 +54,3 @@ Owner review on 2026-10-11: Stage 3 Preview 01 is visually usable and may procee
 29. `visitors`
 30. `contributions-activity`
 31. `not-found`
-
-**Initial status**: baseline instrumentation only; no Stage4 cards yet declared visually aligned; no new offline highlight required until a visual code batch lands.
