@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-11 Stage4 real functional fixes (CI pending)
+- PR #266 Draft/open, preceding head 2e3eb2406a0faa09696dfae530eeb5c3aade1e26, Stage4 QXFRAME #38127372265 and CSS Schema #38127372258 success; Stage4 source/QX 31x16 same-Chromium comparisons mapped 496/496, no page JS errors.
+- Stage3 PR #265 merged into main 0b2c931. User policy: QX approved component differences are NOT bugs; no pixel-perfect shadcn rework.
+- Real Stage4 issues: Codespaces Local tab previously had no separate panel, despite source HTTPS/SSH/CLI nested content; BookAppointment 4 time buttons were authored static, missing multiple-selection behavior.
+- Add Local panel with QX nested Tabs and framework InputGroup (reference copy and descriptions). Shared preview Tabs activation now acts only on direct child panel siblings to preserve nested QX Tabs and Stage3 FAQ. BookAppointment multiple toggle delegation projects on existing QX Button.is-active + aria-pressed, allowing 0..4 active slots. No JS runtime framework changes.
+- QA ledger current batch ONLY Codespaces and BookAppointment two Preview02 cards; remove old GitHub-profile highlight. Add strict static/Chromium click tests next, verify 2 CI, official exact-head complete Windows dist+docs ZIP.
+- Stage4 ~15% estimate after validation, overall ~81%, Stage5 not begun.
+
 ## CURRENT — 2026-10-11 Stage 3 merged; Stage 4 owner-approved QX-priority acceptance (CI pending)
 - Stage3 PR #265 merged into main by explicit owner authorization: merge 0b2c9310712ad73a9f2d279a9c3cfb2bc468e7d6, previous Stage3 HEAD 75fbacfd48a85a957f3c0c712bc34bafb3ece061; both QXFRAME #38125642688 and CSS Schema #38125642536 were SUCCESS. Stage3 practical acceptance DONE; not a 100% pixel-equivalence claim.
 - Owner's definitive Stage4 policy: Preview 02 is NOT pixel-perfect shadcn reproduction. All previously approved/modified QX components may change Card size/paint and are **not** bugs. Repair only real theme/contrast/layout/overflow/state/interaction/regression or component-ownership defects. Avoid fixed Card heights and needless shadow/radius/token rewrites. Stage4 should move quickly by shared fixes.

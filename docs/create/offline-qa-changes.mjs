@@ -1,7 +1,10 @@
-/** Current batch only: Preview 02 GitHub Profile Public Email native Select dark popup. */
+/** Stage4: only Codespaces nested Local Tabs and BookAppointment multi-select. */
 const groups = [
- ['github-profile','GitHub Profile · Public Email',[
-  ['.qxframe9a7c2-form-select','原生 Select 新式弹层','Chromium base-select：暗色与反色菜单文字/背景、Popup 边框与圆角、选项 Hover/Selected/Disabled 统一 Theme。','__QA_BUNDLE_HEAD__']
+ ['codespaces-card','Codespaces · Local Tab',[
+  ['.qxframe9a7c2-card-content','补齐 Local / HTTPS / SSH / CLI 面板','复用 QX Tabs；父级切换不干扰内层 Tabs 面板。','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['book-appointment','Book Appointment · Time Slots',[
+  ['[data-pv-multi-toggle="appointment"]','时间段按钮恢复多选','每个时间段独立切换，允许零个或多个选择，保持 QX Button 样式。','__QA_BUNDLE_HEAD__']
  ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -62,10 +65,10 @@ function mount(){
   const panel=document.createElement('section');
   panel.className='qa-offline-toolbar';panel.dataset.qaToolbar='';
   const markedRegions=groups.reduce((count,g)=>count+g[2].length,0);
-  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview 01 · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
+  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.querySelector('[data-card="book-appointment"]')?'02':'01')+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Receiving Method 选择组 Hover 与 Field 反馈优先级；此前黄色高亮已全部清空。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Codespaces Local 面板与 Book Appointment 多选时间段；此前高亮已清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

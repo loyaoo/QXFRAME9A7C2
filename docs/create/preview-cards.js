@@ -86,7 +86,11 @@
     // The QX Tabs controller owns activation. Panels are authored framework
     // compositions, not a second tab implementation or duplicate styling.
     var group = host.getAttribute('data-pv-tab-group');
-    var panels = group ? Array.prototype.slice.call(host.parentNode.querySelectorAll('[data-pv-tab-panel]')) : [];
+    // Limit each Tabs' activation to DIRECT sibling panels. A nested Tabs owner
+    // must not have its panels hidden by the outer parent controller.
+    var panels = group ? Array.prototype.filter.call(host.parentNode.children, function (node) {
+      return node.hasAttribute('data-pv-tab-panel');
+    }) : [];
     if (panels.length) {
       options.onChange = function (activeKey) {
         panels.forEach(function (panel) { panel.hidden = panel.getAttribute('data-pv-tab-panel') !== String(activeKey); });
@@ -139,6 +143,17 @@
       if (next) onChange(next);
     });
   }
+  // BookAppointment composes framework Buttons as a multiple ToggleGroup.
+  // The control remains an authored preview, not another framework Controller.
+  document.querySelectorAll('[data-pv-multi-toggle]').forEach(function (group) {
+    group.addEventListener('click', function (event) {
+      var button = event.target.closest('button');
+      if (!button || !group.contains(button) || button.disabled) return;
+      var selected = !button.classList.contains('is-active');
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+  });
   var kitchen = document.querySelector('[data-card="kitchen-island"]');
   if (kitchen) {
     var scenes = {

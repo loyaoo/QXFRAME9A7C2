@@ -16,6 +16,9 @@ Stage 3 **PR #265 merged into main**, merge `0b2c9310712ad73a9f2d279a9c3cfb2bc46
 
 `tools/qa/preview-02-audit.mjs`: strict 31 QX visible Card IDs × 8 Styles × light/dark = 496 valid QX Card boxes and page error checks; diagnostic source metrics and Nova screenshots, including visible Card and inner Header/Content/Footer/Field/Item/Button values. Do **not** assert pixel-equal Card heights, outer radius or typography when they derive from accepted QX components. Missing/unmappable source roots must be reported as unavailable comparisons, not accepted.
 
+## Stage4 genuine interaction repair batch (2026-10-11)
+Codespaces Local now owns nested HTTPS/SSH/GitHub CLI QX Tabs panels; outer Tabs only changes its own direct panel siblings. Book Appointment uses multiple Button states and supports 0..4 independently selected time slots. These are functional correctness fixes, not Card pixel realignment. Both are the only current-round highlighted Preview 02 cards.
+
 ## Follow-up
 
 - Check Stage 4 dual CI on the exact final HEAD; fix measurement-script failures independently from actual component bugs.
