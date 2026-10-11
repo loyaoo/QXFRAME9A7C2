@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-11 Stage3 native Focus strict rem-length correction (CI pending)
+- Previous exact HEAD a50a286606d98b6691e9b1b17ce7a226d05ace51 failed QXFRAME Release CSS constraints because bare keyboard Focus outline fallback used literal 2px; corrected to 0.125rem (still computed 2px). Static test exact consumer fallback synchronized. Other fixes and Chromium matrix unchanged. Await new exact-head dual CI; PR #265 remains Draft/unmerged.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 Textarea/bare native normal Shadow + Focus coverage (CI pending)
 - Parent HEAD 5bb9844fb4b71cd156d556c3e4ca64bf5dd0298e QXFRAME #38117224923 and CSS Schema #38117224842 both SUCCESS, PR #265 Draft/open/unmerged; main/backup untouched.
 - Fixed unclassed native Input/Select/Textarea normal box-shadow:none paint so they consume Theme shadow-control at rest, without Focus; pointer and keyboard use separate focus colors, halo effect and genuine CSS Outline when selected.
