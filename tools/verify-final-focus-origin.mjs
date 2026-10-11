@@ -90,12 +90,21 @@ while((match=ruleRe.exec(css))){
   if(!outline) continue;
   const value=String(outline[1]||'').trim().toLowerCase();
   if(value==='none'||value==='0'||value.startsWith('0 ')) continue;
+  // An explicit Pointer Outline theme mode is genuine CSS outline, not a
+  // shadow. Unlike bare :focus-within this is constrained by real FocusOrigin,
+  // its Theme width (0 except for the requested 2px mode) and -1px offset.
+  // No new root/item duplicate focus owners are allowed.
+  const pointerGated=selector.startsWith('html:not(.qxframe9a7c2-keyboard-focus-origin) ');
+  const themeOutline=/var\(--qxframe9a7c2-theme-pointer-width(?:,0px)?\)/.test(outline[1]);
+  const themeOffset=/outline-offset\s*:\s*var\(--qxframe9a7c2-theme-pointer-offset/.test(body);
+  const uniqueShell=selector.includes('.qxframe9a7c2-tabs-tab:focus-within')&&!selector.includes('.qxframe9a7c2-tabs-tab-action:focus');
+  if(pointerGated&&themeOutline&&themeOffset&&uniqueShell)continue;
   unsafeFocusOutlineRules.push(selector);
 }
 assert.deepEqual(
   unsafeFocusOutlineRules,
   [],
-  'Mouse/programmatic :focus/:focus-within must never own an outline; use :focus-visible or FocusOrigin-projected keyboard classes.'
+  'Bare :focus/:focus-within may not own outlines; explicit Theme Pointer Outline requires FocusOrigin, width, offset and one shell.'
 );
 
 const componentDir=path.join(root,'src/components');
@@ -122,6 +131,6 @@ console.log(JSON.stringify({
   tests:[
     'pointer-editor','tab-editor','same-owner-pointer','discrete-action','capture-restore',
     'nested-pointer-focus-handoff','focus-origin-root-projection','virtual-focus-modality-preservation',
-    'all-component-keyboard-class-ownership','no-pointer-focus-outline-css'
+    'all-component-keyboard-class-ownership','single-origin-gated-pointer-outline-css'
   ]
 }));
