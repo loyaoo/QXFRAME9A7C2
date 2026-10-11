@@ -36,7 +36,7 @@
     --_qxframe9a7c2-semantic-border-hover: var(--qxframe9a7c2-theme-input);
     --_qxframe9a7c2-semantic-border-disabled: var(--qxframe9a7c2-theme-input);
     --_qxframe9a7c2-semantic-input-border: var(--qxframe9a7c2-theme-input);
-    --_qxframe9a7c2-semantic-focus: var(--qxframe9a7c2-theme-ring);
+    --_qxframe9a7c2-semantic-focus: var(--qxframe9a7c2-theme-pointer-focus);
     --_qxframe9a7c2-semantic-mask: var(--qxframe9a7c2-theme-overlay);
     --_qxframe9a7c2-semantic-bg-readonly: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-background);
@@ -62,13 +62,13 @@
     --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-focus);
     /* Shared roles that the retired legacy palette used to feed at :root (docs and plain hosts read them). */
     --_qxframe9a7c2-semantic-accent-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);
-    --_qxframe9a7c2-semantic-accent-ring-color: color-mix(in oklab, var(--qxframe9a7c2-theme-ring) 50%, transparent);
+    --_qxframe9a7c2-semantic-accent-ring-color: color-mix(in oklab, var(--qxframe9a7c2-theme-pointer-focus) 50%, transparent);
     --_qxframe9a7c2-semantic-accent-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent));
     --_qxframe9a7c2-semantic-accent-soft-hover: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 30%, transparent));
     --_qxframe9a7c2-semantic-success-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-success) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-success) 20%, transparent));
     --_qxframe9a7c2-semantic-error-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent));
     --_qxframe9a7c2-semantic-info-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-info) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-info) 20%, transparent));
-    --_qxframe9a7c2-focus-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-ring) 50%, transparent);
+    --_qxframe9a7c2-focus-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-pointer-focus) 50%, transparent);
     --_qxframe9a7c2-validation-error-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent);
     --_qxframe9a7c2-validation-warning-ring: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-warning) 20%, transparent);
     --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
@@ -215,12 +215,12 @@
   .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-ring); }
-  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-ring); }
-  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-ring); }
-  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-ring); }
-  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-ring); }
-  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-ring); }
+  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-v2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
   .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
   .qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg: var(--_qxframe9a7c2-v2-popup-bg); --_qxframe9a7c2-popover-text: var(--_qxframe9a7c2-v2-popup-text); }
@@ -257,7 +257,7 @@
     --_qxframe9a7c2-button-hover-border: var(--_qxframe9a7c2-v2-action-border);
     --_qxframe9a7c2-button-active-border: var(--_qxframe9a7c2-v2-action-border);
     --_qxframe9a7c2-button-disabled-border: var(--_qxframe9a7c2-v2-action-border);
-    --_qxframe9a7c2-button-focus-border: var(--qxframe9a7c2-theme-ring);
+    --_qxframe9a7c2-button-focus-border: var(--qxframe9a7c2-theme-pointer-focus);
     --_qxframe9a7c2-button-hover-bg: var(--_qxframe9a7c2-v2-action-hover);
     --_qxframe9a7c2-button-active-bg: var(--_qxframe9a7c2-v2-action-hover);
     --_qxframe9a7c2-button-focus-bg: var(--_qxframe9a7c2-v2-action-bg);
@@ -311,7 +311,7 @@
   .qxframe9a7c2-button:hover, .qxframe9a7c2-button.is-hover {
     --_qxframe9a7c2-v2-action-current: var(--_qxframe9a7c2-v2-action-hover);
   }
-  .qxframe9a7c2-button:focus-visible, .qxframe9a7c2-button.is-focus { border-color: var(--qxframe9a7c2-theme-ring); }
+  .qxframe9a7c2-button:focus-visible, .qxframe9a7c2-button.is-focus { border-color: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-button.is-filled:focus-visible, .qxframe9a7c2-button.is-filled.is-focus { border-color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 40%, transparent); }
   /* Source supplies no independent pressed color. Loading freezes the normal
      expression; disabled keeps that expression and applies whole opacity. */
@@ -328,7 +328,7 @@
     border-color: var(--_qxframe9a7c2-v2-control-border);
     color: var(--qxframe9a7c2-theme-foreground);
   }
-  .qxframe9a7c2-input:focus-within, .qxframe9a7c2-input.is-focused, .qxframe9a7c2-input.is-expanded { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-ring); }
+  .qxframe9a7c2-input:focus-within, .qxframe9a7c2-input.is-focused, .qxframe9a7c2-input.is-expanded { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-input.is-error, .qxframe9a7c2-input.is-invalid { --_qxframe9a7c2-v2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
   .qxframe9a7c2-input.is-warning { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-warning); }
   .qxframe9a7c2-input.is-disabled { opacity: .5; }
@@ -545,4 +545,13 @@
     color:var(--qxframe9a7c2-theme-foreground);
     border-color:var(--qxframe9a7c2-theme-border);
   }
+}
+
+/* Pointer and keyboard Focus have distinct Theme colors, never the imported
+ * shadcn palette ring. Validation feedback remains higher priority. */
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-button:focus-visible:not(.is-disabled):not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus-visible:not(:disabled),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus-visible:not(:disabled){
+  border-color:var(--qxframe9a7c2-theme-focus)
 }

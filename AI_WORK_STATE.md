@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 canonical Focus and InputGroup reconciliation (CI pending)
+- Parent dd5cb1da84c65fb5e2e8793916d73ca5301c19b1: QXFRAME Release failed static gate because verifier regex retained unprefixed form-input-group-field after new canonical class migration. Updated all active createApp verifier references (bare/prefixed) and phase-F verifier to input-group.
+- More importantly, the V2 physical Control/semantic-focus consumer still read theme-ring; replaced all V2 ring palette consumption with theme-pointer-focus, plus keyboard FocusOrigin override using theme-focus. No runtime JS modifications.
+- Corrected connected SelectGroup outline/muted corner projection from theme-radius-field to theme-radius-item, matching the parent Surface owner.
+- This does NOT reclassify shadcn's imported palette ring input or the independent focus halo option. Remaining private var naming cleanup requires consumer-wide gates; do not claim ring terminology fully removed from internal CSS yet.
+- PR #265 Draft, no merge; next exact-head CI and full Windows offline deliverable.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 canonical InputGroup class migration (CI pending)
 - HEAD parent 13038d10a4758900c6e835ba7386350ecd9087ab; PR #265 Draft/open/unmerged. Previous verify:create-app failed due stale previous-round highlight ban on currently highlighted Savings Targets; corrected in this batch.
 - Canonical CSS class selector is now qxframe9a7c2-input-group and companion -item/-field/-addon/-prefix/-suffix/-kbd etc; qxframe9a7c2-form-input-group removed from active composition, Create previews, component docs/labs and verifiers. No runtime qxframe.js edits or obsolete class aliases.

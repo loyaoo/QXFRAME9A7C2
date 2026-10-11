@@ -66,11 +66,11 @@ button.qxframe9a7c2-input-group-addon:focus-visible,a.qxframe9a7c2-input-group-a
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label,
-.qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-start-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{border-start-start-radius:var(--qxframe9a7c2-theme-radius-item);border-end-start-radius:var(--qxframe9a7c2-theme-radius-item)}
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label,
-.qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{border-start-end-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)}
+.qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-flex>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{border-start-end-radius:var(--qxframe9a7c2-theme-radius-item);border-end-end-radius:var(--qxframe9a7c2-theme-radius-item)}
 .qxframe9a7c2-selectgroup.is-connected .qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-active)}
 .qxframe9a7c2-selectgroup.is-connected .qxframe9a7c2-selectgroup-item:focus-within{z-index:var(--qxframe9a7c2-z-local-focus)}
 /* Explicit feedback state wins over the pointer FocusOrigin border color.
@@ -87,11 +87,11 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warnin
 .qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item>.qxframe9a7c2-selectgroup-label{border-radius:0}
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:first-child>.qxframe9a7c2-selectgroup-label{
-  border-start-start-radius:var(--qxframe9a7c2-theme-radius-field);border-start-end-radius:var(--qxframe9a7c2-theme-radius-field)
+  border-start-start-radius:var(--qxframe9a7c2-theme-radius-item);border-start-end-radius:var(--qxframe9a7c2-theme-radius-item)
 }
 .qxframe9a7c2-selectgroup.is-connected.is-outline>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-connected.is-muted>.qxframe9a7c2-stack>.qxframe9a7c2-selectgroup-item:last-child>.qxframe9a7c2-selectgroup-label{
-  border-end-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)
+  border-end-start-radius:var(--qxframe9a7c2-theme-radius-item);border-end-end-radius:var(--qxframe9a7c2-theme-radius-item)
 }
 /* Nested stable GroupItem projects child interaction state to the composition stacking owner. */
 .qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item:hover{--_qxframe9a7c2-group-stack:2}

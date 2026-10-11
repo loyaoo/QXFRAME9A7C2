@@ -231,8 +231,8 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
   assert.match(css('composition'),/sidebar-menu-button:hover:not\(\.is-active\)[^\{]*\{[^}]*theme-muted/,'muted hover');
   assert.match(css('composition'),/sidebar-menu-button\.is-active:hover[^\{]*\{[^}]*theme-accent/,'theme active');
-  assert.match(css('composition'),/form-input-group-field:has\(>\.qxframe9a7c2-form-input:focus-visible\)[^\{]*\{[^}]*outline:/,'group owns keyboard outline');
-  assert.match(css('composition'),/form-input-group-addon\+\.qxframe9a7c2-form-input[^\{]*\{[^}]*padding-inline-start:calc/,'internal touching padding half');
+  assert.match(css('composition'),/input-group-field:has\(>\.qxframe9a7c2-form-input:focus-visible\)[^\{]*\{[^}]*outline:/,'group owns keyboard outline');
+  assert.match(css('composition'),/input-group-addon\+\.qxframe9a7c2-form-input[^\{]*\{[^}]*padding-inline-start:calc/,'internal touching padding half');
   assert.match(css('form-native'),/\.qxframe9a7c2-form-select,\.qxframe9a7c2-native-form select\{[\s\S]*?appearance:none/,'native arrow replacement');
   assert.ok(fs.readFileSync(path.join(root,'docs/create/inputgroup-control-contract.md'),'utf8').includes('独立子组合布局岛'));
   assert.match(css('button'),/\.qxframe9a7c2-button\.is-md:not\(\.is-square\):not\(\.is-icon-only\)[^\{]*\{[^}]*theme-button-md-padding-inline/,'MD Button family uses style-specific inset');
@@ -334,14 +334,14 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   assert.match(source('src/styles/components/button.css'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-button:focus[^\{]*\{[^}]*theme-pointer-shadow/,'Button pointer focus projects Theme shadow independently of :active');
   assert.match(source('src/styles/components/native-input.css'),/\.qxframe9a7c2-input:hover:not\(:focus-within\)/,'JS Input native hover');
   assert.match(source('src/styles/main/theme-visual-v2-consumers.css'),/theme-hover-border-strength/,'hover border is resolved from independent style axis');
-  assert.match(source('src/styles/components/composition.css'),/form-input-group-addon\):hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'connected InputGroup shares hover border step');
+  assert.match(source('src/styles/components/composition.css'),/input-group-addon\):hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'connected InputGroup shares hover border step');
 
   const groupCss=source('src/styles/components/composition.css');
-  assert.match(groupCss,/form-input-group-field:has\(>\.qxframe9a7c2-input\.is-keyboard-focus[^\{]*\{[^}]*theme-focus-shadow/,'JS Input keyboard focus projects its halo to InputGroupField');
-  assert.match(groupCss,/form-input-group-field:has\(>\.qxframe9a7c2-input\.is-focused[^\{]*\{[^}]*theme-pointer-shadow/,'JS Input pointer focus projects to its outer composition');
-  assert.match(groupCss,/form-input-group-field>\.qxframe9a7c2-input\{[^}]*state-ring:none;[^}]*box-shadow:none/,'hosted JS Input never paints a second ring');
-  assert.match(groupCss,/form-input-group-field:hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'InputGroupField has the same derived hover border');
-  assert.match(groupCss,/form-input-group-addon\):hover:not\(:focus-within\)[^\{]*qxframe9a7c2-input\.is-disabled/,'connected InputGroup hover respects JS Input disabled state');
+  assert.match(groupCss,/input-group-field:has\(>\.qxframe9a7c2-input\.is-keyboard-focus[^\{]*\{[^}]*theme-focus-shadow/,'JS Input keyboard focus projects its halo to InputGroupField');
+  assert.match(groupCss,/input-group-field:has\(>\.qxframe9a7c2-input\.is-focused[^\{]*\{[^}]*theme-pointer-shadow/,'JS Input pointer focus projects to its outer composition');
+  assert.match(groupCss,/input-group-field>\.qxframe9a7c2-input\{[^}]*state-ring:none;[^}]*box-shadow:none/,'hosted JS Input never paints a second ring');
+  assert.match(groupCss,/input-group-field:hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'InputGroupField has the same derived hover border');
+  assert.match(groupCss,/input-group-addon\):hover:not\(:focus-within\)[^\{]*qxframe9a7c2-input\.is-disabled/,'connected InputGroup hover respects JS Input disabled state');
 
 });
 
@@ -760,8 +760,8 @@ check('QX shape, Luma switch and shared layout contracts', () => {
   for (const page of ['preview-01.html', 'preview-02.html']) {
     assert.doesNotMatch(read(page), /class="[^"]*\b(?:pv-stack|pv-field-group|pv-check-field|pv-swatch-cell|pv-separator|pv-row|pv-item|pv-field|create-grid|create-col|create-pair)\b/, 'duplicate private primitive ' + page);
   }
-  assert.match(composition, /form-input-group-prefix/);
-  assert.match(composition, /form-input-group-suffix/);
+  assert.match(composition, /input-group-prefix/);
+  assert.match(composition, /input-group-suffix/);
   const privateCss = read('preview.css');
   for (const oldName of ['pv-stack', 'pv-row', 'pv-item', 'pv-field-group', 'pv-separator', 'pv-swatch-cell', 'pv-kbd', 'pv-skeleton', 'pv-spinner', 'pv-progress', 'create-grid', 'create-col']) {
     assert.doesNotMatch(privateCss, new RegExp('\\.' + oldName + '(?:\\b|\\.)'), 'private duplicate not removed: ' + oldName);
