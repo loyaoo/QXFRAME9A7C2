@@ -1365,10 +1365,12 @@ try {
       for(const mode of ['light','dark']){
         const point=await evaluate(`(()=>{
           const frame=document.querySelector('[data-create-frame]'),d=frame.contentDocument,h=d.documentElement;
+          const wasDark=h.classList.contains('dark');
           h.classList.toggle('dark',__DARK__);
           const fixture=d.createElement('div');fixture.id='qx-s3-hover-fixture';
           fixture.style.cssText='position:fixed;left:18px;top:38px;z-index:99999;width:260px;height:64px';
           fixture.innerHTML='<div class="qxframe9a7c2-field is-warning"><div class="qxframe9a7c2-selectgroup is-outline"><label class="qxframe9a7c2-selectgroup-item"><input type="checkbox" class="qxframe9a7c2-selectgroup-input"><span class="qxframe9a7c2-selectgroup-label" style="width:250px;height:55px;transition:none">Test choice</span></label></div></div><i data-probe style="position:absolute;left:-9000px"></i>';
+          fixture.dataset.previousDark=String(wasDark);
           d.body.append(fixture);
           h.style.setProperty('--qxframe9a7c2-theme-hover-border-strength','100%');
           h.style.setProperty('--qxframe9a7c2-theme-hover-background-strength','100%');
@@ -1410,6 +1412,7 @@ try {
             input.disabled=false;input.checked=true;
             rows.push({appearance,status:'checked',before:{border:css(label).borderColor,bg:css(label).backgroundColor}});
           }
+          h.classList.toggle('dark',f.dataset.previousDark==='true');
           f.remove();for(const name of ['--qxframe9a7c2-theme-hover-border-strength','--qxframe9a7c2-theme-hover-background-strength','--qxframe9a7c2-theme-hover-color'])h.style.removeProperty(name);
           return {hover,colors,rows};
         })()`);
