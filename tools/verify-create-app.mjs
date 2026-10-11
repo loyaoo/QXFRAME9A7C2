@@ -58,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'github-profile':['.qxframe9a7c2-form-select']}; // Preview 02 native customizable select
+  const current={'codespaces-card':['.qxframe9a7c2-card-content'],'book-appointment':['[data-pv-multi-toggle="appointment"]']}; // Stage4 functional batch
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
@@ -72,7 +72,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only this round Preview 02 native Select is highlighted');
+  assert.equal(count,2,'only two Stage4 changed regions (Codespaces/Appointment) are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -440,6 +440,23 @@ check('Stage 4 Preview 02 pinned 31-card inventory and same-browser audit entryp
   assert.match(audit,/docs\/create\/preview-02\.html/,'Stage4 must compare QX Preview 02');
   assert.match(audit,/assert\.equal\(rows\.length,496/,'31 Cards times eight styles and two themes');
   execFileSync(process.execPath,['--check',path.join(root,'tools/qa/preview-02-audit.mjs')],{stdio:'pipe'});
+});
+
+
+check('Stage4 Codespaces nested QX Tabs and BookAppointment multiple button state owner',()=>{
+ const page=read('preview-02.html');
+ const codespaces=page.slice(page.indexOf('<!-- @card codespaces-card -->'),page.indexOf('<!-- @end codespaces-card -->'));
+ const appointment=page.slice(page.indexOf('<!-- @card book-appointment -->'),page.indexOf('<!-- @end book-appointment -->'));
+ for(const name of ['codespaces','local','https','ssh','cli'])
+   assert.match(codespaces,new RegExp('data-pv-tab-panel="'+name+'"'),'real nested source tab panel '+name);
+ assert.match(codespaces,/data-pv-tab-group="codespaces"/,'outer QX Tabs');
+ assert.match(codespaces,/data-pv-tab-group="codespaces-local"/,'nested QX Tabs');
+ assert.match(appointment,/data-pv-multi-toggle="appointment"/,'authored multiple group');
+ assert.equal((appointment.match(/aria-pressed=/g)||[]).length,4,'4 independent time slots');
+ const runtime=read('preview-cards.js');
+ assert.match(runtime,/host\.parentNode\.children/,'QX Tabs only owns direct panels');
+ assert.match(runtime,/data-pv-multi-toggle/,'delegated real multiple choice Buttons');
+ assert.match(read('preview.css'),/\[data-pv-tab-panel\]\[hidden\]\s*\{\s*display:\s*none/,'nested Stack panels stay hidden');
 });
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{

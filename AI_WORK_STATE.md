@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-11 Stage4 real Chromium and static gates added (CI pending)
+- Parent 74d1d63d18cab847a11642ff3accdbde4994afe5 restored Codespaces Local clone panel via nested QX Tabs and BookAppointment 4 independent slots.
+- Extended static verifier to current two-region QA ledger and nested controls DOM/source checks.
+- Added real createApp Chromium Stage4 5 Codespaces panel transitions (outer and inner preserve state), plus BookAppointment zero/one/multiple 4-slot interaction, checked CSS class and pressed state. No source shadcn pixel matching.
+- New exact-head dual CI required; correct any real failures then ship official full Windows offline dist+docs.
+
 ## CURRENT — 2026-10-11 Stage4 real functional fixes (CI pending)
 - PR #266 Draft/open, preceding head 2e3eb2406a0faa09696dfae530eeb5c3aade1e26, Stage4 QXFRAME #38127372265 and CSS Schema #38127372258 success; Stage4 source/QX 31x16 same-Chromium comparisons mapped 496/496, no page JS errors.
 - Stage3 PR #265 merged into main 0b2c931. User policy: QX approved component differences are NOT bugs; no pixel-perfect shadcn rework.

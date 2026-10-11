@@ -305,6 +305,26 @@ try {
     assert.match((await state()).search, /item=02/);
   });
 
+  await step('Stage4 real Preview02 Codespaces nested QX Tabs and Appointment multiselect',async()=>{
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.querySelector("[data-card=codespaces-card] .qxframe9a7c2-tabs-tab")','Codespaces mounted QX Tabs');
+    const actual=await evaluate("(function(){\n      const doc=document.querySelector('[data-create-frame]').contentDocument;\n      const codespaces=doc.querySelector('[data-card=\"codespaces-card\"]');\n      const appointment=doc.querySelector('[data-card=\"book-appointment\"]');\n      const panel=(name)=>codespaces.querySelector('[data-pv-tab-panel=\"'+name+'\"]');\n      const shown=name=>Boolean(panel(name)&&!panel(name).hidden);\n      const tab=(group,name)=>{\n        const host=codespaces.querySelector('[data-pv-tab-group=\"'+group+'\"]');\n        const button=[...host.querySelectorAll('.qxframe9a7c2-tabs-tab')].find(x=>x.textContent.trim()===name);\n        if(!button)throw new Error('Missing QX Tabs '+group+'/'+name);\n        button.click();\n      };\n      const first=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const local=[shown('codespaces'),shown('local'),shown('https'),shown('ssh'),shown('cli'),panel('https').querySelector('input').value];\n      tab('codespaces-local','SSH');\n      const ssh=[shown('https'),shown('ssh'),shown('cli'),panel('ssh').querySelector('input').value];\n      tab('codespaces-local','GitHub CLI');\n      const cli=[shown('https'),shown('ssh'),shown('cli'),panel('cli').querySelector('input').value];\n      tab('codespaces','Codespaces');\n      const back=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const reopen=[shown('local'),shown('cli')];\n      tab('codespaces','Codespaces');\n      const slots=[...appointment.querySelectorAll('[data-pv-multi-toggle=\"appointment\"] button')];\n      const snapshot=()=>slots.map(b=>({active:b.classList.contains('is-active'),pressed:b.getAttribute('aria-pressed')}));\n      const start=snapshot();\n      slots[1].click();const add=snapshot();\n      slots[0].click();const single=snapshot();\n      slots[1].click();const none=snapshot();\n      slots[2].click();slots[3].click();const multiple=snapshot();\n      return {first,local,ssh,cli,back,reopen,start,add,single,none,multiple,count:slots.length};\n    })()");
+    assert.deepEqual(actual.first,[true,false],'Codespaces initial panel active');
+    assert.deepEqual(actual.local,[false,true,true,false,false,'https://github.com/shadcn-ui/ui.git']);
+    assert.deepEqual(actual.ssh,[false,true,false,'git@github.com:shadcn-ui/ui.git']);
+    assert.deepEqual(actual.cli,[false,false,true,'gh repo clone shadcn-ui/ui']);
+    assert.deepEqual(actual.back,[true,false]);
+    assert.deepEqual(actual.reopen,[true,true],'nested CLI tab state survives outer hide/show');
+    assert.equal(actual.count,4);
+    const bools=s=>s.map(x=>x.active);
+    assert.deepEqual(bools(actual.start),[true,false,false,false]);
+    assert.deepEqual(bools(actual.add),[true,true,false,false]);
+    assert.deepEqual(bools(actual.single),[false,true,false,false]);
+    assert.deepEqual(bools(actual.none),[false,false,false,false]);
+    assert.deepEqual(bools(actual.multiple),[false,false,true,true]);
+    for(const group of [actual.start,actual.add,actual.single,actual.none,actual.multiple])
+      for(const item of group)assert.equal(item.pressed,String(item.active),'multiselect class/semantic state synchronized');
+  });
+
   await step('import errors are reported and keep the current configuration', async () => {
     const before = JSON.stringify((await state()).config);
     await key('o');
