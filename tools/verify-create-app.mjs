@@ -58,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'live-waveform':['[data-pv-wave-visual]','.qxframe9a7c2-card-footer'],'no-team-members':['[data-pv-jump-invites]']}; // Stage4 waveform and cross-card invitation
+  const current={'shipping-address':['[data-pv-address-fields]','[data-pv-address-actions]'],'feedback-form':['[data-pv-feedback-fields]','[data-pv-feedback-submit]']}; // Stage4 live local form validation
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
@@ -72,7 +72,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,3,'only current Stage4 waveform/invite regions are highlighted');
+  assert.equal(count,4,'only current Stage4 two local forms/four regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -1547,6 +1547,23 @@ check('CardFooter peer Button equal-width semantic only when editorial',()=>{
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
     assert.match(theme,new RegExp('--qxframe9a7c2-theme-card-footer-peer-flex: '+(style==='sera'?'1 1 0%':'0 1 auto')+';'),'theme peer action role '+style);
   }
+});
+
+
+check('Stage4 local-only forms use real labels, validation, QX Select and action feedback',()=>{
+  const html=read('preview-02.html'),js=read('preview-cards.js');
+  for(const card of ['shipping-address','feedback-form'])
+    assert.ok(html.includes('data-card="'+card+'"'),'form Card '+card);
+  for(const id of ['pv-address-street','pv-address-suite','pv-address-city','pv-address-state','pv-address-zip','pv-address-country','pv-form-topic','pv-form-message']){
+    assert.ok(html.includes('for="'+id+'"'),'FieldLabel points to '+id);
+    assert.ok(html.includes('id="'+id+'"') || html.includes('data-pv-label-id="'+id+'"'),'actual input or Select focus owner '+id);
+  }
+  for(const name of ['data-pv-address-save','data-pv-address-cancel','data-pv-address-status','data-pv-feedback-submit','data-pv-feedback-status'])
+    assert.ok(html.includes(name),'working form hook '+name);
+  assert.match(js,/previewSelects\.set\(host,mountedSelect\)/,'existing Select instance retained, no cloned controllers');
+  assert.match(js,/select\.setValue\(host\.getAttribute\('data-value'\) \|\| ''\)/,'Cancel restores authored QX Select');
+  assert.match(js,/Address checked locally; not saved to a server/,'address result cannot fake persistence');
+  assert.match(js,/Feedback validated locally; not submitted to a server/,'feedback result cannot fake submission');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

@@ -10,14 +10,16 @@
       return { value: parts[0], label: parts[1] === undefined ? parts[0] : parts[1] };
     });
   }
+  var previewSelects = new Map();
   document.querySelectorAll('[data-pv-select]').forEach(function (host) {
-    C.Select.create({
+    var mountedSelect = C.Select.create({
       container: host,
       items: pairs(host.getAttribute('data-options')),
       value: host.getAttribute('data-value') || undefined,
       placeholder: host.getAttribute('data-placeholder') || undefined,
       size: host.getAttribute('data-size') || 'md'
     });
+    previewSelects.set(host,mountedSelect);
     // A non-searchable QX Select owns a focusable div[tabindex], not an
     // input. Bridge source FieldLabel clicks to the QX-owned focus root.
     var focusId = host.getAttribute('data-pv-label-id');
@@ -156,6 +158,70 @@
     });
   });
 
+
+
+  // Stage4 practical form interactions: preserve authored QX fields/Select and
+  // validate locally. These examples have NO submission or persistence API.
+  var addressCard = document.querySelector('[data-card="shipping-address"]');
+  if (addressCard) {
+    var addressInputs = Array.prototype.slice.call(addressCard.querySelectorAll('[data-pv-address-fields] input[type="text"]'));
+    var addressStatus = addressCard.querySelector('[data-pv-address-status]');
+    var addressCheckbox = addressCard.querySelector('[data-pv-address-fields] input[type="checkbox"]');
+    var addressSelects = Array.prototype.slice.call(addressCard.querySelectorAll('[data-pv-address-fields] [data-pv-select]'));
+    function addressMessage(message) {
+      addressStatus.hidden = !message;
+      addressStatus.textContent = message || '';
+    }
+    addressCard.querySelector('[data-pv-address-save]').addEventListener('click',function () {
+      var missing = addressInputs.find(function (input) { return input.required && !input.value.trim(); });
+      if (missing) {
+        addressMessage('Street address, city and ZIP Code are required before saving.');
+        missing.focus({preventScroll:true});
+        return;
+      }
+      addressMessage('Address checked locally; not saved to a server.');
+    });
+    addressCard.querySelector('[data-pv-address-cancel]').addEventListener('click',function () {
+      addressInputs.forEach(function (input) { input.value = ''; });
+      if (addressCheckbox) addressCheckbox.checked = true;
+      addressSelects.forEach(function (host) {
+        var select = previewSelects.get(host);
+        if (select && typeof select.setValue === 'function')
+          select.setValue(host.getAttribute('data-value') || '');
+      });
+      addressMessage('Unsaved address changes discarded locally.');
+    });
+    addressInputs.forEach(function (input) {
+      input.addEventListener('input',function () { addressMessage(''); });
+    });
+  }
+  var feedbackCard = document.querySelector('[data-card="feedback-form"]');
+  if (feedbackCard) {
+    var feedbackFields = feedbackCard.querySelector('[data-pv-feedback-fields]');
+    var feedbackTopic = feedbackFields.querySelector('select');
+    var feedbackBody = feedbackFields.querySelector('textarea');
+    var feedbackStatus = feedbackCard.querySelector('[data-pv-feedback-status]');
+    function feedbackMessage(message) {
+      feedbackStatus.hidden = !message;
+      feedbackStatus.textContent = message || '';
+    }
+    feedbackCard.querySelector('[data-pv-feedback-submit]').addEventListener('click',function () {
+      if (!feedbackTopic.value) {
+        feedbackMessage('Select a topic before submitting feedback.');
+        feedbackTopic.focus({preventScroll:true});
+        return;
+      }
+      if (!feedbackBody.value.trim()) {
+        feedbackMessage('Enter feedback before submitting.');
+        feedbackBody.focus({preventScroll:true});
+        return;
+      }
+      feedbackMessage('Feedback validated locally; not submitted to a server.');
+    });
+    feedbackFields.addEventListener('input',function () { feedbackMessage(''); });
+    feedbackTopic.addEventListener('change',function () { feedbackMessage(''); });
+    feedbackFields.addEventListener('submit',function (event) { event.preventDefault(); });
+  }
 
   // Stage4: File Upload is a local picker/drop demonstration, NOT an upload
   // API. Match the copy ("PNG, JPG, PDF up to 10MB"), reject other/oversized

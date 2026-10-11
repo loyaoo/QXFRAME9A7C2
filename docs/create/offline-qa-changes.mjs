@@ -1,11 +1,12 @@
 /** Stage4: LiveWaveform real media/processing states; InviteMembers cross-card action. */
 const groups = [
- ['live-waveform','Live Audio Waveform · Real State',[
-  ['[data-pv-wave-visual]','真实麦克风波形或模拟处理动画','点击后才申请麦克风；权限拒绝不伪造监听；停止释放音轨、AudioContext；Static / Scrolling 可切换。','__QA_BUNDLE_HEAD__'],
-  ['.qxframe9a7c2-card-footer','三个波形按钮可操作','Start/Stop Listening、Processing 和模式状态按原组件语义切换。','__QA_BUNDLE_HEAD__']
+ ['shipping-address','Shipping Address · Local Form',[
+  ['[data-pv-address-fields]','Required fields and focusable labels','Required street/city/ZIP; native fields and QX Select focus from their labels.','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-address-actions]','Save / Cancel real local actions','Validate and reset draft; never imply a server saved the address.','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['no-team-members','No Team Members · Invite Members',[
-  ['[data-pv-jump-invites]','邀请入口定位至 Invite Team','焦点跳转到现有 Invite Team 操作，不假装已经发送邀请。','__QA_BUNDLE_HEAD__']
+ ['feedback-form','Feedback Form · Local Validation',[
+  ['[data-pv-feedback-fields]','Topic / Feedback required fields','Native Select and textarea label association, no false submission.','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-feedback-submit]','Submit action feedback','Shows validation errors or honest local-only status.','__QA_BUNDLE_HEAD__']
  ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
