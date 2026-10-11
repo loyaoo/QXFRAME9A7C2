@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Stage 3 Field valid focus precedence product fix (CI pending)
+- Real Chromium CSS Schema candidate dab406be rendered ordinary JS Input pointer Focus border and focus-ring correctly; test then rejected the **real** is-valid Field JS Input focus border, which used generic pointer-focus rather than Theme success. CSS Schema #38098270620 FAILED at exact is-valid computed border and was not waived.
+- Reused the existing single V2 JS Input border paint slot. Strengthened Field/form-field is-valid consumer on :focus-within/.is-focused so success outranks the more specific ordinary FocusOrigin color, while explicit child warning/invalid and disabled/readonly remain excluded. Added static regression; existing light/dark × input/choice Chromium paint gate stays strict.
+- Parent accepted baseline remains 18dd230c; latest candidate will need **both workflows** SUCCESS same commit, then official Windows dist+docs ZIP. PR #265 Draft/unmerged; no Preview DOM modification or yellow highlights.
+
 ## CURRENT — 2026-10-11 S3 JS V2 FocusOrigin paint + Field valid native/JS/SelectGroup status (CI pending)
 - Verified parent 18dd230c14ee51060c495bc648d9e422821a2bf9, both official workflows SUCCESS; PR #265 Draft/open/unmerged.
 - Fixed missing Theme V2 final border owner on JS Input pointer and keyboard FocusOrigin; both now set --_qxframe9a7c2-v2-control-border and the existing JS Input --_qxframe9a7c2-state-ring to the configured pointer/keyboard Theme shadow. No new CSS physical owner or new public Theme token.

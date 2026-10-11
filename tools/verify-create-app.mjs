@@ -98,6 +98,7 @@ check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Fie
  assert.match(consumer,/--_qxframe9a7c2-state-ring:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard JS surface shadow');
  assert.match(native,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-form-input:not\(:disabled\)/,'native Field success feedback');
  assert.match(style,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-input:not\(\.is-disabled\)/,'JS Field success V2 feedback');
+ assert.match(style,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-input:focus-within:not\(\.is-disabled\)/,'focused valid JS Field must outrank generic FocusOrigin color');
  assert.match(consumer,/html\.qxframe9a7c2-keyboard-focus-origin \.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-selectgroup-input:focus/,'SelectGroup valid border survives keyboard focus');
 });
 

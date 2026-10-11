@@ -98,6 +98,12 @@
 
   /* Field validity applies to JS Input's shared V2 physical border slot, too.
    * Explicit child feedback remains authoritative, independent of FocusOrigin. */
+  /* A focused valid Field must defeat the high-specificity FocusOrigin color
+   * projection without introducing a second physical border painter. */
+  .qxframe9a7c2-field.is-valid .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-field.is-valid .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
+  .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-field.is-valid .qxframe9a7c2-input:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-input:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning){
     --_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-success);
