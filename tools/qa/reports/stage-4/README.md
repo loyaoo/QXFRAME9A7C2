@@ -1,5 +1,15 @@
 # Stage 4 · Preview 02 practical visual acceptance
 
+## Stage 4 owner acceptance and closeout — 2026-10-11
+
+**Owner accepted all 31 Preview 02 Cards:** “卡片都验收了没问题，继续”. This is explicit acceptance of the reviewed card results. The prior ten-card functional batch at `7cb643cbe70c89f01c250d1432737ec1e3b6d815` has verified QXFRAME CI #38140220682 and CSS Schema Acceptance #38140220688, with official full `dist+docs` artifact #11702368628.
+
+**Acceptance policy remains unchanged:** accepted Stage 3 QX control size/radius/typography/normal shadow/FocusOrigin/real CSS outline and Style effects are not pixel regressions. Do not re-audit 31 cards for 0.5px shadcn equality; preserve only real functionality/theme/contrast/layout gates and 496 same-browser render cases (31 × 8 Styles × 2 modes).
+
+**Latest Windows QA highlight ledger is historical change provenance, not outstanding QA:** the prior ten-card 14-region patch remains the most recent *actual* code modification; earlier yellow marks stay cleared, while production HTML stays unmarked. The owner accepted all 31 Cards, including unhighlighted static display Cards. No new Card-specific visual work is claimed in this closeout commit.
+
+**Merge restriction remains:** PR #266 stays Draft and unmerged. Card acceptance does not grant express approval to merge or mark Ready. `main` and `backup` are protected, Stage 5 not started. This documentation closeout needs its own two green checks and official artifact before declaring final exact-HEAD CI complete.
+
 ## Owner-approved acceptance policy (2026-10-11)
 
 Stage 3 **PR #265 merged into main**, merge `0b2c9310712ad73a9f2d279a9c3cfb2bc468e7d6`. The owner confirms Preview 01 solved most shared framework visual/unification defects. **Preview 02 must NOT be chased to pixel-level agreement with shadcn** when differences are caused by already modified, explicitly accepted QX components.

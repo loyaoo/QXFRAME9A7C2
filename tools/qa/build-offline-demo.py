@@ -120,9 +120,9 @@ http.createServer((req,res)=>{
     ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。') +
     '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。'
     ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。')
-    '未标注的卡片不代表已通过验收。\n\n'
+    '31 张 Preview 02 卡片已经用户人工验收通过；高亮仅标记最近一次实际代码变更。\n\n'
     '之后每批更改卡片必须同步更新 docs/create/offline-qa-changes.mjs 的清单。'
-    'Stage 3 已合并。此 Stage 4 验收包来自 Draft PR #266，尚待人工验收，未合并 main。\n', encoding='utf-8')
+    'Stage 3 已合并；Stage 4 Preview 02 全部 31 张卡片已通过用户人工验收。此验收包来自 Draft PR #266，未经单独授权仍未合并 main，Stage 5 未启动。\n', encoding='utf-8')
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass

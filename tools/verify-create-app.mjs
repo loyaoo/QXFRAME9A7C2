@@ -83,6 +83,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   assert.match(ledger,/data-qa-toggle/,'offline QA must support original clean view');
   assert.match(packager,/offline-qa-changes\.mjs/,'packager must inject the QA module into local copies');
   assert.match(packager,/offline-qa-changes\.css/,'packager must inject the QA stylesheet into local copies');
+  assert.match(packager,/31 张 Preview 02 卡片已经用户人工验收通过/,'offline bundle must reflect Stage4 owner acceptance');
+  assert.doesNotMatch(packager,/尚待人工验收/,'do not ship stale pending Stage4 copy after owner acceptance');
   for(const page of ['index.html','preview-01.html','preview-02.html'])
     assert.doesNotMatch(read(page),/offline-qa-changes/,
       'QA visuals are forbidden in source / online Create HTML: '+page);
