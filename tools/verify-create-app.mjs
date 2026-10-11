@@ -88,6 +88,19 @@ check('Retired form-selectgroup selectors have no Theme V2 paint authority',()=>
   assert.match(tabCss,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{--_qxframe9a7c2-tabs-tab-weight:var\(--qxframe9a7c2-theme-control-weight,500\)/,'segmented Tabs inherit Theme typography');
 });
 
+check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Field success stays distinct',()=>{
+ const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
+ const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+ const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
+ assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
+ assert.match(consumer,/--_qxframe9a7c2-state-ring:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer JS surface shadow');
+ assert.match(consumer,/--_qxframe9a7c2-state-ring:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard JS surface shadow');
+ assert.match(native,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-form-input:not\(:disabled\)/,'native Field success feedback');
+ assert.match(style,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-input:not\(\.is-disabled\)/,'JS Field success V2 feedback');
+ assert.match(consumer,/html\.qxframe9a7c2-keyboard-focus-origin \.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-selectgroup-input:focus/,'SelectGroup valid border survives keyboard focus');
+});
+
 check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
   const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
   const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');

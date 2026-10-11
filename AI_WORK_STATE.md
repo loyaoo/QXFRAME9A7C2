@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 S3 JS V2 FocusOrigin paint + Field valid native/JS/SelectGroup status (CI pending)
+- Verified parent 18dd230c14ee51060c495bc648d9e422821a2bf9, both official workflows SUCCESS; PR #265 Draft/open/unmerged.
+- Fixed missing Theme V2 final border owner on JS Input pointer and keyboard FocusOrigin; both now set --_qxframe9a7c2-v2-control-border and the existing JS Input --_qxframe9a7c2-state-ring to the configured pointer/keyboard Theme shadow. No new CSS physical owner or new public Theme token.
+- Added unified is-valid Field feedback for native Input/Select/Textarea, JS Input and SelectGroup focused Surface, retaining disabled/readonly and child invalid/warning priority. No new appearance classes or JS runtime changes.
+- Added strict static guard and Chromium light/dark × pointer/keyboard × JS normal/valid/native/SelectGroup valid 16-case paint verification; inspect actual computed border and shadow, not token strings alone.
+- Pending same-HEAD QXFRAME CI + CSS Schema Acceptance and official dist/docs Windows ZIP. Preview DOM unchanged; no yellow QA region. Preserve PR Draft and no Stage4/5 start.
+
 ## CURRENT — 2026-10-11 Stage 3 source inner-role typography + stale SelectGroup Theme selector cleanup (pending CI)
 - Confirmed parent 4d14fd61e32925fc3ade402d8b71f5c0410e5607: QXFRAME CI #38061687428 and CSS Schema #38061687433 both SUCCESS, PR #265 open/draft/unmerged.
 - Official same-Chromium 528/528 renders had 0 geometry/height discrepancies, but source inner-roles report showed FAQ segmented trigger fontWeight 500 across 7 styles and 600 for Sera while QX painted 400 in all 16 light/dark cells. Bound selected + inactive TabsTrigger weight to existing Theme control-weight without introducing public token, and added Chromium 16-style/mode regression (active and inactive).

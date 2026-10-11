@@ -87,10 +87,31 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-focus)}
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-pointer-focus)}
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled):not(.is-invalid):not(.is-error):not(.is-warning){--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-focus)}
+/* Native and JS shells must feed the same final V2 border painter. The
+ * state ring is consumed by JS Input itself, without a second box-shadow owner. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning){
+ --_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-pointer-focus);
+ --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-pointer-focus);
+ --_qxframe9a7c2-state-ring:var(--qxframe9a7c2-theme-pointer-shadow,none)
+}
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning){
+ --_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-focus);
+ --_qxframe9a7c2-v2-control-border:var(--qxframe9a7c2-theme-focus);
+ --_qxframe9a7c2-state-ring:var(--qxframe9a7c2-theme-focus-shadow,none)
+}
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-focus)}
+
+/* A Field's explicit success status outranks FocusOrigin selection border,
+ * exactly as warning/destructive do, without moving focus off the Surface. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-field.is-valid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-field.is-valid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
+ --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-success);
+ border-color:var(--qxframe9a7c2-theme-success)
+}
 
 /* Native Field feedback already owns border-color in form-native.css; the
  * independent focus recipes above adjust only the field's color variable.

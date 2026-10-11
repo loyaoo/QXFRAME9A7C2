@@ -25,6 +25,15 @@
 .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select,
 .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-textarea{border-color:var(--qxframe9a7c2-theme-warning)}
 
+/* Valid feedback is a third Field color role. Disabled/read-only and an
+ * explicit child warning/error keep their preexisting precedence. */
+.qxframe9a7c2-field.is-valid .qxframe9a7c2-form-input:not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+.qxframe9a7c2-field.is-valid .qxframe9a7c2-form-select:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+.qxframe9a7c2-field.is-valid .qxframe9a7c2-form-textarea:not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+.qxframe9a7c2-form-field.is-valid .qxframe9a7c2-form-input:not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
+.qxframe9a7c2-form-field.is-valid .qxframe9a7c2-form-select:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
+.qxframe9a7c2-form-field.is-valid .qxframe9a7c2-form-textarea:not(:disabled):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){border-color:var(--qxframe9a7c2-theme-success)}
+
 /* v1.95 P2-A native Choice parity — native inputs remain the only checked/exclusivity owner. */
 .qxframe9a7c2-form-check.is-xs{--_qxframe9a7c2-form-check-size-default:0.75rem;font-size:0.75rem}
 .qxframe9a7c2-form-check.is-sm{--_qxframe9a7c2-form-check-size-default:0.875rem;font-size:0.875rem}
