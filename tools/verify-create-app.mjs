@@ -42,7 +42,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'upcoming-payments':['.pv-calendar']}; // actual Calendar visual change
+  const current={'faq':['.pv-tabs']}; // current batch segmented Tabs keyboard focus elevation
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -55,10 +55,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   }
   for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','savings-targets',
     'recent-transactions','transfer-funds','claimable-balance','front-door',
-    'release-catalog','qr-connect','cover-art','new-milestone','social-links'])
+    'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'one modified Calendar region in Preview 01');
-  assert.match(ledger,/const groups = \[/,'live Calendar ledger exists');
+  assert.equal(count,1,'one modified FAQ Tabs region in Preview 01');
+  assert.match(ledger,/const groups = \[/,'live FAQ Tabs ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -70,6 +70,13 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const page of ['index.html','preview-01.html','preview-02.html'])
     assert.doesNotMatch(read(page),/offline-qa-changes/,
       'QA visuals are forbidden in source / online Create HTML: '+page);
+});
+
+check('Tabs keyboard focus preserves the selected elevation on the same focus shell',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  assert.match(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:var\(--_qxframe9a7c2-tabs-tab-elevation\),var\(--_qxframe9a7c2-tabs-tab-ring\);outline:var\(--_qxframe9a7c2-focus-visible-outline\)/,'Tab keyboard ring must preserve existing selected elevation');
+  assert.match(css,/\.qxframe9a7c2-tabs-tab-action:focus-visible\{outline:none;box-shadow:none\}/,'inner action must not introduce a second outline');
+  assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:none/,'focused selected Tab must not lose its elevation');
 });
 
 check('segmented Tabs use the pinned source dark active input/30 recipe', () => {

@@ -1320,6 +1320,42 @@ try {
     }
   });
 
+  await step('FAQ segmented Tabs retain selected elevation through keyboard virtual-focus in 16 modes',async()=>{
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active")','FAQ segmented Tabs');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','FAQ elevation '+style);
+      for(const mode of ['light','dark']){
+        const m=await evaluate(`(()=>{
+          const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,wasDark=h.classList.contains('dark');
+          const wasShadow=h.style.getPropertyValue('--qxframe9a7c2-shadow-sm');
+          h.classList.toggle('dark',${mode==='dark'});
+          h.style.setProperty('--qxframe9a7c2-shadow-sm','0 2px 4px 0 rgb(53, 101, 211)');
+          const tabs=[...d.querySelectorAll('[data-card="faq"] .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab')];
+          const active=tabs.filter(t=>t.classList.contains('is-active'));
+          const t=active[0],child=t?.querySelector('.qxframe9a7c2-tabs-tab-action');
+          const priorTransition=t?.style.transition||'',wasFocus=t?.classList.contains('is-keyboard-focus');
+          if(t){t.style.transition='none';t.classList.remove('is-keyboard-focus')}
+          const before=t?getComputedStyle(t).boxShadow:null;
+          if(t)t.classList.add('is-keyboard-focus');
+          const css=t?getComputedStyle(t):null;
+          const result={count:tabs.length,active:active.length,before,focused:css?.boxShadow,outline:css?.outlineStyle,width:css?.outlineWidth,offset:css?.outlineOffset,childOutline:child?getComputedStyle(child).outlineStyle:null};
+          if(t){t.classList.toggle('is-keyboard-focus',!!wasFocus);t.style.transition=priorTransition}
+          if(wasShadow)h.style.setProperty('--qxframe9a7c2-shadow-sm',wasShadow);else h.style.removeProperty('--qxframe9a7c2-shadow-sm');
+          h.classList.toggle('dark',wasDark);return result;
+        })()`);
+        assert.ok(m.count>=3&&m.active===1,style+'/'+mode+' one selected FAQ Tab '+JSON.stringify(m));
+        assert.ok(m.before.includes('53, 101, 211'),'selected Tab has active elevation before keyboard focus '+JSON.stringify(m));
+        assert.equal(m.focused,m.before,style+'/'+mode+' keyboard outline must preserve selected Tab shadow');
+        assert.equal(m.outline,'solid',style+'/'+mode+' outer Tab has keyboard focus outline');
+        assert.equal(m.width,'2px',style+'/'+mode+' keyboard focus width');
+        assert.equal(m.offset,'-1px',style+'/'+mode+' keyboard focus offset');
+        if(m.childOutline)assert.equal(m.childOutline,'none',style+'/'+mode+' inner action has no duplicate outline');
+      }
+    }
+  });
+
   await step('FieldContent label line and FAQ trigger gap follow source in 16 themes', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ and Notifications');

@@ -66,7 +66,10 @@ button.qxframe9a7c2-tabs-tab{padding:0 var(--_qxframe9a7c2-tabs-pad-x);gap:0.375
 /* Pinned shadcn TabsTrigger data-active uses normal weight and foreground, not primary/bold. */
 .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:light-dark(var(--qxframe9a7c2-theme-background),color-mix(in oklab,var(--qxframe9a7c2-theme-input) 30%,transparent));--_qxframe9a7c2-tabs-tab-border:light-dark(transparent,var(--qxframe9a7c2-theme-choice-border));border-color:var(--_qxframe9a7c2-tabs-tab-border);--_qxframe9a7c2-tabs-tab-elevation:var(--qxframe9a7c2-shadow-sm,0 0 0 0 transparent);--_qxframe9a7c2-tabs-tab-text:var(--qxframe9a7c2-theme-foreground);--_qxframe9a7c2-tabs-tab-weight:var(--qxframe9a7c2-theme-control-weight,500)}
 .qxframe9a7c2-tabs-tab-action:focus-visible{outline:none;box-shadow:none}
-.qxframe9a7c2-tabs-tab.is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
+/* Keyboard focus adds the one Tab shell outline, but it must not erase the
+ * selected segmented Tab's already-owned elevation. The inner action draws no
+ * extra halo; both selected and normal tabs keep their existing shadow recipe. */
+.qxframe9a7c2-tabs-tab.is-keyboard-focus{box-shadow:var(--_qxframe9a7c2-tabs-tab-elevation),var(--_qxframe9a7c2-tabs-tab-ring);outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-tabs-tab.is-disabled,button.qxframe9a7c2-tabs-tab:disabled{--_qxframe9a7c2-tabs-tab-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-tabs-tab-cursor:not-allowed;--_qxframe9a7c2-tabs-tab-ring:0 0 0 0 transparent}
 .qxframe9a7c2-tabs-icon,.qxframe9a7c2-tabs-badge,.qxframe9a7c2-tabs-close{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
 .qxframe9a7c2-tabs-label{min-width:0;overflow:hidden;text-overflow:ellipsis}

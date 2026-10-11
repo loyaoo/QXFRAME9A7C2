@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ segmented Tabs keyboard-focus elevation (CI pending)
+- Accepted base cf656d17e93f149c93a95daef48dcbad0ecb34ca: QXFRAME CI #38100844623 and CSS Schema #38100844615 both SUCCESS, PR #265 Draft/open/unmerged. No re-audit, no Stage4/5.
+- Source-locked selected segmented FAQ tab has an active elevation shadow from shared Theme `--qxframe9a7c2-shadow-sm`. Tabs keyboard virtual focus currently sets box-shadow:none, unexpectedly discarding selected state shadow even though keyboard outline belongs to the same Tab shell.
+- Updated the existing Tabs shell one-owner focus rule to preserve `--_qxframe9a7c2-tabs-tab-elevation` and `--_qxframe9a7c2-tabs-tab-ring` while retaining keyboard 2px/-1px outline and no inner action outline. No new Theme token, no JS changes, no shadow added to non-focused states, no changes to fixed geometry.
+- Strict static gate plus real Chromium 8 Styles × light/dark: selected FAQ Tab must retain a sentinel injected shared elevation before/after keyboard focus and maintain one 2px/-1px keyboard shell ring; inner Action remains non-outlined.
+- Offline QA ledger marks ONLY Preview 01 FAQ .pv-tabs this round; old Calendar highlight cleared. Production Create HTML remains unmodified.
+- NEXT: both complete CI success same SHA (QXFRAME release/Chromium/528 source geometry/Windows, CSS Schema), full official artifact, Windows ZIP smoke/overlay, update PR progress. Do not merge.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 Calendar source inner-role correction (new CI pending)
 - Accepted parent e7615ea584bd6b9537cc25ed0fada03249a352bc, QXFRAME #38098832352 and CSS Schema #38098832367 SUCCESS, PR #265 Draft/unmerged.
 - Official same-browser 528-case nested inner-roles report identifies Upcoming Payments outside-month day text: source muted 400, QX normal foreground 500 / Sera 600 across 16 theme modes. Sera adaptive day width is 36px, actual height 40px due generic control minimum (reference 36px).
