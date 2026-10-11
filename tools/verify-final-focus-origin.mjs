@@ -97,7 +97,11 @@ while((match=ruleRe.exec(css))){
   const pointerGated=selector.startsWith('html:not(.qxframe9a7c2-keyboard-focus-origin) ');
   const themeOutline=/var\(--qxframe9a7c2-theme-pointer-width(?:,0px)?\)/.test(outline[1]);
   const themeOffset=/outline-offset\s*:\s*var\(--qxframe9a7c2-theme-pointer-offset/.test(body);
-  const uniqueShell=selector.includes('.qxframe9a7c2-tabs-tab:focus-within')&&!selector.includes('.qxframe9a7c2-tabs-tab-action:focus');
+  const uniqueShell=(
+    (selector.includes('.qxframe9a7c2-tabs-tab:focus-within')&&!selector.includes('.qxframe9a7c2-tabs-tab-action:focus'))||
+    selector.includes('.qxframe9a7c2-button:focus:not(:disabled)')||
+    (selector.includes('.qxframe9a7c2-input:focus-within:not(.is-disabled)')&&selector.includes('.qxframe9a7c2-input.is-focused:not(.is-disabled)'))
+  )&&!selector.includes('.qxframe9a7c2-input-control:focus');
   if(pointerGated&&themeOutline&&themeOffset&&uniqueShell)continue;
   unsafeFocusOutlineRules.push(selector);
 }
