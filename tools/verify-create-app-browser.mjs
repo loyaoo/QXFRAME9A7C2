@@ -2204,11 +2204,11 @@ try {
       "d.head.append(sheet);d.body.append(host);h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
       "const names=['button','input','select','js','group','choice'],read=()=>Object.fromEntries(names.map(n=>[n,getComputedStyle(host.querySelector('[data-shadow-'+n+']')).boxShadow]));\n"+
       "const orig={...api.state.config},ext={...orig.ext};let out={};\n"+
-      "for(const shadow of ['none','light']){\n"+
-      "sheet.textContent=api.compileTheme({...orig,ext:{...ext,shadow,pointerFocus:'border'}},{generatedAt:''}).body+'[data-shadow-js],[data-shadow-button],[data-shadow-choice]{transition:none!important}';\n"+
-      "out[shadow]=read();\n"+
+      "for(const shadow of ['off','on']){\n"+
+      "sheet.textContent=api.compileTheme({...orig,ext:{...ext,controlShadow:shadow,pointerFocus:'border'}},{generatedAt:''}).body+'[data-shadow-js],[data-shadow-button],[data-shadow-choice]{transition:none!important}';\n"+
+      "out[shadow==='on'?'light':'none']=read();\n"+
       "}\n"+
-      "sheet.textContent=api.compileTheme({...orig,ext:{...ext,shadow:'light',pointerFocus:'outline'}},{generatedAt:''}).body+'[data-shadow-js],[data-shadow-button]{transition:none!important}';\n"+
+      "sheet.textContent=api.compileTheme({...orig,ext:{...ext,controlShadow:'on',pointerFocus:'outline'}},{generatedAt:''}).body+'[data-shadow-js],[data-shadow-button]{transition:none!important}';\n"+
       "host.querySelector('[data-shadow-button]').focus();h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
       "const getOutline=n=>{const c=getComputedStyle(host.querySelector('[data-shadow-'+n+']'));return {width:c.outlineWidth,offset:c.outlineOffset,style:c.outlineStyle,shadow:c.boxShadow};};\n"+
       "out.buttonFocus=getOutline('button');\n"+
@@ -2241,14 +2241,14 @@ try {
       "d.head.append(sheet);d.body.append(host);h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
       "const names=['button','bare-input','bare-textarea','bare-select','input','textarea','select','native-form-textarea'],out=[];\n"+
       "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\n"+
-      " h.classList.toggle('dark',dark);const c={...orig,style,ext:{...orig.ext,shadow:'light',pointerFocus:'outline',keyboardFocus:'outline'}};\n"+
+      " h.classList.toggle('dark',dark);const c={...orig,style,ext:{...orig.ext,shadow:'none',controlShadow:'on',pointerFocus:'outline',keyboardFocus:'outline'}};\n"+
       " sheet.textContent=api.compileTheme(c,{generatedAt:''}).body+'[data-control]{transition:none!important;animation:none!important}';\n"+
       " const on=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\\"'+name+'\\\"]')).boxShadow]));\n"+
       " const target=host.querySelector('[data-control=\\\"bare-textarea\\\"]');target.focus({preventScroll:true});h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
       " const cs=getComputedStyle(target),pointer={width:cs.outlineWidth,offset:cs.outlineOffset,style:cs.outlineStyle,shadow:cs.boxShadow};\n"+
       " h.classList.add('qxframe9a7c2-keyboard-focus-origin');const ck=getComputedStyle(target),keyboard={width:ck.outlineWidth,offset:ck.outlineOffset,style:ck.outlineStyle,shadow:ck.boxShadow};\n"+
       " h.classList.remove('qxframe9a7c2-keyboard-focus-origin');target.blur();\n"+
-      " sheet.textContent=api.compileTheme({...c,ext:{...c.ext,shadow:'none'}},{generatedAt:''}).body+'[data-control]{transition:none!important;animation:none!important}';\n"+
+      " sheet.textContent=api.compileTheme({...c,ext:{...c.ext,shadow:'heavy',controlShadow:'off'}},{generatedAt:''}).body+'[data-control]{transition:none!important;animation:none!important}';\n"+
       " const off=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\\"'+name+'\\\"]')).boxShadow]));\n"+
       " out.push({style,dark,on,off,pointer,keyboard});\n"+
       "}h.classList.toggle('dark',wasDark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',wasKeyboard);host.remove();sheet.remove();return out;\n"+
@@ -2259,7 +2259,7 @@ try {
       assert.notEqual(baseline,'none',r.style+' normal Button shadow');
       for(const name of Object.keys(r.on)){
         assert.ok(r.on[name].includes(baseline),r.style+'/'+r.dark+' normal Shadow matches Button for '+name+': '+JSON.stringify(r));
-        assert.ok(!r.off[name].includes(baseline),r.style+'/'+r.dark+' Shadow=none removes normal elevation on '+name+': '+JSON.stringify(r));
+        assert.ok(!r.off[name].includes(baseline),r.style+'/'+r.dark+' Control=off removes elevation even with Card=heavy on '+name+': '+JSON.stringify(r));
       }
       for(const origin of ['pointer','keyboard']){
         const focus=r[origin];
@@ -2267,6 +2267,33 @@ try {
         assert.equal(focus.width,'2px',r.style+'/'+r.dark+' '+origin+' CSS outline width');
         assert.equal(focus.offset,'-1px',r.style+'/'+r.dark+' '+origin+' CSS outline offset');
         assert.ok(focus.shadow.includes(baseline),r.style+'/'+r.dark+' '+origin+' keeps ordinary Shadow');
+      }
+    }
+  });
+
+  await step('Control Shadow and surface Shadow independent in Chromium: 8 Styles x light/dark x 4 combinations',async()=>{
+    const rows=await evaluate("(() => {\n  const d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement;\n  const cfg=api.state.config,wasDark=h.classList.contains('dark'),sheet=d.createElement('style'),host=d.createElement('div');\n  host.style.cssText='position:absolute;left:-9000px;top:0';\n  host.innerHTML='<div class=\"qxframe9a7c2-card\" data-axis-card>Card</div><button class=\"qxframe9a7c2-button is-outline\" data-axis-button>Button</button><input class=\"qxframe9a7c2-form-input\" data-axis-input value=\"Input\"><div class=\"qxframe9a7c2-selectgroup is-outline\"><label class=\"qxframe9a7c2-selectgroup-item\"><input class=\"qxframe9a7c2-selectgroup-input\" type=\"radio\"><span class=\"qxframe9a7c2-selectgroup-label\" data-axis-choice>Choice</span></label></div>';\n  d.head.append(sheet);d.body.append(host);const rows=[];\n  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\n    h.classList.toggle('dark',dark);\n    for(const surface of ['none','heavy'])for(const control of ['off','on']){\n      const config={...cfg,style,ext:{...cfg.ext,shadow:surface,controlShadow:control}};\n      sheet.textContent=api.compileTheme(config,{generatedAt:''}).body+'[data-axis-card],[data-axis-button],[data-axis-input],[data-axis-choice]{transition:none!important;animation:none!important}';\n      const get=sel=>getComputedStyle(host.querySelector(sel)).boxShadow;\n      rows.push({style,dark,surface,control,card:get('[data-axis-card]'),button:get('[data-axis-button]'),input:get('[data-axis-input]'),choice:get('[data-axis-choice]'),\n        controlToken:getComputedStyle(h).getPropertyValue('--qxframe9a7c2-theme-shadow-control').trim(),cardToken:getComputedStyle(h).getPropertyValue('--qxframe9a7c2-theme-shadow-card').trim()});\n    }\n  }\n  h.classList.toggle('dark',wasDark);host.remove();sheet.remove();return rows;\n})()");
+    assert.equal(rows.length,64,'8 styles × 2 modes × 4 independent ON/OFF combinations');
+    for(const r of rows){
+      const label=r.style+'/'+(r.dark?'dark':'light')+'/'+r.surface+'/'+r.control;
+      if(r.control==='off')assert.ok(r.controlToken.includes('transparent'),label+' disabled Control shadow');
+      else assert.ok(r.controlToken.includes('0.0625rem'),label+' enabled Control shadow');
+      if(r.surface==='none')assert.equal(r.card,'none',label+' Card must not inherit Control elevation');
+      else assert.notEqual(r.card,'none',label+' Card independently draws Surface shadow');
+      if(r.control==='on')for(const control of ['button','input','choice'])
+        assert.ok(r[control]!=='none',label+' '+control+' must paint ordinary elevation');
+    }
+    for(let i=0;i<rows.length;i+=4){
+      const sample=rows.slice(i,i+4),at=(surface,control)=>sample.find(x=>x.surface===surface&&x.control===control);
+      for(const control of ['on','off']){
+        const a=at('none',control),b=at('heavy',control);
+        for(const key of ['button','input','choice','controlToken'])
+          assert.equal(a[key],b[key],a.style+'/'+a.dark+' surface strength must not alter '+key);
+      }
+      for(const surface of ['none','heavy']){
+        const a=at(surface,'off'),b=at(surface,'on');
+        assert.equal(a.card,b.card,a.style+'/'+a.dark+' Control toggle must not alter Card');
+        assert.equal(a.cardToken,b.cardToken,a.style+'/'+a.dark+' Control toggle must not alter Card token');
       }
     }
   });

@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 separate Control/Surface Shadow Chromium regression gate (CI pending)
+- Parent 09f00516fd20f91aa3418b7c239147659a7e190f introduces controlShadow separate from Card/Popup/Dialog shadow axis. Updated former Shadow parity tests to use controlShadow=on/off rather than surface shadow light/none. Added real Chromium 8 Styles × light/dark × 4 independent combinations, measuring actual Card/Button/native Input/SelectGroup CSS and ensuring surface-strength changes never change Control and vice versa. Both axes remain separate from Focus Halo.
+- Await exact-head dual CI; PR #265 Draft, no merge.
+
 ## CURRENT — 2026-10-11 S3 Control Shadow switch independent of Card/Popup/Dialog surface strength (CI pending)
 - Previous exact green HEAD aa44f25390abd1821bf08525cc8d4d118a14a864; user requires independent normal Control Shadow ON/OFF for Button, native Input/Select/Textarea, JS Input, InputGroup and SelectGroup (Outline/Muted). Card/Popup/Dialog retains five-step separate surface Shadow axis.
 - Added EXT `controlShadow` (`?control-shadow=on|off`) in Control panel; implicit Follow Style defaults Vega/Luma/Sera/Rhea ON, Nova/Maia/Lyra/Mira OFF preserve prior default paint. Changed ONLY compiler `shadow-control` source from ext.shadow to ext.controlShadow; no new public Theme token, no focus slot changes. Existing five-tier shadow strength remains Card/Popup/Dialog only.
