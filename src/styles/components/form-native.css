@@ -67,7 +67,7 @@
 .qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-bg:transparent;--_qxframe9a7c2-choice-border:transparent;
   --_qxframe9a7c2-choice-text:var(--_qxframe9a7c2-semantic-text);
-  --_qxframe9a7c2-choice-focus-shadow:none;--_qxframe9a7c2-choice-outline:0 solid transparent;
+  --_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-choice-outline:0 solid transparent;
   --_qxframe9a7c2-choice-opacity:1;--_qxframe9a7c2-choice-cursor:pointer;
   position:relative;box-sizing:border-box;display:flex;min-width:0;align-items:stretch;
   justify-content:flex-start;gap:0;padding:0;overflow:visible;
@@ -189,11 +189,11 @@
 .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive)}
 .qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label,
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-choice-focus-shadow:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
 .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning)}
 .qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label,
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-choice-focus-shadow:none;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-choice-outline:var(--_qxframe9a7c2-focus-visible-outline)}
 .qxframe9a7c2-field.is-valid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-selectgroup-input+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-success)}
 
@@ -428,6 +428,6 @@
 
 /* Bare SelectGroup shows the native choice, not an invisible 1px input. */
 .qxframe9a7c2-selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))>.qxframe9a7c2-selectgroup-input{position:static;clip:auto;clip-path:none;overflow:visible;white-space:normal;margin:0}
-.qxframe9a7c2-selectgroup:not(.is-outline):not(.is-muted) .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-outline:0 solid transparent;--_qxframe9a7c2-choice-focus-shadow:none}
+.qxframe9a7c2-selectgroup:not(.is-outline):not(.is-muted) .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-outline:0 solid transparent;--_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent}
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-label{box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-choice-focus-shadow)}

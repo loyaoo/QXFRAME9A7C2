@@ -111,6 +111,23 @@ check('unwrapped native SelectGroup checkbox and radio share canonical visuals',
    assert.ok(css.includes('selectgroup-item:hover:not(:focus-within):not(:has(>.qxframe9a7c2-selectgroup-input:checked)):not(:has(>.qxframe9a7c2-selectgroup-input:disabled)) .qxframe9a7c2-selectgroup-indicator.is-'+kind),'Hover never supersedes checked, disabled, or focused '+kind);
 });
 
+check('normal Control Shadow is shared and separate from pointer/keyboard focus',()=>{
+  const compiler=read('compiler.js'),source=p=>fs.readFileSync(path.join(root,p),'utf8');
+  const native=source('src/styles/components/native-input.css'),form=source('src/styles/components/form-native.css');
+  const button=source('src/styles/components/button.css'),theme=source('src/styles/main/theme.css');
+  assert.ok(compiler.includes("root['shadow-control'] = ext.shadow === 'none' ? '0 0 0 0 transparent' : SHADOWS.xs"));
+  for(const suffix of ['shadow-control','focus-shadow','pointer-shadow'])assert.ok(
+    theme.includes('--qxframe9a7c2-theme-'+suffix+': 0 0 0 0 transparent;'),'default transparent shadow is visually off and composition-safe: '+suffix);
+  assert.ok(native.includes('--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent'),'JS Input never invalidates normal shadow with comma+none');
+  assert.ok(form.includes('--_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent'),'SelectGroup never invalidates normal shadow with comma+none');
+  assert.ok(native.includes('box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-state-focus-shadow)'),'JS Input retains normal-state elevation');
+  assert.ok(form.includes('box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-choice-focus-shadow)'),'SelectGroup retains normal-state elevation');
+  for(const css of [native,button]){
+    assert.ok(css.includes('outline:var(--qxframe9a7c2-theme-pointer-width,0px) solid color-mix('),'pointer mode paints real CSS outline');
+    assert.ok(css.includes('outline-offset:var(--qxframe9a7c2-theme-pointer-offset,-1px)'),'pointer outline offset is -1px in Outline mode');
+  }
+});
+
 check('real Focus outline and common Choice/Slider/Control Surface contracts',()=>{
  const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
  const group=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
@@ -119,7 +136,7 @@ check('real Focus outline and common Choice/Slider/Control Surface contracts',()
  const form=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
  const slider=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');
  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
- assert.ok(compiler.includes("root['shadow-control'] = ext.shadow === 'none' ? 'none' : SHADOWS.xs"),'Shadow axis has single Control elevation role');
+ assert.ok(compiler.includes("root['shadow-control'] = ext.shadow === 'none' ? '0 0 0 0 transparent' : SHADOWS.xs"),'normal shadow-control follows Theme Shadow axis');
  assert.ok(compiler.includes("root['pointer-shadow'] = ext.pointerFocus === 'ring'"),'only explicit halo owns focus shadow');
  assert.ok(!compiler.includes("ext.pointerFocus === 'outline'\n      ? '0 0 0"),'no shadow-simulated outline');
  assert.doesNotMatch(group,/var\(--qxframe9a7c2-theme-ring\)/,'InputGroup no imported palette ring');
@@ -359,7 +376,7 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   assert.equal(fromHeader.ok,true,JSON.stringify(fromHeader.errors));
   for(const key of axes)assert.equal(fromHeader.config.ext[key],seven.ext[key],key+' CSS header roundtrip');
   const baseline=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
-  assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*none/,'baseline keyboard default unchanged');
+  assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0 0 transparent/,'baseline keyboard halo is visually absent and comma-safe');
   assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*none/,'baseline pointer default unchanged');
   assert.doesNotMatch(source('docs/create/compiler.js'),/light\.ring\s*=\s*light\.primary/,'Theme Focus may not mutate imported shadcn palette ring');
   assert.match(source('src/styles/components/focus-closeout.css'),/theme-pointer-shadow/,'native pointer ring');
@@ -372,7 +389,7 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   const groupCss=source('src/styles/components/composition.css');
   assert.match(groupCss,/input-group-field:has\(>\.qxframe9a7c2-input\.is-keyboard-focus[^\{]*\{[^}]*theme-focus-shadow/,'JS Input keyboard focus projects its halo to InputGroupField');
   assert.match(groupCss,/input-group-field:has\(>\.qxframe9a7c2-input\.is-focused[^\{]*\{[^}]*theme-pointer-shadow/,'JS Input pointer focus projects to its outer composition');
-  assert.match(groupCss,/input-group-field>\.qxframe9a7c2-input\{[^}]*state-focus-shadow:none;[^}]*box-shadow:none/,'hosted JS Input never paints a second ring');
+  assert.match(groupCss,/input-group-field>\.qxframe9a7c2-input\{[^}]*state-focus-shadow:0 0 0 0 transparent;[^}]*box-shadow:none/,'hosted JS Input never paints a second ring');
   assert.match(groupCss,/input-group-field:hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'InputGroupField has the same derived hover border');
   assert.match(groupCss,/input-group-addon\):hover:not\(:focus-within\)[^\{]*qxframe9a7c2-input\.is-disabled/,'connected InputGroup hover respects JS Input disabled state');
 

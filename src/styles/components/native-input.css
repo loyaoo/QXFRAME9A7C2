@@ -18,7 +18,7 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
   --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-control-bg);
   --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border);
   --_qxframe9a7c2-state-text:var(--_qxframe9a7c2-control-text);
-  --_qxframe9a7c2-state-focus-shadow:none;
+  --_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;
   --_qxframe9a7c2-state-outline:0 solid transparent;
   --_qxframe9a7c2-state-cursor:text;
   --_qxframe9a7c2-state-z:1;
@@ -29,15 +29,15 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
   --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-hover);
   --_qxframe9a7c2-state-z:2
 }
-.qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly),.qxframe9a7c2-input.is-focused,.qxframe9a7c2-input.is-expanded{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-state-focus-shadow:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:4}
+.qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly),.qxframe9a7c2-input.is-focused,.qxframe9a7c2-input.is-expanded{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:4}
 .qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled){--_qxframe9a7c2-state-outline:var(--_qxframe9a7c2-focus-visible-outline);--_qxframe9a7c2-state-z:6}
 .qxframe9a7c2-input.is-error,.qxframe9a7c2-input.is-invalid{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-state-z:3}
-.qxframe9a7c2-input.is-error:focus-within,.qxframe9a7c2-input.is-error.is-focused,.qxframe9a7c2-input.is-error.is-expanded,.qxframe9a7c2-input.is-invalid:focus-within,.qxframe9a7c2-input.is-invalid.is-focused,.qxframe9a7c2-input.is-invalid.is-expanded{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-state-focus-shadow:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
+.qxframe9a7c2-input.is-error:focus-within,.qxframe9a7c2-input.is-error.is-focused,.qxframe9a7c2-input.is-error.is-expanded,.qxframe9a7c2-input.is-invalid:focus-within,.qxframe9a7c2-input.is-invalid.is-focused,.qxframe9a7c2-input.is-invalid.is-expanded{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
 .qxframe9a7c2-input.is-warning{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-state-z:3}
-.qxframe9a7c2-input.is-warning:focus-within,.qxframe9a7c2-input.is-warning.is-focused,.qxframe9a7c2-input.is-warning.is-expanded{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-state-focus-shadow:none;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
+.qxframe9a7c2-input.is-warning:focus-within,.qxframe9a7c2-input.is-warning.is-focused,.qxframe9a7c2-input.is-warning.is-expanded{--_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-warning);--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:5}
 .qxframe9a7c2-input.is-readonly{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-control-bg-readonly);--_qxframe9a7c2-state-cursor:default}
-.qxframe9a7c2-input.is-disabled{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-control-bg-disabled);--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-disabled);--_qxframe9a7c2-state-text:var(--_qxframe9a7c2-control-text-disabled);--_qxframe9a7c2-state-focus-shadow:none;--_qxframe9a7c2-state-outline:none;--_qxframe9a7c2-state-cursor:not-allowed;--_qxframe9a7c2-state-z:0}
-.qxframe9a7c2-input.is-focus-outline-disabled{--_qxframe9a7c2-state-focus-shadow:none;--_qxframe9a7c2-state-outline:none}
+.qxframe9a7c2-input.is-disabled{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-control-bg-disabled);--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-disabled);--_qxframe9a7c2-state-text:var(--_qxframe9a7c2-control-text-disabled);--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:none;--_qxframe9a7c2-state-cursor:not-allowed;--_qxframe9a7c2-state-z:0}
+.qxframe9a7c2-input.is-focus-outline-disabled{--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:none}
 
 .qxframe9a7c2-input-prefix,.qxframe9a7c2-input-suffix,.qxframe9a7c2-input-toggle,.qxframe9a7c2-input-loading,.qxframe9a7c2-input-count{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--_qxframe9a7c2-control-text-secondary)}
 .qxframe9a7c2-input-prefix:empty,.qxframe9a7c2-input-suffix:empty,.qxframe9a7c2-input-toggle[hidden],.qxframe9a7c2-input-toggle.is-hidden,.qxframe9a7c2-input-loading[hidden],.qxframe9a7c2-input-loading.is-hidden,.qxframe9a7c2-input-count[hidden],.qxframe9a7c2-input-count.is-hidden,.qxframe9a7c2-input-clear[hidden],.qxframe9a7c2-input-clear.is-hidden{display:none}
@@ -85,7 +85,7 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 /* Size classes already resolve --_qxframe9a7c2-control-height through the shared family recipe.
    Keep input's local height inherited from that resolved owner so family control-height overrides
    apply consistently to single-value and tag/multiple controls. */
-.qxframe9a7c2-input.is-variant-filled{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-state-border:transparent}.qxframe9a7c2-input.is-variant-borderless{--_qxframe9a7c2-state-bg:transparent;--_qxframe9a7c2-state-border:transparent;--_qxframe9a7c2-state-focus-shadow:none}.qxframe9a7c2-input.is-variant-underlined{--_qxframe9a7c2-state-outline:none;background:transparent;border-width:0 0 var(--_qxframe9a7c2-control-border-width);border-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius));box-shadow:none}.qxframe9a7c2-input.is-variant-underlined:focus-within:not(.is-keyboard-focus),.qxframe9a7c2-input.is-variant-underlined.is-focused:not(.is-keyboard-focus),.qxframe9a7c2-input.is-variant-underlined.is-expanded:not(.is-keyboard-focus){--_qxframe9a7c2-state-outline:none}
+.qxframe9a7c2-input.is-variant-filled{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-semantic-surface-muted);--_qxframe9a7c2-state-border:transparent}.qxframe9a7c2-input.is-variant-borderless{--_qxframe9a7c2-state-bg:transparent;--_qxframe9a7c2-state-border:transparent;--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent}.qxframe9a7c2-input.is-variant-underlined{--_qxframe9a7c2-state-outline:none;background:transparent;border-width:0 0 var(--_qxframe9a7c2-control-border-width);border-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius));box-shadow:none}.qxframe9a7c2-input.is-variant-underlined:focus-within:not(.is-keyboard-focus),.qxframe9a7c2-input.is-variant-underlined.is-focused:not(.is-keyboard-focus),.qxframe9a7c2-input.is-variant-underlined.is-expanded:not(.is-keyboard-focus){--_qxframe9a7c2-state-outline:none}
 .qxframe9a7c2-input.is-rounded{border-radius:100rem}.qxframe9a7c2-input.is-flush{padding-inline:0;border-inline-width:0;border-top-width:0;border-radius:var(--_qxframe9a7c2-component-radius,var(--_qxframe9a7c2-control-radius));background:transparent;box-shadow:none}
 .qxframe9a7c2-input.is-busy{cursor:progress}.qxframe9a7c2-input.is-busy>.qxframe9a7c2-input-control,.qxframe9a7c2-input.is-busy>.qxframe9a7c2-input-values{opacity:.72}
 .qxframe9a7c2-input>.qxframe9a7c2-input-form-field{display:none}
@@ -104,4 +104,12 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 }
 .qxframe9a7c2-input.is-focused:not(.is-keyboard-focus):not(.is-disabled):not(.is-focus-outline-disabled){
   --_qxframe9a7c2-state-focus-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
+}
+
+/* Pointer Outline is independent of Control elevation and the optional halo.
+ * Connected InputGroup delegates the outline to its sole outer border owner. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly){
+  outline:var(--qxframe9a7c2-theme-pointer-width,0px) solid color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
+  outline-offset:var(--qxframe9a7c2-theme-pointer-offset,-1px)
 }

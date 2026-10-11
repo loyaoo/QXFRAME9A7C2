@@ -411,3 +411,10 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:di
 }
 
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-button:focus-visible{--_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-focus)}
+
+/* Pointer outline uses real CSS outline, never a box-shadow surrogate.
+ * Normal Button elevation is still supplied by Theme shadow-control. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:disabled):not(.is-disabled):not(.is-loading){
+  outline:var(--qxframe9a7c2-theme-pointer-width,0px) solid color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
+  outline-offset:var(--qxframe9a7c2-theme-pointer-offset,-1px)
+}
