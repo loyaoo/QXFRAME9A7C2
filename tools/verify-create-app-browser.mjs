@@ -321,15 +321,15 @@ try {
       "existing.textContent=oldCss;html.classList.toggle('dark',oldDark);html.setAttribute('data-create-style',oldStyle);\n"+
       "return {cardCount:cards.length,componentCount:initial,mountErrors,progressed,finance,automation,samples};\n"+
       "})()");
-    assert.equal(result.cardCount,18,'Preview03 contains all 18 commercial Cards');
-    assert.ok(result.componentCount>=20,'Preview03 must mount at least 20 real QX component instances');
+    assert.equal(result.cardCount,66,'Preview03 contains all 66 commercial Cards');
+    assert.ok(result.componentCount>=45,'Preview03 must mount at least 45 real QX component instances');
     assert.deepEqual(result.mountErrors,[],'No QX component may silently fail mounting');
     assert.match(result.progressed,/stage 3 of 4/,'Step controller advances live demo');
     assert.match(result.finance,/local budget limit/,'Finance draft checks without remote approval');
     assert.match(result.automation,/Dry test/,'Automation runs local dry test');
     assert.equal(result.samples.length,16,'8 Styles × light/dark');
     for(const sample of result.samples) {
-      assert.equal(sample.visible,18,sample.style+'/'+sample.dark+' all Cards render');
+      assert.equal(sample.visible,66,sample.style+'/'+sample.dark+' all Cards render');
       assert.ok(sample.bg&&sample.bg!=='rgba(0, 0, 0, 0)',sample.style+'/'+sample.dark+' Theme Card background');
     }
     await click('document.querySelector(\'[data-create-item="02"]\')');

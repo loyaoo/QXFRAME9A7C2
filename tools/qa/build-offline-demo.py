@@ -35,7 +35,7 @@ with zipfile.ZipFile(artifact) as outer:
         assert inner.testzip() is None
         required = ('docs/create/index.html', 'docs/create/preview-01.html',
                     'docs/create/preview-02.html', 'docs/create/preview-03.html',
-                    'docs/create/preview-03.js', 'docs/create/preview-03.css', 'dist/qxframe9a7c2.js',
+                    'docs/create/preview-03.js', 'docs/create/preview-03-extra.js', 'docs/create/preview-03-coverage.json', 'docs/create/preview-03.css', 'dist/qxframe9a7c2.js',
                     'docs/create/offline-qa-changes.mjs', 'docs/create/offline-qa-changes.css')
         assert set(required).issubset(inner.namelist()), 'Missing Create or QA script in Actions artifact'
         inner.extractall(work)
@@ -135,7 +135,7 @@ cwd = os.getcwd()
 os.chdir(work)
 server = Server(('127.0.0.1', 0), Quiet)
 threading.Thread(target=server.serve_forever, daemon=True).start()
-checks = ('docs/create/', 'docs/create/preview-01.html', 'docs/create/preview-02.html', 'docs/create/preview-03.html', 'docs/create/preview-03.js', 'docs/create/preview-03.css',
+checks = ('docs/create/', 'docs/create/preview-01.html', 'docs/create/preview-02.html', 'docs/create/preview-03.html', 'docs/create/preview-03.js', 'docs/create/preview-03-extra.js', 'docs/create/preview-03-coverage.json', 'docs/create/preview-03.css',
           'docs/create/offline-qa-changes.mjs', 'docs/create/offline-qa-changes.css',
           'docs/theme-playground.html', 'dist/qxframe9a7c2.js', 'dist/qxframe9a7c2.css')
 try:

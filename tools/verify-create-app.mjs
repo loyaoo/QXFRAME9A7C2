@@ -12,7 +12,7 @@ const ONLINE_JS = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js';
 const checks = [];
 const check = (name, fn) => { fn(); checks.push(name); };
 
-const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview.css', 'preview.js', 'preview-cards.js'];
+const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview-03-extra.js', 'preview-03-coverage.json', 'preview.css', 'preview.js', 'preview-cards.js'];
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
   const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
   const ids=["platform-tree","workforce-access","onboarding-flow","service-health","brand-studio","plan-governance","release-planner","order-routing","finance-approval","customer-quality","inventory-control","data-inspector","marketing-creative","identity-otp","support-triage","usage-meter","rules-automation","incident-response"];
@@ -26,6 +26,19 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
   assert.match(html,/preview-03\.js/);
   assert.doesNotMatch(css,/display\s*:\s*grid|@layer|:is\(|:where\(|\bvw\b|\bvh\b|\bfr\b/,'Preview03 authors Flex-only page layout');
   assert.match(read('offline-qa-changes.mjs'),/group\[3\]==='03'/,'offline QA locator handles third page');
+  const inventory=JSON.parse(read('preview-03-coverage.json'));
+  assert.equal(inventory.totalCards,66,'full commercial gallery count');
+  assert.equal(inventory.addedCards,48,'this batch adds 48');
+  assert.equal(inventory.coverage.length,66,'every documented family mapped');
+  assert.equal(new Set(inventory.coverage.map(x=>x.component)).size,66,'no duplicated documentation families');
+  assert.equal(new Set(inventory.added.map(x=>x.id)).size,48,'new Card ids distinct');
+  for(const entry of inventory.added) assert.ok(html.includes('data-card="'+entry.id+'"'),'additional Card '+entry.id);
+  assert.equal((html.match(/data-card="/g)||[]).length,66,'exactly 66 Preview03 Card containers');
+  assert.match(html,/preview-03-extra\\.js/,'extra-QX runtime script wired');
+  const extra=read('preview-03-extra.js');
+  assert.match(extra,/C\\[type\\]\\.create/,'expanded examples mount real QX constructors');
+  assert.match(extra,/QXFRAME9A7C2_PREVIEW3/,'expanded script shares diagnostics with baseline');
+
 });
 
 check('all CSS private Focus shadows use focus, not ring terminology',()=>{
@@ -74,7 +87,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component]"],"workforce-access":["[data-pv3-component]"],"onboarding-flow":["[data-pv3-component]"],"service-health":["[data-pv3-component]"],"brand-studio":["[data-pv3-component]"],"plan-governance":["[data-pv3-component]"],"release-planner":["[data-pv3-component]"],"order-routing":["[data-pv3-component]"],"finance-approval":["[data-pv3-component]"],"customer-quality":["[data-pv3-component]"],"inventory-control":["[data-pv3-component]"],"data-inspector":["[data-pv3-component]"],"marketing-creative":["[data-pv3-component]"],"identity-otp":["[data-pv3-component]"],"support-triage":["[data-pv3-component]"],"usage-meter":["[data-pv3-component]"],"rules-automation":["[data-pv3-component]"],"incident-response":["[data-pv3-component]"]}; // Stage5 Preview03 18 new commercial cards
+  const coverage=JSON.parse(read('preview-03-coverage.json'));
+  const current=Object.fromEntries(coverage.added.map(entry=>[entry.id,['.pv3x-summary']])); // Stage5 current batch: new 48 Cards only
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -88,7 +102,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,18,'only current Stage5 Preview03 18 cards/regions are highlighted');
+  assert.equal(count,48,'only current Stage5 Preview03 new 48 cards/regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');

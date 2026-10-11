@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 Preview03 expanded to 66 commercial Cards, 66/66 component documentation families (CI pending)
+- Stage5 Draft PR #267; owner requested at least 48 commercial Cards and **all documented QX components**, not a limited 18-Card gallery.
+- 18 existing Preview03 Cards preserved; 48 new QX business compositions added: **66 total**. Repository docs/components has 66 component families, every one mapped in docs/create/preview-03-coverage.json. Distinguish actual QX JS runtime mounting vs QX framework-native CSS/static behavioral components. Avoid falsely claiming static components are JS instances.
+- Added docs/create/preview-03-extra.js for business demos, introduced real additional QX classes (calendar, autocomplete, image, uploader, list, period panel, JSON, virtual list, etc.) with local operations and accurate diagnostics. No changes to approved Preview01/02 or framework CSS/Token.
+- QA ledger now highlights new 48 cards only, previous 18 Preview03 highlights cleared; packaging includes new HTML/CSS/JS/coverage. Browser gates require 66 real Cards in each of 16 modes, and no QX runtime mount errors. CI must be confirmed before owner QA.
+- Stage5 Preview03 is NOT yet user accepted or merged. Await two green checks and official exact-tree full dist+docs Windows bundle; maintain PR #267 DRAFT.
+
 ## CURRENT — 2026-10-11 Stage5 Preview03 QX global Tree export correction (CI pending)
 - Chromium CSS Schema workflow #38143540322 exposed real runtime contract: UMD `QXFRAME9A7C2.Components.Tree` is unavailable, even though `src/components/tree.js` exports the ESM class. Avoid new changes to frozen qxframe.js/Stage3 or faking a tree; the Workspace Explorer now composes QX JSON's actual hierarchical Tree-backed viewer with QX TreeSelect. Other 18 Cards remain unchanged.
 - Latest Draft PR #267 head follows fix. Rerun exact-HEAD Chromium/dual CI and official Windows dist+docs. No Stage5 merge, no legacy generator deletion.
