@@ -34,9 +34,9 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
   assert.equal(new Set(inventory.added.map(x=>x.id)).size,48,'new Card ids distinct');
   for(const entry of inventory.added) assert.ok(html.includes('data-card="'+entry.id+'"'),'additional Card '+entry.id);
   assert.equal((html.match(/data-card="/g)||[]).length,66,'exactly 66 Preview03 Card containers');
-  assert.match(html,/preview-03-extra\\.js/,'extra-QX runtime script wired');
+  assert.match(html,/preview-03-extra\.js/,'extra-QX runtime script wired');
   const extra=read('preview-03-extra.js');
-  assert.match(extra,/C\\[type\\]\\.create/,'expanded examples mount real QX constructors');
+  assert.match(extra,/C\[type\]\.create/,'expanded examples mount real QX constructors');
   assert.match(extra,/QXFRAME9A7C2_PREVIEW3/,'expanded script shares diagnostics with baseline');
 
 });
