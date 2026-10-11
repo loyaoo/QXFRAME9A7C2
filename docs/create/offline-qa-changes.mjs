@@ -1,10 +1,7 @@
-/** Only this batch: separate Control Shadow toggle from Card/Popup/Dialog strength. */
+/** Only this round: inverted Select dropdown idle foreground uses Menu foreground. */
 const groups = [
- ['savings-targets','Savings Targets · Control Shadow',[
-  ['.qxframe9a7c2-input-group','控件阴影独立配置','InputGroup 与 Button/Input/Select 使用 Control Shadow，Card 阴影另行设置。','__QA_BUNDLE_HEAD__']
- ],'01'],
- ['receiving-method','Receiving Method · SelectGroup',[
-  ['.qxframe9a7c2-selectgroup','选择组阴影独立配置','Outline/Muted SelectGroup 仅受 Control Shadow 开关控制。','__QA_BUNDLE_HEAD__']
+ ['payout-threshold','Payout Threshold · Preferred Currency',[
+  ['#preferred-currency','反色下拉前景色','普通选项使用菜单前景色，Hover/Selected 保留菜单强调色配对。','__QA_BUNDLE_HEAD__']
  ],'01']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

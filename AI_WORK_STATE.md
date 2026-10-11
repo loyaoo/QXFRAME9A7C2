@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 inverted Select dropdown foreground fix (CI pending)
+- Screenshot: inverted Preferred Currency Select popup has dark background, selected USD white but idle EUR/GBP/JPY nearly black.
+- Root cause: canonical Theme sets Popup menu foreground, but `ItemCollection` and `ItemSurface` consume page foreground instead of the popup foreground. Their explicit color prevents parent inheritance.
+- Fixed canonical `src/styles/main/theme-visual-v2.css`: Popup-scoped ItemCollection and ItemSurface normal foreground resolve `--_qxframe9a7c2-popup-surface-text`; existing higher-specificity hover/selected menu accent remains unchanged. No preview-specific CSS, no new token, no change in controller behavior.
+- Added real Chromium computed-style regression 8 styles × light/dark × 4 normal/inverted/translucent menus (64 combinations) testing idle, selected, hovered and disabled. Static CSS checks. Offline QA ledger reset to only Payout Threshold Preferred Currency Select.
+- PR #265 stays Draft/unmerged, no main/backup, no Stage4/5. Stage3 ~96% Field/SelectGroup ~89% overall ~79% remain estimates subject to acceptance.
+
 ## CURRENT — 2026-10-11 separate Control/Surface Shadow Chromium regression gate (CI pending)
 - Parent 09f00516fd20f91aa3418b7c239147659a7e190f introduces controlShadow separate from Card/Popup/Dialog shadow axis. Updated former Shadow parity tests to use controlShadow=on/off rather than surface shadow light/none. Added real Chromium 8 Styles × light/dark × 4 independent combinations, measuring actual Card/Button/native Input/SelectGroup CSS and ensuring surface-strength changes never change Control and vice versa. Both axes remain separate from Focus Halo.
 - Await exact-head dual CI; PR #265 Draft, no merge.

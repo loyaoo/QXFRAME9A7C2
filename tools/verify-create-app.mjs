@@ -58,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'savings-targets':['.qxframe9a7c2-input-group'],'receiving-method':['.qxframe9a7c2-selectgroup']}; // this round Control/Surface Shadow split
+  const current={'payout-threshold':['#preferred-currency']}; // this round inverted Select idle text fix
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -69,10 +69,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['sidebar-nav','dividend-income','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
+  for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'only this round Control/Surface Shadow split is highlighted in Preview 01');
+  assert.equal(count,1,'only this round Select inverted menu text is highlighted in Preview 01');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -399,6 +399,16 @@ check('Control Shadow and Card Shadow independently switch and round-trip withou
  assert.equal(parsed.ok,true,JSON.stringify(parsed.errors));
  assert.equal(parsed.config.ext.controlShadow,'off','CSS header Control setting roundtrip');
  assert.equal(parsed.config.ext.shadow,'heavy','CSS header Card setting roundtrip');
+});
+
+
+check('inverted Popup ItemCollection and Select idle text use menu foreground',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-collection\s*\{\s*color:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
+ assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\s*\{\s*--_qxframe9a7c2-item-text:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
+ assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\.is-selected[^}]*theme-menu-accent-foreground/);
+ const result=model.compileTheme(model.normalizeConfig({menuColor:'inverted'}),{generatedAt:''}).body;
+ assert.match(result,/--qxframe9a7c2-theme-menu-foreground:/);
 });
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{

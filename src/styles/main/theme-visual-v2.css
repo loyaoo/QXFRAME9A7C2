@@ -384,6 +384,15 @@
     --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
     color: var(--_qxframe9a7c2-v2-popup-text);
   }
+  /* Popup ItemCollection and ItemSurface otherwise force the page foreground
+     onto floating Select options, breaking inverted menu readability.
+     Selected/hover items below retain the menu accent foreground pair. */
+  .qxframe9a7c2-popup-surface .qxframe9a7c2-item-collection {
+    color: var(--_qxframe9a7c2-popup-surface-text);
+  }
+  .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface {
+    --_qxframe9a7c2-item-text: var(--_qxframe9a7c2-popup-surface-text);
+  }
   .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-selected, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-selected.is-hover { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground); }
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
     background-color: var(--_qxframe9a7c2-v2-popup-bg);
