@@ -1,16 +1,13 @@
-/** Current batch: shared Focus, SelectGroup, Choice and Control Shadow/Slider visuals. */
+/** Current batch: shared CSS private Focus shadow naming; no cosmetic recipe change. */
 const groups = [
   ['savings-targets','Savings Targets · InputGroup',[
-    ['.qxframe9a7c2-input-group','InputGroup Focus/Shadow','同主题边框焦点消费 pointer-focus/keyboard focus；Outline 为真实 CSS 外轮廓。','__QA_BUNDLE_HEAD__']
+    ['.qxframe9a7c2-input-group','统一 Focus 阴影语义','InputGroup 单边框所有权：内部 state-focus-shadow 改名；不改变阴影叠加和主题值。','__QA_BUNDLE_HEAD__']
   ],'01'],
   ['receiving-method','Receiving Method · SelectGroup',[
-    ['.qxframe9a7c2-selectgroup','SelectGroup Radius/Choice','圆角统一 Item 档位；无 Appearance 焦点仅由指示器/原生控件绘制。','__QA_BUNDLE_HEAD__']
-  ],'01'],
-  ['notification-settings','Notification Settings · Choice',[
-    ['.qxframe9a7c2-selectgroup','Choice Indicator','复用原生 Checkbox/Radio 与半选前景色、Hover 边框派生。','__QA_BUNDLE_HEAD__']
+    ['.qxframe9a7c2-selectgroup','统一 Choice Focus 阴影语义','移除 choice-ring 私有变量命名，保留 FocusOrigin、Indicator 单光环及 Theme 覆盖。','__QA_BUNDLE_HEAD__']
   ],'01'],
   ['faq','FAQ · Tabs Focus',[
-    ['.pv-tabs .qxframe9a7c2-tabs','真实 CSS Outline','外轮廓模式使用 2px/-1px outline；Shadow 只属于光环模式。','__QA_BUNDLE_HEAD__']
+    ['.pv-tabs .qxframe9a7c2-tabs','统一 Tabs Focus 阴影语义','保留 Tabs elevation 与 Focus 阴影叠加，改用 tabs-tab-focus-shadow 单一消费槽。','__QA_BUNDLE_HEAD__']
   ],'01']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

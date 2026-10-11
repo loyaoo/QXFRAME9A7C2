@@ -226,7 +226,7 @@ export function themeTokens(resolved) {
   // shadcn semantic colors.
   for (const role of ['background', 'foreground', 'card', 'card-foreground', 'popover', 'popover-foreground', 'primary',
     'primary-foreground', 'secondary', 'secondary-foreground', 'muted', 'muted-foreground', 'accent', 'accent-foreground',
-    'destructive', 'border', 'input', 'ring', 'chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5', 'sidebar', 'sidebar-foreground']) {
+    'destructive', 'border', 'input', 'chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5', 'sidebar', 'sidebar-foreground']) {
     color(role, role);
   }
   light['destructive-foreground'] = 'oklch(1 0 0)';

@@ -4,11 +4,11 @@
 .qxframe9a7c2-collapse-item{
   --_qxframe9a7c2-collapse-header-bg:var(--_qxframe9a7c2-semantic-surface-muted);
   --_qxframe9a7c2-collapse-main-text:inherit;
-  --_qxframe9a7c2-collapse-main-ring:none;
+  --_qxframe9a7c2-collapse-main-focus-shadow:none;
   --_qxframe9a7c2-collapse-main-cursor:pointer;
   --_qxframe9a7c2-collapse-indicator-bg:transparent;
   --_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-text-secondary);
-  --_qxframe9a7c2-collapse-indicator-ring:none;
+  --_qxframe9a7c2-collapse-indicator-focus-shadow:none;
   --_qxframe9a7c2-collapse-indicator-cursor:pointer;
   --_qxframe9a7c2-collapse-item-opacity:1;
   opacity:var(--_qxframe9a7c2-collapse-item-opacity)
@@ -17,8 +17,8 @@
 .qxframe9a7c2-collapse.is-borderless .qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item,.qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-item+.qxframe9a7c2-collapse-item{border-top-color:transparent}
 .qxframe9a7c2-collapse-header{display:flex;align-items:center;gap:var(--_qxframe9a7c2-fixed-space-2);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);outline:0;background:var(--_qxframe9a7c2-collapse-header-bg)}
 .qxframe9a7c2-collapse.is-ghost .qxframe9a7c2-collapse-item{--_qxframe9a7c2-collapse-header-bg:transparent}
-.qxframe9a7c2-collapse-main{display:flex;min-width:0;min-height:inherit;flex:1 1 auto;align-items:center;padding:0;border:0;outline:0;background:transparent;color:var(--_qxframe9a7c2-collapse-main-text);box-shadow:var(--_qxframe9a7c2-collapse-main-ring);font:inherit;text-align:start;cursor:var(--_qxframe9a7c2-collapse-main-cursor)}
-.qxframe9a7c2-collapse-indicator{display:inline-flex;width:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));height:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));flex:0 0 max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--_qxframe9a7c2-collapse-action-radius);outline:0;background:var(--_qxframe9a7c2-collapse-indicator-bg);color:var(--_qxframe9a7c2-collapse-indicator-text);box-shadow:var(--_qxframe9a7c2-collapse-indicator-ring);font:inherit;cursor:var(--_qxframe9a7c2-collapse-indicator-cursor)}
+.qxframe9a7c2-collapse-main{display:flex;min-width:0;min-height:inherit;flex:1 1 auto;align-items:center;padding:0;border:0;outline:0;background:transparent;color:var(--_qxframe9a7c2-collapse-main-text);box-shadow:var(--_qxframe9a7c2-collapse-main-focus-shadow);font:inherit;text-align:start;cursor:var(--_qxframe9a7c2-collapse-main-cursor)}
+.qxframe9a7c2-collapse-indicator{display:inline-flex;width:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));height:max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));flex:0 0 max(1.25rem,calc(var(--_qxframe9a7c2-control-height) - 0.25rem));align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--_qxframe9a7c2-collapse-action-radius);outline:0;background:var(--_qxframe9a7c2-collapse-indicator-bg);color:var(--_qxframe9a7c2-collapse-indicator-text);box-shadow:var(--_qxframe9a7c2-collapse-indicator-focus-shadow);font:inherit;cursor:var(--_qxframe9a7c2-collapse-indicator-cursor)}
 .qxframe9a7c2-collapse-indicator:hover:not(:disabled){--_qxframe9a7c2-collapse-indicator-bg:var(--_qxframe9a7c2-semantic-surface-hover);--_qxframe9a7c2-collapse-indicator-text:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-collapse-header:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 /* Disclosure state is visual-only here; Collapse JS remains the sole open/close owner. */
@@ -30,9 +30,9 @@
 /* Public per-instance prose color. Default Collapse keeps muted detail text. */
 .qxframe9a7c2-collapse-content{padding:0.375rem var(--_qxframe9a7c2-control-padding-inline);color:var(--qxframe9a7c2-collapse-content-color,var(--_qxframe9a7c2-semantic-text-secondary))}
 /* Capability resolves last and suppresses hover/focus disclosure decoration without changing Collapse behavior. */
-.qxframe9a7c2-collapse-item.is-disabled{--_qxframe9a7c2-collapse-main-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed;--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-indicator-ring:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed;--_qxframe9a7c2-collapse-item-opacity:.55}
-.qxframe9a7c2-collapse-main:disabled{--_qxframe9a7c2-collapse-main-ring:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed}
-.qxframe9a7c2-collapse-indicator:disabled{--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-ring:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed}
+.qxframe9a7c2-collapse-item.is-disabled{--_qxframe9a7c2-collapse-main-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-main-focus-shadow:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed;--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-collapse-indicator-focus-shadow:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed;--_qxframe9a7c2-collapse-item-opacity:.55}
+.qxframe9a7c2-collapse-main:disabled{--_qxframe9a7c2-collapse-main-focus-shadow:none;--_qxframe9a7c2-collapse-main-cursor:not-allowed}
+.qxframe9a7c2-collapse-indicator:disabled{--_qxframe9a7c2-collapse-indicator-bg:transparent;--_qxframe9a7c2-collapse-indicator-focus-shadow:none;--_qxframe9a7c2-collapse-indicator-cursor:not-allowed}
 .qxframe9a7c2-collapse-transition-enter-from,.qxframe9a7c2-collapse-transition-leave-to{height:0;opacity:0}
 .qxframe9a7c2-collapse-transition-enter-to,.qxframe9a7c2-collapse-transition-leave-from{height:var(--qxframe9a7c2-collapse-motion-height);opacity:1}
 .qxframe9a7c2-collapse-transition-enter-active{overflow:hidden;transition:height var(--qxframe9a7c2-motion-collapse-panel-enter-duration) var(--qxframe9a7c2-motion-collapse-panel-easing),opacity var(--qxframe9a7c2-motion-collapse-panel-enter-duration) var(--qxframe9a7c2-motion-collapse-panel-easing)}

@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 canonical private Focus semantic closeout (CI pending)
+- Previous validated HEAD 9e652493dbf20110fdb5ed9ddcdfe07bf5c57d70: QXFRAME #38110755016 and CSS Schema #38110754989 both SUCCESS, PR #265 Draft/unmerged. DO NOT repeat prior fixed Field/SelectGroup logic, Tabs focus, InputGroup rename.
+- This batch removes all **private `--_qxframe9a7c2-*-ring` Focus shadow slot names** from the 61 ordered source CSS modules. The role is renamed to `-focus-shadow`, including JS Input state, SelectGroup Choice, Tabs selected elevation composition, tree/menu/list/picker/checkbox/slider adjacent components; fixed size and accent color role names are classified separately. All CSS values, selectors, specificity, keyboard/pointer focus condition, JS and geometry remain identical.
+- `--qxframe9a7c2-theme-ring` in the imported shadcn neutral palette is a distinct source data token (not a live Focus CSS consumer); `--qxframe9a7c2-theme-progress-ring` describes circular Progress radius, not focus. Public palette/schema collapse should be evaluated separately, not conflated with private variable migration.
+- Strict global source CSS gate verifies no private `*-ring` token remains and confirms three shared painted owner role slots. Chromium and static tests updated for renamed slots.
+- Offline marking reset to only Preview01 Savings Targets InputGroup / Receiving Method SelectGroup / FAQ Tabs. Previous Notification Settings Choice highlighter removed. Complete Windows dist+docs artifact required for this exact HEAD before handoff.
+- Estimates Stage3 ~96%, Field/SelectGroup ~89%, overall CREATEAPP-V3 ~79%; Stage3 user sign-off pending. Keep PR #265 Draft, no merge, no Stage4/5.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 control shadow paint-owner closeout (CI pending)
 - Parent a1845968e4679b087adcfce819fa9d5ecd85b77a; single Native Input/Select now consumes theme-shadow-control at rest and existing focus-closeout composes control elevation with keyboard/pointer halo.
 - Connected InputGroup/Field owns only one shadow; hosted native Input/Select child drops own normal shadow as it already drops border, JS child retains previous none.
@@ -75,7 +83,7 @@
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ segmented Tabs keyboard-focus elevation (CI pending)
 - Accepted base cf656d17e93f149c93a95daef48dcbad0ecb34ca: QXFRAME CI #38100844623 and CSS Schema #38100844615 both SUCCESS, PR #265 Draft/open/unmerged. No re-audit, no Stage4/5.
 - Source-locked selected segmented FAQ tab has an active elevation shadow from shared Theme `--qxframe9a7c2-shadow-sm`. Tabs keyboard virtual focus currently sets box-shadow:none, unexpectedly discarding selected state shadow even though keyboard outline belongs to the same Tab shell.
-- Updated the existing Tabs shell one-owner focus rule to preserve `--_qxframe9a7c2-tabs-tab-elevation` and `--_qxframe9a7c2-tabs-tab-ring` while retaining keyboard 2px/-1px outline and no inner action outline. No new Theme token, no JS changes, no shadow added to non-focused states, no changes to fixed geometry.
+- Updated the existing Tabs shell one-owner focus rule to preserve `--_qxframe9a7c2-tabs-tab-elevation` and `--_qxframe9a7c2-tabs-tab-focus-shadow` while retaining keyboard 2px/-1px outline and no inner action outline. No new Theme token, no JS changes, no shadow added to non-focused states, no changes to fixed geometry.
 - Strict static gate plus real Chromium 8 Styles × light/dark: selected FAQ Tab must retain a sentinel injected shared elevation before/after keyboard focus and maintain one 2px/-1px keyboard shell ring; inner Action remains non-outlined.
 - Offline QA ledger marks ONLY Preview 01 FAQ .pv-tabs this round; old Calendar highlight cleared. Production Create HTML remains unmodified.
 - NEXT: both complete CI success same SHA (QXFRAME release/Chromium/528 source geometry/Windows, CSS Schema), full official artifact, Windows ZIP smoke/overlay, update PR progress. Do not merge.
@@ -94,7 +102,7 @@
 
 ## CURRENT — 2026-10-11 S3 JS V2 FocusOrigin paint + Field valid native/JS/SelectGroup status (CI pending)
 - Verified parent 18dd230c14ee51060c495bc648d9e422821a2bf9, both official workflows SUCCESS; PR #265 Draft/open/unmerged.
-- Fixed missing Theme V2 final border owner on JS Input pointer and keyboard FocusOrigin; both now set --_qxframe9a7c2-v2-control-border and the existing JS Input --_qxframe9a7c2-state-ring to the configured pointer/keyboard Theme shadow. No new CSS physical owner or new public Theme token.
+- Fixed missing Theme V2 final border owner on JS Input pointer and keyboard FocusOrigin; both now set --_qxframe9a7c2-v2-control-border and the existing JS Input --_qxframe9a7c2-state-focus-shadow to the configured pointer/keyboard Theme shadow. No new CSS physical owner or new public Theme token.
 - Added unified is-valid Field feedback for native Input/Select/Textarea, JS Input and SelectGroup focused Surface, retaining disabled/readonly and child invalid/warning priority. No new appearance classes or JS runtime changes.
 - Added strict static guard and Chromium light/dark × pointer/keyboard × JS normal/valid/native/SelectGroup valid 16-case paint verification; inspect actual computed border and shadow, not token strings alone.
 - Pending same-HEAD QXFRAME CI + CSS Schema Acceptance and official dist/docs Windows ZIP. Preview DOM unchanged; no yellow QA region. Preserve PR Draft and no Stage4/5 start.
@@ -174,7 +182,7 @@
 - Added a fast static node --check gate in tools/verify-create-app.mjs so the browser test module is syntax-checked before the expensive acceptance suite. Both workflows must pass on the new HEAD before distributing any Actions dist+docs ZIP. PR #265 remains Draft.
 
 ## CURRENT — 2026-10-10 FocusOwner settled-paint browser test (new CI pending)
-- CSS Schema #38043988823 Chromium diagnostic proved input actually focused, :focus-visible=true, root FocusOrigin keyboard=true, computed Surface `--_qxframe9a7c2-choice-ring` and Theme focus-shadow both 3px green. Immediate computed box-shadow was 0px transparent because the Surface transitions `box-shadow` from no ring; synchronous diagnostic sampled frame 0. Set ONLY the test-created Surface's `transition:none` to measure resolved paint without animating; no production CSS/motion weakened. Re-run full both CI same HEAD and package official Actions ZIP only after success.
+- CSS Schema #38043988823 Chromium diagnostic proved input actually focused, :focus-visible=true, root FocusOrigin keyboard=true, computed Surface `--_qxframe9a7c2-choice-focus-shadow` and Theme focus-shadow both 3px green. Immediate computed box-shadow was 0px transparent because the Surface transitions `box-shadow` from no ring; synchronous diagnostic sampled frame 0. Set ONLY the test-created Surface's `transition:none` to measure resolved paint without animating; no production CSS/motion weakened. Re-run full both CI same HEAD and package official Actions ZIP only after success.
 
 ## CURRENT — 2026-10-10 FocusOrigin Chromium computed-style diagnostics (new CI pending)
 - CSS Schema #38043676141 reached browser but keyboard shadow remained absent after moving selectors outside scope. New Chromium acceptance logs precise native input focus flag, `:focus`/`:focus-visible`, document FocusOrigin class, Surface custom ring var, Theme shadow token and computed box-shadow, as well as pointer projection. Test requirements unchanged; use this evidence to resolve paint owner before accepting.

@@ -32,7 +32,6 @@ export const THEME_TOKENS = [
   C('destructive-foreground', 'Text on destructive'),
   C('border', 'Hairline border'),
   C('input', 'Control border'),
-  C('ring', 'Focus ring source'),
   C('chart-1', 'Chart series 1'),
   C('chart-2', 'Chart series 2'),
   C('chart-3', 'Chart series 3'),

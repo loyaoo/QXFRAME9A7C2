@@ -13,6 +13,22 @@ const checks = [];
 const check = (name, fn) => { fn(); checks.push(name); };
 
 const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview.css', 'preview.js', 'preview-cards.js'];
+check('all CSS private Focus shadows use focus, not ring terminology',()=>{
+  const dirs=['src/styles/components','src/styles/main'];
+  const found=[];
+  for(const dir of dirs)for(const file of fs.readdirSync(path.join(root,dir)).filter(x=>x.endsWith('.css'))){
+    const css=fs.readFileSync(path.join(root,dir,file),'utf8');
+    const matches=[...css.matchAll(/--_qxframe9a7c2-[a-z0-9-]*ring(?:-size|-color)?/g)];
+    for(const m of matches)found.push(dir+'/'+file+':'+m[0]);
+  }
+  assert.deepEqual(found,[],'legacy private Focus ring tokens must be eliminated across concatenated CSS');
+  const readCss=p=>fs.readFileSync(path.join(root,'src/styles/components',p),'utf8');
+  assert.ok(readCss('native-input.css').includes('--_qxframe9a7c2-state-focus-shadow'),'JS Input Focus shadow state role');
+  assert.ok(readCss('tabs.css').includes('--_qxframe9a7c2-tabs-tab-focus-shadow'),'Tabs preserves separate elevation + Focus shadow');
+  assert.ok(readCss('form-native.css').includes('--_qxframe9a7c2-choice-focus-shadow'),'SelectGroup Focus shadow role');
+  assert.ok(readCss('composition.css').includes('--_qxframe9a7c2-state-focus-shadow'),'hosted JS input drops duplicate Focus shadow');
+});
+
 check('Canonical Field structure shares one CSS owner with native Form', () => {
   const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
   const composition=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
@@ -42,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'savings-targets':['.qxframe9a7c2-input-group'],'receiving-method':['.qxframe9a7c2-selectgroup'],'notification-settings':['.qxframe9a7c2-selectgroup'],'faq':['.pv-tabs .qxframe9a7c2-tabs']}; // current batch FAQ Tabs Shape allocation
+  const current={'savings-targets':['.qxframe9a7c2-input-group'],'receiving-method':['.qxframe9a7c2-selectgroup'],'faq':['.pv-tabs .qxframe9a7c2-tabs']}; // current batch FAQ Tabs Shape allocation
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -56,7 +72,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'exactly four affected Control and Choice regions in Preview 01');
+  assert.equal(count,3,'exactly three current Focus shadow migration regions in Preview 01');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -73,7 +89,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
 
 check('Tabs keyboard focus preserves the selected elevation on the same focus shell',()=>{
   const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
-  assert.match(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:var\(--_qxframe9a7c2-tabs-tab-elevation\),var\(--_qxframe9a7c2-tabs-tab-ring\);outline:var\(--_qxframe9a7c2-focus-visible-outline\)/,'Tab keyboard ring must preserve existing selected elevation');
+  assert.match(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:var\(--_qxframe9a7c2-tabs-tab-elevation\),var\(--_qxframe9a7c2-tabs-tab-focus-shadow\);outline:var\(--_qxframe9a7c2-focus-visible-outline\)/,'Tab keyboard ring must preserve existing selected elevation');
   assert.match(css,/\.qxframe9a7c2-tabs-tab-action:focus-visible\{outline:none;box-shadow:none\}/,'inner action must not introduce a second outline');
   assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:none/,'focused selected Tab must not lose its elevation');
 });
@@ -122,9 +138,9 @@ check('Tabs pointer Focus paints once on the shell using independent Theme axes'
   const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
   assert.ok(css.includes('html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-tabs-tab:focus-within:not(.is-disabled):not(:disabled){'),'pointer Tab shell has terminal guards');
   assert.ok(css.includes('outline:var(--qxframe9a7c2-theme-pointer-width,0px) solid color-mix('),'pointer outline paints genuine 2px/-1px CSS outline when configured');
-  assert.ok(css.includes('--_qxframe9a7c2-tabs-tab-ring:var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)'),'only explicit pointer halo uses shadow');
+  assert.ok(css.includes('--_qxframe9a7c2-tabs-tab-focus-shadow:var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)'),'only explicit pointer halo uses shadow');
   assert.match(css,/outline-offset:var\(--qxframe9a7c2-theme-pointer-offset,-1px\)/,'pointer outline offset belongs to Theme');
-  assert.ok(css.includes('box-shadow:var(--_qxframe9a7c2-tabs-tab-elevation),var(--_qxframe9a7c2-tabs-tab-ring)'),'selected elevation is never replaced');
+  assert.ok(css.includes('box-shadow:var(--_qxframe9a7c2-tabs-tab-elevation),var(--_qxframe9a7c2-tabs-tab-focus-shadow)'),'selected elevation is never replaced');
 });
 
 check('Maia and Rhea Tabs radius allocation follows source while Shape override wins',()=>{
@@ -158,8 +174,8 @@ check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Fie
  const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
  assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
  assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
- assert.match(consumer,/--_qxframe9a7c2-state-ring:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer JS surface shadow');
- assert.match(consumer,/--_qxframe9a7c2-state-ring:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard JS surface shadow');
+ assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer JS surface shadow');
+ assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard JS surface shadow');
  assert.match(native,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-form-input:not\(:disabled\)/,'native Field success feedback');
  assert.match(style,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-input:not\(\.is-disabled\)/,'JS Field success V2 feedback');
  assert.match(style,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-input:focus-within:not\(\.is-disabled\)/,'focused valid JS Field must outrank generic FocusOrigin color');
@@ -217,9 +233,9 @@ check('SelectGroup appearance and nine floating positions have no retired scene 
   assert.match(demos,/\['top','middle','bottom'\]/);
   assert.match(demos,/\['left','center','right'\]/);
   assert.doesNotMatch(demos,/is-pill|is-boxes|is-image-grid|is-color-grid|display:grid/,'demos use composable appearances and Flex');
-  assert.match(css,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard Theme shadow paints on Surface');
+  assert.match(css,/--_qxframe9a7c2-choice-focus-shadow:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard Theme shadow paints on Surface');
   assert.match(composition,/html\.qxframe9a7c2-keyboard-focus-origin \.qxframe9a7c2-selectgroup \.qxframe9a7c2-selectgroup-input:focus\+\.qxframe9a7c2-selectgroup-label/,'FocusOrigin keyboard projection must be outside scoped canonical component CSS');
-  assert.match(composition,/--_qxframe9a7c2-choice-ring:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer Theme shadow paints on Surface (outside @scope)');
+  assert.match(composition,/--_qxframe9a7c2-choice-focus-shadow:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer Theme shadow paints on Surface (outside @scope)');
   assert.match(visual,/\.qxframe9a7c2-selectgroup-indicator\.is-radio\{border-color:var\(--_qxframe9a7c2-semantic-focus\);outline:none;box-shadow:none\}/,'indicator cannot draw second focus halo');
   for(const side of ['top-left','top-center','middle-left','middle-center','bottom-center','bottom-right'])
     assert.match(css,new RegExp('is-'+side+'\\b'),'named floating anchor exists: '+side);
@@ -328,10 +344,10 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   const generated=model.compileTheme(model.normalizeConfig({style:'nova',ext:{keyboardFocus:'ring',pointerFocus:'ring',keyboardFocusColor:'theme',pointerFocusColor:'black-white',hoverStyle:'both',hoverColor:'theme',focusBackground:'parent-surface'}})).body;
   assert.match(generated,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0/,'keyboard ring has a genuine shadow');
   assert.match(generated,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0/,'pointer ring has a genuine shadow');
-  assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'shadcn input palette ring remains a source-only color');
+  assert.doesNotMatch(generated,/--qxframe9a7c2-theme-ring:/,'source palette ring must not be exported as a Theme CSS Focus token');
   const colorTokens=Object.fromEntries([...generated.matchAll(/--qxframe9a7c2-theme-([\w-]+):\s*([^;]+);/g)].map(x=>[x[1],x[2]]));
   assert.equal(colorTokens.focus,colorTokens.primary,'selected theme sets focus outline to primary');
-  assert.notEqual(colorTokens.ring,colorTokens.primary,'imported shadcn palette ring remains independent of active Focus roles');
+  assert.equal(colorTokens.ring,undefined,'the Theme export must not emit an obsolete ring role');
   assert.equal(colorTokens['hover-color'],colorTokens.primary,'Hover theme color is resolved independently');
   assert.notEqual(colorTokens['pointer-focus'],colorTokens.primary,'Pointer black-white does not inherit keyboard Theme color');
   assert.match(generated,/--qxframe9a7c2-theme-hover-background-strength:\s*15%/,'combined hover paints background');
