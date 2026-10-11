@@ -82,8 +82,9 @@ check('Tabs keyboard focus preserves the selected elevation on the same focus sh
 check('Tabs pointer Focus paints once on the shell using independent Theme axes',()=>{
   const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
   assert.ok(css.includes('html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-tabs-tab:focus-within:not(.is-disabled):not(:disabled){'),'pointer Tab shell has terminal guards');
-  assert.ok(css.includes('--_qxframe9a7c2-tabs-tab-ring:var(--qxframe9a7c2-theme-pointer-shadow'),'the one existing Tab ring slot uses pointer Theme');
-  assert.ok(css.includes('outline:var(--qxframe9a7c2-theme-pointer-width'),'pointer outline uses Theme configuration');
+  assert.ok(css.includes('--_qxframe9a7c2-tabs-tab-ring:inset 0 0 0 var(--qxframe9a7c2-theme-pointer-width'),'pointer inset border uses Theme style without forbidden outline');
+  assert.ok(css.includes('var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)'),'pointer halo composes in same ring slot');
+  assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab:focus-within[^}]*\boutline\s*:/,'pointer focus never paints an outline');
   assert.ok(css.includes('box-shadow:var(--_qxframe9a7c2-tabs-tab-elevation),var(--_qxframe9a7c2-tabs-tab-ring)'),'selected elevation is never replaced');
 });
 

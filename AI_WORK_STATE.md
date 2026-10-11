@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 S3 Tabs pointer paint CI repair (new CI pending)
+- Candidate c3779e0ede0113770d5d7279b9ec83ca05d62121: QXFRAME #38104803244 FAILED in release precisely because pointer :focus-within contained outline; static focus ownership gate correctly rejected it. Source-preview-geometry and windows-tools passed; CSS Schema candidate was still processing. No gate weakening.
+- Fixed the actual contract: pointer width/color uses an inset box-shadow in the Tab shell's existing ring slot alongside pointer halo, composing with selected elevation; no mouse outline. Keyboard 2px/-1px remains a separate existing class-driven owner. Real Chromium assertion now insists pointer outline-width=0 and inset border shadow.
+- Parent CI-success baseline 75b079c0 remains accepted, but this batch requires NEW same-HEAD QXFRAME + CSS Schema SUCCESS, official Windows ZIP then PR #265 Draft/user acceptance. Stage3 95%, Field/SelectGroup 86%, overall 77%.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ Tabs pointer Focus paint (CI pending)
 - Parent 75b079c0ff966eb9f01cc23da1d1fe432b6e90af; PR #265 Draft/open/unmerged; QXFRAME #38102125201 and CSS Schema #38102125284 confirmed SUCCESS, correcting the parent "CI pending" status.
 - Official same-browser 528/528 subset and height diagnostics passed; the nested role probes are diagnostic and mixed DOM wrappers/padding are not blindly treated as defects.

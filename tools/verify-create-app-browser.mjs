@@ -1384,8 +1384,8 @@ try {
         assert.ok(m.exists&&m.focusWithin,style+'/'+mode+' pointer focus reached shell '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('211, 67, 31'),style+'/'+mode+' pointer shadow drawn '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('53, 101, 211'),style+'/'+mode+' selected elevation retained '+JSON.stringify(m));
-        assert.equal(m.outline,'2px',style+'/'+mode+' pointer outline width');
-        assert.equal(m.offset,'-1px',style+'/'+mode+' pointer outline offset');
+        assert.ok(m.shadow?.includes('inset'),style+'/'+mode+' pointer width paints an inset border without outline');
+        assert.equal(m.outline,'0px',style+'/'+mode+' pointer must have no outline');
         assert.ok(!m.disabledShadow?.includes('211, 67, 31'),style+'/'+mode+' disabled has no pointer shadow');
         if(m.childOutline)assert.equal(m.childOutline,'none',style+'/'+mode+' no inner outline');
       }
