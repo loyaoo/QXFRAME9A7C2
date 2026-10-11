@@ -668,6 +668,45 @@ try {
     }
   });
 
+  await step('Calendar outside-month muted colors and actual day height across 16 theme modes',async()=>{
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar-cell")','Calendar day cells');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','Calendar '+style);
+      for(const mode of ['light','dark']){
+        const r=await evaluate(`(()=>{
+          const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;
+          const prev=h.classList.contains('dark');h.classList.toggle('dark',${mode==='dark'});
+          const cal=d.querySelector('[data-card="upcoming-payments"] .qxframe9a7c2-calendar');
+          const cells=[...cal.querySelectorAll('.qxframe9a7c2-calendar-cell')];
+          const css=e=>d.defaultView.getComputedStyle(e);
+          const visible=e=>css(e).display!=='none';
+          const outside=cells.find(e=>e.classList.contains('is-outside')&&!e.classList.contains('is-selected')&&visible(e));
+          const inside=cells.find(e=>!e.classList.contains('is-outside')&&!e.classList.contains('is-selected')&&visible(e));
+          const probe=d.createElement('span');probe.style.color='var(--qxframe9a7c2-theme-muted-foreground)';
+          cal.append(probe);const muted=css(probe).color;probe.remove();
+          const out={outside:!!outside,inside:!!inside,muted,
+            outsideColor:outside?css(outside).color:null,insideColor:inside?css(inside).color:null,
+            outsideWeight:outside?css(outside).fontWeight:null,insideWeight:inside?css(inside).fontWeight:null,
+            outsideHeight:outside?outside.getBoundingClientRect().height:null,
+            insideHeight:inside?inside.getBoundingClientRect().height:null,
+            insideWidth:inside?inside.getBoundingClientRect().width:null};
+          h.classList.toggle('dark',prev);return out;
+        })()`);
+        assert.ok(r.outside&&r.inside,style+'/'+mode+' current and outside-month dates');
+        assert.equal(r.outsideColor,r.muted,style+'/'+mode+' outside day muted color');
+        assert.notEqual(r.insideColor,r.muted,style+'/'+mode+' ordinary day foreground');
+        assert.equal(r.outsideWeight,'400',style+'/'+mode+' outside day plain weight');
+        assert.equal(r.insideWeight,'400',style+'/'+mode+' ordinary day plain weight');
+        const cell=style==='sera'?36:40;
+        assert.ok(Math.abs(r.outsideHeight-cell)<=.5,style+'/'+mode+' outside height '+r.outsideHeight);
+        assert.ok(Math.abs(r.insideHeight-cell)<=.5,style+'/'+mode+' inside height '+r.insideHeight);
+        assert.ok(Math.abs(r.insideWidth-cell)<=.5,style+'/'+mode+' day width '+r.insideWidth);
+      }
+    }
+  });
+
   await step('Adaptive Calendar keyboard movement across the month remains visible', async () => {
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Calendar keyboard');
