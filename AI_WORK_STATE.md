@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 Stage5 visual parity QA ledger / 11 current family Cards (CI pending)
+- Offline demo QA highlights exactly 11 touched Preview03 Cards/regions for shared Menu, List, Steps, Tree, Carousel, Progress, Image, Avatar, Badge, Card skeleton and Slider Theme shape corrections. Removed previous inverse Picker 6/8 region highlights. Production docs remain unannotated.
+- 544 computed-corner Chromium assertions (8 styles × two color modes × none/default radius × 17 family parts) added to exact-head CI. Draft PR #267 unchanged merge restrictions; avoid interpreting 66 documentation entries as complete visual acceptance.
+
 ## CURRENT — 2026-10-11 Stage5 all component Theme visual parity batch (CI pending)
 - User requests all QX components beyond Preview01/02 to integrate Theme tokens consistently for radius/color/size/states. Real local Chromium audit of 66 Preview03 Cards under Nova radius=none/default, Maia large, Sera found menu-item/list stuck at 4px, fixed round tree/steps/carousel controls, Preview03 Avatar fixed to 100rem, other fixed Badge/Image/Progress/Slider internal corners.
 - Updated 10 shared CSS component families plus Preview03 Avatar example, preserving framework-level radius role tokens and public component overrides; this is not a preview-only patch. New browser gate checks 17 QX-only component parts under 8 Styles × 2 modes × none/default radius = 544 computed corner checks. Existing 66-family doc mapping remains; no claim of full 66-family visual signoff from mapping alone.

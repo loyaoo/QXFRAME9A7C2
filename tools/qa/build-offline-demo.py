@@ -122,7 +122,7 @@ http.createServer((req,res)=>{
     '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n'
     ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。') +
     '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。'
-    ('本轮 Preview 03 是反色 Picker 颜色修复，不再高亮上轮 48 张新增卡片。' if preview03_changed else ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。'))
+    ('本轮 Preview 03 为 Theme 全组件视觉统一，不再标注上一轮反色 Picker 卡片。' if preview03_changed else ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。'))
     '31 张 Preview 02 卡片已经用户人工验收通过；高亮仅标记最近一次实际代码变更。\n\n'
     '之后每批更改卡片必须同步更新 docs/create/offline-qa-changes.mjs 的清单。'
     'Stage 3/4 已合并；Preview 01/02 已通过用户验收。Preview 03 是新开发内容，来自 Stage 5 Draft PR #267，未合并 main，尚待验收。\n', encoding='utf-8')

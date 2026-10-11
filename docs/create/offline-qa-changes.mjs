@@ -1,25 +1,38 @@
-/** Stage5 current batch: inverse Menu Picker contrast; highlight ONLY affected Picker controls.
+/** Stage5 current batch: QX-only Theme visual parity; only this batch's 11 component regions.
  * No previous Preview01/02 card or the older 48-card expansion stays highlighted. */
 const groups = [
- ['platform-tree','TreeSelect · inverted dropdown',[
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect menu colors','Rebind tree labels, option states and disabled text to popup Menu foreground','__QA_BUNDLE_HEAD__']
+ ['navigation-workspace','Menu 角样式',[
+  ['[data-pv3x-widget="navigation-workspace"]','Menu 角样式','菜单项圆角改为 radius-item','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['release-planner','DatePicker / TimePicker',[
-  ['[data-pv3-component="release-date"]','Date calendar and presets','Selected, outside-month, navigation, presets and time segments follow inverted Menu','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="release-time"]','Time options','Wheel labels and active guide use Menu colors','__QA_BUNDLE_HEAD__']
+ ['activity-timeline','List 容器',[
+  ['[data-pv3x-widget="activity-timeline"]','List 容器','List 与分组圆角统一','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['order-routing','Cascader / Select',[
-  ['[data-pv3-component="routing-cascader"]','Cascader columns','Grouped navigation, search, selected and disabled states','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="routing-select"]','Select dropdown','Option labels, search and selection have paired backgrounds/foregrounds','__QA_BUNDLE_HEAD__']
+ ['onboarding-flow','Steps 标记',[
+  ['[data-pv3-component="onboarding-steps"]','Steps 标记','步骤主标记与小圆点遵循 radius-item','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['brand-studio','ColorPicker internal controls',[
-  ['[data-pv3-component="brand-color"]','Color picker controls','Hex input, mode switch, gradient and swatches contrast with Menu','__QA_BUNDLE_HEAD__']
+ ['org-hierarchy','Tree 控制',[
+  ['[data-pv3x-widget="org-hierarchy"]','Tree 控制','树展开按钮遵循 radius-button','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['rules-automation','TreeSelect owner picker',[
-  ['[data-pv3-component="automation-owner"]','TreeSelect owner field','Correct inverted Menu tree option contrast','__QA_BUNDLE_HEAD__']
+ ['marketing-creative','Carousel 按钮',[
+  ['[data-pv3-component="campaign-carousel"]','Carousel 按钮','轮播箭头和分页指示遵循 button/track','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['contact-lookup','Autocomplete picker',[
-  ['[data-pv3x-widget="contact-lookup"]','Autocomplete options','Popup option list follows Menu surface, not underlying page','__QA_BUNDLE_HEAD__']
+ ['service-health','Progress 轨道',[
+  ['[data-pv3-component="service-progress"]','Progress 轨道','进度分段跟随 radius-track','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['asset-preview','ImagePreview 控件',[
+  ['[data-pv3x-widget="asset-preview"]','ImagePreview 控件','预览标签工具条和操作按钮遵循 popup/button','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['stakeholder-roster','Avatar 形状',[
+  ['.pv3x-avatars','Avatar 形状','商用头像不再强行锁死圆角','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['compliance-flags','Badge 标签',[
+  ['.qxframe9a7c2-badge','Badge 标签','标签计数及装饰形态遵循 badge 主题','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['revenue-surfaces','Card 内部形态',[
+  ['.pv3x-mini-cards','Card 内部形态','卡片骨架与分区细节统一','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['usage-meter','Slider 标记',[
+  ['[data-pv3-component="usage-slider"]','Slider 标记','Slider 标记遵循 thumb 形状策略','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -83,7 +96,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：反色 Picker 主题修复 6 张卡片、8 处控件区域；清除上轮 48 张黄色高亮。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：全组件 Theme 形态统一 11 张卡片、11 处控件区域；上轮反色 Picker 高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

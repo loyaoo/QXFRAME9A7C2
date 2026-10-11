@@ -108,7 +108,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component=\"workspace-tree-select\"]"],"release-planner":["[data-pv3-component=\"release-date\"]","[data-pv3-component=\"release-time\"]"],"order-routing":["[data-pv3-component=\"routing-cascader\"]","[data-pv3-component=\"routing-select\"]"],"brand-studio":["[data-pv3-component=\"brand-color\"]"],"rules-automation":["[data-pv3-component=\"automation-owner\"]"],"contact-lookup":["[data-pv3x-widget=\"contact-lookup\"]"]}; // current Picker inverted Menu batch, not previous Card expansion
+  const current={"navigation-workspace":["[data-pv3x-widget=\"navigation-workspace\"]"],"activity-timeline":["[data-pv3x-widget=\"activity-timeline\"]"],"onboarding-flow":["[data-pv3-component=\"onboarding-steps\"]"],"org-hierarchy":["[data-pv3x-widget=\"org-hierarchy\"]"],"marketing-creative":["[data-pv3-component=\"campaign-carousel\"]"],"service-health":["[data-pv3-component=\"service-progress\"]"],"asset-preview":["[data-pv3x-widget=\"asset-preview\"]"],"stakeholder-roster":[".pv3x-avatars"],"compliance-flags":[".qxframe9a7c2-badge"],"revenue-surfaces":[".pv3x-mini-cards"],"usage-meter":["[data-pv3-component=\"usage-slider\"]"]}; // Stage5 QX-only visual parity batch
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -122,7 +122,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,8,'only current inverted Picker 6 cards/8 changed regions are highlighted');
+  assert.equal(count,11,'only current 11 QX-only component Card regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
