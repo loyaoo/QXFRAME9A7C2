@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Stage4 iframe focus test boundary fix (CI pending)
+- Previous HEAD f848bbf6eb14a97db02e06abb9973a50d33f0ddf, QXFRAME #38132718677 geometry 496 + Windows success; CSS Schema #38132718763 failed AFTER new Stage4 file/upload/invite Chromium test PASSED. Subsequent old import shortcut test timed out because new InviteTeam copy fallback focused and selected a URL input INSIDE Preview02 iframe; by design keyboard shortcuts are not forwarded from an input. No production bug.
+- Browser test now explicitly focuses a visible enabled BUTTON in CreateApp host and asserts that focus has returned to host before old import shortcut fires. Retains strict file type/drop, dynamic QX Select and copy fallback assertions.
+- Await exact-new-head dual CI and official offline artifact. PR #266 remains Draft, main/backup unchanged.
+
 ## CURRENT — 2026-10-11 Stage4 Preview02 local file/invite actual behavior (CI pending)
 - Previous Stage4 exact green HEAD eb2cea4c2fcf0c1dcee5f0eefface381dd296de2, QXFRAME #38130513582 success, CSS Schema #38130513577 success, 496 source-preview-geometry passing.
 - Owner: do not chase shadcn pixel parity; retain approved QX controls. Real remaining stage4 defects: File Upload browse/drop button inert; Report Bug Attach File inert; Invite Team Add another inert; Invite link copy icon inert. Source is static demo but button actions advertise capabilities, so restore local behaviors without inventing server API results.

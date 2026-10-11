@@ -354,6 +354,11 @@ try {
     assert.equal(actual.hasRealSelect,true,'new row mounts QX Select');
     assert.equal(actual.email,'name@example.com');
     assert.match(actual.copied,/Invite link copied|Invite link selected; use Ctrl\+C/,'copy action gives truthful feedback');
+    // This test deliberately clicked/focused inputs inside Preview 02 iframe.
+    // Return keyboard origin to the Create host before the next test sends
+    // the host-level "O" import shortcut; typing in iframe must NOT forward it.
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+    assert.equal(await evaluate('document.activeElement.tagName'),'BUTTON','host keyboard origin restored');
   });
 
   await step('import errors are reported and keep the current configuration', async () => {
