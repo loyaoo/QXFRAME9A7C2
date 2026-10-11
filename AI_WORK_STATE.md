@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ Tabs pointer Focus Chromium isolation (CI pending)
+- Parent 76e512c2f5ec647e6e16ed8683fe1e3ee2cb5fdc: QXFRAME #38104953655 geometry and windows-tools SUCCESS, release still running; CSS Schema #38104953631 FAILED at exact Chromium assertion pointer outline 3px instead of 0px.
+- Cause to verify: pointer test follows keyboard virtual-focus test and had not isolated/restored the shell's existing `.is-keyboard-focus` state; a synthetic focus call is not a real pointer-origin event. The pointer probe now explicitly clears that inherited keyboard-only class after focusing and restores original state afterward, additionally asserts it absent. Does not relax 0px outline test, old strict CSS gate or any visual condition.
+- CSS product uses one Tab shell inset-shadow painter + pointer halo and retains selected elevation. No framework runtime JS or new token changes.
+- NEXT: both CI workflows SUCCESS on this new commit or inspect failed job logs. Then same-HEAD official dist+docs Windows ZIP with CRC, HTTP and offline-only FAQ pointer highlight, PR #265 Draft; no Stage4/5. Progress estimates remain Stage3 95%, Field/SelectGroup 86%, overall 77%.
+
 ## CURRENT — 2026-10-11 S3 Tabs pointer paint CI repair (new CI pending)
 - Candidate c3779e0ede0113770d5d7279b9ec83ca05d62121: QXFRAME #38104803244 FAILED in release precisely because pointer :focus-within contained outline; static focus ownership gate correctly rejected it. Source-preview-geometry and windows-tools passed; CSS Schema candidate was still processing. No gate weakening.
 - Fixed the actual contract: pointer width/color uses an inset box-shadow in the Tab shell's existing ring slot alongside pointer halo, composing with selected elevation; no mouse outline. Keyboard 2px/-1px remains a separate existing class-driven owner. Real Chromium assertion now insists pointer outline-width=0 and inset border shadow.

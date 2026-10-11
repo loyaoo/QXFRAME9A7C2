@@ -1368,16 +1368,19 @@ try {
           const t=d.querySelector('[data-card="faq"] .qxframe9a7c2-tabs-tab.is-active'),a=t?.querySelector('.qxframe9a7c2-tabs-tab-action')||t;
           const wasDark=h.classList.contains('dark'),wasKeyboard=h.classList.contains('qxframe9a7c2-keyboard-focus-origin');
           const vars=['--qxframe9a7c2-theme-pointer-shadow','--qxframe9a7c2-shadow-sm','--qxframe9a7c2-theme-pointer-width','--qxframe9a7c2-theme-pointer-offset'];
-          const prior=vars.map(v=>h.style.getPropertyValue(v)),wasDisabled=t?.classList.contains('is-disabled');
+          const prior=vars.map(v=>h.style.getPropertyValue(v)),wasDisabled=t?.classList.contains('is-disabled'),wasKeyboardTab=t?.classList.contains('is-keyboard-focus');
           h.classList.toggle('dark',__DARK__);h.classList.remove('qxframe9a7c2-keyboard-focus-origin');
           h.style.setProperty(vars[0],'0 0 0 3px rgb(211, 67, 31)');
           h.style.setProperty(vars[1],'0 2px 4px 0 rgb(53, 101, 211)');
           h.style.setProperty(vars[2],'2px');h.style.setProperty(vars[3],'-1px');
           if(t)t.classList.remove('is-disabled');if(a)a.focus();
-          const s=t&&getComputedStyle(t),out={exists:!!t,focusWithin:!!t?.matches(':focus-within'),shadow:s?.boxShadow,outline:s?.outlineWidth,offset:s?.outlineOffset,childOutline:a&&a!==t?getComputedStyle(a).outlineStyle:null};
+          // Synthetic pointer probe must clear any virtual keyboard focus left by
+          // the previous keyboard-specific regression, without changing runtime.
+          if(t)t.classList.remove('is-keyboard-focus');
+          const s=t&&getComputedStyle(t),out={exists:!!t,focusWithin:!!t?.matches(':focus-within'),shadow:s?.boxShadow,outline:s?.outlineWidth,offset:s?.outlineOffset,childOutline:a&&a!==t?getComputedStyle(a).outlineStyle:null,keyboardClass:t?.classList.contains('is-keyboard-focus')};
           if(t)t.classList.add('is-disabled');
           out.disabledShadow=t?getComputedStyle(t).boxShadow:null;
-          if(a)a.blur();if(t)t.classList.toggle('is-disabled',!!wasDisabled);
+          if(a)a.blur();if(t){t.classList.toggle('is-disabled',!!wasDisabled);t.classList.toggle('is-keyboard-focus',!!wasKeyboardTab)}
           vars.forEach((v,i)=>prior[i]?h.style.setProperty(v,prior[i]):h.style.removeProperty(v));
           h.classList.toggle('dark',wasDark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',wasKeyboard);return out;
         })()`.replace('__DARK__',String(mode==='dark')));
@@ -1385,6 +1388,7 @@ try {
         assert.ok(m.shadow?.includes('211, 67, 31'),style+'/'+mode+' pointer shadow drawn '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('53, 101, 211'),style+'/'+mode+' selected elevation retained '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('inset'),style+'/'+mode+' pointer width paints an inset border without outline');
+        assert.equal(m.keyboardClass,false,style+'/'+mode+' pointer state excludes keyboard virtual-focus class');
         assert.equal(m.outline,'0px',style+'/'+mode+' pointer must have no outline');
         assert.ok(!m.disabledShadow?.includes('211, 67, 31'),style+'/'+mode+' disabled has no pointer shadow');
         if(m.childOutline)assert.equal(m.childOutline,'none',style+'/'+mode+' no inner outline');
