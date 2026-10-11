@@ -1363,7 +1363,7 @@ try {
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
       await waitFor(frameAttr('data-create-style')+' === "'+style+'"','SelectGroup hover '+style);
       for(const mode of ['light','dark']){
-        const point=await evaluate(\`(()=>{
+        const point=await evaluate(`(()=>{
           const frame=document.querySelector('[data-create-frame]'),d=frame.contentDocument,h=d.documentElement;
           h.classList.toggle('dark',__DARK__);
           const fixture=d.createElement('div');fixture.id='qx-s3-hover-fixture';
@@ -1375,9 +1375,9 @@ try {
           h.style.setProperty('--qxframe9a7c2-theme-hover-color','rgb(34,45,219)');
           const x=frame.getBoundingClientRect(),r=fixture.querySelector('.qxframe9a7c2-selectgroup-label').getBoundingClientRect();
           return {x:x.left+r.left+30,y:x.top+r.top+25};
-        })()\`.replace('__DARK__',String(mode==='dark')));
+        })()`.replace('__DARK__',String(mode==='dark')));
         await mouse('mouseMoved',point.x,point.y);
-        const data=await evaluate(\`(()=>{
+        const data=await evaluate(`(()=>{
           const d=document.querySelector('[data-create-frame]').contentDocument,
             f=d.getElementById('qx-s3-hover-fixture'),h=d.documentElement,
             field=f.querySelector('.qxframe9a7c2-field'),group=f.querySelector('.qxframe9a7c2-selectgroup'),
@@ -1412,7 +1412,7 @@ try {
           }
           f.remove();for(const name of ['--qxframe9a7c2-theme-hover-border-strength','--qxframe9a7c2-theme-hover-background-strength','--qxframe9a7c2-theme-hover-color'])h.style.removeProperty(name);
           return {hover,colors,rows};
-        })()\`);
+        })()`);
         assert.ok(data.hover,style+'/'+mode+' CDP mouse really hovered SelectGroup');
         for(const r of data.rows){
           const tag=style+'/'+mode+'/'+r.appearance+'/'+r.status+' '+JSON.stringify(r);
