@@ -1356,6 +1356,81 @@ try {
     }
   });
 
+  await step('SelectGroup Hover cannot override Field feedback or focus, Outline and Muted in 16 themes',async()=>{
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','SelectGroup Preview');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','SelectGroup hover '+style);
+      for(const mode of ['light','dark']){
+        const point=await evaluate(\`(()=>{
+          const frame=document.querySelector('[data-create-frame]'),d=frame.contentDocument,h=d.documentElement;
+          h.classList.toggle('dark',__DARK__);
+          const fixture=d.createElement('div');fixture.id='qx-s3-hover-fixture';
+          fixture.style.cssText='position:fixed;left:18px;top:38px;z-index:99999;width:260px;height:64px';
+          fixture.innerHTML='<div class="qxframe9a7c2-field is-warning"><div class="qxframe9a7c2-selectgroup is-outline"><label class="qxframe9a7c2-selectgroup-item"><input type="checkbox" class="qxframe9a7c2-selectgroup-input"><span class="qxframe9a7c2-selectgroup-label" style="width:250px;height:55px;transition:none">Test choice</span></label></div></div><i data-probe style="position:absolute;left:-9000px"></i>';
+          d.body.append(fixture);
+          h.style.setProperty('--qxframe9a7c2-theme-hover-border-strength','100%');
+          h.style.setProperty('--qxframe9a7c2-theme-hover-background-strength','100%');
+          h.style.setProperty('--qxframe9a7c2-theme-hover-color','rgb(34,45,219)');
+          const x=frame.getBoundingClientRect(),r=fixture.querySelector('.qxframe9a7c2-selectgroup-label').getBoundingClientRect();
+          return {x:x.left+r.left+30,y:x.top+r.top+25};
+        })()\`.replace('__DARK__',String(mode==='dark')));
+        await mouse('mouseMoved',point.x,point.y);
+        const data=await evaluate(\`(()=>{
+          const d=document.querySelector('[data-create-frame]').contentDocument,
+            f=d.getElementById('qx-s3-hover-fixture'),h=d.documentElement,
+            field=f.querySelector('.qxframe9a7c2-field'),group=f.querySelector('.qxframe9a7c2-selectgroup'),
+            item=f.querySelector('.qxframe9a7c2-selectgroup-item'),input=f.querySelector('input'),
+            label=f.querySelector('.qxframe9a7c2-selectgroup-label'),probe=f.querySelector('[data-probe]'),
+            css=e=>d.defaultView.getComputedStyle(e),colors={};
+          for(const [name,token] of [['is-warning','warning'],['is-invalid','destructive'],['is-valid','success'],['normal','border']]){
+            probe.style.color='var(--qxframe9a7c2-theme-'+token+')';colors[name]=css(probe).color;
+          }
+          probe.style.backgroundColor='color-mix(in oklab,var(--qxframe9a7c2-theme-muted),rgb(34,45,219) 0%)';
+          colors.muted=css(probe).backgroundColor;
+          probe.style.backgroundColor='color-mix(in oklab,transparent,rgb(34,45,219) 0%)';
+          colors.transparentHover=css(probe).backgroundColor;
+          probe.style.backgroundColor='color-mix(in oklab,var(--qxframe9a7c2-theme-border),rgb(34,45,219) 100%)';
+          colors.normalHoverBorder=css(probe).backgroundColor;
+          const rows=[],hover=item.matches(':hover');
+          for(const appearance of ['is-outline','is-muted']){
+            group.className='qxframe9a7c2-selectgroup '+appearance;
+            for(const status of ['is-warning','is-invalid','is-valid','normal']){
+              field.className='qxframe9a7c2-field'+(status==='normal'?'':' '+status);
+              input.disabled=false;input.checked=false;input.blur();
+              const s=css(label),before={border:s.borderColor,bg:s.backgroundColor,hover:item.matches(':hover')};
+              input.focus();
+              const focused={border:css(label).borderColor,bg:css(label).backgroundColor,focusWithin:item.matches(':focus-within')};
+              input.blur();
+              rows.push({appearance,status,before,focused});
+            }
+            input.disabled=true;input.checked=false;
+            rows.push({appearance,status:'disabled',before:{border:css(label).borderColor,bg:css(label).backgroundColor}});
+            input.disabled=false;input.checked=true;
+            rows.push({appearance,status:'checked',before:{border:css(label).borderColor,bg:css(label).backgroundColor}});
+          }
+          f.remove();for(const name of ['--qxframe9a7c2-theme-hover-border-strength','--qxframe9a7c2-theme-hover-background-strength','--qxframe9a7c2-theme-hover-color'])h.style.removeProperty(name);
+          return {hover,colors,rows};
+        })()\`);
+        assert.ok(data.hover,style+'/'+mode+' CDP mouse really hovered SelectGroup');
+        for(const r of data.rows){
+          const tag=style+'/'+mode+'/'+r.appearance+'/'+r.status+' '+JSON.stringify(r);
+          if(['is-warning','is-invalid','is-valid'].includes(r.status)){
+            if(r.appearance==='is-outline')assert.equal(r.before.border,data.colors[r.status],tag+' status border wins Hover');
+            if(r.appearance==='is-muted')assert.equal(r.before.bg,data.colors.muted,tag+' status surface must not be tinted');
+            assert.equal(r.focused.focusWithin,true,tag+' focus reached choice');
+            if(r.appearance==='is-outline')assert.equal(r.focused.border,data.colors[r.status],tag+' status border wins Focus');
+          } else if(r.status==='normal'){
+            if(r.appearance==='is-outline')assert.equal(r.before.border,data.colors.normalHoverBorder,tag+' ordinary Hover remains theme-configurable');
+            assert.equal(r.focused.focusWithin,true,tag+' focused choice must be focus-within');
+            if(r.appearance==='is-outline')assert.notEqual(r.focused.border,data.colors.normalHoverBorder,tag+' Hover cannot override focus');
+          }
+        }
+      }
+    }
+  });
+
   await step('FAQ Tabs pointer Focus preserves selected elevation and disables pointer ring in 16 modes',async()=>{
     await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs-tab.is-active")','FAQ pointer shell');

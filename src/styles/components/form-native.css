@@ -93,12 +93,30 @@
   --_qxframe9a7c2-choice-bg:var(--qxframe9a7c2-theme-muted);
   padding:var(--qxframe9a7c2-selectgroup-padding-block,.5rem) var(--qxframe9a7c2-selectgroup-padding-inline,.75rem)
 }
-.qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled)):not(:has(>.qxframe9a7c2-selectgroup-input:checked))>.qxframe9a7c2-selectgroup-label{
-  --_qxframe9a7c2-choice-border:color-mix(in oklab,var(--qxframe9a7c2-theme-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength));
-  --_qxframe9a7c2-choice-bg:color-mix(in oklab,transparent,var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
+/* Hover strength is conditional on Field feedback, never a second physical painter.
+ * Normal choices consume Theme Hover; Invalid/Warning/Valid disable Hover tint
+ * and retain their semantic border. Focus-within outranks Hover separately. */
+.qxframe9a7c2-field.is-invalid .qxframe9a7c2-selectgroup,
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup{
+  --_qxframe9a7c2-choice-hover-border:var(--qxframe9a7c2-theme-destructive);
+  --_qxframe9a7c2-choice-hover-background-strength:0%
 }
-.qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-item:hover:not(:has(>.qxframe9a7c2-selectgroup-input:disabled)):not(:has(>.qxframe9a7c2-selectgroup-input:checked))>.qxframe9a7c2-selectgroup-label{
-  --_qxframe9a7c2-choice-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-muted),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-background-strength))
+.qxframe9a7c2-field.is-warning .qxframe9a7c2-selectgroup,
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-selectgroup{
+  --_qxframe9a7c2-choice-hover-border:var(--qxframe9a7c2-theme-warning);
+  --_qxframe9a7c2-choice-hover-background-strength:0%
+}
+.qxframe9a7c2-field.is-valid .qxframe9a7c2-selectgroup,
+.qxframe9a7c2-form-field.is-valid .qxframe9a7c2-selectgroup{
+  --_qxframe9a7c2-choice-hover-border:var(--qxframe9a7c2-theme-success);
+  --_qxframe9a7c2-choice-hover-background-strength:0%
+}
+.qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-item:hover:not(:focus-within):not(:has(>.qxframe9a7c2-selectgroup-input:disabled)):not(:has(>.qxframe9a7c2-selectgroup-input:checked))>.qxframe9a7c2-selectgroup-label{
+  --_qxframe9a7c2-choice-border:var(--_qxframe9a7c2-choice-hover-border,color-mix(in oklab,var(--qxframe9a7c2-theme-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength)));
+  --_qxframe9a7c2-choice-bg:color-mix(in oklab,transparent,var(--qxframe9a7c2-theme-hover-color) var(--_qxframe9a7c2-choice-hover-background-strength,var(--qxframe9a7c2-theme-hover-background-strength)))
+}
+.qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-item:hover:not(:focus-within):not(:has(>.qxframe9a7c2-selectgroup-input:disabled)):not(:has(>.qxframe9a7c2-selectgroup-input:checked))>.qxframe9a7c2-selectgroup-label{
+  --_qxframe9a7c2-choice-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-muted),var(--qxframe9a7c2-theme-hover-color) var(--_qxframe9a7c2-choice-hover-background-strength,var(--qxframe9a7c2-theme-hover-background-strength)))
 }
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-primary)

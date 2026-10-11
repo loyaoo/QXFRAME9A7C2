@@ -42,7 +42,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'faq':['.pv-tabs']}; // current batch segmented Tabs keyboard focus elevation
+  const current={'receiving-method':['.qxframe9a7c2-selectgroup.is-outline']}; // current batch SelectGroup Hover feedback owner
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -57,8 +57,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'one modified FAQ Tabs region in Preview 01');
-  assert.match(ledger,/const groups = \[/,'live FAQ Tabs ledger exists');
+  assert.equal(count,1,'one modified Receiving Method SelectGroup region in Preview 01');
+  assert.match(ledger,/const groups = \[/,'live SelectGroup ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -131,6 +131,17 @@ check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
   assert.match(style,/\.qxframe9a7c2-field\.is-invalid \.qxframe9a7c2-form-input:hover:not\(:disabled\)/,'invalid feedback wins on hover');
   assert.match(structure,/is-connected\.is-outline>\.qxframe9a7c2-flex>\.qxframe9a7c2-selectgroup-item:first-child/,'horizontal corners scoped to Flex');
   assert.doesNotMatch(structure,/is-connected\.is-outline \.qxframe9a7c2-selectgroup-item:first-child/,'horizontal corner cannot leak to vertical Stack');
+});
+
+check('SelectGroup Hover cannot supersede Focus or Field feedback in Outline and Muted',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  for(const appearance of ['is-outline','is-muted']){
+    assert.match(css,new RegExp('selectgroup\\.'+appearance+' \\.qxframe9a7c2-selectgroup-item:hover:not\\(:focus-within\\)'),'Hover must exclude Focus within '+appearance);
+  }
+  for(const status of ['is-invalid','is-warning','is-valid'])
+    assert.ok(css.includes('qxframe9a7c2-field.'+status+' .qxframe9a7c2-selectgroup'),'shared status controls SelectGroup Hover '+status);
+  assert.ok(css.includes('--_qxframe9a7c2-choice-hover-border,color-mix('),'Outline Hover reuses one border slot with status fallback');
+  assert.ok((css.match(/--_qxframe9a7c2-choice-hover-background-strength,var\(--qxframe9a7c2-theme-hover-background-strength\)/g)||[]).length===2,'Outline and Muted Hover derive background from the same status-aware strength');
 });
 
 check('SelectGroup replaces CheckField without a duplicate choice Field owner', () => {
