@@ -10,8 +10,8 @@ assert.match(css,/\.qxframe9a7c2-card-actions\{display:flex;/);
 assert.match(css,/\.qxframe9a7c2-card-action\{display:flex;min-width:0;min-height:(?:var\(--[^)]+\)|calc\([^;{}]+\)|-?\d*\.?\d+rem);flex:1 1 0;/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-card-actions\{[^}]*display:grid/);
 
-assert.match(css,/\.qxframe9a7c2-form-selectgroup-image\{display:flex;[^}]*flex-direction:column/);
-assert.doesNotMatch(css,/\.qxframe9a7c2-form-selectgroup-image\{[^}]*display:grid/);
+assert.match(css,/\.qxframe9a7c2-selectgroup-image\{display:flex;[^}]*flex-direction:column/);
+assert.doesNotMatch(css,/\.qxframe9a7c2-selectgroup-image\{[^}]*display:grid/);
 
 assert.match(css,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-check-wrap\{[^}]*display:inline-flex;[^}]*align-items:center;[^}]*justify-content:center/);
 assert.doesNotMatch(css,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-check-wrap\{[^}]*grid-template-/);

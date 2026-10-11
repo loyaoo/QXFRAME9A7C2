@@ -68,7 +68,7 @@
 
 /* Placement-aware motion for all anchored popup/picker/dropdown surfaces.
    Trigger projects the *resolved* Floating UI placement so flips animate from the actual anchor side. */
-.qxframe9a7c2-motion-popup-placement-appear-from,.qxframe9a7c2-motion-popup-placement-enter-from,.qxframe9a7c2-motion-popup-placement-leave-to{opacity:0;transform:translate3d(var(--_qxframe9a7c2-popup-motion-x,0),var(--_qxframe9a7c2-popup-motion-y,0),0) scale(.96)}
+.qxframe9a7c2-motion-popup-placement-appear-from,.qxframe9a7c2-motion-popup-placement-enter-from,.qxframe9a7c2-motion-popup-placement-leave-to{opacity:0;transform:translate3d(var(--_qxframe9a7c2-popup-motion-x,0),var(--_qxframe9a7c2-popup-motion-y,0),0) scaleY(.88)}
 .qxframe9a7c2-motion-popup-placement-appear-to,.qxframe9a7c2-motion-popup-placement-enter-to,.qxframe9a7c2-motion-popup-placement-leave-from{opacity:1;transform:translate3d(0,0,0) scale(1)}
 .qxframe9a7c2-motion-popup-placement-appear-active,.qxframe9a7c2-motion-popup-placement-enter-active{transition:transform var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.23, 1, .32, 1),opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.23, 1, .32, 1)}
 .qxframe9a7c2-motion-popup-placement-leave-active{transition:transform var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.755, .05, .855, .06),opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.755, .05, .855, .06)}
@@ -84,6 +84,17 @@
 [data-placement="right-end"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:0 100%}
 [data-placement="left-start"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:100% 0}
 [data-placement="left-end"][class*="qxframe9a7c2-motion-popup-placement-"]{transform-origin:100% 100%}
+
+/* Placement-aware popup reveal expands from the EDGE nearest the trigger,
+ * not a point. Right/left placements use their vertical attachment edge. */
+[data-placement^="right"].qxframe9a7c2-motion-popup-placement-appear-from,
+[data-placement^="right"].qxframe9a7c2-motion-popup-placement-enter-from,
+[data-placement^="right"].qxframe9a7c2-motion-popup-placement-leave-to,
+[data-placement^="left"].qxframe9a7c2-motion-popup-placement-appear-from,
+[data-placement^="left"].qxframe9a7c2-motion-popup-placement-enter-from,
+[data-placement^="left"].qxframe9a7c2-motion-popup-placement-leave-to{
+  transform:translate3d(var(--_qxframe9a7c2-popup-motion-x,0),var(--_qxframe9a7c2-popup-motion-y,0),0) scaleX(.88)
+}
 
 /* Ant-style slide family for anchored popup panels. */
 .qxframe9a7c2-motion-slide-up-appear-from,.qxframe9a7c2-motion-slide-up-enter-from,.qxframe9a7c2-motion-slide-up-leave-to{opacity:0;transform:scaleY(.8);transform-origin:0 0}

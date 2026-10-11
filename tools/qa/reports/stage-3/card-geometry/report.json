@@ -1,0 +1,5625 @@
+{
+  "source": "shadcn-ui/ui@295a1f114a138f23b5dfee0e0c6812394dfeb90c",
+  "font": "system-ui, sans-serif",
+  "tolerance": 0.5,
+  "checks": 624,
+  "failures": 0,
+  "rows": [
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 200,
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 200,
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 200,
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 200,
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "vega",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 179,
+      "actual": 179,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 22,
+      "actual": 22,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 179,
+      "actual": 179,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 22,
+      "actual": 22,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 179,
+      "actual": 179,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 22,
+      "actual": 22,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 179,
+      "actual": 179,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 22,
+      "actual": 22,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "nova",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 204,
+      "actual": 204,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 204,
+      "actual": 204,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 204,
+      "actual": 204,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 204,
+      "actual": 204,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 8,
+      "actual": 8,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "maia",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 176,
+      "actual": 176,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 176,
+      "actual": 176,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 176,
+      "actual": 176,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 176,
+      "actual": 176,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "lyra",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 10,
+      "actual": 10,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 155,
+      "actual": 155,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 10,
+      "actual": 10,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 155,
+      "actual": 155,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 10,
+      "actual": 10,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 155,
+      "actual": 155,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 10,
+      "actual": 10,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 155,
+      "actual": 155,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 14,
+      "actual": 14,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 19.5,
+      "actual": 19.5,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 4,
+      "actual": 4,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "style": "mira",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 26,
+      "actual": 26,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 202,
+      "actual": 202,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 26,
+      "actual": 26,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 202,
+      "actual": 202,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 26,
+      "actual": 26,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 202,
+      "actual": 202,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 26,
+      "actual": 26,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 202,
+      "actual": 202,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 36,
+      "actual": 36,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "style": "luma",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 244.75,
+      "actual": 244.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 600,
+      "actual": 600,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 22.75,
+      "actual": 22.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 40,
+      "actual": 40,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 244.75,
+      "actual": 244.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 600,
+      "actual": 600,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 22.75,
+      "actual": 22.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 40,
+      "actual": 40,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 32,
+      "expected": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 32,
+      "expected": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 244.75,
+      "actual": 244.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 600,
+      "actual": 600,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 22.75,
+      "actual": 22.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 40,
+      "actual": 40,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 244.75,
+      "actual": 244.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 600,
+      "actual": 600,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 18,
+      "actual": 18,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 28,
+      "actual": 28,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 22.75,
+      "actual": 22.75,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 40,
+      "actual": 40,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 32,
+      "expected": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 32,
+      "expected": 32,
+      "pass": true
+    },
+    {
+      "style": "sera",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "radius",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "height",
+      "expected": 182,
+      "actual": 182,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "inset",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "top",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 182,
+      "actual": 182,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 20,
+      "expected": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 20,
+      "expected": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "light",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.205 0 0)",
+      "expected": "oklch(0.205 0 0)",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "radius",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "height",
+      "expected": 182,
+      "actual": 182,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "inset",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "top",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "contentGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "footerBottom",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "content",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "radius",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "height",
+      "expected": 182,
+      "actual": 182,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "inset",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "top",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "metaGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "contentGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerGap",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerInset",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "footerBottom",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "divider",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleWeight",
+      "expected": 500,
+      "actual": 500,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleSize",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "titleLine",
+      "expected": 24,
+      "actual": 24,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "descriptionLine",
+      "expected": 20,
+      "actual": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "buttonHeight",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "legacy-body",
+      "property": "headingGap",
+      "expected": 6,
+      "actual": 6,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "states",
+      "property": "selected-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "states",
+      "property": "borderless-outline",
+      "actual": "rgba(0, 0, 0, 0)",
+      "expected": "rgba(0, 0, 0, 0)",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-radius",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "states",
+      "property": "public-padding",
+      "actual": "30px",
+      "expected": "30px",
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "states",
+      "property": "mixed-content-gap",
+      "actual": 20,
+      "expected": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "states",
+      "property": "content-before-header-gap",
+      "actual": 20,
+      "expected": 20,
+      "pass": true
+    },
+    {
+      "style": "rhea",
+      "mode": "dark",
+      "markup": "states",
+      "property": "hover-outline",
+      "actual": "oklch(0.922 0 0)",
+      "expected": "oklch(0.922 0 0)",
+      "pass": true
+    }
+  ]
+}

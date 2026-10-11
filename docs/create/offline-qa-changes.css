@@ -1,0 +1,19 @@
+/* Offline acceptance overlay only. Never linked by production Create HTML. */
+.qa-offline-toolbar { position:fixed;z-index:2147483000;right:16px;bottom:16px;width:320px;max-width:calc(100% - 32px);max-height:70%;overflow:auto;border:1px solid #b77713;border-radius:10px;background:#fffaf0;color:#241b0c;box-shadow:0 8px 38px rgba(0,0,0,.24);font:13px/1.45 system-ui,sans-serif;text-align:left;padding:12px;box-sizing:border-box;}
+.qa-toolbar-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;padding-bottom:8px;border-bottom:1px solid #e6c991;}
+.qa-toolbar-header strong{font-size:14px;}.qa-toolbar-header span{font-size:11px;color:#82531b;}
+.qa-toolbar-buttons{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;}
+.qa-offline-toolbar button{border:1px solid #d69e44;border-radius:6px;background:#fff;box-shadow:none;padding:5px 8px;color:#382714;cursor:pointer;font:inherit;text-align:left;}
+.qa-offline-toolbar button:hover{background:#ffe8b9;}
+.qa-toolbar-buttons [data-qa-toggle]{font-weight:700;background:#ffe8b9;}
+.qa-toolbar-content>p{margin:0 0 10px;color:#745523;font-size:12px;}
+.qa-toolbar-caption{border-top:1px solid #e6c991;padding-top:8px;margin-top:10px!important;}
+.qa-change-group{margin:8px 0;padding:8px;border:1px solid #f0d9af;border-radius:6px;}
+.qa-change-group>strong{display:block;font-size:12px;}
+.qa-offline-toolbar .qa-change-row{display:block;width:100%;margin:7px 0 0;font-weight:600;font-size:12px;}
+.qa-change-summary{margin:2px 1px 3px;color:#745523;font-size:11px;}
+.qa-panel-collapsed .qa-toolbar-content{display:none;}
+.qa-annotated-enabled .qa-annotated .qa-changed-card {position:relative;outline:2px solid #f59e0b;outline-offset:2px;}
+.qa-annotated-enabled .qa-annotated .qa-changed-card::after{content:attr(data-qa-card-label);position:absolute;top:2px;right:5px;padding:2px 5px;background:#f59e0b;color:#201206;border-radius:4px;font:700 11px/1.25 system-ui,sans-serif;z-index:100;pointer-events:none;}
+.qa-annotated-enabled .qa-annotated .qa-changed-region{outline:2px dashed #db7516;outline-offset:-2px;}
+.qa-annotated .qa-jump-flash{outline:3px solid #dc2626!important;outline-offset:3px!important;}

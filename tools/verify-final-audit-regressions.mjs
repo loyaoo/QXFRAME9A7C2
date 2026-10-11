@@ -60,7 +60,7 @@ assert.match(calendarSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'Ca
 assert.match(periodPanelSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'PeriodPanel must project the same canonical is-hover state.');
 assert.match(css,/\.qxframe9a7c2-date-panel-cell\.is-in-range\.is-hover:not\(:disabled\):not\(\.is-selected\)\{[^}]*(?:accent-soft-hover|theme-primary\) 20%)/,'Canonical date cell CSS must distinguish range hover from selected state.');
 assert.doesNotMatch(css,/--_qxframe9a7c2-calendar-cell-text/,'Calendar must not use the retired cell-text private variable.');
-assert.match(css,/\.qxframe9a7c2-calendar-cell\.is-outside:not\(\.is-selected\):not\(\.is-in-range\)\{--_qxframe9a7c2-date-panel-cell-text:var\(--_qxframe9a7c2-semantic-text-disabled\)\}/,'Outside-month Calendar cells must target the canonical shared date-panel text variable.');
+assert.match(css,/\.qxframe9a7c2-calendar-cell\.is-outside:not\(\.is-selected\):not\(\.is-in-range\)\{--_qxframe9a7c2-date-panel-cell-text:var\(--_qxframe9a7c2-semantic-text-disabled\);color:var\(--_qxframe9a7c2-semantic-text-disabled\)\}/,'Outside-month Calendar cells must project the shared date-panel text variable and muted physical color.');
 assert.match(css,/\.qxframe9a7c2-calendar-cell\.is-outside\.is-hover:not\(:disabled\):not\(\.is-selected\):not\(\.is-in-range\)\{[^}]*semantic-subtle-hover[^}]*semantic-text-disabled/,'Outside-month hover must keep muted text while adding the canonical hover background.');
 
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);

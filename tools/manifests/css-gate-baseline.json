@@ -34,7 +34,6 @@
     "duplicate-owner": {
       "components/alert": 1,
       "components/badge": 3,
-      "components/card": 1,
       "components/descriptions": 4,
       "components/form-native": 7,
       "components/image": 11,
@@ -45,7 +44,7 @@
       "components/picker-family": 3,
       "components/table": 1,
       "components/upload": 1,
-      "components/visual-recipe": 16,
+      "components/visual-recipe": 12,
       "main/fixed-values": 26,
       "main/theme-visual-v2": 34,
       "main/theme-visual-v2-style-consumers": 16
@@ -106,5 +105,5 @@
     },
     "outside-segment": {}
   },
-  "note": "Ratchet baseline for the v3 createApp redesign CSS gates. Counts may only fall; every rule must reach zero by stage 5. Stage 2b-B re-baseline: legacy :root palettes/constants dissolved (root-non-theme 4618→383, hardcoded-color 2244→126, public-component-token-declared 503→492). Per-segment hardcoded-color rose in a few components (image, slider, switch, table, upload, carousel, card, badge…) because mode-independent shadow/media-overlay constants moved from :root definitions to their single consumer; the total fell."
+  "note": "Ratchet baseline for the v3 createApp redesign CSS gates. Counts may only fall; every rule must reach zero by stage 5. Stage 2b-B re-baseline: legacy :root palettes/constants dissolved (root-non-theme 4618→383, hardcoded-color 2244→126, public-component-token-declared 503→492). Per-segment hardcoded-color rose in a few components (image, slider, switch, table, upload, carousel, card, badge…) because mode-independent shadow/media-overlay constants moved from :root definitions to their single consumer; the total fell. Stage 3 Card ownership cleanup: duplicate-owner 141→136; no counter increased."
 }

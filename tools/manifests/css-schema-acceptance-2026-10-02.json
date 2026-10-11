@@ -1011,8 +1011,8 @@
       {
         "file": "src/styles/components/composition.css",
         "line": 3,
-        "selector": ".qxframe9a7c2-form-input-group",
-        "token": "--qxframe9a7c2-form-input-group-radius",
+        "selector": ".qxframe9a7c2-input-group",
+        "token": "--qxframe9a7c2-input-group-radius",
         "value": "var(--_qxframe9a7c2-control-radius)"
       },
       {

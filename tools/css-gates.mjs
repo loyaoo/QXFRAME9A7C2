@@ -160,13 +160,13 @@ export function checkThemeFile(css, { registry = readRegistry() } = {}) {
       else if (registered && !registered.has(d.prop)) errors.push(`${r.selector}: unregistered theme token ${d.prop}`);
     }
   }
-  // v3 §5.2: every theme writes the whole list — all tokens in :root, all color tokens in .dark.
+  // v3 §5.2: both :root and .dark must declare the entire registered token inventory.
   if (registry) {
     const declared = sel => new Set(rules.filter(r => r.selectors.includes(sel)).flatMap(r => r.declarations.map(d => d.prop)));
     const rootSet = declared(':root'), darkSet = declared('.dark');
     for (const t of registry.tokens) {
       if (!rootSet.has(t.name)) errors.push(`:root is missing ${t.name}`);
-      if (t.mode === 'color' && !darkSet.has(t.name)) errors.push(`.dark is missing ${t.name}`);
+      if (!darkSet.has(t.name)) errors.push(`.dark is missing ${t.name}`);
     }
   }
   const bytes = Buffer.byteLength(css);

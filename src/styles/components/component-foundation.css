@@ -57,7 +57,7 @@
 /* component */
 
   @media (forced-colors: active) {
-    .qxframe9a7c2-input,.qxframe9a7c2-button,.qxframe9a7c2-form-input,.qxframe9a7c2-form-select,.qxframe9a7c2-form-textarea,.qxframe9a7c2-pagination-control,.qxframe9a7c2-pagination-input,.qxframe9a7c2-form-selectgroup-label,.qxframe9a7c2-input-number-action,.qxframe9a7c2-input-segment-field,.qxframe9a7c2-switch-track,.qxframe9a7c2-slider-handle,.qxframe9a7c2-rate {
+    .qxframe9a7c2-input,.qxframe9a7c2-button,.qxframe9a7c2-form-input,.qxframe9a7c2-form-select,.qxframe9a7c2-form-textarea,.qxframe9a7c2-pagination-control,.qxframe9a7c2-pagination-input,.qxframe9a7c2-selectgroup-label,.qxframe9a7c2-input-number-action,.qxframe9a7c2-input-segment-field,.qxframe9a7c2-switch-track,.qxframe9a7c2-slider-handle,.qxframe9a7c2-rate {
       forced-color-adjust: auto;
     }
     .qxframe9a7c2-item-surface,.qxframe9a7c2-menu-item,.qxframe9a7c2-tabs-tab,.qxframe9a7c2-tabs-more,.qxframe9a7c2-tabs-add,.qxframe9a7c2-calendar-cell,.qxframe9a7c2-calendar-title-button,.qxframe9a7c2-calendar-nav,.qxframe9a7c2-tree-toggle,.qxframe9a7c2-tree-check,.qxframe9a7c2-table-sorter,.qxframe9a7c2-table-filter,.qxframe9a7c2-table-expand-trigger,.qxframe9a7c2-collapse-main,.qxframe9a7c2-collapse-indicator {
@@ -66,21 +66,21 @@
     .qxframe9a7c2-upload-dropzone,.qxframe9a7c2-message-close,.qxframe9a7c2-notification-close,.qxframe9a7c2-notification-action,.qxframe9a7c2-date-picker-preset,.qxframe9a7c2-time-picker-now,.qxframe9a7c2-color-picker-mode-button,.qxframe9a7c2-color-picker-gradient-add,.qxframe9a7c2-color-picker-gradient-remove,.qxframe9a7c2-tag,.qxframe9a7c2-tag-close,.qxframe9a7c2-tags-input,.qxframe9a7c2-carousel-arrow,.qxframe9a7c2-carousel-dot,.qxframe9a7c2-image-preview-tool,.qxframe9a7c2-image-preview-nav {
       forced-color-adjust: auto;
     }
-    .qxframe9a7c2-input:focus-visible,.qxframe9a7c2-button:focus-visible,.qxframe9a7c2-form-input:focus-visible,.qxframe9a7c2-form-select:focus-visible,.qxframe9a7c2-form-textarea:focus-visible,.qxframe9a7c2-pagination-control:focus-visible,.qxframe9a7c2-pagination-input:focus-visible,.qxframe9a7c2-form-selectgroup-input:focus-visible + .qxframe9a7c2-form-selectgroup-label {
+    .qxframe9a7c2-input:focus-visible,.qxframe9a7c2-button:focus-visible,.qxframe9a7c2-form-input:focus-visible,.qxframe9a7c2-form-select:focus-visible,.qxframe9a7c2-form-textarea:focus-visible,.qxframe9a7c2-pagination-control:focus-visible,.qxframe9a7c2-pagination-input:focus-visible,.qxframe9a7c2-selectgroup-input:focus-visible + .qxframe9a7c2-selectgroup-label {
       /* Environment native semantics override:  intentionally carries enough specificity
        * to survive later zero-specificity component rules without priority flags. */
       outline: var(--_qxframe9a7c2-focus-visible-width) solid Highlight;
       outline-offset: -1px;
     }
-    .qxframe9a7c2-input.is-invalid,.qxframe9a7c2-input.is-error,.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-input,.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-selectgroup-label,.qxframe9a7c2-form-input.is-error,.qxframe9a7c2-form-select.is-error,.qxframe9a7c2-form-textarea.is-error,.qxframe9a7c2-input-otp.is-error .qxframe9a7c2-input-segment-field{
+    .qxframe9a7c2-input.is-invalid,.qxframe9a7c2-input.is-error,.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-input,.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-selectgroup-label,.qxframe9a7c2-form-input.is-error,.qxframe9a7c2-form-select.is-error,.qxframe9a7c2-form-textarea.is-error,.qxframe9a7c2-input-otp.is-error .qxframe9a7c2-input-segment-field{
       border-color: Mark;
     }
     .qxframe9a7c2-pagination-item.is-current .qxframe9a7c2-pagination-control,
-    .qxframe9a7c2-form-selectgroup-input:checked + .qxframe9a7c2-form-selectgroup-label {
+    .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label {
       outline: 1px solid Highlight;
       outline-offset: calc(var(--_qxframe9a7c2-focus-visible-width) * -1);
     }
-    .qxframe9a7c2-input.is-disabled,.qxframe9a7c2-button:disabled,.qxframe9a7c2-form-input:disabled,.qxframe9a7c2-form-select:disabled,.qxframe9a7c2-form-textarea:disabled,.qxframe9a7c2-pagination-control:disabled,.qxframe9a7c2-pagination-input:disabled,.qxframe9a7c2-form-selectgroup-input:disabled + .qxframe9a7c2-form-selectgroup-label {
+    .qxframe9a7c2-input.is-disabled,.qxframe9a7c2-button:disabled,.qxframe9a7c2-form-input:disabled,.qxframe9a7c2-form-select:disabled,.qxframe9a7c2-form-textarea:disabled,.qxframe9a7c2-pagination-control:disabled,.qxframe9a7c2-pagination-input:disabled,.qxframe9a7c2-selectgroup-input:disabled + .qxframe9a7c2-selectgroup-label {
       border-color: GrayText;
       color: GrayText;
     }

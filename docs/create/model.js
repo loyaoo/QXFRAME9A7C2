@@ -65,7 +65,7 @@ export function normalizeConfig(input) {
 
 // Fill "跟随风格" values from the current style.
 export function resolveConfig(config) {
-  const resolved = { ...config, ext: {} };
+  const resolved = { ...config, ext: {}, explicit: { ...config.ext } };
   for (const axis of ALL_EXT_AXES) resolved.ext[axis.key] = config.ext[axis.key] ?? axis.defaults[config.style];
   resolved.radiusValue = config.radius === 'default' ? STYLE_RADIUS[config.style] : config.radius;
   return resolved;
@@ -141,7 +141,7 @@ export function compileTheme(config, { version = 'unknown', generatedAt = new Da
     ' * 生成工具: QXFRAME9A7C2 Create (docs/create)',
     ' * 配置:',
     ...configSummary(config).map(line => ' *   ' + line),
-    ' * 内容: --qxframe9a7c2-theme-* 封闭清单全量输出（:root 全部、.dark 全部颜色）。',
+    ' * 内容: --qxframe9a7c2-theme-* 封闭清单全量输出（:root 和 .dark 各自包含完整 token 清单）。',
     ' */'
   ].join('\n');
   return { css: `${header}\n${body}`, body, header };
@@ -163,17 +163,27 @@ export function parseThemeHeader(text) {
     ...MAIN_KEYS.map(key => [MAIN_PARAMS[key], { main: key }]),
     ...ALL_EXT_AXES.map(axis => [axis.param, { axis }])
   ]);
-  lines.forEach((line, index) => {
-    const match = /^\s*\*\s+.*?\(([a-z-]+)\):\s*([^\s#]+)/.exec(line);
-    if (!match) return;
+  const configStart = lines.findIndex(line => /^\s*\*\s*配置:\s*$/.test(line));
+  const configEnd = lines.findIndex((line, index) => index > configStart && /^\s*\*\s*内容:/.test(line));
+  if (configStart < 0 || configEnd <= configStart) {
+    return { ok: false, errors: ['主题头部的配置区块不完整；请导入完整的当前版本主题 CSS。'] };
+  }
+  for (let i = configStart + 1; i < configEnd; i++) {
+    const line = lines[i];
+    if (/^\s*\*\s*$/.test(line)) continue;
+    const match = /^\s*\*\s+[^\r\n]*?\(([a-z-]+)\):\s*([^\s#]+)(?:\s*(?:#.*)?)?$/.exec(line);
+    if (!match) { errors.push(`第 ${i + 1} 行：配置格式无效。`); continue; }
     const [, param, value] = match;
     const target = byParam.get(param);
-    if (!target) { errors.push(`第 ${index + 1} 行：未知配置项 "${param}"。`); return; }
+    if (!target) { errors.push(`第 ${i + 1} 行：未知配置项 "${param}"。`); continue; }
+    if (seen.has(param)) { errors.push(`第 ${i + 1} 行：配置项 "${param}" 重复。`); continue; }
     seen.add(param);
     if (target.main) raw[target.main] = value;
     else if (value !== 'follow') raw.ext[target.axis.key] = value;
-  });
-  if (!seen.size) errors.push('头部注释中没有任何配置项。');
+  }
+  for (const param of byParam.keys()) {
+    if (!seen.has(param)) errors.push(`缺少必需配置项 "${param}"；不能通过自动填充默认值导入不完整主题。`);
+  }
   for (const key of MAIN_KEYS) {
     if (raw[key] === undefined) continue;
     const allowed = mainOptions(key, raw.baseColor ? raw : { baseColor: 'neutral' });
@@ -182,6 +192,9 @@ export function parseThemeHeader(text) {
   for (const [key, value] of Object.entries(raw.ext)) {
     const axis = axisByKey(key);
     if (!axis.options.some(o => o.value === value)) errors.push(`${axis.label} (${axis.param})：无效取值 "${value}"，可选：follow / ${axis.options.map(o => o.value).join(' / ')}。`);
+  }
+  if (raw.menuColor && isTranslucentMenu(raw.menuColor) && raw.menuAccent === 'bold') {
+    errors.push('半透明菜单只支持柔和强调；导入配置项互相冲突。');
   }
   if (errors.length) return { ok: false, errors };
   return { ok: true, config: normalizeConfig(raw) };
@@ -197,10 +210,19 @@ export function randomizeConfig(current, locks, rand = Math.random) {
   const next = { ...current, ext: { ...current.ext } };
   const keep = key => locks.has(key);
   if (!keep('style')) next.style = chooseFrom(STYLES).value;
-  if (!keep('baseColor')) next.baseColor = chooseFrom(BASE_COLORS);
+  // Base color is a domain for theme/chart. Filter it before shuffling so
+  // locked values remain intact instead of being silently normalized away.
+  if (!keep('baseColor')) {
+    const candidates = BASE_COLORS.filter(base => {
+      const available = themesForBaseColor(base);
+      return (!keep('theme') || available.includes(current.theme))
+        && (!keep('chartColor') || available.includes(current.chartColor));
+    });
+    if (candidates.length) next.baseColor = chooseFrom(candidates);
+  }
   const themes = themesForBaseColor(next.baseColor);
-  if (!keep('theme') || !themes.includes(next.theme)) next.theme = chooseFrom(themes);
-  if (!keep('chartColor') || !themes.includes(next.chartColor)) {
+  if (!keep('theme')) next.theme = chooseFrom(themes);
+  if (!keep('chartColor')) {
     const pairing = CHART_COLOR_PAIRINGS[next.theme];
     const paired = pairing ? themes.filter(name => pairing.includes(name)) : [];
     next.chartColor = chooseFrom(paired.length ? paired : themes);
@@ -234,6 +256,15 @@ export function resetConfig(current, locks) {
   const preset = { ...STYLE_PRESETS[current.style], radius: 'default', menuColor: 'default', menuAccent: 'subtle' };
   const next = { ...current, ext: {} };
   for (const [key, value] of Object.entries(preset)) if (!locks.has(key)) next[key] = value;
+  // Reset must honor locked theme/chart too: do not choose a base whose
+  // derived options would invalidate either locked color.
+  const compatible = color => themesForBaseColor(next.baseColor).includes(color);
+  if ((locks.has('theme') && !compatible(current.theme))
+      || (locks.has('chartColor') && !compatible(current.chartColor))) {
+    next.baseColor = current.baseColor;
+  }
+  if (locks.has('menuAccent') && current.menuAccent === 'bold'
+      && isTranslucentMenu(next.menuColor)) next.menuColor = current.menuColor;
   for (const axis of ALL_EXT_AXES) if (locks.has(axis.key) && current.ext[axis.key] !== undefined) next.ext[axis.key] = current.ext[axis.key];
   return normalizeConfig(next);
 }

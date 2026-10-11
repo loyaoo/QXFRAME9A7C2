@@ -40,10 +40,9 @@ assert.match(css,/\.qxframe9a7c2-list-item\{[^}]*display:flex;align-items:center
 assert.equal(css.includes('.qxframe9a7c2-list-item{gap:var(--_qxframe9a7c2-fixed-space-2)}'),false,
   'List gap-only selector reopening must not return.');
 
-assert.match(css,/\.qxframe9a7c2-form-selectgroup\.is-image-grid \.qxframe9a7c2-form-selectgroup-label\{width:100%;min-width:var\(--_qxframe9a7c2-fixed-form-selectgroup-image-label-min-width\);padding:0;align-items:stretch\}/,
-  'SelectGroup image-grid label width must live in the canonical image-grid label owner.');
-assert.equal(count('.qxframe9a7c2-form-selectgroup.is-image-grid .qxframe9a7c2-form-selectgroup-label{'),1,
-  'SelectGroup image-grid label must not be reopened for one property.');
+assert.equal((css.match(/^\.qxframe9a7c2-selectgroup-label\{/gm)||[]).length,1,'SelectGroup base Surface has exactly one canonical owner, state rules are separate');
+assert.equal(count('.qxframe9a7c2-selectgroup.is-connected{'),1,'one connected seam owner in composition');
+assert.equal(count('.qxframe9a7c2-selectgroup.is-image-grid '),0,'old image-grid dedicated CSS must be absent');
 
 assert.equal(count('.qxframe9a7c2-image-preview-root[hidden]{'),1,
   'Image Preview hidden state must have one canonical rule.');

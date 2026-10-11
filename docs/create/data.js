@@ -106,6 +106,11 @@ export const EXT_AXES = [
     { value: 'solid', label: '实底' }, { value: 'solid-shadow', label: '实底带阴影' }, { value: 'tinted', label: '浅着色' },
     { value: 'transparent', label: '透明' }, { value: 'light-solid', label: '亮实暗透' }, { value: 'ghost', label: '全透明' }],
     defaults: S('solid-shadow', 'solid', 'tinted', 'solid', 'transparent', 'light-solid', 'ghost', 'light-solid') },
+  { key: 'controlShadow', param: 'control-shadow', label: '控件正常阴影', group: 'look', options: [
+    { value: 'on', label: '开启' }, { value: 'off', label: '关闭' }],
+    // Follows Style by default, never Card/Popup/Dialog shadow strength.
+    // Preserve the pre-split normal visual defaults for all eight Styles.
+    defaults: S('on', 'off', 'off', 'off', 'off', 'on', 'on', 'on') },
   { key: 'inputLook', param: 'input', label: '输入外观', group: 'look', options: [
     { value: 'outline', label: '描边' }, { value: 'tinted', label: '浅着色' }, { value: 'subtle', label: '微着色' },
     { value: 'soft', label: '柔和填充' }, { value: 'underline', label: '下划线' }, { value: 'borderless', label: '无边框', qx: true }],
@@ -129,7 +134,7 @@ export const EXT_AXES = [
   { key: 'sections', param: 'sections', label: '表面分区', group: 'surface', options: [
     { value: 'none', label: '无分区' }, { value: 'divider', label: '仅分隔线' }, { value: 'muted', label: '灰底分区' }],
     defaults: S('none', 'muted', 'none', 'divider', 'none', 'none', 'none', 'none') },
-  { key: 'shadow', param: 'shadow', label: '阴影强度', group: 'surface', options: [
+  { key: 'shadow', param: 'shadow', label: '表面阴影强度（Card/弹层）', group: 'surface', options: [
     { value: 'none', label: '无' }, { value: 'light', label: '轻' }, { value: 'medium', label: '适中' },
     { value: 'strong', label: '明显' }, { value: 'heavy', label: '强' }],
     // Card tier from shadcn styles: vega shadow-xs, luma shadow-md, sera/rhea shadow-sm, others none.
@@ -138,17 +143,29 @@ export const EXT_AXES = [
     { value: 'none', label: '无描边', qx: true }, { value: 'faint', label: '淡描边' }, { value: 'clear', label: '清晰描边' },
     { value: 'strong', label: '强描边', qx: true }],
     defaults: S('clear', 'clear', 'clear', 'clear', 'clear', 'faint', 'faint', 'faint') },
-  { key: 'keyboardFocus', param: 'kfocus', label: '键盘焦点样式', group: 'focus', followLabel: '跟随风格（QX 描边）', options: [
-    { value: 'ring', label: '光环' }, { value: 'outline', label: '描边' }],
-    // "跟随风格" = the existing QX keyboard focus (2px outline, -1px offset).
-    defaults: S('qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx') },
-  { key: 'pointerFocus', param: 'pfocus', label: '鼠标焦点样式', group: 'focus', followLabel: '跟随风格（QX 默认）', options: [
-    { value: 'ring', label: '光环' }, { value: 'outline', label: '描边' }],
-    // "跟随风格" = the existing QX pointer focus (per-component background / border change).
-    defaults: S('qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx', 'qx') },
-  { key: 'focusColor', param: 'fcolor', label: '焦点颜色', group: 'focus', options: [
-    { value: 'mono', label: '黑白' }, { value: 'theme', label: '主题色' }],
-    defaults: S('mono', 'mono', 'mono', 'mono', 'mono', 'mono', 'mono', 'mono') },
+  // Seven independent Hover/Focus axes. An absent override always means follow Style.
+  { key: 'hoverStyle', param: 'hover-style', label: 'Hover 样式', group: 'focus', options: [
+    { value: 'border', label: '边框' }, { value: 'background', label: '背景' },
+    { value: 'both', label: '边框 + 背景' }, { value: 'none', label: '无' }],
+    defaults: S(...Array(8).fill('border')) },
+  { key: 'hoverColor', param: 'hover-color', label: 'Hover 颜色', group: 'focus', options: [
+    { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
+    defaults: S(...Array(8).fill('neutral')) },
+  { key: 'keyboardFocus', param: 'kfocus', label: '键盘 Focus 样式', group: 'focus', followLabel: '跟随风格（QX Outline）', options: [
+    { value: 'border', label: '边框' }, { value: 'ring', label: '光环' }, { value: 'outline', label: '外轮廓' }],
+    defaults: S(...Array(8).fill('outline')) },
+  { key: 'keyboardFocusColor', param: 'kfocus-color', label: '键盘 Focus 颜色', group: 'focus', options: [
+    { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
+    defaults: S(...Array(8).fill('black-white')) },
+  { key: 'pointerFocus', param: 'pfocus', label: '鼠标 Focus 样式', group: 'focus', followLabel: '跟随风格（QX Border）', options: [
+    { value: 'border', label: '边框' }, { value: 'ring', label: '光环' }, { value: 'outline', label: '外轮廓' }],
+    defaults: S(...Array(8).fill('border')) },
+  { key: 'pointerFocusColor', param: 'pfocus-color', label: '鼠标 Focus 颜色', group: 'focus', options: [
+    { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
+    defaults: S(...Array(8).fill('black-white')) },
+  { key: 'focusBackground', param: 'focus-bg', label: 'Focus 背景', group: 'focus', options: [
+    { value: 'keep', label: '保持当前背景' }, { value: 'parent-surface', label: '父级表面' }],
+    defaults: S(...Array(8).fill('keep')) },
   { key: 'hairline', param: 'hairline', label: '边界清晰度', group: 'advanced', qx: true, options: [
     { value: 'thin', label: '细' }, { value: 'standard', label: '标准' }, { value: 'clear', label: '清晰' }],
     defaults: S('standard', 'standard', 'standard', 'standard', 'standard', 'standard', 'standard', 'standard') },
